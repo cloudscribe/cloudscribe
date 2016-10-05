@@ -226,10 +226,25 @@ namespace example.WebApp
                     // this one is only needed if using cloudscribe Logging with EF as the logging storage
                     LoggingEFStartup.InitializeDatabaseAsync(app.ApplicationServices).Wait();
 
-                    CloudscribeIdentityServerIntegrationEFCoreStorage.InitializeDatabaseAsync(app.ApplicationServices).Wait();
+                    // you can use this hack to add clients and scopes into the db since
+                    // there is currently no ui to do it
+                    // you should not use this on the first run that actually creates the initial cloudscribe data
+                    // you must wait until after that and then you can get the needed siteid from the database
+                    // this will only run at startup time and only add data if no data exists for the given site.
+                    // if you pass in an invalid siteid it will not fail, you will get data with a bad siteid
+                    // make note of your siteid, don't use these, these are from my db
+                    // site1 8f54733c-3f3a-4971-bb1f-8950cea42f1a
+                    // site2 7c111db3-e270-497a-9a12-aed436c764c6
+                    // replace null with your siteid and run the app, then change it back to null since it can only be a one time task
+                    string siteId = null;
 
-                    //InitializeIdentityServerDatabase(app);
-
+                    CloudscribeIdentityServerIntegrationEFCoreStorage.InitializeDatabaseAsync(
+                        app.ApplicationServices,
+                        siteId,
+                        GetClients(),
+                        GetScopes()
+                        ).Wait();
+                    
                     break;
             }
 
@@ -271,7 +286,6 @@ namespace example.WebApp
             //
             app.UseIdentityServerAuthentication(new IdentityServerAuthenticationOptions
             {
-                //Authority = "http://localhost:5000",
                 Authority = "https://localhost:44399",
                 ScopeName = "api1",
 
@@ -283,34 +297,7 @@ namespace example.WebApp
 
             
         }
-
-        //private void InitializeIdentityServerDatabase(IApplicationBuilder app)
-        //{
-        //    using (var scope = app.ApplicationServices.GetService<IServiceScopeFactory>().CreateScope())
-        //    {
-        //        scope.ServiceProvider.GetRequiredService<IdentityServer4.EntityFramework.DbContexts.PersistedGrantDbContext>().Database.Migrate();
-
-        //        var context = scope.ServiceProvider.GetRequiredService<IdentityServer4.EntityFramework.DbContexts.ConfigurationDbContext>();
-        //        context.Database.Migrate();
-        //        if (!context.Clients.Any())
-        //        {
-        //            foreach (var client in GetClients())
-        //            {
-        //                context.Clients.Add(client.ToEntity());
-        //            }
-        //            context.SaveChanges();
-        //        }
-
-        //        if (!context.Scopes.Any())
-        //        {
-        //            foreach (var client in GetScopes())
-        //            {
-        //                context.Scopes.Add(client.ToEntity());
-        //            }
-        //            context.SaveChanges();
-        //        }
-        //    }
-        //}
+        
 
         // scopes define the resources in your system
         private IEnumerable<Scope> GetScopes()
@@ -382,7 +369,7 @@ namespace example.WebApp
 
                     RedirectUris = new List<string>
                     {
-                        "http://localhost:5002/signin-oidc"
+                        "https://localhost:44399/signin-oidc"
                     },
                     PostLogoutRedirectUris = new List<string>
                     {
@@ -408,11 +395,11 @@ namespace example.WebApp
 
                     RedirectUris = new List<string>
                     {
-                        "http://localhost:5003/callback.html"
+                        "https://localhost:44399/callback.html"
                     },
                     PostLogoutRedirectUris = new List<string>
                     {
-                        "http://localhost:5003/index.html"
+                        "https://localhost:44399/app.html"
                     },
                     AllowedCorsOrigins = new List<string>
                     {

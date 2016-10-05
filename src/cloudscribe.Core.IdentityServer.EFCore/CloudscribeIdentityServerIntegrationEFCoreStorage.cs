@@ -20,8 +20,9 @@ namespace Microsoft.Extensions.DependencyInjection
     {
         public static async Task InitializeDatabaseAsync(
             IServiceProvider serviceProvider
-            //,IEnumerable<Client> initialClients = null,
-            //IEnumerable<Scope> initialScopes = null
+            , string siteId = null
+            , IEnumerable<Client> initialClients = null,
+            IEnumerable<Scope> initialScopes = null
             )
         {
             using (var serviceScope = serviceProvider.GetService<IServiceScopeFactory>().CreateScope())
@@ -32,24 +33,31 @@ namespace Microsoft.Extensions.DependencyInjection
                 var configContext = serviceScope.ServiceProvider.GetRequiredService<ConfigurationDbContext>();
                 await configContext.Database.MigrateAsync();
 
-                // we can't do this because we don't have a tenantid to tag the data with
-                //if ((initialClients != null) && (!configContext.Clients.Any()))
-                //{
-                //    foreach (var client in initialClients)
-                //    {
-                //        configContext.Clients.Add(client.ToEntity());
-                //    }
-                //    configContext.SaveChanges();
-                //}
+                if(!string.IsNullOrEmpty(siteId))
+                {
+                    if ((initialClients != null) && (!configContext.Clients.Any(x => x.SiteId == siteId)))
+                    {
+                        foreach (var client in initialClients)
+                        {
+                            var c = client.ToEntity();
+                            c.SiteId = siteId;
+                            configContext.Clients.Add(c);
+                        }
+                        configContext.SaveChanges();
+                    }
 
-                //if ((initialScopes != null) && (!configContext.Scopes.Any()))
-                //{
-                //    foreach (var scope in initialScopes)
-                //    {
-                //        configContext.Scopes.Add(scope.ToEntity());
-                //    }
-                //    configContext.SaveChanges();
-                //}
+                    if ((initialScopes != null) && (!configContext.Scopes.Any(x => x.SiteId == siteId)))
+                    {
+                        foreach (var scope in initialScopes)
+                        {
+                            var s = scope.ToEntity();
+                            s.SiteId = siteId;
+                            configContext.Scopes.Add(s);
+                        }
+                        configContext.SaveChanges();
+                    }
+                }
+
 
             }
 
