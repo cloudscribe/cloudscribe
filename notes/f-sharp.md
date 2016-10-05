@@ -18,6 +18,12 @@ https://medium.com/@cscalfani/so-you-want-to-be-a-functional-programmer-part-1-1
 https://medium.com/@cscalfani/so-you-want-to-be-a-functional-programmer-part-2-7005682cec4a#.l8e829csl
 https://medium.com/@cscalfani/so-you-want-to-be-a-functional-programmer-part-3-1b0fd14eb1a7#.oc8njnxbt
 https://medium.com/@cscalfani/so-you-want-to-be-a-functional-programmer-part-4-18fbe3ea9e49#.prcqec89k
+https://medium.com/@cscalfani/so-you-want-to-be-a-functional-programmer-part-5-c70adc9cf56a
+
+Can programming be liberated from function abstraction?
+http://tomasp.net/blog/2016/no-functions/
+
+http://sidburn.github.io/blog/2016/09/25/function-application-and-composition
 
 In Functional Programming, you don’t just write Pure Functions.
 Functional Languages cannot eliminate Side Effects, they can only confine them. Since programs have to interface to the real world, some parts of every program must be impure. The goal is to minimize the amount of impure code and segregate it from the rest of our program.
@@ -30,6 +36,19 @@ In Functional Programming, functions are our building blocks. We write them to d
 This is called Function Composition.
 
 http://blog.ploeh.dk/2016/09/26/decoupling-decisions-from-effects/
+
+http://degoes.net/articles/modern-fp-part-2
+
+http://gettingsharper.de/2015/03/10/dependency-injection-a-functional-way/
+Reader Monad Gist
+https://gist.github.com/danieljsummers/eca04e64b903f08aecfb15e8f2536dd6
+
+http://learnyouahaskell.com/functors-applicative-functors-and-monoids
+
+Use Functions Instead of Simple Values
+Model Data Transformations as a Pipeline
+Extract Generic Functions
+https://vsavkin.com/functional-typescript-316f0e003dc6#.qxl03h4kc
 
 
 ## Resources
@@ -49,6 +68,8 @@ http://www.developerfusion.com/article/139804/an-introduction-to-f-agents
 ### C# Interop
 
 http://theburningmonk.com/2012/09/f-make-extension-methods-visible-to-c/
+
+http://stackoverflow.com/questions/17254855/what-is-the-simplest-way-to-access-data-of-an-f-discriminated-union-type-in-c
 
 http://stackoverflow.com/questions/38078526/cant-reference-an-f-class-library
 

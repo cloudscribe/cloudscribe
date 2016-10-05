@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2014-10-26
-// Last Modified:			2016-06-25
+// Last Modified:			2016-09-30
 // 
 
 using cloudscribe.Core.Identity;
@@ -37,6 +37,7 @@ namespace cloudscribe.Core.Web.Controllers
             IpAddressTracker ipAddressTracker,
             ISiteMessageEmailSender emailSender,
             ISmsSender smsSender,
+            IIdentityServerIntegration identityServerIntegration,
             IStringLocalizer<CloudscribeCore> localizer,
             ILogger<AccountController> logger
             )
@@ -44,6 +45,7 @@ namespace cloudscribe.Core.Web.Controllers
             Site = currentSite; 
             this.userManager = userManager;
             this.signInManager = signInManager;
+            this.identityServerIntegration = identityServerIntegration;
             this.emailSender = emailSender;
             this.smsSender = smsSender;
             this.ipAddressTracker = ipAddressTracker;
@@ -54,6 +56,7 @@ namespace cloudscribe.Core.Web.Controllers
         private readonly ISiteSettings Site;
         private readonly SiteUserManager<SiteUser> userManager;
         private readonly SiteSignInManager<SiteUser> signInManager;
+        private readonly IIdentityServerIntegration identityServerIntegration;
         private readonly ISiteMessageEmailSender emailSender;
         private readonly ISmsSender smsSender;
         private IpAddressTracker ipAddressTracker;
@@ -63,11 +66,20 @@ namespace cloudscribe.Core.Web.Controllers
         // GET: /Account/Login
         [HttpGet]
         [AllowAnonymous]
-        public IActionResult Login(string returnUrl = null)
+        public async Task<IActionResult> Login(string returnUrl = null)
         {
             if (signInManager.IsSignedIn(User))
             {
                 return this.RedirectToSiteRoot(Site);
+            }
+
+            //identityserver integration point
+            var idProvider = await identityServerIntegration.GetAuthorizationContextAsync(returnUrl);
+
+            if (!string.IsNullOrEmpty(idProvider))
+            {
+                // if IdP is passed, then bypass showing the login screen
+                return ExternalLogin(idProvider, returnUrl);
             }
 
             ViewData["Title"] = sr["Log in"];
@@ -533,7 +545,45 @@ namespace cloudscribe.Core.Web.Controllers
             return this.RedirectToSiteRoot(Site);
         }
 
-        
+        // identityserver integration point
+
+        [HttpGet]
+        public async Task<IActionResult> Logout(string logoutId)
+        {
+            var clientId = await identityServerIntegration.GetLogoutContextClientIdAsync(logoutId);
+            if (!string.IsNullOrEmpty(clientId))
+            {
+                // if the logout request is authenticated, it's safe to automatically sign-out
+                return await Logout(new IdentityServerLogoutViewModel { LogoutId = logoutId });
+            }
+
+            var vm = new IdentityServerLogoutViewModel
+            {
+                LogoutId = logoutId
+            };
+
+            return View(vm);
+        }
+
+        // identityserver integration point
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Logout(IdentityServerLogoutViewModel model)
+        {
+            // delete authentication cookies
+            await signInManager.SignOutAsync();
+
+            // set this so UI rendering sees an anonymous user
+            HttpContext.User = new ClaimsPrincipal(new ClaimsIdentity());
+
+            // get context information (client name, post logout redirect URI and iframe for federated signout)
+            var logoutModel = await identityServerIntegration.GetLogoutContextModelAsync(model.LogoutId);
+
+            
+            return View("LoggedOut", logoutModel);
+        }
+
+
         // POST: /Account/ExternalLogin
         [HttpPost]
         [AllowAnonymous]

@@ -202,3 +202,4 @@ src/example.WebApp/nodb_storage/*
 src/cloudscribe.Core.Repositories.EF/appsettings.local.overrides.json
 src/cloudscribe.Logging.EF/appsettings.local.overrides.json
 **/dp_keys/**
+**/appsettings.local.overrides.json

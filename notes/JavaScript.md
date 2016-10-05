@@ -1,4 +1,7 @@
 
+https://hackernoon.com/how-it-feels-to-learn-javascript-in-2016-d3a717dd577f#.r4tdjn583
+
+
 http://www.fiyazhasan.me/configuring-typescript-for-asp-net-core-apps/
 
 

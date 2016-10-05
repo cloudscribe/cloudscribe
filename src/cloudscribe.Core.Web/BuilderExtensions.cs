@@ -170,7 +170,8 @@ namespace Microsoft.AspNetCore.Builder
             }
             else
             {
-                options.AuthenticationScheme = $"{scheme}-{tenant.SiteFolderName}";
+                //options.AuthenticationScheme = $"{scheme}-{tenant.SiteFolderName}";
+                options.AuthenticationScheme = scheme;
                 options.CookieName = $"{scheme}-{tenant.SiteFolderName}";
                 options.CookiePath = "/" + tenant.SiteFolderName;
                 cookieEvents.OnValidatePrincipal = siteValidator.ValidatePrincipal;
@@ -211,7 +212,8 @@ namespace Microsoft.AspNetCore.Builder
             }
             else
             {
-                options.AuthenticationScheme = $"{scheme}-{tenant.SiteFolderName}";
+                //options.AuthenticationScheme = $"{scheme}-{tenant.SiteFolderName}";
+                options.AuthenticationScheme = scheme;
                 options.CookieName = $"{scheme}-{tenant.SiteFolderName}";
                 options.CookiePath = "/" + tenant.SiteFolderName;
             }

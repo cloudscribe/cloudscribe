@@ -16,6 +16,10 @@ using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Mvc.Razor;
 using System.Globalization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using System.Reflection;
+using IdentityServer4.Models;
+//using IdentityServer4.EntityFramework.Mappers;
 
 namespace example.WebApp
 {
@@ -165,6 +169,9 @@ namespace example.WebApp
                         options.AddEmbeddedViewsForNavigation();
                         options.AddEmbeddedViewsForCloudscribeCore();
                         options.AddEmbeddedViewsForCloudscribeLogging();
+
+                        options.AddEmbeddedViewsForCloudscribeIdentityServerIntegration();
+
                         options.ViewLocationExpanders.Add(new cloudscribe.Core.Web.Components.SiteViewLocationExpander());
                     })
                     ;
@@ -202,7 +209,45 @@ namespace example.WebApp
                 app.UseDatabaseErrorPage();
                 app.UseBrowserLink();
             }
-           
+
+            var storage = Configuration["DevOptions:DbPlatform"];
+
+            switch (storage)
+            {
+                case "NoDb":
+                    CoreNoDbStartup.InitializeDataAsync(app.ApplicationServices).Wait();
+                    break;
+
+                case "ef":
+                default:
+                    // this creates ensures the database is created and initial data
+                    CoreEFStartup.InitializeDatabaseAsync(app.ApplicationServices).Wait();
+
+                    // this one is only needed if using cloudscribe Logging with EF as the logging storage
+                    LoggingEFStartup.InitializeDatabaseAsync(app.ApplicationServices).Wait();
+
+                    // you can use this hack to add clients and scopes into the db since
+                    // there is currently no ui to do it
+                    // you should not use this on the first run that actually creates the initial cloudscribe data
+                    // you must wait until after that and then you can get the needed siteid from the database
+                    // this will only run at startup time and only add data if no data exists for the given site.
+                    // if you pass in an invalid siteid it will not fail, you will get data with a bad siteid
+                    // make note of your siteid, don't use these, these are from my db
+                    // site1 8f54733c-3f3a-4971-bb1f-8950cea42f1a
+                    // site2 7c111db3-e270-497a-9a12-aed436c764c6
+                    // replace null with your siteid and run the app, then change it back to null since it can only be a one time task
+                    string siteId = null;
+
+                    CloudscribeIdentityServerIntegrationEFCoreStorage.InitializeDatabaseAsync(
+                        app.ApplicationServices,
+                        siteId,
+                        GetClients(),
+                        GetScopes()
+                        ).Wait();
+                    
+                    break;
+            }
+
             app.UseForwardedHeaders();
 
             app.UseStaticFiles();
@@ -224,32 +269,153 @@ namespace example.WebApp
                     loggerFactory,
                     multiTenantOptions,
                     ctx.Tenant);
-                
+
+                // todo how to make this multi tenant for folders?
+                // https://github.com/IdentityServer/IdentityServer4/issues/19
+                //https://github.com/IdentityServer/IdentityServer4/blob/dev/src/IdentityServer4/Configuration/IdentityServerApplicationBuilderExtensions.cs
+                //https://github.com/IdentityServer/IdentityServer4/blob/dev/src/IdentityServer4/Hosting/IdentityServerMiddleware.cs
+                // perhaps will need to plugin custom IEndpointRouter?
+                if (storage == "ef")
+                {
+                    // with this uncommented it breaks folder tenants
+                    builder.UseIdentityServer();
+                }
+
             });
-            
+
+            //
+            app.UseIdentityServerAuthentication(new IdentityServerAuthenticationOptions
+            {
+                Authority = "https://localhost:44399",
+                ScopeName = "api1",
+
+                RequireHttpsMetadata = true
+            });
+
+
             UseMvc(app, multiTenantOptions.Mode == cloudscribe.Core.Models.MultiTenantMode.FolderName);
 
-            var storage = Configuration["DevOptions:DbPlatform"];
-            switch (storage)
-            {
-                case "NoDb":
-                    CoreNoDbStartup.InitializeDataAsync(app.ApplicationServices).Wait();
-                    break;
-
-                case "ef":
-                default:
-                    // this creates ensures the database is created and initial data
-                    CoreEFStartup.InitializeDatabaseAsync(app.ApplicationServices).Wait();
-
-                    // this one is only needed if using cloudscribe Logging with EF as the logging storage
-                    LoggingEFStartup.InitializeDatabaseAsync(app.ApplicationServices).Wait();
-
-                    break;
-            }
-
-           
+            
         }
         
+
+        // scopes define the resources in your system
+        private IEnumerable<Scope> GetScopes()
+        {
+            return new List<Scope>
+            {
+                StandardScopes.OpenId,
+                StandardScopes.Profile,
+                StandardScopes.OfflineAccess,
+
+                new Scope
+                {
+                    Name = "api1",
+                    DisplayName = "API1 access",
+                    Description = "My API"
+                }
+            };
+        }
+
+        private IEnumerable<Client> GetClients()
+        {
+            // client credentials client
+            return new List<Client>
+            {
+                new Client
+                {
+                    ClientId = "client",
+                    ClientName = "Client",
+                    AllowedGrantTypes = GrantTypes.ClientCredentials,
+
+                    ClientSecrets = new List<IdentityServer4.Models.Secret>
+                    {
+                        new IdentityServer4.Models.Secret("secret".Sha256())
+                    },
+                    AllowedScopes = new List<string>
+                    {
+                        "api1"
+                    }
+                },
+
+                // resource owner password grant client
+                new Client
+                {
+                    ClientId = "ro.client",
+                    ClientName = "Resource Owner Client",
+                    AllowedGrantTypes = GrantTypes.ResourceOwnerPassword,
+
+                    ClientSecrets = new List<IdentityServer4.Models.Secret>
+                    {
+                        new IdentityServer4.Models.Secret("secret".Sha256())
+                    },
+                    AllowedScopes = new List<string>
+                    {
+                        "api1"
+                    }
+                },
+
+                // OpenID Connect hybrid flow and client credentials client (MVC)
+                new Client
+                {
+                    ClientId = "mvc",
+                    ClientName = "MVC Client",
+                    AllowedGrantTypes = GrantTypes.HybridAndClientCredentials,
+
+                    ClientSecrets = new List<IdentityServer4.Models.Secret>
+                    {
+                        new IdentityServer4.Models.Secret("secret".Sha256())
+                    },
+
+                    RedirectUris = new List<string>
+                    {
+                        "https://localhost:44399/signin-oidc"
+                    },
+                    PostLogoutRedirectUris = new List<string>
+                    {
+                        "http://localhost:5002"
+                    },
+
+                    AllowedScopes = new List<string>
+                    {
+                        StandardScopes.OpenId.Name,
+                        StandardScopes.Profile.Name,
+                        StandardScopes.OfflineAccess.Name,
+                        "api1"
+                    }
+                },
+
+                // JavaScript Client
+                new Client
+                {
+                    ClientId = "js",
+                    ClientName = "JavaScript Client",
+                    AllowedGrantTypes = GrantTypes.Implicit,
+                    AllowAccessTokensViaBrowser = true,
+
+                    RedirectUris = new List<string>
+                    {
+                        "https://localhost:44399/callback.html"
+                    },
+                    PostLogoutRedirectUris = new List<string>
+                    {
+                        "https://localhost:44399/app.html"
+                    },
+                    AllowedCorsOrigins = new List<string>
+                    {
+                        "http://localhost:5003"
+                    },
+
+                    AllowedScopes = new List<string>
+                    {
+                        StandardScopes.OpenId.Name,
+                        StandardScopes.Profile.Name,
+                        "api1"
+                    }
+                }
+            };
+        }
+
         private void UseMvc(IApplicationBuilder app, bool useFolders)
         {
             app.UseMvc(routes =>
@@ -317,7 +483,25 @@ namespace example.WebApp
 
                     // only needed if using cloudscribe logging with EF storage
                     services.AddCloudscribeLoggingEFStorage(connectionString);
-                    
+
+
+                    services.AddCloudscribeIdentityServerIntegration();
+                    services.AddIdentityServer()
+                        .AddCloudscribeCoreEFIdentityServerStorage(connectionString);
+
+                    //var migrationsAssembly = typeof(Startup).GetTypeInfo().Assembly.GetName().Name;
+
+                    //services.AddIdentityServer() 
+                    //    .AddConfigurationStore(builder =>
+                    //        builder.UseSqlServer(connectionString, options =>
+                    //            options.MigrationsAssembly(migrationsAssembly)))
+                    //    .AddOperationalStore(builder =>
+                    //        builder.UseSqlServer(connectionString, options =>
+                    //            options.MigrationsAssembly(migrationsAssembly)))
+                    //    .AddCloudscribeIdentity<cloudscribe.Core.Models.SiteUser>()
+                    //    .SetTemporarySigningCredential()
+                    //            ;
+
 
 
                     break;

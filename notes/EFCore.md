@@ -1,4 +1,5 @@
 
+https://blogs.msdn.microsoft.com/dotnet/2016/09/29/implementing-seeding-custom-conventions-and-interceptors-in-ef-core-1-0/
 
 http://www.stum.de/2016/08/24/thoughts-on-orms-2016-edition/
 
@@ -189,6 +190,9 @@ dotnet ef migrations add cleanup20160617 -c CoreDbContext
 dotnet ef migrations add cleanup20160617-2 -c CoreDbContext
 
 dotnet ef migrations add changes20160701 -c LoggingDbContext
+
+dotnet ef migrations add Initial -c ConfigurationDbContext
+dotnet ef migrations add Initial -c PersistedGrantDbContext
 
 No parameterless constructor was found on 'LoggingDbContext'. Either add a parameterless constructor to 'LoggingDbContext' or add an impleme
 ntation of 'IDbContextFactory<LoggingDbContext>' in the same assembly as 'LoggingDbContext'.

@@ -1,0 +1,38 @@
+﻿{
+    "version": "1.0.0-*",
+    "description": "cloudscribe multi-tenant identity integration for IdentityServer4",
+    "authors": [ "Joe Audette" ],
+    "packOptions": {
+        "owners": [ "Source Tree Solutions" ],
+        "tags": [ "cloudscribe", "identity" ],
+        "projectUrl": "https://github.com/joeaudette/cloudscribe",
+        "licenseUrl": "http://www.apache.org/licenses/LICENSE-2.0",
+        "copyright": "2015 Source Tree Solutions",
+        "iconUrl": "https://raw.githubusercontent.com/joeaudette/cloudscribe/master/cloudscribe-icon-32.png",
+        "requireLicenseAcceptance": false,
+        "releaseNotes": ""
+    },
+
+    "buildOptions": {
+        "embed": [ "Views/**" ]
+    },
+
+    "dependencies": {
+        "NETStandard.Library": "1.6.0",
+        "Microsoft.Extensions.Options": "1.0.0",
+        "Microsoft.Extensions.Logging.Abstractions": "1.0.0",
+        "Microsoft.Extensions.FileProviders.Embedded": "1.0.*",
+        "Microsoft.Extensions.DependencyInjection.Abstractions": "1.0.*",
+        "Microsoft.AspNetCore.Mvc.Razor": "1.0.*",
+        "Microsoft.AspNetCore.Mvc": "1.0.*",
+        "IdentityServer4": "1.0.0-*",
+        "cloudscribe.Core.Identity": "1.0.0-*"
+    },
+
+    "frameworks": {
+        "netstandard1.6": {
+            "imports": "dnxcore50"
+        },
+        "net452": {}
+    }
+}
