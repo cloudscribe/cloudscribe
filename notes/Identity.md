@@ -188,3 +188,6 @@ https://github.com/aspnet/Security/blob/dev/src/Microsoft.AspNet.Authentication/
 "token_endpoint_auth_methods_supported":["client_secret_basic","client_secret_post"],
 "code_challenge_methods_supported":["plain","S256"]}
 
+
+https://localhost:44399/consent?returnUrl=%2Fconnect%2Fauthorize%2Fconsent%3Fclient_id%3Djs%26redirect_uri%3Dhttps%253A%252F%252Flocalhost%253A44399%252Fcallback.html%26response_type%3Did_token%2520token%26scope%3Dopenid%2520profile%2520api1%26state%3D8902207321e94c978e2a71b356b576e4%26nonce%3D2c8de8c871e54a73884ff7c6217620ea
+
