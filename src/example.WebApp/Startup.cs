@@ -19,7 +19,6 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.Reflection;
 using IdentityServer4.Models;
-//using IdentityServer4.EntityFramework.Mappers;
 
 namespace example.WebApp
 {
@@ -279,19 +278,29 @@ namespace example.WebApp
                 {
                     // with this uncommented it breaks folder tenants
                     builder.UseIdentityServer();
+
+                    // this sets up the authentication for apis within this endpoint
+                    // ie apis that are hosted in the same web app endpoint with the authority server
+                    // this is not needed here if you are only using separate api endpoints
+                    // it is needed in the startup of those separate endpoints
+                    app.UseIdentityServerAuthentication(new IdentityServerAuthenticationOptions
+                    {
+                        Authority = "https://localhost:44399",
+                        // using the site aliasid as the scope so each tenant has a different scope
+                        // you can view the aliasid from site settings
+                        // clients must be configured with the scope to have access to the apis for the tenant
+                        ScopeName = ctx.Tenant.AliasId, 
+
+                        RequireHttpsMetadata = true
+                    });
+
                 }
 
+
+
             });
 
-            //
-            app.UseIdentityServerAuthentication(new IdentityServerAuthenticationOptions
-            {
-                Authority = "https://localhost:44399",
-                ScopeName = "api1",
-
-                RequireHttpsMetadata = true
-            });
-
+            
 
             UseMvc(app, multiTenantOptions.Mode == cloudscribe.Core.Models.MultiTenantMode.FolderName);
 
@@ -310,9 +319,9 @@ namespace example.WebApp
 
                 new Scope
                 {
-                    Name = "api1",
-                    DisplayName = "API1 access",
-                    Description = "My API"
+                    Name = "s1",
+                    DisplayName = "Site 1 api access",
+                    Description = "Site1 APIs"
                 }
             };
         }
@@ -334,7 +343,7 @@ namespace example.WebApp
                     },
                     AllowedScopes = new List<string>
                     {
-                        "api1"
+                        "s1"
                     }
                 },
 
@@ -351,11 +360,12 @@ namespace example.WebApp
                     },
                     AllowedScopes = new List<string>
                     {
-                        "api1"
+                        "s1"
                     }
                 },
 
                 // OpenID Connect hybrid flow and client credentials client (MVC)
+                // this would be for letting a different mvc app authenticate
                 new Client
                 {
                     ClientId = "mvc",
@@ -381,11 +391,12 @@ namespace example.WebApp
                         StandardScopes.OpenId.Name,
                         StandardScopes.Profile.Name,
                         StandardScopes.OfflineAccess.Name,
-                        "api1"
+                        "s1"
                     }
                 },
 
                 // JavaScript Client
+                // you can test this client at /app.html
                 new Client
                 {
                     ClientId = "js",
@@ -410,7 +421,9 @@ namespace example.WebApp
                     {
                         StandardScopes.OpenId.Name,
                         StandardScopes.Profile.Name,
-                        "api1"
+                        // this client is allowed access to apis of 2 tenants
+                        "s1", // site 1 aliasid
+                        "s2" //site 2 aliasid
                     }
                 }
             };
@@ -483,27 +496,13 @@ namespace example.WebApp
 
                     // only needed if using cloudscribe logging with EF storage
                     services.AddCloudscribeLoggingEFStorage(connectionString);
-
-
-                    services.AddCloudscribeIdentityServerIntegration();
+                    
                     services.AddIdentityServer()
-                        .AddCloudscribeCoreEFIdentityServerStorage(connectionString);
-
-                    //var migrationsAssembly = typeof(Startup).GetTypeInfo().Assembly.GetName().Name;
-
-                    //services.AddIdentityServer() 
-                    //    .AddConfigurationStore(builder =>
-                    //        builder.UseSqlServer(connectionString, options =>
-                    //            options.MigrationsAssembly(migrationsAssembly)))
-                    //    .AddOperationalStore(builder =>
-                    //        builder.UseSqlServer(connectionString, options =>
-                    //            options.MigrationsAssembly(migrationsAssembly)))
-                    //    .AddCloudscribeIdentity<cloudscribe.Core.Models.SiteUser>()
-                    //    .SetTemporarySigningCredential()
-                    //            ;
-
-
-
+                        .AddCloudscribeCoreEFIdentityServerStorage(connectionString)
+                        .AddCloudscribeIdentityServerIntegration<cloudscribe.Core.Models.SiteUser>()
+                        .SetTemporarySigningCredential()
+                        ;
+                    
                     break;
             }
         }

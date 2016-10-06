@@ -23,7 +23,7 @@ var config = {
     client_id: "js",
     redirect_uri: "https://localhost:44399/callback.html",
     response_type: "id_token token",
-    scope:"openid profile api1",
+    scope:"openid profile s1",
     post_logout_redirect_uri: "https://localhost:44399/app.html",
 };
 var mgr = new Oidc.UserManager(config);
