@@ -9,6 +9,8 @@ using System.Threading.Tasks;
 using IdentityServer4.Models;
 using IdentityServer4.Stores;
 using cloudscribe.Core.IdentityServerIntegration.Models;
+using cloudscribe.Core.Models;
+using cloudscribe.Core.Identity;
 
 namespace cloudscribe.Core.IdentityServerIntegration
 {
@@ -21,19 +23,27 @@ namespace cloudscribe.Core.IdentityServerIntegration
         private readonly IClientStore _clientStore;
         private readonly IScopeStore _scopeStore;
         private readonly IIdentityServerInteractionService _interaction;
+        private readonly IIdentityServerIntegration identityServerIntegration;
+        private readonly SiteSettings _site;
 
         public ConsentController(
             ILogger<ConsentController> logger,
             IIdentityServerInteractionService interaction,
             IClientStore clientStore,
-            IScopeStore scopeStore)
+            IScopeStore scopeStore,
+            IIdentityServerIntegration identityServerIntegration,
+            SiteSettings currentSite
+            )
         {
             _logger = logger;
             _interaction = interaction;
             _clientStore = clientStore;
             _scopeStore = scopeStore;
+            _site = currentSite;
+            this.identityServerIntegration = identityServerIntegration;
         }
 
+        
         /// <summary>
         /// Shows the consent screen
         /// </summary>
@@ -42,6 +52,7 @@ namespace cloudscribe.Core.IdentityServerIntegration
         [HttpGet]
         public async Task<IActionResult> Index(string returnUrl)
         {
+            returnUrl = identityServerIntegration.EnsureFolderSegmentIfNeeded(_site, returnUrl);
             var vm = await BuildViewModelAsync(returnUrl);
             if (vm != null)
             {
@@ -59,7 +70,8 @@ namespace cloudscribe.Core.IdentityServerIntegration
         public async Task<IActionResult> Index(ConsentInputModel model)
         {
             // parse the return URL back to an AuthorizeRequest object
-            var request = await _interaction.GetAuthorizationContextAsync(model.ReturnUrl);
+            var returnUrl = identityServerIntegration.EnsureFolderSegmentIfNeeded(_site, model.ReturnUrl);
+            var request = await _interaction.GetAuthorizationContextAsync(returnUrl);
             ConsentResponse response = null;
 
             // user clicked 'no' - send back the standard 'access_denied' response
@@ -95,10 +107,10 @@ namespace cloudscribe.Core.IdentityServerIntegration
                 await _interaction.GrantConsentAsync(request, response);
 
                 // redirect back to authorization endpoint
-                return Redirect(model.ReturnUrl);
+                return Redirect(returnUrl);
             }
 
-            var vm = await BuildViewModelAsync(model.ReturnUrl, model);
+            var vm = await BuildViewModelAsync(returnUrl, model);
             if (vm != null)
             {
                 return View("Index", vm);

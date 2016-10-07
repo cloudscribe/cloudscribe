@@ -10,9 +10,7 @@ using cloudscribe.Core.IdentityServer.EFCore.Stores;
 using IdentityServer4.Services;
 using IdentityServer4.Stores;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.DependencyInjection.Extensions;
 using System;
-using System.Threading.Tasks;
 
 namespace Microsoft.Extensions.DependencyInjection
 {
@@ -23,14 +21,8 @@ namespace Microsoft.Extensions.DependencyInjection
             string connectionString
             )
         {
-            //builder.AddConfigurationStore(contextBuilder =>
-            //                contextBuilder.UseSqlServer(connectionString));
-            builder.AddConfigurationStore(connectionString);
-
-            //builder.AddOperationalStore(contextBuilder =>
-            //                contextBuilder.UseSqlServer(connectionString));
+            builder.AddConfigurationStore(connectionString);    
             builder.AddOperationalStore(connectionString);
-
 
             return builder;
         }

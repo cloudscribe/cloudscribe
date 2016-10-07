@@ -250,10 +250,7 @@ namespace example.WebApp
             app.UseForwardedHeaders();
 
             app.UseStaticFiles();
-
-            // custom 404 and error page - this preserves the status code (ie 404)
-            app.UseStatusCodePagesWithReExecute("/Home/Error/{0}");
-
+            
             app.UseSession();
             
             app.UseRequestLocalization(localizationOptionsAccessor.Value);
@@ -264,6 +261,17 @@ namespace example.WebApp
 
             app.UsePerTenant<cloudscribe.Core.Models.SiteSettings>((ctx, builder) =>
             {
+                // custom 404 and error page - this preserves the status code (ie 404)
+                if(string.IsNullOrEmpty(ctx.Tenant.SiteFolderName))
+                {
+                    builder.UseStatusCodePagesWithReExecute("/Home/Error/{0}");
+                }
+                else
+                {
+                    builder.UseStatusCodePagesWithReExecute("/" + ctx.Tenant.SiteFolderName + "/Home/Error/{0}");
+                }
+                
+
                 builder.UseCloudscribeCoreDefaultAuthentication(
                     loggerFactory,
                     multiTenantOptions,
@@ -307,6 +315,125 @@ namespace example.WebApp
             
         }
         
+
+        
+
+        private void UseMvc(IApplicationBuilder app, bool useFolders)
+        {
+            app.UseMvc(routes =>
+            {
+                if (useFolders)
+                {
+                    routes.MapRoute(
+                        name: "folderdefault",
+                        template: "{sitefolder}/{controller}/{action}/{id?}",
+                        defaults: new { controller = "Home", action = "Index" },
+                        constraints: new { name = new cloudscribe.Core.Web.Components.SiteFolderRouteConstraint() });
+
+                    
+                }
+
+                routes.MapRoute(
+                   name: "errorhandler",
+                   template: "Home/Error/{statusCode}", 
+                   defaults: new { controller = "Home", action = "Error" }
+                   );
+
+                routes.MapRoute(
+                    name: "default",
+                    template: "{controller=Home}/{action=Index}/{id?}"
+                    //,defaults: new { controller = "Home", action = "Index" }
+                    );
+            });
+        }
+
+
+        private void ConfigureAuthPolicy(IServiceCollection services)
+        {
+            services.AddAuthorization(options =>
+            {
+                options.AddCloudscribeCoreDefaultPolicies();
+                options.AddCloudscribeLoggingDefaultPolicy();
+                
+                //options.AddPolicy(
+                //    "SetupSystemPolicy",
+                //    authBuilder =>
+                //    {
+                //        authBuilder.RequireRole("ServerAdmins, Administrators");
+                //    });
+
+            });
+
+        }
+
+        private void ConfigureDataStorage(IServiceCollection services)
+        {
+            services.AddScoped<cloudscribe.Core.Models.Setup.ISetupTask, cloudscribe.Core.Web.Components.EnsureInitialDataSetupTask>();
+            
+            var storage = Configuration["DevOptions:DbPlatform"];
+
+            switch (storage)
+            {
+                case "NoDb":
+                    services.AddCloudscribeCoreNoDbStorage();
+                    // only needed if using cloudscribe logging with NoDb storage
+                    services.AddCloudscribeLoggingNoDbStorage(Configuration);
+                    break;
+
+                case "ef":
+                default:
+                    var connectionString = Configuration.GetConnectionString("EntityFrameworkConnectionString");
+                    services.AddCloudscribeCoreEFStorage(connectionString);
+
+                    // only needed if using cloudscribe logging with EF storage
+                    services.AddCloudscribeLoggingEFStorage(connectionString);
+                    
+                    services.AddIdentityServer()
+                        .AddCloudscribeCoreEFIdentityServerStorage(connectionString)
+                        .AddCloudscribeIdentityServerIntegration<cloudscribe.Core.Models.SiteUser>()
+                        .SetTemporarySigningCredential()
+                        ;
+                    
+                    break;
+            }
+        }
+
+        private void ConfigureLogging(
+            ILoggerFactory loggerFactory, 
+            IServiceProvider serviceProvider
+            , cloudscribe.Logging.Web.ILogRepository logRepo
+            )
+        {
+            
+            // a customizable filter for logging
+            LogLevel minimumLevel = LogLevel.Information;
+
+            // add exclusions to remove noise in the logs
+            var excludedLoggers = new List<string>
+            {
+                "Microsoft.AspNetCore.StaticFiles.StaticFileMiddleware",
+                "Microsoft.AspNetCore.Hosting.Internal.WebHost",
+            };
+
+            Func<string, LogLevel, bool> logFilter = (string loggerName, LogLevel logLevel) =>
+            {
+                if (logLevel < minimumLevel)
+                {
+                    return false;
+                }
+
+                if (excludedLoggers.Contains(loggerName))
+                {
+                    return false;
+                }
+
+                return true;
+            };
+            
+            loggerFactory.AddDbLogger(serviceProvider, logFilter, logRepo);
+        }
+
+        // test data for identityserver integration
 
         // scopes define the resources in your system
         private IEnumerable<Scope> GetScopes()
@@ -429,117 +556,5 @@ namespace example.WebApp
             };
         }
 
-        private void UseMvc(IApplicationBuilder app, bool useFolders)
-        {
-            app.UseMvc(routes =>
-            {
-                if (useFolders)
-                {
-                    routes.MapRoute(
-                        name: "folderdefault",
-                        template: "{sitefolder}/{controller}/{action}/{id?}",
-                        defaults: new { controller = "Home", action = "Index" },
-                        constraints: new { name = new cloudscribe.Core.Web.Components.SiteFolderRouteConstraint() });
-                }
-
-                routes.MapRoute(
-                   name: "errorhandler",
-                   template: "Home/Error/{statusCode}", 
-                   defaults: new { controller = "Home", action = "Error" }
-                   );
-
-                routes.MapRoute(
-                    name: "default",
-                    template: "{controller=Home}/{action=Index}/{id?}"
-                    //,defaults: new { controller = "Home", action = "Index" }
-                    );
-            });
-        }
-
-
-        private void ConfigureAuthPolicy(IServiceCollection services)
-        {
-            services.AddAuthorization(options =>
-            {
-                options.AddCloudscribeCoreDefaultPolicies();
-                options.AddCloudscribeLoggingDefaultPolicy();
-                
-                //options.AddPolicy(
-                //    "SetupSystemPolicy",
-                //    authBuilder =>
-                //    {
-                //        authBuilder.RequireRole("ServerAdmins, Administrators");
-                //    });
-
-            });
-
-        }
-
-        private void ConfigureDataStorage(IServiceCollection services)
-        {
-            services.AddScoped<cloudscribe.Core.Models.Setup.ISetupTask, cloudscribe.Core.Web.Components.EnsureInitialDataSetupTask>();
-            
-            var storage = Configuration["DevOptions:DbPlatform"];
-
-            switch (storage)
-            {
-                case "NoDb":
-                    services.AddCloudscribeCoreNoDbStorage();
-                    // only needed if using cloudscribe logging with NoDb storage
-                    services.AddCloudscribeLoggingNoDbStorage(Configuration);
-                    break;
-
-                case "ef":
-                default:
-                    var connectionString = Configuration.GetConnectionString("EntityFrameworkConnectionString");
-                    services.AddCloudscribeCoreEFStorage(connectionString);
-
-                    // only needed if using cloudscribe logging with EF storage
-                    services.AddCloudscribeLoggingEFStorage(connectionString);
-                    
-                    services.AddIdentityServer()
-                        .AddCloudscribeCoreEFIdentityServerStorage(connectionString)
-                        .AddCloudscribeIdentityServerIntegration<cloudscribe.Core.Models.SiteUser>()
-                        .SetTemporarySigningCredential()
-                        ;
-                    
-                    break;
-            }
-        }
-
-        private void ConfigureLogging(
-            ILoggerFactory loggerFactory, 
-            IServiceProvider serviceProvider
-            , cloudscribe.Logging.Web.ILogRepository logRepo
-            )
-        {
-            
-            // a customizable filter for logging
-            LogLevel minimumLevel = LogLevel.Information;
-
-            // add exclusions to remove noise in the logs
-            var excludedLoggers = new List<string>
-            {
-                "Microsoft.AspNetCore.StaticFiles.StaticFileMiddleware",
-                "Microsoft.AspNetCore.Hosting.Internal.WebHost",
-            };
-
-            Func<string, LogLevel, bool> logFilter = (string loggerName, LogLevel logLevel) =>
-            {
-                if (logLevel < minimumLevel)
-                {
-                    return false;
-                }
-
-                if (excludedLoggers.Contains(loggerName))
-                {
-                    return false;
-                }
-
-                return true;
-            };
-            
-            loggerFactory.AddDbLogger(serviceProvider, logFilter, logRepo);
-        }
     }
 }

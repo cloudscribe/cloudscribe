@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
+using cloudscribe.Core.Models;
 
 namespace cloudscribe.Core.Identity
 {
@@ -13,6 +14,8 @@ namespace cloudscribe.Core.Identity
         Task<string> GetAuthorizationContextAsync(string returnUrl);
 
         Task<string> GetLogoutContextClientIdAsync(string logoutId);
+
+        string EnsureFolderSegmentIfNeeded(ISiteSettings site, string returnUrl);
     }
 
     public class IdentityServerLogoutViewModel
@@ -42,6 +45,11 @@ namespace cloudscribe.Core.Identity
         public Task<IdentityServerLoggedOutViewModel> GetLogoutContextModelAsync(string logoutId)
         {
             throw new NotImplementedException();
+        }
+
+        public string EnsureFolderSegmentIfNeeded(ISiteSettings site, string returnUrl)
+        {
+            return returnUrl;
         }
     }
 
