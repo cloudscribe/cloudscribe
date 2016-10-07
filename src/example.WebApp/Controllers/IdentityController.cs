@@ -4,9 +4,11 @@
 using System.Linq;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Authorization;
+using cloudscribe.Core.Web.Components;
 
 namespace example.WebApp.Controllers
 {
+    [Route("{sitefolder}/api/[controller]")]
     [Route("api/[controller]")]
     [Authorize]
     public class IdentityController : ControllerBase

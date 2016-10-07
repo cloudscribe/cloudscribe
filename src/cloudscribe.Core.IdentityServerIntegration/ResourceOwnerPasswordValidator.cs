@@ -32,7 +32,7 @@ namespace cloudscribe.Core.IdentityServerIntegration
                     if (_userManager.SupportsUserLockout &&
                         await _userManager.IsLockedOutAsync(user))
                     {
-                        context.Result = new GrantValidationResult(IdentityServer4.Models.TokenErrors.InvalidGrant);
+                        context.Result = new GrantValidationResult(IdentityServer4.Models.TokenRequestErrors.InvalidGrant);
                     }
                     else if (await _userManager.CheckPasswordAsync(user, context.Password))
                     {

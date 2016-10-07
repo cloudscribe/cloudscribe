@@ -25,7 +25,7 @@
         "Microsoft.Extensions.DependencyInjection.Abstractions": "1.0.*",
         "Microsoft.AspNetCore.Mvc.Razor": "1.0.*",
         "Microsoft.AspNetCore.Mvc": "1.0.*",
-        "IdentityServer4": "1.0.0-*",
+        "cloudscribe.IDS4Fork": "1.0.0-*",
         "cloudscribe.Core.Identity": "1.0.0-*"
     },
 

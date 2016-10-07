@@ -60,7 +60,7 @@
         "cloudscribe.Web.Navigation": "1.0.2-*",
         "cloudscribe.Web.Pagination": "1.0.*",
         "SaasKit.Multitenancy": "1.1.*",
-        "IdentityServer4": "1.0.0-*",
+        "cloudscribe.IDS4Fork": "1.0.0-*",
         "cloudscribe.Core.IdentityServerIntegration": "1.0.0-*",
         "cloudscribe.Core.IdentityServer.EFCore": "1.0.0-*",
         "IdentityModel": "2.0.0-*",

@@ -19,7 +19,7 @@
 
 
     "dependencies": {
-        "IdentityServer4": "1.0.0-rc1-update2",
+        "cloudscribe.IDS4Fork": "1.0.0-*",
         "Microsoft.EntityFrameworkCore": "1.0.*",
         "Microsoft.EntityFrameworkCore.Relational": "1.0.*",
         "Microsoft.EntityFrameworkCore.Tools": {

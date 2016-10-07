@@ -73,6 +73,7 @@ namespace cloudscribe.Core.Web.Controllers
                 return this.RedirectToSiteRoot(Site);
             }
 
+            returnUrl = identityServerIntegration.EnsureFolderSegmentIfNeeded(Site, returnUrl);
             //identityserver integration point
             var idProvider = await identityServerIntegration.GetAuthorizationContextAsync(returnUrl);
 

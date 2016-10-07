@@ -19,11 +19,11 @@ document.getElementById("api").addEventListener("click", api, false);
 document.getElementById("logout").addEventListener("click", logout, false);
 
 var config = {
-    authority: "https://localhost:44399",
+    authority: "https://localhost:44399/two",
     client_id: "js",
     redirect_uri: "https://localhost:44399/callback.html",
     response_type: "id_token token",
-    scope:"openid profile s1",
+    scope:"openid profile s2",
     post_logout_redirect_uri: "https://localhost:44399/app.html",
 };
 var mgr = new Oidc.UserManager(config);
@@ -43,7 +43,7 @@ function login() {
 
 function api() {
     mgr.getUser().then(function (user) {
-        var url = "https://localhost:44399/api/identity";
+        var url = "https://localhost:44399/two/api/identity";
 
         var xhr = new XMLHttpRequest();
         xhr.open("GET", url);
