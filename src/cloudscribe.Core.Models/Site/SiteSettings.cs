@@ -10,7 +10,7 @@ using System;
 namespace cloudscribe.Core.Models
 {
     //[Serializable()]
-    public class SiteSettings : SiteInfo, ISiteSettings
+    public class SiteSettings : SiteInfo, ISiteSettings, ISiteContext
     {
 
         public SiteSettings()

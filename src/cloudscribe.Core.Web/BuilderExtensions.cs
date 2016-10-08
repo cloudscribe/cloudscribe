@@ -14,7 +14,7 @@ namespace Microsoft.AspNetCore.Builder
            this IApplicationBuilder builder,
            ILoggerFactory loggerFactory,
            MultiTenantOptions multiTenantOptions,
-           SiteSettings tenant,
+           SiteContext tenant,
            CookieSecurePolicy applicationCookieSecure = CookieSecurePolicy.SameAsRequest
            )
         {
@@ -64,7 +64,7 @@ namespace Microsoft.AspNetCore.Builder
 
         public static IApplicationBuilder UseSocialAuth(
             this IApplicationBuilder app,
-            SiteSettings site,
+            SiteContext site,
             CookieAuthenticationOptions externalCookieOptions,
             bool shouldUseFolder)
         {
@@ -156,7 +156,7 @@ namespace Microsoft.AspNetCore.Builder
            SiteAuthCookieValidator siteValidator,
            string scheme,
            bool useRelatedSitesMode,
-           SiteSettings tenant,
+           SiteContext tenant,
            CookieSecurePolicy cookieSecure = CookieSecurePolicy.SameAsRequest
            )
         {
@@ -199,7 +199,7 @@ namespace Microsoft.AspNetCore.Builder
             this IApplicationBuilder app,
             string scheme,
             bool useRelatedSitesMode,
-            SiteSettings tenant,
+            SiteContext tenant,
             CookieSecurePolicy cookieSecure = CookieSecurePolicy.None
             )
         {

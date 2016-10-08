@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2014-12-09
-// Last Modified:			2016-06-17
+// Last Modified:			2016-10-08
 // 
 
 using System.Collections.Generic;
@@ -37,7 +37,7 @@ namespace cloudscribe.Core.Models
             return true;
         }
 
-        public static bool HasAnySocialAuthEnabled(this ISiteSettings site)
+        public static bool HasAnySocialAuthEnabled(this ISiteContext site)
         {
             if ((site.MicrosoftClientId.Length > 0) && (site.MicrosoftClientSecret.Length > 0)) return true;
             if ((site.FacebookAppId.Length > 0) && (site.FacebookAppSecret.Length > 0)) return true;
@@ -47,9 +47,33 @@ namespace cloudscribe.Core.Models
             return false;
         }
 
+        public static bool HasAnySocialAuthEnabled(this ISiteSettings site)
+        {
+            if ((site.MicrosoftClientId.Length > 0) && (site.MicrosoftClientSecret.Length > 0)) return true;
+            if ((site.FacebookAppId.Length > 0) && (site.FacebookAppSecret.Length > 0)) return true;
+            if ((site.GoogleClientId.Length > 0) && (site.GoogleClientSecret.Length > 0)) return true;
+            if ((site.TwitterConsumerKey.Length > 0) && (site.TwitterConsumerSecret.Length > 0)) return true;
+
+            return false;
+        }
+
+        public static bool SmtpIsConfigured(this ISiteContext site)
+        {
+            if (!string.IsNullOrEmpty(site.SmtpServer)) return true;
+
+            return false;
+        }
+
         public static bool SmtpIsConfigured(this ISiteSettings site)
         {
             if (!string.IsNullOrEmpty(site.SmtpServer)) return true;
+
+            return false;
+        }
+
+        public static bool SmsIsConfigured(this ISiteContext site)
+        {
+            if (!string.IsNullOrEmpty(site.SmsClientId)) return true;
 
             return false;
         }

@@ -3,7 +3,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette/Derek Gray
 // Created:				    2016-08-24
-// Last Modified:		    2016-08-24
+// Last Modified:		    2016-10-08
 // 
 
 using cloudscribe.Core.Models;
@@ -17,12 +17,12 @@ namespace cloudscribe.Core.Web.Navigation
     /// </summary>
     public class SiteNavigationCacheKeyResolver : ITreeCacheKeyResolver
     {
-        public SiteNavigationCacheKeyResolver(SiteSettings currentSite)
+        public SiteNavigationCacheKeyResolver(SiteContext currentSite)
         {
             this.currentSite = currentSite;
         }
 
-        private SiteSettings currentSite;
+        private SiteContext currentSite;
 
         public string GetCacheKey(INavigationTreeBuilder builder)
         {

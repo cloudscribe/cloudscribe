@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2014-10-26
-// Last Modified:			2016-06-06
+// Last Modified:			2016-10-08
 // 
 
 using cloudscribe.Core.Models;
@@ -27,7 +27,7 @@ namespace cloudscribe.Core.Web.Controllers
     public class ManageController : Controller
     {
         public ManageController(
-            SiteSettings currentSite,
+            SiteContext currentSite,
             SiteUserManager<SiteUser> userManager,
             SiteSignInManager<SiteUser> signInManager,
             ISmsSender smsSender,
@@ -39,14 +39,13 @@ namespace cloudscribe.Core.Web.Controllers
             Site = currentSite; 
             this.userManager = userManager;
             this.signInManager = signInManager;
-           // this.emailSender = emailSender;
             this.smsSender = smsSender;
             sr = localizer;
             this.timeZoneIdResolver = timeZoneIdResolver;
             tzHelper = timeZoneHelper;
         }
 
-        private readonly ISiteSettings Site;
+        private readonly ISiteContext Site;
         private readonly SiteUserManager<SiteUser> userManager;
         private readonly SiteSignInManager<SiteUser> signInManager;
         //private readonly IAuthEmailSender emailSender;

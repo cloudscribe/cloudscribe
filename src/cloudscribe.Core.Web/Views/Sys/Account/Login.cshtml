@@ -7,7 +7,7 @@
 @using Microsoft.Extensions.Options
 @using Microsoft.Extensions.Localization
 @inject IStringLocalizer<CloudscribeCore> sr
-@inject SiteSettings site
+@inject SiteContext site
 @{
     var socFormat = sr["Log in using your {0} account"];
     var socialAuthoColumnWidth = 4;

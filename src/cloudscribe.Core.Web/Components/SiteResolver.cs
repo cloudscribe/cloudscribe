@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:              Joe Audette
 // Created:             2016-02-04
-// Last Modified:       2016-05-19
+// Last Modified:       2016-10-08
 // 
 
 //  2016-02-04 found this blog post by Ben Foster
@@ -23,7 +23,7 @@ using System.Threading.Tasks;
 
 namespace cloudscribe.Core.Web.Components
 {
-    public class SiteResolver : ITenantResolver<SiteSettings>
+    public class SiteResolver : ITenantResolver<SiteContext>
     {
         public SiteResolver(
             ISiteQueries siteRepository,
@@ -39,7 +39,7 @@ namespace cloudscribe.Core.Web.Components
         private ISiteQueries siteRepo;
         private SiteDataProtector dataProtector;
 
-        public Task<TenantContext<SiteSettings>> ResolveAsync(HttpContext context)
+        public Task<TenantContext<SiteContext>> ResolveAsync(HttpContext context)
         {
             if(multiTenantOptions.Mode == MultiTenantMode.FolderName)
             {
@@ -49,12 +49,12 @@ namespace cloudscribe.Core.Web.Components
             return ResolveByHostAsync(context);
         }
 
-        private async Task<TenantContext<SiteSettings>> ResolveByFolderAsync(HttpContext context)
+        private async Task<TenantContext<SiteContext>> ResolveByFolderAsync(HttpContext context)
         {
             var siteFolderName = context.Request.Path.StartingSegment();
             if (siteFolderName.Length == 0) { siteFolderName = "root"; }
 
-            TenantContext<SiteSettings> tenantContext = null;
+            TenantContext<SiteContext> tenantContext = null;
 
             CancellationToken cancellationToken = context?.RequestAborted ?? CancellationToken.None;
 
@@ -63,8 +63,8 @@ namespace cloudscribe.Core.Web.Components
             if (site != null)
             {
                 dataProtector.UnProtect(site);
-
-                tenantContext = new TenantContext<SiteSettings>((SiteSettings)site);
+                var siteContext = new SiteContext(site);
+                tenantContext = new TenantContext<SiteContext>(siteContext);
             }
 
             return tenantContext;
@@ -72,9 +72,9 @@ namespace cloudscribe.Core.Web.Components
             
         }
 
-        private async Task<TenantContext<SiteSettings>> ResolveByHostAsync(HttpContext context)
+        private async Task<TenantContext<SiteContext>> ResolveByHostAsync(HttpContext context)
         {
-            TenantContext<SiteSettings> tenantContext = null;
+            TenantContext<SiteContext> tenantContext = null;
 
             CancellationToken cancellationToken = context?.RequestAborted ?? CancellationToken.None;
 
@@ -84,7 +84,9 @@ namespace cloudscribe.Core.Web.Components
             {
                 dataProtector.UnProtect(site);
 
-                tenantContext = new TenantContext<SiteSettings>((SiteSettings)site);
+                var siteContext = new SiteContext(site);
+
+                tenantContext = new TenantContext<SiteContext>(siteContext);
             }
 
             return tenantContext;

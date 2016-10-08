@@ -193,7 +193,7 @@ namespace cloudscribe.Core.Identity
             //return all;
         }
 
-        private IEnumerable<AuthenticationDescription> BuildFilteredAuthList(ISiteSettings site, IEnumerable<AuthenticationDescription> all)
+        private IEnumerable<AuthenticationDescription> BuildFilteredAuthList(ISiteContext site, IEnumerable<AuthenticationDescription> all)
         {
             //log.LogInformation("BuildFilteredAuthList called");
 

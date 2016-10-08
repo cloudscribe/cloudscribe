@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:              Joe Audette
 // Created:             2016-02-04
-// Last Modified:       2016-05-14
+// Last Modified:       2016-10-08
 // 
 
 //  2016-02-04 found this blog post by Ben Foster
@@ -26,7 +26,7 @@ using System.Threading.Tasks;
 
 namespace cloudscribe.Core.Web.Components
 {
-    public class CachingSiteResolver : MemoryCacheTenantResolverBase<SiteSettings>
+    public class CachingSiteResolver : MemoryCacheTenantResolverBase<SiteContext>
     {
         
         public CachingSiteResolver(
@@ -101,7 +101,7 @@ namespace cloudscribe.Core.Web.Components
         /// </summary>
         /// <param name="context"></param>
         /// <returns></returns>
-        protected override IEnumerable<string> GetTenantIdentifiers(TenantContext<SiteSettings> context)
+        protected override IEnumerable<string> GetTenantIdentifiers(TenantContext<SiteContext> context)
         {
             var identifiers = new List<string>();
 
@@ -125,7 +125,7 @@ namespace cloudscribe.Core.Web.Components
         }
 
         //Resolve a tenant context from the current request. This will only be executed on cache misses.
-        protected override Task<TenantContext<SiteSettings>> ResolveAsync(HttpContext context)
+        protected override Task<TenantContext<SiteContext>> ResolveAsync(HttpContext context)
         {
             if (multiTenantOptions.Mode == MultiTenantMode.FolderName)
             {
@@ -135,11 +135,11 @@ namespace cloudscribe.Core.Web.Components
             return ResolveByHostAsync(context);           
         }
 
-        private async Task<TenantContext<SiteSettings>> ResolveByFolderAsync(HttpContext context)
+        private async Task<TenantContext<SiteContext>> ResolveByFolderAsync(HttpContext context)
         {
             var siteFolderName = await GetContextIdentifier(context);
 
-            TenantContext<SiteSettings> tenantContext = null;
+            TenantContext<SiteContext> tenantContext = null;
 
             CancellationToken cancellationToken = context?.RequestAborted ?? CancellationToken.None;
 
@@ -148,16 +148,16 @@ namespace cloudscribe.Core.Web.Components
             if (site != null)
             {
                 dataProtector.UnProtect(site);
-
-                tenantContext = new TenantContext<SiteSettings>((SiteSettings)site);
+                var siteContext = new SiteContext(site);
+                tenantContext = new TenantContext<SiteContext>(siteContext);
             }
 
             return tenantContext;
         }
 
-        private async Task<TenantContext<SiteSettings>> ResolveByHostAsync(HttpContext context)
+        private async Task<TenantContext<SiteContext>> ResolveByHostAsync(HttpContext context)
         {
-            TenantContext<SiteSettings> tenantContext = null;
+            TenantContext<SiteContext> tenantContext = null;
 
             CancellationToken cancellationToken = context?.RequestAborted ?? CancellationToken.None;
 
@@ -166,8 +166,8 @@ namespace cloudscribe.Core.Web.Components
             if (site != null)
             {
                 dataProtector.UnProtect(site);
-
-                tenantContext = new TenantContext<SiteSettings>((SiteSettings)site);
+                var siteContext = new SiteContext(site);
+                tenantContext = new TenantContext<SiteContext>(siteContext);
             }
 
             return tenantContext;

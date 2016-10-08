@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2014-10-26
-// Last Modified:			2016-09-30
+// Last Modified:			2016-10-08
 // 
 
 using cloudscribe.Core.Identity;
@@ -31,7 +31,7 @@ namespace cloudscribe.Core.Web.Controllers
     {
 
         public AccountController(
-            SiteSettings currentSite,
+            SiteContext currentSite,
             SiteUserManager<SiteUser> userManager,
             SiteSignInManager<SiteUser> signInManager,
             IpAddressTracker ipAddressTracker,
@@ -53,7 +53,7 @@ namespace cloudscribe.Core.Web.Controllers
             log = logger;
         }
 
-        private readonly ISiteSettings Site;
+        private readonly ISiteContext Site;
         private readonly SiteUserManager<SiteUser> userManager;
         private readonly SiteSignInManager<SiteUser> signInManager;
         private readonly IIdentityServerIntegration identityServerIntegration;

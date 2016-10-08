@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:				    2014-07-22
-// Last Modified:		    2016-05-18
+// Last Modified:		    2016-10-08
 // 
 //
 
@@ -26,7 +26,7 @@ namespace cloudscribe.Core.Identity
     public class SiteUserManager<TUser> : UserManager<TUser> where TUser : SiteUser
     {        
         public SiteUserManager(
-            SiteSettings currentSite,
+            SiteContext currentSite,
             IUserCommands userCommands,
             IUserQueries userQueries,
             IUserStore<TUser> store,
@@ -76,7 +76,7 @@ namespace cloudscribe.Core.Identity
 
         private CancellationToken CancellationToken => httpContext?.RequestAborted ?? CancellationToken.None;
 
-        private ISiteSettings siteSettings = null;
+        private ISiteContext siteSettings = null;
 
         internal IUserLockoutStore<TUser> GetUserLockoutStore()
         {
@@ -88,7 +88,7 @@ namespace cloudscribe.Core.Identity
             return cast;
         }
         
-        public ISiteSettings Site { get { return siteSettings; } }
+        public ISiteContext Site { get { return siteSettings; } }
         
         public Task<bool> LoginIsAvailable(Guid userId, string loginName)
         {

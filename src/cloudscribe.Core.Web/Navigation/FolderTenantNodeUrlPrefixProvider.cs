@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2015-08-02
-// Last Modified:			2016-05-19
+// Last Modified:			2016-10-08
 // 
 
 using cloudscribe.Core.Models;
@@ -14,7 +14,7 @@ namespace cloudscribe.Core.Web.Navigation
     public class FolderTenantNodeUrlPrefixProvider : INodeUrlPrefixProvider
     {
         public FolderTenantNodeUrlPrefixProvider(
-            SiteSettings currentSite,
+            SiteContext currentSite,
             IOptions<MultiTenantOptions> multiTenantOptions)
         {
             site = currentSite;
@@ -22,7 +22,7 @@ namespace cloudscribe.Core.Web.Navigation
         }
 
         private MultiTenantOptions options;
-        private ISiteSettings site;
+        private ISiteContext site;
 
         public string GetPrefix()
         {

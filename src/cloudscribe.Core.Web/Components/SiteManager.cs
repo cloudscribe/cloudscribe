@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2015-07-22
-// Last Modified:			2016-06-11
+// Last Modified:			2016-10-08
 // 
 
 using cloudscribe.Core.Models;
@@ -20,7 +20,7 @@ namespace cloudscribe.Core.Web.Components
     {
 
         public SiteManager(
-            SiteSettings currentSite,
+            SiteContext currentSite,
             ISiteCommands siteCommands,
             ISiteQueries siteQueries,
             IUserCommands userCommands,
@@ -60,7 +60,7 @@ namespace cloudscribe.Core.Web.Components
         private ISiteQueries queries;
         private IUserQueries userQueries;
         private IUserCommands userCommands;
-        private ISiteSettings siteSettings = null;
+        private ISiteContext siteSettings = null;
         //private ISiteSettings Site
         //{
         //    get
@@ -69,9 +69,14 @@ namespace cloudscribe.Core.Web.Components
         //    }
         //}
 
-        public ISiteSettings CurrentSite
+        public ISiteContext CurrentSite
         {
             get { return siteSettings; }
+        }
+
+        public async Task<ISiteSettings> GetCurrentSiteSettings()
+        {
+            return await queries.Fetch(CurrentSite.Id, CancellationToken);
         }
         
         public Task<List<ISiteInfo>> GetPageOtherSites(

@@ -20,7 +20,7 @@ namespace cloudscribe.Core.IdentityServer.EFCore.Stores
         private string _siteId;
 
         public ClientStore(
-            SiteSettings site,
+            SiteContext site,
             IConfigurationDbContext context
             )
         {

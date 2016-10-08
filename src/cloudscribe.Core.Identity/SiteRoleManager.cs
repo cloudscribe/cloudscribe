@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:				    2014-07-17
-// Last Modified:		    2016-05-18
+// Last Modified:		    2016-10-08
 // 
 //
 
@@ -26,7 +26,7 @@ namespace cloudscribe.Core.Identity
     public class SiteRoleManager<TRole> : RoleManager<TRole> where TRole : SiteRole
     {
         public SiteRoleManager(
-            SiteSettings currentSite,
+            SiteContext currentSite,
             IUserCommands userCommands,
             IUserQueries userQueries,
             IOptions<MultiTenantOptions> multiTenantOptionsAccessor,
@@ -66,8 +66,8 @@ namespace cloudscribe.Core.Identity
         private IUserCommands commands;
         private IUserQueries queries;
         private ILogger logger;
-        private ISiteSettings siteSettings = null;
-        private ISiteSettings Site
+        private ISiteContext siteSettings = null;
+        private ISiteContext Site
         {
             get
             {

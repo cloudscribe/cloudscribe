@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2016-05-07
-// Last Modified:			2016-09-28
+// Last Modified:			2016-10-08
 // 
 
 
@@ -43,7 +43,7 @@ namespace Microsoft.Extensions.DependencyInjection
            
             //services.AddMultitenancy<SiteSettings, SiteResolver>();
             
-            services.AddMultitenancy<SiteSettings, CachingSiteResolver>();
+            services.AddMultitenancy<SiteContext, CachingSiteResolver>();
             services.AddScoped<CacheHelper, CacheHelper>();
             services.AddScoped<SiteManager, SiteManager>();
             services.AddScoped<GeoDataManager, GeoDataManager>();

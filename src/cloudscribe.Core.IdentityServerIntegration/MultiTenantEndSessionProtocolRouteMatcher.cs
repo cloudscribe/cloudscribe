@@ -11,7 +11,7 @@ namespace cloudscribe.Core.IdentityServerIntegration
     public class MultiTenantEndSessionProtocolRouteMatcher : IMatchEndSessionProtocolRoutePaths
     {
         public MultiTenantEndSessionProtocolRouteMatcher(
-            SiteSettings currentSite,
+            SiteContext currentSite,
             IOptions<MultiTenantOptions> multiTenantOptionsAccessor)
         {
             multiTenantOptions = multiTenantOptionsAccessor.Value;
@@ -19,7 +19,7 @@ namespace cloudscribe.Core.IdentityServerIntegration
         }
 
         private MultiTenantOptions multiTenantOptions;
-        private SiteSettings site;
+        private SiteContext site;
 
 
         public bool IsEndSessionPath(string requestPath)

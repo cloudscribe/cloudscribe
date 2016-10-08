@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:				    2014-06-19
-// Last Modified:		    2016-06-03
+// Last Modified:		    2016-10-08
 // 
 
 using cloudscribe.Core.Models;
@@ -18,7 +18,7 @@ namespace cloudscribe.Core.Identity
     public sealed class RoleStore<TRole> : IRoleStore<TRole> where TRole : SiteRole
     {
         public RoleStore(
-            SiteSettings currentSite,
+            SiteContext currentSite,
             ILogger<RoleStore<TRole>> logger,
             IOptions<MultiTenantOptions> multiTenantOptionsAccessor,
             IUserCommands userCommands,
@@ -44,9 +44,9 @@ namespace cloudscribe.Core.Identity
         private ILogger log;
         private IUserCommands commands;
         private IUserQueries queries;
-        private ISiteSettings siteSettings = null;
+        private ISiteContext siteSettings = null;
         
-        private ISiteSettings Site
+        private ISiteContext Site
         {
             get { return siteSettings; }
         }

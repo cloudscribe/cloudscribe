@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2015-01-02
-// Last Modified:			2016-05-19
+// Last Modified:			2016-10-08
 // 
 
 using cloudscribe.Core.Models;
@@ -17,7 +17,7 @@ namespace cloudscribe.Core.Web.Controllers
     public static class Extensions
     {
         
-        public static RedirectResult RedirectToSiteRoot(this Controller controller, ISiteSettings site)
+        public static RedirectResult RedirectToSiteRoot(this Controller controller, ISiteContext site)
         {
             if(site.SiteFolderName.Length > 0)
             {

@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2015-07-27
-// Last Modified:			2016-10-03
+// Last Modified:			2016-10-08
 // 
 
 using cloudscribe.Core.Models;
@@ -46,7 +46,7 @@ namespace cloudscribe.Core.Identity
             // it needs to resolve options per tenant
             //await securityStampValidator.ValidateAsync(context);
 
-            var tenant = context.HttpContext.GetTenant<SiteSettings>();
+            var tenant = context.HttpContext.GetTenant<SiteContext>();
 
             if (tenant == null)
             {

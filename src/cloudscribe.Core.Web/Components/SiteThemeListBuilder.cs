@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 //  Author:                     Joe Audette
 //  Created:                    2015-10-09
-//	Last Modified:              2016-06-12
+//	Last Modified:              2016-10-08
 //
 
 using cloudscribe.Core.Models;
@@ -73,7 +73,7 @@ namespace cloudscribe.Core.Web.Components
                + "/themes/".Replace("/", Path.DirectorySeparatorChar.ToString());
             }
 
-            var tenant = contextAccessor.HttpContext.GetTenant<SiteSettings>();
+            var tenant = contextAccessor.HttpContext.GetTenant<SiteContext>();
             // TODO: more configurable?
             return appBasePath + "/sitefiles/" 
                 + tenant.AliasId

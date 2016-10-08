@@ -63,7 +63,7 @@ namespace cloudscribe.Core.IdentityServerIntegration
             if (context.Request.Path.StartsWithSegments(path)) return true;
             if(multiTenantOptions.Mode == MultiTenantMode.FolderName && !multiTenantOptions.UseRelatedSitesMode)
             {
-                var site = context.GetTenant<SiteSettings>();
+                var site = context.GetTenant<SiteContext>();
                 if(site != null && (!string.IsNullOrEmpty(site.SiteFolderName)))
                 {
                     var folderPath = "/" + site.SiteFolderName + path;

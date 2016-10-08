@@ -2,16 +2,14 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2015-07-22
-// Last Modified:			2016-02-03
+// Last Modified:			2016-10-08
 // 
 
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using cloudscribe.Core.Models;
 using cloudscribe.Messaging.Sms;
 using Microsoft.Extensions.Logging;
+using System;
+using System.Threading.Tasks;
 
 namespace cloudscribe.Core.Web.Components.Messaging
 {
@@ -25,7 +23,7 @@ namespace cloudscribe.Core.Web.Components.Messaging
         private ILogger log;
 
         public async Task SendSmsAsync(
-            ISiteSettings site,
+            ISiteContext site,
             string phoneNumber, 
             string message)
         {
@@ -61,7 +59,7 @@ namespace cloudscribe.Core.Web.Components.Messaging
                 
         }
 
-        private TwilioSmsCredentials GetCredentials(ISiteSettings site)
+        private TwilioSmsCredentials GetCredentials(ISiteContext site)
         {
             if(site == null) { return null; }
             if(string.IsNullOrWhiteSpace(site.SmsClientId)) { return null; }

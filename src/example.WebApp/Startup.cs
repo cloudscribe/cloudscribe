@@ -255,11 +255,11 @@ namespace example.WebApp
             
             app.UseRequestLocalization(localizationOptionsAccessor.Value);
 
-            app.UseMultitenancy<cloudscribe.Core.Models.SiteSettings>();
+            app.UseMultitenancy<cloudscribe.Core.Models.SiteContext>();
 
             var multiTenantOptions = multiTenantOptionsAccessor.Value;
 
-            app.UsePerTenant<cloudscribe.Core.Models.SiteSettings>((ctx, builder) =>
+            app.UsePerTenant<cloudscribe.Core.Models.SiteContext>((ctx, builder) =>
             {
                 // custom 404 and error page - this preserves the status code (ie 404)
                 if(string.IsNullOrEmpty(ctx.Tenant.SiteFolderName))

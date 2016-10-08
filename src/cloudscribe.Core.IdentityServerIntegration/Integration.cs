@@ -16,7 +16,7 @@ namespace cloudscribe.Core.IdentityServerIntegration
 
         private readonly IIdentityServerInteractionService _interaction;
 
-        public string EnsureFolderSegmentIfNeeded(ISiteSettings site, string returnUrl)
+        public string EnsureFolderSegmentIfNeeded(ISiteContext site, string returnUrl)
         {
             // only adjust if the return url is an endpoint url
             if (!IsEndpointReturnUrl(returnUrl)) return returnUrl;

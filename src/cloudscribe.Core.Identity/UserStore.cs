@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:				    2014-07-22
-// Last Modified:		    2016-05-18
+// Last Modified:		    2016-10-08
 // 
 
 using cloudscribe.Core.Models;
@@ -35,7 +35,7 @@ namespace cloudscribe.Core.Identity
         private UserStore() { }
 
         public UserStore(
-            SiteSettings currentSite,
+            SiteContext currentSite,
             ILogger<UserStore<TUser>> logger,
             IUserCommands userCommands,
             IUserQueries userQueries,
@@ -65,10 +65,10 @@ namespace cloudscribe.Core.Identity
 
         private ILogger log;
         private bool debugLog = false;
-        private ISiteSettings _siteSettings = null;
+        private ISiteContext _siteSettings = null;
         private MultiTenantOptions multiTenantOptions;
         
-        private ISiteSettings siteSettings
+        private ISiteContext siteSettings
         {
             get { return _siteSettings; }
         }
