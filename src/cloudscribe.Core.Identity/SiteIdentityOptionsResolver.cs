@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette/Derek Gray
 // Created:				    2016-05-04
-// Last Modified:		    2016-06-20
+// Last Modified:		    2016-10-08
 // 
 
 using cloudscribe.Core.Models;
@@ -41,7 +41,7 @@ namespace cloudscribe.Core.Identity
             get
             {
                 var context = httpContextAccessor.HttpContext;
-                var tenant = context.GetTenant<SiteSettings>();
+                var tenant = context.GetTenant<SiteContext>();
                 var identityOptions = new IdentityOptions();
 
                 identityOptions.Tokens = tokenOptions;
@@ -72,7 +72,7 @@ namespace cloudscribe.Core.Identity
             }
         }
 
-        private void SetupAppCookie(CookieAuthenticationOptions options, string scheme, SiteSettings tenant)
+        private void SetupAppCookie(CookieAuthenticationOptions options, string scheme, SiteContext tenant)
         {
             if(multiTenantOptions.UseRelatedSitesMode)
             {
@@ -103,7 +103,7 @@ namespace cloudscribe.Core.Identity
             options.AutomaticChallenge = true;
         }
 
-        private void SetupOtherCookies(CookieAuthenticationOptions options, string scheme, SiteSettings tenant)
+        private void SetupOtherCookies(CookieAuthenticationOptions options, string scheme, SiteContext tenant)
         {
             if (multiTenantOptions.UseRelatedSitesMode)
             {

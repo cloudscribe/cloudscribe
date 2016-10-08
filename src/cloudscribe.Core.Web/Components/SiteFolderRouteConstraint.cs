@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2015-06-19
-// Last Modified:			2016-05-18
+// Last Modified:			2016-10-08
 // 
 
 using cloudscribe.Core.Models;
@@ -32,7 +32,7 @@ namespace cloudscribe.Core.Web.Components
         {
             string requestFolder = httpContext.Request.Path.StartingSegment();
 
-            var tenant = httpContext.GetTenant<SiteSettings>();
+            var tenant = httpContext.GetTenant<SiteContext>();
 
             if (tenant != null)
             {

@@ -19,6 +19,8 @@ https://identityserver4.readthedocs.io/en/dev/intro/big_picture.html
 
 https://identityserver4.readthedocs.io/en/dev/quickstarts/6_aspnet_identity.html
 
+http://andrewlock.net/an-introduction-to-openid-connect-in-asp-net-core/
+
 https://blogs.msdn.microsoft.com/webdev/2016/09/19/introducing-identityserver4-for-authentication-and-access-control-in-asp-net-core/
 
 https://identityserver4.readthedocs.io/en/dev/quickstarts/0_overview.html

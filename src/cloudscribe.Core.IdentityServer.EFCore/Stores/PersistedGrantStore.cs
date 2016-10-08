@@ -22,7 +22,7 @@ namespace cloudscribe.Core.IdentityServer.EFCore.Stores
         private string _siteId;
 
         public PersistedGrantStore(
-            SiteSettings site,
+            SiteContext site,
             IPersistedGrantDbContext context, 
             ILogger<PersistedGrantStore> logger)
         {

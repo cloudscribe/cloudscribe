@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2014-12-08
-// Last Modified:			2016-08-11
+// Last Modified:			2016-10-08
 // 
 
 using cloudscribe.Core.Identity;
@@ -69,11 +69,11 @@ namespace cloudscribe.Core.Web.Controllers
             int pageSize = -1
             )
         {
-            ISiteSettings selectedSite;
+            ISiteContext selectedSite;
             // only server admin site can edit other sites settings
             if ((siteId.HasValue) && (siteId.Value != Guid.Empty) && (siteId.Value != siteManager.CurrentSite.Id) && (siteManager.CurrentSite.IsServerAdminSite))
             {
-                selectedSite = await siteManager.Fetch(siteId.Value);
+                selectedSite = await siteManager.Fetch(siteId.Value) as ISiteContext;
                 ViewData["Title"] = string.Format(CultureInfo.CurrentUICulture, sr["{0} - User Management"], selectedSite.SiteName);
             }
             else
@@ -119,11 +119,11 @@ namespace cloudscribe.Core.Web.Controllers
             int pageNumber = 1,
             int pageSize = -1)
         {
-            ISiteSettings selectedSite;
+            ISiteContext selectedSite;
             // only server admin site can edit other sites settings
             if ((siteId.HasValue) && (siteId.Value != Guid.Empty) && (siteId.Value != siteManager.CurrentSite.Id) && (siteManager.CurrentSite.IsServerAdminSite))
             {
-                selectedSite = await siteManager.Fetch(siteId.Value);
+                selectedSite = await siteManager.Fetch(siteId.Value) as ISiteContext;
             }
             else
             {
@@ -166,11 +166,11 @@ namespace cloudscribe.Core.Web.Controllers
             Guid? siteId,
             string ipQuery = "")
         {
-            ISiteSettings selectedSite;
+            ISiteContext selectedSite;
             // only server admin site can edit other sites settings
             if ((siteId.HasValue) && (siteId.Value != Guid.Empty) && (siteId.Value != siteManager.CurrentSite.Id) && (siteManager.CurrentSite.IsServerAdminSite))
             {
-                selectedSite = await siteManager.Fetch(siteId.Value);
+                selectedSite = await siteManager.Fetch(siteId.Value) as ISiteContext;
             }
             else
             {
@@ -203,11 +203,11 @@ namespace cloudscribe.Core.Web.Controllers
             int pageNumber = 1,
             int pageSize = -1)
         {
-            ISiteSettings selectedSite;
+            ISiteContext selectedSite;
             // only server admin site can edit other sites settings
             if ((siteId.HasValue) && (siteId.Value != Guid.Empty) && (siteId.Value != siteManager.CurrentSite.Id) && (siteManager.CurrentSite.IsServerAdminSite))
             {
-                selectedSite = await siteManager.Fetch(siteId.Value);
+                selectedSite = await siteManager.Fetch(siteId.Value) as ISiteContext;
             }
             else
             {
@@ -248,11 +248,11 @@ namespace cloudscribe.Core.Web.Controllers
             int pageNumber = 1,
             int pageSize = -1)
         {
-            ISiteSettings selectedSite;
+            ISiteContext selectedSite;
             // only server admin site can edit other sites settings
             if ((siteId.HasValue) && (siteId.Value != Guid.Empty) && (siteId.Value != siteManager.CurrentSite.Id) && (siteManager.CurrentSite.IsServerAdminSite))
             {
-                selectedSite = await siteManager.Fetch(siteId.Value);
+                selectedSite = await siteManager.Fetch(siteId.Value) as ISiteContext;
             }
             else
             {
@@ -292,11 +292,11 @@ namespace cloudscribe.Core.Web.Controllers
         public async Task<ActionResult> NewUser(
             Guid? siteId)
         {
-            ISiteSettings selectedSite;
+            ISiteContext selectedSite;
             // only server admin site can edit other sites settings
             if ((siteId.HasValue) && (siteId.Value != Guid.Empty) && (siteId.Value != siteManager.CurrentSite.Id) && (siteManager.CurrentSite.IsServerAdminSite))
             {
-                selectedSite = await siteManager.Fetch(siteId.Value);
+                selectedSite = await siteManager.Fetch(siteId.Value) as ISiteContext;
                 ViewData["Title"] = string.Format(CultureInfo.CurrentUICulture, sr["{0} - New User"], selectedSite.SiteName);
             }
             else
@@ -315,11 +315,11 @@ namespace cloudscribe.Core.Web.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> NewUser(NewUserViewModel model)
         {
-            ISiteSettings selectedSite;
+            ISiteContext selectedSite;
             // only server admin site can edit other sites settings
             if ((model.SiteId != siteManager.CurrentSite.Id) && (model.SiteId != Guid.Empty) && (siteManager.CurrentSite.IsServerAdminSite))
             {
-                selectedSite = await siteManager.Fetch(model.SiteId);
+                selectedSite = await siteManager.Fetch(model.SiteId) as ISiteContext;
             }
             else
             {
@@ -373,11 +373,11 @@ namespace cloudscribe.Core.Web.Controllers
             }
 
             ViewData["ReturnUrl"] = Request.Path + Request.QueryString;
-            ISiteSettings selectedSite;
+            ISiteContext selectedSite;
             // only server admin site can edit other sites settings
             if ((siteId.HasValue) && (siteId.Value != Guid.Empty) && (siteId.Value != siteManager.CurrentSite.Id) && (siteManager.CurrentSite.IsServerAdminSite))
             {
-                selectedSite = await siteManager.Fetch(siteId.Value);
+                selectedSite = await siteManager.Fetch(siteId.Value) as ISiteContext;
                 ViewData["Title"] = string.Format(CultureInfo.CurrentUICulture, sr["{0} - Manage User"], selectedSite.SiteName);
             }
             else
@@ -439,11 +439,11 @@ namespace cloudscribe.Core.Web.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> UserEdit(EditUserViewModel model)
         {
-            ISiteSettings selectedSite;
+            ISiteContext selectedSite;
             // only server admin site can edit other sites settings
             if ((model.SiteId != siteManager.CurrentSite.Id) && (model.SiteId != Guid.Empty) && (siteManager.CurrentSite.IsServerAdminSite))
             {
-                selectedSite = await siteManager.Fetch(model.SiteId);
+                selectedSite = await siteManager.Fetch(model.SiteId) as ISiteContext;
             }
             else
             {
@@ -511,7 +511,7 @@ namespace cloudscribe.Core.Web.Controllers
             bool sendApprovalEmail,
             string returnUrl = null)
         {
-            var selectedSite = await siteManager.Fetch(siteId);
+            var selectedSite = await siteManager.Fetch(siteId) as ISiteContext;
 
             if (
                 (selectedSite != null)
@@ -583,7 +583,7 @@ namespace cloudscribe.Core.Web.Controllers
             string claimType, 
             string claimValue)
         {
-            ISiteSettings selectedSite;
+            ISiteContext selectedSite;
             // only server admin site can edit other sites settings
             //if ((siteId != siteManager.CurrentSite.Id) && (siteId != Guid.Empty) && (siteManager.CurrentSite.IsServerAdminSite))
             //{
@@ -618,7 +618,7 @@ namespace cloudscribe.Core.Web.Controllers
             string claimType,
             string claimValue)
         {
-            ISiteSettings selectedSite;
+            ISiteContext selectedSite;
             // only server admin site can edit other sites settings
             //if ((siteId != siteManager.CurrentSite.Id) && (siteId != Guid.Empty) && (siteManager.CurrentSite.IsServerAdminSite))
             //{

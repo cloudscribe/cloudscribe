@@ -24,7 +24,7 @@ namespace cloudscribe.Core.IdentityServerIntegration
         private readonly IScopeStore _scopeStore;
         private readonly IIdentityServerInteractionService _interaction;
         private readonly IIdentityServerIntegration identityServerIntegration;
-        private readonly SiteSettings _site;
+        private readonly SiteContext _site;
 
         public ConsentController(
             ILogger<ConsentController> logger,
@@ -32,7 +32,7 @@ namespace cloudscribe.Core.IdentityServerIntegration
             IClientStore clientStore,
             IScopeStore scopeStore,
             IIdentityServerIntegration identityServerIntegration,
-            SiteSettings currentSite
+            SiteContext currentSite
             )
         {
             _logger = logger;

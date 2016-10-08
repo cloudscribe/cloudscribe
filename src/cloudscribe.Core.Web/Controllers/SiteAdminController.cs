@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2014-10-26
-// Last Modified:			2016-08-28
+// Last Modified:			2016-10-08
 // 
 
 using cloudscribe.Core.Models;
@@ -115,11 +115,11 @@ namespace cloudscribe.Core.Web.Controllers
             int slp = 1)
         {
             
-            ISiteSettings selectedSite;
+            ISiteContext selectedSite;
             // only server admin site can edit other sites settings
             if ((siteId.HasValue) && (siteId.Value != Guid.Empty) && (siteId.Value != siteManager.CurrentSite.Id) && (siteManager.CurrentSite.IsServerAdminSite))
             {
-                selectedSite = await siteManager.Fetch(siteId.Value);
+                selectedSite = await siteManager.Fetch(siteId.Value) as ISiteContext;
                 ViewData["Title"] = string.Format(CultureInfo.CurrentUICulture, sr["{0} - Settings"], selectedSite.SiteName);
             }
             else
@@ -204,7 +204,7 @@ namespace cloudscribe.Core.Web.Controllers
             ISiteSettings selectedSite = null;
             if (model.SiteId == siteManager.CurrentSite.Id)
             {
-                selectedSite = siteManager.CurrentSite;
+                selectedSite = await siteManager.GetCurrentSiteSettings();
                 ViewData["Title"] = sr["Site Settings"];
             }
             else if (siteManager.CurrentSite.IsServerAdminSite)
@@ -466,7 +466,7 @@ namespace cloudscribe.Core.Web.Controllers
             }
             else
             {
-                selectedSite = siteManager.CurrentSite;
+                selectedSite = await siteManager.GetCurrentSiteSettings();
                 ViewData["Title"] = sr["Company Info"];
             }
             
@@ -524,7 +524,7 @@ namespace cloudscribe.Core.Web.Controllers
             ISiteSettings selectedSite = null;
             if (model.SiteId == siteManager.CurrentSite.Id)
             {
-                selectedSite = siteManager.CurrentSite;
+                selectedSite = await siteManager.GetCurrentSiteSettings();
                 ViewData["Title"] = sr["Company Info"];
             }
             else if (siteManager.CurrentSite.IsServerAdminSite)
@@ -593,7 +593,7 @@ namespace cloudscribe.Core.Web.Controllers
             }
             else
             {
-                selectedSite = siteManager.CurrentSite;
+                selectedSite = await siteManager.GetCurrentSiteSettings();
                 ViewData["Title"] = sr["Email Settings"];
             }
 
@@ -620,7 +620,7 @@ namespace cloudscribe.Core.Web.Controllers
             ISiteSettings selectedSite = null;
             if (model.SiteId == siteManager.CurrentSite.Id)
             {
-                selectedSite = siteManager.CurrentSite;
+                selectedSite = await siteManager.GetCurrentSiteSettings();
                 ViewData["Title"] = sr["Email Settings"];
             }
             else if (siteManager.CurrentSite.IsServerAdminSite)
@@ -691,7 +691,7 @@ namespace cloudscribe.Core.Web.Controllers
             }
             else
             {
-                selectedSite = siteManager.CurrentSite;
+                selectedSite = await siteManager.GetCurrentSiteSettings();
                 ViewData["Title"] = sr["SMS Settings"];
             }
 
@@ -712,7 +712,7 @@ namespace cloudscribe.Core.Web.Controllers
             ISiteSettings selectedSite = null;
             if (model.SiteId == siteManager.CurrentSite.Id)
             {
-                selectedSite = siteManager.CurrentSite;
+                selectedSite = await siteManager.GetCurrentSiteSettings();
                 ViewData["Title"] = sr["SMS Settings"];
             }
             else if (siteManager.CurrentSite.IsServerAdminSite)
@@ -772,7 +772,7 @@ namespace cloudscribe.Core.Web.Controllers
             }
             else
             {
-                selectedSite = siteManager.CurrentSite;
+                selectedSite = await siteManager.GetCurrentSiteSettings();
                 ViewData["Title"] = sr["Security Settings"];
             }
 
@@ -803,7 +803,7 @@ namespace cloudscribe.Core.Web.Controllers
             ISiteSettings selectedSite = null;
             if (model.SiteId == siteManager.CurrentSite.Id)
             {
-                selectedSite = siteManager.CurrentSite;
+                selectedSite = await siteManager.GetCurrentSiteSettings();
                 ViewData["Title"] = "Security Settings";
             }
             else if (siteManager.CurrentSite.IsServerAdminSite)
@@ -872,7 +872,7 @@ namespace cloudscribe.Core.Web.Controllers
             }
             else
             {
-                selectedSite = siteManager.CurrentSite;
+                selectedSite = await siteManager.GetCurrentSiteSettings();
                 ViewData["Title"] = sr["Captcha Settings"];
             }
             
@@ -895,7 +895,7 @@ namespace cloudscribe.Core.Web.Controllers
             ISiteSettings selectedSite = null;
             if (model.SiteId == siteManager.CurrentSite.Id)
             {
-                selectedSite = siteManager.CurrentSite;
+                selectedSite = await siteManager.GetCurrentSiteSettings();
                 ViewData["Title"] = sr["Captcha Settings"];
             }
             else if (siteManager.CurrentSite.IsServerAdminSite)
@@ -957,7 +957,7 @@ namespace cloudscribe.Core.Web.Controllers
             }
             else
             {
-                selectedSite = siteManager.CurrentSite;
+                selectedSite = await siteManager.GetCurrentSiteSettings();
                 ViewData["Title"] = sr["Social Login Settings"];
             }
             
@@ -985,7 +985,7 @@ namespace cloudscribe.Core.Web.Controllers
             ISiteSettings selectedSite = null;
             if (model.SiteId == siteManager.CurrentSite.Id)
             {
-                selectedSite = siteManager.CurrentSite;
+                selectedSite = await siteManager.GetCurrentSiteSettings();
                 ViewData["Title"] = sr["Social Login Settings"];
             }
             else if (siteManager.CurrentSite.IsServerAdminSite)
@@ -1054,7 +1054,7 @@ namespace cloudscribe.Core.Web.Controllers
             }
             else
             {
-                selectedSite = siteManager.CurrentSite;
+                selectedSite = await siteManager.GetCurrentSiteSettings();
                 ViewData["Title"] = sr["Login Page Content"];
             }
             
@@ -1075,7 +1075,7 @@ namespace cloudscribe.Core.Web.Controllers
             ISiteSettings selectedSite = null;
             if (model.SiteId == siteManager.CurrentSite.Id)
             {
-                selectedSite = siteManager.CurrentSite;
+                selectedSite = await siteManager.GetCurrentSiteSettings();
                 ViewData["Title"] = sr["Login Page Content"];
             }
             else if (siteManager.CurrentSite.IsServerAdminSite)
@@ -1135,7 +1135,7 @@ namespace cloudscribe.Core.Web.Controllers
             }
             else
             {
-                selectedSite = siteManager.CurrentSite;
+                selectedSite = await siteManager.GetCurrentSiteSettings();
                 ViewData["Title"] = sr["Registration Page Content"];
             }
             
@@ -1157,7 +1157,7 @@ namespace cloudscribe.Core.Web.Controllers
             ISiteSettings selectedSite = null;
             if (model.SiteId == siteManager.CurrentSite.Id)
             {
-                selectedSite = siteManager.CurrentSite;
+                selectedSite = await siteManager.GetCurrentSiteSettings();
                 ViewData["Title"] = sr["Registration Page Content"];
             }
             else if (siteManager.CurrentSite.IsServerAdminSite)
@@ -1256,7 +1256,7 @@ namespace cloudscribe.Core.Web.Controllers
             }
             else
             {
-                selectedSite = siteManager.CurrentSite;
+                selectedSite = await siteManager.GetCurrentSiteSettings();
                 ViewData["Title"] = sr["Domain/Host Name Mappings"];
             }
 

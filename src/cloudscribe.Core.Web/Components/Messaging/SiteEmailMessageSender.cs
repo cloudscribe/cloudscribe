@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2015-08-11
-// Last Modified:			2016-06-24
+// Last Modified:			2016-10-08
 // 
 
 using cloudscribe.Core.Models;
@@ -37,7 +37,7 @@ namespace cloudscribe.Core.Web.Components.Messaging
         private IStringLocalizer sr;
         private ILogger log;
 
-        private SmtpOptions GetSmptOptions(ISiteSettings siteSettings)
+        private SmtpOptions GetSmptOptions(ISiteContext siteSettings)
         {
             if (string.IsNullOrWhiteSpace(siteSettings.SmtpServer)) { return null; }
 
@@ -54,7 +54,7 @@ namespace cloudscribe.Core.Web.Components.Messaging
         }
 
         public async Task SendAccountConfirmationEmailAsync(
-            ISiteSettings siteSettings,
+            ISiteContext siteSettings,
             string toAddress,
             string subject,
             string confirmationUrl)
@@ -92,7 +92,7 @@ namespace cloudscribe.Core.Web.Components.Messaging
         }
 
         public async Task SendPasswordResetEmailAsync(
-            ISiteSettings siteSettings,
+            ISiteContext siteSettings,
             string toAddress,
             string subject,
             string resetUrl)
@@ -136,7 +136,7 @@ namespace cloudscribe.Core.Web.Components.Messaging
         }
 
         public async Task SendSecurityCodeEmailAsync(
-            ISiteSettings siteSettings,
+            ISiteContext siteSettings,
             string toAddress,
             string subject,
             string securityCode)
@@ -174,7 +174,7 @@ namespace cloudscribe.Core.Web.Components.Messaging
         }
 
         public async Task AccountPendingApprovalAdminNotification(
-            ISiteSettings siteSettings,
+            ISiteContext siteSettings,
             ISiteUser user)
         {
             if (siteSettings.AccountApprovalEmailCsv.Length == 0) { return; }
@@ -215,7 +215,7 @@ namespace cloudscribe.Core.Web.Components.Messaging
         }
 
         public async Task SendAccountApprovalNotificationAsync(
-            ISiteSettings siteSettings,
+            ISiteContext siteSettings,
             string toAddress,
             string subject,
             string loginUrl)

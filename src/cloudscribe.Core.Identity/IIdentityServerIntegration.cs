@@ -15,7 +15,7 @@ namespace cloudscribe.Core.Identity
 
         Task<string> GetLogoutContextClientIdAsync(string logoutId);
 
-        string EnsureFolderSegmentIfNeeded(ISiteSettings site, string returnUrl);
+        string EnsureFolderSegmentIfNeeded(ISiteContext site, string returnUrl);
     }
 
     public class IdentityServerLogoutViewModel
@@ -47,7 +47,7 @@ namespace cloudscribe.Core.Identity
             throw new NotImplementedException();
         }
 
-        public string EnsureFolderSegmentIfNeeded(ISiteSettings site, string returnUrl)
+        public string EnsureFolderSegmentIfNeeded(ISiteContext site, string returnUrl)
         {
             return returnUrl;
         }

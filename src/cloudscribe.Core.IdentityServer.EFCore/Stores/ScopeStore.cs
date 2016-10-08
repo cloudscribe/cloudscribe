@@ -21,7 +21,7 @@ namespace cloudscribe.Core.IdentityServer.EFCore.Stores
         private string _siteId;
 
         public ScopeStore(
-            SiteSettings site,
+            SiteContext site,
             IConfigurationDbContext context
             )
         {

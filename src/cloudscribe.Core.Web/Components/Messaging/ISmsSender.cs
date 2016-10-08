@@ -8,6 +8,6 @@ namespace cloudscribe.Core.Web
 {
     public interface ISmsSender
     {
-        Task SendSmsAsync(ISiteSettings site, string number, string message);
+        Task SendSmsAsync(ISiteContext site, string number, string message);
     }
 }

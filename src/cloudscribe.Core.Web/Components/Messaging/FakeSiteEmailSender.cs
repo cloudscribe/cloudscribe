@@ -13,7 +13,7 @@ namespace cloudscribe.Core.Web.Components.Messaging
     {
 
         public Task SendAccountConfirmationEmailAsync(
-            ISiteSettings siteSettings,
+            ISiteContext siteSettings,
             string toAddress,
             string subject,
             string confirmationUrl)
@@ -22,7 +22,7 @@ namespace cloudscribe.Core.Web.Components.Messaging
         }
 
         public Task SendSecurityCodeEmailAsync(
-            ISiteSettings siteSettings,
+            ISiteContext siteSettings,
             string toAddress,
             string subject,
             string securityCode)
@@ -31,7 +31,7 @@ namespace cloudscribe.Core.Web.Components.Messaging
         }
 
         public Task SendPasswordResetEmailAsync(
-            ISiteSettings siteSettings,
+            ISiteContext siteSettings,
             string toAddress,
             string subject,
             string resetUrl)
@@ -40,14 +40,14 @@ namespace cloudscribe.Core.Web.Components.Messaging
         }
 
         public Task AccountPendingApprovalAdminNotification(
-            ISiteSettings siteSettings,
+            ISiteContext siteSettings,
             ISiteUser user)
         {
             return Task.FromResult(0);
         }
 
         public Task SendAccountApprovalNotificationAsync(
-            ISiteSettings siteSettings,
+            ISiteContext siteSettings,
             string toAddress,
             string subject,
             string loginUrl)

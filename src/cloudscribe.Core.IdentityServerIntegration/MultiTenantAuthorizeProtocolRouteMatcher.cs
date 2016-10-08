@@ -1,17 +1,13 @@
 ﻿using cloudscribe.Core.Models;
 using IdentityServer4.Hosting;
 using Microsoft.Extensions.Options;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace cloudscribe.Core.IdentityServerIntegration
 {
     public class MultiTenantAuthorizeProtocolRouteMatcher : IMatchAuthorizeProtocolRoutePaths
     {
         public MultiTenantAuthorizeProtocolRouteMatcher(
-            SiteSettings currentSite,
+            SiteContext currentSite,
             IOptions<MultiTenantOptions> multiTenantOptionsAccessor
             )
         {
@@ -20,7 +16,7 @@ namespace cloudscribe.Core.IdentityServerIntegration
         }
 
         private MultiTenantOptions multiTenantOptions;
-        private SiteSettings site;
+        private SiteContext site;
 
         public bool IsAuthorizePath(string requestPath)
         {

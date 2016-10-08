@@ -2,29 +2,26 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2016-08-02
-// Last Modified:			2016-08-02
+// Last Modified:			2016-10-08
 // 
 
 
 using cloudscribe.Core.Models;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
 namespace cloudscribe.Core.Storage.NoDb
 {
-   
+
     public class PerTenantNoDbProjectIdResolver
     {
         public PerTenantNoDbProjectIdResolver(
-            SiteSettings site)
+            SiteContext site)
         {
             this.site = site;
         }
 
-        private SiteSettings site;
+        private SiteContext site;
 
         public Task<string> ResolveProjectId(CancellationToken cancellationToken = default(CancellationToken))
         {
