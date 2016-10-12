@@ -19,6 +19,7 @@ https://medium.com/@cscalfani/so-you-want-to-be-a-functional-programmer-part-2-7
 https://medium.com/@cscalfani/so-you-want-to-be-a-functional-programmer-part-3-1b0fd14eb1a7#.oc8njnxbt
 https://medium.com/@cscalfani/so-you-want-to-be-a-functional-programmer-part-4-18fbe3ea9e49#.prcqec89k
 https://medium.com/@cscalfani/so-you-want-to-be-a-functional-programmer-part-5-c70adc9cf56a
+https://medium.com/@cscalfani/so-you-want-to-be-a-functional-programmer-part-6-db502830403
 
 Can programming be liberated from function abstraction?
 http://tomasp.net/blog/2016/no-functions/
@@ -49,6 +50,11 @@ Use Functions Instead of Simple Values
 Model Data Transformations as a Pipeline
 Extract Generic Functions
 https://vsavkin.com/functional-typescript-316f0e003dc6#.qxl03h4kc
+
+https://medium.com/@dogwith1eye/prefer-records-of-functions-to-interfaces-d6413af4d2c3#.4enqjlsak
+
+Explore stackoverflow data with F#
+https://www.youtube.com/watch?v=qlKZKN7il7c&feature=youtu.be&list=PLEx5khR4g7PIu7g3dXpwnGFdV69Wp-wce
 
 
 ## Resources

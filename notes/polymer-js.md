@@ -28,3 +28,11 @@ http://blog.nojaf.com/2015/05/02/testing-a-webcomponent-using-csharp-selenium/
 https://github.com/nojaf/SledgehammerSheep
 
 https://justmarkup.com/log/2016/08/indicating-offline/#grey-out-things-not-available-offline
+
+http://stackoverflow.com/questions/30837206/can-open-layer-3-be-used-as-a-web-component
+https://github.com/jumpinjackie/ol-polymer
+https://github.com/fherdom/idecanarias-ol3
+https://github.com/fredj/ol3-polymer
+https://github.com/oliverroick/map-components
+
+https://github.com/openlayers/ol3/issues/5435

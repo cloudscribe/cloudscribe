@@ -277,33 +277,26 @@ namespace example.WebApp
                     multiTenantOptions,
                     ctx.Tenant);
 
-                // todo how to make this multi tenant for folders?
+                // to make this multi tenant for folders
+                // using a fork of IdentityServer4 and hoping to get changes so we don't need a fork
                 // https://github.com/IdentityServer/IdentityServer4/issues/19
-                //https://github.com/IdentityServer/IdentityServer4/blob/dev/src/IdentityServer4/Configuration/IdentityServerApplicationBuilderExtensions.cs
-                //https://github.com/IdentityServer/IdentityServer4/blob/dev/src/IdentityServer4/Hosting/IdentityServerMiddleware.cs
-                // perhaps will need to plugin custom IEndpointRouter?
-                if (storage == "ef")
+
+                builder.UseIdentityServer();
+
+                // this sets up the authentication for apis within this application endpoint
+                // ie apis that are hosted in the same web app endpoint with the authority server
+                // this is not needed here if you are only using separate api endpoints
+                // it is needed in the startup of those separate endpoints
+                app.UseIdentityServerAuthentication(new IdentityServerAuthenticationOptions
                 {
-                    // with this uncommented it breaks folder tenants
-                    builder.UseIdentityServer();
+                    Authority = "https://localhost:44399",
+                    // using the site aliasid as the scope so each tenant has a different scope
+                    // you can view the aliasid from site settings
+                    // clients must be configured with the scope to have access to the apis for the tenant
+                    ScopeName = ctx.Tenant.AliasId, 
 
-                    // this sets up the authentication for apis within this endpoint
-                    // ie apis that are hosted in the same web app endpoint with the authority server
-                    // this is not needed here if you are only using separate api endpoints
-                    // it is needed in the startup of those separate endpoints
-                    app.UseIdentityServerAuthentication(new IdentityServerAuthenticationOptions
-                    {
-                        Authority = "https://localhost:44399",
-                        // using the site aliasid as the scope so each tenant has a different scope
-                        // you can view the aliasid from site settings
-                        // clients must be configured with the scope to have access to the apis for the tenant
-                        ScopeName = ctx.Tenant.AliasId, 
-
-                        RequireHttpsMetadata = true
-                    });
-
-                }
-
+                    RequireHttpsMetadata = true
+                });
 
 
             });
@@ -378,6 +371,13 @@ namespace example.WebApp
                     services.AddCloudscribeCoreNoDbStorage();
                     // only needed if using cloudscribe logging with NoDb storage
                     services.AddCloudscribeLoggingNoDbStorage(Configuration);
+
+                    services.AddIdentityServer()
+                        .AddCloudscribeCoreNoDbIdentityServerStorage()
+                        .AddCloudscribeIdentityServerIntegration<cloudscribe.Core.Models.SiteUser>()
+                        .SetTemporarySigningCredential()
+                        ;
+
                     break;
 
                 case "ef":
