@@ -215,6 +215,26 @@ namespace example.WebApp
             {
                 case "NoDb":
                     CoreNoDbStartup.InitializeDataAsync(app.ApplicationServices).Wait();
+
+                    // you can use this hack to add clients and scopes into the db since
+                    // there is currently no ui to do it
+                    // you should not use this on the first run that actually creates the initial cloudscribe data
+                    // you must wait until after that and then you can get the needed siteid from the database
+                    // this will only run at startup time and only add data if no data exists for the given site.
+                    // if you pass in an invalid siteid it will not fail, you will get data with a bad siteid
+                    // make note of your siteid, don't use these, these are from my NoDb storage
+                    // site1 05301194-da1d-43a8-9aa4-6c5f8959f37b
+                    // site2 a9e2c249-90b4-4770-9e99-9702d89f73b6
+                    // replace null with your siteid and run the app, then change it back to null since it can only be a one time task
+                    string sId = null;
+
+                    CloudscribeIdentityServerIntegrationNoDbStorage.InitializeDatabaseAsync(
+                        app.ApplicationServices,
+                        sId,
+                        GetClients(),
+                        GetScopes()
+                        ).Wait();
+
                     break;
 
                 case "ef":
@@ -446,9 +466,9 @@ namespace example.WebApp
 
                 new Scope
                 {
-                    Name = "s1",
-                    DisplayName = "Site 1 api access",
-                    Description = "Site1 APIs"
+                    Name = "s2",
+                    DisplayName = "Site 2 api access",
+                    Description = "Site2 APIs"
                 }
             };
         }
@@ -470,7 +490,7 @@ namespace example.WebApp
                     },
                     AllowedScopes = new List<string>
                     {
-                        "s1"
+                        "s2"
                     }
                 },
 
@@ -487,7 +507,7 @@ namespace example.WebApp
                     },
                     AllowedScopes = new List<string>
                     {
-                        "s1"
+                        "s2"
                     }
                 },
 
