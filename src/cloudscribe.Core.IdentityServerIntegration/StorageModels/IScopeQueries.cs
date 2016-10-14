@@ -14,11 +14,12 @@ namespace cloudscribe.Core.IdentityServerIntegration.StorageModels
 {
     public interface IScopeQueries
     {
-        Task<bool> ScopeExists(string scopeName, CancellationToken cancellationToken = default(CancellationToken));
-        Task<Scope> FetchScope(string scopeName, CancellationToken cancellationToken = default(CancellationToken));
-        Task<int> CountScopes(CancellationToken cancellationToken = default(CancellationToken));
+        Task<bool> ScopeExists(string siteId, string scopeName, CancellationToken cancellationToken = default(CancellationToken));
+        Task<Scope> FetchScope(string siteId, string scopeName, CancellationToken cancellationToken = default(CancellationToken));
+        Task<int> CountScopes(string siteId, CancellationToken cancellationToken = default(CancellationToken));
 
         Task<PagedResult<Scope>> GetScopes(
+            string siteId,
             int pageNumber,
             int pageSize,
             CancellationToken cancellationToken = default(CancellationToken));

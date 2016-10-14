@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0
 // Author:					Joe Audette
 // Created:					2016-10-13
-// Last Modified:			2016-10-13
+// Last Modified:			2016-10-14
 // 
 
 using IdentityServer4.Models;
@@ -13,8 +13,8 @@ namespace cloudscribe.Core.IdentityServerIntegration.StorageModels
 {
     public interface IScopeCommands
     {
-        Task CreateScope(Scope scope, CancellationToken cancellationToken = default(CancellationToken));
-        Task UpdateScope(Scope scope, CancellationToken cancellationToken = default(CancellationToken));
-        Task DeleteScope(Scope scope, CancellationToken cancellationToken = default(CancellationToken));
+        Task CreateScope(string siteId, Scope scope, CancellationToken cancellationToken = default(CancellationToken));
+        Task UpdateScope(string siteId, Scope scope, CancellationToken cancellationToken = default(CancellationToken));
+        Task DeleteScope(string siteId, string scopeName, CancellationToken cancellationToken = default(CancellationToken));
     }
 }

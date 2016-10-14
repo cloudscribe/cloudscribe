@@ -1,2 +1,65 @@
-﻿@model cloudscribe.Core.IdentityServerIntegration.Models.ConsentViewModel
-
+﻿@model cloudscribe.Core.IdentityServerIntegration.Models.ScopeListViewModel
+@using cloudscribe.Core.IdentityServerIntegration
+@using cloudscribe.Web.Pagination
+@using Microsoft.Extensions.Localization
+@addTagHelper "*, cloudscribe.Web.Pagination"
+@inject IStringLocalizer<CloudscribeIntegration> sr
+<h2>@sr["Resource Scope Management"]</h2>
+<p>@sr["Resource scopes identify web APIs (also called resource servers). To get access tokens for APIs, you need to register them as a scope."]</p>
+<div>
+    <table class="table table-striped">
+        <tr>
+            <th>
+                <a class="btn btn-xs btn-default" asp-action="NewScope" asp-controller="Scopes"
+                   asp-route-siteId="@Model.SiteId"
+                   bs-modal-link="true">@sr["New Scope"]</a>
+            </th>
+            <th>
+                @sr["Name"]
+            </th> 
+            <th>
+                @sr["Display Name"]
+            </th>
+            <th>
+                @sr["Description"]
+            </th>
+            <th>
+                @sr["Enabled"]
+            </th>
+        </tr>
+        @foreach (var s in Model.Scopes)
+            {
+            <tr>
+                <td>
+                    <form asp-controller="Scopes" asp-action="RemoveScope">
+                        <input name="SiteId" value="@Model.SiteId" type="hidden" />
+                        <input name="ScopeName" value="@s.Name" type="hidden" />
+                        <button type="submit"
+                                class="btn btn-danger btn-xs"
+                                onclick="javascript: return confirm('@Html.FormatValue(s.Name, sr["Are you sure you want to remove {0}?"])');">
+                            @sr["Remove"]
+                        </button>
+                    </form>
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => s.Name)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => s.DisplayName)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => s.Description)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => s.Enabled)
+                </td>
+            </tr>
+        }
+    </table>
+    <div>
+        <cs-pager cs-paging-info="@Model.Paging"
+                  asp-action="Index" asp-controller="Scopes"
+                  asp-route-siteId="@Model.SiteId" 
+                  asp-route-pagesize="@Model.Paging.ItemsPerPage"></cs-pager>
+    </div>
+</div>

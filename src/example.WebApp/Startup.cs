@@ -367,13 +367,13 @@ namespace example.WebApp
             {
                 options.AddCloudscribeCoreDefaultPolicies();
                 options.AddCloudscribeLoggingDefaultPolicy();
-                
-                //options.AddPolicy(
-                //    "SetupSystemPolicy",
-                //    authBuilder =>
-                //    {
-                //        authBuilder.RequireRole("ServerAdmins, Administrators");
-                //    });
+
+                options.AddPolicy(
+                    "IdentityServerAdminPolicy",
+                    authBuilder =>
+                    {
+                        authBuilder.RequireRole("Administrators");
+                    });
 
             });
 

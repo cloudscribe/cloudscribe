@@ -33,10 +33,11 @@ namespace cloudscribe.Core.IdentityServerIntegration.Services
         private CancellationToken CancellationToken => _context?.RequestAborted ?? CancellationToken.None;
 
         public async Task<PagedResult<Scope>> GetScopes(
+            string siteId,
             int pageNumber,
             int pageSize)
         {
-            return await _queries.GetScopes(pageNumber, pageSize, CancellationToken).ConfigureAwait(false);
+            return await _queries.GetScopes(siteId, pageNumber, pageSize, CancellationToken).ConfigureAwait(false);
         }
 
 
