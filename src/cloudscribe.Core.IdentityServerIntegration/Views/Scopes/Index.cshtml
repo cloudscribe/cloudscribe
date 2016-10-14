@@ -31,14 +31,17 @@
             {
             <tr>
                 <td>
-                    <form asp-controller="Scopes" asp-action="RemoveScope">
-                        <input name="SiteId" value="@Model.SiteId" type="hidden" />
-                        <input name="ScopeName" value="@s.Name" type="hidden" />
+                    <form asp-controller="Scopes" asp-action="DeleteScope">
+                        <a class="btn btn-xs btn-default" asp-action="EditScope" asp-controller="Scopes"
+                           asp-route-siteId="@Model.SiteId"
+                           asp-route-scopeName="@s.Name">@sr["Edit"]</a>
                         <button type="submit"
                                 class="btn btn-danger btn-xs"
-                                onclick="javascript: return confirm('@Html.FormatValue(s.Name, sr["Are you sure you want to remove {0}?"])');">
-                            @sr["Remove"]
+                                onclick="javascript: return confirm('@Html.FormatValue(s.Name, sr["Are you sure you want to delete {0}?"])');">
+                            @sr["Delete"]
                         </button>
+                        <input name="SiteId" value="@Model.SiteId" type="hidden" />
+                        <input name="ScopeName" value="@s.Name" type="hidden" />
                     </form>
                 </td>
                 <td>

@@ -76,5 +76,43 @@ namespace cloudscribe.Core.IdentityServerIntegration.Controllers
             return View(model);
         }
 
+        [HttpGet]
+        public async Task<IActionResult> EditScope(
+            Guid? siteId,
+            string scopeName = null)
+        {
+            ISiteContext selectedSite;
+            // only server admin site can edit other sites settings
+            if ((siteId.HasValue) && (siteId.Value != Guid.Empty) && (siteId.Value != siteManager.CurrentSite.Id) && (siteManager.CurrentSite.IsServerAdminSite))
+            {
+                selectedSite = await siteManager.Fetch(siteId.Value) as ISiteContext;      
+            }
+            else
+            {
+                selectedSite = siteManager.CurrentSite;     
+            }
+
+            if (string.IsNullOrEmpty(scopeName))
+            {
+                ViewData["Title"] = string.Format(CultureInfo.CurrentUICulture, sr["{0} - New Scope"], selectedSite.SiteName);
+            }
+            else
+            {
+                ViewData["Title"] = string.Format(CultureInfo.CurrentUICulture, sr["{0} - Edit Scope"], selectedSite.SiteName);
+            }
+
+            var model = new ScopeEditViewModel();
+            model.SiteId = selectedSite.Id.ToString();
+            if (!string.IsNullOrEmpty(scopeName))
+            {
+                var scope = await scopesManager.FetchScope(model.SiteId, scopeName);
+                model.CurrentScope = scope;
+            }
+            
+            return View(model);
+
+        }
+
+
     }
 }

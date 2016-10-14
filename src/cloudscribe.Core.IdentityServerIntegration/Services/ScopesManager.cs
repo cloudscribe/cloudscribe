@@ -40,6 +40,11 @@ namespace cloudscribe.Core.IdentityServerIntegration.Services
             return await _queries.GetScopes(siteId, pageNumber, pageSize, CancellationToken).ConfigureAwait(false);
         }
 
+        public async Task<Scope> FetchScope(string siteId, string scopeName, CancellationToken cancellationToken = default(CancellationToken))
+        {
+            return await _queries.FetchScope(siteId, scopeName, cancellationToken).ConfigureAwait(false);
+        }
+
 
 
     }
