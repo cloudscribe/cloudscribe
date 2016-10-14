@@ -16,7 +16,7 @@ namespace cloudscribe.Core.IdentityServerIntegration.Models
             Paging = new PaginationSettings();
         }
 
-        public Guid SiteId { get; set; } = Guid.Empty;
+        public string SiteId { get; set; } = string.Empty;
 
         public IList<Scope> Scopes { get; set; }
 

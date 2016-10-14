@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0
 // Author:					Joe Audette
 // Created:					2016-10-13
-// Last Modified:			2016-10-13
+// Last Modified:			2016-10-14
 // 
 
 using cloudscribe.Core.IdentityServerIntegration.StorageModels;
@@ -40,11 +40,25 @@ namespace cloudscribe.Core.IdentityServerIntegration.Services
             return await _queries.GetScopes(siteId, pageNumber, pageSize, CancellationToken).ConfigureAwait(false);
         }
 
-        public async Task<Scope> FetchScope(string siteId, string scopeName, CancellationToken cancellationToken = default(CancellationToken))
+        public async Task<Scope> FetchScope(string siteId, string scopeName)
         {
-            return await _queries.FetchScope(siteId, scopeName, cancellationToken).ConfigureAwait(false);
+            return await _queries.FetchScope(siteId, scopeName, CancellationToken).ConfigureAwait(false);
         }
 
+        public async Task CreateScope(string siteId, Scope scope)
+        {
+            await _commands.CreateScope(siteId, scope, CancellationToken.None).ConfigureAwait(false);
+        }
+
+        public async Task UpdateScope(string siteId, Scope scope)
+        {
+            await _commands.UpdateScope(siteId, scope, CancellationToken.None).ConfigureAwait(false);
+        }
+
+        public async Task DeleteScope(string siteId, string scopeName)
+        {
+            await _commands.DeleteScope(siteId, scopeName, CancellationToken.None).ConfigureAwait(false);
+        }
 
 
     }

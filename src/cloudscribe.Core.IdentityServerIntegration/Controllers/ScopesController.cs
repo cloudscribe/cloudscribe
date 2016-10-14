@@ -52,12 +52,12 @@ namespace cloudscribe.Core.IdentityServerIntegration.Controllers
             if ((siteId.HasValue) && (siteId.Value != Guid.Empty) && (siteId.Value != siteManager.CurrentSite.Id) && (siteManager.CurrentSite.IsServerAdminSite))
             {
                 selectedSite = await siteManager.Fetch(siteId.Value) as ISiteContext;
-                ViewData["Title"] = string.Format(CultureInfo.CurrentUICulture, sr["{0} - Resource Scope Management"], selectedSite.SiteName);
+                ViewData["Title"] = string.Format(CultureInfo.CurrentUICulture, sr["{0} - Scope Management"], selectedSite.SiteName);
             }
             else
             {
                 selectedSite = siteManager.CurrentSite;
-                ViewData["Title"] = sr["Resource Scope Management"];
+                ViewData["Title"] = sr["Scope Management"];
             }
 
             int itemsPerPage = 10;
@@ -66,6 +66,7 @@ namespace cloudscribe.Core.IdentityServerIntegration.Controllers
                 itemsPerPage = pageSize;
             }
             var model = new ScopeListViewModel();
+            model.SiteId = selectedSite.Id.ToString();
             var result = await scopesManager.GetScopes(selectedSite.Id.ToString(), pageNumber, itemsPerPage);
             model.Scopes = result.Data;
 
@@ -81,6 +82,8 @@ namespace cloudscribe.Core.IdentityServerIntegration.Controllers
             Guid? siteId,
             string scopeName = null)
         {
+            //TODO: validate modelstate
+
             ISiteContext selectedSite;
             // only server admin site can edit other sites settings
             if ((siteId.HasValue) && (siteId.Value != Guid.Empty) && (siteId.Value != siteManager.CurrentSite.Id) && (siteManager.CurrentSite.IsServerAdminSite))
@@ -110,6 +113,50 @@ namespace cloudscribe.Core.IdentityServerIntegration.Controllers
             }
             
             return View(model);
+
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> EditScope(ScopeItemViewModel scopeModel)
+        {
+            Guid siteId = siteManager.CurrentSite.Id;
+            if(!string.IsNullOrEmpty(scopeModel.SiteId) && scopeModel.SiteId.Length == 36)
+            {
+                siteId = new Guid(scopeModel.SiteId);
+            }
+            ISiteContext selectedSite;
+            // only server admin site can edit other sites settings
+            if ((siteId != Guid.Empty) && (siteId != siteManager.CurrentSite.Id) && (siteManager.CurrentSite.IsServerAdminSite))
+            {
+                selectedSite = await siteManager.Fetch(siteId) as ISiteContext;
+            }
+            else
+            {
+                selectedSite = siteManager.CurrentSite;
+            }
+
+            //if (string.IsNullOrEmpty(scopeModel.Name))
+            //{
+            //    ViewData["Title"] = string.Format(CultureInfo.CurrentUICulture, sr["{0} - New Scope"], selectedSite.SiteName);
+            //}
+            //else
+            //{
+            //    ViewData["Title"] = string.Format(CultureInfo.CurrentUICulture, sr["{0} - Edit Scope"], selectedSite.SiteName);
+            //}
+            var scope = await scopesManager.FetchScope(selectedSite.Id.ToString(), scopeModel.Name);
+            scope.AllowUnrestrictedIntrospection = scopeModel.AllowUnrestrictedIntrospection;
+            scope.ClaimsRule = scopeModel.ClaimsRule;
+            scope.Description = scopeModel.Description;
+            scope.DisplayName = scopeModel.DisplayName;
+            scope.Emphasize = scopeModel.Emphasize;
+            scope.Enabled = scopeModel.Enabled;
+            scope.IncludeAllClaimsForUser = scopeModel.IncludeAllClaimsForUser;
+            scope.Required = scopeModel.Required;
+            scope.ShowInDiscoveryDocument = scopeModel.ShowInDiscoveryDocument;
+            await scopesManager.UpdateScope(selectedSite.Id.ToString(), scope);
+
+
+            return RedirectToAction("Index");
 
         }
 

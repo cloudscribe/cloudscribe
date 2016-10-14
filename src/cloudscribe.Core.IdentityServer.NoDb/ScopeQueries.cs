@@ -69,7 +69,7 @@ namespace cloudscribe.Core.IdentityServer.NoDb
             var result = new PagedResult<Scope>();
             result.TotalItems = all.Count;
             result.Data = all
-                .OrderBy(x => x.Name)
+                .OrderBy(x => x.Type).ThenBy(x => x.Name)
                 .Skip(offset)
                 .Take(pageSize).ToList();
 
