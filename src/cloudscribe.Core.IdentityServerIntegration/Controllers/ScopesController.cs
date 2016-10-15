@@ -2,13 +2,15 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2016-10-13
-// Last Modified:			2016-10-14
+// Last Modified:			2016-10-15
 // 
 
 using cloudscribe.Core.IdentityServerIntegration.Models;
 using cloudscribe.Core.IdentityServerIntegration.Services;
 using cloudscribe.Core.Models;
 using cloudscribe.Core.Web.Components;
+using cloudscribe.Web.Common.Extensions;
+using IdentityServer4.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
@@ -119,6 +121,11 @@ namespace cloudscribe.Core.IdentityServerIntegration.Controllers
         [HttpPost]
         public async Task<IActionResult> EditScope(ScopeItemViewModel scopeModel)
         {
+            if (!ModelState.IsValid)
+            {
+                return RedirectToAction("EditScope", new { siteId = scopeModel.SiteId, scopeName = scopeModel.Name });
+            }
+
             Guid siteId = siteManager.CurrentSite.Id;
             if(!string.IsNullOrEmpty(scopeModel.SiteId) && scopeModel.SiteId.Length == 36)
             {
@@ -134,15 +141,7 @@ namespace cloudscribe.Core.IdentityServerIntegration.Controllers
             {
                 selectedSite = siteManager.CurrentSite;
             }
-
-            //if (string.IsNullOrEmpty(scopeModel.Name))
-            //{
-            //    ViewData["Title"] = string.Format(CultureInfo.CurrentUICulture, sr["{0} - New Scope"], selectedSite.SiteName);
-            //}
-            //else
-            //{
-            //    ViewData["Title"] = string.Format(CultureInfo.CurrentUICulture, sr["{0} - Edit Scope"], selectedSite.SiteName);
-            //}
+            
             var scope = await scopesManager.FetchScope(selectedSite.Id.ToString(), scopeModel.Name);
             scope.AllowUnrestrictedIntrospection = scopeModel.AllowUnrestrictedIntrospection;
             scope.ClaimsRule = scopeModel.ClaimsRule;
@@ -155,9 +154,72 @@ namespace cloudscribe.Core.IdentityServerIntegration.Controllers
             scope.ShowInDiscoveryDocument = scopeModel.ShowInDiscoveryDocument;
             await scopesManager.UpdateScope(selectedSite.Id.ToString(), scope);
 
+            var successFormat = sr["The Scope <b>{0}</b> was successfully updated."];
 
+            this.AlertSuccess(string.Format(successFormat, scope.Name), true);
+
+            return RedirectToAction("EditScope", new { siteId = selectedSite.Id.ToString(), scopeName = scope.Name });
+
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> NewScope(ScopeItemViewModel scopeModel)
+        {
+            if (!ModelState.IsValid)
+            {
+                return RedirectToAction("EditScope", new { siteId = scopeModel.SiteId, scopeName = scopeModel.Name });
+            }
+
+            Guid siteId = siteManager.CurrentSite.Id;
+            if (!string.IsNullOrEmpty(scopeModel.SiteId) && scopeModel.SiteId.Length == 36)
+            {
+                siteId = new Guid(scopeModel.SiteId);
+            }
+            ISiteContext selectedSite;
+            // only server admin site can edit other sites settings
+            if ((siteId != Guid.Empty) && (siteId != siteManager.CurrentSite.Id) && (siteManager.CurrentSite.IsServerAdminSite))
+            {
+                selectedSite = await siteManager.Fetch(siteId) as ISiteContext;
+            }
+            else
+            {
+                selectedSite = siteManager.CurrentSite;
+            }
+
+            var exists = await scopesManager.ScopeExists(selectedSite.Id.ToString(), scopeModel.Name);
+            var scopeType = scopesManager.ResolveScopeType(scopeModel.ScopeType);
+            if(exists || !scopeType.HasValue)
+            {
+                if(!exists) ModelState.AddModelError("scopeerror", sr["Scope name is already in use"]);
+                if(!scopeType.HasValue) ModelState.AddModelError("scopeerror", sr["Invalid Scope Type"]);
+
+                var model = new ScopeEditViewModel();
+                model.SiteId = selectedSite.Id.ToString();
+                return View("EditScope", model);
+            }
+
+            var scope = new Scope
+            {
+                Type = scopeType.Value,
+                Name = scopeModel.Name,
+                DisplayName = scopeModel.DisplayName,
+                Description = scopeModel.Description
+            };
+
+            await scopesManager.CreateScope(selectedSite.Id.ToString(), scope);
+
+            var successFormat = sr["The Scope <b>{0}</b> was successfully Created."];
+
+            this.AlertSuccess(string.Format(successFormat, scope.Name), true);
+
+            return RedirectToAction("EditScope", new { siteId = selectedSite.Id.ToString(), scopeName = scope.Name });
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> DeleteScope(Guid siteId, string scopeName)
+        {
+            await scopesManager.DeleteScope(siteId.ToString(), scopeName);
             return RedirectToAction("Index");
-
         }
 
 

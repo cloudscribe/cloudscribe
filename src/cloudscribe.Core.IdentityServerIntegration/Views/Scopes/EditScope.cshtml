@@ -8,7 +8,7 @@
 @if (Model.CurrentScope == null)
 {
     <h2>@sr["New Scope"]</h2>
-
+    await Html.RenderPartialAsync("NewScopePartial", Model);
 }
 else
 {
@@ -18,6 +18,12 @@ else
         <input name="Name" value="@Model.CurrentScope.Name" type="hidden" />
         <div class="form-horizontal">
             <div asp-validation-summary="All" class="text-danger"></div>
+            <div class="form-group">
+                <label class="col-md-2 control-label">@sr["Type"]</label>
+                <div class="col-md-10">
+                    <label class="form-control" >@Model.CurrentScope.Type</label>
+                </div>
+            </div>
             <div class="form-group">
                 <label for="DisplayName" class="col-md-2 control-label">@sr["Display Name"]</label>
                 <div class="col-md-10">
@@ -94,17 +100,15 @@ else
             <div class="form-group">
                 <div class="col-md-offset-2 col-md-10">
                     <button name="submit" type="submit" class="btn btn-default">@sr["Save"]</button>
+                    <a class="btn btn-default" asp-action="Index" asp-controller="Scopes"
+                       asp-route-siteId="@Model.SiteId">@sr["Cancel"]</a>
                 </div>
             </div>
         </div>
     </form>
-
-
-
     await Html.RenderPartialAsync("ScopeClaimsPartial", Model);
     await Html.RenderPartialAsync("ScopeSecretsPartial", Model);
 }
-
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial"); }
 }

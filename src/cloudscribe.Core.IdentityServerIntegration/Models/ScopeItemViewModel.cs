@@ -7,6 +7,8 @@ namespace cloudscribe.Core.IdentityServerIntegration.Models
         [Required]
         public string SiteId { get; set; }
 
+        public string ScopeType { get; set; }
+
         [Required]
         public string Name { get; set; }
         public string DisplayName { get; set; }

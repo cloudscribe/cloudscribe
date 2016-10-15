@@ -7,13 +7,13 @@
 <h2>@sr["Scope Management"]</h2>
 <p>@sr["Identity scopes request identity information (aka claims) about a user, e.g. his name or email address is modeled as a scope in OpenID Connect."]</p>
 <p>@sr["Resource scopes identify web APIs (also called resource servers). To get access tokens for APIs, you need to register them as a scope."]</p>
+<p>To learn more about scopes see the <a href="https://identityserver4.readthedocs.io/en/dev/configuration/scopes.html">IdentityServer Documentation</a></p>
 <div>
     <table class="table table-striped">
         <tr>
             <th>
                 <a class="btn btn-xs btn-default" asp-action="EditScope" asp-controller="Scopes"
-                   asp-route-siteId="@Model.SiteId"
-                   bs-modal-link="true">@sr["New Scope"]</a>
+                   asp-route-siteId="@Model.SiteId">@sr["New Scope"]</a>
             </th>
             <th>
                 @sr["Type"]

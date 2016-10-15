@@ -45,6 +45,11 @@ namespace cloudscribe.Core.IdentityServerIntegration.Services
             return await _queries.FetchScope(siteId, scopeName, CancellationToken).ConfigureAwait(false);
         }
 
+        public async Task<bool> ScopeExists(string siteId, string scopeName)
+        {
+            return await _queries.ScopeExists(siteId, scopeName, CancellationToken).ConfigureAwait(false);
+        }
+
         public async Task CreateScope(string siteId, Scope scope)
         {
             await _commands.CreateScope(siteId, scope, CancellationToken.None).ConfigureAwait(false);
@@ -58,6 +63,21 @@ namespace cloudscribe.Core.IdentityServerIntegration.Services
         public async Task DeleteScope(string siteId, string scopeName)
         {
             await _commands.DeleteScope(siteId, scopeName, CancellationToken.None).ConfigureAwait(false);
+        }
+
+        public ScopeType? ResolveScopeType(string scopeTypeName)
+        {
+            switch(scopeTypeName)
+            {
+                
+                case "Identity":
+                    return ScopeType.Identity;
+                case "Resources":
+                    return ScopeType.Resource;
+                
+            }
+
+            return null;
         }
 
 
