@@ -29,7 +29,8 @@
         "cloudscribe.Core.Identity": "1.0.0-*",
         "cloudscribe.Core.Web": "1.0.0-*",
         "cloudscribe.Web.Common": "1.0.0-*",
-        "cloudscribe.Web.Pagination": "1.0.2-*"
+        "cloudscribe.Web.Pagination": "1.0.2-*",
+        "cloudscribe.Web.Navigation": "1.0.2-*"
     },
 
     "frameworks": {

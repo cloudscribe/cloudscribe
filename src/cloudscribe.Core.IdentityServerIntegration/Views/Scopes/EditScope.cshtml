@@ -8,11 +8,11 @@
 @if (Model.CurrentScope == null)
 {
     <h2>@sr["New Scope"]</h2>
-    await Html.RenderPartialAsync("NewScopePartial", Model);
+    await Html.RenderPartialAsync("NewScopePartial", Model.NewScope);
 }
 else
 {
-    <h2>@sr["Edit Scope"] @Model.CurrentScope.Name</h2>
+    <h2>@sr["Edit Scope"]</h2>
     <form asp-controller="Scopes" asp-action="EditScope">
         <input asp-for="SiteId" type="hidden" />
         <input name="Name" value="@Model.CurrentScope.Name" type="hidden" />
@@ -22,6 +22,12 @@ else
                 <label class="col-md-2 control-label">@sr["Type"]</label>
                 <div class="col-md-10">
                     <label class="form-control" >@Model.CurrentScope.Type</label>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-md-2 control-label">@sr["Name"]</label>
+                <div class="col-md-10">
+                    <label class="form-control">@Model.CurrentScope.Name</label>
                 </div>
             </div>
             <div class="form-group">

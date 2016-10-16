@@ -1,4 +1,4 @@
-﻿@model cloudscribe.Core.IdentityServerIntegration.Models.ScopeEditViewModel
+﻿@model cloudscribe.Core.IdentityServerIntegration.Models.ScopeItemViewModel
 @using cloudscribe.Core.IdentityServerIntegration
 @using cloudscribe.Web.Pagination
 @using Microsoft.Extensions.Localization
@@ -8,37 +8,35 @@
     <input asp-for="SiteId" type="hidden" />
     <div class="form-horizontal">
         <div asp-validation-summary="All" class="text-danger"></div>
-        @Html.ValidationMessage("scopeerror", new { @class = "text-danger" })
         <div class="form-group">
             <label for="ScopeType" class="col-md-2 control-label">@sr["Name"]</label>
             <div class="col-md-10">
-                <select id="ScopeType" name="ScopeType">
+                <select asp-for="ScopeType">
                     <option value="Identity">Identity</option>
                     <option value="Resource">Resource</option>
                 </select>
+                @Html.ValidationMessage("invalidscopetypeerror", new { @class = "text-danger" })
             </div>
         </div>
         <div class="form-group">
             <label for="Name" class="col-md-2 control-label">@sr["Name"]</label>
             <div class="col-md-10">
-                <input class="form-control" name="Name"  />
+                <input class="form-control" asp-for="Name"  />
+                @Html.ValidationMessage("scopenameinuseerror", new { @class = "text-danger" })
             </div>
         </div>
         <div class="form-group">
             <label for="DisplayName" class="col-md-2 control-label">@sr["Display Name"]</label>
             <div class="col-md-10">
-                <input class="form-control" name="DisplayName"  />
+                <input class="form-control" asp-for="DisplayName"  />
             </div>
         </div>
         <div class="form-group">
             <label for="Description" class="col-md-2 control-label">@sr["Description"]</label>
             <div class="col-md-10">
-                <input class="form-control" name="Description"  />
+                <input class="form-control" asp-for="Description"  />
             </div>
-        </div>
-        
-        
-       
+        </div>  
         <div class="form-group">
             <div class="col-md-offset-2 col-md-10">
                 <button name="submit" type="submit" class="btn btn-default">@sr["Create"]</button>

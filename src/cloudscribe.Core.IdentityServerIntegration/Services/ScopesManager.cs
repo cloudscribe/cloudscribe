@@ -72,7 +72,7 @@ namespace cloudscribe.Core.IdentityServerIntegration.Services
                 
                 case "Identity":
                     return ScopeType.Identity;
-                case "Resources":
+                case "Resource":
                     return ScopeType.Resource;
                 
             }
