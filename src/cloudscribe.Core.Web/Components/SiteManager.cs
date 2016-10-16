@@ -78,7 +78,31 @@ namespace cloudscribe.Core.Web.Components
         {
             return await queries.Fetch(CurrentSite.Id, CancellationToken);
         }
-        
+
+        public async Task<ISiteContext> GetSiteForDataOperations(Guid? siteId)
+        {
+            if ((siteId.HasValue) && (siteId.Value != Guid.Empty) 
+                && (siteId.Value != CurrentSite.Id) 
+                && (CurrentSite.IsServerAdminSite))
+            {
+                return await Fetch(siteId.Value) as ISiteContext; 
+            }
+
+            return CurrentSite;
+        }
+
+        public async Task<ISiteSettings> GetSiteForEdit(Guid? siteId)
+        {
+            if ((siteId.HasValue) && (siteId.Value != Guid.Empty)
+                && (siteId.Value != CurrentSite.Id)
+                && (CurrentSite.IsServerAdminSite))
+            {
+                return await Fetch(siteId.Value);
+            }
+
+            return await Fetch(CurrentSite.Id);
+        }
+
         public Task<List<ISiteInfo>> GetPageOtherSites(
             Guid currentSiteId,
             int pageNumber,

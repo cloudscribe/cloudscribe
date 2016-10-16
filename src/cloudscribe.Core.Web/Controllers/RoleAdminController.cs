@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2014-12-06
-// Last Modified:			2016-10-08
+// Last Modified:			2016-10-16
 // 
 
 using cloudscribe.Core.Identity;
@@ -56,16 +56,14 @@ namespace cloudscribe.Core.Web.Controllers
             int pageNumber = 1, 
             int pageSize = -1)
         {
-            ISiteContext selectedSite;
+            var selectedSite = await siteManager.GetSiteForDataOperations(siteId);
             // only server admin site can edit other sites settings
-            if ((siteId.HasValue) && (siteId.Value != Guid.Empty) && (siteId.Value != siteManager.CurrentSite.Id) && (siteManager.CurrentSite.IsServerAdminSite))
+            if (selectedSite.Id != siteManager.CurrentSite.Id)
             {
-                selectedSite = await siteManager.Fetch(siteId.Value) as ISiteContext;
                 ViewData["Title"] = string.Format(CultureInfo.CurrentUICulture, sr["{0} - Role Management"], selectedSite.SiteName);
             }
             else
             {
-                selectedSite = siteManager.CurrentSite;
                 ViewData["Title"] = sr["Role Management"];
             }
             
@@ -110,16 +108,14 @@ namespace cloudscribe.Core.Web.Controllers
             int pageNumber = 1,
             int pageSize = -1)
         {
-            ISiteContext selectedSite;
+            var selectedSite = await siteManager.GetSiteForDataOperations(siteId);
             // only server admin site can edit other sites settings
-            if ((siteId.HasValue) && (siteId.Value != Guid.Empty) && (siteId.Value != siteManager.CurrentSite.Id) && (siteManager.CurrentSite.IsServerAdminSite))
-            {
-                selectedSite = await siteManager.Fetch(siteId.Value) as ISiteContext;
+            if (selectedSite.Id != siteManager.CurrentSite.Id)
+            { 
                 ViewData["Title"] = string.Format(CultureInfo.CurrentUICulture, sr["{0} - Role Management"], selectedSite.SiteName);
             }
             else
             {
-                selectedSite = siteManager.CurrentSite;
                 ViewData["Title"] = sr["Role Management"];
             }
 
@@ -162,16 +158,14 @@ namespace cloudscribe.Core.Web.Controllers
             Guid? siteId,
             Guid? roleId)
         {
-            ISiteContext selectedSite;
+            var selectedSite = await siteManager.GetSiteForDataOperations(siteId);
             // only server admin site can edit other sites settings
-            if ((siteId.HasValue) && (siteId.Value != Guid.Empty) && (siteId.Value != siteManager.CurrentSite.Id) && (siteManager.CurrentSite.IsServerAdminSite))
+            if (selectedSite.Id != siteManager.CurrentSite.Id)
             {
-                selectedSite = await siteManager.Fetch(siteId.Value) as ISiteContext;
                 ViewData["Title"] = string.Format(CultureInfo.CurrentUICulture, sr["{0} - New Role"], selectedSite.SiteName);
             }
             else
             {
-                selectedSite = siteManager.CurrentSite;
                 ViewData["Title"] = sr["New Role"];
             }
             
@@ -198,16 +192,14 @@ namespace cloudscribe.Core.Web.Controllers
         [Authorize(Policy = "RoleAdminPolicy")]
         public async Task<IActionResult> RoleEdit(RoleViewModel model, int returnPageNumber = 1)
         {
-            ISiteContext selectedSite;
+            var selectedSite = await siteManager.GetSiteForDataOperations(model.SiteId);
             // only server admin site can edit other sites settings
-            if ((model.SiteId != Guid.Empty) && (model.SiteId != siteManager.CurrentSite.Id) && (siteManager.CurrentSite.IsServerAdminSite))
+            if (selectedSite.Id != siteManager.CurrentSite.Id)
             {
-                selectedSite = await siteManager.Fetch(model.SiteId) as ISiteContext;
                 ViewData["Title"] = string.Format(CultureInfo.CurrentUICulture, sr["{0} - Edit Role"], selectedSite.SiteName);
             }
             else
             {
-                selectedSite = siteManager.CurrentSite;
                 ViewData["Title"] = sr["Edit Role"];
             }
             
@@ -252,17 +244,8 @@ namespace cloudscribe.Core.Web.Controllers
             Guid roleId, 
             int returnPageNumber = 1)
         {
-            ISiteContext selectedSite;
-            // only server admin site can edit other sites settings
-            if ((siteId.HasValue) && (siteId.Value != Guid.Empty) && (siteId.Value != siteManager.CurrentSite.Id) && (siteManager.CurrentSite.IsServerAdminSite))
-            {
-                selectedSite = await siteManager.Fetch(siteId.Value) as ISiteContext;   
-            }
-            else
-            {
-                selectedSite = siteManager.CurrentSite;  
-            }
-
+            var selectedSite = await siteManager.GetSiteForDataOperations(siteId);
+            
             var role = await RoleManager.FindByIdAsync(roleId.ToString());
             if (role != null && role.SiteId == selectedSite.Id && role.IsDeletable(setupOptions.RolesThatCannotBeDeleted))
             {
@@ -288,16 +271,14 @@ namespace cloudscribe.Core.Web.Controllers
             int pageNumber = 1,
             int pageSize = -1)
         {
-            ISiteContext selectedSite;
+            var selectedSite = await siteManager.GetSiteForDataOperations(siteId);
             // only server admin site can edit other sites settings
-            if ((siteId.HasValue) && (siteId.Value != Guid.Empty) && (siteId.Value != siteManager.CurrentSite.Id) && (siteManager.CurrentSite.IsServerAdminSite))
+            if (selectedSite.Id != siteManager.CurrentSite.Id)
             {
-                selectedSite = await siteManager.Fetch(siteId.Value) as ISiteContext;
                 ViewData["Title"] = string.Format(CultureInfo.CurrentUICulture, sr["{0} - Role Members"], selectedSite.SiteName);
             }
             else
             {
-                selectedSite = siteManager.CurrentSite;
                 ViewData["Title"] = sr["Role Members"];
             }
             
@@ -355,16 +336,14 @@ namespace cloudscribe.Core.Web.Controllers
             int pageSize = 0,
             bool ajaxGrid = false)
         {
-            ISiteContext selectedSite;
+            var selectedSite = await siteManager.GetSiteForDataOperations(siteId);
             // only server admin site can edit other sites settings
-            if ((siteId.HasValue) && (siteId.Value != Guid.Empty) && (siteId.Value != siteManager.CurrentSite.Id) && (siteManager.CurrentSite.IsServerAdminSite))
+            if (selectedSite.Id != siteManager.CurrentSite.Id)
             {
-                selectedSite = await siteManager.Fetch(siteId.Value) as ISiteContext;
                 ViewData["Title"] = string.Format(CultureInfo.CurrentUICulture, sr["{0} - Non Role Members"], selectedSite.SiteName);
             }
             else
             {
-                selectedSite = siteManager.CurrentSite;
                 ViewData["Title"] = sr["Non Role Members"];
             }
             
@@ -424,19 +403,8 @@ namespace cloudscribe.Core.Web.Controllers
             Guid roleId, 
             Guid userId)
         {
-            ISiteContext selectedSite;
-            // only server admin site can edit other sites settings
-            if ((siteId.HasValue) && (siteId.Value != Guid.Empty) && (siteId.Value != siteManager.CurrentSite.Id) && (siteManager.CurrentSite.IsServerAdminSite))
-            {
-                selectedSite = await siteManager.Fetch(siteId.Value) as ISiteContext;
-                
-            }
-            else
-            {
-                selectedSite = siteManager.CurrentSite;
-                
-            }
-
+            var selectedSite = await siteManager.GetSiteForDataOperations(siteId);
+            
             var user = await UserManager.Fetch(selectedSite.Id, userId);
 
             if (user != null)
@@ -463,17 +431,8 @@ namespace cloudscribe.Core.Web.Controllers
             Guid roleId, 
             Guid userId)
         {
-            ISiteContext selectedSite;
-            // only server admin site can edit other sites settings
-            if ((siteId.HasValue) && (siteId.Value != Guid.Empty) && (siteId.Value != siteManager.CurrentSite.Id) && (siteManager.CurrentSite.IsServerAdminSite))
-            {
-                selectedSite = await siteManager.Fetch(siteId.Value) as ISiteContext;
-            }
-            else
-            {
-                selectedSite = siteManager.CurrentSite;
-            }
-
+            var selectedSite = await siteManager.GetSiteForDataOperations(siteId);
+            
             var user = await UserManager.Fetch(selectedSite.Id, userId);
             if (user != null)
             {
