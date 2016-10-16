@@ -12,6 +12,7 @@ using cloudscribe.Core.IdentityServer.EFCore.Mappers;
 using IdentityServer4.Models;
 using IdentityServer4.Stores;
 using Microsoft.Extensions.Logging;
+using Microsoft.EntityFrameworkCore;
 
 namespace cloudscribe.Core.IdentityServer.EFCore.Stores
 {
@@ -31,7 +32,7 @@ namespace cloudscribe.Core.IdentityServer.EFCore.Stores
             _logger = logger;
         }
 
-        public Task StoreAsync(PersistedGrant token)
+        public async Task StoreAsync(PersistedGrant token)
         {
             var existing = _context.PersistedGrants.SingleOrDefault(x => x.SiteId == _siteId && x.Key == token.Key);
             if (existing == null)
@@ -47,14 +48,14 @@ namespace cloudscribe.Core.IdentityServer.EFCore.Stores
 
             try
             {
-                _context.SaveChanges();
+                await _context.SaveChangesAsync();
             }
             catch (Exception ex)
             {
                 _logger.LogError(0, ex, "StoreAsync");
             }
 
-            return Task.FromResult(0);
+            
         }
 
         public Task<PersistedGrant> GetAsync(string key)
@@ -65,48 +66,48 @@ namespace cloudscribe.Core.IdentityServer.EFCore.Stores
             return Task.FromResult(model);
         }
 
-        public Task<IEnumerable<PersistedGrant>> GetAllAsync(string subjectId)
+        public async Task<IEnumerable<PersistedGrant>> GetAllAsync(string subjectId)
         {
-            var persistedGrants = _context.PersistedGrants.Where(x => x.SiteId == _siteId && x.SubjectId == subjectId).ToList();
+            var persistedGrants = await _context.PersistedGrants
+                .Where(x => x.SiteId == _siteId && x.SubjectId == subjectId)
+                .ToListAsync();
+
             var model = persistedGrants.Select(x => x.ToModel());
 
-            return Task.FromResult(model);
+            return model;
         }
 
-        public Task RemoveAsync(string key)
+        public async Task RemoveAsync(string key)
         {
             var persistedGrant = _context.PersistedGrants.FirstOrDefault(x => x.SiteId == _siteId && x.Key == key);
             if (persistedGrant!= null)
             {
                 _context.PersistedGrants.Remove(persistedGrant);
-                _context.SaveChanges();
-            }
-
-            return Task.FromResult(0);
+                await _context.SaveChangesAsync();
+            } 
         }
 
-        public Task RemoveAllAsync(string subjectId, string clientId)
+        public async Task RemoveAllAsync(string subjectId, string clientId)
         {
-            var persistedGrants = _context.PersistedGrants.Where(x => x.SiteId == _siteId && x.SubjectId == subjectId && x.ClientId == clientId).ToList();
+            var persistedGrants = await _context.PersistedGrants
+                .Where(x => x.SiteId == _siteId && x.SubjectId == subjectId && x.ClientId == clientId)
+                .ToListAsync();
 
             _context.PersistedGrants.RemoveRange(persistedGrants);
-            _context.SaveChanges();
-
-            return Task.FromResult(0);
+            await _context.SaveChangesAsync();
+            
         }
 
-        public Task RemoveAllAsync(string subjectId, string clientId, string type)
+        public async Task RemoveAllAsync(string subjectId, string clientId, string type)
         {
-            var persistedGrants = _context.PersistedGrants.Where(x =>
+            var persistedGrants = await _context.PersistedGrants.Where(x =>
                 x.SiteId == _siteId &&
                 x.SubjectId == subjectId &&
                 x.ClientId == clientId &&
-                x.Type == type).ToList();
+                x.Type == type).ToListAsync();
 
             _context.PersistedGrants.RemoveRange(persistedGrants);
-            _context.SaveChanges();
-
-            return Task.FromResult(0);
+            await _context.SaveChangesAsync();
         }
     }
 }

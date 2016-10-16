@@ -1,10 +1,7 @@
 ﻿@model cloudscribe.Core.IdentityServerIntegration.Models.ScopeEditViewModel
 @using cloudscribe.Core.IdentityServerIntegration
-@using cloudscribe.Web.Pagination
 @using Microsoft.Extensions.Localization
-@addTagHelper "*, cloudscribe.Web.Pagination"
 @inject IStringLocalizer<CloudscribeIntegration> sr
-
 @if (Model.CurrentScope != null)
 {
     <div class="col-md-offset-2 col-md-10">

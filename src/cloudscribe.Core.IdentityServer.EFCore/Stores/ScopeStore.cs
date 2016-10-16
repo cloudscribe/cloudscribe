@@ -30,7 +30,7 @@ namespace cloudscribe.Core.IdentityServer.EFCore.Stores
             this.context = context;
         }
 
-        public Task<IEnumerable<Scope>> FindScopesAsync(IEnumerable<string> scopeNames)
+        public async Task<IEnumerable<Scope>> FindScopesAsync(IEnumerable<string> scopeNames)
         {
             IQueryable<Entities.Scope> scopes = context.Scopes
                 .Include(x => x.Claims)
@@ -41,13 +41,13 @@ namespace cloudscribe.Core.IdentityServer.EFCore.Stores
                 scopes = scopes.Where(x => x.SiteId == _siteId && scopeNames.Contains(x.Name));
             }
 
-            var foundScopes = scopes.ToList();
+            var foundScopes = await scopes.ToListAsync();
             var model = foundScopes.Select(x => x.ToModel());
 
-            return Task.FromResult(model);
+            return model;
         }
 
-        public Task<IEnumerable<Scope>> GetScopesAsync(bool publicOnly = true)
+        public async Task<IEnumerable<Scope>> GetScopesAsync(bool publicOnly = true)
         {
             IQueryable<Entities.Scope> scopes = context.Scopes
                 .Include(x => x.Claims)
@@ -62,10 +62,10 @@ namespace cloudscribe.Core.IdentityServer.EFCore.Stores
                 scopes = scopes.Where(x => x.SiteId == _siteId);
             }
 
-            var foundScopes = scopes.ToList();
+            var foundScopes = await scopes.ToListAsync();
             var model = foundScopes.Select(x => x.ToModel());
 
-            return Task.FromResult(model);
+            return model;
         }
     }
 }
