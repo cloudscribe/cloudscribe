@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:                  Joe Audette
 // Created:                 2016-10-12
-// Last Modified:           2016-10-12
+// Last Modified:           2016-10-14
 // 
 
 using cloudscribe.Core.Models;
@@ -34,8 +34,7 @@ namespace cloudscribe.Core.IdentityServer.NoDb
            
             if (scopeNames != null && scopeNames.Any())
             {
-                //TODO: cache
-                var allScopes = await _queries.GetAllAsync(_siteId).ConfigureAwait(false);
+                var allScopes = await GetAllScopes().ConfigureAwait(false);
                 var scopes = allScopes.Where(x => scopeNames.Contains(x.Name));
                 return scopes;
             }
@@ -45,8 +44,7 @@ namespace cloudscribe.Core.IdentityServer.NoDb
 
         public async Task<IEnumerable<Scope>> GetScopesAsync(bool publicOnly = true)
         {
-            //TODO: cache
-            var allScopes = await _queries.GetAllAsync(_siteId).ConfigureAwait(false);
+            var allScopes = await GetAllScopes().ConfigureAwait(false);
 
             if (publicOnly)
             {
@@ -56,6 +54,13 @@ namespace cloudscribe.Core.IdentityServer.NoDb
             return allScopes;
         }
 
+        private async Task<IEnumerable<Scope>> GetAllScopes()
+        {
+            //TODO: cache
+            var allScopes = await _queries.GetAllAsync(_siteId).ConfigureAwait(false);
+
+            return allScopes;
+        }
 
 
     }

@@ -5,9 +5,9 @@ using System.Threading.Tasks;
 
 namespace cloudscribe.Core.IdentityServerIntegration
 {
-    public class Integration : IIdentityServerIntegration
+    public class CloudscribeIntegration : IIdentityServerIntegration
     {
-        public Integration(
+        public CloudscribeIntegration(
             IIdentityServerInteractionService interaction
             )
         {

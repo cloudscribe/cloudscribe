@@ -1,6 +1,7 @@
 ﻿
 using cloudscribe.Core.Identity;
 using cloudscribe.Core.IdentityServerIntegration;
+using cloudscribe.Core.IdentityServerIntegration.Services;
 using cloudscribe.Core.Models;
 using IdentityModel;
 using IdentityServer4.Configuration;
@@ -29,7 +30,7 @@ namespace Microsoft.Extensions.DependencyInjection
         public static IIdentityServerBuilder AddCloudscribeIdentityServerIntegration<TUser>(this IIdentityServerBuilder builder, string authenticationScheme)
             where TUser : SiteUser
         {
-            builder.Services.AddScoped<IIdentityServerIntegration, Integration>();
+            builder.Services.AddScoped<IIdentityServerIntegration, CloudscribeIntegration>();
 
             builder.Services.Configure<IdentityServerOptions>(options =>
             {
@@ -61,6 +62,8 @@ namespace Microsoft.Extensions.DependencyInjection
             builder.Services.AddScoped<IMatchAuthorizeProtocolRoutePaths, MultiTenantAuthorizeProtocolRouteMatcher>();
             builder.Services.AddScoped<IMatchEndSessionProtocolRoutePaths, MultiTenantEndSessionProtocolRouteMatcher>();
 
+            builder.Services.AddScoped<ScopesManager, ScopesManager>();
+
             return builder;
         }
 
@@ -74,7 +77,7 @@ namespace Microsoft.Extensions.DependencyInjection
         public static RazorViewEngineOptions AddEmbeddedViewsForCloudscribeIdentityServerIntegration(this RazorViewEngineOptions options)
         {
             options.FileProviders.Add(new EmbeddedFileProvider(
-                    typeof(Integration).GetTypeInfo().Assembly,
+                    typeof(CloudscribeIntegration).GetTypeInfo().Assembly,
                     "cloudscribe.Core.IdentityServerIntegration"
                 ));
 

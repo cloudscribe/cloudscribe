@@ -6,6 +6,7 @@
 // 
 
 using cloudscribe.Core.IdentityServer.NoDb;
+using cloudscribe.Core.IdentityServerIntegration.StorageModels;
 using IdentityServer4.Models;
 using IdentityServer4.Services;
 using IdentityServer4.Stores;
@@ -35,6 +36,9 @@ namespace Microsoft.Extensions.DependencyInjection
             builder.Services.AddTransient<IClientStore, ClientStore>();
             builder.Services.AddTransient<IScopeStore, ScopeStore>();
             builder.Services.AddTransient<ICorsPolicyService, CorsPolicyService>();
+
+            builder.Services.AddTransient<IScopeQueries, ScopeQueries>();
+            builder.Services.AddTransient<IScopeCommands, ScopeCommands>();
 
             return builder;
         }
