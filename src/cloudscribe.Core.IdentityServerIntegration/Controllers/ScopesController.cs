@@ -7,18 +7,14 @@
 
 using cloudscribe.Core.IdentityServerIntegration.Models;
 using cloudscribe.Core.IdentityServerIntegration.Services;
-using cloudscribe.Core.Models;
 using cloudscribe.Core.Web.Components;
 using cloudscribe.Web.Common.Extensions;
 using cloudscribe.Web.Navigation;
 using IdentityServer4.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.Extensions.Localization;
-using Microsoft.Extensions.Options;
 using System;
-using System.Collections.Generic;
 using System.Globalization;
 using System.Threading.Tasks;
 
@@ -50,16 +46,14 @@ namespace cloudscribe.Core.IdentityServerIntegration.Controllers
             int pageSize = -1
             )
         {
-            ISiteContext selectedSite;
+            var selectedSite = await siteManager.GetSiteForDataOperations(siteId);
             // only server admin site can edit other sites settings
-            if ((siteId.HasValue) && (siteId.Value != Guid.Empty) && (siteId.Value != siteManager.CurrentSite.Id) && (siteManager.CurrentSite.IsServerAdminSite))
+            if (selectedSite.Id != siteManager.CurrentSite.Id)
             {
-                selectedSite = await siteManager.Fetch(siteId.Value) as ISiteContext;
                 ViewData["Title"] = string.Format(CultureInfo.CurrentUICulture, sr["{0} - Scope Management"], selectedSite.SiteName);
             }
             else
             {
-                selectedSite = siteManager.CurrentSite;
                 ViewData["Title"] = sr["Scope Management"];
             }
 
@@ -87,17 +81,8 @@ namespace cloudscribe.Core.IdentityServerIntegration.Controllers
         {
             //TODO: validate modelstate
 
-            ISiteContext selectedSite;
-            // only server admin site can edit other sites settings
-            if ((siteId.HasValue) && (siteId.Value != Guid.Empty) && (siteId.Value != siteManager.CurrentSite.Id) && (siteManager.CurrentSite.IsServerAdminSite))
-            {
-                selectedSite = await siteManager.Fetch(siteId.Value) as ISiteContext;      
-            }
-            else
-            {
-                selectedSite = siteManager.CurrentSite;     
-            }
-
+            var selectedSite = await siteManager.GetSiteForDataOperations(siteId);
+            
             if (!string.IsNullOrEmpty(scopeName))
             {
                 ViewData["Title"] = string.Format(CultureInfo.CurrentUICulture, sr["{0} - Edit Scope"], selectedSite.SiteName);
@@ -145,16 +130,7 @@ namespace cloudscribe.Core.IdentityServerIntegration.Controllers
             {
                 siteId = new Guid(scopeModel.SiteId);
             }
-            ISiteContext selectedSite;
-            // only server admin site can edit other sites settings
-            if ((siteId != Guid.Empty) && (siteId != siteManager.CurrentSite.Id) && (siteManager.CurrentSite.IsServerAdminSite))
-            {
-                selectedSite = await siteManager.Fetch(siteId) as ISiteContext;
-            }
-            else
-            {
-                selectedSite = siteManager.CurrentSite;
-            }
+            var selectedSite = await siteManager.GetSiteForDataOperations(siteId);
             
             var scope = await scopesManager.FetchScope(selectedSite.Id.ToString(), scopeModel.Name);
             scope.AllowUnrestrictedIntrospection = scopeModel.AllowUnrestrictedIntrospection;
@@ -189,16 +165,7 @@ namespace cloudscribe.Core.IdentityServerIntegration.Controllers
             {
                 siteId = new Guid(scopeModel.SiteId);
             }
-            ISiteContext selectedSite;
-            // only server admin site can edit other sites settings
-            if ((siteId != Guid.Empty) && (siteId != siteManager.CurrentSite.Id) && (siteManager.CurrentSite.IsServerAdminSite))
-            {
-                selectedSite = await siteManager.Fetch(siteId) as ISiteContext;
-            }
-            else
-            {
-                selectedSite = siteManager.CurrentSite;
-            }
+            var selectedSite = await siteManager.GetSiteForDataOperations(siteId);
 
             ViewData["Title"] = string.Format(CultureInfo.CurrentUICulture, sr["{0} - New Scope"], selectedSite.SiteName);
 
@@ -257,16 +224,7 @@ namespace cloudscribe.Core.IdentityServerIntegration.Controllers
             {
                 siteId = new Guid(scopeModel.SiteId);
             }
-            ISiteContext selectedSite;
-            // only server admin site can edit other sites settings
-            if ((siteId != Guid.Empty) && (siteId != siteManager.CurrentSite.Id) && (siteManager.CurrentSite.IsServerAdminSite))
-            {
-                selectedSite = await siteManager.Fetch(siteId) as ISiteContext;
-            }
-            else
-            {
-                selectedSite = siteManager.CurrentSite;
-            }
+            var selectedSite = await siteManager.GetSiteForDataOperations(siteId);
 
             var scope = await scopesManager.FetchScope(selectedSite.Id.ToString(), scopeModel.ScopeName);
             if(scope == null)
@@ -350,16 +308,7 @@ namespace cloudscribe.Core.IdentityServerIntegration.Controllers
             {
                 siteId = new Guid(scopeModel.SiteId);
             }
-            ISiteContext selectedSite;
-            // only server admin site can edit other sites settings
-            if ((siteId != Guid.Empty) && (siteId != siteManager.CurrentSite.Id) && (siteManager.CurrentSite.IsServerAdminSite))
-            {
-                selectedSite = await siteManager.Fetch(siteId) as ISiteContext;
-            }
-            else
-            {
-                selectedSite = siteManager.CurrentSite;
-            }
+            var selectedSite = await siteManager.GetSiteForDataOperations(siteId);
 
             var scope = await scopesManager.FetchScope(selectedSite.Id.ToString(), scopeModel.ScopeName);
             if (scope == null)
@@ -388,7 +337,9 @@ namespace cloudscribe.Core.IdentityServerIntegration.Controllers
         [HttpPost]
         public async Task<IActionResult> DeleteScopeSecret(Guid siteId, string scopeName, string secretValue)
         {
-            var scope = await scopesManager.FetchScope(siteId.ToString(), scopeName);
+            var selectedSite = await siteManager.GetSiteForDataOperations(siteId);
+
+            var scope = await scopesManager.FetchScope(selectedSite.Id.ToString(), scopeName);
             if (scope == null)
             {
                 this.AlertDanger(sr["Invalid request, scope not found."], true);
