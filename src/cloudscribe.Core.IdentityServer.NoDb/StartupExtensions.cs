@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:                  Joe Audette
 // Created:                 2016-10-12
-// Last Modified:           2016-10-12
+// Last Modified:           2016-10-17
 // 
 
 using cloudscribe.Core.IdentityServer.NoDb;
@@ -39,6 +39,9 @@ namespace Microsoft.Extensions.DependencyInjection
 
             builder.Services.AddTransient<IScopeQueries, ScopeQueries>();
             builder.Services.AddTransient<IScopeCommands, ScopeCommands>();
+
+            builder.Services.AddTransient<IClientQueries, ClientQueries>();
+            builder.Services.AddTransient<IClientCommands, ClientCommands>();
 
             return builder;
         }

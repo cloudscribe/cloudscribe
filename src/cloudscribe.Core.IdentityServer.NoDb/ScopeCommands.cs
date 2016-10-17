@@ -6,7 +6,6 @@
 // 
 
 using cloudscribe.Core.IdentityServerIntegration.StorageModels;
-using cloudscribe.Core.Models;
 using IdentityServer4.Models;
 using NoDb;
 using System.Threading;
@@ -17,19 +16,13 @@ namespace cloudscribe.Core.IdentityServer.NoDb
     public class ScopeCommands : IScopeCommands
     {
         public ScopeCommands(
-            //SiteContext site,
-            //IBasicQueries<Scope> queries,
             IBasicCommands<Scope> commands
             )
         {
-         //   _siteId = site.Id.ToString();
-        //    _queries = queries;
             _commands = commands;
         }
 
-       // private IBasicQueries<Scope> _queries;
         private IBasicCommands<Scope> _commands;
-        //private string _siteId;
 
         public async Task CreateScope(string siteId, Scope scope, CancellationToken cancellationToken = default(CancellationToken))
         {

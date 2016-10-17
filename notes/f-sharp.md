@@ -56,6 +56,9 @@ https://medium.com/@dogwith1eye/prefer-records-of-functions-to-interfaces-d6413a
 Explore stackoverflow data with F#
 https://www.youtube.com/watch?v=qlKZKN7il7c&feature=youtu.be&list=PLEx5khR4g7PIu7g3dXpwnGFdV69Wp-wce
 
+http://blog.stermon.com/articles/2016/10/05/data-structures-done-right
+
+https://medium.com/@dogwith1eye/prefer-records-of-functions-to-interfaces-d6413af4d2c3#.175bp2yee
 
 ## Resources
 

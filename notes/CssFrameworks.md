@@ -1,4 +1,8 @@
 
+icon set created in pure css
+http://cssicon.space/#/icon/S
+
+
 5 principles of modern css
 https://gist.github.com/alekseykulikov/68a5d6ddae569f6d0456b0e9d603e892
 
