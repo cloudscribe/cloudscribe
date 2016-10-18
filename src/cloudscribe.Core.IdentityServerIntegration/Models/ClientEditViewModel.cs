@@ -11,11 +11,14 @@ namespace cloudscribe.Core.IdentityServerIntegration.Models
         public ClientEditViewModel()
         {
             CurrentClient = new ClientItemViewModel();
+            NewClient = new NewClientViewModel();
         }
 
         public string SiteId { get; set; } = string.Empty;
 
         public ClientItemViewModel CurrentClient { get; set; }
+
+        public NewClientViewModel NewClient { get; set; }
 
 
 

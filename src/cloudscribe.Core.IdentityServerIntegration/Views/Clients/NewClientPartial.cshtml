@@ -1,45 +1,59 @@
-﻿@model cloudscribe.Core.IdentityServerIntegration.Models.ScopeItemViewModel
+﻿@model cloudscribe.Core.IdentityServerIntegration.Models.NewClientViewModel
 @using cloudscribe.Core.IdentityServerIntegration
 @using Microsoft.Extensions.Localization
 @inject IStringLocalizer<CloudscribeIntegration> sr
-<form asp-controller="Scopes" asp-action="NewScope">
+<form asp-controller="Clients" asp-action="NewClient">
     <input asp-for="SiteId" type="hidden" />
     <div class="form-horizontal">
         <div asp-validation-summary="All" class="text-danger"></div>
         <div class="form-group">
-            <label for="ScopeType" class="col-md-2 control-label">@sr["Name"]</label>
+            <label class="col-md-2 control-label">@sr["Id"]</label>
             <div class="col-md-10">
-                <select asp-for="ScopeType">
-                    <option value="Identity">Identity</option>
-                    <option value="Resource">Resource</option>
+                <input class="form-control" asp-for="ClientId" />
+                <span asp-validation-for="ClientId" class="text-danger"></span> 
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="ClientName" class="col-md-2 control-label">@sr["Name"]</label>
+            <div class="col-md-10">
+                <input class="form-control" asp-for="ClientName" />
+                <span asp-validation-for="ClientName" class="text-danger"></span> 
+            </div>
+        </div>
+        
+        <div class="form-group">
+            <label for="AccessTokenType" class="col-md-2 control-label">@sr["Access Token Type"]</label>
+            <div class="col-md-10">
+                <select asp-for="AccessTokenType">
+                    <option value="Jwt">Jwt</option>
+                    <option value="Reference">Reference</option>
                 </select>
-                @Html.ValidationMessage("invalidscopetypeerror", new { @class = "text-danger" })
             </div>
         </div>
         <div class="form-group">
-            <label for="Name" class="col-md-2 control-label">@sr["Name"]</label>
+            <label for="RefreshTokenExpiration" class="col-md-2 control-label">@sr["Refresh Token Expiration"]</label>
             <div class="col-md-10">
-                <input class="form-control" asp-for="Name"  />
-                @Html.ValidationMessage("scopenameinuseerror", new { @class = "text-danger" })
+                <select asp-for="RefreshTokenExpiration">
+                    <option value="Sliding">Sliding</option>
+                    <option value="Absolute">Absolute</option>
+                </select>
             </div>
         </div>
         <div class="form-group">
-            <label for="DisplayName" class="col-md-2 control-label">@sr["Display Name"]</label>
+            <label for="RefreshTokenUsage" class="col-md-2 control-label">@sr["Refresh Token Usage"]</label>
             <div class="col-md-10">
-                <input class="form-control" asp-for="DisplayName"  />
+                <select asp-for="RefreshTokenUsage">
+                    <option value="ReUse">ReUse</option>
+                    <option value="OneTimeOnly">OneTimeOnly</option>
+                </select>
             </div>
         </div>
-        <div class="form-group">
-            <label for="Description" class="col-md-2 control-label">@sr["Description"]</label>
-            <div class="col-md-10">
-                <input class="form-control" asp-for="Description"  />
-            </div>
-        </div>  
+        
         <div class="form-group">
             <div class="col-md-offset-2 col-md-10">
                 <button name="submit" type="submit" class="btn btn-default">@sr["Create"]</button>
-                <a class="btn btn-default" asp-action="Index" asp-controller="Scopes"
-                   asp-route-siteId="@Model.SiteId">@sr["Cancel"]</a>
+                <a class="btn btn-default" asp-action="Index" asp-controller="Clients"
+                   asp-route-siteId="SiteId">@sr["Cancel"]</a>
             </div>
         </div>
     </div>

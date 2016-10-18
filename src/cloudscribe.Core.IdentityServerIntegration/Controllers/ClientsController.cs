@@ -90,6 +90,7 @@ namespace cloudscribe.Core.IdentityServerIntegration.Controllers
 
             var model = new ClientEditViewModel();
             model.SiteId = selectedSite.Id.ToString();
+            model.NewClient.SiteId = model.SiteId;
             //model.NewScope.SiteId = model.SiteId;
             if (!string.IsNullOrEmpty(clientId))
             {
@@ -98,7 +99,7 @@ namespace cloudscribe.Core.IdentityServerIntegration.Controllers
             }
 
             if (model.CurrentClient == null)
-            {
+            { 
                 ViewData["Title"] = string.Format(CultureInfo.CurrentUICulture, sr["{0} - New Client"], selectedSite.SiteName);
                 var currentCrumbAdjuster = new NavigationNodeAdjuster(Request.HttpContext);
                 currentCrumbAdjuster.KeyToAdjust = "EditClient";
@@ -183,6 +184,53 @@ namespace cloudscribe.Core.IdentityServerIntegration.Controllers
             this.AlertSuccess(string.Format(successFormat, client.ClientId), true);
 
             return RedirectToAction("EditClient", new { siteId = selectedSite.Id.ToString(), clientId = client.ClientId });
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> NewClient(NewClientViewModel clientModel)
+        {
+            if (!ModelState.IsValid)
+            {
+                return RedirectToAction("EditClient", new { siteId = clientModel.SiteId });
+            }
+
+            Guid siteId = siteManager.CurrentSite.Id;
+            if (!string.IsNullOrEmpty(clientModel.SiteId) && clientModel.SiteId.Length == 36)
+            {
+                siteId = new Guid(clientModel.SiteId);
+            }
+            var selectedSite = await siteManager.GetSiteForDataOperations(siteId);
+
+            var found = await clientsManager.FetchClient(selectedSite.Id.ToString(), clientModel.ClientId);
+
+            if (found != null)
+            {
+                this.AlertDanger(sr["Client already exists with that client id"], true);
+                return RedirectToAction("EditClient", new { siteId = selectedSite.Id.ToString(), clientId = found.ClientId });
+            }
+
+            var client = new Client();
+            client.ClientId = clientModel.ClientId;
+            client.ClientName = clientModel.ClientName;
+            client.AccessTokenType = clientModel.AccessTokenType;
+            client.RefreshTokenExpiration = clientModel.RefreshTokenExpiration;
+            client.RefreshTokenUsage = clientModel.RefreshTokenUsage;
+
+            await clientsManager.CreateClient(selectedSite.Id.ToString(), client);
+
+            var successFormat = sr["The Client <b>{0}</b> was successfully Created."];
+
+            this.AlertSuccess(string.Format(successFormat, client.ClientId), true);
+
+            return RedirectToAction("EditClient", new { siteId = selectedSite.Id.ToString(), clientId = client.ClientId });
+
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> DeleteClient(Guid siteId, string clientId)
+        {
+            await clientsManager.DeleteClient(siteId.ToString(), clientId);
+            return RedirectToAction("Index");
         }
 
 

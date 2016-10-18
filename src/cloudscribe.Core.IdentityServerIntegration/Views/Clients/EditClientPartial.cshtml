@@ -2,7 +2,6 @@
 @using cloudscribe.Core.IdentityServerIntegration
 @using Microsoft.Extensions.Localization
 @inject IStringLocalizer<CloudscribeIntegration> sr
-    <h2>@sr["Edit Client"]</h2>
     <form asp-controller="Clients" asp-action="EditClient">
         <input asp-for="SiteId" type="hidden" />
         <input name="ClientId" value="@Model.ClientId" type="hidden" />

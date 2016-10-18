@@ -6,13 +6,12 @@
 @if (string.IsNullOrEmpty(Model.CurrentClient.ClientId))
 {
     <h2>@sr["New Client"]</h2>
-    await Html.RenderPartialAsync("NewClientPartial", Model);
+    await Html.RenderPartialAsync("NewClientPartial", Model.NewClient);
 }
 else
 {
+    <h2>@sr["Edit Client"]</h2>
     await Html.RenderPartialAsync("EditClientPartial", Model.CurrentClient);
-
-    
 }
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial"); }

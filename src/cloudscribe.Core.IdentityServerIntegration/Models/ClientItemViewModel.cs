@@ -1,6 +1,7 @@
 ﻿using IdentityServer4.Models;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -46,14 +47,25 @@ namespace cloudscribe.Core.IdentityServerIntegration.Models
 
         }
 
+        //TODO: localize error messages
+
+        [Required]
         public string SiteId { get; set; }
 
+        [Required]
         public string ClientId { get; set; }
+
+        [Required]
         public string ClientName { get; set; }
+
+        public AccessTokenType AccessTokenType { get; set; }
+
+        public TokenExpiration RefreshTokenExpiration { get; set; }
+        public TokenUsage RefreshTokenUsage { get; set; }
 
         public int AbsoluteRefreshTokenLifetime { get; set; }
         public int AccessTokenLifetime { get; set; }
-        public AccessTokenType AccessTokenType { get; set; }
+        
         public bool AllowAccessToAllScopes { get; set; }
         public bool AllowAccessTokensViaBrowser { get; set; }
 
@@ -79,8 +91,7 @@ namespace cloudscribe.Core.IdentityServerIntegration.Models
         public int SlidingRefreshTokenLifetime { get; set; }
         public bool UpdateAccessTokenClaimsOnRefresh { get; set; }
 
-        public TokenExpiration RefreshTokenExpiration { get; set; }
-        public TokenUsage RefreshTokenUsage { get; set; }
+        
 
     }
 }
