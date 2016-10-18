@@ -24,7 +24,6 @@ namespace cloudscribe.Core.IdentityServerIntegration.Controllers
     public class ScopesController : Controller
     {
         public ScopesController(
-            //SiteContext currentSite,
             SiteManager siteManager,
             ScopesManager scopesManager,
             IStringLocalizer<CloudscribeIntegration> localizer
@@ -133,6 +132,13 @@ namespace cloudscribe.Core.IdentityServerIntegration.Controllers
             var selectedSite = await siteManager.GetSiteForDataOperations(siteId);
             
             var scope = await scopesManager.FetchScope(selectedSite.Id.ToString(), scopeModel.Name);
+
+            if(scope == null)
+            {
+                this.AlertDanger(sr["Scope not found"], true);
+                return RedirectToAction("Index", new { siteId = selectedSite.Id.ToString() });
+            }
+
             scope.AllowUnrestrictedIntrospection = scopeModel.AllowUnrestrictedIntrospection;
             scope.ClaimsRule = scopeModel.ClaimsRule;
             scope.Description = scopeModel.Description;

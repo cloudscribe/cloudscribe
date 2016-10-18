@@ -1,0 +1,19 @@
+﻿@model cloudscribe.Core.IdentityServerIntegration.Models.ClientEditViewModel
+@using cloudscribe.Core.IdentityServerIntegration
+@using Microsoft.Extensions.Localization
+@inject IStringLocalizer<CloudscribeIntegration> sr
+
+@if (string.IsNullOrEmpty(Model.CurrentClient.ClientId))
+{
+    <h2>@sr["New Client"]</h2>
+    await Html.RenderPartialAsync("NewClientPartial", Model);
+}
+else
+{
+    await Html.RenderPartialAsync("EditClientPartial", Model.CurrentClient);
+
+    
+}
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial"); }
+}

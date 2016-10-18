@@ -63,6 +63,7 @@ namespace Microsoft.Extensions.DependencyInjection
             builder.Services.AddScoped<IMatchEndSessionProtocolRoutePaths, MultiTenantEndSessionProtocolRouteMatcher>();
 
             builder.Services.AddScoped<ScopesManager, ScopesManager>();
+            builder.Services.AddScoped<ClientsManager, ClientsManager>();
 
             return builder;
         }
