@@ -1,0 +1,26 @@
+﻿@model cloudscribe.Core.IdentityServerIntegration.Models.ClientItemViewModel
+@using cloudscribe.Core.IdentityServerIntegration
+@using Microsoft.Extensions.Localization
+@inject IStringLocalizer<CloudscribeIntegration> sr
+<form class="form-inline" asp-controller="Clients" asp-action="AddClientClaim">
+    <div class="form-group">
+        <label for="Type">@sr["Type"]</label>
+        <input class="form-control" id="Type" name="Type">
+    </div>
+    <div class="form-group">
+        <label for="Value">@sr["Value"]</label>
+        <input class="form-control" id="Value" name="Value" />
+    </div>
+    <div class="form-group">
+        <label for="Issuer">@sr["Issuer"]</label>
+        <input class="form-control" id="Issuer" name="Issuer" />
+    </div>
+    <div class="form-group">
+        <label for="OriginalIssuer">@sr["Original Issuer"]</label>
+        <input class="form-control" id="OriginalIssuer" name="OriginalIssuer" />
+    </div>
+    <input asp-for="SiteId" type="hidden" />
+    <input asp-for="ClientId" type="hidden" />
+    <button type="submit" class="btn btn-default">Add Claim</button>
+    <div asp-validation-summary="All" class="text-danger"></div>
+</form>

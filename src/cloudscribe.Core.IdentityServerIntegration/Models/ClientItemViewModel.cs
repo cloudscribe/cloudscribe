@@ -16,6 +16,9 @@ namespace cloudscribe.Core.IdentityServerIntegration.Models
 
         public ClientItemViewModel(string siteId, Client client)
         {
+            if (string.IsNullOrEmpty(siteId)) throw new ArgumentException("SiteId must be provided");
+            if (client == null) throw new ArgumentNullException("client must be provided");
+
             SiteId = siteId;
             ClientId = client.ClientId;
             ClientName = client.ClientName;
@@ -43,11 +46,14 @@ namespace cloudscribe.Core.IdentityServerIntegration.Models
             UpdateAccessTokenClaimsOnRefresh = client.UpdateAccessTokenClaimsOnRefresh;
             RefreshTokenExpiration = client.RefreshTokenExpiration;
             RefreshTokenUsage = client.RefreshTokenUsage;
-            
+
+            Client = client;
 
         }
 
         //TODO: localize error messages
+
+        public Client Client { get; private set; } = null;
 
         [Required]
         public string SiteId { get; set; }

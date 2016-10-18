@@ -176,7 +176,16 @@ namespace cloudscribe.Core.IdentityServerIntegration.Controllers
             //client.IdentityProviderRestrictions
             //client.PostLogoutRedirectUris
             //client.RedirectUris
-            
+
+            //public ICollection<string> AllowedCorsOrigins { get; set; }
+            //public IEnumerable<string> AllowedGrantTypes { get; set; }
+            //public ICollection<string> AllowedScopes { get; set; }
+            //public ICollection<Claim> Claims { get; set; }
+            //public ICollection<Secret> ClientSecrets { get; set; }
+            //public ICollection<string> IdentityProviderRestrictions { get; set; }
+            //public ICollection<string> PostLogoutRedirectUris { get; set; }
+            //public ICollection<string> RedirectUris { get; set; }
+
             await clientsManager.UpdateClient(selectedSite.Id.ToString(), client);
 
             var successFormat = sr["The Client <b>{0}</b> was successfully updated."];

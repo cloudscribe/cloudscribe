@@ -3,7 +3,7 @@
 @using Microsoft.Extensions.Localization
 @inject IStringLocalizer<CloudscribeIntegration> sr
 
-@if (string.IsNullOrEmpty(Model.CurrentClient.ClientId))
+@if (Model.CurrentClient == null)
 {
     <h2>@sr["New Client"]</h2>
     await Html.RenderPartialAsync("NewClientPartial", Model.NewClient);
@@ -12,6 +12,7 @@ else
 {
     <h2>@sr["Edit Client"]</h2>
     await Html.RenderPartialAsync("EditClientPartial", Model.CurrentClient);
+    await Html.RenderPartialAsync("ClientClaimsPartial", Model.CurrentClient);
 }
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial"); }
