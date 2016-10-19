@@ -317,5 +317,79 @@ namespace cloudscribe.Core.IdentityServerIntegration.Controllers
             return RedirectToAction("EditClient", new { siteId = siteId.ToString(), clientId = clientId });
         }
 
+        [HttpPost]
+        public async Task<IActionResult> AddClientSecret(NewClientSecretViewModel model)
+        {
+            if (!ModelState.IsValid)
+            {
+                return RedirectToAction("EditClient", new { siteId = model.SiteId, clientId = model.ClientId });
+            }
+
+            Guid siteId = siteManager.CurrentSite.Id;
+            if (!string.IsNullOrEmpty(model.SiteId) && model.SiteId.Length == 36)
+            {
+                siteId = new Guid(model.SiteId);
+            }
+            var selectedSite = await siteManager.GetSiteForDataOperations(siteId);
+
+            var client = await clientsManager.FetchClient(selectedSite.Id.ToString(), model.ClientId);
+            if (client == null)
+            {
+                this.AlertDanger(sr["Invalid request, client not found."], true);
+                return RedirectToAction("Index");
+            }
+
+            var secret = new Secret(model.Value, model.Description, model.Expiration);
+            secret.Type = model.Type;
+
+            if (client.ClientSecrets.Contains(secret))
+            {
+                this.AlertDanger(sr["Client already has a secret with that value."], true);
+                return RedirectToAction("EditClient", new { siteId = selectedSite.Id.ToString(), clientId = model.ClientId });
+            }
+            client.ClientSecrets.Add(secret);
+
+            await clientsManager.UpdateClient(selectedSite.Id.ToString(), client);
+
+            this.AlertSuccess(sr["The Secret was successfully added."], true);
+
+            return RedirectToAction("EditClient", new { siteId = selectedSite.Id.ToString(), clientId = model.ClientId });
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> DeleteClientSecret(Guid siteId, string clientId, string secretValue)
+        {
+            var selectedSite = await siteManager.GetSiteForDataOperations(siteId);
+
+            var client = await clientsManager.FetchClient(selectedSite.Id.ToString(), clientId);
+            if (client == null)
+            {
+                this.AlertDanger(sr["Invalid request, client not found."], true);
+                return RedirectToAction("Index");
+            }
+
+            Secret found = null;
+            foreach (var c in client.ClientSecrets)
+            {
+                if (c.Value == secretValue)
+                {
+                    found = c;
+                    break;
+                }
+            }
+            if (found != null)
+            {
+                client.ClientSecrets.Remove(found);
+                await clientsManager.UpdateClient(siteId.ToString(), client);
+                this.AlertSuccess(sr["The Secret was successfully removed."], true);
+            }
+            else
+            {
+                this.AlertDanger(sr["Invalid request, client secret not found."], true);
+            }
+
+            return RedirectToAction("EditClient", new { siteId = siteId.ToString(), clientId = clientId });
+        }
+
     }
 }

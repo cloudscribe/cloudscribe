@@ -12,7 +12,9 @@ else
 {
     <h2>@sr["Edit Client"]</h2>
     await Html.RenderPartialAsync("EditClientPartial", Model.CurrentClient);
+    await Html.RenderPartialAsync("ClientSecretsPartial", Model.CurrentClient);
     await Html.RenderPartialAsync("ClientClaimsPartial", Model.CurrentClient);
+
 }
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial"); }
