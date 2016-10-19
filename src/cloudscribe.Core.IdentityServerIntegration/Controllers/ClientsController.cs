@@ -18,6 +18,7 @@ using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
 
 namespace cloudscribe.Core.IdentityServerIntegration.Controllers
@@ -185,7 +186,7 @@ namespace cloudscribe.Core.IdentityServerIntegration.Controllers
             //public ICollection<string> IdentityProviderRestrictions { get; set; }
             //public ICollection<string> PostLogoutRedirectUris { get; set; }
             //public ICollection<string> RedirectUris { get; set; }
-
+        
             await clientsManager.UpdateClient(selectedSite.Id.ToString(), client);
 
             var successFormat = sr["The Client <b>{0}</b> was successfully updated."];
@@ -242,6 +243,79 @@ namespace cloudscribe.Core.IdentityServerIntegration.Controllers
             return RedirectToAction("Index");
         }
 
+        [HttpPost]
+        public async Task<IActionResult> AddClientClaim(NewClientClaimViewModel model)
+        {
+            if (!ModelState.IsValid)
+            {
+                return RedirectToAction("EditClient", new { siteId = model.SiteId, clientId = model.ClientId });
+            }
+
+            Guid siteId = siteManager.CurrentSite.Id;
+            if (!string.IsNullOrEmpty(model.SiteId) && model.SiteId.Length == 36)
+            {
+                siteId = new Guid(model.SiteId);
+            }
+            var selectedSite = await siteManager.GetSiteForDataOperations(siteId);
+
+            var client = await clientsManager.FetchClient(selectedSite.Id.ToString(), model.ClientId);
+            if (client == null)
+            {
+                this.AlertDanger(sr["Invalid request, Client not found."], true);
+                return RedirectToAction("Index");
+            }
+
+            var claim = new Claim(model.Type, model.Value);
+            
+            if (client.HasClaim(claim))
+            {
+                this.AlertDanger(sr["Client already has a claim with that type and value."], true);
+                return RedirectToAction("EditClient", new { siteId = selectedSite.Id.ToString(), clientId = model.ClientId });
+            }
+            client.Claims.Add(claim);
+
+            await clientsManager.UpdateClient(selectedSite.Id.ToString(), client);
+
+            var successFormat = sr["The Claim <b>{0}</b> was successfully added."];
+
+            this.AlertSuccess(string.Format(successFormat, claim.Type), true);
+
+            return RedirectToAction("EditClient", new { siteId = selectedSite.Id.ToString(), clientId = model.ClientId });
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> DeleteClientClaim(Guid siteId, string clientId, string claimType, string claimValue)
+        {
+            var client = await clientsManager.FetchClient(siteId.ToString(), clientId);
+            if (client == null)
+            {
+                this.AlertDanger(sr["Invalid request, client not found."], true);
+                return RedirectToAction("Index");
+            }
+
+            Claim found = null;
+            foreach (var c in client.Claims)
+            {
+                if (c.Type == claimType && c.Value == claimValue)
+                {
+                    found = c;
+                    break;
+                }
+            }
+            if (found != null)
+            {
+                client.Claims.Remove(found);
+                await clientsManager.UpdateClient(siteId.ToString(), client);
+                var successFormat = sr["The Claim <b>{0}</b> was successfully removed."];
+                this.AlertSuccess(string.Format(successFormat, claimType), true);
+            }
+            else
+            {
+                this.AlertDanger(sr["Invalid request, client claim not found."], true);
+            }
+
+            return RedirectToAction("EditClient", new { siteId = siteId.ToString(), clientId = clientId });
+        }
 
     }
 }

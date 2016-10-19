@@ -62,6 +62,8 @@ https://medium.com/@dogwith1eye/prefer-records-of-functions-to-interfaces-d6413a
 
 ## Resources
 
+https://medium.com/real-world-fsharp/using-f-with-net-core-aa6cfc9ef547#.wlxvm2oj6
+
 F# Webstack group
 https://groups.google.com/forum/#!forum/web-stack-fs
 F# Discussions

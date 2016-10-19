@@ -6,6 +6,7 @@
 // 
 
 using cloudscribe.Core.IdentityServer.NoDb;
+using cloudscribe.Core.IdentityServer.NoDb.Models;
 using cloudscribe.Core.IdentityServerIntegration.StorageModels;
 using IdentityServer4.Models;
 using IdentityServer4.Services;
@@ -31,6 +32,7 @@ namespace Microsoft.Extensions.DependencyInjection
         {
 
             builder.Services.AddNoDb<Client>();
+            builder.Services.AddNoDb<ClientClaim>();
             builder.Services.AddNoDb<Scope>();
 
             builder.Services.AddTransient<IClientStore, ClientStore>();

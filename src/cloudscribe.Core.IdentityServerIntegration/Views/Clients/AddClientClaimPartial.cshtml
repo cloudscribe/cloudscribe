@@ -5,19 +5,15 @@
 <form class="form-inline" asp-controller="Clients" asp-action="AddClientClaim">
     <div class="form-group">
         <label for="Type">@sr["Type"]</label>
-        <input class="form-control" id="Type" name="Type">
+        <input class="form-control" id="Type" name="Type" data-val="true" data-val-required='@sr["The Type field is required."]'
+               aria-required="true" aria-invalid="false" aria-describedby="Type-error" />
+        <span class="text-danger field-validation-valid" data-valmsg-for="Type" data-valmsg-replace="true"></span>
     </div>
     <div class="form-group">
         <label for="Value">@sr["Value"]</label>
-        <input class="form-control" id="Value" name="Value" />
-    </div>
-    <div class="form-group">
-        <label for="Issuer">@sr["Issuer"]</label>
-        <input class="form-control" id="Issuer" name="Issuer" />
-    </div>
-    <div class="form-group">
-        <label for="OriginalIssuer">@sr["Original Issuer"]</label>
-        <input class="form-control" id="OriginalIssuer" name="OriginalIssuer" />
+        <input class="form-control" id="Value" name="Value" data-val="true" data-val-required='@sr["The Value field is required."]'
+               aria-required="true" aria-invalid="false" aria-describedby="Value-error" />
+        <span class="text-danger field-validation-valid" data-valmsg-for="Value" data-valmsg-replace="true"></span>
     </div>
     <input asp-for="SiteId" type="hidden" />
     <input asp-for="ClientId" type="hidden" />

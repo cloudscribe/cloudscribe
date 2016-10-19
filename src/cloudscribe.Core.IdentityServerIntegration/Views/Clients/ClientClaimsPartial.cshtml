@@ -16,10 +16,7 @@
                 </th>
                 <th>
                     @sr["Value"]
-                </th>
-                <th>
-                    @sr["Issuer"]
-                </th>
+                </th>  
             </tr>
             @foreach (var c in Model.Client.Claims)
             {
@@ -39,7 +36,6 @@
                     </td>
                     <td>@c.Type</td>
                     <td>@c.Value</td>
-                    <td>@c.Issuer</td>
                 </tr>
             }
         </table>
