@@ -128,6 +128,7 @@ namespace cloudscribe.Core.Web.Controllers
             
             var model = new SiteBasicSettingsViewModel();
             model.ReturnPageNumber = slp; // site list page number to return to
+            model.TimeZoneId = selectedSite.TimeZoneId;
             model.AllTimeZones = tzHelper.GetTimeZoneList().Select(x =>
                                new SelectListItem
                                {
@@ -143,7 +144,7 @@ namespace cloudscribe.Core.Web.Controllers
             model.AliasId = selectedSite.AliasId;
             //}
             
-            model.TimeZoneId = selectedSite.TimeZoneId;
+           
             
             model.IsClosed = selectedSite.SiteIsClosed;
             model.ClosedMessage = selectedSite.SiteIsClosedMessage;

@@ -2,10 +2,9 @@
 // Licensed under the Apache License, Version 2.0
 // Author:					Joe Audette
 // Created:					2016-10-14
-// Last Modified:			2016-10-14
+// Last Modified:			2016-10-17
 // 
 
-using cloudscribe.Core.Models;
 using cloudscribe.Core.Models.Generic;
 using cloudscribe.Core.IdentityServerIntegration.StorageModels;
 using IdentityServer4.Models;
@@ -20,19 +19,17 @@ namespace cloudscribe.Core.IdentityServer.NoDb
     public class ScopeQueries : IScopeQueries
     {
         public ScopeQueries(
-           // SiteContext site,
             IBasicQueries<Scope> queries
             )
         {
-          //  _siteId = site.Id.ToString();
             _queries = queries;
         }
 
         private IBasicQueries<Scope> _queries;
-        //private string _siteId;
 
-        private async Task<List<Scope>> GetAllScopes(string siteId)
+        private async Task<List<Scope>> GetAllScopes(string siteId, CancellationToken cancellationToken = default(CancellationToken))
         {
+            cancellationToken.ThrowIfCancellationRequested();
             //TODO: cache
             var allScopes = await _queries.GetAllAsync(siteId).ConfigureAwait(false);
 
@@ -41,19 +38,22 @@ namespace cloudscribe.Core.IdentityServer.NoDb
 
         public async Task<bool> ScopeExists(string siteId, string scopeName, CancellationToken cancellationToken = default(CancellationToken))
         {
+            cancellationToken.ThrowIfCancellationRequested();
             var scope = await FetchScope(siteId, scopeName, cancellationToken).ConfigureAwait(false);
             return (scope != null);
         }
 
         public async Task<Scope> FetchScope(string siteId, string scopeName, CancellationToken cancellationToken = default(CancellationToken))
         {
+            cancellationToken.ThrowIfCancellationRequested();
             return await _queries.FetchAsync(siteId, scopeName, cancellationToken).ConfigureAwait(false);
         }
 
         public async Task<int> CountScopes(string siteId, CancellationToken cancellationToken = default(CancellationToken))
         {
-            var allScopes = await GetAllScopes(siteId).ConfigureAwait(false);
-            return allScopes.Count;
+            cancellationToken.ThrowIfCancellationRequested();
+            var all = await GetAllScopes(siteId, cancellationToken).ConfigureAwait(false);
+            return all.Count;
         }
 
         public async Task<PagedResult<Scope>> GetScopes(
@@ -62,7 +62,8 @@ namespace cloudscribe.Core.IdentityServer.NoDb
             int pageSize,
             CancellationToken cancellationToken = default(CancellationToken))
         {
-            var all = await GetAllScopes(siteId).ConfigureAwait(false);
+            cancellationToken.ThrowIfCancellationRequested();
+            var all = await GetAllScopes(siteId, cancellationToken).ConfigureAwait(false);
 
             int offset = (pageSize * pageNumber) - pageSize;
 

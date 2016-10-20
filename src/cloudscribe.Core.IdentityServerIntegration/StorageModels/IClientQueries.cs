@@ -14,12 +14,13 @@ namespace cloudscribe.Core.IdentityServerIntegration.StorageModels
 {
     public interface IClientQueries
     {
-        Task<bool> ClientExists(string clientId, CancellationToken cancellationToken = default(CancellationToken));
-        Task<Client> FetchClient(string clientId, CancellationToken cancellationToken = default(CancellationToken));
+        Task<bool> ClientExists(string siteId, string clientId, CancellationToken cancellationToken = default(CancellationToken));
+        Task<Client> FetchClient(string siteId, string clientId, CancellationToken cancellationToken = default(CancellationToken));
 
-        Task<int> CountClients(CancellationToken cancellationToken = default(CancellationToken));
+        Task<int> CountClients(string siteId, CancellationToken cancellationToken = default(CancellationToken));
 
         Task<PagedResult<Client>> GetClients(
+            string siteId,
             int pageNumber,
             int pageSize,
             CancellationToken cancellationToken = default(CancellationToken));

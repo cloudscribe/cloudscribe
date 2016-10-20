@@ -1,4 +1,8 @@
 
+ASP.NET Core - Feature Slices for ASP.NET Core MVC
+https://msdn.microsoft.com/magazine/mt763233
+
+
 Walkthrough: Organizing an ASP.NET MVC Application using Areas
 .NET Framework 4
 
