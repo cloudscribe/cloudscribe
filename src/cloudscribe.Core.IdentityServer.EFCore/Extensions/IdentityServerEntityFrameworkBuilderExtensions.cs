@@ -7,7 +7,7 @@ using cloudscribe.Core.IdentityServer.EFCore.DbContexts;
 using cloudscribe.Core.IdentityServer.EFCore.Interfaces;
 using cloudscribe.Core.IdentityServer.EFCore.Services;
 using cloudscribe.Core.IdentityServer.EFCore.Stores;
-using cloudscribe.Core.IdentityServerIntegration.StorageModels;
+using cloudscribe.Core.IdentityServerIntegration.Storage;
 using IdentityServer4.Services;
 using IdentityServer4.Stores;
 using Microsoft.EntityFrameworkCore;
@@ -51,6 +51,9 @@ namespace Microsoft.Extensions.DependencyInjection
 
             builder.Services.AddTransient<IScopeQueries, ScopeQueries>();
             builder.Services.AddTransient<IScopeCommands, ScopeCommands>();
+
+            builder.Services.AddTransient<IClientQueries, ClientQueries>();
+            builder.Services.AddTransient<IClientCommands, ClientCommands>();
 
             return builder;
         }

@@ -5,7 +5,7 @@
 // Last Modified:			2016-10-14
 // 
 
-using cloudscribe.Core.IdentityServerIntegration.StorageModels;
+using cloudscribe.Core.IdentityServerIntegration.Storage;
 using IdentityServer4.Models;
 using NoDb;
 using System.Threading;

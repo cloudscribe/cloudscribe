@@ -5,7 +5,7 @@
 // Last Modified:			2016-10-17
 // 
 
-using cloudscribe.Core.IdentityServerIntegration.StorageModels;
+using cloudscribe.Core.IdentityServerIntegration.Storage;
 using cloudscribe.Core.Models.Generic;
 using IdentityServer4.Models;
 using Microsoft.AspNetCore.Http;

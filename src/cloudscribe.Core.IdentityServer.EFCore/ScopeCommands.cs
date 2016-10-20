@@ -7,7 +7,7 @@
 
 using cloudscribe.Core.IdentityServer.EFCore.Interfaces;
 using cloudscribe.Core.IdentityServer.EFCore.Mappers;
-using cloudscribe.Core.IdentityServerIntegration.StorageModels;
+using cloudscribe.Core.IdentityServerIntegration.Storage;
 using cloudscribe.Core.Models.Generic;
 using IdentityServer4.Models;
 using Microsoft.EntityFrameworkCore;
@@ -26,9 +26,11 @@ namespace cloudscribe.Core.IdentityServer.EFCore
         {
             if(context == null) throw new ArgumentNullException(nameof(context));
             this.context = context;
+           
         }
 
         private readonly IConfigurationDbContext context;
+        
 
         public async Task CreateScope(string siteId, Scope scope, CancellationToken cancellationToken = default(CancellationToken))
         {
@@ -40,7 +42,11 @@ namespace cloudscribe.Core.IdentityServer.EFCore
 
         public async Task UpdateScope(string siteId, Scope scope, CancellationToken cancellationToken = default(CancellationToken))
         {
+            var name = scope.Name;
+            var found = await context.Scopes.AsNoTracking().Where(x => x.SiteId == siteId && x.Name == name)
+               .Select(x => x.Id).FirstOrDefaultAsync();
             var ent = scope.ToEntity();
+            ent.Id = found;
             ent.SiteId = siteId;
             context.Scopes.Update(ent);
             await context.SaveChangesAsync();

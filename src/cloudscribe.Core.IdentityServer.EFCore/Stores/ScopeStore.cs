@@ -33,6 +33,7 @@ namespace cloudscribe.Core.IdentityServer.EFCore.Stores
         public async Task<IEnumerable<Scope>> FindScopesAsync(IEnumerable<string> scopeNames)
         {
             IQueryable<Entities.Scope> scopes = context.Scopes
+                .AsNoTracking()
                 .Include(x => x.Claims)
                 .Include(x => x.ScopeSecrets);
 
@@ -50,6 +51,7 @@ namespace cloudscribe.Core.IdentityServer.EFCore.Stores
         public async Task<IEnumerable<Scope>> GetScopesAsync(bool publicOnly = true)
         {
             IQueryable<Entities.Scope> scopes = context.Scopes
+                .AsNoTracking()
                 .Include(x => x.Claims)
                 .Include(x => x.ScopeSecrets);
 
