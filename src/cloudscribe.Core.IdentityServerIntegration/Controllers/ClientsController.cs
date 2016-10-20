@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2016-10-13
-// Last Modified:			2016-10-17
+// Last Modified:			2016-10-20
 // 
 
 using cloudscribe.Core.IdentityServerIntegration.Models;
@@ -167,26 +167,7 @@ namespace cloudscribe.Core.IdentityServerIntegration.Controllers
             client.RequirePkce = clientModel.RequirePkce;
             client.SlidingRefreshTokenLifetime = clientModel.SlidingRefreshTokenLifetime;
             client.UpdateAccessTokenClaimsOnRefresh = clientModel.UpdateAccessTokenClaimsOnRefresh;
-
-            // TODO: separate actions and views for each collection
-            //client.AllowedCorsOrigins = clientModel.
-            //client.AllowedGrantTypes
-            //client.AllowedScopes
-            //client.Claims
-            //client.ClientSecrets
-            //client.IdentityProviderRestrictions
-            //client.PostLogoutRedirectUris
-            //client.RedirectUris
-
-            //public ICollection<string> AllowedCorsOrigins { get; set; }
-            //public IEnumerable<string> AllowedGrantTypes { get; set; }
-            //public ICollection<string> AllowedScopes { get; set; }
-            //public ICollection<Claim> Claims { get; set; }
-            //public ICollection<Secret> ClientSecrets { get; set; }
-            //public ICollection<string> IdentityProviderRestrictions { get; set; }
-            //public ICollection<string> PostLogoutRedirectUris { get; set; }
-            //public ICollection<string> RedirectUris { get; set; }
-        
+            
             await clientsManager.UpdateClient(selectedSite.Id.ToString(), client);
 
             var successFormat = sr["The Client <b>{0}</b> was successfully updated."];
@@ -386,6 +367,407 @@ namespace cloudscribe.Core.IdentityServerIntegration.Controllers
             else
             {
                 this.AlertDanger(sr["Invalid request, client secret not found."], true);
+            }
+
+            return RedirectToAction("EditClient", new { siteId = siteId.ToString(), clientId = clientId });
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> AddClientRedirect(Guid siteId, string clientId, string redirectUri)
+        {
+            if (!ModelState.IsValid)
+            {
+                return RedirectToAction("EditClient", new { siteId = siteId, clientId = clientId });
+            }
+
+            var selectedSite = await siteManager.GetSiteForDataOperations(siteId);
+
+            var client = await clientsManager.FetchClient(selectedSite.Id.ToString(), clientId);
+            if (client == null)
+            {
+                this.AlertDanger(sr["Invalid request, client not found."], true);
+                return RedirectToAction("Index");
+            }
+            
+            if (client.RedirectUris.Contains(redirectUri))
+            {
+                this.AlertDanger(sr["Client already has a Redirect Uri with that value."], true);
+                return RedirectToAction("EditClient", new { siteId = selectedSite.Id.ToString(), clientId = clientId });
+            }
+            client.RedirectUris.Add(redirectUri);
+
+            await clientsManager.UpdateClient(selectedSite.Id.ToString(), client);
+
+            this.AlertSuccess(sr["The Redirect Uri was successfully added."], true);
+
+            return RedirectToAction("EditClient", new { siteId = selectedSite.Id.ToString(), clientId = clientId });
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> DeleteClientRedirect(Guid siteId, string clientId, string redirectUri)
+        {
+            var selectedSite = await siteManager.GetSiteForDataOperations(siteId);
+
+            var client = await clientsManager.FetchClient(selectedSite.Id.ToString(), clientId);
+            if (client == null)
+            {
+                this.AlertDanger(sr["Invalid request, client not found."], true);
+                return RedirectToAction("Index");
+            }
+
+            string found = null;
+            foreach (var c in client.RedirectUris)
+            {
+                if (c == redirectUri)
+                {
+                    found = c;
+                    break;
+                }
+            }
+            if (found != null)
+            {
+                client.RedirectUris.Remove(found);
+                await clientsManager.UpdateClient(siteId.ToString(), client);
+                this.AlertSuccess(sr["The Redirect Url was successfully removed."], true);
+            }
+            else
+            {
+                this.AlertDanger(sr["Invalid request, Redirect Url not found."], true);
+            }
+
+            return RedirectToAction("EditClient", new { siteId = siteId.ToString(), clientId = clientId });
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> AddClientLogoutRedirect(Guid siteId, string clientId, string logoutRedirectUri)
+        {
+            if (!ModelState.IsValid)
+            {
+                return RedirectToAction("EditClient", new { siteId = siteId, clientId = clientId });
+            }
+
+            var selectedSite = await siteManager.GetSiteForDataOperations(siteId);
+
+            var client = await clientsManager.FetchClient(selectedSite.Id.ToString(), clientId);
+            if (client == null)
+            {
+                this.AlertDanger(sr["Invalid request, client not found."], true);
+                return RedirectToAction("Index");
+            }
+
+            if (client.PostLogoutRedirectUris.Contains(logoutRedirectUri))
+            {
+                this.AlertDanger(sr["Client already has a Logout Redirect Url with that value."], true);
+                return RedirectToAction("EditClient", new { siteId = selectedSite.Id.ToString(), clientId = clientId });
+            }
+            client.PostLogoutRedirectUris.Add(logoutRedirectUri);
+
+            await clientsManager.UpdateClient(selectedSite.Id.ToString(), client);
+
+            this.AlertSuccess(sr["The Logout Redirect Url was successfully added."], true);
+
+            return RedirectToAction("EditClient", new { siteId = selectedSite.Id.ToString(), clientId = clientId });
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> DeleteClientLogoutRedirect(Guid siteId, string clientId, string logoutRedirectUri)
+        {
+            var selectedSite = await siteManager.GetSiteForDataOperations(siteId);
+
+            var client = await clientsManager.FetchClient(selectedSite.Id.ToString(), clientId);
+            if (client == null)
+            {
+                this.AlertDanger(sr["Invalid request, client not found."], true);
+                return RedirectToAction("Index");
+            }
+
+            string found = null;
+            foreach (var c in client.PostLogoutRedirectUris)
+            {
+                if (c == logoutRedirectUri)
+                {
+                    found = c;
+                    break;
+                }
+            }
+            if (found != null)
+            {
+                client.PostLogoutRedirectUris.Remove(found);
+                await clientsManager.UpdateClient(siteId.ToString(), client);
+                this.AlertSuccess(sr["The Logout Redirect Url was successfully removed."], true);
+            }
+            else
+            {
+                this.AlertDanger(sr["Invalid request, Logout Redirect Url not found."], true);
+            }
+
+            return RedirectToAction("EditClient", new { siteId = siteId.ToString(), clientId = clientId });
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> AddClientCorsOrigin(Guid siteId, string clientId, string corsOrigin)
+        {
+            if (!ModelState.IsValid)
+            {
+                return RedirectToAction("EditClient", new { siteId = siteId, clientId = clientId });
+            }
+
+            var selectedSite = await siteManager.GetSiteForDataOperations(siteId);
+
+            var client = await clientsManager.FetchClient(selectedSite.Id.ToString(), clientId);
+            if (client == null)
+            {
+                this.AlertDanger(sr["Invalid request, client not found."], true);
+                return RedirectToAction("Index");
+            }
+
+            if (client.AllowedCorsOrigins.Contains(corsOrigin))
+            {
+                this.AlertDanger(sr["Client already has a CORS Origin with that value."], true);
+                return RedirectToAction("EditClient", new { siteId = selectedSite.Id.ToString(), clientId = clientId });
+            }
+            client.AllowedCorsOrigins.Add(corsOrigin);
+
+            await clientsManager.UpdateClient(selectedSite.Id.ToString(), client);
+
+            this.AlertSuccess(sr["The CORS Origin was successfully added."], true);
+
+            return RedirectToAction("EditClient", new { siteId = selectedSite.Id.ToString(), clientId = clientId });
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> DeleteClientCorsOrigin(Guid siteId, string clientId, string corsOrigin)
+        {
+            var selectedSite = await siteManager.GetSiteForDataOperations(siteId);
+
+            var client = await clientsManager.FetchClient(selectedSite.Id.ToString(), clientId);
+            if (client == null)
+            {
+                this.AlertDanger(sr["Invalid request, client not found."], true);
+                return RedirectToAction("Index");
+            }
+
+            string found = null;
+            foreach (var c in client.AllowedCorsOrigins)
+            {
+                if (c == corsOrigin)
+                {
+                    found = c;
+                    break;
+                }
+            }
+            if (found != null)
+            {
+                client.AllowedCorsOrigins.Remove(found);
+                await clientsManager.UpdateClient(siteId.ToString(), client);
+                this.AlertSuccess(sr["The CORS Origin was successfully removed."], true);
+            }
+            else
+            {
+                this.AlertDanger(sr["Invalid request, CORS Origin not found."], true);
+            }
+
+            return RedirectToAction("EditClient", new { siteId = siteId.ToString(), clientId = clientId });
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> AddClientGrantType(Guid siteId, string clientId, string grantType)
+        {
+            if (!ModelState.IsValid)
+            {
+                return RedirectToAction("EditClient", new { siteId = siteId, clientId = clientId });
+            }
+
+            var selectedSite = await siteManager.GetSiteForDataOperations(siteId);
+
+            var client = await clientsManager.FetchClient(selectedSite.Id.ToString(), clientId);
+            if (client == null)
+            {
+                this.AlertDanger(sr["Invalid request, client not found."], true);
+                return RedirectToAction("Index");
+            }
+
+            var grants = client.AllowedGrantTypes.ToList();
+            if (grants.Contains(grantType))
+            {
+                this.AlertDanger(sr["Client already has a Grant Type with that value."], true);
+                return RedirectToAction("EditClient", new { siteId = selectedSite.Id.ToString(), clientId = clientId });
+            }
+
+            grants.Add(grantType);
+            client.AllowedGrantTypes = grants;
+
+            await clientsManager.UpdateClient(selectedSite.Id.ToString(), client);
+
+            this.AlertSuccess(sr["The Grant Type was successfully added."], true);
+
+            return RedirectToAction("EditClient", new { siteId = selectedSite.Id.ToString(), clientId = clientId });
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> DeleteClientGrantType(Guid siteId, string clientId, string grantType)
+        {
+            var selectedSite = await siteManager.GetSiteForDataOperations(siteId);
+
+            var client = await clientsManager.FetchClient(selectedSite.Id.ToString(), clientId);
+            if (client == null)
+            {
+                this.AlertDanger(sr["Invalid request, client not found."], true);
+                return RedirectToAction("Index");
+            }
+
+            var grants = client.AllowedGrantTypes.ToList();
+            string found = null;
+            foreach (var c in grants)
+            {
+                if (c == grantType)
+                {
+                    found = c;
+                    break;
+                }
+            }
+            if (found != null)
+            {
+                grants.Remove(found);
+                client.AllowedGrantTypes = grants;
+                await clientsManager.UpdateClient(siteId.ToString(), client);
+                this.AlertSuccess(sr["The Grant Type was successfully removed."], true);
+            }
+            else
+            {
+                this.AlertDanger(sr["Invalid request, Grant Type not found."], true);
+            }
+
+            return RedirectToAction("EditClient", new { siteId = siteId.ToString(), clientId = clientId });
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> AddClientScope(Guid siteId, string clientId, string scopeName)
+        {
+            if (!ModelState.IsValid)
+            {
+                return RedirectToAction("EditClient", new { siteId = siteId, clientId = clientId });
+            }
+
+            var selectedSite = await siteManager.GetSiteForDataOperations(siteId);
+
+            var client = await clientsManager.FetchClient(selectedSite.Id.ToString(), clientId);
+            if (client == null)
+            {
+                this.AlertDanger(sr["Invalid request, client not found."], true);
+                return RedirectToAction("Index");
+            }
+
+            if (client.AllowedScopes.Contains(scopeName))
+            {
+                this.AlertDanger(sr["Client already has a Scope with that value."], true);
+                return RedirectToAction("EditClient", new { siteId = selectedSite.Id.ToString(), clientId = clientId });
+            }
+            client.AllowedScopes.Add(scopeName);
+
+            await clientsManager.UpdateClient(selectedSite.Id.ToString(), client);
+
+            this.AlertSuccess(sr["The Scope was successfully added."], true);
+
+            return RedirectToAction("EditClient", new { siteId = selectedSite.Id.ToString(), clientId = clientId });
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> DeleteClientScope(Guid siteId, string clientId, string scopeName)
+        {
+            var selectedSite = await siteManager.GetSiteForDataOperations(siteId);
+
+            var client = await clientsManager.FetchClient(selectedSite.Id.ToString(), clientId);
+            if (client == null)
+            {
+                this.AlertDanger(sr["Invalid request, client not found."], true);
+                return RedirectToAction("Index");
+            }
+
+            string found = null;
+            foreach (var c in client.AllowedScopes)
+            {
+                if (c == scopeName)
+                {
+                    found = c;
+                    break;
+                }
+            }
+            if (found != null)
+            {
+                client.AllowedScopes.Remove(scopeName);
+                await clientsManager.UpdateClient(siteId.ToString(), client);
+                this.AlertSuccess(sr["The Scope was successfully removed."], true);
+            }
+            else
+            {
+                this.AlertDanger(sr["Invalid request, Scope not found."], true);
+            }
+
+            return RedirectToAction("EditClient", new { siteId = siteId.ToString(), clientId = clientId });
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> AddClientRestriction(Guid siteId, string clientId, string restriction)
+        {
+            if (!ModelState.IsValid)
+            {
+                return RedirectToAction("EditClient", new { siteId = siteId, clientId = clientId });
+            }
+
+            var selectedSite = await siteManager.GetSiteForDataOperations(siteId);
+
+            var client = await clientsManager.FetchClient(selectedSite.Id.ToString(), clientId);
+            if (client == null)
+            {
+                this.AlertDanger(sr["Invalid request, client not found."], true);
+                return RedirectToAction("Index");
+            }
+
+            if (client.IdentityProviderRestrictions.Contains(restriction))
+            {
+                this.AlertDanger(sr["Client already has a Restriction with that value."], true);
+                return RedirectToAction("EditClient", new { siteId = selectedSite.Id.ToString(), clientId = clientId });
+            }
+            client.IdentityProviderRestrictions.Add(restriction);
+
+            await clientsManager.UpdateClient(selectedSite.Id.ToString(), client);
+
+            this.AlertSuccess(sr["The Restriction was successfully added."], true);
+
+            return RedirectToAction("EditClient", new { siteId = selectedSite.Id.ToString(), clientId = clientId });
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> DeleteClientRestriction(Guid siteId, string clientId, string restriction)
+        {
+            var selectedSite = await siteManager.GetSiteForDataOperations(siteId);
+
+            var client = await clientsManager.FetchClient(selectedSite.Id.ToString(), clientId);
+            if (client == null)
+            {
+                this.AlertDanger(sr["Invalid request, client not found."], true);
+                return RedirectToAction("Index");
+            }
+
+            string found = null;
+            foreach (var c in client.IdentityProviderRestrictions)
+            {
+                if (c == restriction)
+                {
+                    found = c;
+                    break;
+                }
+            }
+            if (found != null)
+            {
+                client.IdentityProviderRestrictions.Remove(restriction);
+                await clientsManager.UpdateClient(siteId.ToString(), client);
+                this.AlertSuccess(sr["The Restriction was successfully removed."], true);
+            }
+            else
+            {
+                this.AlertDanger(sr["Invalid request, Restriction not found."], true);
             }
 
             return RedirectToAction("EditClient", new { siteId = siteId.ToString(), clientId = clientId });

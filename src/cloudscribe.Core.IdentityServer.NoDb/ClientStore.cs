@@ -29,6 +29,7 @@ namespace cloudscribe.Core.IdentityServer.NoDb
         {
             _siteId = site.Id.ToString();
             _queries = queries;
+            _claimQueries = claimQueries;
         }
 
         private IBasicQueries<Client> _queries;
