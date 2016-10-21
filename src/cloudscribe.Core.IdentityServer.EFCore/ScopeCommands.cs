@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0
 // Author:					Joe Audette
 // Created:					2016-10-16
-// Last Modified:			2016-10-16
+// Last Modified:			2016-10-21
 // 
 
 using cloudscribe.Core.IdentityServer.EFCore.Interfaces;

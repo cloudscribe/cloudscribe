@@ -92,7 +92,6 @@ namespace cloudscribe.Core.IdentityServerIntegration.Controllers
             var model = new ClientEditViewModel();
             model.SiteId = selectedSite.Id.ToString();
             model.NewClient.SiteId = model.SiteId;
-            //model.NewScope.SiteId = model.SiteId;
             if (!string.IsNullOrEmpty(clientId))
             {
                 var client = await clientsManager.FetchClient(model.SiteId, clientId);
@@ -107,13 +106,7 @@ namespace cloudscribe.Core.IdentityServerIntegration.Controllers
                 currentCrumbAdjuster.AdjustedText = sr["New Client"];
                 currentCrumbAdjuster.AddToContext();
             }
-            else
-            {
-                //model.NewScopeClaim.SiteId = model.SiteId;
-                //model.NewScopeClaim.ScopeName = model.CurrentScope.Name;
-                //model.NewScopeSecret.SiteId = model.SiteId;
-                //model.NewScopeSecret.ScopeName = model.CurrentScope.Name;
-            }
+            
 
             return View(model);
 
