@@ -1,5 +1,5 @@
 {
-    "version": "1.0.0-rc20161007",
+    "version": "1.0.0-rc20161020",
     "description": "asp.net identity implementation for cloudscribe web application foundation",
     "authors": [ "Joe Audette" ],
     "packOptions": {

@@ -29,9 +29,10 @@ namespace cloudscribe.Core.IdentityServer.EFCore.Stores
             this.context = context;
         }
 
-        public Task<Client> FindClientByIdAsync(string clientId)
+        public async Task<Client> FindClientByIdAsync(string clientId)
         {
-            var client = context.Clients
+            var client = await context.Clients
+                .AsNoTracking()
                 .Include(x => x.AllowedGrantTypes)
                 .Include(x => x.RedirectUris)
                 .Include(x => x.PostLogoutRedirectUris)
@@ -40,10 +41,11 @@ namespace cloudscribe.Core.IdentityServer.EFCore.Stores
                 .Include(x => x.Claims)
                 .Include(x => x.IdentityProviderRestrictions)
                 .Include(x => x.AllowedCorsOrigins)
-                .FirstOrDefault(x => x.SiteId == _siteId && x.ClientId == clientId);
+                .FirstOrDefaultAsync(x => x.SiteId == _siteId && x.ClientId == clientId);
+
             var model = client.ToModel();
 
-            return Task.FromResult(model);
+            return model;
         }
     }
 }

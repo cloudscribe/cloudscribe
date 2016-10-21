@@ -1,4 +1,5 @@
 ﻿@model cloudscribe.Core.IdentityServerIntegration.Models.ScopeEditViewModel
+@using cloudscribe.Core.IdentityServerIntegration.Models
 @using cloudscribe.Core.IdentityServerIntegration
 @using Microsoft.Extensions.Localization
 @inject IStringLocalizer<CloudscribeIntegration> sr
@@ -11,105 +12,7 @@
 else
 {
     <h2>@sr["Edit Scope"]</h2>
-    <form asp-controller="Scopes" asp-action="EditScope">
-        <input asp-for="SiteId" type="hidden" />
-        <input name="Name" value="@Model.CurrentScope.Name" type="hidden" />
-        <div class="form-horizontal">
-            <div asp-validation-summary="All" class="text-danger"></div>
-            <div class="form-group">
-                <label class="col-md-2 control-label">@sr["Type"]</label>
-                <div class="col-md-10">
-                    <label class="form-control" >@Model.CurrentScope.Type</label>
-                </div>
-            </div>
-            <div class="form-group">
-                <label class="col-md-2 control-label">@sr["Name"]</label>
-                <div class="col-md-10">
-                    <label class="form-control">@Model.CurrentScope.Name</label>
-                </div>
-            </div>
-            <div class="form-group">
-                <label for="DisplayName" class="col-md-2 control-label">@sr["Display Name"]</label>
-                <div class="col-md-10">
-                    <input class="form-control" name="DisplayName" value="@Model.CurrentScope.DisplayName" />
-                    @Html.ValidationMessage("scopeerror", new { @class = "text-danger" })
-                </div>
-            </div>
-            <div class="form-group">
-                <label for="Description" class="col-md-2 control-label">@sr["Description"]</label>
-                <div class="col-md-10">
-                    <input class="form-control" name="Description" value="@Model.CurrentScope.Description" />
-                </div>
-            </div>
-            <div class="form-group">
-                <label for="ClaimsRule" class="col-md-2 control-label">@sr["Claims Rule"]</label>
-                <div class="col-md-10">
-                    <input class="form-control" name="ClaimsRule" value="@Model.CurrentScope.ClaimsRule" />
-                </div>
-            </div>
-            <div class="form-group">
-                <div class="col-md-10 col-md-offset-2">
-                    <div class="checkbox">
-                        <label>
-                            <input id="Enabled" name="Enabled" type="checkbox" checked="@Model.CurrentScope.Enabled" data-val="true" data-val-required="true" value="true" /> @sr["Enabled"]
-                        </label>
-                    </div>
-                </div>
-            </div>
-            <div class="form-group">
-                <div class="col-md-10 col-md-offset-2">
-                    <div class="checkbox">
-                        <label>
-                            <input id="Required" name="Required" type="checkbox" checked="@Model.CurrentScope.Required" data-val="true" data-val-required="true" value="true"  /> @sr["Required"]
-                        </label>
-                    </div>
-                </div>
-            </div>
-            <div class="form-group">
-                <div class="col-md-10 col-md-offset-2">
-                    <div class="checkbox">
-                        <label>
-                            <input id="Emphasize" name="Emphasize" type="checkbox" checked="@Model.CurrentScope.Emphasize" data-val="true" data-val-required="true" value="true"  /> @sr["Emphasize"]
-                        </label>
-                    </div>
-                </div>
-            </div>
-            <div class="form-group">
-                <div class="col-md-10 col-md-offset-2">
-                    <div class="checkbox">
-                        <label>
-                            <input id="ShowInDiscoveryDocument" name="ShowInDiscoveryDocument" type="checkbox" checked="@Model.CurrentScope.ShowInDiscoveryDocument" data-val="true" data-val-required="true" value="true"  /> @sr["Show In Discovery Document"]
-                        </label>
-                    </div>
-                </div>
-            </div>
-            <div class="form-group">
-                <div class="col-md-10 col-md-offset-2">
-                    <div class="checkbox">
-                        <label>
-                            <input id="AllowUnrestrictedIntrospection" name="AllowUnrestrictedIntrospection" type="checkbox" checked="@Model.CurrentScope.AllowUnrestrictedIntrospection" data-val="true" data-val-required="true" value="true" /> @sr["AllowUnrestricted Introspection"]
-                        </label>
-                    </div>
-                </div>
-            </div>
-            <div class="form-group">
-                <div class="col-md-10 col-md-offset-2">
-                    <div class="checkbox">
-                        <label>
-                            <input id="IncludeAllClaimsForUser" name="IncludeAllClaimsForUser" type="checkbox" checked="@Model.CurrentScope.IncludeAllClaimsForUser" data-val="true" data-val-required="true" value="true" /> @sr["Include All Claims For User"]
-                        </label>
-                    </div>
-                </div>
-            </div>
-            <div class="form-group">
-                <div class="col-md-offset-2 col-md-10">
-                    <button name="submit" type="submit" class="btn btn-default">@sr["Save"]</button>
-                    <a class="btn btn-default" asp-action="Index" asp-controller="Scopes"
-                       asp-route-siteId="@Model.SiteId">@sr["Cancel"]</a>
-                </div>
-            </div>
-        </div>
-    </form>
+    await Html.RenderPartialAsync("EditScopePartial", new ScopeItemViewModel(Model.SiteId, Model.CurrentScope));
     await Html.RenderPartialAsync("ScopeClaimsPartial", Model);
     await Html.RenderPartialAsync("ScopeSecretsPartial", Model);
 }

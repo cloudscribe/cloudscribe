@@ -9,7 +9,7 @@ using IdentityServer4.Models;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace cloudscribe.Core.IdentityServerIntegration.StorageModels
+namespace cloudscribe.Core.IdentityServerIntegration.Storage
 {
     public interface IClientCommands
     {

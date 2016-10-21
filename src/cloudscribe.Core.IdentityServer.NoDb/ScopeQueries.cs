@@ -6,7 +6,7 @@
 // 
 
 using cloudscribe.Core.Models.Generic;
-using cloudscribe.Core.IdentityServerIntegration.StorageModels;
+using cloudscribe.Core.IdentityServerIntegration.Storage;
 using IdentityServer4.Models;
 using NoDb;
 using System.Collections.Generic;

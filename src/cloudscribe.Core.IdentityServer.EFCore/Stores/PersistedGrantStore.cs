@@ -34,7 +34,8 @@ namespace cloudscribe.Core.IdentityServer.EFCore.Stores
 
         public async Task StoreAsync(PersistedGrant token)
         {
-            var existing = _context.PersistedGrants.SingleOrDefault(x => x.SiteId == _siteId && x.Key == token.Key);
+            var existing = await _context.PersistedGrants.SingleOrDefaultAsync(x => x.SiteId == _siteId && x.Key == token.Key)
+                .ConfigureAwait(false);
             if (existing == null)
             {
                 var persistedGrant = token.ToEntity();
@@ -48,29 +49,28 @@ namespace cloudscribe.Core.IdentityServer.EFCore.Stores
 
             try
             {
-                await _context.SaveChangesAsync();
+                await _context.SaveChangesAsync().ConfigureAwait(false);
             }
             catch (Exception ex)
             {
                 _logger.LogError(0, ex, "StoreAsync");
-            }
-
-            
+            }  
         }
 
-        public Task<PersistedGrant> GetAsync(string key)
+        public async Task<PersistedGrant> GetAsync(string key)
         {
-            var persistedGrant = _context.PersistedGrants.FirstOrDefault(x => x.SiteId == _siteId && x.Key == key);
+            var persistedGrant = await _context.PersistedGrants.FirstOrDefaultAsync(x => x.SiteId == _siteId && x.Key == key)
+                .ConfigureAwait(false);
             var model = persistedGrant.ToModel();
 
-            return Task.FromResult(model);
+            return model;
         }
 
         public async Task<IEnumerable<PersistedGrant>> GetAllAsync(string subjectId)
         {
             var persistedGrants = await _context.PersistedGrants
                 .Where(x => x.SiteId == _siteId && x.SubjectId == subjectId)
-                .ToListAsync();
+                .ToListAsync().ConfigureAwait(false);
 
             var model = persistedGrants.Select(x => x.ToModel());
 
@@ -79,11 +79,12 @@ namespace cloudscribe.Core.IdentityServer.EFCore.Stores
 
         public async Task RemoveAsync(string key)
         {
-            var persistedGrant = _context.PersistedGrants.FirstOrDefault(x => x.SiteId == _siteId && x.Key == key);
+            var persistedGrant = await _context.PersistedGrants.FirstOrDefaultAsync(x => x.SiteId == _siteId && x.Key == key)
+                .ConfigureAwait(false);
             if (persistedGrant!= null)
             {
                 _context.PersistedGrants.Remove(persistedGrant);
-                await _context.SaveChangesAsync();
+                await _context.SaveChangesAsync().ConfigureAwait(false);
             } 
         }
 
@@ -94,7 +95,7 @@ namespace cloudscribe.Core.IdentityServer.EFCore.Stores
                 .ToListAsync();
 
             _context.PersistedGrants.RemoveRange(persistedGrants);
-            await _context.SaveChangesAsync();
+            await _context.SaveChangesAsync().ConfigureAwait(false);
             
         }
 
@@ -104,10 +105,10 @@ namespace cloudscribe.Core.IdentityServer.EFCore.Stores
                 x.SiteId == _siteId &&
                 x.SubjectId == subjectId &&
                 x.ClientId == clientId &&
-                x.Type == type).ToListAsync();
+                x.Type == type).ToListAsync().ConfigureAwait(false);
 
             _context.PersistedGrants.RemoveRange(persistedGrants);
-            await _context.SaveChangesAsync();
+            await _context.SaveChangesAsync().ConfigureAwait(false);
         }
     }
 }

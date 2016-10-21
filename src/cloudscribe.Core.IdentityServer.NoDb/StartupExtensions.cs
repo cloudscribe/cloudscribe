@@ -7,7 +7,7 @@
 
 using cloudscribe.Core.IdentityServer.NoDb;
 using cloudscribe.Core.IdentityServer.NoDb.Models;
-using cloudscribe.Core.IdentityServerIntegration.StorageModels;
+using cloudscribe.Core.IdentityServerIntegration.Storage;
 using IdentityServer4.Models;
 using IdentityServer4.Services;
 using IdentityServer4.Stores;

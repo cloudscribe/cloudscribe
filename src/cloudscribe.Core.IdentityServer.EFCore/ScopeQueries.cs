@@ -2,12 +2,12 @@
 // Licensed under the Apache License, Version 2.0
 // Author:					Joe Audette
 // Created:					2016-10-16
-// Last Modified:			2016-10-16
+// Last Modified:			2016-10-21
 // 
 
 using cloudscribe.Core.IdentityServer.EFCore.Interfaces;
 using cloudscribe.Core.IdentityServer.EFCore.Mappers;
-using cloudscribe.Core.IdentityServerIntegration.StorageModels;
+using cloudscribe.Core.IdentityServerIntegration.Storage;
 using cloudscribe.Core.Models.Generic;
 using IdentityServer4.Models;
 using Microsoft.EntityFrameworkCore;
@@ -39,6 +39,7 @@ namespace cloudscribe.Core.IdentityServer.EFCore
         public async Task<Scope> FetchScope(string siteId, string scopeName, CancellationToken cancellationToken = default(CancellationToken))
         {
             IQueryable<Entities.Scope> query = context.Scopes
+                .AsNoTracking()
                 .Include(x => x.Claims)
                 .Include(x => x.ScopeSecrets);
             
@@ -66,6 +67,7 @@ namespace cloudscribe.Core.IdentityServer.EFCore
             int offset = (pageSize * pageNumber) - pageSize;
 
             var list = await context.Scopes
+                .AsNoTracking()
                 .Where(x => x.SiteId == siteId)
                 .OrderBy(x => x.Type).ThenBy(x => x.Name)
                 .Skip(offset)
