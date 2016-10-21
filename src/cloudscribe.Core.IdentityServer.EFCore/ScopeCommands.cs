@@ -42,14 +42,14 @@ namespace cloudscribe.Core.IdentityServer.EFCore
 
         public async Task UpdateScope(string siteId, Scope scope, CancellationToken cancellationToken = default(CancellationToken))
         {
-            var name = scope.Name;
-            var found = await context.Scopes.AsNoTracking().Where(x => x.SiteId == siteId && x.Name == name)
-               .Select(x => x.Id).FirstOrDefaultAsync();
-            var ent = scope.ToEntity();
-            ent.Id = found;
-            ent.SiteId = siteId;
-            context.Scopes.Update(ent);
-            await context.SaveChangesAsync();
+            if (scope == null) return;
+            // since the Scope doesn't have the ids of the scope entity child objects
+            // updating creates duplicate child objects ie ScopeClaims and Secrets
+            // therefore we need to actually delete the found scope
+            // and re-create it - we don't care about the storage ids
+            await DeleteScope(siteId, scope.Name, cancellationToken).ConfigureAwait(false);
+
+            await CreateScope(siteId, scope, cancellationToken).ConfigureAwait(false);
         }
 
         public async Task DeleteScope(string siteId, string scopeName, CancellationToken cancellationToken = default(CancellationToken))

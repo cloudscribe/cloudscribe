@@ -37,6 +37,7 @@ namespace cloudscribe.Core.IdentityServer.EFCore
             cancellationToken.ThrowIfCancellationRequested();
 
             var client = await context.Clients
+                .AsNoTracking()
                 .Include(x => x.AllowedGrantTypes)
                 .Include(x => x.RedirectUris)
                 .Include(x => x.PostLogoutRedirectUris)
@@ -54,7 +55,7 @@ namespace cloudscribe.Core.IdentityServer.EFCore
 
         public async Task<int> CountClients(string siteId, CancellationToken cancellationToken = default(CancellationToken))
         {
-            return await context.Clients.Where(x => x.SiteId == siteId).CountAsync(cancellationToken).ConfigureAwait(false);
+            return await context.Clients.AsNoTracking().Where(x => x.SiteId == siteId).CountAsync(cancellationToken).ConfigureAwait(false);
         }
 
         public async Task<PagedResult<Client>> GetClients(
@@ -66,6 +67,15 @@ namespace cloudscribe.Core.IdentityServer.EFCore
             int offset = (pageSize * pageNumber) - pageSize;
 
             var data = await context.Clients
+                .AsNoTracking()
+                .Include(x => x.AllowedGrantTypes)
+                .Include(x => x.RedirectUris)
+                .Include(x => x.PostLogoutRedirectUris)
+                .Include(x => x.AllowedScopes)
+                .Include(x => x.ClientSecrets)
+                .Include(x => x.Claims)
+                .Include(x => x.IdentityProviderRestrictions)
+                .Include(x => x.AllowedCorsOrigins)
                 .Where(x => x.SiteId == siteId)
                 .OrderBy(x => x.ClientName)
                 .Skip(offset)

@@ -78,8 +78,7 @@ namespace cloudscribe.Core.IdentityServerIntegration.Controllers
             Guid? siteId,
             string scopeName = null)
         {
-            //TODO: validate modelstate
-
+            
             var selectedSite = await siteManager.GetSiteForDataOperations(siteId);
             
             if (!string.IsNullOrEmpty(scopeName))

@@ -34,11 +34,17 @@ namespace cloudscribe.Core.IdentityServer.EFCore
 
         public async Task UpdateClient(string siteId, Client client, CancellationToken cancellationToken = default(CancellationToken))
         {
+            if (client == null) return;
+            // since the Client doesn't have the ids of the scope entity child objects
+            // updating creates duplicate child objects ie Scopes and Secrets
+            // therefore we need to actually delete the found client
+            // and re-create it - we don't care about the storage ids
+
             cancellationToken.ThrowIfCancellationRequested();
-            var ent = client.ToEntity();
-            ent.SiteId = siteId;
-            context.Clients.Update(ent);
-            await context.SaveChangesAsync().ConfigureAwait(false);
+
+            await DeleteClient(siteId, client.ClientId, cancellationToken).ConfigureAwait(false);
+            await CreateClient(siteId, client, cancellationToken).ConfigureAwait(false);
+            
         }
 
         public async Task DeleteClient(string siteId, string clientId, CancellationToken cancellationToken = default(CancellationToken))

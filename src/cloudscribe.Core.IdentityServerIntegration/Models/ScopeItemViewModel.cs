@@ -1,9 +1,30 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using IdentityServer4.Models;
 
 namespace cloudscribe.Core.IdentityServerIntegration.Models
 {
     public class ScopeItemViewModel
     {
+        public ScopeItemViewModel()
+        { }
+
+        public ScopeItemViewModel(string siteId, Scope scope)
+        {
+            SiteId = siteId;
+            ScopeType = scope.Type.ToString();
+            Name = scope.Name;
+            DisplayName = scope.DisplayName;
+            Description = scope.Description;
+            Emphasize = scope.Emphasize;
+            Required = scope.Required;
+            ClaimsRule = scope.ClaimsRule;
+            AllowUnrestrictedIntrospection = scope.AllowUnrestrictedIntrospection;
+            Enabled = scope.Enabled;
+            IncludeAllClaimsForUser = scope.IncludeAllClaimsForUser;
+            ShowInDiscoveryDocument = scope.ShowInDiscoveryDocument;
+
+        }
+
         [Required]
         public string SiteId { get; set; }
 

@@ -32,6 +32,7 @@ namespace cloudscribe.Core.IdentityServer.EFCore.Stores
         public async Task<Client> FindClientByIdAsync(string clientId)
         {
             var client = await context.Clients
+                .AsNoTracking()
                 .Include(x => x.AllowedGrantTypes)
                 .Include(x => x.RedirectUris)
                 .Include(x => x.PostLogoutRedirectUris)
