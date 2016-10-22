@@ -21,20 +21,13 @@ namespace Microsoft.Extensions.DependencyInjection
 {
     public static class StartupExtensions
     {
-        public static IIdentityServerBuilder AddCloudscribeIdentityServerIntegration<TUser>(this IIdentityServerBuilder builder)
-            where TUser : SiteUser
-        {
-            return builder.AddCloudscribeIdentityServerIntegration<TUser>(AuthenticationScheme.Application);
-        }
-
-        public static IIdentityServerBuilder AddCloudscribeIdentityServerIntegration<TUser>(this IIdentityServerBuilder builder, string authenticationScheme)
-            where TUser : SiteUser
+        public static IIdentityServerBuilder AddCloudscribeIdentityServerIntegration(this IIdentityServerBuilder builder)   
         {
             builder.Services.AddScoped<IIdentityServerIntegration, CloudscribeIntegration>();
 
             builder.Services.Configure<IdentityServerOptions>(options =>
             {
-                options.AuthenticationOptions.AuthenticationScheme = authenticationScheme;
+                options.AuthenticationOptions.AuthenticationScheme = AuthenticationScheme.Application;
             });
 
             builder.Services.AddSingleton<IEndpointRouter>(resolver =>
@@ -48,16 +41,16 @@ namespace Microsoft.Extensions.DependencyInjection
 
             builder.Services.Configure<IdentityOptions>(options =>
             {
-                options.Cookies.ApplicationCookie.AuthenticationScheme = authenticationScheme;
+                options.Cookies.ApplicationCookie.AuthenticationScheme = AuthenticationScheme.Application;
                 options.ClaimsIdentity.UserIdClaimType = JwtClaimTypes.Subject;
                 options.ClaimsIdentity.UserNameClaimType = JwtClaimTypes.Name;
                 options.ClaimsIdentity.RoleClaimType = JwtClaimTypes.Role;
             });
 
-            builder.AddResourceOwnerValidator<ResourceOwnerPasswordValidator<TUser>>();
-            builder.Services.AddTransient<IProfileService, ProfileService<TUser>>();
+            builder.AddResourceOwnerValidator<ResourceOwnerPasswordValidator<SiteUser>>();
+            builder.Services.AddTransient<IProfileService, ProfileService<SiteUser>>();
 
-            builder.Services.AddTransient<ISecurityStampValidator, cloudscribe.Core.IdentityServerIntegration.SecurityStampValidator<TUser>>();
+            builder.Services.AddTransient<ISecurityStampValidator, cloudscribe.Core.IdentityServerIntegration.SecurityStampValidator<SiteUser>>();
 
             builder.Services.AddScoped<IMatchAuthorizeProtocolRoutePaths, MultiTenantAuthorizeProtocolRouteMatcher>();
             builder.Services.AddScoped<IMatchEndSessionProtocolRoutePaths, MultiTenantEndSessionProtocolRouteMatcher>();
