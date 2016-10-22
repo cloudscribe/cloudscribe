@@ -394,7 +394,7 @@ namespace example.WebApp
 
                     services.AddIdentityServer()
                         .AddCloudscribeCoreNoDbIdentityServerStorage()
-                        .AddCloudscribeIdentityServerIntegration<cloudscribe.Core.Models.SiteUser>()
+                        .AddCloudscribeIdentityServerIntegration()
                         .SetTemporarySigningCredential()
                         ;
 
@@ -410,7 +410,7 @@ namespace example.WebApp
                     
                     services.AddIdentityServer()
                         .AddCloudscribeCoreEFIdentityServerStorage(connectionString)
-                        .AddCloudscribeIdentityServerIntegration<cloudscribe.Core.Models.SiteUser>()
+                        .AddCloudscribeIdentityServerIntegration()
                         .SetTemporarySigningCredential()
                         ;
                     
