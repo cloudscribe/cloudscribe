@@ -307,7 +307,7 @@ namespace example.WebApp
                 // ie apis that are hosted in the same web app endpoint with the authority server
                 // this is not needed here if you are only using separate api endpoints
                 // it is needed in the startup of those separate endpoints
-                app.UseIdentityServerAuthentication(new IdentityServerAuthenticationOptions
+                builder.UseIdentityServerAuthentication(new IdentityServerAuthenticationOptions
                 {
                     Authority = "https://localhost:44399",
                     // using the site aliasid as the scope so each tenant has a different scope
