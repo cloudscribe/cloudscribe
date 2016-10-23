@@ -49,7 +49,7 @@ namespace Microsoft.AspNetCore.Builder
                 AuthenticationScheme.Application,
                 multiTenantOptions.UseRelatedSitesMode,
                 tenant,
-                CookieSecurePolicy.Always
+                applicationCookieSecure
                 );
             builder.UseCookieAuthentication(appCookieOptions);
 
