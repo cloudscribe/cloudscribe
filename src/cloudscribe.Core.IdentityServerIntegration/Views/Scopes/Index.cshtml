@@ -4,7 +4,7 @@
 @using Microsoft.Extensions.Localization
 @addTagHelper "*, cloudscribe.Web.Pagination"
 @inject IStringLocalizer<CloudscribeIntegration> sr
-<h2>@sr["Scope Management"]</h2>
+<h2>@ViewData["Title"]</h2>
 <p>@sr["Identity scopes request identity information (aka claims) about a user, e.g. his name or email address is modeled as a scope in OpenID Connect."]</p>
 <p>@sr["Resource scopes identify web APIs (also called resource servers). To get access tokens for APIs, you need to register them as a scope."]</p>
 <p>To learn more about scopes see the <a href="https://identityserver4.readthedocs.io/en/dev/configuration/scopes.html">IdentityServer Documentation</a></p>

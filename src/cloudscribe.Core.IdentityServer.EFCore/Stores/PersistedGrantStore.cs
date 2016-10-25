@@ -13,6 +13,7 @@ using IdentityServer4.Models;
 using IdentityServer4.Stores;
 using Microsoft.Extensions.Logging;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Http;
 
 namespace cloudscribe.Core.IdentityServer.EFCore.Stores
 {
@@ -20,20 +21,28 @@ namespace cloudscribe.Core.IdentityServer.EFCore.Stores
     {
         private readonly IPersistedGrantDbContext _context;
         private readonly ILogger _logger;
-        private string _siteId;
+        private IHttpContextAccessor _contextAccessor;
 
         public PersistedGrantStore(
-            SiteContext site,
+            IHttpContextAccessor contextAccessor,
             IPersistedGrantDbContext context, 
             ILogger<PersistedGrantStore> logger)
         {
-            _siteId = site.Id.ToString();
+            _contextAccessor = contextAccessor;
             _context = context;
             _logger = logger;
         }
 
         public async Task StoreAsync(PersistedGrant token)
         {
+            var site = _contextAccessor.HttpContext.GetTenant<SiteContext>();
+            if (site == null)
+            {
+                _logger.LogError("sitecontext was null");
+                return;
+            }
+            var _siteId = site.Id.ToString();
+
             var existing = await _context.PersistedGrants.SingleOrDefaultAsync(x => x.SiteId == _siteId && x.Key == token.Key)
                 .ConfigureAwait(false);
             if (existing == null)
@@ -59,6 +68,14 @@ namespace cloudscribe.Core.IdentityServer.EFCore.Stores
 
         public async Task<PersistedGrant> GetAsync(string key)
         {
+            var site = _contextAccessor.HttpContext.GetTenant<SiteContext>();
+            if (site == null)
+            {
+                _logger.LogError("sitecontext was null");
+                return null;
+            }
+            var _siteId = site.Id.ToString();
+
             var persistedGrant = await _context.PersistedGrants.FirstOrDefaultAsync(x => x.SiteId == _siteId && x.Key == key)
                 .ConfigureAwait(false);
             var model = persistedGrant.ToModel();
@@ -68,6 +85,14 @@ namespace cloudscribe.Core.IdentityServer.EFCore.Stores
 
         public async Task<IEnumerable<PersistedGrant>> GetAllAsync(string subjectId)
         {
+            var site = _contextAccessor.HttpContext.GetTenant<SiteContext>();
+            if (site == null)
+            {
+                _logger.LogError("sitecontext was null");
+                return new List<PersistedGrant>();
+            }
+            var _siteId = site.Id.ToString();
+
             var persistedGrants = await _context.PersistedGrants
                 .Where(x => x.SiteId == _siteId && x.SubjectId == subjectId)
                 .ToListAsync().ConfigureAwait(false);
@@ -79,6 +104,14 @@ namespace cloudscribe.Core.IdentityServer.EFCore.Stores
 
         public async Task RemoveAsync(string key)
         {
+            var site = _contextAccessor.HttpContext.GetTenant<SiteContext>();
+            if (site == null)
+            {
+                _logger.LogError("sitecontext was null");
+                return;
+            }
+            var _siteId = site.Id.ToString();
+
             var persistedGrant = await _context.PersistedGrants.FirstOrDefaultAsync(x => x.SiteId == _siteId && x.Key == key)
                 .ConfigureAwait(false);
             if (persistedGrant!= null)
@@ -90,6 +123,14 @@ namespace cloudscribe.Core.IdentityServer.EFCore.Stores
 
         public async Task RemoveAllAsync(string subjectId, string clientId)
         {
+            var site = _contextAccessor.HttpContext.GetTenant<SiteContext>();
+            if (site == null)
+            {
+                _logger.LogError("sitecontext was null");
+                return;
+            }
+            var _siteId = site.Id.ToString();
+
             var persistedGrants = await _context.PersistedGrants
                 .Where(x => x.SiteId == _siteId && x.SubjectId == subjectId && x.ClientId == clientId)
                 .ToListAsync();
@@ -101,6 +142,14 @@ namespace cloudscribe.Core.IdentityServer.EFCore.Stores
 
         public async Task RemoveAllAsync(string subjectId, string clientId, string type)
         {
+            var site = _contextAccessor.HttpContext.GetTenant<SiteContext>();
+            if (site == null)
+            {
+                _logger.LogError("sitecontext was null");
+                return;
+            }
+            var _siteId = site.Id.ToString();
+
             var persistedGrants = await _context.PersistedGrants.Where(x =>
                 x.SiteId == _siteId &&
                 x.SubjectId == subjectId &&

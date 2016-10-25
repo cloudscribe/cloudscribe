@@ -6,12 +6,12 @@
 
 @if (Model.CurrentScope == null)
 {
-    <h2>@sr["New Scope"]</h2>
+    <h2>@ViewData["Title"]</h2>
     await Html.RenderPartialAsync("NewScopePartial", Model.NewScope);
 }
 else
 {
-    <h2>@sr["Edit Scope"]</h2>
+    <h2>@ViewData["Title"]</h2>
     await Html.RenderPartialAsync("EditScopePartial", new ScopeItemViewModel(Model.SiteId, Model.CurrentScope));
     await Html.RenderPartialAsync("ScopeClaimsPartial", Model);
     await Html.RenderPartialAsync("ScopeSecretsPartial", Model);

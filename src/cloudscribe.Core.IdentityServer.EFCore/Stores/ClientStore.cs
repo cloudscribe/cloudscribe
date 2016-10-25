@@ -11,26 +11,31 @@ using cloudscribe.Core.IdentityServer.EFCore.Mappers;
 using IdentityServer4.Models;
 using IdentityServer4.Stores;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Http;
 
 namespace cloudscribe.Core.IdentityServer.EFCore.Stores
 {
     public class ClientStore : IClientStore
     {
         private readonly IConfigurationDbContext context;
-        private string _siteId;
+        private IHttpContextAccessor _contextAccessor;
 
         public ClientStore(
-            SiteContext site,
+            IHttpContextAccessor contextAccessor,
             IConfigurationDbContext context
             )
         {
             if (context == null) throw new ArgumentNullException(nameof(context));
-            _siteId = site.Id.ToString();
+            _contextAccessor = contextAccessor;
             this.context = context;
         }
 
         public async Task<Client> FindClientByIdAsync(string clientId)
         {
+            var site = _contextAccessor.HttpContext.GetTenant<SiteContext>();
+            if (site == null) return null;
+            var _siteId = site.Id.ToString();
+
             var client = await context.Clients
                 .AsNoTracking()
                 .Include(x => x.AllowedGrantTypes)

@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:                  Joe Audette
 // Created:                 2016-10-12
-// Last Modified:           2016-10-19
+// Last Modified:           2016-10-25
 // 
 
 using cloudscribe.Core.IdentityServer.NoDb.Models;
@@ -10,6 +10,7 @@ using cloudscribe.Core.Models;
 using IdentityServer4.Models;
 using IdentityServer4.Services;
 using IdentityServer4.Stores;
+using Microsoft.AspNetCore.Http;
 using NoDb;
 using System;
 using System.Collections.Generic;
@@ -22,25 +23,28 @@ namespace cloudscribe.Core.IdentityServer.NoDb
     public class ClientStore : IClientStore
     {
         public ClientStore(
-            SiteContext site,
+            IHttpContextAccessor contextAccessor,
             IBasicQueries<Client> queries,
             IBasicQueries<ClientClaim> claimQueries
             )
         {
-            _siteId = site.Id.ToString();
+            
             _queries = queries;
             _claimQueries = claimQueries;
+            _contextAccessor = contextAccessor;
         }
 
         private IBasicQueries<Client> _queries;
         private IBasicQueries<ClientClaim> _claimQueries;
-        private string _siteId;
+        private IHttpContextAccessor _contextAccessor;
 
         private async Task<List<ClientClaim>> GetAllClientClaims(string siteId, CancellationToken cancellationToken = default(CancellationToken))
         {
             cancellationToken.ThrowIfCancellationRequested();
+            var site = _contextAccessor.HttpContext.GetTenant<SiteContext>();
+            if (site == null) return new List<ClientClaim>();
             //TODO: cache
-            var all = await _claimQueries.GetAllAsync(siteId, cancellationToken).ConfigureAwait(false);
+            var all = await _claimQueries.GetAllAsync(site.Id.ToString(), cancellationToken).ConfigureAwait(false);
 
             return all.ToList();
         }
@@ -56,14 +60,17 @@ namespace cloudscribe.Core.IdentityServer.NoDb
 
         public async Task<Client> FindClientByIdAsync(string clientId)
         {
+            var site = _contextAccessor.HttpContext.GetTenant<SiteContext>();
+            if (site == null) return null;
+
             var client =  await _queries.FetchAsync(
-                _siteId, // aka nodb projectid
+                site.Id.ToString(), // aka nodb projectid
                 clientId 
                 ).ConfigureAwait(false);
 
             if (client != null)
             {
-                var clientClaims = await GetClientClaims(_siteId, client.ClientId).ConfigureAwait(false);
+                var clientClaims = await GetClientClaims(site.Id.ToString(), client.ClientId).ConfigureAwait(false);
                 foreach (var cc in clientClaims)
                 {
                     var c = new System.Security.Claims.Claim(cc.Type, cc.Value);
