@@ -1,5 +1,5 @@
 ﻿{
-    "version": "1.0.0-rc20161021",
+    "version": "1.0.0-rc20161024",
     "description": "cloudscribe multi-tenant identity integration for IdentityServer4",
     "authors": [ "Joe Audette" ],
     "packOptions": {
