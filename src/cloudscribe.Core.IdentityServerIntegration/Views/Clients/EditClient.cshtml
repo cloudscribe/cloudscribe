@@ -5,12 +5,12 @@
 
 @if (Model.CurrentClient == null)
 {
-    <h2>@sr["New Client"]</h2>
+    <h2>@ViewData["Title"]</h2>
     await Html.RenderPartialAsync("NewClientPartial", Model.NewClient);
 }
 else
 {
-    <h2>@sr["Edit Client"]</h2>
+    <h2>@ViewData["Title"]</h2>
     await Html.RenderPartialAsync("EditClientPartial", Model.CurrentClient);
     await Html.RenderPartialAsync("ClientRedirectsPartial", Model.CurrentClient);
     await Html.RenderPartialAsync("ClientLogoutRedirectsPartial", Model.CurrentClient);

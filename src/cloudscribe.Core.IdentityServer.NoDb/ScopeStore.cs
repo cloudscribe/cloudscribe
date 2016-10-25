@@ -2,12 +2,13 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:                  Joe Audette
 // Created:                 2016-10-12
-// Last Modified:           2016-10-14
+// Last Modified:           2016-10-25
 // 
 
 using cloudscribe.Core.Models;
 using IdentityServer4.Models;
 using IdentityServer4.Stores;
+using Microsoft.AspNetCore.Http;
 using NoDb;
 using System.Collections.Generic;
 using System.Linq;
@@ -18,16 +19,16 @@ namespace cloudscribe.Core.IdentityServer.NoDb
     public class ScopeStore : IScopeStore
     {
         public ScopeStore(
-            SiteContext site,
+            IHttpContextAccessor contextAccessor,
             IBasicQueries<Scope> queries
             )
         {
-            _siteId = site.Id.ToString();
+            _contextAccessor = contextAccessor;
             _queries = queries;
         }
 
         private IBasicQueries<Scope> _queries;
-        private string _siteId;
+        private IHttpContextAccessor _contextAccessor;
 
         public async Task<IEnumerable<Scope>> FindScopesAsync(IEnumerable<string> scopeNames)
         {
@@ -56,8 +57,10 @@ namespace cloudscribe.Core.IdentityServer.NoDb
 
         private async Task<IEnumerable<Scope>> GetAllScopes()
         {
+            var site = _contextAccessor.HttpContext.GetTenant<SiteContext>();
+            if (site == null) return new List<Scope>();
             //TODO: cache
-            var allScopes = await _queries.GetAllAsync(_siteId).ConfigureAwait(false);
+            var allScopes = await _queries.GetAllAsync(site.Id.ToString()).ConfigureAwait(false);
 
             return allScopes;
         }

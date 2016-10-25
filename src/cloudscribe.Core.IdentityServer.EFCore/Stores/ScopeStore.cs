@@ -12,26 +12,33 @@ using cloudscribe.Core.IdentityServer.EFCore.Mappers;
 using IdentityServer4.Models;
 using IdentityServer4.Stores;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Http;
 
 namespace cloudscribe.Core.IdentityServer.EFCore.Stores
 {
     public class ScopeStore : IScopeStore
     {
         private readonly IConfigurationDbContext context;
-        private string _siteId;
+        private IHttpContextAccessor _contextAccessor;
 
         public ScopeStore(
-            SiteContext site,
+            IHttpContextAccessor contextAccessor,
             IConfigurationDbContext context
             )
         {
             if (context == null) throw new ArgumentNullException(nameof(context));
-            _siteId = site.Id.ToString();
+            
             this.context = context;
+            _contextAccessor = contextAccessor;
         }
+
 
         public async Task<IEnumerable<Scope>> FindScopesAsync(IEnumerable<string> scopeNames)
         {
+            var site = _contextAccessor.HttpContext.GetTenant<SiteContext>();
+            if (site == null) return new List<Scope>();
+            var _siteId = site.Id.ToString();
+
             IQueryable<Entities.Scope> scopes = context.Scopes
                 .AsNoTracking()
                 .Include(x => x.Claims)
@@ -50,6 +57,10 @@ namespace cloudscribe.Core.IdentityServer.EFCore.Stores
 
         public async Task<IEnumerable<Scope>> GetScopesAsync(bool publicOnly = true)
         {
+            var site = _contextAccessor.HttpContext.GetTenant<SiteContext>();
+            if (site == null) return new List<Scope>();
+            var _siteId = site.Id.ToString();
+
             IQueryable<Entities.Scope> scopes = context.Scopes
                 .AsNoTracking()
                 .Include(x => x.Claims)

@@ -6,8 +6,10 @@ using cloudscribe.Core.Models;
 using IdentityModel;
 using IdentityServer4.Configuration;
 using IdentityServer4.Hosting;
+using IdentityServer4.Infrastructure;
 using IdentityServer4.Services;
 using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Cors.Infrastructure;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc.Razor;
 using Microsoft.Extensions.FileProviders;
@@ -28,6 +30,7 @@ namespace Microsoft.Extensions.DependencyInjection
             builder.Services.Configure<IdentityServerOptions>(options =>
             {
                 options.AuthenticationOptions.AuthenticationScheme = AuthenticationScheme.Application;
+                
             });
 
             builder.Services.AddSingleton<IEndpointRouter>(resolver =>
@@ -58,8 +61,13 @@ namespace Microsoft.Extensions.DependencyInjection
             builder.Services.AddScoped<ScopesManager, ScopesManager>();
             builder.Services.AddScoped<ClientsManager, ClientsManager>();
 
+            //builder.Services.AddTransientDecorator<ICorsPolicyProvider, CorsPolicyProvider>();
+            builder.Services.AddTransient<ICorsPathValidator, CorsPathValidator>();
+
             return builder;
         }
+
+
 
         //public static IServiceCollection AddCloudscribeIdentityServerIntegration(this IServiceCollection services)
         //{

@@ -8,6 +8,7 @@
 using cloudscribe.Core.Models;
 using IdentityServer4.Models;
 using IdentityServer4.Stores;
+using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
 using NoDb;
 using System;
@@ -20,35 +21,35 @@ namespace cloudscribe.Core.IdentityServer.NoDb
     public class PersistedGrantStore : IPersistedGrantStore
     {
         public PersistedGrantStore(
-            SiteContext site,
+            IHttpContextAccessor contextAccessor,
             IBasicQueries<PersistedGrant> queries,
             IBasicCommands<PersistedGrant> commands,
             ILogger<PersistedGrantStore> logger
             )
         {
-            _siteId = site.Id.ToString();
+            _contextAccessor = contextAccessor;
             _logger = logger;
             _queries = queries;
             _commands = commands;
         }
 
         private readonly ILogger _logger;
-        private string _siteId;
+        private IHttpContextAccessor _contextAccessor;
         private IBasicQueries<PersistedGrant> _queries;
         private IBasicCommands<PersistedGrant> _commands;
 
-        private async Task<IEnumerable<PersistedGrant>> GetAllAsync()
+        private async Task<IEnumerable<PersistedGrant>> GetAllInternalAsync(string siteId)
         {
             //TODO: cache
-            var all = await _queries.GetAllAsync(_siteId).ConfigureAwait(false);
+            var all = await _queries.GetAllAsync(siteId).ConfigureAwait(false);
             return all;
         }
 
-        private async Task RemoveRange(IEnumerable<PersistedGrant> list)
+        private async Task RemoveRange(string siteId, IEnumerable<PersistedGrant> list)
         {
             foreach (var g in list)
             {
-                await _commands.DeleteAsync(_siteId, g.Key).ConfigureAwait(false);
+                await _commands.DeleteAsync(siteId, g.Key).ConfigureAwait(false);
             }
         }
 
@@ -56,15 +57,21 @@ namespace cloudscribe.Core.IdentityServer.NoDb
         {
             try
             {
+                var site = _contextAccessor.HttpContext.GetTenant<SiteContext>();
+                if(site == null)
+                {
+                    _logger.LogError("sitecontext was null");
+                    return;
+                }
                 var existing = await GetAsync(token.Key).ConfigureAwait(false); 
                 if (existing == null)
                 {
                     if (string.IsNullOrEmpty(token.Key)) token.Key = Guid.NewGuid().ToString();
-                    await _commands.CreateAsync(_siteId, token.Key, token).ConfigureAwait(false);
+                    await _commands.CreateAsync(site.Id.ToString(), token.Key, token).ConfigureAwait(false);
                 }
                 else
                 {
-                    await _commands.UpdateAsync(_siteId, token.Key, token).ConfigureAwait(false);
+                    await _commands.UpdateAsync(site.Id.ToString(), token.Key, token).ConfigureAwait(false);
                 }
             }
             catch (Exception ex)
@@ -77,39 +84,64 @@ namespace cloudscribe.Core.IdentityServer.NoDb
 
         public async Task<PersistedGrant> GetAsync(string key)
         {
-            return await _queries.FetchAsync(_siteId, key).ConfigureAwait(false);
+            var site = _contextAccessor.HttpContext.GetTenant<SiteContext>();
+            if (site == null) return null;
+            return await _queries.FetchAsync(site.Id.ToString(), key).ConfigureAwait(false);
            
         }
 
         public async Task<IEnumerable<PersistedGrant>> GetAllAsync(string subjectId)
         {
-            var all = await GetAllAsync().ConfigureAwait(false);
+            var site = _contextAccessor.HttpContext.GetTenant<SiteContext>();
+            if (site == null) return new List<PersistedGrant>();
+
+            var all = await GetAllInternalAsync(site.Id.ToString()).ConfigureAwait(false);
             return all.Where(x => x.SubjectId == subjectId).ToList();
             
         }
 
         public async Task RemoveAsync(string key)
         {
-            await _commands.DeleteAsync(_siteId, key).ConfigureAwait(false);
+            var site = _contextAccessor.HttpContext.GetTenant<SiteContext>();
+            if (site == null)
+            {
+                _logger.LogError("sitecontext was null");
+                return;
+            }
+            await _commands.DeleteAsync(site.Id.ToString(), key).ConfigureAwait(false);
             
         }
 
         public async Task RemoveAllAsync(string subjectId, string clientId)
         {
-            var all = await GetAllAsync().ConfigureAwait(false);
+            var site = _contextAccessor.HttpContext.GetTenant<SiteContext>();
+            if (site == null)
+            {
+                _logger.LogError("sitecontext was null");
+                return;
+            }
+
+            var all = await GetAllInternalAsync(site.Id.ToString()).ConfigureAwait(false);
             var persistedGrants = all.Where(x => x.SubjectId == subjectId && x.ClientId == clientId).ToList();
-            await RemoveRange(persistedGrants).ConfigureAwait(false);  
+            await RemoveRange(site.Id.ToString(), persistedGrants).ConfigureAwait(false);  
         }
 
         public async Task RemoveAllAsync(string subjectId, string clientId, string type)
         {
-            var all = await GetAllAsync().ConfigureAwait(false);
+            var site = _contextAccessor.HttpContext.GetTenant<SiteContext>();
+            if (site == null)
+            {
+                _logger.LogError("sitecontext was null");
+                return;
+            }
+
+            var all = await GetAllInternalAsync(site.Id.ToString()).ConfigureAwait(false);
             var persistedGrants = all.Where(x =>
                 x.SubjectId == subjectId &&
                 x.ClientId == clientId &&
                 x.Type == type).ToList();
 
-            await RemoveRange(persistedGrants).ConfigureAwait(false);
+            await RemoveRange(site.Id.ToString(), persistedGrants).ConfigureAwait(false);
         }
 
 
