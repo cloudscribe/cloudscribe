@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:                  Joe Audette
 // Created:                 2016-10-12
-// Last Modified:           2016-10-17
+// Last Modified:           2016-10-26
 // 
 
 using cloudscribe.Core.IdentityServer.NoDb;
@@ -69,7 +69,8 @@ namespace Microsoft.Extensions.DependencyInjection
         public static IIdentityServerBuilder AddOperationalStore(
             this IIdentityServerBuilder builder)
         {
-            builder.Services.AddNoDb<PersistedGrant>();
+
+            builder.Services.AddNoDb<GrantItem>();
             builder.Services.AddTransient<IPersistedGrantStore, PersistedGrantStore>();
 
             return builder;

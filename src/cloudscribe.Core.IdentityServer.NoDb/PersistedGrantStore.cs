@@ -2,9 +2,10 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:                  Joe Audette
 // Created:                 2016-10-12
-// Last Modified:           2016-10-12
+// Last Modified:           2016-10-26
 // 
 
+using cloudscribe.Core.IdentityServer.NoDb.Models;
 using cloudscribe.Core.Models;
 using IdentityServer4.Models;
 using IdentityServer4.Stores;
@@ -22,8 +23,8 @@ namespace cloudscribe.Core.IdentityServer.NoDb
     {
         public PersistedGrantStore(
             IHttpContextAccessor contextAccessor,
-            IBasicQueries<PersistedGrant> queries,
-            IBasicCommands<PersistedGrant> commands,
+            IBasicQueries<GrantItem> queries,
+            IBasicCommands<GrantItem> commands,
             ILogger<PersistedGrantStore> logger
             )
         {
@@ -35,8 +36,13 @@ namespace cloudscribe.Core.IdentityServer.NoDb
 
         private readonly ILogger _logger;
         private IHttpContextAccessor _contextAccessor;
-        private IBasicQueries<PersistedGrant> _queries;
-        private IBasicCommands<PersistedGrant> _commands;
+        private IBasicQueries<GrantItem> _queries;
+        private IBasicCommands<GrantItem> _commands;
+
+        // key is not a good thing to use to name the storage file, an example key is
+        // OIvXyoxM+JDUP4c0PA6EzeYCvxcZpYdZWQn2mP+Q34Q=
+        // so stored as OIvXyoxM+JDUP4c0PA6EzeYCvxcZpYdZWQn2mP+Q34Q=.json results in file system errors
+        // therefore introduced GrantItem which adds a guid id
 
         private async Task<IEnumerable<PersistedGrant>> GetAllInternalAsync(string siteId)
         {
@@ -49,7 +55,12 @@ namespace cloudscribe.Core.IdentityServer.NoDb
         {
             foreach (var g in list)
             {
-                await _commands.DeleteAsync(siteId, g.Key).ConfigureAwait(false);
+                var gi = g as GrantItem;
+                if(gi != null)
+                {
+                    await _commands.DeleteAsync(siteId, gi.Id).ConfigureAwait(false);
+                }
+                
             }
         }
 
@@ -63,16 +74,9 @@ namespace cloudscribe.Core.IdentityServer.NoDb
                     _logger.LogError("sitecontext was null");
                     return;
                 }
-                var existing = await GetAsync(token.Key).ConfigureAwait(false); 
-                if (existing == null)
-                {
-                    if (string.IsNullOrEmpty(token.Key)) token.Key = Guid.NewGuid().ToString();
-                    await _commands.CreateAsync(site.Id.ToString(), token.Key, token).ConfigureAwait(false);
-                }
-                else
-                {
-                    await _commands.UpdateAsync(site.Id.ToString(), token.Key, token).ConfigureAwait(false);
-                }
+                var grant = new GrantItem(token);
+                await RemoveAsync(grant.Key).ConfigureAwait(false);
+                await _commands.CreateAsync(site.Id.ToString(), grant.Id, grant).ConfigureAwait(false);
             }
             catch (Exception ex)
             {
@@ -86,7 +90,10 @@ namespace cloudscribe.Core.IdentityServer.NoDb
         {
             var site = _contextAccessor.HttpContext.GetTenant<SiteContext>();
             if (site == null) return null;
-            return await _queries.FetchAsync(site.Id.ToString(), key).ConfigureAwait(false);
+
+            var all = await GetAllInternalAsync(site.Id.ToString()).ConfigureAwait(false);
+
+            return all.Where(x => x.Key == key).FirstOrDefault();
            
         }
 
@@ -108,7 +115,12 @@ namespace cloudscribe.Core.IdentityServer.NoDb
                 _logger.LogError("sitecontext was null");
                 return;
             }
-            await _commands.DeleteAsync(site.Id.ToString(), key).ConfigureAwait(false);
+            var found = await GetAsync(key).ConfigureAwait(false) as GrantItem;
+            if(found != null)
+            {
+                await _commands.DeleteAsync(site.Id.ToString(), found.Id).ConfigureAwait(false);
+            }
+            
             
         }
 
