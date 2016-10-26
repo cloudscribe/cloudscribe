@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.IO;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.DataProtection;
@@ -47,16 +48,12 @@ namespace example.WebApp
             // so no risk of messing up settings if deploying a new version to azure
             builder.AddEnvironmentVariables();
             Configuration = builder.Build();
-
-            appBasePath = env.ContentRootPath;
+            
             environment = env;
-
-
+            
         }
 
         private IHostingEnvironment environment;
-
-        private string appBasePath;
         public IConfigurationRoot Configuration { get; }
 
         // This method gets called by the runtime. Use this method to add services to the container.
@@ -67,7 +64,7 @@ namespace example.WebApp
             // we need to move to different hosting, without those key on the new host it would not be possible to decrypt
             // but it is perhaps a little risky storing these keys below the appRoot folder
             // for your own production envrionments store them outside of that if possible
-            string pathToCryptoKeys = appBasePath + System.IO.Path.DirectorySeparatorChar + "dp_keys" + System.IO.Path.DirectorySeparatorChar;
+            string pathToCryptoKeys = Path.Combine(environment.ContentRootPath, "dp_keys");
             services.AddDataProtection()
                 .PersistKeysToFileSystem(new System.IO.DirectoryInfo(pathToCryptoKeys));
 
