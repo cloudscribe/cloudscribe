@@ -60,6 +60,8 @@ http://blog.stermon.com/articles/2016/10/05/data-structures-done-right
 
 https://medium.com/@dogwith1eye/prefer-records-of-functions-to-interfaces-d6413af4d2c3#.175bp2yee
 
+http://lukemerrett.com/fsharp-domain-modelling/
+
 ## Resources
 
 https://medium.com/real-world-fsharp/using-f-with-net-core-aa6cfc9ef547#.wlxvm2oj6

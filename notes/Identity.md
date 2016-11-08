@@ -34,12 +34,23 @@ http://stackoverflow.com/questions/34612631/prevent-token-based-authorization-of
 
 https://github.com/mrsheepuk/ASPNETSelfCreatedTokenAuthExample
 
+https://github.com/IdentityModel/oidc-client-js
+https://github.com/IdentityModel/oidc-client-js/wiki
+
+OpenID Connect Basic Client Implementer's Guide
+https://openid.net/specs/openid-connect-basic-1_0.html
+
+https://nat.sakimura.org/2014/12/10/making-a-javascript-openid-connect-client/
+https://github.com/GluuFederation/openid-implicit-client
+
 
 http://www.simplecloud.info/
 System for Cross-domain Identity Management
 SCIM 2, the open API for managing identities is now complete and published under the IETF.
 
 http://damienbod.com/2015/11/08/oauth2-implicit-flow-with-angular-and-asp-net-5-identity-server/
+
+https://leastprivilege.com/2016/09/13/new-in-identityserver4-clients-without-secrets/
 
 
 http://bitoftech.net/2015/03/31/asp-net-web-api-claims-authorization-with-asp-net-identity-2-1/
@@ -77,6 +88,11 @@ http://brockallen.com/2014/02/11/concerns-with-two-factor-authentication-in-asp-
 https://github.com/IdentityServer/Thinktecture.IdentityServer3
 
 http://identityserver.github.io/Documentation/docs/
+
+## OIDC js Client
+https://github.com/IdentityModel/oidc-client-js/wiki
+https://mderriey.github.io/2016/08/21/openid-connect-and-js-applications-with-oidc-client-js/
+https://identityserver.github.io/Documentation/docsv2/overview/jsGettingStarted.html
 
 ### Old Notes
 

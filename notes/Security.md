@@ -1,4 +1,7 @@
 
+https://blogs.msdn.microsoft.com/webdev/2016/10/27/bearer-token-authentication-in-asp-net-core/
+
+
 http://en.xn--mgbz4cf.com/post/secure-your-aspnet-core-application-from-image-hotlinking
 
 http://blog.securityps.com/2016/08/aspnet-core-basic-security-settings.html
