@@ -1,11 +1,8 @@
-{
-    "version": "1.0.0-rc20160916",
-    "description": "Entity Framework Core implementation of cloudscribe core commands and queries",
+﻿{
+    "version": "1.0.0-rc20161108",
+    "description": "Entity Framework Core implementation of cloudscribe core commands and queries - typically you do not use this directly, use cloudscribe.Core.Storage.EFCore.MSSQL",
     "authors": [ "Joe Audette" ],
-    "buildOptions": {
-        "emitEntryPoint": true
-    },
-
+    
     "packOptions": {
         "tags": [ "cloudscribe", "commands", "queries", "ef" ],
         "owners": [ "Source Tree Solutions" ],
@@ -22,34 +19,19 @@
         "NETStandard.Library": "1.6.0-*",
         "Microsoft.Extensions.Configuration.Json": "1.0.*",
         "Microsoft.Extensions.Configuration": "1.0.*",
-        "Microsoft.EntityFrameworkCore.SqlServer": "1.0.*",
+        "Microsoft.EntityFrameworkCore": "1.0.*",
         "cloudscribe.Core.Models": "1.0.2-*",
-        "Microsoft.EntityFrameworkCore.Tools": {
-            "version": "1.0.0-preview2-final",
-            "type": "build"
-        },
+        
         "Microsoft.AspNetCore.Hosting": "1.0.*",
         "Microsoft.Extensions.DependencyInjection.Abstractions": "1.0.*"
     },
 
-    "tools": {
-        "Microsoft.EntityFrameworkCore.Tools": {
-            "version": "1.0.0-preview2-final"
-        }
-    },
-
     "frameworks": {
-        "netcoreapp1.0": {
-            "imports": [ "dotnet5.6", "portable-net451+win8" ],
-            "buildOptions": {
-                "emitEntryPoint": true
-            },
-            "dependencies": {
-                "Microsoft.NETCore.App": {
-                    "type": "platform",
-                    "version": "1.0.0-*"
-                }
-            }
+        "net46": {},
+        "net451": {},
+        "net452": {},
+        "netstandard1.6": {
+            "imports": "dnxcore50"
         }
     }
 }

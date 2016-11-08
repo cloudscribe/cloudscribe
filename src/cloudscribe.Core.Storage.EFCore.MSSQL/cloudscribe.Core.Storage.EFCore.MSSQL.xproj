@@ -7,8 +7,8 @@
 
   <Import Project="$(VSToolsPath)\DotNet\Microsoft.DotNet.Props" Condition="'$(VSToolsPath)' != ''" />
   <PropertyGroup Label="Globals">
-    <ProjectGuid>fee59c59-15e2-41ca-91ef-ff05d9061826</ProjectGuid>
-    <RootNamespace>cloudscribe.Core.Storage.EF</RootNamespace>
+    <ProjectGuid>b0ef256e-30e6-4760-971a-74b9bcb8e3af</ProjectGuid>
+    <RootNamespace>cloudscribe.Core.Storage.EFCore.MSSQL</RootNamespace>
     <BaseIntermediateOutputPath Condition="'$(BaseIntermediateOutputPath)'=='' ">.\obj</BaseIntermediateOutputPath>
     <OutputPath Condition="'$(OutputPath)'=='' ">.\bin\</OutputPath>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>

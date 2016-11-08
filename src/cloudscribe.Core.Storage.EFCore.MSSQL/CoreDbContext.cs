@@ -2,11 +2,12 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2015-11-16
-// Last Modified:			2016-06-12
+// Last Modified:			2016-11-08
 // 
 
 using cloudscribe.Core.Models;
 using cloudscribe.Core.Models.Geography;
+using cloudscribe.Core.Storage.EFCore.Common;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 
@@ -37,25 +38,25 @@ using Microsoft.EntityFrameworkCore.Infrastructure;
 
 // https://github.com/aspnet/EntityFramework/wiki/Configuring-a-DbContext
 
-namespace cloudscribe.Core.Storage.EF
+namespace cloudscribe.Core.Storage.EFCore.MSSQL
 {
-    public class CoreDbContext : DbContext
+    public class CoreDbContext : CoreDbContextBase, ICoreDbContext
     {
         public CoreDbContext(DbContextOptions<CoreDbContext> options) : base(options)
         {
 
         }
 
-        public DbSet<GeoCountry> Countries { get; set; }
-        public DbSet<GeoZone> States { get; set; }
-        public DbSet<SiteSettings> Sites { get; set; }
-        public DbSet<SiteHost> SiteHosts { get; set; }
-        public DbSet<SiteUser> Users { get; set; }
-        public DbSet<UserClaim> UserClaims { get; set; }
-        public DbSet<UserLogin> UserLogins { get; set; }
-        public DbSet<SiteRole> Roles { get; set; }
-        public DbSet<UserLocation> UserLocations { get; set; }
-        public DbSet<UserRole> UserRoles { get; set; }
+        //public DbSet<GeoCountry> Countries { get; set; }
+        //public DbSet<GeoZone> States { get; set; }
+        //public DbSet<SiteSettings> Sites { get; set; }
+        //public DbSet<SiteHost> SiteHosts { get; set; }
+        //public DbSet<SiteUser> Users { get; set; }
+        //public DbSet<UserClaim> UserClaims { get; set; }
+        //public DbSet<UserLogin> UserLogins { get; set; }
+        //public DbSet<SiteRole> Roles { get; set; }
+        //public DbSet<UserLocation> UserLocations { get; set; }
+        //public DbSet<UserRole> UserRoles { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {

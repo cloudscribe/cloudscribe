@@ -7,6 +7,7 @@
 
 using cloudscribe.Core.Models;
 using cloudscribe.Core.Models.Geography;
+using cloudscribe.Core.Storage.EFCore.Common;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 //using Microsoft.EntityFrameworkCore.Metadata.Internal;
@@ -33,7 +34,7 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 // but a different one can be injected
 
 
-namespace cloudscribe.Core.Storage.EF
+namespace cloudscribe.Core.Storage.EFCore.MSSQL
 {
     /// <summary>
     /// To really support other dbplatfroms with EF it would require implementing this for other platforms

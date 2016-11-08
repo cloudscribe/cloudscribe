@@ -1,4 +1,4 @@
-﻿namespace cloudscribe.Core.Storage.EF
+﻿namespace cloudscribe.Core.Storage.EFCore.Common
 {
     /// <summary>
     /// note that is is possible to register a custom instance of this class to be injected into SqlServerCoreModelMapper

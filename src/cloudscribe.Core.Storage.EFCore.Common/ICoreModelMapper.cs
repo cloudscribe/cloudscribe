@@ -9,7 +9,7 @@ using cloudscribe.Core.Models;
 using cloudscribe.Core.Models.Geography;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
-namespace cloudscribe.Core.Storage.EF
+namespace cloudscribe.Core.Storage.EFCore.Common
 {
     public interface ICoreModelMapper
     {

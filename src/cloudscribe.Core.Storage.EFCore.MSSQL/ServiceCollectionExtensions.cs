@@ -1,10 +1,9 @@
 ﻿
 
 using cloudscribe.Core.Models;
-using cloudscribe.Core.Models.Geography;
-using cloudscribe.Core.Storage.EF;
+using cloudscribe.Core.Storage.EFCore.Common;
+using cloudscribe.Core.Storage.EFCore.MSSQL;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.DependencyInjection.Extensions;
 
 namespace Microsoft.Extensions.DependencyInjection
 {
@@ -15,31 +14,19 @@ namespace Microsoft.Extensions.DependencyInjection
             string connectionString
             )
         {
+            services.AddCloudscribeCoreEFCommon();
+
             services.AddEntityFrameworkSqlServer()
                 .AddDbContext<CoreDbContext>((serviceProvider, options) =>
                 options.UseSqlServer(connectionString)
                        .UseInternalServiceProvider(serviceProvider)
                        );
 
-            //services.AddDbContext<CoreDbContext>(options =>
-            //{
-            //    options.UseSqlServer(connectionString) ;
-            //});
-
+            services.AddScoped<ICoreDbContext, CoreDbContext>();
+            
             services.AddScoped<ICoreModelMapper, SqlServerCoreModelMapper>();
             services.AddScoped<IDataPlatformInfo, DataPlatformInfo>();
-
-            services.AddScoped<ISiteCommands, SiteCommands>();
-            services.AddScoped<ISiteQueries, SiteQueries>();
-
-            services.AddScoped<IUserCommands, UserCommands>();
-            services.AddScoped<IUserQueries, UserQueries>();
-
-            services.AddScoped<IGeoCommands, GeoCommands>();
-            services.AddScoped<IGeoQueries, GeoQueries>();
-
-            services.TryAddScoped<CoreTableNames, CoreTableNames>();
-
+            
             return services;
         }
 

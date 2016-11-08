@@ -13,16 +13,16 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace cloudscribe.Core.Storage.EF
+namespace cloudscribe.Core.Storage.EFCore.Common
 {
     public class GeoQueries : IGeoQueries
     {
-        public GeoQueries(CoreDbContext dbContext)
+        public GeoQueries(ICoreDbContext dbContext)
         {
             this.dbContext = dbContext;
         }
 
-        private CoreDbContext dbContext;
+        private ICoreDbContext dbContext;
 
         public async Task<IGeoCountry> FetchCountry(
             Guid countryId, 

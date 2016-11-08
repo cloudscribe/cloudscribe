@@ -1,6 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 
-namespace cloudscribe.Core.Storage.EF
+namespace cloudscribe.Core.Storage.EFCore.Common
 {
     public static class Extensions
     {

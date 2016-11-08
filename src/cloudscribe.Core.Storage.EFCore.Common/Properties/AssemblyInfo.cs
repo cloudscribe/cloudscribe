@@ -7,7 +7,7 @@ using System.Runtime.InteropServices;
 // associated with an assembly.
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("")]
-[assembly: AssemblyProduct("cloudscribe.Core.Storage.EF")]
+[assembly: AssemblyProduct("cloudscribe.Core.Storage.EFCore.Common")]
 [assembly: AssemblyTrademark("")]
 
 // Setting ComVisible to false makes the types in this assembly not visible
@@ -16,4 +16,4 @@ using System.Runtime.InteropServices;
 [assembly: ComVisible(false)]
 
 // The following GUID is for the ID of the typelib if this project is exposed to COM
-[assembly: Guid("fee59c59-15e2-41ca-91ef-ff05d9061826")]
+[assembly: Guid("ccc22bd3-7f83-48fb-82ca-938be238c740")]

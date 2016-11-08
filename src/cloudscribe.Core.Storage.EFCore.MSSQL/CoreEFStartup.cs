@@ -8,7 +8,7 @@
 
 using cloudscribe.Core.Models;
 using cloudscribe.Core.Models.Geography;
-using cloudscribe.Core.Storage.EF;
+using cloudscribe.Core.Storage.EFCore.MSSQL;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using System;

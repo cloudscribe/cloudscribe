@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using Microsoft.EntityFrameworkCore.Migrations;
 
-namespace cloudscribe.Core.Storage.EF.Migrations
+namespace cloudscribe.Core.Storage.EFCore.MSSQL.Migrations
 {
     public partial class Initial : Migration
     {

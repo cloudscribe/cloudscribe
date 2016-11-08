@@ -12,7 +12,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using cloudscribe.Core.Models;
 
-namespace cloudscribe.Core.Storage.EF
+namespace cloudscribe.Core.Storage.EFCore.MSSQL
 {
     public class DataPlatformInfo : IDataPlatformInfo
     {

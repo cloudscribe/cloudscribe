@@ -12,16 +12,16 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace cloudscribe.Core.Storage.EF
+namespace cloudscribe.Core.Storage.EFCore.Common
 {
     public class SiteCommands : ISiteCommands
     {
-        public SiteCommands(CoreDbContext dbContext)
+        public SiteCommands(ICoreDbContext dbContext)
         {
             this.dbContext = dbContext;
         }
 
-        private CoreDbContext dbContext;
+        private ICoreDbContext dbContext;
 
         public async Task Create(
             ISiteSettings site,

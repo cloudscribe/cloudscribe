@@ -14,16 +14,16 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace cloudscribe.Core.Storage.EF
+namespace cloudscribe.Core.Storage.EFCore.Common
 {
     public class UserCommands : IUserCommands
     {
-        public UserCommands(CoreDbContext dbContext)
+        public UserCommands(ICoreDbContext dbContext)
         {
             this.dbContext = dbContext;
         }
 
-        private CoreDbContext dbContext;
+        private ICoreDbContext dbContext;
 
         #region User
 
