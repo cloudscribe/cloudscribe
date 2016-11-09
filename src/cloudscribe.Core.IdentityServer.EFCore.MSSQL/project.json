@@ -1,10 +1,5 @@
-<<<<<<< HEAD:src/cloudscribe.Core.IdentityServer.EFCore.MSSQL/project.json
 ﻿{
     "version": "1.0.0-rc20161109",
-=======
-{
-    "version": "1.0.0-rc20161024",
->>>>>>> master:src/cloudscribe.Core.IdentityServer.EFCore/project.json
     "description": "Entity Framework configuration and operational stores for IdentityServer4 cloudscribe multi-tenant identity integration",
     "authors": [ "Joe Audette" ],
     "packOptions": {
