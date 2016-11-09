@@ -1,5 +1,5 @@
 {
-    "version": "1.0.0-rc20161020",
+    "version": "1.0.0-rc20161025",
     "description": "NoDb configuration and operational stores for IdentityServer4 cloudscribe multi-tenant identity integration",
     "authors": [ "Joe Audette" ],
     "packOptions": {

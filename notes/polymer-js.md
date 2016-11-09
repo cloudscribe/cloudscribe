@@ -2,18 +2,40 @@
 
 https://www.polymer-project.org/1.0/
 
+https://customelements.io/
+https://vaadin.com/elements
+
 http://thewebplatform.libsyn.com/webpage
 
 http://developer.telerik.com/featured/what-to-expect-from-javascript-in-2016-frameworks/
+
+http://mentormate.com/blog/polymer-vs-angular-future-web-apps/
 
 https://home-assistant.io/blog/2016/05/18/why-we-use-polymer/
 
 https://optimizely.github.io/nuclear-js/
 
+http://www.fiyazhasan.me/tag/polymer-series/
+
 http://www.fiyazhasan.me/building-apps-with-polymer-and-asp-net-core-part-iii/
 
 polymer group
 https://groups.google.com/forum/#!forum/polymer-dev
+
+https://developer.microsoft.com/en-us/microsoft-edge/platform/status/
+
+https://javascriptair.com/episodes/2016-11-02/
+
+https://blog.intercom.com/browsers-not-apps-are-the-future-of-mobile/
+
+How to lazy load script dependencies
+https://www.tjvantoll.com/2014/08/12/the-problem-with-using-html-imports-for-dependency-management/
+https://gist.github.com/wycats/51c96e3adcdb3a68cbc3
+https://github.com/Polymer/polymer/issues/3875
+Fast Polymer app loading
+https://gist.github.com/ebidel/1ba71473d687d0567bd3
+
+https://www.polymer-project.org/1.0/docs/release-notes
 
 ## Testing
 
