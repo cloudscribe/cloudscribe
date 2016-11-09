@@ -409,7 +409,7 @@ namespace example.WebApp
                     services.AddCloudscribeLoggingEFStorage(connectionString);
                     
                     services.AddIdentityServer()
-                        .AddCloudscribeCoreEFIdentityServerStorage(connectionString)
+                        .AddCloudscribeCoreEFIdentityServerStorageMSSQL(connectionString)
                         .AddCloudscribeIdentityServerIntegration()
                         .SetTemporarySigningCredential()
                         ;

@@ -25,7 +25,7 @@ namespace cloudscribe.Core.Storage.EFCore.Common
             services.AddScoped<IGeoCommands, GeoCommands>();
             services.AddScoped<IGeoQueries, GeoQueries>();
 
-            services.TryAddScoped<CoreTableNames, CoreTableNames>();
+            services.TryAddScoped<ICoreTableNames, CoreTableNames>();
 
             return services;
         }

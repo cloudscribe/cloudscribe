@@ -5,7 +5,7 @@
     /// but using custom tables names requires deleting all existing migrations and re-regenerating them
     /// so you would probably want to fork this project to do that
     /// </summary>
-    public class CoreTableNames
+    public class CoreTableNames : ICoreTableNames
     {
         public CoreTableNames()
         {

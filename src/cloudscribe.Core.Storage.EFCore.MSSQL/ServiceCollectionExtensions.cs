@@ -22,9 +22,7 @@ namespace Microsoft.Extensions.DependencyInjection
                        .UseInternalServiceProvider(serviceProvider)
                        );
 
-            services.AddScoped<ICoreDbContext, CoreDbContext>();
-            
-            services.AddScoped<ICoreModelMapper, SqlServerCoreModelMapper>();
+            services.AddScoped<ICoreDbContext, CoreDbContext>(); 
             services.AddScoped<IDataPlatformInfo, DataPlatformInfo>();
             
             return services;

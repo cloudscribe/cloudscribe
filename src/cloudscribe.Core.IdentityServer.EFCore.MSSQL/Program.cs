@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Hosting;
 using System.IO;
 
-namespace cloudscribe.Core.Storage.EFCore.MSSQL
+namespace cloudscribe.Core.IdentityServer.EFCore.MSSQL
 {
     public class Program
     {

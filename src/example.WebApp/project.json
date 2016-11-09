@@ -62,7 +62,7 @@
         "SaasKit.Multitenancy": "1.1.*",
         "cloudscribe.IDS4Fork": "1.0.0-*",
         "cloudscribe.Core.IdentityServerIntegration": "1.0.0-*",
-        "cloudscribe.Core.IdentityServer.EFCore": "1.0.0-*",
+        "cloudscribe.Core.IdentityServer.EFCore.MSSQL": "1.0.0-*",
         "cloudscribe.Core.IdentityServer.NoDb": "1.0.0-*",
         "IdentityModel": "2.0.0-*",
         "IdentityServer4.AccessTokenValidation": "1.0.1-*"
