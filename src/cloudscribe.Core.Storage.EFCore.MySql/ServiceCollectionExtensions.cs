@@ -2,23 +2,30 @@
 
 using cloudscribe.Core.Models;
 using cloudscribe.Core.Storage.EFCore.Common;
-using cloudscribe.Core.Storage.EFCore.MSSQL;
+using cloudscribe.Core.Storage.EFCore.MySql;
 using Microsoft.EntityFrameworkCore;
+using MySQL.Data.EntityFrameworkCore;
+using MySQL.Data.EntityFrameworkCore.Extensions;
 
 namespace Microsoft.Extensions.DependencyInjection
 {
     public static class ServiceCollectionExtensions
     {
-        public static IServiceCollection AddCloudscribeCoreEFStorageMSSQL(
+        public static IServiceCollection AddCloudscribeCoreEFStorageMySql(
             this IServiceCollection services,
             string connectionString
             )
         {
             services.AddCloudscribeCoreEFCommon();
 
-            services.AddEntityFrameworkSqlServer()
+            //services.AddEntityFrameworkSqlServer()
+            //    .AddDbContext<CoreDbContext>((serviceProvider, options) =>
+            //    options.UseSqlServer(connectionString)
+            //           .UseInternalServiceProvider(serviceProvider)
+            //           );
+            services.AddEntityFrameworkMySQL()
                 .AddDbContext<CoreDbContext>((serviceProvider, options) =>
-                options.UseSqlServer(connectionString)
+                options.UseMySQL(connectionString)
                        .UseInternalServiceProvider(serviceProvider)
                        );
 

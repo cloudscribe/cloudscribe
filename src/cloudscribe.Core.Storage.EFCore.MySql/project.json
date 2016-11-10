@@ -1,6 +1,6 @@
 ﻿{
     "version": "1.0.0-rc20161109",
-    "description": "Microsoft Sql Server Entity Framework Core implementation of cloudscribe core storage",
+    "description": "MySql Entity Framework Core implementation of cloudscribe core storage",
     "authors": [ "Joe Audette" ],
     "buildOptions": {
         "emitEntryPoint": true
@@ -22,7 +22,7 @@
         "NETStandard.Library": "1.6.0-*",
         "Microsoft.Extensions.Configuration.Json": "1.0.*",
         "Microsoft.Extensions.Configuration": "1.0.*",
-        "Microsoft.EntityFrameworkCore.SqlServer": "1.0.*",
+        "Microsoft.EntityFrameworkCore": "1.0.*",
         "cloudscribe.Core.Models": "1.0.2-*",
         "cloudscribe.Core.Storage.EFCore.Common": "1.0.0-*",
         "Microsoft.EntityFrameworkCore.Tools": {
@@ -30,7 +30,9 @@
             "type": "build"
         },
         "Microsoft.AspNetCore.Hosting": "1.0.*",
-        "Microsoft.Extensions.DependencyInjection.Abstractions": "1.0.*"
+        "Microsoft.Extensions.DependencyInjection.Abstractions": "1.0.*",
+        "MySql.Data.EntityFrameworkCore": "7.0.6-IR31"
+
     },
 
     "tools": {

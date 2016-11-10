@@ -1,17 +1,25 @@
-﻿using Microsoft.AspNetCore.Builder;
+﻿// Copyright (c) Source Tree Solutions, LLC. All rights reserved.
+// Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
+// Author:					Joe Audette
+// Created:					2015-12-03
+// Last Modified:			2016-05-18
+// 
+
+//http://www.jerriepelser.com/blog/moving-entity-framework-7-models-to-external-project
+
+using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
-using cloudscribe.Core.IdentityServer.EFCore.Interfaces;
-using cloudscribe.Core.IdentityServer.EFCore.DbContexts;
+using cloudscribe.Core.Storage.EFCore.Common;
 
-namespace cloudscribe.Core.IdentityServer.EFCore.MSSQL
+namespace cloudscribe.Core.Storage.EFCore.pgsql
 {
     public class Startup
     {
-
+        
         public IConfigurationRoot Configuration { get; set; }
 
         public Startup(IHostingEnvironment env)
@@ -30,21 +38,12 @@ namespace cloudscribe.Core.IdentityServer.EFCore.MSSQL
 
         public void ConfigureServices(IServiceCollection services)
         {
-
-            //services.AddEntityFrameworkSqlServer()
-            //  .AddDbContext<ConfigurationDbContext>((serviceProvider, options) =>
-            //    options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection"))
+            //services.AddEntityFrameworkNpgsql()
+            //  .AddDbContext<CoreDbContext>((serviceProvider, options) =>
+            //    options.UseNpgsql(Configuration.GetConnectionString("DefaultConnection"))
             //           .UseInternalServiceProvider(serviceProvider)
             //           );
-
-            //services.AddEntityFrameworkSqlServer()
-            //  .AddDbContext<PersistedGrantDbContext>((serviceProvider, options) =>
-            //    options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection"))
-            //           .UseInternalServiceProvider(serviceProvider)
-            //           );
-
-            services.AddCloudscribeCoreIdentityServerEFStorageMSSQL(Configuration.GetConnectionString("DefaultConnection"));
-   
+            services.AddCloudscribeCoreEFStoragePostgreSql(Configuration.GetConnectionString("DefaultConnection"));
         }
 
 

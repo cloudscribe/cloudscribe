@@ -191,8 +191,8 @@ namespace example.WebApp
             ILoggerFactory loggerFactory,
             IOptions<cloudscribe.Core.Models.MultiTenantOptions> multiTenantOptionsAccessor,
             IServiceProvider serviceProvider,
-            IOptions<RequestLocalizationOptions> localizationOptionsAccessor,
-            cloudscribe.Logging.Web.ILogRepository logRepo
+            IOptions<RequestLocalizationOptions> localizationOptionsAccessor
+            ,cloudscribe.Logging.Web.ILogRepository logRepo
             )
         {
             loggerFactory.AddConsole(Configuration.GetSection("Logging"));
@@ -399,18 +399,54 @@ namespace example.WebApp
 
                 case "ef":
                 default:
+
                     var connectionString = Configuration.GetConnectionString("EntityFrameworkConnectionString");
-                    services.AddCloudscribeCoreEFStorage(connectionString);
+                    services.AddCloudscribeCoreEFStorageMSSQL(connectionString);
 
                     // only needed if using cloudscribe logging with EF storage
-                    services.AddCloudscribeLoggingEFStorage(connectionString);
-                    
+                    services.AddCloudscribeLoggingEFStorageMSSQL(connectionString);
+
                     services.AddIdentityServer()
                         .AddCloudscribeCoreEFIdentityServerStorageMSSQL(connectionString)
                         .AddCloudscribeIdentityServerIntegration()
                         .SetTemporarySigningCredential()
                         ;
-                    
+
+                    //var connectionString = Configuration.GetConnectionString("PostgreSqlEntityFrameworkConnectionString");
+                    //services.AddCloudscribeCoreEFStoragePostgreSql(connectionString);
+
+                    //// only needed if using cloudscribe logging with EF storage
+                    ////services.AddCloudscribeLoggingEFStorageMSSQL(connectionString);
+
+                    //services.AddIdentityServer()
+                    //    .AddCloudscribeCoreEFIdentityServerStoragePostgreSql(connectionString)
+                    //    .AddCloudscribeIdentityServerIntegration()
+                    //    .SetTemporarySigningCredential()
+                    //    ;
+
+                    //var connectionString = Configuration.GetConnectionString("MySqlEntityFrameworkConnectionString");
+                    //services.AddCloudscribeCoreEFStorageMySql(connectionString);
+
+                    //// only needed if using cloudscribe logging with EF storage
+                    ////services.AddCloudscribeLoggingEFStorageMSSQL(connectionString);
+
+                    //services.AddIdentityServer()
+                    //    .AddCloudscribeCoreEFIdentityServerStorageMySql(connectionString)
+                    //    .AddCloudscribeIdentityServerIntegration()
+                    //    .SetTemporarySigningCredential()
+                    //    ;
+                    // unfortunately getting an error trying to run the migrations in mysql
+                    // does not seem to be implemented to support migrations
+                    /*
+                     MySql.Data.MySqlClient.MySqlException
+                     Table 'efcs1.__efmigrationshistory' doesn't exist
+                     CoreEFStartup.cs
+                   catch(System.NotImplementedException)
+                   {
+                       db.Database.Migrate();
+                   }
+                     */
+
                     break;
             }
         }

@@ -4,7 +4,7 @@
 
 using cloudscribe.Core.IdentityServer.EFCore.Extensions;
 using cloudscribe.Core.IdentityServer.EFCore.Interfaces;
-using cloudscribe.Core.IdentityServer.EFCore.MSSQL;
+using cloudscribe.Core.IdentityServer.EFCore.pgsql;
 using cloudscribe.Core.IdentityServer.EFCore.Stores;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -13,14 +13,14 @@ namespace Microsoft.Extensions.DependencyInjection
 {
     public static class IdServerBuilderExtensions
     {
-        public static IIdentityServerBuilder AddCloudscribeCoreEFIdentityServerStorageMSSQL(
+        public static IIdentityServerBuilder AddCloudscribeCoreEFIdentityServerStoragePostgreSql(
             this IIdentityServerBuilder builder,
             string connectionString
             )
         {
             //builder.AddConfigurationStoreMSSQL(connectionString);    
             //builder.AddOperationalStoreMSSQL(connectionString);
-            builder.Services.AddCloudscribeCoreIdentityServerEFStorageMSSQL(connectionString);
+            builder.Services.AddCloudscribeCoreIdentityServerEFStoragePostgreSql(connectionString);
 
             return builder;
         }
@@ -31,9 +31,9 @@ namespace Microsoft.Extensions.DependencyInjection
         //    Action<DbContextOptionsBuilder> optionsAction = null)
         //{
             
-        //    builder.Services.AddEntityFrameworkSqlServer()
+        //    builder.Services.AddEntityFrameworkNpgsql()
         //        .AddDbContext<ConfigurationDbContext>((serviceProvider, options) =>
-        //        options.UseSqlServer(connectionString)
+        //        options.UseNpgsql(connectionString)
         //               .UseInternalServiceProvider(serviceProvider)
         //               );
 
@@ -68,9 +68,9 @@ namespace Microsoft.Extensions.DependencyInjection
         //    Action<DbContextOptionsBuilder> optionsAction = null)
         //{
             
-        //    builder.Services.AddEntityFrameworkSqlServer()
+        //    builder.Services.AddEntityFrameworkNpgsql()
         //        .AddDbContext<PersistedGrantDbContext>((serviceProvider, options) =>
-        //        options.UseSqlServer(connectionString)
+        //        options.UseNpgsql(connectionString)
         //               .UseInternalServiceProvider(serviceProvider)
         //               );
 
@@ -79,14 +79,14 @@ namespace Microsoft.Extensions.DependencyInjection
         //    return builder;
         //}
 
-        public static IServiceCollection AddCloudscribeCoreIdentityServerEFStorageMSSQL(
+        public static IServiceCollection AddCloudscribeCoreIdentityServerEFStoragePostgreSql(
             this IServiceCollection services,
             string connectionString
             )
         {
-            services.AddEntityFrameworkSqlServer()
+            services.AddEntityFrameworkNpgsql()
                 .AddDbContext<ConfigurationDbContext>((serviceProvider, options) =>
-                options.UseSqlServer(connectionString)
+                options.UseNpgsql(connectionString)
                        .UseInternalServiceProvider(serviceProvider)
                        );
 
@@ -94,9 +94,9 @@ namespace Microsoft.Extensions.DependencyInjection
 
             services.AddScoped<IConfigurationDbContext, ConfigurationDbContext>();
 
-            services.AddEntityFrameworkSqlServer()
+            services.AddEntityFrameworkNpgsql()
                 .AddDbContext<PersistedGrantDbContext>((serviceProvider, options) =>
-                options.UseSqlServer(connectionString)
+                options.UseNpgsql(connectionString)
                        .UseInternalServiceProvider(serviceProvider)
                        );
 
@@ -104,7 +104,6 @@ namespace Microsoft.Extensions.DependencyInjection
 
             return services;
         }
-
 
 
 
