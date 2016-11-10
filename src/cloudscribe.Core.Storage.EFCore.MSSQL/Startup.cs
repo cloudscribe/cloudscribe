@@ -38,11 +38,12 @@ namespace cloudscribe.Core.Storage.EFCore.MSSQL
 
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddEntityFrameworkSqlServer()
-              .AddDbContext<CoreDbContext>((serviceProvider, options) =>
-                options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection"))
-                       .UseInternalServiceProvider(serviceProvider)
-                       );
+            //services.AddEntityFrameworkSqlServer()
+            //  .AddDbContext<CoreDbContext>((serviceProvider, options) =>
+            //    options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection"))
+            //           .UseInternalServiceProvider(serviceProvider)
+            //           );
+            services.AddCloudscribeCoreEFStorageMSSQL(Configuration.GetConnectionString("DefaultConnection"));
         }
 
 

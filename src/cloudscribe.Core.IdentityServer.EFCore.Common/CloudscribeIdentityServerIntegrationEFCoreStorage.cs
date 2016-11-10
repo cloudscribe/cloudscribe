@@ -21,10 +21,26 @@ namespace Microsoft.Extensions.DependencyInjection
             using (var serviceScope = serviceProvider.GetService<IServiceScopeFactory>().CreateScope())
             {
                 var grantContext = serviceScope.ServiceProvider.GetRequiredService<IPersistedGrantDbContext>();
-                await grantContext.Database.MigrateAsync();
+                try
+                {
+                    await grantContext.Database.MigrateAsync();
+                }
+                catch(System.NotImplementedException)
+                {
+                    grantContext.Database.Migrate();
+                }
+                
 
                 var configContext = serviceScope.ServiceProvider.GetRequiredService<IConfigurationDbContext>();
-                await configContext.Database.MigrateAsync();
+                try
+                {
+                    await configContext.Database.MigrateAsync();
+                }
+                catch (System.NotImplementedException)
+                {
+                    configContext.Database.Migrate();
+                }
+                
 
                 if(!string.IsNullOrEmpty(siteId))
                 {

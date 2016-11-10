@@ -7,7 +7,7 @@ using Microsoft.Extensions.DependencyInjection.Extensions;
 using cloudscribe.Core.IdentityServer.EFCore.Interfaces;
 using cloudscribe.Core.IdentityServer.EFCore.DbContexts;
 
-namespace cloudscribe.Core.IdentityServer.EFCore.MSSQL
+namespace cloudscribe.Core.IdentityServer.EFCore.pgsql
 {
     public class Startup
     {
@@ -31,20 +31,20 @@ namespace cloudscribe.Core.IdentityServer.EFCore.MSSQL
         public void ConfigureServices(IServiceCollection services)
         {
 
-            //services.AddEntityFrameworkSqlServer()
+            //services.AddEntityFrameworkNpgsql()
             //  .AddDbContext<ConfigurationDbContext>((serviceProvider, options) =>
-            //    options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection"))
+            //    options.UseNpgsql(Configuration.GetConnectionString("DefaultConnection"))
             //           .UseInternalServiceProvider(serviceProvider)
             //           );
 
-            //services.AddEntityFrameworkSqlServer()
+            //services.AddEntityFrameworkNpgsql()
             //  .AddDbContext<PersistedGrantDbContext>((serviceProvider, options) =>
-            //    options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection"))
+            //    options.UseNpgsql(Configuration.GetConnectionString("DefaultConnection"))
             //           .UseInternalServiceProvider(serviceProvider)
             //           );
+            services.AddCloudscribeCoreIdentityServerEFStoragePostgreSql(Configuration.GetConnectionString("DefaultConnection"));
 
-            services.AddCloudscribeCoreIdentityServerEFStorageMSSQL(Configuration.GetConnectionString("DefaultConnection"));
-   
+
         }
 
 

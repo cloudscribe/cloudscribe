@@ -34,15 +34,18 @@ namespace Microsoft.AspNetCore.Hosting // so it will show up in startup without 
                 // EnsureCreated is designed for testing or rapid prototyping where you are ok with dropping and re-creating 
                 // the database each time. If you are using migrations and want to have them automatically applied on app start, 
                 // then you can use context.Database.Migrate() instead.
-                
-                //try
-                //{
+
+                try
+                {
                     await db.Database.MigrateAsync();
-                //}
-                //catch { }
-                    
-              
-                
+                }
+                catch(System.NotImplementedException)
+                {
+                    db.Database.Migrate();
+                }
+
+
+
 
                 await EnsureData(db);
 

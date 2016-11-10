@@ -6,8 +6,10 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using cloudscribe.Core.IdentityServer.EFCore.Interfaces;
 using cloudscribe.Core.IdentityServer.EFCore.DbContexts;
+using MySQL.Data.EntityFrameworkCore;
+using MySQL.Data.EntityFrameworkCore.Extensions;
 
-namespace cloudscribe.Core.IdentityServer.EFCore.MSSQL
+namespace cloudscribe.Core.IdentityServer.EFCore.MySql
 {
     public class Startup
     {
@@ -31,20 +33,21 @@ namespace cloudscribe.Core.IdentityServer.EFCore.MSSQL
         public void ConfigureServices(IServiceCollection services)
         {
 
-            //services.AddEntityFrameworkSqlServer()
+            //services.AddEntityFrameworkMySQL()
             //  .AddDbContext<ConfigurationDbContext>((serviceProvider, options) =>
-            //    options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection"))
+            //    options.UseMySQL(Configuration.GetConnectionString("DefaultConnection"))
             //           .UseInternalServiceProvider(serviceProvider)
             //           );
 
-            //services.AddEntityFrameworkSqlServer()
+            //services.AddEntityFrameworkMySQL()
             //  .AddDbContext<PersistedGrantDbContext>((serviceProvider, options) =>
-            //    options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection"))
+            //    options.UseMySQL(Configuration.GetConnectionString("DefaultConnection"))
             //           .UseInternalServiceProvider(serviceProvider)
             //           );
 
-            services.AddCloudscribeCoreIdentityServerEFStorageMSSQL(Configuration.GetConnectionString("DefaultConnection"));
-   
+            services.AddCloudscribeCoreIdentityServerEFStorageMySql(Configuration.GetConnectionString("DefaultConnection"));
+
+
         }
 
 

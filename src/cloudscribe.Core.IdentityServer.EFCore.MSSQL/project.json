@@ -1,6 +1,6 @@
 ﻿{
     "version": "1.0.0-rc20161109",
-    "description": "Entity Framework configuration and operational stores for IdentityServer4 cloudscribe multi-tenant identity integration",
+    "description": "Microsoft Sql Server Entity Framework configuration and operational stores for IdentityServer4 cloudscribe multi-tenant identity integration",
     "authors": [ "Joe Audette" ],
     "packOptions": {
         "owners": [ "Source Tree Solutions" ],
