@@ -17,12 +17,11 @@
         "NETStandard.Library": "1.6.0-*",
         "cloudscribe.IDS4Fork": "1.0.0-*",
         "cloudscribe.Core.IdentityServerIntegration": "1.0.0-*",
-        "Microsoft.EntityFrameworkCore": "1.0.*",
-        "Microsoft.EntityFrameworkCore.Relational": "1.0.*",
+        "Microsoft.EntityFrameworkCore": "1.0.1-*",
+        "Microsoft.EntityFrameworkCore.Relational": "1.0.1-*",
 
         "AutoMapper": "5.1.*",
         "cloudscribe.Core.Models": "1.0.2-*",
-        "Microsoft.EntityFrameworkCore.SqlServer": "1.0.*",
         "Microsoft.Extensions.Configuration.FileExtensions": "1.0.*",
         "Microsoft.Extensions.Configuration.Json": "1.0.*",
         "Microsoft.AspNetCore.Hosting": "1.0.*"

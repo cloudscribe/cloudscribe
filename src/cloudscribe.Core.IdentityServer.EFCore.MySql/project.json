@@ -21,8 +21,8 @@
     "dependencies": {
         "cloudscribe.IDS4Fork": "1.0.0-*",
         "cloudscribe.Core.IdentityServerIntegration": "1.0.0-*",
-        "Microsoft.EntityFrameworkCore": "1.0.*",
-        "Microsoft.EntityFrameworkCore.Relational": "1.0.*",
+        "Microsoft.EntityFrameworkCore": "1.0.1-*",
+        "Microsoft.EntityFrameworkCore.Relational": "1.0.1-*",
         "Microsoft.EntityFrameworkCore.Tools": {
             "version": "1.0.0-preview2-final",
             "type": "build"
@@ -32,7 +32,7 @@
         "Microsoft.Extensions.Configuration.FileExtensions": "1.0.*",
         "Microsoft.Extensions.Configuration.Json": "1.0.*",
         "Microsoft.AspNetCore.Hosting": "1.0.*",
-        "MySql.Data.EntityFrameworkCore": "7.0.6-IR31"
+        "Pomelo.EntityFrameworkCore.MySql": "1.0-*"
     },
 
     "tools": {

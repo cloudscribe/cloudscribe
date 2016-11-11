@@ -495,11 +495,9 @@ namespace cloudscribe.Core.Storage.EFCore.MySql.Migrations
 
                     b.Property<DateTime>("LastCaptureUtc");
 
-                    b.Property<double>("Latitude")
-                        .HasAnnotation("MySQL:ColumnType", "float");
+                    b.Property<double>("Latitude");
 
-                    b.Property<double>("Longitude")
-                        .HasAnnotation("MySQL:ColumnType", "float");
+                    b.Property<double>("Longitude");
 
                     b.Property<string>("Region")
                         .HasAnnotation("MaxLength", 255);

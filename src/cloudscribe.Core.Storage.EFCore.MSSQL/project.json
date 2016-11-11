@@ -22,7 +22,7 @@
         "NETStandard.Library": "1.6.0-*",
         "Microsoft.Extensions.Configuration.Json": "1.0.*",
         "Microsoft.Extensions.Configuration": "1.0.*",
-        "Microsoft.EntityFrameworkCore.SqlServer": "1.0.*",
+        "Microsoft.EntityFrameworkCore.SqlServer": "1.0-*",
         "cloudscribe.Core.Models": "1.0.2-*",
         "cloudscribe.Core.Storage.EFCore.Common": "1.0.0-*",
         "Microsoft.EntityFrameworkCore.Tools": {

@@ -6,8 +6,8 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using cloudscribe.Core.IdentityServer.EFCore.Interfaces;
 using cloudscribe.Core.IdentityServer.EFCore.DbContexts;
-using MySQL.Data.EntityFrameworkCore;
-using MySQL.Data.EntityFrameworkCore.Extensions;
+//using MySQL.Data.EntityFrameworkCore;
+//using MySQL.Data.EntityFrameworkCore.Extensions;
 
 namespace cloudscribe.Core.IdentityServer.EFCore.MySql
 {

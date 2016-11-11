@@ -1,4 +1,8 @@
 
+
+https://medium.com/javascript-scene/native-apps-are-doomed-ac397148a2c0#.j1yqyfrsi
+
+
 https://hackernoon.com/how-it-feels-to-learn-javascript-in-2016-d3a717dd577f#.r4tdjn583
 
 

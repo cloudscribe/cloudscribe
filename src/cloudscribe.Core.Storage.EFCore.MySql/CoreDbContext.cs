@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2016-11-10
-// Last Modified:			2016-11-10
+// Last Modified:			2016-11-11
 // 
 
 using cloudscribe.Core.Models;
@@ -10,7 +10,7 @@ using cloudscribe.Core.Models.Geography;
 using cloudscribe.Core.Storage.EFCore.Common;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
-using MySQL.Data.EntityFrameworkCore.Extensions;
+//using MySQL.Data.EntityFrameworkCore.Extensions;
 
 //http://ef.readthedocs.org/en/latest/modeling/configuring.html
 // "If you are targeting more than one relational provider with the same model then you 
@@ -836,11 +836,11 @@ namespace cloudscribe.Core.Storage.EFCore.MySql
                 ;
 
                 entity.Property(p => p.Latitude)
-                   .ForMySQLHasColumnType("float")
+                   //.ForMySQLHasColumnType("float")
                 ;
 
                 entity.Property(p => p.Longitude)
-                   .ForMySQLHasColumnType("float")
+                   //.ForMySQLHasColumnType("float")
                 ;
 
                 entity.Property(p => p.HostName)
