@@ -22,6 +22,7 @@ To get started building your own features and applications with cloudscribe, [pl
 * Related sites mode setting allows shared users and roles across sites while still allowing permissions to be segmented/siloed by site.
 * Authentication/Authorization Framework - Multi-Tenant Implementation of aspnet Identity
 * Multi-Tenant User and Role Management
+* Integration with [IdentityServer4](https://github.com/IdentityServer/IdentityServer4) providing management of users, clients and scopes. This brings us support for [Jwt](https://jwt.io/) as an alternative to cookie authentication so we can more readily support SPA (Single Page Application) style web apps as well as authentication from mobile devices.
 * System Logging - optional implementation of ILogger that logs to the database, and a UI for viewing the log
 * [Custom RazorViewEngine view resolver, conventions](https://github.com/joeaudette/cloudscribe/wiki/Customizing-Views-and-Display-Templates)
 * TagHelper for bootstrap modal
@@ -29,8 +30,8 @@ To get started building your own features and applications with cloudscribe, [pl
 * ViewComponent for navigation menus, breadcrumbs - via [cloudscribe.Web.Navigation project](https://github.com/joeaudette/cloudscribe.Web.Navigation)
 * Unobtrusive js for CKeditor
 * Localization Support - documentation coming soon
-* For data access, going forward we are working primarily with Entity Framework Core which has many advantages for rapid development, but a goal of this project is to not impose a specific ORM (Object Relational Mapper) on anyone, so we also intend to provide a variety of other data access options including MongoDB as well as more traditional ADO.NET, and of course anyone is free to implement other data platforms since they are abstracted in a way that makes it easy to swap implementations. Currently, in addition to the Entity Framework data layer, there is also an implementation using [NoDb](https://github.com/joeaudette/NoDb) file system storage.
-* async all the way down
+* For data access, supports Entity Framework Core with either MSSQL, MySql, or PostgreSql. [NoDb](https://github.com/joeaudette/NoDb) file system storage is also supported for small sites or proptypes.
+* Data and IO operations are async all the way down
 * This project aims to follow the [OWASP](https://www.owasp.org/index.php/Main_Page) Guidelines for best practices in security
 * Need Content? Take a look at [cloudscribe.SimpleContent](https://github.com/joeaudette/cloudscribe.SimpleContent), a simple yet flexible content and blogging engine that works with cloudscribe Core
 
@@ -39,7 +40,6 @@ To get started building your own features and applications with cloudscribe, [pl
 * Implement tracking of password hash history to support scenarios where re-using old passwords is not allowed
 * Implement a more traditional ADO.NET data layer with MSSQL and stored procedures
 * MongoDB Support - I am interested in trying to implement the data repositories with MongoDB and would welcome help with that. 
-* support for [IdentityServer4](https://github.com/IdentityServer/IdentityServer4) both as an authentication/authorization client and a user store. This will bring us support for [Jwt](https://jwt.io/) as an alternative to cookie authentication so we can more readily support SPA (Single Page Application) style web apps as well as authentication from mobile devices.
 * Lots of miscellaneous smaller stuff
 
 ##### Other things we'd like to see:
