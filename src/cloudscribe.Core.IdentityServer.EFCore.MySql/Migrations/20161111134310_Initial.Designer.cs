@@ -8,7 +8,7 @@ using cloudscribe.Core.IdentityServer.EFCore.MySql;
 namespace cloudscribe.Core.IdentityServer.EFCore.MySql.Migrations
 {
     [DbContext(typeof(ConfigurationDbContext))]
-    [Migration("20161110153613_Initial")]
+    [Migration("20161111134310_Initial")]
     partial class Initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)

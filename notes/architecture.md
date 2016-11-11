@@ -80,3 +80,5 @@ http://stackoverflow.com/questions/148747/what-is-the-difference-between-a-frame
 https://medium.com/@cscalfani/goodbye-object-oriented-programming-a59cda4c0e53#.tf8xilhuk
 
 https://medium.freecodecamp.com/imperative-vs-declarative-programming-283e96bf8aea#.hyf6bmgjr
+
+http://www.hanselman.com/blog/Stateless30AStateMachineLibraryForNETCore.aspx

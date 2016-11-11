@@ -12,7 +12,8 @@ namespace cloudscribe.Core.Storage.EFCore.MySql.Migrations
                 name: "cs_GeoCountry",
                 columns: table => new
                 {
-                    Id = table.Column<Guid>(nullable: false),
+                    Id = table.Column<Guid>(nullable: false)
+                        .Annotation("MySql:ValueGeneratedOnAdd", true),
                     ISOCode2 = table.Column<string>(maxLength: 2, nullable: false),
                     ISOCode3 = table.Column<string>(maxLength: 3, nullable: false),
                     Name = table.Column<string>(maxLength: 255, nullable: false)
@@ -26,7 +27,8 @@ namespace cloudscribe.Core.Storage.EFCore.MySql.Migrations
                 name: "cs_GeoZone",
                 columns: table => new
                 {
-                    Id = table.Column<Guid>(nullable: false),
+                    Id = table.Column<Guid>(nullable: false)
+                        .Annotation("MySql:ValueGeneratedOnAdd", true),
                     Code = table.Column<string>(maxLength: 255, nullable: false),
                     CountryId = table.Column<Guid>(nullable: false),
                     Name = table.Column<string>(maxLength: 255, nullable: false)
@@ -40,7 +42,8 @@ namespace cloudscribe.Core.Storage.EFCore.MySql.Migrations
                 name: "cs_SiteHost",
                 columns: table => new
                 {
-                    Id = table.Column<Guid>(nullable: false),
+                    Id = table.Column<Guid>(nullable: false)
+                        .Annotation("MySql:ValueGeneratedOnAdd", true),
                     HostName = table.Column<string>(maxLength: 255, nullable: false),
                     SiteId = table.Column<Guid>(nullable: false)
                 },
@@ -53,7 +56,8 @@ namespace cloudscribe.Core.Storage.EFCore.MySql.Migrations
                 name: "cs_Role",
                 columns: table => new
                 {
-                    Id = table.Column<Guid>(nullable: false),
+                    Id = table.Column<Guid>(nullable: false)
+                        .Annotation("MySql:ValueGeneratedOnAdd", true),
                     NormalizedRoleName = table.Column<string>(maxLength: 50, nullable: false),
                     RoleName = table.Column<string>(maxLength: 50, nullable: false),
                     SiteId = table.Column<Guid>(nullable: false)
@@ -67,7 +71,8 @@ namespace cloudscribe.Core.Storage.EFCore.MySql.Migrations
                 name: "cs_Site",
                 columns: table => new
                 {
-                    Id = table.Column<Guid>(nullable: false),
+                    Id = table.Column<Guid>(nullable: false)
+                        .Annotation("MySql:ValueGeneratedOnAdd", true),
                     AccountApprovalEmailCsv = table.Column<string>(nullable: true),
                     AddThisDotComUsername = table.Column<string>(maxLength: 50, nullable: true),
                     AliasId = table.Column<string>(maxLength: 36, nullable: true),
@@ -129,7 +134,8 @@ namespace cloudscribe.Core.Storage.EFCore.MySql.Migrations
                     RequireConfirmedPhone = table.Column<bool>(nullable: false),
                     RequiresQuestionAndAnswer = table.Column<bool>(nullable: false),
                     SignEmailWithDkim = table.Column<bool>(nullable: false),
-                    SiteFolderName = table.Column<string>(maxLength: 50, nullable: true, defaultValue: ""),
+                    SiteFolderName = table.Column<string>(maxLength: 50, nullable: true, defaultValue: "")
+                        .Annotation("MySql:ValueGeneratedOnAdd", true),
                     SiteIsClosed = table.Column<bool>(nullable: false),
                     SiteIsClosedMessage = table.Column<string>(nullable: true),
                     SiteName = table.Column<string>(maxLength: 255, nullable: false),
@@ -159,7 +165,8 @@ namespace cloudscribe.Core.Storage.EFCore.MySql.Migrations
                 name: "cs_User",
                 columns: table => new
                 {
-                    Id = table.Column<Guid>(nullable: false),
+                    Id = table.Column<Guid>(nullable: false)
+                        .Annotation("MySql:ValueGeneratedOnAdd", true),
                     AccessFailedCount = table.Column<int>(nullable: false),
                     AccountApproved = table.Column<bool>(nullable: false),
                     AuthorBio = table.Column<string>(nullable: true),
@@ -208,7 +215,8 @@ namespace cloudscribe.Core.Storage.EFCore.MySql.Migrations
                 name: "cs_UserClaim",
                 columns: table => new
                 {
-                    Id = table.Column<Guid>(nullable: false),
+                    Id = table.Column<Guid>(nullable: false)
+                        .Annotation("MySql:ValueGeneratedOnAdd", true),
                     ClaimType = table.Column<string>(maxLength: 255, nullable: true),
                     ClaimValue = table.Column<string>(nullable: true),
                     SiteId = table.Column<Guid>(nullable: false),
@@ -223,7 +231,8 @@ namespace cloudscribe.Core.Storage.EFCore.MySql.Migrations
                 name: "cs_UserLocation",
                 columns: table => new
                 {
-                    Id = table.Column<Guid>(nullable: false),
+                    Id = table.Column<Guid>(nullable: false)
+                        .Annotation("MySql:ValueGeneratedOnAdd", true),
                     CaptureCount = table.Column<int>(nullable: false),
                     City = table.Column<string>(maxLength: 255, nullable: true),
                     Continent = table.Column<string>(maxLength: 255, nullable: true),
@@ -234,8 +243,8 @@ namespace cloudscribe.Core.Storage.EFCore.MySql.Migrations
                     IpAddressLong = table.Column<long>(nullable: false),
                     Isp = table.Column<string>(maxLength: 255, nullable: true),
                     LastCaptureUtc = table.Column<DateTime>(nullable: false),
-                    Latitude = table.Column<double>(type: "float", nullable: false),
-                    Longitude = table.Column<double>(type: "float", nullable: false),
+                    Latitude = table.Column<double>(nullable: false),
+                    Longitude = table.Column<double>(nullable: false),
                     Region = table.Column<string>(maxLength: 255, nullable: true),
                     SiteId = table.Column<Guid>(nullable: false),
                     TimeZone = table.Column<string>(maxLength: 255, nullable: true),

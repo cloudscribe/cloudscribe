@@ -14,8 +14,8 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using cloudscribe.Core.Storage.EFCore.Common;
-using MySQL.Data.EntityFrameworkCore;
-using MySQL.Data.EntityFrameworkCore.Extensions;
+//using MySQL.Data.EntityFrameworkCore;
+//using MySQL.Data.EntityFrameworkCore.Extensions;
 
 namespace cloudscribe.Core.Storage.EFCore.MySql
 {

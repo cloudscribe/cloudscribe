@@ -7,8 +7,8 @@ using cloudscribe.Core.IdentityServer.EFCore.Interfaces;
 using cloudscribe.Core.IdentityServer.EFCore.MySql;
 using cloudscribe.Core.IdentityServer.EFCore.Stores;
 using Microsoft.EntityFrameworkCore;
-using MySQL.Data.EntityFrameworkCore;
-using MySQL.Data.EntityFrameworkCore.Extensions;
+//using MySQL.Data.EntityFrameworkCore;
+//using MySQL.Data.EntityFrameworkCore.Extensions;
 using System;
 
 namespace Microsoft.Extensions.DependencyInjection
@@ -86,9 +86,9 @@ namespace Microsoft.Extensions.DependencyInjection
             string connectionString
             )
         {
-            services.AddEntityFrameworkMySQL()
+            services.AddEntityFrameworkMySql()
                 .AddDbContext<ConfigurationDbContext>((serviceProvider, options) =>
-                options.UseMySQL(connectionString)
+                options.UseMySql(connectionString)
                        .UseInternalServiceProvider(serviceProvider)
                        );
 
@@ -96,9 +96,9 @@ namespace Microsoft.Extensions.DependencyInjection
 
             services.AddScoped<IConfigurationDbContext, ConfigurationDbContext>();
 
-            services.AddEntityFrameworkMySQL()
+            services.AddEntityFrameworkMySql()
                 .AddDbContext<PersistedGrantDbContext>((serviceProvider, options) =>
-                options.UseMySQL(connectionString)
+                options.UseMySql(connectionString)
                        .UseInternalServiceProvider(serviceProvider)
                        );
 

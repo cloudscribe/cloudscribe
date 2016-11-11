@@ -8,7 +8,7 @@ using cloudscribe.Core.Storage.EFCore.MySql;
 namespace cloudscribe.Core.Storage.EFCore.MySql.Migrations
 {
     [DbContext(typeof(CoreDbContext))]
-    [Migration("20161110150006_Initial")]
+    [Migration("20161111133959_Initial")]
     partial class Initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -496,11 +496,9 @@ namespace cloudscribe.Core.Storage.EFCore.MySql.Migrations
 
                     b.Property<DateTime>("LastCaptureUtc");
 
-                    b.Property<double>("Latitude")
-                        .HasAnnotation("MySQL:ColumnType", "float");
+                    b.Property<double>("Latitude");
 
-                    b.Property<double>("Longitude")
-                        .HasAnnotation("MySQL:ColumnType", "float");
+                    b.Property<double>("Longitude");
 
                     b.Property<string>("Region")
                         .HasAnnotation("MaxLength", 255);
