@@ -1230,7 +1230,7 @@ namespace cloudscribe.Core.Web.Controllers
             }
 
             var model = new SiteHostMappingsViewModel();
-            
+            model.SiteId = selectedSite.Id;
             model.HostMappings = await siteManager.GetSiteHosts(selectedSite.Id);
             if (slp > -1)
             {
