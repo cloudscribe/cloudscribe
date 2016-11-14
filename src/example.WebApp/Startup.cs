@@ -20,6 +20,8 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.Reflection;
 using IdentityServer4.Models;
+using cloudscribe.Web.Common.Razor;
+using cloudscribe.Core.Web.Components;
 
 namespace example.WebApp
 {
@@ -101,7 +103,8 @@ namespace example.WebApp
             //services.AddScoped<IVersionProvider, SetupVersionProvider>();
             //services.AddScoped<IVersionProvider, CloudscribeLoggingVersionProvider>();
             /* end cloudscribe Setup */
-            
+
+            //services.AddSingleton<IThemeListBuilder, SharedThemeListBuilder>();
             services.AddCloudscribeCore(Configuration);
             
             
@@ -116,6 +119,8 @@ namespace example.WebApp
                 {
                     new CultureInfo("en-US"),
                     new CultureInfo("en-GB"),
+                    new CultureInfo("cy-GB"),
+                    new CultureInfo("cy"),
                     new CultureInfo("fr-FR"),
                     new CultureInfo("fr"),
                 };
@@ -169,6 +174,7 @@ namespace example.WebApp
                         options.AddEmbeddedViewsForCloudscribeIdentityServerIntegration();
 
                         options.ViewLocationExpanders.Add(new cloudscribe.Core.Web.Components.SiteViewLocationExpander());
+                        //options.ViewLocationExpanders.Add(new cloudscribe.Core.Web.Components.SharedThemesViewLocationExpander());
                     })
                     ;
 

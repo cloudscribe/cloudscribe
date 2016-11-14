@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2016-01-01
-// Last Modified:			2016-01-19
+// Last Modified:			2016-11-14
 // 
 
 
@@ -17,5 +17,9 @@ namespace cloudscribe.Messaging.Email
         public bool UseSsl { get; set; } = false;
         public bool RequiresAuthentication { get; set; } = false;
         public string PreferredEncoding { get; set; } = string.Empty;
+
+        public string DefaultEmailFromAddress { get; set; } = string.Empty;
+
+        public string DefaultEmailFromAlias { get; set; } = string.Empty;
     }
 }

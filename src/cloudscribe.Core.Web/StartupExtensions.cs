@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2016-05-07
-// Last Modified:			2016-10-08
+// Last Modified:			2016-11-14
 // 
 
 
@@ -24,6 +24,7 @@ using Microsoft.Extensions.FileProviders;
 using Microsoft.Extensions.Options;
 using System.Reflection;
 using Microsoft.AspNetCore.Authorization;
+using cloudscribe.Messaging.Email;
 
 namespace Microsoft.Extensions.DependencyInjection
 {
@@ -34,7 +35,7 @@ namespace Microsoft.Extensions.DependencyInjection
             services.TryAddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 
             services.Configure<MultiTenantOptions>(configuration.GetSection("MultiTenantOptions"));
-
+            services.Configure<SmtpOptions>(configuration.GetSection("SmtpOptions"));
             services.Configure<SiteConfigOptions>(configuration.GetSection("SiteConfigOptions"));
             services.Configure<UIOptions>(configuration.GetSection("UIOptions"));
             services.Configure<CkeditorOptions>(configuration.GetSection("CkeditorOptions"));
@@ -65,7 +66,7 @@ namespace Microsoft.Extensions.DependencyInjection
             
             services.AddTransient<ISmsSender, SiteSmsSender>();
 
-            services.AddSingleton<IThemeListBuilder, SiteThemeListBuilder>();
+            services.TryAddSingleton<IThemeListBuilder, SiteThemeListBuilder>();
             //services.AddSingleton<IRazorViewEngine, CoreViewEngine>();
             services.TryAddScoped<ViewRenderer, ViewRenderer>();
 

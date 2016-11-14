@@ -7,14 +7,14 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     @RenderSection("Meta", required: false)
   <environment names="Development">
-    <link rel="stylesheet" href="~/cssmin/themes/cerulean/bootstrap.css" />
+      <link rel="stylesheet" href="~/cssmin/themes/paper/bootstrap.css" />
     <link rel="stylesheet" href="~/css/site.css" />
   </environment>
   <environment names="Staging,Production">
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootswatch/3.3.6/cerulean/bootstrap.min.css"
-          asp-fallback-href="~/cssmin/themes/cerulean/bootstrap.min.css"
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootswatch/3.3.6/paper/bootstrap.min.css"
+          asp-fallback-href="~/cssmin/themes/paper/bootstrap.min.css"
           asp-fallback-test-class="sr-only" asp-fallback-test-property="position" asp-fallback-test-value="absolute" />
-    <link rel="stylesheet" href="~/css/site.min.css" asp-append-version="true" /> 
+    <link rel="stylesheet" href="~/css/site.min.css" asp-append-version="true" />
   </environment>
     @RenderSection("Styles", required: false)
 </head>
@@ -41,10 +41,8 @@
         @await Html.PartialAsync("AlertsPartial")
         @RenderBody()
     </div>
-    <footer class="container text-center" role="contentinfo" itemscope itemtype="http://schema.org/Person" itemprop="author">
-        <small>
-            Copyright &copy; @DateTime.Now.Year - @(Tenant?.SiteName ?? "Sample")  
-        </small>
+    <footer class="text-center" role="contentinfo" itemscope itemtype="http://schema.org/Person" itemprop="author">
+        <small>Copyright &copy; @DateTime.Now.Year - @(Tenant?.SiteName ?? "Sample")</small>
     </footer>
     <environment names="Development">
         <script src="~/lib/jquery/dist/jquery.js"></script>

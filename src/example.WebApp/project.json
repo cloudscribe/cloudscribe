@@ -60,7 +60,7 @@
         "cloudscribe.Logging.NoDb": "1.0.0-*",
         "cloudscribe.Logging.Web": "1.0.2-*",
         "cloudscribe.Messaging.Email": "1.0.0-*",
-        "cloudscribe.Web.Localization": "1.0.0-*",
+        "cloudscribe.Web.Localization": "1.0.1-*",
         "cloudscribe.Web.Navigation": "1.0.2-*",
         "cloudscribe.Web.Pagination": "1.0.*",
         "SaasKit.Multitenancy": "1.1.*",

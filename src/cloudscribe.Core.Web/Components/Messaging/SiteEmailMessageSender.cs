@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2015-08-11
-// Last Modified:			2016-10-08
+// Last Modified:			2016-11-14
 // 
 
 using cloudscribe.Core.Models;
@@ -10,6 +10,7 @@ using cloudscribe.Messaging.Email;
 using cloudscribe.Web.Common.Razor;
 using Microsoft.Extensions.Localization;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
 using System;
 using System.Threading.Tasks;
 
@@ -23,6 +24,7 @@ namespace cloudscribe.Core.Web.Components.Messaging
 
         public SiteEmailMessageSender(
             ViewRenderer viewRenderer,
+            IOptions<SmtpOptions> smtpOptionsAccessor,
             IStringLocalizer<CloudscribeCore> localizer,
             ILogger<SiteEmailMessageSender> logger
             )
@@ -30,17 +32,19 @@ namespace cloudscribe.Core.Web.Components.Messaging
             log = logger;
             sr = localizer;
             this.viewRenderer = viewRenderer;
+            globalSmtpSettings = smtpOptionsAccessor.Value;
 
         }
 
         private ViewRenderer viewRenderer;
+        private SmtpOptions globalSmtpSettings;
         private IStringLocalizer sr;
         private ILogger log;
 
         private SmtpOptions GetSmptOptions(ISiteContext siteSettings)
         {
-            if (string.IsNullOrWhiteSpace(siteSettings.SmtpServer)) { return null; }
-
+            if(!siteSettings.SmtpIsConfigured()) { return globalSmtpSettings; }
+            
             SmtpOptions smtpOptions = new SmtpOptions();
             smtpOptions.Password = siteSettings.SmtpPassword;
             smtpOptions.Port = siteSettings.SmtpPort;
@@ -49,6 +53,8 @@ namespace cloudscribe.Core.Web.Components.Messaging
             smtpOptions.Server = siteSettings.SmtpServer;
             smtpOptions.User = siteSettings.SmtpUser;
             smtpOptions.UseSsl = siteSettings.SmtpUseSsl;
+            smtpOptions.DefaultEmailFromAddress = siteSettings.DefaultEmailFromAddress;
+            smtpOptions.DefaultEmailFromAlias = siteSettings.DefaultEmailFromAlias;
 
             return smtpOptions;
         }
@@ -79,7 +85,7 @@ namespace cloudscribe.Core.Web.Components.Messaging
                 await sender.SendEmailAsync(
                     smtpOptions,
                     toAddress,
-                    siteSettings.DefaultEmailFromAddress,
+                    smtpOptions.DefaultEmailFromAddress,
                     subject,
                     plainTextMessage,
                     htmlMessage).ConfigureAwait(false);
@@ -123,7 +129,7 @@ namespace cloudscribe.Core.Web.Components.Messaging
                 await sender.SendEmailAsync(
                     smtpOptions,
                     toAddress,
-                    siteSettings.DefaultEmailFromAddress,
+                    smtpOptions.DefaultEmailFromAddress,
                     subject,
                     plainTextMessage,
                     htmlMessage).ConfigureAwait(false);
@@ -162,7 +168,7 @@ namespace cloudscribe.Core.Web.Components.Messaging
                 await sender.SendEmailAsync(
                 smtpOptions,
                 toAddress,
-                siteSettings.DefaultEmailFromAddress,
+                smtpOptions.DefaultEmailFromAddress,
                 subject,
                 plainTextMessage,
                 htmlMessage).ConfigureAwait(false);
@@ -202,7 +208,7 @@ namespace cloudscribe.Core.Web.Components.Messaging
                 await sender.SendMultipleEmailAsync(
                     smtpOptions,
                     siteSettings.AccountApprovalEmailCsv,
-                    siteSettings.DefaultEmailFromAddress,
+                    smtpOptions.DefaultEmailFromAddress,
                     subject,
                     plainTextMessage,
                     htmlMessage).ConfigureAwait(false);
@@ -246,7 +252,7 @@ namespace cloudscribe.Core.Web.Components.Messaging
                 await sender.SendEmailAsync(
                     smtpOptions,
                     toAddress,
-                    siteSettings.DefaultEmailFromAddress,
+                    smtpOptions.DefaultEmailFromAddress,
                     subject,
                     plainTextMessage,
                     htmlMessage).ConfigureAwait(false);
