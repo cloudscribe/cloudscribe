@@ -942,4 +942,10 @@
   <data name="New Account Pending Approval" xml:space="preserve">
     <value>New Account Pending Approval</value>
   </data>
+  <data name="Hello {0}!" xml:space="preserve">
+    <value>Hello {0}!</value>
+  </data>
+  <data name="Log off" xml:space="preserve">
+    <value>Log off</value>
+  </data>
 </root>

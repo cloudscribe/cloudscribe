@@ -147,4 +147,7 @@
   <data name="Require Captcha On Registration?" xml:space="preserve">
     <value>Exiger Captcha sur l'enregistrement ?</value>
   </data>
+  <data name="Log in" xml:space="preserve">
+    <value>Logez Vous Inward</value>
+  </data>
 </root>
