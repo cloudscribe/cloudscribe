@@ -831,8 +831,12 @@ namespace cloudscribe.Core.Web.Controllers
             if (ModelState.IsValid)
             {
                 var user = await userManager.FindByNameAsync(model.Email);
-                if (user == null || !(await userManager.IsEmailConfirmedAsync(user)))
+                if (user == null || (Site.RequireConfirmedEmail && !(await userManager.IsEmailConfirmedAsync(user))))
                 {
+                    if(user != null)
+                    {
+                        log.LogWarning(user.Email + ": user tried to use pasword recovery but no email was sent because user email is not confirmed and security settings require confirmed email");
+                    }
                     // Don't reveal that the user does not exist or is not confirmed
                     return View("ForgotPasswordConfirmation");
                 }
@@ -855,7 +859,12 @@ namespace cloudscribe.Core.Web.Controllers
                     model.Email,
                     sr["Reset Password"],
                     resetUrl).Forget();
-               
+                //await emailSender.SendPasswordResetEmailAsync(
+                //    userManager.Site,
+                //    model.Email,
+                //    sr["Reset Password"],
+                //    resetUrl);
+
                 return View("ForgotPasswordConfirmation");
             }
 
