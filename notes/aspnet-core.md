@@ -1,4 +1,10 @@
 
+https://blogs.msdn.microsoft.com/webdev/2016/11/16/announcing-asp-net-core-1-1/
+
+https://blogs.msdn.microsoft.com/dotnet/2016/11/16/announcing-net-core-tools-msbuild-alpha/
+
+https://blogs.msdn.microsoft.com/dotnet/2016/11/16/announcing-net-core-1-1/
+
 https://blogs.msdn.microsoft.com/dotnet/2016/09/26/introducing-net-standard/
 
 https://blogs.msdn.microsoft.com/dotnet/2016/07/15/net-core-roadmap/

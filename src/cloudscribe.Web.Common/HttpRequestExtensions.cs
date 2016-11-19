@@ -51,5 +51,21 @@ namespace cloudscribe.Web.Common.Extensions
             return request.Path + request.QueryString;
         }
 
+        public static string GetCurrentFullUrl(this HttpRequest request)
+        {
+
+            return request.Scheme + "://" + request.Host.ToUriComponent() + request.Path.Value;
+        }
+
+        public static string GetCurrentFullUrlWithQueryString(this HttpRequest request)
+        {
+
+            return request.Scheme + "://" 
+                + request.Host.ToUriComponent() 
+                + request.Path.Value
+                + request.QueryString
+                ;
+        }
+
     }
 }
