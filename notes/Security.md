@@ -1,4 +1,8 @@
 
+https://docs.microsoft.com/en-us/aspnet/core/hosting/dataprotection
+To automatically persist keys for an application hosted in IIS, you must create registry hives for each application pool. Use the Provisioning PowerShell script for each application pool you will be hosting ASP.NET Core applications under. This script will create a special registry key in the HKLM registry that is ACLed only to the worker process account. Keys are encrypted at rest using DPAPI.
+https://github.com/aspnet/DataProtection/blob/dev/Provision-AutoGenKeys.ps1
+
 https://blogs.msdn.microsoft.com/webdev/2016/10/27/bearer-token-authentication-in-asp-net-core/
 
 

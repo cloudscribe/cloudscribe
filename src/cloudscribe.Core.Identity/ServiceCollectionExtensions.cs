@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2016-05-07
-// Last Modified:			2016-09-28
+// Last Modified:			2016-11-26
 // 
 
 using cloudscribe.Core.Identity;
@@ -59,6 +59,8 @@ namespace Microsoft.Extensions.DependencyInjection
             //services.TryAddScoped<UserManager<SiteUser>, UserManager<SiteUser>>();
             //services.TryAddScoped<SignInManager<SiteUser>, SignInManager<SiteUser>>();
             //services.TryAddScoped<RoleManager<SiteRole>, RoleManager<SiteRole>>();
+
+            services.AddScoped<UserEvents, UserEvents>();
 
             services.TryAddScoped<ICustomClaimProvider, DoNothingCustomClaimProvider>();
 

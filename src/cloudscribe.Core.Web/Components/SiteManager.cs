@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2015-07-22
-// Last Modified:			2016-10-08
+// Last Modified:			2016-11-26
 // 
 
 using cloudscribe.Core.Models;
@@ -21,6 +21,7 @@ namespace cloudscribe.Core.Web.Components
 
         public SiteManager(
             SiteContext currentSite,
+            SiteEvents siteEventHandlers,
             ISiteCommands siteCommands,
             ISiteQueries siteQueries,
             IUserCommands userCommands,
@@ -47,6 +48,7 @@ namespace cloudscribe.Core.Web.Components
             //resolver = siteResolver;
             siteSettings = currentSite;
             this.cacheHelper = cacheHelper;
+            eventHandlers = siteEventHandlers;
         }
 
         private readonly HttpContext _context;
@@ -61,6 +63,7 @@ namespace cloudscribe.Core.Web.Components
         private IUserQueries userQueries;
         private IUserCommands userCommands;
         private ISiteContext siteSettings = null;
+        private SiteEvents eventHandlers;
         //private ISiteSettings Site
         //{
         //    get
@@ -166,6 +169,8 @@ namespace cloudscribe.Core.Web.Components
 
         public async Task Update(ISiteSettings site)
         {
+            await eventHandlers.HandleSitePreUpdate(site.Id).ConfigureAwait(false);
+
             dataProtector.Protect(site);
             if(site.Id == Guid.Empty)
             {
@@ -192,16 +197,13 @@ namespace cloudscribe.Core.Web.Components
                 if(_context != null && !string.IsNullOrEmpty(_context.Request.Host.Value))
                 cacheHelper.ClearCache(_context.Request.Host.Value);
             }
+
+            await eventHandlers.HandleSiteUpdated(site).ConfigureAwait(false);
         }
 
         public async Task Delete(ISiteSettings site)
         {
-            // we will need a provider model or something similar here to
-            // allow other features and 3rd party features to delete
-            // related data when a site is deleted
-            // TODO: implement
-            // will ProviderModel be available in Core Framework or will we have to use something else
-            // a way to use dependency injection?
+            await eventHandlers.HandleSitePreDelete(site.Id).ConfigureAwait(false);
 
             // delete users
             await userCommands.DeleteUsersBySite(site.Id, CancellationToken.None); // this also deletes userroles claims logins
@@ -252,6 +254,8 @@ namespace cloudscribe.Core.Web.Components
 
             if(multiTenantOptions.Mode == MultiTenantMode.FolderName)
             cacheHelper.ClearCache("folderList");
+
+            await eventHandlers.HandleSiteCreated(newSite).ConfigureAwait(false);
 
         }
 

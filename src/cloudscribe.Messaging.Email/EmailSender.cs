@@ -116,7 +116,8 @@ namespace cloudscribe.Messaging.Email
             string from,
             string subject,
             string plainTextMessage,
-            string htmlMessage)
+            string htmlMessage,
+            string replyTo = null)
         {
             if (string.IsNullOrWhiteSpace(toCsv))
             {
@@ -139,20 +140,29 @@ namespace cloudscribe.Messaging.Email
             {
                 throw new ArgumentException("no message provided");
             }
-
-
-
-
+            
             var m = new MimeMessage();
 
             m.From.Add(new MailboxAddress("", from));
-
-            string[] adrs = toCsv.Split(',');
-
-            foreach (string item in adrs)
+            if (!string.IsNullOrWhiteSpace(replyTo))
             {
-                if (!string.IsNullOrEmpty(item)) { m.To.Add(new MailboxAddress("", item)); ; }
+                m.ReplyTo.Add(new MailboxAddress("", replyTo));
             }
+
+            if(toCsv.Contains(","))
+            {
+                string[] adrs = toCsv.Split(',');
+
+                foreach (string item in adrs)
+                {
+                    if (!string.IsNullOrEmpty(item)) { m.To.Add(new MailboxAddress("", item));  }
+                }
+            }
+            else
+            {
+                m.To.Add(new MailboxAddress("", toCsv));
+            }
+            
 
             m.Subject = subject;
             m.Importance = MessageImportance.High;

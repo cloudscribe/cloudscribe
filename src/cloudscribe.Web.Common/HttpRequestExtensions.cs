@@ -51,5 +51,51 @@ namespace cloudscribe.Web.Common.Extensions
             return request.Path + request.QueryString;
         }
 
+        public static string GetCurrentBaseUrl(this HttpRequest request)
+        {
+
+            return request.Scheme + "://" + request.Host.ToUriComponent();
+        }
+
+        public static string GetCurrentFullUrl(this HttpRequest request)
+        {
+
+            return request.Scheme + "://" + request.Host.ToUriComponent() + request.Path.Value;
+        }
+
+        public static string GetCurrentFullUrlWithQueryString(this HttpRequest request)
+        {
+
+            return request.Scheme + "://" 
+                + request.Host.ToUriComponent() 
+                + request.Path.Value
+                + request.QueryString
+                ;
+        }
+
+        public static string GetIpV4Address(this HttpContext context)
+        {
+            var connection = context.Connection;
+            if (connection == null) return string.Empty; ;
+            var ip = connection.RemoteIpAddress;
+            if (ip == null) return string.Empty;
+            var ipv4 = ip.MapToIPv4();
+
+            string ipv4Address = ipv4.ToString();
+            return ipv4Address;
+        }
+
+        public static string GetIpV6Address(this HttpContext context)
+        {
+            var connection = context.Connection;
+            if (connection == null) return string.Empty; ;
+            var ip = connection.RemoteIpAddress;
+            if (ip == null) return string.Empty;
+            var ipv6 = ip.MapToIPv6();
+
+            string ipv6Address = ipv6.ToString();
+            return ipv6Address;
+        }
+
     }
 }
