@@ -7,6 +7,8 @@ https://vaadin.com/elements
 
 http://thewebplatform.libsyn.com/webpage
 
+https://webkit.org/blog/7027/introducing-custom-elements/
+
 http://developer.telerik.com/featured/what-to-expect-from-javascript-in-2016-frameworks/
 
 http://mentormate.com/blog/polymer-vs-angular-future-web-apps/

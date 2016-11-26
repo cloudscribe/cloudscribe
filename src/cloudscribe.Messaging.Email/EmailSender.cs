@@ -149,12 +149,20 @@ namespace cloudscribe.Messaging.Email
                 m.ReplyTo.Add(new MailboxAddress("", replyTo));
             }
 
-            string[] adrs = toCsv.Split(',');
-
-            foreach (string item in adrs)
+            if(toCsv.Contains(","))
             {
-                if (!string.IsNullOrEmpty(item)) { m.To.Add(new MailboxAddress("", item)); ; }
+                string[] adrs = toCsv.Split(',');
+
+                foreach (string item in adrs)
+                {
+                    if (!string.IsNullOrEmpty(item)) { m.To.Add(new MailboxAddress("", item));  }
+                }
             }
+            else
+            {
+                m.To.Add(new MailboxAddress("", toCsv));
+            }
+            
 
             m.Subject = subject;
             m.Importance = MessageImportance.High;

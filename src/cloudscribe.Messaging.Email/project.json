@@ -1,5 +1,5 @@
 {
-    "version": "1.0.0-rc20161115",
+    "version": "1.0.0-rc20161116",
     "description": "a friendly wrapper around Mailkit/Mimekit",
     "authors": [ "Joe Audette" ],
     "packOptions": {

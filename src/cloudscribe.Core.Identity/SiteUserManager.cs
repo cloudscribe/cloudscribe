@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:				    2014-07-22
-// Last Modified:		    2016-10-08
+// Last Modified:		    2016-11-26
 // 
 //
 
@@ -27,6 +27,7 @@ namespace cloudscribe.Core.Identity
     {        
         public SiteUserManager(
             SiteContext currentSite,
+            UserEvents userEventHandlers,
             IUserCommands userCommands,
             IUserQueries userQueries,
             IUserStore<TUser> store,
@@ -64,6 +65,7 @@ namespace cloudscribe.Core.Identity
             multiTenantOptions = multiTenantOptionsAccessor.Value;
             this.contextAccessor = contextAccessor;
             httpContext = contextAccessor?.HttpContext;
+            eventHandlers = userEventHandlers;
         }
         
         private IdentityOptions identityOptions;
@@ -73,6 +75,7 @@ namespace cloudscribe.Core.Identity
         private MultiTenantOptions multiTenantOptions;
         private IHttpContextAccessor contextAccessor;
         private HttpContext httpContext;
+        private UserEvents eventHandlers;
 
         private CancellationToken CancellationToken => httpContext?.RequestAborted ?? CancellationToken.None;
 
@@ -196,11 +199,42 @@ namespace cloudscribe.Core.Identity
 
         #region Overrides
 
+        public override async Task<IdentityResult> CreateAsync(TUser user)
+        {
+            var result = await base.CreateAsync(user);
+            if(result.Succeeded)
+            {
+                await eventHandlers.HandleUserCreated(user).ConfigureAwait(false);
+            }
+
+            return result;
+        }
+
+        public override async Task<IdentityResult> DeleteAsync(TUser user)
+        {
+            await eventHandlers.HandleUserPreDelete(user.SiteId, user.Id).ConfigureAwait(false);
+
+            return await base.DeleteAsync(user);
+        }
+
+        public override async Task<IdentityResult> UpdateAsync(TUser user)
+        {
+            await eventHandlers.HandleUserPreUpdate(user.SiteId, user.Id).ConfigureAwait(false);
+
+            var result = await base.UpdateAsync(user);
+            if (result.Succeeded)
+            {
+                await eventHandlers.HandleUserUpdated(user).ConfigureAwait(false);
+            }
+
+            return result;
+        }
+
         //public override async Task<string> GenerateEmailConfirmationTokenAsync(TUser user)
         //{
         //    Guid registerConfirmGuid = Guid.NewGuid();
         //    bool result = await userRepo.SetRegistrationConfirmationGuid(user.UserGuid, registerConfirmGuid, CancellationToken.None);
-            
+
         //    return registerConfirmGuid.ToString();
         //}
 
