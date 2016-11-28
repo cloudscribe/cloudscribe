@@ -90,9 +90,12 @@
                             <input type="hidden" asp-for="UseEmailForLogin" />
                         </div>
                     </div>
-                    <p>
-                        <a asp-action="Register">@sr["Register as a new user?"]</a>
-                    </p>
+                    @if (site.AllowNewRegistration)
+                    {
+                        <p>
+                            <a asp-action="Register">@sr["Register as a new user?"]</a>
+                        </p>
+                    }     
                     <p>
                         <a asp-action="ForgotPassword">@sr["Forgot your password?"]</a>
                     </p>
