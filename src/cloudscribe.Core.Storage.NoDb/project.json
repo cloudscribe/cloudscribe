@@ -1,5 +1,5 @@
 ﻿{
-    "version": "1.0.0-rc20161020",
+    "version": "1.1.0-rc20161129",
     "description": "NoDb implementation of cloudscribe core commands and queries",
     "authors": [ "Joe Audette" ],
     "packOptions": {
@@ -15,12 +15,12 @@
 
 
     "dependencies": {
-        "NETStandard.Library": "1.6.0-*",
-        "cloudscribe.Core.Models": "1.0.2-*",
-        "NoDb": "1.0.*",
-        "Microsoft.Extensions.Logging.Abstractions": "1.0.*",
-        "Microsoft.Extensions.Options": "1.0.*",
-        "Microsoft.AspNetCore.Http": "1.0.*"
+        "NETStandard.Library": "1.6.*",
+        "cloudscribe.Core.Models": "1.1.0-*",
+        "NoDb": "1.1.*",
+        "Microsoft.Extensions.Logging.Abstractions": "1.1.*",
+        "Microsoft.Extensions.Options": "1.1.*",
+        "Microsoft.AspNetCore.Http": "1.1.*"
         
     },
 
@@ -31,7 +31,7 @@
         "netstandard1.6": {
             "imports": "dnxcore50",
             "dependencies": {
-                "System.Linq.Queryable": "4.0.1-*"
+                "System.Linq.Queryable": "4.*"
             }
         }
     }

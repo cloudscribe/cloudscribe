@@ -1,5 +1,5 @@
 {
-    "version": "1.0.0-rc20161116",
+    "version": "1.1.0-rc20161129",
     "description": "a friendly wrapper around Mailkit/Mimekit",
     "authors": [ "Joe Audette" ],
     "packOptions": {
@@ -14,10 +14,10 @@
     },
 
   "dependencies": {
-    "NETStandard.Library": "1.6.0-*",
+    "NETStandard.Library": "1.6.*",
     "MailKit": "1.4.0-*",
     "MimeKit": "1.4.0-*",
-    "Microsoft.Extensions.Options": "1.0.0"
+    "Microsoft.Extensions.Options": "1.1.*"
   },
 
     "frameworks": {

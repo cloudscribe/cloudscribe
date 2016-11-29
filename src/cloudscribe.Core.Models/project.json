@@ -1,5 +1,5 @@
 ﻿{
-    "version": "1.0.2-rc20161021",
+    "version": "1.1.0-rc20161129",
     "description": "model classes for cloudscribe core. you should not normally install this separately, it will be installed if you install cloudscribe.Core.Web",
     "authors": [ "Joe Audette" ],
     "packOptions": {
@@ -14,11 +14,11 @@
     },
 
     "dependencies": {
-        "Microsoft.AspNetCore.DataProtection": "1.0.*",
-        "Microsoft.AspNetCore.Http": "1.0.*",
-        "Microsoft.Extensions.Logging.Abstractions": "1.0.*",
-        "NETStandard.Library": "1.6.0-*",
-        "System.Data.Common": "4.0.1-*"
+        "Microsoft.AspNetCore.DataProtection": "1.1.*",
+        "Microsoft.AspNetCore.Http": "1.1.*",
+        "Microsoft.Extensions.Logging.Abstractions": "1.1.*",
+        "NETStandard.Library": "1.6.*",
+        "System.Data.Common": "4.*"
     },
 
     "frameworks": {
@@ -28,7 +28,7 @@
         "netstandard1.6": {
             "imports": "dnxcore50",
             "dependencies": {    
-                "System.Security.Claims": "4.0.1-*"
+                "System.Security.Claims": "4.*"
             }
         }
     }

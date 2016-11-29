@@ -1,5 +1,5 @@
 {
-    "version": "1.0.0-rc20161025",
+    "version": "1.1.0-rc20161129",
     "description": "NoDb configuration and operational stores for IdentityServer4 cloudscribe multi-tenant identity integration",
     "authors": [ "Joe Audette" ],
     "packOptions": {
@@ -14,12 +14,12 @@
     },
 
     "dependencies": {
-        "NETStandard.Library": "1.6.0",
+        "NETStandard.Library": "1.6.*",
         "cloudscribe.IDS4Fork": "1.0.0-*",
-        "cloudscribe.Core.IdentityServerIntegration": "1.0.0-*",
-        "cloudscribe.Core.Models": "1.0.2-*",
-        "NoDb": "1.0.*",
-        "Microsoft.Extensions.Caching.Memory": "1.0.0"
+        "cloudscribe.Core.IdentityServerIntegration": "1.1.0-*",
+        "cloudscribe.Core.Models": "1.1.0-*",
+        "NoDb": "1.1.*",
+        "Microsoft.Extensions.Caching.Memory": "1.1.*"
     },
 
     "frameworks": {

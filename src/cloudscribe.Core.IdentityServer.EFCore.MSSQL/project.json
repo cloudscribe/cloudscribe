@@ -1,5 +1,5 @@
 ﻿{
-    "version": "1.0.0-rc20161109",
+    "version": "1.1.0-rc20161129",
     "description": "Microsoft Sql Server Entity Framework configuration and operational stores for IdentityServer4 cloudscribe multi-tenant identity integration",
     "authors": [ "Joe Audette" ],
     "packOptions": {
@@ -20,40 +20,34 @@
 
     "dependencies": {
         "cloudscribe.IDS4Fork": "1.0.0-*",
-        "cloudscribe.Core.IdentityServerIntegration": "1.0.0-*",
-        "Microsoft.EntityFrameworkCore": "1.0.1-*",
-        "Microsoft.EntityFrameworkCore.Relational": "1.0.1-*",
-        "Microsoft.EntityFrameworkCore.Tools": {
-            "version": "1.0.0-preview2-final",
-            "type": "build"
-        },
-        "cloudscribe.Core.Models": "1.0.2-*",
-        "cloudscribe.Core.IdentityServer.EFCore.Common": "1.0.0-*",
-        "Microsoft.EntityFrameworkCore.SqlServer": "1.0.1-*",
-        "Microsoft.Extensions.Configuration.FileExtensions": "1.0.*",
-        "Microsoft.Extensions.Configuration.Json": "1.0-*",
-        "Microsoft.AspNetCore.Hosting": "1.0-*"
+        "cloudscribe.Core.IdentityServerIntegration": "1.1.0-*",
+        "Microsoft.EntityFrameworkCore": "1.1.*",
+        "Microsoft.EntityFrameworkCore.Relational": "1.1.*",
+        "cloudscribe.Core.Models": "1.1.0-*",
+        "cloudscribe.Core.IdentityServer.EFCore.Common": "1.1.0-*",
+        "Microsoft.EntityFrameworkCore.SqlServer": "1.1.*",
+        "Microsoft.Extensions.Configuration.FileExtensions": "1.1.*",
+        "Microsoft.Extensions.Configuration.Json": "1.1.*",
+        "Microsoft.AspNetCore.Hosting": "1.1.*"
     },
 
     "tools": {
-        "Microsoft.EntityFrameworkCore.Tools": {
-            "version": "1.0.0-preview2-final"
-        }
+        "Microsoft.EntityFrameworkCore.Tools.DotNet": "1.1.0-preview4-final"
     },
 
 
-    "frameworks": {
-        "netcoreapp1.0": {
-            "imports": [ "dotnet5.6", "portable-net451+win8" ],
-            "buildOptions": {
-                "emitEntryPoint": true
-            },
-            "dependencies": {
-                "Microsoft.NETCore.App": {
-                    "type": "platform",
-                    "version": "1.0.0-*"
-                }
-            }
+  "frameworks": {
+    "netcoreapp1.1": {
+      "imports": [ "dotnet5.6", "portable-net451+win8" ],
+      "buildOptions": {
+        "emitEntryPoint": true
+      },
+      "dependencies": {
+        "Microsoft.NETCore.App": {
+          "type": "platform",
+          "version": "1.1.*"
         }
+      }
     }
+  }
 }

@@ -1,5 +1,5 @@
 ﻿{
-    "version": "1.0.0-rc20161109",
+    "version": "1.1.0-rc20161129",
     "description": "Microsoft Sql Server Entity Framework Core implementation of cloudscribe core storage",
     "authors": [ "Joe Audette" ],
     "buildOptions": {
@@ -19,38 +19,32 @@
 
 
     "dependencies": {
-        "NETStandard.Library": "1.6.0-*",
-        "Microsoft.Extensions.Configuration.Json": "1.0.*",
-        "Microsoft.Extensions.Configuration": "1.0.*",
-        "Microsoft.EntityFrameworkCore.SqlServer": "1.0-*",
-        "cloudscribe.Core.Models": "1.0.2-*",
-        "cloudscribe.Core.Storage.EFCore.Common": "1.0.0-*",
-        "Microsoft.EntityFrameworkCore.Tools": {
-            "version": "1.0.0-preview2-final",
-            "type": "build"
-        },
-        "Microsoft.AspNetCore.Hosting": "1.0.*",
-        "Microsoft.Extensions.DependencyInjection.Abstractions": "1.0.*"
+        "NETStandard.Library": "1.6.*",
+        "Microsoft.Extensions.Configuration.Json": "1.1.*",
+        "Microsoft.Extensions.Configuration": "1.1.*",
+        "Microsoft.EntityFrameworkCore.SqlServer": "1.1-*",
+        "cloudscribe.Core.Models": "1.1.0-*",
+        "cloudscribe.Core.Storage.EFCore.Common": "1.1.0-*",
+        "Microsoft.AspNetCore.Hosting": "1.1.*",
+        "Microsoft.Extensions.DependencyInjection.Abstractions": "1.1.*"
     },
 
     "tools": {
-        "Microsoft.EntityFrameworkCore.Tools": {
-            "version": "1.0.0-preview2-final"
-        }
+        "Microsoft.EntityFrameworkCore.Tools.DotNet": "1.1.0-preview4-final"
     },
 
-    "frameworks": {
-        "netcoreapp1.0": {
-            "imports": [ "dotnet5.6", "portable-net451+win8" ],
-            "buildOptions": {
-                "emitEntryPoint": true
-            },
-            "dependencies": {
-                "Microsoft.NETCore.App": {
-                    "type": "platform",
-                    "version": "1.0.0-*"
-                }
-            }
+  "frameworks": {
+    "netcoreapp1.1": {
+      "imports": [ "dotnet5.6", "portable-net451+win8" ],
+      "buildOptions": {
+        "emitEntryPoint": true
+      },
+      "dependencies": {
+        "Microsoft.NETCore.App": {
+          "type": "platform",
+          "version": "1.1.*"
         }
+      }
     }
+  }
 }

@@ -343,32 +343,32 @@ namespace cloudscribe.Core.Identity
             return await SignInOrTwoFactorAsync(user, isPersistent, loginProvider);
         }
 
-        private async Task<SignInResult> PreSignInCheck(TUser user)
-        {
-            logger.LogInformation("PreSignInCheck called");
+        //private async Task<SignInResult> PreSignInCheck(TUser user)
+        //{
+        //    logger.LogInformation("PreSignInCheck called");
 
 
-            if (!await CanSignInAsync(user))
-            {
-                return SignInResult.NotAllowed;
-            }
-            if (await IsLockedOut(user))
-            {
-                return await LockedOut(user);
-            }
-            return null;
-        }
+        //    if (!await CanSignInAsync(user))
+        //    {
+        //        return SignInResult.NotAllowed;
+        //    }
+        //    if (await IsLockedOut(user))
+        //    {
+        //        return await LockedOut(user);
+        //    }
+        //    return null;
+        //}
 
-        private async Task<bool> IsLockedOut(TUser user)
-        {
-            return UserManager.SupportsUserLockout && await UserManager.IsLockedOutAsync(user);
-        }
+        //private async Task<bool> IsLockedOut(TUser user)
+        //{
+        //    return UserManager.SupportsUserLockout && await UserManager.IsLockedOutAsync(user);
+        //}
 
-        private async Task<SignInResult> LockedOut(TUser user)
-        {
-            Logger.LogWarning("User {userId} is currently locked out.", await UserManager.GetUserIdAsync(user));
-            return SignInResult.LockedOut;
-        }
+        //private async Task<SignInResult> LockedOut(TUser user)
+        //{
+        //    Logger.LogWarning("User {userId} is currently locked out.", await UserManager.GetUserIdAsync(user));
+        //    return SignInResult.LockedOut;
+        //}
 
         private async Task<SignInResult> SignInOrTwoFactorAsync(TUser user, bool isPersistent, string loginProvider = null)
         {
@@ -502,14 +502,14 @@ namespace cloudscribe.Core.Identity
             return SignInResult.Failed;
         }
 
-        private Task ResetLockout(TUser user)
-        {
-            if (UserManager.SupportsUserLockout)
-            {
-                return UserManager.ResetAccessFailedCountAsync(user);
-            }
-            return Task.FromResult(0);
-        }
+        //private Task ResetLockout(TUser user)
+        //{
+        //    if (UserManager.SupportsUserLockout)
+        //    {
+        //        return UserManager.ResetAccessFailedCountAsync(user);
+        //    }
+        //    return Task.FromResult(0);
+        //}
 
         internal ClaimsPrincipal StoreTwoFactorInfo(string userId, string loginProvider)
         {
