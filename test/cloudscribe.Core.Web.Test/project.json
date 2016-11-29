@@ -13,25 +13,25 @@
             "version": "2.2.0-preview2-build1029",
             "target": "package"
         },
-        "Microsoft.NETCore.Platforms": "1.0.1-*",
-        "cloudscribe.Core.Models": "1.0.2-*",
-        "cloudscribe.Core.Web": "1.0.0-*",
-        "cloudscribe.Web.Common": "1.0.0-*",
-        "NodaTime": "2.0.0-alpha20160523"
+        "Microsoft.NETCore.Platforms": "1.1.*",
+        "cloudscribe.Core.Models": "1.1.0-*",
+        "cloudscribe.Core.Web": "1.1.0-*",
+        "cloudscribe.Web.Common": "1.1.*",
+        "NodaTime": "2.0.0-*"
     },
 
     "frameworks": {
-        "netcoreapp1.0": {
+        "netcoreapp1.1": {
             "dependencies": {
                 "Microsoft.NETCore.App": {
-                    "version": "1.0.0-*",
+                    "version": "1.1.*",
                     "type": "platform"
                 },
-                "Microsoft.CSharp": "4.0.1-*",
-                "System.Collections": "4.0.11-*",
-                "System.Linq": "4.1.0-*",
-                "System.Runtime": "4.1.0-*",
-                "System.Threading": "4.0.11-*"
+                "Microsoft.CSharp": "4.3.0",
+                "System.Collections": "4.3.0",
+                "System.Linq": "4.3.0",
+                "System.Runtime": "4.3.0",
+                "System.Threading": "4.3.0"
             },
             "imports": [
                 "dnxcore50",

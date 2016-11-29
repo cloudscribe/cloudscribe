@@ -77,7 +77,7 @@ namespace cloudscribe.Core.Identity
         private HttpContext httpContext;
         private UserEvents eventHandlers;
 
-        private CancellationToken CancellationToken => httpContext?.RequestAborted ?? CancellationToken.None;
+        //private CancellationToken CancellationToken => httpContext?.RequestAborted ?? CancellationToken.None;
 
         private ISiteContext siteSettings = null;
 
