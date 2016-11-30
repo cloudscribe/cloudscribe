@@ -14,7 +14,7 @@
     },
 
     "dependencies": {
-        "NETStandard.Library": "1.6.*",
+        "NETStandard.Library": "1.6.1",
         "cloudscribe.IDS4Fork": "1.0.0-*",
         "cloudscribe.Core.IdentityServerIntegration": "1.1.0-*",
         "cloudscribe.Core.Models": "1.1.0-*",

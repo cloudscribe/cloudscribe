@@ -14,7 +14,7 @@
     },
 
   "dependencies": {
-    "NETStandard.Library": "1.6.*",
+    "NETStandard.Library": "1.6.1",
     "MailKit": "1.4.0-*",
     "MimeKit": "1.4.0-*",
     "Microsoft.Extensions.Options": "1.1.*"
