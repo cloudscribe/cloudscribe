@@ -15,7 +15,7 @@
 
 
     "dependencies": {
-        "NETStandard.Library": "1.6.*",
+        "NETStandard.Library": "1.6.1",
         "cloudscribe.Core.Models": "1.1.0-*",
         "Microsoft.AspNetCore.Identity": "1.1.*",
         "Microsoft.AspNetCore.Antiforgery": "1.1.*",
