@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2015-07-22
-// Last Modified:			2016-04-21
+// Last Modified:			2016-12-01
 // 
 
 using MailKit.Net.Smtp;
@@ -26,7 +26,9 @@ namespace cloudscribe.Messaging.Email
             string subject,
             string plainTextMessage,
             string htmlMessage,
-            string replyTo = null)
+            string replyTo = null,
+            Importance importance = Importance.Normal
+            )
         {
             if (string.IsNullOrWhiteSpace(to))
             {
@@ -59,8 +61,8 @@ namespace cloudscribe.Messaging.Email
             }
             m.To.Add(new MailboxAddress("", to));
             m.Subject = subject;
-
-            //m.Importance = MessageImportance.Normal;
+            m.Importance = GetMessageImportance(importance);
+            
             //Header h = new Header(HeaderId.Precedence, "Bulk");
             //m.Headers.Add()
 
@@ -79,20 +81,12 @@ namespace cloudscribe.Messaging.Email
 
             using (var client = new SmtpClient())
             {
-                //client.ServerCertificateValidationCallback = delegate (
-                //    Object obj, X509Certificate certificate, X509Chain chain,
-                //    SslPolicyErrors errors)
-                //{
-                //    return (true);
-                //};
-
                 await client.ConnectAsync(
                     smtpOptions.Server,
                     smtpOptions.Port,
                     smtpOptions.UseSsl)
                     .ConfigureAwait(false);
-                //await client.ConnectAsync(smtpOptions.Server, smtpOptions.Port, SecureSocketOptions.StartTls);
-
+                
                 // Note: since we don't have an OAuth2 token, disable
                 // the XOAUTH2 authentication mechanism.
                 client.AuthenticationMechanisms.Remove("XOAUTH2");
@@ -117,7 +111,9 @@ namespace cloudscribe.Messaging.Email
             string subject,
             string plainTextMessage,
             string htmlMessage,
-            string replyTo = null)
+            string replyTo = null,
+            Importance importance = Importance.Normal
+            )
         {
             if (string.IsNullOrWhiteSpace(toCsv))
             {
@@ -165,7 +161,7 @@ namespace cloudscribe.Messaging.Email
             
 
             m.Subject = subject;
-            m.Importance = MessageImportance.High;
+            m.Importance = GetMessageImportance(importance);
 
             BodyBuilder bodyBuilder = new BodyBuilder();
             if (hasPlainText)
@@ -182,19 +178,11 @@ namespace cloudscribe.Messaging.Email
 
             using (var client = new SmtpClient())
             {
-                //client.ServerCertificateValidationCallback = delegate (
-                //    Object obj, X509Certificate certificate, X509Chain chain,
-                //    SslPolicyErrors errors)
-                //{
-                //    return (true);
-                //};
-
                 await client.ConnectAsync(
                     smtpOptions.Server,
                     smtpOptions.Port,
                     smtpOptions.UseSsl).ConfigureAwait(false);
-                //await client.ConnectAsync(smtpOptions.Server, smtpOptions.Port, SecureSocketOptions.StartTls);
-
+                
                 // Note: since we don't have an OAuth2 token, disable
                 // the XOAUTH2 authentication mechanism.
                 client.AuthenticationMechanisms.Remove("XOAUTH2");
@@ -213,23 +201,19 @@ namespace cloudscribe.Messaging.Email
 
         }
 
-        //public async Task SendEmailAsync(
-        //    SmtpOptions smtpOptions,
-        //    string toAddress,
-        //    string toName,
-        //    string from,
-        //    string fromName,
-        //    string replyToAddress,
-        //    string cc,
-        //    string bcc,
-        //    string subject,
-        //    string plainTextMessage,
-        //    string htmlMessage)
-        //{
-
-
-        //}
-
-
+        private MessageImportance GetMessageImportance(Importance importance)
+        {
+            switch(importance)
+            {
+                case Importance.Low:
+                    return MessageImportance.Low;
+                case Importance.High:
+                    return MessageImportance.High;
+                case Importance.Normal:
+                default:
+                    return MessageImportance.Normal;
+            }
+        }
+        
     }
 }
