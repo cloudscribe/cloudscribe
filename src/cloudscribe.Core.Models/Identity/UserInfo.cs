@@ -9,7 +9,6 @@ namespace cloudscribe.Core.Models
     /// lighter weight version of user for lists and dropdowns
     /// base class for SiteUser
     /// </summary>
-    //[Serializable]
     public class UserInfo : IUserInfo
     {
         public UserInfo()
@@ -18,7 +17,7 @@ namespace cloudscribe.Core.Models
         }
 
         public Guid Id { get; set; } 
-        public Guid SiteId { get; set; } = Guid.Empty;
+        public Guid SiteId { get; set; } 
         
         private string email = string.Empty;
         public string Email

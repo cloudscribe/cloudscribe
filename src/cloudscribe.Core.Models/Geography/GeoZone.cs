@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2014-11-02
-// Last Modified:			2016-05-12
+// Last Modified:			2016-12-02
 // 
 
 using System;
@@ -16,8 +16,8 @@ namespace cloudscribe.Core.Models.Geography
             Id = Guid.NewGuid();
         }
         
-        public Guid Id { get; set; } = Guid.Empty;
-        public Guid CountryId { get; set; } = Guid.Empty;
+        public Guid Id { get; set; }
+        public Guid CountryId { get; set; } 
 
         private string name = string.Empty;
         public string Name

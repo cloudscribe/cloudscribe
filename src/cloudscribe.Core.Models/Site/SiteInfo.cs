@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2014-08-16
-// Last Modified:			2016-04-28
+// Last Modified:			2016-12-02
 // 
 
 using System;
@@ -14,12 +14,9 @@ using System.Threading.Tasks;
 
 namespace cloudscribe.Core.Models
 {
-    //[Serializable]
     public class SiteInfo : ISiteInfo
     {
-        
-        //public int SiteId { get; set; } = -1;
-        public Guid Id { get; set; } = Guid.Empty;
+        public Guid Id { get; set; } 
 
         private string aliasId = null;
         /// <summary>
