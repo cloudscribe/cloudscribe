@@ -9,8 +9,6 @@ using System;
 
 namespace cloudscribe.Core.Models
 {
-
-    //[Serializable]
     public class SiteUser : UserInfo, ISiteUser
     {
         

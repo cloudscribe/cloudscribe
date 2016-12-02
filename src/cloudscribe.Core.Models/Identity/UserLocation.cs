@@ -15,9 +15,9 @@ namespace cloudscribe.Core.Models
         {
             Id = Guid.NewGuid();
         }
-        public Guid Id { get; set; } = Guid.Empty;
-        public Guid UserId { get; set; } = Guid.Empty;
-        public Guid SiteId { get; set; } = Guid.Empty;
+        public Guid Id { get; set; }
+        public Guid UserId { get; set; } 
+        public Guid SiteId { get; set; }
 
         private string ipAddress = string.Empty;
         public string IpAddress

@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2014-08-10
-// Last Modified:			2016-05-12
+// Last Modified:			2016-12-02
 // 
 
 using System;
@@ -18,9 +18,9 @@ namespace cloudscribe.Core.Models
         }
 
         
-        public Guid Id { get; set; } = Guid.Empty;
-        public Guid SiteId { get; set; } = Guid.Empty;
-        public Guid UserId { get; set; } = Guid.Empty;
+        public Guid Id { get; set; }
+        public Guid SiteId { get; set; } 
+        public Guid UserId { get; set; } 
         
         private string claimType = string.Empty;
         public string ClaimType
@@ -35,7 +35,6 @@ namespace cloudscribe.Core.Models
             get { return claimValue ?? string.Empty; }
             set { claimValue = value; }
         }
-
         
         public static UserClaim FromIUserClaim(IUserClaim i)
         {
