@@ -168,7 +168,7 @@ namespace example.WebApp
                         options.AddCloudscribeViewLocationFormats();
 
                         options.AddEmbeddedViewsForNavigation();
-                        options.AddEmbeddedViewsForCloudscribeCore();
+                        options.AddEmbeddedBootstrap3ViewsForCloudscribeCore();
                         options.AddEmbeddedViewsForCloudscribeLogging();
 
                         options.AddEmbeddedViewsForCloudscribeIdentityServerIntegration();

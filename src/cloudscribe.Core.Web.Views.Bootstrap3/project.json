@@ -1,0 +1,36 @@
+﻿{
+  "version": "1.1.0-rc20161202",
+  "description": "Bootstrap 3 views for cloudscribe.Core.Web",
+
+  "authors": [ "Joe Audette" ],
+  "packOptions": {
+    "owners": [ "Source Tree Solutions" ],
+    "tags": [ "cloudscribe", "multi-tenant", "mvc6", "site management" ],
+    "projectUrl": "https://github.com/joeaudette/cloudscribe",
+    "licenseUrl": "http://www.apache.org/licenses/LICENSE-2.0",
+    "copyright": "2015 Source Tree Solutions",
+    "iconUrl": "https://raw.githubusercontent.com/joeaudette/cloudscribe/master/cloudscribe-icon-32.png",
+    "requireLicenseAcceptance": false,
+    "summary": "Multi-tenant MVC and WebApi application foundation with management for sites, users, roles, and geographic data",
+    "releaseNotes": ""
+  },
+
+  "dependencies": {
+    "Microsoft.AspNetCore.Mvc.Razor": "1.1.0",
+    "Microsoft.Extensions.FileProviders.Embedded": "1.1.0",
+    "NETStandard.Library": "1.6.1"
+  },
+
+  "buildOptions": {
+    "embed": [ "Views/**", "js/**", "css/**" ]
+  },
+
+  "frameworks": {
+    "net451": {},
+    "net452": {},
+    "net46": {},
+    "netstandard1.6": {
+      "imports": "dnxcore50"
+    }
+  }
+}
