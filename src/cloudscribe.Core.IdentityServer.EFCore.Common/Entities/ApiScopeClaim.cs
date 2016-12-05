@@ -2,12 +2,10 @@
 // Licensed under the Apache License, Version 2.0. See LICENSE in the project root for license information.
 
 
-using System;
-
 namespace cloudscribe.Core.IdentityServer.EFCore.Entities
 {
-    public class ClientSecret : Secret
+    public class ApiScopeClaim : UserClaim
     {
-        public Client Client { get; set; }
+        public ApiScope ApiScope { get; set; }
     }
 }

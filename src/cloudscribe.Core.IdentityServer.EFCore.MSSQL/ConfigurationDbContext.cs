@@ -23,12 +23,18 @@ namespace cloudscribe.Core.IdentityServer.EFCore.MSSQL
         {
             modelBuilder.Entity<Client>(entity =>
             {
-                entity.ToTable(EfConstants.TableNames.Client).HasKey(x => x.Id);
+                entity.ToTable(EfConstants.TableNames.Client)
+                .HasKey(x => x.Id);
                 entity.Property(x => x.SiteId).HasMaxLength(36).IsRequired();
                 entity.HasIndex(x => x.SiteId);
+                
                 entity.Property(x => x.ClientId).HasMaxLength(200).IsRequired();
-                entity.Property(x => x.ClientName).HasMaxLength(200).IsRequired();
+                entity.Property(x => x.ProtocolType).HasMaxLength(200).IsRequired();
+                entity.Property(x => x.ClientName).HasMaxLength(200);
                 entity.Property(x => x.ClientUri).HasMaxLength(2000);
+
+                entity.HasIndex(x => x.ClientId).IsUnique();
+
                 entity.HasMany(x => x.AllowedGrantTypes).WithOne(x => x.Client).IsRequired().OnDelete(DeleteBehavior.Cascade);
                 entity.HasMany(x => x.RedirectUris).WithOne(x => x.Client).IsRequired().OnDelete(DeleteBehavior.Cascade);
                 entity.HasMany(x => x.PostLogoutRedirectUris).WithOne(x => x.Client).IsRequired().OnDelete(DeleteBehavior.Cascade);

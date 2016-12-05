@@ -4,12 +4,39 @@
 
 using System.Collections.Generic;
 using System.Linq;
+using IdentityServer4;
 using IdentityServer4.Models;
 
 namespace cloudscribe.Core.IdentityServerIntegration.Models
 {
     public class ScopeViewModel
     {
+        public static ScopeViewModel GetOfflineAccess(bool check)
+        {
+            return new ScopeViewModel
+            {
+                Name = IdentityServerConstants.StandardScopes.OfflineAccess,
+                DisplayName = "Offline Access",
+                Description = "Access to your applications and resources, even when you are offline",
+                Emphasize = true,
+                Checked = check
+            };
+        }
+
+        private ScopeViewModel()
+        {
+        }
+
+        public ScopeViewModel(IdentityResource identity, bool check)
+        {
+            Name = identity.Name;
+            DisplayName = identity.DisplayName;
+            Description = identity.Description;
+            Emphasize = identity.Emphasize;
+            Required = identity.Required;
+            Checked = check || identity.Required;
+        }
+
         public ScopeViewModel(Scope scope, bool check)
         {
             Name = scope.Name;

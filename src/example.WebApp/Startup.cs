@@ -398,7 +398,7 @@ namespace example.WebApp
                     services.AddIdentityServer()
                         .AddCloudscribeCoreNoDbIdentityServerStorage()
                         .AddCloudscribeIdentityServerIntegration()
-                        .SetTemporarySigningCredential()
+                        .AddTemporarySigningCredential()
                         ;
 
                     break;
@@ -416,7 +416,7 @@ namespace example.WebApp
                             services.AddIdentityServer()
                                 .AddCloudscribeCoreEFIdentityServerStoragePostgreSql(pgConnection)
                                 .AddCloudscribeIdentityServerIntegration()
-                                .SetTemporarySigningCredential()
+                                .AddTemporarySigningCredential()
                                 ;
 
                             break;
@@ -429,7 +429,7 @@ namespace example.WebApp
                             services.AddIdentityServer()
                                 .AddCloudscribeCoreEFIdentityServerStorageMySql(mysqlConnection)
                                 .AddCloudscribeIdentityServerIntegration()
-                                .SetTemporarySigningCredential()
+                                .AddTemporarySigningCredential()
                                 ;
                             
                             break;
@@ -443,7 +443,7 @@ namespace example.WebApp
                             services.AddIdentityServer()
                                 .AddCloudscribeCoreEFIdentityServerStorageMSSQL(connectionString)
                                 .AddCloudscribeIdentityServerIntegration()
-                                .SetTemporarySigningCredential()
+                                .AddTemporarySigningCredential()
                                 ;
 
                             break;

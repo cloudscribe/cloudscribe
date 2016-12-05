@@ -15,7 +15,8 @@ namespace Microsoft.Extensions.DependencyInjection
             IServiceProvider serviceProvider
             , string siteId = null
             , IEnumerable<Client> initialClients = null,
-            IEnumerable<Scope> initialScopes = null
+            IEnumerable<ApiResource> initialApiResources = null,
+            IEnumerable<IdentityResource> initialIdentityResources = null
             )
         {
             using (var serviceScope = serviceProvider.GetService<IServiceScopeFactory>().CreateScope())
@@ -55,13 +56,24 @@ namespace Microsoft.Extensions.DependencyInjection
                         await configContext.SaveChangesAsync();
                     }
 
-                    if ((initialScopes != null) && (!configContext.Scopes.Any(x => x.SiteId == siteId)))
+                    if ((initialApiResources != null) && (!configContext.ApiResources.Any(x => x.SiteId == siteId)))
                     {
-                        foreach (var scope in initialScopes)
+                        foreach (var scope in initialApiResources)
                         {
                             var s = scope.ToEntity();
                             s.SiteId = siteId;
-                            configContext.Scopes.Add(s);
+                            configContext.ApiResources.Add(s);
+                        }
+                        await configContext.SaveChangesAsync();
+                    }
+
+                    if ((initialIdentityResources != null) && (!configContext.IdentityResources.Any(x => x.SiteId == siteId)))
+                    {
+                        foreach (var scope in initialIdentityResources)
+                        {
+                            var s = scope.ToEntity();
+                            s.SiteId = siteId;
+                            configContext.IdentityResources.Add(s);
                         }
                         await configContext.SaveChangesAsync();
                     }

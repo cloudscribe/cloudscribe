@@ -53,11 +53,11 @@ namespace Microsoft.Extensions.DependencyInjection
             // these need to be registered as concrete classes in DI for
             // the caching decorators to work
             builder.Services.AddTransient<ClientStore>();
-            builder.Services.AddTransient<ScopeStore>();
+            builder.Services.AddTransient<ResourceStore>();
 
             // add the caching decorators
             builder.AddClientStoreCache<ClientStore>();
-            builder.AddScopeStoreCache<ScopeStore>();
+            builder.AddResourceStoreCache<ResourceStore>();
 
             return builder;
         }

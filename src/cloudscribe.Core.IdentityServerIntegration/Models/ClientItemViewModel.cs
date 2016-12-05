@@ -25,7 +25,7 @@ namespace cloudscribe.Core.IdentityServerIntegration.Models
             AbsoluteRefreshTokenLifetime = client.AbsoluteRefreshTokenLifetime;
             AccessTokenLifetime = client.AccessTokenLifetime;
             AccessTokenType = client.AccessTokenType;
-            AllowAccessToAllScopes = client.AllowAccessToAllScopes;
+            //AllowAccessToAllScopes = client.AllowAccessToAllScopes;
             AllowAccessTokensViaBrowser = client.AllowAccessTokensViaBrowser;
             AllowRememberConsent = client.AllowRememberConsent;
             AlwaysSendClientClaims = client.AlwaysSendClientClaims;
