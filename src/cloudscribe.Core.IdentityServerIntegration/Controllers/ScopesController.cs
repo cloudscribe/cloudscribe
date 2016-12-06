@@ -78,9 +78,9 @@
 //            Guid? siteId,
 //            string scopeName = null)
 //        {
-            
+
 //            var selectedSite = await siteManager.GetSiteForDataOperations(siteId);
-            
+
 //            if (!string.IsNullOrEmpty(scopeName))
 //            {
 //                ViewData["Title"] = string.Format(CultureInfo.CurrentUICulture, sr["{0} - Edit Scope"], selectedSite.SiteName);
@@ -95,7 +95,7 @@
 //                model.CurrentScope = scope;
 //            }
 
-//            if(model.CurrentScope == null)
+//            if (model.CurrentScope == null)
 //            {
 //                ViewData["Title"] = string.Format(CultureInfo.CurrentUICulture, sr["{0} - New Scope"], selectedSite.SiteName);
 //                var currentCrumbAdjuster = new NavigationNodeAdjuster(Request.HttpContext);
@@ -110,7 +110,7 @@
 //                model.NewScopeSecret.SiteId = model.SiteId;
 //                model.NewScopeSecret.ScopeName = model.CurrentScope.Name;
 //            }
-            
+
 //            return View(model);
 
 //        }
@@ -124,15 +124,15 @@
 //            }
 
 //            Guid siteId = siteManager.CurrentSite.Id;
-//            if(!string.IsNullOrEmpty(scopeModel.SiteId) && scopeModel.SiteId.Length == 36)
+//            if (!string.IsNullOrEmpty(scopeModel.SiteId) && scopeModel.SiteId.Length == 36)
 //            {
 //                siteId = new Guid(scopeModel.SiteId);
 //            }
 //            var selectedSite = await siteManager.GetSiteForDataOperations(siteId);
-            
+
 //            var scope = await scopesManager.FetchScope(selectedSite.Id.ToString(), scopeModel.Name);
 
-//            if(scope == null)
+//            if (scope == null)
 //            {
 //                this.AlertDanger(sr["Scope not found"], true);
 //                return RedirectToAction("Index", new { siteId = selectedSite.Id.ToString() });
@@ -176,7 +176,7 @@
 
 //            var exists = await scopesManager.ScopeExists(selectedSite.Id.ToString(), scopeModel.Name);
 //            var scopeType = scopesManager.ResolveScopeType(scopeModel.ScopeType);
-//            if(exists || !scopeType.HasValue)
+//            if (exists || !scopeType.HasValue)
 //            {
 //                var model = new ScopeEditViewModel();
 //                model.SiteId = selectedSite.Id.ToString();
@@ -232,7 +232,7 @@
 //            var selectedSite = await siteManager.GetSiteForDataOperations(siteId);
 
 //            var scope = await scopesManager.FetchScope(selectedSite.Id.ToString(), scopeModel.ScopeName);
-//            if(scope == null)
+//            if (scope == null)
 //            {
 //                this.AlertDanger(sr["Invalid request, scope not found."], true);
 //                return RedirectToAction("Index");
@@ -241,7 +241,7 @@
 //            var claim = new ScopeClaim(scopeModel.Name, scopeModel.AlwaysIncludeInIdToken);
 //            claim.Description = scopeModel.Description;
 
-//            if(scope.Claims.Contains(claim))
+//            if (scope.Claims.Contains(claim))
 //            {
 //                this.AlertDanger(sr["Scope already has a claim with that name."], true);
 //                return RedirectToAction("EditScope", new { siteId = selectedSite.Id.ToString(), scopeName = scopeModel.ScopeName });
@@ -268,7 +268,7 @@
 //            }
 
 //            ScopeClaim found = null;
-//            foreach(var c in scope.Claims)
+//            foreach (var c in scope.Claims)
 //            {
 //                if (c.Name == claimName)
 //                {
@@ -276,7 +276,7 @@
 //                    break;
 //                }
 //            }
-//            if(found != null)
+//            if (found != null)
 //            {
 //                scope.Claims.Remove(found);
 //                await scopesManager.UpdateScope(siteId.ToString(), scope);
@@ -287,7 +287,7 @@
 //            {
 //                this.AlertDanger(sr["Invalid request, scope claim not found."], true);
 //            }
-            
+
 //            return RedirectToAction("EditScope", new { siteId = siteId.ToString(), scopeName = scopeName });
 //        }
 
@@ -333,7 +333,7 @@
 //            scope.ScopeSecrets.Add(secret);
 
 //            await scopesManager.UpdateScope(selectedSite.Id.ToString(), scope);
-            
+
 //            this.AlertSuccess(sr["The Secret was successfully added."], true);
 
 //            return RedirectToAction("EditScope", new { siteId = selectedSite.Id.ToString(), scopeName = scopeModel.ScopeName });

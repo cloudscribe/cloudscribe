@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:                  Joe Audette
 // Created:                 2016-10-12
-// Last Modified:           2016-10-26
+// Last Modified:           2016-12-06
 // 
 
 using cloudscribe.Core.IdentityServer.NoDb;
@@ -33,14 +33,18 @@ namespace Microsoft.Extensions.DependencyInjection
 
             builder.Services.AddNoDb<Client>();
             builder.Services.AddNoDb<ClientClaim>();
-            builder.Services.AddNoDb<Scope>();
+            builder.Services.AddNoDb<ApiResource>();
+            builder.Services.AddNoDb<IdentityResource>();
 
             builder.Services.AddTransient<IClientStore, ClientStore>();
-            builder.Services.AddTransient<IScopeStore, ScopeStore>();
+            builder.Services.AddTransient<IResourceStore, ResourceStore>();
             builder.Services.AddTransient<ICorsPolicyService, CorsPolicyService>();
 
-            builder.Services.AddTransient<IScopeQueries, ScopeQueries>();
-            builder.Services.AddTransient<IScopeCommands, ScopeCommands>();
+            builder.Services.AddTransient<IApiResourceQueries, ApiResourceQueries>();
+            builder.Services.AddTransient<IApiResourceCommands, ApiResourceCommands>();
+
+            builder.Services.AddTransient<IIdentityResourceQueries, IdentityResourceQueries>();
+            builder.Services.AddTransient<IIdentityResourceCommands, IdentityResourceCommands>();
 
             builder.Services.AddTransient<IClientQueries, ClientQueries>();
             builder.Services.AddTransient<IClientCommands, ClientCommands>();
@@ -57,11 +61,11 @@ namespace Microsoft.Extensions.DependencyInjection
             // these need to be registered as concrete classes in DI for
             // the caching decorators to work
             builder.Services.AddTransient<ClientStore>();
-            builder.Services.AddTransient<ScopeStore>();
+            builder.Services.AddTransient<ResourceStore>();
 
             // add the caching decorators
             builder.AddClientStoreCache<ClientStore>();
-            builder.AddScopeStoreCache<ScopeStore>();
+            builder.AddResourceStoreCache<ResourceStore>();
 
             return builder;
         }

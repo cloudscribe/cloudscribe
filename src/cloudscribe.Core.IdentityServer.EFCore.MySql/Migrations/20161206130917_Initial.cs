@@ -2,29 +2,46 @@
 using System.Collections.Generic;
 using Microsoft.EntityFrameworkCore.Migrations;
 
-namespace cloudscribe.Core.IdentityServer.EFCore.pgsql.Migrations
+namespace cloudscribe.Core.IdentityServer.EFCore.MySql.Migrations
 {
     public partial class Initial : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.CreateTable(
+                name: "csids_ApiResources",
+                columns: table => new
+                {
+                    Id = table.Column<int>(nullable: false)
+                        .Annotation("MySql:ValueGeneratedOnAdd", true),
+                    Description = table.Column<string>(maxLength: 1000, nullable: true),
+                    DisplayName = table.Column<string>(maxLength: 200, nullable: true),
+                    Enabled = table.Column<bool>(nullable: false),
+                    Name = table.Column<string>(maxLength: 200, nullable: false),
+                    SiteId = table.Column<string>(maxLength: 36, nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_csids_ApiResources", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "csids_Clients",
                 columns: table => new
                 {
                     Id = table.Column<int>(nullable: false)
-                        .Annotation("Npgsql:ValueGeneratedOnAdd", true),
+                        .Annotation("MySql:ValueGeneratedOnAdd", true),
                     AbsoluteRefreshTokenLifetime = table.Column<int>(nullable: false),
                     AccessTokenLifetime = table.Column<int>(nullable: false),
                     AccessTokenType = table.Column<int>(nullable: false),
-                    AllowAccessToAllScopes = table.Column<bool>(nullable: false),
                     AllowAccessTokensViaBrowser = table.Column<bool>(nullable: false),
-                    AllowPromptNone = table.Column<bool>(nullable: false),
+                    AllowOfflineAccess = table.Column<bool>(nullable: false),
+                    AllowPlainTextPkce = table.Column<bool>(nullable: false),
                     AllowRememberConsent = table.Column<bool>(nullable: false),
                     AlwaysSendClientClaims = table.Column<bool>(nullable: false),
                     AuthorizationCodeLifetime = table.Column<int>(nullable: false),
                     ClientId = table.Column<string>(maxLength: 200, nullable: false),
-                    ClientName = table.Column<string>(maxLength: 200, nullable: false),
+                    ClientName = table.Column<string>(maxLength: 200, nullable: true),
                     ClientUri = table.Column<string>(maxLength: 2000, nullable: true),
                     EnableLocalLogin = table.Column<bool>(nullable: false),
                     Enabled = table.Column<bool>(nullable: false),
@@ -34,7 +51,7 @@ namespace cloudscribe.Core.IdentityServer.EFCore.pgsql.Migrations
                     LogoutSessionRequired = table.Column<bool>(nullable: false),
                     LogoutUri = table.Column<string>(nullable: true),
                     PrefixClientClaims = table.Column<bool>(nullable: false),
-                    PublicClient = table.Column<bool>(nullable: false),
+                    ProtocolType = table.Column<string>(maxLength: 200, nullable: false),
                     RefreshTokenExpiration = table.Column<int>(nullable: false),
                     RefreshTokenUsage = table.Column<int>(nullable: false),
                     RequireClientSecret = table.Column<bool>(nullable: false),
@@ -50,27 +67,91 @@ namespace cloudscribe.Core.IdentityServer.EFCore.pgsql.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "csids_Scopes",
+                name: "csids_IdentityResources",
                 columns: table => new
                 {
                     Id = table.Column<int>(nullable: false)
-                        .Annotation("Npgsql:ValueGeneratedOnAdd", true),
-                    AllowUnrestrictedIntrospection = table.Column<bool>(nullable: false),
-                    ClaimsRule = table.Column<string>(maxLength: 200, nullable: true),
+                        .Annotation("MySql:ValueGeneratedOnAdd", true),
                     Description = table.Column<string>(maxLength: 1000, nullable: true),
                     DisplayName = table.Column<string>(maxLength: 200, nullable: true),
                     Emphasize = table.Column<bool>(nullable: false),
                     Enabled = table.Column<bool>(nullable: false),
-                    IncludeAllClaimsForUser = table.Column<bool>(nullable: false),
                     Name = table.Column<string>(maxLength: 200, nullable: false),
                     Required = table.Column<bool>(nullable: false),
                     ShowInDiscoveryDocument = table.Column<bool>(nullable: false),
-                    SiteId = table.Column<string>(maxLength: 36, nullable: false),
-                    Type = table.Column<int>(nullable: false)
+                    SiteId = table.Column<string>(maxLength: 36, nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_csids_Scopes", x => x.Id);
+                    table.PrimaryKey("PK_csids_IdentityResources", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "csids_ApiClaims",
+                columns: table => new
+                {
+                    Id = table.Column<int>(nullable: false)
+                        .Annotation("MySql:ValueGeneratedOnAdd", true),
+                    ApiResourceId = table.Column<int>(nullable: false),
+                    Type = table.Column<string>(maxLength: 200, nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_csids_ApiClaims", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_csids_ApiClaims_csids_ApiResources_ApiResourceId",
+                        column: x => x.ApiResourceId,
+                        principalTable: "csids_ApiResources",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "csids_ApiScopes",
+                columns: table => new
+                {
+                    Id = table.Column<int>(nullable: false)
+                        .Annotation("MySql:ValueGeneratedOnAdd", true),
+                    ApiResourceId = table.Column<int>(nullable: false),
+                    Description = table.Column<string>(maxLength: 1000, nullable: true),
+                    DisplayName = table.Column<string>(maxLength: 200, nullable: true),
+                    Emphasize = table.Column<bool>(nullable: false),
+                    Name = table.Column<string>(maxLength: 200, nullable: false),
+                    Required = table.Column<bool>(nullable: false),
+                    ShowInDiscoveryDocument = table.Column<bool>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_csids_ApiScopes", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_csids_ApiScopes_csids_ApiResources_ApiResourceId",
+                        column: x => x.ApiResourceId,
+                        principalTable: "csids_ApiResources",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "csids_ApiSecrets",
+                columns: table => new
+                {
+                    Id = table.Column<int>(nullable: false)
+                        .Annotation("MySql:ValueGeneratedOnAdd", true),
+                    ApiResourceId = table.Column<int>(nullable: false),
+                    Description = table.Column<string>(maxLength: 1000, nullable: true),
+                    Expiration = table.Column<DateTime>(nullable: true),
+                    Type = table.Column<string>(maxLength: 250, nullable: true),
+                    Value = table.Column<string>(maxLength: 2000, nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_csids_ApiSecrets", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_csids_ApiSecrets_csids_ApiResources_ApiResourceId",
+                        column: x => x.ApiResourceId,
+                        principalTable: "csids_ApiResources",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -78,7 +159,7 @@ namespace cloudscribe.Core.IdentityServer.EFCore.pgsql.Migrations
                 columns: table => new
                 {
                     Id = table.Column<int>(nullable: false)
-                        .Annotation("Npgsql:ValueGeneratedOnAdd", true),
+                        .Annotation("MySql:ValueGeneratedOnAdd", true),
                     ClientId = table.Column<int>(nullable: false),
                     Type = table.Column<string>(maxLength: 250, nullable: false),
                     Value = table.Column<string>(maxLength: 250, nullable: false)
@@ -99,7 +180,7 @@ namespace cloudscribe.Core.IdentityServer.EFCore.pgsql.Migrations
                 columns: table => new
                 {
                     Id = table.Column<int>(nullable: false)
-                        .Annotation("Npgsql:ValueGeneratedOnAdd", true),
+                        .Annotation("MySql:ValueGeneratedOnAdd", true),
                     ClientId = table.Column<int>(nullable: false),
                     Origin = table.Column<string>(maxLength: 150, nullable: false)
                 },
@@ -119,7 +200,7 @@ namespace cloudscribe.Core.IdentityServer.EFCore.pgsql.Migrations
                 columns: table => new
                 {
                     Id = table.Column<int>(nullable: false)
-                        .Annotation("Npgsql:ValueGeneratedOnAdd", true),
+                        .Annotation("MySql:ValueGeneratedOnAdd", true),
                     ClientId = table.Column<int>(nullable: false),
                     GrantType = table.Column<string>(maxLength: 250, nullable: false)
                 },
@@ -139,7 +220,7 @@ namespace cloudscribe.Core.IdentityServer.EFCore.pgsql.Migrations
                 columns: table => new
                 {
                     Id = table.Column<int>(nullable: false)
-                        .Annotation("Npgsql:ValueGeneratedOnAdd", true),
+                        .Annotation("MySql:ValueGeneratedOnAdd", true),
                     ClientId = table.Column<int>(nullable: false),
                     Provider = table.Column<string>(maxLength: 200, nullable: false)
                 },
@@ -159,7 +240,7 @@ namespace cloudscribe.Core.IdentityServer.EFCore.pgsql.Migrations
                 columns: table => new
                 {
                     Id = table.Column<int>(nullable: false)
-                        .Annotation("Npgsql:ValueGeneratedOnAdd", true),
+                        .Annotation("MySql:ValueGeneratedOnAdd", true),
                     ClientId = table.Column<int>(nullable: false),
                     PostLogoutRedirectUri = table.Column<string>(maxLength: 2000, nullable: false)
                 },
@@ -179,7 +260,7 @@ namespace cloudscribe.Core.IdentityServer.EFCore.pgsql.Migrations
                 columns: table => new
                 {
                     Id = table.Column<int>(nullable: false)
-                        .Annotation("Npgsql:ValueGeneratedOnAdd", true),
+                        .Annotation("MySql:ValueGeneratedOnAdd", true),
                     ClientId = table.Column<int>(nullable: false),
                     RedirectUri = table.Column<string>(maxLength: 2000, nullable: false)
                 },
@@ -199,7 +280,7 @@ namespace cloudscribe.Core.IdentityServer.EFCore.pgsql.Migrations
                 columns: table => new
                 {
                     Id = table.Column<int>(nullable: false)
-                        .Annotation("Npgsql:ValueGeneratedOnAdd", true),
+                        .Annotation("MySql:ValueGeneratedOnAdd", true),
                     ClientId = table.Column<int>(nullable: false),
                     Scope = table.Column<string>(maxLength: 200, nullable: false)
                 },
@@ -219,7 +300,7 @@ namespace cloudscribe.Core.IdentityServer.EFCore.pgsql.Migrations
                 columns: table => new
                 {
                     Id = table.Column<int>(nullable: false)
-                        .Annotation("Npgsql:ValueGeneratedOnAdd", true),
+                        .Annotation("MySql:ValueGeneratedOnAdd", true),
                     ClientId = table.Column<int>(nullable: false),
                     Description = table.Column<string>(maxLength: 2000, nullable: true),
                     Expiration = table.Column<DateTime>(nullable: true),
@@ -238,49 +319,87 @@ namespace cloudscribe.Core.IdentityServer.EFCore.pgsql.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "csids_ScopeClaims",
+                name: "csids_IdentityClaims",
                 columns: table => new
                 {
                     Id = table.Column<int>(nullable: false)
-                        .Annotation("Npgsql:ValueGeneratedOnAdd", true),
-                    AlwaysIncludeInIdToken = table.Column<bool>(nullable: false),
-                    Description = table.Column<string>(maxLength: 1000, nullable: true),
-                    Name = table.Column<string>(maxLength: 200, nullable: false),
-                    ScopeId = table.Column<int>(nullable: false)
+                        .Annotation("MySql:ValueGeneratedOnAdd", true),
+                    IdentityResourceId = table.Column<int>(nullable: false),
+                    Type = table.Column<string>(maxLength: 200, nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_csids_ScopeClaims", x => x.Id);
+                    table.PrimaryKey("PK_csids_IdentityClaims", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_csids_ScopeClaims_csids_Scopes_ScopeId",
-                        column: x => x.ScopeId,
-                        principalTable: "csids_Scopes",
+                        name: "FK_csids_IdentityClaims_csids_IdentityResources_IdentityResourceId",
+                        column: x => x.IdentityResourceId,
+                        principalTable: "csids_IdentityResources",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
-                name: "csids_ScopeSecrets",
+                name: "csids_ApiScopeClaims",
                 columns: table => new
                 {
                     Id = table.Column<int>(nullable: false)
-                        .Annotation("Npgsql:ValueGeneratedOnAdd", true),
-                    Description = table.Column<string>(maxLength: 1000, nullable: true),
-                    Expiration = table.Column<DateTime>(nullable: true),
-                    ScopeId = table.Column<int>(nullable: false),
-                    Type = table.Column<string>(maxLength: 250, nullable: true),
-                    Value = table.Column<string>(maxLength: 250, nullable: true)
+                        .Annotation("MySql:ValueGeneratedOnAdd", true),
+                    ApiScopeId = table.Column<int>(nullable: false),
+                    Type = table.Column<string>(maxLength: 200, nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_csids_ScopeSecrets", x => x.Id);
+                    table.PrimaryKey("PK_csids_ApiScopeClaims", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_csids_ScopeSecrets_csids_Scopes_ScopeId",
-                        column: x => x.ScopeId,
-                        principalTable: "csids_Scopes",
+                        name: "FK_csids_ApiScopeClaims_csids_ApiScopes_ApiScopeId",
+                        column: x => x.ApiScopeId,
+                        principalTable: "csids_ApiScopes",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
+
+            migrationBuilder.CreateIndex(
+                name: "IX_csids_ApiResources_Name",
+                table: "csids_ApiResources",
+                column: "Name",
+                unique: true);
+
+            migrationBuilder.CreateIndex(
+                name: "IX_csids_ApiResources_SiteId",
+                table: "csids_ApiResources",
+                column: "SiteId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_csids_ApiClaims_ApiResourceId",
+                table: "csids_ApiClaims",
+                column: "ApiResourceId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_csids_ApiScopes_ApiResourceId",
+                table: "csids_ApiScopes",
+                column: "ApiResourceId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_csids_ApiScopes_Name",
+                table: "csids_ApiScopes",
+                column: "Name",
+                unique: true);
+
+            migrationBuilder.CreateIndex(
+                name: "IX_csids_ApiScopeClaims_ApiScopeId",
+                table: "csids_ApiScopeClaims",
+                column: "ApiScopeId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_csids_ApiSecrets_ApiResourceId",
+                table: "csids_ApiSecrets",
+                column: "ApiResourceId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_csids_Clients_ClientId",
+                table: "csids_Clients",
+                column: "ClientId",
+                unique: true);
 
             migrationBuilder.CreateIndex(
                 name: "IX_csids_Clients_SiteId",
@@ -328,23 +447,33 @@ namespace cloudscribe.Core.IdentityServer.EFCore.pgsql.Migrations
                 column: "ClientId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_csids_Scopes_SiteId",
-                table: "csids_Scopes",
+                name: "IX_csids_IdentityClaims_IdentityResourceId",
+                table: "csids_IdentityClaims",
+                column: "IdentityResourceId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_csids_IdentityResources_Name",
+                table: "csids_IdentityResources",
+                column: "Name",
+                unique: true);
+
+            migrationBuilder.CreateIndex(
+                name: "IX_csids_IdentityResources_SiteId",
+                table: "csids_IdentityResources",
                 column: "SiteId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_csids_ScopeClaims_ScopeId",
-                table: "csids_ScopeClaims",
-                column: "ScopeId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_csids_ScopeSecrets_ScopeId",
-                table: "csids_ScopeSecrets",
-                column: "ScopeId");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
         {
+            migrationBuilder.DropTable(
+                name: "csids_ApiClaims");
+
+            migrationBuilder.DropTable(
+                name: "csids_ApiScopeClaims");
+
+            migrationBuilder.DropTable(
+                name: "csids_ApiSecrets");
+
             migrationBuilder.DropTable(
                 name: "csids_ClientClaims");
 
@@ -370,16 +499,19 @@ namespace cloudscribe.Core.IdentityServer.EFCore.pgsql.Migrations
                 name: "csids_ClientSecrets");
 
             migrationBuilder.DropTable(
-                name: "csids_ScopeClaims");
+                name: "csids_IdentityClaims");
 
             migrationBuilder.DropTable(
-                name: "csids_ScopeSecrets");
+                name: "csids_ApiScopes");
 
             migrationBuilder.DropTable(
                 name: "csids_Clients");
 
             migrationBuilder.DropTable(
-                name: "csids_Scopes");
+                name: "csids_IdentityResources");
+
+            migrationBuilder.DropTable(
+                name: "csids_ApiResources");
         }
     }
 }

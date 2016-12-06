@@ -22,6 +22,8 @@ using System.Reflection;
 using IdentityServer4.Models;
 using cloudscribe.Web.Common.Razor;
 using cloudscribe.Core.Web.Components;
+using IdentityModel;
+using example.WebApp.Configuration;
 
 namespace example.WebApp
 {
@@ -234,8 +236,9 @@ namespace example.WebApp
                     CloudscribeIdentityServerIntegrationNoDbStorage.InitializeDatabaseAsync(
                         app.ApplicationServices,
                         sId,
-                        GetClients(),
-                        GetScopes()
+                        IdServerClients.Get(),
+                        IdServerResources.GetApiResources(),
+                        IdServerResources.GetIdentityResources()
                         ).Wait();
 
                     break;
@@ -263,8 +266,9 @@ namespace example.WebApp
                     CloudscribeIdentityServerIntegrationEFCoreStorage.InitializeDatabaseAsync(
                         app.ApplicationServices,
                         siteId,
-                        GetClients(),
-                        GetScopes()
+                        IdServerClients.Get(),
+                        IdServerResources.GetApiResources(),
+                        IdServerResources.GetIdentityResources()
                         ).Wait();
                     
                     break;
@@ -489,128 +493,7 @@ namespace example.WebApp
             loggerFactory.AddDbLogger(serviceProvider, logFilter, logRepo);
         }
 
-        // test data for identityserver integration
-
-        // scopes define the resources in your system
-        private IEnumerable<Scope> GetScopes()
-        {
-            return new List<Scope>
-            {
-                StandardScopes.OpenId,
-                StandardScopes.Profile,
-                StandardScopes.OfflineAccess,
-
-                new Scope
-                {
-                    Name = "s2",
-                    DisplayName = "Site 2 api access",
-                    Description = "Site2 APIs"
-                }
-            };
-        }
-
-        private IEnumerable<Client> GetClients()
-        {
-            // client credentials client
-            return new List<Client>
-            {
-                new Client
-                {
-                    ClientId = "client",
-                    ClientName = "Client",
-                    AllowedGrantTypes = GrantTypes.ClientCredentials,
-
-                    ClientSecrets = new List<IdentityServer4.Models.Secret>
-                    {
-                        new IdentityServer4.Models.Secret("secret".Sha256())
-                    },
-                    AllowedScopes = new List<string>
-                    {
-                        "s2"
-                    }
-                },
-
-                // resource owner password grant client
-                new Client
-                {
-                    ClientId = "ro.client",
-                    ClientName = "Resource Owner Client",
-                    AllowedGrantTypes = GrantTypes.ResourceOwnerPassword,
-
-                    ClientSecrets = new List<IdentityServer4.Models.Secret>
-                    {
-                        new IdentityServer4.Models.Secret("secret".Sha256())
-                    },
-                    AllowedScopes = new List<string>
-                    {
-                        "s2"
-                    }
-                },
-
-                // OpenID Connect hybrid flow and client credentials client (MVC)
-                // this would be for letting a different mvc app authenticate
-                new Client
-                {
-                    ClientId = "mvc",
-                    ClientName = "MVC Client",
-                    AllowedGrantTypes = GrantTypes.HybridAndClientCredentials,
-
-                    ClientSecrets = new List<IdentityServer4.Models.Secret>
-                    {
-                        new IdentityServer4.Models.Secret("secret".Sha256())
-                    },
-
-                    RedirectUris = new List<string>
-                    {
-                        "https://localhost:44399/signin-oidc"
-                    },
-                    PostLogoutRedirectUris = new List<string>
-                    {
-                        "http://localhost:5002"
-                    },
-
-                    AllowedScopes = new List<string>
-                    {
-                        StandardScopes.OpenId.Name,
-                        StandardScopes.Profile.Name,
-                        StandardScopes.OfflineAccess.Name,
-                        "s1"
-                    }
-                },
-
-                // JavaScript Client
-                // you can test this client at /app.html
-                new Client
-                {
-                    ClientId = "js",
-                    ClientName = "JavaScript Client",
-                    AllowedGrantTypes = GrantTypes.Implicit,
-                    AllowAccessTokensViaBrowser = true,
-
-                    RedirectUris = new List<string>
-                    {
-                        "https://localhost:44399/callback.html"
-                    },
-                    PostLogoutRedirectUris = new List<string>
-                    {
-                        "https://localhost:44399/app.html"
-                    },
-                    AllowedCorsOrigins = new List<string>
-                    {
-                        "http://localhost:5003"
-                    },
-
-                    AllowedScopes = new List<string>
-                    {
-                        StandardScopes.OpenId.Name,
-                        StandardScopes.Profile.Name,
-                        // this client is allowed access to apis of 2 tenants
-                        "s1", // site 1 aliasid
-                        "s2" //site 2 aliasid
-                    }
-                }
-            };
-        }
+        
 
     }
 }

@@ -3,29 +3,30 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Migrations;
-using cloudscribe.Core.IdentityServer.EFCore.DbContexts;
+using cloudscribe.Core.IdentityServer.EFCore.MySql;
 
-namespace cloudscribe.Core.IdentityServer.EFCore.MSSQL.Migrations
+namespace cloudscribe.Core.IdentityServer.EFCore.MySql.Migrations.PersistedGrantDb
 {
     [DbContext(typeof(PersistedGrantDbContext))]
-    [Migration("20161004204419_Initial")]
+    [Migration("20161206130934_Initial")]
     partial class Initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
             modelBuilder
-                .HasAnnotation("ProductVersion", "1.0.1")
-                .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                .HasAnnotation("ProductVersion", "1.1.0-rtm-22752");
 
             modelBuilder.Entity("cloudscribe.Core.IdentityServer.EFCore.Entities.PersistedGrant", b =>
                 {
-                    b.Property<string>("Key");
+                    b.Property<string>("Key")
+                        .HasMaxLength(200);
 
-                    b.Property<string>("Type");
+                    b.Property<string>("Type")
+                        .HasMaxLength(50);
 
                     b.Property<string>("ClientId")
                         .IsRequired()
-                        .HasAnnotation("MaxLength", 200);
+                        .HasMaxLength(200);
 
                     b.Property<DateTime>("CreationTime");
 
@@ -36,13 +37,20 @@ namespace cloudscribe.Core.IdentityServer.EFCore.MSSQL.Migrations
 
                     b.Property<string>("SiteId")
                         .IsRequired()
-                        .HasAnnotation("MaxLength", 36);
+                        .HasMaxLength(36);
 
-                    b.Property<string>("SubjectId");
+                    b.Property<string>("SubjectId")
+                        .HasMaxLength(200);
 
                     b.HasKey("Key", "Type");
 
                     b.HasIndex("SiteId");
+
+                    b.HasIndex("SubjectId");
+
+                    b.HasIndex("SubjectId", "ClientId");
+
+                    b.HasIndex("SubjectId", "ClientId", "Type");
 
                     b.ToTable("csids_PersistedGrants");
                 });

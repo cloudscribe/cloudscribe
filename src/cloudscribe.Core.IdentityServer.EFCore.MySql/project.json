@@ -1,5 +1,5 @@
 ﻿{
-    "version": "1.1.0-rc20161129",
+    "version": "1.1.0-rc20161205",
     "description": "MySql Entity Framework configuration and operational stores for IdentityServer4 cloudscribe multi-tenant identity integration",
     "authors": [ "Joe Audette" ],
     "packOptions": {
@@ -18,18 +18,19 @@
     },
 
 
-    "dependencies": {
-        "cloudscribe.IDS4Fork": "1.0.0-*",
-        "cloudscribe.Core.IdentityServerIntegration": "1.1.0-*",
-        "Microsoft.EntityFrameworkCore": "1.1.*",
-        "Microsoft.EntityFrameworkCore.Relational": "1.1.*",
-        "cloudscribe.Core.Models": "1.1.0-*",
-        "cloudscribe.Core.IdentityServer.EFCore.Common": "1.1.0-*",
-        "Microsoft.Extensions.Configuration.FileExtensions": "1.1.*",
-        "Microsoft.Extensions.Configuration.Json": "1.1.*",
-        "Microsoft.AspNetCore.Hosting": "1.1.*",
-        "Pomelo.EntityFrameworkCore.MySql": "1.0-*"
-    },
+  "dependencies": {
+    "cloudscribe.IDS4Fork": "1.0.0-*",
+    "cloudscribe.Core.IdentityServerIntegration": "1.1.0-*",
+    "Microsoft.EntityFrameworkCore": "1.1.*",
+    "Microsoft.EntityFrameworkCore.Design": "1.1.*",
+    "Microsoft.EntityFrameworkCore.Relational": "1.1.*",
+    "cloudscribe.Core.Models": "1.1.0-*",
+    "cloudscribe.Core.IdentityServer.EFCore.Common": "1.1.0-*",
+    "Microsoft.Extensions.Configuration.FileExtensions": "1.1.*",
+    "Microsoft.Extensions.Configuration.Json": "1.1.*",
+    "Microsoft.AspNetCore.Hosting": "1.1.*",
+    "Pomelo.EntityFrameworkCore.MySql": "1.0-*"
+  },
 
     "tools": {
         "Microsoft.EntityFrameworkCore.Tools.DotNet": "1.1.0-preview4-final"

@@ -3,9 +3,9 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Migrations;
-using cloudscribe.Core.IdentityServer.EFCore.pgsql;
+using cloudscribe.Core.IdentityServer.EFCore.MSSQL;
 
-namespace cloudscribe.Core.IdentityServer.EFCore.pgsql.Migrations.PersistedGrantDb
+namespace cloudscribe.Core.IdentityServer.EFCore.MSSQL.Migrations.PersistedGrantDb
 {
     [DbContext(typeof(PersistedGrantDbContext))]
     partial class PersistedGrantDbContextModelSnapshot : ModelSnapshot
@@ -13,7 +13,8 @@ namespace cloudscribe.Core.IdentityServer.EFCore.pgsql.Migrations.PersistedGrant
         protected override void BuildModel(ModelBuilder modelBuilder)
         {
             modelBuilder
-                .HasAnnotation("ProductVersion", "1.1.0-rtm-22752");
+                .HasAnnotation("ProductVersion", "1.1.0-rtm-22752")
+                .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
             modelBuilder.Entity("cloudscribe.Core.IdentityServer.EFCore.Entities.PersistedGrant", b =>
                 {

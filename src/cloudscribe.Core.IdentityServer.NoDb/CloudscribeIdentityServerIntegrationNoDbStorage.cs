@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:                  Joe Audette
 // Created:                 2016-10-12
-// Last Modified:           2016-10-12
+// Last Modified:           2016-12-06
 // 
 
 using IdentityServer4.Models;
@@ -20,13 +20,16 @@ namespace Microsoft.Extensions.DependencyInjection
             IServiceProvider serviceProvider
             , string siteId = null
             , IEnumerable<Client> initialClients = null,
-            IEnumerable<Scope> initialScopes = null
+            IEnumerable<ApiResource> initialApiResources = null,
+            IEnumerable<IdentityResource> initialIdentityResources = null
             )
         {
             using (var serviceScope = serviceProvider.GetService<IServiceScopeFactory>().CreateScope())
             {
-                var scopeCommands = serviceScope.ServiceProvider.GetRequiredService<IBasicCommands<Scope>>();
-                var scopeQueries = serviceScope.ServiceProvider.GetRequiredService<IBasicQueries<Scope>>();
+                var apiResourceCommands = serviceScope.ServiceProvider.GetRequiredService<IBasicCommands<ApiResource>>();
+                var apiResourceQueries = serviceScope.ServiceProvider.GetRequiredService<IBasicQueries<ApiResource>>();
+                var identityResourceCommands = serviceScope.ServiceProvider.GetRequiredService<IBasicCommands<IdentityResource>>();
+                var identityResourceQueries = serviceScope.ServiceProvider.GetRequiredService<IBasicQueries<IdentityResource>>();
                 var clientCommands = serviceScope.ServiceProvider.GetRequiredService<IBasicCommands<Client>>();
                 var clientQueries = serviceScope.ServiceProvider.GetRequiredService<IBasicQueries<Client>>();
 
@@ -46,17 +49,30 @@ namespace Microsoft.Extensions.DependencyInjection
                         
                     }
 
-                    if (initialScopes != null) 
+                    if (initialApiResources != null) 
                     {
-                        var allScopes = await scopeQueries.GetAllAsync(siteId).ConfigureAwait(false);
-                        if (allScopes.ToList().Count == 0)
+                        var allApis = await apiResourceQueries.GetAllAsync(siteId).ConfigureAwait(false);
+                        if (allApis.ToList().Count == 0)
                         {
-                            foreach (var scope in initialScopes)
+                            foreach (var api in initialApiResources)
                             {
-                                await scopeCommands.CreateAsync(siteId, scope.Name, scope).ConfigureAwait(false);
+                                await apiResourceCommands.CreateAsync(siteId, api.Name, api).ConfigureAwait(false);
                             }
                         }
  
+                    }
+
+                    if (initialIdentityResources != null)
+                    {
+                        var all = await identityResourceQueries.GetAllAsync(siteId).ConfigureAwait(false);
+                        if (all.ToList().Count == 0)
+                        {
+                            foreach (var res in initialIdentityResources)
+                            {
+                                await identityResourceCommands.CreateAsync(siteId, res.Name, res).ConfigureAwait(false);
+                            }
+                        }
+
                     }
                 }
 

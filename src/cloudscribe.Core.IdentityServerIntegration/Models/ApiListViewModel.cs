@@ -5,17 +5,17 @@ using System.Collections.Generic;
 
 namespace cloudscribe.Core.IdentityServerIntegration.Models
 {
-    public class ScopeListViewModel
+    public class ApiListViewModel
     {
-        public ScopeListViewModel()
+        public ApiListViewModel()
         {
-            Scopes = new List<Scope>();
+            Apis = new List<ApiResource>();
             Paging = new PaginationSettings();
         }
 
         public string SiteId { get; set; } = string.Empty;
 
-        public IList<Scope> Scopes { get; set; }
+        public IList<ApiResource> Apis { get; set; }
 
         public PaginationSettings Paging { get; set; }
 
