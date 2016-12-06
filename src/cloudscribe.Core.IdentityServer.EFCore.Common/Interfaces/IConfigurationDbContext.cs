@@ -14,7 +14,8 @@ namespace cloudscribe.Core.IdentityServer.EFCore.Interfaces
     public interface IConfigurationDbContext : IDisposable
     {
         DbSet<Client> Clients { get; set; }
-        DbSet<Scope> Scopes { get; set; }
+        DbSet<IdentityResource> IdentityResources { get; set; }
+        DbSet<ApiResource> ApiResources { get; set; }
 
         DatabaseFacade Database { get; }
 

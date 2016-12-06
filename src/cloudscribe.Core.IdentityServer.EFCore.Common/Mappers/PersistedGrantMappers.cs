@@ -11,32 +11,25 @@ namespace cloudscribe.Core.IdentityServer.EFCore.Mappers
     {
         static PersistedGrantMappers()
         {
-            Mapper = new MapperConfiguration(config =>
-            {
-                config.CreateMap<Entities.PersistedGrant, PersistedGrant>(MemberList.Destination);
-                config.CreateMap<PersistedGrant, Entities.PersistedGrant>(MemberList.Source);
-            }).CreateMapper();
+            Mapper = new MapperConfiguration(cfg => cfg.AddProfile<PersistedGrantMapperProfile>())
+                .CreateMapper();
         }
 
         internal static IMapper Mapper { get; }
 
         public static PersistedGrant ToModel(this Entities.PersistedGrant token)
         {
-            if (token == null) return null;
-
-            return Mapper.Map<Entities.PersistedGrant, PersistedGrant>(token);
+            return token == null ? null : Mapper.Map<PersistedGrant>(token);
         }
 
         public static Entities.PersistedGrant ToEntity(this PersistedGrant token)
         {
-            if (token == null) return null;
-
-            return Mapper.Map<PersistedGrant, Entities.PersistedGrant>(token);
+            return token == null ? null : Mapper.Map<Entities.PersistedGrant>(token);
         }
 
         public static void UpdateEntity(this PersistedGrant token, Entities.PersistedGrant target)
         {
-            Mapper.Map<PersistedGrant, Entities.PersistedGrant>(token, target);
+            Mapper.Map(token, target);
         }
     }
 }

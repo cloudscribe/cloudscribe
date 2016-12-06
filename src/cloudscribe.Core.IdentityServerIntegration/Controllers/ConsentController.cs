@@ -21,7 +21,7 @@ namespace cloudscribe.Core.IdentityServerIntegration
     {
         private readonly ILogger<ConsentController> _logger;
         private readonly IClientStore _clientStore;
-        private readonly IScopeStore _scopeStore;
+        private readonly IResourceStore _resourceStore;
         private readonly IIdentityServerInteractionService _interaction;
         private readonly IIdentityServerIntegration identityServerIntegration;
         private readonly SiteContext _site;
@@ -30,7 +30,7 @@ namespace cloudscribe.Core.IdentityServerIntegration
             ILogger<ConsentController> logger,
             IIdentityServerInteractionService interaction,
             IClientStore clientStore,
-            IScopeStore scopeStore,
+            IResourceStore resourceStore,
             IIdentityServerIntegration identityServerIntegration,
             SiteContext currentSite
             )
@@ -38,7 +38,7 @@ namespace cloudscribe.Core.IdentityServerIntegration
             _logger = logger;
             _interaction = interaction;
             _clientStore = clientStore;
-            _scopeStore = scopeStore;
+            _resourceStore = resourceStore;
             _site = currentSite;
             this.identityServerIntegration = identityServerIntegration;
         }
@@ -127,10 +127,10 @@ namespace cloudscribe.Core.IdentityServerIntegration
                 var client = await _clientStore.FindClientByIdAsync(request.ClientId);
                 if (client != null)
                 {
-                    var scopes = await _scopeStore.FindScopesAsync(request.ScopesRequested);
-                    if (scopes != null && scopes.Any())
+                    var resources = await _resourceStore.FindEnabledResourcesByScopeAsync(request.ScopesRequested);
+                    if (resources != null && (resources.IdentityResources.Any() || resources.ApiResources.Any()))
                     {
-                        return new ConsentViewModel(model, returnUrl, request, client, scopes);
+                        return new ConsentViewModel(model, returnUrl, request, client, resources);
                     }
                     else
                     {

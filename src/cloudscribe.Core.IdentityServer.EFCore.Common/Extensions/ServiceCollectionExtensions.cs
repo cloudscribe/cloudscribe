@@ -12,11 +12,14 @@ namespace cloudscribe.Core.IdentityServer.EFCore.Extensions
         public static IServiceCollection AddCloudscribeCoreIdentityServerStores(this IServiceCollection services)
         {
             services.AddTransient<IClientStore, ClientStore>();
-            services.AddTransient<IScopeStore, ScopeStore>();
+            services.AddTransient<IResourceStore, ResourceStore>();
             services.AddTransient<ICorsPolicyService, CorsPolicyService>();
 
-            services.AddTransient<IScopeQueries, ScopeQueries>();
-            services.AddTransient<IScopeCommands, ScopeCommands>();
+            services.AddTransient<IApiResourceQueries, ApiResourceQueries>();
+            services.AddTransient<IApiResourceCommands, ApiResourceCommands>();
+
+            services.AddTransient<IIdentityResourceQueries, IdentityResourceQueries>();
+            services.AddTransient<IIdentityResourceCommands, IdentityResourceCommands>();
 
             services.AddTransient<IClientQueries, ClientQueries>();
             services.AddTransient<IClientCommands, ClientCommands>();

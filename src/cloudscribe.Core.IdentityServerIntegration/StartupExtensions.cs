@@ -58,7 +58,8 @@ namespace Microsoft.Extensions.DependencyInjection
             builder.Services.AddScoped<IMatchAuthorizeProtocolRoutePaths, MultiTenantAuthorizeProtocolRouteMatcher>();
             builder.Services.AddScoped<IMatchEndSessionProtocolRoutePaths, MultiTenantEndSessionProtocolRouteMatcher>();
 
-            builder.Services.AddScoped<ScopesManager, ScopesManager>();
+            builder.Services.AddScoped<ApiResourceManager, ApiResourceManager>();
+            builder.Services.AddScoped<IdentityResourceManager, IdentityResourceManager>();
             builder.Services.AddScoped<ClientsManager, ClientsManager>();
 
             //builder.Services.AddTransientDecorator<ICorsPolicyProvider, CorsPolicyProvider>();

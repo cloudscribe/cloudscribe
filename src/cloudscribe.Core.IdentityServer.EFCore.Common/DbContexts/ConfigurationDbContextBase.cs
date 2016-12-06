@@ -17,8 +17,9 @@ namespace cloudscribe.Core.IdentityServer.EFCore.DbContexts
         }
 
         public DbSet<Client> Clients { get; set; }
-        public DbSet<Scope> Scopes { get; set; }
-        
+        public DbSet<IdentityResource> IdentityResources { get; set; }
+        public DbSet<ApiResource> ApiResources { get; set; }
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);

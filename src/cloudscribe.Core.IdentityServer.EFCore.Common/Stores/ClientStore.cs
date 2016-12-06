@@ -12,6 +12,7 @@ using IdentityServer4.Models;
 using IdentityServer4.Stores;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.Logging;
 
 namespace cloudscribe.Core.IdentityServer.EFCore.Stores
 {
@@ -19,15 +20,18 @@ namespace cloudscribe.Core.IdentityServer.EFCore.Stores
     {
         private readonly IConfigurationDbContext context;
         private IHttpContextAccessor _contextAccessor;
+        private readonly ILogger<ClientStore> _logger;
 
         public ClientStore(
             IHttpContextAccessor contextAccessor,
-            IConfigurationDbContext context
+            IConfigurationDbContext context,
+            ILogger<ClientStore> logger
             )
         {
             if (context == null) throw new ArgumentNullException(nameof(context));
             _contextAccessor = contextAccessor;
             this.context = context;
+            _logger = logger;
         }
 
         public async Task<Client> FindClientByIdAsync(string clientId)
@@ -48,7 +52,9 @@ namespace cloudscribe.Core.IdentityServer.EFCore.Stores
                 .Include(x => x.AllowedCorsOrigins)
                 .FirstOrDefaultAsync(x => x.SiteId == _siteId && x.ClientId == clientId);
 
-            var model = client.ToModel();
+            var model = client?.ToModel();
+
+            _logger.LogDebug("{clientId} found in database: {clientIdFound}", clientId, model != null);
 
             return model;
         }
