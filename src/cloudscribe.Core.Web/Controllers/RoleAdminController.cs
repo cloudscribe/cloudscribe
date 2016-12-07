@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2014-12-06
-// Last Modified:			2016-10-16
+// Last Modified:			2016-12-07
 // 
 
 using cloudscribe.Core.Identity;
@@ -108,7 +108,7 @@ namespace cloudscribe.Core.Web.Controllers
             int pageNumber = 1,
             int pageSize = -1)
         {
-            var selectedSite = await siteManager.GetSiteForDataOperations(siteId);
+            var selectedSite = await siteManager.GetSiteForDataOperations(siteId, true);
             // only server admin site can edit other sites settings
             if (selectedSite.Id != siteManager.CurrentSite.Id)
             { 
@@ -158,7 +158,7 @@ namespace cloudscribe.Core.Web.Controllers
             Guid? siteId,
             Guid? roleId)
         {
-            var selectedSite = await siteManager.GetSiteForDataOperations(siteId);
+            var selectedSite = await siteManager.GetSiteForDataOperations(siteId, true);
             // only server admin site can edit other sites settings
             if (selectedSite.Id != siteManager.CurrentSite.Id)
             {
@@ -192,7 +192,7 @@ namespace cloudscribe.Core.Web.Controllers
         [Authorize(Policy = "RoleAdminPolicy")]
         public async Task<IActionResult> RoleEdit(RoleViewModel model, int returnPageNumber = 1)
         {
-            var selectedSite = await siteManager.GetSiteForDataOperations(model.SiteId);
+            var selectedSite = await siteManager.GetSiteForDataOperations(model.SiteId, true);
             // only server admin site can edit other sites settings
             if (selectedSite.Id != siteManager.CurrentSite.Id)
             {
@@ -244,7 +244,7 @@ namespace cloudscribe.Core.Web.Controllers
             Guid roleId, 
             int returnPageNumber = 1)
         {
-            var selectedSite = await siteManager.GetSiteForDataOperations(siteId);
+            var selectedSite = await siteManager.GetSiteForDataOperations(siteId, true);
             
             var role = await RoleManager.FindByIdAsync(roleId.ToString());
             if (role != null && role.SiteId == selectedSite.Id && role.IsDeletable(setupOptions.RolesThatCannotBeDeleted))
@@ -271,7 +271,7 @@ namespace cloudscribe.Core.Web.Controllers
             int pageNumber = 1,
             int pageSize = -1)
         {
-            var selectedSite = await siteManager.GetSiteForDataOperations(siteId);
+            var selectedSite = await siteManager.GetSiteForDataOperations(siteId, true);
             // only server admin site can edit other sites settings
             if (selectedSite.Id != siteManager.CurrentSite.Id)
             {
@@ -283,7 +283,7 @@ namespace cloudscribe.Core.Web.Controllers
             }
             
             var role = await RoleManager.FindByIdAsync(roleId.ToString());
-            if ((role == null) || (role.SiteId != selectedSite.Id))
+            if ((role == null) || (role.SiteId != selectedSite.Id ))
             {
                 return RedirectToAction("Index");
             }
@@ -336,7 +336,7 @@ namespace cloudscribe.Core.Web.Controllers
             int pageSize = 0,
             bool ajaxGrid = false)
         {
-            var selectedSite = await siteManager.GetSiteForDataOperations(siteId);
+            var selectedSite = await siteManager.GetSiteForDataOperations(siteId, true);
             // only server admin site can edit other sites settings
             if (selectedSite.Id != siteManager.CurrentSite.Id)
             {
@@ -403,7 +403,7 @@ namespace cloudscribe.Core.Web.Controllers
             Guid roleId, 
             Guid userId)
         {
-            var selectedSite = await siteManager.GetSiteForDataOperations(siteId);
+            var selectedSite = await siteManager.GetSiteForDataOperations(siteId, true);
             
             var user = await UserManager.Fetch(selectedSite.Id, userId);
 
@@ -431,7 +431,7 @@ namespace cloudscribe.Core.Web.Controllers
             Guid roleId, 
             Guid userId)
         {
-            var selectedSite = await siteManager.GetSiteForDataOperations(siteId);
+            var selectedSite = await siteManager.GetSiteForDataOperations(siteId, true);
             
             var user = await UserManager.Fetch(selectedSite.Id, userId);
             if (user != null)

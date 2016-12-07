@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2015-07-22
-// Last Modified:			2016-11-26
+// Last Modified:			2016-12-07
 // 
 
 using cloudscribe.Core.Models;
@@ -82,8 +82,16 @@ namespace cloudscribe.Core.Web.Components
             return await queries.Fetch(CurrentSite.Id, CancellationToken);
         }
 
-        public async Task<ISiteContext> GetSiteForDataOperations(Guid? siteId)
+        public async Task<ISiteContext> GetSiteForDataOperations(Guid? siteId, bool useRelatedSiteId = false)
         {
+            if(multiTenantOptions.UseRelatedSitesMode)
+            {
+                if (useRelatedSiteId)
+                {
+                    return await Fetch(multiTenantOptions.RelatedSiteId) as ISiteContext;
+                }
+            }
+
             if ((siteId.HasValue) && (siteId.Value != Guid.Empty) 
                 && (siteId.Value != CurrentSite.Id) 
                 && (CurrentSite.IsServerAdminSite))

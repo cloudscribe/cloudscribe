@@ -159,7 +159,7 @@ namespace example.WebApp
 
             services.Configure<MvcOptions>(options =>
             {
-                options.Filters.Add(new RequireHttpsAttribute());
+                //options.Filters.Add(new RequireHttpsAttribute());
             });
 
             services.AddMvc()
@@ -289,7 +289,7 @@ namespace example.WebApp
             app.UsePerTenant<cloudscribe.Core.Models.SiteContext>((ctx, builder) =>
             {
                 // custom 404 and error page - this preserves the status code (ie 404)
-                if(string.IsNullOrEmpty(ctx.Tenant.SiteFolderName))
+                if(multiTenantOptions.Mode != cloudscribe.Core.Models.MultiTenantMode.FolderName || string.IsNullOrEmpty(ctx.Tenant.SiteFolderName))
                 {
                     builder.UseStatusCodePagesWithReExecute("/Home/Error/{0}");
                 }
@@ -308,22 +308,22 @@ namespace example.WebApp
                 // using a fork of IdentityServer4 and hoping to get changes so we don't need a fork
                 // https://github.com/IdentityServer/IdentityServer4/issues/19
 
-                builder.UseIdentityServer();
+                //builder.UseIdentityServer();
 
-                // this sets up the authentication for apis within this application endpoint
-                // ie apis that are hosted in the same web app endpoint with the authority server
-                // this is not needed here if you are only using separate api endpoints
-                // it is needed in the startup of those separate endpoints
-                builder.UseIdentityServerAuthentication(new IdentityServerAuthenticationOptions
-                {
-                    Authority = "https://localhost:44399",
-                    // using the site aliasid as the scope so each tenant has a different scope
-                    // you can view the aliasid from site settings
-                    // clients must be configured with the scope to have access to the apis for the tenant
-                    ApiName = ctx.Tenant.AliasId, 
+                //// this sets up the authentication for apis within this application endpoint
+                //// ie apis that are hosted in the same web app endpoint with the authority server
+                //// this is not needed here if you are only using separate api endpoints
+                //// it is needed in the startup of those separate endpoints
+                //builder.UseIdentityServerAuthentication(new IdentityServerAuthenticationOptions
+                //{
+                //    Authority = "https://localhost:44399",
+                //    // using the site aliasid as the scope so each tenant has a different scope
+                //    // you can view the aliasid from site settings
+                //    // clients must be configured with the scope to have access to the apis for the tenant
+                //    ApiName = ctx.Tenant.AliasId, 
 
-                    RequireHttpsMetadata = true
-                });
+                //    RequireHttpsMetadata = true
+                //});
 
 
             });

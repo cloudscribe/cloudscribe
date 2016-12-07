@@ -21,6 +21,8 @@ https://medium.com/@cscalfani/so-you-want-to-be-a-functional-programmer-part-4-1
 https://medium.com/@cscalfani/so-you-want-to-be-a-functional-programmer-part-5-c70adc9cf56a
 https://medium.com/@cscalfani/so-you-want-to-be-a-functional-programmer-part-6-db502830403
 
+http://blog.ploeh.dk/2016/11/28/easy-domain-modelling-with-types/
+
 Can programming be liberated from function abstraction?
 http://tomasp.net/blog/2016/no-functions/
 

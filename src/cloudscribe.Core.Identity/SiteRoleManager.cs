@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:				    2014-07-17
-// Last Modified:		    2016-10-08
+// Last Modified:		    2016-12-07
 // 
 //
 
@@ -98,12 +98,18 @@ namespace cloudscribe.Core.Identity
         
         public async Task DeleteUserRolesByRole(Guid roleId)
         {
-            await commands.DeleteUserRolesByRole(Site.Id, roleId, CancellationToken);
+            var siteId = Site.Id;
+            if (multiTenantOptions.UseRelatedSitesMode) { siteId = multiTenantOptions.RelatedSiteId; }
+
+            await commands.DeleteUserRolesByRole(siteId, roleId, CancellationToken);
         }
 
         public async Task DeleteRole(Guid roleId)
         {
-            await commands.DeleteRole(Site.Id, roleId, CancellationToken);
+            var siteId = Site.Id;
+            if (multiTenantOptions.UseRelatedSitesMode) { siteId = multiTenantOptions.RelatedSiteId; }
+
+            await commands.DeleteRole(siteId, roleId, CancellationToken);
         }
 
         //public async Task<bool> RoleExists(Guid siteId, string roleName)

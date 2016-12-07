@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:				    2014-06-19
-// Last Modified:		    2016-10-08
+// Last Modified:		    2016-12-07
 // 
 
 using cloudscribe.Core.Models;
@@ -50,6 +50,19 @@ namespace cloudscribe.Core.Identity
         {
             get { return siteSettings; }
         }
+
+        private Guid GetSiteId()
+        {
+            if(multiTenantOptions.UseRelatedSitesMode)
+            {
+                if(multiTenantOptions.RelatedSiteId != Guid.Empty)
+                {
+                    return multiTenantOptions.RelatedSiteId;
+                }
+            }
+
+            return Site.Id;
+        }
         
         public async Task<IdentityResult> CreateAsync(TRole role, CancellationToken cancellationToken)
         {
@@ -58,7 +71,7 @@ namespace cloudscribe.Core.Identity
                 throw new ArgumentNullException("role");
             }
 
-            if (role.SiteId == Guid.Empty){ role.SiteId = Site.Id; }
+            if (role.SiteId == Guid.Empty){ role.SiteId = GetSiteId(); }
             if (role.Id == Guid.Empty) role.Id = Guid.NewGuid();
             ThrowIfDisposed();
             cancellationToken.ThrowIfCancellationRequested();
@@ -93,7 +106,7 @@ namespace cloudscribe.Core.Identity
             if (string.IsNullOrWhiteSpace(roleId)) throw new ArgumentException("invalid roleid");
             if(roleId.Length != 36) throw new ArgumentException("invalid roleid");
             var roleGuid = new Guid(roleId);
-            var role = await queries.FetchRole(Site.Id, roleGuid, cancellationToken);
+            var role = await queries.FetchRole(GetSiteId(), roleGuid, cancellationToken);
 
             return (TRole)role;
         }
@@ -102,11 +115,8 @@ namespace cloudscribe.Core.Identity
         {
             cancellationToken.ThrowIfCancellationRequested();
             ThrowIfDisposed();
-
-            Guid siteGuid = Site.Id;
-            if (multiTenantOptions.UseRelatedSitesMode) { siteGuid = multiTenantOptions.RelatedSiteId; }
-
-            var role = await queries.FetchRole(siteGuid, normalizedRoleName, cancellationToken);
+            
+            var role = await queries.FetchRole(GetSiteId(), normalizedRoleName, cancellationToken);
 
             return (TRole)role;
         }

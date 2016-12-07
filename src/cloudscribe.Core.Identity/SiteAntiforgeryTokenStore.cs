@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2016-05-03
-// Last Modified:			2016-10-08
+// Last Modified:			2016-12-07
 // 
 
 using cloudscribe.Core.Models;
@@ -20,8 +20,12 @@ namespace cloudscribe.Core.Identity
     public class SiteAntiforgeryTokenStore : IAntiforgeryTokenStore
     {
         private readonly AntiforgeryOptions _options;
+        private MultiTenantOptions multiTenantOptions;
 
-        public SiteAntiforgeryTokenStore(IOptions<AntiforgeryOptions> optionsAccessor)
+        public SiteAntiforgeryTokenStore(
+            IOptions<MultiTenantOptions> multiTenantOptionsAccessor,
+            IOptions<AntiforgeryOptions> optionsAccessor
+            )
         {
             if (optionsAccessor == null)
             {
@@ -29,6 +33,33 @@ namespace cloudscribe.Core.Identity
             }
 
             _options = optionsAccessor.Value;
+            multiTenantOptions = multiTenantOptionsAccessor.Value;
+        }
+
+        private string GetCookieName(SiteContext tenant)
+        {
+            if(multiTenantOptions.Mode == MultiTenantMode.FolderName)
+            {
+                if(!string.IsNullOrEmpty(tenant.SiteFolderName))
+                {
+                    return _options.CookieName + tenant.SiteFolderName;
+                }
+            }
+
+            return _options.CookieName;
+        }
+
+        private string GetCookiePath(SiteContext tenant)
+        {
+            if (multiTenantOptions.Mode == MultiTenantMode.FolderName)
+            {
+                if (!string.IsNullOrEmpty(tenant.SiteFolderName))
+                {
+                    return "/" + tenant.SiteFolderName;
+                }
+            }
+
+            return "/";
         }
 
         public string GetCookieToken(HttpContext httpContext)
@@ -39,7 +70,7 @@ namespace cloudscribe.Core.Identity
 
             var tenant = httpContext.GetTenant<SiteContext>();
 
-            var requestCookie = httpContext.Request.Cookies[_options.CookieName + tenant.SiteFolderName];
+            var requestCookie = httpContext.Request.Cookies[GetCookieName(tenant)];
 
             if (string.IsNullOrEmpty(requestCookie))
             {
@@ -57,7 +88,7 @@ namespace cloudscribe.Core.Identity
             //var cookieToken = httpContext.Request.Cookies[_options.CookieName];
 
             var tenant = httpContext.GetTenant<SiteContext>();
-            var cookieToken = httpContext.Request.Cookies[_options.CookieName + tenant.SiteFolderName];
+            var cookieToken = httpContext.Request.Cookies[GetCookieName(tenant)];
 
             StringValues requestToken;
             if (httpContext.Request.HasFormContentType)
@@ -91,11 +122,11 @@ namespace cloudscribe.Core.Identity
                 options.Secure = true;
             }
 
-            //httpContext.Response.Cookies.Append(_options.CookieName, token, options);
-
+            
             var tenant = httpContext.GetTenant<SiteContext>();
-            if (tenant.SiteFolderName.Length > 0) options.Path = new PathString("/" + tenant.SiteFolderName);
-            httpContext.Response.Cookies.Append(_options.CookieName + tenant.SiteFolderName, token, options);
+            options.Path = new PathString(GetCookiePath(tenant));
+            
+            httpContext.Response.Cookies.Append(GetCookieName(tenant), token, options);
         }
     }
 
