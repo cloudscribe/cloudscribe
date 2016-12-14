@@ -48,11 +48,11 @@ namespace cloudscribe.Core.IdentityServerIntegration.Controllers
             // only server admin site can edit other sites settings
             if (selectedSite.Id != siteManager.CurrentSite.Id)
             {
-                ViewData["Title"] = string.Format(CultureInfo.CurrentUICulture, sr["{0} - Scope Management"], selectedSite.SiteName);
+                ViewData["Title"] = string.Format(CultureInfo.CurrentUICulture, sr["{0} - API Resource Management"], selectedSite.SiteName);
             }
             else
             {
-                ViewData["Title"] = sr["Scope Management"];
+                ViewData["Title"] = sr["API Resource Management"];
             }
 
             int itemsPerPage = 10;
@@ -70,6 +70,272 @@ namespace cloudscribe.Core.IdentityServerIntegration.Controllers
             model.Paging.TotalItems = result.TotalItems;
 
             return View(model);
+        }
+
+
+        [HttpGet]
+        public async Task<IActionResult> EditApiResource(
+            Guid? siteId,
+            string name = null)
+        {
+
+            var selectedSite = await siteManager.GetSiteForDataOperations(siteId);
+
+            if (!string.IsNullOrEmpty(name))
+            {
+                ViewData["Title"] = string.Format(CultureInfo.CurrentUICulture, sr["{0} - Edit API Resource"], selectedSite.SiteName);
+            }
+
+            var model = new ApiEditViewModel();
+            model.SiteId = selectedSite.Id.ToString();
+            model.NewApi.SiteId = model.SiteId;
+            if (!string.IsNullOrEmpty(name))
+            {
+                var apiResource = await apiManager.FetchApiResource(model.SiteId, name);
+                model.CurrentApi = apiResource;
+            }
+
+            if (model.CurrentApi == null)
+            {
+                ViewData["Title"] = string.Format(CultureInfo.CurrentUICulture, sr["{0} - New API Resource"], selectedSite.SiteName);
+                var currentCrumbAdjuster = new NavigationNodeAdjuster(Request.HttpContext);
+                currentCrumbAdjuster.KeyToAdjust = "EditApiResource";
+                currentCrumbAdjuster.AdjustedText = sr["New API Resource"];
+                currentCrumbAdjuster.AddToContext();
+            }
+            else
+            {
+                model.NewApiClaim.SiteId = model.SiteId;
+                model.NewApiClaim.ApiName = model.CurrentApi.Name;
+                model.NewApiSecret.SiteId = model.SiteId;
+                model.NewApiSecret.ApiName = model.CurrentApi.Name;
+            }
+
+            return View(model);
+
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> EditApiResource(ApiItemViewModel model)
+        {
+            if (!ModelState.IsValid)
+            {
+                return RedirectToAction("EditApiResource", new { siteId = model.SiteId, name = model.Name });
+            }
+
+            Guid siteId = siteManager.CurrentSite.Id;
+            if (!string.IsNullOrEmpty(model.SiteId) && model.SiteId.Length == 36)
+            {
+                siteId = new Guid(model.SiteId);
+            }
+            var selectedSite = await siteManager.GetSiteForDataOperations(siteId);
+
+            var apiResource = await apiManager.FetchApiResource(selectedSite.Id.ToString(), model.Name);
+
+            if (apiResource == null)
+            {
+                this.AlertDanger(sr["API Resource not found"], true);
+                return RedirectToAction("Index", new { siteId = selectedSite.Id.ToString() });
+            }
+
+           // apiResource.AllowUnrestrictedIntrospection = model.AllowUnrestrictedIntrospection;
+            //apiResource.ClaimsRule = model.ClaimsRule;
+            apiResource.Description = model.Description;
+            apiResource.DisplayName = model.DisplayName;
+           // apiResource.Emphasize = model.Emphasize;
+            apiResource.Enabled = model.Enabled;
+            //apiResource.IncludeAllClaimsForUser = model.IncludeAllClaimsForUser;
+            //apiResource.Required = model.Required;
+            //apiResource.ShowInDiscoveryDocument = model.ShowInDiscoveryDocument;
+            await apiManager.UpdateApiResource(selectedSite.Id.ToString(), apiResource);
+
+            var successFormat = sr["The API Resource <b>{0}</b> was successfully updated."];
+
+            this.AlertSuccess(string.Format(successFormat, apiResource.Name), true);
+
+            return RedirectToAction("EditApiResource", new { siteId = selectedSite.Id.ToString(), name = apiResource.Name });
+
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> NewApiResource(ApiItemViewModel apiModel)
+        {
+            if (!ModelState.IsValid)
+            {
+                return RedirectToAction("EditApiResource", new { siteId = apiModel.SiteId, ame = apiModel.Name });
+            }
+
+            Guid siteId = siteManager.CurrentSite.Id;
+            if (!string.IsNullOrEmpty(apiModel.SiteId) && apiModel.SiteId.Length == 36)
+            {
+                siteId = new Guid(apiModel.SiteId);
+            }
+            var selectedSite = await siteManager.GetSiteForDataOperations(siteId);
+
+            ViewData["Title"] = string.Format(CultureInfo.CurrentUICulture, sr["{0} - New API Resource"], selectedSite.SiteName);
+
+            var exists = await apiManager.ApiResourceExists(selectedSite.Id.ToString(), apiModel.Name);
+            
+            if (exists)
+            {
+                var model = new ApiEditViewModel();
+                model.SiteId = selectedSite.Id.ToString();
+                model.NewApi = apiModel;
+                model.NewApi.SiteId = model.SiteId;
+
+                if (exists) ModelState.AddModelError("apinameinuseerror", sr["API Resource name is already in use"]);
+                
+
+                return View("EditApiResource", model);
+            }
+
+            var api = new ApiResource
+            {
+                Name = apiModel.Name,
+                DisplayName = apiModel.DisplayName,
+                Description = apiModel.Description
+            };
+
+            await apiManager.CreateApiResource(selectedSite.Id.ToString(), api);
+
+            var successFormat = sr["The API Resource <b>{0}</b> was successfully Created."];
+
+            this.AlertSuccess(string.Format(successFormat, api.Name), true);
+
+            return RedirectToAction("EditApiResource", new { siteId = selectedSite.Id.ToString(), name = api.Name });
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> DeleteApiResource(Guid siteId, string apiName)
+        {
+            await apiManager.DeleteApiResource(siteId.ToString(), apiName);
+            return RedirectToAction("Index");
+        }
+
+        // Scope Claims
+        // List of user claims that should be included in the identity (identity scope) or access token (resource scope).
+
+        [HttpPost]
+        public async Task<IActionResult> AddApiClaim(NewApiClaimViewModel model)
+        {
+            if (!ModelState.IsValid)
+            {
+                return RedirectToAction("EditApiResource", new { siteId = model.SiteId, name = model.ApiName });
+            }
+
+            Guid siteId = siteManager.CurrentSite.Id;
+            if (!string.IsNullOrEmpty(model.SiteId) && model.SiteId.Length == 36)
+            {
+                siteId = new Guid(model.SiteId);
+            }
+            var selectedSite = await siteManager.GetSiteForDataOperations(siteId);
+
+            var apiResource = await apiManager.FetchApiResource(selectedSite.Id.ToString(), model.ApiName);
+            if (apiResource == null)
+            {
+                this.AlertDanger(sr["Invalid request, scope not found."], true);
+                return RedirectToAction("Index");
+            }
+
+            //var claim = new ScopeClaim(model.Name, model.AlwaysIncludeInIdToken);
+            //claim.Description = model.Description;
+
+            if (apiResource.UserClaims.Contains(model.Name))
+            {
+                this.AlertDanger(sr["API Resource already has a claim with that name."], true);
+                return RedirectToAction("EditApiResource", new { siteId = selectedSite.Id.ToString(), name = model.ApiName });
+            }
+            apiResource.UserClaims.Add(model.Name);
+
+            await apiManager.UpdateApiResource(selectedSite.Id.ToString(), apiResource);
+
+            var successFormat = sr["The Claim <b>{0}</b> was successfully added."];
+
+            this.AlertSuccess(string.Format(successFormat, model.Name), true);
+
+            return RedirectToAction("EditApiResource", new { siteId = selectedSite.Id.ToString(), name = model.ApiName });
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> DeleteApiClaim(Guid siteId, string apiName, string claimName)
+        {
+            var apiResource = await apiManager.FetchApiResource(siteId.ToString(), apiName);
+            if (apiResource == null)
+            {
+                this.AlertDanger(sr["Invalid request, API Resource not found."], true);
+                return RedirectToAction("Index");
+            }
+
+            string found = null;
+            foreach (var c in apiResource.UserClaims)
+            {
+                if (c == claimName)
+                {
+                    found = c;
+                    break;
+                }
+            }
+            if (found != null)
+            {
+                apiResource.UserClaims.Remove(found);
+                await apiManager.UpdateApiResource(siteId.ToString(), apiResource);
+                var successFormat = sr["The Claim <b>{0}</b> was successfully removed."];
+                this.AlertSuccess(string.Format(successFormat, claimName), true);
+            }
+            else
+            {
+                this.AlertDanger(sr["Invalid request, API Resource claim not found."], true);
+            }
+
+            return RedirectToAction("EditApiResource", new { siteId = siteId.ToString(), name = apiName });
+        }
+
+        //        //API Secrets
+        //        // https://identityserver.github.io/Documentation/docsv2/configuration/secrets.html
+        //        // Secrets define how machines (e.g. a client or a scope) can authenticate with IdentityServer.
+        //        // Value The value of the secret. This is being interpreted by the secret validator 
+        //        // (e.g. a “password”-like share secret or something else that identifies a credential)
+        //        // Description The description of the secret - useful for attaching some extra information to the secret
+        //        // Expiration A point in time, where this secret will expire
+        //        // Type Some string that gives the secret validator a hint what type of secret to expect (e.g. “SharedSecret” or “X509CertificateThumbprint”)
+
+        [HttpPost]
+        public async Task<IActionResult> AddApiSecret(NewApiSecretViewModel apiModel)
+        {
+            if (!ModelState.IsValid)
+            {
+                return RedirectToAction("EditApiResource", new { siteId = apiModel.SiteId, name = apiModel.ApiName });
+            }
+
+            Guid siteId = siteManager.CurrentSite.Id;
+            if (!string.IsNullOrEmpty(apiModel.SiteId) && apiModel.SiteId.Length == 36)
+            {
+                siteId = new Guid(apiModel.SiteId);
+            }
+            var selectedSite = await siteManager.GetSiteForDataOperations(siteId);
+
+            var apiResource = await apiManager.FetchApiResource(selectedSite.Id.ToString(), apiModel.ApiName);
+            if (apiResource == null)
+            {
+                this.AlertDanger(sr["Invalid request, API Resource not found."], true);
+                return RedirectToAction("Index");
+            }
+
+            var secret = new Secret(apiModel.Value, apiModel.Description, apiModel.Expiration);
+            secret.Type = apiModel.Type;
+
+            if (apiResource.ApiSecrets.Contains(secret))
+            {
+                this.AlertDanger(sr["API Resource already has a secret with that value."], true);
+                return RedirectToAction("EditApiResource", new { siteId = selectedSite.Id.ToString(), name = apiModel.ApiName });
+            }
+            apiResource.ApiSecrets.Add(secret);
+
+            await apiManager.UpdateApiResource(selectedSite.Id.ToString(), apiResource);
+
+            this.AlertSuccess(sr["The Secret was successfully added."], true);
+
+            return RedirectToAction("EditApiResource", new { siteId = selectedSite.Id.ToString(), name = apiModel.ApiName });
         }
 
 
