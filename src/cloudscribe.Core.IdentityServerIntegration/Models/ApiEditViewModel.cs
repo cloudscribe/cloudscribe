@@ -9,6 +9,7 @@ namespace cloudscribe.Core.IdentityServerIntegration.Models
             NewApi = new ApiItemViewModel();
             NewApiClaim = new NewApiClaimViewModel();
             NewApiSecret = new NewApiSecretViewModel();
+            NewScope = new NewApiScopeViewModel();
         }
 
         public string SiteId { get; set; } = string.Empty;
@@ -20,5 +21,7 @@ namespace cloudscribe.Core.IdentityServerIntegration.Models
         public NewApiClaimViewModel NewApiClaim { get; set; }
 
         public NewApiSecretViewModel NewApiSecret { get; set; }
+
+        public NewApiScopeViewModel NewScope { get; set; }
     }
 }

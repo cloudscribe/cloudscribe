@@ -11,6 +11,7 @@ namespace cloudscribe.Core.IdentityServerIntegration.Models
         public string ApiName { get; set; }
 
         [Required]
+        [RegularExpression(@"^\S*$", ErrorMessage = "No white space allowed")]
         public string Name { get; set; }
 
         /// <summary>

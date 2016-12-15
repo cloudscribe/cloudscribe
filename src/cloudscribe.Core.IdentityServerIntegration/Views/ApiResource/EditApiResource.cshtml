@@ -12,7 +12,8 @@
 else
 {
     <h2>@ViewData["Title"]</h2>
-    await Html.RenderPartialAsync("EditApiPartial", new ApiItemViewModel(Model.SiteId, Model.CurrentApi));
+    await Html.RenderPartialAsync("EditApiResourcePartial", new ApiItemViewModel(Model.SiteId, Model.CurrentApi));
+    await Html.RenderPartialAsync("ApiScopesPartial", Model);
     await Html.RenderPartialAsync("ApiClaimsPartial", Model);
     await Html.RenderPartialAsync("ApiSecretsPartial", Model);
 }

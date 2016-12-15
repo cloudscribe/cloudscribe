@@ -18,7 +18,7 @@
             <div class="col-md-10">
                 <input class="form-control" asp-for="DisplayName" />
                 <span asp-validation-for="DisplayName" class="text-danger"></span> 
-                @Html.ValidationMessage("scopeerror", new { @class = "text-danger" })
+                @Html.ValidationMessage("apierror", new { @class = "text-danger" })
             </div>
         </div>
         <div class="form-group">
@@ -26,13 +26,6 @@
             <div class="col-md-10">
                 <input class="form-control" asp-for="Description" />
                 <span asp-validation-for="Description" class="text-danger"></span> 
-            </div>
-        </div>
-        <div class="form-group">
-            <label asp-for="ClaimsRule" class="col-md-2 control-label">@sr["Claims Rule"]</label>
-            <div class="col-md-10">
-                <input class="form-control" asp-for="ClaimsRule"  />
-                <span asp-validation-for="ClaimsRule" class="text-danger"></span> 
             </div>
         </div>
         <div class="form-group">
@@ -44,16 +37,6 @@
                 </div>
             </div>
         </div>
-        <div class="form-group">
-            <div class="col-md-10 col-md-offset-2">
-                <div class="checkbox">
-                    <label>
-                        <input asp-for="Required"  /> @sr["Required"]
-                    </label>
-                </div>
-            </div>
-        </div>
-        
         <div class="form-group">
             <div class="col-md-offset-2 col-md-10">
                 <button name="submit" type="submit" class="btn btn-default">@sr["Save"]</button>

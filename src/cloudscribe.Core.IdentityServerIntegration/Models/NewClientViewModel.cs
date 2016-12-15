@@ -10,6 +10,7 @@ namespace cloudscribe.Core.IdentityServerIntegration.Models
         public string SiteId { get; set; }
 
         [Required]
+        [RegularExpression(@"^\S*$", ErrorMessage = "No white space allowed")]
         public string ClientId { get; set; }
 
         [Required]

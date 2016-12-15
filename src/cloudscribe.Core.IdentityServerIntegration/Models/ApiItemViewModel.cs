@@ -13,17 +13,17 @@ namespace cloudscribe.Core.IdentityServerIntegration.Models
         {
 
         }
-        public ApiItemViewModel(string siteId, ApiResource scope)
+        public ApiItemViewModel(string siteId, ApiResource apiResource)
         {
             SiteId = siteId;
-            Name = scope.Name;
-            DisplayName = scope.DisplayName;
-            Description = scope.Description;
+            Name = apiResource.Name;
+            DisplayName = apiResource.DisplayName;
+            Description = apiResource.Description;
             //Emphasize = scope.Emphasize;
             //Required = scope.Required;
             //ClaimsRule = scope.ClaimsRule;
             //AllowUnrestrictedIntrospection = scope.AllowUnrestrictedIntrospection;
-            Enabled = scope.Enabled;
+            Enabled = apiResource.Enabled;
             //IncludeAllClaimsForUser = scope.IncludeAllClaimsForUser;
             //ShowInDiscoveryDocument = scope.ShowInDiscoveryDocument;
 
@@ -36,7 +36,8 @@ namespace cloudscribe.Core.IdentityServerIntegration.Models
         /// <summary>
         /// This is the value a client will use to request the scope.
         /// </summary>
-        [Required]
+        [Required(ErrorMessage="Name is required")]
+        [RegularExpression(@"^\S*$", ErrorMessage = "No white space allowed")]
         public string Name { get; set; }
 
         /// <summary>
@@ -57,7 +58,7 @@ namespace cloudscribe.Core.IdentityServerIntegration.Models
         /// <summary>
         /// Specifies whether the user can de-select the scope on the consent screen. Defaults to false
         /// </summary>
-        public bool Required { get; set; }
+        //public bool Required { get; set; }
 
         /// <summary>
         /// Rule for determining which claims should be included in the token (this is implementation specific)
