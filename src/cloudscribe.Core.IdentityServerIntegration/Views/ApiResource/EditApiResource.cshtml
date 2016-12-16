@@ -1,0 +1,22 @@
+﻿@model cloudscribe.Core.IdentityServerIntegration.Models.ApiEditViewModel
+@using cloudscribe.Core.IdentityServerIntegration.Models
+@using cloudscribe.Core.IdentityServerIntegration
+@using Microsoft.Extensions.Localization
+@inject IStringLocalizer<CloudscribeIntegration> sr
+
+@if (Model.CurrentApi == null)
+{
+    <h2>@ViewData["Title"]</h2>
+    await Html.RenderPartialAsync("NewApiPartial", Model.NewApi);
+}
+else
+{
+    <h2>@ViewData["Title"]</h2>
+    await Html.RenderPartialAsync("EditApiResourcePartial", new ApiItemViewModel(Model.SiteId, Model.CurrentApi));
+    await Html.RenderPartialAsync("ApiScopesPartial", Model);
+    await Html.RenderPartialAsync("ApiClaimsPartial", Model);
+    await Html.RenderPartialAsync("ApiSecretsPartial", Model);
+}
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial"); }
+}

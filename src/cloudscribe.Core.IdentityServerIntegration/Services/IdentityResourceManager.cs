@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0
 // Author:					Joe Audette
 // Created:					2016-10-13
-// Last Modified:			2016-10-14
+// Last Modified:			2016-12-15
 // 
 
 using cloudscribe.Core.IdentityServerIntegration.Storage;
@@ -40,7 +40,7 @@ namespace cloudscribe.Core.IdentityServerIntegration.Services
             return await _queries.GetIdentityResources(siteId, pageNumber, pageSize, CancellationToken).ConfigureAwait(false);
         }
 
-        public async Task<IdentityResource> FetchScope(string siteId, string name)
+        public async Task<IdentityResource> FetchIdentityResource(string siteId, string name)
         {
             return await _queries.FetchIdentityResource(siteId, name, CancellationToken).ConfigureAwait(false);
         }
@@ -55,7 +55,7 @@ namespace cloudscribe.Core.IdentityServerIntegration.Services
             await _commands.CreateIdentityResource(siteId, resource, CancellationToken.None).ConfigureAwait(false);
         }
 
-        public async Task UpdateScope(string siteId, IdentityResource resource)
+        public async Task UpdateIdentityResource(string siteId, IdentityResource resource)
         {
             await _commands.UpdateIdentityResource(siteId, resource, CancellationToken.None).ConfigureAwait(false);
         }
