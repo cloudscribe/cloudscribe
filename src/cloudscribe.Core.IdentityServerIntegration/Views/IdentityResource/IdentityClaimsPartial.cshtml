@@ -1,0 +1,32 @@
+﻿@model cloudscribe.Core.IdentityServerIntegration.Models.IdentityEditViewModel
+@using cloudscribe.Core.IdentityServerIntegration
+@using Microsoft.Extensions.Localization
+@inject IStringLocalizer<CloudscribeIntegration> sr
+@if (Model.CurrentResource != null)
+{
+    <div class="col-md-offset-2 col-md-10">
+        <h3>@sr["Claims"] </h3>
+        @{ await Html.RenderPartialAsync("AddResourceClaimPartial", Model.NewClaim);} 
+        @if (Model.CurrentResource.UserClaims.Count > 0)
+        {
+            <ul class="list-unstyled">
+                @foreach (var c in Model.CurrentResource.UserClaims)
+                {
+                    <li>
+                        <form asp-controller="IdentityResource" asp-action="DeleteClaim">
+                            @c
+                            <button type="submit"
+                                    class="btn btn-danger btn-xs"
+                                    onclick="javascript: return confirm('@Html.FormatValue(c, sr["Are you sure you want to delete {0}?"])');">
+                                @sr["Delete"]
+                            </button>
+                            <input asp-for="SiteId" type="hidden" />
+                            <input name="ResourceName" value="@Model.CurrentResource.Name" type="hidden" />
+                            <input name="ClaimName" value="@c" type="hidden" />
+                        </form>    
+                    </li>  
+                }
+            </ul>      
+        }
+    </div>
+}

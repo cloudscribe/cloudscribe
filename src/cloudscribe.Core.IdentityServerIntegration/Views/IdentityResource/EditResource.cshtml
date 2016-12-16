@@ -1,0 +1,21 @@
+﻿@model cloudscribe.Core.IdentityServerIntegration.Models.IdentityEditViewModel
+@using cloudscribe.Core.IdentityServerIntegration.Models
+@using cloudscribe.Core.IdentityServerIntegration
+@using Microsoft.Extensions.Localization
+@inject IStringLocalizer<CloudscribeIntegration> sr
+
+@if (Model.CurrentResource == null)
+{
+    <h2>@ViewData["Title"]</h2>
+    await Html.RenderPartialAsync("NewResourcePartial", Model.NewResource);
+}
+else
+{
+    <h2>@ViewData["Title"]</h2>
+    await Html.RenderPartialAsync("EditResourcePartial", new IdentityItemViewModel(Model.SiteId, Model.CurrentResource));
+    await Html.RenderPartialAsync("IdentityClaimsPartial", Model);
+
+}
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial"); }
+}
