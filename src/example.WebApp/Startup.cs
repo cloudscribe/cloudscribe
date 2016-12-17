@@ -308,7 +308,7 @@ namespace example.WebApp
                 // using a fork of IdentityServer4 and hoping to get changes so we don't need a fork
                 // https://github.com/IdentityServer/IdentityServer4/issues/19
 
-                builder.UseIdentityServer();
+                //builder.UseIdentityServer();
 
                 //// this sets up the authentication for apis within this application endpoint
                 //// ie apis that are hosted in the same web app endpoint with the authority server

@@ -34,14 +34,14 @@
                     <form asp-controller="IdentityResource" asp-action="DeleteResource">
                         <a class="btn btn-xs btn-default" asp-action="EditResource" asp-controller="IdentityResource"
                            asp-route-siteId="@Model.SiteId"
-                           asp-route-resourcename="@s.Name">@sr["Edit"]</a>
+                           asp-route-apiname="@s.Name">@sr["Edit"]</a>
                         <button type="submit"
                                 class="btn btn-danger btn-xs"
                                 onclick="javascript: return confirm('@Html.FormatValue(s.Name, sr["Are you sure you want to delete {0}?"])');">
                             @sr["Delete"]
                         </button>
                         <input name="SiteId" value="@Model.SiteId" type="hidden" />
-                        <input name="ResourceName" value="@s.Name" type="hidden" />
+                        <input name="ApiName" value="@s.Name" type="hidden" />
                     </form>
                 </td>
  
