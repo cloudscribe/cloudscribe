@@ -8,7 +8,7 @@
     "testRunner": "xunit",
 
     "dependencies": {
-        "xunit": "2.1.0",
+        "xunit": "2.2.0-beta4-build3444",
         "dotnet-test-xunit": {
             "version": "2.2.0-preview2-build1029",
             "target": "package"
@@ -17,7 +17,8 @@
         "cloudscribe.Core.Models": "1.1.0-*",
         "cloudscribe.Core.Web": "1.1.0-*",
         "cloudscribe.Web.Common": "1.1.*",
-        "NodaTime": "2.0.0-*"
+        "NodaTime": "2.0.0-*",
+		"Microsoft.DotNet.InternalAbstractions": "1.0.*"
     },
 
     "frameworks": {

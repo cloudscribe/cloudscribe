@@ -1,4 +1,7 @@
 
+https://leastprivilege.com/2016/12/16/identity-vs-permissions/
+
+
 ## My Thoughts around IdentityServer4
 
 All the samples separate the OP (OpenID Connect provider) aka Identity Server, into a separate web app which is great for scalability. The samples often have multiple clients and maybe an api so you spin up 3 or 4 web apps which is a good way to show how the distributed system can work.
