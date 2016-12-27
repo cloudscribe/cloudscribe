@@ -1,11 +1,11 @@
 ﻿{
-  "version": "1.1.0-rc20161202",
-  "description": "Bootstrap 3 views for cloudscribe.Core.Web",
+  "version": "1.1.0-rc20161226",
+  "description": "Bootstrap 3 views for cloudscribe.Core.IdentityServerIntegration",
 
   "authors": [ "Joe Audette" ],
   "packOptions": {
     "owners": [ "Source Tree Solutions" ],
-    "tags": [ "cloudscribe.Core", "Bootstrap3" ],
+    "tags": [ "cloudscribe", "IdentityServer4", "Bootstrap3" ],
     "projectUrl": "https://github.com/joeaudette/cloudscribe",
     "licenseUrl": "http://www.apache.org/licenses/LICENSE-2.0",
     "copyright": "2015 Source Tree Solutions",
@@ -22,7 +22,7 @@
   },
 
   "buildOptions": {
-    "embed": [ "Views/**", "js/**", "css/**" ]
+    "embed": [ "Views/**" ]
   },
 
   "frameworks": {

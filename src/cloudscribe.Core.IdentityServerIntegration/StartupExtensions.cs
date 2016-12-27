@@ -15,6 +15,7 @@ using Microsoft.AspNetCore.Mvc.Razor;
 using Microsoft.Extensions.FileProviders;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
+using System;
 using System.Reflection;
 
 // https://github.com/IdentityServer/IdentityServer4/issues/19
@@ -77,12 +78,14 @@ namespace Microsoft.Extensions.DependencyInjection
         //    return services;
         //}
 
+        [Obsolete("AddEmbeddedViewsForCloudscribeIdentityServerIntegration is deprecated, please use AddEmbeddedBootstrap3ViewsForCloudscribeCoreIdentityServerIntegration instead.")]
         public static RazorViewEngineOptions AddEmbeddedViewsForCloudscribeIdentityServerIntegration(this RazorViewEngineOptions options)
         {
-            options.FileProviders.Add(new EmbeddedFileProvider(
-                    typeof(CloudscribeIntegration).GetTypeInfo().Assembly,
-                    "cloudscribe.Core.IdentityServerIntegration"
-                ));
+            options.AddEmbeddedBootstrap3ViewsForCloudscribeCoreIdentityServerIntegration();
+            //options.FileProviders.Add(new EmbeddedFileProvider(
+            //        typeof(CloudscribeIntegration).GetTypeInfo().Assembly,
+            //        "cloudscribe.Core.IdentityServerIntegration"
+            //    ));
 
             return options;
         }

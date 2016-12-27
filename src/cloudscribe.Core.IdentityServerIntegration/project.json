@@ -1,5 +1,5 @@
 ﻿{
-    "version": "1.1.0-rc20161215",
+    "version": "1.1.0-rc20161226",
     "description": "cloudscribe multi-tenant identity integration for IdentityServer4",
     "authors": [ "Joe Audette" ],
     "packOptions": {
@@ -13,25 +13,24 @@
         "releaseNotes": ""
     },
 
-    "buildOptions": {
-        "embed": [ "Views/**" ]
-    },
+    
 
-    "dependencies": {
-        "NETStandard.Library": "1.6.1",
-        "Microsoft.Extensions.Options": "1.1.*",
-        "Microsoft.Extensions.Logging.Abstractions": "1.1.*",
-        "Microsoft.Extensions.FileProviders.Embedded": "1.1.*",
-        "Microsoft.Extensions.DependencyInjection.Abstractions": "1.1.*",
-        "Microsoft.AspNetCore.Mvc.Razor": "1.1.*",
-        "Microsoft.AspNetCore.Mvc": "1.1.*",
-        "cloudscribe.IDS4Fork": "1.1.0-*",
-        "cloudscribe.Core.Identity": "1.1.0-*",
-        "cloudscribe.Core.Web": "1.1.0-*",
-        "cloudscribe.Web.Common": "1.1.*",
-        "cloudscribe.Web.Pagination": "1.1.*",
-        "cloudscribe.Web.Navigation": "1.1.0-*"
-    },
+  "dependencies": {
+    "NETStandard.Library": "1.6.1",
+    "Microsoft.Extensions.Options": "1.1.*",
+    "Microsoft.Extensions.Logging.Abstractions": "1.1.*",
+    "Microsoft.Extensions.FileProviders.Embedded": "1.1.*",
+    "Microsoft.Extensions.DependencyInjection.Abstractions": "1.1.*",
+    "Microsoft.AspNetCore.Mvc.Razor": "1.1.*",
+    "Microsoft.AspNetCore.Mvc": "1.1.*",
+    "cloudscribe.IDS4Fork": "1.1.0-*",
+    "cloudscribe.Core.Identity": "1.1.0-*",
+    "cloudscribe.Core.Web": "1.1.0-*",
+    "cloudscribe.Core.IdentityServerIntegration.Views.Bootstrap3": "1.1.0-*",
+    "cloudscribe.Web.Common": "1.1.*",
+    "cloudscribe.Web.Pagination": "1.1.*",
+    "cloudscribe.Web.Navigation": "1.1.0-*"
+  },
 
     "frameworks": {
         "netstandard1.6": {
