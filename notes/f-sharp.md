@@ -66,6 +66,8 @@ http://lukemerrett.com/fsharp-domain-modelling/
 
 ## Resources
 
+https://shane.logsdon.io/posts/exploring-fsharp-with-dotnet-core-and-kestrel/
+
 https://medium.com/real-world-fsharp/using-f-with-net-core-aa6cfc9ef547#.wlxvm2oj6
 
 F# Webstack group
