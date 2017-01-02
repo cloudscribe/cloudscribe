@@ -1,4 +1,8 @@
 
+http://alistapart.com/article/content-modelling-a-master-skill
+
+https://www.smashingmagazine.com/2016/12/how-my-api-driven-website-helps-me-travel-the-world/
+
 http://alistapart.com/article/managing-your-content-management-system
 
 http://www.lukew.com/ff/entry.asp?1434;
