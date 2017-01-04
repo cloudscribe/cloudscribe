@@ -12,7 +12,8 @@ namespace cloudscribe.Web.Common.Serialization
         public static string ToCsv<T>(
             this IEnumerable<T> objectlist, 
             List<string> excludedPropertyNames = null,
-            bool quoteEveryField = false)
+            bool quoteEveryField = false,
+            bool includeFieldNamesAsFirstRow = true)
         {
             if (excludedPropertyNames == null) { excludedPropertyNames = new List<string>(); }
             var separator = ",";
@@ -20,12 +21,27 @@ namespace cloudscribe.Web.Common.Serialization
             PropertyInfo[] props = t.GetProperties();
 
             var arrPropNames = props.Where(p => !excludedPropertyNames.Contains(p.Name)).Select(f => f.Name).ToArray();
-
-            string header = string.Join(separator, arrPropNames);
-
             var csvBuilder = new StringBuilder();
-            csvBuilder.AppendLine(header);
 
+            if (includeFieldNamesAsFirstRow)
+            {
+                if (quoteEveryField)
+                {
+                    for(int i = 0; i <= arrPropNames.Length -1; i++)
+                    {
+                        if (i > 0) { csvBuilder.Append(separator); }
+                        csvBuilder.Append("\"");
+                        csvBuilder.Append(arrPropNames[i]);
+                        csvBuilder.Append("\"");
+                    }
+                }
+                else
+                {
+                    string header = string.Join(separator, arrPropNames);
+                    csvBuilder.AppendLine(header);
+                }
+            }
+            
             foreach (var o in objectlist)
             {
                 AppendCsvRow(csvBuilder, excludedPropertyNames, separator, quoteEveryField, props, o);
