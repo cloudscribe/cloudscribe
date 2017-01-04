@@ -182,3 +182,15 @@ https://vimeo.com/183301783
 
 http://blog.tamizhvendan.in/blog/2014/12/10/web-application-development-in-fsharp-using-asp-dot-net-mvc/
 https://github.com/tamizhvendan/fsharp-phonecat
+
+# Workflows
+
+https://www.codeproject.com/articles/33544/an-idea-of-f-workflow-engine-based-on-concurrency
+
+https://blogs.msdn.microsoft.com/doriancorompt/2012/05/25/7-workflows-a-monad-alias/
+
+https://www.infoq.com/articles/pickering-fsharp-workflow
+
+https://docs.microsoft.com/en-us/dotnet/articles/fsharp/language-reference/asynchronous-workflows
+
+https://www.exceptionnotfound.net/designing-a-workflow-engine-database-part-1-introduction-and-purpose/
