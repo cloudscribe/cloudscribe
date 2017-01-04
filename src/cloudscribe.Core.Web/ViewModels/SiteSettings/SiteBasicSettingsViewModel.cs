@@ -66,9 +66,12 @@ namespace cloudscribe.Core.Web.ViewModels.SiteSettings
         public string HostName { get; set; } = string.Empty;
         
         public string Theme { get; set; } = string.Empty;
-
-        public List<SelectListItem> AvailableThemes { get; set; } = null;
         
+        public List<SelectListItem> AvailableThemes { get; set; } = null;
+
+        [StringLength(255, ErrorMessage = "Google Analytics ProfileId has a maximum length of 25 characters")]
+        public string GoogleAnalyticsProfileId { get; set; }
+
 
         [Required(ErrorMessage = "Time zone is required")]
         public string TimeZoneId { get; set; } = "America/New_York";

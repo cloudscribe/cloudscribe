@@ -3,14 +3,16 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Text;
-using System.Threading.Tasks;
 
 namespace cloudscribe.Web.Common.Serialization
 {
     public static class Extensions
     {
         //https://tools.ietf.org/html/rfc4180 csv spec
-        public static string ToCsv<T>(this IEnumerable<T> objectlist, List<string> excludedPropertyNames = null)
+        public static string ToCsv<T>(
+            this IEnumerable<T> objectlist, 
+            List<string> excludedPropertyNames = null,
+            bool quoteEveryField = false)
         {
             if (excludedPropertyNames == null) { excludedPropertyNames = new List<string>(); }
             var separator = ",";
@@ -26,7 +28,7 @@ namespace cloudscribe.Web.Common.Serialization
 
             foreach (var o in objectlist)
             {
-                AppendCsvRow(csvBuilder, excludedPropertyNames, separator, props, o);
+                AppendCsvRow(csvBuilder, excludedPropertyNames, separator, quoteEveryField, props, o);
                 csvBuilder.Append(Environment.NewLine);
             }
 
@@ -34,7 +36,13 @@ namespace cloudscribe.Web.Common.Serialization
             return csvBuilder.ToString();
         }
 
-        private static void AppendCsvRow(StringBuilder sb, List<string> excludedPropertyNames, string separator, PropertyInfo[] props, object o)
+        private static void AppendCsvRow(
+            StringBuilder sb, 
+            List<string> excludedPropertyNames, 
+            string separator, 
+            bool alwaysQuote,
+            PropertyInfo[] props, 
+            object o)
         {
             int index = 0;
             foreach (var f in props)
@@ -48,7 +56,7 @@ namespace cloudscribe.Web.Common.Serialization
 
                     if (x != null)
                     {
-                        x.ToString().AppendCsvCell(sb);
+                        x.ToString().AppendCsvCell(sb, alwaysQuote);
                     }
                     index++;
                 }
@@ -57,7 +65,10 @@ namespace cloudscribe.Web.Common.Serialization
 
         }
 
-        private static void AppendCsvCell(this string str, StringBuilder sb)
+        private static void AppendCsvCell(
+            this string str, 
+            StringBuilder sb,
+            bool alwaysQuote)
         {
             bool mustQuote = (str.Contains(",") || str.Contains("\"") || str.Contains("\r") || str.Contains("\n"));
             if (mustQuote)
@@ -69,6 +80,12 @@ namespace cloudscribe.Web.Common.Serialization
                     if (nextChar == '"')
                         sb.Append("\"");
                 }
+                sb.Append("\"");
+            }
+            else if(alwaysQuote)
+            {
+                sb.Append("\"");
+                sb.Append(str);
                 sb.Append("\"");
             }
             else

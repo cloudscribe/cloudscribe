@@ -143,7 +143,7 @@ namespace cloudscribe.Core.Web.Controllers
             //{
             model.AliasId = selectedSite.AliasId;
             //}
-            
+            model.GoogleAnalyticsProfileId = selectedSite.GoogleAnalyticsProfileId;
            
             
             model.IsClosed = selectedSite.SiteIsClosed;
@@ -276,7 +276,8 @@ namespace cloudscribe.Core.Web.Controllers
             selectedSite.SiteIsClosed = model.IsClosed;
             selectedSite.SiteIsClosedMessage = model.ClosedMessage;
             selectedSite.Theme = model.Theme;
-            
+            selectedSite.GoogleAnalyticsProfileId = model.GoogleAnalyticsProfileId;
+
             await siteManager.Update(selectedSite);
             
             this.AlertSuccess(string.Format(sr["Basic site settings for {0} were successfully updated."],
