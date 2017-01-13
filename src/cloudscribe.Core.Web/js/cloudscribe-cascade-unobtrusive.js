@@ -7,6 +7,8 @@ $(function () {
             var serviceUrl = $(ele).data('cascade-serviceurl');
             var origVal = $(ele).data('cascade-orig-val');
             var selectLabel = $(ele).data('cascade-select-label');
+            var disableOnEmptyParent = $(ele).data('cascade-disableonemptyparent');
+            var emptyParentValue = $(ele).data('cascade-parent-emptyvalue');
             $parent.change(function () {
                 $.getJSON(serviceUrl + $parent.val(), function (data) {
                     var items = '<option>' + selectLabel + '</option>';
@@ -21,6 +23,16 @@ $(function () {
                         }
                     }
                 });
+                if (disableOnEmptyParent) {
+                    var emptyParent = ($parent.val() === emptyParentValue);
+                    if (emptyParent) {
+                        $(ele).prop("disabled", true);
+                    }
+                    else {
+                        $(ele).prop("disabled", false);
+                    }
+                }
+
             });
         });
     }
