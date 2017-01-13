@@ -34,6 +34,8 @@ namespace cloudscribe.Web.Common.Serialization
                         csvBuilder.Append(arrPropNames[i]);
                         csvBuilder.Append("\"");
                     }
+                    csvBuilder.Append(Environment.NewLine);
+
                 }
                 else
                 {

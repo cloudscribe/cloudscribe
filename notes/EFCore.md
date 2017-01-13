@@ -187,6 +187,7 @@ dotnet ef migrations add Initial -c CoreDbContext
 dotnet ef migrations add Initial -c LoggingDbContext
 
 dotnet ef migrations add Initial -c SimpleContentDbContext
+dotnet ef migrations add AddMenuOnlyProp -c SimpleContentDbContext
 
 dotnet ef migrations add RemoveCurrecncy -c CoreDbContext
 dotnet ef migrations add Limitfieldsize -c CoreDbContext

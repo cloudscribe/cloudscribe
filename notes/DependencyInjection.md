@@ -1,4 +1,8 @@
 
+Some thingds such as Controllers, ViewComponents, and TagHelpers are not resolved by the container by default but instead by factories.
+However this can be changed:
+http://stackoverflow.com/documentation/asp.net-core/1949/dependency-injection/23212/resolve-controllers-viewcomponents-and-taghelpers-via-dependency-injection#t=201701121334489459167
+
 http://www.maherjendoubi.io/new-asp-net-core-feature-coming-to-1-1-better-integration-of-3rd-party-ioc-containers-in-startup-class/
 
 http://stackoverflow.com/questions/37512862/asp-net-core-identitydbcontext-using-dependency-injection

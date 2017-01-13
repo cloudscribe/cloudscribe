@@ -1,5 +1,8 @@
 
 
+D3.js is a JavaScript library for manipulating documents based on data. D3 helps you bring data to life using HTML, SVG, and CSS. D3’s emphasis on web standards gives you the full capabilities of modern browsers without tying yourself to a proprietary framework, combining powerful visualization components and a data-driven approach to DOM manipulation.
+https://d3js.org/
+
 https://medium.com/javascript-scene/native-apps-are-doomed-ac397148a2c0#.j1yqyfrsi
 
 
@@ -32,7 +35,7 @@ http://www.kequc.com/2016/06/03/make-your-own-tagging-system-from-scratch
 http://www.davepaquette.com/archive/2014/10/08/how-to-use-gulp-in-visual-studio.aspx
 http://www.davepaquette.com/archive/2015/05/05/web-optimization-development-and-production-in-asp-net-mvc6.aspx
 
-
+https://www.sitepoint.com/native-javascript-development-after-internet-explorer/
 
 
 AutoComplete
