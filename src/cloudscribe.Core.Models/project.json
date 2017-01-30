@@ -1,5 +1,5 @@
 ﻿{
-    "version": "1.1.0-rc20161129",
+    "version": "1.1.0-rc20170130",
     "description": "model classes for cloudscribe core. you should not normally install this separately, it will be installed if you install cloudscribe.Core.Web",
     "authors": [ "Joe Audette" ],
     "packOptions": {

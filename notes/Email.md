@@ -1,4 +1,7 @@
 
+
+https://www.smashingmagazine.com/2017/01/making-responsive-html-email-coding-easy-with-mjml/
+
 https://www.smashingmagazine.com/2017/01/introduction-building-sending-html-email-for-web-developers/
 
 https://www.smashingmagazine.com/2014/08/improve-your-email-workflow-with-modular-design/

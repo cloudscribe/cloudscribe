@@ -80,6 +80,9 @@ namespace Microsoft.Extensions.DependencyInjection
 
             services.AddCloudscribeIdentity();
 
+            services.AddScoped<IUserContextResolver, UserContextResolver>();
+            services.AddScoped<ISiteIdResolver, SiteIdResolver>();
+
             return services;
         }
 

@@ -1,4 +1,6 @@
 
+http://www.talkingdotnet.com/how-to-enable-gzip-compression-in-asp-net-core/
+
 http://docs.asp.net/en/latest/fundamentals/middleware.html
 
 https://www.jeffogata.com/asp-net-core-middleware/
