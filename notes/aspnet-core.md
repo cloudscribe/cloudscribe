@@ -1,4 +1,7 @@
 
+https://www.asp.net/freecourses
+
+
 https://blogs.msdn.microsoft.com/webdev/2016/11/16/announcing-asp-net-core-1-1/
 
 https://blogs.msdn.microsoft.com/dotnet/2016/11/16/announcing-net-core-tools-msbuild-alpha/

@@ -1,6 +1,7 @@
 
 https://leastprivilege.com/2016/12/16/identity-vs-permissions/
 
+https://blogs.msdn.microsoft.com/webdev/2017/01/23/asp-net-core-authentication-with-identityserver4/
 
 ## My Thoughts around IdentityServer4
 
