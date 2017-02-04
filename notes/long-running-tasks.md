@@ -1,4 +1,9 @@
 
+http://www.quartz-scheduler.net/
+https://github.com/quartznet/quartznet
+apache2
+
+
 http://hangfire.io/
 
 https://github.com/HangfireIO/Hangfire/issues/365

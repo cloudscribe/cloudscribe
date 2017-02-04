@@ -1,4 +1,14 @@
 
+Actor Model
+https://github.com/dotnet/orleans
+http://dotnet.github.io/orleans/
+https://blogs.msdn.microsoft.com/orleans/2016/12/05/orleans-20-tech-preview-net-core/
+
+http://blog.ploeh.dk/2017/02/02/dependency-rejection/
+http://blog.ploeh.dk/2016/03/18/functional-architecture-is-ports-and-adapters/
+
+
+
 Inheritance in ViewModels
 I had been struggling in my own thought about how to be DRY (Don't Repeat Yourself) with ViewModels
 because I have similar but different views for user Registration and for Admins to create or edit users

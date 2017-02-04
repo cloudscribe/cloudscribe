@@ -23,6 +23,8 @@ https://medium.com/@cscalfani/so-you-want-to-be-a-functional-programmer-part-6-d
 
 http://blog.ploeh.dk/2016/11/28/easy-domain-modelling-with-types/
 
+http://lucasmreis.github.io/blog/type-driven-domain-modelling-part-2/
+
 Can programming be liberated from function abstraction?
 http://tomasp.net/blog/2016/no-functions/
 

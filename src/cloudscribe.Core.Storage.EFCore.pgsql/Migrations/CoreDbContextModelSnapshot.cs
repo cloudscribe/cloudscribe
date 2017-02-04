@@ -13,8 +13,9 @@ namespace cloudscribe.Core.Storage.EFCore.pgsql.Migrations
         protected override void BuildModel(ModelBuilder modelBuilder)
         {
             modelBuilder
-                .HasAnnotation("Npgsql:PostgresExtension:.uuid-ossp", "'uuid-ossp', '', ''")
-                .HasAnnotation("ProductVersion", "1.0.1");
+                .HasAnnotation("Npgsql:PostgresExtension:uuid-ossp", "'uuid-ossp', '', ''")
+                .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.SerialColumn)
+                .HasAnnotation("ProductVersion", "1.1.0-rtm-22752");
 
             modelBuilder.Entity("cloudscribe.Core.Models.Geography.GeoCountry", b =>
                 {
@@ -23,15 +24,15 @@ namespace cloudscribe.Core.Storage.EFCore.pgsql.Migrations
 
                     b.Property<string>("ISOCode2")
                         .IsRequired()
-                        .HasAnnotation("MaxLength", 2);
+                        .HasMaxLength(2);
 
                     b.Property<string>("ISOCode3")
                         .IsRequired()
-                        .HasAnnotation("MaxLength", 3);
+                        .HasMaxLength(3);
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasAnnotation("MaxLength", 255);
+                        .HasMaxLength(255);
 
                     b.HasKey("Id");
 
@@ -49,13 +50,13 @@ namespace cloudscribe.Core.Storage.EFCore.pgsql.Migrations
 
                     b.Property<string>("Code")
                         .IsRequired()
-                        .HasAnnotation("MaxLength", 255);
+                        .HasMaxLength(255);
 
                     b.Property<Guid>("CountryId");
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasAnnotation("MaxLength", 255);
+                        .HasMaxLength(255);
 
                     b.HasKey("Id");
 
@@ -75,7 +76,7 @@ namespace cloudscribe.Core.Storage.EFCore.pgsql.Migrations
 
                     b.Property<string>("HostName")
                         .IsRequired()
-                        .HasAnnotation("MaxLength", 255);
+                        .HasMaxLength(255);
 
                     b.Property<Guid>("SiteId");
 
@@ -97,11 +98,11 @@ namespace cloudscribe.Core.Storage.EFCore.pgsql.Migrations
 
                     b.Property<string>("NormalizedRoleName")
                         .IsRequired()
-                        .HasAnnotation("MaxLength", 50);
+                        .HasMaxLength(50);
 
                     b.Property<string>("RoleName")
                         .IsRequired()
-                        .HasAnnotation("MaxLength", 50);
+                        .HasMaxLength(50);
 
                     b.Property<Guid>("SiteId");
 
@@ -127,10 +128,10 @@ namespace cloudscribe.Core.Storage.EFCore.pgsql.Migrations
                     b.Property<string>("AccountApprovalEmailCsv");
 
                     b.Property<string>("AddThisDotComUsername")
-                        .HasAnnotation("MaxLength", 50);
+                        .HasMaxLength(50);
 
                     b.Property<string>("AliasId")
-                        .HasAnnotation("MaxLength", 36);
+                        .HasMaxLength(36);
 
                     b.Property<bool>("AllowDbFallbackWithLdap");
 
@@ -145,69 +146,69 @@ namespace cloudscribe.Core.Storage.EFCore.pgsql.Migrations
                     b.Property<bool>("CaptchaOnRegistration");
 
                     b.Property<string>("CompanyCountry")
-                        .HasAnnotation("MaxLength", 10);
+                        .HasMaxLength(10);
 
                     b.Property<string>("CompanyFax")
-                        .HasAnnotation("MaxLength", 20);
+                        .HasMaxLength(20);
 
                     b.Property<string>("CompanyLocality")
-                        .HasAnnotation("MaxLength", 200);
+                        .HasMaxLength(200);
 
                     b.Property<string>("CompanyName")
-                        .HasAnnotation("MaxLength", 250);
+                        .HasMaxLength(250);
 
                     b.Property<string>("CompanyPhone")
-                        .HasAnnotation("MaxLength", 20);
+                        .HasMaxLength(20);
 
                     b.Property<string>("CompanyPostalCode")
-                        .HasAnnotation("MaxLength", 20);
+                        .HasMaxLength(20);
 
                     b.Property<string>("CompanyPublicEmail")
-                        .HasAnnotation("MaxLength", 100);
+                        .HasMaxLength(100);
 
                     b.Property<string>("CompanyRegion")
-                        .HasAnnotation("MaxLength", 200);
+                        .HasMaxLength(200);
 
                     b.Property<string>("CompanyStreetAddress")
-                        .HasAnnotation("MaxLength", 250);
+                        .HasMaxLength(250);
 
                     b.Property<string>("CompanyStreetAddress2")
-                        .HasAnnotation("MaxLength", 250);
+                        .HasMaxLength(250);
 
                     b.Property<string>("ConcurrencyStamp");
 
                     b.Property<DateTime>("CreatedUtc");
 
                     b.Property<string>("DefaultEmailFromAddress")
-                        .HasAnnotation("MaxLength", 100);
+                        .HasMaxLength(100);
 
                     b.Property<string>("DefaultEmailFromAlias")
-                        .HasAnnotation("MaxLength", 100);
+                        .HasMaxLength(100);
 
                     b.Property<bool>("DisableDbAuth");
 
                     b.Property<string>("DkimDomain")
-                        .HasAnnotation("MaxLength", 255);
+                        .HasMaxLength(255);
 
                     b.Property<string>("DkimPrivateKey");
 
                     b.Property<string>("DkimPublicKey");
 
                     b.Property<string>("DkimSelector")
-                        .HasAnnotation("MaxLength", 128);
+                        .HasMaxLength(128);
 
                     b.Property<bool>("EmailLdapDbFallback");
 
                     b.Property<string>("FacebookAppId")
-                        .HasAnnotation("MaxLength", 100);
+                        .HasMaxLength(100);
 
                     b.Property<string>("FacebookAppSecret");
 
                     b.Property<string>("GoogleAnalyticsProfileId")
-                        .HasAnnotation("MaxLength", 25);
+                        .HasMaxLength(25);
 
                     b.Property<string>("GoogleClientId")
-                        .HasAnnotation("MaxLength", 100);
+                        .HasMaxLength(100);
 
                     b.Property<string>("GoogleClientSecret");
 
@@ -216,18 +217,18 @@ namespace cloudscribe.Core.Storage.EFCore.pgsql.Migrations
                     b.Property<bool>("IsServerAdminSite");
 
                     b.Property<string>("LdapDomain")
-                        .HasAnnotation("MaxLength", 255);
+                        .HasMaxLength(255);
 
                     b.Property<int>("LdapPort");
 
                     b.Property<string>("LdapRootDN")
-                        .HasAnnotation("MaxLength", 255);
+                        .HasMaxLength(255);
 
                     b.Property<string>("LdapServer")
-                        .HasAnnotation("MaxLength", 255);
+                        .HasMaxLength(255);
 
                     b.Property<string>("LdapUserDNKey")
-                        .HasAnnotation("MaxLength", 10);
+                        .HasMaxLength(10);
 
                     b.Property<string>("LoginInfoBottom");
 
@@ -236,29 +237,29 @@ namespace cloudscribe.Core.Storage.EFCore.pgsql.Migrations
                     b.Property<int>("MaxInvalidPasswordAttempts");
 
                     b.Property<string>("MicrosoftClientId")
-                        .HasAnnotation("MaxLength", 100);
+                        .HasMaxLength(100);
 
                     b.Property<string>("MicrosoftClientSecret");
 
                     b.Property<int>("MinRequiredPasswordLength");
 
                     b.Property<string>("OidConnectAppId")
-                        .HasAnnotation("MaxLength", 255);
+                        .HasMaxLength(255);
 
                     b.Property<string>("OidConnectAppSecret");
 
                     b.Property<string>("PreferredHostName")
-                        .HasAnnotation("MaxLength", 250);
+                        .HasMaxLength(250);
 
                     b.Property<string>("PrivacyPolicy");
 
                     b.Property<bool>("ReallyDeleteUsers");
 
                     b.Property<string>("RecaptchaPrivateKey")
-                        .HasAnnotation("MaxLength", 255);
+                        .HasMaxLength(255);
 
                     b.Property<string>("RecaptchaPublicKey")
-                        .HasAnnotation("MaxLength", 255);
+                        .HasMaxLength(255);
 
                     b.Property<string>("RegistrationAgreement");
 
@@ -277,7 +278,7 @@ namespace cloudscribe.Core.Storage.EFCore.pgsql.Migrations
                     b.Property<string>("SiteFolderName")
                         .ValueGeneratedOnAdd()
                         .HasDefaultValue("")
-                        .HasAnnotation("MaxLength", 50);
+                        .HasMaxLength(50);
 
                     b.Property<bool>("SiteIsClosed");
 
@@ -285,13 +286,13 @@ namespace cloudscribe.Core.Storage.EFCore.pgsql.Migrations
 
                     b.Property<string>("SiteName")
                         .IsRequired()
-                        .HasAnnotation("MaxLength", 255);
+                        .HasMaxLength(255);
 
                     b.Property<string>("SmsClientId")
-                        .HasAnnotation("MaxLength", 255);
+                        .HasMaxLength(255);
 
                     b.Property<string>("SmsFrom")
-                        .HasAnnotation("MaxLength", 100);
+                        .HasMaxLength(100);
 
                     b.Property<string>("SmsSecureToken");
 
@@ -300,26 +301,26 @@ namespace cloudscribe.Core.Storage.EFCore.pgsql.Migrations
                     b.Property<int>("SmtpPort");
 
                     b.Property<string>("SmtpPreferredEncoding")
-                        .HasAnnotation("MaxLength", 20);
+                        .HasMaxLength(20);
 
                     b.Property<bool>("SmtpRequiresAuth");
 
                     b.Property<string>("SmtpServer")
-                        .HasAnnotation("MaxLength", 200);
+                        .HasMaxLength(200);
 
                     b.Property<bool>("SmtpUseSsl");
 
                     b.Property<string>("SmtpUser")
-                        .HasAnnotation("MaxLength", 500);
+                        .HasMaxLength(500);
 
                     b.Property<string>("Theme")
-                        .HasAnnotation("MaxLength", 100);
+                        .HasMaxLength(100);
 
                     b.Property<string>("TimeZoneId")
-                        .HasAnnotation("MaxLength", 50);
+                        .HasMaxLength(50);
 
                     b.Property<string>("TwitterConsumerKey")
-                        .HasAnnotation("MaxLength", 100);
+                        .HasMaxLength(100);
 
                     b.Property<string>("TwitterConsumerSecret");
 
@@ -350,7 +351,7 @@ namespace cloudscribe.Core.Storage.EFCore.pgsql.Migrations
                     b.Property<string>("AuthorBio");
 
                     b.Property<string>("AvatarUrl")
-                        .HasAnnotation("MaxLength", 255);
+                        .HasMaxLength(255);
 
                     b.Property<bool>("CanAutoLockout");
 
@@ -364,16 +365,16 @@ namespace cloudscribe.Core.Storage.EFCore.pgsql.Migrations
 
                     b.Property<string>("DisplayName")
                         .IsRequired()
-                        .HasAnnotation("MaxLength", 100);
+                        .HasMaxLength(100);
 
                     b.Property<string>("Email")
                         .IsRequired()
-                        .HasAnnotation("MaxLength", 100);
+                        .HasMaxLength(100);
 
                     b.Property<bool>("EmailConfirmed");
 
                     b.Property<string>("FirstName")
-                        .HasAnnotation("MaxLength", 100);
+                        .HasMaxLength(100);
 
                     b.Property<string>("Gender");
 
@@ -386,7 +387,7 @@ namespace cloudscribe.Core.Storage.EFCore.pgsql.Migrations
                     b.Property<DateTime>("LastModifiedUtc");
 
                     b.Property<string>("LastName")
-                        .HasAnnotation("MaxLength", 100);
+                        .HasMaxLength(100);
 
                     b.Property<DateTime?>("LastPasswordChangeUtc");
 
@@ -395,36 +396,36 @@ namespace cloudscribe.Core.Storage.EFCore.pgsql.Migrations
                     b.Property<bool>("MustChangePwd");
 
                     b.Property<string>("NewEmail")
-                        .HasAnnotation("MaxLength", 100);
+                        .HasMaxLength(100);
 
                     b.Property<bool>("NewEmailApproved");
 
                     b.Property<string>("NormalizedEmail")
                         .IsRequired()
-                        .HasAnnotation("MaxLength", 100);
+                        .HasMaxLength(100);
 
                     b.Property<string>("NormalizedUserName")
                         .IsRequired()
-                        .HasAnnotation("MaxLength", 50);
+                        .HasMaxLength(50);
 
                     b.Property<string>("PasswordHash");
 
                     b.Property<string>("PhoneNumber")
-                        .HasAnnotation("MaxLength", 50);
+                        .HasMaxLength(50);
 
                     b.Property<bool>("PhoneNumberConfirmed");
 
                     b.Property<bool>("RolesChanged");
 
                     b.Property<string>("SecurityStamp")
-                        .HasAnnotation("MaxLength", 50);
+                        .HasMaxLength(50);
 
                     b.Property<string>("Signature");
 
                     b.Property<Guid>("SiteId");
 
                     b.Property<string>("TimeZoneId")
-                        .HasAnnotation("MaxLength", 50);
+                        .HasMaxLength(50);
 
                     b.Property<bool>("Trusted");
 
@@ -432,10 +433,10 @@ namespace cloudscribe.Core.Storage.EFCore.pgsql.Migrations
 
                     b.Property<string>("UserName")
                         .IsRequired()
-                        .HasAnnotation("MaxLength", 50);
+                        .HasMaxLength(50);
 
                     b.Property<string>("WebSiteUrl")
-                        .HasAnnotation("MaxLength", 100);
+                        .HasMaxLength(100);
 
                     b.HasKey("Id");
 
@@ -458,7 +459,7 @@ namespace cloudscribe.Core.Storage.EFCore.pgsql.Migrations
                         .ValueGeneratedOnAdd();
 
                     b.Property<string>("ClaimType")
-                        .HasAnnotation("MaxLength", 255);
+                        .HasMaxLength(255);
 
                     b.Property<string>("ClaimValue");
 
@@ -487,26 +488,26 @@ namespace cloudscribe.Core.Storage.EFCore.pgsql.Migrations
                     b.Property<int>("CaptureCount");
 
                     b.Property<string>("City")
-                        .HasAnnotation("MaxLength", 255);
+                        .HasMaxLength(255);
 
                     b.Property<string>("Continent")
-                        .HasAnnotation("MaxLength", 255);
+                        .HasMaxLength(255);
 
                     b.Property<string>("Country")
-                        .HasAnnotation("MaxLength", 255);
+                        .HasMaxLength(255);
 
                     b.Property<DateTime>("FirstCaptureUtc");
 
                     b.Property<string>("HostName")
-                        .HasAnnotation("MaxLength", 255);
+                        .HasMaxLength(255);
 
                     b.Property<string>("IpAddress")
-                        .HasAnnotation("MaxLength", 50);
+                        .HasMaxLength(50);
 
                     b.Property<long>("IpAddressLong");
 
                     b.Property<string>("Isp")
-                        .HasAnnotation("MaxLength", 255);
+                        .HasMaxLength(255);
 
                     b.Property<DateTime>("LastCaptureUtc");
 
@@ -515,12 +516,12 @@ namespace cloudscribe.Core.Storage.EFCore.pgsql.Migrations
                     b.Property<double>("Longitude");
 
                     b.Property<string>("Region")
-                        .HasAnnotation("MaxLength", 255);
+                        .HasMaxLength(255);
 
                     b.Property<Guid>("SiteId");
 
                     b.Property<string>("TimeZone")
-                        .HasAnnotation("MaxLength", 255);
+                        .HasMaxLength(255);
 
                     b.Property<Guid>("UserId");
 
@@ -542,13 +543,13 @@ namespace cloudscribe.Core.Storage.EFCore.pgsql.Migrations
                     b.Property<Guid>("SiteId");
 
                     b.Property<string>("LoginProvider")
-                        .HasAnnotation("MaxLength", 128);
+                        .HasMaxLength(128);
 
                     b.Property<string>("ProviderKey")
-                        .HasAnnotation("MaxLength", 128);
+                        .HasMaxLength(128);
 
                     b.Property<string>("ProviderDisplayName")
-                        .HasAnnotation("MaxLength", 100);
+                        .HasMaxLength(100);
 
                     b.HasKey("UserId", "SiteId", "LoginProvider", "ProviderKey");
 

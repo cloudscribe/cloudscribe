@@ -1,5 +1,5 @@
 ﻿{
-    "version": "1.1.0-rc20161129",
+    "version": "1.1.0-rc20170203",
     "description": "PostgreSql Entity Framework Core implementation of cloudscribe core storage",
     "authors": [ "Joe Audette" ],
     "buildOptions": {
@@ -18,18 +18,22 @@
     },
 
 
-    "dependencies": {
-        "NETStandard.Library": "1.6.*",
-        "Microsoft.Extensions.Configuration.Json": "1.1.*",
-        "Microsoft.Extensions.Configuration": "1.1.*",
-        "Microsoft.EntityFrameworkCore": "1.1.*",
-        "cloudscribe.Core.Models": "1.1.0-*",
-        "cloudscribe.Core.Storage.EFCore.Common": "1.1.0-*",
-        "Microsoft.AspNetCore.Hosting": "1.1.*",
-        "Microsoft.Extensions.DependencyInjection.Abstractions": "1.1.*",
-        "Npgsql.EntityFrameworkCore.PostgreSQL": "1.0.2",
-        "Npgsql.EntityFrameworkCore.PostgreSQL.Design": "1.0.2"
-    },
+  "dependencies": {
+    "NETStandard.Library": "1.6.*",
+    "Microsoft.Extensions.Configuration.Json": "1.1.*",
+    "Microsoft.Extensions.Configuration": "1.1.*",
+    "Microsoft.EntityFrameworkCore": "1.1.*",
+    "Microsoft.EntityFrameworkCore.Design": "1.1.*",
+    "cloudscribe.Core.Models": "1.1.0-*",
+    "cloudscribe.Core.Storage.EFCore.Common": "1.1.0-*",
+    "Microsoft.AspNetCore.Hosting": "1.1.*",
+    "Microsoft.Extensions.DependencyInjection.Abstractions": "1.1.*",
+    "Npgsql.EntityFrameworkCore.PostgreSQL": "1.1.*",
+    "Npgsql.EntityFrameworkCore.PostgreSQL.Design": {
+      "version": "1.1.*",
+      "type": "build"
+    }
+  },
 
     "tools": {
         "Microsoft.EntityFrameworkCore.Tools.DotNet": "1.1.0-preview4-final"
