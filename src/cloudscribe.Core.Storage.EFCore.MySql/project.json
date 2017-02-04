@@ -1,5 +1,5 @@
 ﻿{
-    "version": "1.1.0-rc20161129",
+    "version": "1.1.0-rc20170203",
     "description": "MySql Entity Framework Core implementation of cloudscribe core storage",
     "authors": [ "Joe Audette" ],
     "buildOptions": {
@@ -27,7 +27,7 @@
         "cloudscribe.Core.Storage.EFCore.Common": "1.1.0-*",
         "Microsoft.AspNetCore.Hosting": "1.1.*",
         "Microsoft.Extensions.DependencyInjection.Abstractions": "1.1.*",
-        "Pomelo.EntityFrameworkCore.MySql": "1.0.*"
+        "Pomelo.EntityFrameworkCore.MySql": "1.1.*"
 
     },
 

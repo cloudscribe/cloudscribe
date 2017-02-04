@@ -8,14 +8,14 @@ namespace cloudscribe.Core.Storage.EFCore.pgsql.Migrations
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.EnsurePostgresExtension("uuid-ossp");
+            migrationBuilder.AlterDatabase()
+                .Annotation("Npgsql:PostgresExtension:uuid-ossp", "'uuid-ossp', '', ''");
 
             migrationBuilder.CreateTable(
                 name: "cs_GeoCountry",
                 columns: table => new
                 {
-                    Id = table.Column<Guid>(nullable: false)
-                        .Annotation("Npgsql:ValueGeneratedOnAdd", true),
+                    Id = table.Column<Guid>(nullable: false),
                     ISOCode2 = table.Column<string>(maxLength: 2, nullable: false),
                     ISOCode3 = table.Column<string>(maxLength: 3, nullable: false),
                     Name = table.Column<string>(maxLength: 255, nullable: false)
@@ -29,8 +29,7 @@ namespace cloudscribe.Core.Storage.EFCore.pgsql.Migrations
                 name: "cs_GeoZone",
                 columns: table => new
                 {
-                    Id = table.Column<Guid>(nullable: false)
-                        .Annotation("Npgsql:ValueGeneratedOnAdd", true),
+                    Id = table.Column<Guid>(nullable: false),
                     Code = table.Column<string>(maxLength: 255, nullable: false),
                     CountryId = table.Column<Guid>(nullable: false),
                     Name = table.Column<string>(maxLength: 255, nullable: false)
@@ -44,8 +43,7 @@ namespace cloudscribe.Core.Storage.EFCore.pgsql.Migrations
                 name: "cs_SiteHost",
                 columns: table => new
                 {
-                    Id = table.Column<Guid>(nullable: false)
-                        .Annotation("Npgsql:ValueGeneratedOnAdd", true),
+                    Id = table.Column<Guid>(nullable: false),
                     HostName = table.Column<string>(maxLength: 255, nullable: false),
                     SiteId = table.Column<Guid>(nullable: false)
                 },
@@ -58,8 +56,7 @@ namespace cloudscribe.Core.Storage.EFCore.pgsql.Migrations
                 name: "cs_Role",
                 columns: table => new
                 {
-                    Id = table.Column<Guid>(nullable: false)
-                        .Annotation("Npgsql:ValueGeneratedOnAdd", true),
+                    Id = table.Column<Guid>(nullable: false),
                     NormalizedRoleName = table.Column<string>(maxLength: 50, nullable: false),
                     RoleName = table.Column<string>(maxLength: 50, nullable: false),
                     SiteId = table.Column<Guid>(nullable: false)
@@ -73,8 +70,7 @@ namespace cloudscribe.Core.Storage.EFCore.pgsql.Migrations
                 name: "cs_Site",
                 columns: table => new
                 {
-                    Id = table.Column<Guid>(nullable: false)
-                        .Annotation("Npgsql:ValueGeneratedOnAdd", true),
+                    Id = table.Column<Guid>(nullable: false),
                     AccountApprovalEmailCsv = table.Column<string>(nullable: true),
                     AddThisDotComUsername = table.Column<string>(maxLength: 50, nullable: true),
                     AliasId = table.Column<string>(maxLength: 36, nullable: true),
@@ -136,8 +132,7 @@ namespace cloudscribe.Core.Storage.EFCore.pgsql.Migrations
                     RequireConfirmedPhone = table.Column<bool>(nullable: false),
                     RequiresQuestionAndAnswer = table.Column<bool>(nullable: false),
                     SignEmailWithDkim = table.Column<bool>(nullable: false),
-                    SiteFolderName = table.Column<string>(maxLength: 50, nullable: true, defaultValue: "")
-                        .Annotation("Npgsql:ValueGeneratedOnAdd", true),
+                    SiteFolderName = table.Column<string>(maxLength: 50, nullable: true, defaultValue: ""),
                     SiteIsClosed = table.Column<bool>(nullable: false),
                     SiteIsClosedMessage = table.Column<string>(nullable: true),
                     SiteName = table.Column<string>(maxLength: 255, nullable: false),
@@ -167,8 +162,7 @@ namespace cloudscribe.Core.Storage.EFCore.pgsql.Migrations
                 name: "cs_User",
                 columns: table => new
                 {
-                    Id = table.Column<Guid>(nullable: false)
-                        .Annotation("Npgsql:ValueGeneratedOnAdd", true),
+                    Id = table.Column<Guid>(nullable: false),
                     AccessFailedCount = table.Column<int>(nullable: false),
                     AccountApproved = table.Column<bool>(nullable: false),
                     AuthorBio = table.Column<string>(nullable: true),
@@ -217,8 +211,7 @@ namespace cloudscribe.Core.Storage.EFCore.pgsql.Migrations
                 name: "cs_UserClaim",
                 columns: table => new
                 {
-                    Id = table.Column<Guid>(nullable: false)
-                        .Annotation("Npgsql:ValueGeneratedOnAdd", true),
+                    Id = table.Column<Guid>(nullable: false),
                     ClaimType = table.Column<string>(maxLength: 255, nullable: true),
                     ClaimValue = table.Column<string>(nullable: true),
                     SiteId = table.Column<Guid>(nullable: false),
@@ -233,8 +226,7 @@ namespace cloudscribe.Core.Storage.EFCore.pgsql.Migrations
                 name: "cs_UserLocation",
                 columns: table => new
                 {
-                    Id = table.Column<Guid>(nullable: false)
-                        .Annotation("Npgsql:ValueGeneratedOnAdd", true),
+                    Id = table.Column<Guid>(nullable: false),
                     CaptureCount = table.Column<int>(nullable: false),
                     City = table.Column<string>(maxLength: 255, nullable: true),
                     Continent = table.Column<string>(maxLength: 255, nullable: true),

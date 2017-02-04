@@ -67,6 +67,11 @@ namespace cloudscribe.Core.Models
             }
         }
 
+        public bool EmailConfirmed
+        {
+            get { return user.EmailConfirmed; }
+        }
+
         public string FirstName
         {
             get

@@ -5,55 +5,38 @@
 @using Microsoft.Extensions.Localization
 @inject IStringLocalizer<CloudscribeCore> sr
 <h1>@ViewData["Title"]</h1>
-<ul class="list-unstyled">
-    <li>
-        <h2 class="pull-left h4 clearfix">@sr["Server Host Name"]</h2>
-        <div class="padded margin10 clearfix">
-            @Model.Name
-        </div>
-    </li>
-    <li>
-        <h2 class="pull-left h4 clearfix">@sr["Server IP Address"]</h2>
-        <div class="padded margin10 clearfix">
-            @Model.LocalAddress
-        </div>
-    </li>
-    <li>
-        <h2 class="pull-left h4 clearfix">@sr["Operating System"]</h2>
-        <div class="padded margin10 clearfix">
-            @Model.OperatingSystem
-        </div>
-    </li>
-    <li>
-        <h2 class="pull-left h4 clearfix">@sr["Runtime"]</h2>
-        <div class="padded margin10 clearfix">
-            @Model.Runtime
-        </div>
-    </li>
-    
-    <li>
-        <h2 class="pull-left h4 clearfix">@sr["Environment Name"]</h2>
-        <div class="padded margin10 clearfix">
-            @Model.EnvironmentName
-        </div>
-    </li>
-    <li>
-        <h2 class="pull-left h4 clearfix">@sr["Cloudscribe Version"]</h2>
-        <div class="padded margin10 clearfix">
-            @Model.CloudscribeCoreVersion
-        </div>
-    </li>
-    <li>
-        <h2 class="pull-left h4 clearfix">@sr["Database Platform"]</h2>
-        <div class="padded margin10 clearfix">
-            @Model.DatabasePlatform
-        </div>
-    </li>
-    <li>
-        <h2 class="pull-left h4 clearfix">@sr["Server Time UTC"]</h2>
-        <div class="padded margin10 clearfix">
-            @Model.ServerTimeUtc
-        </div>
-    </li>
-</ul>
+<dl class="dl-horizontal">
+    <dt>@sr["Server Host Name"]</dt>
+    <dd>
+        @Model.Name
+    </dd>
+    <dt>@sr["Server IP Address"]</dt>
+    <dd>
+        @Model.LocalAddress
+    </dd>
+    <dt>@sr["Operating System"]</dt>
+    <dd>
+        @Model.OperatingSystem
+    </dd>
+    <dt>@sr["Runtime"]</dt>
+    <dd>
+        @Model.Runtime
+    </dd>
+    <dt>@sr["Environment Name"]</dt>
+    <dd>
+        @Model.EnvironmentName
+    </dd>
+    <dt>@sr["Cloudscribe Version"]</dt>
+    <dd>
+        @Model.CloudscribeCoreVersion
+    </dd>
+    <dt>@sr["Database Platform"]</dt>
+    <dd>
+        @Model.DatabasePlatform
+    </dd>
+    <dt>@sr["Server Time UTC"]</dt>
+    <dd>
+        @Model.ServerTimeUtc
+    </dd>
+</dl>
 @await Component.InvokeAsync("Navigation", new { viewName = "ChildTree", filterName = NamedNavigationFilters.ChildTree, startingNodeKey = "" })

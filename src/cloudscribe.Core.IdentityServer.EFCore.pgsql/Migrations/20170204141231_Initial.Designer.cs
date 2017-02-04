@@ -8,12 +8,13 @@ using cloudscribe.Core.IdentityServer.EFCore.pgsql;
 namespace cloudscribe.Core.IdentityServer.EFCore.pgsql.Migrations
 {
     [DbContext(typeof(ConfigurationDbContext))]
-    [Migration("20161206131040_Initial")]
+    [Migration("20170204141231_Initial")]
     partial class Initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
             modelBuilder
+                .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.SerialColumn)
                 .HasAnnotation("ProductVersion", "1.1.0-rtm-22752");
 
             modelBuilder.Entity("cloudscribe.Core.IdentityServer.EFCore.Entities.ApiResource", b =>
