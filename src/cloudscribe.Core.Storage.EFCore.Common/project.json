@@ -17,13 +17,9 @@
 
     "dependencies": {
         "NETStandard.Library": "1.6.1",
-        "Microsoft.Extensions.Configuration.Json": "1.1.*",
-        "Microsoft.Extensions.Configuration": "1.1.*",
         "Microsoft.EntityFrameworkCore": "1.1-*",
         "Microsoft.EntityFrameworkCore.Relational": "1.1.*",
         "cloudscribe.Core.Models": "1.1.0-*",
-
-        "Microsoft.AspNetCore.Hosting": "1.1.*",
         "Microsoft.Extensions.DependencyInjection.Abstractions": "1.1.*"
     },
 

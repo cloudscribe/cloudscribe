@@ -24,6 +24,7 @@ using cloudscribe.Web.Common.Razor;
 using cloudscribe.Core.Web.Components;
 using IdentityModel;
 using example.WebApp.Configuration;
+using Microsoft.AspNetCore.Mvc.ViewFeatures;
 
 namespace example.WebApp
 {
@@ -88,7 +89,7 @@ namespace example.WebApp
             services.AddMemoryCache();
             // we currently only use session for alerts, so we can fire an alert on the next request
             // if session is disabled this feature fails quietly with no errors
-            services.AddSession();
+            //services.AddSession();
             
             // add authorization policies 
             ConfigureAuthPolicy(services);
@@ -179,6 +180,8 @@ namespace example.WebApp
                         //options.ViewLocationExpanders.Add(new cloudscribe.Core.Web.Components.SharedThemesViewLocationExpander());
                     })
                     ;
+
+            //services.AddSingleton<ITempDataProvider, CookieTempDataProvider>();
 
             ConfigureDataStorage(services);
 
@@ -278,7 +281,7 @@ namespace example.WebApp
 
             app.UseStaticFiles();
             
-            app.UseSession();
+            //app.UseSession();
             
             app.UseRequestLocalization(localizationOptionsAccessor.Value);
 
