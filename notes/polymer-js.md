@@ -62,3 +62,8 @@ https://github.com/fredj/ol3-polymer
 https://github.com/oliverroick/map-components
 
 https://github.com/openlayers/ol3/issues/5435
+
+https://www.smashingmagazine.com/2017/02/designing-html-apis/
+https://hacks.mozilla.org/2014/12/mozilla-and-web-components/
+
+https://www.robinwieruch.de/reasons-why-i-moved-from-angular-to-react/

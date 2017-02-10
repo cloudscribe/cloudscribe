@@ -7,7 +7,8 @@ https://blogs.msdn.microsoft.com/orleans/2016/12/05/orleans-20-tech-preview-net-
 http://blog.ploeh.dk/2017/02/02/dependency-rejection/
 http://blog.ploeh.dk/2016/03/18/functional-architecture-is-ports-and-adapters/
 
-
+Cutting Edge - CQRS and Message-Based Applications
+https://msdn.microsoft.com/en-us/magazine/mt238399.aspx?f=255&MSPPError=-2147217396
 
 Inheritance in ViewModels
 I had been struggling in my own thought about how to be DRY (Don't Repeat Yourself) with ViewModels

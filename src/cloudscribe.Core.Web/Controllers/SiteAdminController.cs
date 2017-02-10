@@ -8,6 +8,7 @@
 using cloudscribe.Core.Models;
 using cloudscribe.Core.Web.Components;
 using cloudscribe.Core.Web.ViewModels.SiteSettings;
+using cloudscribe.Messaging.Email;
 using cloudscribe.Web.Common;
 using cloudscribe.Web.Common.Extensions;
 using cloudscribe.Web.Common.Razor;
@@ -29,6 +30,7 @@ namespace cloudscribe.Core.Web.Controllers
         public SiteAdminController(
             SiteManager siteManager,
             GeoDataManager geoDataManager,
+            ISmtpOptionsProvider smtpOptionsProvider,
             IOptions<MultiTenantOptions> multiTenantOptions,
             IOptions<UIOptions> uiOptionsAccessor,
             IThemeListBuilder layoutListBuilder,
@@ -48,11 +50,13 @@ namespace cloudscribe.Core.Web.Controllers
             this.layoutListBuilder = layoutListBuilder;
             sr = localizer;
             tzHelper = timeZoneHelper;
+            this.smtpOptionsProvider = smtpOptionsProvider;
         }
 
         private SiteManager siteManager;
         private GeoDataManager geoDataManager;
         private MultiTenantOptions multiTenantOptions;
+        private ISmtpOptionsProvider smtpOptionsProvider;
         //private ITriggerStartup startup
         private IStringLocalizer sr;
         private IThemeListBuilder layoutListBuilder;
@@ -765,6 +769,8 @@ namespace cloudscribe.Core.Web.Controllers
                 ViewData["Title"] = sr["Security Settings"];
             }
 
+            var smtpOptions = await smtpOptionsProvider.GetSmtpOptions().ConfigureAwait(false);
+
             var model = new SecuritySettingsViewModel();
             model.SiteId = selectedSite.Id;
             model.AllowNewRegistration = selectedSite.AllowNewRegistration;
@@ -777,7 +783,7 @@ namespace cloudscribe.Core.Web.Controllers
             model.RequireConfirmedPhone = selectedSite.RequireConfirmedPhone;
             model.AccountApprovalEmailCsv = selectedSite.AccountApprovalEmailCsv;
 
-            model.SmtpIsConfigured = selectedSite.SmtpIsConfigured();
+            model.SmtpIsConfigured = !string.IsNullOrEmpty(smtpOptions.Server);
             model.SmsIsConfigured = selectedSite.SmsIsConfigured();
             model.HasAnySocialAuthEnabled = selectedSite.HasAnySocialAuthEnabled();
 
@@ -812,9 +818,11 @@ namespace cloudscribe.Core.Web.Controllers
                 return RedirectToAction("Index");
             }
 
+            var smtpOptions = await smtpOptionsProvider.GetSmtpOptions().ConfigureAwait(false);
+
             if (!ModelState.IsValid)
             {
-                model.SmtpIsConfigured = selectedSite.SmtpIsConfigured();
+                model.SmtpIsConfigured = !string.IsNullOrEmpty(smtpOptions.Server);
                 model.SmsIsConfigured = selectedSite.SmsIsConfigured();
                 model.HasAnySocialAuthEnabled = selectedSite.HasAnySocialAuthEnabled();
                 return View(model);

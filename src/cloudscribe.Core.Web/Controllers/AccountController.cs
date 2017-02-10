@@ -406,7 +406,7 @@ namespace cloudscribe.Core.Web.Controllers
                             sr["Confirm your account"],
                             callbackUrl).Forget();
 
-                        if (this.SessionIsAvailable())
+                        if (this.TempDataIsAvailable())
                         {
                             this.AlertSuccess(sr["Please check your email inbox, we just sent you a link that you need to click to confirm your account"], true);
                             
@@ -738,7 +738,7 @@ namespace cloudscribe.Core.Web.Controllers
                             // this is needed to clear the external cookie - wasn't needed in rc2
                             await signInManager.SignOutAsync();
 
-                            if (this.SessionIsAvailable())
+                            if (this.TempDataIsAvailable())
                             {
                                 this.AlertSuccess(sr["Please check your email inbox, we just sent you a link that you need to click to confirm your account"], true);
 

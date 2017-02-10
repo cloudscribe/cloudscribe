@@ -26,6 +26,7 @@ using System.Reflection;
 using Microsoft.AspNetCore.Authorization;
 using cloudscribe.Messaging.Email;
 using System;
+using Microsoft.AspNetCore.Mvc.ViewFeatures;
 
 namespace Microsoft.Extensions.DependencyInjection
 {
@@ -35,6 +36,7 @@ namespace Microsoft.Extensions.DependencyInjection
         {
             services.TryAddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 
+            services.TryAddScoped<ISmtpOptionsProvider, SiteSmtpOptionsResolver>();
             services.Configure<MultiTenantOptions>(configuration.GetSection("MultiTenantOptions"));
             services.Configure<SmtpOptions>(configuration.GetSection("SmtpOptions"));
             services.Configure<SiteConfigOptions>(configuration.GetSection("SiteConfigOptions"));
@@ -82,6 +84,8 @@ namespace Microsoft.Extensions.DependencyInjection
 
             services.AddScoped<IUserContextResolver, UserContextResolver>();
             services.AddScoped<ISiteIdResolver, SiteIdResolver>();
+
+            services.TryAddSingleton<ITempDataProvider, CookieTempDataProvider>();
 
             return services;
         }

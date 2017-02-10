@@ -25,6 +25,8 @@ http://blog.ploeh.dk/2016/11/28/easy-domain-modelling-with-types/
 
 http://lucasmreis.github.io/blog/type-driven-domain-modelling-part-2/
 
+http://codeopinion.com/getting-started-with-functional-programming-in-f/
+
 Can programming be liberated from function abstraction?
 http://tomasp.net/blog/2016/no-functions/
 
