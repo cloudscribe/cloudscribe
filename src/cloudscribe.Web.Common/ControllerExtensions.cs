@@ -53,11 +53,12 @@ namespace cloudscribe.Web.Common.Extensions
             return (feature != null);
         }
 
-        public static bool TempDataIsAvailable(this Controller controller)
-        {
-            var feature = controller.HttpContext.Features.Get<ITempDataProvider>();
-            return (feature != null);
-        }
+        // this did not work, always false
+        //public static bool TempDataIsAvailable(this Controller controller)
+        //{
+        //    var feature = controller.HttpContext.Features.Get<ITempDataProvider>();
+        //    return (feature != null);
+        //}
 
         //public static RedirectResult RedirectToSiteRoot(this Controller controller, ISiteSettings site)
         //{
