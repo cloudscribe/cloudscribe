@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2014-10-26
-// Last Modified:			2016-10-08
+// Last Modified:			2017-02-11
 // 
 
 using cloudscribe.Core.Identity;
@@ -12,6 +12,7 @@ using cloudscribe.Core.Web.Components.Messaging;
 using cloudscribe.Core.Web.ViewModels.Account;
 using cloudscribe.Core.Web.ViewModels.SiteUser;
 using cloudscribe.Web.Common.Extensions;
+using cloudscribe.Web.Common.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -39,6 +40,7 @@ namespace cloudscribe.Core.Web.Controllers
             ISmsSender smsSender,
             IIdentityServerIntegration identityServerIntegration,
             IStringLocalizer<CloudscribeCore> localizer,
+            IRecaptchaKeysProvider recaptchaKeysProvider,
             ILogger<AccountController> logger
             )
         {
@@ -51,6 +53,7 @@ namespace cloudscribe.Core.Web.Controllers
             this.ipAddressTracker = ipAddressTracker;
             sr = localizer;
             log = logger;
+            this.recaptchaKeysProvider = recaptchaKeysProvider;
         }
 
         private readonly ISiteContext Site;
@@ -62,6 +65,7 @@ namespace cloudscribe.Core.Web.Controllers
         private IpAddressTracker ipAddressTracker;
         private ILogger log;
         private IStringLocalizer sr;
+        private IRecaptchaKeysProvider recaptchaKeysProvider;
 
         // GET: /Account/Login
         [HttpGet]
@@ -86,10 +90,12 @@ namespace cloudscribe.Core.Web.Controllers
             ViewData["Title"] = sr["Log in"];
             ViewData["ReturnUrl"] = returnUrl;
             LoginViewModel model = new LoginViewModel();
+
+            var recaptchaKeys = await recaptchaKeysProvider.GetKeys().ConfigureAwait(false);
             
-            if ((Site.CaptchaOnLogin)&& (Site.RecaptchaPublicKey.Length > 0))
+            if ((Site.CaptchaOnLogin)&& (!string.IsNullOrEmpty(recaptchaKeys.PublicKey)))
             {
-                model.RecaptchaSiteKey = Site.RecaptchaPublicKey;     
+                model.RecaptchaSiteKey = recaptchaKeys.PublicKey;     
             }
             model.UseEmailForLogin = Site.UseEmailForLogin;
             model.LoginInfoTop = Site.LoginInfoTop;
@@ -110,9 +116,10 @@ namespace cloudscribe.Core.Web.Controllers
         {
             ViewData["Title"] = sr["Log in"];
             ViewData["ReturnUrl"] = returnUrl;
-            if ((Site.CaptchaOnLogin)&& (Site.RecaptchaPublicKey.Length > 0))
+            var recaptchaKeys = await recaptchaKeysProvider.GetKeys().ConfigureAwait(false);
+            if ((Site.CaptchaOnLogin)&& (!string.IsNullOrEmpty(recaptchaKeys.PublicKey)))
             {
-                model.RecaptchaSiteKey = Site.RecaptchaPublicKey;   
+                model.RecaptchaSiteKey = recaptchaKeys.PublicKey;   
             }
             model.UseEmailForLogin = Site.UseEmailForLogin;
             model.LoginInfoTop = Site.LoginInfoTop;
@@ -126,9 +133,9 @@ namespace cloudscribe.Core.Web.Controllers
                 return View(model);
             }
 
-            if ((Site.CaptchaOnLogin) && (Site.RecaptchaPublicKey.Length > 0))
+            if ((Site.CaptchaOnLogin) && (!string.IsNullOrEmpty(recaptchaKeys.PrivateKey)))
             {
-                var recpatchaSecretKey = Site.RecaptchaPrivateKey;
+                var recpatchaSecretKey = recaptchaKeys.PrivateKey;
                 var captchaResponse = await this.ValidateRecaptcha(Request, recpatchaSecretKey);
 
                 if (!captchaResponse.Success)
