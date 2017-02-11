@@ -27,6 +27,7 @@ using Microsoft.AspNetCore.Authorization;
 using cloudscribe.Messaging.Email;
 using System;
 using Microsoft.AspNetCore.Mvc.ViewFeatures;
+using cloudscribe.Web.Common.Models;
 
 namespace Microsoft.Extensions.DependencyInjection
 {
@@ -86,6 +87,7 @@ namespace Microsoft.Extensions.DependencyInjection
             services.AddScoped<ISiteIdResolver, SiteIdResolver>();
 
             services.TryAddSingleton<ITempDataProvider, CookieTempDataProvider>();
+            services.TryAddScoped<IRecaptchaKeysProvider, SiteRecaptchaKeysProvider>();
 
             return services;
         }
