@@ -40,6 +40,7 @@ namespace Microsoft.Extensions.DependencyInjection
             services.TryAddScoped<ISmtpOptionsProvider, SiteSmtpOptionsResolver>();
             services.Configure<MultiTenantOptions>(configuration.GetSection("MultiTenantOptions"));
             services.Configure<SmtpOptions>(configuration.GetSection("SmtpOptions"));
+            services.Configure<RecaptchaKeys>(configuration.GetSection("RecaptchaKeys"));
             services.Configure<SiteConfigOptions>(configuration.GetSection("SiteConfigOptions"));
             services.Configure<UIOptions>(configuration.GetSection("UIOptions"));
             services.Configure<CkeditorOptions>(configuration.GetSection("CkeditorOptions"));

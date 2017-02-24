@@ -27,6 +27,8 @@ http://lucasmreis.github.io/blog/type-driven-domain-modelling-part-2/
 
 http://codeopinion.com/getting-started-with-functional-programming-in-f/
 
+https://dusted.codes/functional-aspnet-core
+
 Can programming be liberated from function abstraction?
 http://tomasp.net/blog/2016/no-functions/
 

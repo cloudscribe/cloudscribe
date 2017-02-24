@@ -1,4 +1,10 @@
 
+https://arstechnica.co.uk/security/2017/02/now-sites-can-fingerprint-you-online-even-when-you-use-multiple-browsers/
+
+https://blog.benroux.me/running-multiple-https-domains-from-the-same-server/
+
+http://odetocode.com/blogs/scott/archive/2017/02/06/anti-forgery-tokens-and-asp-net-core-apis.aspx
+
 http://sakurity.com/blog/2016/12/10/serviceworker_botnet.html
 
 https://docs.microsoft.com/en-us/aspnet/core/hosting/dataprotection

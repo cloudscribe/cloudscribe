@@ -1,6 +1,8 @@
 
 http://www.talkingdotnet.com/how-to-enable-gzip-compression-in-asp-net-core/
 
+https://carlos.mendible.com/2017/02/12/net-core-health-endpoint-monitoring-middleware/
+
 http://docs.asp.net/en/latest/fundamentals/middleware.html
 
 https://www.jeffogata.com/asp-net-core-middleware/

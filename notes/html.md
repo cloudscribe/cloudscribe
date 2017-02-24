@@ -1,4 +1,9 @@
 
+http://htmlreference.io/
+
+https://bootstrapstudio.io/
+
+
 In html5 the html, head and body tags are all optional and google recommends leave them out!!!
 https://google.github.io/styleguide/htmlcssguide.xml?showone=Optional_Tags#Optional_Tags
 https://html.spec.whatwg.org/multipage/syntax.html#syntax-tag-omission
