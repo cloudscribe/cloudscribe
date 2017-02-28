@@ -161,6 +161,7 @@ namespace cloudscribe.Core.Web.Controllers
                     {
                         if (!await userManager.IsEmailConfirmedAsync(user))
                         {
+                            log.LogInformation($"login not allowed for {user.Email} because email is not confirmed");
                             //ModelState.AddModelError(string.Empty, "You must have a confirmed email to log in.");
                             ModelState.AddModelError(string.Empty, sr["Invalid login attempt."]);
                             return View(model);
@@ -171,6 +172,7 @@ namespace cloudscribe.Core.Web.Controllers
                     {
                         if(!user.AccountApproved)
                         {
+                            log.LogInformation($"login not allowed for {user.Email} because account not approved yet");
                             //ModelState.AddModelError(string.Empty, "Your account must be approved by an administrator before you can log in. If an administrator approves your account, you will receive an email notifying you that your account is ready.");
                             ModelState.AddModelError(string.Empty, sr["Invalid login attempt."]);
                             return View(model);
@@ -179,6 +181,7 @@ namespace cloudscribe.Core.Web.Controllers
 
                     if((user.IsLockedOut)||(user.IsDeleted))
                     {
+                        log.LogInformation($"login not allowed for {user.Email} because account either logged out or flagged as deleted");
                         //ModelState.AddModelError(string.Empty, "Your account must be approved by an administrator before you can log in. If an administrator approves your account, you will receive an email notifying you that your account is ready.");
                         ModelState.AddModelError(string.Empty, sr["Invalid login attempt."]);
                         return View(model);
@@ -240,6 +243,7 @@ namespace cloudscribe.Core.Web.Controllers
             }
             if (result.RequiresTwoFactor)
             {
+                log.LogInformation($"redirecting from login for {model.Email} because 2 factor not configured yet for account");
                 return RedirectToAction(nameof(SendCode), new { ReturnUrl = returnUrl, RememberMe = model.RememberMe });
             }
             if (result.IsLockedOut)
@@ -248,6 +252,7 @@ namespace cloudscribe.Core.Web.Controllers
             }
             else
             {
+                log.LogInformation($"login did not succeed for {model.Email}");
                 ModelState.AddModelError(string.Empty, sr["Invalid login attempt."]);
                 return View(model);
             }
