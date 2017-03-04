@@ -8,6 +8,15 @@ https://medium.freecodecamp.com/101-ways-to-make-your-website-more-awesome-79c93
 
 http://html5doctor.com/designing-a-blog-with-html5/
 
+
+
+https://developers.google.com/web/fundamentals/performance/prpl-pattern/
+
+https://responsiveimages.org/demos/
+
+https://developers.google.com/web/fundamentals/design-and-ui/media/images
+
+
 http://prideparrot.com/blog/archive/2014/4/blog_template_using_twitter_bootstrap3_part1#tags-widget
 
 http://www.brucelawson.co.uk/2012/best-of-time/
@@ -46,3 +55,5 @@ http://www.discourse.org/
 https://github.com/discourse/discourse  gpl2
 dsicourse uses rails which is a pain on windows
 http://blog.discourse.org/2013/04/discourse-as-your-first-rails-app/
+
+https://hypothes.is/blog/annotation-is-now-a-web-standard/

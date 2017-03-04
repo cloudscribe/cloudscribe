@@ -1,4 +1,7 @@
 
+https://developers.google.com/web/fundamentals/
+
+https://developers.google.com/web/fundamentals/performance/prpl-pattern/
 
 https://www.polymer-project.org/1.0/
 
