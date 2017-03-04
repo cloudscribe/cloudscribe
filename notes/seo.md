@@ -1,4 +1,21 @@
 
+http://getschema.org/index.php?title=BlogPosting
+
+https://developers.google.com/search/docs/data-types/articles
+
+AMP HTML is a subset of HTML for authoring content pages such as news articles in a way that guarantees certain baseline performance characteristics.
+https://www.ampproject.org/docs/reference/spec
+
+https://developers.google.com/search/docs/data-types/articles#amp-sd
+
+"JSON-LD is the recommended format. Google is in the process of adding JSON-LD support for all markup-powered features. The table below lists the exceptions to this. We recommend using JSON-LD where possible."
+http://json-ld.org/
+https://developers.google.com/search/docs/guides/intro-structured-data#markup-formats-and-placement
+http://stackoverflow.com/questions/26906367/microdata-rdfa-or-json-ld-appropriate-or-best-usage
+http://stackoverflow.com/questions/38091635/microdata-or-json-ld-im-confused
+http://stackoverflow.com/questions/41034582/json-ld-and-microdata-on-the-same-page
+
+
 https://ma.ttias.be/technical-guide-seo/
 
 

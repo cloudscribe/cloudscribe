@@ -10,3 +10,5 @@ http://marcelo-cure.blogspot.com/2016/09/rest-anti-patterns.html
 https://vimeo.com/108913764
 
 http://www.hanselman.com/blog/ASPNETCoreRESTfulWebAPIVersioningMadeEasy.aspx
+
+https://mmikowski.github.io/the_lie/
