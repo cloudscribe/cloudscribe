@@ -1,4 +1,7 @@
 
+
+https://cloud.google.com/apis/design/
+
 Actor Model
 https://github.com/dotnet/orleans
 http://dotnet.github.io/orleans/
@@ -93,3 +96,6 @@ https://medium.com/@cscalfani/goodbye-object-oriented-programming-a59cda4c0e53#.
 https://medium.freecodecamp.com/imperative-vs-declarative-programming-283e96bf8aea#.hyf6bmgjr
 
 http://www.hanselman.com/blog/Stateless30AStateMachineLibraryForNETCore.aspx
+
+https://twitter.com/clemensv/status/831462231808339971/photo/1
+https://gist.github.com/clemensv/650361dc37b1eb77a91d00dbc1611288

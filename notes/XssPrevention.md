@@ -1,4 +1,5 @@
 
+https://scotthelme.co.uk/csrf-is-dead/
 
 Input Filtering:
 

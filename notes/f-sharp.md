@@ -12,6 +12,8 @@ https://docs.microsoft.com/en-us/dotnet/articles/fsharp/tour
 
 https://docs.microsoft.com/en-us/dotnet/articles/fsharp/language-reference/computation-expressions
 
+https://kimsereyblog.blogspot.com/2017/03/create-simple-form-engine-with.html
+
 ## Functional Thinking
 
 https://medium.com/@cscalfani/so-you-want-to-be-a-functional-programmer-part-1-1f15e387e536#.7bkef6jn2
@@ -26,6 +28,8 @@ http://blog.ploeh.dk/2016/11/28/easy-domain-modelling-with-types/
 http://lucasmreis.github.io/blog/type-driven-domain-modelling-part-2/
 
 http://codeopinion.com/getting-started-with-functional-programming-in-f/
+
+https://dusted.codes/functional-aspnet-core
 
 Can programming be liberated from function abstraction?
 http://tomasp.net/blog/2016/no-functions/

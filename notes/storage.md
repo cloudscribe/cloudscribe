@@ -2,6 +2,8 @@
 
 There are so many options for data storage and different people recommending their favorites.
 
+http://renesd.blogspot.com/2017/02/is-postgresql-good-enough.html
+
 ## Aaron Stannard of Akk.NET fame recommends Cassandra
 http://cassandra.apache.org/
 The Apache Cassandra database is the right choice when you need scalability and high availability without compromising performance. Linear scalability and proven fault-tolerance on commodity hardware or cloud infrastructure make it the perfect platform for mission-critical data.Cassandra's support for replicating across multiple datacenters is best-in-class, providing lower latency for your users and the peace of mind of knowing that you can survive regional outages.
