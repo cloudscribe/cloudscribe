@@ -12,6 +12,8 @@ https://docs.microsoft.com/en-us/dotnet/articles/fsharp/tour
 
 https://docs.microsoft.com/en-us/dotnet/articles/fsharp/language-reference/computation-expressions
 
+https://kimsereyblog.blogspot.com/2017/03/create-simple-form-engine-with.html
+
 ## Functional Thinking
 
 https://medium.com/@cscalfani/so-you-want-to-be-a-functional-programmer-part-1-1f15e387e536#.7bkef6jn2

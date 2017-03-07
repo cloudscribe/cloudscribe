@@ -1,4 +1,16 @@
 
+
+https://schema.org/BlogPosting
+
+http://stackoverflow.com/questions/35844485/mixing-json-ld-and-microdata-schema-org/35845345
+<meta itemprop="name" content="MIT OpenCourseWare" />
+
+<div itemprop="publisher" itemscope itemtype="http://schema.org/Person" itemid="philbalchin">
+    <meta itemprop="name" content="Phil Balchin" />
+  </div>
+
+http://stackoverflow.com/questions/34677968/whats-the-best-way-to-nest-non-visible-schema-org-properties-in-microdata
+
 https://schema.org/BlogPosting
 
 https://search.google.com/structured-data/testing-tool

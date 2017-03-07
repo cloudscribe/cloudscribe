@@ -1,4 +1,6 @@
 
+https://www.inbound.org.nz/blog/seo-guide
+
 http://getschema.org/index.php?title=BlogPosting
 
 https://developers.google.com/search/docs/data-types/articles
