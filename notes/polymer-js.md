@@ -1,4 +1,10 @@
 
+
+https://dmitriid.com/blog/2017/03/the-broken-promise-of-web-components/
+
+https://robdodson.me/regarding-the-broken-promise-of-web-components/
+
+
 https://developers.google.com/web/fundamentals/
 
 https://developers.google.com/web/fundamentals/performance/prpl-pattern/
