@@ -1,8 +1,9 @@
-<Project Sdk="Microsoft.NET.Sdk.Web">
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
 
   <PropertyGroup>
     <Description>MySql Entity Framework configuration and operational stores for IdentityServer4 cloudscribe multi-tenant identity integration</Description>
-    <VersionPrefix>1.1.0-rc20170203</VersionPrefix>
+    <VersionPrefix>1.1.0</VersionPrefix>
+    <VersionSuffix>rc20170203</VersionSuffix>
     <Authors>Joe Audette</Authors>
     <TargetFramework>netcoreapp1.1</TargetFramework>
     <AssemblyName>cloudscribe.Core.IdentityServer.EFCore.MySql</AssemblyName>
@@ -23,6 +24,15 @@
     <ProjectReference Include="..\cloudscribe.Core.IdentityServerIntegration\cloudscribe.Core.IdentityServerIntegration.csproj" />
     <ProjectReference Include="..\cloudscribe.Core.Models\cloudscribe.Core.Models.csproj" />
     <ProjectReference Include="..\cloudscribe.Core.IdentityServer.EFCore.Common\cloudscribe.Core.IdentityServer.EFCore.Common.csproj" />
+
+    <Content Remove="Properties\launchSettings.json" />
+    <Content Include="Properties\launchSettings.json" CopyToPublishDirectory="Never">
+      <Pack>false</Pack>
+    </Content>
+    <Content Remove="appsettings.json" CopyToPublishDirectory="Never" />
+    <Content Include="appsettings.json" CopyToPublishDirectory="Never">
+      <Pack>false</Pack>
+    </Content>
   </ItemGroup>
 
   <ItemGroup>
