@@ -1,4 +1,7 @@
 
+https://www.netlify.com/blog/2017/02/28/to-www-or-not-www/
+
+
 https://www.inbound.org.nz/blog/seo-guide
 
 http://getschema.org/index.php?title=BlogPosting

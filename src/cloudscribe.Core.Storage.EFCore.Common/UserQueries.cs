@@ -978,23 +978,55 @@ namespace cloudscribe.Core.Storage.EFCore.Common
                             (searchInput == "" || x.RoleName.Contains(searchInput) || x.NormalizedRoleName.Contains(searchInput))
                             )
                             orderby x.NormalizedRoleName ascending
-                            select new SiteRole
+                            //select new SiteRole
+                            //{
+                            //    Id = x.Id,
+                            //    SiteId = x.SiteId,
+                            //    NormalizedRoleName = x.NormalizedRoleName,
+                            //    RoleName = x.RoleName,
+                            //    // 2017-03-21 this line broke
+                            //    // https://github.com/aspnet/EntityFramework/issues/7714
+                            //    MemberCount = dbContext.UserRoles.Count<UserRole>(u => u.RoleId == x.Id)
+                            //};
+                            // workaround need to use anonymous type and then project back into SiteRole
+                            select new 
                             {
-                                //RoleId = x.RoleId,
                                 Id = x.Id,
-                                // SiteId = x.SiteId,
                                 SiteId = x.SiteId,
                                 NormalizedRoleName = x.NormalizedRoleName,
                                 RoleName = x.RoleName,
+                                // 2017-03-21 this line broke
+                                // https://github.com/aspnet/EntityFramework/issues/7714
                                 MemberCount = dbContext.UserRoles.Count<UserRole>(u => u.RoleId == x.Id)
                             };
 
-            return await listQuery
+            var anonList = await listQuery
                 .AsNoTracking()
                 .Skip(offset)
                 .Take(pageSize)
-                .ToListAsync<ISiteRole>(cancellationToken)
+                .ToListAsync(cancellationToken)
                 .ConfigureAwait(false);
+
+            var result = anonList.Select(x =>
+               new SiteRole
+               {
+                   Id = x.Id,
+                   SiteId = x.SiteId,
+                   NormalizedRoleName = x.NormalizedRoleName,
+                   RoleName = x.RoleName,
+                   MemberCount = x.MemberCount
+               }
+
+            );
+
+            return result.ToList<ISiteRole>();
+
+            //return await listQuery
+            //    .AsNoTracking()
+            //    .Skip(offset)
+            //    .Take(pageSize)
+            //    .ToListAsync<ISiteRole>(cancellationToken)
+            //    .ConfigureAwait(false);
 
         }
 
