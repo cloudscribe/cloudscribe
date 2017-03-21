@@ -42,8 +42,9 @@ To get started building your own features and applications with cloudscribe, [pl
 * MongoDB Support - I am interested in trying to implement the data repositories with MongoDB and would welcome help with that. 
 * Lots of miscellaneous smaller stuff
 
-##### Other things we'd like to see:
-* If this project were to become popular then it would provide a way for many people to build things on top of it that are compatible with each other, making it easier to assemble various functionality within a site
+##### Screenshots
+
+![administration menu screen shot](https://github.com/joeaudette/cloudscribe/raw/master/screenshots/admin-menu.png)
 
 ##### Keep In Touch
 
