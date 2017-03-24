@@ -1,5 +1,7 @@
 
 
+https://www.hanselman.com/blog/OptionsForCSSAndJSBundlingAndMinificationWithASPNETCore.aspx
+
 http://yoksel.github.io/flex-cheatsheet/
 
 icon set created in pure css

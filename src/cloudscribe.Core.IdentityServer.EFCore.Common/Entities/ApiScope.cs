@@ -8,6 +8,7 @@ namespace cloudscribe.Core.IdentityServer.EFCore.Entities
     public class ApiScope
     {
         public int Id { get; set; }
+        public string SiteId { get; set; }
         public string Name { get; set; }
         public string DisplayName { get; set; }
         public string Description { get; set; }

@@ -33,7 +33,8 @@ namespace cloudscribe.Core.IdentityServer.EFCore.MySql
                 entity.Property(x => x.ClientName).HasMaxLength(200);
                 entity.Property(x => x.ClientUri).HasMaxLength(2000);
 
-                entity.HasIndex(x => x.ClientId).IsUnique();
+                entity.HasIndex(x => new { x.SiteId, x.ClientId })
+                .IsUnique();
 
                 entity.HasMany(x => x.AllowedGrantTypes).WithOne(x => x.Client).IsRequired().OnDelete(DeleteBehavior.Cascade);
                 entity.HasMany(x => x.RedirectUris).WithOne(x => x.Client).IsRequired().OnDelete(DeleteBehavior.Cascade);
@@ -117,7 +118,8 @@ namespace cloudscribe.Core.IdentityServer.EFCore.MySql
                 entity.Property(x => x.DisplayName).HasMaxLength(200);
                 entity.Property(x => x.Description).HasMaxLength(1000);
 
-                entity.HasIndex(x => x.Name).IsUnique();
+                entity.HasIndex(x => new { x.SiteId, x.Name })
+                .IsUnique();
 
                 entity.HasMany(x => x.UserClaims).WithOne(x => x.IdentityResource).IsRequired().OnDelete(DeleteBehavior.Cascade);
             });
@@ -143,7 +145,8 @@ namespace cloudscribe.Core.IdentityServer.EFCore.MySql
                 entity.Property(x => x.DisplayName).HasMaxLength(200);
                 entity.Property(x => x.Description).HasMaxLength(1000);
 
-                entity.HasIndex(x => x.Name).IsUnique();
+                entity.HasIndex(x => new { x.SiteId, x.Name })
+                .IsUnique();
 
                 entity.HasMany(x => x.Secrets).WithOne(x => x.ApiResource).IsRequired().OnDelete(DeleteBehavior.Cascade);
                 entity.HasMany(x => x.Scopes).WithOne(x => x.ApiResource).IsRequired().OnDelete(DeleteBehavior.Cascade);
@@ -177,7 +180,8 @@ namespace cloudscribe.Core.IdentityServer.EFCore.MySql
                 entity.Property(x => x.DisplayName).HasMaxLength(200);
                 entity.Property(x => x.Description).HasMaxLength(1000);
 
-                entity.HasIndex(x => x.Name).IsUnique();
+                entity.HasIndex(x => new { x.SiteId, x.Name })
+                .IsUnique();
 
                 entity.HasMany(x => x.UserClaims).WithOne(x => x.ApiScope).IsRequired().OnDelete(DeleteBehavior.Cascade);
             });
