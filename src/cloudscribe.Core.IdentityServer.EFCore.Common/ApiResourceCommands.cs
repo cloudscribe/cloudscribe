@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0
 // Author:					Joe Audette
 // Created:					2016-10-16
-// Last Modified:			2016-10-21
+// Last Modified:			2017-03-24
 // 
 
 using cloudscribe.Core.IdentityServer.EFCore.Interfaces;
@@ -34,6 +34,10 @@ namespace cloudscribe.Core.IdentityServer.EFCore
         {
             var ent = apiResource.ToEntity();
             ent.SiteId = siteId;
+            foreach(var s in ent.Scopes)
+            {
+                s.SiteId = siteId;
+            }
             context.ApiResources.Add(ent);
             await context.SaveChangesAsync();
         }
@@ -46,7 +50,7 @@ namespace cloudscribe.Core.IdentityServer.EFCore
             // therefore we need to actually delete the found resource
             // and re-create it - we don't care about the storage ids
             await DeleteApiResource(siteId, apiResource.Name, cancellationToken).ConfigureAwait(false);
-
+            
             await CreateApiResource(siteId, apiResource, cancellationToken).ConfigureAwait(false);
         }
 

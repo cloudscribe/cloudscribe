@@ -37,7 +37,7 @@ namespace cloudscribe.Core.IdentityServerIntegration.Models
         /// This is the value a client will use to request the scope.
         /// </summary>
         [Required(ErrorMessage="Name is required")]
-        [RegularExpression(@"^\S*$", ErrorMessage = "No white space allowed")]
+        [RegularExpression(@"^\S*$", ErrorMessage = "No white space allowed in name")]
         public string Name { get; set; }
 
         /// <summary>

@@ -3,17 +3,17 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Migrations;
-using cloudscribe.Core.IdentityServer.EFCore.pgsql;
+using cloudscribe.Core.IdentityServer.EFCore.MySql;
 
-namespace cloudscribe.Core.IdentityServer.EFCore.pgsql.Migrations
+namespace cloudscribe.Core.IdentityServer.EFCore.MySql.Migrations
 {
     [DbContext(typeof(ConfigurationDbContext))]
-    partial class ConfigurationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20170324171225_changes20170324")]
+    partial class changes20170324
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
             modelBuilder
-                .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.SerialColumn)
                 .HasAnnotation("ProductVersion", "1.1.1");
 
             modelBuilder.Entity("cloudscribe.Core.IdentityServer.EFCore.Entities.ApiResource", b =>

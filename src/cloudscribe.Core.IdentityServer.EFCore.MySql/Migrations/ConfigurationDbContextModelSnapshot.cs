@@ -13,7 +13,7 @@ namespace cloudscribe.Core.IdentityServer.EFCore.MySql.Migrations
         protected override void BuildModel(ModelBuilder modelBuilder)
         {
             modelBuilder
-                .HasAnnotation("ProductVersion", "1.1.0-rtm-22752");
+                .HasAnnotation("ProductVersion", "1.1.1");
 
             modelBuilder.Entity("cloudscribe.Core.IdentityServer.EFCore.Entities.ApiResource", b =>
                 {
@@ -38,10 +38,10 @@ namespace cloudscribe.Core.IdentityServer.EFCore.MySql.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("Name")
-                        .IsUnique();
-
                     b.HasIndex("SiteId");
+
+                    b.HasIndex("SiteId", "Name")
+                        .IsUnique();
 
                     b.ToTable("csids_ApiResources");
                 });
@@ -89,11 +89,13 @@ namespace cloudscribe.Core.IdentityServer.EFCore.MySql.Migrations
 
                     b.Property<bool>("ShowInDiscoveryDocument");
 
+                    b.Property<string>("SiteId");
+
                     b.HasKey("Id");
 
                     b.HasIndex("ApiResourceId");
 
-                    b.HasIndex("Name")
+                    b.HasIndex("SiteId", "Name")
                         .IsUnique();
 
                     b.ToTable("csids_ApiScopes");
@@ -217,10 +219,10 @@ namespace cloudscribe.Core.IdentityServer.EFCore.MySql.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("ClientId")
-                        .IsUnique();
-
                     b.HasIndex("SiteId");
+
+                    b.HasIndex("SiteId", "ClientId")
+                        .IsUnique();
 
                     b.ToTable("csids_Clients");
                 });
@@ -437,10 +439,10 @@ namespace cloudscribe.Core.IdentityServer.EFCore.MySql.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("Name")
-                        .IsUnique();
-
                     b.HasIndex("SiteId");
+
+                    b.HasIndex("SiteId", "Name")
+                        .IsUnique();
 
                     b.ToTable("csids_IdentityResources");
                 });

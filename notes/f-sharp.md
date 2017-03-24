@@ -6,6 +6,8 @@ https://channel9.msdn.com/Shows/On-NET/A-tour-of-F-with-Phillip-Carter
 
 https://blogs.msdn.microsoft.com/dotnet/2017/03/14/announcing-nightly-releases-for-the-visual-f-tools/
 
+https://eiriktsarpalis.wordpress.com/2017/03/20/why-oo-matters-in-f/
+
 ## Language
 
 http://fsharp.org/
