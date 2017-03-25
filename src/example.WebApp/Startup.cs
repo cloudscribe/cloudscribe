@@ -25,6 +25,7 @@ using cloudscribe.Core.Web.Components;
 using IdentityModel;
 using example.WebApp.Configuration;
 using Microsoft.AspNetCore.Mvc.ViewFeatures;
+using cloudscribe.Core.Identity;
 
 namespace example.WebApp
 {
@@ -151,6 +152,17 @@ namespace example.WebApp
                 //  // My custom request culture logic
                 //  return new ProviderCultureResult("en");
                 //}));
+            });
+
+            services.AddCors(options =>
+            {
+                // this defines a CORS policy called "default"
+                options.AddPolicy("default", policy =>
+                {
+                    policy.WithOrigins("http://localhost:5003", "http://localhost:5010")
+                        .AllowAnyHeader()
+                        .AllowAnyMethod();
+                });
             });
 
             services.AddRouting(options =>
@@ -285,6 +297,9 @@ namespace example.WebApp
             
             app.UseRequestLocalization(localizationOptionsAccessor.Value);
 
+            // this uses the policy called "default"
+            app.UseCors("default");
+
             app.UseMultitenancy<cloudscribe.Core.Models.SiteContext>();
 
             var multiTenantOptions = multiTenantOptionsAccessor.Value;
@@ -317,16 +332,19 @@ namespace example.WebApp
                 //// ie apis that are hosted in the same web app endpoint with the authority server
                 //// this is not needed here if you are only using separate api endpoints
                 //// it is needed in the startup of those separate endpoints
-                builder.UseIdentityServerAuthentication(new IdentityServerAuthenticationOptions
-                {
-                    Authority = "https://localhost:44399",
-                    // using the site aliasid as the scope so each tenant has a different scope
-                    // you can view the aliasid from site settings
-                    // clients must be configured with the scope to have access to the apis for the tenant
-                    ApiName = ctx.Tenant.AliasId,
+                //// note that with both cookie auth and jwt auth middleware the principal is merged from both the cookie and the jwt token if it is passed
+                //builder.UseIdentityServerAuthentication(new IdentityServerAuthenticationOptions
+                //{
+                //    Authority = "https://localhost:44399",
+                //    // using the site aliasid as the scope so each tenant has a different scope
+                //    // you can view the aliasid from site settings
+                //    // clients must be configured with the scope to have access to the apis for the tenant
+                //    ApiName = ctx.Tenant.AliasId,
+                //    //RoleClaimType = "http://schemas.microsoft.com/ws/2008/06/identity/claims/role",
+                //    //AuthenticationScheme = AuthenticationScheme.Application,
 
-                    RequireHttpsMetadata = true
-                });
+                //    RequireHttpsMetadata = true
+                //});
 
 
             });
@@ -383,6 +401,13 @@ namespace example.WebApp
                     authBuilder =>
                     {
                         authBuilder.RequireRole("Administrators");
+                    });
+
+                options.AddPolicy(
+                    "FakePolicy",
+                    authBuilder =>
+                    {
+                        authBuilder.RequireRole("fake"); // no user has this role this policy is for verifying it fails
                     });
 
             });

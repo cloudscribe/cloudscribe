@@ -1,6 +1,12 @@
 
 https://leastprivilege.com/2016/12/16/identity-vs-permissions/
 
+
+http://stackoverflow.com/questions/41682434/how-to-put-asp-net-identity-roles-into-the-identityserver4-identity-token
+
+https://stackoverflow.com/questions/41687659/how-to-add-additional-claims-to-be-included-in-the-access-token-using-asp-net-id
+
+
 https://blogs.msdn.microsoft.com/webdev/2017/01/23/asp-net-core-authentication-with-identityserver4/
 
 ## My Thoughts around IdentityServer4

@@ -9,6 +9,10 @@ using Microsoft.AspNetCore.Identity;
 using System.Threading.Tasks;
 using cloudscribe.Core.Models;
 using cloudscribe.Core.Identity;
+using System.Collections.Generic;
+using System.Security.Claims;
+using System.Linq;
+using IdentityModel;
 
 namespace cloudscribe.Core.IdentityServerIntegration
 {
@@ -30,7 +34,26 @@ namespace cloudscribe.Core.IdentityServerIntegration
             var sub = context.Subject.GetSubjectId();
             var user = await _userManager.FindByIdAsync(sub);
             var principal = await _claimsFactory.CreateAsync(user);
-            context.AddFilteredClaims(principal.Claims);
+            //context.AddFilteredClaims(principal.Claims);
+            var filtered = FilterClaims(context, principal.Claims);
+            context.IssuedClaims.AddRange(filtered);
+        }
+
+        private List<Claim> FilterClaims(ProfileDataRequestContext context, IEnumerable<Claim> claims)
+        {
+            var result = claims.Where(x => context.RequestedClaimTypes.Contains(x.Type)).ToList();
+            //if(context.RequestedClaimTypes.Contains(JwtClaimTypes.Role))
+            //{
+                var roleClaims = claims.Where(x => x.Type == "http://schemas.microsoft.com/ws/2008/06/identity/claims/role");
+                foreach (var roleClaim in roleClaims)
+                {
+                //result.Add(new Claim(JwtClaimTypes.Role, roleClaim.Value));
+                result.Add(new Claim(roleClaim.Type, roleClaim.Value));
+            }
+
+            //}
+
+            return result;
         }
 
         public async Task IsActiveAsync(IsActiveContext context)

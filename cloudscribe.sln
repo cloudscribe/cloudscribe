@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
-VisualStudioVersion = 15.0.26228.4
+VisualStudioVersion = 15.0.26228.9
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{9C16B47A-B712-4237-B62F-B4403ACF1CD5}"
 EndProject
@@ -53,6 +53,10 @@ EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "cloudscribe.Core.Web.Views.Bootstrap3", "src\cloudscribe.Core.Web.Views.Bootstrap3\cloudscribe.Core.Web.Views.Bootstrap3.csproj", "{283CDDAF-BAED-41F2-97E1-D50457913EA6}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "cloudscribe.Core.IdentityServerIntegration.Views.Bootstrap3", "src\cloudscribe.Core.IdentityServerIntegration.Views.Bootstrap3\cloudscribe.Core.IdentityServerIntegration.Views.Bootstrap3.csproj", "{33BE3AD1-D2AC-4D51-B505-282035BC2385}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HtmlClient", "src\HtmlClient\HtmlClient.csproj", "{0CA9F404-6BF9-4896-B94A-46D0638673CB}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Tenant1Api", "src\Tenant1Api\Tenant1Api.csproj", "{41D3EC37-232E-443F-8396-F34900F62C09}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -144,6 +148,14 @@ Global
 		{33BE3AD1-D2AC-4D51-B505-282035BC2385}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{33BE3AD1-D2AC-4D51-B505-282035BC2385}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{33BE3AD1-D2AC-4D51-B505-282035BC2385}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0CA9F404-6BF9-4896-B94A-46D0638673CB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0CA9F404-6BF9-4896-B94A-46D0638673CB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0CA9F404-6BF9-4896-B94A-46D0638673CB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0CA9F404-6BF9-4896-B94A-46D0638673CB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{41D3EC37-232E-443F-8396-F34900F62C09}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{41D3EC37-232E-443F-8396-F34900F62C09}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{41D3EC37-232E-443F-8396-F34900F62C09}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{41D3EC37-232E-443F-8396-F34900F62C09}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -170,5 +182,7 @@ Global
 		{959758B6-DE95-4F6A-B52E-F3416FB5A62B} = {9C16B47A-B712-4237-B62F-B4403ACF1CD5}
 		{283CDDAF-BAED-41F2-97E1-D50457913EA6} = {9C16B47A-B712-4237-B62F-B4403ACF1CD5}
 		{33BE3AD1-D2AC-4D51-B505-282035BC2385} = {9C16B47A-B712-4237-B62F-B4403ACF1CD5}
+		{0CA9F404-6BF9-4896-B94A-46D0638673CB} = {9C16B47A-B712-4237-B62F-B4403ACF1CD5}
+		{41D3EC37-232E-443F-8396-F34900F62C09} = {9C16B47A-B712-4237-B62F-B4403ACF1CD5}
 	EndGlobalSection
 EndGlobal
