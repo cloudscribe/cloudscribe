@@ -75,10 +75,14 @@ namespace cloudscribe.Core.IdentityServer.EFCore.Stores
 
             var names = scopeNames.ToArray();
 
+            //var query =
+            //    from api in _context.ApiResources
+            //    let scopes = api.Scopes.Select(x => x.Name)
+            //    where api.SiteId == _siteId && scopes.Intersect(names).Any()
+            //    select api;
             var query =
                 from api in _context.ApiResources
-                let scopes = api.Scopes.Select(x => x.Name)
-                where api.SiteId == _siteId && scopes.Intersect(names).Any()
+                where api.SiteId == _siteId && api.Scopes.Where(x => names.Contains(x.Name)).Any()
                 select api;
 
             var apis = query
