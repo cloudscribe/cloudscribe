@@ -1,0 +1,259 @@
+<!--
+@license
+Copyright (c) 2016 The Polymer Project Authors. All rights reserved.
+This code may only be used under the BSD style license found at http://polymer.github.io/LICENSE.txt
+The complete set of authors may be found at http://polymer.github.io/AUTHORS.txt
+The complete set of contributors may be found at http://polymer.github.io/CONTRIBUTORS.txt
+Code distributed by Google as part of the polymer project is also
+subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
+-->
+
+<link rel="import" href="../bower_components/polymer/polymer.html">
+<link rel="import" href="../bower_components/app-layout/app-drawer/app-drawer.html">
+<link rel="import" href="../bower_components/app-layout/app-drawer-layout/app-drawer-layout.html">
+<link rel="import" href="../bower_components/app-layout/app-header/app-header.html">
+<link rel="import" href="../bower_components/app-layout/app-header-layout/app-header-layout.html">
+<link rel="import" href="../bower_components/app-layout/app-scroll-effects/app-scroll-effects.html">
+<link rel="import" href="../bower_components/app-layout/app-toolbar/app-toolbar.html">
+<link rel="import" href="../bower_components/app-route/app-location.html">
+<link rel="import" href="../bower_components/app-route/app-route.html">
+<link rel="import" href="../bower_components/iron-pages/iron-pages.html">
+<link rel="import" href="../bower_components/iron-selector/iron-selector.html">
+<link rel="import" href="../bower_components/paper-button/paper-button.html">
+<link rel="import" href="../bower_components/paper-icon-button/paper-icon-button.html">
+<link rel="import" href="my-icons.html">
+<link rel="import" href="../bower_components/cloudscribe-oidc-client/cloudscribe-oidc-client.html">
+
+<dom-module id="my-app">
+  <template>
+    <style>
+      :host {
+        --app-primary-color: #4285f4;
+        --app-secondary-color: black;
+
+        display: block;
+      }
+
+      app-header {
+        color: #fff;
+        background-color: var(--app-primary-color);
+      }
+      app-header paper-icon-button {
+        --paper-icon-button-ink-color: white;
+      }
+
+      .drawer-list {
+        margin: 0 20px;
+      }
+
+      .drawer-list a {
+        display: block;
+
+        padding: 0 16px;
+
+        text-decoration: none;
+
+        color: var(--app-secondary-color);
+
+        line-height: 40px;
+      }
+
+      .drawer-list a.iron-selected {
+        color: black;
+
+        font-weight: bold;
+      }
+    </style>
+
+    <app-location id="apploc" route="{{route}}"></app-location>
+    <app-route id="router"
+        route="{{route}}"
+        pattern="/:page"
+        data="{{routeData}}"
+        tail="{{subroute}}"></app-route>
+      <cloudscribe-oidc-client id="oidc"
+        authority="[[authority]]"
+        client-id="[[clientId]]"
+        redirect-uri="[[redirectUri]]"
+        silent-redirect-uri="[[silentRedirectUri]]"
+        post-logout-redirect-uri="[[postLogoutRedirectUri]]"
+        scopes="[[scopes]]"
+        log-to-console="false"
+       ></cloudscribe-oidc-client> 
+    <app-drawer-layout fullbleed>
+      <!-- Drawer content -->
+      <app-drawer>
+        <app-toolbar>Menu</app-toolbar>
+        <iron-selector selected="[[page]]" attr-for-selected="name" class="drawer-list" role="navigation">
+          <a name="view1" href="/view1">View One</a>
+          <a name="view2" href="/view2">View Two</a>
+          <a name="view3" href="/view3">View Three</a>
+        </iron-selector>
+      </app-drawer>
+      <!-- Main content -->
+      <app-header-layout has-scrolling-region>
+        <app-header condenses reveals effects="waterfall">
+          <app-toolbar>
+            <paper-icon-button icon="menu" drawer-toggle></paper-icon-button>
+            <div main-title>My App</div>
+              <template is="dom-if" if="{{_computeButtonIsSignIn(signedIn)}}">
+                  <span class="buttonText">Welcome {{user.profile.name}}!</span>
+                  <paper-button raised on-click="signOut" on-keydown="_signOutKeyPress">Sign Out</paper-button>
+              </template>
+              <template is="dom-if" if="{{_computeButtonIsSignOut(signedIn) }}">
+                  <paper-button raised on-click="signIn" on-keydown="_signInKeyPress">Sign In</paper-button>
+              </template>
+          </app-toolbar>
+        </app-header>
+        <iron-pages id="pages"
+            selected="[[page]]"
+            selectedItem="{{currentPage}}"
+            attr-for-selected="name"
+            fallback-selection="view404"
+            role="main">
+          <my-view1 name="view1" user="{{user}}" service-url="{{sampleApiUri}}"></my-view1>
+          <my-view2 name="view2"></my-view2>
+          <my-view3 name="view3"></my-view3>
+          <my-view404 name="view404"></my-view404>
+        </iron-pages>
+      </app-header-layout>
+    </app-drawer-layout>
+  </template>
+  <script>
+    Polymer({
+      is: 'my-app',
+
+      properties: {
+        page: {
+          type: String,
+          reflectToAttribute: true,
+          observer: '_pageChanged'
+        },  
+        authority: {
+            type: String
+        },
+        clientId: {
+            type: String,
+            value: ''
+        },
+        scopes: {
+            type: String,
+            value: ''
+        },
+        redirectUri: {
+            type: String,
+            value: ''
+        },
+        silentRedirectUri: {
+            type: String,
+            value: ''
+        },
+        postLogoutRedirectUri: {
+            type: String,
+            value: ''
+        },
+        responseType: {
+            type: String,
+            value: 'id_token token'
+        },
+        signedIn: {
+            type: Boolean,
+            notify: true,
+            value: false
+        },
+        user: {
+            type: Object
+        },
+        currentPage: {
+            type: Object
+        },
+        sampleApiUri: {
+            type: String,
+            value: ''
+        },
+      },
+
+      observers: [
+        '_routePageChanged(routeData.page)'
+      ],
+
+      attached: function () {
+          this.$.oidc.getUser().then(this._handleUser.bind(this), this._handleUserError.bind(this));
+      },
+
+      _routePageChanged: function(page) {
+        this.page = page || 'view1';
+      },
+
+      _pageChanged: function(page) {
+          // Load page import on demand. Show 404 page if fails
+          if (page === "index.html") {  
+              this._handleIndexActions();
+              return;
+          }
+          var resolvedPageUrl = this.resolveUrl('my-' + page + '.html');
+          this.importHref(resolvedPageUrl, null, this._showPage404, true);
+      },
+      _handleIndexActions: function () {
+          switch (this.$.apploc.route.__queryParams.action) {
+              // /index.html?action=popupcallback
+              case "popupcallback":
+                  this.$.oidc.signinPopupCallback()
+                      .then(this._redirectToRoot.bind(this), this._redirectToRoot.bind(this));
+                  break;
+                case "signincallback":
+                    this.$.oidc.signinRedirectCallback()
+                        .then(this._redirectToRoot.bind(this), this._redirectToRoot.bind(this));
+                    break;
+                case undefined:
+                default:
+                    this._redirectToRoot();
+              }
+      },
+     
+      _redirectToRoot: function () {
+          window.location.href = '/';
+      },
+      _showPage404: function() {
+        this.page = 'view404';
+      },
+      _computeButtonIsSignIn: function (signedIn) {
+          return signedIn;
+      },
+      _computeButtonIsSignOut: function (signedIn) {
+          return !signedIn;
+      },
+      signIn: function () {
+          this.$.oidc.signinPopup().then(this._handleUser.bind(this), this._handleUserError.bind(this));
+      },
+      _signInKeyPress: function (e) {
+          if (e.which == 13 || e.keyCode == 13 || e.which == 32 || e.keyCode == 32) {
+              e.preventDefault();
+              this.signIn();
+          }
+      },
+      signOut: function () {
+          this.$.oidc.signOut();
+      },
+      _signOutKeyPress: function (e) {
+          if (e.which == 13 || e.keyCode == 13 || e.which == 32 || e.keyCode == 32) {
+              e.preventDefault();
+              this.signOut();
+          }
+      },
+      _handleUser: function (user) {
+          if (user) {
+              this.signedIn = true;
+              this.user = user;
+          }
+          else {
+              this.signedIn = false;
+          }
+      },
+      _handleUserError: function (err) {
+          alert(err);
+      }
+
+    });
+  </script>
+</dom-module>

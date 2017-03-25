@@ -13,10 +13,18 @@ namespace example.WebApp.Controllers
     [Authorize]
     public class IdentityController : ControllerBase
     {
+        //[Authorize(Policy = "AdminPolicy")]
         [HttpGet]
         public IActionResult Get()
         {
             return new JsonResult(from c in User.Claims select new { c.Type, c.Value });
         }
+
+        //[Authorize(Policy = "AdminPolicy")]
+        //[HttpPost]
+        //public IActionResult Post()
+        //{
+        //    return new JsonResult(from c in User.Claims select new { c.Type, c.Value });
+        //}
     }
 }
