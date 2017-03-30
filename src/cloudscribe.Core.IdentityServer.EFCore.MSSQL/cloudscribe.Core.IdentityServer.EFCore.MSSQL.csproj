@@ -3,7 +3,7 @@
   <PropertyGroup>
     <Description>Microsoft Sql Server Entity Framework configuration and operational stores for IdentityServer4 cloudscribe multi-tenant identity integration</Description>
     <VersionPrefix>1.1.0</VersionPrefix>
-    <VersionSuffix>rc20170324</VersionSuffix>
+    <VersionSuffix>rc20170327</VersionSuffix>
     <Authors>Joe Audette</Authors>
     <TargetFramework>netcoreapp1.1</TargetFramework>
     <AssemblyName>cloudscribe.Core.IdentityServer.EFCore.MSSQL</AssemblyName>
@@ -36,7 +36,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="cloudscribe.IDS4Fork" Version="1.1.0-rc20161215" />
+    <PackageReference Include="cloudscribe.IDS4Fork" Version="1.4.1-rc20170328" />
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="1.1.1" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Relational" Version="1.1.1" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="1.1.1" />

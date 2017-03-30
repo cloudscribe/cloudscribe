@@ -69,8 +69,8 @@ namespace cloudscribe.Core.IdentityServerIntegration
                     var folderPath = "/" + site.SiteFolderName + path;
                     if (context.Request.Path.StartsWithSegments(folderPath))
                     {
-                        var idBasePath = context.GetBasePath().EnsureTrailingSlash();
-                        context.SetBasePath(idBasePath + site.SiteFolderName + "/");
+                        var idBasePath = context.GetIdentityServerBasePath().EnsureTrailingSlash();
+                        context.SetIdentityServerBasePath(idBasePath + site.SiteFolderName + "/");
                         return true;
                     }
                 }

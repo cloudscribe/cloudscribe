@@ -4,6 +4,7 @@ using cloudscribe.Core.IdentityServerIntegration;
 using cloudscribe.Core.IdentityServerIntegration.Services;
 using cloudscribe.Core.Models;
 using IdentityModel;
+using IdentityServer4;
 using IdentityServer4.Configuration;
 using IdentityServer4.Hosting;
 using IdentityServer4.Infrastructure;
@@ -30,8 +31,8 @@ namespace Microsoft.Extensions.DependencyInjection
 
             builder.Services.Configure<IdentityServerOptions>(options =>
             {
-                options.AuthenticationOptions.AuthenticationScheme = AuthenticationScheme.Application;
-                
+                //options.AuthenticationOptions.AuthenticationScheme = AuthenticationScheme.Application;
+                options.Authentication.AuthenticationScheme = AuthenticationScheme.Application;
             });
 
             builder.Services.AddSingleton<IEndpointRouter>(resolver =>

@@ -8,6 +8,8 @@ https://blogs.msdn.microsoft.com/dotnet/2017/03/14/announcing-nightly-releases-f
 
 https://eiriktsarpalis.wordpress.com/2017/03/20/why-oo-matters-in-f/
 
+http://blog.ploeh.dk/2017/03/30/a-reusable-apicontroller-adapter/
+
 ## Language
 
 http://fsharp.org/

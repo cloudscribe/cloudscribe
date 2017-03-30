@@ -159,7 +159,7 @@ namespace example.WebApp
                 // this defines a CORS policy called "default"
                 options.AddPolicy("default", policy =>
                 {
-                    policy.WithOrigins("http://localhost:5003", "http://localhost:5010")
+                    policy.WithOrigins("http://localhost:5010", "http://localhost:5011")
                         .AllowAnyHeader()
                         .AllowAnyMethod();
                 });
