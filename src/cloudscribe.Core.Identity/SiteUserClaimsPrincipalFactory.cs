@@ -61,9 +61,11 @@ namespace cloudscribe.Core.Identity
                 Options.ClaimsIdentity.RoleClaimType);
 
             id.AddClaim(new Claim(Options.ClaimsIdentity.UserIdClaimType, userId));
-            id.AddClaim(new Claim("sub", userId)); //JwtClaimTypes.Subject
+            
             id.AddClaim(new Claim(Options.ClaimsIdentity.UserNameClaimType, userName));
-            id.AddClaim(new Claim("name", userName)); //needed by identtyserver integration
+            //needed by identityserver integration
+            id.AddClaim(new Claim("sub", userId)); //JwtClaimTypes.Subject
+            id.AddClaim(new Claim("name", userName)); //JwtClaimTypes.Name
 
             if (UserManager.SupportsUserSecurityStamp)
             {
