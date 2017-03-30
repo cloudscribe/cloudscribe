@@ -64,9 +64,9 @@
     <PackageReference Include="cloudscribe.Web.Navigation" Version="1.1-*" />
     <PackageReference Include="cloudscribe.Web.Pagination" Version="1.1.*" />
     <PackageReference Include="SaasKit.Multitenancy" Version="1.1.*" />
-    <PackageReference Include="cloudscribe.IDS4Fork" Version="1.1.0-*" />
-    <PackageReference Include="IdentityModel" Version="2.1.1" />
-    <PackageReference Include="IdentityServer4.AccessTokenValidation" Version="1.0.1-*" />
+    <PackageReference Include="cloudscribe.IDS4Fork" Version="1.4.1-rc20170328" />
+    <PackageReference Include="IdentityModel" Version="2.6.0" />
+    <PackageReference Include="IdentityServer4.AccessTokenValidation" Version="1.1.0" />
   </ItemGroup>
 
   <Target Name="PrepublishScript" BeforeTargets="PrepareForPublish">

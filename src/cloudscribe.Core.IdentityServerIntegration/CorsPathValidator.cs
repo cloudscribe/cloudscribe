@@ -1,6 +1,6 @@
 ﻿using cloudscribe.Core.Models;
 using IdentityServer4.Configuration;
-using IdentityServer4.Infrastructure;
+using IdentityServer4;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Options;
 using System;

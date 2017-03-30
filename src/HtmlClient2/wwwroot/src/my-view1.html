@@ -1,0 +1,103 @@
+<!--
+@license
+Copyright (c) 2016 The Polymer Project Authors. All rights reserved.
+This code may only be used under the BSD style license found at http://polymer.github.io/LICENSE.txt
+The complete set of authors may be found at http://polymer.github.io/AUTHORS.txt
+The complete set of contributors may be found at http://polymer.github.io/CONTRIBUTORS.txt
+Code distributed by Google as part of the polymer project is also
+subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
+-->
+
+<link rel="import" href="../bower_components/polymer/polymer.html">
+<link rel="import" href="../bower_components/iron-ajax/iron-ajax.html" />
+<link rel="import" href="../bower_components/iron-list/iron-list.html" />
+<link rel="import" href="../bower_components/paper-button/paper-button.html">
+<link rel="import" href="shared-styles.html">
+
+<dom-module id="my-view1">
+  <template>
+    <style include="shared-styles">
+      :host {
+        display: block;
+
+        padding: 10px;
+      }
+    </style>
+    <iron-ajax id="getClaims"
+                url="{{serviceUrl}}"
+                method="GET"
+                handle-as="json"
+                on-response="handleGet"></iron-ajax>
+    <div class="card">
+      <div class="circle">1</div>
+      <h1>View One</h1>
+        <template is="dom-if" if="{{_computeIsSignedIn(user)}}">
+            <span class="buttonText">Welcome {{user.profile.name}}!</span>
+            <paper-button raised on-click="_callApi" on-keydown="_callApiKeyPress">Call API</paper-button>
+            <iron-list items="[[apiData]]" as="item">
+                <template>
+                    <div>
+                        [[item.type]] : [[item.value]]
+                    </div>
+                </template>
+            </iron-list>
+        </template>
+        
+       
+            <p>Ut labores minimum atomorum pro. Laudem tibique ut has.
+            <p>Lorem ipsum dolor sit amet, per in nusquam nominavi periculis, sit elit oportere ea.Lorem ipsum dolor sit amet, per in nusquam nominavi periculis, sit elit oportere ea.Cu mei vide viris gloriatur, at populo eripuit sit.</p>
+</div>
+  </template>
+
+  <script>
+    Polymer({
+        is: 'my-view1',
+        properties: {
+            user: {
+                type: Object
+            },
+            apiData: {
+                type: Array,
+                value: [],
+                notify: true
+            },
+            serviceUrl: {
+                type: String
+                
+            }
+        },
+        handleGet: function (data) {
+            var self = this;
+            self.apiData = data.detail.response;
+        },
+        _computeHeader: function () {
+            if (this.user !== undefined)
+            {
+                var obj = {};
+                obj.Authorization = "Bearer " + this.user.access_token;
+                return obj;
+            }
+            return null;
+            
+        },
+        _callApi: function () {
+            var self = this;
+            self.$.getClaims.headers = this._computeHeader();
+            self.$.getClaims.generateRequest();
+        },
+
+        _callApiKeyPress: function (e) {
+            if (e.which == 13 || e.keyCode == 13 || e.which == 32 || e.keyCode == 32) {
+                e.preventDefault();
+                this._callApi();
+            }
+        },
+        _computeIsSignedIn: function (user) {
+            if (user === undefined) return false;
+            if (user.profile === undefined) return false;
+            return true;
+
+        }
+    });
+  </script>
+</dom-module>
