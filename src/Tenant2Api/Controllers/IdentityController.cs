@@ -8,6 +8,8 @@ namespace Tenant2Api.Controllers
     [Authorize]
     public class IdentityController : ControllerBase
     {
+        [Authorize(Policy = "SecureApiPolicy")]
+        //[Authorize(Policy = "FakePolicy")]
         [HttpGet]
         public IActionResult Get()
         {

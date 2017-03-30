@@ -54,6 +54,7 @@ namespace Microsoft.Extensions.DependencyInjection
 
             builder.AddResourceOwnerValidator<ResourceOwnerPasswordValidator<SiteUser>>();
             builder.Services.AddTransient<IProfileService, ProfileService<SiteUser>>();
+            builder.Services.AddTransient<IJwtClaimsProcessor<SiteUser>, DefaultJwtClaimsProcessor>();
 
             builder.Services.AddTransient<ISecurityStampValidator, cloudscribe.Core.IdentityServerIntegration.SecurityStampValidator<SiteUser>>();
 

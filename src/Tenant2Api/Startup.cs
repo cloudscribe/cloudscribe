@@ -38,6 +38,25 @@ namespace Tenant2Api
                 });
             });
 
+            services.AddAuthorization(options =>
+            {
+                
+                options.AddPolicy(
+                    "SecureApiPolicy",
+                    authBuilder =>
+                    {
+                        authBuilder.RequireRole("Administrators");
+                    });
+
+                options.AddPolicy(
+                    "FakePolicy",
+                    authBuilder =>
+                    {
+                        authBuilder.RequireRole("fake"); // no user has this role this policy is for verifying it fails
+                    });
+
+            });
+
             services.AddMvcCore()
                 .AddAuthorization()
                 .AddJsonFormatters();
