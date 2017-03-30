@@ -52,6 +52,7 @@ namespace Tenant1Api
             // this uses the policy called "default"
             app.UseCors("default");
 
+            //https://github.com/IdentityServer/IdentityServer4.AccessTokenValidation/blob/dev/src/IdentityServer4.AccessTokenValidation/IdentityServerAuthenticationOptions.cs
             app.UseIdentityServerAuthentication(new IdentityServerAuthenticationOptions
             {
                 Authority = "https://localhost:44399",

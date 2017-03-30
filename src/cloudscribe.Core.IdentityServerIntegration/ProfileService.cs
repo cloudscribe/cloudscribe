@@ -47,8 +47,8 @@ namespace cloudscribe.Core.IdentityServerIntegration
                 var roleClaims = claims.Where(x => x.Type == "http://schemas.microsoft.com/ws/2008/06/identity/claims/role");
                 foreach (var roleClaim in roleClaims)
                 {
-                //result.Add(new Claim(JwtClaimTypes.Role, roleClaim.Value));
-                result.Add(new Claim(roleClaim.Type, roleClaim.Value));
+                result.Add(new Claim(JwtClaimTypes.Role, roleClaim.Value));
+                //result.Add(new Claim(roleClaim.Type, roleClaim.Value));
             }
 
             //}

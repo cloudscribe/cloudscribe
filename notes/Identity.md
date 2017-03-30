@@ -6,6 +6,8 @@ http://stackoverflow.com/questions/41682434/how-to-put-asp-net-identity-roles-in
 
 https://stackoverflow.com/questions/41687659/how-to-add-additional-claims-to-be-included-in-the-access-token-using-asp-net-id
 
+https://damienbod.com/2016/02/14/authorization-policies-and-data-protection-with-identityserver4-in-asp-net-core/
+
 
 https://blogs.msdn.microsoft.com/webdev/2017/01/23/asp-net-core-authentication-with-identityserver4/
 
@@ -245,3 +247,7 @@ https://localhost:44399/consent?returnUrl=%2Fconnect%2Fauthorize%2Fconsent%3Fcli
 		return new StatusCodeResult(HttpStatusCode.NotFound);
 	}
 
+
+ <VersionSuffix>rc20170328</VersionSuffix> 
+ <AssemblyName>cloudscribe.IDS4Fork</AssemblyName>
+ <PackageId>cloudscribe.IDS4Fork</PackageId>
