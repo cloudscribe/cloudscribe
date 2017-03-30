@@ -81,7 +81,7 @@ namespace cloudscribe.Core.IdentityServerIntegration.Controllers
 
             if (!string.IsNullOrEmpty(resourceName))
             {
-                ViewData["Title"] = string.Format(CultureInfo.CurrentUICulture, sr["{0} - Edit API Resource"], selectedSite.SiteName);
+                ViewData["Title"] = string.Format(CultureInfo.CurrentUICulture, sr["{0} - Edit Identity Resource"], selectedSite.SiteName);
             }
 
             var model = new IdentityEditViewModel();
