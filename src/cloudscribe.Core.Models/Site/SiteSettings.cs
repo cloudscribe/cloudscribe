@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2014-08-16
-// Last Modified:			2016-06-06
+// Last Modified:			2017-04-01
 // 
 
 using System;
@@ -109,6 +109,8 @@ namespace cloudscribe.Core.Models
             get { return recaptchaPublicKey ?? string.Empty; }
             set { recaptchaPublicKey = value; }
         }
+
+        public bool UseInvisibleRecaptcha { get; set; } = false;
 
         private string facebookAppId = string.Empty;
         public string FacebookAppId
@@ -552,6 +554,7 @@ namespace cloudscribe.Core.Models
             s.TimeZoneId = i.TimeZoneId;
             s.TwitterConsumerKey = i.TwitterConsumerKey;
             s.TwitterConsumerSecret = i.TwitterConsumerSecret;
+            s.UseInvisibleRecaptcha = i.UseInvisibleRecaptcha;
             s.UseEmailForLogin = i.UseEmailForLogin;
             s.UseLdapAuth = i.UseLdapAuth;
            

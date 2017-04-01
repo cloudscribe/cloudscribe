@@ -1,9 +1,6 @@
 ﻿using cloudscribe.Core.Models;
 using cloudscribe.Web.Common.Models;
 using Microsoft.Extensions.Options;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace cloudscribe.Core.Web.Components
@@ -29,6 +26,7 @@ namespace cloudscribe.Core.Web.Components
                 var siteKeys = new RecaptchaKeys();
                 siteKeys.PrivateKey = currentSite.RecaptchaPrivateKey;
                 siteKeys.PublicKey = currentSite.RecaptchaPublicKey;
+                siteKeys.Invisible = currentSite.UseInvisibleRecaptcha;
                 return Task.FromResult(siteKeys);
             }
 

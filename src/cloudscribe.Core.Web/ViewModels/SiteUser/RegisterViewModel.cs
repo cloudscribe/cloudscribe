@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:				    2014-08-31
-// Last Modified:		    2016-06-19
+// Last Modified:		    2017-04-01
 // 
 // TODO: support custom profile properties that are required for registration
 
@@ -62,7 +62,8 @@ namespace cloudscribe.Core.Web.ViewModels.Account
         public DateTime? DateOfBirth { get; set; }
 
         public string RecaptchaSiteKey { get; set; } = string.Empty;
-        
+        public bool UseInvisibleCaptcha { get; set; } = false;
+
         public string RegistrationPreamble { get; set; } = string.Empty;
 
         public string RegistrationAgreement { get; set; } = string.Empty;

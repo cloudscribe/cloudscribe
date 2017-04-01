@@ -12,3 +12,5 @@ https://vimeo.com/108913764
 http://www.hanselman.com/blog/ASPNETCoreRESTfulWebAPIVersioningMadeEasy.aspx
 
 https://mmikowski.github.io/the_lie/
+
+https://brandur.org/api-paradigms

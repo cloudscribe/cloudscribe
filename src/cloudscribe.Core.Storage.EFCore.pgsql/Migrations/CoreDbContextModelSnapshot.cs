@@ -15,7 +15,7 @@ namespace cloudscribe.Core.Storage.EFCore.pgsql.Migrations
             modelBuilder
                 .HasAnnotation("Npgsql:PostgresExtension:uuid-ossp", "'uuid-ossp', '', ''")
                 .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.SerialColumn)
-                .HasAnnotation("ProductVersion", "1.1.0-rtm-22752");
+                .HasAnnotation("ProductVersion", "1.1.1");
 
             modelBuilder.Entity("cloudscribe.Core.Models.Geography.GeoCountry", b =>
                 {
@@ -325,6 +325,8 @@ namespace cloudscribe.Core.Storage.EFCore.pgsql.Migrations
                     b.Property<string>("TwitterConsumerSecret");
 
                     b.Property<bool>("UseEmailForLogin");
+
+                    b.Property<bool>("UseInvisibleRecaptcha");
 
                     b.Property<bool>("UseLdapAuth");
 

@@ -12,6 +12,10 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Content Include="wwwroot\js\site.js" />
+  </ItemGroup>
+
+  <ItemGroup>
     <None Update="wwwroot\**\*;Views\**\*;Areas\**\Views;sitefiles\**\*;dp_keys;nodb_storage;navigation.xml">
       <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
     </None>

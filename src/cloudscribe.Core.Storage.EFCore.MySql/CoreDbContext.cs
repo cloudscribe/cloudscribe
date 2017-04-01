@@ -185,6 +185,12 @@ namespace cloudscribe.Core.Storage.EFCore.MySql
                 .HasMaxLength(255);
                 ;
 
+                entity.Property(p => p.UseInvisibleRecaptcha)
+               .IsRequired()
+               //.ForSqlServerHasColumnType("bit")
+               //.ForSqlServerHasDefaultValue(false)
+               ;
+
                 entity.Property(p => p.DisableDbAuth)
                 .IsRequired()
                 //.ForMySQLHasColumnType("bit")

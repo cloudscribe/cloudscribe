@@ -20,6 +20,12 @@
 {
     <script src='https://www.google.com/recaptcha/api.js'></script>
 }
+@if (Model.UseInvisibleCaptcha)
+{
+        <script>
+            function onCaptchaSubmit(token) { document.getElementById("login-form").submit();  }
+        </script>
+}
 <h2>@ViewData["Title"]</h2>
 @if (Model.LoginInfoTop.Length > 0)
 {
@@ -34,7 +40,7 @@
         @if (!Model.DisableDbAuth)
         {
             <section id="loginForm">
-                <form asp-controller="Account" asp-action="Login" asp-route-returnurl='@ViewData["ReturnUrl"]' method="post" class="form-horizontal" role="form">
+                <form id="login-form" asp-controller="Account" asp-action="Login" asp-route-returnurl='@ViewData["ReturnUrl"]' method="post" class="form-horizontal" role="form">
                     <div asp-validation-summary="All" class="text-danger"></div>
                     @if (Model.UseEmailForLogin)
                 {
@@ -75,8 +81,8 @@
                             </div>
                         </div>
                     }
-                    @if (Model.RecaptchaSiteKey.Length > 0)
-                {
+                    @if (Model.RecaptchaSiteKey.Length > 0 && !Model.UseInvisibleCaptcha)
+                    {
                         <div class="form-group">
                             <div class="col-md-offset-2 col-md-10">
                                 <div class="g-recaptcha" data-sitekey="@Model.RecaptchaSiteKey"></div>
@@ -86,7 +92,15 @@
                     }
                     <div class="form-group">
                         <div class="col-md-offset-2 col-md-10">
-                            <button name="submit" type="submit" class="btn btn-default">@sr["Log in"]</button>
+@if (Model.RecaptchaSiteKey.Length > 0 && Model.UseInvisibleCaptcha)
+{
+    <button  class="btn btn-default g-recaptcha" data-sitekey="@Model.RecaptchaSiteKey" data-callback='onCaptchaSubmit'>@sr["Log in"]</button>
+}
+else
+{
+    <button name="submit" type="submit" class="btn btn-default">@sr["Log in"]</button>
+}
+                            
                             <input type="hidden" asp-for="UseEmailForLogin" />
                         </div>
                     </div>
