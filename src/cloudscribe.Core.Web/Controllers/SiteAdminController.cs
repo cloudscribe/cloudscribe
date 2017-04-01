@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2014-10-26
-// Last Modified:			2016-10-22
+// Last Modified:			2017-04-01
 // 
 
 using cloudscribe.Core.Models;
@@ -874,6 +874,7 @@ namespace cloudscribe.Core.Web.Controllers
             model.SiteId = selectedSite.Id;
             model.RecaptchaPrivateKey = selectedSite.RecaptchaPrivateKey;
             model.RecaptchaPublicKey = selectedSite.RecaptchaPublicKey;
+            model.UseInvisibleCaptcha = selectedSite.UseInvisibleRecaptcha;
             model.RequireCaptchaOnLogin = selectedSite.CaptchaOnLogin;
             model.RequireCaptchaOnRegistration = selectedSite.CaptchaOnRegistration;
 
@@ -916,6 +917,7 @@ namespace cloudscribe.Core.Web.Controllers
 
             selectedSite.RecaptchaPublicKey = model.RecaptchaPublicKey;
             selectedSite.RecaptchaPrivateKey = model.RecaptchaPrivateKey;
+            selectedSite.UseInvisibleRecaptcha = model.UseInvisibleCaptcha;
             selectedSite.CaptchaOnRegistration = model.RequireCaptchaOnRegistration;
             selectedSite.CaptchaOnLogin = model.RequireCaptchaOnLogin;
 

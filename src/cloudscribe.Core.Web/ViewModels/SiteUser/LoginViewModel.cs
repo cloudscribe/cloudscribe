@@ -37,6 +37,8 @@ namespace cloudscribe.Core.Web.ViewModels.SiteUser
         
         public string RecaptchaSiteKey { get; set; } = string.Empty;
 
+        public bool UseInvisibleCaptcha { get; set; } = false;
+
         public string LoginInfoTop { get; set; } = string.Empty;
 
         public string LoginInfoBottom { get; set; } = string.Empty;

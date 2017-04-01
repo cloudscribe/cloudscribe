@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <Description>cloudscribe common helpers for web applications</Description>
-    <VersionPrefix>1.1.8</VersionPrefix>
+    <VersionPrefix>1.1.9</VersionPrefix>
     <Authors>Joe Audette</Authors>
     <TargetFrameworks>net451;net452;net46;netstandard1.6</TargetFrameworks>
     <AssemblyName>cloudscribe.Web.Common</AssemblyName>
@@ -25,7 +25,7 @@
     <PackageReference Include="Microsoft.AspNetCore.Mvc.ViewFeatures" Version="1.1.2" />
     <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="1.1.1" />
     <PackageReference Include="System.Text.Encodings.Web" Version="4.3.0" />
-    <PackageReference Include="NodaTime" Version="2.0.0-*" />
+    <PackageReference Include="NodaTime" Version="2.0.0" />
   </ItemGroup>
 
   <ItemGroup Condition=" '$(TargetFramework)' == 'net451' ">

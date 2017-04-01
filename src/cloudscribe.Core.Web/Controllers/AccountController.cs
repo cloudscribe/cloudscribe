@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2014-10-26
-// Last Modified:			2017-02-11
+// Last Modified:			2017-04-01
 // 
 
 using cloudscribe.Core.Identity;
@@ -95,7 +95,8 @@ namespace cloudscribe.Core.Web.Controllers
             
             if ((Site.CaptchaOnLogin)&& (!string.IsNullOrEmpty(recaptchaKeys.PublicKey)))
             {
-                model.RecaptchaSiteKey = recaptchaKeys.PublicKey;     
+                model.RecaptchaSiteKey = recaptchaKeys.PublicKey;
+                model.UseInvisibleCaptcha = recaptchaKeys.Invisible;
             }
             model.UseEmailForLogin = Site.UseEmailForLogin;
             model.LoginInfoTop = Site.LoginInfoTop;
@@ -119,7 +120,8 @@ namespace cloudscribe.Core.Web.Controllers
             var recaptchaKeys = await recaptchaKeysProvider.GetKeys().ConfigureAwait(false);
             if ((Site.CaptchaOnLogin)&& (!string.IsNullOrEmpty(recaptchaKeys.PublicKey)))
             {
-                model.RecaptchaSiteKey = recaptchaKeys.PublicKey;   
+                model.RecaptchaSiteKey = recaptchaKeys.PublicKey;
+                model.UseInvisibleCaptcha = recaptchaKeys.Invisible;
             }
             model.UseEmailForLogin = Site.UseEmailForLogin;
             model.LoginInfoTop = Site.LoginInfoTop;
@@ -286,7 +288,8 @@ namespace cloudscribe.Core.Web.Controllers
 
             if ((Site.CaptchaOnRegistration)&& (Site.RecaptchaPublicKey.Length > 0))
             {
-                model.RecaptchaSiteKey = Site.RecaptchaPublicKey;  
+                model.RecaptchaSiteKey = Site.RecaptchaPublicKey;
+                model.UseInvisibleCaptcha = Site.UseInvisibleRecaptcha;
             }
             model.UseEmailForLogin = Site.UseEmailForLogin;
             model.RegistrationPreamble = Site.RegistrationPreamble;
@@ -307,7 +310,8 @@ namespace cloudscribe.Core.Web.Controllers
             ViewData["Title"] = sr["Register"];
             if ((Site.CaptchaOnRegistration)&& (Site.RecaptchaPublicKey.Length > 0))
             {
-                model.RecaptchaSiteKey = Site.RecaptchaPublicKey;     
+                model.RecaptchaSiteKey = Site.RecaptchaPublicKey;
+                model.UseInvisibleCaptcha = Site.UseInvisibleRecaptcha;
             }
             model.UseEmailForLogin = Site.UseEmailForLogin;
             model.RegistrationPreamble = Site.RegistrationPreamble;

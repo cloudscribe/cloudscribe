@@ -110,6 +110,7 @@ namespace cloudscribe.Core.Models
         bool CaptchaOnRegistration { get; set; }
         string RecaptchaPrivateKey { get; set; }
         string RecaptchaPublicKey { get; set; }
+        bool UseInvisibleRecaptcha { get; set; }
         
         //company info
         string CompanyCountry { get; set; }

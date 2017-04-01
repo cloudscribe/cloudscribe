@@ -44,6 +44,7 @@ namespace cloudscribe.Core.Models
         bool CaptchaOnRegistration { get; }
         string RecaptchaPrivateKey { get; }
         string RecaptchaPublicKey { get; }
+        bool UseInvisibleRecaptcha { get; }
 
         //company info
         string CompanyCountry { get; }

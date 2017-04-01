@@ -164,6 +164,11 @@ namespace cloudscribe.Core.Models
             get { return site.RecaptchaPublicKey; }
         }
 
+        public bool UseInvisibleRecaptcha
+        {
+            get { return site.UseInvisibleRecaptcha; }
+        } 
+
         public string FacebookAppId
         {
             get { return site.FacebookAppId; }
