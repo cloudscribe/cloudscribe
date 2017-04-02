@@ -3,7 +3,7 @@
   <PropertyGroup>
     <Description>Entity Framework configuration and operational stores for IdentityServer4 cloudscribe multi-tenant identity integration</Description>
     <VersionPrefix>1.1.0</VersionPrefix>
-    <VersionSuffix>rc20170327</VersionSuffix>
+    <VersionSuffix>rc20170401</VersionSuffix>
     <Authors>Joe Audette</Authors>
     <TargetFrameworks>net46;net452;netstandard1.6</TargetFrameworks>
     <AssemblyName>cloudscribe.Core.IdentityServer.EFCore.Common</AssemblyName>
