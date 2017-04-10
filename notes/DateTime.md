@@ -10,6 +10,8 @@ https://github.com/sbstjn/timesheet.js
 
 # Date/Time picker implementations
 
+https://github.com/dbushell/Pikaday
+
 
 Will be nice when all browsers support their own date time pickers for html 5 (I think only Opera has it).
 

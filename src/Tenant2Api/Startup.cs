@@ -49,7 +49,7 @@ namespace Tenant2Api
                     });
 
                 options.AddPolicy(
-                    "FakePolicy",
+                    "OtherPolicy",
                     authBuilder =>
                     {
                         authBuilder.RequireRole("fake"); // no user has this role this policy is for verifying it fails

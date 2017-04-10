@@ -26,6 +26,8 @@ https://kimsereyblog.blogspot.com/2017/03/create-simple-form-engine-with.html
 
 ## Functional Thinking
 
+https://medium.com/javascript-scene/the-rise-and-fall-and-rise-of-functional-programming-composable-software-c2d91b424c8c
+
 https://medium.com/@cscalfani/so-you-want-to-be-a-functional-programmer-part-1-1f15e387e536#.7bkef6jn2
 https://medium.com/@cscalfani/so-you-want-to-be-a-functional-programmer-part-2-7005682cec4a#.l8e829csl
 https://medium.com/@cscalfani/so-you-want-to-be-a-functional-programmer-part-3-1b0fd14eb1a7#.oc8njnxbt

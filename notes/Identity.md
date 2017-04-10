@@ -1,6 +1,8 @@
 
 https://leastprivilege.com/2016/12/16/identity-vs-permissions/
 
+https://identityserver4.readthedocs.io/en/release/topics/federation_gateway.html
+
 
 http://stackoverflow.com/questions/41682434/how-to-put-asp-net-identity-roles-into-the-identityserver4-identity-token
 
