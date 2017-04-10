@@ -14,3 +14,5 @@ http://www.hanselman.com/blog/ASPNETCoreRESTfulWebAPIVersioningMadeEasy.aspx
 https://mmikowski.github.io/the_lie/
 
 https://brandur.org/api-paradigms
+
+https://stormpath.com/blog/rest-api-mobile-dotnet-core?utm_source=DNK-188919

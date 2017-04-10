@@ -1,5 +1,7 @@
 
 
+https://medium.com/@richardeng/the-javascript-phenomenon-is-a-mass-psychosis-57adebb09359
+
 https://medium.freecodecamp.com/what-to-learn-in-2017-if-youre-a-frontend-developer-b6cfef46effd
 
 https://www.smashingmagazine.com/2017/02/a-detailed-introduction-to-webpack/

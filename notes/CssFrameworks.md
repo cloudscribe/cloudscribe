@@ -2,6 +2,9 @@
 
 https://www.hanselman.com/blog/OptionsForCSSAndJSBundlingAndMinificationWithASPNETCore.aspx
 
+
+http://material.io/color
+
 http://yoksel.github.io/flex-cheatsheet/
 
 icon set created in pure css
