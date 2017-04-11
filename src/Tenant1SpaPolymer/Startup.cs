@@ -8,7 +8,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 
-namespace Tenant2Api
+namespace Tenant1SpaPolymer
 {
     public class Startup
     {
@@ -27,35 +27,16 @@ namespace Tenant2Api
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddCors(options =>
-            {
-                // this defines a CORS policy called "default"
-                options.AddPolicy("default", policy =>
-                {
-                    policy.WithOrigins("http://localhost:5011") //HtmlClient2
-                        .AllowAnyHeader()
-                        .AllowAnyMethod();
-                });
-            });
-
-            services.AddAuthorization(options =>
-            {
-                
-                options.AddPolicy(
-                    "SecureApiPolicy",
-                    authBuilder =>
-                    {
-                        authBuilder.RequireRole("Administrators");
-                    });
-
-                options.AddPolicy(
-                    "OtherPolicy",
-                    authBuilder =>
-                    {
-                        authBuilder.RequireRole("fake"); // no user has this role this policy is for verifying it fails
-                    });
-
-            });
+            //services.AddCors(options =>
+            //{
+            //    // this defines a CORS policy called "default"
+            //    options.AddPolicy("default", policy =>
+            //    {
+            //        policy.WithOrigins("http://localhost:5003", "http://localhost:5010")
+            //            .AllowAnyHeader()
+            //            .AllowAnyMethod();
+            //    });
+            //});
 
             services.AddMvcCore()
                 .AddAuthorization()
@@ -69,12 +50,16 @@ namespace Tenant2Api
             loggerFactory.AddDebug();
 
             // this uses the policy called "default"
-            app.UseCors("default");
+            //app.UseCors("default");
 
+            app.UseDefaultFiles();
+            app.UseStaticFiles();
+
+            //https://github.com/IdentityServer/IdentityServer4.AccessTokenValidation/blob/dev/src/IdentityServer4.AccessTokenValidation/IdentityServerAuthenticationOptions.cs
             app.UseIdentityServerAuthentication(new IdentityServerAuthenticationOptions
             {
-                Authority = "https://localhost:44399/two",
-                ApiName = "tenant2RemoteApi",
+                Authority = "https://localhost:44399",
+                ApiName = "tenant1RemoteApi",
 
                 RequireHttpsMetadata = false
             });

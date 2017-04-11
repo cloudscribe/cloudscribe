@@ -1,4 +1,7 @@
 
+
+https://www.smashingmagazine.com/2017/04/guide-http2-server-push/
+
 http://www.dotnetcurry.com/aspnet-mvc/1149/convert-aspnet-webapi2-aspnet5-mvc6
 
 https://goblincoding.com/2016/07/03/issuing-and-authenticating-jwt-tokens-in-asp-net-core-webapi-part-i/

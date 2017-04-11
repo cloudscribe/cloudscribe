@@ -19,5 +19,7 @@ https://code.facebook.com/posts/1639473982937255/updating-our-open-source-patent
 
 https://hackernoon.com/10-react-mini-patterns-c1da92f068c5
 
+https://reacttraining.com/online/react-fundamentals
+
 
 
