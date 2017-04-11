@@ -8,7 +8,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 
-namespace Tenant1Api
+namespace Tenant2SpaPolymer
 {
     public class Startup
     {
@@ -27,20 +27,39 @@ namespace Tenant1Api
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddCors(options =>
+            //services.AddCors(options =>
+            //{
+            //    // this defines a CORS policy called "default"
+            //    options.AddPolicy("default", policy =>
+            //    {
+            //        policy.WithOrigins("http://localhost:5011") //HtmlClient2
+            //            .AllowAnyHeader()
+            //            .AllowAnyMethod();
+            //    });
+            //});
+
+            services.AddAuthorization(options =>
             {
-                // this defines a CORS policy called "default"
-                options.AddPolicy("default", policy =>
-                {
-                    policy.WithOrigins("http://localhost:5003","http://localhost:5010")
-                        .AllowAnyHeader()
-                        .AllowAnyMethod();
-                });
+
+                options.AddPolicy(
+                    "SecureApiPolicy",
+                    authBuilder =>
+                    {
+                        authBuilder.RequireRole("Administrators");
+                    });
+
+                options.AddPolicy(
+                    "OtherPolicy",
+                    authBuilder =>
+                    {
+                        authBuilder.RequireRole("fake"); // no user has this role this policy is for verifying it fails
+                    });
+
             });
 
             services.AddMvcCore()
                 .AddAuthorization()
-                .AddJsonFormatters(); 
+                .AddJsonFormatters();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -50,13 +69,15 @@ namespace Tenant1Api
             loggerFactory.AddDebug();
 
             // this uses the policy called "default"
-            app.UseCors("default");
+            //app.UseCors("default");
 
-            //https://github.com/IdentityServer/IdentityServer4.AccessTokenValidation/blob/dev/src/IdentityServer4.AccessTokenValidation/IdentityServerAuthenticationOptions.cs
+            app.UseDefaultFiles();
+            app.UseStaticFiles();
+
             app.UseIdentityServerAuthentication(new IdentityServerAuthenticationOptions
             {
-                Authority = "https://localhost:44399",
-                ApiName = "tenant1RemoteApi",
+                Authority = "https://localhost:44399/two",
+                ApiName = "tenant2RemoteApi",
 
                 RequireHttpsMetadata = false
             });
@@ -64,5 +85,7 @@ namespace Tenant1Api
 
             app.UseMvc();
         }
+
     }
+
 }

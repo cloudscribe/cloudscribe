@@ -2,7 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using System.Linq;
 
-namespace Tenant1Api.Controllers
+namespace Tenant1SpaPolymer.Controllers
 {
     [Route("api/[controller]")]
     [Authorize]

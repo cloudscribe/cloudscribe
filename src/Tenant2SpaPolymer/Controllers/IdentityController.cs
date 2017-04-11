@@ -2,7 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using System.Linq;
 
-namespace Tenant2Api.Controllers
+namespace Tenant2SpaPolymer.Controllers
 {
     [Route("api/[controller]")]
     [Authorize]
@@ -13,7 +13,7 @@ namespace Tenant2Api.Controllers
         [HttpGet]
         public IActionResult Get()
         {
-            
+
             return new JsonResult(from c in User.Claims select new { c.Type, c.Value });
         }
 
@@ -35,4 +35,5 @@ namespace Tenant2Api.Controllers
             return new JsonResult(from c in User.Claims select new { c.Type, c.Value });
         }
     }
+
 }

@@ -9,6 +9,8 @@ https://forum.vuejs.org/
 
 https://github.com/vuejs/vue-cli
 
+https://www.typescriptlang.org/index.html
+
 # install vue-cli
 $ npm install --global vue-cli
 # create a new project using the "webpack" template

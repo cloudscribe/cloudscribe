@@ -1,9 +1,9 @@
-{
+﻿{
   "iisSettings": {
     "windowsAuthentication": false,
     "anonymousAuthentication": true,
     "iisExpress": {
-      "applicationUrl": "http://localhost:5010/",
+      "applicationUrl": "http://localhost:5011/",
       "sslPort": 0
     }
   },
@@ -15,13 +15,13 @@
         "ASPNETCORE_ENVIRONMENT": "Development"
       }
     },
-    "HtmlClient": {
+    "Tenant2SpaPolymer": {
       "commandName": "Project",
       "launchBrowser": true,
-      "launchUrl": "http://localhost:5010/",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development"
-      }
+      },
+      "applicationUrl": "http://localhost:5011"
     }
   }
 }
