@@ -102,3 +102,6 @@ https://gist.github.com/clemensv/650361dc37b1eb77a91d00dbc1611288
 
 https://blogs.msdn.microsoft.com/ericlippert/2009/04/27/the-stack-is-an-implementation-detail-part-one/
 https://blogs.msdn.microsoft.com/ericlippert/2009/05/04/the-stack-is-an-implementation-detail-part-two/
+
+
+https://visualstudiomagazine.com/articles/2017/04/01/template-method-pattern.aspx

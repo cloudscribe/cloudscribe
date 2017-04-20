@@ -1,4 +1,5 @@
 
+https://javascriptweblog.wordpress.com/2011/05/31/a-fresh-look-at-javascript-mixins/
 
 https://medium.com/@richardeng/the-javascript-phenomenon-is-a-mass-psychosis-57adebb09359
 
