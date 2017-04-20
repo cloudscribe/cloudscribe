@@ -10,6 +10,8 @@ https://eiriktsarpalis.wordpress.com/2017/03/20/why-oo-matters-in-f/
 
 http://blog.ploeh.dk/2017/03/30/a-reusable-apicontroller-adapter/
 
+https://fsharpforfunandprofit.com/posts/happy-fsharp-day-2/
+
 ## Language
 
 http://fsharp.org/
@@ -27,6 +29,10 @@ https://kimsereyblog.blogspot.com/2017/03/create-simple-form-engine-with.html
 ## Functional Thinking
 
 https://medium.com/javascript-scene/the-rise-and-fall-and-rise-of-functional-programming-composable-software-c2d91b424c8c
+
+https://eiriktsarpalis.wordpress.com/2017/04/02/programming-in-the-point-free-style/
+
+https://medium.com/@mikolajszabo/why-functional-programming-matters-c647f56a7691
 
 https://medium.com/@cscalfani/so-you-want-to-be-a-functional-programmer-part-1-1f15e387e536#.7bkef6jn2
 https://medium.com/@cscalfani/so-you-want-to-be-a-functional-programmer-part-2-7005682cec4a#.l8e829csl

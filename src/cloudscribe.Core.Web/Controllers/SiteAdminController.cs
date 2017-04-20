@@ -334,8 +334,13 @@ namespace cloudscribe.Core.Web.Controllers
             var newSite = new SiteSettings();
             newSite.Id = Guid.NewGuid();
 
+            
+
             if (multiTenantOptions.Mode == MultiTenantMode.FolderName)
             {
+                //https://github.com/joeaudette/cloudscribe.StarterKits/issues/27
+                model.SiteFolderName = model.SiteFolderName.ToLowerInvariant();
+
                 if (string.IsNullOrEmpty(model.SiteFolderName))
                 {
                     model.AllTimeZones = tzHelper.GetTimeZoneList().Select(x =>

@@ -8,3 +8,5 @@ http://www.hanselman.com/blog/ExploringApplicationInsightsForDisconnectedOrConne
 
 Community Standup episode
 https://www.youtube.com/watch?v=iNMYiKGa5E4
+
+https://azure.microsoft.com/en-us/blog/integrating-application-insights-into-a-modular-cms-and-a-multi-tenant-public-saas/

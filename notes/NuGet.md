@@ -1,4 +1,8 @@
 
+http://blog.nuget.org/20170417/Package-identity-and-trust.html
+https://github.com/NuGet/Home/issues/1882
+
+
 Targets
 https://github.com/dotnet/corefx/blob/master/Documentation/architecture/net-platform-standard.md
 https://blogs.infosupport.com/net-platform-standard-and-the-magic-of-imports/

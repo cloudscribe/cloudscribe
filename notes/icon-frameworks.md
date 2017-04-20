@@ -1,5 +1,7 @@
 ## Icon frameworks
 
+https://github.com/edent/SuperTinySocialIcons/
+
 http://fontawesome.io/
 
 https://design.google.com/icons/
