@@ -1,4 +1,7 @@
 
+https://medium.com/@gianluca.guarini/things-nobody-will-tell-you-about-react-js-3a373c1b03b4
+
+https://medium.com/@dan_abramov/hey-thanks-for-feedback-bf9502689ca4
 
 
 https://github.com/Maarten88/rrod
