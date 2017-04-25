@@ -1,5 +1,7 @@
 
 
+https://andrewlock.net/model-binding-json-posts-in-asp-net-core/
+
 https://www.smashingmagazine.com/2017/04/guide-http2-server-push/
 
 http://www.dotnetcurry.com/aspnet-mvc/1149/convert-aspnet-webapi2-aspnet5-mvc6

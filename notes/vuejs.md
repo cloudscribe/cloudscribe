@@ -96,3 +96,6 @@ https://github.com/monterail/vuelidate
 
 https://github.com/umdjs/umd
 https://github.com/amdjs/amdjs-api/blob/master/AMD.md
+
+https://auth0.com/blog/vuejs2-authentication-tutorial/
+

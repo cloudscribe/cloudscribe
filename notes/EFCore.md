@@ -6,6 +6,7 @@ https://blogs.msdn.microsoft.com/dotnet/2016/09/29/implementing-seeding-custom-c
 http://www.dotnetcurry.com/aspnet-mvc/1267/using-mongodb-nosql-database-with-aspnet-webapi-core
 
 http://www.stum.de/2016/08/24/thoughts-on-orms-2016-edition/
+http://robbygrodin.com/2017/04/18/wayfair-blog-post-orm-bankruptcy/
 
 a good example of the friction of relational storage vs document storage
 http://stackoverflow.com/questions/37370476/how-to-persist-a-list-of-strings-with-entity-framework-core

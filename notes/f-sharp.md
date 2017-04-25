@@ -12,6 +12,8 @@ http://blog.ploeh.dk/2017/03/30/a-reusable-apicontroller-adapter/
 
 https://fsharpforfunandprofit.com/posts/happy-fsharp-day-2/
 
+https://ask.slashdot.org/story/17/04/24/0149259/ask-slashdot-do-you-like-functional-programming
+
 ## Language
 
 http://fsharp.org/
