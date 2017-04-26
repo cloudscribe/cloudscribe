@@ -6,4 +6,7 @@ https://medium.com/apegroup-texts/5-actual-web-designs-trends-for-2016-f9504223c
 
 https://medium.freecodecamp.com/before-you-can-master-design-you-must-first-master-the-fundamentals-1981a2af1fda
 
+https://github.com/vadikom/smartmenus
+http://vadikom.github.io/smartmenus/src/demo/bootstrap-navbar-static-top.html
+
 

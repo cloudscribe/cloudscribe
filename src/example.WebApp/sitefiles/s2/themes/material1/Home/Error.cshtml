@@ -1,0 +1,41 @@
+﻿@model int
+
+@{
+    switch (Model)
+    {
+        case 400:
+            ViewData["Icon"] = "fa fa-ban text-danger";
+            ViewData["Title"] = "Bad Request";
+            ViewData["Description"] = "Your browser sent a request that this server could not understand.";
+            break;
+        case 401:
+            ViewData["Icon"] = "fa fa-ban text-danger";
+            ViewData["Title"] = "Unauthorized";
+            ViewData["Description"] = "Sorry, but the page requires authentication.";
+            break;
+        case 403:
+            ViewData["Icon"] = "fa fa-exclamation-circle text-danger";
+            ViewData["Title"] = "Forbidden";
+            ViewData["Description"] = "Sorry, but you don't have permission to access this page.";
+            break;
+        case 404:
+            ViewData["Icon"] = "fa fa-exclamation-circle text-danger";
+            ViewData["Title"] = "Page Not Found";
+            ViewData["Description"] = "Sorry, but the page you were looking for can't be found.";
+            break;
+        case 500:
+        default:
+            ViewData["Icon"] = "fa fa-exclamation-circle text-danger";
+            ViewData["Title"] = "Unexpected Error";
+            ViewData["Description"] = "Well, this is embarrassing. An error occurred while processing your request. Rest assured, this problem has been logged and hamsters have been released to fix the problem.";
+            break;
+    }
+}
+
+<div class="jumbotron text-center">
+    <header>
+        <h1><span aria-hidden="true" class="@ViewData["Icon"]"></span> @ViewData["Title"]</h1>
+    </header>
+    <p>@ViewData["Description"]</p>
+    <a class="btn btn-primary btn-lg" href="@Url.RouteUrl("/")"><span aria-hidden="true" class="fa fa-home"></span> Site Home</a>
+</div>

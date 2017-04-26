@@ -1,0 +1,70 @@
+﻿@model cloudscribe.Core.Web.ViewModels.CoreData.GeoZoneViewModel
+@using cloudscribe.Core.Web
+@using Microsoft.Extensions.Options
+@using Microsoft.Extensions.Localization
+@inject IStringLocalizer<CloudscribeCore> sr
+@{
+    if(Model.Id == Guid.Empty)
+    {
+        ViewData["Title"] = sr["New State"];
+    }
+    else
+    {
+        ViewData["Title"] = sr["Edit State"];
+    }
+
+}
+<h2>@ViewData["Title"]</h2>
+<h3>@Model.CountryName</h3>
+    <div class="form-horizontal">
+        <form role="form" asp-action="StateEdit" asp-controller="CoreData">
+            <div asp-validation-summary="All" class="text-danger"></div>
+            <input asp-for="Id" type="hidden" />
+            <input asp-for="CountryId" type="hidden" />
+            <input asp-for="ReturnPageNumber" type="hidden" />
+            <input asp-for="CountryListReturnPageNumber" type="hidden" />
+            <div class="form-group">
+                <label asp-for="Name" class="col-md-2 control-label">@sr["Name"]</label>
+                <div class="col-md-10">
+                    <input asp-for="Name" class="form-control" />
+                    <span asp-validation-for="Name" class="text-danger"></span> 
+                </div>
+            </div>
+            <div class="form-group">
+                <label asp-for="Code" class="col-md-2 control-label">@sr["Code"]</label>
+                <div class="col-md-10">
+                    <input asp-for="Code" class="form-control" />
+                    <span asp-validation-for="Code" class="text-danger"></span> 
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-md-offset-2 col-md-10">
+                    <button name="submit" type="submit" class="btn btn-default">@sr["Save"]</button>
+                    @if (Model.Id != Guid.Empty)
+                    {
+                        <button name="button" type="button" class="btn btn-default"
+                                onclick="javascript: if(confirm('@Html.FormatValue(Model.Name, sr["Are you sure you want to delete {0}?"])')) {$('#deleteform').submit();}">
+                            @sr["Delete"]
+                        </button>
+                    }
+                </div>
+            </div>
+
+        </form> 
+    </div>
+@if (Model.Id != Guid.Empty)
+{
+    <form id="deleteform" asp-action="StateDelete" asp-controller="CoreData">
+        <input asp-for="Id" type="hidden" />
+        <input asp-for="CountryId" type="hidden" />
+        <input asp-for="ReturnPageNumber" type="hidden" />
+        <input id="crp" name="crp" type="hidden" value="@Model.CountryListReturnPageNumber" />
+    </form>  
+}
+        <div>
+            <a class="btn btn-default" asp-action="StateListPage"
+               asp-controller="CoreData"
+               asp-route-countryId="@Model.CountryId"
+               asp-route-crp="@Model.CountryListReturnPageNumber"
+               asp-route-pageNumber="@Model.ReturnPageNumber">@sr["Back To State List"]</a>
+        </div>

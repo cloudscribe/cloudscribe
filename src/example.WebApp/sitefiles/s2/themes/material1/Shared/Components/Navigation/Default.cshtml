@@ -1,0 +1,12 @@
+﻿@using cloudscribe.Web.Navigation
+@model NavigationViewModel
+@if (Model.HasVisibleChildren(Model.RootNode))
+{
+    <ul class="menu">
+    @foreach (var node in Model.RootNode.Children)
+    {
+        if (!Model.ShouldAllowView(node)) { continue; }
+        <li class='@Model.GetClass(node.Value)'><a href="@Url.Content(Model.AdjustUrl(node))">@Html.Raw(Model.GetIcon(node.Value))@Model.AdjustText(node)</a></li>
+    }
+    </ul>
+}

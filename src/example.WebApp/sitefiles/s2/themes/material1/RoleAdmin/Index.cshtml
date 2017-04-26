@@ -1,0 +1,65 @@
+﻿@model cloudscribe.Core.Web.ViewModels.RoleAdmin.RoleListViewModel
+@using cloudscribe.Web.Navigation
+@using cloudscribe.Web.Pagination
+@addTagHelper "*, cloudscribe.Web.Pagination"
+@using cloudscribe.Core.Models
+@using cloudscribe.Core.Web
+@using Microsoft.Extensions.Options
+@using Microsoft.Extensions.Localization
+@inject IStringLocalizer<CloudscribeCore> sr
+@inject IOptions<SiteConfigOptions> setupOptionsAccessor
+@{
+    var setupOptions = setupOptionsAccessor.Value;
+}
+<div class="row">
+    <div class="col-md-10 col-md-push-2">
+        <h2>@ViewData["Title"]</h2>
+        <p>
+            <a class="btn btn-sm btn-default" asp-action="RoleEdit" asp-controller="RoleAdmin" asp-route-siteId="@Model.SiteId">@sr["New Role"]</a>
+        </p>
+        <ul class="btn-group list-group">
+            @foreach (var item in Model.SiteRoles)
+            {
+                <li class="list-group-item">
+                    <span>
+                        @Html.DisplayFor(modelItem => item.RoleName)
+                        &nbsp;
+                    </span>
+                    <div class="btn-group pull-right" role="group">
+                        <form class="form-inline" asp-controller="RoleAdmin" asp-action="RoleDelete">
+                            <input name="SiteId" value="@item.SiteId" type="hidden" />
+                            <input id="roleId" name="roleId" type="hidden" value="@item.Id" />
+                            <span class="btn btn-default btn-xs">
+                                <a asp-action="RoleMembers"
+                                   asp-controller="RoleAdmin"
+                                   asp-route-siteId="@item.SiteId"
+                                   asp-route-roleId="@item.Id">@sr["Members"]</a>
+                                <span class="badge">@Html.DisplayFor(modelItem => item.MemberCount)</span>
+                            </span>
+                            <a class="btn btn-xs btn-default" asp-action="RoleEdit" asp-controller="RoleAdmin"
+                               asp-route-siteId="@Model.SiteId"
+                               asp-route-roleId="@item.Id">@sr["Edit"]</a>
+                            @if (item.IsDeletable(setupOptions.RolesThatCannotBeDeleted))
+                            {
+                                <button type="submit"
+                                        onclick="javascript: return confirm('@Html.FormatValue(item.RoleName, sr["Are you sure you want to delete {0}?"])');"
+                                        class="btn btn-default btn-xs">
+                                    @sr["Delete"]
+                                </button>
+                            }
+                        </form>
+                    </div>
+                </li>
+            }
+        </ul>
+        <div>
+            <cs-pager cs-paging-info="@Model.Paging"
+                      asp-action="Index" asp-controller="RoleAdmin"
+                      asp-route-siteId="@Model.SiteId"
+                      asp-route-pageSize="@Model.Paging.ItemsPerPage"></cs-pager>
+        </div>
+    </div>
+    <div class="col-md-2 col-md-pull-10">
+        @await Component.InvokeAsync("Navigation", new { viewName = "SideNav", filterName = NamedNavigationFilters.ParentTree, startingNodeKey = "SiteAdmin" })
+    </div>
+</div>

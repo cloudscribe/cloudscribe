@@ -1,0 +1,42 @@
+﻿@model cloudscribe.Core.Web.ViewModels.SystemInfo.SystemInfoViewModel
+@using cloudscribe.Core.Web
+@using cloudscribe.Web.Navigation
+@using Microsoft.Extensions.Options
+@using Microsoft.Extensions.Localization
+@inject IStringLocalizer<CloudscribeCore> sr
+<h1>@ViewData["Title"]</h1>
+<dl class="dl-horizontal">
+    <dt>@sr["Server Host Name"]</dt>
+    <dd>
+        @Model.Name
+    </dd>
+    <dt>@sr["Server IP Address"]</dt>
+    <dd>
+        @Model.LocalAddress
+    </dd>
+    <dt>@sr["Operating System"]</dt>
+    <dd>
+        @Model.OperatingSystem
+    </dd>
+    <dt>@sr["Runtime"]</dt>
+    <dd>
+        @Model.Runtime
+    </dd>
+    <dt>@sr["Environment Name"]</dt>
+    <dd>
+        @Model.EnvironmentName
+    </dd>
+    <dt>@sr["Cloudscribe Version"]</dt>
+    <dd>
+        @Model.CloudscribeCoreVersion
+    </dd>
+    <dt>@sr["Database Platform"]</dt>
+    <dd>
+        @Model.DatabasePlatform
+    </dd>
+    <dt>@sr["Server Time UTC"]</dt>
+    <dd>
+        @Model.ServerTimeUtc
+    </dd>
+</dl>
+@await Component.InvokeAsync("Navigation", new { viewName = "ChildTree", filterName = NamedNavigationFilters.ChildTree, startingNodeKey = "" })

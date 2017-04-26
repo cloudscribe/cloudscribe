@@ -1,0 +1,10 @@
+﻿@using cloudscribe.Core.Models
+@inject SiteContext Site
+@model string 
+
+@{
+    Layout = "_LayoutEmailNotification";
+    ViewData["Title"] = "Security Code";
+}
+
+Your security code for @Site.SiteName is: @Model

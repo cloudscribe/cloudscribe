@@ -1,0 +1,13 @@
+﻿@using cloudscribe.Core.Web
+@using Microsoft.Extensions.Options
+@using Microsoft.Extensions.Localization
+@inject IStringLocalizer<CloudscribeCore> sr
+@{
+    ViewData["Title"] = sr["Email Confirmed"];
+}
+<h2>@ViewData["Title"]</h2>
+<div>
+    <p>
+        @sr["Thank you for confirming your email."] <a asp-controller="Account" asp-action="Login">@sr["Please Click here to Log in"]</a>.
+    </p>
+</div>

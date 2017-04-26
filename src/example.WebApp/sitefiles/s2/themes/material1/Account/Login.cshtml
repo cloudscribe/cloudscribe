@@ -1,0 +1,153 @@
+﻿@model  cloudscribe.Core.Web.ViewModels.SiteUser.LoginViewModel
+@using System.Collections.Generic
+@using Microsoft.AspNetCore.Http
+@using Microsoft.AspNetCore.Http.Authentication
+@using cloudscribe.Core.Models
+@using cloudscribe.Core.Web
+@using Microsoft.Extensions.Options
+@using Microsoft.Extensions.Localization
+@inject IStringLocalizer<CloudscribeCore> sr
+@inject SiteContext site
+@{
+    var socFormat = sr["Log in using your {0} account"];
+    var socialAuthoColumnWidth = 4;
+    if (Model.DisableDbAuth) { socialAuthoColumnWidth = 12; }
+}
+@section Meta {
+<meta name="robots" content="noindex" />
+}
+@if (Model.RecaptchaSiteKey.Length > 0)
+{
+    <script src='https://www.google.com/recaptcha/api.js'></script>
+}
+@if (Model.UseInvisibleCaptcha)
+{
+        <script>
+            function onCaptchaSubmit(token) { document.getElementById("login-form").submit();  }
+        </script>
+}
+<h2>@ViewData["Title"]</h2>
+@if (Model.LoginInfoTop.Length > 0)
+{
+    <div class="row">
+        <div class="col-md-12">
+            @Html.Raw(Model.LoginInfoTop)
+        </div>
+    </div>
+}
+<div class="row">
+    <div class="col m8">
+        @if (!Model.DisableDbAuth)
+        {
+            <section id="loginForm" class="row">
+                <form id="login-form" asp-controller="Account" asp-action="Login" asp-route-returnurl='@ViewData["ReturnUrl"]' method="post" class="col s12" role="form">
+                    <div asp-validation-summary="All" class="text-danger"></div>
+                    @if (Model.UseEmailForLogin)
+                {
+                        <div class="row">
+                            <div class="input-field col s6">
+                                <input asp-for="Email" class="form-control" />
+                                <label asp-for="Email" class="col m2 control-label">@sr["Email"]</label>
+                                <span asp-validation-for="Email" class="text-danger"></span>
+                            </div>
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="row">
+                            <div class="input-field col s6">
+                                <input asp-for="UserName" class="form-control" />
+                                <label asp-for="UserName" class="col-md-2 control-label">@sr["Username"]</label>
+                                <span asp-validation-for="UserName" class="text-danger"></span>
+                            </div>
+                        </div>
+                    }
+                    <div class="row">
+                        <div class="input-field col s6">
+                            <input asp-for="Password" class="form-control" />
+                            <label asp-for="Password" class="col-md-2 control-label">@sr["Password"]</label>
+                            <span asp-validation-for="Password" class="text-danger"></span>
+                        </div>
+                    </div>
+                    @if (site.AllowPersistentLogin)
+                {
+                        <div class="row">
+                            <div class="col s6">
+                                <input asp-for="RememberMe" />
+                                <label asp-for="RememberMe" class="col-md-2 control-label">@sr["Remember Me"]</label>                 
+                            </div>
+                        </div>
+                    }
+                    @if (Model.RecaptchaSiteKey.Length > 0 && !Model.UseInvisibleCaptcha)
+                    {
+                        <div class="row">
+                            <div class="input-field col s6">
+                                <div class="g-recaptcha" data-sitekey="@Model.RecaptchaSiteKey"></div>
+                                @Html.ValidationMessage("recaptchaerror", new { @class = "text-danger" })
+                            </div>
+                        </div>
+                    }
+                    <div class="row">
+                        <div class="input-field col s6">
+@if (Model.RecaptchaSiteKey.Length > 0 && Model.UseInvisibleCaptcha)
+{
+    <button  class="btn  g-recaptcha" data-sitekey="@Model.RecaptchaSiteKey" data-callback='onCaptchaSubmit'>@sr["Log in"]</button>
+}
+else
+{
+    <button name="submit" type="submit" class="btn ">@sr["Log in"]</button>
+}
+                            
+                            <input type="hidden" asp-for="UseEmailForLogin" />
+                        </div>
+                    </div>
+                    @if (site.AllowNewRegistration)
+                    {
+                        <p>
+                            <a asp-action="Register">@sr["Register as a new user?"]</a>
+                        </p>
+                    }     
+                    <p>
+                        <a asp-action="ForgotPassword">@sr["Forgot your password?"]</a>
+                    </p>
+                </form>
+            </section>
+        }
+    </div>
+    <div class="col m@socialAuthoColumnWidth">
+        @{
+            var LoginProviders = Model.ExternalAuthenticationList.ToList();
+            if (LoginProviders.Count > 0)
+            {
+                <section id="socialLoginForm">
+                    <h4>@sr["Use an existing account to log in"]</h4>
+                    <form asp-controller="Account" asp-action="ExternalLogin" asp-route-returnurl='@ViewData["ReturnUrl"]' method="post"  role="form">
+                        <div id="socialLoginList">
+                            <p>
+                                @foreach (AuthenticationDescription p in LoginProviders)
+                                {
+                                    <button type="submit" class="btn" id="@p.AuthenticationScheme" name="provider" value="@p.AuthenticationScheme"
+                                            title="@string.Format(socFormat,p.DisplayName)">
+                                        @p.AuthenticationScheme
+                                    </button>
+                                }
+                            </p>
+                        </div>
+                    </form>
+                </section>
+            }
+        }
+    </div>
+</div>
+@if (Model.LoginInfoBottom.Length > 0)
+{
+    <div class="row">
+        <div class="col m12">
+            @Html.Raw(Model.LoginInfoBottom)
+        </div>
+    </div>
+}
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial"); }
+    <script src="~/cscsr/requiredwhenvalidator"></script>
+}

@@ -78,6 +78,8 @@ https://www.typescriptlang.org/docs/handbook/compiler-options.html
 https://github.com/vuejs/vue-class-component
 https://github.com/vuejs/vue-class-component/blob/master/example/App.vue
 
+https://ypereirareis.github.io/blog/2017/04/25/vuejs-two-way-data-binding-state-management-vuex-strict-mode/
+
 
 
 http://vue-loader.vuejs.org/en/configurations/extract-css.html

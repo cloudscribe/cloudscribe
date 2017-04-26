@@ -1,0 +1,17 @@
+﻿@using cloudscribe.Web.Navigation
+@model NavigationViewModel
+@if (Model.CurrentNode != null && Model.ParentChain.Count > 1)
+{
+    <nav>
+        <div class="nav-wrapper">
+            <div class="col s12">
+                @foreach (var node in Model.ParentChain)
+                {
+                    if (!Model.ShouldAllowView(node)) { continue; }
+                    <a class="breadcrumb" href="@Url.Content(Model.AdjustUrl(node))">@Model.AdjustText(node)</a>         
+                }
+            </div>      
+       </div>
+    </nav>
+    
+}

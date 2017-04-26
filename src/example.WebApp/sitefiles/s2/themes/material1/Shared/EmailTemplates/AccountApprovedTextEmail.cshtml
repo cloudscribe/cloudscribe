@@ -1,0 +1,11 @@
+﻿@using cloudscribe.Core.Models
+@inject SiteContext Site
+@model string 
+
+@{
+    Layout = "_LayoutTextEmailNotification";
+    ViewData["Title"] = "Account Approved";
+}
+
+Your account at @Site.SiteName has been approved. 
+You may now login by clicking here: @Html.Raw(Model)

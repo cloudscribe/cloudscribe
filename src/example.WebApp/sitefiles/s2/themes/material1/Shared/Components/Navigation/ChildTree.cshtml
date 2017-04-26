@@ -1,0 +1,22 @@
+﻿@using cloudscribe.Web.Navigation
+@using System.Text
+@model NavigationViewModel
+@if (Model.HasVisibleChildren(Model.CurrentNode))
+{
+    <ul role="menu">
+    @foreach (var node in Model.CurrentNode.Children)
+    {
+        if (!Model.ShouldAllowView(node)) { continue; }
+        if (!Model.HasVisibleChildren(node))
+        {
+            <li role="presentation" class='@Model.GetClass(node.Value)'><a href="@Url.Content(Model.AdjustUrl(node))">@Html.Raw(Model.GetIcon(node.Value))@Model.AdjustText(node)</a></li>
+        }
+        else
+        {
+            <li role="presentation" class='@Model.GetClass(node.Value)'><a href="@Url.Content(Model.AdjustUrl(node))">@Html.Raw(Model.GetIcon(node.Value))@Model.AdjustText(node)</a>
+            @Model.UpdateTempNode(node)@Html.Partial("NavigationNodeChildTreePartial", Model) 
+            </li>
+        }
+    }
+    </ul>
+}

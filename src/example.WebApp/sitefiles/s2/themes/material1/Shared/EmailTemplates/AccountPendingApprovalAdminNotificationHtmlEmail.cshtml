@@ -1,0 +1,10 @@
+﻿@using cloudscribe.Core.Models
+@inject SiteContext Site
+@model ISiteUser 
+
+@{
+    Layout = "_LayoutEmailNotification";
+    ViewData["Title"] = "New User Account Needs Approval";
+}
+A new user just registered at @Site.SiteName with email address @Model.Email
+<br />The account needs to be approved before the new user can login.

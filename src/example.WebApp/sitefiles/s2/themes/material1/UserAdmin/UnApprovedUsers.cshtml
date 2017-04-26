@@ -1,0 +1,14 @@
+﻿@model cloudscribe.Core.Web.ViewModels.UserAdmin.UserListViewModel
+@using cloudscribe.Web.Navigation
+<div class="row">
+    <div class="col-md-10 col-md-push-2">
+        <h2>@ViewData["Title"]</h2>
+        @{await Html.RenderPartialAsync("UserGridPartial", Model); }
+    </div>
+    <div class="col-md-2 col-md-pull-10">
+        @await Component.InvokeAsync("Navigation", new { viewName = "SideNavAlt1", filterName = NamedNavigationFilters.ParentTree, startingNodeKey = "SiteAdmin" })
+    </div>
+</div>
+@section scripts {
+@{ await Html.RenderPartialAsync("_SideMenuScriptsPartial"); }
+}
