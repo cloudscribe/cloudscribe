@@ -2,8 +2,7 @@
 
   <PropertyGroup>
     <Description>model classes for cloudscribe core. you should not normally install this separately, it will be installed if you install cloudscribe.Core.Web</Description>
-    <VersionPrefix>1.1.0</VersionPrefix>
-    <VersionSuffix>rc20170401</VersionSuffix>
+    <VersionPrefix>1.2.1</VersionPrefix>
     <Authors>Joe Audette</Authors>
     <TargetFrameworks>net451;net452;net46;netstandard1.6</TargetFrameworks>
     <AssemblyName>cloudscribe.Core.Models</AssemblyName>
@@ -20,10 +19,10 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.AspNetCore.DataProtection" Version="1.1.1" />
-    <PackageReference Include="Microsoft.AspNetCore.Http" Version="1.1.1" />
-    <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="1.1.1" />
-    <PackageReference Include="System.Data.Common" Version="4.3.0" />
+    <PackageReference Include="Microsoft.AspNetCore.DataProtection" Version="1.1.*" />
+    <PackageReference Include="Microsoft.AspNetCore.Http" Version="1.1.*" />
+    <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="1.1.*" />
+    <PackageReference Include="System.Data.Common" Version="4.3.*" />
   </ItemGroup>
 
   <ItemGroup Condition=" '$(TargetFramework)' == 'net451' ">

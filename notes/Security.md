@@ -3,6 +3,8 @@ https://paragonie.com/blog/2017/03/jwt-json-web-tokens-is-bad-standard-that-ever
 
 https://blogs.msdn.microsoft.com/webdev/2017/04/06/jwt-validation-and-authorization-in-asp-net-core/
 
+https://blogs.msdn.microsoft.com/webdev/2017/04/27/jwt-validation-and-authorization-in-asp-net-core-2/
+
 https://arstechnica.co.uk/security/2017/02/now-sites-can-fingerprint-you-online-even-when-you-use-multiple-browsers/
 
 https://blog.benroux.me/running-multiple-https-domains-from-the-same-server/

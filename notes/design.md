@@ -9,4 +9,6 @@ https://medium.freecodecamp.com/before-you-can-master-design-you-must-first-mast
 https://github.com/vadikom/smartmenus
 http://vadikom.github.io/smartmenus/src/demo/bootstrap-navbar-static-top.html
 
+https://blog.marvelapp.com/body-text-small/
+
 
