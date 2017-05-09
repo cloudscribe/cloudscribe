@@ -2,6 +2,8 @@
 
 https://www.hanselman.com/blog/OptionsForCSSAndJSBundlingAndMinificationWithASPNETCore.aspx
 
+material design css
+https://getmdl.io/
 
 http://material.io/color
 

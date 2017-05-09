@@ -24,5 +24,7 @@ https://hackernoon.com/10-react-mini-patterns-c1da92f068c5
 
 https://reacttraining.com/online/react-fundamentals
 
+https://medium.freecodecamp.com/functional-setstate-is-the-future-of-react-374f30401b6b
+
 
 

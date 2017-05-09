@@ -1,5 +1,6 @@
 
 
+http://alt-web.com/TUTORIALS/?id=bootstrap_modal_carousel_gallery
 
 http://www.sitepoint.com/understanding-bootstraps-affix-scrollspy-plugins/
 nav bar stuff
@@ -20,3 +21,5 @@ http://alistapart.com/article/dry-ing-out-your-sass-mixins
 
 http://www.thesassway.com/editorial/sass-doesnt-create-bad-code-bad-coders-do
 
+
+@{galleryIndex += 1; }

@@ -23,6 +23,11 @@ $ npm run dev
 
 https://marketplace.visualstudio.com/items?itemName=octref.vetur
 
+https://alligator.io/vuejs/typescript-class-components/
+
+https://www.davevoyles.com/2016/02/16/how-to-add-type-definitions-to-a-typescript-project/
+
+https://www.reddit.com/r/vuejs/comments/62m2te/what_project_directory_structure_and_file_naming/
 
 http://router.vuejs.org/
 
@@ -78,6 +83,10 @@ https://www.typescriptlang.org/docs/handbook/compiler-options.html
 https://github.com/vuejs/vue-class-component
 https://github.com/vuejs/vue-class-component/blob/master/example/App.vue
 
+https://ypereirareis.github.io/blog/2017/04/25/vuejs-two-way-data-binding-state-management-vuex-strict-mode/
+
+https://github.com/JosephusPaye/Keen-UI
+
 
 
 http://vue-loader.vuejs.org/en/configurations/extract-css.html
@@ -98,4 +107,8 @@ https://github.com/umdjs/umd
 https://github.com/amdjs/amdjs-api/blob/master/AMD.md
 
 https://auth0.com/blog/vuejs2-authentication-tutorial/
+
+https://herringtondarkholme.github.io/2016/11/01/how-to-choose-vue-library/
+
+
 
