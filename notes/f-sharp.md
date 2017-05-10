@@ -14,6 +14,10 @@ https://fsharpforfunandprofit.com/posts/happy-fsharp-day-2/
 
 https://ask.slashdot.org/story/17/04/24/0149259/ask-slashdot-do-you-like-functional-programming
 
+http://www.codemag.com/article/1705051
+
+http://connelhooley.uk/blog/2017/04/30/f-sharp-to-c-sharp
+
 ## Language
 
 http://fsharp.org/
