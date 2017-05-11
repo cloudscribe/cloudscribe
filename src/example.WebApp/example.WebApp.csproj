@@ -84,4 +84,8 @@
     <DotNetCliToolReference Include="Microsoft.EntityFrameworkCore.Tools.DotNet" Version="1.*" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="sitefiles\s1\themes\cerulean\static\css\" />
+  </ItemGroup>
+
 </Project>

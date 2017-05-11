@@ -26,6 +26,7 @@ using IdentityModel;
 using example.WebApp.Configuration;
 using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using cloudscribe.Core.Identity;
+using Microsoft.Extensions.FileProviders;
 
 namespace example.WebApp
 {
@@ -291,7 +292,7 @@ namespace example.WebApp
 
             app.UseForwardedHeaders();
 
-            app.UseStaticFiles();
+            
             
             //app.UseSession();
             
@@ -306,6 +307,7 @@ namespace example.WebApp
 
             app.UsePerTenant<cloudscribe.Core.Models.SiteContext>((ctx, builder) =>
             {
+                var tenantSegment = "";
                 // custom 404 and error page - this preserves the status code (ie 404)
                 if(multiTenantOptions.Mode != cloudscribe.Core.Models.MultiTenantMode.FolderName || string.IsNullOrEmpty(ctx.Tenant.SiteFolderName))
                 {
@@ -313,6 +315,7 @@ namespace example.WebApp
                 }
                 else
                 {
+                    tenantSegment = ctx.Tenant.SiteFolderName + "/";
                     builder.UseStatusCodePagesWithReExecute("/" + ctx.Tenant.SiteFolderName + "/Home/Error/{0}");
                 }
                 
@@ -346,10 +349,51 @@ namespace example.WebApp
                 //    RequireHttpsMetadata = true
                 //});
 
+                // this allows serving static files from the "static" folder beneath the theme folder
+                // we don't want to serve the view files over http, but we can serve css and js etc from the static folder beneath the theme folder
+                // without serving theme views
+                var themeName = ctx.Tenant.Theme;
+                if(!string.IsNullOrEmpty(themeName))
+                {
+                    var themePath = Path.Combine(Directory.GetCurrentDirectory(), "sitefiles", ctx.Tenant.AliasId, "themes", themeName, "static");
+                    if(Directory.Exists(themePath))
+                    {
+                        builder.UseStaticFiles(new StaticFileOptions()
+                        {
+                            FileProvider = new PhysicalFileProvider(themePath),
+                            RequestPath = new PathString("/" + tenantSegment + themeName)
+                        });
+                    }
+                    
+                }
+
+                var siteFilesPath = Path.Combine(Directory.GetCurrentDirectory(), "sitefiles", ctx.Tenant.AliasId, "files");
+                if (Directory.Exists(siteFilesPath))
+                {
+                    if(string.IsNullOrEmpty(tenantSegment))
+                    {
+                        builder.UseStaticFiles(new StaticFileOptions()
+                        {
+                            FileProvider = new PhysicalFileProvider(siteFilesPath)
+                            //,RequestPath = new PathString("/files")
+                        });
+                    }
+                    else
+                    {
+                        builder.UseStaticFiles(new StaticFileOptions()
+                        {
+                            FileProvider = new PhysicalFileProvider(siteFilesPath)
+                            ,RequestPath = new PathString("/" + ctx.Tenant.SiteFolderName)
+                        });
+                    }
+                    
+                }
+
 
             });
 
-            
+            app.UseStaticFiles();
+
 
             UseMvc(app, multiTenantOptions.Mode == cloudscribe.Core.Models.MultiTenantMode.FolderName);
 
