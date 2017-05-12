@@ -1,4 +1,5 @@
 ﻿@inject SiteContext Tenant
+@addTagHelper "*, cloudscribe.Core.Web"
 <!DOCTYPE html>
 <html>
 <head>
@@ -7,8 +8,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     @RenderSection("Meta", required: false)
   <environment names="Development">
-      <link rel="stylesheet" href="~/cosmo/css/bootstrap.css" />
-    <link rel="stylesheet" href="~/css/site.css" />
+      <link rel="stylesheet" cs-resolve-theme-resource="true" cs-tenant="@Tenant" asp-append-version="true" href="~/css/bootstrap.css" />
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
   </environment>
   <environment names="Staging,Production">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootswatch/3.3.6/cosmo/bootstrap.min.css"

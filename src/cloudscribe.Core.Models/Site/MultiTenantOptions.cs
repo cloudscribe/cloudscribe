@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2015-08-01
-// Last Modified:			2016-06-12
+// Last Modified:			2017-05-12
 // 
 
 using System;
@@ -58,5 +58,19 @@ namespace cloudscribe.Core.Models
         public bool AllowSharedAliasId { get; set; } = false;
 
         public string DefaultNewUserRoles { get; set; } = "Authenticated Users";
+
+        public string SiteFilesFolderName { get; set; } = "sitefiles";
+
+        public string SiteThemesFolderName { get; set; } = "themes";
+
+        public string SiteContentFolderName { get; set; } = "wwwroot";
+
+        public bool UserPerSiteThemes { get; set; } = true;
+
+        public bool UseSharedThemes { get; set; } = true;
+
+        public string SharedThemesFolderName { get; set; } = "SharedThemes";
+
+
     }
 }

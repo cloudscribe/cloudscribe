@@ -2,12 +2,14 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 //  Author:                     Joe Audette
 //  Created:                    2016-03-03
-//	Last Modified:              2016-10-08
+//	Last Modified:              2017-05-12
 //
 
 using cloudscribe.Core.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc.Razor;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Options;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -18,7 +20,8 @@ namespace cloudscribe.Core.Web.Components
 {
     public class SiteViewLocationExpander : IViewLocationExpander
     {
-        private const string THEME_KEY = "theme", TENANT_KEY = "tenant";
+        
+        private const string THEME_KEY = "theme", TENANT_KEY = "tenant", OPTIONS_KEY = "multitenantoptions";
 
         public void PopulateValues(ViewLocationExpanderContext context)
         {
@@ -29,25 +32,33 @@ namespace cloudscribe.Core.Web.Components
             //if(string.IsNullOrWhiteSpace(tenantKey)) tenantKey = "tenant-" + context.ActionContext.HttpContext.GetTenant<SiteSettings>()?.SiteGuid.ToString();
 
             context.Values[TENANT_KEY] = tenantKey;
+            
         }
 
         public IEnumerable<string> ExpandViewLocations(ViewLocationExpanderContext context, IEnumerable<string> viewLocations)
         {
-            string tenant = null;
-            string theme = null;
+            // could not avoid the servicelocator pattern here because of the way ViewLocationExpander is added in startup
+            var optionsAccessor = context.ActionContext.HttpContext.RequestServices.GetService(typeof(IOptions<MultiTenantOptions>)) as IOptions<MultiTenantOptions>;
+            var options = optionsAccessor.Value;
 
-            if (context.Values.TryGetValue(THEME_KEY, out theme))
+            if (context.Values.TryGetValue(THEME_KEY, out string theme))
             {
-                if (context.Values.TryGetValue(TENANT_KEY, out tenant))
+                if (context.Values.TryGetValue(TENANT_KEY, out string tenant))
                 {
-                    IEnumerable<string> themeLocations = new[]
+                    if (options != null)
                     {
-                        $"/sitefiles/{tenant}/themes/{theme}/{{1}}/{{0}}.cshtml",
-                        $"/sitefiles/{tenant}/themes/{theme}/Shared/{{0}}.cshtml",
-                        $"/sitefiles/{tenant}/themes/{theme}/EmailTemplates/{{0}}.cshtml"
-                    };
 
-                    viewLocations = themeLocations.Concat(viewLocations);
+                        IEnumerable<string> themeLocations = new[]
+                        {
+                            $"/{options.SiteFilesFolderName}/{tenant}/{options.SiteThemesFolderName}/{theme}/{{1}}/{{0}}.cshtml",
+                            $"/{options.SiteFilesFolderName}/{tenant}/{options.SiteThemesFolderName}/{theme}/Shared/{{0}}.cshtml",
+                            $"/{options.SiteFilesFolderName}/{tenant}/{options.SiteThemesFolderName}/{theme}/EmailTemplates/{{0}}.cshtml"
+                        };
+
+                        viewLocations = themeLocations.Concat(viewLocations);
+                    }
+                    
+                    
                 }
                 
             }
