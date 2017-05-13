@@ -26,6 +26,7 @@ using IdentityModel;
 using example.WebApp.Configuration;
 using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using cloudscribe.Core.Identity;
+using Microsoft.Extensions.FileProviders;
 
 namespace example.WebApp
 {
@@ -291,7 +292,7 @@ namespace example.WebApp
 
             app.UseForwardedHeaders();
 
-            app.UseStaticFiles();
+            
             
             //app.UseSession();
             
@@ -304,8 +305,11 @@ namespace example.WebApp
 
             var multiTenantOptions = multiTenantOptionsAccessor.Value;
 
+            bool didAddMainStaticFiles = false;
+
             app.UsePerTenant<cloudscribe.Core.Models.SiteContext>((ctx, builder) =>
             {
+                var tenantSegment = "";
                 // custom 404 and error page - this preserves the status code (ie 404)
                 if(multiTenantOptions.Mode != cloudscribe.Core.Models.MultiTenantMode.FolderName || string.IsNullOrEmpty(ctx.Tenant.SiteFolderName))
                 {
@@ -313,16 +317,27 @@ namespace example.WebApp
                 }
                 else
                 {
+                    tenantSegment = ctx.Tenant.SiteFolderName + "/";
                     builder.UseStatusCodePagesWithReExecute("/" + ctx.Tenant.SiteFolderName + "/Home/Error/{0}");
                 }
-                
+
+                // resolve static files from wwwroot folders within themes and within sitefiles
+                builder.UseSiteAndThemeStaticFiles(loggerFactory, multiTenantOptions, ctx.Tenant);
+                if(!didAddMainStaticFiles)
+                {
+                    // add main wwwroot static file middleware before authentication but after our other static files branches
+                    // notice app here is intended not builder, we only need that once on the main branch
+                    app.UseStaticFiles();
+                    didAddMainStaticFiles = true;
+                }
+
 
                 builder.UseCloudscribeCoreDefaultAuthentication(
                     loggerFactory,
                     multiTenantOptions,
                     ctx.Tenant);
 
-                // to make this multi tenant for folders
+                // to make this multi tenant for folders we are
                 // using a fork of IdentityServer4 and hoping to get changes so we don't need a fork
                 // https://github.com/IdentityServer/IdentityServer4/issues/19
 
@@ -345,12 +360,11 @@ namespace example.WebApp
 
                 //    RequireHttpsMetadata = true
                 //});
-
-
+                
+                
+                
             });
-
             
-
             UseMvc(app, multiTenantOptions.Mode == cloudscribe.Core.Models.MultiTenantMode.FolderName);
 
             

@@ -4,7 +4,9 @@ using cloudscribe.Core.Identity;
 using cloudscribe.Core.Models;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.FileProviders;
 using Microsoft.Extensions.Logging;
+using System.IO;
 
 namespace Microsoft.AspNetCore.Builder
 {
@@ -227,6 +229,105 @@ namespace Microsoft.AspNetCore.Builder
 
             return options;
 
+        }
+
+        public static IApplicationBuilder UseSiteAndThemeStaticFiles(
+           this IApplicationBuilder builder,
+           ILoggerFactory loggerFactory,
+           MultiTenantOptions multiTenantOptions,
+           SiteContext tenant
+           )
+        {
+            var tenantSegment = "";
+            if (multiTenantOptions.Mode == MultiTenantMode.FolderName && !string.IsNullOrEmpty(tenant.SiteFolderName))
+            {
+                tenantSegment = tenant.SiteFolderName + "/";  
+            }
+
+            var themeName = tenant.Theme;
+            bool themeFound = false;
+            if (multiTenantOptions.UserPerSiteThemes)
+            {
+                // this allows serving static files from the "wwwroot" folder beneath the theme folder
+                // we don't want to serve the view files over http, but we can serve css and js etc from the static folder beneath the theme folder
+                // without serving theme views
+                if (!string.IsNullOrEmpty(themeName))
+                {
+                    var themePath = Path.Combine(Directory.GetCurrentDirectory(),
+                        multiTenantOptions.SiteFilesFolderName,
+                        tenant.AliasId,
+                        multiTenantOptions.SiteThemesFolderName,
+                        themeName,
+                        multiTenantOptions.ThemeStaticFilesFolderName);
+
+                    if (Directory.Exists(themePath))
+                    {
+                        builder.UseStaticFiles(new StaticFileOptions()
+                        {
+                            FileProvider = new PhysicalFileProvider(themePath),
+                            RequestPath = new PathString("/" + tenantSegment + themeName)
+                        });
+                        themeFound = true;
+                    }
+
+                }
+            }
+
+            if(!themeFound && multiTenantOptions.UseSharedThemes)
+            {
+                if (!string.IsNullOrEmpty(themeName))
+                {
+                    var themePath = Path.Combine(Directory.GetCurrentDirectory(),
+                        multiTenantOptions.SharedThemesFolderName,
+                        themeName,
+                        multiTenantOptions.ThemeStaticFilesFolderName);
+
+                    if (Directory.Exists(themePath))
+                    {
+                        builder.UseStaticFiles(new StaticFileOptions()
+                        {
+                            FileProvider = new PhysicalFileProvider(themePath)
+                            ,RequestPath = new PathString("/" + tenantSegment + themeName)
+                        });
+                    }
+
+                }
+
+            }
+            
+            if(multiTenantOptions.UserPerSiteWwwRoot)
+            {
+                // this allows serving static files from /sitefiles/[aliasid]/wwwroot
+                // so that files can be isolated per tenant
+                var siteFilesPath = Path.Combine(Directory.GetCurrentDirectory(),
+                    multiTenantOptions.SiteFilesFolderName,
+                    tenant.AliasId,
+                    multiTenantOptions.SiteContentFolderName);
+
+                if (Directory.Exists(siteFilesPath))
+                {
+                    if (string.IsNullOrEmpty(tenantSegment)) // root tenant or hostname tenant
+                    {
+                        builder.UseStaticFiles(new StaticFileOptions()
+                        {
+                            FileProvider = new PhysicalFileProvider(siteFilesPath)
+                            //,RequestPath = new PathString("/files")
+                        });
+                    }
+                    else
+                    {
+                        builder.UseStaticFiles(new StaticFileOptions()
+                        {
+                            FileProvider = new PhysicalFileProvider(siteFilesPath),
+                            RequestPath = new PathString("/" + tenant.SiteFolderName)
+                        });
+                    }
+
+                }
+            }
+            
+
+            return builder;
         }
 
         //public static IApplicationBuilder UseWhen(this IApplicationBuilder app
