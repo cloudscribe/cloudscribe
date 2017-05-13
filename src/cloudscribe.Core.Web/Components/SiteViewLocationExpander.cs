@@ -56,6 +56,18 @@ namespace cloudscribe.Core.Web.Components
                         };
 
                         viewLocations = themeLocations.Concat(viewLocations);
+
+                        if(options.UseSharedThemes)
+                        {
+                            IEnumerable<string> sharedThemeLocations = new[]
+                            {
+                                $"/{options.SharedThemesFolderName}/{theme}/{{1}}/{{0}}.cshtml",
+                                $"/{options.SharedThemesFolderName}/{theme}/Shared/{{0}}.cshtml",
+                                $"/{options.SharedThemesFolderName}/{theme}/EmailTemplates/{{0}}.cshtml"
+                            };
+
+                            viewLocations = sharedThemeLocations.Concat(viewLocations);
+                        }
                     }
                     
                     
@@ -66,14 +78,14 @@ namespace cloudscribe.Core.Web.Components
             return viewLocations;
         }
 
-        private IEnumerable<string> ExpandTenantLocations(string tenant, IEnumerable<string> defaultLocations)
-        {
-            foreach (var location in defaultLocations)
-            {
-                yield return location.Replace("{0}", $"{{0}}_{tenant}");
-                yield return location;
-            }
-        }
+        //private IEnumerable<string> ExpandTenantLocations(string tenant, IEnumerable<string> defaultLocations)
+        //{
+        //    foreach (var location in defaultLocations)
+        //    {
+        //        yield return location.Replace("{0}", $"{{0}}_{tenant}");
+        //        yield return location;
+        //    }
+        //}
 
     }
 }

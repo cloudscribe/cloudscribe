@@ -305,6 +305,8 @@ namespace example.WebApp
 
             var multiTenantOptions = multiTenantOptionsAccessor.Value;
 
+            bool didAddMainStaticFiles = false;
+
             app.UsePerTenant<cloudscribe.Core.Models.SiteContext>((ctx, builder) =>
             {
                 var tenantSegment = "";
@@ -318,14 +320,24 @@ namespace example.WebApp
                     tenantSegment = ctx.Tenant.SiteFolderName + "/";
                     builder.UseStatusCodePagesWithReExecute("/" + ctx.Tenant.SiteFolderName + "/Home/Error/{0}");
                 }
-                
+
+                // resolve static files from wwwroot folders within themes and within sitefiles
+                builder.UseSiteAndThemeStaticFiles(loggerFactory, multiTenantOptions, ctx.Tenant);
+                if(!didAddMainStaticFiles)
+                {
+                    // add main wwwroot static file middleware before authentication but after our other static files branches
+                    // notice app here is intended not builder, we only need that once on the main branch
+                    app.UseStaticFiles();
+                    didAddMainStaticFiles = true;
+                }
+
 
                 builder.UseCloudscribeCoreDefaultAuthentication(
                     loggerFactory,
                     multiTenantOptions,
                     ctx.Tenant);
 
-                // to make this multi tenant for folders
+                // to make this multi tenant for folders we are
                 // using a fork of IdentityServer4 and hoping to get changes so we don't need a fork
                 // https://github.com/IdentityServer/IdentityServer4/issues/19
 
@@ -348,53 +360,11 @@ namespace example.WebApp
 
                 //    RequireHttpsMetadata = true
                 //});
-
-                // this allows serving static files from the "static" folder beneath the theme folder
-                // we don't want to serve the view files over http, but we can serve css and js etc from the static folder beneath the theme folder
-                // without serving theme views
-                var themeName = ctx.Tenant.Theme;
-                if(!string.IsNullOrEmpty(themeName))
-                {
-                    var themePath = Path.Combine(Directory.GetCurrentDirectory(), "sitefiles", ctx.Tenant.AliasId, "themes", themeName, "static");
-                    if(Directory.Exists(themePath))
-                    {
-                        builder.UseStaticFiles(new StaticFileOptions()
-                        {
-                            FileProvider = new PhysicalFileProvider(themePath),
-                            RequestPath = new PathString("/" + tenantSegment + themeName)
-                        });
-                    }
-                    
-                }
-
-                var siteFilesPath = Path.Combine(Directory.GetCurrentDirectory(), "sitefiles", ctx.Tenant.AliasId, "files");
-                if (Directory.Exists(siteFilesPath))
-                {
-                    if(string.IsNullOrEmpty(tenantSegment))
-                    {
-                        builder.UseStaticFiles(new StaticFileOptions()
-                        {
-                            FileProvider = new PhysicalFileProvider(siteFilesPath)
-                            //,RequestPath = new PathString("/files")
-                        });
-                    }
-                    else
-                    {
-                        builder.UseStaticFiles(new StaticFileOptions()
-                        {
-                            FileProvider = new PhysicalFileProvider(siteFilesPath)
-                            ,RequestPath = new PathString("/" + ctx.Tenant.SiteFolderName)
-                        });
-                    }
-                    
-                }
-
-
+                
+                
+                
             });
-
-            app.UseStaticFiles();
-
-
+            
             UseMvc(app, multiTenantOptions.Mode == cloudscribe.Core.Models.MultiTenantMode.FolderName);
 
             

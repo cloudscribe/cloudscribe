@@ -40,9 +40,49 @@ namespace cloudscribe.Core.Web.Components
         public List<SelectListItem> GetAvailableThemes(string aliasId = null)
         {
             List<SelectListItem> layouts = new List<SelectListItem>();
+            if(options.UserPerSiteThemes)
+            {
+                string pathToViews = GetPathToViews(aliasId);
+                if (Directory.Exists(pathToViews))
+                {
+                    var directoryInfo = new DirectoryInfo(pathToViews);
+                    var folders = directoryInfo.GetDirectories();
+                    foreach (DirectoryInfo f in folders)
+                    {
+                        SelectListItem layout = new SelectListItem
+                        {
+                            Text = f.Name,
+                            Value = f.Name
+                        };
+                        layouts.Add(layout);
+                    }
+                }
+            }
+            
 
-            string pathToViews = GetPathToViews(aliasId);
-            if(Directory.Exists(pathToViews))
+            if(options.UseSharedThemes)
+            {
+                var sharedThemes = GetSharedThemes();
+                layouts.AddRange(sharedThemes);
+            }
+            
+            layouts.Add(new SelectListItem
+            {
+                Text = "default",
+                Value = ""
+            });
+           
+            return layouts;
+
+        }
+
+        private List<SelectListItem> GetSharedThemes()
+        {
+            List<SelectListItem> layouts = new List<SelectListItem>();
+
+            string pathToViews = Path.Combine(appBasePath, options.SharedThemesFolderName);
+
+            if (Directory.Exists(pathToViews))
             {
                 var directoryInfo = new DirectoryInfo(pathToViews);
                 var folders = directoryInfo.GetDirectories();
@@ -57,12 +97,6 @@ namespace cloudscribe.Core.Web.Components
                 }
             }
             
-            layouts.Add(new SelectListItem
-            {
-                Text = "default",
-                Value = ""
-            });
-           
             return layouts;
 
         }
@@ -71,20 +105,10 @@ namespace cloudscribe.Core.Web.Components
         {
             if(string.IsNullOrEmpty(aliasId))
             {
-                // return appBasePath + "/sitefiles/"
-                //+ aliasId
-                //+ "/themes/".Replace("/", Path.DirectorySeparatorChar.ToString());
-                //return Path.Combine(appBasePath, "sitefiles", aliasId, "themes");
                 var tenant = contextAccessor.HttpContext.GetTenant<SiteContext>();
                 aliasId = tenant.AliasId;
             }
-
-            //var tenant = contextAccessor.HttpContext.GetTenant<SiteContext>();
-            // TODO: more configurable?
-            //return appBasePath + "/sitefiles/" 
-            //    + tenant.AliasId
-            //    + "/themes/".Replace("/", Path.DirectorySeparatorChar.ToString());
-
+            
             return Path.Combine(appBasePath, options.SiteFilesFolderName, aliasId, options.SiteThemesFolderName);
         }
 

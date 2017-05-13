@@ -65,6 +65,10 @@ namespace cloudscribe.Core.Models
 
         public string SiteContentFolderName { get; set; } = "wwwroot";
 
+        public bool UserPerSiteWwwRoot { get; set; } = true;
+
+        public string ThemeStaticFilesFolderName { get; set; } = "wwwroot";
+
         public bool UserPerSiteThemes { get; set; } = true;
 
         public bool UseSharedThemes { get; set; } = true;
