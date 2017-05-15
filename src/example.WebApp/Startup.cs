@@ -309,7 +309,6 @@ namespace example.WebApp
 
             app.UsePerTenant<cloudscribe.Core.Models.SiteContext>((ctx, builder) =>
             {
-                var tenantSegment = "";
                 // custom 404 and error page - this preserves the status code (ie 404)
                 if(multiTenantOptions.Mode != cloudscribe.Core.Models.MultiTenantMode.FolderName || string.IsNullOrEmpty(ctx.Tenant.SiteFolderName))
                 {
@@ -317,7 +316,6 @@ namespace example.WebApp
                 }
                 else
                 {
-                    tenantSegment = ctx.Tenant.SiteFolderName + "/";
                     builder.UseStatusCodePagesWithReExecute("/" + ctx.Tenant.SiteFolderName + "/Home/Error/{0}");
                 }
 

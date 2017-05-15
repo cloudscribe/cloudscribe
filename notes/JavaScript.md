@@ -60,3 +60,6 @@ https://d4.js.org/
 
 client side mvc
 https://medium.com/@alexnm/is-mvc-dead-for-the-frontend-35b4d1fe39ec#.qlci0m2jp
+
+http://lucasfcosta.com/2017/05/08/All-About-Recursion-PTC-TCO-and-STC-in-JavaScript.html
+
