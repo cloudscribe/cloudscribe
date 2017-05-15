@@ -299,13 +299,16 @@ namespace Microsoft.AspNetCore.Builder
             {
                 // this allows serving static files from /sitefiles/[aliasid]/wwwroot
                 // so that files can be isolated per tenant
-                var siteFilesPath = Path.Combine(Directory.GetCurrentDirectory(),
-                    multiTenantOptions.SiteFilesFolderName,
-                    tenant.AliasId,
-                    multiTenantOptions.SiteContentFolderName);
+                
+                var folderExists = TryEnsureTenantWwwRoot(tenant, multiTenantOptions);
 
-                if (Directory.Exists(siteFilesPath))
+                if (folderExists)
                 {
+                    var siteFilesPath = Path.Combine(Directory.GetCurrentDirectory(),
+                        multiTenantOptions.SiteFilesFolderName,
+                        tenant.AliasId,
+                        multiTenantOptions.SiteContentFolderName);
+
                     if (string.IsNullOrEmpty(tenantSegment)) // root tenant or hostname tenant
                     {
                         builder.UseStaticFiles(new StaticFileOptions()
@@ -328,6 +331,51 @@ namespace Microsoft.AspNetCore.Builder
             
 
             return builder;
+        }
+
+        private static bool TryEnsureTenantWwwRoot(ISiteContext tenant, MultiTenantOptions options)
+        {
+          
+            var siteFilesPath = Path.Combine(Directory.GetCurrentDirectory(), options.SiteFilesFolderName);
+            if (!Directory.Exists(siteFilesPath))
+            {
+                try
+                {
+                    Directory.CreateDirectory(siteFilesPath);     
+                }
+                catch 
+                {      
+                    return false;
+                }
+            }
+
+            var tenantFolder = Path.Combine(siteFilesPath, tenant.AliasId);
+            if (!Directory.Exists(tenantFolder))
+            {
+                try
+                {
+                    Directory.CreateDirectory(tenantFolder);
+                }
+                catch
+                {
+                    return false;
+                }
+            }
+
+            var tenantWwwRoot = Path.Combine(tenantFolder, options.SiteContentFolderName);
+            if (!Directory.Exists(tenantWwwRoot))
+            {
+                try
+                {
+                    Directory.CreateDirectory(tenantWwwRoot);
+                }
+                catch 
+                {
+                    return false;
+                }
+            }
+            
+            return true;
         }
 
         //public static IApplicationBuilder UseWhen(this IApplicationBuilder app

@@ -51,6 +51,7 @@
             <small>Copyright &copy; @DateTime.Now.Year - @(Tenant?.SiteName ?? "Sample")</small>
         </footer>
     </div>
+    @RenderSection("Toolbar", required: false)
     <environment names="Development">
         <script src="~/lib/jquery/dist/jquery.js"></script>
         <script src="~/lib/bootstrap/dist/js/bootstrap.js"></script>

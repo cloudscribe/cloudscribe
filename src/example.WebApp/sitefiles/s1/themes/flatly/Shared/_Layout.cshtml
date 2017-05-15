@@ -43,6 +43,7 @@
     <footer class="text-center" role="contentinfo" itemscope itemtype="http://schema.org/Person" itemprop="author">
         <small>Copyright &copy; @DateTime.Now.Year - @(Tenant?.SiteName ?? "Sample")</small>
     </footer>
+    @RenderSection("Toolbar", required: false)
     <environment names="Development">
         <script src="~/js/jquery.js" cs-resolve-theme-resource="true" cs-tenant="@Tenant"></script>
         <script src="~/js/bootstrap.js" cs-resolve-theme-resource="true" cs-tenant="@Tenant"></script>
