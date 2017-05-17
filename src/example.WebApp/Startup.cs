@@ -89,8 +89,7 @@ namespace example.WebApp
             });
 
             services.AddMemoryCache();
-            // we currently only use session for alerts, so we can fire an alert on the next request
-            // if session is disabled this feature fails quietly with no errors
+            
             //services.AddSession();
             
             // add authorization policies 
@@ -109,7 +108,6 @@ namespace example.WebApp
             //services.AddScoped<IVersionProvider, CloudscribeLoggingVersionProvider>();
             /* end cloudscribe Setup */
 
-            //services.AddSingleton<IThemeListBuilder, SharedThemeListBuilder>();
             services.AddCloudscribeCore(Configuration);
             
             
@@ -237,8 +235,8 @@ namespace example.WebApp
                 case "NoDb":
                     CoreNoDbStartup.InitializeDataAsync(app.ApplicationServices).Wait();
 
-                    // you can use this hack to add clients and scopes into the db since
-                    // there is currently no ui to do it
+                    // you can use this hack to add clients and scopes into the db during startup if needed
+                    // I used this before we implemented the UI for adding them
                     // you should not use this on the first run that actually creates the initial cloudscribe data
                     // you must wait until after that and then you can get the needed siteid from the database
                     // this will only run at startup time and only add data if no data exists for the given site.
@@ -267,8 +265,8 @@ namespace example.WebApp
                     // this one is only needed if using cloudscribe Logging with EF as the logging storage
                     LoggingEFStartup.InitializeDatabaseAsync(app.ApplicationServices).Wait();
 
-                    // you can use this hack to add clients and scopes into the db since
-                    // there is currently no ui to do it
+                    // you can use this hack to add clients and scopes into the db during startup if needed
+                    // I used this before we implemented the UI for adding them
                     // you should not use this on the first run that actually creates the initial cloudscribe data
                     // you must wait until after that and then you can get the needed siteid from the database
                     // this will only run at startup time and only add data if no data exists for the given site.
@@ -292,10 +290,10 @@ namespace example.WebApp
 
             app.UseForwardedHeaders();
 
-            
-            
+            app.UseStaticFiles();
+
             //app.UseSession();
-            
+
             app.UseRequestLocalization(localizationOptionsAccessor.Value);
 
             // this uses the policy called "default"
@@ -304,32 +302,22 @@ namespace example.WebApp
             app.UseMultitenancy<cloudscribe.Core.Models.SiteContext>();
 
             var multiTenantOptions = multiTenantOptionsAccessor.Value;
-
-            bool didAddMainStaticFiles = false;
-
+            
             app.UsePerTenant<cloudscribe.Core.Models.SiteContext>((ctx, builder) =>
             {
                 // custom 404 and error page - this preserves the status code (ie 404)
                 if(multiTenantOptions.Mode != cloudscribe.Core.Models.MultiTenantMode.FolderName || string.IsNullOrEmpty(ctx.Tenant.SiteFolderName))
                 {
-                    builder.UseStatusCodePagesWithReExecute("/Home/Error/{0}");
+                    builder.UseStatusCodePagesWithReExecute("/home/error/{0}");
                 }
                 else
                 {
-                    builder.UseStatusCodePagesWithReExecute("/" + ctx.Tenant.SiteFolderName + "/Home/Error/{0}");
+                    builder.UseStatusCodePagesWithReExecute("/" + ctx.Tenant.SiteFolderName + "/home/error/{0}");
                 }
 
                 // resolve static files from wwwroot folders within themes and within sitefiles
                 builder.UseSiteAndThemeStaticFiles(loggerFactory, multiTenantOptions, ctx.Tenant);
-                if(!didAddMainStaticFiles)
-                {
-                    // add main wwwroot static file middleware before authentication but after our other static files branches
-                    // notice app here is intended not builder, we only need that once on the main branch
-                    app.UseStaticFiles();
-                    didAddMainStaticFiles = true;
-                }
-
-
+                
                 builder.UseCloudscribeCoreDefaultAuthentication(
                     loggerFactory,
                     multiTenantOptions,
@@ -378,6 +366,14 @@ namespace example.WebApp
                 if (useFolders)
                 {
                     routes.MapRoute(
+                       name: "foldererrorhandler",
+                       template: "{sitefolder}/home/error/{statusCode}",
+                       defaults: new { controller = "Home", action = "Error" },
+                       constraints: new { name = new cloudscribe.Core.Web.Components.SiteFolderRouteConstraint() }
+                    );
+
+
+                    routes.MapRoute(
                         name: "folderdefault",
                         template: "{sitefolder}/{controller}/{action}/{id?}",
                         defaults: new { controller = "Home", action = "Index" },
@@ -388,7 +384,7 @@ namespace example.WebApp
 
                 routes.MapRoute(
                    name: "errorhandler",
-                   template: "Home/Error/{statusCode}", 
+                   template: "home/error/{statusCode}", 
                    defaults: new { controller = "Home", action = "Error" }
                    );
 

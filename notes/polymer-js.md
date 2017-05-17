@@ -1,5 +1,9 @@
 
 
+http://react-etc.net/entry/why-is-google-working-on-angular-2-and-polymer
+
+https://mentormate.com/blog/polymer-vs-angular-future-web-apps/
+
 https://dmitriid.com/blog/2017/03/the-broken-promise-of-web-components/
 
 https://robdodson.me/regarding-the-broken-promise-of-web-components/
