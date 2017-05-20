@@ -1,6 +1,11 @@
 
 https://javascriptweblog.wordpress.com/2011/05/31/a-fresh-look-at-javascript-mixins/
 
+JavaScript Patterns for 2017 - Scott Allen
+https://www.youtube.com/watch?v=hO7mzO83N1Q
+
+https://medium.com/@adambene/currying-in-javascript-es6-540d2ad09400
+
 https://medium.com/@richardeng/the-javascript-phenomenon-is-a-mass-psychosis-57adebb09359
 
 https://medium.freecodecamp.com/what-to-learn-in-2017-if-youre-a-frontend-developer-b6cfef46effd
@@ -63,3 +68,6 @@ https://medium.com/@alexnm/is-mvc-dead-for-the-frontend-35b4d1fe39ec#.qlci0m2jp
 
 http://lucasfcosta.com/2017/05/08/All-About-Recursion-PTC-TCO-and-STC-in-JavaScript.html
 
+## Testing
+
+https://sean.is/writing/client-side-testing-with-mocha-and-karma/

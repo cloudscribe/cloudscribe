@@ -113,6 +113,11 @@ fsharp.slack.com
 http://tomasp.net/blog/csharp-async-gotchas.aspx/
 http://www.developerfusion.com/article/139804/an-introduction-to-f-agents
 
+### ASP.NET Core
+
+https://dusted.codes/functional-aspnet-core
+https://github.com/dustinmoris/Giraffe
+
 
 ### C# Interop
 

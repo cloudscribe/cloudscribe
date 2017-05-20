@@ -1,5 +1,7 @@
 
 
+https://tomhofman.nl/lets-create-versioned-documented-asp-net-core-web-api/
+
 https://andrewlock.net/model-binding-json-posts-in-asp-net-core/
 
 https://www.smashingmagazine.com/2017/04/guide-http2-server-push/
