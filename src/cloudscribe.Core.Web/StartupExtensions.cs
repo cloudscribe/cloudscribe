@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2016-05-07
-// Last Modified:			2016-11-26
+// Last Modified:			2017-05-22
 // 
 
 
@@ -54,6 +54,7 @@ namespace Microsoft.Extensions.DependencyInjection
 
             services.AddScoped<SiteEvents, SiteEvents>();
             services.AddScoped<SiteManager, SiteManager>();
+            services.AddScoped<AccountService, AccountService>();
             services.AddScoped<GeoDataManager, GeoDataManager>();
             services.AddScoped<SystemInfoManager, SystemInfoManager>();
             services.AddScoped<IpAddressTracker, IpAddressTracker>();

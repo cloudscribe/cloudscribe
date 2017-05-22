@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2014-10-26
-// Last Modified:			2017-04-01
+// Last Modified:			2017-05-22
 // 
 
 using cloudscribe.Core.Identity;
@@ -32,6 +32,7 @@ namespace cloudscribe.Core.Web.Controllers
     {
 
         public AccountController(
+            AccountService accountService,
             SiteContext currentSite,
             SiteUserManager<SiteUser> userManager,
             SiteSignInManager<SiteUser> signInManager,
@@ -44,6 +45,7 @@ namespace cloudscribe.Core.Web.Controllers
             ILogger<AccountController> logger
             )
         {
+            this.accountService = accountService;
             Site = currentSite; 
             this.userManager = userManager;
             this.signInManager = signInManager;
@@ -56,6 +58,7 @@ namespace cloudscribe.Core.Web.Controllers
             this.recaptchaKeysProvider = recaptchaKeysProvider;
         }
 
+        private readonly AccountService accountService;
         private readonly ISiteContext Site;
         private readonly SiteUserManager<SiteUser> userManager;
         private readonly SiteSignInManager<SiteUser> signInManager;
@@ -89,7 +92,8 @@ namespace cloudscribe.Core.Web.Controllers
 
             ViewData["Title"] = sr["Log in"];
             ViewData["ReturnUrl"] = returnUrl;
-            LoginViewModel model = new LoginViewModel();
+
+            var model = new LoginViewModel();
 
             var recaptchaKeys = await recaptchaKeysProvider.GetKeys().ConfigureAwait(false);
             
@@ -118,7 +122,7 @@ namespace cloudscribe.Core.Web.Controllers
             ViewData["Title"] = sr["Log in"];
             ViewData["ReturnUrl"] = returnUrl;
             var recaptchaKeys = await recaptchaKeysProvider.GetKeys().ConfigureAwait(false);
-            if ((Site.CaptchaOnLogin)&& (!string.IsNullOrEmpty(recaptchaKeys.PublicKey)))
+            if ((Site.CaptchaOnLogin) && (!string.IsNullOrEmpty(recaptchaKeys.PublicKey)))
             {
                 model.RecaptchaSiteKey = recaptchaKeys.PublicKey;
                 model.UseInvisibleCaptcha = recaptchaKeys.Invisible;
@@ -147,92 +151,13 @@ namespace cloudscribe.Core.Web.Controllers
                 }
             }
 
-            if(userManager.Site.RequireConfirmedEmail || userManager.Site.RequireApprovalBeforeLogin)
-            {
-                var user = await userManager.FindByNameAsync(model.Email);
-                if (user != null)
-                {
-                    // TODO: showing these messages is not right
-                    // this can be used by a hacker to determine that an account exists
-                    // need to fix this
-                    // probably all of these checks should be moved into signInManager.PasswordSignInAsync
-                    // so that we either redirect to show message if login was correct credentials
-                    // or just show invalid login attempt otherwise
-
-                    if (userManager.Site.RequireConfirmedEmail)
-                    {
-                        if (!await userManager.IsEmailConfirmedAsync(user))
-                        {
-                            log.LogInformation($"login not allowed for {user.Email} because email is not confirmed");
-                            //ModelState.AddModelError(string.Empty, "You must have a confirmed email to log in.");
-                            ModelState.AddModelError(string.Empty, sr["Invalid login attempt."]);
-                            return View(model);
-                        }
-                    }
-
-                    if(userManager.Site.RequireApprovalBeforeLogin)
-                    {
-                        if(!user.AccountApproved)
-                        {
-                            log.LogInformation($"login not allowed for {user.Email} because account not approved yet");
-                            //ModelState.AddModelError(string.Empty, "Your account must be approved by an administrator before you can log in. If an administrator approves your account, you will receive an email notifying you that your account is ready.");
-                            ModelState.AddModelError(string.Empty, sr["Invalid login attempt."]);
-                            return View(model);
-                        }
-                    }
-
-                    if((user.IsLockedOut)||(user.IsDeleted))
-                    {
-                        log.LogInformation($"login not allowed for {user.Email} because account either logged out or flagged as deleted");
-                        //ModelState.AddModelError(string.Empty, "Your account must be approved by an administrator before you can log in. If an administrator approves your account, you will receive an email notifying you that your account is ready.");
-                        ModelState.AddModelError(string.Empty, sr["Invalid login attempt."]);
-                        return View(model);
-                    }
-                    
-                }
-            }
+            var result = await accountService.TryLogin(model);
             
-            var persistent = false;
-            if(userManager.Site.AllowPersistentLogin)
+            if (result.SignInResult.Succeeded)
             {
-                //TODO: hide remember me in view if persistent login not allowed  site settings
-                persistent = model.RememberMe;
-            }
-
-            Microsoft.AspNetCore.Identity.SignInResult result;
-            if(Site.UseEmailForLogin)
-            {
-                result = await signInManager.PasswordSignInAsync(
-                    model.Email,
-                    model.Password,
-                    persistent,
-                    lockoutOnFailure: false);
-            }
-            else
-            {
-                result = await signInManager.PasswordSignInAsync(
-                    model.UserName,
-                    model.Password,
-                    persistent,
-                    lockoutOnFailure: false);
-            }
-            
-            
-            if (result.Succeeded)
-            {
-                SiteUser user;
-                if(Site.UseEmailForLogin)
+                if (result.User != null)
                 {
-                    user = await userManager.FindByNameAsync(model.Email);
-                }
-                else
-                {
-                    user = await userManager.FindByNameAsync(model.UserName);
-                }
-                
-                if(user != null)
-                {
-                    await ipAddressTracker.TackUserIpAddress(Site.Id, user.Id);
+                    await ipAddressTracker.TackUserIpAddress(Site.Id, result.User.Id);
                 }
 
                 if (!string.IsNullOrEmpty(returnUrl))
@@ -243,12 +168,18 @@ namespace cloudscribe.Core.Web.Controllers
                 return this.RedirectToSiteRoot(Site);
 
             }
-            if (result.RequiresTwoFactor)
+            foreach(var reason in result.RejectReasons)
+            {
+                //these reasons are not meant to be shown in the ui
+                // but we can log them so admin will see failed attempts in the log along with reasons
+                log.LogInformation(reason);
+            }
+            if (result.SignInResult.RequiresTwoFactor)
             {
                 log.LogInformation($"redirecting from login for {model.Email} because 2 factor not configured yet for account");
                 return RedirectToAction(nameof(SendCode), new { ReturnUrl = returnUrl, RememberMe = model.RememberMe });
             }
-            if (result.IsLockedOut)
+            if (result.SignInResult.IsLockedOut)
             {
                 return View("Lockout");
             }
@@ -259,7 +190,9 @@ namespace cloudscribe.Core.Web.Controllers
                 return View(model);
             }
         }
+
         
+
         // GET: /Account/Register
         [HttpGet]
         [AllowAnonymous]
@@ -635,10 +568,26 @@ namespace cloudscribe.Core.Web.Controllers
             
             // Sign in the user with this external login provider if the user already has a login.
             var result = await signInManager.ExternalLoginSignInAsync(info.LoginProvider, info.ProviderKey, isPersistent: false);
+
+            if(result == Microsoft.AspNetCore.Identity.SignInResult.Failed)
+            {
+                // account doesn't exist do we have what we need to create it
+                var tryCreateResult = await userManager.TryCreateAccountForExternalUser(Site.Id, info);
+                if(tryCreateResult.Succeeded)
+                {
+                    //try login again
+                    result = await signInManager.ExternalLoginSignInAsync(info.LoginProvider, info.ProviderKey, isPersistent: false);
+                }
+
+            }
+
             if (result.Succeeded)
             {
                 //TODO: how to get the user here?
                 //await ipAddressTracker.TackUserIpAddress(Site.SiteGuid, user.UserGuid);
+
+                //TODO: seems like we need the same branching logic here as in the post below
+                // ie if email is not confirmed
 
                 log.LogDebug("ExternalLoginCallback ExternalLoginSignInAsync succeeded ");
                 if (!string.IsNullOrEmpty(returnUrl))
@@ -648,6 +597,8 @@ namespace cloudscribe.Core.Web.Controllers
 
                 return this.RedirectToSiteRoot(Site);
             }
+
+            
 
             if (result.RequiresTwoFactor)
             {
@@ -665,10 +616,13 @@ namespace cloudscribe.Core.Web.Controllers
                 log.LogDebug("ExternalLoginCallback ExternalLoginSignInAsync IsLockedOut ");
                 return View("Lockout");
             }
-            else
+            else // result.Failed
             {
                 log.LogDebug("ExternalLoginCallback needs new account ");
                 // If the user does not have an account, then ask the user to create an account.
+                // check the claims from the provider to see if we have what we need
+                // only need to show this form if there is no email or if there is a required registration agreement
+                
                 ViewData["ReturnUrl"] = returnUrl;
                 ViewData["LoginProvider"] = info.LoginProvider;
                 var email = info.Principal.FindFirstValue(ClaimTypes.Email);
@@ -681,6 +635,8 @@ namespace cloudscribe.Core.Web.Controllers
             }
 
         }
+
+        
 
         // POST: /Account/ExternalLoginConfirmation
         [HttpPost]

@@ -26,5 +26,86 @@ https://reacttraining.com/online/react-fundamentals
 
 https://medium.freecodecamp.com/functional-setstate-is-the-future-of-react-374f30401b6b
 
+### Code Style
+
+https://github.com/erikras/react-redux-universal-hot-example
+
+https://github.com/prettier/prettier
+
+### Form Builders
+
+https://react.rocks/tag/FormGenerator
+
+https://github.com/erikras/redux-form
+https://redux-form.com/6.7.0/
+
+looks good but unmaintained
+https://github.com/insin/newforms
+http://newforms.readthedocs.io/en/latest/
+
+
+this looks great
+https://github.com/andrewhathaway/Winterfell
+http://winterfell.andrewhathaway.net/
+
+this looks like a winner, what about multi page forms?
+https://github.com/mozilla-services/react-jsonschema-form
+https://mozilla-services.github.io/react-jsonschema-form/
+
+https://github.com/SteveVitali/react-form-generator
+
+https://github.com/kumailht/gridforms
+http://gcanti.github.io/tcomb-form/demo/gridforms/index.html
+
+this one depends on jquery
+https://github.com/blackjk3/react-form-builder
+
+tied to a specific backend? license?
+https://github.com/Kinto/formbuilder
+
+https://github.com/rsamec/react-designer
+http://rsamec.github.io/react-designer/#/?_k=vua375
+
+
+### Calendars
+
+https://github.com/intljusticemission/react-big-calendar
+http://intljusticemission.github.io/react-big-calendar/examples/index.html
+
+
+### File Managers
+
+https://github.com/lionng429/react-file-uploader
+
+
+not react but looks good
+https://github.com/servocoder/RichFilemanager
+
+not react
+https://github.com/Studio-42/elFinder/
+
+deprecated
+https://github.com/simogeo/Filemanager
+
+// very basic
+https://github.com/3webbg/file-manager
+
+### TreeViews
+
+https://react.rocks/tag/TreeView
+
+// looks decent
+https://github.com/pqx/react-ui-tree
+
+
+https://github.com/fritz-c/react-sortable-tree
+
+https://github.com/chenglou/react-treeview
+
+### Tools
+
+https://github.com/ipselon/structor
+
+
 
 
