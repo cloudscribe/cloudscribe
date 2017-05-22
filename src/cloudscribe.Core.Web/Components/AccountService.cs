@@ -11,6 +11,7 @@ using cloudscribe.Core.Web.Components;
 using cloudscribe.Core.Web.Components.Messaging;
 using cloudscribe.Core.Web.ViewModels.Account;
 using cloudscribe.Core.Web.ViewModels.SiteUser;
+using Microsoft.AspNetCore.Http.Authentication;
 //using cloudscribe.Web.Common.Extensions;
 //using cloudscribe.Web.Common.Models;
 //using Microsoft.AspNetCore.Authorization;
@@ -54,26 +55,68 @@ namespace cloudscribe.Core.Web.Components
         // maybe should do that from controller
         private ILogger log;
 
-        public async Task<UserLoginResult> TryLogin(LoginViewModel model)
+        public async Task<UserLoginResult> TryExternalLogin()
         {
-            var signinResult = SignInResult.Failed;
             SiteUser user = null;
             IUserContext userContext = null;
-            List<string> rejectReasons = new List<string>();
+            var signinResult = SignInResult.Failed;
+            var rejectReasons = new List<string>();
+            var mustAcceptTerms = false;
+            var needsAccountApproval = false;
+            var needsEmailConfirmation = false;
+            var needsPhoneConfirmation = false;
 
-            if (userManager.Site.RequireConfirmedEmail || userManager.Site.RequireApprovalBeforeLogin)
+            var info = await signInManager.GetExternalLoginInfoAsync();
+            if (info == null)
             {
-               user = await userManager.FindByNameAsync(model.Email);
+                // log.LogDebug("ExternalLoginCallback redirecting to login because GetExternalLoginInfoAsync returned null ");
+                rejectReasons.Add("signInManager.GetExternalLoginInfoAsync returned null");
+            }
+
+            if ( info != null && (userManager.Site.RequireConfirmedEmail
+                || userManager.Site.RequireConfirmedPhone
+                || userManager.Site.RequireApprovalBeforeLogin
+                || !string.IsNullOrWhiteSpace(userManager.Site.RegistrationAgreement)
+                ))
+            {
+                signinResult = await signInManager.ExternalLoginSignInAsync(info.LoginProvider, info.ProviderKey, isPersistent: false);
+
+                if (signinResult == SignInResult.Failed)
+                {
+                    var email = info.Principal.FindFirstValue(ClaimTypes.Email);
+                    var userName = await userManager.SuggestLoginNameFromEmail(Site.Id, email);
+                    var newUser = new SiteUser
+                    {
+                        SiteId = Site.Id,
+                        UserName = userName,
+                        Email = email,
+                        DisplayName = email.Substring(0, email.IndexOf("@")),
+                        FirstName = info.Principal.FindFirstValue(ClaimTypes.GivenName),
+                        LastName = info.Principal.FindFirstValue(ClaimTypes.Surname),
+                        AccountApproved = Site.RequireApprovalBeforeLogin ? false : true
+                    };
+                    var identityResult = await userManager.CreateAsync(newUser);
+                    if (identityResult.Succeeded)
+                    {
+                        identityResult = await userManager.AddLoginAsync(newUser, info);
+                        user = newUser;
+                    }
+                    //try again
+                    signinResult = await signInManager.ExternalLoginSignInAsync(info.LoginProvider, info.ProviderKey, isPersistent: false);
+
+                }
+                
                 if (user != null)
                 {
                     userContext = new UserContext(user);
-                    
+
                     if (userManager.Site.RequireConfirmedEmail)
                     {
                         if (!await userManager.IsEmailConfirmedAsync(user))
                         {
                             var reason = $"login not allowed for {user.Email} because email is not confirmed";
                             rejectReasons.Add(reason);
+                            needsEmailConfirmation = true;
                         }
                     }
 
@@ -86,10 +129,132 @@ namespace cloudscribe.Core.Web.Components
                         }
                     }
 
+                    if (userManager.Site.RequireConfirmedPhone)
+                    {
+                        if (!user.PhoneNumberConfirmed || string.IsNullOrEmpty(user.PhoneNumber))
+                        {
+                            var reason = $"login not allowed for {user.Email} because phone not added or verified yet";
+                            rejectReasons.Add(reason);
+                            needsPhoneConfirmation = true;
+
+                        }
+                    }
+
+                    if ((user.IsLockedOut) || (user.IsDeleted))
+                    {
+                        var reason = $"login not allowed for {user.Email} because account either locked out or flagged as deleted";
+                        rejectReasons.Add(reason);
+                    }
+
+                    if (!string.IsNullOrWhiteSpace(userManager.Site.RegistrationAgreement))
+                    {
+                        // TODO: we need to capture user acceptance of terms with date
+                    }
+
+                }
+            }
+
+            if (user != null && rejectReasons.Count == 0)
+            {
+                var persistent = false;
+                //if (userManager.Site.AllowPersistentLogin)
+                //{
+                //    persistent = model.RememberMe;
+                //}
+
+
+                //if (Site.UseEmailForLogin)
+                //{
+                //    signinResult = await signInManager.PasswordSignInAsync(
+                //        user.Email,
+                //        model.Password,
+                //        persistent,
+                //        lockoutOnFailure: false);
+                //}
+                //else
+                //{
+                //    signinResult = await signInManager.PasswordSignInAsync(
+                //        model.UserName,
+                //        model.Password,
+                //        persistent,
+                //        lockoutOnFailure: false);
+                //}
+            }
+
+
+            return new UserLoginResult(
+                signinResult,
+                rejectReasons,
+                userContext,
+                mustAcceptTerms,
+                needsAccountApproval,
+                needsEmailConfirmation,
+                needsPhoneConfirmation
+                );
+
+        }
+
+        public async Task<UserLoginResult> TryLogin(LoginViewModel model)
+        {
+            SiteUser user = null;
+            IUserContext userContext = null;
+            var signinResult = SignInResult.Failed;
+            var rejectReasons = new List<string>();
+            var mustAcceptTerms = false;
+            var needsAccountApproval = false;
+            var needsEmailConfirmation = false;
+            var needsPhoneConfirmation = false;
+
+            if (userManager.Site.RequireConfirmedEmail 
+                || userManager.Site.RequireConfirmedPhone
+                || userManager.Site.RequireApprovalBeforeLogin
+                || !string.IsNullOrWhiteSpace(userManager.Site.RegistrationAgreement)
+                )
+            {
+               user = await userManager.FindByNameAsync(model.Email);
+                if (user != null)
+                {
+                    userContext = new UserContext(user);
+                    
+                    if (userManager.Site.RequireConfirmedEmail)
+                    {
+                        if (!await userManager.IsEmailConfirmedAsync(user))
+                        {
+                            var reason = $"login not allowed for {user.Email} because email is not confirmed";
+                            rejectReasons.Add(reason);
+                            needsEmailConfirmation = true;
+                        }
+                    }
+
+                    if (userManager.Site.RequireApprovalBeforeLogin)
+                    {
+                        if (!user.AccountApproved)
+                        {
+                            var reason = $"login not allowed for {user.Email} because account not approved yet";
+                            rejectReasons.Add(reason);
+                        }
+                    }
+
+                    if(userManager.Site.RequireConfirmedPhone)
+                    {
+                        if(!user.PhoneNumberConfirmed || string.IsNullOrEmpty(user.PhoneNumber))
+                        {
+                            var reason = $"login not allowed for {user.Email} because phone not added or verified yet";
+                            rejectReasons.Add(reason);
+                            needsPhoneConfirmation = true;
+                            
+                        }
+                    }
+
                     if ((user.IsLockedOut) || (user.IsDeleted))
                     {  
                         var reason = $"login not allowed for {user.Email} because account either locked out or flagged as deleted";
                         rejectReasons.Add(reason);
+                    }
+
+                    if(!string.IsNullOrWhiteSpace(userManager.Site.RegistrationAgreement))
+                    {
+                       // TODO: we need to capture user acceptance of terms with date
                     }
 
                 }
@@ -123,8 +288,21 @@ namespace cloudscribe.Core.Web.Components
             }
             
 
-            return new UserLoginResult(signinResult, rejectReasons, userContext);
+            return new UserLoginResult(
+                signinResult, 
+                rejectReasons, 
+                userContext,
+                mustAcceptTerms,
+                needsAccountApproval,
+                needsEmailConfirmation,
+                needsPhoneConfirmation
+                );
 
+        }
+
+        public AuthenticationProperties ConfigureExternalAuthenticationProperties(string provider, string returnUrl = null)
+        {
+            return signInManager.ConfigureExternalAuthenticationProperties(provider, returnUrl);
         }
 
 

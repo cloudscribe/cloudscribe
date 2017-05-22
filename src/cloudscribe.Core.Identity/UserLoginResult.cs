@@ -17,11 +17,18 @@ namespace cloudscribe.Core.Identity
            // bool succeeded,
             SignInResult signInResult,
             List<string> rejectReasons = null,
-            IUserContext user = null
+            IUserContext user = null,
+            bool mustAcceptTerms = false,
+            bool needsAccountApproval = false,
+            bool needsEmailConfirmation = false,
+            bool needsPhoneConfirmation = false
             )
         {
             SignInResult = signInResult;
-            //Success = succeeded;
+            MustAcceptTerms = mustAcceptTerms;
+            NeedsAccountApproval = needsAccountApproval;
+            NeedsEmailConfirmation = needsEmailConfirmation;
+            NeedsPhoneConfirmation = needsPhoneConfirmation;
             RejectReasons = rejectReasons;
             if (RejectReasons != null)
             {
@@ -29,7 +36,15 @@ namespace cloudscribe.Core.Identity
             }
 
         }
-       // public bool Success { get; }
+
+        public bool MustAcceptTerms { get; }
+
+        public bool NeedsAccountApproval { get; }
+
+       public bool NeedsEmailConfirmation { get; }
+
+        public bool NeedsPhoneConfirmation { get; }
+
 
         public SignInResult SignInResult { get; }
 

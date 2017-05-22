@@ -263,32 +263,6 @@ namespace cloudscribe.Core.Web.Controllers
 
                     if (!captchaResponse.Success)
                     {
-                        //if (captchaResponse.ErrorCodes.Count <= 0)
-                        //{
-                        //    return View(model);
-                        //}
-
-                        ////TODO: log these errors rather than show them in the ui
-                        //var error = captchaResponse.ErrorCodes[0].ToLower();
-                        //switch (error)
-                        //{
-                        //    case ("missing-input-secret"):
-                        //        ModelState.AddModelError("recaptchaerror", "The secret parameter is missing.");     
-                        //        break;
-                        //    case ("invalid-input-secret"):
-                        //        ModelState.AddModelError("recaptchaerror", "The secret parameter is invalid or malformed.");
-                        //        break;
-                        //    case ("missing-input-response"):
-                        //        ModelState.AddModelError("recaptchaerror", "The response parameter is missing.");
-                        //        break;
-                        //    case ("invalid-input-response"):
-                        //        ModelState.AddModelError("recaptchaerror", "The response parameter is invalid or malformed.");
-                        //        break;
-                        //    default:
-                        //        ModelState.AddModelError("recaptchaerror", "Error occured. Please try again");
-                        //        break;
-                        //}
-
                         ModelState.AddModelError("recaptchaerror", "reCAPTCHA Error occured. Please try again");
                         isValid = false;
                         
@@ -541,7 +515,7 @@ namespace cloudscribe.Core.Web.Controllers
 
             // Request a redirect to the external login provider.
             var redirectUrl = Url.Action("ExternalLoginCallback", "Account", new { ReturnUrl = returnUrl });
-            var properties = signInManager.ConfigureExternalAuthenticationProperties(provider, redirectUrl);
+            var properties = accountService.ConfigureExternalAuthenticationProperties(provider, redirectUrl);
             return Challenge(properties, provider);
         }
 
