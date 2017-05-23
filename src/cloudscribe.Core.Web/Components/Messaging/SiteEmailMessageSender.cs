@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2015-08-11
-// Last Modified:			2017-02-10
+// Last Modified:			2017-05-23
 // 
 
 using cloudscribe.Core.Models;
@@ -185,7 +185,7 @@ namespace cloudscribe.Core.Web.Components.Messaging
 
         public async Task AccountPendingApprovalAdminNotification(
             ISiteContext siteSettings,
-            ISiteUser user)
+            IUserContext user)
         {
             if (siteSettings.AccountApprovalEmailCsv.Length == 0) { return; }
 

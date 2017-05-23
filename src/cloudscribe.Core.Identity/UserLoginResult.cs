@@ -21,14 +21,18 @@ namespace cloudscribe.Core.Identity
             bool mustAcceptTerms = false,
             bool needsAccountApproval = false,
             bool needsEmailConfirmation = false,
-            bool needsPhoneConfirmation = false
+            string emailConfirmationToken = "",
+            bool needsPhoneConfirmation = false,
+            ExternalLoginInfo externalLoginInfo = null
             )
         {
             SignInResult = signInResult;
             MustAcceptTerms = mustAcceptTerms;
             NeedsAccountApproval = needsAccountApproval;
             NeedsEmailConfirmation = needsEmailConfirmation;
+            EmailConfirmationToken = emailConfirmationToken;
             NeedsPhoneConfirmation = needsPhoneConfirmation;
+            ExternalLoginInfo = externalLoginInfo;
             RejectReasons = rejectReasons;
             if (RejectReasons != null)
             {
@@ -41,9 +45,13 @@ namespace cloudscribe.Core.Identity
 
         public bool NeedsAccountApproval { get; }
 
-       public bool NeedsEmailConfirmation { get; }
+        public bool NeedsEmailConfirmation { get; }
+
+        public string EmailConfirmationToken { get; }
 
         public bool NeedsPhoneConfirmation { get; }
+
+        public ExternalLoginInfo ExternalLoginInfo { get; }
 
 
         public SignInResult SignInResult { get; }
