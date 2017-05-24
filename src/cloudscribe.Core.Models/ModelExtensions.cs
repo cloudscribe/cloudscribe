@@ -57,12 +57,18 @@ namespace cloudscribe.Core.Models
             return false;
         }
 
-        public static bool SmtpIsConfigured(this ISiteContext site)
-        {
-            if (!string.IsNullOrEmpty(site.SmtpServer)) return true;
+        /// <summary>
+        /// this method returns false if not configured in site but
+        /// fails to account for smtp can be configured from config
+        /// </summary>
+        /// <param name="site"></param>
+        /// <returns></returns>
+        //public static bool SmtpIsConfigured(this ISiteContext site)
+        //{
+        //    if (!string.IsNullOrEmpty(site.SmtpServer)) return true;
 
-            return false;
-        }
+        //    return false;
+        //}
 
         public static bool SmtpIsConfigured(this ISiteSettings site)
         {

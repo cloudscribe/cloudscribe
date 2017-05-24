@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2017-05-22
-// Last Modified:			2017-05-22
+// Last Modified:			2017-05-24
 // 
 
 using cloudscribe.Core.Models;
@@ -14,7 +14,6 @@ namespace cloudscribe.Core.Identity
     public class UserLoginResult
     {
         public UserLoginResult(
-           // bool succeeded,
             SignInResult signInResult,
             List<string> rejectReasons = null,
             IUserContext user = null,
@@ -27,18 +26,20 @@ namespace cloudscribe.Core.Identity
             )
         {
             SignInResult = signInResult;
+            
+            RejectReasons = rejectReasons;
+            if (RejectReasons != null)
+            {
+                RejectReasons = new List<string>();
+            }
+            User = user;
             MustAcceptTerms = mustAcceptTerms;
             NeedsAccountApproval = needsAccountApproval;
             NeedsEmailConfirmation = needsEmailConfirmation;
             EmailConfirmationToken = emailConfirmationToken;
             NeedsPhoneConfirmation = needsPhoneConfirmation;
             ExternalLoginInfo = externalLoginInfo;
-            RejectReasons = rejectReasons;
-            if (RejectReasons != null)
-            {
-                RejectReasons = new List<string>();
-            }
-
+            
         }
 
         public bool MustAcceptTerms { get; }

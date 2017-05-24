@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2014-10-26
-// Last Modified:			2017-05-22
+// Last Modified:			2017-05-24
 // 
 
 using cloudscribe.Core.Identity;
@@ -34,8 +34,8 @@ namespace cloudscribe.Core.Web.Controllers
         public AccountController(
             AccountService accountService,
             SiteContext currentSite,
-            SiteUserManager<SiteUser> userManager,
-            SiteSignInManager<SiteUser> signInManager,
+            //SiteUserManager<SiteUser> userManager,
+            //SiteSignInManager<SiteUser> signInManager,
             IpAddressTracker ipAddressTracker,
             ISiteMessageEmailSender emailSender,
             ISmsSender smsSender,
@@ -47,8 +47,8 @@ namespace cloudscribe.Core.Web.Controllers
         {
             this.accountService = accountService;
             Site = currentSite; 
-            this.userManager = userManager;
-            this.signInManager = signInManager;
+            //this.userManager = userManager;
+            //this.signInManager = signInManager;
             this.identityServerIntegration = identityServerIntegration;
             this.emailSender = emailSender;
             this.smsSender = smsSender;
@@ -60,8 +60,8 @@ namespace cloudscribe.Core.Web.Controllers
 
         private readonly AccountService accountService;
         private readonly ISiteContext Site;
-        private readonly SiteUserManager<SiteUser> userManager;
-        private readonly SiteSignInManager<SiteUser> signInManager;
+        //private readonly SiteUserManager<SiteUser> userManager;
+        //private readonly SiteSignInManager<SiteUser> signInManager;
         private readonly IIdentityServerIntegration identityServerIntegration;
         private readonly ISiteMessageEmailSender emailSender;
         private readonly ISmsSender smsSender;
@@ -192,6 +192,8 @@ namespace cloudscribe.Core.Web.Controllers
         }
 
         
+
+
 
         // GET: /Account/Register
         [HttpGet]
@@ -599,6 +601,62 @@ namespace cloudscribe.Core.Web.Controllers
             return View("LoggedOut", logoutModel);
         }
 
+        private IActionResult HandleLoginNotAllowed(UserLoginResult result)
+        {
+            if (result.User != null)
+            {
+                if (result.NeedsEmailConfirmation)
+                {
+                    //TODO: check how recent we sent this
+                    // var timeSpan = DateTime.UtcNow - result.User.ConfirmEmailSentUtc;
+                    // if(timeSpan.TotalDays > x) send
+                    var callbackUrl = Url.Action(new UrlActionContext
+                    {
+                        Action = "ConfirmEmail",
+                        Controller = "Account",
+                        Values = new { userId = result.User.Id.ToString(), code = result.EmailConfirmationToken },
+                        Protocol = HttpContext.Request.Scheme
+                    });
+
+                    emailSender.SendAccountConfirmationEmailAsync(
+                        Site,
+                        result.User.Email,
+                        sr["Confirm your account"],
+                        callbackUrl).Forget();
+
+
+                    this.AlertSuccess(sr["Please check your email inbox, we just sent you a link that you need to click to confirm your account"], true);
+
+                    return RedirectToAction("EmailConfirmationRequired", new { userId = result.User.Id, didSend = true });
+                }
+
+                if (result.NeedsPhoneConfirmation)
+                {
+                    //TODO: redirect?
+                    var logItem = $"user {result.User.Email} was not allowed to login because phone is not confirmed";
+                    log.LogWarning(logItem);
+
+                }
+
+                if (result.NeedsAccountApproval)
+                {
+                    var timeSpan = DateTime.UtcNow - result.User.CreatedUtc;
+                    if (timeSpan.TotalDays < 1)
+                    {
+                        // account was just created so send notification to approver
+                        emailSender.AccountPendingApprovalAdminNotification(Site, result.User).Forget();
+                    }
+
+
+                    return RedirectToAction("PendingApproval", new { userId = result.User.Id, didSend = true });
+
+                }
+
+            }
+
+            return this.RedirectToSiteRoot(Site);
+        }
+
 
         // POST: /Account/ExternalLogin
         [HttpPost]
@@ -628,24 +686,34 @@ namespace cloudscribe.Core.Web.Controllers
             }
 
             var result = await accountService.TryExternalLogin();
-
+            //TODO: from here down is a lot of logic also needed in other actions
+            // how to encapsulate it when we may need to return a view if none of the redirects happen first
+            foreach (var reason in result.RejectReasons)
+            {
+                // these reasons are not meant to be shown in the ui
+                // but we can log them so admin will see failed attempts in the log along with reasons
+                log.LogWarning(reason);
+            }
             
+            if (result.SignInResult.IsNotAllowed)
+            {
+                return HandleLoginNotAllowed(result);
+            }
+
             if (result.ExternalLoginInfo == null)
             {
                 log.LogDebug("ExternalLoginCallback redirecting to login because GetExternalLoginInfoAsync returned null ");
                 return RedirectToAction(nameof(Login));
             }
-
-           
-
+            
             if (result.SignInResult.Succeeded)
             {
                 if(result.User != null)
                 {
+                   
                     await ipAddressTracker.TackUserIpAddress(Site.Id, result.User.Id);
                 }
-                
-                
+
                 log.LogDebug("ExternalLoginCallback ExternalLoginSignInAsync succeeded ");
                 if (!string.IsNullOrEmpty(returnUrl))
                 {
@@ -662,11 +730,7 @@ namespace cloudscribe.Core.Web.Controllers
                 log.LogDebug("ExternalLoginCallback ExternalLoginSignInAsync RequiresTwoFactor ");
                 return RedirectToAction(nameof(SendCode), new { ReturnUrl = returnUrl });
             }
-
-            if (result.SignInResult.IsNotAllowed)
-            {
-                return RedirectToAction("PendingApproval");
-            }
+            
 
             if (result.SignInResult.IsLockedOut)
             {
@@ -675,32 +739,22 @@ namespace cloudscribe.Core.Web.Controllers
             }
             else // result.Failed
             {
-                foreach (var reason in result.RejectReasons)
+                
+
+                if (result.User != null)
                 {
-                    //these reasons are not meant to be shown in the ui
-                    // but we can log them so admin will see failed attempts in the log along with reasons
-                    log.LogInformation(reason);
+                    //TODO: seems like we need the same branching logic here as in the post below
+                    // ie if email is not confirmed
+                    
+                    if (result.MustAcceptTerms)
+                    {
+                        //TODO: redirect
+
+                    }
+                    
                 }
+                
 
-                //TODO: seems like we need the same branching logic here as in the post below
-                // ie if email is not confirmed
-                if (result.NeedsEmailConfirmation)
-                {
-
-                }
-
-                if (result.NeedsPhoneConfirmation)
-                {
-
-                }
-                if (result.MustAcceptTerms)
-                {
-
-                }
-                if (result.NeedsAccountApproval)
-                {
-
-                }
 
                 // If the user does not have an account, then ask the user to create an account.
                 // check the claims from the provider to see if we have what we need
@@ -718,6 +772,8 @@ namespace cloudscribe.Core.Web.Controllers
             }
 
         }
+
+        
 
         //[HttpGet]
         //[AllowAnonymous]
@@ -817,6 +873,7 @@ namespace cloudscribe.Core.Web.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> ExternalLoginConfirmation(ExternalLoginConfirmationViewModel model, string returnUrl)
         {
+            // this is posted if the SiteUser has not been created yet 
             log.LogDebug("ExternalLoginConfirmation called with returnurl " + returnUrl);
 
             //if (signInManager.IsSignedIn(User))
@@ -826,109 +883,85 @@ namespace cloudscribe.Core.Web.Controllers
 
             if (ModelState.IsValid)
             {
+                var result = await accountService.TryExternalLogin(model.Email);
                 // Get the information about the user from the external login provider
-                var info = await signInManager.GetExternalLoginInfoAsync();
-                if (info == null)
+                //var info = await signInManager.GetExternalLoginInfoAsync();
+                if (result.ExternalLoginInfo == null)
                 {
                     return View("ExternalLoginFailure");
                 }
 
-                var userName = model.Email.Replace("@", string.Empty).Replace(".", string.Empty);
-                var userNameAvailable = await userManager.LoginIsAvailable(Guid.Empty, userName);
-                if (!userNameAvailable)
-                {
-                    userName = model.Email;
-                }
-
-                var user = new SiteUser
-                {
-                    SiteId = Site.Id,
-                    UserName = userName,
-                    Email = model.Email,
-                    AccountApproved = Site.RequireApprovalBeforeLogin ? false : true
-                };
-                var result = await userManager.CreateAsync(user);
-                if (result.Succeeded)
+                
+                if (result.User != null)
                 {
                     log.LogDebug("ExternalLoginConfirmation user created ");
 
-                    await ipAddressTracker.TackUserIpAddress(Site.Id, user.Id);
-
-                    result = await userManager.AddLoginAsync(user, info);
-                    if (result.Succeeded)
+                    await ipAddressTracker.TackUserIpAddress(Site.Id, result.User.Id);
+                    
+                    if (result.NeedsEmailConfirmation) // require email confirmation
                     {
-                        log.LogDebug("ExternalLoginConfirmation AddLoginAsync succeeded ");
+                        
 
-
-                        if (Site.RequireConfirmedEmail) // require email confirmation
+                        var callbackUrl = Url.Action(new UrlActionContext
                         {
-                            var code = await userManager.GenerateEmailConfirmationTokenAsync(user);
+                            Action = "ConfirmEmail",
+                            Controller = "Account",
+                            Values = new { userId = result.User.Id.ToString(), code = result.EmailConfirmationToken },
+                            Protocol = HttpContext.Request.Scheme
+                        });
 
-                            var callbackUrl = Url.Action(new UrlActionContext
-                            {
-                                Action = "ConfirmEmail",
-                                Controller = "Account",
-                                Values = new { userId = user.Id.ToString(), code = code },
-                                Protocol = HttpContext.Request.Scheme
-                            });
+                        emailSender.SendAccountConfirmationEmailAsync(
+                            Site,
+                            model.Email,
+                            sr["Confirm your account"],
+                            callbackUrl).Forget();
 
-                            emailSender.SendAccountConfirmationEmailAsync(
-                                Site,
-                                model.Email,
-                                sr["Confirm your account"],
-                                callbackUrl).Forget();
+                        // this is needed to clear the external cookie - wasn't needed in rc2
+                        //await signInManager.SignOutAsync();
 
-                            // this is needed to clear the external cookie - wasn't needed in rc2
-                            await signInManager.SignOutAsync();
+                        ////if (this.TempDataIsAvailable())
+                        // {
+                        this.AlertSuccess(sr["Please check your email inbox, we just sent you a link that you need to click to confirm your account"], true);
 
-                            ////if (this.TempDataIsAvailable())
-                            // {
-                            this.AlertSuccess(sr["Please check your email inbox, we just sent you a link that you need to click to confirm your account"], true);
+                        //return Redirect("/");
+                        // }
+                        // else
+                        // {
+                        return RedirectToAction("EmailConfirmationRequired", new { userId = result.User.Id, didSend = true });
+                        // }
+                    }
+                    
+                    if (result.NeedsAccountApproval)
+                    {
+                        emailSender.AccountPendingApprovalAdminNotification(Site, result.User).Forget();
 
-                            //return Redirect("/");
-                            // }
-                            // else
-                            // {
-                            return RedirectToAction("EmailConfirmationRequired", new { userId = user.Id, didSend = true });
-                            // }
-                        }
-                        else
+                        // this is needed to clear the external cookie - wasn't needed in rc2
+                        //await signInManager.SignOutAsync();
+
+                        return RedirectToAction("PendingApproval", new { userId = result.User.Id, didSend = true });
+                    }
+
+                    if(result.SignInResult.Succeeded)
+                    {
+                       
+                        if (!string.IsNullOrEmpty(returnUrl))
                         {
-                            if (Site.RequireApprovalBeforeLogin)
-                            {
-                                emailSender.AccountPendingApprovalAdminNotification(Site, user as IUserContext).Forget();
-
-                                // this is needed to clear the external cookie - wasn't needed in rc2
-                                await signInManager.SignOutAsync();
-
-                                return RedirectToAction("PendingApproval", new { userId = user.Id, didSend = true });
-                            }
-                            else
-                            {
-                                await signInManager.SignInAsync(user, isPersistent: false);
-
-                                if (!string.IsNullOrEmpty(returnUrl))
-                                {
-                                    return LocalRedirect(returnUrl);
-                                }
-
-                                return this.RedirectToSiteRoot(Site);
-                            }
+                            return LocalRedirect(returnUrl);
                         }
 
+                        return this.RedirectToSiteRoot(Site);
+                    }
+                    
 
-                    }
-                    else
-                    {
-                        log.LogDebug("ExternalLoginConfirmation AddLoginAsync failed ");
-                    }
+
+                   
                 }
                 else
                 {
                     log.LogDebug("ExternalLoginConfirmation failed to user created ");
                 }
 
-                AddErrors(result);
+                //AddErrors(result);
             }
             else
             {

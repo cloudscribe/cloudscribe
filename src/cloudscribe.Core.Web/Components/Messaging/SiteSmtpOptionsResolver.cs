@@ -21,7 +21,7 @@ namespace cloudscribe.Core.Web.Components.Messaging
 
         public Task<SmtpOptions> GetSmtpOptions()
         {
-            if (!currentSite.SmtpIsConfigured()) { return Task.FromResult(globalSmtp); }
+            if (string.IsNullOrEmpty(currentSite.SmtpServer)) { return Task.FromResult(globalSmtp); }
 
             SmtpOptions smtpOptions = new SmtpOptions();
             smtpOptions.Password = currentSite.SmtpPassword;

@@ -41,7 +41,7 @@ namespace cloudscribe.Core.Web.Components.Messaging
 
         public Task AccountPendingApprovalAdminNotification(
             ISiteContext siteSettings,
-            ISiteUser user)
+            IUserContext user)
         {
             return Task.FromResult(0);
         }

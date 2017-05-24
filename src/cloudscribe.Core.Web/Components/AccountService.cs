@@ -2,23 +2,16 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2017-05-22
-// Last Modified:			2017-05-23
+// Last Modified:			2017-05-24
 // 
 
 using cloudscribe.Core.Identity;
 using cloudscribe.Core.Models;
-using cloudscribe.Core.Web.Components;
-using cloudscribe.Core.Web.Components.Messaging;
 using cloudscribe.Core.Web.ViewModels.Account;
 using cloudscribe.Core.Web.ViewModels.SiteUser;
+using cloudscribe.Messaging.Email;
 using Microsoft.AspNetCore.Http.Authentication;
-//using cloudscribe.Web.Common.Extensions;
-//using cloudscribe.Web.Common.Models;
-//using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
-//using Microsoft.AspNetCore.Mvc;
-//using Microsoft.AspNetCore.Mvc.Rendering;
-//using Microsoft.AspNetCore.Mvc.Routing;
 using Microsoft.Extensions.Localization;
 using Microsoft.Extensions.Logging;
 using System;
@@ -33,224 +26,246 @@ namespace cloudscribe.Core.Web.Components
     public class AccountService
     {
         public AccountService(
-            //SiteContext currentSite,
             SiteUserManager<SiteUser> userManager,
             SiteSignInManager<SiteUser> signInManager,
             IIdentityServerIntegration identityServerIntegration,
-            ILogger<AccountService> logger
+            ISocialAuthEmailVerfificationPolicy socialAuthEmailVerificationPolicy,
+            ISmtpOptionsProvider smtpOptionsProvider
+            //,ILogger<AccountService> logger
             )
         {
-            //Site = currentSite;
             this.userManager = userManager;
             this.signInManager = signInManager;
             this.identityServerIntegration = identityServerIntegration;
-            log = logger;
+            this.socialAuthEmailVerificationPolicy = socialAuthEmailVerificationPolicy;
+            this.smtpOptionsProvider = smtpOptionsProvider;
+            //log = logger;
         }
 
         //private readonly ISiteContext Site;
         private readonly SiteUserManager<SiteUser> userManager;
         private readonly SiteSignInManager<SiteUser> signInManager;
         private readonly IIdentityServerIntegration identityServerIntegration;
+        private readonly ISocialAuthEmailVerfificationPolicy socialAuthEmailVerificationPolicy;
+        private readonly ISmtpOptionsProvider smtpOptionsProvider;
+        private SmtpOptions smtpOptions = null;
         // is logging really a concern in here
         // maybe should do that from controller
-        private ILogger log;
+        // private ILogger log;
 
-        public async Task<UserLoginResult> TryExternalLogin()
+        private class LoginResultTemplate
         {
-            SiteUser user = null;
+            public bool MustAcceptTerms { get; set; }
+            public bool NeedsAccountApproval { get; set; }
+            public bool NeedsEmailConfirmation { get; set; }
+            public string EmailConfirmationToken { get; set; } = string.Empty;
+            public bool NeedsPhoneConfirmation { get; set; }
+            public ExternalLoginInfo ExternalLoginInfo { get; set; } = null;
+            public List<string> RejectReasons { get; set; } = new List<string>();
+            public SiteUser User { get; set; } = null;
+            public SignInResult SignInResult { get; set; } = SignInResult.Failed;
+        }
+
+        private async Task<bool> RequireConfirmedEmail()
+        {
+            if (!userManager.Site.RequireConfirmedEmail) return false;
+            if (smtpOptions == null) { smtpOptions = await smtpOptionsProvider.GetSmtpOptions().ConfigureAwait(false); }
+            return !string.IsNullOrEmpty(smtpOptions.Server);
+        }
+
+        private async Task ProcessAccountLoginRules(LoginResultTemplate template)
+        {
+            if (template.User == null) return;
+            var requireConfirmedEmail = await RequireConfirmedEmail();
+
+            if (requireConfirmedEmail)
+            {
+                if (!template.User.EmailConfirmed)
+                {
+                    var reason = $"login not allowed for {template.User.Email} because email is not confirmed";
+                    template.RejectReasons.Add(reason);
+                    template.NeedsEmailConfirmation = true;
+                    template.EmailConfirmationToken = await userManager.GenerateEmailConfirmationTokenAsync(template.User);
+                    template.SignInResult = SignInResult.NotAllowed;
+                }
+            }
+
+            if (userManager.Site.RequireApprovalBeforeLogin)
+            {
+                if (!template.User.AccountApproved)
+                {
+                    var reason = $"login not allowed for {template.User.Email} because account not approved yet";
+                    template.RejectReasons.Add(reason);
+                    template.NeedsAccountApproval = true;
+                    template.SignInResult = SignInResult.NotAllowed;
+                }
+            }
+
+            if (userManager.Site.RequireConfirmedPhone && userManager.Site.SmsIsConfigured())
+            {
+                if (string.IsNullOrEmpty(template.User.PhoneNumber))
+                {
+                    // we can't add a reason here that would block login
+                    // we need to enforce user to add phone number via middleware redirect
+                    // not by blocking login
+                    // because without logging in user cannot update the phone
+                    template.NeedsPhoneConfirmation = true;
+                }
+                else
+                {
+                    if (!template.User.PhoneNumberConfirmed)
+                    {
+                        var reason = $"login not allowed for {template.User.Email} because phone not added or verified yet";
+                        template.RejectReasons.Add(reason);
+                        template.NeedsPhoneConfirmation = true;
+
+                    }
+                }
+
+            }
+
+            if (!string.IsNullOrWhiteSpace(userManager.Site.RegistrationAgreement))
+            {
+                // TODO: we need to capture user acceptance of terms with date
+                // need to not block login otherwise how can we make the user agree agree to terms on account
+                // need to enforce it with middleware
+                template.MustAcceptTerms = true;
+            }
+
+            if (template.User.IsLockedOut)
+            {
+                var reason = $"login not allowed for {template.User.Email} because account is locked out";
+                template.RejectReasons.Add(reason);
+                template.SignInResult = SignInResult.LockedOut;
+
+               
+            }
+
+            if (template.User.IsDeleted)
+            {
+                var reason = $"login not allowed for {template.User.Email} because account is flagged as deleted";
+                template.RejectReasons.Add(reason);
+                template.User = null;
+
+
+            }
+        }
+
+        public async Task<UserLoginResult> TryExternalLogin(string providedEmail = "")
+        {
+            var template = new LoginResultTemplate();
             IUserContext userContext = null;
-            ExternalLoginInfo externalLoginInfo = null;
-            var signinResult = SignInResult.Failed;
-            var rejectReasons = new List<string>();
-            var mustAcceptTerms = false;
-            var needsAccountApproval = false;
-            var needsEmailConfirmation = false;
-            var needsPhoneConfirmation = false;
-            string emailConfirmationToken = string.Empty;
+            
+            var email = providedEmail;
 
-            externalLoginInfo = await signInManager.GetExternalLoginInfoAsync();
-            if (externalLoginInfo == null)
+            template.ExternalLoginInfo = await signInManager.GetExternalLoginInfoAsync();
+            if (template.ExternalLoginInfo == null)
             {
-                rejectReasons.Add("signInManager.GetExternalLoginInfoAsync returned null");
+                template.RejectReasons.Add("signInManager.GetExternalLoginInfoAsync returned null");
             }
-
-            if (externalLoginInfo != null && (userManager.Site.RequireConfirmedEmail
-                || userManager.Site.RequireConfirmedPhone
-                || userManager.Site.RequireApprovalBeforeLogin
-                || !string.IsNullOrWhiteSpace(userManager.Site.RegistrationAgreement)
-                ))
+            else
             {
-                signinResult = await signInManager.ExternalLoginSignInAsync(externalLoginInfo.LoginProvider, externalLoginInfo.ProviderKey, isPersistent: false);
-
-                if (signinResult == SignInResult.Failed)
+                if(string.IsNullOrWhiteSpace(email))
                 {
-                    var email = externalLoginInfo.Principal.FindFirstValue(ClaimTypes.Email);
-                    if(!string.IsNullOrWhiteSpace(email))
-                    {
-                        var userName = await userManager.SuggestLoginNameFromEmail(userManager.Site.Id, email);
-                        var newUser = new SiteUser
-                        {
-                            SiteId = userManager.Site.Id,
-                            UserName = userName,
-                            Email = email,
-                            DisplayName = email.Substring(0, email.IndexOf("@")),
-                            FirstName = externalLoginInfo.Principal.FindFirstValue(ClaimTypes.GivenName),
-                            LastName = externalLoginInfo.Principal.FindFirstValue(ClaimTypes.Surname),
-                            AccountApproved = userManager.Site.RequireApprovalBeforeLogin ? false : true
-                        };
-                        var identityResult = await userManager.CreateAsync(newUser);
-                        if (identityResult.Succeeded)
-                        {
-                            identityResult = await userManager.AddLoginAsync(newUser, externalLoginInfo);
-                            user = newUser;
-                        }
-                    }
-                    
-                    
-
+                    email = template.ExternalLoginInfo.Principal.FindFirstValue(ClaimTypes.Email);
                 }
                 
-                if (user != null)
+                if (!string.IsNullOrWhiteSpace(email) && email.Contains("@"))
                 {
-                    userContext = new UserContext(user);
-
-                    if (userManager.Site.RequireConfirmedEmail)
+                    template.User = await userManager.FindByNameAsync(email);
+                    if(template.User == null)
                     {
-                        if (!await userManager.IsEmailConfirmedAsync(user))
-                        {
-                            var reason = $"login not allowed for {user.Email} because email is not confirmed";
-                            rejectReasons.Add(reason);
-                            needsEmailConfirmation = true;
-                            emailConfirmationToken = await userManager.GenerateEmailConfirmationTokenAsync(user);
-                        }
+                        template.User = await CreateUserFromExternalLogin(template.ExternalLoginInfo);
                     }
-
-                    if (userManager.Site.RequireApprovalBeforeLogin)
-                    {
-                        if (!user.AccountApproved)
-                        {
-                            var reason = $"login not allowed for {user.Email} because account not approved yet";
-                            rejectReasons.Add(reason);
-                        }
-                    }
-
-                    if (userManager.Site.RequireConfirmedPhone)
-                    {
-                        if (!user.PhoneNumberConfirmed || string.IsNullOrEmpty(user.PhoneNumber))
-                        {
-                            var reason = $"login not allowed for {user.Email} because phone not added or verified yet";
-                            rejectReasons.Add(reason);
-                            needsPhoneConfirmation = true;
-
-                        }
-                    }
-
-                    if ((user.IsLockedOut) || (user.IsDeleted))
-                    {
-                        var reason = $"login not allowed for {user.Email} because account either locked out or flagged as deleted";
-                        rejectReasons.Add(reason);
-                    }
-
-                    if (!string.IsNullOrWhiteSpace(userManager.Site.RegistrationAgreement))
-                    {
-                        // TODO: we need to capture user acceptance of terms with date
-                    }
-
                 }
             }
-
-            if (signinResult == SignInResult.Failed && user != null && rejectReasons.Count == 0)
+ 
+            if (template.User != null)
             {
-                //try again
-                signinResult = await signInManager.ExternalLoginSignInAsync(externalLoginInfo.LoginProvider, externalLoginInfo.ProviderKey, isPersistent: false);
+                await ProcessAccountLoginRules(template);
+            }
+            
+            if (template.SignInResult == SignInResult.Failed && template.User != null && template.RejectReasons.Count == 0)
+            {
+                template.SignInResult = await signInManager.ExternalLoginSignInAsync(template.ExternalLoginInfo.LoginProvider, template.ExternalLoginInfo.ProviderKey, isPersistent: false);
+                if(template.SignInResult.Succeeded)
+                {
+                    // TODO:
+                    //update last login time
+                }
                 
             }
 
+            if(template.SignInResult != SignInResult.Success)
+            {
+                //clear the external login 
+                await signInManager.SignOutAsync();
+            }
 
+            if(template.User != null) { userContext = new UserContext(template.User); }
+            
             return new UserLoginResult(
-                signinResult,
-                rejectReasons,
+                template.SignInResult,
+                template.RejectReasons,
                 userContext,
-                mustAcceptTerms,
-                needsAccountApproval,
-                needsEmailConfirmation,
-                emailConfirmationToken,
-                needsPhoneConfirmation,
-                externalLoginInfo
+                template.MustAcceptTerms,
+                template.NeedsAccountApproval,
+                template.NeedsEmailConfirmation,
+                template.EmailConfirmationToken,
+                template.NeedsPhoneConfirmation,
+                template.ExternalLoginInfo
                 );
 
         }
 
-        public async Task<UserLoginResult> TryLogin(LoginViewModel model)
+        
+
+
+        private async Task<SiteUser> CreateUserFromExternalLogin(ExternalLoginInfo externalLoginInfo)
         {
-            SiteUser user = null;
-            IUserContext userContext = null;
-            var signinResult = SignInResult.Failed;
-            var rejectReasons = new List<string>();
-            var mustAcceptTerms = false;
-            var needsAccountApproval = false;
-            var needsEmailConfirmation = false;
-            var needsPhoneConfirmation = false;
-            string emailConfirmationToken = string.Empty;
-
-            if (userManager.Site.RequireConfirmedEmail 
-                || userManager.Site.RequireConfirmedPhone
-                || userManager.Site.RequireApprovalBeforeLogin
-                || !string.IsNullOrWhiteSpace(userManager.Site.RegistrationAgreement)
-                )
+            var email = externalLoginInfo.Principal.FindFirstValue(ClaimTypes.Email);
+            if (!string.IsNullOrWhiteSpace(email) && email.Contains("@"))
             {
-               user = await userManager.FindByNameAsync(model.Email);
-                if (user != null)
+                var userName = await userManager.SuggestLoginNameFromEmail(userManager.Site.Id, email);
+                var newUser = new SiteUser
                 {
-                    userContext = new UserContext(user);
-                    
-                    if (userManager.Site.RequireConfirmedEmail)
-                    {
-                        if (!await userManager.IsEmailConfirmedAsync(user))
-                        {
-                            var reason = $"login not allowed for {user.Email} because email is not confirmed";
-                            rejectReasons.Add(reason);
-                            needsEmailConfirmation = true;
-                            emailConfirmationToken = await userManager.GenerateEmailConfirmationTokenAsync(user);
-                        }
-                    }
-
-                    if (userManager.Site.RequireApprovalBeforeLogin)
-                    {
-                        if (!user.AccountApproved)
-                        {
-                            var reason = $"login not allowed for {user.Email} because account not approved yet";
-                            rejectReasons.Add(reason);
-                        }
-                    }
-
-                    if(userManager.Site.RequireConfirmedPhone)
-                    {
-                        if(!user.PhoneNumberConfirmed || string.IsNullOrEmpty(user.PhoneNumber))
-                        {
-                            var reason = $"login not allowed for {user.Email} because phone not added or verified yet";
-                            rejectReasons.Add(reason);
-                            needsPhoneConfirmation = true;
-                            
-                        }
-                    }
-
-                    if ((user.IsLockedOut) || (user.IsDeleted))
-                    {  
-                        var reason = $"login not allowed for {user.Email} because account either locked out or flagged as deleted";
-                        rejectReasons.Add(reason);
-                    }
-
-                    if(!string.IsNullOrWhiteSpace(userManager.Site.RegistrationAgreement))
-                    {
-                       // TODO: we need to capture user acceptance of terms with date
-                    }
-
+                    SiteId = userManager.Site.Id,
+                    UserName = userName,
+                    Email = email,
+                    DisplayName = email.Substring(0, email.IndexOf("@")),
+                    FirstName = externalLoginInfo.Principal.FindFirstValue(ClaimTypes.GivenName),
+                    LastName = externalLoginInfo.Principal.FindFirstValue(ClaimTypes.Surname),
+                    AccountApproved = userManager.Site.RequireApprovalBeforeLogin ? false : true,
+                    EmailConfirmed = socialAuthEmailVerificationPolicy.HasVerifiedEmail(externalLoginInfo)
+                };
+                var identityResult = await userManager.CreateAsync(newUser);
+                if (identityResult.Succeeded)
+                {
+                    identityResult = await userManager.AddLoginAsync(newUser, externalLoginInfo);
+                    return newUser;
                 }
+
+               
             }
 
-            if(rejectReasons.Count == 0)
+            return null;
+        }
+
+        public async Task<UserLoginResult> TryLogin(LoginViewModel model)
+        {
+            var template = new LoginResultTemplate();
+            IUserContext userContext = null;
+           
+            template.User = await userManager.FindByNameAsync(model.Email);
+            if (template.User != null)
             {
+                await ProcessAccountLoginRules(template);  
+            }
+            
+
+            if(template.User != null && template.SignInResult == SignInResult.Failed &&  template.RejectReasons.Count == 0)
+            {
+                userContext = new UserContext(template.User);
                 var persistent = false;
                 if (userManager.Site.AllowPersistentLogin)
                 {
@@ -260,7 +275,7 @@ namespace cloudscribe.Core.Web.Components
 
                 if (userManager.Site.UseEmailForLogin)
                 {
-                    signinResult = await signInManager.PasswordSignInAsync(
+                    template.SignInResult = await signInManager.PasswordSignInAsync(
                         model.Email,
                         model.Password,
                         persistent,
@@ -268,7 +283,7 @@ namespace cloudscribe.Core.Web.Components
                 }
                 else
                 {
-                    signinResult = await signInManager.PasswordSignInAsync(
+                    template.SignInResult = await signInManager.PasswordSignInAsync(
                         model.UserName,
                         model.Password,
                         persistent,
@@ -278,14 +293,14 @@ namespace cloudscribe.Core.Web.Components
             
 
             return new UserLoginResult(
-                signinResult, 
-                rejectReasons, 
+                template.SignInResult, 
+                template.RejectReasons, 
                 userContext,
-                mustAcceptTerms,
-                needsAccountApproval,
-                needsEmailConfirmation,
-                emailConfirmationToken,
-                needsPhoneConfirmation
+                template.MustAcceptTerms,
+                template.NeedsAccountApproval,
+                template.NeedsEmailConfirmation,
+                template.EmailConfirmationToken,
+                template.NeedsPhoneConfirmation
                 );
 
         }
@@ -294,15 +309,8 @@ namespace cloudscribe.Core.Web.Components
 
         public async Task<UserLoginResult> TryRegister(RegisterViewModel model)
         {
-            SiteUser user = null;
+            var template = new LoginResultTemplate();
             IUserContext userContext = null;
-            var signinResult = SignInResult.Failed;
-            var rejectReasons = new List<string>();
-            var mustAcceptTerms = false;
-            var needsAccountApproval = false;
-            var needsEmailConfirmation = false;
-            var needsPhoneConfirmation = false;
-            string emailConfirmationToken = string.Empty;
 
             var userName = model.Username.Length > 0 ? model.Username : await userManager.SuggestLoginNameFromEmail(userManager.Site.Id, model.Email);
             var userNameAvailable = await userManager.LoginIsAvailable(Guid.Empty, userName);
@@ -313,7 +321,7 @@ namespace cloudscribe.Core.Web.Components
                 userName = await userManager.SuggestLoginNameFromEmail(userManager.Site.Id, model.Email);
             }
 
-            user = new SiteUser
+            var user = new SiteUser
             {
                 SiteId = userManager.Site.Id,
                 UserName = userName,
@@ -333,67 +341,26 @@ namespace cloudscribe.Core.Web.Components
 
             if (result.Succeeded)
             {
-                if (userManager.Site.RequireConfirmedEmail)
-                {
-                    if (!await userManager.IsEmailConfirmedAsync(user))
-                    {
-                        var reason = $"login not allowed for {user.Email} because email is not confirmed";
-                        rejectReasons.Add(reason);
-                        needsEmailConfirmation = true;
-                        emailConfirmationToken = await userManager.GenerateEmailConfirmationTokenAsync(user);
-                    }
-                }
-
-                if (userManager.Site.RequireApprovalBeforeLogin)
-                {
-                    if (!user.AccountApproved)
-                    {
-                        var reason = $"login not allowed for {user.Email} because account not approved yet";
-                        rejectReasons.Add(reason);
-                    }
-                }
-
-                if (userManager.Site.RequireConfirmedPhone)
-                {
-                    if (!user.PhoneNumberConfirmed || string.IsNullOrEmpty(user.PhoneNumber))
-                    {
-                        var reason = $"login not allowed for {user.Email} because phone not added or verified yet";
-                        rejectReasons.Add(reason);
-                        needsPhoneConfirmation = true;
-
-                    }
-                }
-                
-
-                //if (!string.IsNullOrWhiteSpace(userManager.Site.RegistrationAgreement))
-                //{
-                //    // TODO: we need to capture user acceptance of terms with date
-                //    if(!model.AgreeToTerms)
-                //    {
-                //        var reason = $"login not allowed for {user.Email} because registration afgreement not accepted";
-                //        rejectReasons.Add(reason);
-                //    }
-                //}
-
-
+                template.User = user;
+                await ProcessAccountLoginRules(template);
             }
 
-            if(rejectReasons.Count == 0 && user != null)
+            if(template.RejectReasons.Count == 0 && user != null && template.SignInResult == SignInResult.Failed) // failed is initial state, could have been changed to lockedout
             {
                 await signInManager.SignInAsync(user, isPersistent: false);
                 userContext = new UserContext(user);
-                signinResult = SignInResult.Success;
+                template.SignInResult = SignInResult.Success;
             }
 
             return new UserLoginResult(
-                signinResult,
-                rejectReasons,
+                template.SignInResult,
+                template.RejectReasons,
                 userContext,
-                mustAcceptTerms,
-                needsAccountApproval,
-                needsEmailConfirmation,
-                emailConfirmationToken,
-                needsPhoneConfirmation
+                template.MustAcceptTerms,
+                template.NeedsAccountApproval,
+                template.NeedsEmailConfirmation,
+                template.EmailConfirmationToken,
+                template.NeedsPhoneConfirmation
                 );
 
         }
