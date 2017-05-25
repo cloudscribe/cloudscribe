@@ -35,6 +35,11 @@ namespace Microsoft.Extensions.DependencyInjection
             services.TryAddScoped<SiteSignInManager<SiteUser>, SiteSignInManager<SiteUser>>();
             services.TryAddSingleton<SiteAuthCookieValidator, SiteAuthCookieValidator>();
             services.TryAddScoped<SiteCookieAuthenticationEvents, SiteCookieAuthenticationEvents>();
+            services.TryAddScoped<ISocialAuthEmailVerfificationPolicy, DefaultSocialAuthEmailVerfificationPolicy>();
+
+            services.TryAddScoped<ISiteAcountCapabilitiesProvider, DefaultSiteAcountCapabilitiesProvider>();
+            services.TryAddScoped<IProcessAccountLoginRules, DefaultAccountLoginRulesProcessor>();
+
             services.AddSingleton<IAntiforgeryTokenStore, SiteAntiforgeryTokenStore>();
 
             services.AddAuthentication(options =>

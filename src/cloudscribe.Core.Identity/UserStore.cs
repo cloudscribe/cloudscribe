@@ -96,12 +96,12 @@ namespace cloudscribe.Core.Identity
             }
             
 
-            if (user.UserName.Length == 0)
+            if (string.IsNullOrWhiteSpace(user.UserName))
             {
                 user.UserName = await SuggestLoginNameFromEmail(siteSettings.Id, user.Email);
             }
 
-            if (user.DisplayName.Length == 0)
+            if (string.IsNullOrWhiteSpace(user.DisplayName))
             {
                 user.DisplayName = await SuggestLoginNameFromEmail(siteSettings.Id, user.Email);
             }

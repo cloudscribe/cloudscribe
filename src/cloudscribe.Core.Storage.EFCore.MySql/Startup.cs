@@ -33,7 +33,7 @@ namespace cloudscribe.Core.Storage.EFCore.MySql
             // this file name is ignored by gitignore
             // so you can create it and use on your local dev machine
             // remember last config source added wins if it has the same settings
-            builder.AddJsonFile("appsettings.local.overrides.json", optional: true);
+            builder.AddJsonFile("appsettings.dev.json", optional: true);
 
             Configuration = builder.Build();
         }
@@ -50,7 +50,7 @@ namespace cloudscribe.Core.Storage.EFCore.MySql
             //    options.UseMySQL(Configuration.GetConnectionString("DefaultConnection"))
             //           .UseInternalServiceProvider(serviceProvider)
             //           );
-            services.AddCloudscribeCoreEFStorageMySql(Configuration.GetConnectionString("DefaultConnection"));
+            services.AddCloudscribeCoreEFStorageMySql(Configuration.GetConnectionString("MySqlEntityFrameworkConnectionString"));
         }
 
 

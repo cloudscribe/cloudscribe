@@ -1,5 +1,7 @@
 # F# 
 
+https://github.com/Microsoft/visualfsharp/issues/3069
+
 https://blogs.msdn.microsoft.com/dotnet/2017/03/07/announcing-f-4-1-and-the-visual-f-tools-for-visual-studio-2017/
 
 https://channel9.msdn.com/Shows/On-NET/A-tour-of-F-with-Phillip-Carter
@@ -112,6 +114,11 @@ fsharp.slack.com
 ### Async
 http://tomasp.net/blog/csharp-async-gotchas.aspx/
 http://www.developerfusion.com/article/139804/an-introduction-to-f-agents
+
+### ASP.NET Core
+
+https://dusted.codes/functional-aspnet-core
+https://github.com/dustinmoris/Giraffe
 
 
 ### C# Interop

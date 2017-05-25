@@ -46,9 +46,7 @@ namespace cloudscribe.Core.Identity
             this.logger = logger;
 
             multiTenantOptions = multiTenantOptionsAccessor.Value;
-            
-            if (siteQueries == null) { throw new ArgumentNullException(nameof(siteQueries)); }
-            queries = siteQueries;
+            queries = siteQueries ?? throw new ArgumentNullException(nameof(siteQueries));
 
             this.options = optionsAccessor.Value;
         }
@@ -331,7 +329,7 @@ namespace cloudscribe.Core.Identity
                 return SignInResult.Failed;
             }
 
-            if (!user.AccountApproved) return SignInResult.NotAllowed;
+            //if (!user.AccountApproved) return SignInResult.NotAllowed;
 
             if (user.IsDeleted) return SignInResult.Failed;
 
@@ -426,7 +424,8 @@ namespace cloudscribe.Core.Identity
 
         private async Task<TwoFactorAuthenticationInfo> RetrieveTwoFactorInfoAsync()
         {
-            var result = await context.Authentication.AuthenticateAsync(options.Cookies.TwoFactorUserIdCookieAuthenticationScheme);
+            //var result = await context.Authentication.AuthenticateAsync(options.Cookies.TwoFactorUserIdCookieAuthenticationScheme);
+            var result = await context.Authentication.AuthenticateAsync(options.Cookies.TwoFactorUserIdCookie.AuthenticationScheme);
             if (result != null)
             {
                 return new TwoFactorAuthenticationInfo

@@ -11,6 +11,7 @@ namespace cloudscribe.Core.Models
         string FirstName { get; }
         string LastName { get; }
         string Email { get; }
+        bool EmailConfirmed { get; }
         DateTime CreatedUtc { get; }
         DateTime LastModifiedUtc { get; }
         DateTime? DateOfBirth { get; }

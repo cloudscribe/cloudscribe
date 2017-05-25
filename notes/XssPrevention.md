@@ -1,6 +1,8 @@
 
 https://scotthelme.co.uk/csrf-is-dead/
 
+http://blog.novanet.no/a-pile-of-anti-forgery-cookies/
+
 Input Filtering:
 
 Our approach in mojoPortal has always been to assume that in fact a user can insert malicious content in a wysiwyg editor. We distinguish between untrusted users and trusted users, and untrusted content vs trusted content created by the corresponding user type.

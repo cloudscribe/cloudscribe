@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2015-07-22
-// Last Modified:			2016-10-08
+// Last Modified:			2017-05-23
 // 
 
 using cloudscribe.Core.Models;
@@ -32,7 +32,7 @@ namespace cloudscribe.Core.Web.Components.Messaging
 
         Task AccountPendingApprovalAdminNotification(
             ISiteContext siteSettings,
-            ISiteUser user);
+            IUserContext user);
 
         Task SendAccountApprovalNotificationAsync(
             ISiteContext siteSettings,

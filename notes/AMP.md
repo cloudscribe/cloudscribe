@@ -1,4 +1,5 @@
 
+https://www.theregister.co.uk/2017/05/19/open_source_insider_google_amp_bad_bad_bad/
 
 https://www.ampproject.org/
 

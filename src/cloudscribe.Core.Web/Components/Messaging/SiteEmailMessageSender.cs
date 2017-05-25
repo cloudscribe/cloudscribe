@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2015-08-11
-// Last Modified:			2017-02-10
+// Last Modified:			2017-05-23
 // 
 
 using cloudscribe.Core.Models;
@@ -185,7 +185,7 @@ namespace cloudscribe.Core.Web.Components.Messaging
 
         public async Task AccountPendingApprovalAdminNotification(
             ISiteContext siteSettings,
-            ISiteUser user)
+            IUserContext user)
         {
             if (siteSettings.AccountApprovalEmailCsv.Length == 0) { return; }
 
@@ -204,10 +204,10 @@ namespace cloudscribe.Core.Web.Components.Messaging
             try
             {
                 var plainTextMessage
-                   = await viewRenderer.RenderViewAsString<ISiteUser>("EmailTemplates/AccountPendingApprovalAdminNotificationTextEmail", user).ConfigureAwait(false);
+                   = await viewRenderer.RenderViewAsString<IUserContext>("EmailTemplates/AccountPendingApprovalAdminNotificationTextEmail", user).ConfigureAwait(false);
 
                 var htmlMessage
-                    = await viewRenderer.RenderViewAsString<ISiteUser>("EmailTemplates/AccountPendingApprovalAdminNotificationHtmlEmail", user).ConfigureAwait(false);
+                    = await viewRenderer.RenderViewAsString<IUserContext>("EmailTemplates/AccountPendingApprovalAdminNotificationHtmlEmail", user).ConfigureAwait(false);
 
                 await sender.SendMultipleEmailAsync(
                     smtpOptions,

@@ -208,6 +208,16 @@ namespace cloudscribe.Core.Models.DataExtensions
                 user.LockoutEndDateUtc = Convert.ToDateTime(reader["LockoutEndDateUtc"]);
             }
 
+            if (reader["EmailConfirmSentUtc"] != DBNull.Value)
+            {
+                user.EmailConfirmSentUtc = Convert.ToDateTime(reader["EmailConfirmSentUtc"]);
+            }
+
+            if (reader["AgreementAcceptedUtc"] != DBNull.Value)
+            {
+                user.AgreementAcceptedUtc = Convert.ToDateTime(reader["AgreementAcceptedUtc"]);
+            }
+
             user.PasswordHash = reader["PasswordHash"].ToString();
             user.NormalizedUserName = reader["NormalizedUserName"].ToString();
             user.NewEmailApproved = Convert.ToBoolean(reader["NewEmailApproved"]);
@@ -321,6 +331,7 @@ namespace cloudscribe.Core.Models.DataExtensions
             site.SignEmailWithDkim = Convert.ToBoolean(reader["SignEmailWithDkim"]);
             site.OidConnectAppId = reader["OidConnectAppId"].ToString();
             site.OidConnectAppSecret = reader["OidConnectAppSecret"].ToString();
+            site.OidConnectAuthority = reader["OidConnectAuthority"].ToString();
             site.SmsClientId = reader["SmsClientId"].ToString();
             site.SmsSecureToken = reader["SmsSecureToken"].ToString();
             site.SmsFrom = reader["SmsFrom"].ToString();
