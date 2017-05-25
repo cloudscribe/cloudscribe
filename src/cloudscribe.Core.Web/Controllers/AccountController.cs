@@ -929,8 +929,14 @@ namespace cloudscribe.Core.Web.Controllers
             var result = await accountService.TwoFactorSignInAsync(model.Provider, model.Code, model.RememberMe, model.RememberBrowser);
             if (result.Succeeded)
             {
-                return LocalRedirect(model.ReturnUrl);
+                if (!string.IsNullOrEmpty(model.ReturnUrl))
+                {
+                    return LocalRedirect(model.ReturnUrl);
+                }
+
+                return this.RedirectToSiteRoot(Site);
             }
+
             if (result.IsLockedOut)
             {
                 return View("Lockout");

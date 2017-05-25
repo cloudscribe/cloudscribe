@@ -1,5 +1,7 @@
 # F# 
 
+https://github.com/Microsoft/visualfsharp/issues/3069
+
 https://blogs.msdn.microsoft.com/dotnet/2017/03/07/announcing-f-4-1-and-the-visual-f-tools-for-visual-studio-2017/
 
 https://channel9.msdn.com/Shows/On-NET/A-tour-of-F-with-Phillip-Carter

@@ -196,7 +196,7 @@ namespace cloudscribe.Core.Web.Components
                 
             }
 
-            if(template.SignInResult != SignInResult.Success)
+            if(template.SignInResult != SignInResult.Success && template.SignInResult != SignInResult.TwoFactorRequired)
             {
                 //clear the external login 
                 await signInManager.SignOutAsync();

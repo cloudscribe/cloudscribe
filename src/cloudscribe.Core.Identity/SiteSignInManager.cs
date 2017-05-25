@@ -424,7 +424,8 @@ namespace cloudscribe.Core.Identity
 
         private async Task<TwoFactorAuthenticationInfo> RetrieveTwoFactorInfoAsync()
         {
-            var result = await context.Authentication.AuthenticateAsync(options.Cookies.TwoFactorUserIdCookieAuthenticationScheme);
+            //var result = await context.Authentication.AuthenticateAsync(options.Cookies.TwoFactorUserIdCookieAuthenticationScheme);
+            var result = await context.Authentication.AuthenticateAsync(options.Cookies.TwoFactorUserIdCookie.AuthenticationScheme);
             if (result != null)
             {
                 return new TwoFactorAuthenticationInfo
