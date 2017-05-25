@@ -181,7 +181,14 @@ namespace cloudscribe.Core.Models
             get { return oidConnectAppSecret ?? string.Empty; }
             set { oidConnectAppSecret = value; }
         }
-        
+
+        private string oidConnectAuthority = string.Empty;
+        public string OidConnectAuthority
+        {
+            get { return oidConnectAuthority ?? string.Empty; }
+            set { oidConnectAuthority = value; }
+        }
+
         private string addThisDotComUsername = string.Empty;
         public string AddThisDotComUsername
         {
@@ -523,6 +530,7 @@ namespace cloudscribe.Core.Models
             s.MinRequiredPasswordLength = i.MinRequiredPasswordLength;
             s.OidConnectAppId = i.OidConnectAppId;
             s.OidConnectAppSecret = i.OidConnectAppSecret;
+            s.OidConnectAuthority = i.OidConnectAuthority;
             s.PreferredHostName = i.PreferredHostName;
             s.PrivacyPolicy = i.PrivacyPolicy;
             s.ReallyDeleteUsers = i.ReallyDeleteUsers;
@@ -558,11 +566,6 @@ namespace cloudscribe.Core.Models
             s.UseEmailForLogin = i.UseEmailForLogin;
             s.UseLdapAuth = i.UseLdapAuth;
            
-            
-            
-
-
-
             return s;
         }
 

@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2016-05-07
-// Last Modified:			2017-05-22
+// Last Modified:			2017-05-25
 // 
 
 
@@ -13,22 +13,20 @@ using cloudscribe.Core.Web.Components;
 using cloudscribe.Core.Web.Components.Editor;
 using cloudscribe.Core.Web.Components.Messaging;
 using cloudscribe.Core.Web.Navigation;
+using cloudscribe.Messaging.Email;
+using cloudscribe.Web.Common.Models;
 using cloudscribe.Web.Common.Razor;
 using cloudscribe.Web.Navigation;
 using cloudscribe.Web.Navigation.Caching;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc.Razor;
+using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection.Extensions;
-using Microsoft.Extensions.FileProviders;
 using Microsoft.Extensions.Options;
-using System.Reflection;
-using Microsoft.AspNetCore.Authorization;
-using cloudscribe.Messaging.Email;
 using System;
-using Microsoft.AspNetCore.Mvc.ViewFeatures;
-using cloudscribe.Web.Common.Models;
-using cloudscribe.Core.Identity;
+
 
 namespace Microsoft.Extensions.DependencyInjection
 {
@@ -84,7 +82,8 @@ namespace Microsoft.Extensions.DependencyInjection
             services.AddScoped<INodeUrlPrefixProvider, FolderTenantNodeUrlPrefixProvider>();
             services.AddCloudscribeNavigation(configuration);
 
-            services.TryAddScoped<IProcessAccountLoginRules, DefaultAccountLoginRulesProcessor>();
+            // Identity ***
+            services.TryAddScoped<ISiteAcountCapabilitiesProvider, SiteAcountCapabilitiesProvider>();
             services.AddCloudscribeIdentity();
 
             services.AddScoped<IUserContextResolver, UserContextResolver>();

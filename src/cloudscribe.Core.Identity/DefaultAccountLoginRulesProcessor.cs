@@ -5,41 +5,32 @@
 // Last Modified:			2017-05-25
 // 
 
-using cloudscribe.Core.Identity;
 using cloudscribe.Core.Models;
-
-using cloudscribe.Messaging.Email;
-using Microsoft.AspNetCore.Http.Authentication;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.Extensions.Logging;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Security.Claims;
 using System.Threading.Tasks;
 
-namespace cloudscribe.Core.Web.Components
+namespace cloudscribe.Core.Identity
 {
     public class DefaultAccountLoginRulesProcessor : IProcessAccountLoginRules
     {
         public DefaultAccountLoginRulesProcessor(
             SiteUserManager<SiteUser> userManager,
-            ISmtpOptionsProvider smtpOptionsProvider
+            ISiteAcountCapabilitiesProvider capabilitiesProvider
             )
         {
             this.userManager = userManager;
-            this.smtpOptionsProvider = smtpOptionsProvider;
+            this.capabilitiesProvider = capabilitiesProvider;
         }
 
         private readonly SiteUserManager<SiteUser> userManager;
-        private readonly ISmtpOptionsProvider smtpOptionsProvider;
-        private SmtpOptions smtpOptions = null;
+        private readonly ISiteAcountCapabilitiesProvider capabilitiesProvider;
+        
 
         private async Task<bool> RequireConfirmedEmail()
         {
             if (!userManager.Site.RequireConfirmedEmail) return false;
-            if (smtpOptions == null) { smtpOptions = await smtpOptionsProvider.GetSmtpOptions().ConfigureAwait(false); }
-            return !string.IsNullOrEmpty(smtpOptions.Server);
+            // if true check if it is possible, it is only possible to confirm email if email notification is setup
+            return await capabilitiesProvider.SupportsEmailNotification(userManager.Site);
         }
 
         public async Task ProcessAccountLoginRules(LoginResultTemplate template)

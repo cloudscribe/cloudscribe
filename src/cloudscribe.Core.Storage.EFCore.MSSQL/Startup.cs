@@ -31,7 +31,7 @@ namespace cloudscribe.Core.Storage.EFCore.MSSQL
             // this file name is ignored by gitignore
             // so you can create it and use on your local dev machine
             // remember last config source added wins if it has the same settings
-            builder.AddJsonFile("appsettings.local.overrides.json", optional: true);
+            builder.AddJsonFile("appsettings.dev.json", optional: true);
 
             Configuration = builder.Build();
         }
@@ -43,7 +43,7 @@ namespace cloudscribe.Core.Storage.EFCore.MSSQL
             //    options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection"))
             //           .UseInternalServiceProvider(serviceProvider)
             //           );
-            services.AddCloudscribeCoreEFStorageMSSQL(Configuration.GetConnectionString("DefaultConnection"));
+            services.AddCloudscribeCoreEFStorageMSSQL(Configuration.GetConnectionString("EntityFrameworkConnectionString"));
         }
 
 

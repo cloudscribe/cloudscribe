@@ -9,14 +9,10 @@ using cloudscribe.Core.Identity;
 using cloudscribe.Core.Models;
 using cloudscribe.Core.Web.ViewModels.Account;
 using cloudscribe.Core.Web.ViewModels.SiteUser;
-using cloudscribe.Messaging.Email;
 using Microsoft.AspNetCore.Http.Authentication;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.Extensions.Localization;
-using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
 
@@ -31,7 +27,6 @@ namespace cloudscribe.Core.Web.Components
             IIdentityServerIntegration identityServerIntegration,
             ISocialAuthEmailVerfificationPolicy socialAuthEmailVerificationPolicy,
             IProcessAccountLoginRules loginRulesProcessor
-            //,ISmtpOptionsProvider smtpOptionsProvider
             //,ILogger<AccountService> logger
             )
         {
@@ -40,20 +35,15 @@ namespace cloudscribe.Core.Web.Components
             this.identityServerIntegration = identityServerIntegration;
             this.socialAuthEmailVerificationPolicy = socialAuthEmailVerificationPolicy;
             this.loginRulesProcessor = loginRulesProcessor;
-            //this.smtpOptionsProvider = smtpOptionsProvider;
+           
             //log = logger;
         }
 
-        
         private readonly SiteUserManager<SiteUser> userManager;
         private readonly SiteSignInManager<SiteUser> signInManager;
         private readonly IIdentityServerIntegration identityServerIntegration;
         private readonly ISocialAuthEmailVerfificationPolicy socialAuthEmailVerificationPolicy;
         private readonly IProcessAccountLoginRules loginRulesProcessor;
-
-        //private readonly ISmtpOptionsProvider smtpOptionsProvider;
-       // private SmtpOptions smtpOptions = null;
-
         // private ILogger log;
 
         private async Task<SiteUser> CreateUserFromExternalLogin(ExternalLoginInfo externalLoginInfo, string providedEmail = null)
@@ -84,102 +74,15 @@ namespace cloudscribe.Core.Web.Components
                     identityResult = await userManager.AddLoginAsync(newUser, externalLoginInfo);
                     return newUser;
                 }
-
             }
             return null;
         }
 
-
-        //private async Task<bool> RequireConfirmedEmail()
-        //{
-        //    if (!userManager.Site.RequireConfirmedEmail) return false;
-        //    if (smtpOptions == null) { smtpOptions = await smtpOptionsProvider.GetSmtpOptions().ConfigureAwait(false); }
-        //    return !string.IsNullOrEmpty(smtpOptions.Server);
-        //}
-
-        //private async Task ProcessAccountLoginRules(LoginResultTemplate template)
-        //{
-        //    if (template.User == null) return;
-        //    var requireConfirmedEmail = await RequireConfirmedEmail();
-
-        //    if (requireConfirmedEmail)
-        //    {
-        //        if (!template.User.EmailConfirmed)
-        //        {
-        //            var reason = $"login not allowed for {template.User.Email} because email is not confirmed";
-        //            template.RejectReasons.Add(reason);
-        //            template.NeedsEmailConfirmation = true;
-        //            template.EmailConfirmationToken = await userManager.GenerateEmailConfirmationTokenAsync(template.User);
-        //            template.SignInResult = SignInResult.NotAllowed;
-        //        }
-        //    }
-
-        //    if (userManager.Site.RequireApprovalBeforeLogin)
-        //    {
-        //        if (!template.User.AccountApproved)
-        //        {
-        //            var reason = $"login not allowed for {template.User.Email} because account not approved yet";
-        //            template.RejectReasons.Add(reason);
-        //            template.NeedsAccountApproval = true;
-        //            template.SignInResult = SignInResult.NotAllowed;
-        //        }
-        //    }
-
-        //    if (userManager.Site.RequireConfirmedPhone && userManager.Site.SmsIsConfigured())
-        //    {
-        //        if (string.IsNullOrEmpty(template.User.PhoneNumber))
-        //        {
-        //            // we can't add a reason here that would block login
-        //            // we need to enforce user to add phone number via middleware redirect
-        //            // not by blocking login
-        //            // because without logging in user cannot update the phone
-        //            template.NeedsPhoneConfirmation = true;
-        //        }
-        //        else
-        //        {
-        //            if (!template.User.PhoneNumberConfirmed)
-        //            {
-        //                var reason = $"login not allowed for {template.User.Email} because phone not added or verified yet";
-        //                template.RejectReasons.Add(reason);
-        //                template.NeedsPhoneConfirmation = true;
-
-        //            }
-        //        }
-
-        //    }
-
-        //    if (!string.IsNullOrWhiteSpace(userManager.Site.RegistrationAgreement))
-        //    {
-        //        // TODO: we need to capture user acceptance of terms with date
-        //        // need to not block login otherwise how can we make the user agree agree to terms on account
-        //        // need to enforce it with middleware
-        //        template.MustAcceptTerms = true;
-        //    }
-
-        //    if (template.User.IsLockedOut)
-        //    {
-        //        var reason = $"login not allowed for {template.User.Email} because account is locked out";
-        //        template.RejectReasons.Add(reason);
-        //        template.SignInResult = SignInResult.LockedOut;
-
-
-        //    }
-
-        //    if (template.User.IsDeleted)
-        //    {
-        //        var reason = $"login not allowed for {template.User.Email} because account is flagged as deleted";
-        //        template.RejectReasons.Add(reason);
-        //        template.User = null;
-
-
-        //    }
-        //}
-
+        
         public async Task<UserLoginResult> TryExternalLogin(string providedEmail = "")
         {
             var template = new LoginResultTemplate();
             IUserContext userContext = null;
-            
             var email = providedEmail;
 
             template.ExternalLoginInfo = await signInManager.GetExternalLoginInfoAsync();
@@ -202,7 +105,6 @@ namespace cloudscribe.Core.Web.Components
                     {
                         template.User = await userManager.FindByNameAsync(email);
                     }
-
                 }
                 
                 if (template.User == null)
@@ -223,8 +125,7 @@ namespace cloudscribe.Core.Web.Components
                 {
                     // TODO:
                     //update last login time
-                }
-                
+                }      
             }
 
             if(template.User != null
@@ -250,12 +151,7 @@ namespace cloudscribe.Core.Web.Components
                 );
 
         }
-
         
-
-
-        
-
         public async Task<UserLoginResult> TryLogin(LoginViewModel model)
         {
             var template = new LoginResultTemplate();
@@ -266,8 +162,7 @@ namespace cloudscribe.Core.Web.Components
             {
                 await loginRulesProcessor.ProcessAccountLoginRules(template);
             }
-            
-
+           
             if(template.User != null && template.SignInResult == SignInResult.Failed &&  template.RejectReasons.Count == 0)
             {
                 userContext = new UserContext(template.User);
@@ -276,7 +171,6 @@ namespace cloudscribe.Core.Web.Components
                 {
                     persistent = model.RememberMe;
                 }
-
 
                 if (userManager.Site.UseEmailForLogin)
                 {
@@ -296,7 +190,6 @@ namespace cloudscribe.Core.Web.Components
                 }
             }
             
-
             return new UserLoginResult(
                 template.SignInResult, 
                 template.RejectReasons, 
@@ -307,11 +200,9 @@ namespace cloudscribe.Core.Web.Components
                 template.EmailConfirmationToken,
                 template.NeedsPhoneConfirmation
                 );
-
         }
 
         
-
         public async Task<UserLoginResult> TryRegister(RegisterViewModel model)
         {
             var template = new LoginResultTemplate();
@@ -321,8 +212,6 @@ namespace cloudscribe.Core.Web.Components
             var userNameAvailable = await userManager.LoginIsAvailable(Guid.Empty, userName);
             if (!userNameAvailable)
             {
-                //ModelState.AddModelError("usernameerror", sr["Username not accepted please try a different value"]);
-                //isValid = false;
                 userName = await userManager.SuggestLoginNameFromEmail(userManager.Site.Id, model.Email);
             }
 
@@ -353,8 +242,12 @@ namespace cloudscribe.Core.Web.Components
             if(template.RejectReasons.Count == 0 && user != null && template.SignInResult == SignInResult.Failed) // failed is initial state, could have been changed to lockedout
             {
                 await signInManager.SignInAsync(user, isPersistent: false);
-                userContext = new UserContext(user);
                 template.SignInResult = SignInResult.Success;
+            }
+
+            if(template.User != null)
+            {
+                userContext = new UserContext(template.User);
             }
 
             return new UserLoginResult(
@@ -367,7 +260,6 @@ namespace cloudscribe.Core.Web.Components
                 template.EmailConfirmationToken,
                 template.NeedsPhoneConfirmation
                 );
-
         }
 
         public async Task<ResetPasswordInfo> GetPasswordResetInfo(string email)
@@ -410,7 +302,6 @@ namespace cloudscribe.Core.Web.Components
                 token = await userManager.GenerateEmailConfirmationTokenAsync((SiteUser)user);
                 userContext = new UserContext(user);
             }
-
 
             return new VerifyEmailInfo(userContext, token);
         }

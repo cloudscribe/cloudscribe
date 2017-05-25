@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2015-11-16
-// Last Modified:			2016-11-09
+// Last Modified:			2017-05-25
 // 
 
 using cloudscribe.Core.Models;
@@ -320,6 +320,15 @@ namespace cloudscribe.Core.Storage.EFCore.MSSQL
                 entity.Property(p => p.OidConnectAppId)
                .HasMaxLength(255);
                 ;
+
+                entity.Property(p => p.OidConnectAppSecret)
+               .HasMaxLength(255);
+                ;
+
+                entity.Property(p => p.OidConnectAuthority)
+               .HasMaxLength(255);
+                ;
+
 
                 entity.Property(p => p.PreferredHostName)
                 .HasMaxLength(250);

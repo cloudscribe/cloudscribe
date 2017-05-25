@@ -5,11 +5,20 @@ using System.Linq;
 using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
+using Microsoft.Extensions.Logging;
 
 namespace cloudscribe.Core.Identity
 {
     public class DefaultSocialAuthEmailVerfificationPolicy : ISocialAuthEmailVerfificationPolicy
     {
+        public DefaultSocialAuthEmailVerfificationPolicy(
+           // ILogger<DefaultSocialAuthEmailVerfificationPolicy> logger
+            )
+        {
+           // log = logger;
+        }
+
+        //private ILogger log;
 
         public bool HasVerifiedEmail(ExternalLoginInfo externalLoginInfo)
         {
@@ -22,6 +31,16 @@ namespace cloudscribe.Core.Identity
             //var emailVerified = externalLoginInfo.Principal.FindFirstValue(ClaimTypes.);
             // not sure about Microsoft
             // twitter doesn't provide an email
+            //if(externalLoginInfo.Principal != null)
+            //{
+            //    foreach(var c in externalLoginInfo.Principal.Claims)
+            //    {
+            //        var message = $"found claim type {c.Type} with value {c.Value}";
+            //        log.LogWarning(message);
+            //    }
+
+                
+            //}
 
             return false;
         }

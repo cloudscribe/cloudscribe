@@ -95,7 +95,8 @@ namespace cloudscribe.Core.Models
         string TwitterConsumerKey { get; }
         string TwitterConsumerSecret { get; }
         string OidConnectAppId { get;  }
-        string OidConnectAppSecret { get; } 
+        string OidConnectAppSecret { get; }
+        string OidConnectAuthority { get; }
         string AddThisDotComUsername { get; }
         //bool IsDataProtected { get; }
         DateTime CreatedUtc { get; }

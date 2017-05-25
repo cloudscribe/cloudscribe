@@ -90,6 +90,18 @@ namespace cloudscribe.Core.Models
         string SecurityStamp { get; set; }
 
         bool EmailConfirmed { get; set; }
+        /// <summary>
+        /// last time we sent a verification email to this user email account
+        /// mainly used for periodic retry if user tries to login and still not verified
+        /// </summary>
+        DateTime? EmailConfirmSentUtc { get; set; }
+
+        /// <summary>
+        /// if populated the user accepted the terms
+        /// if you change the terms you could rest this to nukk in the db to force users to accept the new terms at login
+        /// </summary>
+        DateTime? AgreementAcceptedUtc { get; set; }
+
         string NormalizedEmail { get; set; } // maps to LoweredEmail in ado data layers
         string NormalizedUserName { get; set; }
 

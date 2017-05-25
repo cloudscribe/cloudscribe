@@ -13,7 +13,7 @@ namespace cloudscribe.Core.Storage.EFCore.MySql.Migrations
         protected override void BuildModel(ModelBuilder modelBuilder)
         {
             modelBuilder
-                .HasAnnotation("ProductVersion", "1.1.1");
+                .HasAnnotation("ProductVersion", "1.1.2");
 
             modelBuilder.Entity("cloudscribe.Core.Models.Geography.GeoCountry", b =>
                 {
@@ -236,7 +236,11 @@ namespace cloudscribe.Core.Storage.EFCore.MySql.Migrations
                     b.Property<string>("OidConnectAppId")
                         .HasMaxLength(255);
 
-                    b.Property<string>("OidConnectAppSecret");
+                    b.Property<string>("OidConnectAppSecret")
+                        .HasMaxLength(255);
+
+                    b.Property<string>("OidConnectAuthority")
+                        .HasMaxLength(255);
 
                     b.Property<string>("PreferredHostName")
                         .HasMaxLength(250);
@@ -338,6 +342,8 @@ namespace cloudscribe.Core.Storage.EFCore.MySql.Migrations
 
                     b.Property<bool>("AccountApproved");
 
+                    b.Property<DateTime?>("AgreementAcceptedUtc");
+
                     b.Property<string>("AuthorBio");
 
                     b.Property<string>("AvatarUrl")
@@ -360,6 +366,8 @@ namespace cloudscribe.Core.Storage.EFCore.MySql.Migrations
                     b.Property<string>("Email")
                         .IsRequired()
                         .HasMaxLength(100);
+
+                    b.Property<DateTime?>("EmailConfirmSentUtc");
 
                     b.Property<bool>("EmailConfirmed");
 

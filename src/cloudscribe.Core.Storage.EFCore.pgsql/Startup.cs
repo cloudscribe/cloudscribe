@@ -31,7 +31,7 @@ namespace cloudscribe.Core.Storage.EFCore.pgsql
             // this file name is ignored by gitignore
             // so you can create it and use on your local dev machine
             // remember last config source added wins if it has the same settings
-            builder.AddJsonFile("appsettings.local.overrides.json", optional: true);
+            builder.AddJsonFile("appsettings.dev.json", optional: true);
 
             Configuration = builder.Build();
         }
@@ -43,7 +43,7 @@ namespace cloudscribe.Core.Storage.EFCore.pgsql
             //    options.UseNpgsql(Configuration.GetConnectionString("DefaultConnection"))
             //           .UseInternalServiceProvider(serviceProvider)
             //           );
-            services.AddCloudscribeCoreEFStoragePostgreSql(Configuration.GetConnectionString("DefaultConnection"));
+            services.AddCloudscribeCoreEFStoragePostgreSql(Configuration.GetConnectionString("PostgreSqlEntityFrameworkConnectionString"));
         }
 
 

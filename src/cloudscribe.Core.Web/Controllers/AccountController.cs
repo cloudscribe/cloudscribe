@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2014-10-26
-// Last Modified:			2017-05-24
+// Last Modified:			2017-05-25
 // 
 
 using cloudscribe.Core.Identity;
@@ -30,7 +30,6 @@ namespace cloudscribe.Core.Web.Controllers
     [Authorize]
     public class AccountController : Controller
     {
-
         public AccountController(
             AccountService accountService,
             SiteContext currentSite,
@@ -176,12 +175,12 @@ namespace cloudscribe.Core.Web.Controllers
             
             if (result.SignInResult.RequiresTwoFactor)
             {
-                log.LogInformation($"redirecting from login for {model.Email} because 2 factor not configured yet for account");
-                return RedirectToAction(nameof(SendCode), new { ReturnUrl = returnUrl, RememberMe = model.RememberMe });
+                return HandleRequiresTwoFactor(result, returnUrl, model.RememberMe);
             }
+
             if (result.SignInResult.IsLockedOut)
             {
-                return View("Lockout");
+                return HandleLockout(result);
             }
             else
             {
@@ -191,7 +190,70 @@ namespace cloudscribe.Core.Web.Controllers
             }
         }
 
-        
+        private IActionResult HandleLoginNotAllowed(UserLoginResult result)
+        {
+            if (result.User != null)
+            {
+                if (result.NeedsEmailConfirmation)
+                {
+                    //TODO: check how recent we sent this
+                    // var timeSpan = DateTime.UtcNow - result.User.ConfirmEmailSentUtc;
+                    // if(timeSpan.TotalDays > x) send
+                    var callbackUrl = Url.Action(new UrlActionContext
+                    {
+                        Action = "ConfirmEmail",
+                        Controller = "Account",
+                        Values = new { userId = result.User.Id.ToString(), code = result.EmailConfirmationToken },
+                        Protocol = HttpContext.Request.Scheme
+                    });
+
+                    emailSender.SendAccountConfirmationEmailAsync(
+                        Site,
+                        result.User.Email,
+                        sr["Confirm your account"],
+                        callbackUrl).Forget();
+
+
+                    this.AlertSuccess(sr["Please check your email inbox, we just sent you a link that you need to click to confirm your account"], true);
+
+                    return RedirectToAction("EmailConfirmationRequired", new { userId = result.User.Id, didSend = true });
+                }
+
+                if (result.NeedsAccountApproval)
+                {
+                    var timeSpan = DateTime.UtcNow - result.User.CreatedUtc;
+                    if (timeSpan.TotalDays < 1)
+                    {
+                        // account was just created so send notification to approver
+                        emailSender.AccountPendingApprovalAdminNotification(Site, result.User).Forget();
+                    }
+
+                    return RedirectToAction("PendingApproval", new { userId = result.User.Id, didSend = true });
+                }
+            }
+
+            return this.RedirectToSiteRoot(Site);
+        }
+
+        private IActionResult HandleRequiresTwoFactor(UserLoginResult result, string returnUrl, bool rememberMe)
+        {
+            if(result.User != null)
+            {
+                log.LogWarning($"redirecting from login for {result.User.Email} because 2 factor not configured yet for account");
+            }
+            
+            return RedirectToAction(nameof(SendCode), new { ReturnUrl = returnUrl, RememberMe = rememberMe });
+        }
+
+        private IActionResult HandleLockout(UserLoginResult result)
+        {
+            if (result.User != null)
+            {
+                log.LogWarning($"redirecting to lockout page for {result.User.Email} because account is locked");
+            }
+
+            return View("Lockout");
+        }
 
 
 
@@ -317,19 +379,17 @@ namespace cloudscribe.Core.Web.Controllers
 
                 if (result.SignInResult.RequiresTwoFactor)
                 {
-                    log.LogInformation($"redirecting from login for {model.Email} because 2 factor not configured yet for account");
-                    return RedirectToAction(nameof(SendCode), new { ReturnUrl = returnUrl, RememberMe = false });
+                    return HandleRequiresTwoFactor(result, returnUrl, false);
                 }
                 if (result.SignInResult.IsLockedOut)
                 {
-                    return View("Lockout");
+                    return HandleLockout(result);
                 }
-                else
-                {
-                    log.LogInformation($"login did not succeed for {model.Email}");
-                    ModelState.AddModelError(string.Empty, sr["Invalid login attempt."]);
-                    return View(model);
-                }
+                
+                log.LogInformation($"login did not succeed for {model.Email}");
+                ModelState.AddModelError(string.Empty, sr["Invalid login attempt."]);
+                return View(model);
+                
             }
 
             // If we got this far, something failed, redisplay form
@@ -471,71 +531,17 @@ namespace cloudscribe.Core.Web.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Logout(IdentityServerLogoutViewModel model)
         {
-            // delete authentication cookies
             await accountService.SignOutAsync();
-
             // set this so UI rendering sees an anonymous user
             HttpContext.User = new ClaimsPrincipal(new ClaimsIdentity());
 
             // get context information (client name, post logout redirect URI and iframe for federated signout)
             var logoutModel = await identityServerIntegration.GetLogoutContextModelAsync(model.LogoutId);
-
             
             return View("LoggedOut", logoutModel);
         }
 
-        private IActionResult HandleLoginNotAllowed(UserLoginResult result)
-        {
-            if (result.User != null)
-            {
-                if (result.NeedsEmailConfirmation)
-                {
-                    //TODO: check how recent we sent this
-                    // var timeSpan = DateTime.UtcNow - result.User.ConfirmEmailSentUtc;
-                    // if(timeSpan.TotalDays > x) send
-                    var callbackUrl = Url.Action(new UrlActionContext
-                    {
-                        Action = "ConfirmEmail",
-                        Controller = "Account",
-                        Values = new { userId = result.User.Id.ToString(), code = result.EmailConfirmationToken },
-                        Protocol = HttpContext.Request.Scheme
-                    });
-
-                    emailSender.SendAccountConfirmationEmailAsync(
-                        Site,
-                        result.User.Email,
-                        sr["Confirm your account"],
-                        callbackUrl).Forget();
-
-
-                    this.AlertSuccess(sr["Please check your email inbox, we just sent you a link that you need to click to confirm your account"], true);
-
-                    return RedirectToAction("EmailConfirmationRequired", new { userId = result.User.Id, didSend = true });
-                }
-
-                if (result.NeedsPhoneConfirmation)
-                {
-                    //TODO: redirect?
-                    var logItem = $"user {result.User.Email} was not allowed to login because phone is not confirmed";
-                    log.LogWarning(logItem);
-
-                }
-
-                if (result.NeedsAccountApproval)
-                {
-                    var timeSpan = DateTime.UtcNow - result.User.CreatedUtc;
-                    if (timeSpan.TotalDays < 1)
-                    {
-                        // account was just created so send notification to approver
-                        emailSender.AccountPendingApprovalAdminNotification(Site, result.User).Forget();
-                    }
-                    
-                    return RedirectToAction("PendingApproval", new { userId = result.User.Id, didSend = true });
-                }
-            }
-
-            return this.RedirectToSiteRoot(Site);
-        }
+        
 
 
         // POST: /Account/ExternalLogin
@@ -603,41 +609,39 @@ namespace cloudscribe.Core.Web.Controllers
             
             if (result.SignInResult.RequiresTwoFactor)
             {
-                log.LogDebug("ExternalLoginCallback ExternalLoginSignInAsync RequiresTwoFactor ");
-                return RedirectToAction(nameof(SendCode), new { ReturnUrl = returnUrl });
+                return HandleRequiresTwoFactor(result, returnUrl, false);
             }
             
             if (result.SignInResult.IsLockedOut)
             {
-                log.LogDebug("ExternalLoginCallback ExternalLoginSignInAsync IsLockedOut ");
-                return View("Lockout");
+                return HandleLockout(result);
             }
-            else // result.Failed
+
+            // result.Failed
+            
+            if (result.User != null)
             {
-                if (result.User != null)
+                if (result.MustAcceptTerms)
                 {
-                    if (result.MustAcceptTerms)
-                    {
-                        //TODO: redirect
+                    //TODO: redirect
 
-                    }
-                    
-                }
-                
-                // If the user does not have an account, then ask the user to create an account.
-                // check the claims from the provider to see if we have what we need
-                // only need to show this form if there is no email or if there is a required registration agreement
-
-                ViewData["ReturnUrl"] = returnUrl;
-                ViewData["LoginProvider"] = result.ExternalLoginInfo.LoginProvider;
-                var email = result.ExternalLoginInfo.Principal.FindFirstValue(ClaimTypes.Email);
-                var model = new ExternalLoginConfirmationViewModel();
-                model.Email = email;
-                model.RegistrationPreamble = Site.RegistrationPreamble;
-                model.RegistrationAgreement = Site.RegistrationAgreement;
-                model.AgreementRequired = Site.RegistrationAgreement.Length > 0;
-                return View("ExternalLoginConfirmation", model);
+                }      
             }
+                
+            // If the user does not have an account, then ask the user to create an account.
+            // check the claims from the provider to see if we have what we need
+            // only need to show this form if there is no email or if there is a required registration agreement
+
+            ViewData["ReturnUrl"] = returnUrl;
+            ViewData["LoginProvider"] = result.ExternalLoginInfo.LoginProvider;
+            var email = result.ExternalLoginInfo.Principal.FindFirstValue(ClaimTypes.Email);
+            var model = new ExternalLoginConfirmationViewModel();
+            model.Email = email;
+            model.RegistrationPreamble = Site.RegistrationPreamble;
+            model.RegistrationAgreement = Site.RegistrationAgreement;
+            model.AgreementRequired = Site.RegistrationAgreement.Length > 0;
+            return View("ExternalLoginConfirmation", model);
+            
 
         }
         
@@ -683,16 +687,14 @@ namespace cloudscribe.Core.Web.Controllers
                     await ipAddressTracker.TackUserIpAddress(Site.Id, result.User.Id);
                     
                     if(result.SignInResult.Succeeded)
-                    {
-                       
+                    {           
                         if (!string.IsNullOrEmpty(returnUrl))
                         {
                             return LocalRedirect(returnUrl);
                         }
 
                         return this.RedirectToSiteRoot(Site);
-                    }
-                   
+                    } 
                 }
                 else
                 {
@@ -725,8 +727,7 @@ namespace cloudscribe.Core.Web.Controllers
             Guid selectedUserGuid = Guid.Empty;
             if (userId.HasValue) { selectedUserGuid = userId.Value; }
             bool available = await accountService.LoginNameIsAvailable(selectedUserGuid, userName);
-
-
+            
             return Json(available);
         }
 

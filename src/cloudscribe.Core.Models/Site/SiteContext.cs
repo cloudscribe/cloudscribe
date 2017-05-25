@@ -219,6 +219,11 @@ namespace cloudscribe.Core.Models
             get { return site.OidConnectAppSecret; }
         }
 
+        public string OidConnectAuthority
+        {
+            get { return site.OidConnectAuthority; }
+        }
+
         public string AddThisDotComUsername
         {
             get { return site.AddThisDotComUsername; }

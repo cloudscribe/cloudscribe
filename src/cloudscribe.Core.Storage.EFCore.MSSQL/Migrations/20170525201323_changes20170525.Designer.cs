@@ -8,9 +8,10 @@ using cloudscribe.Core.Storage.EFCore.MSSQL;
 namespace cloudscribe.Core.Storage.EFCore.MSSQL.Migrations
 {
     [DbContext(typeof(CoreDbContext))]
-    partial class CoreDbContextModelSnapshot : ModelSnapshot
+    [Migration("20170525201323_changes20170525")]
+    partial class changes20170525
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
             modelBuilder
                 .HasAnnotation("ProductVersion", "1.1.2")
