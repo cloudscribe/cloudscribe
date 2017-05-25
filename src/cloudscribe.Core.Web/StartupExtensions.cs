@@ -28,6 +28,7 @@ using cloudscribe.Messaging.Email;
 using System;
 using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using cloudscribe.Web.Common.Models;
+using cloudscribe.Core.Identity;
 
 namespace Microsoft.Extensions.DependencyInjection
 {
@@ -83,6 +84,7 @@ namespace Microsoft.Extensions.DependencyInjection
             services.AddScoped<INodeUrlPrefixProvider, FolderTenantNodeUrlPrefixProvider>();
             services.AddCloudscribeNavigation(configuration);
 
+            services.TryAddScoped<IProcessAccountLoginRules, DefaultAccountLoginRulesProcessor>();
             services.AddCloudscribeIdentity();
 
             services.AddScoped<IUserContextResolver, UserContextResolver>();
