@@ -162,10 +162,16 @@ namespace cloudscribe.Core.Web.Components
             {
                 await loginRulesProcessor.ProcessAccountLoginRules(template);
             }
-           
-            if(template.User != null && template.SignInResult == SignInResult.Failed &&  template.RejectReasons.Count == 0)
+
+            if(template.User != null)
             {
                 userContext = new UserContext(template.User);
+            }
+           
+            if(userContext != null 
+                && template.SignInResult == SignInResult.Failed 
+                &&  template.RejectReasons.Count == 0)
+            {
                 var persistent = false;
                 if (userManager.Site.AllowPersistentLogin)
                 {
@@ -349,6 +355,38 @@ namespace cloudscribe.Core.Web.Components
             }
 
             return new TwoFactorInfo(userContext, userFactors, token);
+        }
+
+        public async Task HandleUserRolesChanged(ClaimsPrincipal principal)
+        {
+            if (principal == null) return;
+            var userId = principal.GetUserId();
+            if (string.IsNullOrEmpty(userId)) return;
+            var user = await userManager.FindByIdAsync(userId);
+            await signInManager.SignOutAsync();
+            if (user != null)
+            {
+                user.RolesChanged = false;
+                var result = await userManager.UpdateAsync(user);
+                if(result.Succeeded)
+                {
+                    await signInManager.SignInAsync(user, isPersistent: false);
+                }
+            }
+            
+        }
+
+        public async Task<bool> AcceptRegistrationAgreement(ClaimsPrincipal principal)
+        {
+            if (principal == null) return false;
+            var userId = principal.GetUserId();
+            if (string.IsNullOrEmpty(userId)) return false;
+            var user = await userManager.FindByIdAsync(userId);
+            user.AgreementAcceptedUtc = DateTime.UtcNow;
+            var result = await userManager.UpdateAsync(user);
+            if (result.Succeeded) return true;
+
+            return false;
         }
 
         //public async Task<string> GenerateTwoFactorTokenAsync(string provider)

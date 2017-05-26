@@ -350,7 +350,10 @@ namespace example.WebApp
                 
                 
             });
-            
+
+            app.UseCloudscribeEnforceSiteRulesMiddleware();
+
+
             UseMvc(app, multiTenantOptions.Mode == cloudscribe.Core.Models.MultiTenantMode.FolderName);
 
             

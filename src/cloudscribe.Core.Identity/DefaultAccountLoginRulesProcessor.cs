@@ -78,7 +78,6 @@ namespace cloudscribe.Core.Identity
                         var reason = $"login not allowed for {template.User.Email} because phone not added or verified yet";
                         template.RejectReasons.Add(reason);
                         template.NeedsPhoneConfirmation = true;
-
                     }
                 }
 
@@ -89,7 +88,11 @@ namespace cloudscribe.Core.Identity
                 // TODO: we need to capture user acceptance of terms with date
                 // need to not block login otherwise how can we make the user agree agree to terms on account
                 // need to enforce it with middleware
-                template.MustAcceptTerms = true;
+                if(template.User.AgreementAcceptedUtc == null)
+                {
+                    template.MustAcceptTerms = true;
+                }
+                
             }
 
             if (template.User.IsLockedOut)

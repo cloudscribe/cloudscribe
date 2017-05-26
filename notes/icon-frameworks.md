@@ -14,3 +14,8 @@ svg
 http://www.heropatterns.com/
 
 https://thenounproject.com/
+
+http://www.webalys.com/
+
+http://www.ego-icons.com/
+

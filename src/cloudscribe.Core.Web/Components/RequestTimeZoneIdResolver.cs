@@ -2,14 +2,14 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 //	Author:                 Joe Audette
 //  Created:			    2016-06-06
-//	Last Modified:		    2016-10-08
+//	Last Modified:		    2017-05-26
 // 
 
 using cloudscribe.Core.Identity;
 using cloudscribe.Core.Models;
+using cloudscribe.Web.Common;
 using Microsoft.AspNetCore.Http;
 using SaasKit.Multitenancy;
-using System;
 using System.Threading;
 using System.Threading.Tasks;
 

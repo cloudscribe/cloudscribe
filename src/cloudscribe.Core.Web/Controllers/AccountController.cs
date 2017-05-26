@@ -69,10 +69,16 @@ namespace cloudscribe.Core.Web.Controllers
             {
                 await ipAddressTracker.TackUserIpAddress(Site.Id, result.User.Id);
             }
-
+            
             if (!string.IsNullOrEmpty(returnUrl))
             {
-                return LocalRedirect(returnUrl);
+                // when site is closed login is still allowed
+                // but don't redirect to closed paged
+                if(!returnUrl.Contains("/closed"))
+                {
+                    return LocalRedirect(returnUrl);
+                }
+                
             }
 
             return this.RedirectToSiteRoot(Site);
@@ -133,9 +139,11 @@ namespace cloudscribe.Core.Web.Controllers
             return RedirectToAction(nameof(SendCode), new { ReturnUrl = returnUrl, RememberMe = rememberMe });
         }
 
-        private IActionResult HandleLockout(UserLoginResult result)
+        private IActionResult HandleLockout(UserLoginResult result = null)
         {
-            if (result.User != null)
+            ViewData["Title"] = sr["Locked out"];
+
+            if (result != null && result.User != null)
             {
                 log.LogWarning($"redirecting to lockout page for {result.User.Email} because account is locked");
             }
@@ -363,15 +371,6 @@ namespace cloudscribe.Core.Web.Controllers
                     return HandleLoginNotAllowed(result);
                 }
                 
-                if (result.SignInResult.RequiresTwoFactor)
-                {
-                    return HandleRequiresTwoFactor(result, returnUrl, false);
-                }
-                if (result.SignInResult.IsLockedOut)
-                {
-                    return HandleLockout(result);
-                }
-                
                 log.LogInformation($"login did not succeed for {model.Email}");
                 ModelState.AddModelError(string.Empty, sr["Invalid login attempt."]);
                 return View(model);           
@@ -405,7 +404,7 @@ namespace cloudscribe.Core.Web.Controllers
             if (remoteError != null)
             {
                 ModelState.AddModelError(string.Empty, $"Error from external provider: {remoteError}");
-                return View(nameof(Login));
+                return RedirectToAction("Login");
             }
 
             var result = await accountService.TryExternalLogin();
@@ -440,7 +439,7 @@ namespace cloudscribe.Core.Web.Controllers
 
             if (result.SignInResult.IsLockedOut)
             {
-                return HandleLockout(result);
+                return HandleLockout(result); 
             }
 
             // result.Failed
@@ -536,6 +535,48 @@ namespace cloudscribe.Core.Web.Controllers
             model.DidSend = didSend;
 
             return View("PendingApproval", model);
+        }
+
+        [HttpGet]
+        public IActionResult TermsOfUse()
+        {
+            if (!accountService.IsSignedIn(User) || string.IsNullOrWhiteSpace(Site.RegistrationAgreement))
+            {
+                return this.RedirectToSiteRoot(Site);
+            }
+
+            ViewData["Title"] = sr["Registration Agreement Required"];
+
+            var model = new AcceptTermsViewModel();
+            model.AgreementRequired = true;
+            model.RegistrationAgreement = Site.RegistrationAgreement;
+            model.RegistrationPreamble = Site.RegistrationPreamble;
+
+            return View(model); 
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> TermsOfUse(AcceptTermsViewModel model)
+        {
+            if(!ModelState.IsValid)
+            {
+                ViewData["Title"] = sr["Registration Agreement Required"];
+                model.AgreementRequired = true;
+                model.RegistrationAgreement = Site.RegistrationAgreement;
+                model.RegistrationPreamble = Site.RegistrationPreamble;
+
+                return View(model);
+            }
+
+            var result = await accountService.AcceptRegistrationAgreement(User);
+            //return Redirect("/");
+            if(result)
+            {
+                return this.RedirectToSiteRoot(Site);
+            }
+
+            return View(model);
         }
 
         [HttpGet]
@@ -879,7 +920,7 @@ namespace cloudscribe.Core.Web.Controllers
 
             if (result.IsLockedOut)
             {
-                return View("Lockout");
+                return HandleLockout();
             }
             else
             {
