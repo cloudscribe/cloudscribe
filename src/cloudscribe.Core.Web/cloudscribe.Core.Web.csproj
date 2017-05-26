@@ -41,6 +41,7 @@
     <PackageReference Include="Microsoft.AspNetCore.Authentication.Google" Version="1.1.*" />
     <PackageReference Include="Microsoft.AspNetCore.Authentication.MicrosoftAccount" Version="1.1.*" />
     <PackageReference Include="Microsoft.AspNetCore.Authentication.Twitter" Version="1.1.*" />
+    <PackageReference Include="Microsoft.AspNetCore.Authentication.OpenIdConnect" Version="1.1.*" />
     <PackageReference Include="Microsoft.AspNetCore.Authorization" Version="1.1.*" />
     <PackageReference Include="Microsoft.AspNetCore.Diagnostics" Version="1.1.*" />
     <PackageReference Include="Microsoft.AspNetCore.Hosting.Abstractions" Version="1.1.*" />

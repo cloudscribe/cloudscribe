@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.FileProviders;
 using Microsoft.Extensions.Logging;
+using Microsoft.IdentityModel.Protocols.OpenIdConnect;
 using System.IO;
 
 namespace Microsoft.AspNetCore.Builder
@@ -117,20 +118,7 @@ namespace Microsoft.AspNetCore.Builder
                 app.UseMicrosoftAccountAuthentication(microsoftOptions);
             }
 
-            //app.Use()
-
-            //Func<HttpContext, bool> hasTwitterKeys = (HttpContext context) =>
-            //{
-            //    var tenant = context.GetTenant<SiteSettings>();
-            //    if (tenant == null) return false;
-            //    if (string.IsNullOrWhiteSpace(tenant.TwitterConsumerKey)) return false;
-            //    if (string.IsNullOrWhiteSpace(tenant.TwitterConsumerSecret)) return false;
-
-            //    return true;
-            //};
-
-            //app.UseWhen(context => hasTwitterKeys(context), appBuilder =>
-            //{
+            
             if (!string.IsNullOrWhiteSpace(site.TwitterConsumerKey))
             {
                 var twitterOptions = new TwitterOptions();
@@ -146,7 +134,44 @@ namespace Microsoft.AspNetCore.Builder
                 app.UseTwitterAuthentication(twitterOptions);
             }
 
-            //});
+            if(!string.IsNullOrWhiteSpace(site.OidConnectAuthority)
+                && !string.IsNullOrWhiteSpace(site.OidConnectAppId)
+                && !string.IsNullOrWhiteSpace(site.OidConnectAppSecret)
+                )
+            {
+                var oidOptions = new OpenIdConnectOptions();
+                oidOptions.SignInScheme = externalCookieOptions.AuthenticationScheme;
+                oidOptions.Authority = site.OidConnectAuthority;
+                oidOptions.ClientId = site.OidConnectAppId;
+                oidOptions.ClientSecret = site.OidConnectAppSecret;
+                oidOptions.GetClaimsFromUserInfoEndpoint = true;
+                oidOptions.ResponseType = OpenIdConnectResponseType.CodeIdToken;
+
+                if (shouldUseFolder)
+                {
+                    oidOptions.CallbackPath = "/" + site.SiteFolderName + "/signin-oidc";
+                    oidOptions.SignedOutCallbackPath = "/" + site.SiteFolderName + "/signout-callback-oidc";
+                    oidOptions.RemoteSignOutPath = "/" + site.SiteFolderName + "/signout-oidc";
+                }
+                
+                //oidOptions.Events = new OpenIdConnectEvents()
+                //{
+                //    OnAuthenticationFailed = c =>
+                //    {
+                //        c.HandleResponse();
+
+                //        c.Response.StatusCode = 500;
+                //        c.Response.ContentType = "text/plain";
+
+                //        return c.Response.WriteAsync("An error occurred processing your authentication.");
+                //    }
+                //};
+                app.UseOpenIdConnectAuthentication(oidOptions);
+               
+
+            }
+
+            
 
 
 
