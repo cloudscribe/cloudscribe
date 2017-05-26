@@ -11,6 +11,7 @@ using cloudscribe.Core.Web.Components;
 using cloudscribe.Core.Web.Components.Messaging;
 using cloudscribe.Core.Web.ViewModels.Account;
 using cloudscribe.Core.Web.ViewModels.SiteUser;
+using cloudscribe.Web.Common;
 using cloudscribe.Web.Common.Extensions;
 using cloudscribe.Web.Common.Models;
 using Microsoft.AspNetCore.Authorization;
@@ -35,6 +36,7 @@ namespace cloudscribe.Core.Web.Controllers
             SiteContext currentSite,
             IpAddressTracker ipAddressTracker,
             ISiteMessageEmailSender emailSender,
+            SiteTimeZoneService timeZoneHelper,
             ISmsSender smsSender,
             IIdentityServerIntegration identityServerIntegration,
             IStringLocalizer<CloudscribeCore> localizer,
@@ -51,6 +53,7 @@ namespace cloudscribe.Core.Web.Controllers
             sr = localizer;
             log = logger;
             this.recaptchaKeysProvider = recaptchaKeysProvider;
+            this.timeZoneHelper = timeZoneHelper;
         }
 
         private readonly AccountService accountService;
@@ -62,6 +65,7 @@ namespace cloudscribe.Core.Web.Controllers
         private ILogger log;
         private IStringLocalizer sr;
         private IRecaptchaKeysProvider recaptchaKeysProvider;
+        private SiteTimeZoneService timeZoneHelper;
 
         private async Task<IActionResult> HandleLoginSuccess(UserLoginResult result, string returnUrl)
         {
@@ -411,6 +415,13 @@ namespace cloudscribe.Core.Web.Controllers
 
             if (result.SignInResult.Succeeded)
             {
+                if (result.User != null)
+                {
+                    if (result.MustAcceptTerms)
+                    {
+                        return RedirectToAction("TermsOfUse");
+                    }
+                }
                 return await HandleLoginSuccess(result, returnUrl);
             }
 
@@ -444,14 +455,7 @@ namespace cloudscribe.Core.Web.Controllers
 
             // result.Failed
 
-            if (result.User != null)
-            {
-                if (result.MustAcceptTerms)
-                {
-                    //TODO: redirect
-
-                }
-            }
+            
 
             // If the user does not have an account, then ask the user to create an account.
             // check the claims from the provider to see if we have what we need
@@ -484,7 +488,7 @@ namespace cloudscribe.Core.Web.Controllers
 
             if (ModelState.IsValid)
             {
-                var result = await accountService.TryExternalLogin(model.Email);
+                var result = await accountService.TryExternalLogin(model.Email, model.AgreeToTerms);
                 if (result.SignInResult.Succeeded)
                 {
                     return await HandleLoginSuccess(result, returnUrl);
@@ -538,7 +542,7 @@ namespace cloudscribe.Core.Web.Controllers
         }
 
         [HttpGet]
-        public IActionResult TermsOfUse()
+        public async Task<IActionResult> TermsOfUse()
         {
             if (!accountService.IsSignedIn(User) || string.IsNullOrWhiteSpace(Site.RegistrationAgreement))
             {
@@ -548,6 +552,7 @@ namespace cloudscribe.Core.Web.Controllers
             ViewData["Title"] = sr["Registration Agreement Required"];
 
             var model = new AcceptTermsViewModel();
+            model.TermsUpdatedDate = await timeZoneHelper.ConvertToLocalTime(Site.TermsUpdatedUtc);
             model.AgreementRequired = true;
             model.RegistrationAgreement = Site.RegistrationAgreement;
             model.RegistrationPreamble = Site.RegistrationPreamble;
@@ -559,9 +564,15 @@ namespace cloudscribe.Core.Web.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> TermsOfUse(AcceptTermsViewModel model)
         {
-            if(!ModelState.IsValid)
+            if (!accountService.IsSignedIn(User) || string.IsNullOrWhiteSpace(Site.RegistrationAgreement))
+            {
+                return this.RedirectToSiteRoot(Site);
+            }
+
+            if (!ModelState.IsValid)
             {
                 ViewData["Title"] = sr["Registration Agreement Required"];
+                model.TermsUpdatedDate = await timeZoneHelper.ConvertToLocalTime(Site.TermsUpdatedUtc);
                 model.AgreementRequired = true;
                 model.RegistrationAgreement = Site.RegistrationAgreement;
                 model.RegistrationPreamble = Site.RegistrationPreamble;

@@ -100,6 +100,7 @@ namespace cloudscribe.Core.Models
         string AddThisDotComUsername { get; }
         //bool IsDataProtected { get; }
         DateTime CreatedUtc { get; }
+        DateTime TermsUpdatedUtc { get; }
 
     }
 }

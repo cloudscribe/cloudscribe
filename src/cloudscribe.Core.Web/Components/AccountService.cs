@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2017-05-22
-// Last Modified:			2017-05-25
+// Last Modified:			2017-05-26
 // 
 
 using cloudscribe.Core.Identity;
@@ -46,13 +46,20 @@ namespace cloudscribe.Core.Web.Components
         private readonly IProcessAccountLoginRules loginRulesProcessor;
         // private ILogger log;
 
-        private async Task<SiteUser> CreateUserFromExternalLogin(ExternalLoginInfo externalLoginInfo, string providedEmail = null)
+        private async Task<SiteUser> CreateUserFromExternalLogin(
+            ExternalLoginInfo externalLoginInfo, 
+            string providedEmail = null,
+            bool? didAcceptTerms = null
+            )
         {
             var email = providedEmail;
             if (string.IsNullOrWhiteSpace(email))
             {
                 email = externalLoginInfo.Principal.FindFirstValue(ClaimTypes.Email);
             }
+
+            DateTime? termsAcceptedDate = null;
+            if (didAcceptTerms == true && !string.IsNullOrWhiteSpace(userManager.Site.RegistrationAgreement)) { termsAcceptedDate = DateTime.UtcNow; }
 
             if (!string.IsNullOrWhiteSpace(email) && email.Contains("@"))
             {
@@ -66,7 +73,8 @@ namespace cloudscribe.Core.Web.Components
                     FirstName = externalLoginInfo.Principal.FindFirstValue(ClaimTypes.GivenName),
                     LastName = externalLoginInfo.Principal.FindFirstValue(ClaimTypes.Surname),
                     AccountApproved = userManager.Site.RequireApprovalBeforeLogin ? false : true,
-                    EmailConfirmed = socialAuthEmailVerificationPolicy.HasVerifiedEmail(externalLoginInfo)
+                    EmailConfirmed = socialAuthEmailVerificationPolicy.HasVerifiedEmail(externalLoginInfo),
+                    AgreementAcceptedUtc = termsAcceptedDate
                 };
                 var identityResult = await userManager.CreateAsync(newUser);
                 if (identityResult.Succeeded)
@@ -79,7 +87,7 @@ namespace cloudscribe.Core.Web.Components
         }
 
         
-        public async Task<UserLoginResult> TryExternalLogin(string providedEmail = "")
+        public async Task<UserLoginResult> TryExternalLogin(string providedEmail = "", bool? didAcceptTerms = null)
         {
             var template = new LoginResultTemplate();
             IUserContext userContext = null;
@@ -109,7 +117,7 @@ namespace cloudscribe.Core.Web.Components
                 
                 if (template.User == null)
                 {
-                    template.User = await CreateUserFromExternalLogin(template.ExternalLoginInfo, email);
+                    template.User = await CreateUserFromExternalLogin(template.ExternalLoginInfo, email, didAcceptTerms);
                 }
             }
  

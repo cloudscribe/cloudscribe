@@ -52,7 +52,7 @@ namespace cloudscribe.Core.Web.Middleware
             
             if(userContext != null)
             {
-                // handle roles changes
+                // handle roles changes - basically sets RolesChanged flag to false then sign out and in again to get new roles in cookie
                 if (userContext.RolesChanged)
                 {
                     await accountService.HandleUserRolesChanged(context.User);
@@ -88,7 +88,7 @@ namespace cloudscribe.Core.Web.Middleware
             // handle must agree to terms
             if(userContext != null
                && (!string.IsNullOrWhiteSpace(currentSite.RegistrationAgreement))
-               && (userContext.AgreementAcceptedUtc == null)
+               && (userContext.AgreementAcceptedUtc == null || userContext.AgreementAcceptedUtc < currentSite.TermsUpdatedUtc)
                 && !context.User.IsInRole("Administrators")
                 && !context.User.IsInRole("Content Administrators")
                 )

@@ -186,6 +186,7 @@ namespace cloudscribe.Core.Models
         
         bool IsDataProtected { get; set; }
         DateTime CreatedUtc { get; set; }
+        DateTime TermsUpdatedUtc { get; set; }
 
 
         // TODO: drop

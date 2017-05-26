@@ -58,6 +58,7 @@ namespace Microsoft.Extensions.DependencyInjection
             services.AddScoped<GeoDataManager, GeoDataManager>();
             services.AddScoped<SystemInfoManager, SystemInfoManager>();
             services.AddScoped<IpAddressTracker, IpAddressTracker>();
+            services.AddScoped<SiteTimeZoneService, SiteTimeZoneService>();
 
             services.AddScoped<SiteDataProtector>();
             // timezone localization from NodaTime

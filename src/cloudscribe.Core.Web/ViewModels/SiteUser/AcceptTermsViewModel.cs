@@ -9,6 +9,7 @@ namespace cloudscribe.Core.Web.ViewModels.Account
 {
     public class AcceptTermsViewModel
     {
+        public DateTime TermsUpdatedDate { get; set; }
         public string RegistrationPreamble { get; set; } = string.Empty;
 
         public string RegistrationAgreement { get; set; } = string.Empty;

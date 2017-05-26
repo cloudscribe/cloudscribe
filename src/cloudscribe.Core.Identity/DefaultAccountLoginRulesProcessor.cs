@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2017-05-25
-// Last Modified:			2017-05-25
+// Last Modified:			2017-05-26
 // 
 
 using cloudscribe.Core.Models;
@@ -85,14 +85,13 @@ namespace cloudscribe.Core.Identity
 
             if (!string.IsNullOrWhiteSpace(userManager.Site.RegistrationAgreement))
             {
-                // TODO: we need to capture user acceptance of terms with date
                 // need to not block login otherwise how can we make the user agree agree to terms on account
-                // need to enforce it with middleware
-                if(template.User.AgreementAcceptedUtc == null)
+                // enforced with middleware
+                if (template.User.AgreementAcceptedUtc == null || template.User.AgreementAcceptedUtc < userManager.Site.TermsUpdatedUtc)
                 {
                     template.MustAcceptTerms = true;
                 }
-                
+
             }
 
             if (template.User.IsLockedOut)

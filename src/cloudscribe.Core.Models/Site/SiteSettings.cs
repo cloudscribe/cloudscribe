@@ -431,6 +431,8 @@ namespace cloudscribe.Core.Models
 
         public DateTime CreatedUtc { get; set; } = DateTime.UtcNow;
 
+        public DateTime TermsUpdatedUtc { get; set; } = DateTime.UtcNow;
+
         //public bool UseSslOnAllPages { get; set; } = false;
 
         //public int PasswordAttemptWindowMinutes { get; set; } = 5;

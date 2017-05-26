@@ -53,8 +53,7 @@ namespace cloudscribe.Core.Identity
         public bool NeedsPhoneConfirmation { get; }
 
         public ExternalLoginInfo ExternalLoginInfo { get; }
-
-
+        
         public SignInResult SignInResult { get; }
 
         /// <summary>
