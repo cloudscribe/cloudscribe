@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2014-10-26
-// Last Modified:			2017-05-25
+// Last Modified:			2017-05-26
 // 
 
 using cloudscribe.Core.Identity;
@@ -11,7 +11,6 @@ using cloudscribe.Core.Web.Components;
 using cloudscribe.Core.Web.Components.Messaging;
 using cloudscribe.Core.Web.ViewModels.Account;
 using cloudscribe.Core.Web.ViewModels.SiteUser;
-using cloudscribe.Web.Common;
 using cloudscribe.Web.Common.Extensions;
 using cloudscribe.Web.Common.Models;
 using Microsoft.AspNetCore.Authorization;
@@ -88,32 +87,41 @@ namespace cloudscribe.Core.Web.Controllers
             return this.RedirectToSiteRoot(Site);
         }
 
+        private bool ShouldSendConfirmation(IUserContext user)
+        {
+            if (user.EmailConfirmSentUtc == null) return true; //never sent yet
+            var timeSpan = DateTime.UtcNow - user.EmailConfirmSentUtc;
+            if (timeSpan.Value != null && timeSpan.Value.TotalDays > 1) return true; // at most resend once per day if user tries to login
+
+            return false;
+        }
+
         private IActionResult HandleLoginNotAllowed(UserLoginResult result)
         {
             if (result.User != null)
             {
                 if (result.NeedsEmailConfirmation)
                 {
-                    //TODO: check how recent we sent this
-                    // var timeSpan = DateTime.UtcNow - result.User.ConfirmEmailSentUtc;
-                    // if(timeSpan.TotalDays > x) send
-                    var callbackUrl = Url.Action(new UrlActionContext
+                    if(ShouldSendConfirmation(result.User))
                     {
-                        Action = "ConfirmEmail",
-                        Controller = "Account",
-                        Values = new { userId = result.User.Id.ToString(), code = result.EmailConfirmationToken },
-                        Protocol = HttpContext.Request.Scheme
-                    });
+                        var callbackUrl = Url.Action(new UrlActionContext
+                        {
+                            Action = "ConfirmEmail",
+                            Controller = "Account",
+                            Values = new { userId = result.User.Id.ToString(), code = result.EmailConfirmationToken },
+                            Protocol = HttpContext.Request.Scheme
+                        });
 
-                    emailSender.SendAccountConfirmationEmailAsync(
-                        Site,
-                        result.User.Email,
-                        sr["Confirm your account"],
-                        callbackUrl).Forget();
+                        emailSender.SendAccountConfirmationEmailAsync(
+                            Site,
+                            result.User.Email,
+                            sr["Confirm your account"],
+                            callbackUrl).Forget();
 
 
-                    this.AlertSuccess(sr["Please check your email inbox, we just sent you a link that you need to click to confirm your account"], true);
-
+                        this.AlertSuccess(sr["Please check your email inbox, we just sent you a link that you need to click to confirm your account"], true);
+                    }
+                   
                     return RedirectToAction("EmailConfirmationRequired", new { userId = result.User.Id, didSend = true });
                 }
 
