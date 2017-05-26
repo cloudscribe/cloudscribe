@@ -1,4 +1,7 @@
 
+https://stackoverflow.com/questions/44206205/ef-core-inject-dbcontext-with-many-potential-connection-strings
+
+
 https://blogs.msdn.microsoft.com/dotnet/2016/11/16/announcing-entity-framework-core-1-1/
 
 https://blogs.msdn.microsoft.com/dotnet/2016/09/29/implementing-seeding-custom-conventions-and-interceptors-in-ef-core-1-0/

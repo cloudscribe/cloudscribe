@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2014-10-26
-// Last Modified:			2017-05-25
+// Last Modified:			2017-05-26
 // 
 
 using cloudscribe.Core.Identity;
@@ -35,6 +35,7 @@ namespace cloudscribe.Core.Web.Controllers
             SiteContext currentSite,
             IpAddressTracker ipAddressTracker,
             ISiteMessageEmailSender emailSender,
+            SiteTimeZoneService timeZoneHelper,
             ISmsSender smsSender,
             IIdentityServerIntegration identityServerIntegration,
             IStringLocalizer<CloudscribeCore> localizer,
@@ -51,6 +52,7 @@ namespace cloudscribe.Core.Web.Controllers
             sr = localizer;
             log = logger;
             this.recaptchaKeysProvider = recaptchaKeysProvider;
+            this.timeZoneHelper = timeZoneHelper;
         }
 
         private readonly AccountService accountService;
@@ -62,6 +64,7 @@ namespace cloudscribe.Core.Web.Controllers
         private ILogger log;
         private IStringLocalizer sr;
         private IRecaptchaKeysProvider recaptchaKeysProvider;
+        private SiteTimeZoneService timeZoneHelper;
 
         private async Task<IActionResult> HandleLoginSuccess(UserLoginResult result, string returnUrl)
         {
@@ -69,13 +72,28 @@ namespace cloudscribe.Core.Web.Controllers
             {
                 await ipAddressTracker.TackUserIpAddress(Site.Id, result.User.Id);
             }
-
+            
             if (!string.IsNullOrEmpty(returnUrl))
             {
-                return LocalRedirect(returnUrl);
+                // when site is closed login is still allowed
+                // but don't redirect to closed paged
+                if(!returnUrl.Contains("/closed"))
+                {
+                    return LocalRedirect(returnUrl);
+                }
+                
             }
 
             return this.RedirectToSiteRoot(Site);
+        }
+
+        private bool ShouldSendConfirmation(IUserContext user)
+        {
+            if (user.EmailConfirmSentUtc == null) return true; //never sent yet
+            var timeSpan = DateTime.UtcNow - user.EmailConfirmSentUtc;
+            if (timeSpan.Value != null && timeSpan.Value.TotalDays > 1) return true; // at most resend once per day if user tries to login
+
+            return false;
         }
 
         private IActionResult HandleLoginNotAllowed(UserLoginResult result)
@@ -84,26 +102,26 @@ namespace cloudscribe.Core.Web.Controllers
             {
                 if (result.NeedsEmailConfirmation)
                 {
-                    //TODO: check how recent we sent this
-                    // var timeSpan = DateTime.UtcNow - result.User.ConfirmEmailSentUtc;
-                    // if(timeSpan.TotalDays > x) send
-                    var callbackUrl = Url.Action(new UrlActionContext
+                    if(ShouldSendConfirmation(result.User))
                     {
-                        Action = "ConfirmEmail",
-                        Controller = "Account",
-                        Values = new { userId = result.User.Id.ToString(), code = result.EmailConfirmationToken },
-                        Protocol = HttpContext.Request.Scheme
-                    });
+                        var callbackUrl = Url.Action(new UrlActionContext
+                        {
+                            Action = "ConfirmEmail",
+                            Controller = "Account",
+                            Values = new { userId = result.User.Id.ToString(), code = result.EmailConfirmationToken },
+                            Protocol = HttpContext.Request.Scheme
+                        });
 
-                    emailSender.SendAccountConfirmationEmailAsync(
-                        Site,
-                        result.User.Email,
-                        sr["Confirm your account"],
-                        callbackUrl).Forget();
+                        emailSender.SendAccountConfirmationEmailAsync(
+                            Site,
+                            result.User.Email,
+                            sr["Confirm your account"],
+                            callbackUrl).Forget();
 
 
-                    this.AlertSuccess(sr["Please check your email inbox, we just sent you a link that you need to click to confirm your account"], true);
-
+                        this.AlertSuccess(sr["Please check your email inbox, we just sent you a link that you need to click to confirm your account"], true);
+                    }
+                   
                     return RedirectToAction("EmailConfirmationRequired", new { userId = result.User.Id, didSend = true });
                 }
 
@@ -133,9 +151,11 @@ namespace cloudscribe.Core.Web.Controllers
             return RedirectToAction(nameof(SendCode), new { ReturnUrl = returnUrl, RememberMe = rememberMe });
         }
 
-        private IActionResult HandleLockout(UserLoginResult result)
+        private IActionResult HandleLockout(UserLoginResult result = null)
         {
-            if (result.User != null)
+            ViewData["Title"] = sr["Locked out"];
+
+            if (result != null && result.User != null)
             {
                 log.LogWarning($"redirecting to lockout page for {result.User.Email} because account is locked");
             }
@@ -363,15 +383,6 @@ namespace cloudscribe.Core.Web.Controllers
                     return HandleLoginNotAllowed(result);
                 }
                 
-                if (result.SignInResult.RequiresTwoFactor)
-                {
-                    return HandleRequiresTwoFactor(result, returnUrl, false);
-                }
-                if (result.SignInResult.IsLockedOut)
-                {
-                    return HandleLockout(result);
-                }
-                
                 log.LogInformation($"login did not succeed for {model.Email}");
                 ModelState.AddModelError(string.Empty, sr["Invalid login attempt."]);
                 return View(model);           
@@ -405,13 +416,20 @@ namespace cloudscribe.Core.Web.Controllers
             if (remoteError != null)
             {
                 ModelState.AddModelError(string.Empty, $"Error from external provider: {remoteError}");
-                return View(nameof(Login));
+                return RedirectToAction("Login");
             }
 
             var result = await accountService.TryExternalLogin();
 
             if (result.SignInResult.Succeeded)
             {
+                if (result.User != null)
+                {
+                    if (result.MustAcceptTerms)
+                    {
+                        return RedirectToAction("TermsOfUse");
+                    }
+                }
                 return await HandleLoginSuccess(result, returnUrl);
             }
 
@@ -440,19 +458,12 @@ namespace cloudscribe.Core.Web.Controllers
 
             if (result.SignInResult.IsLockedOut)
             {
-                return HandleLockout(result);
+                return HandleLockout(result); 
             }
 
             // result.Failed
 
-            if (result.User != null)
-            {
-                if (result.MustAcceptTerms)
-                {
-                    //TODO: redirect
-
-                }
-            }
+            
 
             // If the user does not have an account, then ask the user to create an account.
             // check the claims from the provider to see if we have what we need
@@ -485,7 +496,7 @@ namespace cloudscribe.Core.Web.Controllers
 
             if (ModelState.IsValid)
             {
-                var result = await accountService.TryExternalLogin(model.Email);
+                var result = await accountService.TryExternalLogin(model.Email, model.AgreeToTerms);
                 if (result.SignInResult.Succeeded)
                 {
                     return await HandleLoginSuccess(result, returnUrl);
@@ -536,6 +547,55 @@ namespace cloudscribe.Core.Web.Controllers
             model.DidSend = didSend;
 
             return View("PendingApproval", model);
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> TermsOfUse()
+        {
+            if (!accountService.IsSignedIn(User) || string.IsNullOrWhiteSpace(Site.RegistrationAgreement))
+            {
+                return this.RedirectToSiteRoot(Site);
+            }
+
+            ViewData["Title"] = sr["Registration Agreement Required"];
+
+            var model = new AcceptTermsViewModel();
+            model.TermsUpdatedDate = await timeZoneHelper.ConvertToLocalTime(Site.TermsUpdatedUtc);
+            model.AgreementRequired = true;
+            model.RegistrationAgreement = Site.RegistrationAgreement;
+            model.RegistrationPreamble = Site.RegistrationPreamble;
+
+            return View(model); 
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> TermsOfUse(AcceptTermsViewModel model)
+        {
+            if (!accountService.IsSignedIn(User) || string.IsNullOrWhiteSpace(Site.RegistrationAgreement))
+            {
+                return this.RedirectToSiteRoot(Site);
+            }
+
+            if (!ModelState.IsValid)
+            {
+                ViewData["Title"] = sr["Registration Agreement Required"];
+                model.TermsUpdatedDate = await timeZoneHelper.ConvertToLocalTime(Site.TermsUpdatedUtc);
+                model.AgreementRequired = true;
+                model.RegistrationAgreement = Site.RegistrationAgreement;
+                model.RegistrationPreamble = Site.RegistrationPreamble;
+
+                return View(model);
+            }
+
+            var result = await accountService.AcceptRegistrationAgreement(User);
+            //return Redirect("/");
+            if(result)
+            {
+                return this.RedirectToSiteRoot(Site);
+            }
+
+            return View(model);
         }
 
         [HttpGet]
@@ -879,7 +939,7 @@ namespace cloudscribe.Core.Web.Controllers
 
             if (result.IsLockedOut)
             {
-                return View("Lockout");
+                return HandleLockout();
             }
             else
             {

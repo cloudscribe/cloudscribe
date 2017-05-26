@@ -307,6 +307,8 @@ namespace cloudscribe.Core.Storage.EFCore.MySql.Migrations
                     b.Property<string>("SmtpUser")
                         .HasMaxLength(500);
 
+                    b.Property<DateTime>("TermsUpdatedUtc");
+
                     b.Property<string>("Theme")
                         .HasMaxLength(100);
 

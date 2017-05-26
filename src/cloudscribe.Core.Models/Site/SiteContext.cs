@@ -413,5 +413,11 @@ namespace cloudscribe.Core.Models
             get { return site.CreatedUtc; }
         }
 
+        public DateTime TermsUpdatedUtc
+        {
+            get { return site.TermsUpdatedUtc; }
+        }
+
+        
     }
 }

@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2017-05-22
-// Last Modified:			2017-05-25
+// Last Modified:			2017-05-26
 // 
 
 using cloudscribe.Core.Identity;
@@ -46,13 +46,20 @@ namespace cloudscribe.Core.Web.Components
         private readonly IProcessAccountLoginRules loginRulesProcessor;
         // private ILogger log;
 
-        private async Task<SiteUser> CreateUserFromExternalLogin(ExternalLoginInfo externalLoginInfo, string providedEmail = null)
+        private async Task<SiteUser> CreateUserFromExternalLogin(
+            ExternalLoginInfo externalLoginInfo, 
+            string providedEmail = null,
+            bool? didAcceptTerms = null
+            )
         {
             var email = providedEmail;
             if (string.IsNullOrWhiteSpace(email))
             {
                 email = externalLoginInfo.Principal.FindFirstValue(ClaimTypes.Email);
             }
+
+            DateTime? termsAcceptedDate = null;
+            if (didAcceptTerms == true && !string.IsNullOrWhiteSpace(userManager.Site.RegistrationAgreement)) { termsAcceptedDate = DateTime.UtcNow; }
 
             if (!string.IsNullOrWhiteSpace(email) && email.Contains("@"))
             {
@@ -66,7 +73,8 @@ namespace cloudscribe.Core.Web.Components
                     FirstName = externalLoginInfo.Principal.FindFirstValue(ClaimTypes.GivenName),
                     LastName = externalLoginInfo.Principal.FindFirstValue(ClaimTypes.Surname),
                     AccountApproved = userManager.Site.RequireApprovalBeforeLogin ? false : true,
-                    EmailConfirmed = socialAuthEmailVerificationPolicy.HasVerifiedEmail(externalLoginInfo)
+                    EmailConfirmed = socialAuthEmailVerificationPolicy.HasVerifiedEmail(externalLoginInfo),
+                    AgreementAcceptedUtc = termsAcceptedDate
                 };
                 var identityResult = await userManager.CreateAsync(newUser);
                 if (identityResult.Succeeded)
@@ -79,7 +87,7 @@ namespace cloudscribe.Core.Web.Components
         }
 
         
-        public async Task<UserLoginResult> TryExternalLogin(string providedEmail = "")
+        public async Task<UserLoginResult> TryExternalLogin(string providedEmail = "", bool? didAcceptTerms = null)
         {
             var template = new LoginResultTemplate();
             IUserContext userContext = null;
@@ -109,7 +117,7 @@ namespace cloudscribe.Core.Web.Components
                 
                 if (template.User == null)
                 {
-                    template.User = await CreateUserFromExternalLogin(template.ExternalLoginInfo, email);
+                    template.User = await CreateUserFromExternalLogin(template.ExternalLoginInfo, email, didAcceptTerms);
                 }
             }
  
@@ -162,10 +170,16 @@ namespace cloudscribe.Core.Web.Components
             {
                 await loginRulesProcessor.ProcessAccountLoginRules(template);
             }
-           
-            if(template.User != null && template.SignInResult == SignInResult.Failed &&  template.RejectReasons.Count == 0)
+
+            if(template.User != null)
             {
                 userContext = new UserContext(template.User);
+            }
+           
+            if(userContext != null 
+                && template.SignInResult == SignInResult.Failed 
+                &&  template.RejectReasons.Count == 0)
+            {
                 var persistent = false;
                 if (userManager.Site.AllowPersistentLogin)
                 {
@@ -349,6 +363,38 @@ namespace cloudscribe.Core.Web.Components
             }
 
             return new TwoFactorInfo(userContext, userFactors, token);
+        }
+
+        public async Task HandleUserRolesChanged(ClaimsPrincipal principal)
+        {
+            if (principal == null) return;
+            var userId = principal.GetUserId();
+            if (string.IsNullOrEmpty(userId)) return;
+            var user = await userManager.FindByIdAsync(userId);
+            await signInManager.SignOutAsync();
+            if (user != null)
+            {
+                user.RolesChanged = false;
+                var result = await userManager.UpdateAsync(user);
+                if(result.Succeeded)
+                {
+                    await signInManager.SignInAsync(user, isPersistent: false);
+                }
+            }
+            
+        }
+
+        public async Task<bool> AcceptRegistrationAgreement(ClaimsPrincipal principal)
+        {
+            if (principal == null) return false;
+            var userId = principal.GetUserId();
+            if (string.IsNullOrEmpty(userId)) return false;
+            var user = await userManager.FindByIdAsync(userId);
+            user.AgreementAcceptedUtc = DateTime.UtcNow;
+            var result = await userManager.UpdateAsync(user);
+            if (result.Succeeded) return true;
+
+            return false;
         }
 
         //public async Task<string> GenerateTwoFactorTokenAsync(string provider)

@@ -1,0 +1,113 @@
+﻿// Copyright (c) Source Tree Solutions, LLC. All rights reserved.
+// Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
+// Author:					Joe Audette
+// Created:					2017-05-26
+// Last Modified:			2017-05-26
+// 
+
+using cloudscribe.Core.Models;
+using cloudscribe.Core.Web.Components;
+using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
+using System.Threading.Tasks;
+
+namespace cloudscribe.Core.Web.Middleware
+{
+    public class EnforceSiteRulesMiddleware
+    {
+        public EnforceSiteRulesMiddleware(
+            RequestDelegate next,
+            ILoggerFactory loggerFactory
+            )
+        {
+            _next = next;
+            _logger = loggerFactory.CreateLogger<EnforceSiteRulesMiddleware>();
+        }
+
+        private readonly RequestDelegate _next;
+        private readonly ILogger _logger;
+
+        public async Task Invoke(
+            HttpContext context,
+            SiteContext currentSite,
+            IOptions<MultiTenantOptions> multiTenantOptionsAccessor,
+            IUserContextResolver userResolver,
+            AccountService accountService
+            )
+        {
+            var multiTenantOptions = multiTenantOptionsAccessor.Value;
+            var folderSegment = "";
+            if (multiTenantOptions.Mode == MultiTenantMode.FolderName)
+            {
+                if (!string.IsNullOrWhiteSpace(currentSite.SiteFolderName))
+                {
+                    folderSegment = "/" + currentSite.SiteFolderName;
+                }
+            }
+            var userContext = await userResolver.GetCurrentUser();
+
+            // enforce SiteRules
+
+            
+            if(userContext != null)
+            {
+                // handle roles changes - basically sets RolesChanged flag to false then sign out and in again to get new roles in cookie
+                if (userContext.RolesChanged)
+                {
+                    await accountService.HandleUserRolesChanged(context.User);
+                }
+
+                // handle user still authenticated after lockout or delete
+                if(userContext.IsLockedOut || userContext.IsDeleted)
+                {
+                    await accountService.SignOutAsync();
+                }   
+            }
+
+            // handle site closed
+            if (currentSite.SiteIsClosed 
+                && !context.User.IsInRole("Administrators") 
+                && !context.User.IsInRole("Content Administrators")
+                )
+            {           
+                var closedUrl = folderSegment + "/closed";
+                // not redirecting for account urls because admin needs to be able to login to unclose the site
+                if(
+                    (!context.Request.Path.StartsWithSegments(closedUrl))
+                    && (!context.Request.Path.StartsWithSegments(folderSegment + "/account")) 
+                    )
+                {
+                    var logMessage = $"site closed so redirecting to closed for requested path {context.Request.Path}";
+                    _logger.LogWarning(logMessage);
+                    context.Response.Redirect(closedUrl);
+
+                } 
+            }
+
+            // handle must agree to terms
+            if(userContext != null
+               && (!string.IsNullOrWhiteSpace(currentSite.RegistrationAgreement))
+               && (userContext.AgreementAcceptedUtc == null || userContext.AgreementAcceptedUtc < currentSite.TermsUpdatedUtc)
+                && !context.User.IsInRole("Administrators")
+                && !context.User.IsInRole("Content Administrators")
+                )
+            {
+                var agreementUrl = folderSegment + "/account/termsofuse";
+
+                if (!context.Request.Path.StartsWithSegments(agreementUrl))
+                {
+                    var logMessage = $"user {userContext.Email} has not accepted terms of use so redirecting to terms of use acceptance page from requested path {context.Request.Path}";
+                    _logger.LogWarning(logMessage);
+                    context.Response.Redirect(agreementUrl);
+                }
+                
+            }
+
+
+            await _next(context);
+
+        }
+
+    }
+}

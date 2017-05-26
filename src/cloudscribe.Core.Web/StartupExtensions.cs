@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2016-05-07
-// Last Modified:			2017-05-25
+// Last Modified:			2017-05-26
 // 
 
 
@@ -14,6 +14,7 @@ using cloudscribe.Core.Web.Components.Editor;
 using cloudscribe.Core.Web.Components.Messaging;
 using cloudscribe.Core.Web.Navigation;
 using cloudscribe.Messaging.Email;
+using cloudscribe.Web.Common;
 using cloudscribe.Web.Common.Models;
 using cloudscribe.Web.Common.Razor;
 using cloudscribe.Web.Navigation;
@@ -57,6 +58,7 @@ namespace Microsoft.Extensions.DependencyInjection
             services.AddScoped<GeoDataManager, GeoDataManager>();
             services.AddScoped<SystemInfoManager, SystemInfoManager>();
             services.AddScoped<IpAddressTracker, IpAddressTracker>();
+            services.AddScoped<SiteTimeZoneService, SiteTimeZoneService>();
 
             services.AddScoped<SiteDataProtector>();
             // timezone localization from NodaTime

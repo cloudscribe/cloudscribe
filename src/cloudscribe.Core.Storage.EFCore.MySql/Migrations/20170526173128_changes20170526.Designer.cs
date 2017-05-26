@@ -3,25 +3,23 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Migrations;
-using cloudscribe.Core.Storage.EFCore.MSSQL;
+using cloudscribe.Core.Storage.EFCore.MySql;
 
-namespace cloudscribe.Core.Storage.EFCore.MSSQL.Migrations
+namespace cloudscribe.Core.Storage.EFCore.MySql.Migrations
 {
     [DbContext(typeof(CoreDbContext))]
-    partial class CoreDbContextModelSnapshot : ModelSnapshot
+    [Migration("20170526173128_changes20170526")]
+    partial class changes20170526
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
             modelBuilder
-                .HasAnnotation("ProductVersion", "1.1.2")
-                .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                .HasAnnotation("ProductVersion", "1.1.2");
 
             modelBuilder.Entity("cloudscribe.Core.Models.Geography.GeoCountry", b =>
                 {
                     b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasAnnotation("SqlServer:ColumnType", "uniqueidentifier")
-                        .HasAnnotation("SqlServer:DefaultValueSql", "newid()");
+                        .ValueGeneratedOnAdd();
 
                     b.Property<string>("ISOCode2")
                         .IsRequired()
@@ -39,24 +37,19 @@ namespace cloudscribe.Core.Storage.EFCore.MSSQL.Migrations
 
                     b.HasIndex("ISOCode2");
 
-                    b.ToTable("Countries");
-
-                    b.HasAnnotation("SqlServer:TableName", "cs_GeoCountry");
+                    b.ToTable("cs_GeoCountry");
                 });
 
             modelBuilder.Entity("cloudscribe.Core.Models.Geography.GeoZone", b =>
                 {
                     b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasAnnotation("SqlServer:ColumnType", "uniqueidentifier")
-                        .HasAnnotation("SqlServer:DefaultValueSql", "newid()");
+                        .ValueGeneratedOnAdd();
 
                     b.Property<string>("Code")
                         .IsRequired()
                         .HasMaxLength(255);
 
-                    b.Property<Guid>("CountryId")
-                        .HasAnnotation("SqlServer:ColumnType", "uniqueidentifier");
+                    b.Property<Guid>("CountryId");
 
                     b.Property<string>("Name")
                         .IsRequired()
@@ -68,24 +61,19 @@ namespace cloudscribe.Core.Storage.EFCore.MSSQL.Migrations
 
                     b.HasIndex("CountryId");
 
-                    b.ToTable("States");
-
-                    b.HasAnnotation("SqlServer:TableName", "cs_GeoZone");
+                    b.ToTable("cs_GeoZone");
                 });
 
             modelBuilder.Entity("cloudscribe.Core.Models.SiteHost", b =>
                 {
                     b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasAnnotation("SqlServer:ColumnType", "uniqueidentifier")
-                        .HasAnnotation("SqlServer:DefaultValueSql", "newid()");
+                        .ValueGeneratedOnAdd();
 
                     b.Property<string>("HostName")
                         .IsRequired()
                         .HasMaxLength(255);
 
-                    b.Property<Guid>("SiteId")
-                        .HasAnnotation("SqlServer:ColumnType", "uniqueidentifier");
+                    b.Property<Guid>("SiteId");
 
                     b.HasKey("Id");
 
@@ -93,17 +81,13 @@ namespace cloudscribe.Core.Storage.EFCore.MSSQL.Migrations
 
                     b.HasIndex("SiteId");
 
-                    b.ToTable("SiteHosts");
-
-                    b.HasAnnotation("SqlServer:TableName", "cs_SiteHost");
+                    b.ToTable("cs_SiteHost");
                 });
 
             modelBuilder.Entity("cloudscribe.Core.Models.SiteRole", b =>
                 {
                     b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasAnnotation("SqlServer:ColumnType", "uniqueidentifier")
-                        .HasAnnotation("SqlServer:DefaultValueSql", "newid()");
+                        .ValueGeneratedOnAdd();
 
                     b.Property<string>("NormalizedRoleName")
                         .IsRequired()
@@ -113,8 +97,7 @@ namespace cloudscribe.Core.Storage.EFCore.MSSQL.Migrations
                         .IsRequired()
                         .HasMaxLength(50);
 
-                    b.Property<Guid>("SiteId")
-                        .HasAnnotation("SqlServer:ColumnType", "uniqueidentifier");
+                    b.Property<Guid>("SiteId");
 
                     b.HasKey("Id");
 
@@ -125,17 +108,13 @@ namespace cloudscribe.Core.Storage.EFCore.MSSQL.Migrations
 
                     b.HasIndex("SiteId");
 
-                    b.ToTable("Roles");
-
-                    b.HasAnnotation("SqlServer:TableName", "cs_Role");
+                    b.ToTable("cs_Role");
                 });
 
             modelBuilder.Entity("cloudscribe.Core.Models.SiteSettings", b =>
                 {
                     b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasAnnotation("SqlServer:ColumnType", "uniqueidentifier")
-                        .HasAnnotation("SqlServer:DefaultValueSql", "newid()");
+                        .ValueGeneratedOnAdd();
 
                     b.Property<string>("AccountApprovalEmailCsv");
 
@@ -145,35 +124,17 @@ namespace cloudscribe.Core.Storage.EFCore.MSSQL.Migrations
                     b.Property<string>("AliasId")
                         .HasMaxLength(36);
 
-                    b.Property<bool>("AllowDbFallbackWithLdap")
-                        .ValueGeneratedOnAdd()
-                        .HasAnnotation("SqlServer:ColumnType", "bit")
-                        .HasAnnotation("SqlServer:DefaultValue", false);
+                    b.Property<bool>("AllowDbFallbackWithLdap");
 
-                    b.Property<bool>("AllowNewRegistration")
-                        .ValueGeneratedOnAdd()
-                        .HasAnnotation("SqlServer:ColumnType", "bit")
-                        .HasAnnotation("SqlServer:DefaultValue", true);
+                    b.Property<bool>("AllowNewRegistration");
 
-                    b.Property<bool>("AllowPersistentLogin")
-                        .ValueGeneratedOnAdd()
-                        .HasAnnotation("SqlServer:ColumnType", "bit")
-                        .HasAnnotation("SqlServer:DefaultValue", false);
+                    b.Property<bool>("AllowPersistentLogin");
 
-                    b.Property<bool>("AutoCreateLdapUserOnFirstLogin")
-                        .ValueGeneratedOnAdd()
-                        .HasAnnotation("SqlServer:ColumnType", "bit")
-                        .HasAnnotation("SqlServer:DefaultValue", true);
+                    b.Property<bool>("AutoCreateLdapUserOnFirstLogin");
 
-                    b.Property<bool>("CaptchaOnLogin")
-                        .ValueGeneratedOnAdd()
-                        .HasAnnotation("SqlServer:ColumnType", "bit")
-                        .HasAnnotation("SqlServer:DefaultValue", false);
+                    b.Property<bool>("CaptchaOnLogin");
 
-                    b.Property<bool>("CaptchaOnRegistration")
-                        .ValueGeneratedOnAdd()
-                        .HasAnnotation("SqlServer:ColumnType", "bit")
-                        .HasAnnotation("SqlServer:DefaultValue", false);
+                    b.Property<bool>("CaptchaOnRegistration");
 
                     b.Property<string>("CompanyCountry")
                         .HasMaxLength(10);
@@ -207,10 +168,7 @@ namespace cloudscribe.Core.Storage.EFCore.MSSQL.Migrations
 
                     b.Property<string>("ConcurrencyStamp");
 
-                    b.Property<DateTime>("CreatedUtc")
-                        .ValueGeneratedOnAdd()
-                        .HasAnnotation("SqlServer:ColumnType", "datetime")
-                        .HasAnnotation("SqlServer:DefaultValueSql", "getutcdate()");
+                    b.Property<DateTime>("CreatedUtc");
 
                     b.Property<string>("DefaultEmailFromAddress")
                         .HasMaxLength(100);
@@ -218,10 +176,7 @@ namespace cloudscribe.Core.Storage.EFCore.MSSQL.Migrations
                     b.Property<string>("DefaultEmailFromAlias")
                         .HasMaxLength(100);
 
-                    b.Property<bool>("DisableDbAuth")
-                        .ValueGeneratedOnAdd()
-                        .HasAnnotation("SqlServer:ColumnType", "bit")
-                        .HasAnnotation("SqlServer:DefaultValue", false);
+                    b.Property<bool>("DisableDbAuth");
 
                     b.Property<string>("DkimDomain")
                         .HasMaxLength(255);
@@ -233,10 +188,7 @@ namespace cloudscribe.Core.Storage.EFCore.MSSQL.Migrations
                     b.Property<string>("DkimSelector")
                         .HasMaxLength(128);
 
-                    b.Property<bool>("EmailLdapDbFallback")
-                        .ValueGeneratedOnAdd()
-                        .HasAnnotation("SqlServer:ColumnType", "bit")
-                        .HasAnnotation("SqlServer:DefaultValue", false);
+                    b.Property<bool>("EmailLdapDbFallback");
 
                     b.Property<string>("FacebookAppId")
                         .HasMaxLength(100);
@@ -251,15 +203,9 @@ namespace cloudscribe.Core.Storage.EFCore.MSSQL.Migrations
 
                     b.Property<string>("GoogleClientSecret");
 
-                    b.Property<bool>("IsDataProtected")
-                        .ValueGeneratedOnAdd()
-                        .HasAnnotation("SqlServer:ColumnType", "bit")
-                        .HasAnnotation("SqlServer:DefaultValue", false);
+                    b.Property<bool>("IsDataProtected");
 
-                    b.Property<bool>("IsServerAdminSite")
-                        .ValueGeneratedOnAdd()
-                        .HasAnnotation("SqlServer:ColumnType", "bit")
-                        .HasAnnotation("SqlServer:DefaultValue", false);
+                    b.Property<bool>("IsServerAdminSite");
 
                     b.Property<string>("LdapDomain")
                         .HasMaxLength(255);
@@ -302,10 +248,7 @@ namespace cloudscribe.Core.Storage.EFCore.MSSQL.Migrations
 
                     b.Property<string>("PrivacyPolicy");
 
-                    b.Property<bool>("ReallyDeleteUsers")
-                        .ValueGeneratedOnAdd()
-                        .HasAnnotation("SqlServer:ColumnType", "bit")
-                        .HasAnnotation("SqlServer:DefaultValue", true);
+                    b.Property<bool>("ReallyDeleteUsers");
 
                     b.Property<string>("RecaptchaPrivateKey")
                         .HasMaxLength(255);
@@ -317,40 +260,22 @@ namespace cloudscribe.Core.Storage.EFCore.MSSQL.Migrations
 
                     b.Property<string>("RegistrationPreamble");
 
-                    b.Property<bool>("RequireApprovalBeforeLogin")
-                        .ValueGeneratedOnAdd()
-                        .HasAnnotation("SqlServer:ColumnType", "bit")
-                        .HasAnnotation("SqlServer:DefaultValue", false);
+                    b.Property<bool>("RequireApprovalBeforeLogin");
 
-                    b.Property<bool>("RequireConfirmedEmail")
-                        .ValueGeneratedOnAdd()
-                        .HasAnnotation("SqlServer:ColumnType", "bit")
-                        .HasAnnotation("SqlServer:DefaultValue", false);
+                    b.Property<bool>("RequireConfirmedEmail");
 
-                    b.Property<bool>("RequireConfirmedPhone")
-                        .ValueGeneratedOnAdd()
-                        .HasAnnotation("SqlServer:ColumnType", "bit")
-                        .HasAnnotation("SqlServer:DefaultValue", false);
+                    b.Property<bool>("RequireConfirmedPhone");
 
-                    b.Property<bool>("RequiresQuestionAndAnswer")
-                        .ValueGeneratedOnAdd()
-                        .HasAnnotation("SqlServer:ColumnType", "bit")
-                        .HasAnnotation("SqlServer:DefaultValue", false);
+                    b.Property<bool>("RequiresQuestionAndAnswer");
 
-                    b.Property<bool>("SignEmailWithDkim")
-                        .ValueGeneratedOnAdd()
-                        .HasAnnotation("SqlServer:ColumnType", "bit")
-                        .HasAnnotation("SqlServer:DefaultValue", false);
+                    b.Property<bool>("SignEmailWithDkim");
 
                     b.Property<string>("SiteFolderName")
                         .ValueGeneratedOnAdd()
                         .HasDefaultValue("")
                         .HasMaxLength(50);
 
-                    b.Property<bool>("SiteIsClosed")
-                        .ValueGeneratedOnAdd()
-                        .HasAnnotation("SqlServer:ColumnType", "bit")
-                        .HasAnnotation("SqlServer:DefaultValue", false);
+                    b.Property<bool>("SiteIsClosed");
 
                     b.Property<string>("SiteIsClosedMessage");
 
@@ -373,18 +298,12 @@ namespace cloudscribe.Core.Storage.EFCore.MSSQL.Migrations
                     b.Property<string>("SmtpPreferredEncoding")
                         .HasMaxLength(20);
 
-                    b.Property<bool>("SmtpRequiresAuth")
-                        .ValueGeneratedOnAdd()
-                        .HasAnnotation("SqlServer:ColumnType", "bit")
-                        .HasAnnotation("SqlServer:DefaultValue", false);
+                    b.Property<bool>("SmtpRequiresAuth");
 
                     b.Property<string>("SmtpServer")
                         .HasMaxLength(200);
 
-                    b.Property<bool>("SmtpUseSsl")
-                        .ValueGeneratedOnAdd()
-                        .HasAnnotation("SqlServer:ColumnType", "bit")
-                        .HasAnnotation("SqlServer:DefaultValue", false);
+                    b.Property<bool>("SmtpUseSsl");
 
                     b.Property<string>("SmtpUser")
                         .HasMaxLength(500);
@@ -402,20 +321,11 @@ namespace cloudscribe.Core.Storage.EFCore.MSSQL.Migrations
 
                     b.Property<string>("TwitterConsumerSecret");
 
-                    b.Property<bool>("UseEmailForLogin")
-                        .ValueGeneratedOnAdd()
-                        .HasAnnotation("SqlServer:ColumnType", "bit")
-                        .HasAnnotation("SqlServer:DefaultValue", true);
+                    b.Property<bool>("UseEmailForLogin");
 
-                    b.Property<bool>("UseInvisibleRecaptcha")
-                        .ValueGeneratedOnAdd()
-                        .HasAnnotation("SqlServer:ColumnType", "bit")
-                        .HasAnnotation("SqlServer:DefaultValue", false);
+                    b.Property<bool>("UseInvisibleRecaptcha");
 
-                    b.Property<bool>("UseLdapAuth")
-                        .ValueGeneratedOnAdd()
-                        .HasAnnotation("SqlServer:ColumnType", "bit")
-                        .HasAnnotation("SqlServer:DefaultValue", false);
+                    b.Property<bool>("UseLdapAuth");
 
                     b.HasKey("Id");
 
@@ -423,24 +333,17 @@ namespace cloudscribe.Core.Storage.EFCore.MSSQL.Migrations
 
                     b.HasIndex("SiteFolderName");
 
-                    b.ToTable("Sites");
-
-                    b.HasAnnotation("SqlServer:TableName", "cs_Site");
+                    b.ToTable("cs_Site");
                 });
 
             modelBuilder.Entity("cloudscribe.Core.Models.SiteUser", b =>
                 {
                     b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasAnnotation("SqlServer:ColumnType", "uniqueidentifier")
-                        .HasAnnotation("SqlServer:DefaultValueSql", "newid()");
+                        .ValueGeneratedOnAdd();
 
                     b.Property<int>("AccessFailedCount");
 
-                    b.Property<bool>("AccountApproved")
-                        .ValueGeneratedOnAdd()
-                        .HasAnnotation("SqlServer:ColumnType", "bit")
-                        .HasAnnotation("SqlServer:DefaultValue", false);
+                    b.Property<bool>("AccountApproved");
 
                     b.Property<DateTime?>("AgreementAcceptedUtc");
 
@@ -449,10 +352,7 @@ namespace cloudscribe.Core.Storage.EFCore.MSSQL.Migrations
                     b.Property<string>("AvatarUrl")
                         .HasMaxLength(255);
 
-                    b.Property<bool>("CanAutoLockout")
-                        .ValueGeneratedOnAdd()
-                        .HasAnnotation("SqlServer:ColumnType", "bit")
-                        .HasAnnotation("SqlServer:DefaultValue", true);
+                    b.Property<bool>("CanAutoLockout");
 
                     b.Property<string>("Comment");
 
@@ -460,10 +360,7 @@ namespace cloudscribe.Core.Storage.EFCore.MSSQL.Migrations
 
                     b.Property<DateTime?>("DateOfBirth");
 
-                    b.Property<bool>("DisplayInMemberList")
-                        .ValueGeneratedOnAdd()
-                        .HasAnnotation("SqlServer:ColumnType", "bit")
-                        .HasAnnotation("SqlServer:DefaultValue", false);
+                    b.Property<bool>("DisplayInMemberList");
 
                     b.Property<string>("DisplayName")
                         .IsRequired()
@@ -475,25 +372,16 @@ namespace cloudscribe.Core.Storage.EFCore.MSSQL.Migrations
 
                     b.Property<DateTime?>("EmailConfirmSentUtc");
 
-                    b.Property<bool>("EmailConfirmed")
-                        .ValueGeneratedOnAdd()
-                        .HasAnnotation("SqlServer:ColumnType", "bit")
-                        .HasAnnotation("SqlServer:DefaultValue", false);
+                    b.Property<bool>("EmailConfirmed");
 
                     b.Property<string>("FirstName")
                         .HasMaxLength(100);
 
                     b.Property<string>("Gender");
 
-                    b.Property<bool>("IsDeleted")
-                        .ValueGeneratedOnAdd()
-                        .HasAnnotation("SqlServer:ColumnType", "bit")
-                        .HasAnnotation("SqlServer:DefaultValue", false);
+                    b.Property<bool>("IsDeleted");
 
-                    b.Property<bool>("IsLockedOut")
-                        .ValueGeneratedOnAdd()
-                        .HasAnnotation("SqlServer:ColumnType", "bit")
-                        .HasAnnotation("SqlServer:DefaultValue", false);
+                    b.Property<bool>("IsLockedOut");
 
                     b.Property<DateTime?>("LastLoginUtc");
 
@@ -506,18 +394,12 @@ namespace cloudscribe.Core.Storage.EFCore.MSSQL.Migrations
 
                     b.Property<DateTime?>("LockoutEndDateUtc");
 
-                    b.Property<bool>("MustChangePwd")
-                        .ValueGeneratedOnAdd()
-                        .HasAnnotation("SqlServer:ColumnType", "bit")
-                        .HasAnnotation("SqlServer:DefaultValue", false);
+                    b.Property<bool>("MustChangePwd");
 
                     b.Property<string>("NewEmail")
                         .HasMaxLength(100);
 
-                    b.Property<bool>("NewEmailApproved")
-                        .ValueGeneratedOnAdd()
-                        .HasAnnotation("SqlServer:ColumnType", "bit")
-                        .HasAnnotation("SqlServer:DefaultValue", false);
+                    b.Property<bool>("NewEmailApproved");
 
                     b.Property<string>("NormalizedEmail")
                         .IsRequired()
@@ -532,33 +414,23 @@ namespace cloudscribe.Core.Storage.EFCore.MSSQL.Migrations
                     b.Property<string>("PhoneNumber")
                         .HasMaxLength(50);
 
-                    b.Property<bool>("PhoneNumberConfirmed")
-                        .ValueGeneratedOnAdd()
-                        .HasAnnotation("SqlServer:ColumnType", "bit")
-                        .HasAnnotation("SqlServer:DefaultValue", false);
+                    b.Property<bool>("PhoneNumberConfirmed");
 
-                    b.Property<bool>("RolesChanged")
-                        .ValueGeneratedOnAdd()
-                        .HasAnnotation("SqlServer:ColumnType", "bit")
-                        .HasAnnotation("SqlServer:DefaultValue", false);
+                    b.Property<bool>("RolesChanged");
 
                     b.Property<string>("SecurityStamp")
                         .HasMaxLength(50);
 
                     b.Property<string>("Signature");
 
-                    b.Property<Guid>("SiteId")
-                        .HasAnnotation("SqlServer:ColumnType", "uniqueidentifier");
+                    b.Property<Guid>("SiteId");
 
                     b.Property<string>("TimeZoneId")
                         .HasMaxLength(50);
 
                     b.Property<bool>("Trusted");
 
-                    b.Property<bool>("TwoFactorEnabled")
-                        .ValueGeneratedOnAdd()
-                        .HasAnnotation("SqlServer:ColumnType", "bit")
-                        .HasAnnotation("SqlServer:DefaultValue", false);
+                    b.Property<bool>("TwoFactorEnabled");
 
                     b.Property<string>("UserName")
                         .IsRequired()
@@ -577,28 +449,22 @@ namespace cloudscribe.Core.Storage.EFCore.MSSQL.Migrations
 
                     b.HasIndex("SiteId");
 
-                    b.ToTable("Users");
-
-                    b.HasAnnotation("SqlServer:TableName", "cs_User");
+                    b.ToTable("cs_User");
                 });
 
             modelBuilder.Entity("cloudscribe.Core.Models.UserClaim", b =>
                 {
                     b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasAnnotation("SqlServer:ColumnType", "uniqueidentifier")
-                        .HasAnnotation("SqlServer:DefaultValueSql", "newid()");
+                        .ValueGeneratedOnAdd();
 
                     b.Property<string>("ClaimType")
                         .HasMaxLength(255);
 
                     b.Property<string>("ClaimValue");
 
-                    b.Property<Guid>("SiteId")
-                        .HasAnnotation("SqlServer:ColumnType", "uniqueidentifier");
+                    b.Property<Guid>("SiteId");
 
-                    b.Property<Guid>("UserId")
-                        .HasAnnotation("SqlServer:ColumnType", "uniqueidentifier");
+                    b.Property<Guid>("UserId");
 
                     b.HasKey("Id");
 
@@ -608,17 +474,13 @@ namespace cloudscribe.Core.Storage.EFCore.MSSQL.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("UserClaims");
-
-                    b.HasAnnotation("SqlServer:TableName", "cs_UserClaim");
+                    b.ToTable("cs_UserClaim");
                 });
 
             modelBuilder.Entity("cloudscribe.Core.Models.UserLocation", b =>
                 {
                     b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasAnnotation("SqlServer:ColumnType", "uniqueidentifier")
-                        .HasAnnotation("SqlServer:DefaultValueSql", "newid()");
+                        .ValueGeneratedOnAdd();
 
                     b.Property<int>("CaptureCount");
 
@@ -646,23 +508,19 @@ namespace cloudscribe.Core.Storage.EFCore.MSSQL.Migrations
 
                     b.Property<DateTime>("LastCaptureUtc");
 
-                    b.Property<double>("Latitude")
-                        .HasAnnotation("SqlServer:ColumnType", "float");
+                    b.Property<double>("Latitude");
 
-                    b.Property<double>("Longitude")
-                        .HasAnnotation("SqlServer:ColumnType", "float");
+                    b.Property<double>("Longitude");
 
                     b.Property<string>("Region")
                         .HasMaxLength(255);
 
-                    b.Property<Guid>("SiteId")
-                        .HasAnnotation("SqlServer:ColumnType", "uniqueidentifier");
+                    b.Property<Guid>("SiteId");
 
                     b.Property<string>("TimeZone")
                         .HasMaxLength(255);
 
-                    b.Property<Guid>("UserId")
-                        .HasAnnotation("SqlServer:ColumnType", "uniqueidentifier");
+                    b.Property<Guid>("UserId");
 
                     b.HasKey("Id");
 
@@ -670,18 +528,14 @@ namespace cloudscribe.Core.Storage.EFCore.MSSQL.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("UserLocations");
-
-                    b.HasAnnotation("SqlServer:TableName", "cs_UserLocation");
+                    b.ToTable("cs_UserLocation");
                 });
 
             modelBuilder.Entity("cloudscribe.Core.Models.UserLogin", b =>
                 {
-                    b.Property<Guid>("UserId")
-                        .HasAnnotation("SqlServer:ColumnType", "uniqueidentifier");
+                    b.Property<Guid>("UserId");
 
-                    b.Property<Guid>("SiteId")
-                        .HasAnnotation("SqlServer:ColumnType", "uniqueidentifier");
+                    b.Property<Guid>("SiteId");
 
                     b.Property<string>("LoginProvider")
                         .HasMaxLength(128);
@@ -698,18 +552,14 @@ namespace cloudscribe.Core.Storage.EFCore.MSSQL.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("UserLogins");
-
-                    b.HasAnnotation("SqlServer:TableName", "cs_UserLogin");
+                    b.ToTable("cs_UserLogin");
                 });
 
             modelBuilder.Entity("cloudscribe.Core.Models.UserRole", b =>
                 {
-                    b.Property<Guid>("UserId")
-                        .HasAnnotation("SqlServer:ColumnType", "uniqueidentifier");
+                    b.Property<Guid>("UserId");
 
-                    b.Property<Guid>("RoleId")
-                        .HasAnnotation("SqlServer:ColumnType", "uniqueidentifier");
+                    b.Property<Guid>("RoleId");
 
                     b.HasKey("UserId", "RoleId");
 
@@ -717,9 +567,7 @@ namespace cloudscribe.Core.Storage.EFCore.MSSQL.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("UserRoles");
-
-                    b.HasAnnotation("SqlServer:TableName", "cs_UserRole");
+                    b.ToTable("cs_UserRole");
                 });
         }
     }

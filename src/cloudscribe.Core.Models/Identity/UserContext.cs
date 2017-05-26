@@ -72,6 +72,16 @@ namespace cloudscribe.Core.Models
             get { return user.EmailConfirmed; }
         }
 
+        public DateTime? EmailConfirmSentUtc
+        {
+            get { return user.EmailConfirmSentUtc; }
+        }
+
+        public DateTime? AgreementAcceptedUtc
+        {
+            get { return user.AgreementAcceptedUtc; }
+        }
+
         public string FirstName
         {
             get
@@ -190,6 +200,11 @@ namespace cloudscribe.Core.Models
             {
                 return user.WebSiteUrl;
             }
+        }
+
+        public bool RolesChanged
+        {
+            get { return user.RolesChanged; }
         }
     }
 }

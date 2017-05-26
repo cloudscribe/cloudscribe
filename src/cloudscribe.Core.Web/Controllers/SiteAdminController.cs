@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2014-10-26
-// Last Modified:			2017-04-01
+// Last Modified:			2017-05-26
 // 
 
 using cloudscribe.Core.Models;
@@ -1172,6 +1172,11 @@ namespace cloudscribe.Core.Web.Controllers
             {
                 this.AlertDanger(sr["oops something went wrong, site was not found."], true);
                 return RedirectToAction("Index");
+            }
+
+            if(selectedSite.RegistrationAgreement != model.RegistrationAgreement)
+            {
+                selectedSite.TermsUpdatedUtc = DateTime.UtcNow;
             }
             
             selectedSite.RegistrationPreamble = model.RegistrationPreamble;

@@ -12,6 +12,8 @@ namespace cloudscribe.Core.Models
         string LastName { get; }
         string Email { get; }
         bool EmailConfirmed { get; }
+        DateTime? EmailConfirmSentUtc { get; }
+        DateTime? AgreementAcceptedUtc { get; }
         DateTime CreatedUtc { get; }
         DateTime LastModifiedUtc { get; }
         DateTime? DateOfBirth { get; }
@@ -30,5 +32,6 @@ namespace cloudscribe.Core.Models
         bool AccountApproved { get;  }
         string AvatarUrl { get;  }
         string Gender { get;  }
+        bool RolesChanged { get; }
     }
 }
