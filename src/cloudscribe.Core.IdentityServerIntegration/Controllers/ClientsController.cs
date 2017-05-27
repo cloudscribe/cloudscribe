@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2016-10-13
-// Last Modified:			2016-10-20
+// Last Modified:			2017-05-27
 // 
 
 using cloudscribe.Core.IdentityServerIntegration.Models;
@@ -588,7 +588,18 @@ namespace cloudscribe.Core.IdentityServerIntegration.Controllers
             }
 
             grants.Add(grantType);
-            client.AllowedGrantTypes = grants;
+            // error here can't have both implicit and hybrid
+            try
+            {
+                client.AllowedGrantTypes = grants;
+            }
+            catch(InvalidOperationException)
+            {
+                grants.Clear();
+                grants.Add(grantType);
+                client.AllowedGrantTypes = grants;
+            }
+            
 
             await clientsManager.UpdateClient(selectedSite.Id.ToString(), client);
 
@@ -622,6 +633,12 @@ namespace cloudscribe.Core.IdentityServerIntegration.Controllers
             if (found != null)
             {
                 grants.Remove(found);
+                // empty is not allowed, default is implicit
+                if(grants.Count == 0)
+                {
+                    grants.Add(GrantType.Implicit);
+                }
+                
                 client.AllowedGrantTypes = grants;
                 await clientsManager.UpdateClient(siteId.ToString(), client);
                 this.AlertSuccess(sr["The Grant Type was successfully removed."], true);

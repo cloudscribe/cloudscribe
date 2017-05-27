@@ -176,7 +176,7 @@ namespace cloudscribe.Core.Models
         string TwitterConsumerKey { get; set; }
         string TwitterConsumerSecret { get; set; }
 
-        
+        string OidConnectDisplayName { get; set; }
         string OidConnectAppId { get; set; }
         string OidConnectAppSecret { get; set; } // protected with data protection
         string OidConnectAuthority { get; set; }

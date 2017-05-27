@@ -157,95 +157,109 @@ namespace cloudscribe.Core.Identity
             return context.Authentication.SignOutAsync(options.Cookies.TwoFactorRememberMeCookie.AuthenticationScheme);
         }
 
-        public override IEnumerable<AuthenticationDescription> GetExternalAuthenticationSchemes()
-        {
-            //log.LogInformation("GetExternalAuthenticationSchemes called");
-            //https://github.com/aspnet/HttpAbstractions/blob/dev/src/Microsoft.AspNet.Http.Abstractions/Authentication/AuthenticationManager.cs
-            //https://github.com/aspnet/HttpAbstractions/blob/dev/src/Microsoft.AspNet.Http/Authentication/DefaultAuthenticationManager.cs
+        //public override IEnumerable<AuthenticationDescription> GetExternalAuthenticationSchemes()
+        //{
+        //    //log.LogInformation("GetExternalAuthenticationSchemes called");
+        //    //https://github.com/aspnet/HttpAbstractions/blob/dev/src/Microsoft.AspNetCore.Http.Abstractions/Authentication/AuthenticationManager.cs
+        //    //https://github.com/aspnet/HttpAbstractions/blob/dev/src/Microsoft.AspNetCore.Http/Authentication/DefaultAuthenticationManager.cs
 
-            IEnumerable<AuthenticationDescription> all = 
-                context.Authentication.GetAuthenticationSchemes().Where(d => !string.IsNullOrEmpty(d.DisplayName));
+        //    IEnumerable<AuthenticationDescription> all = 
+        //        context.Authentication.GetAuthenticationSchemes().Where(d => !string.IsNullOrEmpty(d.DisplayName));
 
-            //TODO: commenting this out 2016-05-12
-            // review if we need this 
-            // it is the only place where we need to lookup a site non-async
-            // for now I'm just going to get the site from the context via saaskit
-            //if (multiTenantOptions.Mode != MultiTenantMode.None)
-            //{
-            //    // here we need to filter the list to ones configured for the current tenant
-            //    if (multiTenantOptions.Mode == MultiTenantMode.FolderName)
-            //    {
-            //        if (multiTenantOptions.UseRelatedSitesMode)
-            //        {
-            //            ISiteSettings site = queries.FetchNonAsync(multiTenantOptions.RelatedSiteGuid);
+        //    //TODO: commenting this out 2016-05-12
+        //    // review if we need this 
+        //    // it is the only place where we need to lookup a site non-async
+        //    // for now I'm just going to get the site from the context via saaskit
+        //    //if (multiTenantOptions.Mode != MultiTenantMode.None)
+        //    //{
+        //    //    // here we need to filter the list to ones configured for the current tenant
+        //    //    if (multiTenantOptions.Mode == MultiTenantMode.FolderName)
+        //    //    {
+        //    //        if (multiTenantOptions.UseRelatedSitesMode)
+        //    //        {
+        //    //            ISiteSettings site = queries.FetchNonAsync(multiTenantOptions.RelatedSiteGuid);
 
-            //            return BuildFilteredAuthList(site, all);
-            //        }
+        //    //            return BuildFilteredAuthList(site, all);
+        //    //        }
 
-            //    }
+        //    //    }
 
-                return BuildFilteredAuthList(siteUserManager.Site, all);
-            //}
-
-
-            //return all;
-        }
-
-        private IEnumerable<AuthenticationDescription> BuildFilteredAuthList(ISiteContext site, IEnumerable<AuthenticationDescription> all)
-        {
-            //log.LogInformation("BuildFilteredAuthList called");
-
-            if (site == null)
-            {
-                //log.LogInformation("BuildFilteredAuthList returning all because site was null");
-                return all;
-            }
-
-            List<AuthenticationDescription> filtered = new List<AuthenticationDescription>();
-
-            foreach(AuthenticationDescription authDesc in all)
-            {
-                //log.LogInformation("BuildFilteredAuthList authDesc.AuthenticationScheme was " + authDesc.AuthenticationScheme);
-
-                switch (authDesc.AuthenticationScheme)
-                {
-                    case "Microsoft":
-                        if ((site.MicrosoftClientId.Length > 0) && (site.MicrosoftClientSecret.Length > 0))
-                        {
-                            filtered.Add(authDesc);
-                        }
-                        break;
-
-                    case "Google":
-                        if ((site.GoogleClientId.Length > 0) && (site.GoogleClientSecret.Length > 0))
-                        {
-                            filtered.Add(authDesc);
-                        }
-                        break;
-
-                    case "Facebook":
-                        if((site.FacebookAppId.Length > 0)&& (site.FacebookAppSecret.Length > 0))
-                        {
-                            filtered.Add(authDesc);
-                        }
-                        break;
-
-                    case "Twitter":
-                        if ((site.TwitterConsumerKey.Length > 0) && (site.TwitterConsumerSecret.Length > 0))
-                        {
-                            filtered.Add(authDesc);
-                        }
-                        break;
+        //        return BuildFilteredAuthList(siteUserManager.Site, all);
+        //    //}
 
 
-                }
+        //    //return all;
+        //}
+
+        //private IEnumerable<AuthenticationDescription> BuildFilteredAuthList(ISiteContext site, IEnumerable<AuthenticationDescription> all)
+        //{
+        //    //log.LogInformation("BuildFilteredAuthList called");
+            
+
+        //    if (site == null)
+        //    {
+        //        //log.LogInformation("BuildFilteredAuthList returning all because site was null");
+        //        return all;
+        //    }
+
+        //    List<AuthenticationDescription> filtered = new List<AuthenticationDescription>();
+
+        //    foreach(AuthenticationDescription authDesc in all)
+        //    {
+        //        //log.LogInformation("BuildFilteredAuthList authDesc.AuthenticationScheme was " + authDesc.AuthenticationScheme);
+
+        //        switch (authDesc.AuthenticationScheme)
+        //        {
+        //            case "Microsoft":
+        //                if ((!string.IsNullOrWhiteSpace(site.MicrosoftClientId)) 
+        //                    && (!string.IsNullOrWhiteSpace(site.MicrosoftClientSecret)))
+        //                {
+        //                    filtered.Add(authDesc);
+        //                }
+        //                break;
+
+        //            case "Google":
+        //                if ((!string.IsNullOrWhiteSpace(site.GoogleClientId)) 
+        //                    && (!string.IsNullOrWhiteSpace(site.GoogleClientSecret)))
+        //                {
+        //                    filtered.Add(authDesc);
+        //                }
+        //                break;
+
+        //            case "Facebook":
+        //                if((!string.IsNullOrWhiteSpace(site.FacebookAppId))
+        //                    && (!string.IsNullOrWhiteSpace(site.FacebookAppSecret)))
+        //                {
+        //                    filtered.Add(authDesc);
+        //                }
+        //                break;
+
+        //            case "Twitter":
+        //                if ((!string.IsNullOrWhiteSpace(site.TwitterConsumerKey)) 
+        //                    && (!string.IsNullOrWhiteSpace(site.TwitterConsumerSecret)))
+        //                {
+        //                    filtered.Add(authDesc);
+        //                }
+        //                break;
+
+        //            case "ExternalOIDC":
+        //                if(!string.IsNullOrWhiteSpace(site.OidConnectAppId)
+        //                    && !string.IsNullOrWhiteSpace(site.OidConnectAuthority)
+        //                    )
+        //                {
+        //                    filtered.Add(authDesc);
+        //                }
+        //                break;
+
+
+        //        }
 
                 
-            }
+        //    }
 
-            return filtered;
+        //    return filtered;
 
-        }
+        //}
 
 
         private const string LoginProviderKey = "LoginProvider";

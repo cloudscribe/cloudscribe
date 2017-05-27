@@ -18,6 +18,7 @@ namespace Microsoft.AspNetCore.Builder
            ILoggerFactory loggerFactory,
            MultiTenantOptions multiTenantOptions,
            SiteContext tenant,
+           bool sslIsAvailable = true,
            CookieSecurePolicy applicationCookieSecure = CookieSecurePolicy.SameAsRequest
            )
         {
@@ -56,10 +57,8 @@ namespace Microsoft.AspNetCore.Builder
                 );
             builder.UseCookieAuthentication(appCookieOptions);
 
-            // known issue here is if a site is updated to populate the
-            // social auth keys, it currently requires a restart so that the middleware gets registered
-            // in order for it to work or for the social auth buttons to appear 
-            builder.UseSocialAuth(tenant, externalCookieOptions, useFolder);
+            
+            builder.UseSocialAuth(tenant, externalCookieOptions, useFolder, sslIsAvailable);
 
 
             return builder;
@@ -69,7 +68,9 @@ namespace Microsoft.AspNetCore.Builder
             this IApplicationBuilder app,
             SiteContext site,
             CookieAuthenticationOptions externalCookieOptions,
-            bool shouldUseFolder)
+            bool shouldUseFolder,
+            bool sslIsAvailable = true
+            )
         {
             // TODO: will this require a restart if the options are updated in the ui?
             // no just need to clear the tenant cache after updating the settings
@@ -136,16 +137,25 @@ namespace Microsoft.AspNetCore.Builder
 
             if(!string.IsNullOrWhiteSpace(site.OidConnectAuthority)
                 && !string.IsNullOrWhiteSpace(site.OidConnectAppId)
-                && !string.IsNullOrWhiteSpace(site.OidConnectAppSecret)
+               // && !string.IsNullOrWhiteSpace(site.OidConnectAppSecret)
                 )
             {
+                var displayName = "ExternalOIDC";
+                if(!string.IsNullOrWhiteSpace(site.OidConnectDisplayName))
+                {
+                    displayName = site.OidConnectDisplayName;
+                }
                 var oidOptions = new OpenIdConnectOptions();
+                oidOptions.AuthenticationScheme = "ExternalOIDC";
                 oidOptions.SignInScheme = externalCookieOptions.AuthenticationScheme;
                 oidOptions.Authority = site.OidConnectAuthority;
                 oidOptions.ClientId = site.OidConnectAppId;
                 oidOptions.ClientSecret = site.OidConnectAppSecret;
                 oidOptions.GetClaimsFromUserInfoEndpoint = true;
                 oidOptions.ResponseType = OpenIdConnectResponseType.CodeIdToken;
+                oidOptions.RequireHttpsMetadata = sslIsAvailable;
+                oidOptions.SaveTokens = true;
+                oidOptions.DisplayName = displayName;
 
                 if (shouldUseFolder)
                 {

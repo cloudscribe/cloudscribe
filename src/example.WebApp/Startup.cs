@@ -63,6 +63,8 @@ namespace example.WebApp
         private IHostingEnvironment environment;
         public IConfigurationRoot Configuration { get; }
 
+        public bool SslIsAvailable = false;
+
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
@@ -169,10 +171,16 @@ namespace example.WebApp
                 options.LowercaseUrls = true;
             });
 
-            services.Configure<MvcOptions>(options =>
+            // for production be sure to use ssl
+            SslIsAvailable = Configuration.GetValue<bool>("AppSettings:UseSsl");
+            if(SslIsAvailable)
             {
-                //options.Filters.Add(new RequireHttpsAttribute());
-            });
+                services.Configure<MvcOptions>(options =>
+                {
+                    options.Filters.Add(new RequireHttpsAttribute());
+                });
+            }
+            
 
             services.AddMvc()
                     .AddViewLocalization(LanguageViewLocationExpanderFormat.Suffix)
@@ -321,7 +329,8 @@ namespace example.WebApp
                 builder.UseCloudscribeCoreDefaultAuthentication(
                     loggerFactory,
                     multiTenantOptions,
-                    ctx.Tenant);
+                    ctx.Tenant,
+                    SslIsAvailable);
 
                 // to make this multi tenant for folders we are
                 // using a fork of IdentityServer4 and hoping to get changes so we don't need a fork

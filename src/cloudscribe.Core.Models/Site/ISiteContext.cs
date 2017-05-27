@@ -94,6 +94,7 @@ namespace cloudscribe.Core.Models
         string GoogleClientSecret { get; }
         string TwitterConsumerKey { get; }
         string TwitterConsumerSecret { get; }
+        string OidConnectDisplayName { get; }
         string OidConnectAppId { get;  }
         string OidConnectAppSecret { get; }
         string OidConnectAuthority { get; }

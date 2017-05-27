@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2014-10-26
-// Last Modified:			2017-05-26
+// Last Modified:			2017-05-27
 // 
 
 using cloudscribe.Core.Models;
@@ -143,10 +143,7 @@ namespace cloudscribe.Core.Web.Controllers
 
             model.SiteId = selectedSite.Id;
             model.SiteName = selectedSite.SiteName;
-            //if(selectedSite.AliasId != selectedSite.Id.ToString())
-            //{
             model.AliasId = selectedSite.AliasId;
-            //}
             model.GoogleAnalyticsProfileId = selectedSite.GoogleAnalyticsProfileId;
            
             
@@ -969,6 +966,10 @@ namespace cloudscribe.Core.Web.Controllers
             model.MicrosoftClientSecret = selectedSite.MicrosoftClientSecret;
             model.TwitterConsumerKey = selectedSite.TwitterConsumerKey;
             model.TwitterConsumerSecret = selectedSite.TwitterConsumerSecret;
+            model.OidConnectDisplayName = selectedSite.OidConnectDisplayName;
+            model.OidConnectAppId = selectedSite.OidConnectAppId;
+            model.OidConnectAppSecret = selectedSite.OidConnectAppSecret;
+            model.OidConnectAuthority = selectedSite.OidConnectAuthority;
 
             return View(model);
 
@@ -1016,6 +1017,10 @@ namespace cloudscribe.Core.Web.Controllers
             selectedSite.MicrosoftClientSecret = model.MicrosoftClientSecret;
             selectedSite.TwitterConsumerKey = model.TwitterConsumerKey;
             selectedSite.TwitterConsumerSecret = model.TwitterConsumerSecret;
+            selectedSite.OidConnectDisplayName = model.OidConnectDisplayName;
+            selectedSite.OidConnectAppId = model.OidConnectAppId;
+            selectedSite.OidConnectAppSecret = model.OidConnectAppSecret;
+            selectedSite.OidConnectAuthority = model.OidConnectAuthority;
 
             await siteManager.Update(selectedSite);
             //TODO: need to wrap ICache into something more abstract and/or move it into sitemanager

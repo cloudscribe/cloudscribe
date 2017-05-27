@@ -3,16 +3,19 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Migrations;
-using cloudscribe.Core.Storage.EFCore.MySql;
+using cloudscribe.Core.Storage.EFCore.pgsql;
 
-namespace cloudscribe.Core.Storage.EFCore.MySql.Migrations
+namespace cloudscribe.Core.Storage.EFCore.pgsql.Migrations
 {
     [DbContext(typeof(CoreDbContext))]
-    partial class CoreDbContextModelSnapshot : ModelSnapshot
+    [Migration("20170527165002_changes20170527")]
+    partial class changes20170527
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
             modelBuilder
+                .HasAnnotation("Npgsql:PostgresExtension:uuid-ossp", "'uuid-ossp', '', ''")
+                .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.SerialColumn)
                 .HasAnnotation("ProductVersion", "1.1.2");
 
             modelBuilder.Entity("cloudscribe.Core.Models.Geography.GeoCountry", b =>
@@ -36,7 +39,9 @@ namespace cloudscribe.Core.Storage.EFCore.MySql.Migrations
 
                     b.HasIndex("ISOCode2");
 
-                    b.ToTable("cs_GeoCountry");
+                    b.ToTable("Countries");
+
+                    b.HasAnnotation("Npgsql:TableName", "cs_GeoCountry");
                 });
 
             modelBuilder.Entity("cloudscribe.Core.Models.Geography.GeoZone", b =>
@@ -60,7 +65,9 @@ namespace cloudscribe.Core.Storage.EFCore.MySql.Migrations
 
                     b.HasIndex("CountryId");
 
-                    b.ToTable("cs_GeoZone");
+                    b.ToTable("States");
+
+                    b.HasAnnotation("Npgsql:TableName", "cs_GeoZone");
                 });
 
             modelBuilder.Entity("cloudscribe.Core.Models.SiteHost", b =>
@@ -80,7 +87,9 @@ namespace cloudscribe.Core.Storage.EFCore.MySql.Migrations
 
                     b.HasIndex("SiteId");
 
-                    b.ToTable("cs_SiteHost");
+                    b.ToTable("SiteHosts");
+
+                    b.HasAnnotation("Npgsql:TableName", "cs_SiteHost");
                 });
 
             modelBuilder.Entity("cloudscribe.Core.Models.SiteRole", b =>
@@ -107,7 +116,9 @@ namespace cloudscribe.Core.Storage.EFCore.MySql.Migrations
 
                     b.HasIndex("SiteId");
 
-                    b.ToTable("cs_Role");
+                    b.ToTable("Roles");
+
+                    b.HasAnnotation("Npgsql:TableName", "cs_Role");
                 });
 
             modelBuilder.Entity("cloudscribe.Core.Models.SiteSettings", b =>
@@ -335,7 +346,9 @@ namespace cloudscribe.Core.Storage.EFCore.MySql.Migrations
 
                     b.HasIndex("SiteFolderName");
 
-                    b.ToTable("cs_Site");
+                    b.ToTable("Sites");
+
+                    b.HasAnnotation("Npgsql:TableName", "cs_Site");
                 });
 
             modelBuilder.Entity("cloudscribe.Core.Models.SiteUser", b =>
@@ -451,7 +464,9 @@ namespace cloudscribe.Core.Storage.EFCore.MySql.Migrations
 
                     b.HasIndex("SiteId");
 
-                    b.ToTable("cs_User");
+                    b.ToTable("Users");
+
+                    b.HasAnnotation("Npgsql:TableName", "cs_User");
                 });
 
             modelBuilder.Entity("cloudscribe.Core.Models.UserClaim", b =>
@@ -476,7 +491,9 @@ namespace cloudscribe.Core.Storage.EFCore.MySql.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("cs_UserClaim");
+                    b.ToTable("UserClaims");
+
+                    b.HasAnnotation("Npgsql:TableName", "cs_UserClaim");
                 });
 
             modelBuilder.Entity("cloudscribe.Core.Models.UserLocation", b =>
@@ -530,7 +547,9 @@ namespace cloudscribe.Core.Storage.EFCore.MySql.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("cs_UserLocation");
+                    b.ToTable("UserLocations");
+
+                    b.HasAnnotation("Npgsql:TableName", "cs_UserLocation");
                 });
 
             modelBuilder.Entity("cloudscribe.Core.Models.UserLogin", b =>
@@ -554,7 +573,9 @@ namespace cloudscribe.Core.Storage.EFCore.MySql.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("cs_UserLogin");
+                    b.ToTable("UserLogins");
+
+                    b.HasAnnotation("Npgsql:TableName", "cs_UserLogin");
                 });
 
             modelBuilder.Entity("cloudscribe.Core.Models.UserRole", b =>
@@ -569,7 +590,9 @@ namespace cloudscribe.Core.Storage.EFCore.MySql.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("cs_UserRole");
+                    b.ToTable("UserRoles");
+
+                    b.HasAnnotation("Npgsql:TableName", "cs_UserRole");
                 });
         }
     }

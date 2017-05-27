@@ -3,7 +3,7 @@
   <PropertyGroup>
     <Description>Microsoft Sql Server Entity Framework Core implementation of cloudscribe core storage</Description>
     <VersionPrefix>1.1.0</VersionPrefix>
-    <VersionSuffix>rc20170509</VersionSuffix>
+    <VersionSuffix>rc20170526</VersionSuffix>
     <Authors>Joe Audette</Authors>
     <TargetFramework>netcoreapp1.1</TargetFramework>
     <AssemblyName>cloudscribe.Core.Storage.EFCore.MSSQL</AssemblyName>
