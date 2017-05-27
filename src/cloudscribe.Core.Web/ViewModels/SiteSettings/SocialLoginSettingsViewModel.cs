@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2014-10-26
-// Last Modified:			2016-06-14
+// Last Modified:			2017-05-27
 // 
 
 using System;
@@ -26,6 +26,16 @@ namespace cloudscribe.Core.Web.ViewModels.SiteSettings
         [StringLength(100, ErrorMessage = "Twitter Consumer Key has a maximum length of 100 characters")]
         public string TwitterConsumerKey { get; set; } = string.Empty;
         public string TwitterConsumerSecret { get; set; } = string.Empty;
+
+        [StringLength(100, ErrorMessage = "Open ID Connect display name has a maximum length of 150 characters")]
+        public string OidConnectDisplayName { get; set; } = string.Empty;
+
+        public string OidConnectAppId { get; set; } = string.Empty;
+
+        public string OidConnectAppSecret { get; set; } = string.Empty;
+
+        [StringLength(100, ErrorMessage = "Open ID Connect authority url has a maximum length of 255 characters")]
+        public string OidConnectAuthority { get; set; } = string.Empty;
 
     }
 }

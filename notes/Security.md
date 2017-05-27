@@ -1,4 +1,11 @@
 
+
+http://jameschambers.com/2016/04/github-authentication-asp-net-core/
+https://developer.github.com/v3/guides/getting-started/
+https://github.com/aspnet-contrib/AspNet.Security.OAuth.Providers/tree/dev/src/AspNet.Security.OAuth.GitHub
+
+https://stackoverflow.com/questions/41242442/how-to-implement-windows-authentication-with-identityserver-4
+
 https://paragonie.com/blog/2017/03/jwt-json-web-tokens-is-bad-standard-that-everyone-should-avoid
 
 https://blogs.msdn.microsoft.com/webdev/2017/04/06/jwt-validation-and-authorization-in-asp-net-core/
@@ -254,3 +261,20 @@ http://stackoverflow.com/questions/30768015/configure-the-authorization-server-e
 
 
 http://www.asp.net/aspnet/overview/web-development-best-practices/what-not-to-do-in-aspnet-and-what-to-do-instead#validation
+
+using openidconnect in cloudscribe against identity server-endpoint
+in the op server setup the client
+Allow access tokens via the browser 
+
+add redirect url:
+https://localhost:44399/signin-oidc 
+add logout redirect url
+https://localhost:44399/signout-callback-oidc 
+add cors origin:
+https://localhost:44399 
+add client secret, only value is needed
+allowed grant types use hybrid
+add allowed scopes
+openid and profile which also must be created as identoty resources
+
+optional add scopes for protected resource apis if applicable

@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.FileProviders;
 using Microsoft.Extensions.Logging;
+using Microsoft.IdentityModel.Protocols.OpenIdConnect;
 using System.IO;
 
 namespace Microsoft.AspNetCore.Builder
@@ -17,6 +18,7 @@ namespace Microsoft.AspNetCore.Builder
            ILoggerFactory loggerFactory,
            MultiTenantOptions multiTenantOptions,
            SiteContext tenant,
+           bool sslIsAvailable = true,
            CookieSecurePolicy applicationCookieSecure = CookieSecurePolicy.SameAsRequest
            )
         {
@@ -55,10 +57,8 @@ namespace Microsoft.AspNetCore.Builder
                 );
             builder.UseCookieAuthentication(appCookieOptions);
 
-            // known issue here is if a site is updated to populate the
-            // social auth keys, it currently requires a restart so that the middleware gets registered
-            // in order for it to work or for the social auth buttons to appear 
-            builder.UseSocialAuth(tenant, externalCookieOptions, useFolder);
+            
+            builder.UseSocialAuth(tenant, externalCookieOptions, useFolder, sslIsAvailable);
 
 
             return builder;
@@ -68,7 +68,9 @@ namespace Microsoft.AspNetCore.Builder
             this IApplicationBuilder app,
             SiteContext site,
             CookieAuthenticationOptions externalCookieOptions,
-            bool shouldUseFolder)
+            bool shouldUseFolder,
+            bool sslIsAvailable = true
+            )
         {
             // TODO: will this require a restart if the options are updated in the ui?
             // no just need to clear the tenant cache after updating the settings
@@ -117,20 +119,7 @@ namespace Microsoft.AspNetCore.Builder
                 app.UseMicrosoftAccountAuthentication(microsoftOptions);
             }
 
-            //app.Use()
-
-            //Func<HttpContext, bool> hasTwitterKeys = (HttpContext context) =>
-            //{
-            //    var tenant = context.GetTenant<SiteSettings>();
-            //    if (tenant == null) return false;
-            //    if (string.IsNullOrWhiteSpace(tenant.TwitterConsumerKey)) return false;
-            //    if (string.IsNullOrWhiteSpace(tenant.TwitterConsumerSecret)) return false;
-
-            //    return true;
-            //};
-
-            //app.UseWhen(context => hasTwitterKeys(context), appBuilder =>
-            //{
+            
             if (!string.IsNullOrWhiteSpace(site.TwitterConsumerKey))
             {
                 var twitterOptions = new TwitterOptions();
@@ -146,7 +135,53 @@ namespace Microsoft.AspNetCore.Builder
                 app.UseTwitterAuthentication(twitterOptions);
             }
 
-            //});
+            if(!string.IsNullOrWhiteSpace(site.OidConnectAuthority)
+                && !string.IsNullOrWhiteSpace(site.OidConnectAppId)
+               // && !string.IsNullOrWhiteSpace(site.OidConnectAppSecret)
+                )
+            {
+                var displayName = "ExternalOIDC";
+                if(!string.IsNullOrWhiteSpace(site.OidConnectDisplayName))
+                {
+                    displayName = site.OidConnectDisplayName;
+                }
+                var oidOptions = new OpenIdConnectOptions();
+                oidOptions.AuthenticationScheme = "ExternalOIDC";
+                oidOptions.SignInScheme = externalCookieOptions.AuthenticationScheme;
+                oidOptions.Authority = site.OidConnectAuthority;
+                oidOptions.ClientId = site.OidConnectAppId;
+                oidOptions.ClientSecret = site.OidConnectAppSecret;
+                oidOptions.GetClaimsFromUserInfoEndpoint = true;
+                oidOptions.ResponseType = OpenIdConnectResponseType.CodeIdToken;
+                oidOptions.RequireHttpsMetadata = sslIsAvailable;
+                oidOptions.SaveTokens = true;
+                oidOptions.DisplayName = displayName;
+
+                if (shouldUseFolder)
+                {
+                    oidOptions.CallbackPath = "/" + site.SiteFolderName + "/signin-oidc";
+                    oidOptions.SignedOutCallbackPath = "/" + site.SiteFolderName + "/signout-callback-oidc";
+                    oidOptions.RemoteSignOutPath = "/" + site.SiteFolderName + "/signout-oidc";
+                }
+                
+                //oidOptions.Events = new OpenIdConnectEvents()
+                //{
+                //    OnAuthenticationFailed = c =>
+                //    {
+                //        c.HandleResponse();
+
+                //        c.Response.StatusCode = 500;
+                //        c.Response.ContentType = "text/plain";
+
+                //        return c.Response.WriteAsync("An error occurred processing your authentication.");
+                //    }
+                //};
+                app.UseOpenIdConnectAuthentication(oidOptions);
+               
+
+            }
+
+            
 
 
 

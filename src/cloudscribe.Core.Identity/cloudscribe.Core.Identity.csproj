@@ -3,7 +3,7 @@
   <PropertyGroup>
     <Description>asp.net identity implementation for cloudscribe web application foundation</Description>
     <VersionPrefix>1.1.1</VersionPrefix>
-    <VersionSuffix>rc20170513</VersionSuffix>
+    <VersionSuffix>rc20170526</VersionSuffix>
     <Authors>Joe Audette</Authors>
     <TargetFrameworks>net451;net452;net46;netstandard1.6</TargetFrameworks>
     <AssemblyName>cloudscribe.Core.Identity</AssemblyName>

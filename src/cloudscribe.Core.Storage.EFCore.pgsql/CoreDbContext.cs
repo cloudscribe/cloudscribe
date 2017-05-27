@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2015-11-16
-// Last Modified:			2017-05-25
+// Last Modified:			2017-05-27
 // 
 
 using cloudscribe.Core.Models;
@@ -330,6 +330,10 @@ namespace cloudscribe.Core.Storage.EFCore.pgsql
 
                 entity.Property(p => p.OidConnectAuthority)
                .HasMaxLength(255);
+                ;
+
+                entity.Property(p => p.OidConnectDisplayName)
+               .HasMaxLength(150);
                 ;
 
                 entity.Property(p => p.PreferredHostName)

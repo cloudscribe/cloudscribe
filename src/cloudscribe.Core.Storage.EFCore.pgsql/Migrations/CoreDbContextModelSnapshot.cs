@@ -252,6 +252,9 @@ namespace cloudscribe.Core.Storage.EFCore.pgsql.Migrations
                     b.Property<string>("OidConnectAuthority")
                         .HasMaxLength(255);
 
+                    b.Property<string>("OidConnectDisplayName")
+                        .HasMaxLength(150);
+
                     b.Property<string>("PreferredHostName")
                         .HasMaxLength(250);
 

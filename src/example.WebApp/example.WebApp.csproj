@@ -72,11 +72,12 @@
     <PackageReference Include="IdentityModel" Version="2.7.*" />
     <PackageReference Include="IdentityServer4.AccessTokenValidation" Version="1.1.0" />
   </ItemGroup>
-
+<!--
   <Target Name="PrepublishScript" BeforeTargets="PrepareForPublish">
     <Exec Command="bower install" />
     <Exec Command="dotnet bundle" />
   </Target>
+  -->
 
   <ItemGroup>
     <DotNetCliToolReference Include="BundlerMinifier.Core" Version="2.*" />
@@ -84,8 +85,5 @@
     <DotNetCliToolReference Include="Microsoft.EntityFrameworkCore.Tools.DotNet" Version="1.*" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="sitefiles\s1\themes\cerulean\static\css\" />
-  </ItemGroup>
-
+ 
 </Project>
