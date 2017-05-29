@@ -116,3 +116,5 @@ http://blog.davidebbo.com/2011/04/easy-way-to-publish-nuget-packages-with.html
 
 http://docs.nuget.org/docs/creating-packages/hosting-your-own-nuget-feeds
 
+not sure I agree with this but interesting
+https://blog.ometer.com/2017/01/10/dear-package-managers-dependency-resolution-results-should-be-in-version-control/

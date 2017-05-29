@@ -64,6 +64,14 @@ namespace cloudscribe.Core.Web.Middleware
                     await accountService.SignOutAsync();
                 }   
             }
+            else
+            {
+                //userContext is null, make sure user is not signed in, ie if account was deleted but user was currently logged in we need to catch that
+                if(context.User.Identity.IsAuthenticated)
+                {
+                    await accountService.SignOutAsync();
+                }
+            }
 
             // handle site closed
             if (currentSite.SiteIsClosed 

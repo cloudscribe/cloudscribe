@@ -14,6 +14,8 @@ https://medium.com/@MaartenSikkema/using-react-redux-and-webpack-with-dotnet-cor
 
 https://medium.com/@MaartenSikkema/using-dotnet-core-orleans-redux-and-websockets-to-build-a-scalable-realtime-back-end-cd0b65ec6b4d
 
+http://vuejsdevelopers.com/2017/05/28/switch-from-react-to-vue-js/
+
 
 Your license to use React.js can be revoked if you compete with Facebook
 https://news.ycombinator.com/item?id=12108158
