@@ -268,8 +268,12 @@ Allow access tokens via the browser
 
 add redirect url:
 https://localhost:44399/signin-oidc 
+
+https://localhost:44399/two/signin-oidc
 add logout redirect url
 https://localhost:44399/signout-callback-oidc 
+
+https://localhost:44399/two/signout-callback-oidc
 add cors origin:
 https://localhost:44399 
 add client secret, only value is needed

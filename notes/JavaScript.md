@@ -4,6 +4,8 @@ https://javascriptweblog.wordpress.com/2011/05/31/a-fresh-look-at-javascript-mix
 JavaScript Patterns for 2017 - Scott Allen
 https://www.youtube.com/watch?v=hO7mzO83N1Q
 
+https://medium.com/webpack/the-state-of-javascript-modules-4636d1774358
+
 https://medium.com/@adambene/currying-in-javascript-es6-540d2ad09400
 
 https://medium.com/@richardeng/the-javascript-phenomenon-is-a-mass-psychosis-57adebb09359
