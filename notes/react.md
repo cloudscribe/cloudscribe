@@ -34,12 +34,30 @@ https://github.com/erikras/react-redux-universal-hot-example
 
 https://github.com/prettier/prettier
 
+### UI Kits
+
+http://blueprintjs.com/
+http://blueprintjs.com/docs/
+https://github.com/palantir/blueprint
+
+
 ### Form Builders
 
 https://react.rocks/tag/FormGenerator
 
 https://github.com/erikras/redux-form
-https://redux-form.com/6.7.0/
+http://redux-form.com/6.7.0/examples/
+
+dynamic redux form
+
+https://github.com/redux-autoform/redux-autoform
+https://github.com/redux-autoform/redux-autoform/blob/master/docs-md/documentation.md
+
+https://www.youtube.com/watch?v=6C22gwvOzaw
+https://github.com/StephenGrider/RallyCodingWeekly
+
+https://github.com/lemonCMS/redux-form-generator
+
 
 looks good but unmaintained
 https://github.com/insin/newforms
@@ -67,6 +85,8 @@ https://github.com/Kinto/formbuilder
 
 https://github.com/rsamec/react-designer
 http://rsamec.github.io/react-designer/#/?_k=vua375
+
+https://www.npmjs.com/package/react-formzilla
 
 
 ### Calendars

@@ -7,6 +7,26 @@
 @{
     var socFormat = sr["Register in using your {0} account"];
 }
+@functions {
+    public string GetIconForLogin(string displayName)
+    {
+        switch(displayName)
+        {
+            case "Facebook":
+                return "<i class='fa fa-facebook-square' aria-hidden='true'></i>";
+            case "Google":
+                return "<i class='fa fa-google' aria-hidden='true'></i>";
+            case "Twitter":
+                return "<i class='fa fa-twitter' aria-hidden='true'></i>";
+            case "Microsoft":
+                return "<i class='fa fa-windows' aria-hidden='true'></i>";
+
+
+        }
+
+        return "<i class='fa fa-arrow-circle-right' aria-hidden='true'></i>";
+    }
+}
 @section Meta {
     <meta name="robots" content="noindex" />
 }
@@ -128,7 +148,7 @@ else
                         {
                             <button type="submit" class="btn btn-default" id="@p.AuthenticationScheme" name="provider" value="@p.AuthenticationScheme"
                                     title="@string.Format(socFormat,p.DisplayName)">
-                                @p.AuthenticationScheme
+                                @Html.Raw(GetIconForLogin(p.DisplayName)) @p.DisplayName
                             </button>
                         }
                     </p>

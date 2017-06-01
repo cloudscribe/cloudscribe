@@ -1,5 +1,20 @@
 
 
+https://codeopinion.com/building-self-descriptive-http-api-asp-net-core/
+https://codeopinion.com/self-descriptive-http-api-in-asp-net-core-object-as-resource/
+https://codeopinion.com/self-descriptive-http-api-in-asp-net-core-hypermedia/
+https://codeopinion.com/self-descriptive-http-api-in-asp-net-core-hateoas/
+
+https://github.com/dcomartin/Migrap.AspNetCore.Hateoas
+
+http://hyperschema.org/mediatypes/siren
+
+https://www.markus-lanthaler.com/hydra/
+
+
+
+
+
 https://tomhofman.nl/lets-create-versioned-documented-asp-net-core-web-api/
 
 https://andrewlock.net/model-binding-json-posts-in-asp-net-core/
