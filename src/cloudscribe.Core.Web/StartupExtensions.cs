@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2016-05-07
-// Last Modified:			2017-05-26
+// Last Modified:			2017-06-08
 // 
 
 
@@ -10,7 +10,6 @@ using cloudscribe.Core.Models;
 using cloudscribe.Core.Models.Setup;
 using cloudscribe.Core.Web;
 using cloudscribe.Core.Web.Components;
-using cloudscribe.Core.Web.Components.Editor;
 using cloudscribe.Core.Web.Components.Messaging;
 using cloudscribe.Core.Web.Navigation;
 using cloudscribe.Messaging.Email;
@@ -43,7 +42,7 @@ namespace Microsoft.Extensions.DependencyInjection
             services.Configure<RecaptchaKeys>(configuration.GetSection("RecaptchaKeys"));
             services.Configure<SiteConfigOptions>(configuration.GetSection("SiteConfigOptions"));
             services.Configure<UIOptions>(configuration.GetSection("UIOptions"));
-            services.Configure<CkeditorOptions>(configuration.GetSection("CkeditorOptions"));
+            
             services.Configure<CachingSiteResolverOptions>(configuration.GetSection("CachingSiteResolverOptions"));
             
            
@@ -62,7 +61,7 @@ namespace Microsoft.Extensions.DependencyInjection
 
             services.AddScoped<SiteDataProtector>();
             // timezone localization from NodaTime
-            services.AddCloudscribeCommmon();
+            services.AddCloudscribeCommmon(configuration);
             services.AddScoped<ITimeZoneIdResolver, RequestTimeZoneIdResolver>();
 
             services.AddCloudscribePagination();
@@ -93,6 +92,8 @@ namespace Microsoft.Extensions.DependencyInjection
 
             services.TryAddSingleton<ITempDataProvider, CookieTempDataProvider>();
             services.TryAddScoped<IRecaptchaKeysProvider, SiteRecaptchaKeysProvider>();
+
+            services.AddCloudscribeFileManagerIntegration(configuration);
 
             return services;
         }

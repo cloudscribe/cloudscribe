@@ -1,5 +1,8 @@
 
 
+https://jeremydmiller.com/2017/04/18/using-storyteller-with-asp-net-core-systems/
+http://storyteller.github.io/
+
 http://www.danylkoweb.com//Blog/the-ultimate-guide-to-unit-testing-in-aspnet-mvc-E2
 
 http://www.jerriepelser.com/blog/unit-testing-controllers-aspnet5

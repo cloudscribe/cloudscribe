@@ -1,0 +1,19 @@
+﻿@using cloudscribe.Web.Common.Extensions
+@using cloudscribe.Web.Common
+@using Microsoft.Extensions.Options
+@using Microsoft.Extensions.Localization
+@inject IStringLocalizer<CloudscribeCommonResources> sr
+@{
+    var alerts = TempData.GetAlerts();
+    foreach (var alert in alerts)
+    {
+        var dismissableClass = alert.Dismissable ? "alert-dismissable" : null;
+        <div role="alert" class="alert alert-@alert.AlertStyle @dismissableClass">
+            @if (alert.Dismissable)
+            {
+                <button type="button" class="close" data-dismiss="alert" aria-hidden="true" aria-label='@sr["Close"]'>&times;</button>
+            }
+            @Html.Raw(alert.Message)
+        </div>
+    }  
+}

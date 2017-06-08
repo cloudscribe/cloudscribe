@@ -82,6 +82,12 @@ namespace cloudscribe.Core.Web.ViewModels.SiteSettings
         public bool ShowDelete { get; set; } = false;
         public string ClosedMessage { get; set; } = string.Empty;
         public bool IsClosed { get; set; } = false;
-            
+
+        public string DropFileUrl { get; set; } = "/filemanager/upload";
+
+        public string FileBrowseUrl { get; set; } = "/filemanager/ckfiledialog?type=file";
+
+        public string ImageBrowseUrl { get; set; } = "/filemanager/ckfiledialog?type=image";
+
     }
 }

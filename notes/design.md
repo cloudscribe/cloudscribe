@@ -11,4 +11,7 @@ http://vadikom.github.io/smartmenus/src/demo/bootstrap-navbar-static-top.html
 
 https://blog.marvelapp.com/body-text-small/
 
+https://andrewlock.net/adding-favicons-to-your-asp-net-core-website-with-realfavicongenerator/
+http://realfavicongenerator.net/
+
 

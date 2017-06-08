@@ -172,6 +172,6 @@ else
     </div>
 }
 @section Scripts {
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial"); }
-    <script src="~/cscsr/requiredwhenvalidator"></script>
+    @{await Html.RenderPartialAsync("_UnobtrusiveValidationScriptsPartial"); }
+    <script src="~/cr/js/cloudscribe-validation-requirewhen.min.js"></script>
 }
