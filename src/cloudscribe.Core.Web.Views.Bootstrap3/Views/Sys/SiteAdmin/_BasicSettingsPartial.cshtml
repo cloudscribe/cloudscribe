@@ -1,6 +1,6 @@
 ﻿@model cloudscribe.Core.Web.ViewModels.SiteSettings.SiteBasicSettingsViewModel
 @using cloudscribe.Core.Models
-@using cloudscribe.Core.Web.Components.Editor
+@using cloudscribe.Web.Common.Models
 @using cloudscribe.Core.Web
 @using Microsoft.Extensions.Options
 @using Microsoft.Extensions.Localization
@@ -100,9 +100,11 @@
             <div class="col-md-10">
                 <textarea class="form-control" rows="5" asp-for="ClosedMessage"
                           data-ckeditor-unobtrusive="" 
-                          data-ckeditor-unobtrusive-config-url="@Url.Content(ckOptions.CustomConfigPath)"
-                          data-ckeditor-unobtrusive-config-toolbar="Full"
-                          data-ckeditor-unobtrusive-config-language="@System.Globalization.CultureInfo.CurrentUICulture.Name"
+                          data-ckeditor-config-url="@Url.Content(ckOptions.CustomConfigPath)"
+                          data-ckeditor-config-language="@System.Globalization.CultureInfo.CurrentUICulture.Name"
+                          data-ckeditor-config-dropfileuploadurl="@Model.DropFileUrl"
+                          data-ckeditor-config-filebrowserurl="@Model.FileBrowseUrl"
+                          data-ckeditor-config-imagebrowseurl="@Model.ImageBrowseUrl"
                           ></textarea>
                 <span asp-validation-for="ClosedMessage" class="text-danger"></span>             
             </div>

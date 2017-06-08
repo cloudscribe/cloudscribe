@@ -109,7 +109,7 @@
     <script src="~/jsdev/cloudscribe-role-selector.js"></script>
 *@
  @section Scripts {
-@{await Html.RenderPartialAsync("_ValidationScriptsPartial"); }
-<script src="~/cscsr/jqueryajax"></script>
-<script src="~/cscsr/bootstrapmodal"></script>
+@{await Html.RenderPartialAsync("_UnobtrusiveValidationScriptsPartial"); }
+<script src="~/cr/js/jquery.unobtrusive-ajax.min.js"></script>
+<script src="~/cr/js/cloudscribe-modaldialog-bootstrap.min.js"></script>
  }

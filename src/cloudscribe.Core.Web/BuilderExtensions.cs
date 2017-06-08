@@ -8,6 +8,7 @@ using Microsoft.Extensions.FileProviders;
 using Microsoft.Extensions.Logging;
 using Microsoft.IdentityModel.Protocols.OpenIdConnect;
 using System.IO;
+using System.Reflection;
 
 namespace Microsoft.AspNetCore.Builder
 {
@@ -363,7 +364,20 @@ namespace Microsoft.AspNetCore.Builder
 
                 }
             }
-            
+
+            // would this work? I am doubtful, need to try it sometime
+            //var embeddedFiles = new EmbeddedFileProvider(
+            //        typeof(cloudscribe.Core.Web.Components.AccountService).GetTypeInfo().Assembly,
+            //        "your.assembly.name"
+            //    );
+
+            //builder.UseStaticFiles(new StaticFileOptions()
+            //{
+            //    FileProvider = embeddedFiles
+            //    //,RequestPath = new PathString("/files")
+            //});
+
+
 
             return builder;
         }

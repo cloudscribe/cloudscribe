@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:				    2014-08-31
-// Last Modified:		    2016-08-11
+// Last Modified:		    2017-06-08
 // 
 // TODO: support custom profile properties that are required for registration ?
 
@@ -66,6 +66,12 @@ namespace cloudscribe.Core.Web.ViewModels.Account
         public string Comment { get; set; }
 
         public IList<Claim> UserClaims { get; set; }
+
+        public string DropFileUrl { get; set; } = "/filemanager/upload";
+
+        public string FileBrowseUrl { get; set; } = "/filemanager/ckfiledialog?type=file";
+
+        public string ImageBrowseUrl { get; set; } = "/filemanager/ckfiledialog?type=image";
 
 
     }

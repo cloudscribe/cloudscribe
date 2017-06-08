@@ -1,4 +1,8 @@
 
+
+https://www.contextis.com/resources/blog/comma-separated-vulnerabilities/
+
+
 https://scotthelme.co.uk/csrf-is-dead/
 
 http://blog.novanet.no/a-pile-of-anti-forgery-cookies/

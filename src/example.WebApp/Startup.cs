@@ -112,7 +112,9 @@ namespace example.WebApp
 
             services.AddCloudscribeCore(Configuration);
             
-            
+
+
+
             services.Configure<GlobalResourceOptions>(Configuration.GetSection("GlobalResourceOptions"));
             services.AddSingleton<IStringLocalizerFactory, GlobalResourceManagerStringLocalizerFactory>();
             
@@ -189,9 +191,11 @@ namespace example.WebApp
                     {
                         options.AddCloudscribeViewLocationFormats();
 
+                        options.AddCloudscribeCommonEmbeddedViews();
                         options.AddEmbeddedViewsForNavigation();
                         options.AddEmbeddedBootstrap3ViewsForCloudscribeCore();
                         options.AddEmbeddedViewsForCloudscribeLogging();
+                        options.AddBootstrap3EmbeddedViewsForFileManager();
 
                         options.AddEmbeddedBootstrap3ViewsForCloudscribeCoreIdentityServerIntegration();
 
@@ -375,6 +379,8 @@ namespace example.WebApp
         {
             app.UseMvc(routes =>
             {
+                routes.AddRoutesForCloudscribeCommonResources();
+
                 if (useFolders)
                 {
                     routes.MapRoute(
@@ -421,6 +427,20 @@ namespace example.WebApp
                     authBuilder =>
                     {
                         authBuilder.RequireRole("Administrators");
+                    });
+
+                options.AddPolicy(
+                    "FileManagerPolicy",
+                    authBuilder =>
+                    {
+                        authBuilder.RequireRole("Administrators", "Content Administrators");
+                    });
+
+                options.AddPolicy(
+                    "FileManagerDeletePolicy",
+                    authBuilder =>
+                    {
+                        authBuilder.RequireRole("Administrators", "Content Administrators");
                     });
 
                 options.AddPolicy(

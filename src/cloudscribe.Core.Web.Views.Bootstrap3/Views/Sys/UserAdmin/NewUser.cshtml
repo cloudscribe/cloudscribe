@@ -98,7 +98,7 @@
     <div asp-validation-summary="All" class="text-danger"></div>
 </form>
 @section Scripts {
-    @{ await Html.RenderPartialAsync("_ValidationScriptsPartial"); }
-    @{ await Html.RenderPartialAsync("_EditorScriptsPartial"); }
+    @{ await Html.RenderPartialAsync("_UnobtrusiveValidationScriptsPartial"); }
+    @{ await Html.RenderPartialAsync("_UnobtrusiveEditorScriptsPartial"); }
     @{ await Html.RenderPartialAsync("_DatePickerScriptsPartial"); }
 }

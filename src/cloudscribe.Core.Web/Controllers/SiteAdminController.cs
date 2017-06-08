@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2014-10-26
-// Last Modified:			2017-05-27
+// Last Modified:			2017-06-08
 // 
 
 using cloudscribe.Core.Models;
@@ -145,8 +145,11 @@ namespace cloudscribe.Core.Web.Controllers
             model.SiteName = selectedSite.SiteName;
             model.AliasId = selectedSite.AliasId;
             model.GoogleAnalyticsProfileId = selectedSite.GoogleAnalyticsProfileId;
-           
-            
+            model.FileBrowseUrl = Url.Action("FileDialog", "FileManager", new { type = "file" });
+            model.ImageBrowseUrl = Url.Action("FileDialog", "FileManager", new { type = "image" });
+            model.DropFileUrl = Url.Action("DropFile", "FileManager");
+
+
             model.IsClosed = selectedSite.SiteIsClosed;
             model.ClosedMessage = selectedSite.SiteIsClosedMessage;
             
@@ -191,6 +194,10 @@ namespace cloudscribe.Core.Web.Controllers
 
             if (!ModelState.IsValid)
             {
+                model.FileBrowseUrl = Url.Action("FileDialog", "FileManager", new { type = "file" });
+                model.ImageBrowseUrl = Url.Action("FileDialog", "FileManager", new { type = "image" });
+                model.DropFileUrl = Url.Action("DropFile", "FileManager");
+
                 return View(model);
             }
 
@@ -279,6 +286,7 @@ namespace cloudscribe.Core.Web.Controllers
             selectedSite.Theme = model.Theme;
             selectedSite.GoogleAnalyticsProfileId = model.GoogleAnalyticsProfileId;
 
+
             await siteManager.Update(selectedSite);
             
             this.AlertSuccess(string.Format(sr["Basic site settings for {0} were successfully updated."],
@@ -311,6 +319,9 @@ namespace cloudscribe.Core.Web.Controllers
                                    Value = x,
                                    Selected = model.TimeZoneId == x
                                });
+            model.FileBrowseUrl = Url.Action("FileDialog", "FileManager", new { type = "file" });
+            model.ImageBrowseUrl = Url.Action("FileDialog", "FileManager", new { type = "image" });
+            model.DropFileUrl = Url.Action("DropFile", "FileManager");
 
             return View(model);
         }
@@ -324,6 +335,10 @@ namespace cloudscribe.Core.Web.Controllers
 
             if (!ModelState.IsValid)
             {
+                model.FileBrowseUrl = Url.Action("FileDialog", "FileManager", new { type = "file" });
+                model.ImageBrowseUrl = Url.Action("FileDialog", "FileManager", new { type = "image" });
+                model.DropFileUrl = Url.Action("DropFile", "FileManager");
+
                 return View(model);
             }
             
@@ -1062,6 +1077,9 @@ namespace cloudscribe.Core.Web.Controllers
             model.SiteId = selectedSite.Id;
             model.LoginInfoTop = selectedSite.LoginInfoTop;
             model.LoginInfoBottom = selectedSite.LoginInfoBottom;
+            model.FileBrowseUrl = Url.Action("FileDialog", "FileManager", new { type = "file" });
+            model.ImageBrowseUrl = Url.Action("FileDialog", "FileManager", new { type = "image" });
+            model.DropFileUrl = Url.Action("DropFile", "FileManager");
 
             return View(model);
         }
@@ -1091,6 +1109,10 @@ namespace cloudscribe.Core.Web.Controllers
 
             if (!ModelState.IsValid)
             {
+                model.FileBrowseUrl = Url.Action("FileDialog", "FileManager", new { type = "file" });
+                model.ImageBrowseUrl = Url.Action("FileDialog", "FileManager", new { type = "image" });
+                model.DropFileUrl = Url.Action("DropFile", "FileManager");
+
                 return View(model);
             }
 
@@ -1140,6 +1162,9 @@ namespace cloudscribe.Core.Web.Controllers
             model.SiteId = selectedSite.Id;
             model.RegistrationPreamble = selectedSite.RegistrationPreamble;
             model.RegistrationAgreement = selectedSite.RegistrationAgreement;
+            model.FileBrowseUrl = Url.Action("FileDialog", "FileManager", new { type = "file" });
+            model.ImageBrowseUrl = Url.Action("FileDialog", "FileManager", new { type = "image" });
+            model.DropFileUrl = Url.Action("DropFile", "FileManager");
 
             return View(model);
         }
@@ -1170,6 +1195,10 @@ namespace cloudscribe.Core.Web.Controllers
 
             if (!ModelState.IsValid)
             {
+                model.FileBrowseUrl = Url.Action("FileDialog", "FileManager", new { type = "file" });
+                model.ImageBrowseUrl = Url.Action("FileDialog", "FileManager", new { type = "image" });
+                model.DropFileUrl = Url.Action("DropFile", "FileManager");
+
                 return View(model);
             }
 

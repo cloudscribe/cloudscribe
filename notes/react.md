@@ -28,17 +28,40 @@ https://reacttraining.com/online/react-fundamentals
 
 https://medium.freecodecamp.com/functional-setstate-is-the-future-of-react-374f30401b6b
 
+
 ### Code Style
 
 https://github.com/erikras/react-redux-universal-hot-example
 
 https://github.com/prettier/prettier
 
+https://github.com/Lemoncode/react-by-sample
+
+-- the minified boilerplate bundle is 511kb? wth?
+https://github.com/kriasoft/aspnet-starter-kit/issues/40
+https://hashnode.com/post/how-far-can-you-go-with-vanilla-js-citkpyo7w0amxxi53n97yiqbn
+https://github.com/kriasoft/aspnet-starter-kit
+https://github.com/kriasoft/fsharp-starter-kit
+
+https://github.com/bradyholt/aspnet-core-react-template
+
+https://medium.com/@alexmngn/how-to-better-organize-your-react-applications-2fd3ea1920f1
+https://medium.com/@alexmngn/how-to-use-redux-on-highly-scalable-javascript-applications-4e4b8cb5ef38
+
+https://github.com/erikras/ducks-modular-redux
+
+https://github.com/aspnet/JavaScriptServices
+https://github.com/aspnet/JavaScriptServices/tree/dev/src/Microsoft.AspNetCore.SpaServices#example-a-simple-webpack-setup-that-builds-less
+
+
+
 ### UI Kits
 
 http://blueprintjs.com/
 http://blueprintjs.com/docs/
 https://github.com/palantir/blueprint
+
+https://marmelab.com/admin-on-rest/
 
 
 ### Form Builders

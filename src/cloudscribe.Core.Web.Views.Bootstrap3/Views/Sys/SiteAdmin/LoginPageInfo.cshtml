@@ -1,5 +1,5 @@
 ﻿@model cloudscribe.Core.Web.ViewModels.SiteSettings.LoginInfoViewModel
-@using cloudscribe.Core.Web.Components.Editor
+@using cloudscribe.Web.Common.Models
 @using cloudscribe.Core.Web
 @using cloudscribe.Web.Navigation
 @using Microsoft.Extensions.Options
@@ -19,18 +19,22 @@
                 <label asp-for="LoginInfoTop" class="control-label">@sr["Login Info Top"]</label>
                 <textarea class="form-control" rows="5" asp-for="LoginInfoTop"
                           data-ckeditor-unobtrusive=""
-                          data-ckeditor-unobtrusive-config-url="@Url.Content(ckOptions.CustomConfigPath)"
-                          data-ckeditor-unobtrusive-config-toolbar="Full"
-                          data-ckeditor-unobtrusive-config-language="@System.Globalization.CultureInfo.CurrentUICulture.Name"></textarea>
+                          data-ckeditor-config-url="@Url.Content(ckOptions.CustomConfigPath)"
+                          data-ckeditor-config-language="@System.Globalization.CultureInfo.CurrentUICulture.Name"
+                          data-ckeditor-config-dropfileuploadurl="@Model.DropFileUrl"
+                          data-ckeditor-config-filebrowserurl="@Model.FileBrowseUrl"
+                          data-ckeditor-config-imagebrowseurl="@Model.ImageBrowseUrl"></textarea>
                 <span asp-validation-for="LoginInfoTop" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="LoginInfoBottom" class="control-label">@sr["Login Info Bottom"]</label>
                 <textarea class="form-control" rows="5" asp-for="LoginInfoBottom"
                           data-ckeditor-unobtrusive=""
-                          data-ckeditor-unobtrusive-config-url="@Url.Content(ckOptions.CustomConfigPath)"
-                          data-ckeditor-unobtrusive-config-toolbar="Full"
-                          data-ckeditor-unobtrusive-config-language="@System.Globalization.CultureInfo.CurrentUICulture.Name"></textarea>
+                          data-ckeditor-config-url="@Url.Content(ckOptions.CustomConfigPath)"
+                          data-ckeditor-config-language="@System.Globalization.CultureInfo.CurrentUICulture.Name"
+                          data-ckeditor-config-dropfileuploadurl="@Model.DropFileUrl"
+                          data-ckeditor-config-filebrowserurl="@Model.FileBrowseUrl"
+                          data-ckeditor-config-imagebrowseurl="@Model.ImageBrowseUrl"></textarea>
                 <span asp-validation-for="LoginInfoBottom" class="text-danger"></span>
             </div>
             <div class="form-group">
@@ -45,6 +49,6 @@
 
 @section Scripts {
 @{ await Html.RenderPartialAsync("_SideMenuScriptsPartial"); }
-@{ await Html.RenderPartialAsync("_EditorScriptsPartial"); }
-@{ await Html.RenderPartialAsync("_ValidationScriptsPartial"); }
+@{ await Html.RenderPartialAsync("_UnobtrusiveEditorScriptsPartial"); }
+@{ await Html.RenderPartialAsync("_UnobtrusiveValidationScriptsPartial"); }
 }
