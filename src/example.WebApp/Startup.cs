@@ -194,9 +194,9 @@ namespace example.WebApp
                         options.AddCloudscribeCommonEmbeddedViews();
                         options.AddEmbeddedViewsForNavigation();
                         options.AddEmbeddedBootstrap3ViewsForCloudscribeCore();
-                        options.AddEmbeddedViewsForCloudscribeLogging();
                         options.AddBootstrap3EmbeddedViewsForFileManager();
-
+                        options.AddEmbeddedViewsForCloudscribeLogging();
+                        
                         options.AddEmbeddedBootstrap3ViewsForCloudscribeCoreIdentityServerIntegration();
 
                         options.ViewLocationExpanders.Add(new cloudscribe.Core.Web.Components.SiteViewLocationExpander());
@@ -381,8 +381,7 @@ namespace example.WebApp
         {
             app.UseMvc(routes =>
             {
-                routes.AddRoutesForCloudscribeCommonResources();
-
+                
                 if (useFolders)
                 {
                     routes.MapRoute(
