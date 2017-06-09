@@ -1,7 +1,9 @@
 ﻿using cloudscribe.Web.Common;
+using cloudscribe.Web.Common.Components;
 using cloudscribe.Web.Common.Helpers;
 using cloudscribe.Web.Common.Models;
 using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc.Razor;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.Configuration;
@@ -78,6 +80,18 @@ namespace Microsoft.Extensions.DependencyInjection
                );
 
             return routes;
+        }
+
+        public static IApplicationBuilder UseCloudscribeCommonStaticFiles(this IApplicationBuilder builder)
+        {
+
+            builder.UseStaticFiles(new StaticFileOptions()
+            {
+                FileProvider = new EmbeddedFileResolvingProvider(typeof(CloudscribeCommonResources).GetTypeInfo().Assembly,"cloudscribe.Web.Common")
+                , RequestPath = new PathString("/cr")
+            });
+
+            return builder;
         }
     }
 }
