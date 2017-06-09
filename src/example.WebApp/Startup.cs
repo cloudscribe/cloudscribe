@@ -311,6 +311,8 @@ namespace example.WebApp
             // this uses the policy called "default"
             app.UseCors("default");
 
+            app.UseCloudscribeCommonStaticFiles();
+
             app.UseMultitenancy<cloudscribe.Core.Models.SiteContext>();
 
             var multiTenantOptions = multiTenantOptionsAccessor.Value;
