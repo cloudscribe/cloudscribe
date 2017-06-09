@@ -25,6 +25,10 @@ namespace Microsoft.Extensions.DependencyInjection
             services.TryAddScoped<ITimeZoneHelper, TimeZoneHelper>();
             services.TryAddScoped<IResourceHelper, ResourceHelper>();
 
+            services.TryAddScoped<ICkeditorOptionsResolver, DefaultCkeditorOptionsResolver>();
+
+            
+
             if (configuration != null)
             {
                 services.Configure<CkeditorOptions>(configuration.GetSection("CkeditorOptions"));

@@ -1,12 +1,13 @@
 ﻿@model cloudscribe.Core.Web.ViewModels.Account.EditUserViewModel
 @using cloudscribe.Web.Common.Models
+@using cloudscribe.Web.Common.Components
 @using cloudscribe.Core.Web
 @using Microsoft.Extensions.Options
 @using Microsoft.Extensions.Localization
 @inject IStringLocalizer<CloudscribeCore> sr
-@inject IOptions<CkeditorOptions> ckOptionsAccessor
+@inject ICkeditorOptionsResolver editorOptionsResolver
 @{
-    CkeditorOptions ckOptions = ckOptionsAccessor.Value;
+    var ckOptions = await editorOptionsResolver.GetCkeditorOptions();
 }
 @section Styles {
 @{ await Html.RenderPartialAsync("_DatePickerCssPartial"); }
@@ -121,12 +122,12 @@
                 <label asp-for="Comment" class="col-md-2 control-label"></label>
                 <div class="col-md-10">
                     <textarea class="form-control" rows="5" asp-for="Comment"
-                              data-ckeditor-unobtrusive=""
-                              data-ckeditor-config-url="@Url.Content(ckOptions.CustomConfigPath)"
-                              data-ckeditor-config-language="@System.Globalization.CultureInfo.CurrentUICulture.Name"
-                              data-ckeditor-config-dropfileuploadurl="@Model.DropFileUrl"
-                              data-ckeditor-config-filebrowserurl="@Model.FileBrowseUrl"
-                              data-ckeditor-config-imagebrowseurl="@Model.ImageBrowseUrl"></textarea>
+                          data-ckeditor-unobtrusive=""
+                          data-ckeditor-config-url="@ckOptions.CustomConfigPath"
+                          data-ckeditor-config-language="@ckOptions.LanguageCode"
+                          data-ckeditor-config-dropfileuploadurl="@ckOptions.DropFileUrl"
+                          data-ckeditor-config-filebrowserurl="@ckOptions.FileBrowseUrl"
+                          data-ckeditor-config-imagebrowseurl="@ckOptions.ImageBrowseUrl"></textarea>
                 </div>
             </div>
             <div class="form-group">
