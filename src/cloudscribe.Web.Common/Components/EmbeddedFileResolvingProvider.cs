@@ -1,6 +1,6 @@
-﻿// Copyright (c) Source Tree Solutions, LLC. All rights reserved.
-// Licensed under the Apache License, Version 2.0. 
-// Author:                  Joe Audette
+﻿// Copyright(c) .NET Foundation.All rights reserved.
+// Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
+// Author:                  Microsoft/Joe Audette
 // Created:                 2017-06-09
 // Last Modified:           2017-06-09
 // 
@@ -28,6 +28,7 @@ namespace cloudscribe.Web.Common.Components
     /// for example /cr/js/ckeditor461/skins/moono-lisa/editor.css?t=GB8C
     /// must be changed to /cr/js/ckeditor461/skins/moono_lisa/editor.css?t=GB8C
     /// this is used in conjunction with StaticFileMiddleware to serve embedded static resources
+    /// I reported the problem here: https://github.com/aspnet/FileSystem/issues/277
     /// 
     /// Looks up files using embedded resources in the specified assembly.
     /// This file provider is case sensitive.

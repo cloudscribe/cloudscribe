@@ -9,6 +9,7 @@
 // it is more ideal to serve embedded resources using static files middleware which runs before authentication/authorization middelware
 // however to get it working I had to implement a custom IFileProvider, EmbeddedFileResolvingProvider
 // because the built in EmbeddedFileProvider doesn't correctly map folder names with - to _
+// I am keeping this implementation here in comments as a reference in case I need to use this kind of solution elsewhere
 
 //using cloudscribe.Web.Common.Helpers;
 //using Microsoft.AspNetCore.Authorization;
