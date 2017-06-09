@@ -1,11 +1,12 @@
 ﻿@model cloudscribe.Core.Web.ViewModels.SiteSettings.SiteBasicSettingsViewModel
 @using cloudscribe.Core.Models
 @using cloudscribe.Web.Common.Models
+@using cloudscribe.Web.Common.Components
 @using cloudscribe.Core.Web
 @using Microsoft.Extensions.Options
 @using Microsoft.Extensions.Localization
 @inject IStringLocalizer<CloudscribeCore> sr
-@inject IOptions<CkeditorOptions> ckOptionsAccessor
+@inject ICkeditorOptionsResolver editorOptionsResolver
 @inject IOptions<MultiTenantOptions> multiTenantOptionsAccessor
 
 @{
@@ -14,7 +15,7 @@
     if(multiTenantOptions.Mode != MultiTenantMode.FolderName) { useFolderTenants = false; }
     bool useHostTenants = true;
     if (multiTenantOptions.Mode != MultiTenantMode.HostName) { useHostTenants = false; }
-    CkeditorOptions ckOptions = ckOptionsAccessor.Value;
+    var ckOptions = await editorOptionsResolver.GetCkeditorOptions();
 }
 <form method="post" class="form-horizontal" role="form" asp-antiforgery="true">
         <div asp-validation-summary="All" class="text-danger"></div> 
@@ -100,11 +101,11 @@
             <div class="col-md-10">
                 <textarea class="form-control" rows="5" asp-for="ClosedMessage"
                           data-ckeditor-unobtrusive="" 
-                          data-ckeditor-config-url="@Url.Content(ckOptions.CustomConfigPath)"
-                          data-ckeditor-config-language="@System.Globalization.CultureInfo.CurrentUICulture.Name"
-                          data-ckeditor-config-dropfileuploadurl="@Model.DropFileUrl"
-                          data-ckeditor-config-filebrowserurl="@Model.FileBrowseUrl"
-                          data-ckeditor-config-imagebrowseurl="@Model.ImageBrowseUrl"
+                          data-ckeditor-config-url="@ckOptions.CustomConfigPath"
+                          data-ckeditor-config-language="@ckOptions.LanguageCode"
+                          data-ckeditor-config-dropfileuploadurl="@ckOptions.DropFileUrl"
+                          data-ckeditor-config-filebrowserurl="@ckOptions.FileBrowseUrl"
+                          data-ckeditor-config-imagebrowseurl="@ckOptions.ImageBrowseUrl"
                           ></textarea>
                 <span asp-validation-for="ClosedMessage" class="text-danger"></span>             
             </div>

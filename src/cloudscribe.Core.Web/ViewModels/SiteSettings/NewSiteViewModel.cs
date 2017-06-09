@@ -106,11 +106,7 @@ namespace cloudscribe.Core.Web.ViewModels.SiteSettings
         [StringLength(100, ErrorMessage = "Display name has a maximum length of 100 characters")]
         public string DisplayName { get; set; } = string.Empty;
 
-        public string DropFileUrl { get; set; } = "/filemanager/upload";
-
-        public string FileBrowseUrl { get; set; } = "/filemanager/ckfiledialog?type=file";
-
-        public string ImageBrowseUrl { get; set; } = "/filemanager/ckfiledialog?type=image";
+        
 
     }
 }

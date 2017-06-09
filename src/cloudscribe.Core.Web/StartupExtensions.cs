@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2016-05-07
-// Last Modified:			2017-06-08
+// Last Modified:			2017-06-09
 // 
 
 
@@ -14,6 +14,7 @@ using cloudscribe.Core.Web.Components.Messaging;
 using cloudscribe.Core.Web.Navigation;
 using cloudscribe.Messaging.Email;
 using cloudscribe.Web.Common;
+using cloudscribe.Web.Common.Components;
 using cloudscribe.Web.Common.Models;
 using cloudscribe.Web.Common.Razor;
 using cloudscribe.Web.Navigation;
@@ -60,7 +61,8 @@ namespace Microsoft.Extensions.DependencyInjection
             services.AddScoped<SiteTimeZoneService, SiteTimeZoneService>();
 
             services.AddScoped<SiteDataProtector>();
-            // timezone localization from NodaTime
+
+            services.TryAddScoped<ICkeditorOptionsResolver, SiteCkeditorOptionsResolver>();
             services.AddCloudscribeCommmon(configuration);
             services.AddScoped<ITimeZoneIdResolver, RequestTimeZoneIdResolver>();
 
