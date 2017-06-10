@@ -3,7 +3,7 @@
   <PropertyGroup>
     <Description>Multi-tenant MVC and WebApi application foundation with management for sites, users, roles, and geographic data.  You should only install this into an empty web application project that does not already have startup code or AspNet Identity installed. This is the main library for cloudscribe. Typically you should not install this directly but instead install the package cloudscribe.Core.Web.Integration which will also install cloudscribe.Web.Core along with the integration code needed to wire it up in your empty web application project. You are allowed to modify the integration code after it is added to your project.</Description>
     <VersionPrefix>1.1.0</VersionPrefix>
-    <VersionSuffix>rc20170609</VersionSuffix>
+    <VersionSuffix>rc20170611</VersionSuffix>
     <Authors>Joe Audette</Authors>
     <TargetFrameworks>net451;net452;net46;netstandard1.6</TargetFrameworks>
     <AssemblyName>cloudscribe.Core.Web</AssemblyName>

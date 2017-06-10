@@ -1182,7 +1182,12 @@ namespace cloudscribe.Core.Web.Controllers
 
             if(selectedSite.RegistrationAgreement != model.RegistrationAgreement)
             {
-                selectedSite.TermsUpdatedUtc = DateTime.UtcNow;
+                if(model.RequireUsersToAcceptChangedAgreement)
+                {
+                    // changing the terms date will force non admin users to re-accept the terms
+                    selectedSite.TermsUpdatedUtc = DateTime.UtcNow;
+                }
+                
             }
             
             selectedSite.RegistrationPreamble = model.RegistrationPreamble;

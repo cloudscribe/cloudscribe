@@ -206,7 +206,7 @@ namespace example.WebApp
 
             //services.AddSingleton<ITempDataProvider, CookieTempDataProvider>();
 
-            ConfigureDataStorage(services);
+            AddDataStorageServices(services);
 
            
 
@@ -232,16 +232,115 @@ namespace example.WebApp
             loggerFactory.AddConsole(Configuration.GetSection("Logging"));
             loggerFactory.AddDebug();
             ConfigureLogging(loggerFactory, serviceProvider, logRepo);
-            
+
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
                 app.UseDatabaseErrorPage();
                 app.UseBrowserLink();
             }
+            else
+            {
+                app.UseExceptionHandler("/oops/Error");
+            }
 
-            var storage = Configuration["DevOptions:DbPlatform"];
+            EnsureDataStorageIsReady(app);
+
+            app.UseForwardedHeaders();
+
+            app.UseStaticFiles();
+
+            // we don't need session
+            //app.UseSession();
+
+            app.UseRequestLocalization(localizationOptionsAccessor.Value);
+
+            // this uses the policy called "default"
+            app.UseCors("default");
+
+            var multiTenantOptions = multiTenantOptionsAccessor.Value;
+
+            app.UseCloudscribeCore(
+                    loggerFactory,
+                    multiTenantOptions,
+                    SslIsAvailable,
+                    IdentityServerIntegratorFunc);
             
+            UseMvc(app, multiTenantOptions.Mode == cloudscribe.Core.Models.MultiTenantMode.FolderName);
+
+            
+        }
+        
+        private void UseMvc(IApplicationBuilder app, bool useFolders)
+        {
+            app.UseMvc(routes =>
+            {
+                routes.AddCloudscribeFileManagerRoutes();
+
+                if (useFolders)
+                {
+                    routes.MapRoute(
+                       name: "foldererrorhandler",
+                       template: "{sitefolder}/oops/error/{statusCode?}",
+                       defaults: new { controller = "Oops", action = "Error" },
+                       constraints: new { name = new cloudscribe.Core.Web.Components.SiteFolderRouteConstraint() }
+                    );
+
+
+                    routes.MapRoute(
+                        name: "folderdefault",
+                        template: "{sitefolder}/{controller}/{action}/{id?}",
+                        defaults: new { controller = "Home", action = "Index" },
+                        constraints: new { name = new cloudscribe.Core.Web.Components.SiteFolderRouteConstraint() });
+
+                    
+                }
+
+                routes.MapRoute(
+                   name: "errorhandler",
+                   template: "oops/error/{statusCode?}", 
+                   defaults: new { controller = "Oops", action = "Error" }
+                   );
+
+                routes.MapRoute(
+                    name: "default",
+                    template: "{controller=Home}/{action=Index}/{id?}"
+                    //,defaults: new { controller = "Home", action = "Index" }
+                    );
+            });
+        }
+
+        // this Func is passed optionally in to app.UseCloudscribeCore
+        // to wire up identity server integration at the right point in the middleware pipeline
+        private bool IdentityServerIntegratorFunc(IApplicationBuilder builder, cloudscribe.Core.Models.ISiteContext tenant)
+        {
+            builder.UseIdentityServer();
+
+            //// this sets up the authentication for apis within this application endpoint
+            //// ie apis that are hosted in the same web app endpoint with the authority server
+            //// this is not needed here if you are only using separate api endpoints
+            //// it is needed in the startup of those separate endpoints
+            //// note that with both cookie auth and jwt auth middleware the principal is merged from both the cookie and the jwt token if it is passed
+            //builder.UseIdentityServerAuthentication(new IdentityServerAuthenticationOptions
+            //{
+            //    Authority = "https://localhost:44399",
+            //    // using the site aliasid as the scope so each tenant has a different scope
+            //    // you can view the aliasid from site settings
+            //    // clients must be configured with the scope to have access to the apis for the tenant
+            //    ApiName = ctx.Tenant.AliasId,
+            //    //RoleClaimType = "http://schemas.microsoft.com/ws/2008/06/identity/claims/role",
+            //    //AuthenticationScheme = AuthenticationScheme.Application,
+
+            //    RequireHttpsMetadata = true
+            //});
+
+            return true;
+        }
+
+        private void EnsureDataStorageIsReady(IApplicationBuilder app)
+        {
+            var storage = Configuration["DevOptions:DbPlatform"];
+
             switch (storage)
             {
                 case "NoDb":
@@ -296,123 +395,9 @@ namespace example.WebApp
                         IdServerResources.GetApiResources(),
                         IdServerResources.GetIdentityResources()
                         ).Wait();
-                    
+
                     break;
             }
-
-            app.UseForwardedHeaders();
-
-            app.UseStaticFiles();
-
-            //app.UseSession();
-
-            app.UseRequestLocalization(localizationOptionsAccessor.Value);
-
-            // this uses the policy called "default"
-            app.UseCors("default");
-
-            app.UseCloudscribeCommonStaticFiles();
-
-            app.UseMultitenancy<cloudscribe.Core.Models.SiteContext>();
-
-            var multiTenantOptions = multiTenantOptionsAccessor.Value;
-            
-            app.UsePerTenant<cloudscribe.Core.Models.SiteContext>((ctx, builder) =>
-            {
-                // custom 404 and error page - this preserves the status code (ie 404)
-                if(multiTenantOptions.Mode != cloudscribe.Core.Models.MultiTenantMode.FolderName || string.IsNullOrEmpty(ctx.Tenant.SiteFolderName))
-                {
-                    builder.UseStatusCodePagesWithReExecute("/home/error/{0}");
-                }
-                else
-                {
-                    builder.UseStatusCodePagesWithReExecute("/" + ctx.Tenant.SiteFolderName + "/home/error/{0}");
-                }
-
-                // resolve static files from wwwroot folders within themes and within sitefiles
-                builder.UseSiteAndThemeStaticFiles(loggerFactory, multiTenantOptions, ctx.Tenant);
-                
-                builder.UseCloudscribeCoreDefaultAuthentication(
-                    loggerFactory,
-                    multiTenantOptions,
-                    ctx.Tenant,
-                    SslIsAvailable);
-
-                // to make this multi tenant for folders we are
-                // using a fork of IdentityServer4 and hoping to get changes so we don't need a fork
-                // https://github.com/IdentityServer/IdentityServer4/issues/19
-
-                builder.UseIdentityServer();
-
-                //// this sets up the authentication for apis within this application endpoint
-                //// ie apis that are hosted in the same web app endpoint with the authority server
-                //// this is not needed here if you are only using separate api endpoints
-                //// it is needed in the startup of those separate endpoints
-                //// note that with both cookie auth and jwt auth middleware the principal is merged from both the cookie and the jwt token if it is passed
-                //builder.UseIdentityServerAuthentication(new IdentityServerAuthenticationOptions
-                //{
-                //    Authority = "https://localhost:44399",
-                //    // using the site aliasid as the scope so each tenant has a different scope
-                //    // you can view the aliasid from site settings
-                //    // clients must be configured with the scope to have access to the apis for the tenant
-                //    ApiName = ctx.Tenant.AliasId,
-                //    //RoleClaimType = "http://schemas.microsoft.com/ws/2008/06/identity/claims/role",
-                //    //AuthenticationScheme = AuthenticationScheme.Application,
-
-                //    RequireHttpsMetadata = true
-                //});
-                
-                
-                
-            });
-
-            app.UseCloudscribeEnforceSiteRulesMiddleware();
-
-
-            UseMvc(app, multiTenantOptions.Mode == cloudscribe.Core.Models.MultiTenantMode.FolderName);
-
-            
-        }
-        
-
-        
-
-        private void UseMvc(IApplicationBuilder app, bool useFolders)
-        {
-            app.UseMvc(routes =>
-            {
-                
-                if (useFolders)
-                {
-                    routes.MapRoute(
-                       name: "foldererrorhandler",
-                       template: "{sitefolder}/home/error/{statusCode}",
-                       defaults: new { controller = "Home", action = "Error" },
-                       constraints: new { name = new cloudscribe.Core.Web.Components.SiteFolderRouteConstraint() }
-                    );
-
-
-                    routes.MapRoute(
-                        name: "folderdefault",
-                        template: "{sitefolder}/{controller}/{action}/{id?}",
-                        defaults: new { controller = "Home", action = "Index" },
-                        constraints: new { name = new cloudscribe.Core.Web.Components.SiteFolderRouteConstraint() });
-
-                    
-                }
-
-                routes.MapRoute(
-                   name: "errorhandler",
-                   template: "home/error/{statusCode}", 
-                   defaults: new { controller = "Home", action = "Error" }
-                   );
-
-                routes.MapRoute(
-                    name: "default",
-                    template: "{controller=Home}/{action=Index}/{id?}"
-                    //,defaults: new { controller = "Home", action = "Index" }
-                    );
-            });
         }
 
 
@@ -455,7 +440,7 @@ namespace example.WebApp
 
         }
 
-        private void ConfigureDataStorage(IServiceCollection services)
+        private void AddDataStorageServices(IServiceCollection services)
         {
             services.AddScoped<cloudscribe.Core.Models.Setup.ISetupTask, cloudscribe.Core.Web.Components.EnsureInitialDataSetupTask>();
             

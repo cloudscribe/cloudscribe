@@ -1,0 +1,3 @@
+﻿@using cloudscribe.Core.Models
+@inject SiteContext Tenant
+<a class="btn btn-primary btn-lg" href="~/@(Tenant?.SiteFolderName ?? "")"><span aria-hidden="true" class="fa fa-home"></span> Site Home</a>

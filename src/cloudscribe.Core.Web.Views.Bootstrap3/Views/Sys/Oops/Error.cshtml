@@ -31,11 +31,22 @@
             break;
     }
 }
+@section Meta {
+<meta name="robots" content="noindex" />
+}
 
 <div class="jumbotron text-center">
     <header>
         <h1><span aria-hidden="true" class="@ViewData["Icon"]"></span> @ViewData["Title"]</h1>
     </header>
     <p>@ViewData["Description"]</p>
-    <a class="btn btn-primary btn-lg" href="@Url.RouteUrl("/")"><span aria-hidden="true" class="fa fa-home"></span> Site Home</a>
+    @try
+    {
+        @await Html.PartialAsync("TenantHomeLinkPartial")
+
+    }
+    catch
+    {
+        @await Html.PartialAsync("FailSafeHomeLinkPartial")
+    }
 </div>
