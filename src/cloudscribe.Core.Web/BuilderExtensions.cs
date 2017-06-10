@@ -4,9 +4,11 @@ using cloudscribe.Core.Identity;
 using cloudscribe.Core.Models;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.FileProviders;
 using Microsoft.Extensions.Logging;
 using Microsoft.IdentityModel.Protocols.OpenIdConnect;
+using System;
 using System.IO;
 using System.Reflection;
 
@@ -14,6 +16,81 @@ namespace Microsoft.AspNetCore.Builder
 {
     public static class BuilderExtensions
     {
+
+        public static IApplicationBuilder UseCloudscribeCore(
+           this IApplicationBuilder app,
+           ILoggerFactory loggerFactory,
+           MultiTenantOptions multiTenantOptions,
+           bool sslIsAvailable = false,
+           Func<IApplicationBuilder, ISiteContext, bool> identityServerInvoker = null,
+           CookieSecurePolicy applicationCookieSecure = CookieSecurePolicy.SameAsRequest
+           )
+        {
+            app.UseCloudscribeCommonStaticFiles();
+
+            app.UseMultitenancy<cloudscribe.Core.Models.SiteContext>();
+
+
+
+            app.UsePerTenant<cloudscribe.Core.Models.SiteContext>((ctx, builder) =>
+            {
+                // custom 404 and error page - this preserves the status code (ie 404)
+                if (multiTenantOptions.Mode != cloudscribe.Core.Models.MultiTenantMode.FolderName || string.IsNullOrEmpty(ctx.Tenant.SiteFolderName))
+                {
+                    builder.UseStatusCodePagesWithReExecute("/oops/error/{0}");
+                }
+                else
+                {
+                    builder.UseStatusCodePagesWithReExecute("/" + ctx.Tenant.SiteFolderName + "/oops/error/{0}");
+                }
+
+                // resolve static files from wwwroot folders within themes and within sitefiles
+                builder.UseSiteAndThemeStaticFiles(loggerFactory, multiTenantOptions, ctx.Tenant);
+
+                builder.UseCloudscribeCoreDefaultAuthentication(
+                    loggerFactory,
+                    multiTenantOptions,
+                    ctx.Tenant,
+                    sslIsAvailable);
+
+                // to make this multi tenant for folders we are
+                // using a fork of IdentityServer4 and hoping to get changes so we don't need a fork
+                // https://github.com/IdentityServer/IdentityServer4/issues/19
+
+                if(identityServerInvoker != null)
+                {
+                    var addedIdentityServer = identityServerInvoker(builder, ctx.Tenant);
+                }
+                //builder.UseIdentityServer();
+
+                //// this sets up the authentication for apis within this application endpoint
+                //// ie apis that are hosted in the same web app endpoint with the authority server
+                //// this is not needed here if you are only using separate api endpoints
+                //// it is needed in the startup of those separate endpoints
+                //// note that with both cookie auth and jwt auth middleware the principal is merged from both the cookie and the jwt token if it is passed
+                //builder.UseIdentityServerAuthentication(new IdentityServerAuthenticationOptions
+                //{
+                //    Authority = "https://localhost:44399",
+                //    // using the site aliasid as the scope so each tenant has a different scope
+                //    // you can view the aliasid from site settings
+                //    // clients must be configured with the scope to have access to the apis for the tenant
+                //    ApiName = ctx.Tenant.AliasId,
+                //    //RoleClaimType = "http://schemas.microsoft.com/ws/2008/06/identity/claims/role",
+                //    //AuthenticationScheme = AuthenticationScheme.Application,
+
+                //    RequireHttpsMetadata = true
+                //});
+
+
+
+            });
+
+            app.UseCloudscribeEnforceSiteRulesMiddleware();
+
+            return app;
+
+        }
+
         public static IApplicationBuilder UseCloudscribeCoreDefaultAuthentication(
            this IApplicationBuilder builder,
            ILoggerFactory loggerFactory,
