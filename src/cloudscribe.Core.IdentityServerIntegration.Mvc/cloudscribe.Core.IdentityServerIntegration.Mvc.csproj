@@ -1,30 +1,19 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <Description>cloudscribe multi-tenant identity integration for IdentityServer4</Description>
-    <VersionPrefix>1.2.0</VersionPrefix>
+    <Description>MVC Controllers for cloudscribe.Core.IdentityServerIntegration</Description>
+    <VersionPrefix>1.0.0</VersionPrefix>
     <VersionSuffix>rc20170613</VersionSuffix>
     <Authors>Joe Audette</Authors>
     <TargetFrameworks>netstandard1.6;net452</TargetFrameworks>
-    <AssemblyName>cloudscribe.Core.IdentityServerIntegration</AssemblyName>
-    <PackageId>cloudscribe.Core.IdentityServerIntegration</PackageId>
-    <PackageTags>cloudscribe;identity</PackageTags>
-    <PackageIconUrl>https://raw.githubusercontent.com/joeaudette/cloudscribe/master/cloudscribe-icon-32.png</PackageIconUrl>
-    <PackageProjectUrl>https://github.com/joeaudette/cloudscribe</PackageProjectUrl>
-    <PackageLicenseUrl>http://www.apache.org/licenses/LICENSE-2.0</PackageLicenseUrl>
-    <NetStandardImplicitPackageVersion>1.6.1</NetStandardImplicitPackageVersion>
-    <PackageTargetFallback Condition=" '$(TargetFramework)' == 'netstandard1.6' ">$(PackageTargetFallback);dnxcore50</PackageTargetFallback>
-    <GenerateAssemblyConfigurationAttribute>false</GenerateAssemblyConfigurationAttribute>
-    <GenerateAssemblyCompanyAttribute>false</GenerateAssemblyCompanyAttribute>
-    <GenerateAssemblyProductAttribute>false</GenerateAssemblyProductAttribute>
   </PropertyGroup>
-
+  
   <ItemGroup>
     <ProjectReference Include="..\cloudscribe.Core.Identity\cloudscribe.Core.Identity.csproj" />
-    <!--
     <ProjectReference Include="..\cloudscribe.Core.Web\cloudscribe.Core.Web.csproj" />
+    <ProjectReference Include="..\cloudscribe.Core.IdentityServerIntegration\cloudscribe.Core.IdentityServerIntegration.csproj" />
+    <ProjectReference Include="..\cloudscribe.Core.IdentityServerIntegration.Views.Bootstrap3\cloudscribe.Core.IdentityServerIntegration.Views.Bootstrap3.csproj" />
     <ProjectReference Include="..\cloudscribe.Web.Common\cloudscribe.Web.Common.csproj" />
-    -->
   </ItemGroup>
 
   <ItemGroup>
@@ -32,15 +21,11 @@
     <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="1.1.*" />
     <PackageReference Include="Microsoft.Extensions.FileProviders.Embedded" Version="1.1.*" />
     <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="1.1.*" />
-    <!--
     <PackageReference Include="Microsoft.AspNetCore.Mvc.Razor" Version="1.1.*" />
-    
-    -->
     <PackageReference Include="Microsoft.AspNetCore.Mvc" Version="1.1.*" />
-    <PackageReference Include="cloudscribe.Web.Pagination" Version="1.1.*" />
     <PackageReference Include="cloudscribe.IDS4Fork" Version="1.5.*" />
-    
-    
+    <PackageReference Include="cloudscribe.Web.Pagination" Version="1.1.*" />
+
   </ItemGroup>
 
   <ItemGroup Condition=" '$(TargetFramework)' == 'net451' ">

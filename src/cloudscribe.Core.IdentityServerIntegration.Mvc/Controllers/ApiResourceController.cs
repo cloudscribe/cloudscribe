@@ -18,7 +18,7 @@ using System;
 using System.Globalization;
 using System.Threading.Tasks;
 
-namespace cloudscribe.Core.IdentityServerIntegration.Controllers
+namespace cloudscribe.Core.IdentityServerIntegration.Controllers.Mvc
 {
     [Authorize(Policy = "IdentityServerAdminPolicy")]
     public class ApiResourceController : Controller

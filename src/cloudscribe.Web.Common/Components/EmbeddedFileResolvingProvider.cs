@@ -29,6 +29,7 @@ namespace cloudscribe.Web.Common.Components
     /// must be changed to /cr/js/ckeditor461/skins/moono_lisa/editor.css?t=GB8C
     /// this is used in conjunction with StaticFileMiddleware to serve embedded static resources
     /// I reported the problem here: https://github.com/aspnet/FileSystem/issues/277
+    /// turns out it is a duplicsate of this issue https://github.com/aspnet/FileSystem/issues/184
     /// 
     /// Looks up files using embedded resources in the specified assembly.
     /// This file provider is case sensitive.

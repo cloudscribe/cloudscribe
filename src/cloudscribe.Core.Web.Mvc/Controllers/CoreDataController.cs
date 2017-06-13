@@ -20,7 +20,7 @@ using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace cloudscribe.Core.Web.Controllers
+namespace cloudscribe.Core.Web.Controllers.Mvc
 {
     [Authorize(Policy = "CoreDataPolicy")]
     public class CoreDataController : Controller
@@ -213,7 +213,7 @@ namespace cloudscribe.Core.Web.Controllers
             return Json(matches);
         }
 
-        [HttpGet]
+        [HttpPost]
         [AllowAnonymous]
         public async Task<IActionResult> StateAutoSuggestJson(
            string countryCode,
@@ -229,8 +229,10 @@ namespace cloudscribe.Core.Web.Controllers
             {
                 states = new List<IGeoZone>(); //empty list
             }
-            
-            return Json(states);
+
+            var selecteList = new SelectList(states, "Code", "Name");
+
+            return Json(selecteList);
         }
 
 

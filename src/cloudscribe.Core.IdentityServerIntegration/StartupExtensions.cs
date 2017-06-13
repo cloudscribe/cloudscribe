@@ -80,17 +80,17 @@ namespace Microsoft.Extensions.DependencyInjection
         //    return services;
         //}
 
-        [Obsolete("AddEmbeddedViewsForCloudscribeIdentityServerIntegration is deprecated, please use AddEmbeddedBootstrap3ViewsForCloudscribeCoreIdentityServerIntegration instead.")]
-        public static RazorViewEngineOptions AddEmbeddedViewsForCloudscribeIdentityServerIntegration(this RazorViewEngineOptions options)
-        {
-            options.AddEmbeddedBootstrap3ViewsForCloudscribeCoreIdentityServerIntegration();
-            //options.FileProviders.Add(new EmbeddedFileProvider(
-            //        typeof(CloudscribeIntegration).GetTypeInfo().Assembly,
-            //        "cloudscribe.Core.IdentityServerIntegration"
-            //    ));
+        //[Obsolete("AddEmbeddedViewsForCloudscribeIdentityServerIntegration is deprecated, please use AddEmbeddedBootstrap3ViewsForCloudscribeCoreIdentityServerIntegration instead.")]
+        //public static RazorViewEngineOptions AddEmbeddedViewsForCloudscribeIdentityServerIntegration(this RazorViewEngineOptions options)
+        //{
+        //    options.AddEmbeddedBootstrap3ViewsForCloudscribeCoreIdentityServerIntegration();
+        //    //options.FileProviders.Add(new EmbeddedFileProvider(
+        //    //        typeof(CloudscribeIntegration).GetTypeInfo().Assembly,
+        //    //        "cloudscribe.Core.IdentityServerIntegration"
+        //    //    ));
 
-            return options;
-        }
+        //    return options;
+        //}
 
     }
 }

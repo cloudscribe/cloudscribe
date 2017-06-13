@@ -21,7 +21,7 @@ using System;
 using cloudscribe.Web.Common;
 using Microsoft.AspNetCore.Mvc.Rendering;
 
-namespace cloudscribe.Core.Web.Controllers
+namespace cloudscribe.Core.Web.Controllers.Mvc
 {
     [Authorize]
     public class ManageController : Controller

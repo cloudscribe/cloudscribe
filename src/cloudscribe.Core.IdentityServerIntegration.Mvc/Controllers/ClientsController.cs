@@ -21,7 +21,7 @@ using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
 
-namespace cloudscribe.Core.IdentityServerIntegration.Controllers
+namespace cloudscribe.Core.IdentityServerIntegration.Controllers.Mvc
 {
     public class ClientsController : Controller
     {

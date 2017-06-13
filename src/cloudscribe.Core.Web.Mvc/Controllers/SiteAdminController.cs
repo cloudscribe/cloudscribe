@@ -22,7 +22,7 @@ using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace cloudscribe.Core.Web.Controllers
+namespace cloudscribe.Core.Web.Controllers.Mvc
 {
     [Authorize(Policy = "AdminPolicy")]
     public class SiteAdminController : Controller

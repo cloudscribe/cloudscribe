@@ -18,7 +18,7 @@ using System;
 using System.Globalization;
 using System.Threading.Tasks;
 
-namespace cloudscribe.Core.IdentityServerIntegration.Controllers
+namespace cloudscribe.Core.IdentityServerIntegration.Controllers.Mvc
 {
     public class IdentityResourceController : Controller
     {
