@@ -12,7 +12,7 @@ using cloudscribe.Core.IdentityServerIntegration.Models;
 using cloudscribe.Core.Models;
 using cloudscribe.Core.Identity;
 
-namespace cloudscribe.Core.IdentityServerIntegration
+namespace cloudscribe.Core.IdentityServerIntegration.Mvc
 {
     /// <summary>
     /// This controller implements the consent logic

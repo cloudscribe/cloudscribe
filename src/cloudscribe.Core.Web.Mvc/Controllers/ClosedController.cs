@@ -2,7 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Localization;
 
-namespace cloudscribe.Core.Web.Controllers
+namespace cloudscribe.Core.Web.Controllers.Mvc
 {
     public class ClosedController : Controller
     {

@@ -8,7 +8,7 @@
 using cloudscribe.Core.Models;
 using Microsoft.AspNetCore.Mvc;
 
-namespace cloudscribe.Core.Web.Controllers
+namespace cloudscribe.Core.Web.Controllers.Mvc
 {
     /// <summary>
     /// to use extensions from inside a controller you have to use the this keyword to call the extension method

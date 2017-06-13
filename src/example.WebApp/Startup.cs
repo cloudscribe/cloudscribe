@@ -193,11 +193,11 @@ namespace example.WebApp
 
                         options.AddCloudscribeCommonEmbeddedViews();
                         options.AddEmbeddedViewsForNavigation();
-                        options.AddEmbeddedBootstrap3ViewsForCloudscribeCore();
+                        options.AddCloudscribeCoreBootstrap3Views();
                         options.AddBootstrap3EmbeddedViewsForFileManager();
                         options.AddEmbeddedViewsForCloudscribeLogging();
                         
-                        options.AddEmbeddedBootstrap3ViewsForCloudscribeCoreIdentityServerIntegration();
+                        options.AddCloudscribeCoreIdentityServerIntegrationBootstrap3Views();
 
                         options.ViewLocationExpanders.Add(new cloudscribe.Core.Web.Components.SiteViewLocationExpander());
                         //options.ViewLocationExpanders.Add(new cloudscribe.Core.Web.Components.SharedThemesViewLocationExpander());
@@ -295,6 +295,12 @@ namespace example.WebApp
 
                     
                 }
+
+                routes.MapRoute(
+                   name: "stateautosuggest",
+                   template: "coredata/stateautosuggestjson",
+                   defaults: new { controller = "CoreDaata", action = "StateAutoSuggestJson" }
+                   );
 
                 routes.MapRoute(
                    name: "errorhandler",

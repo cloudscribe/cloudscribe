@@ -1,6 +1,9 @@
 
 http://www.hossambarakat.net/2016/02/03/configuring-redis-as-asp-net-core-1-0-session-store/
 
+0 Things To Know About In-Memory Caching In ASP.NET Core
+http://www.binaryintellect.net/articles/a7d9edfd-1f86-45f8-a668-64cc86d8e248.aspx
+
 Distributed cache
 https://github.com/aspnet/Caching/blob/dev/src/Microsoft.Framework.Caching.Abstractions/IDistributedCache.cs
 

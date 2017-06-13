@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Localization;
 using Microsoft.Extensions.Logging;
 
-namespace cloudscribe.Core.Web.Controllers
+namespace cloudscribe.Core.Web.Controllers.Mvc
 {
     public class OopsController : Controller
     {

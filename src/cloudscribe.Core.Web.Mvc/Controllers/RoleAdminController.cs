@@ -18,7 +18,7 @@ using System;
 using System.Globalization;
 using System.Threading.Tasks;
 
-namespace cloudscribe.Core.Web.Controllers
+namespace cloudscribe.Core.Web.Controllers.Mvc
 {
     [Authorize(Policy = "RoleAdminPolicy")]
     public class RoleAdminController : Controller

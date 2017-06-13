@@ -205,7 +205,7 @@ namespace cloudscribe.Core.Storage.EFCore.Common
             var listQuery = dbContext.States
                             .Where(x =>
                            x.CountryId == countryId &&
-                           (x.Name.Contains(query) || x.Code.Contains(query))
+                           ( x.Code.Contains(query))
                             )
                             .OrderBy(x => x.Code)
                             .Take(maxRows)

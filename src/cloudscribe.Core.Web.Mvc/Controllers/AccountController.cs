@@ -25,7 +25,7 @@ using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
 
-namespace cloudscribe.Core.Web.Controllers
+namespace cloudscribe.Core.Web.Controllers.Mvc
 {
     [Authorize]
     public class AccountController : Controller

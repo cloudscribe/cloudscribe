@@ -107,17 +107,17 @@ namespace Microsoft.Extensions.DependencyInjection
         /// </summary>
         /// <param name="options"></param>
         /// <returns>RazorViewEngineOptions</returns>
-        [Obsolete("AddEmbeddedViewsForCloudscribeCore is deprecated, please use AddEmbeddedBootstrap3ViewsForCloudscribeCore instead.")]
-        public static RazorViewEngineOptions AddEmbeddedViewsForCloudscribeCore(this RazorViewEngineOptions options)
-        {
-            //options.FileProviders.Add(new EmbeddedFileProvider(
-            //        typeof(SiteManager).GetTypeInfo().Assembly,
-            //        "cloudscribe.Core.Web"
-            //    ));
-            options.AddEmbeddedBootstrap3ViewsForCloudscribeCore();
+        //[Obsolete("AddEmbeddedViewsForCloudscribeCore is deprecated, please use AddEmbeddedBootstrap3ViewsForCloudscribeCore instead.")]
+        //public static RazorViewEngineOptions AddEmbeddedViewsForCloudscribeCore(this RazorViewEngineOptions options)
+        //{
+        //    //options.FileProviders.Add(new EmbeddedFileProvider(
+        //    //        typeof(SiteManager).GetTypeInfo().Assembly,
+        //    //        "cloudscribe.Core.Web"
+        //    //    ));
+        //    options.AddEmbeddedBootstrap3ViewsForCloudscribeCore();
 
-            return options;
-        }
+        //    return options;
+        //}
 
         
 

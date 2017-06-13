@@ -234,7 +234,7 @@ namespace cloudscribe.Core.Storage.NoDb
             var listQuery = states
                             .Where(x =>
                            x.CountryId == countryId &&
-                           (x.Name.Contains(query) || x.Code.Contains(query))
+                           ( x.Code.Contains(query))
                             )
                             .OrderBy(x => x.Code)
                             .Take(maxRows)
