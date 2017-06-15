@@ -1,5 +1,7 @@
 
 
+https://www.campaignmonitor.com/blog/email-marketing/2017/05/the-really-good-guide-to-email-design-bonus-checklist/
+
 https://www.smashingmagazine.com/2017/01/making-responsive-html-email-coding-easy-with-mjml/
 
 https://www.smashingmagazine.com/2017/01/introduction-building-sending-html-email-for-web-developers/
