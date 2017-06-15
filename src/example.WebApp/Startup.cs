@@ -194,8 +194,8 @@ namespace example.WebApp
                         options.AddCloudscribeCommonEmbeddedViews();
                         options.AddCloudscribeNavigationBootstrap3Views();
                         options.AddCloudscribeCoreBootstrap3Views();
-                        options.AddBootstrap3EmbeddedViewsForFileManager();
-                        options.AddEmbeddedViewsForCloudscribeLogging();
+                        options.AddCloudscribeFileManagerBootstrap3Views();
+                        options.AddCloudscribeLoggingBootstrap3Views();
                         
                         options.AddCloudscribeCoreIdentityServerIntegrationBootstrap3Views();
 
