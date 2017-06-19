@@ -8,4 +8,18 @@ namespace cloudscribe.Web.Common
         Task<string> GetUserTimeZoneId(CancellationToken cancellationToken = default(CancellationToken));
         Task<string> GetSiteTimeZoneId(CancellationToken cancellationToken = default(CancellationToken));
     }
+
+    public class GmtTimeZoneIdResolver : ITimeZoneIdResolver
+    {
+        public Task<string> GetUserTimeZoneId(CancellationToken cancellationToken = default(CancellationToken))
+        {
+            return Task.FromResult("GMT");
+        }
+
+        public Task<string> GetSiteTimeZoneId(CancellationToken cancellationToken = default(CancellationToken))
+        {
+            return Task.FromResult("GMT");
+        }
+
+    }
 }

@@ -25,6 +25,7 @@ namespace Microsoft.Extensions.DependencyInjection
             services.TryAddScoped<ITimeZoneHelper, TimeZoneHelper>();
             services.TryAddScoped<IResourceHelper, ResourceHelper>();
 
+            services.TryAddScoped<ITimeZoneIdResolver, GmtTimeZoneIdResolver>();
             services.TryAddScoped<ICkeditorOptionsResolver, DefaultCkeditorOptionsResolver>();
 
             

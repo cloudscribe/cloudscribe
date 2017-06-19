@@ -187,17 +187,17 @@ FakesAssemblies/
 
 src/cloudscribe-core/.vs/config/applicationhost.config
 
-src/example.WebApp/Properties/PublishProfiles*
-src/example.WebApp/wwwroot/lib*
-src/example.WebApp/wwwroot/js/*
-src/example.WebApp/wwwroot/css/site.min.css
+src/sourceDev.WebApp/Properties/PublishProfiles*
+src/sourceDev.WebApp/wwwroot/lib*
+src/sourceDev.WebApp/wwwroot/js/*
+src/sourceDev.WebApp/wwwroot/css/site.min.css
 
-src/example.WebApp/appsettings.local.overrides.json
+src/sourceDev.WebApp/appsettings.local.overrides.json
 **/appsettings.dev.json
 
-src/example.WebApp/cloudscribe_config/firebirddb/*
-src/example.WebApp/cloudscribe_config/sqlitedb/*
-src/example.WebApp/nodb_storage/*
+src/sourceDev.WebApp/cloudscribe_config/firebirddb/*
+src/sourceDev.WebApp/cloudscribe_config/sqlitedb/*
+src/sourceDev.WebApp/nodb_storage/*
 
 .vscode/launch.json
 src/cloudscribe.Core.Repositories.EF/appsettings.local.overrides.json

@@ -63,8 +63,10 @@ namespace Microsoft.Extensions.DependencyInjection
             services.AddScoped<SiteDataProtector>();
 
             services.TryAddScoped<ICkeditorOptionsResolver, SiteCkeditorOptionsResolver>();
-            services.AddCloudscribeCommmon(configuration);
             services.AddScoped<ITimeZoneIdResolver, RequestTimeZoneIdResolver>();
+
+            services.AddCloudscribeCommmon(configuration);
+            
 
             services.AddCloudscribePagination();
 
