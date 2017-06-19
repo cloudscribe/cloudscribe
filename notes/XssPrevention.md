@@ -58,4 +58,5 @@ http://caniuse.com/contentsecuritypolicy
 need to google Content Security Policy for more info, I think I recal a .NET library
 probably can find or implement something that plugs into the owin pipeline
 
+https://stackoverflow.com/questions/20504846/why-is-it-common-to-put-csrf-prevention-tokens-in-cookies
 

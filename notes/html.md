@@ -3,6 +3,7 @@ http://htmlreference.io/
 
 https://bootstrapstudio.io/
 
+https://addons.mozilla.org/en-US/firefox/addon/webdeveloperchecklist/
 
 In html5 the html, head and body tags are all optional and google recommends leave them out!!!
 https://google.github.io/styleguide/htmlcssguide.xml?showone=Optional_Tags#Optional_Tags

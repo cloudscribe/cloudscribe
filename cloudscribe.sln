@@ -28,8 +28,6 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "cloudscribe.Core.Web", "src
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "cloudscribe.Core.Web.Test", "test\cloudscribe.Core.Web.Test\cloudscribe.Core.Web.Test.csproj", "{FA25ABC0-74D2-479A-B8F0-18A6463BBB08}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "example.WebApp", "src\example.WebApp\example.WebApp.csproj", "{B787FBDE-1595-42A1-A255-9E728E006626}"
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "cloudscribe.Core.IdentityServerIntegration", "src\cloudscribe.Core.IdentityServerIntegration\cloudscribe.Core.IdentityServerIntegration.csproj", "{061E1C0E-3214-47B7-810F-04DEF8324BF4}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "cloudscribe.Core.IdentityServer.NoDb", "src\cloudscribe.Core.IdentityServer.NoDb\cloudscribe.Core.IdentityServer.NoDb.csproj", "{DC4E488D-A128-4023-9570-841EA0258016}"
@@ -61,6 +59,8 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "cloudscribe.Core.Web.Mvc", "src\cloudscribe.Core.Web.Mvc\cloudscribe.Core.Web.Mvc.csproj", "{BE93C7BC-5689-4795-9E0B-DCF2AD37FB0D}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "cloudscribe.Core.IdentityServerIntegration.Mvc", "src\cloudscribe.Core.IdentityServerIntegration.Mvc\cloudscribe.Core.IdentityServerIntegration.Mvc.csproj", "{FD3A5D3C-C942-4468-B98C-DA6A474F3822}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "sourceDev.WebApp", "src\sourceDev.WebApp\sourceDev.WebApp.csproj", "{2E6B129D-5C85-4713-8747-CED53A4AFF34}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -100,10 +100,6 @@ Global
 		{FA25ABC0-74D2-479A-B8F0-18A6463BBB08}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{FA25ABC0-74D2-479A-B8F0-18A6463BBB08}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{FA25ABC0-74D2-479A-B8F0-18A6463BBB08}.Release|Any CPU.Build.0 = Release|Any CPU
-		{B787FBDE-1595-42A1-A255-9E728E006626}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{B787FBDE-1595-42A1-A255-9E728E006626}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{B787FBDE-1595-42A1-A255-9E728E006626}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{B787FBDE-1595-42A1-A255-9E728E006626}.Release|Any CPU.Build.0 = Release|Any CPU
 		{061E1C0E-3214-47B7-810F-04DEF8324BF4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{061E1C0E-3214-47B7-810F-04DEF8324BF4}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{061E1C0E-3214-47B7-810F-04DEF8324BF4}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -168,6 +164,10 @@ Global
 		{FD3A5D3C-C942-4468-B98C-DA6A474F3822}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{FD3A5D3C-C942-4468-B98C-DA6A474F3822}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{FD3A5D3C-C942-4468-B98C-DA6A474F3822}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2E6B129D-5C85-4713-8747-CED53A4AFF34}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2E6B129D-5C85-4713-8747-CED53A4AFF34}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2E6B129D-5C85-4713-8747-CED53A4AFF34}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2E6B129D-5C85-4713-8747-CED53A4AFF34}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -181,7 +181,6 @@ Global
 		{2CC25CD6-2EAD-4608-95E9-F16A43BE767B} = {9C16B47A-B712-4237-B62F-B4403ACF1CD5}
 		{E3434F61-5FF1-4DAF-83F0-CDBFA2D8FB47} = {9C16B47A-B712-4237-B62F-B4403ACF1CD5}
 		{FA25ABC0-74D2-479A-B8F0-18A6463BBB08} = {18722DAD-1668-4F56-A915-F6C65C1A6B74}
-		{B787FBDE-1595-42A1-A255-9E728E006626} = {9C16B47A-B712-4237-B62F-B4403ACF1CD5}
 		{061E1C0E-3214-47B7-810F-04DEF8324BF4} = {9C16B47A-B712-4237-B62F-B4403ACF1CD5}
 		{DC4E488D-A128-4023-9570-841EA0258016} = {9C16B47A-B712-4237-B62F-B4403ACF1CD5}
 		{CCC22BD3-7F83-48FB-82CA-938BE238C740} = {9C16B47A-B712-4237-B62F-B4403ACF1CD5}
@@ -198,5 +197,6 @@ Global
 		{C2F68FB6-C6B1-4CF4-B659-BAE9E499653D} = {9C16B47A-B712-4237-B62F-B4403ACF1CD5}
 		{BE93C7BC-5689-4795-9E0B-DCF2AD37FB0D} = {9C16B47A-B712-4237-B62F-B4403ACF1CD5}
 		{FD3A5D3C-C942-4468-B98C-DA6A474F3822} = {9C16B47A-B712-4237-B62F-B4403ACF1CD5}
+		{2E6B129D-5C85-4713-8747-CED53A4AFF34} = {9C16B47A-B712-4237-B62F-B4403ACF1CD5}
 	EndGlobalSection
 EndGlobal
