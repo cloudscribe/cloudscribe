@@ -5,7 +5,7 @@
 {
     @:<div class="navbar-default sidebar" role="navigation">
         @:<div class="sidebar-nav navbar-collapse">
-            @:<ul class="nav navbar-nav" id="side-menu">
+            @:<ul class="nav navbar-nav" id="side-menu" data-sm-skip="true">
                 foreach (var node in Model.StartingNode.Children)
     {
         if (!Model.ShouldAllowView(node)) { continue; }
