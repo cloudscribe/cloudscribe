@@ -10,6 +10,7 @@ using cloudscribe.Core.Models;
 using cloudscribe.Core.Web.Components;
 using cloudscribe.Core.Web.ViewModels.RoleAdmin;
 using cloudscribe.Web.Common.Extensions;
+using cloudscribe.Web.Navigation;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Localization;
@@ -162,7 +163,7 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
             // only server admin site can edit other sites settings
             if (selectedSite.Id != siteManager.CurrentSite.Id)
             {
-                ViewData["Title"] = string.Format(CultureInfo.CurrentUICulture, sr["{0} - New Role"], selectedSite.SiteName);
+                ViewData["Title"] = string.Format(CultureInfo.CurrentUICulture, sr["{0} - New Role"], selectedSite.SiteName);  
             }
             else
             {
@@ -178,7 +179,12 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
                 if ((role != null) && (role.SiteId == selectedSite.Id))
                 {
                     model = RoleViewModel.FromISiteRole(role);
-                    ViewData["Title"] = sr["Edit Role"];    
+                    ViewData["Title"] = sr["Edit Role"];
+                    var currentCrumbAdjuster = new NavigationNodeAdjuster(Request.HttpContext);
+                    currentCrumbAdjuster.KeyToAdjust = "RoleEdit";
+                    currentCrumbAdjuster.AdjustedText = sr["Edit Role"];
+                    currentCrumbAdjuster.ViewFilterName = NamedNavigationFilters.Breadcrumbs; // this is default but showing here for readers of code 
+                    currentCrumbAdjuster.AddToContext();
                 }
             }
             
