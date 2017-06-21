@@ -47,6 +47,7 @@
         @await Html.PartialAsync("AlertsPartial")
         @RenderBody()
         <hr />
+        @await Html.PartialAsync("_SelectLanguagePartial")
         <footer class="text-center" role="contentinfo" itemscope itemtype="http://schema.org/Person" itemprop="author">
             <small>Copyright &copy; @DateTime.Now.Year - @(Tenant?.SiteName ?? "Sample")</small>
         </footer>

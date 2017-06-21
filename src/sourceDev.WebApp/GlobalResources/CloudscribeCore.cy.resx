@@ -240,7 +240,7 @@
   <data name="Phone" xml:space="preserve">
     <value>Phone</value>
   </data>
-  <data name="Please Click here to log in" xml:space="preserve">
+  <data name="Please Click here to Log in" xml:space="preserve">
     <value>Please Click here to Log in</value>
   </data>
   <data name="Please Confirm Email Address" xml:space="preserve">
@@ -379,16 +379,16 @@
     <value>Edit State</value>
   </data>
   <data name="Email" xml:space="preserve">
-    <value>Email</value>
+    <value>E-bost</value>
   </data>
   <data name="Forgot Password Confirmation" xml:space="preserve">
     <value>Forgot Password Confirmation</value>
   </data>
   <data name="Forgot your password?" xml:space="preserve">
-    <value>Forgot your password?</value>
+    <value>Wedi anghofio eich cyfrinair?</value>
   </data>
-  <data name="Log In" xml:space="preserve">
-    <value>Log In</value>
+  <data name="Log in" xml:space="preserve">
+    <value>Mewngofnodi</value>
   </data>
   <data name="Must match password" xml:space="preserve">
     <value>Must match password</value>
@@ -412,19 +412,19 @@
     <value>Old Password</value>
   </data>
   <data name="Password" xml:space="preserve">
-    <value>Password</value>
+    <value>cyfrinair</value>
   </data>
   <data name="Please check your email to reset your password." xml:space="preserve">
     <value>Please check your email to reset your password.</value>
   </data>
   <data name="Register" xml:space="preserve">
-    <value>Register</value>
+    <value>cofrestr</value>
   </data>
   <data name="Register as a new user?" xml:space="preserve">
     <value>Register as a new user?</value>
   </data>
   <data name="Remember Me" xml:space="preserve">
-    <value>Remember Me</value>
+    <value>Cofiwch fi</value>
   </data>
   <data name="Remember this web browser" xml:space="preserve">
     <value>Remember this web browser</value>
@@ -556,7 +556,7 @@
     <value>Last Name</value>
   </data>
   <data name="Manage" xml:space="preserve">
-    <value>Manage</value>
+    <value>rheoli</value>
   </data>
   <data name="Manage your account" xml:space="preserve">
     <value>Manage your account</value>
@@ -658,7 +658,7 @@
     <value>Please check your email inbox, we just sent you a link that you need to click to confirm your account</value>
   </data>
   <data name="reCAPTCHA Error occured. Please try again" xml:space="preserve">
-    <value>reCAPTCHA Error occured. Please try again</value>
+    <value>Gwall reCAPTCHA. Rhowch gynnig arall arni</value>
   </data>
   <data name="Role Management" xml:space="preserve">
     <value>Role Management</value>
@@ -882,7 +882,7 @@
   <data name="Your password has been changed." xml:space="preserve">
     <value>Your password has been changed.</value>
   </data>
-  <data name="Your password has been set." xml:space="preserve">
+  <data name="your password has been set" xml:space="preserve">
     <value>your password has been set</value>
   </data>
   <data name="Your phone number was added." xml:space="preserve">
@@ -933,7 +933,7 @@
   <data name="Username not accepted please try a different value" xml:space="preserve">
     <value>Username not accepted please try a different value</value>
   </data>
-  <data name="Register using your {0} account" xml:space="preserve">
+  <data name="Register in using your {0} account" xml:space="preserve">
     <value>Register in using your {0} account</value>
   </data>
   <data name="Use an existing account" xml:space="preserve">
@@ -943,73 +943,9 @@
     <value>New Account Pending Approval</value>
   </data>
   <data name="Hello {0}!" xml:space="preserve">
-    <value>Hello {0}!</value>
+    <value>Helo {0}!</value>
   </data>
   <data name="Log off" xml:space="preserve">
-    <value>Log off</value>
-  </data>
-  <data name="Access Denied" xml:space="preserve">
-    <value>Access Denied</value>
-  </data>
-  <data name="Back To List" xml:space="preserve">
-    <value>Back To List</value>
-  </data>
-  <data name="Before you can Log in, we need to confirm that the email address you provided is valid. We sent an email to the address you&#xD;&#xA;    provided with a link that you need to click in order to confirm your email address is valid." xml:space="preserve">
-    <value>Before you can Log in, we need to confirm that the email address you provided is valid. We sent an email to the address you
-    provided with a link that you need to click in order to confirm your email address is valid.</value>
-  </data>
-  <data name="Enter your email." xml:space="preserve">
-    <value>Enter your email.</value>
-  </data>
-  <data name="Error from external provider: {0}" xml:space="preserve">
-    <value>Error from external provider: {0}</value>
-  </data>
-  <data name="I Agree to these terms of use." xml:space="preserve">
-    <value>I Agree to these terms of use.</value>
-  </data>
-  <data name="ISOCode2" xml:space="preserve">
-    <value>ISOCode2</value>
-  </data>
-  <data name="ISOCode3" xml:space="preserve">
-    <value>ISOCode3</value>
-  </data>
-  <data name="Locked out" xml:space="preserve">
-    <value>Locked out</value>
-  </data>
-  <data name="Log in using your {0} account" xml:space="preserve">
-    <value>Log in using your {0} account</value>
-  </data>
-  <data name="Login Failure" xml:space="preserve">
-    <value>Login Failure</value>
-  </data>
-  <data name="Oops something went wrong" xml:space="preserve">
-    <value>Oops something went wrong</value>
-  </data>
-  <data name="Oops!" xml:space="preserve">
-    <value>Oops!</value>
-  </data>
-  <data name="Please enter a valid email for this site below and click the Register button to finish logging in." xml:space="preserve">
-    <value>Please enter a valid email for this site below and click the Register button to finish logging in.</value>
-  </data>
-  <data name="Registration Agreement Required" xml:space="preserve">
-    <value>Registration Agreement Required</value>
-  </data>
-  <data name="Site Closed To Public Temporarily" xml:space="preserve">
-    <value>Site Closed To Public Temporarily</value>
-  </data>
-  <data name="Sorry for the delay, but this site requires approval of new accounts. An email has been site to the site managers notifying them of your registration request. You should recieve an email notifying you once your account has been approved." xml:space="preserve">
-    <value>Sorry for the delay, but this site requires approval of new accounts. An email has been site to the site managers notifying them of your registration request. You should recieve an email notifying you once your account has been approved.</value>
-  </data>
-  <data name="The role name is already in use." xml:space="preserve">
-    <value>The role name is already in use.</value>
-  </data>
-  <data name="This account has been locked out, please try again later." xml:space="preserve">
-    <value>This account has been locked out, please try again later.</value>
-  </data>
-  <data name="Unsuccessful login with service." xml:space="preserve">
-    <value>Unsuccessful login with service.</value>
-  </data>
-  <data name="Your time zone has been updated." xml:space="preserve">
-    <value>Your time zone has been updated.</value>
+    <value>allgofnodi</value>
   </data>
 </root>

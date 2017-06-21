@@ -1,20 +1,23 @@
 ﻿@model cloudscribe.Core.Web.ViewModels.SiteUser.ExternalLoginConfirmationViewModel
 @using cloudscribe.Core.Web
+@using System.Globalization
 @using Microsoft.Extensions.Options
 @using Microsoft.Extensions.Localization
 @inject IStringLocalizer<CloudscribeCore> sr
 @{
     ViewData["Title"] = sr["Register"];
+	var loginProvider = ViewData["LoginProvider"];
+	var subHeadMessage = string.Format(CultureInfo.CurrentUICulture, sr["Associate your {0} account"], loginProvider);
+	var successMessage = string.Format(CultureInfo.CurrentUICulture, sr["You've successfully authenticated with <strong>{0}</strong>."], loginProvider);
 }
 <h2>@ViewData["Title"]</h2>
-<h3>Associate your @ViewData["LoginProvider"] account</h3>
+<h3>@subHeadMessage</h3>
 
 <form asp-controller="Account" asp-action="ExternalLoginConfirmation" asp-route-returnurl='@ViewData["ReturnUrl"]' method="post" class="form-horizontal">
     <div asp-validation-summary="All" class="text-danger"></div>
     <p class="text-info">
-        You've successfully authenticated with <strong>@ViewBag.LoginProvider</strong>.
-        Please enter a valid email for this site below and click the Register button to finish
-        logging in.
+        @Html.Raw(successMessage)
+		@sr["Please enter a valid email for this site below and click the Register button to finish logging in."]
     </p>
     @if (Model.RegistrationPreamble.Length > 0)
     {
@@ -42,8 +45,8 @@
             <div class="col-md-offset-2 col-md-10">
                 <input type="hidden" asp-for="AgreementRequired" />
                 <div class="checkbox">
-                    <input asp-for="AgreeToTerms" data-val-enforcetrue='@sr["You must agree to the terms."]' />
-                    <label asp-for="AgreeToTerms">@sr["I Agree to these terms of use"]</label>
+                    <input asp-for="AgreeToTerms" data-val-enforcetrue='@sr["You must agree to the terms"]' />
+                    <label asp-for="AgreeToTerms">@sr["I Agree to these terms of use."]</label>
                     <span asp-validation-for="AgreeToTerms" class="text-danger"></span>
                     @Html.ValidationMessage("agreementerror", new { @class = "text-danger" })
                 </div>
