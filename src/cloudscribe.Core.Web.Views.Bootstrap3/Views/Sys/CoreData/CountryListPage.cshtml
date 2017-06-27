@@ -53,5 +53,10 @@
 <div>
     <cs-pager cs-paging-info="@Model.Paging"
               asp-action="CountryListPage" asp-controller="CoreData"
-              asp-route-pagesize="@Model.Paging.ItemsPerPage"></cs-pager>
+              asp-route-pagesize="@Model.Paging.ItemsPerPage"
+              cs-first-page-title='@sr["First Page"]'
+              cs-last-page-title='@sr["Last Page"]'
+              cs-previous-page-title='@sr["Previous page"]'
+              cs-next-page-title='@sr["Next page"]'
+              ></cs-pager>
 </div>

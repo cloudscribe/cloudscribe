@@ -87,5 +87,11 @@
     <DotNetCliToolReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Tools" Version="1.*" />
     <DotNetCliToolReference Include="Microsoft.EntityFrameworkCore.Tools.DotNet" Version="1.*" />
   </ItemGroup>
+  
+  <ItemGroup>
+    <EmbeddedResource Update="GlobalResources\CloudscribeIntegration.en-US.resx">
+      <Generator></Generator>
+    </EmbeddedResource>
+  </ItemGroup>
 
 </Project>

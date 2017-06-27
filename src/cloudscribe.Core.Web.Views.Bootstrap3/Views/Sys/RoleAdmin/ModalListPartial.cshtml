@@ -35,5 +35,10 @@
               asp-route-siteId="@Model.SiteId"
               asp-route-ajaxgrid="true"
               cs-ajax-target="#gridcontainer"
-              cs-ajax-success="roleSelector.syncChanges"></cs-pager>
+              cs-ajax-success="roleSelector.syncChanges"
+              cs-first-page-title='@sr["First Page"]'
+              cs-last-page-title='@sr["Last Page"]'
+              cs-previous-page-title='@sr["Previous page"]'
+              cs-next-page-title='@sr["Next page"]'
+              ></cs-pager>
 </div>
