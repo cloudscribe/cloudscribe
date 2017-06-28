@@ -1,4 +1,12 @@
 ﻿@model cloudscribe.Core.IdentityServerIntegration.Models.ConsentViewModel
+@using cloudscribe.Core.IdentityServerIntegration
+@using Microsoft.Extensions.Localization
+@inject IStringLocalizer<CloudscribeIds4Resources> sr
+@{
+    var format = sr["{0} <small>is requesting your permission</small>"];
+	var messageHtml = string.format(format, Model.ClientName);
+
+}
 
 <div class="page-consent">
     <div class="row page-header">
@@ -8,8 +16,7 @@
                 <div class="client-logo"><img src="@Model.ClientLogoUrl"></div>
             }
             <h1>
-                @Model.ClientName
-                <small>is requesting your permission</small>
+                @Html.Raw(messageHtml)
             </h1>
         </div>
     </div>
@@ -21,14 +28,14 @@
             <form asp-action="Index" class="consent-form">
                 <input type="hidden" asp-for="ReturnUrl" />
 
-                <div>Uncheck the permissions you do not wish to grant.</div>
+                <div>@sr["Uncheck the permissions you do not wish to grant."]</div>
                 
                 @if (Model.IdentityScopes.Any())
                 {
                     <div class="panel panel-default consent-buttons">
                         <div class="panel-heading">
                             <span class="glyphicon glyphicon-user"></span>
-                            Personal Information
+                            @sr["Personal Information"]
                         </div>
                         <ul class="list-group">
                             @foreach (var scope in Model.IdentityScopes)
@@ -44,7 +51,7 @@
                     <div class="panel panel-default">
                         <div class="panel-heading">
                             <span class="glyphicon glyphicon-tasks"></span>
-                            Application Access
+                            @sr["Application Access"]
                         </div>
                         <ul class="list-group">
                             @foreach (var scope in Model.ResourceScopes)
@@ -60,14 +67,14 @@
                     <div class="consent-remember">
                         <label>
                             <input class="consent-scopecheck" asp-for="RememberConsent" />
-                            <strong>Remember My Decision</strong>
+                            <strong>@sr["Remember My Decision"]</strong>
                         </label>
                     </div>
                 }
 
                 <div class="consent-buttons">
-                    <button name="button" value="yes" class="btn btn-primary" autofocus>Yes, Allow</button>
-                    <button name="button" value="no" class="btn">No, Do Not Allow</button>
+                    <button name="button" value="yes" class="btn btn-primary" autofocus>@sr["Yes, Allow"]</button>
+                    <button name="button" value="no" class="btn">@sr["No, Do Not Allow"]</button>
                     @if (Model.ClientUrl != null)
                     {
                         <a class="pull-right btn btn-default" target="_blank" href="@Model.ClientUrl">

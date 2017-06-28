@@ -1,7 +1,7 @@
 ﻿@model cloudscribe.Core.IdentityServerIntegration.Models.ClientItemViewModel
 @using cloudscribe.Core.IdentityServerIntegration
 @using Microsoft.Extensions.Localization
-@inject IStringLocalizer<CloudscribeIntegration> sr
+@inject IStringLocalizer<CloudscribeIds4Resources> sr
 <form class="form-inline" asp-controller="Clients" asp-action="AddClientRestriction">
     <div class="form-group">
         <label for="Type">@sr["Restriction"]</label>
@@ -11,6 +11,6 @@
     </div>
     <input asp-for="SiteId" type="hidden" />
     <input asp-for="ClientId" type="hidden" />
-    <button type="submit" class="btn btn-default">Add</button>
+    <button type="submit" class="btn btn-default">@sr["Add"]</button>
     <div asp-validation-summary="All" class="text-danger"></div>
 </form>

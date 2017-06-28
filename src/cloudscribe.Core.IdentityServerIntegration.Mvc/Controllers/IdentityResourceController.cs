@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2016-12-15
-// Last Modified:			2016-12-15
+// Last Modified:			2017-06-28
 // 
 
 using cloudscribe.Core.IdentityServerIntegration.Models;
@@ -11,7 +11,6 @@ using cloudscribe.Core.Web.Components;
 using cloudscribe.Web.Common.Extensions;
 using cloudscribe.Web.Navigation;
 using IdentityServer4.Models;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Localization;
 using System;
@@ -25,7 +24,7 @@ namespace cloudscribe.Core.IdentityServerIntegration.Controllers.Mvc
         public IdentityResourceController(
             SiteManager siteManager,
             IdentityResourceManager idManager,
-            IStringLocalizer<CloudscribeIntegration> localizer)
+            IStringLocalizer<CloudscribeIds4Resources> localizer)
         {
             this.siteManager = siteManager;
             this.idManager = idManager;
@@ -34,7 +33,7 @@ namespace cloudscribe.Core.IdentityServerIntegration.Controllers.Mvc
 
         private SiteManager siteManager;
         private IdentityResourceManager idManager;
-        private IStringLocalizer<CloudscribeIntegration> sr;
+        private IStringLocalizer sr;
 
         [HttpGet]
         public async Task<IActionResult> Index(

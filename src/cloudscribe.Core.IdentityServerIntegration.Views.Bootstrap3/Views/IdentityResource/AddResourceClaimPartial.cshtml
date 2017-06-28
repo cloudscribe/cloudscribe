@@ -1,10 +1,10 @@
 ﻿@model cloudscribe.Core.IdentityServerIntegration.Models.NewIdentityClaimViewModel
 @using cloudscribe.Core.IdentityServerIntegration
 @using Microsoft.Extensions.Localization
-@inject IStringLocalizer<CloudscribeIntegration> sr
+@inject IStringLocalizer<CloudscribeIds4Resources> sr
 <form class="form-inline" asp-controller="IdentityResource" asp-action="AddClaim">
     <div class="form-group">
-        <label asp-for="ClaimName"></label>
+        <label asp-for="ClaimName">@sr["Name"]</label>
         <input class="form-control" asp-for="ClaimName">
         <span asp-validation-for="ClaimName" class="text-danger"></span>
     </div>

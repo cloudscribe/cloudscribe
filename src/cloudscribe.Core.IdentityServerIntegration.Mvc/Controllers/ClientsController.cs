@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2016-10-13
-// Last Modified:			2017-05-27
+// Last Modified:			2017-06-28
 // 
 
 using cloudscribe.Core.IdentityServerIntegration.Models;
@@ -11,11 +11,9 @@ using cloudscribe.Core.Web.Components;
 using cloudscribe.Web.Common.Extensions;
 using cloudscribe.Web.Navigation;
 using IdentityServer4.Models;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Localization;
 using System;
-using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Security.Claims;
@@ -28,7 +26,7 @@ namespace cloudscribe.Core.IdentityServerIntegration.Controllers.Mvc
         public ClientsController(
             SiteManager siteManager,
             ClientsManager clientsManager,
-            IStringLocalizer<CloudscribeIntegration> localizer
+            IStringLocalizer<CloudscribeIds4Resources> localizer
             )
         {
             this.siteManager = siteManager;
@@ -39,7 +37,7 @@ namespace cloudscribe.Core.IdentityServerIntegration.Controllers.Mvc
 
         private SiteManager siteManager;
         private ClientsManager clientsManager;
-        private IStringLocalizer<CloudscribeIntegration> sr;
+        private IStringLocalizer sr;
 
         [HttpGet]
         public async Task<IActionResult> Index(
@@ -404,7 +402,7 @@ namespace cloudscribe.Core.IdentityServerIntegration.Controllers.Mvc
             var client = await clientsManager.FetchClient(selectedSite.Id.ToString(), clientId);
             if (client == null)
             {
-                this.AlertDanger(sr["Invalid request, client not found."], true);
+                this.AlertDanger(sr["Invalid request, Client not found."], true);
                 return RedirectToAction("Index");
             }
 
