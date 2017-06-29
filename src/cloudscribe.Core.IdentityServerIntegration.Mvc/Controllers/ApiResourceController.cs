@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2016-10-13
-// Last Modified:			2016-12-14
+// Last Modified:			2017-06-28
 // 
 
 using cloudscribe.Core.IdentityServerIntegration.Models;
@@ -26,7 +26,7 @@ namespace cloudscribe.Core.IdentityServerIntegration.Controllers.Mvc
         public ApiResourceController(
             SiteManager siteManager,
             ApiResourceManager apiManager,
-            IStringLocalizer<CloudscribeIntegration> localizer)
+            IStringLocalizer<CloudscribeIds4Resources> localizer)
         {
             this.siteManager = siteManager;
             this.apiManager = apiManager;
@@ -35,7 +35,7 @@ namespace cloudscribe.Core.IdentityServerIntegration.Controllers.Mvc
 
         private SiteManager siteManager;
         private ApiResourceManager apiManager;
-        private IStringLocalizer<CloudscribeIntegration> sr;
+        private IStringLocalizer sr;
 
         [HttpGet]
         public async Task<IActionResult> Index(
@@ -200,7 +200,7 @@ namespace cloudscribe.Core.IdentityServerIntegration.Controllers.Mvc
 
             await apiManager.CreateApiResource(selectedSite.Id.ToString(), api);
 
-            var successFormat = sr["The API Resource <b>{0}</b> was successfully Created."];
+            var successFormat = sr["The API Resource <b>{0}</b> was successfully created."];
 
             this.AlertSuccess(string.Format(successFormat, api.Name), true);
 
@@ -424,7 +424,7 @@ namespace cloudscribe.Core.IdentityServerIntegration.Controllers.Mvc
 
             await apiManager.UpdateApiResource(selectedSite.Id.ToString(), apiResource);
 
-            this.AlertSuccess(sr["The Secret was successfully added."], true);
+            this.AlertSuccess(sr["The Scope was successfully added."], true);
 
             return RedirectToAction("EditApiResource", new { siteId = selectedSite.Id.ToString(), apiName = apiModel.ApiName });
         }
@@ -540,7 +540,7 @@ namespace cloudscribe.Core.IdentityServerIntegration.Controllers.Mvc
             }
             if (found == null)
             {
-                this.AlertDanger(sr["Invalid request could not find scope with that name."], true);
+                this.AlertDanger(sr["Invalid request could not find scope claim with that name."], true);
                 return RedirectToAction("EditApiResource", new { siteId = selectedSite.Id.ToString(), apiName = apiName });
             }
 

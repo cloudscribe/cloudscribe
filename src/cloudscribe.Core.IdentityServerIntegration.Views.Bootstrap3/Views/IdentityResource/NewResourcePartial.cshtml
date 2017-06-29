@@ -1,7 +1,7 @@
 ﻿@model cloudscribe.Core.IdentityServerIntegration.Models.IdentityItemViewModel
 @using cloudscribe.Core.IdentityServerIntegration
 @using Microsoft.Extensions.Localization
-@inject IStringLocalizer<CloudscribeIntegration> sr
+@inject IStringLocalizer<CloudscribeIds4Resources> sr
 <form asp-controller="IdentityResource" asp-action="NewResource">
     <input asp-for="SiteId" type="hidden" />
     <div class="form-horizontal">
@@ -47,7 +47,7 @@
             <div class="col-md-10 col-md-offset-2">
                 <div class="checkbox">
                     <label>
-                        <input asp-for="ShowInDiscoveryDocument" /> @sr["ShowInDiscoveryDocument"]
+                        <input asp-for="ShowInDiscoveryDocument" /> @sr["Show In Discovery Document"]
                     </label>
                 </div>
             </div>

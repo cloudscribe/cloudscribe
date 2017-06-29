@@ -5,7 +5,7 @@
 @using Microsoft.AspNetCore.Http.Authentication
 @inject IStringLocalizer<CloudscribeCore> sr
 @{
-    var socFormat = sr["Register in using your {0} account"];
+    var socFormat = sr["Register using your {0} account"];
 }
 @functions {
     public string GetIconForLogin(string displayName)
@@ -99,7 +99,7 @@
                 <input type="hidden" asp-for="AgreementRequired" />
                 <div class="checkbox">
                     <input asp-for="AgreeToTerms" data-val-enforcetrue='@sr["You must agree to the terms."]' />
-                    <label asp-for="AgreeToTerms">@sr["I Agree to these terms of use"]</label>
+                    <label asp-for="AgreeToTerms">@sr["I Agree to these terms of use."]</label>
                     <span asp-validation-for="AgreeToTerms" class="text-danger"></span>
                     @Html.ValidationMessage("agreementerror", new { @class = "text-danger" })
                 </div>

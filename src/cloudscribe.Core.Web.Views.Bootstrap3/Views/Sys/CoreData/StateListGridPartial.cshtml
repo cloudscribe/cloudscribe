@@ -1,5 +1,9 @@
 ﻿@model cloudscribe.Core.Web.ViewModels.CoreData.StateListPageViewModel
 @using cloudscribe.Web.Pagination
+@using cloudscribe.Core.Web
+@using Microsoft.Extensions.Options
+@using Microsoft.Extensions.Localization
+@inject IStringLocalizer<CloudscribeCore> sr
 @addTagHelper "*, cloudscribe.Web.Pagination"
 <table class="table table-striped">
     <tr>
@@ -11,10 +15,10 @@
                bs-modal-link="true">CommonResources.NewState</a>
         </th>
         <th>
-            CommonResources.Name
+            @sr["Name"]
         </th>
         <th>
-            CommonResources.Code
+            @sr["Code"]
         </th>
     </tr>
     @foreach (var item in Model.States) {
@@ -34,7 +38,7 @@
                                     <input id="returnPageNumber" name="returnPageNumber" value="@Model.Paging.CurrentPage" type="hidden" />
 
                                     <input type="submit" value="CommonResources.Delete"
-                                           onclick="javascript: return confirm('@Html.FormatValue(item.Name, "Are you sure you want to delete {0}?")');"
+                                           onclick="javascript: return confirm('@Html.FormatValue(item.Name, sr["Are you sure you want to delete {0}?"])');"
                                            class="btn btn-xs btn-default" />
                                 </form>
                             </td>
@@ -54,5 +58,10 @@
               asp-route-countryId="@Model.Country.Id"
               asp-route-ajaxgrid="true"
               asp-route-pagesize="@Model.Paging.ItemsPerPage"
-              cs-ajax-target="#statelistgridcontainer"></cs-pager>
+              cs-ajax-target="#statelistgridcontainer"
+              cs-first-page-title='@sr["First Page"]'
+              cs-last-page-title='@sr["Last Page"]'
+              cs-previous-page-title='@sr["Previous page"]'
+              cs-next-page-title='@sr["Next page"]'
+              ></cs-pager>
 </div>

@@ -1,0 +1,951 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <!-- 
+    Microsoft ResX Schema 
+    
+    Version 2.0
+    
+    The primary goals of this format is to allow a simple XML format 
+    that is mostly human readable. The generation and parsing of the 
+    various data types are done through the TypeConverter classes 
+    associated with the data types.
+    
+    Example:
+    
+    ... ado.net/XML headers & schema ...
+    <resheader name="resmimetype">text/microsoft-resx</resheader>
+    <resheader name="version">2.0</resheader>
+    <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
+    <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
+    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
+    <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
+    <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
+        <value>[base64 mime encoded serialized .NET Framework object]</value>
+    </data>
+    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
+        <comment>This is a comment</comment>
+    </data>
+                
+    There are any number of "resheader" rows that contain simple 
+    name/value pairs.
+    
+    Each data row contains a name, and value. The row also contains a 
+    type or mimetype. Type corresponds to a .NET class that support 
+    text/value conversion through the TypeConverter architecture. 
+    Classes that don't support this are serialized and stored with the 
+    mimetype set.
+    
+    The mimetype is used for serialized objects, and tells the 
+    ResXResourceReader how to depersist the object. This is currently not 
+    extensible. For a given mimetype the value must be set accordingly:
+    
+    Note - application/x-microsoft.net.object.binary.base64 is the format 
+    that the ResXResourceWriter will generate, however the reader can 
+    read any of the formats listed below.
+    
+    mimetype: application/x-microsoft.net.object.binary.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
+            : and then encoded with base64 encoding.
+    
+    mimetype: application/x-microsoft.net.object.soap.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
+            : and then encoded with base64 encoding.
+
+    mimetype: application/x-microsoft.net.object.bytearray.base64
+    value   : The object must be serialized into a byte array 
+            : using a System.ComponentModel.TypeConverter
+            : and then encoded with base64 encoding.
+    -->
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="AliasId" xml:space="preserve">
+    <value>AliasId</value>
+  </data>
+  <data name="Are you sure you want to delete the site {0} and all related data? You cannot undo this action." xml:space="preserve">
+    <value>Are you sure you want to delete the site {0} and all related data? You cannot undo this action.</value>
+  </data>
+  <data name="Close Site To Public" xml:space="preserve">
+    <value>Close Site To Public</value>
+  </data>
+  <data name="Closed Message" xml:space="preserve">
+    <value>Closed Message</value>
+  </data>
+  <data name="Delete" xml:space="preserve">
+    <value>Delete</value>
+  </data>
+  <data name="Domain Mappings" xml:space="preserve">
+    <value>Domain Mappings</value>
+  </data>
+  <data name="only digits, numbers, - and _ allowed, no spaces allowed" xml:space="preserve">
+    <value>only digits, numbers, - and _ allowed, no spaces allowed</value>
+  </data>
+  <data name="Save" xml:space="preserve">
+    <value>Save</value>
+  </data>
+  <data name="Site Folder Name" xml:space="preserve">
+    <value>Site Folder Name</value>
+  </data>
+  <data name="Site Name" xml:space="preserve">
+    <value>Site Name</value>
+  </data>
+  <data name="Theme" xml:space="preserve">
+    <value>Theme</value>
+  </data>
+  <data name="Time Zone" xml:space="preserve">
+    <value>Time Zone</value>
+  </data>
+  <data name="Add Host Mapping" xml:space="preserve">
+    <value>Add Host Mapping</value>
+  </data>
+  <data name="Address1" xml:space="preserve">
+    <value>Address1</value>
+  </data>
+  <data name="Address2" xml:space="preserve">
+    <value>Address2</value>
+  </data>
+  <data name="Allow New Registrations" xml:space="preserve">
+    <value>Allow New Registrations</value>
+  </data>
+  <data name="Allow Persistent Login" xml:space="preserve">
+    <value>Allow Persistent Login</value>
+  </data>
+  <data name="Are you sure you want to delete the host/domain name mapping {0}" xml:space="preserve">
+    <value>Are you sure you want to delete the host/domain name mapping {0}</value>
+  </data>
+  <data name="Back to site list" xml:space="preserve">
+    <value>Back to site list</value>
+  </data>
+  <data name="City" xml:space="preserve">
+    <value>City</value>
+  </data>
+  <data name="Country" xml:space="preserve">
+    <value>Country</value>
+  </data>
+  <data name="Default Email From Address" xml:space="preserve">
+    <value>Default Email From Address</value>
+  </data>
+  <data name="Default Email From Name" xml:space="preserve">
+    <value>Default Email From Name</value>
+  </data>
+  <data name="Email addresses (csv) to notify of new unapproved users" xml:space="preserve">
+    <value>Email addresses (csv) to notify of new unapproved users</value>
+  </data>
+  <data name="Email Confirmed" xml:space="preserve">
+    <value>Email Confirmed</value>
+  </data>
+  <data name="Facebook App Id" xml:space="preserve">
+    <value>Facebook App Id</value>
+  </data>
+  <data name="Facebook App Secret" xml:space="preserve">
+    <value>Facebook App Secret</value>
+  </data>
+  <data name="Fax" xml:space="preserve">
+    <value>Fax</value>
+  </data>
+  <data name="Folder" xml:space="preserve">
+    <value>Folder</value>
+  </data>
+  <data name="Google Client Id" xml:space="preserve">
+    <value>Google Client Id</value>
+  </data>
+  <data name="Google Client Secret" xml:space="preserve">
+    <value>Google Client Secret</value>
+  </data>
+  <data name="Host Name" xml:space="preserve">
+    <value>Host Name</value>
+  </data>
+  <data name="Id:" xml:space="preserve">
+    <value>Id:</value>
+  </data>
+  <data name="Login Info Bottom" xml:space="preserve">
+    <value>Login Info Bottom</value>
+  </data>
+  <data name="Login Info Top" xml:space="preserve">
+    <value>Login Info Top</value>
+  </data>
+  <data name="Microsoft Client Id" xml:space="preserve">
+    <value>Microsoft Client Id</value>
+  </data>
+  <data name="Microsoft Client Secret" xml:space="preserve">
+    <value>Microsoft Client Secret</value>
+  </data>
+  <data name="Name" xml:space="preserve">
+    <value>Name</value>
+  </data>
+  <data name="New Site" xml:space="preserve">
+    <value>New Site</value>
+  </data>
+  <data name="Only Use Social Authentication" xml:space="preserve">
+    <value>Only Use Social Authentication</value>
+  </data>
+  <data name="Phone" xml:space="preserve">
+    <value>Phone</value>
+  </data>
+  <data name="Please Click here to Log in" xml:space="preserve">
+    <value>Please Click here to Log in</value>
+  </data>
+  <data name="Please Confirm Email Address" xml:space="preserve">
+    <value>Please Confirm Email Address</value>
+  </data>
+  <data name="Port" xml:space="preserve">
+    <value>Port</value>
+  </data>
+  <data name="Postal Code" xml:space="preserve">
+    <value>Postal Code</value>
+  </data>
+  <data name="Preferred Host Name" xml:space="preserve">
+    <value>Preferred Host Name</value>
+  </data>
+  <data name="Public Email" xml:space="preserve">
+    <value>Public Email</value>
+  </data>
+  <data name="Re-Send Verification Email" xml:space="preserve">
+    <value>Re-Send Verification Email</value>
+  </data>
+  <data name="Really Delete Users" xml:space="preserve">
+    <value>Really Delete Users</value>
+  </data>
+  <data name="Recaptcha Private Key" xml:space="preserve">
+    <value>Recaptcha Private Key</value>
+  </data>
+  <data name="Recaptcha Public Key" xml:space="preserve">
+    <value>Recaptcha Public Key</value>
+  </data>
+  <data name="Registration Agreement" xml:space="preserve">
+    <value>Registration Agreement</value>
+  </data>
+  <data name="Registration Preamble" xml:space="preserve">
+    <value>Registration Preamble</value>
+  </data>
+  <data name="Require Approval Before Login" xml:space="preserve">
+    <value>Require Approval Before Login</value>
+  </data>
+  <data name="Require Captcha On Login?" xml:space="preserve">
+    <value>Require Captcha On Login?</value>
+  </data>
+  <data name="Require Captcha On Registration?" xml:space="preserve">
+    <value>Require Captcha On Registration?</value>
+  </data>
+  <data name="Require Confirmed Email" xml:space="preserve">
+    <value>Require Confirmed Email</value>
+  </data>
+  <data name="Require Confirmed Phone" xml:space="preserve">
+    <value>Require Confirmed Phone</value>
+  </data>
+  <data name="Requires Authentication?" xml:space="preserve">
+    <value>Requires Authentication?</value>
+  </data>
+  <data name="Requires SSL?" xml:space="preserve">
+    <value>Requires SSL?</value>
+  </data>
+  <data name="Settings" xml:space="preserve">
+    <value>Settings</value>
+  </data>
+  <data name="Sms Client Id" xml:space="preserve">
+    <value>Sms Client Id</value>
+  </data>
+  <data name="Sms From" xml:space="preserve">
+    <value>Sms From</value>
+  </data>
+  <data name="Sms Secure Token" xml:space="preserve">
+    <value>Sms Secure Token</value>
+  </data>
+  <data name="Smtp Password" xml:space="preserve">
+    <value>Smtp Password</value>
+  </data>
+  <data name="Smtp Server" xml:space="preserve">
+    <value>Smtp Server</value>
+  </data>
+  <data name="Smtp User" xml:space="preserve">
+    <value>Smtp User</value>
+  </data>
+  <data name="State" xml:space="preserve">
+    <value>State</value>
+  </data>
+  <data name="Thank you for confirming your email." xml:space="preserve">
+    <value>Thank you for confirming your email.</value>
+  </data>
+  <data name="Twitter Consumer Key" xml:space="preserve">
+    <value>Twitter Consumer Key</value>
+  </data>
+  <data name="Twitter Consumer Secret" xml:space="preserve">
+    <value>Twitter Consumer Secret</value>
+  </data>
+  <data name="Use Email For Login" xml:space="preserve">
+    <value>Use Email For Login</value>
+  </data>
+  <data name="Add Phone Number" xml:space="preserve">
+    <value>Add Phone Number</value>
+  </data>
+  <data name="Are you sure you want to delete the country {0} and all of its states? You cannot undo this action." xml:space="preserve">
+    <value>Are you sure you want to delete the country {0} and all of its states? You cannot undo this action.</value>
+  </data>
+  <data name="Are you sure you want to delete {0}?" xml:space="preserve">
+    <value>Are you sure you want to delete {0}?</value>
+  </data>
+  <data name="Back To Country List" xml:space="preserve">
+    <value>Back To Country List</value>
+  </data>
+  <data name="Back To State List" xml:space="preserve">
+    <value>Back To State List</value>
+  </data>
+  <data name="Change Password" xml:space="preserve">
+    <value>Change Password</value>
+  </data>
+  <data name="Code" xml:space="preserve">
+    <value>Code</value>
+  </data>
+  <data name="Confirm New Password" xml:space="preserve">
+    <value>Confirm New Password</value>
+  </data>
+  <data name="Confirm Password" xml:space="preserve">
+    <value>Confirm Password</value>
+  </data>
+  <data name="Core Data Administration" xml:space="preserve">
+    <value>Core Data Administration</value>
+  </data>
+  <data name="Country Detail" xml:space="preserve">
+    <value>Country Detail</value>
+  </data>
+  <data name="Country List Administration" xml:space="preserve">
+    <value>Country List Administration</value>
+  </data>
+  <data name="Create a new account." xml:space="preserve">
+    <value>Create a new account.</value>
+  </data>
+  <data name="Edit" xml:space="preserve">
+    <value>Edit</value>
+  </data>
+  <data name="Edit State" xml:space="preserve">
+    <value>Edit State</value>
+  </data>
+  <data name="Email" xml:space="preserve">
+    <value>E-bost</value>
+  </data>
+  <data name="Forgot Password Confirmation" xml:space="preserve">
+    <value>Forgot Password Confirmation</value>
+  </data>
+  <data name="Forgot your password?" xml:space="preserve">
+    <value>Wedi anghofio eich cyfrinair?</value>
+  </data>
+  <data name="Log in" xml:space="preserve">
+    <value>Mewngofnodi</value>
+  </data>
+  <data name="Must match password" xml:space="preserve">
+    <value>Must match password</value>
+  </data>
+  <data name="New Country" xml:space="preserve">
+    <value>New Country</value>
+  </data>
+  <data name="New Currency" xml:space="preserve">
+    <value>New Currency</value>
+  </data>
+  <data name="New Password" xml:space="preserve">
+    <value>New Password</value>
+  </data>
+  <data name="New State" xml:space="preserve">
+    <value>New State</value>
+  </data>
+  <data name="Number" xml:space="preserve">
+    <value>Number</value>
+  </data>
+  <data name="Old Password" xml:space="preserve">
+    <value>Old Password</value>
+  </data>
+  <data name="Password" xml:space="preserve">
+    <value>cyfrinair</value>
+  </data>
+  <data name="Please check your email to reset your password." xml:space="preserve">
+    <value>Please check your email to reset your password.</value>
+  </data>
+  <data name="Register" xml:space="preserve">
+    <value>cofrestr</value>
+  </data>
+  <data name="Register as a new user?" xml:space="preserve">
+    <value>Register as a new user?</value>
+  </data>
+  <data name="Remember Me" xml:space="preserve">
+    <value>Cofiwch fi</value>
+  </data>
+  <data name="Remember this web browser" xml:space="preserve">
+    <value>Remember this web browser</value>
+  </data>
+  <data name="Reset" xml:space="preserve">
+    <value>Reset</value>
+  </data>
+  <data name="Reset password" xml:space="preserve">
+    <value>Reset password</value>
+  </data>
+  <data name="Reset password confirmation" xml:space="preserve">
+    <value>Reset password confirmation</value>
+  </data>
+  <data name="Reset your password." xml:space="preserve">
+    <value>Reset your password.</value>
+  </data>
+  <data name="Select Two-Factor Authentication Provider:" xml:space="preserve">
+    <value>Select Two-Factor Authentication Provider:</value>
+  </data>
+  <data name="Send Verification Code" xml:space="preserve">
+    <value>Send Verification Code</value>
+  </data>
+  <data name="State List Administration" xml:space="preserve">
+    <value>State List Administration</value>
+  </data>
+  <data name="States" xml:space="preserve">
+    <value>States</value>
+  </data>
+  <data name="Submit" xml:space="preserve">
+    <value>Submit</value>
+  </data>
+  <data name="Thanks for registering!" xml:space="preserve">
+    <value>Thanks for registering!</value>
+  </data>
+  <data name="Title" xml:space="preserve">
+    <value>Title</value>
+  </data>
+  <data name="Use a local account to log in." xml:space="preserve">
+    <value>Use a local account to log in.</value>
+  </data>
+  <data name="Use an existing account to log in" xml:space="preserve">
+    <value>Use an existing account to log in</value>
+  </data>
+  <data name="Verify" xml:space="preserve">
+    <value>Verify</value>
+  </data>
+  <data name="You must agree to the terms" xml:space="preserve">
+    <value>You must agree to the terms</value>
+  </data>
+  <data name="Your password has been reset." xml:space="preserve">
+    <value>Your password has been reset.</value>
+  </data>
+  <data name="Account Approved" xml:space="preserve">
+    <value>Account Approved</value>
+  </data>
+  <data name="Account Locked" xml:space="preserve">
+    <value>Account Locked</value>
+  </data>
+  <data name="Add" xml:space="preserve">
+    <value>Add</value>
+  </data>
+  <data name="Add a phone number." xml:space="preserve">
+    <value>Add a phone number.</value>
+  </data>
+  <data name="Add another service to log in." xml:space="preserve">
+    <value>Add another service to log in.</value>
+  </data>
+  <data name="Add User" xml:space="preserve">
+    <value>Add User</value>
+  </data>
+  <data name="All" xml:space="preserve">
+    <value>All</value>
+  </data>
+  <data name="Are you sure you want to add {0}?" xml:space="preserve">
+    <value>Are you sure you want to add {0}?</value>
+  </data>
+  <data name="Are you sure you want to delete the user {0}? You cannot undo this action." xml:space="preserve">
+    <value>Are you sure you want to delete the user {0}? You cannot undo this action.</value>
+  </data>
+  <data name="Are you sure you want to remove {0}?" xml:space="preserve">
+    <value>Are you sure you want to remove {0}?</value>
+  </data>
+  <data name="Change" xml:space="preserve">
+    <value>Change</value>
+  </data>
+  <data name="Change your account settings" xml:space="preserve">
+    <value>Change your account settings</value>
+  </data>
+  <data name="Close" xml:space="preserve">
+    <value>Close</value>
+  </data>
+  <data name="Cloudscribe Version" xml:space="preserve">
+    <value>Cloudscribe Version</value>
+  </data>
+  <data name="Create" xml:space="preserve">
+    <value>Create</value>
+  </data>
+  <data name="Database Platform" xml:space="preserve">
+    <value>Database Platform</value>
+  </data>
+  <data name="Date of Birth" xml:space="preserve">
+    <value>Date of Birth</value>
+  </data>
+  <data name="Disable" xml:space="preserve">
+    <value>Disable</value>
+  </data>
+  <data name="Disabled" xml:space="preserve">
+    <value>Disabled</value>
+  </data>
+  <data name="Display Name" xml:space="preserve">
+    <value>Display Name</value>
+  </data>
+  <data name="Enable" xml:space="preserve">
+    <value>Enable</value>
+  </data>
+  <data name="Enabled" xml:space="preserve">
+    <value>Enabled</value>
+  </data>
+  <data name="Environment Name" xml:space="preserve">
+    <value>Environment Name</value>
+  </data>
+  <data name="External Logins:" xml:space="preserve">
+    <value>External Logins:</value>
+  </data>
+  <data name="First Name" xml:space="preserve">
+    <value>First Name</value>
+  </data>
+  <data name="Last Name" xml:space="preserve">
+    <value>Last Name</value>
+  </data>
+  <data name="Manage" xml:space="preserve">
+    <value>rheoli</value>
+  </data>
+  <data name="Manage your account" xml:space="preserve">
+    <value>Manage your account</value>
+  </data>
+  <data name="Manage your external logins" xml:space="preserve">
+    <value>Manage your external logins</value>
+  </data>
+  <data name="Members" xml:space="preserve">
+    <value>Members</value>
+  </data>
+  <data name="New Role" xml:space="preserve">
+    <value>New Role</value>
+  </data>
+  <data name="None" xml:space="preserve">
+    <value>None</value>
+  </data>
+  <data name="Operating System" xml:space="preserve">
+    <value>Operating System</value>
+  </data>
+  <data name="Password:" xml:space="preserve">
+    <value>Password:</value>
+  </data>
+  <data name="Phone Number:" xml:space="preserve">
+    <value>Phone Number:</value>
+  </data>
+  <data name="Phone Numbers can used as a second factor of verification in two-factor authentication, for better account security add your phone number now." xml:space="preserve">
+    <value>Phone Numbers can used as a second factor of verification in two-factor authentication, for better account security add your phone number now.</value>
+  </data>
+  <data name="Registered Logins" xml:space="preserve">
+    <value>Registered Logins</value>
+  </data>
+  <data name="Remove" xml:space="preserve">
+    <value>Remove</value>
+  </data>
+  <data name="Remove Login" xml:space="preserve">
+    <value>Remove Login</value>
+  </data>
+  <data name="Role Name" xml:space="preserve">
+    <value>Role Name</value>
+  </data>
+  <data name="Runtime" xml:space="preserve">
+    <value>Runtime</value>
+  </data>
+  <data name="Search" xml:space="preserve">
+    <value>Search</value>
+  </data>
+  <data name="Search By IP Address" xml:space="preserve">
+    <value>Search By IP Address</value>
+  </data>
+  <data name="Server Host Name" xml:space="preserve">
+    <value>Server Host Name</value>
+  </data>
+  <data name="Server IP Address" xml:space="preserve">
+    <value>Server IP Address</value>
+  </data>
+  <data name="Server Time UTC" xml:space="preserve">
+    <value>Server Time UTC</value>
+  </data>
+  <data name="Set Password" xml:space="preserve">
+    <value>Set Password</value>
+  </data>
+  <data name="Set your password" xml:space="preserve">
+    <value>Set your password</value>
+  </data>
+  <data name="Two-Factor Authentication:" xml:space="preserve">
+    <value>Two-Factor Authentication:</value>
+  </data>
+  <data name="UserId" xml:space="preserve">
+    <value>UserId</value>
+  </data>
+  <data name="You do not have a local username/password for this site. Add a local account so you can log in without an external login." xml:space="preserve">
+    <value>You do not have a local username/password for this site. Add a local account so you can log in without an external login.</value>
+  </data>
+  <data name="Confirm your account" xml:space="preserve">
+    <value>Confirm your account</value>
+  </data>
+  <data name="Edit Country" xml:space="preserve">
+    <value>Edit Country</value>
+  </data>
+  <data name="Edit Role" xml:space="preserve">
+    <value>Edit Role</value>
+  </data>
+  <data name="Invalid code." xml:space="preserve">
+    <value>Invalid code.</value>
+  </data>
+  <data name="Invalid login attempt." xml:space="preserve">
+    <value>Invalid login attempt.</value>
+  </data>
+  <data name="Manage User" xml:space="preserve">
+    <value>Manage User</value>
+  </data>
+  <data name="New User" xml:space="preserve">
+    <value>New User</value>
+  </data>
+  <data name="Non Role Members" xml:space="preserve">
+    <value>Non Role Members</value>
+  </data>
+  <data name="Please check your email inbox, we just sent you a link that you need to click to confirm your account" xml:space="preserve">
+    <value>Please check your email inbox, we just sent you a link that you need to click to confirm your account</value>
+  </data>
+  <data name="reCAPTCHA Error occured. Please try again" xml:space="preserve">
+    <value>Gwall reCAPTCHA. Rhowch gynnig arall arni</value>
+  </data>
+  <data name="Role Management" xml:space="preserve">
+    <value>Role Management</value>
+  </data>
+  <data name="Role Members" xml:space="preserve">
+    <value>Role Members</value>
+  </data>
+  <data name="Security Code" xml:space="preserve">
+    <value>Security Code</value>
+  </data>
+  <data name="The country {0} was successfully created." xml:space="preserve">
+    <value>The country {0} was successfully created.</value>
+  </data>
+  <data name="The country {0} was successfully deleted." xml:space="preserve">
+    <value>The country {0} was successfully deleted.</value>
+  </data>
+  <data name="The country {0} was successfully updated." xml:space="preserve">
+    <value>The country {0} was successfully updated.</value>
+  </data>
+  <data name="The currency {0} was successfully created." xml:space="preserve">
+    <value>The currency {0} was successfully created.</value>
+  </data>
+  <data name="The currency {0} was successfully deleted." xml:space="preserve">
+    <value>The currency {0} was successfully deleted.</value>
+  </data>
+  <data name="The currency {0} was successfully updated." xml:space="preserve">
+    <value>The currency {0} was successfully updated.</value>
+  </data>
+  <data name="The role &lt;b&gt;{0}&lt;/b&gt; was successfully created." xml:space="preserve">
+    <value>The role &lt;b&gt;{0}&lt;/b&gt; was successfully created.</value>
+  </data>
+  <data name="The role &lt;b&gt;{0}&lt;/b&gt; was successfully deleted." xml:space="preserve">
+    <value>The role &lt;b&gt;{0}&lt;/b&gt; was successfully deleted.</value>
+  </data>
+  <data name="The role &lt;b&gt;{0}&lt;/b&gt; was successfully updated." xml:space="preserve">
+    <value>The role &lt;b&gt;{0}&lt;/b&gt; was successfully updated.</value>
+  </data>
+  <data name="The state {0} was successfully created." xml:space="preserve">
+    <value>The state {0} was successfully created.</value>
+  </data>
+  <data name="The state {0} was successfully deleted." xml:space="preserve">
+    <value>The state {0} was successfully deleted.</value>
+  </data>
+  <data name="The state {0} was successfully updated." xml:space="preserve">
+    <value>The state {0} was successfully updated.</value>
+  </data>
+  <data name="user account for {0} was successfully approved." xml:space="preserve">
+    <value>user account for {0} was successfully approved.</value>
+  </data>
+  <data name="user account for {0} was successfully created." xml:space="preserve">
+    <value>user account for {0} was successfully created.</value>
+  </data>
+  <data name="user account for {0} was successfully deleted." xml:space="preserve">
+    <value>user account for {0} was successfully deleted.</value>
+  </data>
+  <data name="user account for {0} was successfully updated." xml:space="preserve">
+    <value>user account for {0} was successfully updated.</value>
+  </data>
+  <data name="User Management" xml:space="preserve">
+    <value>User Management</value>
+  </data>
+  <data name="Your security code is: {0}" xml:space="preserve">
+    <value>Your security code is: {0}</value>
+  </data>
+  <data name="{0} - Edit Role" xml:space="preserve">
+    <value>{0} - Edit Role</value>
+  </data>
+  <data name="{0} - Locked Out User Accounts" xml:space="preserve">
+    <value>{0} - Locked Out User Accounts</value>
+  </data>
+  <data name="{0} - Manage User" xml:space="preserve">
+    <value>{0} - Manage User</value>
+  </data>
+  <data name="{0} - New Role" xml:space="preserve">
+    <value>{0} - New Role</value>
+  </data>
+  <data name="{0} - New User" xml:space="preserve">
+    <value>{0} - New User</value>
+  </data>
+  <data name="{0} - Non Role Members" xml:space="preserve">
+    <value>{0} - Non Role Members</value>
+  </data>
+  <data name="{0} - Role Management" xml:space="preserve">
+    <value>{0} - Role Management</value>
+  </data>
+  <data name="{0} - Role Members" xml:space="preserve">
+    <value>{0} - Role Members</value>
+  </data>
+  <data name="{0} - User Accounts Pending Approval" xml:space="preserve">
+    <value>{0} - User Accounts Pending Approval</value>
+  </data>
+  <data name="{0} - User Management" xml:space="preserve">
+    <value>{0} - User Management</value>
+  </data>
+  <data name="{0} - {1}" xml:space="preserve">
+    <value>{0} - {1}</value>
+  </data>
+  <data name="{0} States" xml:space="preserve">
+    <value>{0} States</value>
+  </data>
+  <data name="{0} was successfully added to the role {1}." xml:space="preserve">
+    <value>{0} was successfully added to the role {1}.</value>
+  </data>
+  <data name="{0} was successfully removed from the role {1}." xml:space="preserve">
+    <value>{0} was successfully removed from the role {1}.</value>
+  </data>
+  <data name="-Please select-" xml:space="preserve">
+    <value>-Please select-</value>
+  </data>
+  <data name="Basic site settings for {0} were successfully updated." xml:space="preserve">
+    <value>Basic site settings for {0} were successfully updated.</value>
+  </data>
+  <data name="Captcha Settings" xml:space="preserve">
+    <value>Captcha Settings</value>
+  </data>
+  <data name="Captcha Settings for {0} wwas successfully updated." xml:space="preserve">
+    <value>Captcha Settings for {0} wwas successfully updated.</value>
+  </data>
+  <data name="Company Info" xml:space="preserve">
+    <value>Company Info</value>
+  </data>
+  <data name="Company Info for {0} wwas successfully updated." xml:space="preserve">
+    <value>Company Info for {0} wwas successfully updated.</value>
+  </data>
+  <data name="Create New Site" xml:space="preserve">
+    <value>Create New Site</value>
+  </data>
+  <data name="Domain/Host Name Mappings" xml:space="preserve">
+    <value>Domain/Host Name Mappings</value>
+  </data>
+  <data name="Domain/Host Name Mappings for {0}" xml:space="preserve">
+    <value>Domain/Host Name Mappings for {0}</value>
+  </data>
+  <data name="Email Settings" xml:space="preserve">
+    <value>Email Settings</value>
+  </data>
+  <data name="Email Settings for {0} were successfully updated." xml:space="preserve">
+    <value>Email Settings for {0} were successfully updated.</value>
+  </data>
+  <data name="failed to add the requested host name mapping becuase it is already mapped to another site." xml:space="preserve">
+    <value>failed to add the requested host name mapping becuase it is already mapped to another site.</value>
+  </data>
+  <data name="Failed to verify phone number" xml:space="preserve">
+    <value>Failed to verify phone number</value>
+  </data>
+  <data name="Folder name is required." xml:space="preserve">
+    <value>Folder name is required.</value>
+  </data>
+  <data name="Host/domain mapping for {0} was successfully created." xml:space="preserve">
+    <value>Host/domain mapping for {0} was successfully created.</value>
+  </data>
+  <data name="Host/domain mapping for {0} was successfully removed." xml:space="preserve">
+    <value>Host/domain mapping for {0} was successfully removed.</value>
+  </data>
+  <data name="Login Page Content" xml:space="preserve">
+    <value>Login Page Content</value>
+  </data>
+  <data name="Login Page Info for {0} was successfully updated." xml:space="preserve">
+    <value>Login Page Info for {0} was successfully updated.</value>
+  </data>
+  <data name="oops something went wrong please try again" xml:space="preserve">
+    <value>oops something went wrong please try again</value>
+  </data>
+  <data name="oops something went wrong, site was not found." xml:space="preserve">
+    <value>oops something went wrong, site was not found.</value>
+  </data>
+  <data name="oops something went wrong, the external login was not removed, please try again." xml:space="preserve">
+    <value>oops something went wrong, the external login was not removed, please try again.</value>
+  </data>
+  <data name="Registration Page Content" xml:space="preserve">
+    <value>Registration Page Content</value>
+  </data>
+  <data name="Registration Page Content for {0} was successfully updated." xml:space="preserve">
+    <value>Registration Page Content for {0} was successfully updated.</value>
+  </data>
+  <data name="Security Settings" xml:space="preserve">
+    <value>Security Settings</value>
+  </data>
+  <data name="Security Settings for {0} wwas successfully updated." xml:space="preserve">
+    <value>Security Settings for {0} wwas successfully updated.</value>
+  </data>
+  <data name="Site Administration" xml:space="preserve">
+    <value>Site Administration</value>
+  </data>
+  <data name="Site List" xml:space="preserve">
+    <value>Site List</value>
+  </data>
+  <data name="Site Settings" xml:space="preserve">
+    <value>Site Settings</value>
+  </data>
+  <data name="SMS Settings" xml:space="preserve">
+    <value>SMS Settings</value>
+  </data>
+  <data name="SMS Settings for {0} were successfully updated." xml:space="preserve">
+    <value>SMS Settings for {0} were successfully updated.</value>
+  </data>
+  <data name="Social Login Settings" xml:space="preserve">
+    <value>Social Login Settings</value>
+  </data>
+  <data name="Social Login Settings for {0} was successfully updated." xml:space="preserve">
+    <value>Social Login Settings for {0} was successfully updated.</value>
+  </data>
+  <data name="System Information" xml:space="preserve">
+    <value>System Information</value>
+  </data>
+  <data name="The external login was removed." xml:space="preserve">
+    <value>The external login was removed.</value>
+  </data>
+  <data name="The selected folder name is already in use on another site." xml:space="preserve">
+    <value>The selected folder name is already in use on another site.</value>
+  </data>
+  <data name="The selected host/domain name is already in use on another site." xml:space="preserve">
+    <value>The selected host/domain name is already in use on another site.</value>
+  </data>
+  <data name="The site {0} was not deleted because it is a server admin site." xml:space="preserve">
+    <value>The site {0} was not deleted because it is a server admin site.</value>
+  </data>
+  <data name="The site {0} was successfully deleted." xml:space="preserve">
+    <value>The site {0} was successfully deleted.</value>
+  </data>
+  <data name="Your password has been changed." xml:space="preserve">
+    <value>Your password has been changed.</value>
+  </data>
+  <data name="your password has been set" xml:space="preserve">
+    <value>your password has been set</value>
+  </data>
+  <data name="Your phone number was added." xml:space="preserve">
+    <value>Your phone number was added.</value>
+  </data>
+  <data name="Your phone number was removed." xml:space="preserve">
+    <value>Your phone number was removed.</value>
+  </data>
+  <data name="{0} - Captcha Settings" xml:space="preserve">
+    <value>{0} - Captcha Settings</value>
+  </data>
+  <data name="{0} - Company Info" xml:space="preserve">
+    <value>{0} - Company Info</value>
+  </data>
+  <data name="{0} - Email Settings" xml:space="preserve">
+    <value>{0} - Email Settings</value>
+  </data>
+  <data name="{0} - Login Page Content" xml:space="preserve">
+    <value>{0} - Login Page Content</value>
+  </data>
+  <data name="{0} - Registration Page Content" xml:space="preserve">
+    <value>{0} - Registration Page Content</value>
+  </data>
+  <data name="{0} - Security Settings" xml:space="preserve">
+    <value>{0} - Security Settings</value>
+  </data>
+  <data name="{0} - Settings" xml:space="preserve">
+    <value>{0} - Settings</value>
+  </data>
+  <data name="{0} - SMS Settings" xml:space="preserve">
+    <value>{0} - SMS Settings</value>
+  </data>
+  <data name="{0} - Social Login Settings" xml:space="preserve">
+    <value>{0} - Social Login Settings</value>
+  </data>
+  <data name="Time Zone:" xml:space="preserve">
+    <value>Time Zone:</value>
+  </data>
+  <data name="Update Time Zone" xml:space="preserve">
+    <value>Update Time Zone</value>
+  </data>
+  <data name="Culture Code" xml:space="preserve">
+    <value>Culture Code</value>
+  </data>
+  <data name="Username" xml:space="preserve">
+    <value>Username</value>
+  </data>
+  <data name="Username not accepted please try a different value" xml:space="preserve">
+    <value>Username not accepted please try a different value</value>
+  </data>
+  <data name="Register in using your {0} account" xml:space="preserve">
+    <value>Register in using your {0} account</value>
+  </data>
+  <data name="Use an existing account" xml:space="preserve">
+    <value>Use an existing account</value>
+  </data>
+  <data name="New Account Pending Approval" xml:space="preserve">
+    <value>New Account Pending Approval</value>
+  </data>
+  <data name="Hello {0}!" xml:space="preserve">
+    <value>Helo {0}!</value>
+  </data>
+  <data name="Log off" xml:space="preserve">
+    <value>allgofnodi</value>
+  </data>
+</root>

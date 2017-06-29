@@ -1,0 +1,53 @@
+﻿@using cloudscribe.Web.Navigation
+@using System.Text
+@model NavigationViewModel
+@using Microsoft.Extensions.Localization
+@inject  IStringLocalizer<MenuResources> localizer
+@if (Model.HasVisibleChildren(Model.StartingNode))
+{
+    @:<div class="navbar-default sidebar" role="navigation">
+        @:<div class="sidebar-nav navbar-collapse">
+            @:<ul class="nav navbar-nav" id="side-menu" data-sm-skip="true">
+                foreach (var node in Model.StartingNode.Children)
+    {
+        if (!Model.ShouldAllowView(node)) { continue; }
+        if (!Model.HasVisibleChildren(node))
+        {
+            if (node.EqualsNode(Model.CurrentNode))
+            {
+                @:
+                <li class="active"><a class="active" href="@Url.Content(Model.AdjustUrl(node))">@localizer[Model.AdjustText(node)]</a></li>
+            }
+            else
+            {
+                @:
+                <li><a href="@Url.Content(Model.AdjustUrl(node))">@localizer[Model.AdjustText(node)]</a></li>
+            }
+
+        }
+        else
+        {
+            if (node.EqualsNode(Model.CurrentNode))
+            {
+                @:
+                <li class="active">
+                    <a class="active" href="@Url.Content(Model.AdjustUrl(node))">@localizer[Model.AdjustText(node)]</a>
+                    @Model.UpdateTempNode(node)
+                    @Html.Partial("SideNavPartial", Model)
+                </li>
+            }
+            else
+            {
+                @:
+                <li>
+                    <a href="@Url.Content(Model.AdjustUrl(node))">@localizer[Model.AdjustText(node)]</a>
+                    @Model.UpdateTempNode(node)
+                    @Html.Partial("SideNavPartial", Model)
+                </li>
+            }
+        }
+    }
+            @:</ul>
+        @:</div>
+        @:</div>
+ }

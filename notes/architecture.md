@@ -1,4 +1,5 @@
 
+https://www.microsoft.com/net/learn/architecture
 
 https://cloud.google.com/apis/design/
 

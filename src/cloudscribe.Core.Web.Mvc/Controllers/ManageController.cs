@@ -341,7 +341,7 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
                 if (result.Succeeded)
                 {
                     await signInManager.SignInAsync(user, isPersistent: false);
-                    this.AlertSuccess(sr["your password has been set"]);
+                    this.AlertSuccess(sr["Your password has been set."]);
 
                     return RedirectToAction("Index");
                 }

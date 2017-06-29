@@ -1,0 +1,591 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <!-- 
+    Microsoft ResX Schema 
+    
+    Version 2.0
+    
+    The primary goals of this format is to allow a simple XML format 
+    that is mostly human readable. The generation and parsing of the 
+    various data types are done through the TypeConverter classes 
+    associated with the data types.
+    
+    Example:
+    
+    ... ado.net/XML headers & schema ...
+    <resheader name="resmimetype">text/microsoft-resx</resheader>
+    <resheader name="version">2.0</resheader>
+    <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
+    <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
+    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
+    <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
+    <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
+        <value>[base64 mime encoded serialized .NET Framework object]</value>
+    </data>
+    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
+        <comment>This is a comment</comment>
+    </data>
+                
+    There are any number of "resheader" rows that contain simple 
+    name/value pairs.
+    
+    Each data row contains a name, and value. The row also contains a 
+    type or mimetype. Type corresponds to a .NET class that support 
+    text/value conversion through the TypeConverter architecture. 
+    Classes that don't support this are serialized and stored with the 
+    mimetype set.
+    
+    The mimetype is used for serialized objects, and tells the 
+    ResXResourceReader how to depersist the object. This is currently not 
+    extensible. For a given mimetype the value must be set accordingly:
+    
+    Note - application/x-microsoft.net.object.binary.base64 is the format 
+    that the ResXResourceWriter will generate, however the reader can 
+    read any of the formats listed below.
+    
+    mimetype: application/x-microsoft.net.object.binary.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
+            : and then encoded with base64 encoding.
+    
+    mimetype: application/x-microsoft.net.object.soap.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
+            : and then encoded with base64 encoding.
+
+    mimetype: application/x-microsoft.net.object.bytearray.base64
+    value   : The object must be serialized into a byte array 
+            : using a System.ComponentModel.TypeConverter
+            : and then encoded with base64 encoding.
+    -->
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="A client is a piece of software that requests tokens from IdentityServer - either for authenticating a user or for accessing a resource (also often called a relying party or RP)" xml:space="preserve">
+    <value>A client is a piece of software that requests tokens from IdentityServer - either for authenticating a user or for accessing a resource (also often called a relying party or RP)</value>
+  </data>
+  <data name="Absolute Refresh Token Lifetime" xml:space="preserve">
+    <value>Absolute Refresh Token Lifetime</value>
+  </data>
+  <data name="Access Token Lifetime" xml:space="preserve">
+    <value>Access Token Lifetime</value>
+  </data>
+  <data name="Access Token Type" xml:space="preserve">
+    <value>Access Token Type</value>
+  </data>
+  <data name="Add" xml:space="preserve">
+    <value>Add</value>
+  </data>
+  <data name="Add Claim" xml:space="preserve">
+    <value>Add Claim</value>
+  </data>
+  <data name="Add Scope" xml:space="preserve">
+    <value>Add Scope</value>
+  </data>
+  <data name="Add Secret" xml:space="preserve">
+    <value>Add Secret</value>
+  </data>
+  <data name="Allow Access To All Scopes" xml:space="preserve">
+    <value>Allow Access To All Scopes</value>
+  </data>
+  <data name="Allow Access Tokens Via Browser" xml:space="preserve">
+    <value>Allow Access Tokens Via Browser</value>
+  </data>
+  <data name="Allow Remember Consent" xml:space="preserve">
+    <value>Allow Remember Consent</value>
+  </data>
+  <data name="Allowed CORS Origins" xml:space="preserve">
+    <value>Allowed CORS Origins</value>
+  </data>
+  <data name="Allowed Grant Types" xml:space="preserve">
+    <value>Allowed Grant Types</value>
+  </data>
+  <data name="Allowed Scopes" xml:space="preserve">
+    <value>Allowed Scopes</value>
+  </data>
+  <data name="Always Send Client Claims" xml:space="preserve">
+    <value>Always Send Client Claims</value>
+  </data>
+  <data name="API Resource already has a claim with that name." xml:space="preserve">
+    <value>API Resource already has a claim with that name.</value>
+  </data>
+  <data name="API Resource already has a scope with that name." xml:space="preserve">
+    <value>API Resource already has a scope with that name.</value>
+  </data>
+  <data name="API Resource already has a secret with that value." xml:space="preserve">
+    <value>API Resource already has a secret with that value.</value>
+  </data>
+  <data name="API Resource Management" xml:space="preserve">
+    <value>API Resource Management</value>
+  </data>
+  <data name="API Resource name is already in use" xml:space="preserve">
+    <value>API Resource name is already in use</value>
+  </data>
+  <data name="API Resource not found" xml:space="preserve">
+    <value>API Resource not found</value>
+  </data>
+  <data name="API Resource scope already has a claim with that name." xml:space="preserve">
+    <value>API Resource scope already has a claim with that name.</value>
+  </data>
+  <data name="API Resources identify web APIs (also called resource servers). To get access tokens for APIs, you need to register them." xml:space="preserve">
+    <value>API Resources identify web APIs (also called resource servers). To get access tokens for APIs, you need to register them.</value>
+  </data>
+  <data name="Application Access" xml:space="preserve">
+    <value>Application Access</value>
+  </data>
+  <data name="Are you sure you want to delete {0}?" xml:space="preserve">
+    <value>Are you sure you want to delete {0}?</value>
+  </data>
+  <data name="Authorization Code Lifetime" xml:space="preserve">
+    <value>Authorization Code Lifetime</value>
+  </data>
+  <data name="Cancel" xml:space="preserve">
+    <value>Cancel</value>
+  </data>
+  <data name="Claims" xml:space="preserve">
+    <value>Claims</value>
+  </data>
+  <data name="Click &lt;a href='{0}'&gt;here&lt;/a&gt; to return to the&lt;span&gt;{1}&lt;/span&gt; application." xml:space="preserve">
+    <value>Click &lt;a href='{0}'&gt;here&lt;/a&gt; to return to the&lt;span&gt;{1}&lt;/span&gt; application.</value>
+  </data>
+  <data name="Client already exists with that client id" xml:space="preserve">
+    <value>Client already exists with that client id</value>
+  </data>
+  <data name="Client already has a claim with that type and value." xml:space="preserve">
+    <value>Client already has a claim with that type and value.</value>
+  </data>
+  <data name="Client already has a CORS Origin with that value." xml:space="preserve">
+    <value>Client already has a CORS Origin with that value.</value>
+  </data>
+  <data name="Client already has a Grant Type with that value." xml:space="preserve">
+    <value>Client already has a Grant Type with that value.</value>
+  </data>
+  <data name="Client already has a Logout Redirect Url with that value." xml:space="preserve">
+    <value>Client already has a Logout Redirect Url with that value.</value>
+  </data>
+  <data name="Client already has a Redirect Uri with that value." xml:space="preserve">
+    <value>Client already has a Redirect Uri with that value.</value>
+  </data>
+  <data name="Client already has a Restriction with that value." xml:space="preserve">
+    <value>Client already has a Restriction with that value.</value>
+  </data>
+  <data name="Client already has a Scope with that value." xml:space="preserve">
+    <value>Client already has a Scope with that value.</value>
+  </data>
+  <data name="Client already has a secret with that value." xml:space="preserve">
+    <value>Client already has a secret with that value.</value>
+  </data>
+  <data name="Client Management" xml:space="preserve">
+    <value>Client Management</value>
+  </data>
+  <data name="Client not found" xml:space="preserve">
+    <value>Client not found</value>
+  </data>
+  <data name="Client Secrets" xml:space="preserve">
+    <value>Client Secrets</value>
+  </data>
+  <data name="Client Uri" xml:space="preserve">
+    <value>Client Uri</value>
+  </data>
+  <data name="CORS Origin" xml:space="preserve">
+    <value>CORS Origin</value>
+  </data>
+  <data name="Create" xml:space="preserve">
+    <value>Create</value>
+  </data>
+  <data name="Delete" xml:space="preserve">
+    <value>Delete</value>
+  </data>
+  <data name="Description" xml:space="preserve">
+    <value>Description</value>
+  </data>
+  <data name="Display Name" xml:space="preserve">
+    <value>Display Name</value>
+  </data>
+  <data name="Edit" xml:space="preserve">
+    <value>Edit</value>
+  </data>
+  <data name="Emphasize" xml:space="preserve">
+    <value>Emphasize</value>
+  </data>
+  <data name="Enable Local Login" xml:space="preserve">
+    <value>Enable Local Login</value>
+  </data>
+  <data name="Enabled" xml:space="preserve">
+    <value>Enabled</value>
+  </data>
+  <data name="Examples for clients are web applications, native mobile or desktop applications, SPAs, server processes etc." xml:space="preserve">
+    <value>Examples for clients are web applications, native mobile or desktop applications, SPAs, server processes etc.</value>
+  </data>
+  <data name="Expiration" xml:space="preserve">
+    <value>Expiration</value>
+  </data>
+  <data name="First Page" xml:space="preserve">
+    <value>First Page</value>
+  </data>
+  <data name="Grant Type" xml:space="preserve">
+    <value>Grant Type</value>
+  </data>
+  <data name="Id" xml:space="preserve">
+    <value>Id</value>
+  </data>
+  <data name="Identity Resource already has a claim with that name." xml:space="preserve">
+    <value>Identity Resource already has a claim with that name.</value>
+  </data>
+  <data name="Identity Resource Management" xml:space="preserve">
+    <value>Identity Resource Management</value>
+  </data>
+  <data name="Identity Resource name is already in use" xml:space="preserve">
+    <value>Identity Resource name is already in use</value>
+  </data>
+  <data name="Identity resources are data like user ID, name, or email address of a user. An identity resource has a unique name, and you can assign arbitrary claim types to it. These claims will then be included in the identity token for the user. The client will use the scope parameter to request access to an identity resource." xml:space="preserve">
+    <value>Identity resources are data like user ID, name, or email address of a user. An identity resource has a unique name, and you can assign arbitrary claim types to it. These claims will then be included in the identity token for the user. The client will use the scope parameter to request access to an identity resource.</value>
+  </data>
+  <data name="Identity Token Lifetime" xml:space="preserve">
+    <value>Identity Token Lifetime</value>
+  </data>
+  <data name="Include Jwt Id" xml:space="preserve">
+    <value>Include Jwt Id</value>
+  </data>
+  <data name="Invalid request could not find scope claim with that name." xml:space="preserve">
+    <value>Invalid request could not find scope claim with that name.</value>
+  </data>
+  <data name="Invalid request could not find scope with that name." xml:space="preserve">
+    <value>Invalid request could not find scope with that name.</value>
+  </data>
+  <data name="Invalid request, API Resource claim not found." xml:space="preserve">
+    <value>Invalid request, API Resource claim not found.</value>
+  </data>
+  <data name="Invalid request, API Resource not found." xml:space="preserve">
+    <value>Invalid request, API Resource not found.</value>
+  </data>
+  <data name="Invalid request, API Resource scope claim not found." xml:space="preserve">
+    <value>Invalid request, API Resource scope claim not found.</value>
+  </data>
+  <data name="Invalid request, API scope not found." xml:space="preserve">
+    <value>Invalid request, API scope not found.</value>
+  </data>
+  <data name="Invalid request, API secret not found." xml:space="preserve">
+    <value>Invalid request, API secret not found.</value>
+  </data>
+  <data name="Invalid request, Client not found." xml:space="preserve">
+    <value>Invalid request, Client not found.</value>
+  </data>
+  <data name="Invalid request, CORS Origin not found." xml:space="preserve">
+    <value>Invalid request, CORS Origin not found.</value>
+  </data>
+  <data name="Invalid request, Grant Type not found." xml:space="preserve">
+    <value>Invalid request, Grant Type not found.</value>
+  </data>
+  <data name="Invalid request, Identity Resource claim not found." xml:space="preserve">
+    <value>Invalid request, Identity Resource claim not found.</value>
+  </data>
+  <data name="Invalid request, Logout Redirect Url not found." xml:space="preserve">
+    <value>Invalid request, Logout Redirect Url not found.</value>
+  </data>
+  <data name="Invalid request, Redirect Url not found." xml:space="preserve">
+    <value>Invalid request, Redirect Url not found.</value>
+  </data>
+  <data name="Invalid request, Restriction not found." xml:space="preserve">
+    <value>Invalid request, Restriction not found.</value>
+  </data>
+  <data name="Last Page" xml:space="preserve">
+    <value>Last Page</value>
+  </data>
+  <data name="Logo Uri" xml:space="preserve">
+    <value>Logo Uri</value>
+  </data>
+  <data name="Logout" xml:space="preserve">
+    <value>Logout</value>
+  </data>
+  <data name="Logout Session Required" xml:space="preserve">
+    <value>Logout Session Required</value>
+  </data>
+  <data name="Logout Uri" xml:space="preserve">
+    <value>Logout Uri</value>
+  </data>
+  <data name="Name" xml:space="preserve">
+    <value>Name</value>
+  </data>
+  <data name="New Api Resource" xml:space="preserve">
+    <value>New Api Resource</value>
+  </data>
+  <data name="New Client" xml:space="preserve">
+    <value>New Client</value>
+  </data>
+  <data name="Next page" xml:space="preserve">
+    <value>Next page</value>
+  </data>
+  <data name="No, Do Not Allow" xml:space="preserve">
+    <value>No, Do Not Allow</value>
+  </data>
+  <data name="Personal Information" xml:space="preserve">
+    <value>Personal Information</value>
+  </data>
+  <data name="Post Logout Redirect Urls" xml:space="preserve">
+    <value>Post Logout Redirect Urls</value>
+  </data>
+  <data name="Prefix Client Claims" xml:space="preserve">
+    <value>Prefix Client Claims</value>
+  </data>
+  <data name="Previous page" xml:space="preserve">
+    <value>Previous page</value>
+  </data>
+  <data name="Provider Restrictions" xml:space="preserve">
+    <value>Provider Restrictions</value>
+  </data>
+  <data name="Redirect Urls" xml:space="preserve">
+    <value>Redirect Urls</value>
+  </data>
+  <data name="Refresh Token Expiration" xml:space="preserve">
+    <value>Refresh Token Expiration</value>
+  </data>
+  <data name="Refresh Token Usage" xml:space="preserve">
+    <value>Refresh Token Usage</value>
+  </data>
+  <data name="Remember My Decision" xml:space="preserve">
+    <value>Remember My Decision</value>
+  </data>
+  <data name="Require Client Secret" xml:space="preserve">
+    <value>Require Client Secret</value>
+  </data>
+  <data name="Require Consent" xml:space="preserve">
+    <value>Require Consent</value>
+  </data>
+  <data name="Require Pkce" xml:space="preserve">
+    <value>Require Pkce</value>
+  </data>
+  <data name="Required" xml:space="preserve">
+    <value>Required</value>
+  </data>
+  <data name="Restriction" xml:space="preserve">
+    <value>Restriction</value>
+  </data>
+  <data name="Save" xml:space="preserve">
+    <value>Save</value>
+  </data>
+  <data name="Scope" xml:space="preserve">
+    <value>Scope</value>
+  </data>
+  <data name="Scopes" xml:space="preserve">
+    <value>Scopes</value>
+  </data>
+  <data name="Secrets" xml:space="preserve">
+    <value>Secrets</value>
+  </data>
+  <data name="Show In Discovery" xml:space="preserve">
+    <value>Show In Discovery</value>
+  </data>
+  <data name="Show In Discovery Document" xml:space="preserve">
+    <value>Show In Discovery Document</value>
+  </data>
+  <data name="Sliding Refresh Token Lifetime" xml:space="preserve">
+    <value>Sliding Refresh Token Lifetime</value>
+  </data>
+  <data name="The API Resource &lt;b&gt;{0}&lt;/b&gt; was successfully created." xml:space="preserve">
+    <value>The API Resource &lt;b&gt;{0}&lt;/b&gt; was successfully created.</value>
+  </data>
+  <data name="The API Resource &lt;b&gt;{0}&lt;/b&gt; was successfully updated." xml:space="preserve">
+    <value>The API Resource &lt;b&gt;{0}&lt;/b&gt; was successfully updated.</value>
+  </data>
+  <data name="The Claim &lt;b&gt;{0}&lt;/b&gt; was successfully added." xml:space="preserve">
+    <value>The Claim &lt;b&gt;{0}&lt;/b&gt; was successfully added.</value>
+  </data>
+  <data name="The Claim &lt;b&gt;{0}&lt;/b&gt; was successfully removed." xml:space="preserve">
+    <value>The Claim &lt;b&gt;{0}&lt;/b&gt; was successfully removed.</value>
+  </data>
+  <data name="The Client &lt;b&gt;{0}&lt;/b&gt; was successfully Created." xml:space="preserve">
+    <value>The Client &lt;b&gt;{0}&lt;/b&gt; was successfully Created.</value>
+  </data>
+  <data name="The Client &lt;b&gt;{0}&lt;/b&gt; was successfully updated." xml:space="preserve">
+    <value>The Client &lt;b&gt;{0}&lt;/b&gt; was successfully updated.</value>
+  </data>
+  <data name="The CORS Origin field is required." xml:space="preserve">
+    <value>The CORS Origin field is required.</value>
+  </data>
+  <data name="The CORS Origin was successfully added." xml:space="preserve">
+    <value>The CORS Origin was successfully added.</value>
+  </data>
+  <data name="The CORS Origin was successfully removed." xml:space="preserve">
+    <value>The CORS Origin was successfully removed.</value>
+  </data>
+  <data name="The Grant Type field is required." xml:space="preserve">
+    <value>The Grant Type field is required.</value>
+  </data>
+  <data name="The Grant Type was successfully added." xml:space="preserve">
+    <value>The Grant Type was successfully added.</value>
+  </data>
+  <data name="The Grant Type was successfully removed." xml:space="preserve">
+    <value>The Grant Type was successfully removed.</value>
+  </data>
+  <data name="The Identity Resource &lt;b&gt;{0}&lt;/b&gt; was successfully Created." xml:space="preserve">
+    <value>The Identity Resource &lt;b&gt;{0}&lt;/b&gt; was successfully Created.</value>
+  </data>
+  <data name="The Identity Resource &lt;b&gt;{0}&lt;/b&gt; was successfully updated." xml:space="preserve">
+    <value>The Identity Resource &lt;b&gt;{0}&lt;/b&gt; was successfully updated.</value>
+  </data>
+  <data name="The Logout Redirect Url was successfully added." xml:space="preserve">
+    <value>The Logout Redirect Url was successfully added.</value>
+  </data>
+  <data name="The Logout Redirect Url was successfully removed." xml:space="preserve">
+    <value>The Logout Redirect Url was successfully removed.</value>
+  </data>
+  <data name="The Redirect Uri was successfully added." xml:space="preserve">
+    <value>The Redirect Uri was successfully added.</value>
+  </data>
+  <data name="The Redirect Url was successfully removed." xml:space="preserve">
+    <value>The Redirect Url was successfully removed.</value>
+  </data>
+  <data name="The Restriction was successfully added." xml:space="preserve">
+    <value>The Restriction was successfully added.</value>
+  </data>
+  <data name="The Restriction was successfully removed." xml:space="preserve">
+    <value>The Restriction was successfully removed.</value>
+  </data>
+  <data name="The Scope Claim &lt;b&gt;{0}&lt;/b&gt; was successfully added." xml:space="preserve">
+    <value>The Scope Claim &lt;b&gt;{0}&lt;/b&gt; was successfully added.</value>
+  </data>
+  <data name="The Scope Claim &lt;b&gt;{0}&lt;/b&gt; was successfully removed." xml:space="preserve">
+    <value>The Scope Claim &lt;b&gt;{0}&lt;/b&gt; was successfully removed.</value>
+  </data>
+  <data name="The Scope field is required." xml:space="preserve">
+    <value>The Scope field is required.</value>
+  </data>
+  <data name="The Scope was successfully added." xml:space="preserve">
+    <value>The Scope was successfully added.</value>
+  </data>
+  <data name="The Scope was successfully removed." xml:space="preserve">
+    <value>The Scope was successfully removed.</value>
+  </data>
+  <data name="The Secret was successfully added." xml:space="preserve">
+    <value>The Secret was successfully added.</value>
+  </data>
+  <data name="The Secret was successfully removed." xml:space="preserve">
+    <value>The Secret was successfully removed.</value>
+  </data>
+  <data name="The Type field is required." xml:space="preserve">
+    <value>The Type field is required.</value>
+  </data>
+  <data name="The Url field is required." xml:space="preserve">
+    <value>The Url field is required.</value>
+  </data>
+  <data name="The Value field is required." xml:space="preserve">
+    <value>The Value field is required.</value>
+  </data>
+  <data name="Type" xml:space="preserve">
+    <value>Type</value>
+  </data>
+  <data name="Uncheck the permissions you do not wish to grant." xml:space="preserve">
+    <value>Uncheck the permissions you do not wish to grant.</value>
+  </data>
+  <data name="Update Access Token Claims On Refresh" xml:space="preserve">
+    <value>Update Access Token Claims On Refresh</value>
+  </data>
+  <data name="Url" xml:space="preserve">
+    <value>Url</value>
+  </data>
+  <data name="Value" xml:space="preserve">
+    <value>Value</value>
+  </data>
+  <data name="Would you like to logout of IdentityServer?" xml:space="preserve">
+    <value>Would you like to logout of IdentityServer?</value>
+  </data>
+  <data name="Yes" xml:space="preserve">
+    <value>Yes</value>
+  </data>
+  <data name="Yes, Allow" xml:space="preserve">
+    <value>Yes, Allow</value>
+  </data>
+  <data name="You are now logged out" xml:space="preserve">
+    <value>You are now logged out</value>
+  </data>
+  <data name="You must pick at least one permission." xml:space="preserve">
+    <value>You must pick at least one permission.</value>
+  </data>
+  <data name="{0} - API Resource Management" xml:space="preserve">
+    <value>{0} - API Resource Management</value>
+  </data>
+  <data name="{0} - Client Management" xml:space="preserve">
+    <value>{0} - Client Management</value>
+  </data>
+  <data name="{0} - Edit API Resource" xml:space="preserve">
+    <value>{0} - Edit API Resource</value>
+  </data>
+  <data name="{0} - Edit Client" xml:space="preserve">
+    <value>{0} - Edit Client</value>
+  </data>
+  <data name="{0} - Edit Identity Resource" xml:space="preserve">
+    <value>{0} - Edit Identity Resource</value>
+  </data>
+  <data name="{0} - Identity Resource Management" xml:space="preserve">
+    <value>{0} - Identity Resource Management</value>
+  </data>
+  <data name="{0} - New API Resource" xml:space="preserve">
+    <value>{0} - New API Resource</value>
+  </data>
+  <data name="{0} - New Client" xml:space="preserve">
+    <value>{0} - New Client</value>
+  </data>
+  <data name="{0} - New Identity Resource" xml:space="preserve">
+    <value>{0} - New Identity Resource</value>
+  </data>
+  <data name="{0} &lt;small&gt;is requesting your permission&lt;/small&gt;" xml:space="preserve">
+    <value>{0} &lt;small&gt;is requesting your permission&lt;/small&gt;</value>
+  </data>
+</root>

@@ -61,7 +61,12 @@
               asp-action="StateListPage" asp-controller="CoreData"
               asp-route-countryId="@Model.Country.Id"
               asp-route-crp="@Model.CountryListReturnPageNumber"
-              asp-route-pagesize="@Model.Paging.ItemsPerPage"></cs-pager>
+              asp-route-pagesize="@Model.Paging.ItemsPerPage"
+              cs-first-page-title='@sr["First Page"]'
+              cs-last-page-title='@sr["Last Page"]'
+              cs-previous-page-title='@sr["Previous page"]'
+              cs-next-page-title='@sr["Next page"]'
+              ></cs-pager>
 </div>
 <div>
     <a class="btn btn-default" asp-action="CountryListPage" asp-controller="CoreData"

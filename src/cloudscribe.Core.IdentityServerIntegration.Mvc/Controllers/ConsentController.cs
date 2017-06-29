@@ -11,6 +11,7 @@ using IdentityServer4.Stores;
 using cloudscribe.Core.IdentityServerIntegration.Models;
 using cloudscribe.Core.Models;
 using cloudscribe.Core.Identity;
+using Microsoft.Extensions.Localization;
 
 namespace cloudscribe.Core.IdentityServerIntegration.Mvc
 {
@@ -25,6 +26,7 @@ namespace cloudscribe.Core.IdentityServerIntegration.Mvc
         private readonly IIdentityServerInteractionService _interaction;
         private readonly IIdentityServerIntegration identityServerIntegration;
         private readonly SiteContext _site;
+        private IStringLocalizer sr;
 
         public ConsentController(
             ILogger<ConsentController> logger,
@@ -32,7 +34,8 @@ namespace cloudscribe.Core.IdentityServerIntegration.Mvc
             IClientStore clientStore,
             IResourceStore resourceStore,
             IIdentityServerIntegration identityServerIntegration,
-            SiteContext currentSite
+            SiteContext currentSite,
+            IStringLocalizer<CloudscribeIds4Resources> localizer
             )
         {
             _logger = logger;
@@ -41,6 +44,7 @@ namespace cloudscribe.Core.IdentityServerIntegration.Mvc
             _resourceStore = resourceStore;
             _site = currentSite;
             this.identityServerIntegration = identityServerIntegration;
+            sr = localizer;
         }
 
         
@@ -93,7 +97,7 @@ namespace cloudscribe.Core.IdentityServerIntegration.Mvc
                 }
                 else
                 {
-                    ModelState.AddModelError("", "You must pick at least one permission.");
+                    ModelState.AddModelError("", sr["You must pick at least one permission."]);
                 }
             }
             else

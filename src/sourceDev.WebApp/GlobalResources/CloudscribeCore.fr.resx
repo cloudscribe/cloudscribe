@@ -127,7 +127,7 @@
     <value>Effacer</value>
   </data>
   <data name="Domain Mappings" xml:space="preserve">
-    <value>Domaine Mappages</value>
+    <value>Mappages de domaine</value>
   </data>
   <data name="Save" xml:space="preserve">
     <value>Sauvegarder</value>
@@ -148,6 +148,15 @@
     <value>Exiger Captcha sur l'enregistrement ?</value>
   </data>
   <data name="Log in" xml:space="preserve">
-    <value>Logez Vous Inward</value>
+    <value>S'identifier</value>
+  </data>
+  <data name="Hello {0}!" xml:space="preserve">
+    <value>Bonjour {0}!</value>
+  </data>
+  <data name="Log off" xml:space="preserve">
+    <value>Se déconnecter</value>
+  </data>
+  <data name="Site Settings" xml:space="preserve">
+    <value>Paramètres du site</value>
   </data>
 </root>

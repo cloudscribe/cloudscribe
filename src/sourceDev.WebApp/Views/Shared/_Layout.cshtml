@@ -37,7 +37,7 @@
                 <a href="~/@(Tenant?.SiteFolderName ?? "")" class="navbar-brand">@(Tenant?.SiteName ?? "Sample")</a>
             </div>
             <div class="navbar-collapse collapse">
-                @await Component.InvokeAsync("Navigation", new { viewName = "BootstrapTopNav", filterName = NamedNavigationFilters.TopNav, startingNodeKey = "" })
+                @await Component.InvokeAsync("Navigation", new { viewName = "BootstrapTopNavWithDropdowns", filterName = NamedNavigationFilters.TopNav, startingNodeKey = "" })
                 @await Html.PartialAsync("_LoginPartial")
             </div>
         </div>
@@ -47,6 +47,7 @@
         @await Html.PartialAsync("AlertsPartial")
         @RenderBody()
         <hr />
+        @await Html.PartialAsync("_SelectLanguagePartial")
         <footer class="text-center" role="contentinfo" itemscope itemtype="http://schema.org/Person" itemprop="author">
             <small>Copyright &copy; @DateTime.Now.Year - @(Tenant?.SiteName ?? "Sample")</small>
         </footer>

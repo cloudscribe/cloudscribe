@@ -183,7 +183,7 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
                 return ExternalLogin(idProvider, returnUrl);
             }
 
-            ViewData["Title"] = sr["Log in"];
+            ViewData["Title"] = sr["Log In"];
             ViewData["ReturnUrl"] = returnUrl;
 
             var model = new LoginViewModel();
@@ -211,7 +211,7 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Login(LoginViewModel model, string returnUrl = null)
         {
-            ViewData["Title"] = sr["Log in"];
+            ViewData["Title"] = sr["Log In"];
             ViewData["ReturnUrl"] = returnUrl;
             var recaptchaKeys = await recaptchaKeysProvider.GetKeys().ConfigureAwait(false);
             if ((Site.CaptchaOnLogin) && (!string.IsNullOrEmpty(recaptchaKeys.PublicKey)))
@@ -346,7 +346,7 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
 
                     if (!captchaResponse.Success)
                     {
-                        ModelState.AddModelError("recaptchaerror", "reCAPTCHA Error occured. Please try again");
+                        ModelState.AddModelError("recaptchaerror", sr["reCAPTCHA Error occured. Please try again"]);
                         isValid = false;
                     }
                 }
@@ -415,7 +415,8 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
 
             if (remoteError != null)
             {
-                ModelState.AddModelError(string.Empty, $"Error from external provider: {remoteError}");
+                var errormessage = string.Format(sr["Error from external provider: {0}"], remoteError);
+                ModelState.AddModelError("providererror", errormessage);
                 return RedirectToAction("Login");
             }
 

@@ -1,7 +1,7 @@
 ﻿@model cloudscribe.Core.IdentityServerIntegration.Models.ClientItemViewModel
 @using cloudscribe.Core.IdentityServerIntegration
 @using Microsoft.Extensions.Localization
-@inject IStringLocalizer<CloudscribeIntegration> sr
+@inject IStringLocalizer<CloudscribeIds4Resources> sr
     <form asp-controller="Clients" asp-action="EditClient">
         <input asp-for="SiteId" type="hidden" />
         <input name="ClientId" value="@Model.ClientId" type="hidden" />
@@ -98,7 +98,7 @@
                 </div>
             </div>
             <div class="form-group">
-                <label for="SlidingRefreshTokenLifetime" class="col-md-2 control-label">@sr["SlidingRefreshTokenLifetime"]</label>
+                <label for="SlidingRefreshTokenLifetime" class="col-md-2 control-label">@sr["Sliding Refresh Token Lifetime"]</label>
                 <div class="col-md-10">
                     <input class="form-control" asp-for="SlidingRefreshTokenLifetime" />
                     <span asp-validation-for="SlidingRefreshTokenLifetime" class="text-danger"></span> 

@@ -240,7 +240,7 @@
   <data name="Phone" xml:space="preserve">
     <value>Phone</value>
   </data>
-  <data name="Please Click here to Log in" xml:space="preserve">
+  <data name="Please Click here to log in" xml:space="preserve">
     <value>Please Click here to Log in</value>
   </data>
   <data name="Please Confirm Email Address" xml:space="preserve">
@@ -882,7 +882,7 @@
   <data name="Your password has been changed." xml:space="preserve">
     <value>Your password has been changed.</value>
   </data>
-  <data name="your password has been set" xml:space="preserve">
+  <data name="Your password has been set." xml:space="preserve">
     <value>your password has been set</value>
   </data>
   <data name="Your phone number was added." xml:space="preserve">
@@ -933,7 +933,7 @@
   <data name="Username not accepted please try a different value" xml:space="preserve">
     <value>Username not accepted please try a different value</value>
   </data>
-  <data name="Register in using your {0} account" xml:space="preserve">
+  <data name="Register using your {0} account" xml:space="preserve">
     <value>Register in using your {0} account</value>
   </data>
   <data name="Use an existing account" xml:space="preserve">
@@ -947,5 +947,183 @@
   </data>
   <data name="Log off" xml:space="preserve">
     <value>Log off</value>
+  </data>
+  <data name="Access Denied" xml:space="preserve">
+    <value>Access Denied</value>
+  </data>
+  <data name="Back To List" xml:space="preserve">
+    <value>Back To List</value>
+  </data>
+  <data name="Before you can Log in, we need to confirm that the email address you provided is valid. We sent an email to the address you&#xD;&#xA;    provided with a link that you need to click in order to confirm your email address is valid." xml:space="preserve">
+    <value>Before you can Log in, we need to confirm that the email address you provided is valid. We sent an email to the address you
+    provided with a link that you need to click in order to confirm your email address is valid.</value>
+  </data>
+  <data name="Enter your email." xml:space="preserve">
+    <value>Enter your email.</value>
+  </data>
+  <data name="Error from external provider: {0}" xml:space="preserve">
+    <value>Error from external provider: {0}</value>
+  </data>
+  <data name="I Agree to these terms of use." xml:space="preserve">
+    <value>I Agree to these terms of use.</value>
+  </data>
+  <data name="ISOCode2" xml:space="preserve">
+    <value>ISOCode2</value>
+  </data>
+  <data name="ISOCode3" xml:space="preserve">
+    <value>ISOCode3</value>
+  </data>
+  <data name="Locked out" xml:space="preserve">
+    <value>Locked out</value>
+  </data>
+  <data name="Log in using your {0} account" xml:space="preserve">
+    <value>Log in using your {0} account</value>
+  </data>
+  <data name="Login Failure" xml:space="preserve">
+    <value>Login Failure</value>
+  </data>
+  <data name="Oops something went wrong" xml:space="preserve">
+    <value>Oops something went wrong</value>
+  </data>
+  <data name="Oops!" xml:space="preserve">
+    <value>Oops!</value>
+  </data>
+  <data name="Please enter a valid email for this site below and click the Register button to finish logging in." xml:space="preserve">
+    <value>Please enter a valid email for this site below and click the Register button to finish logging in.</value>
+  </data>
+  <data name="Registration Agreement Required" xml:space="preserve">
+    <value>Registration Agreement Required</value>
+  </data>
+  <data name="Site Closed To Public Temporarily" xml:space="preserve">
+    <value>Site Closed To Public Temporarily</value>
+  </data>
+  <data name="Sorry for the delay, but this site requires approval of new accounts. An email has been site to the site managers notifying them of your registration request. You should recieve an email notifying you once your account has been approved." xml:space="preserve">
+    <value>Sorry for the delay, but this site requires approval of new accounts. An email has been site to the site managers notifying them of your registration request. You should recieve an email notifying you once your account has been approved.</value>
+  </data>
+  <data name="The role name is already in use." xml:space="preserve">
+    <value>The role name is already in use.</value>
+  </data>
+  <data name="This account has been locked out, please try again later." xml:space="preserve">
+    <value>This account has been locked out, please try again later.</value>
+  </data>
+  <data name="Unsuccessful login with service." xml:space="preserve">
+    <value>Unsuccessful login with service.</value>
+  </data>
+  <data name="Your time zone has been updated." xml:space="preserve">
+    <value>Your time zone has been updated.</value>
+  </data>
+  <data name="Bad Request" xml:space="preserve">
+    <value>Bad Request</value>
+  </data>
+  <data name="Forbidden" xml:space="preserve">
+    <value>Forbidden</value>
+  </data>
+  <data name="Login Name" xml:space="preserve">
+    <value>Login Name</value>
+  </data>
+  <data name="Page Not Found" xml:space="preserve">
+    <value>Page Not Found</value>
+  </data>
+  <data name="Remove this {0} login from your account" xml:space="preserve">
+    <value>Remove this {0} login from your account</value>
+  </data>
+  <data name="Select Roles" xml:space="preserve">
+    <value>Select Roles</value>
+  </data>
+  <data name="Site Home" xml:space="preserve">
+    <value>Site Home</value>
+  </data>
+  <data name="Sorry, but the page requires authentication." xml:space="preserve">
+    <value>Sorry, but the page requires authentication.</value>
+  </data>
+  <data name="Sorry, but the page you were looking for can't be found." xml:space="preserve">
+    <value>Sorry, but the page you were looking for can't be found.</value>
+  </data>
+  <data name="Sorry, but you don't have permission to access this page." xml:space="preserve">
+    <value>Sorry, but you don't have permission to access this page.</value>
+  </data>
+  <data name="Unauthorized" xml:space="preserve">
+    <value>Unauthorized</value>
+  </data>
+  <data name="Unexpected Error" xml:space="preserve">
+    <value>Unexpected Error</value>
+  </data>
+  <data name="Update" xml:space="preserve">
+    <value>Update</value>
+  </data>
+  <data name="Verify Phone Number" xml:space="preserve">
+    <value>Verify Phone Number</value>
+  </data>
+  <data name="Well, this is embarrassing. An error occurred while processing your request. Rest assured, this problem has been logged and hamsters have been released to fix the problem." xml:space="preserve">
+    <value>Well, this is embarrassing. An error occurred while processing your request. Rest assured, this problem has been logged and hamsters have been released to fix the problem.</value>
+  </data>
+  <data name="Your browser sent a request that this server could not understand." xml:space="preserve">
+    <value>Your browser sent a request that this server could not understand.</value>
+  </data>
+  <data name="Add Claim" xml:space="preserve">
+    <value>Add Claim</value>
+  </data>
+  <data name="Approve this account" xml:space="preserve">
+    <value>Approve this account</value>
+  </data>
+  <data name="Are you sure you want to remove the claim {0}?" xml:space="preserve">
+    <value>Are you sure you want to remove the claim {0}?</value>
+  </data>
+  <data name="Claim Type" xml:space="preserve">
+    <value>Claim Type</value>
+  </data>
+  <data name="Claim Value" xml:space="preserve">
+    <value>Claim Value</value>
+  </data>
+  <data name="Created" xml:space="preserve">
+    <value>Created</value>
+  </data>
+  <data name="Domain/Host name mappings are used internally to resolve a specific site from the database when a web request comes in for that host/domain name. If no maping exists then the default site will be used (i.e. the first site). This is only needed if you are hosting multiple sites based on host names within a single web site installation." xml:space="preserve">
+    <value>Domain/Host name mappings are used internally to resolve a specific site from the database when a web request comes in for that host/domain name. If no maping exists then the default site will be used (i.e. the first site). This is only needed if you are hosting multiple sites based on host names within a single web site installation.</value>
+  </data>
+  <data name="Email/Login" xml:space="preserve">
+    <value>Email/Login</value>
+  </data>
+  <data name="First Page" xml:space="preserve">
+    <value>First Page</value>
+  </data>
+  <data name="Google Analytics ProfileId" xml:space="preserve">
+    <value>Google Analytics ProfileId</value>
+  </data>
+  <data name="Last Page" xml:space="preserve">
+    <value>Last Page</value>
+  </data>
+  <data name="Next page" xml:space="preserve">
+    <value>Next page</value>
+  </data>
+  <data name="Note that the request has to be coming to the web site installation for this to work. That is, you still need a DNS record for the domain or host name to resolve to the IP (Internet Protocol) address of the web site installation, and if the IP address is shared with other web site installations you also still need host name mappings in the web server bindings so that the web server maps the request to the correct web site installation." xml:space="preserve">
+    <value>Note that the request has to be coming to the web site installation for this to work. That is, you still need a DNS record for the domain or host name to resolve to the IP (Internet Protocol) address of the web site installation, and if the IP address is shared with other web site installations you also still need host name mappings in the web server bindings so that the web server maps the request to the correct web site installation.</value>
+  </data>
+  <data name="OpenIdConnect App Id" xml:space="preserve">
+    <value>OpenIdConnect App Id</value>
+  </data>
+  <data name="OpenIdConnect App Secret" xml:space="preserve">
+    <value>OpenIdConnect App Secret</value>
+  </data>
+  <data name="OpenIdConnect Authority Url" xml:space="preserve">
+    <value>OpenIdConnect Authority Url</value>
+  </data>
+  <data name="OpenIdConnect Display Name" xml:space="preserve">
+    <value>OpenIdConnect Display Name</value>
+  </data>
+  <data name="Previous page" xml:space="preserve">
+    <value>Previous page</value>
+  </data>
+  <data name="Registration Agreement/Terms of Use" xml:space="preserve">
+    <value>Registration Agreement/Terms of Use</value>
+  </data>
+  <data name="Require Users To Accept Changed Agreement?" xml:space="preserve">
+    <value>Require Users To Accept Changed Agreement?</value>
+  </data>
+  <data name="Send Email Notification" xml:space="preserve">
+    <value>Send Email Notification</value>
+  </data>
+  <data name="Use Invisible reCaptcha?" xml:space="preserve">
+    <value>Use Invisible reCaptcha?</value>
   </data>
 </root>

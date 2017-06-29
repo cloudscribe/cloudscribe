@@ -1,19 +1,19 @@
 ﻿@model cloudscribe.Core.IdentityServerIntegration.Models.NewApiScopeViewModel
 @using cloudscribe.Core.IdentityServerIntegration
 @using Microsoft.Extensions.Localization
-@inject IStringLocalizer<CloudscribeIntegration> sr
+@inject IStringLocalizer<CloudscribeIds4Resources> sr
 <form class="form-inline" asp-controller="ApiResource" asp-action="AddApiScope">
     <div class="form-group">
-        <label asp-for="Name"></label>
+        <label asp-for="Name">@sr["Name"]</label>
         <input class="form-control" asp-for="Name">
         <span asp-validation-for="Name" class="text-danger"></span>
     </div>
     <div class="form-group">
-        <label asp-for="DisplayName"></label>
+        <label asp-for="DisplayName">@sr["Display Name"]</label>
         <input class="form-control" asp-for="DisplayName" />
     </div>
     <div class="form-group">
-        <label asp-for="Description"></label>
+        <label asp-for="Description">@sr["Description"]</label>
         <input class="form-control" asp-for="Description" />
     </div>
     <div class="form-group">

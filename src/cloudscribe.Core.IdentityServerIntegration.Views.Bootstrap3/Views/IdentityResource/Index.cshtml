@@ -3,7 +3,7 @@
 @using cloudscribe.Web.Pagination
 @using Microsoft.Extensions.Localization
 @addTagHelper "*, cloudscribe.Web.Pagination"
-@inject IStringLocalizer<CloudscribeIntegration> sr
+@inject IStringLocalizer<CloudscribeIds4Resources> sr
 <h2>@ViewData["Title"]</h2>
 <p>@sr["Identity resources are data like user ID, name, or email address of a user. An identity resource has a unique name, and you can assign arbitrary claim types to it. These claims will then be included in the identity token for the user. The client will use the scope parameter to request access to an identity resource."]</p>
 <p>To learn more about Identity Resources see the <a href="https://identityserver4.readthedocs.io/en/release/configuration/resources.html">IdentityServer Documentation</a></p>
@@ -64,6 +64,11 @@
         <cs-pager cs-paging-info="@Model.Paging"
                   asp-action="Index" asp-controller="IdentityResource"
                   asp-route-siteId="@Model.SiteId" 
-                  asp-route-pagesize="@Model.Paging.ItemsPerPage"></cs-pager>
+                  asp-route-pagesize="@Model.Paging.ItemsPerPage"
+                  cs-first-page-title='@sr["First Page"]'
+                  cs-last-page-title='@sr["Last Page"]'
+                  cs-previous-page-title='@sr["Previous page"]'
+                  cs-next-page-title='@sr["Next page"]'
+                  ></cs-pager>
     </div>
 </div>

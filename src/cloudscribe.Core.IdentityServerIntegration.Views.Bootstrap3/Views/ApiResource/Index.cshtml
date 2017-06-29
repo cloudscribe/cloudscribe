@@ -3,7 +3,7 @@
 @using cloudscribe.Web.Pagination
 @using Microsoft.Extensions.Localization
 @addTagHelper "*, cloudscribe.Web.Pagination"
-@inject IStringLocalizer<CloudscribeIntegration> sr
+@inject IStringLocalizer<CloudscribeIds4Resources> sr
 <h2>@ViewData["Title"]</h2>
 <p>@sr["API Resources identify web APIs (also called resource servers). To get access tokens for APIs, you need to register them."]</p>
 <p>To learn more about scopes see the <a href="https://identityserver4.readthedocs.io/en/dev/configuration/scopes.html">IdentityServer Documentation</a></p>
@@ -64,6 +64,11 @@
         <cs-pager cs-paging-info="@Model.Paging"
                   asp-action="Index" asp-controller="ApiResource"
                   asp-route-siteId="@Model.SiteId" 
-                  asp-route-pagesize="@Model.Paging.ItemsPerPage"></cs-pager>
+                  asp-route-pagesize="@Model.Paging.ItemsPerPage"
+                  cs-first-page-title='@sr["First Page"]'
+                  cs-last-page-title='@sr["Last Page"]'
+                  cs-previous-page-title='@sr["Previous page"]'
+                  cs-next-page-title='@sr["Next page"]'
+                  ></cs-pager>
     </div>
 </div>

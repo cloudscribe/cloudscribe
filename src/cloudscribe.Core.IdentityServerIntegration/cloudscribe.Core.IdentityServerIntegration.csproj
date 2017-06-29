@@ -3,7 +3,7 @@
   <PropertyGroup>
     <Description>cloudscribe multi-tenant identity integration for IdentityServer4</Description>
     <VersionPrefix>1.2.0</VersionPrefix>
-    <VersionSuffix>rc20170613</VersionSuffix>
+    <VersionSuffix>rc20170627</VersionSuffix>
     <Authors>Joe Audette</Authors>
     <TargetFrameworks>netstandard1.6;net452</TargetFrameworks>
     <AssemblyName>cloudscribe.Core.IdentityServerIntegration</AssemblyName>
