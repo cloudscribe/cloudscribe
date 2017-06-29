@@ -117,46 +117,7 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="Are you sure you want to delete the site {0} and all related data? You cannot undo this action." xml:space="preserve">
-    <value>Etes-vous sûr de vouloir supprimer le site {0} et toutes les données relatives ? Vous ne pouvez pas annuler cette action.</value>
-  </data>
-  <data name="Close Site To Public" xml:space="preserve">
-    <value>Fermer le site au public</value>
-  </data>
-  <data name="Delete" xml:space="preserve">
-    <value>Effacer</value>
-  </data>
-  <data name="Domain Mappings" xml:space="preserve">
-    <value>Mappages de domaine</value>
-  </data>
-  <data name="Save" xml:space="preserve">
-    <value>Sauvegarder</value>
-  </data>
-  <data name="Site Folder Name" xml:space="preserve">
-    <value>Site Nom du dossier</value>
-  </data>
-  <data name="Site Name" xml:space="preserve">
-    <value>Nom du site</value>
-  </data>
-  <data name="TimeZone" xml:space="preserve">
-    <value>Fuseau horaire</value>
-  </data>
-  <data name="Require Captcha On Login?" xml:space="preserve">
-    <value>Exiger Captcha Sur Login?</value>
-  </data>
-  <data name="Require Captcha On Registration?" xml:space="preserve">
-    <value>Exiger Captcha sur l'enregistrement ?</value>
-  </data>
-  <data name="Log in" xml:space="preserve">
-    <value>S'identifier</value>
-  </data>
-  <data name="Hello {0}!" xml:space="preserve">
-    <value>Bonjour {0}!</value>
-  </data>
-  <data name="Log off" xml:space="preserve">
-    <value>Se déconnecter</value>
-  </data>
-  <data name="Site Settings" xml:space="preserve">
-    <value>Paramètres du site</value>
+  <data name="API Resource Management" xml:space="preserve">
+    <value>Gestion des ressources API</value>
   </data>
 </root>

@@ -117,46 +117,133 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="Are you sure you want to delete the site {0} and all related data? You cannot undo this action." xml:space="preserve">
-    <value>Etes-vous sûr de vouloir supprimer le site {0} et toutes les données relatives ? Vous ne pouvez pas annuler cette action.</value>
+  <data name="Administration" xml:space="preserve">
+    <value>Administration</value>
   </data>
-  <data name="Close Site To Public" xml:space="preserve">
-    <value>Fermer le site au public</value>
+  <data name="API Clients" xml:space="preserve">
+    <value>Clients API</value>
   </data>
-  <data name="Delete" xml:space="preserve">
-    <value>Effacer</value>
+  <data name="API Resources" xml:space="preserve">
+    <value>Ressources API</value>
+  </data>
+  <data name="Captcha Settings" xml:space="preserve">
+    <value>Paramètres Captcha</value>
+  </data>
+  <data name="Company Info" xml:space="preserve">
+    <value>Information d'entreprise</value>
+  </data>
+  <data name="Contact" xml:space="preserve">
+    <value>Contact</value>
+  </data>
+  <data name="Core Data" xml:space="preserve">
+    <value>Données de base</value>
+  </data>
+  <data name="Country State Administration" xml:space="preserve">
+    <value>Administration nationale du pays</value>
   </data>
   <data name="Domain Mappings" xml:space="preserve">
     <value>Mappages de domaine</value>
   </data>
-  <data name="Save" xml:space="preserve">
-    <value>Sauvegarder</value>
+  <data name="Edit API Resource" xml:space="preserve">
+    <value>Modifier la ressource API</value>
   </data>
-  <data name="Site Folder Name" xml:space="preserve">
-    <value>Site Nom du dossier</value>
+  <data name="Edit Client" xml:space="preserve">
+    <value>Modifier le client</value>
   </data>
-  <data name="Site Name" xml:space="preserve">
-    <value>Nom du site</value>
+  <data name="Edit Identity Resource" xml:space="preserve">
+    <value>Modifier la ressource d'identité</value>
   </data>
-  <data name="TimeZone" xml:space="preserve">
-    <value>Fuseau horaire</value>
+  <data name="Email Settings" xml:space="preserve">
+    <value>Paramètres de messagerie</value>
   </data>
-  <data name="Require Captcha On Login?" xml:space="preserve">
-    <value>Exiger Captcha Sur Login?</value>
+  <data name="General" xml:space="preserve">
+    <value>Général</value>
   </data>
-  <data name="Require Captcha On Registration?" xml:space="preserve">
-    <value>Exiger Captcha sur l'enregistrement ?</value>
+  <data name="Home" xml:space="preserve">
+    <value>Accueil</value>
   </data>
-  <data name="Log in" xml:space="preserve">
-    <value>S'identifier</value>
+  <data name="Identity Resources" xml:space="preserve">
+    <value>Ressources d'identité</value>
   </data>
-  <data name="Hello {0}!" xml:space="preserve">
-    <value>Bonjour {0}!</value>
+  <data name="IpSearch" xml:space="preserve">
+    <value>IpSearch</value>
   </data>
-  <data name="Log off" xml:space="preserve">
-    <value>Se déconnecter</value>
+  <data name="Locked Users" xml:space="preserve">
+    <value>Utilisateurs verrouillés</value>
+  </data>
+  <data name="Login Page Info" xml:space="preserve">
+    <value>Info de la page de connexion</value>
+  </data>
+  <data name="New API Resource" xml:space="preserve">
+    <value>Nouvelle ressource API</value>
+  </data>
+  <data name="New Client" xml:space="preserve">
+    <value>Nouveau client</value>
+  </data>
+  <data name="New Country" xml:space="preserve">
+    <value>Nouveau pays</value>
+  </data>
+  <data name="New Identity Resource" xml:space="preserve">
+    <value>Nouvelle ressource d'identité</value>
+  </data>
+  <data name="New Role" xml:space="preserve">
+    <value>Nouveau rôle</value>
+  </data>
+  <data name="New Site" xml:space="preserve">
+    <value>Nouveau site</value>
+  </data>
+  <data name="New State" xml:space="preserve">
+    <value>État nouveau</value>
+  </data>
+  <data name="New User" xml:space="preserve">
+    <value>Nouvel utilisateur</value>
+  </data>
+  <data name="Register Page Info" xml:space="preserve">
+    <value>Inscrivez-vous à la page</value>
+  </data>
+  <data name="Role Management" xml:space="preserve">
+    <value>Gestion des rôles</value>
+  </data>
+  <data name="Role Members" xml:space="preserve">
+    <value>Membres du rôle</value>
+  </data>
+  <data name="Security Settings" xml:space="preserve">
+    <value>Les paramètres de sécurité</value>
+  </data>
+  <data name="Site List" xml:space="preserve">
+    <value>Liste du site</value>
   </data>
   <data name="Site Settings" xml:space="preserve">
     <value>Paramètres du site</value>
+  </data>
+  <data name="SMS Settings" xml:space="preserve">
+    <value>Paramètres SMS</value>
+  </data>
+  <data name="Social Logins" xml:space="preserve">
+    <value>Logins sociaux</value>
+  </data>
+  <data name="States" xml:space="preserve">
+    <value>États</value>
+  </data>
+  <data name="System Information" xml:space="preserve">
+    <value>Informations sur le système</value>
+  </data>
+  <data name="System Log" xml:space="preserve">
+    <value>Journal du système</value>
+  </data>
+  <data name="Un-Approved Users" xml:space="preserve">
+    <value>Utilisateurs non approuvés</value>
+  </data>
+  <data name="User List" xml:space="preserve">
+    <value>liste d'utilisateur</value>
+  </data>
+  <data name="User Management" xml:space="preserve">
+    <value>Gestion des utilisateurs</value>
+  </data>
+  <data name="User Search" xml:space="preserve">
+    <value>Recherche d'utilisateur</value>
+  </data>
+  <data name="About" xml:space="preserve">
+    <value>Sur</value>
   </data>
 </root>
