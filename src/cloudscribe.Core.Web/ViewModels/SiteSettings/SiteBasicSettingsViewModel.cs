@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2014-10-26
-// Last Modified:			2016-06-14
+// Last Modified:			2017-06-29
 // 
 
 using System;
@@ -77,7 +77,14 @@ namespace cloudscribe.Core.Web.ViewModels.SiteSettings
         public string TimeZoneId { get; set; } = "America/New_York";
         
         public IEnumerable<SelectListItem> AllTimeZones { get; set; } = null;
-        
+
+        public List<SelectListItem> AvailableCultures { get; set; } = null;
+        public string ForcedCulture { get; set; } = string.Empty;
+
+        public string ForcedUICulture { get; set; } = string.Empty;
+
+        public List<SelectListItem> AvailableUICultures { get; set; } = null;
+
         public int ReturnPageNumber { get; set; } = 1;
         public bool ShowDelete { get; set; } = false;
         public string ClosedMessage { get; set; } = string.Empty;

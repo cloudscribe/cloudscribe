@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2014-08-16
-// Last Modified:			2017-04-01
+// Last Modified:			2017-06-29
 // 
 
 using System;
@@ -440,6 +440,10 @@ namespace cloudscribe.Core.Models
 
         public DateTime TermsUpdatedUtc { get; set; } = DateTime.UtcNow;
 
+        public string ForcedCulture { get; set; }
+
+        public string ForcedUICulture { get; set; }
+
         //public bool UseSslOnAllPages { get; set; } = false;
 
         //public int PasswordAttemptWindowMinutes { get; set; } = 5;
@@ -518,6 +522,8 @@ namespace cloudscribe.Core.Models
             s.DkimDomain = i.DkimDomain;
             s.DkimSelector = i.DkimSelector;
             s.EmailLdapDbFallback = i.EmailLdapDbFallback;
+            s.ForcedCulture = i.ForcedCulture;
+            s.ForcedUICulture = i.ForcedUICulture;
             s.FacebookAppId = i.FacebookAppId;
             s.FacebookAppSecret = i.FacebookAppSecret;
             s.GoogleAnalyticsProfileId = i.GoogleAnalyticsProfileId;

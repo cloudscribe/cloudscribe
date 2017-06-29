@@ -4,11 +4,14 @@ using cloudscribe.Core.Identity;
 using cloudscribe.Core.Models;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Localization;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.FileProviders;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Protocols.OpenIdConnect;
 using System;
+using System.Globalization;
 using System.IO;
 using System.Reflection;
 
@@ -34,6 +37,22 @@ namespace Microsoft.AspNetCore.Builder
 
             app.UsePerTenant<cloudscribe.Core.Models.SiteContext>((ctx, builder) =>
             {
+                //var locOptions = app.ApplicationServices.GetService<IOptions<RequestLocalizationOptions>>();
+                
+
+                if (!string.IsNullOrWhiteSpace(ctx.Tenant.ForcedCulture) && !string.IsNullOrWhiteSpace(ctx.Tenant.ForcedUICulture))
+                {
+                    var tenantLocalization = new RequestLocalizationOptions();
+                    tenantLocalization.DefaultRequestCulture = new RequestCulture(culture: ctx.Tenant.ForcedCulture, uiCulture: ctx.Tenant.ForcedUICulture);
+                    tenantLocalization.SupportedCultures = new[] { new CultureInfo(ctx.Tenant.ForcedCulture) };
+                    tenantLocalization.SupportedUICultures = new[] { new CultureInfo(ctx.Tenant.ForcedUICulture) };
+
+                    builder.UseRequestLocalization(tenantLocalization);
+                }
+
+                
+
+
                 // custom 404 and error page - this preserves the status code (ie 404)
                 if (multiTenantOptions.Mode != cloudscribe.Core.Models.MultiTenantMode.FolderName || string.IsNullOrEmpty(ctx.Tenant.SiteFolderName))
                 {
