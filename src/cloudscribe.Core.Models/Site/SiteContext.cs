@@ -424,6 +424,16 @@ namespace cloudscribe.Core.Models
             get { return site.TermsUpdatedUtc; }
         }
 
-        
+        public string ForcedCulture
+        {
+            get { return site.ForcedCulture; }
+        }
+
+        public string ForcedUICulture
+        {
+            get { return site.ForcedUICulture; }
+        }
+
+
     }
 }

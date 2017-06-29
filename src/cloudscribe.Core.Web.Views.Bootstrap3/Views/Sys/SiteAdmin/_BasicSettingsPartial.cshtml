@@ -80,6 +80,28 @@
                 </div>
             </div>
         }
+    @if (Model.AvailableCultures.Count > 0)
+    {
+        <div class="form-group">
+            <label asp-for="ForcedCulture" class="col-md-2 control-label">@sr["Forced Culture"]</label>
+            <div class="col-md-10">
+                <select asp-for="ForcedCulture"
+                        asp-items="Model.AvailableCultures" class="form-control"></select>
+                <span asp-validation-for="ForcedCulture" class="text-danger"></span>
+            </div>
+        </div>
+    }
+    @if (Model.AvailableUICultures.Count > 0)
+    {
+        <div class="form-group">
+            <label asp-for="ForcedUICulture" class="col-md-2 control-label">@sr["Forced UI Culture"]</label>
+            <div class="col-md-10">
+                <select asp-for="ForcedUICulture"
+                        asp-items="Model.AvailableUICultures" class="form-control"></select>
+                <span asp-validation-for="ForcedUICulture" class="text-danger"></span>
+            </div>
+        </div>
+    }
     <div class="form-group">
         <label asp-for="SiteName" class="col-md-2 control-label">@sr["Google Analytics ProfileId"]</label>
         <div class="col-md-10">

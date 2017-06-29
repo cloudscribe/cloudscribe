@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2014-10-26
-// Last Modified:			2017-06-08
+// Last Modified:			2017-06-29
 // 
 
 using cloudscribe.Core.Models;
@@ -13,6 +13,7 @@ using cloudscribe.Web.Common;
 using cloudscribe.Web.Common.Extensions;
 using cloudscribe.Web.Common.Razor;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.Extensions.Localization;
@@ -35,7 +36,8 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
             IOptions<UIOptions> uiOptionsAccessor,
             IThemeListBuilder layoutListBuilder,
             IStringLocalizer<CloudscribeCore> localizer,
-            ITimeZoneHelper timeZoneHelper
+            ITimeZoneHelper timeZoneHelper,
+            IOptions<RequestLocalizationOptions> localizationOptions
             )
         {
             if (siteManager == null) { throw new ArgumentNullException(nameof(siteManager)); }
@@ -51,6 +53,7 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
             sr = localizer;
             tzHelper = timeZoneHelper;
             this.smtpOptionsProvider = smtpOptionsProvider;
+            localization = localizationOptions.Value;
         }
 
         private SiteManager siteManager;
@@ -62,6 +65,7 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
         private IThemeListBuilder layoutListBuilder;
         private UIOptions uiOptions;
         private ITimeZoneHelper tzHelper;
+        private RequestLocalizationOptions localization;
 
         // GET: /SiteAdmin
         [HttpGet]
@@ -169,7 +173,21 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
                     model.ShowDelete = uiOptions.AllowDeleteChildSites;
                 }
             }
-            
+
+            model.ForcedUICulture = selectedSite.ForcedUICulture;
+            model.AvailableUICultures = localization.SupportedUICultures
+                                      .Select(c => new SelectListItem { Value = c.Name, Text = c.Name , Selected = model.ForcedUICulture == c.Name  })
+                                      .ToList();
+            model.AvailableUICultures.Insert(0, new SelectListItem { Value = "", Text = sr["Any"] });
+
+            model.ForcedCulture = selectedSite.ForcedCulture;
+            model.AvailableCultures = localization.SupportedCultures
+                                      .Select(c => new SelectListItem { Value = c.Name, Text = c.Name, Selected = model.ForcedCulture == c.Name })
+                                      .ToList();
+            model.AvailableCultures.Insert(0, new SelectListItem { Value = "", Text = sr["Any"] });
+
+
+
             return View(model);
         }
 
@@ -278,6 +296,9 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
             selectedSite.SiteIsClosedMessage = model.ClosedMessage;
             selectedSite.Theme = model.Theme;
             selectedSite.GoogleAnalyticsProfileId = model.GoogleAnalyticsProfileId;
+
+            selectedSite.ForcedCulture = model.ForcedCulture;
+            selectedSite.ForcedUICulture = model.ForcedUICulture;
 
 
             await siteManager.Update(selectedSite);

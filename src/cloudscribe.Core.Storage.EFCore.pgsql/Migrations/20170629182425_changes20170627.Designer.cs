@@ -8,9 +8,10 @@ using cloudscribe.Core.Storage.EFCore.pgsql;
 namespace cloudscribe.Core.Storage.EFCore.pgsql.Migrations
 {
     [DbContext(typeof(CoreDbContext))]
-    partial class CoreDbContextModelSnapshot : ModelSnapshot
+    [Migration("20170629182425_changes20170627")]
+    partial class changes20170627
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
             modelBuilder
                 .HasAnnotation("Npgsql:PostgresExtension:uuid-ossp", "'uuid-ossp', '', ''")

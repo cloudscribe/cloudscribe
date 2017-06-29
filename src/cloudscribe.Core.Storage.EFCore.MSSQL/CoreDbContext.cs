@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2015-11-16
-// Last Modified:			2017-05-27
+// Last Modified:			2017-06-29
 // 
 
 using cloudscribe.Core.Models;
@@ -421,6 +421,15 @@ namespace cloudscribe.Core.Storage.EFCore.MSSQL
                 .ForSqlServerHasColumnType("datetime")
                 .ForSqlServerHasDefaultValueSql("getutcdate()")
                 ;
+
+                entity.Property(p => p.ForcedCulture)
+                .HasMaxLength(10);
+                ;
+
+                entity.Property(p => p.ForcedUICulture)
+                .HasMaxLength(10);
+                ;
+
             });
 
             modelBuilder.Entity<SiteHost>(entity =>

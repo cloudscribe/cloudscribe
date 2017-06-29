@@ -243,6 +243,12 @@ namespace cloudscribe.Core.Storage.EFCore.MSSQL.Migrations
 
                     b.Property<string>("FacebookAppSecret");
 
+                    b.Property<string>("ForcedCulture")
+                        .HasMaxLength(10);
+
+                    b.Property<string>("ForcedUICulture")
+                        .HasMaxLength(10);
+
                     b.Property<string>("GoogleAnalyticsProfileId")
                         .HasMaxLength(25);
 

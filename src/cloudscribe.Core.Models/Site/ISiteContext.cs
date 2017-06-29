@@ -1,7 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace cloudscribe.Core.Models
 {
@@ -102,6 +99,10 @@ namespace cloudscribe.Core.Models
         //bool IsDataProtected { get; }
         DateTime CreatedUtc { get; }
         DateTime TermsUpdatedUtc { get; }
+
+        string ForcedCulture { get; }
+
+        string ForcedUICulture { get; }
 
     }
 }
