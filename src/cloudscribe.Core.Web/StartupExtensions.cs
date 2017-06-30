@@ -11,6 +11,7 @@ using cloudscribe.Core.Models.Setup;
 using cloudscribe.Core.Web;
 using cloudscribe.Core.Web.Components;
 using cloudscribe.Core.Web.Components.Messaging;
+using cloudscribe.Core.Web.ExtensionPoints;
 using cloudscribe.Core.Web.Navigation;
 using cloudscribe.Messaging.Email;
 using cloudscribe.Web.Common;
@@ -64,6 +65,8 @@ namespace Microsoft.Extensions.DependencyInjection
 
             services.TryAddScoped<ICkeditorOptionsResolver, SiteCkeditorOptionsResolver>();
             services.AddScoped<ITimeZoneIdResolver, RequestTimeZoneIdResolver>();
+
+            services.TryAddScoped<IHandleCustomRegistration, NoRegistrationCustomization>();
 
             services.AddCloudscribeCommmon(configuration);
             
