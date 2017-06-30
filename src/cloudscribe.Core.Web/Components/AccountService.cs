@@ -166,7 +166,15 @@ namespace cloudscribe.Core.Web.Components
             var template = new LoginResultTemplate();
             IUserContext userContext = null;
            
-            template.User = await userManager.FindByNameAsync(model.Email);
+            if(userManager.Site.UseEmailForLogin)
+            {
+                template.User = await userManager.FindByNameAsync(model.Email);
+            }
+            else
+            {
+                template.User = await userManager.FindByNameAsync(model.UserName);
+            }
+            
             if (template.User != null)
             {
                 await loginRulesProcessor.ProcessAccountLoginRules(template);
