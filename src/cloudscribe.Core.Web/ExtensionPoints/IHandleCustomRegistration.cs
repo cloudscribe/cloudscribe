@@ -55,7 +55,7 @@ namespace cloudscribe.Core.Web.ExtensionPoints
         /// <param name="modelState"></param>
         /// <param name="cancellationToken"></param>
         /// <returns></returns>
-        Task<bool> HandleRegisterPost(
+        Task<bool> HandleRegisterValidation(
             ISiteContext site,
             RegisterViewModel viewModel,
             HttpContext httpContext,
@@ -105,7 +105,7 @@ namespace cloudscribe.Core.Web.ExtensionPoints
             return Task.FromResult(0);
         }
 
-        public Task<bool> HandleRegisterPost(
+        public Task<bool> HandleRegisterValidation(
             ISiteContext site,
             RegisterViewModel viewModel,
             HttpContext httpContext,

@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2017-05-22
-// Last Modified:			2017-05-27
+// Last Modified:			2017-07-01
 // 
 
 using cloudscribe.Core.Identity;
@@ -252,6 +252,14 @@ namespace cloudscribe.Core.Web.Components
             if (model.DateOfBirth.HasValue)
             {
                 user.DateOfBirth = model.DateOfBirth.Value;
+            }
+
+            if (userManager.Site.RegistrationAgreement.Length > 0)
+            {
+                if (model.AgreeToTerms)
+                {
+                    user.AgreementAcceptedUtc = DateTime.UtcNow;
+                }
             }
 
             var result = await userManager.CreateAsync(user, model.Password);

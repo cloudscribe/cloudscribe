@@ -3,7 +3,7 @@
   <PropertyGroup>
     <Description>Multi-tenant web application foundation with management for sites, users, roles, claims, and geographic data.</Description>
     <VersionPrefix>1.2.0</VersionPrefix>
-    <VersionSuffix>rc20170627</VersionSuffix>
+    <VersionSuffix>rc20170630</VersionSuffix>
     <Authors>Joe Audette</Authors>
     <TargetFrameworks>net451;net452;net46;netstandard1.6</TargetFrameworks>
     <AssemblyName>cloudscribe.Core.Web</AssemblyName>

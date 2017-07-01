@@ -346,7 +346,7 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
             model.ExternalAuthenticationList = accountService.GetExternalAuthenticationSchemes();
 
             bool isValid = ModelState.IsValid;
-            bool customDataIsValid = await customRegistration.HandleRegisterPost(
+            bool customDataIsValid = await customRegistration.HandleRegisterValidation(
                 Site,
                 model,
                 HttpContext,
