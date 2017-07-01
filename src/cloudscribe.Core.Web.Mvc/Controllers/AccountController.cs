@@ -2,13 +2,14 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2014-10-26
-// Last Modified:			2017-05-26
+// Last Modified:			2017-06-30
 // 
 
 using cloudscribe.Core.Identity;
 using cloudscribe.Core.Models;
 using cloudscribe.Core.Web.Components;
 using cloudscribe.Core.Web.Components.Messaging;
+using cloudscribe.Core.Web.ExtensionPoints;
 using cloudscribe.Core.Web.ViewModels.Account;
 using cloudscribe.Core.Web.ViewModels.SiteUser;
 using cloudscribe.Web.Common.Extensions;
@@ -40,6 +41,7 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
             IIdentityServerIntegration identityServerIntegration,
             IStringLocalizer<CloudscribeCore> localizer,
             IRecaptchaKeysProvider recaptchaKeysProvider,
+            IHandleCustomRegistration customRegistration,
             ILogger<AccountController> logger
             )
         {
@@ -53,6 +55,7 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
             log = logger;
             this.recaptchaKeysProvider = recaptchaKeysProvider;
             this.timeZoneHelper = timeZoneHelper;
+            this.customRegistration = customRegistration;
         }
 
         private readonly AccountService accountService;
@@ -65,6 +68,7 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
         private IStringLocalizer sr;
         private IRecaptchaKeysProvider recaptchaKeysProvider;
         private SiteTimeZoneService timeZoneHelper;
+        private IHandleCustomRegistration customRegistration;
 
         private async Task<IActionResult> HandleLoginSuccess(UserLoginResult result, string returnUrl)
         {
@@ -281,7 +285,7 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
         // GET: /Account/Register
         [HttpGet]
         [AllowAnonymous]
-        public IActionResult Register(string returnUrl = null)
+        public async Task<IActionResult> Register(string returnUrl = null)
         {
             if(accountService.IsSignedIn(User))
             {
@@ -314,6 +318,12 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
             model.AgreementRequired = Site.RegistrationAgreement.Length > 0;
             model.ExternalAuthenticationList = accountService.GetExternalAuthenticationSchemes();
 
+            await customRegistration.HandleRegisterGet(
+                Site,
+                model,
+                HttpContext,
+                ViewData);
+
             return View(model);
         }
 
@@ -336,7 +346,14 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
             model.ExternalAuthenticationList = accountService.GetExternalAuthenticationSchemes();
 
             bool isValid = ModelState.IsValid;
-            if (isValid)
+            bool customDataIsValid = await customRegistration.HandleRegisterValidation(
+                Site,
+                model,
+                HttpContext,
+                ViewData,
+                ModelState);
+
+            if (isValid && customDataIsValid)
             {
                 if ((Site.CaptchaOnRegistration) && (Site.RecaptchaPublicKey.Length > 0))
                 {
@@ -360,7 +377,7 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
                     }
                 }
 
-                if(!isValid)
+                if(!isValid || !customDataIsValid)
                 {
                     return View(model);
                 }
@@ -368,6 +385,12 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
                 var result = await accountService.TryRegister(model);
                 if (result.SignInResult.Succeeded)
                 {
+                    await customRegistration.HandleRegisterPostSuccess(
+                        Site,
+                        model,
+                        HttpContext,
+                        result);
+
                     return await HandleLoginSuccess(result, returnUrl);
                 }
 
