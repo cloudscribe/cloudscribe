@@ -100,6 +100,8 @@ namespace sourceDev.WebApp
             //services.AddScoped<IVersionProvider, CloudscribeLoggingVersionProvider>();
             /* end cloudscribe Setup */
 
+            services.AddScoped<cloudscribe.Core.Web.ExtensionPoints.IHandleCustomRegistration, sourceDev.WebApp.Components.CustomRegistrationHandler>();
+
             services.AddCloudscribeCore(Configuration);
 
 
