@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2017-06-30
-// Last Modified:			2017-06-30
+// Last Modified:			2017-07-03
 // 
 
 using cloudscribe.Core.Identity;
@@ -22,6 +22,20 @@ namespace cloudscribe.Core.Web.ExtensionPoints
     /// </summary>
     public interface IHandleCustomRegistration
     {
+        /// <summary>
+        /// This makes is possible for you to use a custom view name or even different views per tenant.
+        /// There is also an empty partial view named RegisterMiddle.cshtml that is invoked by the default Register
+        /// so you could override just that partial view to add some additional fields in the middle of the form 
+        /// and use the default view name here. But if you need to control the entire view then return
+        /// a custom name. Note that it is also possible to have per theme views so you can override a view that way as well.
+        /// So there are many possible solutions for custom register views, here we are just trying to make it even more flexible,
+        /// </summary>
+        /// <param name="site"></param>
+        /// <param name="httpContext"></param>
+        /// <returns></returns>
+        Task<string> GetRegisterViewName(ISiteContext site, HttpContext httpContext);
+
+
         /// <summary>
         /// a method that will be invoked fromm the AccountController Register GET action method.
         /// you could add custom field data to the ViewDataDictionary and use that in a custom view to populate additional custom fields
@@ -94,6 +108,11 @@ namespace cloudscribe.Core.Web.ExtensionPoints
     /// </summary>
     public class NoRegistrationCustomization : IHandleCustomRegistration
     {
+        public Task<string> GetRegisterViewName(ISiteContext site, HttpContext httpContext)
+        {
+            return Task.FromResult("Register"); // this is just returning the default view name.
+        }
+
         public Task HandleRegisterGet(
             ISiteContext site,
             RegisterViewModel viewModel,

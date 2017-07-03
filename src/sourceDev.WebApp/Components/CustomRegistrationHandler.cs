@@ -19,7 +19,7 @@ using System.Threading.Tasks;
 namespace sourceDev.WebApp.Components
 {
     /// <summary>
-    /// this is just a proof of concept implementation of IHandleCustomRegistration. Tenant 1 has a custom Register.cshtml in the cerulean theme that has custom inputs
+    /// this is just a proof of concept implementation of IHandleCustomRegistration. 
     /// to capture first name and last name as required fields during registration. Since there are existing data fields for those on siteuser
     /// this implementation is pretty simple. A more complex custom solution could store additional user data in a custom table.
     /// </summary>
@@ -37,6 +37,11 @@ namespace sourceDev.WebApp.Components
         private SiteUserManager<SiteUser> userManager;
         private ILogger log;
 
+        public Task<string> GetRegisterViewName(ISiteContext site, HttpContext httpContext)
+        {
+            return Task.FromResult("Register"); // this is just returning the default view name.
+        }
+
         public Task HandleRegisterGet(
             ISiteContext site,
             RegisterViewModel viewModel,
@@ -46,8 +51,8 @@ namespace sourceDev.WebApp.Components
             )
         {
             // just testing that custom fields can be pre-populated using ViewData
-            viewData["FirstName"] = "John";
-            viewData["LastName"] = "Doe";
+            //viewData["FirstName"] = "John";
+            //viewData["LastName"] = "Doe";
 
             return Task.FromResult(0);
         }
