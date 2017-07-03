@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:                  Joe Audette
 // Created:	                2017-07-01
-// Last Modified:           2017-07-01
+// Last Modified:           2017-07-03
 // 
 
 using cloudscribe.Core.Identity;
@@ -13,6 +13,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using Microsoft.Extensions.Logging;
+using System;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -81,6 +82,22 @@ namespace sourceDev.WebApp.Components
                 modelState.AddModelError("lastNameError", "Last Name is required");
                 result = false;
             }
+            var dobString = httpContext.Request.Form["DateOfBirth"];
+            if (string.IsNullOrWhiteSpace(dobString))
+            {
+                modelState.AddModelError("DOBError", "Date of Birth is required");
+                result = false;
+            }
+            else
+            {
+                DateTime dob;
+                var dobParsed = DateTime.TryParse(dobString, out dob);
+                if(!dobParsed)
+                {
+                    modelState.AddModelError("DOBError", "Date of Birth must be a valid date");
+                    result = false;
+                }
+            }
 
 
             return Task.FromResult(result);
@@ -102,6 +119,16 @@ namespace sourceDev.WebApp.Components
                 {
                     siteUser.FirstName = httpContext.Request.Form["FirstName"];
                     siteUser.LastName = httpContext.Request.Form["LastName"];
+
+                    var dobString = httpContext.Request.Form["DateOfBirth"];
+                   
+                    DateTime dob;
+                    var dobParsed = DateTime.TryParse(dobString, out dob);
+                    if (!dobParsed)
+                    {
+                        siteUser.DateOfBirth = dob.Date;
+                    }
+                    
                     await userManager.UpdateAsync(siteUser);
                 }
 
