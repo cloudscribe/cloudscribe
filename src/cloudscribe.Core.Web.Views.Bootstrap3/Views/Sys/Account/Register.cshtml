@@ -73,6 +73,7 @@
             <span asp-validation-for="Email" class="text-danger"></span>
         </div>
     </div>
+    @{await Html.RenderPartialAsync("RegisterMiddle", Model); }
     <div class="form-group">
         <label asp-for="Password" class="col-md-2 control-label">@sr["Password"]</label>
         <div class="col-md-10">

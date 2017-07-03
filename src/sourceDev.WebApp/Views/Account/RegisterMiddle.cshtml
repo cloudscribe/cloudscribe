@@ -1,0 +1,22 @@
+﻿@model cloudscribe.Core.Web.ViewModels.Account.RegisterViewModel
+@using cloudscribe.Core.Web
+@using Microsoft.Extensions.Options
+@using Microsoft.Extensions.Localization
+@using Microsoft.AspNetCore.Http.Authentication
+@inject IStringLocalizer<CloudscribeCore> sr
+<div class="form-group">
+    <label for="FirstName" class="col-md-2 control-label">@sr["First Name"]</label>
+    <div class="col-md-10">
+        <input id="FirstName" name="FirstName" value="@ViewData["FirstName"]" class="form-control" data-val="true" data-val-required="First Name is required" />
+        <span class="text-danger field-validation-valid" data-valmsg-for="FirstName" data-valmsg-replace="true"></span>
+        @Html.ValidationMessage("firstNameError", new { @class = "text-danger" })
+    </div>
+</div>
+<div class="form-group">
+    <label for="LastName" class="col-md-2 control-label">@sr["Last Name"]</label>
+    <div class="col-md-10">
+        <input id="LastName" name="LastName" value="@ViewData["LastName"]" class="form-control" data-val="true" data-val-required="Last Name is required" />
+        <span class="text-danger field-validation-valid" data-valmsg-for="LastName" data-valmsg-replace="true"></span>
+        @Html.ValidationMessage("lastNameError", new { @class = "text-danger" })
+    </div>
+</div>
