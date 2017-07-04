@@ -34,9 +34,35 @@ $(function () {
 			var dfocusOnShow = ($(ele).data('bs-datepicker-focusonshow') == false ? false : true);
 			var denabledHours = ($(ele).data('bs-datepicker-enabledhours') || false);
 			var ddisabledHours = ($(ele).data('bs-datepicker-disabledhours') || false);
-			var dviewDate = ($(ele).data('bs-datepicker-viewdate') || false);
+            var dviewDate = ($(ele).data('bs-datepicker-viewdate') || false);
+            var dUseFontAwesome = ($(ele).data('bs-datepicker-use-fontawesome') || false);
 			var posit = {horizontal: 'left',vertical: 'bottom'};
             //if(dwidgetPositioning) { posit = $.parseJSON(dwidgetPositioning); };
+            var iconConfig = {
+                //time: 'glyphicon glyphicon-time',
+                //date: 'glyphicon glyphicon-calendar',
+                //up: 'glyphicon glyphicon-chevron-up',
+                //down: 'glyphicon glyphicon-chevron-down',
+                //previous: 'glyphicon glyphicon-chevron-left',
+                //next: 'glyphicon glyphicon-chevron-right',
+                //today: 'glyphicon glyphicon-screenshot',
+                //clear: 'glyphicon glyphicon-trash',
+                //close: 'glyphicon glyphicon-remove'
+            };
+
+            if (dUseFontAwesome) {
+                iconConfig = {
+                    time: "fa fa-clock-o",
+                    today: "fa fa-crosshairs",
+                    date: "fa fa-calendar",
+                    up: "fa fa-arrow-up",
+                    down: "fa fa-arrow-down",
+                    previous: "fa fa-chevron-left",
+                    next: "fa fa-chevron-right",
+                    clear: "fa fa-trash",
+                    close: "fa fa-times"
+                };
+            }
 			
 			$(ele).datetimepicker({
 			    debug: debugMode,
@@ -66,8 +92,10 @@ $(function () {
 				focusOnShow : dfocusOnShow,
 				enabledHours : denabledHours,
 				disabledHours : ddisabledHours,
-				viewDate : dviewDate
-			});      
+                viewDate: dviewDate,
+                icons:iconConfig
+            });     
+           
         });
     }
 });
