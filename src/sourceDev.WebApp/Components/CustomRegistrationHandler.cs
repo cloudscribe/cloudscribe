@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:                  Joe Audette
 // Created:	                2017-07-01
-// Last Modified:           2017-07-03
+// Last Modified:           2017-07-04
 // 
 
 using cloudscribe.Core.Identity;
@@ -75,12 +75,20 @@ namespace sourceDev.WebApp.Components
                 modelState.AddModelError("firstNameError", "First Name is required");
                 result = false;
             }
+            else
+            {
+                viewData["FirstName"] = firstName;
+            }
 
             var lastName = httpContext.Request.Form["LastName"];
             if (string.IsNullOrWhiteSpace(lastName))
             {
                 modelState.AddModelError("lastNameError", "Last Name is required");
                 result = false;
+            }
+            else
+            {
+                viewData["LastName"] = lastName;
             }
             var dobString = httpContext.Request.Form["DateOfBirth"];
             if (string.IsNullOrWhiteSpace(dobString))
@@ -96,6 +104,10 @@ namespace sourceDev.WebApp.Components
                 {
                     modelState.AddModelError("DOBError", "Date of Birth must be a valid date");
                     result = false;
+                }
+                else
+                {
+                    viewData["DateOfBirth"] = dobString;
                 }
             }
 

@@ -348,6 +348,7 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
             model.ExternalAuthenticationList = accountService.GetExternalAuthenticationSchemes();
 
             bool isValid = ModelState.IsValid;
+            
             bool customDataIsValid = await customRegistration.HandleRegisterValidation(
                 Site,
                 model,
@@ -386,7 +387,7 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
                     return View(viewName, model);
                 }
                 
-                var result = await accountService.TryRegister(model);
+                var result = await accountService.TryRegister(model, ModelState);
                 if (result.SignInResult.Succeeded)
                 {
                     await customRegistration.HandleRegisterPostSuccess(
@@ -410,9 +411,9 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
                     return HandleLoginNotAllowed(result);
                 }
                 
-                log.LogInformation($"login did not succeed for {model.Email}");
-                ModelState.AddModelError(string.Empty, sr["Invalid login attempt."]);
-                return View(model);           
+                log.LogInformation($"registration did not succeed for {model.Email}");
+               // ModelState.AddModelError(string.Empty, sr["Invalid registration attempt."]);
+                return View(viewName, model);           
             }
 
             // If we got this far, something failed, redisplay form
