@@ -11,6 +11,7 @@ using cloudscribe.Core.Web.ViewModels.Account;
 using cloudscribe.Core.Web.ViewModels.SiteUser;
 using Microsoft.AspNetCore.Http.Authentication;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc.ModelBinding;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -25,6 +26,7 @@ namespace cloudscribe.Core.Web.Components
         public AccountService(
             SiteUserManager<SiteUser> userManager,
             SiteSignInManager<SiteUser> signInManager,
+           // IPasswordValidator<SiteUser> passwordValidator,
             IIdentityServerIntegration identityServerIntegration,
             ISocialAuthEmailVerfificationPolicy socialAuthEmailVerificationPolicy,
             IProcessAccountLoginRules loginRulesProcessor
@@ -36,7 +38,8 @@ namespace cloudscribe.Core.Web.Components
             this.identityServerIntegration = identityServerIntegration;
             this.socialAuthEmailVerificationPolicy = socialAuthEmailVerificationPolicy;
             this.loginRulesProcessor = loginRulesProcessor;
-           
+            //this.passwordValidator = passwordValidator;
+
             //log = logger;
         }
 
@@ -45,6 +48,7 @@ namespace cloudscribe.Core.Web.Components
         private readonly IIdentityServerIntegration identityServerIntegration;
         private readonly ISocialAuthEmailVerfificationPolicy socialAuthEmailVerificationPolicy;
         private readonly IProcessAccountLoginRules loginRulesProcessor;
+       // private readonly IPasswordValidator<SiteUser> passwordValidator;
         // private ILogger log;
 
         private async Task<SiteUser> CreateUserFromExternalLogin(
@@ -160,6 +164,11 @@ namespace cloudscribe.Core.Web.Components
                 );
 
         }
+
+        //public bool IsValidPassowrd(string password)
+        //{
+        //    return passwordValidator.
+        //}
         
         public async Task<UserLoginResult> TryLogin(LoginViewModel model)
         {
@@ -226,7 +235,7 @@ namespace cloudscribe.Core.Web.Components
         }
 
         
-        public async Task<UserLoginResult> TryRegister(RegisterViewModel model)
+        public async Task<UserLoginResult> TryRegister(RegisterViewModel model, ModelStateDictionary modelState)
         {
             var template = new LoginResultTemplate();
             IUserContext userContext = null;
@@ -237,6 +246,8 @@ namespace cloudscribe.Core.Web.Components
             {
                 userName = await userManager.SuggestLoginNameFromEmail(userManager.Site.Id, model.Email);
             }
+
+           
 
             var user = new SiteUser
             {
@@ -269,8 +280,20 @@ namespace cloudscribe.Core.Web.Components
                 template.User = user;
                 await loginRulesProcessor.ProcessAccountLoginRules(template);
             }
+            else
+            {
+                foreach (var error in result.Errors)
+                {
+                    modelState.AddModelError(string.Empty, error.Description);
+                }
+            }
+           
 
-            if(template.RejectReasons.Count == 0 && user != null && template.SignInResult == SignInResult.Failed) // failed is initial state, could have been changed to lockedout
+            if(template.RejectReasons.Count == 0 
+                && user != null 
+                && template.SignInResult == SignInResult.Failed // failed is initial state, could have been changed to lockedout
+                && result.Errors.Count<IdentityError>() == 0
+                ) 
             {
                 await signInManager.SignInAsync(user, isPersistent: false);
                 template.SignInResult = SignInResult.Success;
