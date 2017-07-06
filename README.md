@@ -19,6 +19,7 @@ To get started building your own features and applications with cloudscribe, [pl
 #### Documentation
 
 [See the full documentation at cloudscribe.com](https://www.cloudscribe.com/docs) (work in progress)
+
 [Introduction](https://www.cloudscribe.com/docs/introduction) - get the big picture
 
 ##### What Is Included?:
