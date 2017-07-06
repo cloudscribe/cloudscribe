@@ -1,6 +1,6 @@
 # cloudscribe
 
-cloudscribe is a related set of projects and components for building cross platform web applications on ASP.NET Core. Get the big picture at [cloudscribe.com](https://www.cloudscribe.com)
+cloudscribe is a related set of projects and components for building cross platform web applications on ASP.NET Core. Get the big picture at [cloudscribe.com](https://www.cloudscribe.com/docs/introduction)
 
 The foundational set of projects in this repository, known as cloudscibe Core, provides support for single tenant or multi tenant management of sites, users, and roles. The other main cloudscribe projects are [cloudscribe SimpleContent](https://github.com/joeaudette/cloudscribe.SimpleContent), [cloudscribe Navigation](https://github.com/joeaudette/cloudscribe.Web.Navigation), and [cloudscribe Pagination](https://github.com/joeaudette/cloudscribe.Web.Pagination). You can find the [full list of projects here](https://github.com/joeaudette?tab=repositories).
 
@@ -16,24 +16,35 @@ If you start a new web application project in Visual Studio using the standard p
 
 To get started building your own features and applications with cloudscribe, [please see our StarterKit repository](https://github.com/joeaudette/cloudscribe.StarterKits)
 
-##### Currently Working Features:
-* Site Definitions - multi-tenant based on either first folder segment or host names, default is by folder segment for now mainly because it is easier to try that without DNS, it is just a config option so it is easy to change
-* Site is a conceptual container for users, permissions, and content. 
-* Related sites mode setting allows shared users and roles across sites while still allowing permissions to be segmented/siloed by site.
-* Authentication/Authorization Framework - Multi-Tenant Implementation of aspnet Identity
-* Multi-Tenant User and Role Management
+#### Documentation
+
+[See the full documentation at cloudscribe.com](https://www.cloudscribe.com/docs) (work in progress)
+[Introduction](https://www.cloudscribe.com/docs/introduction) - get the big picture
+
+##### What Is Included?:
+
+* Login and registration, with support for social authentication configured from the UI. With options for recaptcha on the login and registration pages
+* Support for extra content on the login page
+* Support for extra content and a terms of use section on the registration page. If you populate the terms of use then users will be required to check a box indicating that they accept the terms in order to register and login. Also if you change the terms later you can optionally force all users to re-accept the changed terms.
+* User Management (optionally [multi-tenant](https://www.cloudscribe.com/docs/multi-tenant-support) user management) you can create and manage user accounts, create and manage roles and user role membership, and add custom claims to users all from the UI. You can optionally disable self serve user registration so that only users that you add are allowed. 
+* If you change a user's role membership, the role cookie will be updated automatically so the changes are effective right away.
+* If you lock a user account or delete a user, the user will be signed out automatically.
+* [A theme system that supports both shared themes and per tenant themes](https://www.cloudscribe.com/docs/themes-and-web-design). You can set the theme from a dropdown list in Administration > Site Settings, and the starter kits have a bunch of bootstrap themes included, and you can also make your own themes.
+* Support for "Site is Closed" - you can set a site as closed and users will not be able to navigate any pages in the site, they will only see the message you provide on the closed page. Users can still login but only members of the Administrators or Content Administrators roles will be allowed to navigate the site, all other users will be redirected to the closed message.
+* You can optionally require a confirmed email address for users if you add SMTP settings for email. A confirmation email will be sent to the user and the user will not be able to login until they click the link to confirm their email address.
+* You can optionally require approval of new accounts before a user can login, and you can get notification when new users register so you can decide whether to approve the account. There is a separate page to make it easy to find users who have not yet been approved or who have not yet confirmed their email address.
+* If you setup social authentication, you can optionally make social authentication the only allowed way to sign in.
+* You can configure SMS settings for Twilio, and then users can enable 2 factor authentication using their phone.
+* There is a company information section where you can define company name, address, email etc, and then you could show that information in the footer for example by customizing the layout. SiteContext is already injected into the layout and the company information are just properties on that so you can wrap your own markup around whichever of those properties you want to show.
 * Integration with [IdentityServer4](https://github.com/IdentityServer/IdentityServer4) providing management of users, clients and scopes. This brings us support for [Jwt](https://jwt.io/) as an alternative to cookie authentication so we can more readily support SPA (Single Page Application) style web apps as well as authentication from mobile devices.
-* System Logging - optional implementation of ILogger that logs to the database, and a UI for viewing the log
-* [Custom RazorViewEngine view resolver, conventions](https://github.com/joeaudette/cloudscribe/wiki/Customizing-Views-and-Display-Templates)
-* TagHelper for bootstrap modal
-* TagHelper for pagination via [cloudscribe.Web.Pagination project](https://github.com/joeaudette/cloudscribe.Web.Pagination)
-* ViewComponent for navigation menus, breadcrumbs - via [cloudscribe.Web.Navigation project](https://github.com/joeaudette/cloudscribe.Web.Navigation)
-* Unobtrusive js for CKeditor
-* Localization Support - documentation coming soon
+* [Localization Support](https://www.cloudscribe.com/docs/localization)
 * For data access, supports Entity Framework Core with either MSSQL, MySql, or PostgreSql. [NoDb](https://github.com/joeaudette/NoDb) file system storage is also supported for small sites or proptypes.
 * Data and IO operations are async all the way down
 * This project aims to follow the [OWASP](https://www.owasp.org/index.php/Main_Page) Guidelines for best practices in security
-* Need Content? Take a look at [cloudscribe.SimpleContent](https://github.com/joeaudette/cloudscribe.SimpleContent), a simple yet flexible content and blogging engine that works with cloudscribe Core
+
+##### Need Content? 
+
+Take a look at [cloudscribe.SimpleContent](https://github.com/joeaudette/cloudscribe.SimpleContent), a simple yet flexible content and blogging engine that works with cloudscribe Core
 
 ##### Planned Features:
 * Implement options for Security Questions and Answers [per OWASP guidelines](https://www.owasp.org/index.php/Forgot_Password_Cheat_Sheet)

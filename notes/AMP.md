@@ -5,3 +5,5 @@ https://www.ampproject.org/
 
 https://moz.com/blog/accelerated-mobile-pages-whiteboard-friday
 
+https://lolware.net/2017/07/04/amp-bloat.html
+

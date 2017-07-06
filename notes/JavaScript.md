@@ -1,6 +1,9 @@
 
 https://javascriptweblog.wordpress.com/2011/05/31/a-fresh-look-at-javascript-mixins/
 
+Best Practices for javascript projects
+https://github.com/wearehive/project-guidelines
+
 https://medium.com/@alexdixon/functional-programming-in-javascript-is-an-antipattern-58526819f21e
 
 JavaScript Patterns for 2017 - Scott Allen
