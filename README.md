@@ -2,7 +2,7 @@
 
 cloudscribe is a related set of projects and components for building cross platform web applications on ASP.NET Core. Get the big picture at [cloudscribe.com](https://www.cloudscribe.com/docs/introduction)
 
-The foundational set of projects in this repository, known as cloudscibe Core, provides support for single tenant or multi tenant management of sites, users, and roles. The other main cloudscribe projects are [cloudscribe SimpleContent](https://github.com/joeaudette/cloudscribe.SimpleContent), [cloudscribe Navigation](https://github.com/joeaudette/cloudscribe.Web.Navigation), and [cloudscribe Pagination](https://github.com/joeaudette/cloudscribe.Web.Pagination). You can find the [full list of projects here](https://github.com/joeaudette?tab=repositories).
+The foundational set of projects in this repository, known as cloudscibe Core, provides support for single tenant or multi tenant management of sites, users, and roles. The other main cloudscribe project is [cloudscribe SimpleContent](https://www.cloudscribe.com/docs/cloudscribe-simplecontent). There are a lot of smaller useful libraries as well, you can find the [full list of projects here](https://www.cloudscribe.com/docs/complete-list-of-cloudscribe-libraries).
 
 If you have questions or just want to be social, say hello in our gitter chat room. I try to monitor that room on a regular basis while I'm working, but if I'm not around you can leave a message.
 
