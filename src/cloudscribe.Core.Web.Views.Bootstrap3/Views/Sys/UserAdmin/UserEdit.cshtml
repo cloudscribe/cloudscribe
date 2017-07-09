@@ -10,7 +10,7 @@
     var ckOptions = await editorOptionsResolver.GetCkeditorOptions();
 }
 @section Styles {
-@{ await Html.RenderPartialAsync("_DatePickerCssPartial"); }
+    @{await Html.RenderPartialAsync("UserEditStylePartial"); }
 }
 <h2>@ViewData["Title"]</h2>
 @if (Model.UserId != Guid.Empty && !Model.AccountApproved)
@@ -102,6 +102,12 @@
                 </div>
             </div>
             <div class="form-group">
+                <label asp-for="WebSiteUrl" class="col-md-2 control-label">@sr["Website Url"]</label>
+                <div class="col-md-10">
+                    <input asp-for="WebSiteUrl" class="form-control" />
+                </div>
+            </div>
+            <div class="form-group">
                 <div class="col-md-offset-2 col-md-12">
                     <div class="checkbox">
                         <label>
@@ -131,6 +137,8 @@
                           data-ckeditor-config-imagebrowseurl="@ckOptions.ImageBrowseUrl"></textarea>
                 </div>
             </div>
+
+            @{await Html.RenderPartialAsync("UserEditMiddlePartial", Model); }
             <div class="form-group">
                 <div class="col-md-offset-2 col-md-10">
                     <input type="submit" class="btn btn-default" value='@sr["Save"]' />
@@ -156,8 +164,6 @@
 <div class="col-md-offset-2 col-md-10">
     @{ await Html.RenderPartialAsync("UserClaims", Model); }
 </div>
-    @section Scripts {
-        @{ await Html.RenderPartialAsync("_UnobtrusiveValidationScriptsPartial"); }
-        @{ await Html.RenderPartialAsync("_UnobtrusiveEditorScriptsPartial"); }
-        @{ await Html.RenderPartialAsync("_DatePickerScriptsPartial"); }
-    }
+@section Scripts {
+    @{await Html.RenderPartialAsync("UserEditScriptsPartial"); }
+}

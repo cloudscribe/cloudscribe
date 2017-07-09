@@ -67,6 +67,12 @@ namespace Microsoft.Extensions.DependencyInjection
             services.AddScoped<ITimeZoneIdResolver, RequestTimeZoneIdResolver>();
 
             services.TryAddScoped<IHandleCustomRegistration, NoRegistrationCustomization>();
+            services.TryAddScoped<IHandleCustomUserInfo, NoUserInfoCustomization>();
+            services.TryAddScoped<IHandleCustomUserInfoAdmin, NoUserEditCustomization>();
+
+            //
+
+            //
 
             services.AddCloudscribeCommmon(configuration);
             

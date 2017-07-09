@@ -2,13 +2,14 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2014-12-08
-// Last Modified:			2017-06-08
+// Last Modified:			2017-07-09
 // 
 
 using cloudscribe.Core.Identity;
 using cloudscribe.Core.Models;
 using cloudscribe.Core.Web.Components;
 using cloudscribe.Core.Web.Components.Messaging;
+using cloudscribe.Core.Web.ExtensionPoints;
 using cloudscribe.Core.Web.ViewModels.Account;
 using cloudscribe.Core.Web.ViewModels.UserAdmin;
 using cloudscribe.Web.Common;
@@ -39,7 +40,8 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
             IOptions<UIOptions> uiOptionsAccessor,
             IStringLocalizer<CloudscribeCore> localizer,
             ITimeZoneIdResolver timeZoneIdResolver,
-            ITimeZoneHelper timeZoneHelper
+            ITimeZoneHelper timeZoneHelper,
+            IHandleCustomUserInfoAdmin customUserEdit
             )
         {
            
@@ -50,6 +52,7 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
             sr = localizer;
             this.timeZoneIdResolver = timeZoneIdResolver;
             tzHelper = timeZoneHelper;
+            this.customUserInfo = customUserEdit;
         }
 
         private SiteManager siteManager;
@@ -59,6 +62,7 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
         private IStringLocalizer sr; // string resources
         private ITimeZoneIdResolver timeZoneIdResolver;
         private ITimeZoneHelper tzHelper;
+        private IHandleCustomUserInfoAdmin customUserInfo;
 
         [HttpGet]
         public async Task<IActionResult> Index(
@@ -369,7 +373,9 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
             {
                 ViewData["Title"] = sr["Manage User"];
             }
+
             
+
             var model = new EditUserViewModel();
             model.SiteId = selectedSite.Id;
             
@@ -388,6 +394,8 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
                 model.IsLockedOut = user.IsLockedOut;
                 model.LastLoginDate = user.LastLoginUtc;
                 model.TimeZoneId = user.TimeZoneId;
+                model.WebSiteUrl = user.WebSiteUrl;
+
                 if(string.IsNullOrEmpty(model.TimeZoneId))
                 {
                     model.TimeZoneId = await timeZoneIdResolver.GetSiteTimeZoneId();
@@ -416,7 +424,14 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
                 
             }
 
-            return View(model);
+            var viewName = await customUserInfo.GetUserEditViewName(UserManager.Site, HttpContext);
+            await customUserInfo.HandleUserEditGet(
+                UserManager.Site,
+                model,
+                HttpContext,
+                ViewData);
+
+            return View(viewName, model);
         }
 
         [HttpPost]
@@ -434,54 +449,73 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
                 ViewData["Title"] = sr["Manage User"];
             }
             
-            if (ModelState.IsValid)
+            bool isValid = ModelState.IsValid && (model.UserId != Guid.Empty);
+            bool customDataIsValid = await customUserInfo.HandleUserEditValidation(
+                UserManager.Site,
+                model,
+                HttpContext,
+                ViewData,
+                ModelState);
+            var viewName = await customUserInfo.GetUserEditViewName(UserManager.Site, HttpContext);
+
+            if (!isValid || !customDataIsValid)
             {
-                if (model.UserId != Guid.Empty)
-                {
-                    //editing an existing user
-                    var user = await UserManager.Fetch(selectedSite.Id, model.UserId);
-                    if (user != null)
-                    {
-                        user.Email = model.Email;
-                        user.FirstName = model.FirstName;
-                        user.LastName = model.LastName;
-                        user.UserName = model.Username;
-                        user.DisplayName = model.DisplayName;
-                        //user.AccountApproved = model.AccountApproved;
-                        user.Comment = model.Comment;
-                        user.EmailConfirmed = model.EmailConfirmed;
-                        if((user.IsLockedOut)&&(!model.IsLockedOut))
-                        {
-                            // TODO: notify user
-                            // think we need to change this so the admin controls whether
-                            // email is sent when approving an account
-                        }
-                        user.IsLockedOut = model.IsLockedOut;
-                        
-                        user.TimeZoneId = model.TimeZoneId;
-
-                        if (model.DateOfBirth.HasValue)
-                        {
-                            user.DateOfBirth = model.DateOfBirth.Value;
-                        }
-                        else
-                        {
-                            user.DateOfBirth = DateTime.MinValue;
-                        }
-
-                        await UserManager.UpdateAsync((SiteUser)user);
-                        
-                        this.AlertSuccess(string.Format(sr["user account for {0} was successfully updated."],
-                             user.DisplayName), true);
-                        
-                        return RedirectToAction("Index", "UserAdmin", new { siteId = selectedSite.Id });
-                    }
-                }
-                
+                return View(viewName, model);
             }
-            
-            // If we got this far, something failed, redisplay form
-            return View(model);
+
+            //editing an existing user
+            var user = await UserManager.Fetch(selectedSite.Id, model.UserId);
+            if (user != null)
+            {
+                user.Email = model.Email;
+                user.FirstName = model.FirstName;
+                user.LastName = model.LastName;
+                user.UserName = model.Username;
+                user.DisplayName = model.DisplayName;
+                //user.AccountApproved = model.AccountApproved;
+                user.Comment = model.Comment;
+                user.EmailConfirmed = model.EmailConfirmed;
+                if((user.IsLockedOut)&&(!model.IsLockedOut))
+                {
+                    // TODO: notify user
+                    // think we need to change this so the admin controls whether
+                    // email is sent when approving an account
+                }
+                user.IsLockedOut = model.IsLockedOut;
+                        
+                user.TimeZoneId = model.TimeZoneId;
+
+                if (model.DateOfBirth.HasValue)
+                {
+                    user.DateOfBirth = model.DateOfBirth.Value;
+                }
+                else
+                {
+                    user.DateOfBirth = null;
+                }
+                user.WebSiteUrl = model.WebSiteUrl;
+
+                await UserManager.UpdateAsync((SiteUser)user);
+
+                await customUserInfo.HandleUserEditPostSuccess(
+                        UserManager.Site,
+                        user,
+                        model,
+                        HttpContext
+                        );
+
+                this.AlertSuccess(string.Format(sr["user account for {0} was successfully updated."],
+                        user.DisplayName), true);
+                        
+                    
+            }
+            else
+            {
+                //to do log it?
+            }
+
+
+            return RedirectToAction("Index", "UserAdmin", new { siteId = selectedSite.Id });
         }
 
         [HttpPost]

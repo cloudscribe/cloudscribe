@@ -1,4 +1,6 @@
 
+Free online email designer
+https://topol.io/
 
 https://www.campaignmonitor.com/blog/email-marketing/2017/05/the-really-good-guide-to-email-design-bonus-checklist/
 
