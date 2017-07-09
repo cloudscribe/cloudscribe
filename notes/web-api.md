@@ -11,7 +11,7 @@ http://hyperschema.org/mediatypes/siren
 
 https://www.markus-lanthaler.com/hydra/
 
-
+https://github.com/shieldfy/API-Security-Checklist
 
 
 

@@ -1126,4 +1126,13 @@
   <data name="Use Invisible reCaptcha?" xml:space="preserve">
     <value>Use Invisible reCaptcha?</value>
   </data>
+  <data name="Your information has been updated." xml:space="preserve">
+    <value>Your information has been updated.</value>
+  </data>
+  <data name="Update User Info" xml:space="preserve">
+    <value>Update User Info</value>
+  </data>
+  <data name="Website Url" xml:space="preserve">
+    <value>Website Url</value>
+  </data>
 </root>

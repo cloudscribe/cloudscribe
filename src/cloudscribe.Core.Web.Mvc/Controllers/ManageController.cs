@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2014-10-26
-// Last Modified:			2016-10-08
+// Last Modified:			2017-07-09
 // 
 
 using cloudscribe.Core.Models;
@@ -20,6 +20,7 @@ using Microsoft.Extensions.Localization;
 using System;
 using cloudscribe.Web.Common;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using cloudscribe.Core.Web.ExtensionPoints;
 
 namespace cloudscribe.Core.Web.Controllers.Mvc
 {
@@ -33,7 +34,8 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
             ISmsSender smsSender,
             IStringLocalizer<CloudscribeCore> localizer,
             ITimeZoneIdResolver timeZoneIdResolver,
-            ITimeZoneHelper timeZoneHelper
+            ITimeZoneHelper timeZoneHelper,
+            IHandleCustomUserInfo customUserInfo
             )
         {
             Site = currentSite; 
@@ -43,6 +45,7 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
             sr = localizer;
             this.timeZoneIdResolver = timeZoneIdResolver;
             tzHelper = timeZoneHelper;
+            this.customUserInfo = customUserInfo;
         }
 
         private readonly ISiteContext Site;
@@ -53,6 +56,7 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
         private IStringLocalizer sr;
         private ITimeZoneIdResolver timeZoneIdResolver;
         private ITimeZoneHelper tzHelper;
+        private IHandleCustomUserInfo customUserInfo;
 
 
         // GET: /Manage/Index
@@ -112,6 +116,75 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
                 user.TimeZoneId = timeZoneId;
                 await userManager.UpdateAsync(user);
                 this.AlertSuccess(sr["Your time zone has been updated."]);
+            }
+            return RedirectToAction("Index");
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> UserInfo()
+        {
+            var user = await userManager.FindByIdAsync(HttpContext.User.GetUserId());
+            var model = new UserInfoViewModel
+            {
+                FirstName = user.FirstName,
+                LastName = user.LastName,
+                DateOfBirth = user.DateOfBirth,
+                WebSiteUrl = user.WebSiteUrl
+            };
+
+            var viewName = await customUserInfo.GetUserInfoViewName(Site, user, HttpContext);
+            await customUserInfo.HandleUserInfoGet(
+                Site,
+                user,
+                model,
+                HttpContext,
+                ViewData);
+
+            return View(viewName, model);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> UserInfo(UserInfoViewModel model)
+        {
+            var user = await userManager.FindByIdAsync(HttpContext.User.GetUserId());
+            var viewName = await customUserInfo.GetUserInfoViewName(Site, user, HttpContext);
+
+            bool isValid = ModelState.IsValid;
+            bool customDataIsValid = await customUserInfo.HandleUserInfoValidation(
+                Site,
+                user,
+                model,
+                HttpContext,
+                ViewData,
+                ModelState);
+
+            if (!isValid || !customDataIsValid)
+            {
+                return View(viewName, model);
+            }
+
+            if (user != null)
+            {
+                user.FirstName = model.FirstName;
+                user.LastName = model.LastName;
+                if(model.DateOfBirth.HasValue)
+                {
+                    user.DateOfBirth = model.DateOfBirth;
+                }
+                
+                
+                user.WebSiteUrl = model.WebSiteUrl;
+                await userManager.UpdateAsync(user);
+
+                await customUserInfo.HandleUserInfoPostSuccess(
+                        Site,
+                        user,
+                        model,
+                        HttpContext
+                        );
+
+                this.AlertSuccess(sr["Your information has been updated."]);
             }
             return RedirectToAction("Index");
         }

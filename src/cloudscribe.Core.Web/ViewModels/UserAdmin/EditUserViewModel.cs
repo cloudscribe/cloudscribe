@@ -31,6 +31,7 @@ namespace cloudscribe.Core.Web.ViewModels.Account
         public bool SendApprovalEmail { get; set; }
 
         [Required(ErrorMessage = "Email is required")]
+        [StringLength(100, ErrorMessage = "Email has a maximum length of 100 characters")]
         [EmailAddress(ErrorMessage = "The email address does not appear as valid")]
         public string Email { get; set; }
 
@@ -44,19 +45,25 @@ namespace cloudscribe.Core.Web.ViewModels.Account
            ErrorMessage = "Username not available, please try another value",
            HttpMethod = "Post")]
         [Required(ErrorMessage = "Username is required")]
+        [StringLength(50, ErrorMessage = "Username has a maximum length of 50 characters")]
         public string Username { get; set; } = string.Empty;
-        
-       
-        [Required(ErrorMessage = "Display name is required")]
+
+        [StringLength(100, ErrorMessage = "Display Name has a maximum length of 100 characters")]
+        [Required(ErrorMessage = "Display Name is required")]
         public string DisplayName { get; set; } = string.Empty;
-        
+
+        [StringLength(100, ErrorMessage = "First Name has a maximum length of 100 characters")]
         public string FirstName { get; set; } = string.Empty;
-        
-        
+
+        [StringLength(100, ErrorMessage = "Last Name has a maximum length of 100 characters")]
         public string LastName { get; set; } = string.Empty;
         
         public DateTime? DateOfBirth { get; set; }
-        
+
+        [Url(ErrorMessage = "You must provide a valid URL")]
+        [StringLength(300, ErrorMessage = "Website Url has a maximum length of 300 characters")]
+        public string WebSiteUrl { get; set; }
+
         public DateTime? LastLoginDate { get; set; }
 
         public string TimeZoneId { get; set; }
