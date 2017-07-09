@@ -6,6 +6,8 @@ https://github.com/wearehive/project-guidelines
 
 https://medium.com/@alexdixon/functional-programming-in-javascript-is-an-antipattern-58526819f21e
 
+https://hackernoon.com/6-reasons-why-javascripts-async-await-blows-promises-away-tutorial-c7ec10518dd9
+
 JavaScript Patterns for 2017 - Scott Allen
 https://www.youtube.com/watch?v=hO7mzO83N1Q
 

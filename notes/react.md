@@ -1,4 +1,6 @@
 
+https://medium.com/@MaartenSikkema/using-react-redux-and-webpack-with-dotnet-core-to-build-a-modern-web-frontend-7e2d091b3ba
+
 https://medium.com/@gianluca.guarini/things-nobody-will-tell-you-about-react-js-3a373c1b03b4
 
 https://medium.com/@dan_abramov/hey-thanks-for-feedback-bf9502689ca4

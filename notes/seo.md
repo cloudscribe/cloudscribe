@@ -2,6 +2,11 @@
 https://www.netlify.com/blog/2017/02/28/to-www-or-not-www/
 
 
+https://www.hanselman.com/blog/URLsAreUI.aspx
+
+https://en.wikipedia.org/wiki/Wikipedia:Manual_of_Style/Computing#Website_addresses
+
+
 https://www.inbound.org.nz/blog/seo-guide
 
 http://getschema.org/index.php?title=BlogPosting
