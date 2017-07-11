@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2017-07-09
-// Last Modified:			2017-07-09
+// Last Modified:			2017-07-10
 // 
 
 using cloudscribe.Web.Common.Models;
@@ -11,6 +11,7 @@ using Microsoft.AspNetCore.Razor.TagHelpers;
 namespace cloudscribe.Web.Common.TagHelpers
 {
     [HtmlTargetElement("input", Attributes = FormItemDefinitionAttributeName)]
+    [HtmlTargetElement("textarea", Attributes = FormItemDefinitionAttributeName)]
     [HtmlTargetElement("select", Attributes = FormItemDefinitionAttributeName)]
     public class FormItemDefinitionTagHelper : TagHelper
     {

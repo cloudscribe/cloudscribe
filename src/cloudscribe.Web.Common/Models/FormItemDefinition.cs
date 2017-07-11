@@ -30,7 +30,12 @@ namespace cloudscribe.Web.Common.Models
         public string ReadOnlyPartialViewName { get; set; } = "FormItemLabelPartial";
 
         public string CssClass { get; set; }
-        
+
+        public string IconCssClass { get; set; }
+
+        public bool IconOnLeft { get; set; } = true;
+
+
         public int MaxLength { get; set; } = -1;
 
         public string MaxLengthErrorMessage { get; set; }

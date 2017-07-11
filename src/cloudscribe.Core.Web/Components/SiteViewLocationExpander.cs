@@ -2,18 +2,15 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 //  Author:                     Joe Audette
 //  Created:                    2016-03-03
-//	Last Modified:              2017-05-12
+//	Last Modified:              2017-07-11
 //
 
 using cloudscribe.Core.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc.Razor;
-using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
-using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 
 
 namespace cloudscribe.Core.Web.Components
@@ -47,12 +44,20 @@ namespace cloudscribe.Core.Web.Components
                 {
                     if (options != null)
                     {
+                        IEnumerable<string> tenantLocations = new[]
+                        {
+                            $"/{options.SiteFilesFolderName}/{tenant}/Views/{{1}}/{{0}}.cshtml",
+                            $"/{options.SiteFilesFolderName}/{tenant}/Views/Shared/{{0}}.cshtml",
+                            $"/{options.SiteFilesFolderName}/{tenant}/Views/EmailTemplates/{{0}}.cshtml"
+                        };
+                        viewLocations = tenantLocations.Concat(viewLocations);
 
                         IEnumerable<string> themeLocations = new[]
                         {
                             $"/{options.SiteFilesFolderName}/{tenant}/{options.SiteThemesFolderName}/{theme}/{{1}}/{{0}}.cshtml",
                             $"/{options.SiteFilesFolderName}/{tenant}/{options.SiteThemesFolderName}/{theme}/Shared/{{0}}.cshtml",
                             $"/{options.SiteFilesFolderName}/{tenant}/{options.SiteThemesFolderName}/{theme}/EmailTemplates/{{0}}.cshtml"
+                            
                         };
 
                         viewLocations = themeLocations.Concat(viewLocations);
@@ -68,8 +73,8 @@ namespace cloudscribe.Core.Web.Components
 
                             viewLocations = sharedThemeLocations.Concat(viewLocations);
                         }
+                        
                     }
-                    
                     
                 }
                 
