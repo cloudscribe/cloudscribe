@@ -1,6 +1,9 @@
 
 https://javascriptweblog.wordpress.com/2011/05/31/a-fresh-look-at-javascript-mixins/
 
+Build Web Apps Without All That JavaScript
+https://visualstudiomagazine.com/articles/2017/05/01/build-web-apps.aspx
+
 Best Practices for javascript projects
 https://github.com/wearehive/project-guidelines
 

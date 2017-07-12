@@ -30,5 +30,12 @@ namespace cloudscribe.Core.Web.Components
         public int DefaultPageSize_UserList { get; set; } = 10;
         public int DefaultPageSize_LogView { get; set; } = 10;
 
+        public string IconEmail { get; set; } = "glyphicon glyphicon-envelope";
+        public string IconUsername { get; set; } = "glyphicon glyphicon-circle-arrow-right";
+        public string IconPassword { get; set; } = "glyphicon glyphicon-lock";
+        public string IconFirstName { get; set; } = "glyphicon glyphicon-user";
+        public string IconLastName { get; set; } = "glyphicon glyphicon-user";
+        public string IconDateOfBirth { get; set; } = "glyphicon glyphicon-calendar";
+
     }
 }
