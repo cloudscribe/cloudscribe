@@ -2,6 +2,7 @@
 @using cloudscribe.Core.Models
 @using cloudscribe.Web.Common.Models
 @using cloudscribe.Web.Common.Components
+@using cloudscribe.Web.Common.Extensions
 @using cloudscribe.Core.Web
 @using Microsoft.Extensions.Options
 @using Microsoft.Extensions.Localization
@@ -16,6 +17,7 @@
     bool useHostTenants = true;
     if (multiTenantOptions.Mode != MultiTenantMode.HostName) { useHostTenants = false; }
     var ckOptions = await editorOptionsResolver.GetCkeditorOptions();
+    var baseUrl = this.Context.Request.GetCurrentBaseUrl() + "/";
 }
 <form method="post" class="form-horizontal" role="form" asp-antiforgery="true">
         <div asp-validation-summary="All" class="text-danger"></div> 
@@ -40,8 +42,11 @@
             <div class="form-group">
                 <label asp-for="SiteFolderName" class="col-md-2 control-label">@sr["Site Folder Name"]</label>
                 <div class="col-md-10">
-                    <input asp-for="SiteFolderName" class="form-control" />
-                    <span asp-validation-for="SiteFolderName" class="text-danger"></span> 
+                    <div class="input-group">
+                        <span class="input-group-addon" >@baseUrl</span>
+                        <input asp-for="SiteFolderName" class="form-control" />
+                    </div>
+                    <span asp-validation-for="SiteFolderName" class="text-danger"></span>
                     @Html.ValidationMessage("foldererror", new { @class = "text-danger" })
                 </div>
             </div>
