@@ -495,14 +495,16 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
                 }
                 user.WebSiteUrl = model.WebSiteUrl;
 
-                await UserManager.UpdateAsync((SiteUser)user);
-
                 await customUserInfo.HandleUserEditPostSuccess(
                         UserManager.Site,
                         user,
                         model,
                         HttpContext
                         );
+
+                await UserManager.UpdateAsync((SiteUser)user);
+
+                
 
                 this.AlertSuccess(string.Format(sr["user account for {0} was successfully updated."],
                         user.DisplayName), true);
