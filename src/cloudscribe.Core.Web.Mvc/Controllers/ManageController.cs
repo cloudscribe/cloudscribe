@@ -175,7 +175,6 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
                 
                 
                 user.WebSiteUrl = model.WebSiteUrl;
-                await userManager.UpdateAsync(user);
 
                 await customUserInfo.HandleUserInfoPostSuccess(
                         Site,
@@ -183,6 +182,11 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
                         model,
                         HttpContext
                         );
+
+
+                await userManager.UpdateAsync(user);
+
+                
 
                 this.AlertSuccess(sr["Your information has been updated."]);
             }
