@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:                  Joe Audette
 // Created:	                2017-07-01
-// Last Modified:           2017-07-04
+// Last Modified:           2017-07-14
 // 
 
 using cloudscribe.Core.Identity;
@@ -115,7 +115,29 @@ namespace sourceDev.WebApp.Components
             return Task.FromResult(result);
         }
 
-        public async Task HandleRegisterPostSuccess(
+        public Task ProcessUserBeforeCreate(ISiteUser siteUser, HttpContext httpContext)
+        {
+            if (siteUser != null)
+            {
+                siteUser.FirstName = httpContext.Request.Form["FirstName"];
+                siteUser.LastName = httpContext.Request.Form["LastName"];
+                
+                var dobString = httpContext.Request.Form["DateOfBirth"];
+
+                DateTime dob;
+                var dobParsed = DateTime.TryParse(dobString, out dob);
+                if (!dobParsed)
+                {
+                    siteUser.DateOfBirth = dob.Date;
+                }
+
+                // we don't need to save the user here it is saved after this method
+            }
+
+            return Task.FromResult(0);
+        }
+
+        public Task HandleRegisterPostSuccess(
             ISiteContext site,
             RegisterViewModel viewModel,
             HttpContext httpContext,
@@ -123,33 +145,19 @@ namespace sourceDev.WebApp.Components
             CancellationToken cancellationToken = default(CancellationToken)
             )
         {
-            // just testing that on success the user can be updated with custom data
+            
             if(loginResult.User != null)
             {
-                var siteUser = await userManager.FindByIdAsync(loginResult.User.Id.ToString());
-                if(siteUser != null)
-                {
-                    siteUser.FirstName = httpContext.Request.Form["FirstName"];
-                    siteUser.LastName = httpContext.Request.Form["LastName"];
-
-                    var dobString = httpContext.Request.Form["DateOfBirth"];
-                   
-                    DateTime dob;
-                    var dobParsed = DateTime.TryParse(dobString, out dob);
-                    if (!dobParsed)
-                    {
-                        siteUser.DateOfBirth = dob.Date;
-                    }
-                    
-                    await userManager.UpdateAsync(siteUser);
-                }
-
+                // here is where you could process additional custom fields into your own custom data storage
+                // if only updating native properties of siteuser use the method above
             }
             else
             {
                 log.LogError("user was null in HandleRegisterPostSuccess, unable to update user with custom data");
             }
-            
+
+            return Task.FromResult(0);
+
         }
 
     }

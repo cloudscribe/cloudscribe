@@ -2,13 +2,15 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2017-05-22
-// Last Modified:			2017-07-01
+// Last Modified:			2017-07-14
 // 
 
 using cloudscribe.Core.Identity;
 using cloudscribe.Core.Models;
+using cloudscribe.Core.Web.ExtensionPoints;
 using cloudscribe.Core.Web.ViewModels.Account;
 using cloudscribe.Core.Web.ViewModels.SiteUser;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.Authentication;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
@@ -26,7 +28,6 @@ namespace cloudscribe.Core.Web.Components
         public AccountService(
             SiteUserManager<SiteUser> userManager,
             SiteSignInManager<SiteUser> signInManager,
-           // IPasswordValidator<SiteUser> passwordValidator,
             IIdentityServerIntegration identityServerIntegration,
             ISocialAuthEmailVerfificationPolicy socialAuthEmailVerificationPolicy,
             IProcessAccountLoginRules loginRulesProcessor
@@ -38,7 +39,7 @@ namespace cloudscribe.Core.Web.Components
             this.identityServerIntegration = identityServerIntegration;
             this.socialAuthEmailVerificationPolicy = socialAuthEmailVerificationPolicy;
             this.loginRulesProcessor = loginRulesProcessor;
-            //this.passwordValidator = passwordValidator;
+            
 
             //log = logger;
         }
@@ -48,7 +49,6 @@ namespace cloudscribe.Core.Web.Components
         private readonly IIdentityServerIntegration identityServerIntegration;
         private readonly ISocialAuthEmailVerfificationPolicy socialAuthEmailVerificationPolicy;
         private readonly IProcessAccountLoginRules loginRulesProcessor;
-       // private readonly IPasswordValidator<SiteUser> passwordValidator;
         // private ILogger log;
 
         private async Task<SiteUser> CreateUserFromExternalLogin(
@@ -235,7 +235,12 @@ namespace cloudscribe.Core.Web.Components
         }
 
         
-        public async Task<UserLoginResult> TryRegister(RegisterViewModel model, ModelStateDictionary modelState)
+        public async Task<UserLoginResult> TryRegister(
+            RegisterViewModel model, 
+            ModelStateDictionary modelState,
+            HttpContext httpContext,
+            IHandleCustomRegistration customRegistration
+            )
         {
             var template = new LoginResultTemplate();
             IUserContext userContext = null;
@@ -246,9 +251,7 @@ namespace cloudscribe.Core.Web.Components
             {
                 userName = await userManager.SuggestLoginNameFromEmail(userManager.Site.Id, model.Email);
             }
-
-           
-
+            
             var user = new SiteUser
             {
                 SiteId = userManager.Site.Id,
@@ -259,6 +262,9 @@ namespace cloudscribe.Core.Web.Components
                 DisplayName = model.DisplayName,
                 AccountApproved = userManager.Site.RequireApprovalBeforeLogin ? false : true
             };
+
+            await customRegistration.ProcessUserBeforeCreate(user, httpContext);
+            
 
             if (model.DateOfBirth.HasValue)
             {
@@ -274,7 +280,7 @@ namespace cloudscribe.Core.Web.Components
             }
 
             var result = await userManager.CreateAsync(user, model.Password);
-
+            
             if (result.Succeeded)
             {
                 template.User = user;

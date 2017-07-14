@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2014-10-26
-// Last Modified:			2017-07-03
+// Last Modified:			2017-07-14
 // 
 
 using cloudscribe.Core.Identity;
@@ -387,7 +387,8 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
                     return View(viewName, model);
                 }
                 
-                var result = await accountService.TryRegister(model, ModelState);
+                var result = await accountService.TryRegister(model, ModelState, HttpContext, customRegistration);
+
                 if (result.SignInResult.Succeeded)
                 {
                     await customRegistration.HandleRegisterPostSuccess(
