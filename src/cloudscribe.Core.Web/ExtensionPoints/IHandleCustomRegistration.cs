@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2017-06-30
-// Last Modified:			2017-07-03
+// Last Modified:			2017-07-14
 // 
 
 using cloudscribe.Core.Identity;
@@ -79,6 +79,22 @@ namespace cloudscribe.Core.Web.ExtensionPoints
             );
 
         /// <summary>
+        /// this method is called just before the attempt to create the user by usermanager
+        /// if you need to update native user properties this is the time to do it.
+        /// I added this method because I have found that with EFCore since the dbcontext is scoped per request
+        /// it is only expected that SaveChanges will be called once during the request lifetime
+        /// so updating user properties and saving again in HandleRegisterPostSuccess doesn't always work.
+        /// Strangely it works for some properties but not others, ie I found that I it failed to update AuthorBio
+        /// though it did update firstname,lastname, and dob. Updating the user model here make sure the properties are set before the
+        /// call to create the user so it allows participating in the one SaveChanges that happens when the user is created and 
+        /// this works as expected for all properties of SiteUser
+        /// </summary>
+        /// <param name="user"></param>
+        /// <returns></returns>
+        Task ProcessUserBeforeCreate(ISiteUser user, HttpContext httpContext);
+
+
+        /// <summary>
         /// A method that will be invoked fromm the AccountController Register POST action method on successful registration.
         /// This is the right place to persist any custom data related to the newly registered user.
         /// The User property of the passed in loginResult should have an IUserContext object but you should do a null check.
@@ -134,6 +150,11 @@ namespace cloudscribe.Core.Web.ExtensionPoints
             )
         {
             return Task.FromResult(true);
+        }
+
+        public Task ProcessUserBeforeCreate(ISiteUser user, HttpContext httpContext)
+        {
+            return Task.FromResult(0);
         }
 
         public Task HandleRegisterPostSuccess(
