@@ -1,6 +1,8 @@
 
 https://stackoverflow.com/questions/44206205/ef-core-inject-dbcontext-with-many-potential-connection-strings
 
+https://en.wikipedia.org/wiki/Object-relational_impedance_mismatch
+
 
 https://blogs.msdn.microsoft.com/dotnet/2016/11/16/announcing-entity-framework-core-1-1/
 

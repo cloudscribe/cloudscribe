@@ -38,7 +38,7 @@
             {
                 <span class="@spnClass"><i class="@Model.IconCssClass" aria-hidden="true"></i></span>
             }
-            <select name="@Model.Key" asp-items="Model.Options" class="form-control" cs-form-item-definition="@Model" ></select>
+            <select name="@Model.Key" asp-items="Model.Options" title="@Model.Tooltip" class="form-control" cs-form-item-definition="@Model" ></select>
             @if (!string.IsNullOrWhiteSpace(Model.IconCssClass) && !Model.IconOnLeft)
             {
                 <span class="@spnClass"><i class="@Model.IconCssClass" aria-hidden="true"></i></span>

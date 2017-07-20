@@ -3,6 +3,8 @@ Some thingds such as Controllers, ViewComponents, and TagHelpers are not resolve
 However this can be changed:
 http://stackoverflow.com/documentation/asp.net-core/1949/dependency-injection/23212/resolve-controllers-viewcomponents-and-taghelpers-via-dependency-injection#t=201701121334489459167
 
+http://josephwoodward.co.uk/2017/07/injecting-javascript-into-views-using-itaghelpercomponent
+
 http://www.maherjendoubi.io/new-asp-net-core-feature-coming-to-1-1-better-integration-of-3rd-party-ioc-containers-in-startup-class/
 
 http://stackoverflow.com/questions/37512862/asp-net-core-identitydbcontext-using-dependency-injection

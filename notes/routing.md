@@ -1,6 +1,8 @@
 
 http://benjii.me/2016/08/global-routes-for-asp-net-core-mvc/
 
+http://codeclimber.net.nz/archive/2017/07/14/how-to-get-the-correct-requesturl-when-behind-a-load-balancer/
+
 http://www.codeproject.com/Articles/1110613/Understanding-Routing-Precedence-in-ASP-NET-MVC-an
 
 http://mobilemancer.com/2016/07/06/how-to-master-asp-net-core-web-api-attribute-routing/
