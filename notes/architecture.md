@@ -1,7 +1,11 @@
 
+
+
 https://www.microsoft.com/net/learn/architecture
 
 https://cloud.google.com/apis/design/
+
+http://msprogrammer.serviciipeweb.ro/2017/07/10/making-any-call-to-a-function-of-an-object-thread-safe/
 
 Actor Model
 https://github.com/dotnet/orleans

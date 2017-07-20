@@ -1,5 +1,7 @@
 
 
+https://channel9.msdn.com/Shows/Code-Conversations/Introduction-to-MSBuild-in-NET-Core-with-Nate-McMaster
+
 https://github.com/hashicorp/terraform
 
 https://continuousdelivery.com/

@@ -2,6 +2,8 @@
 
 https://damienbod.com/2016/08/29/implementing-undo-redo-in-asp-net-core/
 
+http://lightswitchhelpwebsite.com/Blog/tabid/61/EntryId/4309/An-Angular-4-Net-Core-Application-Updater.aspx
+
 
 ### Event Calendars
 

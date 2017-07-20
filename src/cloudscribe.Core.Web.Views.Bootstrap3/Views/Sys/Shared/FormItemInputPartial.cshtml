@@ -22,7 +22,7 @@
             {
                 <span class="@spnClass"><i class="@Model.IconCssClass" aria-hidden="true"></i></span>
             }   
-            <input id="@Model.Key" name="@Model.Key" value="@ViewData[Model.Key]" class="form-control @Model.CssClass" cs-form-item-definition="@Model" />
+            <input id="@Model.Key" name="@Model.Key" value="@ViewData[Model.Key]" title="@Model.Tooltip" class="form-control @Model.CssClass" cs-form-item-definition="@Model" />
             @if (!string.IsNullOrWhiteSpace(Model.IconCssClass) && !Model.IconOnLeft)
             {
                 <span class="@spnClass"><i class="@Model.IconCssClass" aria-hidden="true"></i></span>
