@@ -134,7 +134,8 @@ namespace cloudscribe.Core.Web.Test
         {
             var tzHelper = new TimeZoneHelper(new DateTimeZoneCache(TzdbDateTimeZoneSource.Default));
 
-            var localTime = DateTime.Parse("09/03/2016 1:46 PM"); // central time but local time is eastern 2:26
+            /*var localTime = DateTime.Parse("09/03/2016 1:46 PM");*/ // central time but local time is eastern 2:26
+            var localTime = DateTime.Parse("2016-09-03T13:46");
 
             Assert.True(localTime.Kind == DateTimeKind.Unspecified);
             Assert.True(localTime.Hour == 13);
