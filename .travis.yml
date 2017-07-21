@@ -1,0 +1,19 @@
+language: csharp
+solution: cloudscribe.sln
+sudo: false
+dist: trusty
+mono: none
+dotnet: 1.0.4
+env:
+  global:
+    - DOTNET_SKIP_FIRST_TIME_EXPERIENCE: true
+    - DOTNET_CLI_TELEMETRY_OPTOUT: 1   
+os:
+  - linux
+  - osx
+osx_image: xcode8.3
+script:
+  - if test "$TRAVIS_OS_NAME" == "linux"; then dotnet restore; fi
+  - if test "$TRAVIS_OS_NAME" == "osx"; then dotnet restore --disable-parallel; fi
+  - dotnet build -c Release
+  - dotnet test -c Release ./test/cloudscribe.Core.Web.Test/cloudscribe.Core.Web.Test.csproj
