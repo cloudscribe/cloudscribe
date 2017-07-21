@@ -86,19 +86,6 @@
     <DotNetCliToolReference Include="Microsoft.EntityFrameworkCore.Tools.DotNet" Version="1.*" />
   </ItemGroup>
   
-  <ItemGroup>
-    <EmbeddedResource Update="GlobalResources\CloudscribeIds4Resources.fr.resx">
-      <Generator></Generator>
-    </EmbeddedResource>
-    <EmbeddedResource Update="GlobalResources\CloudscribeIntegration.en-US.resx">
-      <Generator></Generator>
-    </EmbeddedResource>
-    <EmbeddedResource Update="GlobalResources\MenuResources.en-US.resx">
-      <Generator></Generator>
-    </EmbeddedResource>
-    <EmbeddedResource Update="GlobalResources\MenuResources.fr.resx">
-      <Generator></Generator>
-    </EmbeddedResource>
-  </ItemGroup>
+  
 
 </Project>
