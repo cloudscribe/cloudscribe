@@ -4,10 +4,7 @@
     <TargetFramework>netcoreapp1.1</TargetFramework>
   </PropertyGroup>
 
-  <PropertyGroup>
-    <PackageTargetFallback>$(PackageTargetFallback);portable-net45+win8+wp8+wpa81;</PackageTargetFallback>
-  </PropertyGroup>
-
+ 
   <ItemGroup>
     <Content Remove="appsettings.dev.json" CopyToPublishDirectory="Never" />
     <Content Remove="bower.json" CopyToPublishDirectory="Never" />
