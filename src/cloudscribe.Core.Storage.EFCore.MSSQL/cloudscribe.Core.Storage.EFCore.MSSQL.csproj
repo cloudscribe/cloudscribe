@@ -40,15 +40,16 @@
   <ItemGroup>
     <PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="2.0.0-*" />
     <PackageReference Include="Microsoft.Extensions.Configuration" Version="2.0.0-*" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="1.1.*" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="1.1.*" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer.Design" Version="1.1.*" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="2.0.0-*" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="2.0.0-*" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Relational" Version="2.0.0-*" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="2.0.0-*" />
     <PackageReference Include="Microsoft.AspNetCore.Hosting" Version="2.0.0-*" />
     <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="2.0.0-*" />
   </ItemGroup>
 
   <ItemGroup>
-    <DotNetCliToolReference Include="Microsoft.EntityFrameworkCore.Tools.DotNet" Version="1.0.*" />
+    <DotNetCliToolReference Include="Microsoft.EntityFrameworkCore.Tools.DotNet" Version="2.0.0-*" />
   </ItemGroup>
 
 </Project>

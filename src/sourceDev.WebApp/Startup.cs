@@ -91,7 +91,7 @@ namespace sourceDev.WebApp
 
             /* optional and only needed if you are using cloudscribe Logging  */
             //services.AddCloudscribeLoggingNoDbStorage(Configuration);
-            services.AddCloudscribeLogging();
+            //services.AddCloudscribeLogging();
 
             /* these are optional and only needed if using cloudscribe Setup */
             //services.Configure<SetupOptions>(Configuration.GetSection("SetupOptions"));
@@ -187,7 +187,7 @@ namespace sourceDev.WebApp
                         options.AddCloudscribeNavigationBootstrap3Views();
                         options.AddCloudscribeCoreBootstrap3Views();
                         options.AddCloudscribeFileManagerBootstrap3Views();
-                        options.AddCloudscribeLoggingBootstrap3Views();
+                        //options.AddCloudscribeLoggingBootstrap3Views();
 
                         options.AddCloudscribeCoreIdentityServerIntegrationBootstrap3Views();
 
@@ -218,12 +218,12 @@ namespace sourceDev.WebApp
             IOptions<cloudscribe.Core.Models.MultiTenantOptions> multiTenantOptionsAccessor,
             IServiceProvider serviceProvider,
             IOptions<RequestLocalizationOptions> localizationOptionsAccessor
-            , cloudscribe.Logging.Web.ILogRepository logRepo
+            //, cloudscribe.Logging.Web.ILogRepository logRepo
             )
         {
             loggerFactory.AddConsole(Configuration.GetSection("Logging"));
             loggerFactory.AddDebug();
-            ConfigureLogging(loggerFactory, serviceProvider, logRepo);
+            //ConfigureLogging(loggerFactory, serviceProvider, logRepo);
 
             if (env.IsDevelopment())
             {
@@ -255,8 +255,8 @@ namespace sourceDev.WebApp
             app.UseCloudscribeCore(
                     loggerFactory,
                     multiTenantOptions,
-                    SslIsAvailable,
-                    IdentityServerIntegratorFunc);
+                    SslIsAvailable
+                    );
 
             UseMvc(app, multiTenantOptions.Mode == cloudscribe.Core.Models.MultiTenantMode.FolderName);
 
@@ -354,15 +354,15 @@ namespace sourceDev.WebApp
                     // site1 05301194-da1d-43a8-9aa4-6c5f8959f37b
                     // site2 a9e2c249-90b4-4770-9e99-9702d89f73b6
                     // replace null with your siteid and run the app, then change it back to null since it can only be a one time task
-                    string sId = null;
+                    //string sId = null;
 
-                    CloudscribeIdentityServerIntegrationNoDbStorage.InitializeDatabaseAsync(
-                        app.ApplicationServices,
-                        sId,
-                        IdServerClients.Get(),
-                        IdServerResources.GetApiResources(),
-                        IdServerResources.GetIdentityResources()
-                        ).Wait();
+                    //CloudscribeIdentityServerIntegrationNoDbStorage.InitializeDatabaseAsync(
+                     //   app.ApplicationServices,
+                     //   sId,
+                     //   IdServerClients.Get(),
+                     //   IdServerResources.GetApiResources(),
+                     //   IdServerResources.GetIdentityResources()
+                     //   ).Wait();
 
                     break;
 
@@ -372,7 +372,7 @@ namespace sourceDev.WebApp
                     CoreEFStartup.InitializeDatabaseAsync(app.ApplicationServices).Wait();
 
                     // this one is only needed if using cloudscribe Logging with EF as the logging storage
-                    LoggingEFStartup.InitializeDatabaseAsync(app.ApplicationServices).Wait();
+                    //LoggingEFStartup.InitializeDatabaseAsync(app.ApplicationServices).Wait();
 
                     // you can use this hack to add clients and scopes into the db during startup if needed
                     // I used this before we implemented the UI for adding them
@@ -384,15 +384,15 @@ namespace sourceDev.WebApp
                     // site1 8f54733c-3f3a-4971-bb1f-8950cea42f1a
                     // site2 7c111db3-e270-497a-9a12-aed436c764c6
                     // replace null with your siteid and run the app, then change it back to null since it can only be a one time task
-                    string siteId = null;
+                    //tring siteId = null;
 
-                    CloudscribeIdentityServerIntegrationEFCoreStorage.InitializeDatabaseAsync(
-                        app.ApplicationServices,
-                        siteId,
-                        IdServerClients.Get(),
-                        IdServerResources.GetApiResources(),
-                        IdServerResources.GetIdentityResources()
-                        ).Wait();
+                    //CloudscribeIdentityServerIntegrationEFCoreStorage.InitializeDatabaseAsync(
+                    //    app.ApplicationServices,
+                    //    siteId,
+                     //   IdServerClients.Get(),
+                    //    IdServerResources.GetApiResources(),
+                     //   IdServerResources.GetIdentityResources()
+                    //    ).Wait();
 
                     break;
             }
@@ -404,7 +404,7 @@ namespace sourceDev.WebApp
             services.AddAuthorization(options =>
             {
                 options.AddCloudscribeCoreDefaultPolicies();
-                options.AddCloudscribeLoggingDefaultPolicy();
+               // options.AddCloudscribeLoggingDefaultPolicy();
 
                 options.AddPolicy(
                     "IdentityServerAdminPolicy",
@@ -449,13 +449,13 @@ namespace sourceDev.WebApp
             {
                 case "NoDb":
                     services.AddCloudscribeCoreNoDbStorage();
-                    services.AddCloudscribeLoggingNoDbStorage(Configuration);
+                    //services.AddCloudscribeLoggingNoDbStorage(Configuration);
 
-                    services.AddIdentityServer()
-                        .AddCloudscribeCoreNoDbIdentityServerStorage()
-                        .AddCloudscribeIdentityServerIntegration()
-                        .AddTemporarySigningCredential()
-                        ;
+                    //services.AddIdentityServer()
+                    //    .AddCloudscribeCoreNoDbIdentityServerStorage()
+                     //   .AddCloudscribeIdentityServerIntegration()
+                     //   .AddTemporarySigningCredential()
+                     //   ;
 
                     break;
 
@@ -466,27 +466,27 @@ namespace sourceDev.WebApp
                     {
                         case "pgsql":
                             var pgConnection = Configuration.GetConnectionString("PostgreSqlEntityFrameworkConnectionString");
-                            services.AddCloudscribeCoreEFStoragePostgreSql(pgConnection);
-                            services.AddCloudscribeLoggingEFStoragePostgreSql(pgConnection);
+                            //services.AddCloudscribeCoreEFStoragePostgreSql(pgConnection);
+                            //services.AddCloudscribeLoggingEFStoragePostgreSql(pgConnection);
 
-                            services.AddIdentityServer()
-                                .AddCloudscribeCoreEFIdentityServerStoragePostgreSql(pgConnection)
-                                .AddCloudscribeIdentityServerIntegration()
-                                .AddTemporarySigningCredential()
-                                ;
+                        //    services.AddIdentityServer()
+                        //        .AddCloudscribeCoreEFIdentityServerStoragePostgreSql(pgConnection)
+                        //        .AddCloudscribeIdentityServerIntegration()
+                        //        .AddTemporarySigningCredential()
+                        //        ;
 
                             break;
 
                         case "MySql":
                             var mysqlConnection = Configuration.GetConnectionString("MySqlEntityFrameworkConnectionString");
                             services.AddCloudscribeCoreEFStorageMySql(mysqlConnection);
-                            services.AddCloudscribeLoggingEFStorageMySQL(mysqlConnection);
+                            //services.AddCloudscribeLoggingEFStorageMySQL(mysqlConnection);
 
-                            services.AddIdentityServer()
-                                .AddCloudscribeCoreEFIdentityServerStorageMySql(mysqlConnection)
-                                .AddCloudscribeIdentityServerIntegration()
-                                .AddTemporarySigningCredential()
-                                ;
+                            //services.AddIdentityServer()
+                            //    .AddCloudscribeCoreEFIdentityServerStorageMySql(mysqlConnection)
+                            //    .AddCloudscribeIdentityServerIntegration()
+                            //    .AddTemporarySigningCredential()
+                            //    ;
 
                             break;
 
@@ -494,13 +494,13 @@ namespace sourceDev.WebApp
                         default:
                             var connectionString = Configuration.GetConnectionString("EntityFrameworkConnectionString");
                             services.AddCloudscribeCoreEFStorageMSSQL(connectionString);
-                            services.AddCloudscribeLoggingEFStorageMSSQL(connectionString);
+                            //services.AddCloudscribeLoggingEFStorageMSSQL(connectionString);
 
-                            services.AddIdentityServer()
-                                .AddCloudscribeCoreEFIdentityServerStorageMSSQL(connectionString)
-                                .AddCloudscribeIdentityServerIntegration()
-                                .AddTemporarySigningCredential()
-                                ;
+                            //services.AddIdentityServer()
+                            //    .AddCloudscribeCoreEFIdentityServerStorageMSSQL(connectionString)
+                            //    .AddCloudscribeIdentityServerIntegration()
+                            //    .AddTemporarySigningCredential()
+                            //    ;
 
                             break;
                     }
@@ -513,7 +513,7 @@ namespace sourceDev.WebApp
         private void ConfigureLogging(
             ILoggerFactory loggerFactory,
             IServiceProvider serviceProvider
-            , cloudscribe.Logging.Web.ILogRepository logRepo
+            //, cloudscribe.Logging.Web.ILogRepository logRepo
             )
         {
 
@@ -542,7 +542,7 @@ namespace sourceDev.WebApp
                 return true;
             };
 
-            loggerFactory.AddDbLogger(serviceProvider, logFilter, logRepo);
+            //loggerFactory.AddDbLogger(serviceProvider, logFilter, logRepo);
         }
 
     }

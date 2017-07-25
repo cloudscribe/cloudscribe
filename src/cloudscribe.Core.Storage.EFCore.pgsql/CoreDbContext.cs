@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2015-11-16
-// Last Modified:			2017-06-29
+// Last Modified:			2017-07-25
 // 
 
 using cloudscribe.Core.Models;
@@ -50,7 +50,7 @@ namespace cloudscribe.Core.Storage.EFCore.pgsql
 
             modelBuilder.Entity<SiteSettings>(entity =>
             {
-                entity.ForNpgsqlToTable(tableNames.TablePrefix + tableNames.SiteTableName);
+                entity.ToTable(tableNames.TablePrefix + tableNames.SiteTableName);
                 
                 entity.HasKey(p => p.Id);
 
@@ -435,7 +435,7 @@ namespace cloudscribe.Core.Storage.EFCore.pgsql
 
             modelBuilder.Entity<SiteHost>(entity =>
             {
-                entity.ForNpgsqlToTable(tableNames.TablePrefix + tableNames.SiteHostTableName);
+                entity.ToTable(tableNames.TablePrefix + tableNames.SiteHostTableName);
 
                 entity.HasKey(p => p.Id);
 
@@ -460,7 +460,7 @@ namespace cloudscribe.Core.Storage.EFCore.pgsql
             
             modelBuilder.Entity<SiteUser>(entity =>
             {
-                entity.ForNpgsqlToTable(tableNames.TablePrefix + tableNames.UserTableName);
+                entity.ToTable(tableNames.TablePrefix + tableNames.UserTableName);
 
                 entity.Property(p => p.Id)
                    //.ForSqlServerHasColumnType("uniqueidentifier")
@@ -612,7 +612,7 @@ namespace cloudscribe.Core.Storage.EFCore.pgsql
             {
                 entity.Ignore(x => x.MemberCount);
 
-                entity.ForNpgsqlToTable(tableNames.TablePrefix + tableNames.RoleTableName);
+                entity.ToTable(tableNames.TablePrefix + tableNames.RoleTableName);
 
                 entity.HasKey(p => p.Id);
 
@@ -651,7 +651,7 @@ namespace cloudscribe.Core.Storage.EFCore.pgsql
 
             modelBuilder.Entity<UserClaim>(entity =>
             {
-                entity.ForNpgsqlToTable(tableNames.TablePrefix + tableNames.UserClaimTableName);
+                entity.ToTable(tableNames.TablePrefix + tableNames.UserClaimTableName);
                 
                 entity.HasKey(p => p.Id);
 
@@ -691,7 +691,7 @@ namespace cloudscribe.Core.Storage.EFCore.pgsql
 
             modelBuilder.Entity<UserLogin>(entity =>
             {
-                entity.ForNpgsqlToTable(tableNames.TablePrefix + tableNames.UserLoginTableName);
+                entity.ToTable(tableNames.TablePrefix + tableNames.UserLoginTableName);
 
 
                 entity.HasKey(p => new { p.UserId, p.SiteId, p.LoginProvider, p.ProviderKey });
@@ -725,7 +725,7 @@ namespace cloudscribe.Core.Storage.EFCore.pgsql
 
             modelBuilder.Entity<GeoCountry>(entity =>
             {
-                entity.ForNpgsqlToTable(tableNames.TablePrefix + tableNames.GeoCountryTableName);
+                entity.ToTable(tableNames.TablePrefix + tableNames.GeoCountryTableName);
 
                 entity.HasKey(p => p.Id);
 
@@ -755,7 +755,7 @@ namespace cloudscribe.Core.Storage.EFCore.pgsql
 
             modelBuilder.Entity<GeoZone>(entity =>
             {
-                entity.ForNpgsqlToTable(tableNames.TablePrefix + tableNames.GeoZoneTableName);
+                entity.ToTable(tableNames.TablePrefix + tableNames.GeoZoneTableName);
 
                 entity.HasKey(p => p.Id);
 
@@ -787,7 +787,7 @@ namespace cloudscribe.Core.Storage.EFCore.pgsql
             
             modelBuilder.Entity<UserRole>(entity =>
             {
-                entity.ForNpgsqlToTable(tableNames.TablePrefix + tableNames.UserRoleTableName);
+                entity.ToTable(tableNames.TablePrefix + tableNames.UserRoleTableName);
 
                 entity.Property(p => p.UserId)
                 //.ForSqlServerHasColumnType("uniqueidentifier")
@@ -806,7 +806,7 @@ namespace cloudscribe.Core.Storage.EFCore.pgsql
             
             modelBuilder.Entity<UserLocation>(entity =>
             {
-                entity.ForNpgsqlToTable(tableNames.TablePrefix + tableNames.UserLocationTableName);
+                entity.ToTable(tableNames.TablePrefix + tableNames.UserLocationTableName);
 
                 entity.HasKey(p => p.Id);
 
