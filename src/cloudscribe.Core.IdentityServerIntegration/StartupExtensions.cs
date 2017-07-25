@@ -7,17 +7,11 @@ using IdentityModel;
 using IdentityServer4;
 using IdentityServer4.Configuration;
 using IdentityServer4.Hosting;
-using IdentityServer4.Infrastructure;
 using IdentityServer4.Services;
 using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Cors.Infrastructure;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Mvc.Razor;
-using Microsoft.Extensions.FileProviders;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
-using System;
-using System.Reflection;
 
 // https://github.com/IdentityServer/IdentityServer4/issues/19
 
@@ -46,7 +40,8 @@ namespace Microsoft.Extensions.DependencyInjection
 
             builder.Services.Configure<IdentityOptions>(options =>
             {
-                options.Cookies.ApplicationCookie.AuthenticationScheme = AuthenticationScheme.Application;
+                // commented out 2017-07-25 breaking change in 2.0
+                //options.Cookies.ApplicationCookie.AuthenticationScheme = AuthenticationScheme.Application;
                 options.ClaimsIdentity.UserIdClaimType = JwtClaimTypes.Subject;
                 options.ClaimsIdentity.UserNameClaimType = JwtClaimTypes.Name;
                 options.ClaimsIdentity.RoleClaimType = JwtClaimTypes.Role;
@@ -73,24 +68,7 @@ namespace Microsoft.Extensions.DependencyInjection
 
 
 
-        //public static IServiceCollection AddCloudscribeIdentityServerIntegration(this IServiceCollection services)
-        //{
-        //    services.AddScoped<IIdentityServerIntegration, Integration>();
-
-        //    return services;
-        //}
-
-        //[Obsolete("AddEmbeddedViewsForCloudscribeIdentityServerIntegration is deprecated, please use AddEmbeddedBootstrap3ViewsForCloudscribeCoreIdentityServerIntegration instead.")]
-        //public static RazorViewEngineOptions AddEmbeddedViewsForCloudscribeIdentityServerIntegration(this RazorViewEngineOptions options)
-        //{
-        //    options.AddEmbeddedBootstrap3ViewsForCloudscribeCoreIdentityServerIntegration();
-        //    //options.FileProviders.Add(new EmbeddedFileProvider(
-        //    //        typeof(CloudscribeIntegration).GetTypeInfo().Assembly,
-        //    //        "cloudscribe.Core.IdentityServerIntegration"
-        //    //    ));
-
-        //    return options;
-        //}
+        
 
     }
 }

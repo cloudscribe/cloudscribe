@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2014-10-26
-// Last Modified:			2017-07-09
+// Last Modified:			2017-07-25
 // 
 
 using cloudscribe.Core.Models;
@@ -450,7 +450,8 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
                 return View("Error");
             }
             var userLogins = await userManager.GetLoginsAsync(user);
-            var otherLogins = signInManager.GetExternalAuthenticationSchemes().Where(auth => userLogins.All(ul => auth.AuthenticationScheme != ul.LoginProvider)).ToList();
+            var externalSchemes = await signInManager.GetExternalAuthenticationSchemesAsync();
+            var otherLogins = externalSchemes.Where(auth => userLogins.All(ul => auth.Name != ul.LoginProvider)).ToList();
             ViewBag.ShowRemoveButton = user.PasswordHash != null || userLogins.Count > 1;
             return View(new ManageLoginsViewModel
             {

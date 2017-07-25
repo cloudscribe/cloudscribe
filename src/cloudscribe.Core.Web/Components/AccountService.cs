@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2017-05-22
-// Last Modified:			2017-07-14
+// Last Modified:			2017-07-25
 // 
 
 using cloudscribe.Core.Identity;
@@ -11,7 +11,8 @@ using cloudscribe.Core.Web.ExtensionPoints;
 using cloudscribe.Core.Web.ViewModels.Account;
 using cloudscribe.Core.Web.ViewModels.SiteUser;
 using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Http.Authentication;
+//using Microsoft.AspNetCore.Http.Authentication;
+using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 using System;
@@ -464,9 +465,10 @@ namespace cloudscribe.Core.Web.Components
             return signInManager.ConfigureExternalAuthenticationProperties(provider, returnUrl);
         }
 
-        public IEnumerable<AuthenticationDescription> GetExternalAuthenticationSchemes()
+        public async Task<List<Microsoft.AspNetCore.Authentication.AuthenticationScheme>> GetExternalAuthenticationSchemes()
         {
-            return signInManager.GetExternalAuthenticationSchemes().OrderBy(x => x.DisplayName);
+            var result = await signInManager.GetExternalAuthenticationSchemesAsync();
+            return result.OrderBy(x => x.DisplayName).ToList();
         }
 
         public bool IsSignedIn(ClaimsPrincipal user)

@@ -6,13 +6,14 @@
 // cookie if the security stamp is still valid. By re-issuing the cookie from the
 // user's claims in the database, we lose crucial claims that were only available
 // at login time (idp, amr, sid, etc).
+// Last Modified 2017-07-25 JA
 
 using Microsoft.AspNetCore.Identity;
 using System;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.Extensions.Options;
-using Microsoft.AspNetCore.Builder;
 using cloudscribe.Core.Models;
 using cloudscribe.Core.Identity;
 
@@ -20,21 +21,23 @@ namespace cloudscribe.Core.IdentityServerIntegration
 {
     public class SecurityStampValidator<TUser> : ISecurityStampValidator where TUser : SiteUser
     {
-        private readonly IdentityOptions _options;
+        private readonly SecurityStampValidatorOptions _options;
         private readonly SiteSignInManager<TUser> _signInManager;
+        private ISystemClock _clock;
 
-        public SecurityStampValidator(IOptions<IdentityOptions> options, SiteSignInManager<TUser> signInManager)
+        public SecurityStampValidator(IOptions<SecurityStampValidatorOptions> options, SiteSignInManager<TUser> signInManager, ISystemClock clock)
         {
             _options = options.Value;
             _signInManager = signInManager;
+            _clock = clock;
         }
 
         public async Task ValidateAsync(CookieValidatePrincipalContext context)
         {
             var currentUtc = DateTimeOffset.UtcNow;
-            if (context.Options != null && context.Options.SystemClock != null)
+            if (context.Options != null && _clock != null)
             {
-                currentUtc = context.Options.SystemClock.UtcNow;
+                currentUtc = _clock.UtcNow;
             }
             var issuedUtc = context.Properties.IssuedUtc;
 
@@ -43,7 +46,7 @@ namespace cloudscribe.Core.IdentityServerIntegration
             if (issuedUtc != null)
             {
                 var timeElapsed = currentUtc.Subtract(issuedUtc.Value);
-                validate = timeElapsed > _options.SecurityStampValidationInterval;
+                validate = timeElapsed > _options.ValidationInterval;
             }
             if (validate)
             {

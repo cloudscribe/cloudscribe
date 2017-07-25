@@ -66,11 +66,12 @@ namespace Microsoft.AspNetCore.Builder
                 // resolve static files from wwwroot folders within themes and within sitefiles
                 builder.UseSiteAndThemeStaticFiles(loggerFactory, multiTenantOptions, ctx.Tenant);
 
-                builder.UseCloudscribeCoreDefaultAuthentication(
-                    loggerFactory,
-                    multiTenantOptions,
-                    ctx.Tenant,
-                    sslIsAvailable);
+                //commented out 2017-07-25 breaking change in 2.0
+                //builder.UseCloudscribeCoreDefaultAuthentication(
+                //    loggerFactory,
+                //    multiTenantOptions,
+                //    ctx.Tenant,
+                //    sslIsAvailable);
 
                 // to make this multi tenant for folders we are
                 // using a fork of IdentityServer4 and hoping to get changes so we don't need a fork
@@ -110,258 +111,247 @@ namespace Microsoft.AspNetCore.Builder
 
         }
 
-        public static IApplicationBuilder UseCloudscribeCoreDefaultAuthentication(
-           this IApplicationBuilder builder,
-           ILoggerFactory loggerFactory,
-           MultiTenantOptions multiTenantOptions,
-           SiteContext tenant,
-           bool sslIsAvailable = true,
-           CookieSecurePolicy applicationCookieSecure = CookieSecurePolicy.SameAsRequest
-           )
-        {
+        //public static IApplicationBuilder UseCloudscribeCoreDefaultAuthentication(
+        //   this IApplicationBuilder builder,
+        //   ILoggerFactory loggerFactory,
+        //   MultiTenantOptions multiTenantOptions,
+        //   SiteContext tenant,
+        //   bool sslIsAvailable = true,
+        //   CookieSecurePolicy applicationCookieSecure = CookieSecurePolicy.SameAsRequest
+        //   )
+        //{
 
-            var useFolder = !multiTenantOptions.UseRelatedSitesMode
-                                        && multiTenantOptions.Mode == cloudscribe.Core.Models.MultiTenantMode.FolderName
-                                        && tenant.SiteFolderName.Length > 0;
+        //    var useFolder = !multiTenantOptions.UseRelatedSitesMode
+        //                                && multiTenantOptions.Mode == cloudscribe.Core.Models.MultiTenantMode.FolderName
+        //                                && tenant.SiteFolderName.Length > 0;
 
-            var externalCookieOptions = builder.SetupOtherCookies(
-                    AuthenticationScheme.External,
-                    multiTenantOptions.UseRelatedSitesMode,
-                    tenant);
-            builder.UseCookieAuthentication(externalCookieOptions);
+        //    var externalCookieOptions = builder.SetupOtherCookies(
+        //            AuthenticationScheme.External,
+        //            multiTenantOptions.UseRelatedSitesMode,
+        //            tenant);
+        //    builder.UseCookieAuthentication(externalCookieOptions);
 
-            var twoFactorRememberMeCookieOptions = builder.SetupOtherCookies(
-                AuthenticationScheme.TwoFactorRememberMe,
-                multiTenantOptions.UseRelatedSitesMode,
-                tenant);
-            builder.UseCookieAuthentication(twoFactorRememberMeCookieOptions);
+        //    var twoFactorRememberMeCookieOptions = builder.SetupOtherCookies(
+        //        AuthenticationScheme.TwoFactorRememberMe,
+        //        multiTenantOptions.UseRelatedSitesMode,
+        //        tenant);
+        //    builder.UseCookieAuthentication(twoFactorRememberMeCookieOptions);
 
-            var twoFactorUserIdCookie = builder.SetupOtherCookies(
-                AuthenticationScheme.TwoFactorUserId,
-                multiTenantOptions.UseRelatedSitesMode,
-                tenant);
-            builder.UseCookieAuthentication(twoFactorUserIdCookie);
+        //    var twoFactorUserIdCookie = builder.SetupOtherCookies(
+        //        AuthenticationScheme.TwoFactorUserId,
+        //        multiTenantOptions.UseRelatedSitesMode,
+        //        tenant);
+        //    builder.UseCookieAuthentication(twoFactorUserIdCookie);
 
-            //var cookieEvents = new CookieAuthenticationEvents();
-            var logger = loggerFactory.CreateLogger<SiteAuthCookieValidator>();
-            var cookieValidator = new SiteAuthCookieValidator(logger);
-            var appCookieOptions = builder.SetupAppCookie(
-                cookieValidator,
-                AuthenticationScheme.Application,
-                multiTenantOptions.UseRelatedSitesMode,
-                tenant,
-                applicationCookieSecure
-                );
-            builder.UseCookieAuthentication(appCookieOptions);
-
-            
-            builder.UseSocialAuth(tenant, externalCookieOptions, useFolder, sslIsAvailable);
-
-
-            return builder;
-        }
-
-        public static IApplicationBuilder UseSocialAuth(
-            this IApplicationBuilder app,
-            SiteContext site,
-            CookieAuthenticationOptions externalCookieOptions,
-            bool shouldUseFolder,
-            bool sslIsAvailable = true
-            )
-        {
-            // TODO: will this require a restart if the options are updated in the ui?
-            // no just need to clear the tenant cache after updating the settings
-            if (!string.IsNullOrWhiteSpace(site.GoogleClientId))
-            {
-                var googleOptions = new GoogleOptions();
-                googleOptions.AuthenticationScheme = "Google";
-                googleOptions.SignInScheme = externalCookieOptions.AuthenticationScheme;
-                googleOptions.ClientId = site.GoogleClientId;
-                googleOptions.ClientSecret = site.GoogleClientSecret;
-                if (shouldUseFolder)
-                {
-                    googleOptions.CallbackPath = "/" + site.SiteFolderName + "/signin-google";
-                }
-
-                app.UseGoogleAuthentication(googleOptions);
-            }
-
-            if (!string.IsNullOrWhiteSpace(site.FacebookAppId))
-            {
-                var facebookOptions = new FacebookOptions();
-                facebookOptions.AuthenticationScheme = "Facebook";
-                facebookOptions.SignInScheme = externalCookieOptions.AuthenticationScheme;
-                facebookOptions.AppId = site.FacebookAppId;
-                facebookOptions.AppSecret = site.FacebookAppSecret;
-
-                if (shouldUseFolder)
-                {
-                    facebookOptions.CallbackPath = "/" + site.SiteFolderName + "/signin-facebook";
-                }
-
-                app.UseFacebookAuthentication(facebookOptions);
-            }
-
-            if (!string.IsNullOrWhiteSpace(site.MicrosoftClientId))
-            {
-                var microsoftOptions = new MicrosoftAccountOptions();
-                microsoftOptions.SignInScheme = externalCookieOptions.AuthenticationScheme;
-                microsoftOptions.ClientId = site.MicrosoftClientId;
-                microsoftOptions.ClientSecret = site.MicrosoftClientSecret;
-                if (shouldUseFolder)
-                {
-                    microsoftOptions.CallbackPath = "/" + site.SiteFolderName + "/signin-microsoft";
-                }
-
-                app.UseMicrosoftAccountAuthentication(microsoftOptions);
-            }
+        //    //var cookieEvents = new CookieAuthenticationEvents();
+        //    var logger = loggerFactory.CreateLogger<SiteAuthCookieValidator>();
+        //    var cookieValidator = new SiteAuthCookieValidator(logger);
+        //    var appCookieOptions = builder.SetupAppCookie(
+        //        cookieValidator,
+        //        AuthenticationScheme.Application,
+        //        multiTenantOptions.UseRelatedSitesMode,
+        //        tenant,
+        //        applicationCookieSecure
+        //        );
+        //    builder.UseCookieAuthentication(appCookieOptions);
 
             
-            if (!string.IsNullOrWhiteSpace(site.TwitterConsumerKey))
-            {
-                var twitterOptions = new TwitterOptions();
-                twitterOptions.SignInScheme = externalCookieOptions.AuthenticationScheme;
-                twitterOptions.ConsumerKey = site.TwitterConsumerKey;
-                twitterOptions.ConsumerSecret = site.TwitterConsumerSecret;
+        //    builder.UseSocialAuth(tenant, externalCookieOptions, useFolder, sslIsAvailable);
 
-                if (shouldUseFolder)
-                {
-                    twitterOptions.CallbackPath = "/" + site.SiteFolderName + "/signin-twitter";
-                }
 
-                app.UseTwitterAuthentication(twitterOptions);
-            }
+        //    return builder;
+        //}
 
-            if(!string.IsNullOrWhiteSpace(site.OidConnectAuthority)
-                && !string.IsNullOrWhiteSpace(site.OidConnectAppId)
-               // && !string.IsNullOrWhiteSpace(site.OidConnectAppSecret)
-                )
-            {
-                var displayName = "ExternalOIDC";
-                if(!string.IsNullOrWhiteSpace(site.OidConnectDisplayName))
-                {
-                    displayName = site.OidConnectDisplayName;
-                }
-                var oidOptions = new OpenIdConnectOptions();
-                oidOptions.AuthenticationScheme = "ExternalOIDC";
-                oidOptions.SignInScheme = externalCookieOptions.AuthenticationScheme;
-                oidOptions.Authority = site.OidConnectAuthority;
-                oidOptions.ClientId = site.OidConnectAppId;
-                oidOptions.ClientSecret = site.OidConnectAppSecret;
-                oidOptions.GetClaimsFromUserInfoEndpoint = true;
-                oidOptions.ResponseType = OpenIdConnectResponseType.CodeIdToken;
-                oidOptions.RequireHttpsMetadata = sslIsAvailable;
-                oidOptions.SaveTokens = true;
-                oidOptions.DisplayName = displayName;
+        //public static IApplicationBuilder UseSocialAuth(
+        //    this IApplicationBuilder app,
+        //    SiteContext site,
+        //    CookieAuthenticationOptions externalCookieOptions,
+        //    bool shouldUseFolder,
+        //    bool sslIsAvailable = true
+        //    )
+        //{
+        //    // TODO: will this require a restart if the options are updated in the ui?
+        //    // no just need to clear the tenant cache after updating the settings
+        //    if (!string.IsNullOrWhiteSpace(site.GoogleClientId))
+        //    {
+        //        var googleOptions = new GoogleOptions();
+        //        googleOptions.AuthenticationScheme = "Google";
+        //        googleOptions.SignInScheme = externalCookieOptions.AuthenticationScheme;
+        //        googleOptions.ClientId = site.GoogleClientId;
+        //        googleOptions.ClientSecret = site.GoogleClientSecret;
+        //        if (shouldUseFolder)
+        //        {
+        //            googleOptions.CallbackPath = "/" + site.SiteFolderName + "/signin-google";
+        //        }
 
-                if (shouldUseFolder)
-                {
-                    oidOptions.CallbackPath = "/" + site.SiteFolderName + "/signin-oidc";
-                    oidOptions.SignedOutCallbackPath = "/" + site.SiteFolderName + "/signout-callback-oidc";
-                    oidOptions.RemoteSignOutPath = "/" + site.SiteFolderName + "/signout-oidc";
-                }
+        //        app.UseGoogleAuthentication(googleOptions);
+        //    }
+
+        //    if (!string.IsNullOrWhiteSpace(site.FacebookAppId))
+        //    {
+        //        var facebookOptions = new FacebookOptions();
+        //        facebookOptions.AuthenticationScheme = "Facebook";
+        //        facebookOptions.SignInScheme = externalCookieOptions.AuthenticationScheme;
+        //        facebookOptions.AppId = site.FacebookAppId;
+        //        facebookOptions.AppSecret = site.FacebookAppSecret;
+
+        //        if (shouldUseFolder)
+        //        {
+        //            facebookOptions.CallbackPath = "/" + site.SiteFolderName + "/signin-facebook";
+        //        }
+
+        //        app.UseFacebookAuthentication(facebookOptions);
+        //    }
+
+        //    if (!string.IsNullOrWhiteSpace(site.MicrosoftClientId))
+        //    {
+        //        var microsoftOptions = new MicrosoftAccountOptions();
+        //        microsoftOptions.SignInScheme = externalCookieOptions.AuthenticationScheme;
+        //        microsoftOptions.ClientId = site.MicrosoftClientId;
+        //        microsoftOptions.ClientSecret = site.MicrosoftClientSecret;
+        //        if (shouldUseFolder)
+        //        {
+        //            microsoftOptions.CallbackPath = "/" + site.SiteFolderName + "/signin-microsoft";
+        //        }
+
+        //        app.UseMicrosoftAccountAuthentication(microsoftOptions);
+        //    }
+
+            
+        //    if (!string.IsNullOrWhiteSpace(site.TwitterConsumerKey))
+        //    {
+        //        var twitterOptions = new TwitterOptions();
+        //        twitterOptions.SignInScheme = externalCookieOptions.AuthenticationScheme;
+        //        twitterOptions.ConsumerKey = site.TwitterConsumerKey;
+        //        twitterOptions.ConsumerSecret = site.TwitterConsumerSecret;
+
+        //        if (shouldUseFolder)
+        //        {
+        //            twitterOptions.CallbackPath = "/" + site.SiteFolderName + "/signin-twitter";
+        //        }
+
+        //        app.UseTwitterAuthentication(twitterOptions);
+        //    }
+
+        //    if(!string.IsNullOrWhiteSpace(site.OidConnectAuthority)
+        //        && !string.IsNullOrWhiteSpace(site.OidConnectAppId)
+        //       // && !string.IsNullOrWhiteSpace(site.OidConnectAppSecret)
+        //        )
+        //    {
+        //        var displayName = "ExternalOIDC";
+        //        if(!string.IsNullOrWhiteSpace(site.OidConnectDisplayName))
+        //        {
+        //            displayName = site.OidConnectDisplayName;
+        //        }
+        //        var oidOptions = new OpenIdConnectOptions();
+        //        oidOptions.AuthenticationScheme = "ExternalOIDC";
+        //        oidOptions.SignInScheme = externalCookieOptions.AuthenticationScheme;
+        //        oidOptions.Authority = site.OidConnectAuthority;
+        //        oidOptions.ClientId = site.OidConnectAppId;
+        //        oidOptions.ClientSecret = site.OidConnectAppSecret;
+        //        oidOptions.GetClaimsFromUserInfoEndpoint = true;
+        //        oidOptions.ResponseType = OpenIdConnectResponseType.CodeIdToken;
+        //        oidOptions.RequireHttpsMetadata = sslIsAvailable;
+        //        oidOptions.SaveTokens = true;
+        //        oidOptions.DisplayName = displayName;
+
+        //        if (shouldUseFolder)
+        //        {
+        //            oidOptions.CallbackPath = "/" + site.SiteFolderName + "/signin-oidc";
+        //            oidOptions.SignedOutCallbackPath = "/" + site.SiteFolderName + "/signout-callback-oidc";
+        //            oidOptions.RemoteSignOutPath = "/" + site.SiteFolderName + "/signout-oidc";
+        //        }
                 
-                //oidOptions.Events = new OpenIdConnectEvents()
-                //{
-                //    OnAuthenticationFailed = c =>
-                //    {
-                //        c.HandleResponse();
-
-                //        c.Response.StatusCode = 500;
-                //        c.Response.ContentType = "text/plain";
-
-                //        return c.Response.WriteAsync("An error occurred processing your authentication.");
-                //    }
-                //};
-                app.UseOpenIdConnectAuthentication(oidOptions);
+               
+        //        app.UseOpenIdConnectAuthentication(oidOptions);
                
 
-            }
+        //    }
 
             
 
 
 
-            return app;
-        }
+        //    return app;
+        //}
 
-        public static CookieAuthenticationOptions SetupAppCookie(
-            this IApplicationBuilder app,
-           SiteAuthCookieValidator siteValidator,
-           string scheme,
-           bool useRelatedSitesMode,
-           SiteContext tenant,
-           CookieSecurePolicy cookieSecure = CookieSecurePolicy.SameAsRequest
-           )
-        {
-            var cookieEvents = new CookieAuthenticationEvents();
-            var options = new CookieAuthenticationOptions();
-            if (useRelatedSitesMode)
-            {
-                options.AuthenticationScheme = scheme;
-                options.CookieName = scheme;
-                options.CookiePath = "/";
-            }
-            else
-            {
-                //options.AuthenticationScheme = $"{scheme}-{tenant.SiteFolderName}";
-                options.AuthenticationScheme = scheme;
-                options.CookieName = $"{scheme}-{tenant.SiteFolderName}";
-                options.CookiePath = "/" + tenant.SiteFolderName;
-                cookieEvents.OnValidatePrincipal = siteValidator.ValidatePrincipal;
-            }
+        //public static CookieAuthenticationOptions SetupAppCookie(
+        //    this IApplicationBuilder app,
+        //   SiteAuthCookieValidator siteValidator,
+        //   string scheme,
+        //   bool useRelatedSitesMode,
+        //   SiteContext tenant,
+        //   CookieSecurePolicy cookieSecure = CookieSecurePolicy.SameAsRequest
+        //   )
+        //{
+        //    var cookieEvents = new CookieAuthenticationEvents();
+        //    var options = new CookieAuthenticationOptions();
+        //    if (useRelatedSitesMode)
+        //    {
+        //        options.AuthenticationScheme = scheme;
+        //        options.CookieName = scheme;
+        //        options.CookiePath = "/";
+        //    }
+        //    else
+        //    {
+                
+        //        options.AuthenticationScheme = scheme;
+        //        options.CookieName = $"{scheme}-{tenant.SiteFolderName}";
+        //        options.CookiePath = "/" + tenant.SiteFolderName;
+        //        cookieEvents.OnValidatePrincipal = siteValidator.ValidatePrincipal;
+        //    }
 
-            var tenantPathBase = string.IsNullOrEmpty(tenant.SiteFolderName)
-                ? PathString.Empty
-                : new PathString("/" + tenant.SiteFolderName);
+        //    var tenantPathBase = string.IsNullOrEmpty(tenant.SiteFolderName)
+        //        ? PathString.Empty
+        //        : new PathString("/" + tenant.SiteFolderName);
 
-            options.LoginPath = tenantPathBase + "/account/login";
-            options.LogoutPath = tenantPathBase + "/account/logoff";
-            options.AccessDeniedPath = tenantPathBase + "/account/accessdenied";
+        //    options.LoginPath = tenantPathBase + "/account/login";
+        //    options.LogoutPath = tenantPathBase + "/account/logoff";
+        //    options.AccessDeniedPath = tenantPathBase + "/account/accessdenied";
 
-            options.Events = cookieEvents;
+        //    options.Events = cookieEvents;
 
-            options.AutomaticAuthenticate = true;
-            options.AutomaticChallenge = false;
+        //    options.AutomaticAuthenticate = true;
+        //    options.AutomaticChallenge = false;
 
-            options.CookieSecure = cookieSecure;
+        //    options.CookieSecure = cookieSecure;
 
-            return options;
-        }
+        //    return options;
+        //}
 
-        public static CookieAuthenticationOptions SetupOtherCookies(
-            this IApplicationBuilder app,
-            string scheme,
-            bool useRelatedSitesMode,
-            SiteContext tenant,
-            CookieSecurePolicy cookieSecure = CookieSecurePolicy.None
-            )
-        {
-            var options = new CookieAuthenticationOptions();
-            if (useRelatedSitesMode)
-            {
-                options.AuthenticationScheme = scheme;
-                options.CookieName = scheme;
-                options.CookiePath = "/";
-            }
-            else
-            {
-                //options.AuthenticationScheme = $"{scheme}-{tenant.SiteFolderName}";
-                options.AuthenticationScheme = scheme;
-                options.CookieName = $"{scheme}-{tenant.SiteFolderName}";
-                options.CookiePath = "/" + tenant.SiteFolderName;
-            }
+        //public static CookieAuthenticationOptions SetupOtherCookies(
+        //    this IApplicationBuilder app,
+        //    string scheme,
+        //    bool useRelatedSitesMode,
+        //    SiteContext tenant,
+        //    CookieSecurePolicy cookieSecure = CookieSecurePolicy.None
+        //    )
+        //{
+        //    var options = new CookieAuthenticationOptions();
+        //    if (useRelatedSitesMode)
+        //    {
+        //        options.AuthenticationScheme = scheme;
+        //        options.CookieName = scheme;
+        //        options.CookiePath = "/";
+        //    }
+        //    else
+        //    {
+               
+        //        options.AuthenticationScheme = scheme;
+        //        options.CookieName = $"{scheme}-{tenant.SiteFolderName}";
+        //        options.CookiePath = "/" + tenant.SiteFolderName;
+        //    }
 
-            options.AutomaticAuthenticate = false;
+        //    options.AutomaticAuthenticate = false;
 
-            if (cookieSecure != CookieSecurePolicy.None)
-            {
-                options.CookieSecure = cookieSecure;
-            }
+        //    if (cookieSecure != CookieSecurePolicy.None)
+        //    {
+        //        options.CookieSecure = cookieSecure;
+        //    }
 
-            return options;
+        //    return options;
 
-        }
+        //}
 
         public static IApplicationBuilder UseSiteAndThemeStaticFiles(
            this IApplicationBuilder builder,

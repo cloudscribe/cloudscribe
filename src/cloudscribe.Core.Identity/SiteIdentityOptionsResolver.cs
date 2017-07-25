@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette/Derek Gray
 // Created:				    2016-05-04
-// Last Modified:		    2016-10-08
+// Last Modified:		    2017-07-25
 // 
 
 using cloudscribe.Core.Models;
@@ -63,62 +63,65 @@ namespace cloudscribe.Core.Identity
                 identityOptions.User.RequireUniqueEmail = true;
                 identityOptions.User.AllowedUserNameCharacters = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-._@+"; // default value
                 
-                SetupAppCookie(identityOptions.Cookies.ApplicationCookie, AuthenticationScheme.Application, tenant);
-                SetupOtherCookies(identityOptions.Cookies.ExternalCookie, AuthenticationScheme.External, tenant);
-                SetupOtherCookies(identityOptions.Cookies.TwoFactorRememberMeCookie, AuthenticationScheme.TwoFactorRememberMe, tenant);
-                SetupOtherCookies(identityOptions.Cookies.TwoFactorUserIdCookie, AuthenticationScheme.TwoFactorUserId, tenant);
+                //commented out 2017-07-25 breaking changes in 2.0
+                //SetupAppCookie(identityOptions.Cookies.ApplicationCookie, AuthenticationScheme.Application, tenant);
+                //SetupOtherCookies(identityOptions.Cookies.ExternalCookie, AuthenticationScheme.External, tenant);
+                //SetupOtherCookies(identityOptions.Cookies.TwoFactorRememberMeCookie, AuthenticationScheme.TwoFactorRememberMe, tenant);
+                //SetupOtherCookies(identityOptions.Cookies.TwoFactorUserIdCookie, AuthenticationScheme.TwoFactorUserId, tenant);
                 
                 return identityOptions;
             }
         }
 
-        private void SetupAppCookie(CookieAuthenticationOptions options, string scheme, SiteContext tenant)
-        {
-            if(multiTenantOptions.UseRelatedSitesMode)
-            {
-                options.AuthenticationScheme = scheme;
-                options.CookieName =scheme;
-                options.CookiePath = "/";
-            }
-            else
-            {
-                //options.AuthenticationScheme = $"{scheme}-{tenant.SiteFolderName}";
-                options.AuthenticationScheme = scheme;
-                options.CookieName = $"{scheme}-{tenant.SiteFolderName}";
-                options.CookiePath = "/" + tenant.SiteFolderName;
-                cookieEvents.OnValidatePrincipal = siteValidator.ValidatePrincipal;
-            }
+        //commented out 2017-07-25
+        //private void SetupAppCookie(CookieAuthenticationOptions options, string scheme, SiteContext tenant)
+        //{
+        //    if(multiTenantOptions.UseRelatedSitesMode)
+        //    {
+        //        options.AuthenticationScheme = scheme;
+        //        options.CookieName =scheme;
+        //        options.CookiePath = "/";
+        //    }
+        //    else
+        //    {
+               
+        //        options.AuthenticationScheme = scheme;
+        //        options.CookieName = $"{scheme}-{tenant.SiteFolderName}";
+        //        options.CookiePath = "/" + tenant.SiteFolderName;
+        //        cookieEvents.OnValidatePrincipal = siteValidator.ValidatePrincipal;
+        //    }
             
-            var tenantPathBase = string.IsNullOrEmpty(tenant.SiteFolderName)
-                ? PathString.Empty
-                : new PathString("/" + tenant.SiteFolderName);
+        //    var tenantPathBase = string.IsNullOrEmpty(tenant.SiteFolderName)
+        //        ? PathString.Empty
+        //        : new PathString("/" + tenant.SiteFolderName);
 
-            options.LoginPath = tenantPathBase + "/account/login";
-            options.LogoutPath = tenantPathBase + "/account/logoff";
-            options.AccessDeniedPath = tenantPathBase + "/account/accessdenied";
+        //    options.LoginPath = tenantPathBase + "/account/login";
+        //    options.LogoutPath = tenantPathBase + "/account/logoff";
+        //    options.AccessDeniedPath = tenantPathBase + "/account/accessdenied";
 
-            options.Events = cookieEvents;
+        //    options.Events = cookieEvents;
 
-            options.AutomaticAuthenticate = true;
-            options.AutomaticChallenge = true;
-        }
+        //    options.AutomaticAuthenticate = true;
+        //    options.AutomaticChallenge = true;
+        //}
 
-        private void SetupOtherCookies(CookieAuthenticationOptions options, string scheme, SiteContext tenant)
-        {
-            if (multiTenantOptions.UseRelatedSitesMode)
-            {
-                options.AuthenticationScheme = scheme;
-                options.CookieName = scheme;
-                options.CookiePath = "/";
-            }
-            else
-            {
-                //options.AuthenticationScheme = $"{scheme}-{tenant.SiteFolderName}";
-                options.AuthenticationScheme = scheme;
-                options.CookieName = $"{scheme}-{tenant.SiteFolderName}";
-                options.CookiePath = "/" + tenant.SiteFolderName;
-            }
-            //options.AutomaticAuthenticate = false;
-        }
+        // commented out 2017-07-25
+        //private void SetupOtherCookies(CookieAuthenticationOptions options, string scheme, SiteContext tenant)
+        //{
+        //    if (multiTenantOptions.UseRelatedSitesMode)
+        //    {
+        //        options.AuthenticationScheme = scheme;
+        //        options.CookieName = scheme;
+        //        options.CookiePath = "/";
+        //    }
+        //    else
+        //    {
+                
+        //        options.AuthenticationScheme = scheme;
+        //        options.CookieName = $"{scheme}-{tenant.SiteFolderName}";
+        //        options.CookiePath = "/" + tenant.SiteFolderName;
+        //    }
+            
+        //}
     }
 }

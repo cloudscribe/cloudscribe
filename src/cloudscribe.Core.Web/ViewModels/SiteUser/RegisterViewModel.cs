@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:				    2014-08-31
-// Last Modified:		    2017-04-01
+// Last Modified:		    2017-07-25
 // 
 // TODO: support custom profile properties that are required for registration
 
@@ -10,7 +10,6 @@ using System;
 using System.ComponentModel.DataAnnotations;
 using cloudscribe.Web.Common.DataAnnotations;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Http.Authentication;
 using System.Collections.Generic;
 
 namespace cloudscribe.Core.Web.ViewModels.Account
@@ -19,7 +18,7 @@ namespace cloudscribe.Core.Web.ViewModels.Account
     {
         public RegisterViewModel()
         {
-            ExternalAuthenticationList = new List<AuthenticationDescription>();
+            ExternalAuthenticationList = new List<Microsoft.AspNetCore.Authentication.AuthenticationScheme>();
         }
         
         public Guid UserId { get; set; } = Guid.Empty;
@@ -73,6 +72,6 @@ namespace cloudscribe.Core.Web.ViewModels.Account
         [EnforceTrue("AgreementRequired", ErrorMessage = "You must agree to the terms of use.")]
         public bool AgreeToTerms { get; set; } = false;
 
-        public IEnumerable<AuthenticationDescription> ExternalAuthenticationList { get; set; }
+        public IEnumerable<Microsoft.AspNetCore.Authentication.AuthenticationScheme> ExternalAuthenticationList { get; set; }
     }
 }

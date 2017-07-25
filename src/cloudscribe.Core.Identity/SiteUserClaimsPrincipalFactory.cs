@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2015-06-27
-// Last Modified:			2016-09-30
+// Last Modified:			2017-07-25
 // 
 
 
@@ -55,8 +55,11 @@ namespace cloudscribe.Core.Identity
             var userId = await UserManager.GetUserIdAsync(user);
             var userName = await UserManager.GetUserNameAsync(user);
 
+            //commented out 20170-07-25 breaking chnage in 2.0
+            //var authScheme = options.Cookies.ApplicationCookie.AuthenticationScheme;
+            var authScheme = "Identity.Application";
             var id = new ClaimsIdentity(
-                options.Cookies.ApplicationCookie.AuthenticationScheme,
+                authScheme,
                 Options.ClaimsIdentity.UserNameClaimType,
                 Options.ClaimsIdentity.RoleClaimType);
 

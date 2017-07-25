@@ -35,9 +35,13 @@
     <PackageReference Include="Microsoft.AspNetCore.Mvc.Abstractions" Version="2.0.0-*" />
     <PackageReference Include="Microsoft.Extensions.FileProviders.Embedded" Version="2.0.0-*" />
     <PackageReference Include="Microsoft.AspNetCore.Mvc.Razor" Version="2.0.0-*" />
+    <PackageReference Include="CoreCompat.System.Drawing.v2" Version="5.2.0-*" />
+    <!--
+    is this now baked into 2.0?
     <PackageReference Include="CoreCompat.System.Drawing" Version="1.0.0-*" />
     <PackageReference Include="runtime.osx.10.10-x64.CoreCompat.System.Drawing" Version="1.0.1-*" />
     <PackageReference Include="runtime.linux-x64.CoreCompat.System.Drawing" Version="1.0.0-*" />
+    -->
   </ItemGroup>
 
   <ItemGroup>
