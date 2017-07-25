@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
-VisualStudioVersion = 15.0.26430.6
+VisualStudioVersion = 15.0.26430.16
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{9C16B47A-B712-4237-B62F-B4403ACF1CD5}"
 EndProject
@@ -54,13 +54,17 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "cloudscribe.Core.IdentitySe
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Tenant1SpaPolymer", "src\Tenant1SpaPolymer\Tenant1SpaPolymer.csproj", "{BFD1D27C-7C08-472C-A39D-B1B554667ADB}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tenant2SpaPolymer", "src\Tenant2SpaPolymer\Tenant2SpaPolymer.csproj", "{C2F68FB6-C6B1-4CF4-B659-BAE9E499653D}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Tenant2SpaPolymer", "src\Tenant2SpaPolymer\Tenant2SpaPolymer.csproj", "{C2F68FB6-C6B1-4CF4-B659-BAE9E499653D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "cloudscribe.Core.Web.Mvc", "src\cloudscribe.Core.Web.Mvc\cloudscribe.Core.Web.Mvc.csproj", "{BE93C7BC-5689-4795-9E0B-DCF2AD37FB0D}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "cloudscribe.Core.Web.Mvc", "src\cloudscribe.Core.Web.Mvc\cloudscribe.Core.Web.Mvc.csproj", "{BE93C7BC-5689-4795-9E0B-DCF2AD37FB0D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "cloudscribe.Core.IdentityServerIntegration.Mvc", "src\cloudscribe.Core.IdentityServerIntegration.Mvc\cloudscribe.Core.IdentityServerIntegration.Mvc.csproj", "{FD3A5D3C-C942-4468-B98C-DA6A474F3822}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "cloudscribe.Core.IdentityServerIntegration.Mvc", "src\cloudscribe.Core.IdentityServerIntegration.Mvc\cloudscribe.Core.IdentityServerIntegration.Mvc.csproj", "{FD3A5D3C-C942-4468-B98C-DA6A474F3822}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "sourceDev.WebApp", "src\sourceDev.WebApp\sourceDev.WebApp.csproj", "{2E6B129D-5C85-4713-8747-CED53A4AFF34}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "sourceDev.WebApp", "src\sourceDev.WebApp\sourceDev.WebApp.csproj", "{2E6B129D-5C85-4713-8747-CED53A4AFF34}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "cloudscribe.FileManager.Web", "src\cloudscribe.FileManager.Web\cloudscribe.FileManager.Web.csproj", "{8E2CF704-D9C4-4764-B321-6CD805C1E356}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "cloudscribe.FileManager.CoreIntegration", "src\cloudscribe.FileManager.CoreIntegration\cloudscribe.FileManager.CoreIntegration.csproj", "{59C81D0F-4245-48EB-B635-A7F1B68532DE}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -168,6 +172,14 @@ Global
 		{2E6B129D-5C85-4713-8747-CED53A4AFF34}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{2E6B129D-5C85-4713-8747-CED53A4AFF34}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{2E6B129D-5C85-4713-8747-CED53A4AFF34}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8E2CF704-D9C4-4764-B321-6CD805C1E356}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8E2CF704-D9C4-4764-B321-6CD805C1E356}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8E2CF704-D9C4-4764-B321-6CD805C1E356}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8E2CF704-D9C4-4764-B321-6CD805C1E356}.Release|Any CPU.Build.0 = Release|Any CPU
+		{59C81D0F-4245-48EB-B635-A7F1B68532DE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{59C81D0F-4245-48EB-B635-A7F1B68532DE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{59C81D0F-4245-48EB-B635-A7F1B68532DE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{59C81D0F-4245-48EB-B635-A7F1B68532DE}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -198,5 +210,7 @@ Global
 		{BE93C7BC-5689-4795-9E0B-DCF2AD37FB0D} = {9C16B47A-B712-4237-B62F-B4403ACF1CD5}
 		{FD3A5D3C-C942-4468-B98C-DA6A474F3822} = {9C16B47A-B712-4237-B62F-B4403ACF1CD5}
 		{2E6B129D-5C85-4713-8747-CED53A4AFF34} = {9C16B47A-B712-4237-B62F-B4403ACF1CD5}
+		{8E2CF704-D9C4-4764-B321-6CD805C1E356} = {9C16B47A-B712-4237-B62F-B4403ACF1CD5}
+		{59C81D0F-4245-48EB-B635-A7F1B68532DE} = {9C16B47A-B712-4237-B62F-B4403ACF1CD5}
 	EndGlobalSection
 EndGlobal

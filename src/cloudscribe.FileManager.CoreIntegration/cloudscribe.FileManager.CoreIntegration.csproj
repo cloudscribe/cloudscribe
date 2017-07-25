@@ -1,0 +1,30 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <Description>integration for cloudscribe Core and cloudscribe FileManager</Description>
+    <VersionPrefix>1.0.3</VersionPrefix>
+    <Authors>Joe Audette</Authors>
+    <TargetFrameworks>netstandard1.6</TargetFrameworks>
+    <DebugType>portable</DebugType>
+    <AssemblyName>cloudscribe.FileManager.CoreIntegration</AssemblyName>
+    <PackageId>cloudscribe.FileManager.CoreIntegration</PackageId>
+    <PackageTags>cloudscribe;filemanager</PackageTags>
+    <PackageIconUrl>https://raw.githubusercontent.com/joeaudette/cloudscribe/master/cloudscribe-icon-32.png</PackageIconUrl>
+    <PackageProjectUrl>https://github.com/joeaudette/cloudscribe.SimpleContent</PackageProjectUrl>
+    <PackageLicenseUrl>http://www.apache.org/licenses/LICENSE-2.0</PackageLicenseUrl>
+    <GenerateAssemblyConfigurationAttribute>false</GenerateAssemblyConfigurationAttribute>
+    <GenerateAssemblyCompanyAttribute>false</GenerateAssemblyCompanyAttribute>
+    <GenerateAssemblyProductAttribute>false</GenerateAssemblyProductAttribute>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\cloudscribe.Core.Models\cloudscribe.Core.Models.csproj" />
+    <ProjectReference Include="..\cloudscribe.FileManager.Web\cloudscribe.FileManager.Web.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.Extensions.Options" Version="1.1.*" />
+    <PackageReference Include="Microsoft.Extensions.Logging" Version="1.1.*" />
+  </ItemGroup>
+
+</Project>

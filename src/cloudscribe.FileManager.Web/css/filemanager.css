@@ -1,0 +1,181 @@
+﻿
+
+.browserupgrade {
+  margin: 0;
+  padding: .5rem 1rem;
+  background-color: #fcfcfc;
+  text-align: center;
+}
+
+.btn {
+  padding-left: .75rem;
+  padding-right: .75rem;
+}
+
+label.btn {
+  margin-bottom: 0;
+}
+
+.d-flex > .btn {
+  flex-grow: 1;
+}
+
+/* Cropper app */
+
+.img-container,
+.img-preview {
+  background-color: #f7f7f7;
+  width: 100%;
+  text-align: center;
+}
+
+.img-container {
+  min-height: 200px;
+  max-height: 469px;
+  margin-bottom: 1rem;
+}
+
+@media (min-width: 768px) {
+  .img-container {
+    min-height: 469px;
+  }
+}
+
+.img-container > img {
+  max-width: 100%;
+}
+
+.docs-preview {
+  margin-right: -1rem;
+}
+
+.img-preview {
+  float: left;
+  margin-right: .5rem;
+  margin-bottom: .5rem;
+  overflow: hidden;
+}
+
+.img-preview > img {
+  max-width: 100%;
+}
+
+.preview-lg {
+  width: 16rem;
+  height: 9rem;
+}
+
+.preview-md {
+  width: 8rem;
+  height: 4.5rem;
+}
+
+.preview-sm {
+  width: 4rem;
+  height: 2.25rem;
+}
+
+.preview-xs {
+  width: 2rem;
+  height: 1.125rem;
+  margin-right: 0;
+}
+
+.docs-data > .input-group {
+  margin-bottom: .5rem;
+}
+
+.docs-data > .input-group > label {
+  min-width: 5rem;
+}
+
+.docs-data > .input-group > span {
+  min-width: 3rem;
+}
+
+.docs-buttons > .btn,
+.docs-buttons > .btn-group,
+.docs-buttons > .form-control {
+  margin-right: .25rem;
+  margin-bottom: .5rem;
+}
+
+.docs-toggles > .btn,
+.docs-toggles > .btn-group,
+.docs-toggles > .dropdown {
+  margin-bottom: .5rem;
+}
+
+.docs-tooltip {
+  display: block;
+  margin: -.5rem -.75rem;
+  padding: .5rem .75rem;
+}
+
+.docs-tooltip > .icon {
+  margin: 0 -.25rem;
+  vertical-align: top;
+}
+
+.tooltip-inner {
+  white-space: normal;
+}
+
+.btn-upload .tooltip-inner,
+.btn-toggle .tooltip-inner {
+  white-space: nowrap;
+}
+
+.btn-toggle {
+  padding: .5rem;
+}
+
+.btn-toggle > .docs-tooltip {
+  margin: -.5rem;
+  padding: .5rem;
+}
+
+@media (max-width: 400px) {
+  .btn-group-crop {
+    margin-right: -1rem!important;
+  }
+
+  .btn-group-crop > .btn {
+    padding-left: .5rem;
+    padding-right: .5rem;
+  }
+
+  .btn-group-crop .docs-tooltip {
+    margin-left: -.5rem;
+    margin-right: -.5rem;
+    padding-left: .5rem;
+    padding-right: .5rem;
+  }
+}
+
+.docs-options .dropdown-menu {
+  width: 100%;
+}
+
+.docs-options .dropdown-menu > li {
+  font-size: .875rem;
+  padding-left: 1rem;
+  padding-right: 1rem;
+}
+
+.docs-options .dropdown-menu > li:hover {
+  background-color: #f7f7f7;
+}
+
+.docs-options .dropdown-menu > li > label {
+  display: block;
+}
+
+.docs-cropped .modal-body {
+  text-align: center;
+}
+
+.docs-cropped .modal-body > img,
+.docs-cropped .modal-body > canvas {
+  max-width: 100%;
+}
