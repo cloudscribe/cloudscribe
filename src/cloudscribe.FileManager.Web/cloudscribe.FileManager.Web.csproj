@@ -1,0 +1,49 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <Description>media file management</Description>
+    <VersionPrefix>1.0.2</VersionPrefix>
+    <Authors>Joe Audette</Authors>
+    <TargetFrameworks>netstandard1.6</TargetFrameworks>
+    <DebugType>portable</DebugType>
+    <AssemblyName>cloudscribe.FileManager.Web</AssemblyName>
+    <PackageId>cloudscribe.FileManager.Web</PackageId>
+    <PackageTags>cloudscribe;filemanager</PackageTags>
+    <PackageIconUrl>https://raw.githubusercontent.com/joeaudette/cloudscribe/master/cloudscribe-icon-32.png</PackageIconUrl>
+    <PackageProjectUrl>https://github.com/joeaudette/cloudscribe.SimpleContent</PackageProjectUrl>
+    <PackageLicenseUrl>http://www.apache.org/licenses/LICENSE-2.0</PackageLicenseUrl>
+    <GenerateAssemblyConfigurationAttribute>false</GenerateAssemblyConfigurationAttribute>
+    <GenerateAssemblyCompanyAttribute>false</GenerateAssemblyCompanyAttribute>
+    <GenerateAssemblyProductAttribute>false</GenerateAssemblyProductAttribute>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Include="Views\**;js\**;css\**" Exclude="bin\**;obj\**;**\*.xproj;packages\**;@(EmbeddedResource)" />
+  </ItemGroup>
+
+
+  <ItemGroup>
+    
+    <PackageReference Include="Microsoft.AspNetCore.Mvc" Version="1.1.*" />
+    <PackageReference Include="Microsoft.Extensions.Options.ConfigurationExtensions" Version="1.1.*" />
+    <PackageReference Include="Microsoft.Extensions.Caching.Abstractions" Version="1.1.*" />
+    <PackageReference Include="Microsoft.Extensions.Configuration.Abstractions" Version="1.1.*" />
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="1.1.*" />
+    <PackageReference Include="Microsoft.Extensions.Localization" Version="1.1.*" />
+    <PackageReference Include="Microsoft.AspNetCore.Routing" Version="1.1.*" />
+    <PackageReference Include="Microsoft.AspNetCore.Mvc.Abstractions" Version="1.1.*" />
+    <PackageReference Include="Microsoft.Extensions.FileProviders.Embedded" Version="1.1.*" />
+    <PackageReference Include="Microsoft.AspNetCore.Mvc.Razor" Version="1.1.*" />
+  </ItemGroup>
+
+  <ItemGroup Condition=" '$(TargetFramework)' == 'netstandard1.6' ">
+    <PackageReference Include="CoreCompat.System.Drawing" Version="1.0.0-*" />
+    <PackageReference Include="runtime.osx.10.10-x64.CoreCompat.System.Drawing" Version="1.0.1-*" />
+    <PackageReference Include="runtime.linux-x64.CoreCompat.System.Drawing" Version="1.0.0-*" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\cloudscribe.Web.Common\cloudscribe.Web.Common.csproj" />
+  </ItemGroup>
+
+</Project>
