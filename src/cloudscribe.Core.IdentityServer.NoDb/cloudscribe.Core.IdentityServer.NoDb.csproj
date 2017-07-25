@@ -2,9 +2,10 @@
 
   <PropertyGroup>
     <Description>NoDb configuration and operational stores for IdentityServer4 cloudscribe multi-tenant identity integration</Description>
-    <VersionPrefix>1.1.1</VersionPrefix>
+    <VersionPrefix>1.2.0</VersionPrefix>
+    <VersionSuffix>preview20170725</VersionSuffix>
     <Authors>Joe Audette</Authors>
-    <TargetFramework>netstandard1.6</TargetFramework>
+    <TargetFramework>netstandard2.0</TargetFramework>
     <AssemblyName>cloudscribe.Core.IdentityServer.NoDb</AssemblyName>
     <PackageId>cloudscribe.Core.IdentityServer.NoDb</PackageId>
     <PackageTags>cloudscribe;identity</PackageTags>
@@ -24,7 +25,7 @@
   <ItemGroup>
     <PackageReference Include="cloudscribe.IDS4Fork" Version="1.5.*" />
     <PackageReference Include="NoDb" Version="1.1.*" />
-    <PackageReference Include="Microsoft.Extensions.Caching.Memory" Version="1.1.*" />
+    <PackageReference Include="Microsoft.Extensions.Caching.Memory" Version="2.0.0-*" />
   </ItemGroup>
 
 </Project>

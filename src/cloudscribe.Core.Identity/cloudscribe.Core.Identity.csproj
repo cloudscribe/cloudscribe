@@ -2,9 +2,10 @@
 
   <PropertyGroup>
     <Description>asp.net identity implementation for cloudscribe web application foundation</Description>
-    <VersionPrefix>1.1.2</VersionPrefix>
+    <VersionPrefix>1.2.0</VersionPrefix>
+    <VersionSuffix>preview20170725</VersionSuffix>
     <Authors>Joe Audette</Authors>
-    <TargetFrameworks>netstandard1.6</TargetFrameworks>
+    <TargetFrameworks>netstandard2.0</TargetFrameworks>
     <AssemblyName>cloudscribe.Core.Identity</AssemblyName>
     <PackageId>cloudscribe.Core.Identity</PackageId>
     <PackageTags>cloudscribe;identity</PackageTags>
@@ -21,12 +22,12 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.AspNetCore.Identity" Version="1.1.*" />
-    <PackageReference Include="Microsoft.AspNetCore.Antiforgery" Version="1.1.*" />
+    <PackageReference Include="Microsoft.AspNetCore.Identity" Version="2.0.0-*" />
+    <PackageReference Include="Microsoft.AspNetCore.Antiforgery" Version="2.0.0-*" />
     <PackageReference Include="SaasKit.Multitenancy" Version="1.1.4" />
-    <PackageReference Include="Microsoft.Extensions.Primitives" Version="1.1.*" />
-    <PackageReference Include="Microsoft.AspNetCore.Http.Abstractions" Version="1.1.*" />
-    <PackageReference Include="Microsoft.AspNetCore.Mvc.Abstractions" Version="1.1.*" />
+    <PackageReference Include="Microsoft.Extensions.Primitives" Version="2.0.0-*" />
+    <PackageReference Include="Microsoft.AspNetCore.Http.Abstractions" Version="2.0.0-*" />
+    <PackageReference Include="Microsoft.AspNetCore.Mvc.Abstractions" Version="2.0.0-*" />
     <PackageReference Include="System.Security.Claims" Version="4.3.*" />
   </ItemGroup>
 

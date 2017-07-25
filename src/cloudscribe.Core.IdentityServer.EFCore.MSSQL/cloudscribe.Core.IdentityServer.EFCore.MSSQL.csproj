@@ -2,9 +2,10 @@
 
   <PropertyGroup>
     <Description>Microsoft Sql Server Entity Framework configuration and operational stores for IdentityServer4 cloudscribe multi-tenant identity integration</Description>
-    <VersionPrefix>1.1.1</VersionPrefix>
+    <VersionPrefix>1.2.0</VersionPrefix>
+    <VersionSuffix>preview20170725</VersionSuffix>
     <Authors>Joe Audette</Authors>
-    <TargetFramework>netcoreapp1.1</TargetFramework>
+    <TargetFramework>netcoreapp2.0</TargetFramework>
     <AssemblyName>cloudscribe.Core.IdentityServer.EFCore.MSSQL</AssemblyName>
     <OutputType>Exe</OutputType>
     <PackageId>cloudscribe.Core.IdentityServer.EFCore.MSSQL</PackageId>
@@ -39,9 +40,9 @@
     <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="1.1.*" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="1.1.*" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer.Design" Version="1.1.*" />
-    <PackageReference Include="Microsoft.Extensions.Configuration.FileExtensions" Version="1.1.*" />
-    <PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="1.1.*" />
-    <PackageReference Include="Microsoft.AspNetCore.Hosting" Version="1.1.*" />
+    <PackageReference Include="Microsoft.Extensions.Configuration.FileExtensions" Version="2.0.0-*" />
+    <PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="2.0.0-*" />
+    <PackageReference Include="Microsoft.AspNetCore.Hosting" Version="2.0.0-*" />
   </ItemGroup>
 
   <ItemGroup>

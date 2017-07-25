@@ -229,7 +229,7 @@ namespace sourceDev.WebApp
             {
                 app.UseDeveloperExceptionPage();
                 app.UseDatabaseErrorPage();
-                app.UseBrowserLink();
+                //app.UseBrowserLink();
             }
             else
             {

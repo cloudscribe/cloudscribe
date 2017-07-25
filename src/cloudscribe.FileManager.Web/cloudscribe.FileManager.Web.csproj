@@ -2,9 +2,10 @@
 
   <PropertyGroup>
     <Description>media file management</Description>
-    <VersionPrefix>1.0.2</VersionPrefix>
+    <VersionPrefix>1.1.0</VersionPrefix>
+	<VersionSuffix>preview20170725</VersionSuffix>
     <Authors>Joe Audette</Authors>
-    <TargetFrameworks>netstandard1.6</TargetFrameworks>
+    <TargetFrameworks>netstandard2.0</TargetFrameworks>
     <DebugType>portable</DebugType>
     <AssemblyName>cloudscribe.FileManager.Web</AssemblyName>
     <PackageId>cloudscribe.FileManager.Web</PackageId>
@@ -24,19 +25,16 @@
 
   <ItemGroup>
     
-    <PackageReference Include="Microsoft.AspNetCore.Mvc" Version="1.1.*" />
-    <PackageReference Include="Microsoft.Extensions.Options.ConfigurationExtensions" Version="1.1.*" />
-    <PackageReference Include="Microsoft.Extensions.Caching.Abstractions" Version="1.1.*" />
-    <PackageReference Include="Microsoft.Extensions.Configuration.Abstractions" Version="1.1.*" />
-    <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="1.1.*" />
-    <PackageReference Include="Microsoft.Extensions.Localization" Version="1.1.*" />
-    <PackageReference Include="Microsoft.AspNetCore.Routing" Version="1.1.*" />
-    <PackageReference Include="Microsoft.AspNetCore.Mvc.Abstractions" Version="1.1.*" />
-    <PackageReference Include="Microsoft.Extensions.FileProviders.Embedded" Version="1.1.*" />
-    <PackageReference Include="Microsoft.AspNetCore.Mvc.Razor" Version="1.1.*" />
-  </ItemGroup>
-
-  <ItemGroup Condition=" '$(TargetFramework)' == 'netstandard1.6' ">
+    <PackageReference Include="Microsoft.AspNetCore.Mvc" Version="2.0.0-*" />
+    <PackageReference Include="Microsoft.Extensions.Options.ConfigurationExtensions" Version="2.0.0-*" />
+    <PackageReference Include="Microsoft.Extensions.Caching.Abstractions" Version="2.0.0-*" />
+    <PackageReference Include="Microsoft.Extensions.Configuration.Abstractions" Version="2.0.0-*" />
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="2.0.0-*" />
+    <PackageReference Include="Microsoft.Extensions.Localization" Version="2.0.0-*" />
+    <PackageReference Include="Microsoft.AspNetCore.Routing" Version="2.0.0-*" />
+    <PackageReference Include="Microsoft.AspNetCore.Mvc.Abstractions" Version="2.0.0-*" />
+    <PackageReference Include="Microsoft.Extensions.FileProviders.Embedded" Version="2.0.0-*" />
+    <PackageReference Include="Microsoft.AspNetCore.Mvc.Razor" Version="2.0.0-*" />
     <PackageReference Include="CoreCompat.System.Drawing" Version="1.0.0-*" />
     <PackageReference Include="runtime.osx.10.10-x64.CoreCompat.System.Drawing" Version="1.0.1-*" />
     <PackageReference Include="runtime.linux-x64.CoreCompat.System.Drawing" Version="1.0.0-*" />
