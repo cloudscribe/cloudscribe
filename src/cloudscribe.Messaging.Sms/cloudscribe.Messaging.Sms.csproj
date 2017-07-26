@@ -3,7 +3,8 @@
   <PropertyGroup>
     <Description>Sms helper for Twilio REST API</Description>
     <AssemblyTitle>cloudscribe.Messaging.Sms</AssemblyTitle>
-    <VersionPrefix>1.1.2</VersionPrefix>
+    <VersionPrefix>2.0.0</VersionPrefix>
+    <VersionSuffix>preview20170725</VersionSuffix>
     <Authors>Joe Audette</Authors>
     <TargetFrameworks>netstandard1.6</TargetFrameworks>
     <AssemblyName>cloudscribe.Messaging.Sms</AssemblyName>

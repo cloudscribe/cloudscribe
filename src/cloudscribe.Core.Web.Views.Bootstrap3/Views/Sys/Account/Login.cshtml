@@ -1,7 +1,7 @@
 ﻿@model  cloudscribe.Core.Web.ViewModels.SiteUser.LoginViewModel
 @using System.Collections.Generic
 @using Microsoft.AspNetCore.Http
-@using Microsoft.AspNetCore.Http.Authentication
+@using Microsoft.AspNetCore.Authentication
 @using cloudscribe.Core.Models
 @using cloudscribe.Core.Web
 @using cloudscribe.Core.Web.Components
@@ -159,9 +159,9 @@
                         <form asp-controller="Account" asp-action="ExternalLogin" asp-route-returnurl='@ViewData["ReturnUrl"]' method="post" class="form-horizontal" role="form">
                             <div id="socialLoginList">
                                 <p>
-                                    @foreach (AuthenticationDescription p in LoginProviders)
+                                    @foreach (AuthenticationScheme p in LoginProviders)
                                     {
-                                        <button type="submit" class="btn btn-default" id="@p.AuthenticationScheme" name="provider" value="@p.AuthenticationScheme"
+                                        <button type="submit" class="btn btn-default" id="@p.Name" name="provider" value="@p.Name"
                                                 title="@string.Format(socFormat,p.DisplayName)">
                                             @Html.Raw(GetIconForLogin(p.DisplayName))
                                             @p.DisplayName

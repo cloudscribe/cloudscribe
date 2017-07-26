@@ -3,7 +3,7 @@
 @using cloudscribe.Core.Web.Components
 @using Microsoft.Extensions.Options
 @using Microsoft.Extensions.Localization
-@using Microsoft.AspNetCore.Http.Authentication
+@using Microsoft.AspNetCore.Authentication
 @inject IStringLocalizer<CloudscribeCore> sr
 @inject IOptions<UIOptions> uiOptionsAccessor
 @{
@@ -163,9 +163,9 @@ else
             <form asp-controller="Account" asp-action="ExternalLogin" asp-route-returnurl='@ViewData["ReturnUrl"]' method="post" class="form-horizontal" role="form">
                 <div id="socialLoginList">
                     <p>
-                        @foreach (AuthenticationDescription p in LoginProviders)
+                        @foreach (AuthenticationScheme p in LoginProviders)
                         {
-                            <button type="submit" class="btn btn-default" id="@p.AuthenticationScheme" name="provider" value="@p.AuthenticationScheme"
+                            <button type="submit" class="btn btn-default" id="@p.Name" name="provider" value="@p.Name"
                                     title="@string.Format(socFormat,p.DisplayName)">
                                 @Html.Raw(GetIconForLogin(p.DisplayName)) @p.DisplayName
                             </button>
