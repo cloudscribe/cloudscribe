@@ -41,10 +41,15 @@ namespace Microsoft.Extensions.DependencyInjection
             services.AddCookieAuthentication(IdentityConstants.ApplicationScheme, o =>
             {
                 o.LoginPath = new PathString("/Account/Login");
+                //o.Events = new CookieAuthenticationEvents
+                //{
+                //    OnValidatePrincipal = SecurityStampValidator.ValidatePrincipalAsync
+                //};
                 o.Events = new CookieAuthenticationEvents
                 {
-                    OnValidatePrincipal = SecurityStampValidator.ValidatePrincipalAsync
+                    OnValidatePrincipal = SiteAuthCookieValidator.ValidatePrincipalAsync
                 };
+
             });
 
             services.AddCookieAuthentication(IdentityConstants.ExternalScheme, o =>
@@ -62,6 +67,9 @@ namespace Microsoft.Extensions.DependencyInjection
                 o.ExpireTimeSpan = TimeSpan.FromMinutes(5);
             });
 
+            //services.AddSingleton<IOptionsMonitor<CookieAuthenticationOptions>, SiteCookieAuthenticationOptions>();
+            services.AddSingleton<IOptionsSnapshot<CookieAuthenticationOptions>, SiteCookieAuthenticationOptionsPreview>();
+
             services.AddSingleton<IOptions<IdentityOptions>, SiteIdentityOptionsResolver>();
 
             
@@ -74,7 +82,7 @@ namespace Microsoft.Extensions.DependencyInjection
             services.TryAddScoped<SignInManager<SiteUser>, SignInManager<SiteUser>>();
 
             services.TryAddSingleton<SiteAuthCookieValidator, SiteAuthCookieValidator>();
-            services.TryAddScoped<SiteCookieAuthenticationEvents, SiteCookieAuthenticationEvents>();
+            //services.TryAddScoped<SiteCookieAuthenticationEvents, SiteCookieAuthenticationEvents>();
             services.TryAddScoped<ISocialAuthEmailVerfificationPolicy, DefaultSocialAuthEmailVerfificationPolicy>();
 
             services.TryAddScoped<ISiteAcountCapabilitiesProvider, DefaultSiteAcountCapabilitiesProvider>();

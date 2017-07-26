@@ -16,8 +16,8 @@ namespace cloudscribe.Core.Identity
 {
     public class SiteIdentityOptionsResolver : IOptions<IdentityOptions>
     {
-        private CookieAuthenticationEvents cookieEvents;
-        private SiteAuthCookieValidator siteValidator;
+        //private CookieAuthenticationEvents cookieEvents;
+        //private SiteAuthCookieValidator siteValidator;
         private IHttpContextAccessor httpContextAccessor;
         private MultiTenantOptions multiTenantOptions;
         private TokenOptions tokenOptions;
@@ -25,13 +25,13 @@ namespace cloudscribe.Core.Identity
         public SiteIdentityOptionsResolver(
             IHttpContextAccessor httpContextAccessor,
             IOptions<MultiTenantOptions> multiTenantOptionsAccessor,
-            IOptions<TokenOptions> tokenOptionsAccessor,
-            SiteAuthCookieValidator siteValidator
+            IOptions<TokenOptions> tokenOptionsAccessor
+            //,SiteAuthCookieValidator siteValidator
             )
         {
             this.httpContextAccessor = httpContextAccessor;
-            this.cookieEvents = new CookieAuthenticationEvents();
-            this.siteValidator = siteValidator;
+            //this.cookieEvents = new CookieAuthenticationEvents();
+            //this.siteValidator = siteValidator;
             multiTenantOptions = multiTenantOptionsAccessor.Value;
             tokenOptions = tokenOptionsAccessor.Value;
         }
