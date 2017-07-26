@@ -73,11 +73,14 @@ namespace Microsoft.AspNetCore.Builder
                 //    ctx.Tenant,
                 //    sslIsAvailable);
 
+                // new
+                builder.UseAuthentication();
+
                 // to make this multi tenant for folders we are
                 // using a fork of IdentityServer4 and hoping to get changes so we don't need a fork
                 // https://github.com/IdentityServer/IdentityServer4/issues/19
 
-                if(identityServerInvoker != null)
+                if (identityServerInvoker != null)
                 {
                     var addedIdentityServer = identityServerInvoker(builder, ctx.Tenant);
                 }
@@ -110,6 +113,8 @@ namespace Microsoft.AspNetCore.Builder
             return app;
 
         }
+
+        
 
         //public static IApplicationBuilder UseCloudscribeCoreDefaultAuthentication(
         //   this IApplicationBuilder builder,
@@ -155,7 +160,7 @@ namespace Microsoft.AspNetCore.Builder
         //        );
         //    builder.UseCookieAuthentication(appCookieOptions);
 
-            
+
         //    builder.UseSocialAuth(tenant, externalCookieOptions, useFolder, sslIsAvailable);
 
 
@@ -217,7 +222,7 @@ namespace Microsoft.AspNetCore.Builder
         //        app.UseMicrosoftAccountAuthentication(microsoftOptions);
         //    }
 
-            
+
         //    if (!string.IsNullOrWhiteSpace(site.TwitterConsumerKey))
         //    {
         //        var twitterOptions = new TwitterOptions();
@@ -261,14 +266,14 @@ namespace Microsoft.AspNetCore.Builder
         //            oidOptions.SignedOutCallbackPath = "/" + site.SiteFolderName + "/signout-callback-oidc";
         //            oidOptions.RemoteSignOutPath = "/" + site.SiteFolderName + "/signout-oidc";
         //        }
-                
-               
+
+
         //        app.UseOpenIdConnectAuthentication(oidOptions);
-               
+
 
         //    }
 
-            
+
 
 
 
@@ -294,7 +299,7 @@ namespace Microsoft.AspNetCore.Builder
         //    }
         //    else
         //    {
-                
+
         //        options.AuthenticationScheme = scheme;
         //        options.CookieName = $"{scheme}-{tenant.SiteFolderName}";
         //        options.CookiePath = "/" + tenant.SiteFolderName;
@@ -336,7 +341,7 @@ namespace Microsoft.AspNetCore.Builder
         //    }
         //    else
         //    {
-               
+
         //        options.AuthenticationScheme = scheme;
         //        options.CookieName = $"{scheme}-{tenant.SiteFolderName}";
         //        options.CookiePath = "/" + tenant.SiteFolderName;
