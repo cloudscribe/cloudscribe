@@ -90,8 +90,7 @@ namespace sourceDev.WebApp
             services.AddOptions();
 
             /* optional and only needed if you are using cloudscribe Logging  */
-            //services.AddCloudscribeLoggingNoDbStorage(Configuration);
-            //services.AddCloudscribeLogging();
+            services.AddCloudscribeLogging();
 
             /* these are optional and only needed if using cloudscribe Setup */
             //services.Configure<SetupOptions>(Configuration.GetSection("SetupOptions"));
@@ -187,12 +186,12 @@ namespace sourceDev.WebApp
                         options.AddCloudscribeNavigationBootstrap3Views();
                         options.AddCloudscribeCoreBootstrap3Views();
                         options.AddCloudscribeFileManagerBootstrap3Views();
-                        //options.AddCloudscribeLoggingBootstrap3Views();
+                        options.AddCloudscribeLoggingBootstrap3Views();
 
                         options.AddCloudscribeCoreIdentityServerIntegrationBootstrap3Views();
 
                         options.ViewLocationExpanders.Add(new cloudscribe.Core.Web.Components.SiteViewLocationExpander());
-                        //options.ViewLocationExpanders.Add(new cloudscribe.Core.Web.Components.SharedThemesViewLocationExpander());
+                        
                     })
                     ;
 
@@ -218,12 +217,12 @@ namespace sourceDev.WebApp
             IOptions<cloudscribe.Core.Models.MultiTenantOptions> multiTenantOptionsAccessor,
             IServiceProvider serviceProvider,
             IOptions<RequestLocalizationOptions> localizationOptionsAccessor
-            //, cloudscribe.Logging.Web.ILogRepository logRepo
+            , cloudscribe.Logging.Web.ILogRepository logRepo
             )
         {
             loggerFactory.AddConsole(Configuration.GetSection("Logging"));
             loggerFactory.AddDebug();
-            //ConfigureLogging(loggerFactory, serviceProvider, logRepo);
+            ConfigureLogging(loggerFactory, serviceProvider, logRepo);
 
             if (env.IsDevelopment())
             {
@@ -372,7 +371,7 @@ namespace sourceDev.WebApp
                     CoreEFStartup.InitializeDatabaseAsync(app.ApplicationServices).Wait();
 
                     // this one is only needed if using cloudscribe Logging with EF as the logging storage
-                    //LoggingEFStartup.InitializeDatabaseAsync(app.ApplicationServices).Wait();
+                    LoggingEFStartup.InitializeDatabaseAsync(app.ApplicationServices).Wait();
 
                     // you can use this hack to add clients and scopes into the db during startup if needed
                     // I used this before we implemented the UI for adding them
@@ -404,7 +403,7 @@ namespace sourceDev.WebApp
             services.AddAuthorization(options =>
             {
                 options.AddCloudscribeCoreDefaultPolicies();
-               // options.AddCloudscribeLoggingDefaultPolicy();
+                options.AddCloudscribeLoggingDefaultPolicy();
 
                 options.AddPolicy(
                     "IdentityServerAdminPolicy",
@@ -449,7 +448,7 @@ namespace sourceDev.WebApp
             {
                 case "NoDb":
                     services.AddCloudscribeCoreNoDbStorage();
-                    //services.AddCloudscribeLoggingNoDbStorage(Configuration);
+                    services.AddCloudscribeLoggingNoDbStorage(Configuration);
 
                     //services.AddIdentityServer()
                     //    .AddCloudscribeCoreNoDbIdentityServerStorage()
@@ -466,8 +465,8 @@ namespace sourceDev.WebApp
                     {
                         case "pgsql":
                             var pgConnection = Configuration.GetConnectionString("PostgreSqlEntityFrameworkConnectionString");
-                            //services.AddCloudscribeCoreEFStoragePostgreSql(pgConnection);
-                            //services.AddCloudscribeLoggingEFStoragePostgreSql(pgConnection);
+                            services.AddCloudscribeCoreEFStoragePostgreSql(pgConnection);
+                            services.AddCloudscribeLoggingEFStoragePostgreSql(pgConnection);
 
                         //    services.AddIdentityServer()
                         //        .AddCloudscribeCoreEFIdentityServerStoragePostgreSql(pgConnection)
@@ -480,7 +479,7 @@ namespace sourceDev.WebApp
                         case "MySql":
                             var mysqlConnection = Configuration.GetConnectionString("MySqlEntityFrameworkConnectionString");
                             services.AddCloudscribeCoreEFStorageMySql(mysqlConnection);
-                            //services.AddCloudscribeLoggingEFStorageMySQL(mysqlConnection);
+                            services.AddCloudscribeLoggingEFStorageMySQL(mysqlConnection);
 
                             //services.AddIdentityServer()
                             //    .AddCloudscribeCoreEFIdentityServerStorageMySql(mysqlConnection)
@@ -494,7 +493,7 @@ namespace sourceDev.WebApp
                         default:
                             var connectionString = Configuration.GetConnectionString("EntityFrameworkConnectionString");
                             services.AddCloudscribeCoreEFStorageMSSQL(connectionString);
-                            //services.AddCloudscribeLoggingEFStorageMSSQL(connectionString);
+                            services.AddCloudscribeLoggingEFStorageMSSQL(connectionString);
 
                             //services.AddIdentityServer()
                             //    .AddCloudscribeCoreEFIdentityServerStorageMSSQL(connectionString)
@@ -513,7 +512,7 @@ namespace sourceDev.WebApp
         private void ConfigureLogging(
             ILoggerFactory loggerFactory,
             IServiceProvider serviceProvider
-            //, cloudscribe.Logging.Web.ILogRepository logRepo
+            , cloudscribe.Logging.Web.ILogRepository logRepo
             )
         {
 
@@ -542,7 +541,7 @@ namespace sourceDev.WebApp
                 return true;
             };
 
-            //loggerFactory.AddDbLogger(serviceProvider, logFilter, logRepo);
+            loggerFactory.AddDbLogger(serviceProvider, logFilter, logRepo);
         }
 
     }
