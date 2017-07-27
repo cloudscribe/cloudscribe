@@ -42,12 +42,20 @@ namespace cloudscribe.Core.Identity
             var options = new CookieAuthenticationOptions();
             _cookieOptionsInitializer.PostConfigure(scheme, options);
            
-            AdjustOptionsForTenant(tenant, options, scheme);
+            if(scheme == IdentityConstants.ApplicationScheme)
+            {
+                ConfigureApplicationCookie(tenant, options, scheme);
+            }
+            else
+            {
+                ConfigureOtherCookies(tenant, options, scheme);
+            }
+            
             return options;
 
         }
 
-        private void AdjustOptionsForTenant(SiteContext tenant, CookieAuthenticationOptions options, string scheme)
+        private void ConfigureApplicationCookie(SiteContext tenant, CookieAuthenticationOptions options, string scheme)
         {
             if (tenant == null)
             {
@@ -79,6 +87,28 @@ namespace cloudscribe.Core.Identity
             options.LogoutPath = tenantPathBase + "/account/logoff";
             options.AccessDeniedPath = tenantPathBase + "/account/accessdenied";
 
+        }
+
+        private void ConfigureOtherCookies(SiteContext tenant, CookieAuthenticationOptions options, string scheme)
+        {
+            if (tenant == null)
+            {
+                _log.LogError("tenant was null");
+                return;
+            }
+
+            if (_multiTenantOptions.UseRelatedSitesMode)
+            {
+                //options.AuthenticationScheme = scheme;
+                options.CookieName = scheme;
+                options.CookiePath = "/";
+            }
+            else
+            {
+                options.CookieName = $"{scheme}-{tenant.SiteFolderName}";
+                options.CookiePath = "/" + tenant.SiteFolderName;      
+            }
+            
         }
 
         public CookieAuthenticationOptions Value
