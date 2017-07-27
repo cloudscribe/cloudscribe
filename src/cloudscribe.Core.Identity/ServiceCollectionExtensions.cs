@@ -17,6 +17,8 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Options;
 using System;
+using Microsoft.AspNetCore.Authentication.MicrosoftAccount;
+using Microsoft.AspNetCore.Authentication;
 
 namespace Microsoft.Extensions.DependencyInjection
 {
@@ -27,6 +29,7 @@ namespace Microsoft.Extensions.DependencyInjection
             Action<IdentityOptions> setupAction = null
             )
         {
+            services.AddScoped<IAuthenticationHandlerProvider, SiteAuthenticationHandlerProvider>();
 
             // Services used by identity
             // this will change in 2.0 AddCookieAuthentication => AddCookie
@@ -70,10 +73,45 @@ namespace Microsoft.Extensions.DependencyInjection
             //services.AddSingleton<IOptionsMonitor<CookieAuthenticationOptions>, SiteCookieAuthenticationOptions>();
             services.AddSingleton<IOptionsSnapshot<CookieAuthenticationOptions>, SiteCookieAuthenticationOptionsPreview>();
 
-            services.AddSingleton<IOptions<IdentityOptions>, SiteIdentityOptionsResolver>();
+            services.AddFacebookAuthentication(o =>
+            {
+                o.AppId = "placeholder";
+                o.AppSecret = "placeholder";
+            });
+
+            services.AddGoogleAuthentication(o =>
+            {
+                o.ClientId = "placeholder";
+                o.ClientSecret = "placeholder";
+            });
+            services.AddMicrosoftAccountAuthentication(o =>
+            {
+                o.ClientId = "placeholder";
+                o.ClientSecret = "placeholder";
+            });
+
+            services.AddSingleton<IOptionsSnapshot<MicrosoftAccountOptions>, SiteMicrosoftAccountOptions>();
 
             
+
+            services.AddTwitterAuthentication(o =>
+            {
+                o.ConsumerKey = "placeholder";
+                o.ConsumerSecret = "placeholder";
+            });
+            services.AddOpenIdConnectAuthentication(o =>
+            {
+                o.ClientId = "placeholder";
+                o.ClientSecret = "placeholder";
+                o.Authority = "https://placeholder.com";
+               
+               
+            });
+
+
+
             // Services used by identity
+            services.AddSingleton<IOptions<IdentityOptions>, SiteIdentityOptionsResolver>();
 
             services.TryAddScoped<IUserClaimsPrincipalFactory<SiteUser>, SiteUserClaimsPrincipalFactory<SiteUser, SiteRole>>();
             services.TryAddScoped<IPasswordHasher<SiteUser>, SitePasswordHasher<SiteUser>>();

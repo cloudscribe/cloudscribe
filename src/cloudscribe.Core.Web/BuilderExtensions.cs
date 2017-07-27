@@ -108,7 +108,7 @@ namespace Microsoft.AspNetCore.Builder
 
             });
 
-            app.UseCloudscribeEnforceSiteRulesMiddleware();
+            //app.UseCloudscribeEnforceSiteRulesMiddleware();
 
             return app;
 

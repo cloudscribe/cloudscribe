@@ -27,6 +27,7 @@
     <PackageReference Include="Microsoft.AspNetCore.Authentication.Google" Version="2.0.0-*" />
     <PackageReference Include="Microsoft.AspNetCore.Authentication.MicrosoftAccount" Version="2.0.0-*" />
     <PackageReference Include="Microsoft.AspNetCore.Authentication.Twitter" Version="2.0.0-*" />
+    <PackageReference Include="Microsoft.AspNetCore.Authentication.OAuth" Version="2.0.0-*" />
     <PackageReference Include="Microsoft.AspNetCore.Authentication.OpenIdConnect" Version="2.0.0-*" />
     <PackageReference Include="Microsoft.AspNetCore.Hosting.Abstractions" Version="2.0.0-*" />
     <PackageReference Include="Microsoft.AspNetCore.Identity" Version="2.0.0-*" />
