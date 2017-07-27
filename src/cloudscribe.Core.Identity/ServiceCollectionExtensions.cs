@@ -19,6 +19,9 @@ using Microsoft.Extensions.Options;
 using System;
 using Microsoft.AspNetCore.Authentication.MicrosoftAccount;
 using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authentication.Google;
+using Microsoft.AspNetCore.Authentication.Facebook;
+using Microsoft.AspNetCore.Authentication.Twitter;
 
 namespace Microsoft.Extensions.DependencyInjection
 {
@@ -29,7 +32,7 @@ namespace Microsoft.Extensions.DependencyInjection
             Action<IdentityOptions> setupAction = null
             )
         {
-            services.AddScoped<IAuthenticationHandlerProvider, SiteAuthenticationHandlerProvider>();
+            //services.AddScoped<IAuthenticationHandlerProvider, SiteAuthenticationHandlerProvider>();
 
             // Services used by identity
             // this will change in 2.0 AddCookieAuthentication => AddCookie
@@ -78,12 +81,16 @@ namespace Microsoft.Extensions.DependencyInjection
                 o.AppId = "placeholder";
                 o.AppSecret = "placeholder";
             });
+            services.AddSingleton<IOptionsSnapshot<FacebookOptions>, SiteFacebookOptions>();
 
             services.AddGoogleAuthentication(o =>
             {
                 o.ClientId = "placeholder";
                 o.ClientSecret = "placeholder";
             });
+
+            services.AddSingleton<IOptionsSnapshot<GoogleOptions>, SiteGoogleOptions>();
+
             services.AddMicrosoftAccountAuthentication(o =>
             {
                 o.ClientId = "placeholder";
@@ -99,6 +106,9 @@ namespace Microsoft.Extensions.DependencyInjection
                 o.ConsumerKey = "placeholder";
                 o.ConsumerSecret = "placeholder";
             });
+
+            services.AddSingleton<IOptionsSnapshot<TwitterOptions>, SiteTwitterOptions>();
+
             services.AddOpenIdConnectAuthentication(o =>
             {
                 o.ClientId = "placeholder";

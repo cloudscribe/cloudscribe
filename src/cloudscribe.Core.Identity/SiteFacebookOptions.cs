@@ -7,7 +7,7 @@
 
 using cloudscribe.Core.Models;
 using Microsoft.AspNetCore.Authentication;
-using Microsoft.AspNetCore.Authentication.MicrosoftAccount;
+using Microsoft.AspNetCore.Authentication.Facebook;
 using Microsoft.AspNetCore.Authentication.OAuth;
 using Microsoft.AspNetCore.DataProtection;
 using Microsoft.AspNetCore.Http;
@@ -17,14 +17,14 @@ using System.Net.Http;
 
 namespace cloudscribe.Core.Identity
 {
-    public class SiteMicrosoftAccountOptions : IOptionsSnapshot<MicrosoftAccountOptions>
+    public class SiteFacebookOptions : IOptionsSnapshot<FacebookOptions>
     {
-        public SiteMicrosoftAccountOptions(
-            IOptions<MultiTenantOptions> multiTenantOptionsAccessor,
-            IPostConfigureOptions<MicrosoftAccountOptions> optionsInitializer,
+        public SiteFacebookOptions(
+             IOptions<MultiTenantOptions> multiTenantOptionsAccessor,
+            IPostConfigureOptions<FacebookOptions> optionsInitializer,
             IDataProtectionProvider dataProtection,
             IHttpContextAccessor httpContextAccessor,
-            ILogger<SiteMicrosoftAccountOptions> logger
+            ILogger<SiteFacebookOptions> logger
             )
         {
             _multiTenantOptions = multiTenantOptionsAccessor.Value;
@@ -37,14 +37,14 @@ namespace cloudscribe.Core.Identity
         private MultiTenantOptions _multiTenantOptions;
         private IHttpContextAccessor _httpContextAccessor;
         private ILogger _log;
-        private IPostConfigureOptions<MicrosoftAccountOptions> _optionsInitializer;
+        private IPostConfigureOptions<FacebookOptions> _optionsInitializer;
         private readonly IDataProtectionProvider _dp;
 
-        private MicrosoftAccountOptions ResolveOptions(string scheme)
+        private FacebookOptions ResolveOptions(string scheme)
         {
             var tenant = _httpContextAccessor.HttpContext.GetTenant<SiteContext>();
-            var options = new MicrosoftAccountOptions();
-            _optionsInitializer.PostConfigure(scheme,options);
+            var options = new FacebookOptions();
+            _optionsInitializer.PostConfigure(scheme, options);
 
             options.DataProtectionProvider = options.DataProtectionProvider ?? _dp;
 
@@ -59,7 +59,7 @@ namespace cloudscribe.Core.Identity
             if (options.StateDataFormat == null)
             {
                 var dataProtector = options.DataProtectionProvider.CreateProtector(
-                    typeof(OAuthHandler<MicrosoftAccountOptions>).FullName, scheme, "v1");
+                    typeof(OAuthHandler<FacebookOptions>).FullName, scheme, "v1");
 
                 options.StateDataFormat = new PropertiesDataFormat(dataProtector);
             }
@@ -70,9 +70,9 @@ namespace cloudscribe.Core.Identity
 
         }
 
-        private void ConfigureTenantOptions(SiteContext tenant, MicrosoftAccountOptions options)
+        private void ConfigureTenantOptions(SiteContext tenant, FacebookOptions options)
         {
-            if(tenant == null)
+            if (tenant == null)
             {
                 _log.LogError("tenant was null");
                 return;
@@ -81,29 +81,30 @@ namespace cloudscribe.Core.Identity
                                         && _multiTenantOptions.Mode == cloudscribe.Core.Models.MultiTenantMode.FolderName
                                         && tenant.SiteFolderName.Length > 0;
 
-            if (!string.IsNullOrWhiteSpace(tenant.MicrosoftClientId))
+            if (!string.IsNullOrWhiteSpace(tenant.FacebookAppId))
             {
-                options.ClientId = tenant.MicrosoftClientId;
-                options.ClientSecret = tenant.MicrosoftClientSecret;
-         
+                options.AppId = tenant.FacebookAppId;
+                options.AppSecret = tenant.FacebookAppSecret;
+
                 if (useFolder)
                 {
-                    options.CallbackPath = "/" + tenant.SiteFolderName + "/signin-microsoft";
+                    options.CallbackPath = "/" + tenant.SiteFolderName + "/signin-facebook";
                 }
             }
         }
 
-        public MicrosoftAccountOptions Value
+        public FacebookOptions Value
         {
             get
             {
-                return ResolveOptions(MicrosoftAccountDefaults.AuthenticationScheme);
+                return ResolveOptions(FacebookDefaults.AuthenticationScheme);
             }
         }
 
-        public MicrosoftAccountOptions Get(string name)
+        public FacebookOptions Get(string name)
         {
             return ResolveOptions(name);
         }
+
     }
 }
