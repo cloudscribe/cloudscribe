@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2017-07-27
-// Last Modified:			2017-07-27
+// Last Modified:			2017-07-28
 // 
 
 using cloudscribe.Core.Models;
@@ -20,7 +20,7 @@ namespace cloudscribe.Core.Identity
     public class SiteFacebookOptions : IOptionsSnapshot<FacebookOptions>
     {
         public SiteFacebookOptions(
-             IOptions<MultiTenantOptions> multiTenantOptionsAccessor,
+            IOptions<MultiTenantOptions> multiTenantOptionsAccessor,
             IPostConfigureOptions<FacebookOptions> optionsInitializer,
             IDataProtectionProvider dataProtection,
             IHttpContextAccessor httpContextAccessor,
@@ -44,6 +44,10 @@ namespace cloudscribe.Core.Identity
         {
             var tenant = _httpContextAccessor.HttpContext.GetTenant<SiteContext>();
             var options = new FacebookOptions();
+
+            options.AppId = "placeholder";
+            options.AppSecret = "placeholder";
+
             _optionsInitializer.PostConfigure(scheme, options);
 
             options.DataProtectionProvider = options.DataProtectionProvider ?? _dp;

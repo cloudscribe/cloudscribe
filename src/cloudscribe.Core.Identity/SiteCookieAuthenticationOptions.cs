@@ -21,7 +21,7 @@ namespace cloudscribe.Core.Identity
             IOptions<MultiTenantOptions> multiTenantOptionsAccessor,
             IPostConfigureOptions<CookieAuthenticationOptions> cookieOptionsInitializer,
             IHttpContextAccessor httpContextAccessor,
-            ILogger<SiteCookieAuthenticationOptions> logger
+            ILogger<SiteCookieAuthenticationOptionsPreview> logger
             )
         {
             _multiTenantOptions = multiTenantOptionsAccessor.Value;
@@ -124,99 +124,99 @@ namespace cloudscribe.Core.Identity
 
     // in 2.0 this will be consumed by CookieAuthHandler but in preview 2 IOptionsSnapshot is used
 
-    public class SiteCookieAuthenticationOptions : IOptionsMonitor<CookieAuthenticationOptions>
-    {
-        public SiteCookieAuthenticationOptions(
-            IOptions<MultiTenantOptions> multiTenantOptionsAccessor,
-            IPostConfigureOptions<CookieAuthenticationOptions> cookieOptionsInitializer,
-            IHttpContextAccessor httpContextAccessor,
-            ILogger<SiteCookieAuthenticationOptions> logger
-            )
-        {
-            _multiTenantOptions = multiTenantOptionsAccessor.Value;
-            _cookieOptionsInitializer = cookieOptionsInitializer;
-            _httpContextAccessor = httpContextAccessor;
-            _log = logger;
-        }
+    //public class SiteCookieAuthenticationOptions : IOptionsMonitor<CookieAuthenticationOptions>
+    //{
+    //    public SiteCookieAuthenticationOptions(
+    //        IOptions<MultiTenantOptions> multiTenantOptionsAccessor,
+    //        IPostConfigureOptions<CookieAuthenticationOptions> cookieOptionsInitializer,
+    //        IHttpContextAccessor httpContextAccessor,
+    //        ILogger<SiteCookieAuthenticationOptions> logger
+    //        )
+    //    {
+    //        _multiTenantOptions = multiTenantOptionsAccessor.Value;
+    //        _cookieOptionsInitializer = cookieOptionsInitializer;
+    //        _httpContextAccessor = httpContextAccessor;
+    //        _log = logger;
+    //    }
 
-        private MultiTenantOptions _multiTenantOptions;
-        private IPostConfigureOptions<CookieAuthenticationOptions> _cookieOptionsInitializer;
-        private IHttpContextAccessor _httpContextAccessor;
-        private ILogger _log;
-        internal event Action<CookieAuthenticationOptions> _onChange;
+    //    private MultiTenantOptions _multiTenantOptions;
+    //    private IPostConfigureOptions<CookieAuthenticationOptions> _cookieOptionsInitializer;
+    //    private IHttpContextAccessor _httpContextAccessor;
+    //    private ILogger _log;
+    //    internal event Action<CookieAuthenticationOptions> _onChange;
 
-        private CookieAuthenticationOptions ResolveOptions(string scheme)
-        {
-            var tenant = _httpContextAccessor.HttpContext.GetTenant<SiteContext>();
-            var options = new CookieAuthenticationOptions();
-            _cookieOptionsInitializer.PostConfigure(scheme, options);
-            AdjustOptionsForTenant(tenant, options, scheme);
-            return options;
+    //    private CookieAuthenticationOptions ResolveOptions(string scheme)
+    //    {
+    //        var tenant = _httpContextAccessor.HttpContext.GetTenant<SiteContext>();
+    //        var options = new CookieAuthenticationOptions();
+    //        _cookieOptionsInitializer.PostConfigure(scheme, options);
+    //        AdjustOptionsForTenant(tenant, options, scheme);
+    //        return options;
             
-        }
+    //    }
 
-        private void AdjustOptionsForTenant(SiteContext tenant, CookieAuthenticationOptions options, string scheme)
-        {
-            if(tenant == null)
-            {
-                _log.LogError("tenant was null");
-                return;
-            }
+    //    private void AdjustOptionsForTenant(SiteContext tenant, CookieAuthenticationOptions options, string scheme)
+    //    {
+    //        if(tenant == null)
+    //        {
+    //            _log.LogError("tenant was null");
+    //            return;
+    //        }
 
-            if (_multiTenantOptions.UseRelatedSitesMode)
-            {
-                options.CookieName = scheme;
-                options.CookiePath = "/";
-            }
-            else
-            {
+    //        if (_multiTenantOptions.UseRelatedSitesMode)
+    //        {
+    //            options.CookieName = scheme;
+    //            options.CookiePath = "/";
+    //        }
+    //        else
+    //        {
 
-                options.CookieName = $"{scheme}-{tenant.SiteFolderName}";
-                options.CookiePath = "/" + tenant.SiteFolderName;
-                options.Events.OnValidatePrincipal = SiteAuthCookieValidator.ValidatePrincipalAsync;
-            }
+    //            options.CookieName = $"{scheme}-{tenant.SiteFolderName}";
+    //            options.CookiePath = "/" + tenant.SiteFolderName;
+    //            options.Events.OnValidatePrincipal = SiteAuthCookieValidator.ValidatePrincipalAsync;
+    //        }
 
-            var tenantPathBase = string.IsNullOrEmpty(tenant.SiteFolderName)
-                ? PathString.Empty
-                : new PathString("/" + tenant.SiteFolderName);
+    //        var tenantPathBase = string.IsNullOrEmpty(tenant.SiteFolderName)
+    //            ? PathString.Empty
+    //            : new PathString("/" + tenant.SiteFolderName);
 
-            options.LoginPath = tenantPathBase + "/account/login";
-            options.LogoutPath = tenantPathBase + "/account/logoff";
-            options.AccessDeniedPath = tenantPathBase + "/account/accessdenied";
+    //        options.LoginPath = tenantPathBase + "/account/login";
+    //        options.LogoutPath = tenantPathBase + "/account/logoff";
+    //        options.AccessDeniedPath = tenantPathBase + "/account/accessdenied";
 
-        }
+    //    }
 
-        public CookieAuthenticationOptions CurrentValue
-        {
-            get
-            {
-                return ResolveOptions(IdentityConstants.ApplicationScheme);
-            }
-        }
+    //    public CookieAuthenticationOptions CurrentValue
+    //    {
+    //        get
+    //        {
+    //            return ResolveOptions(IdentityConstants.ApplicationScheme);
+    //        }
+    //    }
         
-        public IDisposable OnChange(Action<CookieAuthenticationOptions> listener)
-        {
-            _log.LogInformation("onchange invoked");
+    //    public IDisposable OnChange(Action<CookieAuthenticationOptions> listener)
+    //    {
+    //        _log.LogInformation("onchange invoked");
 
-            var disposable = new ChangeTrackerDisposable(this, listener);
-            _onChange += disposable.OnChange;
-            return disposable;
-        }
+    //        var disposable = new ChangeTrackerDisposable(this, listener);
+    //        _onChange += disposable.OnChange;
+    //        return disposable;
+    //    }
 
-        internal class ChangeTrackerDisposable : IDisposable
-        {
-            private readonly Action<CookieAuthenticationOptions> _listener;
-            private readonly SiteCookieAuthenticationOptions _monitor;
+    //    internal class ChangeTrackerDisposable : IDisposable
+    //    {
+    //        private readonly Action<CookieAuthenticationOptions> _listener;
+    //        private readonly SiteCookieAuthenticationOptions _monitor;
 
-            public ChangeTrackerDisposable(SiteCookieAuthenticationOptions monitor, Action<CookieAuthenticationOptions> listener)
-            {
-                _listener = listener;
-                _monitor = monitor;
-            }
+    //        public ChangeTrackerDisposable(SiteCookieAuthenticationOptions monitor, Action<CookieAuthenticationOptions> listener)
+    //        {
+    //            _listener = listener;
+    //            _monitor = monitor;
+    //        }
 
-            public void OnChange(CookieAuthenticationOptions options) => _listener.Invoke(options);
+    //        public void OnChange(CookieAuthenticationOptions options) => _listener.Invoke(options);
 
-            public void Dispose() => _monitor._onChange -= OnChange;
-        }
-    }
+    //        public void Dispose() => _monitor._onChange -= OnChange;
+    //    }
+    //}
 }

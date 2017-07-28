@@ -43,6 +43,9 @@ namespace cloudscribe.Core.Identity
         {
             var tenant = _httpContextAccessor.HttpContext.GetTenant<SiteContext>();
             var options = new TwitterOptions();
+            options.ConsumerKey = "placeholder";
+            options.ConsumerSecret = "placeholder";
+
             _optionsInitializer.PostConfigure(scheme, options);
 
             options.DataProtectionProvider = options.DataProtectionProvider ?? _dp;

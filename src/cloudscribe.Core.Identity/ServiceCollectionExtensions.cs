@@ -48,10 +48,6 @@ namespace Microsoft.Extensions.DependencyInjection
             services.AddCookieAuthentication(IdentityConstants.ApplicationScheme, o =>
             {
                 o.LoginPath = new PathString("/Account/Login");
-                //o.Events = new CookieAuthenticationEvents
-                //{
-                //    OnValidatePrincipal = SecurityStampValidator.ValidatePrincipalAsync
-                //};
                 o.Events = new CookieAuthenticationEvents
                 {
                     OnValidatePrincipal = SiteAuthCookieValidator.ValidatePrincipalAsync

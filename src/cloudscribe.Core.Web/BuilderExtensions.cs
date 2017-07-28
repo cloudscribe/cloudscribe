@@ -1,19 +1,12 @@
-﻿
-
-using cloudscribe.Core.Identity;
-using cloudscribe.Core.Models;
-using Microsoft.AspNetCore.Authentication.Cookies;
+﻿using cloudscribe.Core.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Localization;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.FileProviders;
 using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Options;
-using Microsoft.IdentityModel.Protocols.OpenIdConnect;
 using System;
 using System.Globalization;
 using System.IO;
-using System.Reflection;
 
 namespace Microsoft.AspNetCore.Builder
 {
@@ -84,31 +77,10 @@ namespace Microsoft.AspNetCore.Builder
                 {
                     var addedIdentityServer = identityServerInvoker(builder, ctx.Tenant);
                 }
-                //builder.UseIdentityServer();
-
-                //// this sets up the authentication for apis within this application endpoint
-                //// ie apis that are hosted in the same web app endpoint with the authority server
-                //// this is not needed here if you are only using separate api endpoints
-                //// it is needed in the startup of those separate endpoints
-                //// note that with both cookie auth and jwt auth middleware the principal is merged from both the cookie and the jwt token if it is passed
-                //builder.UseIdentityServerAuthentication(new IdentityServerAuthenticationOptions
-                //{
-                //    Authority = "https://localhost:44399",
-                //    // using the site aliasid as the scope so each tenant has a different scope
-                //    // you can view the aliasid from site settings
-                //    // clients must be configured with the scope to have access to the apis for the tenant
-                //    ApiName = ctx.Tenant.AliasId,
-                //    //RoleClaimType = "http://schemas.microsoft.com/ws/2008/06/identity/claims/role",
-                //    //AuthenticationScheme = AuthenticationScheme.Application,
-
-                //    RequireHttpsMetadata = true
-                //});
-
-
-
+                
             });
 
-            //app.UseCloudscribeEnforceSiteRulesMiddleware();
+            app.UseCloudscribeEnforceSiteRulesMiddleware();
 
             return app;
 

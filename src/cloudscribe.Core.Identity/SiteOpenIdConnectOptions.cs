@@ -8,7 +8,6 @@
 using cloudscribe.Core.Models;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.OpenIdConnect;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.DataProtection;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
@@ -16,8 +15,8 @@ using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Protocols;
 using Microsoft.IdentityModel.Protocols.OpenIdConnect;
 using System;
-using System.Text;
 using System.Net.Http;
+using System.Text;
 
 namespace cloudscribe.Core.Identity
 {
@@ -70,6 +69,8 @@ namespace cloudscribe.Core.Identity
             _optionsInitializer.PostConfigure(scheme, options);
 
             options.DataProtectionProvider = options.DataProtectionProvider ?? _dp;
+
+            ConfigureTenantOptions(tenant, options);
 
             //if(string.IsNullOrWhiteSpace(options.SignInScheme))
             //{
@@ -141,7 +142,7 @@ namespace cloudscribe.Core.Identity
                 }
             }
 
-            ConfigureTenantOptions(tenant, options);
+            
 
             return options;
 
