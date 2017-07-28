@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2016-05-07
-// Last Modified:			2017-07-26
+// Last Modified:			2017-07-28
 // 
 
 using cloudscribe.Core.Identity;
@@ -22,6 +22,7 @@ using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Google;
 using Microsoft.AspNetCore.Authentication.Facebook;
 using Microsoft.AspNetCore.Authentication.Twitter;
+using Microsoft.AspNetCore.Authentication.OpenIdConnect;
 
 namespace Microsoft.Extensions.DependencyInjection
 {
@@ -98,9 +99,7 @@ namespace Microsoft.Extensions.DependencyInjection
             });
 
             services.AddSingleton<IOptionsSnapshot<MicrosoftAccountOptions>, SiteMicrosoftAccountOptions>();
-
             
-
             services.AddTwitterAuthentication(o =>
             {
                 o.ConsumerKey = "placeholder";
@@ -115,8 +114,9 @@ namespace Microsoft.Extensions.DependencyInjection
                 o.ClientSecret = "placeholder";
                 o.Authority = "https://placeholder.com";
                
-               
             });
+
+            services.AddSingleton<IOptionsSnapshot<OpenIdConnectOptions>, SiteOpenIdConnectOptions>();
 
 
 

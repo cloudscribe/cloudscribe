@@ -95,7 +95,6 @@ namespace cloudscribe.Core.Identity
 
             if (_multiTenantOptions.UseRelatedSitesMode)
             {
-                //options.AuthenticationScheme = scheme;
                 options.CookieName = scheme;
                 options.CookiePath = "/";
             }
