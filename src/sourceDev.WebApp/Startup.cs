@@ -102,10 +102,7 @@ namespace sourceDev.WebApp
             services.AddScoped<cloudscribe.Core.Web.ExtensionPoints.IHandleCustomRegistration, sourceDev.WebApp.Components.CustomRegistrationHandler>();
 
             services.AddCloudscribeCore(Configuration);
-
-
-
-
+            
             services.Configure<GlobalResourceOptions>(Configuration.GetSection("GlobalResourceOptions"));
             services.AddSingleton<IStringLocalizerFactory, GlobalResourceManagerStringLocalizerFactory>();
 
@@ -254,7 +251,8 @@ namespace sourceDev.WebApp
             app.UseCloudscribeCore(
                     loggerFactory,
                     multiTenantOptions,
-                    SslIsAvailable
+                    SslIsAvailable,
+                    IdentityServerIntegratorFunc
                     );
 
             UseMvc(app, multiTenantOptions.Mode == cloudscribe.Core.Models.MultiTenantMode.FolderName);
@@ -311,7 +309,9 @@ namespace sourceDev.WebApp
         // to wire up identity server integration at the right point in the middleware pipeline
         private bool IdentityServerIntegratorFunc(IApplicationBuilder builder, cloudscribe.Core.Models.ISiteContext tenant)
         {
-            builder.UseIdentityServer();
+            //2017-07-28 commented out currently broken under netcore20
+            // need to re-fork identityserver4
+            //builder.UseIdentityServer();
 
             //// this sets up the authentication for apis within this application endpoint
             //// ie apis that are hosted in the same web app endpoint with the authority server
@@ -353,15 +353,15 @@ namespace sourceDev.WebApp
                     // site1 05301194-da1d-43a8-9aa4-6c5f8959f37b
                     // site2 a9e2c249-90b4-4770-9e99-9702d89f73b6
                     // replace null with your siteid and run the app, then change it back to null since it can only be a one time task
-                    //string sId = null;
+                    string sId = null;
 
-                    //CloudscribeIdentityServerIntegrationNoDbStorage.InitializeDatabaseAsync(
-                     //   app.ApplicationServices,
-                     //   sId,
-                     //   IdServerClients.Get(),
-                     //   IdServerResources.GetApiResources(),
-                     //   IdServerResources.GetIdentityResources()
-                     //   ).Wait();
+                    CloudscribeIdentityServerIntegrationNoDbStorage.InitializeDatabaseAsync(
+                        app.ApplicationServices,
+                        sId,
+                        IdServerClients.Get(),
+                        IdServerResources.GetApiResources(),
+                        IdServerResources.GetIdentityResources()
+                        ).Wait();
 
                     break;
 
@@ -383,15 +383,15 @@ namespace sourceDev.WebApp
                     // site1 8f54733c-3f3a-4971-bb1f-8950cea42f1a
                     // site2 7c111db3-e270-497a-9a12-aed436c764c6
                     // replace null with your siteid and run the app, then change it back to null since it can only be a one time task
-                    //tring siteId = null;
+                    string siteId = null;
 
-                    //CloudscribeIdentityServerIntegrationEFCoreStorage.InitializeDatabaseAsync(
-                    //    app.ApplicationServices,
-                    //    siteId,
-                     //   IdServerClients.Get(),
-                    //    IdServerResources.GetApiResources(),
-                     //   IdServerResources.GetIdentityResources()
-                    //    ).Wait();
+                    CloudscribeIdentityServerIntegrationEFCoreStorage.InitializeDatabaseAsync(
+                        app.ApplicationServices,
+                        siteId,
+                        IdServerClients.Get(),
+                        IdServerResources.GetApiResources(),
+                        IdServerResources.GetIdentityResources()
+                        ).Wait();
 
                     break;
             }
@@ -468,11 +468,11 @@ namespace sourceDev.WebApp
                             services.AddCloudscribeCoreEFStoragePostgreSql(pgConnection);
                             services.AddCloudscribeLoggingEFStoragePostgreSql(pgConnection);
 
-                        //    services.AddIdentityServer()
-                        //        .AddCloudscribeCoreEFIdentityServerStoragePostgreSql(pgConnection)
-                        //        .AddCloudscribeIdentityServerIntegration()
-                        //        .AddTemporarySigningCredential()
-                        //        ;
+                            services.AddIdentityServer()
+                                .AddCloudscribeCoreEFIdentityServerStoragePostgreSql(pgConnection)
+                                .AddCloudscribeIdentityServerIntegration()
+                                .AddTemporarySigningCredential()
+                                ;
 
                             break;
 
@@ -481,11 +481,11 @@ namespace sourceDev.WebApp
                             services.AddCloudscribeCoreEFStorageMySql(mysqlConnection);
                             services.AddCloudscribeLoggingEFStorageMySQL(mysqlConnection);
 
-                            //services.AddIdentityServer()
-                            //    .AddCloudscribeCoreEFIdentityServerStorageMySql(mysqlConnection)
-                            //    .AddCloudscribeIdentityServerIntegration()
-                            //    .AddTemporarySigningCredential()
-                            //    ;
+                            services.AddIdentityServer()
+                                .AddCloudscribeCoreEFIdentityServerStorageMySql(mysqlConnection)
+                                .AddCloudscribeIdentityServerIntegration()
+                                .AddTemporarySigningCredential()
+                                ;
 
                             break;
 
@@ -495,11 +495,11 @@ namespace sourceDev.WebApp
                             services.AddCloudscribeCoreEFStorageMSSQL(connectionString);
                             services.AddCloudscribeLoggingEFStorageMSSQL(connectionString);
 
-                            //services.AddIdentityServer()
-                            //    .AddCloudscribeCoreEFIdentityServerStorageMSSQL(connectionString)
-                            //    .AddCloudscribeIdentityServerIntegration()
-                            //    .AddTemporarySigningCredential()
-                            //    ;
+                            services.AddIdentityServer()
+                                .AddCloudscribeCoreEFIdentityServerStorageMSSQL(connectionString)
+                                .AddCloudscribeIdentityServerIntegration()
+                                .AddTemporarySigningCredential()
+                                ;
 
                             break;
                     }

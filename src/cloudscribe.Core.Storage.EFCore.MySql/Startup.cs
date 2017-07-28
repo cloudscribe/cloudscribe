@@ -14,11 +14,22 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using cloudscribe.Core.Storage.EFCore.Common;
+using Microsoft.EntityFrameworkCore.Design;
 //using MySQL.Data.EntityFrameworkCore;
 //using MySQL.Data.EntityFrameworkCore.Extensions;
 
 namespace cloudscribe.Core.Storage.EFCore.MySql
 {
+    public class CoreDcContextDesignTimeFactory : IDesignTimeDbContextFactory<CoreDbContext>
+    {
+        public CoreDbContext CreateDbContext(string[] args)
+        {
+            var builder = new DbContextOptionsBuilder<CoreDbContext>();
+            builder.UseMySql("server=yourservername;UID=yourdatabaseusername;PWD=yourdatabaseuserpassword;database=yourdatabasename");
+            return new CoreDbContext(builder.Options);
+        }
+    }
+
     public class Startup
     {
         

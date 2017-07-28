@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2016-11-10
-// Last Modified:			2017-06-29
+// Last Modified:			2017-07-28
 // 
 
 using cloudscribe.Core.Models;
@@ -41,11 +41,8 @@ namespace cloudscribe.Core.Storage.EFCore.MySql
         
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            ICoreTableNames tableNames = this.GetService<ICoreTableNames>();
-            if (tableNames == null)
-            {
-                tableNames = new CoreTableNames();
-            }
+            ICoreTableNames tableNames = new CoreTableNames();
+            
 
             modelBuilder.Entity<SiteSettings>(entity =>
             {
@@ -430,6 +427,27 @@ namespace cloudscribe.Core.Storage.EFCore.MySql
                 entity.Property(p => p.ForcedUICulture)
                 .HasMaxLength(10);
                 ;
+
+                //entity.Property(p => p.PwdRequireNonAlpha)
+                //.IsRequired()
+                ////.HasColumnType("bit")
+                ////.HasDefaultValue(true)
+                //;
+                //entity.Property(p => p.PwdRequireLowercase)
+                //.IsRequired()
+                ////.HasColumnType("bit")
+                ////.HasDefaultValue(true)
+                //;
+                //entity.Property(p => p.PwdRequireUppercase)
+                //.IsRequired()
+                ////.HasColumnType("bit")
+                ////.HasDefaultValue(true)
+                //;
+                //entity.Property(p => p.PwdRequireDigit)
+                //.IsRequired()
+                ////.HasColumnType("bit")
+                ////.HasDefaultValue(true)
+                //;
 
             });
 

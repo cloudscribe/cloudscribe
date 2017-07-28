@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2014-08-16
-// Last Modified:			2017-06-29
+// Last Modified:			2017-07-28
 // 
 
 using System;
@@ -86,11 +86,14 @@ namespace cloudscribe.Core.Models
 
         
         public int MaxInvalidPasswordAttempts { get; set; } = 5;
-        
-        
-        public int MinRequiredPasswordLength { get; set; } = 7;    
-       
-        
+        public int MinRequiredPasswordLength { get; set; } = 7;
+        //public bool PwdRequireNonAlpha { get; set; } = true;
+        //public bool PwdRequireLowercase { get; set; } = true;
+        //public bool PwdRequireUppercase { get; set; } = true;
+        //public bool PwdRequireDigit { get; set; } = true;
+
+
+
         public bool AllowPersistentLogin { get; set; } = true;
         public bool CaptchaOnRegistration { get; set; } = false;
         public bool CaptchaOnLogin { get; set; } = false;

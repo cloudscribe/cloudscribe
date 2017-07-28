@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk.Web">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <Description>MySql Entity Framework configuration and operational stores for IdentityServer4 cloudscribe multi-tenant identity integration</Description>

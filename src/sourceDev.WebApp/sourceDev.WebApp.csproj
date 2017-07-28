@@ -51,11 +51,11 @@
     <PackageReference Include="cloudscribe.Web.Navigation" Version="1.2.*" />
     <PackageReference Include="cloudscribe.Web.Pagination" Version="1.1.*" />
 
-	<!--
+	
 	<PackageReference Include="cloudscribe.IDS4Fork" Version="1.5.*" />
     <PackageReference Include="IdentityModel" Version="2.7.*" />
     <PackageReference Include="IdentityServer4.AccessTokenValidation" Version="1.1.0" />
-	-->
+	
     
 	
 	<PackageReference Include="Microsoft.AspNetCore.Diagnostics" Version="2.0.0-*" />
@@ -76,35 +76,12 @@
     <PackageReference Include="Microsoft.Extensions.Options" Version="2.0.0-*" />
     <PackageReference Include="Microsoft.AspNetCore.Diagnostics.Abstractions" Version="2.0.0-*" />
     
-	<!--
-    <PackageReference Include="Microsoft.ApplicationInsights.AspNetCore" Version="2.0.*" />
-    <PackageReference Include="Microsoft.AspNetCore.Authentication.Cookies" Version="1.1.*" />
-    <PackageReference Include="Microsoft.AspNetCore.DataProtection" Version="1.1.*" />
-    <PackageReference Include="Microsoft.AspNetCore.Diagnostics" Version="1.1.*" />
-    <PackageReference Include="Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore" Version="1.1.*" />
-    <PackageReference Include="Microsoft.AspNetCore.Mvc" Version="1.1.*" />
-    <PackageReference Include="Microsoft.AspNetCore.Server.IISIntegration" Version="1.1.*" />
-    <PackageReference Include="Microsoft.AspNetCore.Server.Kestrel" Version="1.1.*" />
-    <PackageReference Include="Microsoft.AspNetCore.Session" Version="1.1.*" />
-    <PackageReference Include="Microsoft.AspNetCore.StaticFiles" Version="1.1.*" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="1.1.*" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer.Design" Version="1.1.*" />
-    <PackageReference Include="Microsoft.Extensions.Configuration.EnvironmentVariables" Version="1.1.*" />
-    <PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="1.1.*" />
-    <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="1.1.*" />
-    <PackageReference Include="Microsoft.Extensions.Localization" Version="1.1.*" />
-    <PackageReference Include="Microsoft.Extensions.Logging" Version="1.1.*" />
-    <PackageReference Include="Microsoft.Extensions.Logging.Console" Version="1.1.*" />
-    <PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="1.1.*" />
-    <PackageReference Include="Microsoft.Extensions.Options" Version="1.1.*" />
-    <PackageReference Include="Microsoft.Extensions.Options.ConfigurationExtensions" Version="1.1.*" />
-    <PackageReference Include="Microsoft.VisualStudio.Web.BrowserLink" Version="1.1.*" />
-	-->
+	
   </ItemGroup>
   
   <ItemGroup>
      <DotNetCliToolReference Include="BundlerMinifier.Core" Version="2.*" />
-    <DotNetCliToolReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Tools" Version="2.0.0-preview2-final" />
+    <DotNetCliToolReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Tools" Version="2.0.0-*" />
     <DotNetCliToolReference Include="Microsoft.EntityFrameworkCore.Tools.DotNet" Version="2.0.0-*" />
   </ItemGroup>
   

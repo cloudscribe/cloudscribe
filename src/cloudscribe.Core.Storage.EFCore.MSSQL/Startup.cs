@@ -14,9 +14,20 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using cloudscribe.Core.Storage.EFCore.Common;
+using Microsoft.EntityFrameworkCore.Design;
 
 namespace cloudscribe.Core.Storage.EFCore.MSSQL
 {
+    public class CoreDcContextDesignTimeFactory : IDesignTimeDbContextFactory<CoreDbContext>
+    {
+        public CoreDbContext CreateDbContext(string[] args)
+        {
+            var builder = new DbContextOptionsBuilder<CoreDbContext>();
+            builder.UseSqlServer("Server=(local);Database=DATABASENAME;Trusted_Connection=True;MultipleActiveResultSets=true");
+            return new CoreDbContext(builder.Options);
+        }
+    }
+
     public class Startup
     {
         

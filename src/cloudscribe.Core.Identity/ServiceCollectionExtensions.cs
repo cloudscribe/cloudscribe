@@ -121,7 +121,7 @@ namespace Microsoft.Extensions.DependencyInjection
 
             services.TryAddScoped<IUserClaimsPrincipalFactory<SiteUser>, SiteUserClaimsPrincipalFactory<SiteUser, SiteRole>>();
             services.TryAddScoped<IPasswordHasher<SiteUser>, SitePasswordHasher<SiteUser>>();
-            services.TryAddScoped<SiteSignInManager<SiteUser>, SiteSignInManager<SiteUser>>();
+            //services.TryAddScoped<SiteSignInManager<SiteUser>, SiteSignInManager<SiteUser>>();
 
             services.TryAddScoped<SignInManager<SiteUser>, SignInManager<SiteUser>>();
 

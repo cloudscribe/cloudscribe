@@ -2,13 +2,14 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2015-11-16
-// Last Modified:			2017-07-25
+// Last Modified:			2017-07-28
 // 
 
 using cloudscribe.Core.Models;
 using cloudscribe.Core.Models.Geography;
 using cloudscribe.Core.Storage.EFCore.Common;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Design;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Npgsql.EntityFrameworkCore.PostgreSQL;
 
@@ -32,6 +33,8 @@ using Npgsql.EntityFrameworkCore.PostgreSQL;
 
 namespace cloudscribe.Core.Storage.EFCore.pgsql
 {
+    
+
     public class CoreDbContext : CoreDbContextBase, ICoreDbContext
     {
         public CoreDbContext(DbContextOptions<CoreDbContext> options) : base(options)
@@ -41,11 +44,8 @@ namespace cloudscribe.Core.Storage.EFCore.pgsql
         
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            ICoreTableNames tableNames = this.GetService<ICoreTableNames>();
-            if (tableNames == null)
-            {
-                tableNames = new CoreTableNames();
-            }
+            ICoreTableNames tableNames = new CoreTableNames();
+         
             modelBuilder.HasPostgresExtension("uuid-ossp");
 
             modelBuilder.Entity<SiteSettings>(entity =>
@@ -431,6 +431,28 @@ namespace cloudscribe.Core.Storage.EFCore.pgsql
                 entity.Property(p => p.ForcedUICulture)
                 .HasMaxLength(10);
                 ;
+
+               // entity.Property(p => p.PwdRequireNonAlpha)
+               //.IsRequired()
+               ////.HasColumnType("bit")
+               ////.HasDefaultValue(true)
+               //;
+               // entity.Property(p => p.PwdRequireLowercase)
+               // .IsRequired()
+               // //.HasColumnType("bit")
+               // //.HasDefaultValue(true)
+               // ;
+               // entity.Property(p => p.PwdRequireUppercase)
+               // .IsRequired()
+               // //.HasColumnType("bit")
+               // //.HasDefaultValue(true)
+               // ;
+               // entity.Property(p => p.PwdRequireDigit)
+               // .IsRequired()
+               // //.HasColumnType("bit")
+               // //.HasDefaultValue(true)
+               // ;
+
             });
 
             modelBuilder.Entity<SiteHost>(entity =>

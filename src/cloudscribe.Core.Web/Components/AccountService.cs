@@ -27,7 +27,7 @@ namespace cloudscribe.Core.Web.Components
     {
         public AccountService(
             SiteUserManager<SiteUser> userManager,
-            SiteSignInManager<SiteUser> signInManager,
+            SignInManager<SiteUser> signInManager,
             IIdentityServerIntegration identityServerIntegration,
             ISocialAuthEmailVerfificationPolicy socialAuthEmailVerificationPolicy,
             IProcessAccountLoginRules loginRulesProcessor
@@ -45,7 +45,7 @@ namespace cloudscribe.Core.Web.Components
         }
 
         private readonly SiteUserManager<SiteUser> userManager;
-        private readonly SiteSignInManager<SiteUser> signInManager;
+        private readonly SignInManager<SiteUser> signInManager;
         private readonly IIdentityServerIntegration identityServerIntegration;
         private readonly ISocialAuthEmailVerfificationPolicy socialAuthEmailVerificationPolicy;
         private readonly IProcessAccountLoginRules loginRulesProcessor;

@@ -141,6 +141,28 @@ namespace cloudscribe.Core.Models
             get { return site.MinRequiredPasswordLength; }
         }
 
+        //public bool PwdRequireNonAlpha
+        //{
+        //    get { return site.PwdRequireNonAlpha; }
+        //}
+
+        //public bool PwdRequireLowercase
+        //{
+        //    get { return site.PwdRequireLowercase; }
+        //}
+
+        //public bool PwdRequireUppercase
+        //{
+        //    get { return site.PwdRequireUppercase; }
+        //}
+
+        //public bool PwdRequireDigit
+        //{
+        //    get { return site.PwdRequireDigit; }
+        //}
+
+
+
         public bool AllowPersistentLogin
         {
             get { return site.AllowPersistentLogin; }

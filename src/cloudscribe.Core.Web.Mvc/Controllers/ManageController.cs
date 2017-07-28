@@ -2,25 +2,22 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2014-10-26
-// Last Modified:			2017-07-25
+// Last Modified:			2017-07-27
 // 
 
-using cloudscribe.Core.Models;
 using cloudscribe.Core.Identity;
+using cloudscribe.Core.Models;
+using cloudscribe.Core.Web.ExtensionPoints;
 using cloudscribe.Core.Web.ViewModels.SiteUser;
-using cloudscribe.Messaging.Email;
+using cloudscribe.Web.Common;
 using cloudscribe.Web.Common.Extensions;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using System.Linq;
-using System.Security.Claims;
-using System.Threading.Tasks;
-using Microsoft.Extensions.Localization;
-using System;
-using cloudscribe.Web.Common;
 using Microsoft.AspNetCore.Mvc.Rendering;
-using cloudscribe.Core.Web.ExtensionPoints;
+using Microsoft.Extensions.Localization;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace cloudscribe.Core.Web.Controllers.Mvc
 {
@@ -30,7 +27,7 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
         public ManageController(
             SiteContext currentSite,
             SiteUserManager<SiteUser> userManager,
-            SiteSignInManager<SiteUser> signInManager,
+            SignInManager<SiteUser> signInManager,
             ISmsSender smsSender,
             IStringLocalizer<CloudscribeCore> localizer,
             ITimeZoneIdResolver timeZoneIdResolver,
@@ -50,7 +47,7 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
 
         private readonly ISiteContext Site;
         private readonly SiteUserManager<SiteUser> userManager;
-        private readonly SiteSignInManager<SiteUser> signInManager;
+        private readonly SignInManager<SiteUser> signInManager;
         //private readonly IAuthEmailSender emailSender;
         private readonly ISmsSender smsSender;
         private IStringLocalizer sr;

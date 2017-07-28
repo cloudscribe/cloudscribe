@@ -33,6 +33,8 @@ using Microsoft.EntityFrameworkCore.Infrastructure;
 
 namespace cloudscribe.Core.Storage.EFCore.MSSQL
 {
+    
+
     public class CoreDbContext : CoreDbContextBase, ICoreDbContext
     {
         public CoreDbContext(DbContextOptions<CoreDbContext> options) : base(options)
@@ -42,11 +44,8 @@ namespace cloudscribe.Core.Storage.EFCore.MSSQL
         
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            ICoreTableNames tableNames = this.GetService<ICoreTableNames>();
-            if (tableNames == null)
-            {
-                tableNames = new CoreTableNames();
-            }
+            ICoreTableNames tableNames = new CoreTableNames();
+           
 
             modelBuilder.Entity<SiteSettings>(entity =>
             {
@@ -484,6 +483,27 @@ namespace cloudscribe.Core.Storage.EFCore.MSSQL
                 entity.Property(p => p.ForcedUICulture)
                 .HasMaxLength(10);
                 ;
+
+                //entity.Property(p => p.PwdRequireNonAlpha)
+                //.IsRequired()
+                //.HasColumnType("bit")
+                //.HasDefaultValue(true)
+                //;
+                //entity.Property(p => p.PwdRequireLowercase)
+                //.IsRequired()
+                //.HasColumnType("bit")
+                //.HasDefaultValue(true)
+                //;
+                //entity.Property(p => p.PwdRequireUppercase)
+                //.IsRequired()
+                //.HasColumnType("bit")
+                //.HasDefaultValue(true)
+                //;
+                //entity.Property(p => p.PwdRequireDigit)
+                //.IsRequired()
+                //.HasColumnType("bit")
+                //.HasDefaultValue(true)
+                //;
 
             });
 

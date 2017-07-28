@@ -14,9 +14,20 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using cloudscribe.Core.Storage.EFCore.Common;
+using Microsoft.EntityFrameworkCore.Design;
 
 namespace cloudscribe.Core.Storage.EFCore.pgsql
 {
+    public class CoreDcContextDesignTimeFactory : IDesignTimeDbContextFactory<CoreDbContext>
+    {
+        public CoreDbContext CreateDbContext(string[] args)
+        {
+            var builder = new DbContextOptionsBuilder<CoreDbContext>();
+            builder.UseNpgsql("server=yourservername;UID=yourdatabaseusername;PWD=yourdatabaseuserpassword;database=yourdatabasename");
+            return new CoreDbContext(builder.Options);
+        }
+    }
+
     public class Startup
     {
         

@@ -7,7 +7,7 @@
 @using Microsoft.AspNetCore.Identity
 @inject IStringLocalizer<CloudscribeCore> sr
 @inject SiteContext site
-@inject SiteSignInManager<SiteUser> SignInManager
+@inject SignInManager<SiteUser> SignInManager
 @{ 
     var helloFormat = sr["Hello {0}!"];
 }
