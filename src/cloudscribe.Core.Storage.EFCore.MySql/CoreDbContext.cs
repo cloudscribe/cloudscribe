@@ -10,6 +10,7 @@ using cloudscribe.Core.Models.Geography;
 using cloudscribe.Core.Storage.EFCore.Common;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
 //using MySQL.Data.EntityFrameworkCore.Extensions;
 
 //http://ef.readthedocs.org/en/latest/modeling/configuring.html
@@ -42,29 +43,26 @@ namespace cloudscribe.Core.Storage.EFCore.MySql
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             ICoreTableNames tableNames = new CoreTableNames();
-            
+
+            //modelBuilder.HasAnnotation(MySqlAnnotationNames.FullTextIndex, "FULLTEXT");
+
+           
 
             modelBuilder.Entity<SiteSettings>(entity =>
             {
-                //entity.ForSqlServerToTable(tableNames.TablePrefix + tableNames.SiteTableName);
+                
                 entity.ToTable(tableNames.TablePrefix + tableNames.SiteTableName);
 
                 entity.HasKey(p => p.Id);
 
                 entity.Property(p => p.Id)
-                //.ForMySQLHasColumnType("uniqueidentifier")
-                //.ForMySQLHasDefaultValueSql("newid()")
+                
                 ;
 
                 entity.Property(p => p.AliasId)
                 .HasMaxLength(36)
                 ;
-
-                //entity.Property(u => u.ConcurrencyStamp)
-                //    .IsConcurrencyToken()
-                //    .HasMaxLength(50)
-                //    ;
-
+                
                 entity.HasIndex(p => p.AliasId);
 
                 entity.Property(p => p.SiteName)
@@ -76,38 +74,26 @@ namespace cloudscribe.Core.Storage.EFCore.MySql
 
                 entity.Property(p => p.AllowNewRegistration)
                 .IsRequired()
-                //.ForMySQLHasColumnType("bit")
-                //.ForMySQLHasDefaultValue(true)
                 ;
 
                 entity.Property(p => p.RequireConfirmedEmail)
                 .IsRequired()
-                //.ForMySQLHasColumnType("bit")
-                //.ForMySQLHasDefaultValue(false)
                 ;
 
                 entity.Property(p => p.RequireConfirmedPhone)
                 .IsRequired()
-                //.ForMySQLHasColumnType("bit")
-                //.ForMySQLHasDefaultValue(false)
                 ;
 
                 entity.Property(p => p.IsServerAdminSite)
                 .IsRequired()
-                //.ForMySQLHasColumnType("bit")
-                //.ForMySQLHasDefaultValue(false)
                 ;
 
                 entity.Property(p => p.UseLdapAuth)
                 .IsRequired()
-                //.ForMySQLHasColumnType("bit")
-                // .ForMySQLHasDefaultValue(false)
                 ;
 
                 entity.Property(p => p.AutoCreateLdapUserOnFirstLogin)
                 .IsRequired()
-                //.ForMySQLHasColumnType("bit")
-                //.ForMySQLHasDefaultValue(true)
                 ;
 
                 entity.Property(p => p.LdapServer)
@@ -115,10 +101,6 @@ namespace cloudscribe.Core.Storage.EFCore.MySql
                 ;
 
                 entity.Property(p => p.LdapPort)
-                //.IsRequired()
-                //.ForMySQLHasColumnType("int")
-                // .HasDefaultValue(389)
-                //.ValueGeneratedNever()
                 ;
 
                 entity.Property(p => p.LdapDomain)
@@ -135,35 +117,21 @@ namespace cloudscribe.Core.Storage.EFCore.MySql
 
                 entity.Property(p => p.ReallyDeleteUsers)
                 .IsRequired()
-                //.ForMySQLHasColumnType("bit")
-                //.ForMySQLHasDefaultValue(true)
                 ;
 
                 entity.Property(p => p.UseEmailForLogin)
                 .IsRequired()
-                //.ForMySQLHasColumnType("bit")
-                //.ForMySQLHasDefaultValue(true)
                 ;
 
                 entity.Property(p => p.RequiresQuestionAndAnswer)
                 .IsRequired()
-                //.ForMySQLHasColumnType("bit")
-                //.ForMySQLHasDefaultValue(false)
                 ;
 
                 entity.Property(p => p.MaxInvalidPasswordAttempts)
-                //.IsRequired()
-                //.ForMySQLHasColumnType("int")
-                //.ValueGeneratedNever()
-                // .HasDefaultValue(5)
                 ;
 
 
                 entity.Property(p => p.MinRequiredPasswordLength)
-                // .IsRequired()
-                // .ForMySQLHasColumnType("int")
-                //.HasDefaultValue(5)
-                //.ValueGeneratedNever()
                 ;
 
                 entity.Property(p => p.DefaultEmailFromAddress)
@@ -184,56 +152,38 @@ namespace cloudscribe.Core.Storage.EFCore.MySql
 
                 entity.Property(p => p.UseInvisibleRecaptcha)
                .IsRequired()
-               //.ForSqlServerHasColumnType("bit")
-               //.ForSqlServerHasDefaultValue(false)
                ;
 
                 entity.Property(p => p.DisableDbAuth)
                 .IsRequired()
-                //.ForMySQLHasColumnType("bit")
-                //.ForMySQLHasDefaultValue(false)
                 ;
 
                 entity.Property(p => p.RequireApprovalBeforeLogin)
                 .IsRequired()
-                //.ForMySQLHasColumnType("bit")
-                //.ForMySQLHasDefaultValue(false)
                 ;
 
                 entity.Property(p => p.AllowDbFallbackWithLdap)
                 .IsRequired()
-                //.ForMySQLHasColumnType("bit")
-                // .ForMySQLHasDefaultValue(false)
                 ;
 
                 entity.Property(p => p.EmailLdapDbFallback)
                 .IsRequired()
-                //.ForMySQLHasColumnType("bit")
-                // .ForMySQLHasDefaultValue(false)
                 ;
 
                 entity.Property(p => p.AllowPersistentLogin)
                 .IsRequired()
-                //.ForMySQLHasColumnType("bit")
-                //.ForMySQLHasDefaultValue(false)
                 ;
 
                 entity.Property(p => p.CaptchaOnLogin)
                 .IsRequired()
-                //.ForMySQLHasColumnType("bit")
-                //.ForMySQLHasDefaultValue(false)
                 ;
 
                 entity.Property(p => p.CaptchaOnRegistration)
                 .IsRequired()
-                //.ForMySQLHasColumnType("bit")
-                //.ForMySQLHasDefaultValue(false)
                 ;
 
                 entity.Property(p => p.SiteIsClosed)
                 .IsRequired()
-                //.ForMySQLHasColumnType("bit")
-                //.ForMySQLHasDefaultValue(false)
                 ;
 
                 //not mapped should map to nvarchar(max) by default I think
@@ -358,10 +308,6 @@ namespace cloudscribe.Core.Storage.EFCore.MySql
                 ;
 
                 entity.Property(p => p.SmtpPort)
-                //.IsRequired()
-                //.ForMySQLHasColumnType("int")
-                //.HasDefaultValue(25)
-                //.ValueGeneratedNever()
                 ;
 
                 entity.Property(p => p.SmtpUser)
@@ -377,14 +323,10 @@ namespace cloudscribe.Core.Storage.EFCore.MySql
 
                 entity.Property(p => p.SmtpRequiresAuth)
                 .IsRequired()
-                //.ForMySQLHasColumnType("bit")
-                //.ForMySQLHasDefaultValue(false)
                 ;
 
                 entity.Property(p => p.SmtpUseSsl)
                 .IsRequired()
-                //.ForMySQLHasColumnType("bit")
-                //.ForMySQLHasDefaultValue(false)
                 ;
 
                 entity.Property(p => p.DkimDomain)
@@ -397,8 +339,6 @@ namespace cloudscribe.Core.Storage.EFCore.MySql
 
                 entity.Property(p => p.SignEmailWithDkim)
                 .IsRequired()
-                //.ForMySQLHasColumnType("bit")
-                //.ForMySQLHasDefaultValue(false)
                 ;
 
                 entity.Property(p => p.SmsClientId)
@@ -411,13 +351,9 @@ namespace cloudscribe.Core.Storage.EFCore.MySql
 
                 entity.Property(p => p.IsDataProtected)
                 .IsRequired()
-                //.ForMySQLHasColumnType("bit")
-                //.ForMySQLHasDefaultValue(false)
                 ;
 
                 entity.Property(p => p.CreatedUtc)
-                //.ForMySQLHasColumnType("datetime")
-                //.ForMySQLHasDefaultValue("getutcdate()")
                 ;
 
                 entity.Property(p => p.ForcedCulture)
@@ -430,23 +366,15 @@ namespace cloudscribe.Core.Storage.EFCore.MySql
 
                 //entity.Property(p => p.PwdRequireNonAlpha)
                 //.IsRequired()
-                ////.HasColumnType("bit")
-                ////.HasDefaultValue(true)
                 //;
                 //entity.Property(p => p.PwdRequireLowercase)
                 //.IsRequired()
-                ////.HasColumnType("bit")
-                ////.HasDefaultValue(true)
                 //;
                 //entity.Property(p => p.PwdRequireUppercase)
                 //.IsRequired()
-                ////.HasColumnType("bit")
-                ////.HasDefaultValue(true)
                 //;
                 //entity.Property(p => p.PwdRequireDigit)
                 //.IsRequired()
-                ////.HasColumnType("bit")
-                ////.HasDefaultValue(true)
                 //;
 
             });
@@ -458,12 +386,9 @@ namespace cloudscribe.Core.Storage.EFCore.MySql
                 entity.HasKey(p => p.Id);
 
                 entity.Property(p => p.Id)
-               //.ForMySQLHasColumnType("uniqueidentifier")
-               //.ForMySQLHasDefaultValueSql("newid()")
                ;
 
                 entity.Property(p => p.SiteId)
-                //.ForMySQLHasColumnType("uniqueidentifier")
                 .IsRequired()
                 ;
                 entity.HasIndex(p => p.SiteId);
@@ -481,35 +406,23 @@ namespace cloudscribe.Core.Storage.EFCore.MySql
                 entity.ToTable(tableNames.TablePrefix + tableNames.UserTableName);
 
                 entity.Property(p => p.Id)
-                   //.ForMySQLHasColumnType("uniqueidentifier")
-                   //.ForMySQLHasDefaultValueSql("newid()")
                    .IsRequired()
                    ;
 
                 entity.HasKey(p => p.Id);
 
                 entity.Property(p => p.SiteId)
-                    //.ForMySQLHasColumnType("uniqueidentifier")
                     .IsRequired()
                     ;
 
                 entity.HasIndex(p => p.SiteId);
-
-                //entity.Property(u => u.ConcurrencyStamp)
-                //    .IsConcurrencyToken()
-                //    .HasMaxLength(50)
-                //    ;
-
+                
                 entity.Property(p => p.AccountApproved)
                 .IsRequired()
-                //.ForMySQLHasColumnType("bit")
-                //.ForMySQLHasDefaultValue(false)
                 ;
 
                 entity.Property(p => p.DisplayInMemberList)
                 .IsRequired()
-                //.ForMySQLHasColumnType("bit")
-                //.ForMySQLHasDefaultValue(false)
                 ;
 
                 entity.Property(p => p.Email)
@@ -553,44 +466,30 @@ namespace cloudscribe.Core.Storage.EFCore.MySql
 
                 entity.Property(p => p.EmailConfirmed)
                 .IsRequired()
-                //.ForMySQLHasColumnType("bit")
-                //.ForMySQLHasDefaultValue(false)
                 ;
 
                 entity.Property(p => p.IsDeleted)
                 .IsRequired()
-                //.ForMySQLHasColumnType("bit")
-                //.ForMySQLHasDefaultValue(false)
                 ;
 
                 entity.Property(p => p.IsLockedOut)
                 .IsRequired()
-                //.ForMySQLHasColumnType("bit")
-                //.ForMySQLHasDefaultValue(false)
                 ;
 
                 entity.Property(p => p.MustChangePwd)
                 .IsRequired()
-                //.ForMySQLHasColumnType("bit")
-                //.ForMySQLHasDefaultValue(false)
                 ;
 
                 entity.Property(p => p.NewEmailApproved)
                 .IsRequired()
-                //.ForMySQLHasColumnType("bit")
-                //.ForMySQLHasDefaultValue(false)
                 ;
 
                 entity.Property(p => p.RolesChanged)
                 .IsRequired()
-                //.ForMySQLHasColumnType("bit")
-                //.ForMySQLHasDefaultValue(false)
                 ;
 
                 entity.Property(p => p.TwoFactorEnabled)
                 .IsRequired()
-                //.ForMySQLHasColumnType("bit")
-                //.ForMySQLHasDefaultValue(false)
                 ;
 
                 entity.Property(p => p.PhoneNumber)
@@ -599,14 +498,10 @@ namespace cloudscribe.Core.Storage.EFCore.MySql
 
                 entity.Property(p => p.PhoneNumberConfirmed)
                 .IsRequired()
-                //.ForMySQLHasColumnType("bit")
-                //.ForMySQLHasDefaultValue(false)
                 ;
 
                 entity.Property(p => p.CanAutoLockout)
                 .IsRequired()
-                //.ForMySQLHasColumnType("bit")
-                //.ForMySQLHasDefaultValue(true)
                 ;
 
                 entity.Property(p => p.AvatarUrl)
@@ -635,8 +530,6 @@ namespace cloudscribe.Core.Storage.EFCore.MySql
                 entity.HasKey(p => p.Id);
 
                 entity.Property(p => p.Id)
-                   //.ForMySQLHasColumnType("uniqueidentifier")
-                   //.ForMySQLHasDefaultValueSql("newid()")
                    .IsRequired()
                    ;
 
@@ -644,13 +537,10 @@ namespace cloudscribe.Core.Storage.EFCore.MySql
                 .IsUnique();
 
                 entity.Property(p => p.SiteId)
-                   //.ForMySQLHasColumnType("uniqueidentifier")
                    .IsRequired()
                    ;
 
                 entity.HasIndex(p => p.SiteId);
-
-                //entity.Property(u => u.ConcurrencyStamp).IsConcurrencyToken();
 
                 entity.Property(p => p.NormalizedRoleName)
                 .IsRequired()
@@ -674,20 +564,16 @@ namespace cloudscribe.Core.Storage.EFCore.MySql
                 entity.HasKey(p => p.Id);
 
                 entity.Property(p => p.Id)
-                   //.ForMySQLHasColumnType("uniqueidentifier")
-                   //.ForMySQLHasDefaultValueSql("newid()")
                    .IsRequired()
                 ;
 
                 entity.Property(p => p.UserId)
-                //.ForMySQLHasColumnType("uniqueidentifier")
                 .IsRequired()
                 ;
 
                 entity.HasIndex(p => p.UserId);
 
                 entity.Property(p => p.SiteId)
-                 //.ForMySQLHasColumnType("uniqueidentifier")
                  .IsRequired()
                  ;
 
@@ -723,14 +609,12 @@ namespace cloudscribe.Core.Storage.EFCore.MySql
                 ;
 
                 entity.Property(p => p.UserId)
-                //.ForMySQLHasColumnType("uniqueidentifier")
                 .IsRequired()
                 ;
 
                 entity.HasIndex(p => p.UserId);
 
                 entity.Property(p => p.SiteId)
-                //.ForMySQLHasColumnType("uniqueidentifier")
                 .IsRequired()
                 ;
 
@@ -748,8 +632,6 @@ namespace cloudscribe.Core.Storage.EFCore.MySql
                 entity.HasKey(p => p.Id);
 
                 entity.Property(p => p.Id)
-                   //.ForMySQLHasColumnType("uniqueidentifier")
-                   //.ForMySQLHasDefaultValueSql("newid()")
                    .IsRequired()
                    ;
 
@@ -778,13 +660,10 @@ namespace cloudscribe.Core.Storage.EFCore.MySql
                 entity.HasKey(p => p.Id);
 
                 entity.Property(p => p.Id)
-                   //.ForMySQLHasColumnType("uniqueidentifier")
-                   //.ForMySQLHasDefaultValueSql("newid()")
                    .IsRequired()
                    ;
 
                 entity.Property(p => p.CountryId)
-                   //.ForMySQLHasColumnType("uniqueidentifier")
                    .IsRequired()
                    ;
 
@@ -808,14 +687,10 @@ namespace cloudscribe.Core.Storage.EFCore.MySql
                 entity.ToTable(tableNames.TablePrefix + tableNames.UserRoleTableName);
 
                 entity.Property(p => p.UserId)
-                //.ForMySQLHasColumnType("uniqueidentifier")
-
                 ;
                 entity.HasIndex(p => p.UserId);
 
                 entity.Property(p => p.RoleId)
-                //.ForMySQLHasColumnType("uniqueidentifier")
-
                 ;
                 entity.HasIndex(p => p.RoleId);
 
@@ -829,16 +704,12 @@ namespace cloudscribe.Core.Storage.EFCore.MySql
                 entity.HasKey(p => p.Id);
 
                 entity.Property(p => p.Id)
-                //.ForMySQLHasColumnType("uniqueidentifier")
-                //.ForMySQLHasDefaultValueSql("newid()")
                ;
 
                 entity.Property(p => p.UserId)
-                //.ForMySQLHasColumnType("uniqueidentifier")
                 ;
 
                 entity.Property(p => p.SiteId)
-                //.ForMySQLHasColumnType("uniqueidentifier")
                 ;
 
                 entity.Property(p => p.IpAddress)
@@ -881,11 +752,9 @@ namespace cloudscribe.Core.Storage.EFCore.MySql
                 ;
 
                 entity.Property(p => p.Latitude)
-                   //.ForMySQLHasColumnType("float")
                 ;
 
                 entity.Property(p => p.Longitude)
-                   //.ForMySQLHasColumnType("float")
                 ;
 
                 entity.Property(p => p.HostName)

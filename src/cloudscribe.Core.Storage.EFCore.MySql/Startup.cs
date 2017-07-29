@@ -25,7 +25,8 @@ namespace cloudscribe.Core.Storage.EFCore.MySql
         public CoreDbContext CreateDbContext(string[] args)
         {
             var builder = new DbContextOptionsBuilder<CoreDbContext>();
-            builder.UseMySql("server=yourservername;UID=yourdatabaseusername;PWD=yourdatabaseuserpassword;database=yourdatabasename");
+            builder.UseMySql("Server=yourserver;Database=yourdb;Uid=youruser;Pwd=yourpassword;Charset=utf8;");
+            
             return new CoreDbContext(builder.Options);
         }
     }
