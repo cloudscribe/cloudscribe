@@ -55,20 +55,12 @@ namespace cloudscribe.Core.Storage.EFCore.pgsql
                 entity.HasKey(p => p.Id);
 
                 entity.Property(p => p.Id)
-                
-                //.ForSqlServerHasColumnType("uniqueidentifier")
-                //.ForSqlServerHasDefaultValueSql("newid()")
                 ;
 
                 entity.Property(p => p.AliasId)
                 .HasMaxLength(36)
                 ;
-
-                //entity.Property(u => u.ConcurrencyStamp)
-                //    .IsConcurrencyToken()
-                //    .HasMaxLength(50)
-                //    ;
-
+                
                 entity.HasIndex(p => p.AliasId);
 
                 entity.Property(p => p.SiteName)
@@ -80,38 +72,26 @@ namespace cloudscribe.Core.Storage.EFCore.pgsql
 
                 entity.Property(p => p.AllowNewRegistration)
                 .IsRequired()
-                //.ForSqlServerHasColumnType("bit")
-                //.ForSqlServerHasDefaultValue(true)
                 ;
 
                 entity.Property(p => p.RequireConfirmedEmail)
                 .IsRequired()
-                //.ForSqlServerHasColumnType("bit")
-                //.ForSqlServerHasDefaultValue(false)
                 ;
 
                 entity.Property(p => p.RequireConfirmedPhone)
                 .IsRequired()
-                //.ForSqlServerHasColumnType("bit")
-                //.ForSqlServerHasDefaultValue(false)
                 ;
 
                 entity.Property(p => p.IsServerAdminSite)
                 .IsRequired()
-                //.ForSqlServerHasColumnType("bit")
-                //.ForSqlServerHasDefaultValue(false)
                 ;
 
                 entity.Property(p => p.UseLdapAuth)
                 .IsRequired()
-                //.ForSqlServerHasColumnType("bit")
-                //.ForSqlServerHasDefaultValue(false)
                 ;
 
                 entity.Property(p => p.AutoCreateLdapUserOnFirstLogin)
                 .IsRequired()
-                //.ForSqlServerHasColumnType("bit")
-               // .ForSqlServerHasDefaultValue(true)
                 ;
 
                 entity.Property(p => p.LdapServer)
@@ -119,10 +99,6 @@ namespace cloudscribe.Core.Storage.EFCore.pgsql
                 ;
 
                 entity.Property(p => p.LdapPort)
-                //.IsRequired()
-                //.ForSqlServerHasColumnType("int")
-                // .HasDefaultValue(389)
-                //.ValueGeneratedNever()
                 ;
 
                 entity.Property(p => p.LdapDomain)
@@ -139,35 +115,21 @@ namespace cloudscribe.Core.Storage.EFCore.pgsql
 
                 entity.Property(p => p.ReallyDeleteUsers)
                 .IsRequired()
-                //.ForSqlServerHasColumnType("bit")
-               // .ForSqlServerHasDefaultValue(true)
                 ;
 
                 entity.Property(p => p.UseEmailForLogin)
                 .IsRequired()
-                //.ForSqlServerHasColumnType("bit")
-                //.ForSqlServerHasDefaultValue(true)
                 ;
 
                 entity.Property(p => p.RequiresQuestionAndAnswer)
                 .IsRequired()
-                //.ForSqlServerHasColumnType("bit")
-                //.ForSqlServerHasDefaultValue(false)
                 ;
 
                 entity.Property(p => p.MaxInvalidPasswordAttempts)
-                //.IsRequired()
-                //.ForSqlServerHasColumnType("int")
-                //.ValueGeneratedNever()
-                // .HasDefaultValue(5)
                 ;
 
 
                 entity.Property(p => p.MinRequiredPasswordLength)
-                // .IsRequired()
-                // .ForSqlServerHasColumnType("int")
-                //.HasDefaultValue(5)
-                //.ValueGeneratedNever()
                 ;
 
                 entity.Property(p => p.DefaultEmailFromAddress)
@@ -188,56 +150,38 @@ namespace cloudscribe.Core.Storage.EFCore.pgsql
 
                 entity.Property(p => p.UseInvisibleRecaptcha)
                .IsRequired()
-               //.ForSqlServerHasColumnType("bit")
-               //.ForSqlServerHasDefaultValue(false)
                ;
 
                 entity.Property(p => p.DisableDbAuth)
                 .IsRequired()
-                //.ForSqlServerHasColumnType("bit")
-                //.ForSqlServerHasDefaultValue(false)
                 ;
 
                 entity.Property(p => p.RequireApprovalBeforeLogin)
                 .IsRequired()
-                //.ForSqlServerHasColumnType("bit")
-                //.ForSqlServerHasDefaultValue(false)
                 ;
 
                 entity.Property(p => p.AllowDbFallbackWithLdap)
                 .IsRequired()
-               // .ForSqlServerHasColumnType("bit")
-                //.ForSqlServerHasDefaultValue(false)
                 ;
 
                 entity.Property(p => p.EmailLdapDbFallback)
                 .IsRequired()
-               // .ForSqlServerHasColumnType("bit")
-               // .ForSqlServerHasDefaultValue(false)
                 ;
 
                 entity.Property(p => p.AllowPersistentLogin)
                 .IsRequired()
-               // .ForSqlServerHasColumnType("bit")
-               // .ForSqlServerHasDefaultValue(false)
                 ;
 
                 entity.Property(p => p.CaptchaOnLogin)
                 .IsRequired()
-               // .ForSqlServerHasColumnType("bit")
-               // .ForSqlServerHasDefaultValue(false)
                 ;
 
                 entity.Property(p => p.CaptchaOnRegistration)
                 .IsRequired()
-               // .ForSqlServerHasColumnType("bit")
-               // .ForSqlServerHasDefaultValue(false)
                 ;
 
                 entity.Property(p => p.SiteIsClosed)
                 .IsRequired()
-               // .ForSqlServerHasColumnType("bit")
-               // .ForSqlServerHasDefaultValue(false)
                 ;
 
                 //not mapped should map to nvarchar(max) by default I think
@@ -362,10 +306,6 @@ namespace cloudscribe.Core.Storage.EFCore.pgsql
                 ;
 
                 entity.Property(p => p.SmtpPort)
-                //.IsRequired()
-                //.ForSqlServerHasColumnType("int")
-                //.HasDefaultValue(25)
-                //.ValueGeneratedNever()
                 ;
 
                 entity.Property(p => p.SmtpUser)
@@ -381,14 +321,10 @@ namespace cloudscribe.Core.Storage.EFCore.pgsql
 
                 entity.Property(p => p.SmtpRequiresAuth)
                 .IsRequired()
-                //.ForSqlServerHasColumnType("bit")
-                //.ForSqlServerHasDefaultValue(false)
                 ;
 
                 entity.Property(p => p.SmtpUseSsl)
                 .IsRequired()
-                //.ForSqlServerHasColumnType("bit")
-                //.ForSqlServerHasDefaultValue(false)
                 ;
 
                 entity.Property(p => p.DkimDomain)
@@ -401,8 +337,6 @@ namespace cloudscribe.Core.Storage.EFCore.pgsql
 
                 entity.Property(p => p.SignEmailWithDkim)
                 .IsRequired()
-                //.ForSqlServerHasColumnType("bit")
-                //.ForSqlServerHasDefaultValue(false)
                 ;
 
                 entity.Property(p => p.SmsClientId)
@@ -415,13 +349,9 @@ namespace cloudscribe.Core.Storage.EFCore.pgsql
 
                 entity.Property(p => p.IsDataProtected)
                 .IsRequired()
-                //.ForSqlServerHasColumnType("bit")
-                //.ForSqlServerHasDefaultValue(false)
                 ;
 
                 entity.Property(p => p.CreatedUtc)
-                //.ForSqlServerHasColumnType("datetime")
-                //.ForSqlServerHasDefaultValueSql("getutcdate()")
                 ;
 
                 entity.Property(p => p.ForcedCulture)
@@ -434,23 +364,15 @@ namespace cloudscribe.Core.Storage.EFCore.pgsql
 
                // entity.Property(p => p.PwdRequireNonAlpha)
                //.IsRequired()
-               ////.HasColumnType("bit")
-               ////.HasDefaultValue(true)
                //;
                // entity.Property(p => p.PwdRequireLowercase)
                // .IsRequired()
-               // //.HasColumnType("bit")
-               // //.HasDefaultValue(true)
                // ;
                // entity.Property(p => p.PwdRequireUppercase)
                // .IsRequired()
-               // //.HasColumnType("bit")
-               // //.HasDefaultValue(true)
                // ;
                // entity.Property(p => p.PwdRequireDigit)
                // .IsRequired()
-               // //.HasColumnType("bit")
-               // //.HasDefaultValue(true)
                // ;
 
             });
@@ -462,12 +384,9 @@ namespace cloudscribe.Core.Storage.EFCore.pgsql
                 entity.HasKey(p => p.Id);
 
                 entity.Property(p => p.Id)
-               //.ForSqlServerHasColumnType("uniqueidentifier")
-               //.ForSqlServerHasDefaultValueSql("newid()")
                ;
 
                 entity.Property(p => p.SiteId)
-                //.ForSqlServerHasColumnType("uniqueidentifier")
                 .IsRequired()
                 ;
                 entity.HasIndex(p => p.SiteId);
@@ -485,35 +404,23 @@ namespace cloudscribe.Core.Storage.EFCore.pgsql
                 entity.ToTable(tableNames.TablePrefix + tableNames.UserTableName);
 
                 entity.Property(p => p.Id)
-                   //.ForSqlServerHasColumnType("uniqueidentifier")
-                   //.ForSqlServerHasDefaultValueSql("newid()")
                    .IsRequired()
                    ;
 
                 entity.HasKey(p => p.Id);
 
                 entity.Property(p => p.SiteId)
-                    //.ForSqlServerHasColumnType("uniqueidentifier")
                     .IsRequired()
                     ;
 
                 entity.HasIndex(p => p.SiteId);
-
-                //entity.Property(u => u.ConcurrencyStamp)
-                //    .IsConcurrencyToken()
-                //    .HasMaxLength(50)
-                //    ;
-
+                
                 entity.Property(p => p.AccountApproved)
                 .IsRequired()
-                //.ForSqlServerHasColumnType("bit")
-               // .ForSqlServerHasDefaultValue(false)
                 ;
 
                 entity.Property(p => p.DisplayInMemberList)
                 .IsRequired()
-                //.ForSqlServerHasColumnType("bit")
-                //.ForSqlServerHasDefaultValue(false)
                 ;
 
                 entity.Property(p => p.Email)
@@ -557,44 +464,30 @@ namespace cloudscribe.Core.Storage.EFCore.pgsql
 
                 entity.Property(p => p.EmailConfirmed)
                 .IsRequired()
-                //.ForSqlServerHasColumnType("bit")
-                //.ForSqlServerHasDefaultValue(false)
                 ;
 
                 entity.Property(p => p.IsDeleted)
                 .IsRequired()
-                //.ForSqlServerHasColumnType("bit")
-                //.ForSqlServerHasDefaultValue(false)
                 ;
 
                 entity.Property(p => p.IsLockedOut)
                 .IsRequired()
-                //.ForSqlServerHasColumnType("bit")
-                //.ForSqlServerHasDefaultValue(false)
                 ;
 
                 entity.Property(p => p.MustChangePwd)
                 .IsRequired()
-                //.ForSqlServerHasColumnType("bit")
-                //.ForSqlServerHasDefaultValue(false)
                 ;
 
                 entity.Property(p => p.NewEmailApproved)
                 .IsRequired()
-                //.ForSqlServerHasColumnType("bit")
-               // .ForSqlServerHasDefaultValue(false)
                 ;
 
                 entity.Property(p => p.RolesChanged)
                 .IsRequired()
-                //.ForSqlServerHasColumnType("bit")
-                //.ForSqlServerHasDefaultValue(false)
                 ;
 
                 entity.Property(p => p.TwoFactorEnabled)
                 .IsRequired()
-                //.ForSqlServerHasColumnType("bit")
-                //.ForSqlServerHasDefaultValue(false)
                 ;
 
                 entity.Property(p => p.PhoneNumber)
@@ -603,14 +496,10 @@ namespace cloudscribe.Core.Storage.EFCore.pgsql
 
                 entity.Property(p => p.PhoneNumberConfirmed)
                 .IsRequired()
-                //.ForSqlServerHasColumnType("bit")
-                //.ForSqlServerHasDefaultValue(false)
                 ;
 
                 entity.Property(p => p.CanAutoLockout)
                 .IsRequired()
-                //.ForSqlServerHasColumnType("bit")
-               // .ForSqlServerHasDefaultValue(true)
                 ;
 
                 entity.Property(p => p.AvatarUrl)
@@ -639,8 +528,6 @@ namespace cloudscribe.Core.Storage.EFCore.pgsql
                 entity.HasKey(p => p.Id);
 
                 entity.Property(p => p.Id)
-                   //.ForSqlServerHasColumnType("uniqueidentifier")
-                  // .ForSqlServerHasDefaultValueSql("newid()")
                    .IsRequired()
                    ;
 
@@ -648,13 +535,10 @@ namespace cloudscribe.Core.Storage.EFCore.pgsql
                 .IsUnique();
 
                 entity.Property(p => p.SiteId)
-                  // .ForSqlServerHasColumnType("uniqueidentifier")
                    .IsRequired()
                    ;
 
                 entity.HasIndex(p => p.SiteId);
-
-                //entity.Property(u => u.ConcurrencyStamp).IsConcurrencyToken();
 
                 entity.Property(p => p.NormalizedRoleName)
                 .IsRequired()
@@ -678,20 +562,16 @@ namespace cloudscribe.Core.Storage.EFCore.pgsql
                 entity.HasKey(p => p.Id);
 
                 entity.Property(p => p.Id)
-                  // .ForSqlServerHasColumnType("uniqueidentifier")
-                 //  .ForSqlServerHasDefaultValueSql("newid()")
                    .IsRequired()
                 ;
 
                 entity.Property(p => p.UserId)
-                //.ForSqlServerHasColumnType("uniqueidentifier")
                 .IsRequired()
                 ;
 
                 entity.HasIndex(p => p.UserId);
 
                 entity.Property(p => p.SiteId)
-                 //.ForSqlServerHasColumnType("uniqueidentifier")
                  .IsRequired()
                  ;
 
@@ -727,14 +607,12 @@ namespace cloudscribe.Core.Storage.EFCore.pgsql
                 ;
 
                 entity.Property(p => p.UserId)
-               // .ForSqlServerHasColumnType("uniqueidentifier")
                 .IsRequired()
                 ;
 
                 entity.HasIndex(p => p.UserId);
 
                 entity.Property(p => p.SiteId)
-                //.ForSqlServerHasColumnType("uniqueidentifier")
                 .IsRequired()
                 ;
 
@@ -752,8 +630,6 @@ namespace cloudscribe.Core.Storage.EFCore.pgsql
                 entity.HasKey(p => p.Id);
 
                 entity.Property(p => p.Id)
-                  // .ForSqlServerHasColumnType("uniqueidentifier")
-                  // .ForSqlServerHasDefaultValueSql("newid()")
                    .IsRequired()
                    ;
 
@@ -782,13 +658,10 @@ namespace cloudscribe.Core.Storage.EFCore.pgsql
                 entity.HasKey(p => p.Id);
 
                 entity.Property(p => p.Id)
-                   //.ForSqlServerHasColumnType("uniqueidentifier")
-                   //.ForSqlServerHasDefaultValueSql("newid()")
                    .IsRequired()
                    ;
 
                 entity.Property(p => p.CountryId)
-                   //.ForSqlServerHasColumnType("uniqueidentifier")
                    .IsRequired()
                    ;
 
@@ -811,15 +684,11 @@ namespace cloudscribe.Core.Storage.EFCore.pgsql
             {
                 entity.ToTable(tableNames.TablePrefix + tableNames.UserRoleTableName);
 
-                entity.Property(p => p.UserId)
-                //.ForSqlServerHasColumnType("uniqueidentifier")
-
+                entity.Property(p => p.UserId) 
                 ;
                 entity.HasIndex(p => p.UserId);
 
                 entity.Property(p => p.RoleId)
-                //.ForSqlServerHasColumnType("uniqueidentifier")
-
                 ;
                 entity.HasIndex(p => p.RoleId);
 
@@ -833,16 +702,12 @@ namespace cloudscribe.Core.Storage.EFCore.pgsql
                 entity.HasKey(p => p.Id);
 
                 entity.Property(p => p.Id)
-                //.ForSqlServerHasColumnType("uniqueidentifier")
-                //.ForSqlServerHasDefaultValueSql("newid()")
                ;
 
                 entity.Property(p => p.UserId)
-                //.ForSqlServerHasColumnType("uniqueidentifier")
                 ;
 
                 entity.Property(p => p.SiteId)
-                //.ForSqlServerHasColumnType("uniqueidentifier")
                 ;
 
                 entity.Property(p => p.IpAddress)
