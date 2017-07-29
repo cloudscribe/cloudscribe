@@ -1,5 +1,7 @@
 # F# 
 
+https://blogs.msdn.microsoft.com/dotnet/2017/07/24/get-started-with-f-as-a-c-developer/
+
 Conquer the JavaScript ecosystem with F# and Fable! 
 https://www.youtube.com/watch?v=iRDcpkphrKs&list=PL03Lrmd9CiGewi0lbnahxEpisoP5WZocX&index=132
 

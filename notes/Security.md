@@ -1,4 +1,5 @@
 
+https://www.troyhunt.com/passwords-evolved-authentication-guidance-for-the-modern-era/
 
 http://jameschambers.com/2016/04/github-authentication-asp-net-core/
 https://developer.github.com/v3/guides/getting-started/
