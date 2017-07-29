@@ -9,8 +9,8 @@
 <h2>@Model.Heading1</h2>
 <h3>@Model.Heading2</h3>
 <form class="form-inline" role="form" asp-controller="RoleAdmin" asp-action="RoleMembers" method="get">
-    <input asp-for="Role.SiteId" type="hidden" />
-    <input asp-for="Role.Id" type="hidden" />
+    <input name="siteId" value="@Model.Role.SiteId" type="hidden" />
+    <input name="roleId" value="@Model.Role.Id" type="hidden" />
     <div class="input-group">
         <input name="searchInput" type="search" value="@Model.SearchQuery" class="form-control" />
         <span class="input-group-btn">
