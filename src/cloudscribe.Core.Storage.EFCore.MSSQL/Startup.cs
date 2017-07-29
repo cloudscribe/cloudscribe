@@ -24,6 +24,7 @@ namespace cloudscribe.Core.Storage.EFCore.MSSQL
         {
             var builder = new DbContextOptionsBuilder<CoreDbContext>();
             builder.UseSqlServer("Server=(local);Database=DATABASENAME;Trusted_Connection=True;MultipleActiveResultSets=true");
+            
             return new CoreDbContext(builder.Options);
         }
     }

@@ -54,13 +54,14 @@ namespace cloudscribe.Core.Storage.EFCore.MSSQL
 
                 entity.HasKey(p => p.Id);
 
-                entity.Property(p => p.Id)
+                //entity.Property(p => p.Id)
+                
                 //.ForSqlServerHasColumnType("uniqueidentifier")
-                .HasColumnType("uniqueidentifier")
-                .HasComputedColumnSql("newid()")
+                //.HasColumnType("uniqueidentifier")
+                //.HasComputedColumnSql("newid()")
                 //.ForSqlServerHasDefaultValueSql("newid()")
                 
-                ;
+                //;
 
                 
 
