@@ -33,10 +33,10 @@ namespace cloudscribe.Core.Models
         int MaxInvalidPasswordAttempts { get; }
         int MinRequiredPasswordLength { get; }
 
-        //bool PwdRequireNonAlpha { get; }
-        //bool PwdRequireLowercase { get; }
-        //bool PwdRequireUppercase { get; }
-        //bool PwdRequireDigit { get; }
+        bool PwdRequireNonAlpha { get; }
+        bool PwdRequireLowercase { get; }
+        bool PwdRequireUppercase { get; }
+        bool PwdRequireDigit { get; }
 
         bool UseEmailForLogin { get; }
         bool RequiresQuestionAndAnswer { get; }

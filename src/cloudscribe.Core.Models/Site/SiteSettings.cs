@@ -87,10 +87,10 @@ namespace cloudscribe.Core.Models
         
         public int MaxInvalidPasswordAttempts { get; set; } = 5;
         public int MinRequiredPasswordLength { get; set; } = 7;
-        //public bool PwdRequireNonAlpha { get; set; } = true;
-        //public bool PwdRequireLowercase { get; set; } = true;
-        //public bool PwdRequireUppercase { get; set; } = true;
-        //public bool PwdRequireDigit { get; set; } = true;
+        public bool PwdRequireNonAlpha { get; set; } = true;
+        public bool PwdRequireLowercase { get; set; } = true;
+        public bool PwdRequireUppercase { get; set; } = true;
+        public bool PwdRequireDigit { get; set; } = true;
 
 
 
@@ -552,6 +552,12 @@ namespace cloudscribe.Core.Models
             s.OidConnectDisplayName = i.OidConnectDisplayName;
             s.PreferredHostName = i.PreferredHostName;
             s.PrivacyPolicy = i.PrivacyPolicy;
+
+            s.PwdRequireDigit = i.PwdRequireDigit;
+            s.PwdRequireLowercase = i.PwdRequireLowercase;
+            s.PwdRequireNonAlpha = i.PwdRequireNonAlpha;
+            s.PwdRequireUppercase = i.PwdRequireUppercase;
+
             s.ReallyDeleteUsers = i.ReallyDeleteUsers;
             s.RecaptchaPrivateKey = i.RecaptchaPrivateKey;
             s.RecaptchaPublicKey = i.RecaptchaPublicKey;

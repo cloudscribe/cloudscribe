@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2015-12-03
-// Last Modified:			2016-11-09
+// Last Modified:			2016-07-30
 // 
 
 
@@ -150,6 +150,7 @@ namespace Microsoft.AspNetCore.Hosting // so it will show up in startup without 
                         var adminUser = InitialData.BuildInitialAdmin();
                         adminUser.SiteId = site.Id;
                         adminUser.Id = Guid.NewGuid();
+                        adminUser.CanAutoLockout = false;
                         db.Users.Add(adminUser);
                         
                         rowsAffected = await db.SaveChangesAsync();

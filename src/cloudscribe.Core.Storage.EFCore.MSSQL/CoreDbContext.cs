@@ -2,38 +2,17 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2015-11-16
-// Last Modified:			2017-07-25
+// Last Modified:			2017-07-30
 // 
 
 using cloudscribe.Core.Models;
 using cloudscribe.Core.Models.Geography;
 using cloudscribe.Core.Storage.EFCore.Common;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Design;
-using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using Microsoft.EntityFrameworkCore.Infrastructure;
-
-//http://ef.readthedocs.org/en/latest/modeling/configuring.html
-// "If you are targeting more than one relational provider with the same model then you 
-// probably want to specify a data type for each provider rather than a global one to be used for 
-// all relational providers."
-
-// ie this:
-// modelBuilder.Entity<Blog>()
-//         .Property(b => b.Url)
-//         .HasSqlServerColumnType("varchar(200)");  //sql server specific
-
-// rather than this:
-
-// modelBuilder.Entity<Blog>()
-//          .Property(b => b.Url)
-//          .HasColumnType("varchar(200)");
-//
-// https://github.com/aspnet/EntityFramework/wiki/Configuring-a-DbContext
 
 namespace cloudscribe.Core.Storage.EFCore.MSSQL
 {
-    
+
 
     public class CoreDbContext : CoreDbContextBase, ICoreDbContext
     {
@@ -49,7 +28,6 @@ namespace cloudscribe.Core.Storage.EFCore.MSSQL
 
             modelBuilder.Entity<SiteSettings>(entity =>
             {
-                //entity.ForSqlServerToTable(tableNames.TablePrefix + tableNames.SiteTableName);
                 entity.ToTable(tableNames.TablePrefix + tableNames.SiteTableName);
 
                 entity.HasKey(p => p.Id);
@@ -214,7 +192,7 @@ namespace cloudscribe.Core.Storage.EFCore.MSSQL
                 entity.Property(p => p.SiteIsClosed)
                 .IsRequired()
                 .HasColumnType("bit")
-                .HasDefaultValue(false)
+                //.HasDefaultValue(false)
                 ;
 
                 //not mapped should map to nvarchar(max) by default I think
@@ -406,26 +384,26 @@ namespace cloudscribe.Core.Storage.EFCore.MSSQL
                 .HasMaxLength(10);
                 ;
 
-                //entity.Property(p => p.PwdRequireNonAlpha)
-                //.IsRequired()
-                //.HasColumnType("bit")
-                //.HasDefaultValue(true)
-                //;
-                //entity.Property(p => p.PwdRequireLowercase)
-                //.IsRequired()
-                //.HasColumnType("bit")
-                //.HasDefaultValue(true)
-                //;
-                //entity.Property(p => p.PwdRequireUppercase)
-                //.IsRequired()
-                //.HasColumnType("bit")
-                //.HasDefaultValue(true)
-                //;
-                //entity.Property(p => p.PwdRequireDigit)
-                //.IsRequired()
-                //.HasColumnType("bit")
-                //.HasDefaultValue(true)
-                //;
+                entity.Property(p => p.PwdRequireNonAlpha)
+                .IsRequired()
+                .HasColumnType("bit")
+                .HasDefaultValue(true)
+                ;
+                entity.Property(p => p.PwdRequireLowercase)
+                .IsRequired()
+                .HasColumnType("bit")
+                .HasDefaultValue(true)
+                ;
+                entity.Property(p => p.PwdRequireUppercase)
+                .IsRequired()
+                .HasColumnType("bit")
+                .HasDefaultValue(true)
+                ;
+                entity.Property(p => p.PwdRequireDigit)
+                .IsRequired()
+                .HasColumnType("bit")
+                .HasDefaultValue(true)
+                ;
 
             });
 
@@ -579,7 +557,7 @@ namespace cloudscribe.Core.Storage.EFCore.MSSQL
                 entity.Property(p => p.CanAutoLockout)
                 .IsRequired()
                 .HasColumnType("bit")
-                .HasDefaultValue(true)
+                //.HasDefaultValue(true)
                 ;
 
                 entity.Property(p => p.AvatarUrl)

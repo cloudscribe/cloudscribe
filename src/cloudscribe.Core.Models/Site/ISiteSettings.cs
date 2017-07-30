@@ -89,10 +89,10 @@ namespace cloudscribe.Core.Models
         /// </summary>
         int MinRequiredPasswordLength { get; set; } // maps to IdentityPasswordOptions public int RequiredLength { get; set; } = 6;
 
-        //bool PwdRequireNonAlpha { get; set; }
-        //bool PwdRequireLowercase { get; set; }
-        //bool PwdRequireUppercase { get; set; }
-        //bool PwdRequireDigit { get; set; }
+        bool PwdRequireNonAlpha { get; set; }
+        bool PwdRequireLowercase { get; set; }
+        bool PwdRequireUppercase { get; set; }
+        bool PwdRequireDigit { get; set; }
 
         // typically we are using true for UseEmailForLogin, as such we probably need to override
         // IdentityUserOptions.cs https://github.com/aspnet/Identity/blob/dev/src/Microsoft.AspNetCore.Identity/UserOptions.cs
