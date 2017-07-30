@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2015-11-16
-// Last Modified:			2017-07-28
+// Last Modified:			2017-07-30
 // 
 
 using cloudscribe.Core.Models;
@@ -13,23 +13,6 @@ using Microsoft.EntityFrameworkCore.Design;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Npgsql.EntityFrameworkCore.PostgreSQL;
 
-//http://ef.readthedocs.org/en/latest/modeling/configuring.html
-// "If you are targeting more than one relational provider with the same model then you 
-// probably want to specify a data type for each provider rather than a global one to be used for 
-// all relational providers."
-
-// ie this:
-// modelBuilder.Entity<Blog>()
-//         .Property(b => b.Url)
-//         .HasSqlServerColumnType("varchar(200)");  //sql server specific
-
-// rather than this:
-
-// modelBuilder.Entity<Blog>()
-//          .Property(b => b.Url)
-//          .HasColumnType("varchar(200)");
-//
-// https://github.com/aspnet/EntityFramework/wiki/Configuring-a-DbContext
 
 namespace cloudscribe.Core.Storage.EFCore.pgsql
 {
@@ -362,18 +345,22 @@ namespace cloudscribe.Core.Storage.EFCore.pgsql
                 .HasMaxLength(10);
                 ;
 
-               // entity.Property(p => p.PwdRequireNonAlpha)
-               //.IsRequired()
-               //;
-               // entity.Property(p => p.PwdRequireLowercase)
-               // .IsRequired()
-               // ;
-               // entity.Property(p => p.PwdRequireUppercase)
-               // .IsRequired()
-               // ;
-               // entity.Property(p => p.PwdRequireDigit)
-               // .IsRequired()
-               // ;
+                entity.Property(p => p.PwdRequireNonAlpha)
+                .IsRequired()
+                .HasDefaultValue(true)
+                ;
+                entity.Property(p => p.PwdRequireLowercase)
+                .IsRequired()
+                .HasDefaultValue(true)
+                ;
+                entity.Property(p => p.PwdRequireUppercase)
+                .IsRequired()
+                .HasDefaultValue(true)
+                ;
+                entity.Property(p => p.PwdRequireDigit)
+                .IsRequired()
+                .HasDefaultValue(true)
+                ;
 
             });
 

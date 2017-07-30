@@ -1,11 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace cloudscribe.Core.Models
 {
-    public class SiteContext : ISiteContext
+    public class SiteContext : ISiteContext, IEquatable<SiteContext>
     {
         public SiteContext(ISiteSettings siteSettings)
         {
@@ -13,6 +10,19 @@ namespace cloudscribe.Core.Models
         }
 
         private readonly ISiteSettings site;
+
+        //https://github.com/saaskit/saaskit/issues/76
+
+        public bool Equals(SiteContext other)
+        {
+            if (other == null) return false;
+            return other.Id == this.Id;
+        }
+
+        public override int GetHashCode()
+        {
+            return this.Id.GetHashCode();
+        }
 
         public Guid Id
         {
@@ -456,6 +466,6 @@ namespace cloudscribe.Core.Models
             get { return site.ForcedUICulture; }
         }
 
-
+        
     }
 }

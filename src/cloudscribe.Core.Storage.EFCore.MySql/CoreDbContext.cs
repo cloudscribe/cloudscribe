@@ -13,24 +13,6 @@ using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata.Internal;
 //using MySQL.Data.EntityFrameworkCore.Extensions;
 
-//http://ef.readthedocs.org/en/latest/modeling/configuring.html
-// "If you are targeting more than one relational provider with the same model then you 
-// probably want to specify a data type for each provider rather than a global one to be used for 
-// all relational providers."
-
-// ie this:
-// modelBuilder.Entity<Blog>()
-//         .Property(b => b.Url)
-//         .HasSqlServerColumnType("varchar(200)");  //sql server specific
-
-// rather than this:
-
-// modelBuilder.Entity<Blog>()
-//          .Property(b => b.Url)
-//          .HasColumnType("varchar(200)");
-//
-// https://github.com/aspnet/EntityFramework/wiki/Configuring-a-DbContext
-
 namespace cloudscribe.Core.Storage.EFCore.MySql
 {
     public class CoreDbContext : CoreDbContextBase, ICoreDbContext
@@ -45,9 +27,7 @@ namespace cloudscribe.Core.Storage.EFCore.MySql
             ICoreTableNames tableNames = new CoreTableNames();
 
             //modelBuilder.HasAnnotation(MySqlAnnotationNames.FullTextIndex, "FULLTEXT");
-
-           
-
+            
             modelBuilder.Entity<SiteSettings>(entity =>
             {
                 
@@ -55,9 +35,7 @@ namespace cloudscribe.Core.Storage.EFCore.MySql
 
                 entity.HasKey(p => p.Id);
 
-                entity.Property(p => p.Id)
-                
-                ;
+                entity.Property(p => p.Id);
 
                 entity.Property(p => p.AliasId)
                 .HasMaxLength(36)
@@ -364,18 +342,22 @@ namespace cloudscribe.Core.Storage.EFCore.MySql
                 .HasMaxLength(10);
                 ;
 
-                //entity.Property(p => p.PwdRequireNonAlpha)
-                //.IsRequired()
-                //;
-                //entity.Property(p => p.PwdRequireLowercase)
-                //.IsRequired()
-                //;
-                //entity.Property(p => p.PwdRequireUppercase)
-                //.IsRequired()
-                //;
-                //entity.Property(p => p.PwdRequireDigit)
-                //.IsRequired()
-                //;
+                entity.Property(p => p.PwdRequireNonAlpha)
+                .IsRequired()
+                .HasDefaultValue(true)
+                ;
+                entity.Property(p => p.PwdRequireLowercase)
+                .IsRequired()
+                .HasDefaultValue(true)
+                ;
+                entity.Property(p => p.PwdRequireUppercase)
+                .IsRequired()
+                .HasDefaultValue(true)
+                ;
+                entity.Property(p => p.PwdRequireDigit)
+                .IsRequired()
+                .HasDefaultValue(true)
+                ;
 
             });
 
