@@ -11,9 +11,10 @@ using System;
 namespace cloudscribe.Core.Storage.EFCore.MySql.Migrations
 {
     [DbContext(typeof(CoreDbContext))]
-    partial class CoreDbContextModelSnapshot : ModelSnapshot
+    [Migration("20170731201717_changes20170731")]
+    partial class changes20170731
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
