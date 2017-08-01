@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette/Derek Gray
 // Created:				    2016-05-04
-// Last Modified:		    2017-07-25
+// Last Modified:		    2017-08-01
 // 
 
 using cloudscribe.Core.Models;
@@ -42,10 +42,10 @@ namespace cloudscribe.Core.Identity
                 identityOptions.Tokens = tokenOptions;
 
                 identityOptions.Password.RequiredLength = tenant.MinRequiredPasswordLength;
-                identityOptions.Password.RequireNonAlphanumeric = true; //tenant.PwdRequireNonAlpha; //default is true
-                identityOptions.Password.RequireLowercase = true; //tenant.PwdRequireLowercase; //default is true
-                identityOptions.Password.RequireUppercase = true; //tenant.PwdRequireUppercase; //default is true
-                identityOptions.Password.RequireDigit = true; //tenant.PwdRequireDigit; // default is true
+                identityOptions.Password.RequireNonAlphanumeric = tenant.PwdRequireNonAlpha; //default is true
+                identityOptions.Password.RequireLowercase = tenant.PwdRequireLowercase; //default is true
+                identityOptions.Password.RequireUppercase = tenant.PwdRequireUppercase; //default is true
+                identityOptions.Password.RequireDigit = tenant.PwdRequireDigit; // default is true
 
                 identityOptions.Lockout.AllowedForNewUsers = true;
                 identityOptions.Lockout.MaxFailedAccessAttempts = tenant.MaxInvalidPasswordAttempts;

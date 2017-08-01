@@ -3,7 +3,7 @@
   <PropertyGroup>
     <Description>Multi-tenant web application foundation with management for sites, users, roles, claims, and geographic data.</Description>
     <VersionPrefix>2.0.0</VersionPrefix>
-    <VersionSuffix>preview20170725</VersionSuffix>
+    <VersionSuffix>preview20170726</VersionSuffix>
     <Authors>Joe Audette</Authors>
     <TargetFrameworks>netstandard2.0</TargetFrameworks>
     <AssemblyName>cloudscribe.Core.Web</AssemblyName>
@@ -23,22 +23,16 @@
     <ProjectReference Include="..\cloudscribe.Messaging.Email\cloudscribe.Messaging.Email.csproj" />
     <ProjectReference Include="..\cloudscribe.Messaging.Sms\cloudscribe.Messaging.Sms.csproj" />
     <ProjectReference Include="..\cloudscribe.Web.Common\cloudscribe.Web.Common.csproj" />
+    <ProjectReference Include="..\cloudscribe.FileManager.CoreIntegration\cloudscribe.FileManager.CoreIntegration.csproj" />
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="cloudscribe.Web.Pagination" Version="1.1.*" />
-    <PackageReference Include="cloudscribe.Web.Navigation" Version="1.2.*" />
-    <PackageReference Include="cloudscribe.FileManager.CoreIntegration" Version="1.0.*" />
-
+    <PackageReference Include="cloudscribe.Web.Pagination" Version="2.0.0-*" />
+    <PackageReference Include="cloudscribe.Web.Navigation" Version="2.0.0-*" />
+  
     <PackageReference Include="Microsoft.AspNetCore.Antiforgery" Version="2.0.0-*" />
     <PackageReference Include="Microsoft.AspNetCore.Authentication.Cookies" Version="2.0.0-*" />
-    <!--
-    <PackageReference Include="Microsoft.AspNetCore.Authentication.Facebook" Version="2.0.0-*" />
-    <PackageReference Include="Microsoft.AspNetCore.Authentication.Google" Version="2.0.0-*" />
-    <PackageReference Include="Microsoft.AspNetCore.Authentication.MicrosoftAccount" Version="2.0.0-*" />
-    <PackageReference Include="Microsoft.AspNetCore.Authentication.Twitter" Version="2.0.0-*" />
-    <PackageReference Include="Microsoft.AspNetCore.Authentication.OpenIdConnect" Version="2.0.0-*" />
-    -->
+    
     <PackageReference Include="Microsoft.AspNetCore.Authorization" Version="2.0.0-*" />
     <PackageReference Include="Microsoft.AspNetCore.Diagnostics" Version="2.0.0-*" />
     <PackageReference Include="Microsoft.AspNetCore.Hosting.Abstractions" Version="2.0.0-*" />

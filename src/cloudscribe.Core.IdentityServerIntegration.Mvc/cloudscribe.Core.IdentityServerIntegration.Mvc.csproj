@@ -24,8 +24,8 @@
     <PackageReference Include="Microsoft.AspNetCore.Mvc.Razor" Version="2.0.0-*" />
     <PackageReference Include="Microsoft.AspNetCore.Mvc" Version="2.0.0-*" />
     <PackageReference Include="cloudscribe.IDS4Fork" Version="1.5.*" />
-    <PackageReference Include="cloudscribe.Web.Navigation" Version="1.2.*" />
-    <PackageReference Include="cloudscribe.Web.Pagination" Version="1.1.*" />
+    <PackageReference Include="cloudscribe.Web.Navigation" Version="2.0.0-*" />
+    <PackageReference Include="cloudscribe.Web.Pagination" Version="2.0.0-*" />
 
   </ItemGroup>
 

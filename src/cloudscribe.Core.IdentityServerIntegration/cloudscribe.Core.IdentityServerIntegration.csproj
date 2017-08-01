@@ -28,7 +28,7 @@
     <PackageReference Include="Microsoft.Extensions.FileProviders.Embedded" Version="2.0.0-*" />
     <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="2.0.0-*" />
     <PackageReference Include="Microsoft.AspNetCore.Mvc" Version="2.0.0-*" />
-    <PackageReference Include="cloudscribe.Web.Pagination" Version="1.1.*" />
+    <PackageReference Include="cloudscribe.Web.Pagination" Version="2.0.0-*" />
     <PackageReference Include="cloudscribe.IDS4Fork" Version="1.5.*" />
     
     
