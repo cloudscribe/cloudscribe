@@ -3,7 +3,7 @@
   <PropertyGroup>
     <Description>integration for cloudscribe Core and cloudscribe FileManager</Description>
     <VersionPrefix>2.0.0</VersionPrefix>
-	<VersionSuffix>preview20170725</VersionSuffix>
+	<VersionSuffix>preview20170727</VersionSuffix>
     <Authors>Joe Audette</Authors>
     <TargetFrameworks>netstandard2.0</TargetFrameworks>
     <DebugType>portable</DebugType>

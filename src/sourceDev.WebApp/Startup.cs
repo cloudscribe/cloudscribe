@@ -51,7 +51,7 @@ namespace sourceDev.WebApp
         }
 
         private IHostingEnvironment environment;
-        public IConfigurationRoot Configuration { get; }
+        public IConfiguration Configuration { get; }
 
         public bool SslIsAvailable = false;
 
