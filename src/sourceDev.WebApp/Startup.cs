@@ -21,36 +21,13 @@ namespace sourceDev.WebApp
 {
     public class Startup
     {
-        public Startup(IHostingEnvironment env)
+        public Startup(IConfiguration configuration, IHostingEnvironment env)
         {
-            var builder = new ConfigurationBuilder()
-                .SetBasePath(env.ContentRootPath)
-                .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
-                .AddJsonFile($"appsettings.{env.EnvironmentName}.json", optional: true)
-                ;
-
-            // this file name is ignored by gitignore
-            // so you can create it and use on your local dev machine
-            // remember last config source added wins if it has the same settings
-            builder.AddJsonFile("appsettings.dev.json", optional: true, reloadOnChange: true);
-
-            //if (env.IsDevelopment())
-            //{
-            //    // For more details on using the user secret store see http://go.microsoft.com/fwlink/?LinkID=532709
-            //    builder.AddUserSecrets();
-            //}
-
-            // most common use of environment variables would be in azure hosting
-            // since it is added last anything in env vars would trump the same setting in previous config sources
-            // so no risk of messing up settings if deploying a new version to azure
-            builder.AddEnvironmentVariables();
-
-            Configuration = builder.Build();
-
-            environment = env;
+            Configuration = configuration;
+            Environment = env;
         }
 
-        private IHostingEnvironment environment;
+        private IHostingEnvironment Environment;
         public IConfiguration Configuration { get; }
 
         public bool SslIsAvailable = false;
@@ -63,7 +40,7 @@ namespace sourceDev.WebApp
             // we need to move to different hosting, without those key on the new host it would not be possible to decrypt
             // but it is perhaps a little risky storing these keys below the appRoot folder
             // for your own production envrionments store them outside of that if possible
-            string pathToCryptoKeys = Path.Combine(environment.ContentRootPath, "dp_keys");
+            string pathToCryptoKeys = Path.Combine(Environment.ContentRootPath, "dp_keys");
             services.AddDataProtection()
                 .PersistKeysToFileSystem(new System.IO.DirectoryInfo(pathToCryptoKeys));
 
@@ -214,18 +191,24 @@ namespace sourceDev.WebApp
             IOptions<cloudscribe.Core.Models.MultiTenantOptions> multiTenantOptionsAccessor,
             IServiceProvider serviceProvider,
             IOptions<RequestLocalizationOptions> localizationOptionsAccessor
-            , cloudscribe.Logging.Web.ILogRepository logRepo
+            //, cloudscribe.Logging.Web.ILogRepository logRepo
             )
         {
             loggerFactory.AddConsole(Configuration.GetSection("Logging"));
             loggerFactory.AddDebug();
-            ConfigureLogging(loggerFactory, serviceProvider, logRepo);
+            //var scopeFactory = app.ApplicationServices.GetRequiredService<IServiceScopeFactory>();
+            //using (var scope = scopeFactory.CreateScope())
+            //{
+            //    var logRepo = scope.ServiceProvider.GetService<cloudscribe.Logging.Web.ILogRepository>();
+            //    ConfigureLogging(env, loggerFactory, serviceProvider, logRepo);
+            //}
+            
 
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
                 //app.UseDatabaseErrorPage();
-                //app.UseBrowserLink();
+                app.UseBrowserLink();
             }
             else
             {
@@ -353,15 +336,15 @@ namespace sourceDev.WebApp
                     // site1 05301194-da1d-43a8-9aa4-6c5f8959f37b
                     // site2 a9e2c249-90b4-4770-9e99-9702d89f73b6
                     // replace null with your siteid and run the app, then change it back to null since it can only be a one time task
-                    string sId = null;
+                    //string sId = null;
 
-                    CloudscribeIdentityServerIntegrationNoDbStorage.InitializeDatabaseAsync(
-                        app.ApplicationServices,
-                        sId,
-                        IdServerClients.Get(),
-                        IdServerResources.GetApiResources(),
-                        IdServerResources.GetIdentityResources()
-                        ).Wait();
+                    //CloudscribeIdentityServerIntegrationNoDbStorage.InitializeDatabaseAsync(
+                    //    app.ApplicationServices,
+                    //    sId,
+                    //    IdServerClients.Get(),
+                    //    IdServerResources.GetApiResources(),
+                    //    IdServerResources.GetIdentityResources()
+                    //    ).Wait();
 
                     break;
 
@@ -371,7 +354,7 @@ namespace sourceDev.WebApp
                     CoreEFStartup.InitializeDatabaseAsync(app.ApplicationServices).Wait();
 
                     // this one is only needed if using cloudscribe Logging with EF as the logging storage
-                    LoggingEFStartup.InitializeDatabaseAsync(app.ApplicationServices).Wait();
+                    //LoggingEFStartup.InitializeDatabaseAsync(app.ApplicationServices).Wait();
 
                     // you can use this hack to add clients and scopes into the db during startup if needed
                     // I used this before we implemented the UI for adding them
@@ -383,15 +366,15 @@ namespace sourceDev.WebApp
                     // site1 8f54733c-3f3a-4971-bb1f-8950cea42f1a
                     // site2 7c111db3-e270-497a-9a12-aed436c764c6
                     // replace null with your siteid and run the app, then change it back to null since it can only be a one time task
-                    string siteId = null;
+                    //string siteId = null;
 
-                    CloudscribeIdentityServerIntegrationEFCoreStorage.InitializeDatabaseAsync(
-                        app.ApplicationServices,
-                        siteId,
-                        IdServerClients.Get(),
-                        IdServerResources.GetApiResources(),
-                        IdServerResources.GetIdentityResources()
-                        ).Wait();
+                    //CloudscribeIdentityServerIntegrationEFCoreStorage.InitializeDatabaseAsync(
+                    //    app.ApplicationServices,
+                    //    siteId,
+                    //    IdServerClients.Get(),
+                    //    IdServerResources.GetApiResources(),
+                    //    IdServerResources.GetIdentityResources()
+                    //    ).Wait();
 
                     break;
             }
@@ -510,6 +493,7 @@ namespace sourceDev.WebApp
         }
 
         private void ConfigureLogging(
+            IHostingEnvironment env,
             ILoggerFactory loggerFactory,
             IServiceProvider serviceProvider
             , cloudscribe.Logging.Web.ILogRepository logRepo

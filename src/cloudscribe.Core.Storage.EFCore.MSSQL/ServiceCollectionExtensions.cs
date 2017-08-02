@@ -22,6 +22,13 @@ namespace Microsoft.Extensions.DependencyInjection
                        .UseInternalServiceProvider(serviceProvider)
                        );
 
+            //services.AddEntityFrameworkSqlServer()
+            //    .AddDbContext<CoreDbContext>(options => 
+            //    {
+            //        options.UseSqlServer(connectionString);
+
+            //    },ServiceLifetime.Scoped);
+
             services.AddScoped<ICoreDbContext, CoreDbContext>(); 
             services.AddScoped<IDataPlatformInfo, DataPlatformInfo>();
             

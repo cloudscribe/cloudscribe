@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2015-12-03
-// Last Modified:			2016-07-30
+// Last Modified:			2017-08-02
 // 
 
 
@@ -22,9 +22,10 @@ namespace Microsoft.AspNetCore.Hosting // so it will show up in startup without 
 
         public static async Task InitializeDatabaseAsync(IServiceProvider serviceProvider)
         {
-            using (var serviceScope = serviceProvider.GetRequiredService<IServiceScopeFactory>().CreateScope())
+            var scopeFactory = serviceProvider.GetRequiredService<IServiceScopeFactory>();
+            using (var scope = scopeFactory.CreateScope())
             {
-                var db = serviceScope.ServiceProvider.GetService<ICoreDbContext>();
+                var db = scope.ServiceProvider.GetService<ICoreDbContext>();
 
                 // ran into an error when I made a change to the model and tried to apply the migration
                 // found the reason was this line:
@@ -39,17 +40,46 @@ namespace Microsoft.AspNetCore.Hosting // so it will show up in startup without 
                 {
                     await db.Database.MigrateAsync();
                 }
-                catch(System.NotImplementedException)
+                catch (System.NotImplementedException)
                 {
                     db.Database.Migrate();
                 }
-
-
-
-
+                
                 await EnsureData(db);
 
             }
+
+        
+
+            //using (var serviceScope = serviceProvider.CreateScope())
+            //{
+            //    var scopeServiceProvider = serviceScope.ServiceProvider;
+            //    var db = scopeServiceProvider.GetService<ICoreDbContext>();
+
+            //    // ran into an error when I made a change to the model and tried to apply the migration
+            //    // found the reason was this line:
+            //    //bool didCreatedDb = await db.Database.EnsureCreatedAsync();
+            //    // according to https://github.com/aspnet/EntityFramework/issues/3160
+            //    // EnsureCreatedAsync totally bypasses migrations and just creates the schema for you, you can't mix this with migrations. 
+            //    // EnsureCreated is designed for testing or rapid prototyping where you are ok with dropping and re-creating 
+            //    // the database each time. If you are using migrations and want to have them automatically applied on app start, 
+            //    // then you can use context.Database.Migrate() instead.
+
+            //    try
+            //    {
+            //        await db.Database.MigrateAsync();
+            //    }
+            //    catch(System.NotImplementedException)
+            //    {
+            //        db.Database.Migrate();
+            //    }
+
+
+
+
+            //    await EnsureData(db);
+
+            //}
 
             
         }
