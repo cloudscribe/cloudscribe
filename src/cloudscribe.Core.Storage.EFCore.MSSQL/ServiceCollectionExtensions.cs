@@ -15,20 +15,13 @@ namespace Microsoft.Extensions.DependencyInjection
             )
         {
             services.AddCloudscribeCoreEFCommon();
-
+            
             services.AddEntityFrameworkSqlServer()
-                .AddDbContext<CoreDbContext>((serviceProvider, options) =>
-                options.UseSqlServer(connectionString)
-                       .UseInternalServiceProvider(serviceProvider)
-                       );
-
-            //services.AddEntityFrameworkSqlServer()
-            //    .AddDbContext<CoreDbContext>(options => 
-            //    {
-            //        options.UseSqlServer(connectionString);
-
-            //    },ServiceLifetime.Scoped);
-
+                .AddDbContext<CoreDbContext>(options =>
+                {
+                    options.UseSqlServer(connectionString);
+                });
+            
             services.AddScoped<ICoreDbContext, CoreDbContext>(); 
             services.AddScoped<IDataPlatformInfo, DataPlatformInfo>();
             

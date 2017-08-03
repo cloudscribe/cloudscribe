@@ -1,6 +1,4 @@
-﻿
-
-using cloudscribe.Core.Models;
+﻿using cloudscribe.Core.Models;
 using cloudscribe.Core.Storage.EFCore.Common;
 using cloudscribe.Core.Storage.EFCore.pgsql;
 using Microsoft.EntityFrameworkCore;
@@ -17,10 +15,8 @@ namespace Microsoft.Extensions.DependencyInjection
             services.AddCloudscribeCoreEFCommon();
 
             services.AddEntityFrameworkNpgsql()
-                .AddDbContext<CoreDbContext>((serviceProvider, options) =>
-                options.UseNpgsql(connectionString)
-                       .UseInternalServiceProvider(serviceProvider)
-                       );
+                .AddDbContext<CoreDbContext>(options =>
+                    options.UseNpgsql(connectionString));
 
             services.AddScoped<ICoreDbContext, CoreDbContext>(); 
             services.AddScoped<IDataPlatformInfo, DataPlatformInfo>();

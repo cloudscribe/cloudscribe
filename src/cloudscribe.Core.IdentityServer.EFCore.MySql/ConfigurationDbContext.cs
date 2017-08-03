@@ -21,6 +21,8 @@ namespace cloudscribe.Core.IdentityServer.EFCore.MySql
         
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            base.OnModelCreating(modelBuilder);
+
             modelBuilder.Entity<Client>(entity =>
             {
                 entity.ToTable(EfConstants.TableNames.Client)
@@ -194,7 +196,7 @@ namespace cloudscribe.Core.IdentityServer.EFCore.MySql
                 entity.Property(x => x.Type).HasMaxLength(200).IsRequired();
             });
 
-            base.OnModelCreating(modelBuilder);
+            
         }
     }
 }

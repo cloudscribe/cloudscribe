@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2015-11-16
-// Last Modified:			2017-07-30
+// Last Modified:			2017-08-03
 // 
 
 using cloudscribe.Core.Models;
@@ -20,9 +20,14 @@ namespace cloudscribe.Core.Storage.EFCore.MSSQL
         {
 
         }
-        
+
+        protected CoreDbContext() { }
+
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            base.OnModelCreating(modelBuilder);
+
             ICoreTableNames tableNames = new CoreTableNames();
            
 
@@ -848,9 +853,7 @@ namespace cloudscribe.Core.Storage.EFCore.MSSQL
                 //entity.HasIndex(p => p.Longitude);
             });
 
-            // should this be called before or after we do our thing?
-
-            base.OnModelCreating(modelBuilder);
+            
 
         }
 

@@ -2,21 +2,19 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2015-11-16
-// Last Modified:			2017-07-30
+// Last Modified:			2017-08-03
 // 
 
 using cloudscribe.Core.Models;
 using cloudscribe.Core.Models.Geography;
 using cloudscribe.Core.Storage.EFCore.Common;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Design;
-using Microsoft.EntityFrameworkCore.Infrastructure;
 using Npgsql.EntityFrameworkCore.PostgreSQL;
 
 
 namespace cloudscribe.Core.Storage.EFCore.pgsql
 {
-    
+
 
     public class CoreDbContext : CoreDbContextBase, ICoreDbContext
     {
@@ -24,9 +22,13 @@ namespace cloudscribe.Core.Storage.EFCore.pgsql
         {
 
         }
-        
+
+        protected CoreDbContext() { }
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            base.OnModelCreating(modelBuilder);
+
             ICoreTableNames tableNames = new CoreTableNames();
          
             modelBuilder.HasPostgresExtension("uuid-ossp");
@@ -755,9 +757,8 @@ namespace cloudscribe.Core.Storage.EFCore.pgsql
                 //entity.HasIndex(p => p.Longitude);
             });
 
-            // should this be called before or after we do our thing?
 
-            base.OnModelCreating(modelBuilder);
+            
 
         }
 

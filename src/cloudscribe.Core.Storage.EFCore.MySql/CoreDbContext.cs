@@ -2,16 +2,13 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2016-11-10
-// Last Modified:			2017-07-28
+// Last Modified:			2017-08-03
 // 
 
 using cloudscribe.Core.Models;
 using cloudscribe.Core.Models.Geography;
 using cloudscribe.Core.Storage.EFCore.Common;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Infrastructure;
-using Microsoft.EntityFrameworkCore.Metadata.Internal;
-//using MySQL.Data.EntityFrameworkCore.Extensions;
 
 namespace cloudscribe.Core.Storage.EFCore.MySql
 {
@@ -21,12 +18,14 @@ namespace cloudscribe.Core.Storage.EFCore.MySql
         {
 
         }
-        
+
+        protected CoreDbContext() { }
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            ICoreTableNames tableNames = new CoreTableNames();
+            base.OnModelCreating(modelBuilder);
 
-            //modelBuilder.HasAnnotation(MySqlAnnotationNames.FullTextIndex, "FULLTEXT");
+            ICoreTableNames tableNames = new CoreTableNames();
             
             modelBuilder.Entity<SiteSettings>(entity =>
             {
@@ -749,10 +748,8 @@ namespace cloudscribe.Core.Storage.EFCore.MySql
                 //entity.HasIndex(p => p.Latitude);
                 //entity.HasIndex(p => p.Longitude);
             });
-
-            // should this be called before or after we do our thing?
-
-            base.OnModelCreating(modelBuilder);
+            
+            
 
         }
 

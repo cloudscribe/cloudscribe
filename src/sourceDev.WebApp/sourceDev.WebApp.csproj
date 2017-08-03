@@ -7,11 +7,11 @@
 
  
   <ItemGroup>
-    <Content Remove="appsettings.dev.json" CopyToPublishDirectory="Never" />
+    <Content Remove="appsettings.Development.json" CopyToPublishDirectory="Never" />
     <Content Remove="bower.json" CopyToPublishDirectory="Never" />
     <Content Remove="bundleconfig.json" CopyToPublishDirectory="Never" />
 
-    <Content Include="appsettings.dev.json" CopyToPublishDirectory="Never" />
+    <Content Include="appsettings.Development.json" CopyToPublishDirectory="Never" />
     <Content Include="bower.json" CopyToPublishDirectory="Never" />
     <Content Include="bundleconfig.json" CopyToPublishDirectory="Never" />
 

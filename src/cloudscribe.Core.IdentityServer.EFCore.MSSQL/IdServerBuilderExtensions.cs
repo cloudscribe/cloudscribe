@@ -85,20 +85,16 @@ namespace Microsoft.Extensions.DependencyInjection
             )
         {
             services.AddEntityFrameworkSqlServer()
-                .AddDbContext<ConfigurationDbContext>((serviceProvider, options) =>
-                options.UseSqlServer(connectionString)
-                       .UseInternalServiceProvider(serviceProvider)
-                       );
+                .AddDbContext<ConfigurationDbContext>(options =>
+                    options.UseSqlServer(connectionString));
 
             services.AddCloudscribeCoreIdentityServerStores();
 
             services.AddScoped<IConfigurationDbContext, ConfigurationDbContext>();
 
             services.AddEntityFrameworkSqlServer()
-                .AddDbContext<PersistedGrantDbContext>((serviceProvider, options) =>
-                options.UseSqlServer(connectionString)
-                       .UseInternalServiceProvider(serviceProvider)
-                       );
+                .AddDbContext<PersistedGrantDbContext>(options =>
+                    options.UseSqlServer(connectionString));
 
             services.AddScoped<IPersistedGrantDbContext, PersistedGrantDbContext>();
 

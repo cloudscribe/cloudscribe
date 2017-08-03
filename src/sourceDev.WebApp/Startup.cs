@@ -194,15 +194,15 @@ namespace sourceDev.WebApp
             //, cloudscribe.Logging.Web.ILogRepository logRepo
             )
         {
-            loggerFactory.AddConsole(Configuration.GetSection("Logging"));
-            loggerFactory.AddDebug();
-            //var scopeFactory = app.ApplicationServices.GetRequiredService<IServiceScopeFactory>();
-            //using (var scope = scopeFactory.CreateScope())
-            //{
-            //    var logRepo = scope.ServiceProvider.GetService<cloudscribe.Logging.Web.ILogRepository>();
-            //    ConfigureLogging(env, loggerFactory, serviceProvider, logRepo);
-            //}
-            
+            //loggerFactory.AddConsole(Configuration.GetSection("Logging"));
+            //loggerFactory.AddDebug();
+            var scopeFactory = app.ApplicationServices.GetRequiredService<IServiceScopeFactory>();
+            using (var scope = scopeFactory.CreateScope())
+            {
+                var logRepo = scope.ServiceProvider.GetService<cloudscribe.Logging.Web.ILogRepository>();
+                ConfigureLogging(env, loggerFactory, serviceProvider, logRepo);
+            }
+
 
             if (env.IsDevelopment())
             {
@@ -354,7 +354,7 @@ namespace sourceDev.WebApp
                     CoreEFStartup.InitializeDatabaseAsync(app.ApplicationServices).Wait();
 
                     // this one is only needed if using cloudscribe Logging with EF as the logging storage
-                    //LoggingEFStartup.InitializeDatabaseAsync(app.ApplicationServices).Wait();
+                    LoggingEFStartup.InitializeDatabaseAsync(app.ApplicationServices).Wait();
 
                     // you can use this hack to add clients and scopes into the db during startup if needed
                     // I used this before we implemented the UI for adding them
@@ -451,11 +451,11 @@ namespace sourceDev.WebApp
                             services.AddCloudscribeCoreEFStoragePostgreSql(pgConnection);
                             services.AddCloudscribeLoggingEFStoragePostgreSql(pgConnection);
 
-                            services.AddIdentityServer()
-                                .AddCloudscribeCoreEFIdentityServerStoragePostgreSql(pgConnection)
-                                .AddCloudscribeIdentityServerIntegration()
-                                .AddTemporarySigningCredential()
-                                ;
+                            //services.AddIdentityServer()
+                            //    .AddCloudscribeCoreEFIdentityServerStoragePostgreSql(pgConnection)
+                            //    .AddCloudscribeIdentityServerIntegration()
+                            //    .AddTemporarySigningCredential()
+                            //    ;
 
                             break;
 
@@ -464,11 +464,11 @@ namespace sourceDev.WebApp
                             services.AddCloudscribeCoreEFStorageMySql(mysqlConnection);
                             services.AddCloudscribeLoggingEFStorageMySQL(mysqlConnection);
 
-                            services.AddIdentityServer()
-                                .AddCloudscribeCoreEFIdentityServerStorageMySql(mysqlConnection)
-                                .AddCloudscribeIdentityServerIntegration()
-                                .AddTemporarySigningCredential()
-                                ;
+                            //services.AddIdentityServer()
+                            //    .AddCloudscribeCoreEFIdentityServerStorageMySql(mysqlConnection)
+                            //    .AddCloudscribeIdentityServerIntegration()
+                            //    .AddTemporarySigningCredential()
+                            //    ;
 
                             break;
 
@@ -478,11 +478,11 @@ namespace sourceDev.WebApp
                             services.AddCloudscribeCoreEFStorageMSSQL(connectionString);
                             services.AddCloudscribeLoggingEFStorageMSSQL(connectionString);
 
-                            services.AddIdentityServer()
-                                .AddCloudscribeCoreEFIdentityServerStorageMSSQL(connectionString)
-                                .AddCloudscribeIdentityServerIntegration()
-                                .AddTemporarySigningCredential()
-                                ;
+                            //services.AddIdentityServer()
+                            //    .AddCloudscribeCoreEFIdentityServerStorageMSSQL(connectionString)
+                            //    .AddCloudscribeIdentityServerIntegration()
+                            //    .AddTemporarySigningCredential()
+                            //    ;
 
                             break;
                     }

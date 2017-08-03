@@ -87,20 +87,16 @@ namespace Microsoft.Extensions.DependencyInjection
             )
         {
             services.AddEntityFrameworkMySql()
-                .AddDbContext<ConfigurationDbContext>((serviceProvider, options) =>
-                options.UseMySql(connectionString)
-                       .UseInternalServiceProvider(serviceProvider)
-                       );
+                .AddDbContext<ConfigurationDbContext>(options =>
+                    options.UseMySql(connectionString));
 
             services.AddCloudscribeCoreIdentityServerStores();
 
             services.AddScoped<IConfigurationDbContext, ConfigurationDbContext>();
 
             services.AddEntityFrameworkMySql()
-                .AddDbContext<PersistedGrantDbContext>((serviceProvider, options) =>
-                options.UseMySql(connectionString)
-                       .UseInternalServiceProvider(serviceProvider)
-                       );
+                .AddDbContext<PersistedGrantDbContext>(options =>
+                    options.UseMySql(connectionString));
 
             services.AddScoped<IPersistedGrantDbContext, PersistedGrantDbContext>();
 
