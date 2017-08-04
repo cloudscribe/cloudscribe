@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2015-11-16
-// Last Modified:			2017-08-03
+// Last Modified:			2017-08-04
 // 
 
 using cloudscribe.Core.Models;
@@ -53,37 +53,37 @@ namespace cloudscribe.Core.Storage.EFCore.MSSQL
                 entity.Property(p => p.AllowNewRegistration)
                 .IsRequired()
                 .HasColumnType("bit")
-                .HasDefaultValue(true)
+                //.HasDefaultValue(true)
                 ;
 
                 entity.Property(p => p.RequireConfirmedEmail)
                 .IsRequired()
                 .HasColumnType("bit")
-                .HasDefaultValue(false)
+                //.HasDefaultValue(false)
                 ;
 
                 entity.Property(p => p.RequireConfirmedPhone)
                 .IsRequired()
                 .HasColumnType("bit")
-                .HasDefaultValue(false)
+                //.HasDefaultValue(false)
                 ;
 
                 entity.Property(p => p.IsServerAdminSite)
                 .IsRequired()
                 .HasColumnType("bit")
-                .HasDefaultValue(false)
+                //.HasDefaultValue(false)
                 ;
 
                 entity.Property(p => p.UseLdapAuth)
                 .IsRequired()
                 .HasColumnType("bit")
-                .HasDefaultValue(false)
+               // .HasDefaultValue(false)
                 ;
 
                 entity.Property(p => p.AutoCreateLdapUserOnFirstLogin)
                 .IsRequired()
                 .HasColumnType("bit")
-                .HasDefaultValue(true)
+               // .HasDefaultValue(true)
                 ;
 
                 entity.Property(p => p.LdapServer)
@@ -108,19 +108,19 @@ namespace cloudscribe.Core.Storage.EFCore.MSSQL
                 entity.Property(p => p.ReallyDeleteUsers)
                 .IsRequired()
                 .HasColumnType("bit")
-                .HasDefaultValue(true)
+                //.HasDefaultValue(true)
                 ;
 
                 entity.Property(p => p.UseEmailForLogin)
                 .IsRequired()
                 .HasColumnType("bit")
-                .HasDefaultValue(true)
+               // .HasDefaultValue(true)
                 ;
 
                 entity.Property(p => p.RequiresQuestionAndAnswer)
                 .IsRequired()
                 .HasColumnType("bit")
-                .HasDefaultValue(false)
+               // .HasDefaultValue(false)
                 ;
 
                 entity.Property(p => p.MaxInvalidPasswordAttempts)
@@ -149,49 +149,49 @@ namespace cloudscribe.Core.Storage.EFCore.MSSQL
                 entity.Property(p => p.UseInvisibleRecaptcha)
                 .IsRequired()
                 .HasColumnType("bit")
-                .HasDefaultValue(false)
+               // .HasDefaultValue(false)
                 ;
 
                 entity.Property(p => p.DisableDbAuth)
                 .IsRequired()
                 .HasColumnType("bit")
-                .HasDefaultValue(false)
+                //.HasDefaultValue(false)
                 ;
 
                 entity.Property(p => p.RequireApprovalBeforeLogin)
                 .IsRequired()
                 .HasColumnType("bit")
-                .HasDefaultValue(false)
+               // .HasDefaultValue(false)
                 ;
 
                 entity.Property(p => p.AllowDbFallbackWithLdap)
                 .IsRequired()
                 .HasColumnType("bit")
-                .HasDefaultValue(false)
+               // .HasDefaultValue(false)
                 ;
 
                 entity.Property(p => p.EmailLdapDbFallback)
                 .IsRequired()
                 .HasColumnType("bit")
-                .HasDefaultValue(false)
+               // .HasDefaultValue(false)
                 ;
 
                 entity.Property(p => p.AllowPersistentLogin)
                 .IsRequired()
                 .HasColumnType("bit")
-                .HasDefaultValue(false)
+               // .HasDefaultValue(false)
                 ;
 
                 entity.Property(p => p.CaptchaOnLogin)
                 .IsRequired()
                 .HasColumnType("bit")
-                .HasDefaultValue(false)
+               // .HasDefaultValue(false)
                 ;
 
                 entity.Property(p => p.CaptchaOnRegistration)
                 .IsRequired()
                 .HasColumnType("bit")
-                .HasDefaultValue(false)
+               // .HasDefaultValue(false)
                 ;
 
                 entity.Property(p => p.SiteIsClosed)
@@ -303,7 +303,7 @@ namespace cloudscribe.Core.Storage.EFCore.MSSQL
 
                 entity.Property(p => p.SiteFolderName)
                 .HasMaxLength(50)
-                .HasDefaultValue(string.Empty)
+               // .HasDefaultValue(string.Empty)
                 ;
 
                 entity.HasIndex(p => p.SiteFolderName);
@@ -339,13 +339,13 @@ namespace cloudscribe.Core.Storage.EFCore.MSSQL
                 entity.Property(p => p.SmtpRequiresAuth)
                 .IsRequired()
                 .HasColumnType("bit")
-                .HasDefaultValue(false)
+                //.HasDefaultValue(false)
                 ;
 
                 entity.Property(p => p.SmtpUseSsl)
                 .IsRequired()
                 .HasColumnType("bit")
-                .HasDefaultValue(false)
+               // .HasDefaultValue(false)
                 ;
 
                 entity.Property(p => p.DkimDomain)
@@ -359,7 +359,7 @@ namespace cloudscribe.Core.Storage.EFCore.MSSQL
                 entity.Property(p => p.SignEmailWithDkim)
                 .IsRequired()
                 .HasColumnType("bit")
-                .HasDefaultValue(false)
+               // .HasDefaultValue(false)
                 ;
 
                 entity.Property(p => p.SmsClientId)
@@ -373,7 +373,7 @@ namespace cloudscribe.Core.Storage.EFCore.MSSQL
                 entity.Property(p => p.IsDataProtected)
                 .IsRequired()
                 .HasColumnType("bit")
-                .HasDefaultValue(false)
+               // .HasDefaultValue(false)
                 ;
 
                 entity.Property(p => p.CreatedUtc)
@@ -392,22 +392,22 @@ namespace cloudscribe.Core.Storage.EFCore.MSSQL
                 entity.Property(p => p.PwdRequireNonAlpha)
                 .IsRequired()
                 .HasColumnType("bit")
-                .HasDefaultValue(true)
+               // .HasDefaultValue(true)
                 ;
                 entity.Property(p => p.PwdRequireLowercase)
                 .IsRequired()
                 .HasColumnType("bit")
-                .HasDefaultValue(true)
+              //  .HasDefaultValue(true)
                 ;
                 entity.Property(p => p.PwdRequireUppercase)
                 .IsRequired()
                 .HasColumnType("bit")
-                .HasDefaultValue(true)
+              //  .HasDefaultValue(true)
                 ;
                 entity.Property(p => p.PwdRequireDigit)
                 .IsRequired()
                 .HasColumnType("bit")
-                .HasDefaultValue(true)
+               // .HasDefaultValue(true)
                 ;
 
             });
@@ -459,13 +459,13 @@ namespace cloudscribe.Core.Storage.EFCore.MSSQL
                 entity.Property(p => p.AccountApproved)
                 .IsRequired()
                 .HasColumnType("bit")
-                .HasDefaultValue(false)
+               // .HasDefaultValue(false)
                 ;
 
                 entity.Property(p => p.DisplayInMemberList)
                 .IsRequired()
                 .HasColumnType("bit")
-                .HasDefaultValue(false)
+                //.HasDefaultValue(false)
                 ;
 
                 entity.Property(p => p.Email)
@@ -510,43 +510,43 @@ namespace cloudscribe.Core.Storage.EFCore.MSSQL
                 entity.Property(p => p.EmailConfirmed)
                 .IsRequired()
                 .HasColumnType("bit")
-                .HasDefaultValue(false)
+                //.HasDefaultValue(false)
                 ;
 
                 entity.Property(p => p.IsDeleted)
                 .IsRequired()
                 .HasColumnType("bit")
-                .HasDefaultValue(false)
+               // .HasDefaultValue(false)
                 ;
 
                 entity.Property(p => p.IsLockedOut)
                 .IsRequired()
                 .HasColumnType("bit")
-                .HasDefaultValue(false)
+               // .HasDefaultValue(false)
                 ;
 
                 entity.Property(p => p.MustChangePwd)
                 .IsRequired()
                 .HasColumnType("bit")
-                .HasDefaultValue(false)
+                //.HasDefaultValue(false)
                 ;
 
                 entity.Property(p => p.NewEmailApproved)
                 .IsRequired()
                 .HasColumnType("bit")
-                .HasDefaultValue(false)
+               // .HasDefaultValue(false)
                 ;
 
                 entity.Property(p => p.RolesChanged)
                 .IsRequired()
                 .HasColumnType("bit")
-                .HasDefaultValue(false)
+               // .HasDefaultValue(false)
                 ;
 
                 entity.Property(p => p.TwoFactorEnabled)
                 .IsRequired()
                 .HasColumnType("bit")
-                .HasDefaultValue(false)
+                //.HasDefaultValue(false)
                 ;
 
                 entity.Property(p => p.PhoneNumber)
@@ -556,7 +556,7 @@ namespace cloudscribe.Core.Storage.EFCore.MSSQL
                 entity.Property(p => p.PhoneNumberConfirmed)
                 .IsRequired()
                 .HasColumnType("bit")
-                .HasDefaultValue(false)
+               // .HasDefaultValue(false)
                 ;
 
                 entity.Property(p => p.CanAutoLockout)

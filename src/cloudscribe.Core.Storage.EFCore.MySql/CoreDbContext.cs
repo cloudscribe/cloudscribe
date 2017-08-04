@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2016-11-10
-// Last Modified:			2017-08-03
+// Last Modified:			2017-08-04
 // 
 
 using cloudscribe.Core.Models;
@@ -343,19 +343,19 @@ namespace cloudscribe.Core.Storage.EFCore.MySql
 
                 entity.Property(p => p.PwdRequireNonAlpha)
                 .IsRequired()
-                .HasDefaultValue(true)
+               // .HasDefaultValue(true)
                 ;
                 entity.Property(p => p.PwdRequireLowercase)
                 .IsRequired()
-                .HasDefaultValue(true)
+               // .HasDefaultValue(true)
                 ;
                 entity.Property(p => p.PwdRequireUppercase)
                 .IsRequired()
-                .HasDefaultValue(true)
+               // .HasDefaultValue(true)
                 ;
                 entity.Property(p => p.PwdRequireDigit)
                 .IsRequired()
-                .HasDefaultValue(true)
+               // .HasDefaultValue(true)
                 ;
 
             });

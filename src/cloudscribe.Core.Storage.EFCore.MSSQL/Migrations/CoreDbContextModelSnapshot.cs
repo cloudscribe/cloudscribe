@@ -140,34 +140,22 @@ namespace cloudscribe.Core.Storage.EFCore.MSSQL.Migrations
                         .HasMaxLength(36);
 
                     b.Property<bool>("AllowDbFallbackWithLdap")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("bit")
-                        .HasDefaultValue(false);
+                        .HasColumnType("bit");
 
                     b.Property<bool>("AllowNewRegistration")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("bit")
-                        .HasDefaultValue(true);
+                        .HasColumnType("bit");
 
                     b.Property<bool>("AllowPersistentLogin")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("bit")
-                        .HasDefaultValue(false);
+                        .HasColumnType("bit");
 
                     b.Property<bool>("AutoCreateLdapUserOnFirstLogin")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("bit")
-                        .HasDefaultValue(true);
+                        .HasColumnType("bit");
 
                     b.Property<bool>("CaptchaOnLogin")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("bit")
-                        .HasDefaultValue(false);
+                        .HasColumnType("bit");
 
                     b.Property<bool>("CaptchaOnRegistration")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("bit")
-                        .HasDefaultValue(false);
+                        .HasColumnType("bit");
 
                     b.Property<string>("CompanyCountry")
                         .HasMaxLength(10);
@@ -213,9 +201,7 @@ namespace cloudscribe.Core.Storage.EFCore.MSSQL.Migrations
                         .HasMaxLength(100);
 
                     b.Property<bool>("DisableDbAuth")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("bit")
-                        .HasDefaultValue(false);
+                        .HasColumnType("bit");
 
                     b.Property<string>("DkimDomain")
                         .HasMaxLength(255);
@@ -228,9 +214,7 @@ namespace cloudscribe.Core.Storage.EFCore.MSSQL.Migrations
                         .HasMaxLength(128);
 
                     b.Property<bool>("EmailLdapDbFallback")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("bit")
-                        .HasDefaultValue(false);
+                        .HasColumnType("bit");
 
                     b.Property<string>("FacebookAppId")
                         .HasMaxLength(100);
@@ -252,14 +236,10 @@ namespace cloudscribe.Core.Storage.EFCore.MSSQL.Migrations
                     b.Property<string>("GoogleClientSecret");
 
                     b.Property<bool>("IsDataProtected")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("bit")
-                        .HasDefaultValue(false);
+                        .HasColumnType("bit");
 
                     b.Property<bool>("IsServerAdminSite")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("bit")
-                        .HasDefaultValue(false);
+                        .HasColumnType("bit");
 
                     b.Property<string>("LdapDomain")
                         .HasMaxLength(255);
@@ -306,29 +286,19 @@ namespace cloudscribe.Core.Storage.EFCore.MSSQL.Migrations
                     b.Property<string>("PrivacyPolicy");
 
                     b.Property<bool>("PwdRequireDigit")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("bit")
-                        .HasDefaultValue(true);
+                        .HasColumnType("bit");
 
                     b.Property<bool>("PwdRequireLowercase")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("bit")
-                        .HasDefaultValue(true);
+                        .HasColumnType("bit");
 
                     b.Property<bool>("PwdRequireNonAlpha")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("bit")
-                        .HasDefaultValue(true);
+                        .HasColumnType("bit");
 
                     b.Property<bool>("PwdRequireUppercase")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("bit")
-                        .HasDefaultValue(true);
+                        .HasColumnType("bit");
 
                     b.Property<bool>("ReallyDeleteUsers")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("bit")
-                        .HasDefaultValue(true);
+                        .HasColumnType("bit");
 
                     b.Property<string>("RecaptchaPrivateKey")
                         .HasMaxLength(255);
@@ -341,33 +311,21 @@ namespace cloudscribe.Core.Storage.EFCore.MSSQL.Migrations
                     b.Property<string>("RegistrationPreamble");
 
                     b.Property<bool>("RequireApprovalBeforeLogin")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("bit")
-                        .HasDefaultValue(false);
+                        .HasColumnType("bit");
 
                     b.Property<bool>("RequireConfirmedEmail")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("bit")
-                        .HasDefaultValue(false);
+                        .HasColumnType("bit");
 
                     b.Property<bool>("RequireConfirmedPhone")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("bit")
-                        .HasDefaultValue(false);
+                        .HasColumnType("bit");
 
                     b.Property<bool>("RequiresQuestionAndAnswer")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("bit")
-                        .HasDefaultValue(false);
+                        .HasColumnType("bit");
 
                     b.Property<bool>("SignEmailWithDkim")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("bit")
-                        .HasDefaultValue(false);
+                        .HasColumnType("bit");
 
                     b.Property<string>("SiteFolderName")
-                        .ValueGeneratedOnAdd()
-                        .HasDefaultValue("")
                         .HasMaxLength(50);
 
                     b.Property<bool>("SiteIsClosed")
@@ -395,17 +353,13 @@ namespace cloudscribe.Core.Storage.EFCore.MSSQL.Migrations
                         .HasMaxLength(20);
 
                     b.Property<bool>("SmtpRequiresAuth")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("bit")
-                        .HasDefaultValue(false);
+                        .HasColumnType("bit");
 
                     b.Property<string>("SmtpServer")
                         .HasMaxLength(200);
 
                     b.Property<bool>("SmtpUseSsl")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("bit")
-                        .HasDefaultValue(false);
+                        .HasColumnType("bit");
 
                     b.Property<string>("SmtpUser")
                         .HasMaxLength(500);
@@ -424,19 +378,13 @@ namespace cloudscribe.Core.Storage.EFCore.MSSQL.Migrations
                     b.Property<string>("TwitterConsumerSecret");
 
                     b.Property<bool>("UseEmailForLogin")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("bit")
-                        .HasDefaultValue(true);
+                        .HasColumnType("bit");
 
                     b.Property<bool>("UseInvisibleRecaptcha")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("bit")
-                        .HasDefaultValue(false);
+                        .HasColumnType("bit");
 
                     b.Property<bool>("UseLdapAuth")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("bit")
-                        .HasDefaultValue(false);
+                        .HasColumnType("bit");
 
                     b.HasKey("Id");
 
@@ -457,9 +405,7 @@ namespace cloudscribe.Core.Storage.EFCore.MSSQL.Migrations
                     b.Property<int>("AccessFailedCount");
 
                     b.Property<bool>("AccountApproved")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("bit")
-                        .HasDefaultValue(false);
+                        .HasColumnType("bit");
 
                     b.Property<DateTime?>("AgreementAcceptedUtc");
 
@@ -478,9 +424,7 @@ namespace cloudscribe.Core.Storage.EFCore.MSSQL.Migrations
                     b.Property<DateTime?>("DateOfBirth");
 
                     b.Property<bool>("DisplayInMemberList")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("bit")
-                        .HasDefaultValue(false);
+                        .HasColumnType("bit");
 
                     b.Property<string>("DisplayName")
                         .IsRequired()
@@ -493,9 +437,7 @@ namespace cloudscribe.Core.Storage.EFCore.MSSQL.Migrations
                     b.Property<DateTime?>("EmailConfirmSentUtc");
 
                     b.Property<bool>("EmailConfirmed")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("bit")
-                        .HasDefaultValue(false);
+                        .HasColumnType("bit");
 
                     b.Property<string>("FirstName")
                         .HasMaxLength(100);
@@ -503,14 +445,10 @@ namespace cloudscribe.Core.Storage.EFCore.MSSQL.Migrations
                     b.Property<string>("Gender");
 
                     b.Property<bool>("IsDeleted")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("bit")
-                        .HasDefaultValue(false);
+                        .HasColumnType("bit");
 
                     b.Property<bool>("IsLockedOut")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("bit")
-                        .HasDefaultValue(false);
+                        .HasColumnType("bit");
 
                     b.Property<DateTime?>("LastLoginUtc");
 
@@ -524,17 +462,13 @@ namespace cloudscribe.Core.Storage.EFCore.MSSQL.Migrations
                     b.Property<DateTime?>("LockoutEndDateUtc");
 
                     b.Property<bool>("MustChangePwd")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("bit")
-                        .HasDefaultValue(false);
+                        .HasColumnType("bit");
 
                     b.Property<string>("NewEmail")
                         .HasMaxLength(100);
 
                     b.Property<bool>("NewEmailApproved")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("bit")
-                        .HasDefaultValue(false);
+                        .HasColumnType("bit");
 
                     b.Property<string>("NormalizedEmail")
                         .IsRequired()
@@ -550,14 +484,10 @@ namespace cloudscribe.Core.Storage.EFCore.MSSQL.Migrations
                         .HasMaxLength(50);
 
                     b.Property<bool>("PhoneNumberConfirmed")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("bit")
-                        .HasDefaultValue(false);
+                        .HasColumnType("bit");
 
                     b.Property<bool>("RolesChanged")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("bit")
-                        .HasDefaultValue(false);
+                        .HasColumnType("bit");
 
                     b.Property<string>("SecurityStamp")
                         .HasMaxLength(50);
@@ -573,9 +503,7 @@ namespace cloudscribe.Core.Storage.EFCore.MSSQL.Migrations
                     b.Property<bool>("Trusted");
 
                     b.Property<bool>("TwoFactorEnabled")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("bit")
-                        .HasDefaultValue(false);
+                        .HasColumnType("bit");
 
                     b.Property<string>("UserName")
                         .IsRequired()

@@ -261,21 +261,13 @@ namespace cloudscribe.Core.Storage.EFCore.MySql.Migrations
 
                     b.Property<string>("PrivacyPolicy");
 
-                    b.Property<bool>("PwdRequireDigit")
-                        .ValueGeneratedOnAdd()
-                        .HasDefaultValue(true);
+                    b.Property<bool>("PwdRequireDigit");
 
-                    b.Property<bool>("PwdRequireLowercase")
-                        .ValueGeneratedOnAdd()
-                        .HasDefaultValue(true);
+                    b.Property<bool>("PwdRequireLowercase");
 
-                    b.Property<bool>("PwdRequireNonAlpha")
-                        .ValueGeneratedOnAdd()
-                        .HasDefaultValue(true);
+                    b.Property<bool>("PwdRequireNonAlpha");
 
-                    b.Property<bool>("PwdRequireUppercase")
-                        .ValueGeneratedOnAdd()
-                        .HasDefaultValue(true);
+                    b.Property<bool>("PwdRequireUppercase");
 
                     b.Property<bool>("ReallyDeleteUsers");
 

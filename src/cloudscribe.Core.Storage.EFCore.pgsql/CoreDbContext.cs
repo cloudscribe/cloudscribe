@@ -271,7 +271,7 @@ namespace cloudscribe.Core.Storage.EFCore.pgsql
 
                 entity.Property(p => p.SiteFolderName)
                 .HasMaxLength(50)
-                .HasDefaultValue(string.Empty)
+                //.HasDefaultValue(string.Empty)
                 ;
 
                 entity.HasIndex(p => p.SiteFolderName);
@@ -349,19 +349,19 @@ namespace cloudscribe.Core.Storage.EFCore.pgsql
 
                 entity.Property(p => p.PwdRequireNonAlpha)
                 .IsRequired()
-                .HasDefaultValue(true)
+               // .HasDefaultValue(true)
                 ;
                 entity.Property(p => p.PwdRequireLowercase)
                 .IsRequired()
-                .HasDefaultValue(true)
+               // .HasDefaultValue(true)
                 ;
                 entity.Property(p => p.PwdRequireUppercase)
                 .IsRequired()
-                .HasDefaultValue(true)
+               // .HasDefaultValue(true)
                 ;
                 entity.Property(p => p.PwdRequireDigit)
                 .IsRequired()
-                .HasDefaultValue(true)
+                //.HasDefaultValue(true)
                 ;
 
             });
