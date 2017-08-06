@@ -30,13 +30,17 @@ namespace Microsoft.AspNetCore.Hosting // so it will show up in startup without 
             //    await EnsureData(db);
 
             //}
-            
-            using (var serviceScope = serviceProvider.CreateScope())
-            {
-                var db = serviceScope.ServiceProvider.GetService<ICoreDbContext>();
-                await db.Database.MigrateAsync();
-                await EnsureData(db);
-            }
+
+            //using (var serviceScope = serviceProvider.CreateScope())
+            //{
+            //    var db = serviceScope.ServiceProvider.GetService<ICoreDbContext>();
+            //    await db.Database.MigrateAsync();
+            //    await EnsureData(db);
+            //}
+
+            var db = serviceProvider.GetService<ICoreDbContext>();
+            await db.Database.MigrateAsync();
+            await EnsureData(db);
 
 
         }

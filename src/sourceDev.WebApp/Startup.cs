@@ -191,11 +191,8 @@ namespace sourceDev.WebApp
             IOptions<cloudscribe.Core.Models.MultiTenantOptions> multiTenantOptionsAccessor,
             IServiceProvider serviceProvider,
             IOptions<RequestLocalizationOptions> localizationOptionsAccessor
-            //, cloudscribe.Logging.Web.ILogRepository logRepo
             )
-        {
-            //loggerFactory.AddConsole(Configuration.GetSection("Logging"));
-            //loggerFactory.AddDebug();
+        {   
             var scopeFactory = app.ApplicationServices.GetRequiredService<IServiceScopeFactory>();
             using (var scope = scopeFactory.CreateScope())
             {
@@ -214,9 +211,7 @@ namespace sourceDev.WebApp
             {
                 app.UseExceptionHandler("/oops/Error");
             }
-
-            EnsureDataStorageIsReady(app);
-
+            
             app.UseForwardedHeaders();
 
             app.UseStaticFiles();
@@ -317,68 +312,7 @@ namespace sourceDev.WebApp
             return true;
         }
 
-        private void EnsureDataStorageIsReady(IApplicationBuilder app)
-        {
-            var storage = Configuration["DevOptions:DbPlatform"];
-
-            switch (storage)
-            {
-                case "NoDb":
-                    CoreNoDbStartup.InitializeDataAsync(app.ApplicationServices).Wait();
-
-                    // you can use this hack to add clients and scopes into the db during startup if needed
-                    // I used this before we implemented the UI for adding them
-                    // you should not use this on the first run that actually creates the initial cloudscribe data
-                    // you must wait until after that and then you can get the needed siteid from the database
-                    // this will only run at startup time and only add data if no data exists for the given site.
-                    // if you pass in an invalid siteid it will not fail, you will get data with a bad siteid
-                    // make note of your siteid, don't use these, these are from my NoDb storage
-                    // site1 05301194-da1d-43a8-9aa4-6c5f8959f37b
-                    // site2 a9e2c249-90b4-4770-9e99-9702d89f73b6
-                    // replace null with your siteid and run the app, then change it back to null since it can only be a one time task
-                    //string sId = null;
-
-                    //CloudscribeIdentityServerIntegrationNoDbStorage.InitializeDatabaseAsync(
-                    //    app.ApplicationServices,
-                    //    sId,
-                    //    IdServerClients.Get(),
-                    //    IdServerResources.GetApiResources(),
-                    //    IdServerResources.GetIdentityResources()
-                    //    ).Wait();
-
-                    break;
-
-                case "ef":
-                default:
-                    // this creates ensures the database is created and initial data
-                    CoreEFStartup.InitializeDatabaseAsync(app.ApplicationServices).Wait();
-
-                    // this one is only needed if using cloudscribe Logging with EF as the logging storage
-                    LoggingEFStartup.InitializeDatabaseAsync(app.ApplicationServices).Wait();
-
-                    // you can use this hack to add clients and scopes into the db during startup if needed
-                    // I used this before we implemented the UI for adding them
-                    // you should not use this on the first run that actually creates the initial cloudscribe data
-                    // you must wait until after that and then you can get the needed siteid from the database
-                    // this will only run at startup time and only add data if no data exists for the given site.
-                    // if you pass in an invalid siteid it will not fail, you will get data with a bad siteid
-                    // make note of your siteid, don't use these, these are from my db
-                    // site1 8f54733c-3f3a-4971-bb1f-8950cea42f1a
-                    // site2 7c111db3-e270-497a-9a12-aed436c764c6
-                    // replace null with your siteid and run the app, then change it back to null since it can only be a one time task
-                    //string siteId = null;
-
-                    //CloudscribeIdentityServerIntegrationEFCoreStorage.InitializeDatabaseAsync(
-                    //    app.ApplicationServices,
-                    //    siteId,
-                    //    IdServerClients.Get(),
-                    //    IdServerResources.GetApiResources(),
-                    //    IdServerResources.GetIdentityResources()
-                    //    ).Wait();
-
-                    break;
-            }
-        }
+        
 
 
         private void ConfigureAuthPolicy(IServiceCollection services)
