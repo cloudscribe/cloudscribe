@@ -193,14 +193,6 @@ namespace sourceDev.WebApp
             IOptions<RequestLocalizationOptions> localizationOptionsAccessor
             )
         {   
-            var scopeFactory = app.ApplicationServices.GetRequiredService<IServiceScopeFactory>();
-            using (var scope = scopeFactory.CreateScope())
-            {
-                var logRepo = scope.ServiceProvider.GetService<cloudscribe.Logging.Web.ILogRepository>();
-                ConfigureLogging(env, loggerFactory, serviceProvider, logRepo);
-            }
-
-
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
@@ -425,42 +417,7 @@ namespace sourceDev.WebApp
                     break;
             }
         }
-
-        private void ConfigureLogging(
-            IHostingEnvironment env,
-            ILoggerFactory loggerFactory,
-            IServiceProvider serviceProvider
-            , cloudscribe.Logging.Web.ILogRepository logRepo
-            )
-        {
-
-            // a customizable filter for logging
-            LogLevel minimumLevel = LogLevel.Information;
-
-            // add exclusions to remove noise in the logs
-            var excludedLoggers = new List<string>
-            {
-                "Microsoft.AspNetCore.StaticFiles.StaticFileMiddleware",
-                "Microsoft.AspNetCore.Hosting.Internal.WebHost",
-            };
-
-            Func<string, LogLevel, bool> logFilter = (string loggerName, LogLevel logLevel) =>
-            {
-                if (logLevel < minimumLevel)
-                {
-                    return false;
-                }
-
-                if (excludedLoggers.Contains(loggerName))
-                {
-                    return false;
-                }
-
-                return true;
-            };
-
-            loggerFactory.AddDbLogger(serviceProvider, logFilter, logRepo);
-        }
+        
 
     }
 }
