@@ -2,7 +2,7 @@
 
 namespace cloudscribe.Core.Models
 {
-    public class SiteContext : ISiteContext, IEquatable<SiteContext>
+    public class SiteContext : ISiteContext //, IEquatable<SiteContext>
     {
         public SiteContext(ISiteSettings siteSettings)
         {
@@ -13,16 +13,16 @@ namespace cloudscribe.Core.Models
 
         //https://github.com/saaskit/saaskit/issues/76
 
-        public bool Equals(SiteContext other)
-        {
-            if (other == null) return false;
-            return other.Id == this.Id;
-        }
+        //public bool Equals(SiteContext other)
+        //{
+        //    if (other == null) return false;
+        //    return other.Id == this.Id;
+        //}
 
-        public override int GetHashCode()
-        {
-            return this.Id.GetHashCode();
-        }
+        //public override int GetHashCode()
+        //{
+        //    return this.Id.GetHashCode();
+        //}
 
         public Guid Id
         {
