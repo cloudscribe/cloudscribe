@@ -38,14 +38,29 @@ namespace Microsoft.Extensions.DependencyInjection
             // Services used by identity
             // this will change in 2.0 AddCookieAuthentication => AddCookie
             //https://github.com/aspnet/Identity/blob/dev/src/Microsoft.AspNetCore.Identity/IdentityServiceCollectionExtensions.cs
-            services.AddAuthenticationCore(options =>
+            //services.AddAuthenticationCore(options =>
+            //{
+            //    options.DefaultAuthenticateScheme = IdentityConstants.ApplicationScheme;
+            //    options.DefaultChallengeScheme = IdentityConstants.ApplicationScheme;
+            //    options.DefaultSignInScheme = IdentityConstants.ExternalScheme;
+            //});
+
+            services.AddSingleton<IOptionsMonitor<CookieAuthenticationOptions>, SiteCookieAuthenticationOptions>();
+            //services.AddSingleton<IOptionsSnapshot<CookieAuthenticationOptions>, SiteCookieAuthenticationOptionsPreview>();
+
+           // services.AddSingleton<IOptionsSnapshot<FacebookOptions>, SiteFacebookOptions>();
+            services.AddSingleton<IOptionsSnapshot<GoogleOptions>, SiteGoogleOptions>();
+            services.AddSingleton<IOptionsSnapshot<MicrosoftAccountOptions>, SiteMicrosoftAccountOptions>();
+            services.AddSingleton<IOptionsSnapshot<TwitterOptions>, SiteTwitterOptions>();
+            services.AddSingleton<IOptionsSnapshot<OpenIdConnectOptions>, SiteOpenIdConnectOptions>();
+
+            services.AddAuthentication(options =>
             {
                 options.DefaultAuthenticateScheme = IdentityConstants.ApplicationScheme;
                 options.DefaultChallengeScheme = IdentityConstants.ApplicationScheme;
                 options.DefaultSignInScheme = IdentityConstants.ExternalScheme;
-            });
-
-            services.AddCookieAuthentication(IdentityConstants.ApplicationScheme, o =>
+            })
+           .AddCookie(IdentityConstants.ApplicationScheme, o =>
             {
                 o.LoginPath = new PathString("/Account/Login");
                 o.Events = new CookieAuthenticationEvents
@@ -53,58 +68,41 @@ namespace Microsoft.Extensions.DependencyInjection
                     OnValidatePrincipal = SiteAuthCookieValidator.ValidatePrincipalAsync
                 };
 
-            });
-
-            services.AddCookieAuthentication(IdentityConstants.ExternalScheme, o =>
+            })
+            .AddCookie(IdentityConstants.ExternalScheme, o =>
             {
-                o.CookieName = IdentityConstants.ExternalScheme;
+                o.Cookie.Name = IdentityConstants.ExternalScheme;
                 o.ExpireTimeSpan = TimeSpan.FromMinutes(5);
-            });
-
-            services.AddCookieAuthentication(IdentityConstants.TwoFactorRememberMeScheme,
-                o => o.CookieName = IdentityConstants.TwoFactorRememberMeScheme);
-
-            services.AddCookieAuthentication(IdentityConstants.TwoFactorUserIdScheme, o =>
+            })
+            .AddCookie(IdentityConstants.TwoFactorRememberMeScheme,
+                o => o.Cookie.Name = IdentityConstants.TwoFactorRememberMeScheme
+                )
+            .AddCookie(IdentityConstants.TwoFactorUserIdScheme, o =>
             {
-                o.CookieName = IdentityConstants.TwoFactorUserIdScheme;
+                o.Cookie.Name = IdentityConstants.TwoFactorUserIdScheme;
                 o.ExpireTimeSpan = TimeSpan.FromMinutes(5);
-            });
-
-            //services.AddSingleton<IOptionsMonitor<CookieAuthenticationOptions>, SiteCookieAuthenticationOptions>();
-            services.AddSingleton<IOptionsSnapshot<CookieAuthenticationOptions>, SiteCookieAuthenticationOptionsPreview>();
-
-            services.AddFacebookAuthentication(o =>
+            })
+            .AddFacebook(o =>
             {
                 o.AppId = "placeholder";
                 o.AppSecret = "placeholder";
-            });
-            services.AddSingleton<IOptionsSnapshot<FacebookOptions>, SiteFacebookOptions>();
-
-            services.AddGoogleAuthentication(o =>
+            })
+            .AddGoogle(o =>
             {
                 o.ClientId = "placeholder";
                 o.ClientSecret = "placeholder";
-            });
-
-            services.AddSingleton<IOptionsSnapshot<GoogleOptions>, SiteGoogleOptions>();
-
-            services.AddMicrosoftAccountAuthentication(o =>
+            })
+            .AddMicrosoftAccount(o =>
             {
                 o.ClientId = "placeholder";
                 o.ClientSecret = "placeholder";
-            });
-
-            services.AddSingleton<IOptionsSnapshot<MicrosoftAccountOptions>, SiteMicrosoftAccountOptions>();
-            
-            services.AddTwitterAuthentication(o =>
+            })
+            .AddTwitter(o =>
             {
                 o.ConsumerKey = "placeholder";
                 o.ConsumerSecret = "placeholder";
-            });
-
-            services.AddSingleton<IOptionsSnapshot<TwitterOptions>, SiteTwitterOptions>();
-
-            services.AddOpenIdConnectAuthentication(o =>
+            })
+            .AddOpenIdConnect(o =>
             {
                 o.ClientId = "placeholder";
                 o.ClientSecret = "placeholder";
@@ -112,7 +110,7 @@ namespace Microsoft.Extensions.DependencyInjection
                
             });
 
-            services.AddSingleton<IOptionsSnapshot<OpenIdConnectOptions>, SiteOpenIdConnectOptions>();
+            
 
 
 

@@ -3,7 +3,6 @@
   <PropertyGroup>
     <Description>Entity Framework configuration and operational stores for IdentityServer4 cloudscribe multi-tenant identity integration</Description>
     <VersionPrefix>2.0.0</VersionPrefix>
-    <VersionSuffix>preview20170725</VersionSuffix>
     <Authors>Joe Audette</Authors>
     <TargetFrameworks>netstandard2.0</TargetFrameworks>
     <AssemblyName>cloudscribe.Core.IdentityServer.EFCore.Common</AssemblyName>
@@ -24,12 +23,12 @@
 
   <ItemGroup>
     <PackageReference Include="cloudscribe.IDS4Fork" Version="1.5.*" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="2.0.0-*" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.Relational" Version="2.0.0-*" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="2.0.*" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Relational" Version="2.0.*" />
     <PackageReference Include="AutoMapper" Version="6.0.*" />
-    <PackageReference Include="Microsoft.Extensions.Configuration.FileExtensions" Version="2.0.0-*" />
-    <PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="2.0.0-*" />
-    <PackageReference Include="Microsoft.AspNetCore.Hosting" Version="2.0.0-*" />
+    <PackageReference Include="Microsoft.Extensions.Configuration.FileExtensions" Version="2.0.*" />
+    <PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="2.0.*" />
+    <PackageReference Include="Microsoft.AspNetCore.Hosting" Version="2.0.*" />
   </ItemGroup>
 
 </Project>

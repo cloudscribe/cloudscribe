@@ -3,7 +3,6 @@
   <PropertyGroup>
     <Description>NoDb implementation of cloudscribe core commands and queries</Description>
     <VersionPrefix>2.0.0</VersionPrefix>
-    <VersionSuffix>preview20170725</VersionSuffix>
     <Authors>Joe Audette</Authors>
     <TargetFrameworks>netstandard2.0</TargetFrameworks>
     <AssemblyName>cloudscribe.Core.Storage.NoDb</AssemblyName>
@@ -23,8 +22,8 @@
 
   <ItemGroup>
     <PackageReference Include="NoDb" Version="1.1.*" />
-    <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="2.0.0-*" />
-    <PackageReference Include="Microsoft.Extensions.Options" Version="2.0.0-*" />
+    <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="2.0.*" />
+    <PackageReference Include="Microsoft.Extensions.Options" Version="2.0.*" />
     
     <PackageReference Include="System.Linq.Queryable" Version="4.3.*" />
   </ItemGroup>

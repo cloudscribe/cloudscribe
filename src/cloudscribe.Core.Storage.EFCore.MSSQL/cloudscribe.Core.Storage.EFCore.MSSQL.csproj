@@ -3,7 +3,6 @@
   <PropertyGroup>
     <Description>Microsoft Sql Server Entity Framework Core implementation of cloudscribe core storage</Description>
     <VersionPrefix>2.0.0</VersionPrefix>
-    <VersionSuffix>preview20170728</VersionSuffix>
     <Authors>Joe Audette</Authors>
     <TargetFramework>netcoreapp2.0</TargetFramework>
     <AssemblyName>cloudscribe.Core.Storage.EFCore.MSSQL</AssemblyName>
@@ -38,18 +37,18 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="2.0.0-*" />
-    <PackageReference Include="Microsoft.Extensions.Configuration" Version="2.0.0-*" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="2.0.0-*" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="2.0.0-*" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.Relational" Version="2.0.0-*" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="2.0.0-*" />
-    <PackageReference Include="Microsoft.AspNetCore.Hosting" Version="2.0.0-*" />
-    <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="2.0.0-*" />
+    <PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="2.0.*" />
+    <PackageReference Include="Microsoft.Extensions.Configuration" Version="2.0.*" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="2.0.*" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="2.0.*" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Relational" Version="2.0.*" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="2.0.*" />
+    <PackageReference Include="Microsoft.AspNetCore.Hosting" Version="2.0.*" />
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="2.0.*" />
   </ItemGroup>
 
   <ItemGroup>
-    <DotNetCliToolReference Include="Microsoft.EntityFrameworkCore.Tools.DotNet" Version="2.0.0-*" />
+    <DotNetCliToolReference Include="Microsoft.EntityFrameworkCore.Tools.DotNet" Version="2.0.*" />
   </ItemGroup>
 
 </Project>

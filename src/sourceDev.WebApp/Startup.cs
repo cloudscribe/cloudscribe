@@ -162,7 +162,7 @@ namespace sourceDev.WebApp
                         options.AddCloudscribeFileManagerBootstrap3Views();
                         options.AddCloudscribeLoggingBootstrap3Views();
 
-                        options.AddCloudscribeCoreIdentityServerIntegrationBootstrap3Views();
+                        //options.AddCloudscribeCoreIdentityServerIntegrationBootstrap3Views();
 
                         options.ViewLocationExpanders.Add(new cloudscribe.Core.Web.Components.SiteViewLocationExpander());
                         
@@ -375,7 +375,7 @@ namespace sourceDev.WebApp
                         case "pgsql":
                             var pgConnection = Configuration.GetConnectionString("PostgreSqlEntityFrameworkConnectionString");
                             services.AddCloudscribeCoreEFStoragePostgreSql(pgConnection);
-                            services.AddCloudscribeLoggingEFStoragePostgreSql(pgConnection);
+                            //services.AddCloudscribeLoggingEFStoragePostgreSql(pgConnection);
 
                             //services.AddIdentityServer()
                             //    .AddCloudscribeCoreEFIdentityServerStoragePostgreSql(pgConnection)
@@ -388,7 +388,7 @@ namespace sourceDev.WebApp
                         case "MySql":
                             var mysqlConnection = Configuration.GetConnectionString("MySqlEntityFrameworkConnectionString");
                             services.AddCloudscribeCoreEFStorageMySql(mysqlConnection);
-                            services.AddCloudscribeLoggingEFStorageMySQL(mysqlConnection);
+                            //services.AddCloudscribeLoggingEFStorageMySQL(mysqlConnection);
 
                             //services.AddIdentityServer()
                             //    .AddCloudscribeCoreEFIdentityServerStorageMySql(mysqlConnection)

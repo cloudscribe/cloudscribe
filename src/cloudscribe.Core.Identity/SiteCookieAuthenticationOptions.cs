@@ -11,23 +11,42 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
+using Microsoft.Extensions.Primitives;
 using System;
+using System.Collections.Generic;
 
 namespace cloudscribe.Core.Identity
 {
-    public class SiteCookieAuthenticationOptionsPreview : IOptionsSnapshot<CookieAuthenticationOptions>
+    //https://github.com/aspnet/Options/blob/dev/src/Microsoft.Extensions.Options/OptionsMonitor.cs
+
+    public class SiteCookieAuthenticationOptions : IOptionsMonitor<CookieAuthenticationOptions>
     {
-        public SiteCookieAuthenticationOptionsPreview(
+        public SiteCookieAuthenticationOptions(
+            IOptionsFactory<CookieAuthenticationOptions> factory, 
+            IEnumerable<IOptionsChangeTokenSource<CookieAuthenticationOptions>> sources, 
+            IOptionsMonitorCache<CookieAuthenticationOptions> cache,
             IOptions<MultiTenantOptions> multiTenantOptionsAccessor,
             IPostConfigureOptions<CookieAuthenticationOptions> cookieOptionsInitializer,
             IHttpContextAccessor httpContextAccessor,
-            ILogger<SiteCookieAuthenticationOptionsPreview> logger
+            ILogger<SiteCookieAuthenticationOptions> logger
             )
         {
             _multiTenantOptions = multiTenantOptionsAccessor.Value;
             _cookieOptionsInitializer = cookieOptionsInitializer;
             _httpContextAccessor = httpContextAccessor;
             _log = logger;
+
+            _factory = factory;
+            _sources = sources;
+            _cache = cache;
+
+            foreach (var source in _sources)
+            {
+                ChangeToken.OnChange<string>(
+                    () => source.GetChangeToken(),
+                    (name) => InvokeChanged(name),
+                    source.Name);
+            }
         }
 
         private MultiTenantOptions _multiTenantOptions;
@@ -35,27 +54,23 @@ namespace cloudscribe.Core.Identity
         private IHttpContextAccessor _httpContextAccessor;
         private ILogger _log;
 
+        private readonly IOptionsMonitorCache<CookieAuthenticationOptions> _cache;
+        private readonly IOptionsFactory<CookieAuthenticationOptions> _factory;
+        private readonly IEnumerable<IOptionsChangeTokenSource<CookieAuthenticationOptions>> _sources;
+        internal event Action<CookieAuthenticationOptions, string> _onChange;
+
+
         private CookieAuthenticationOptions ResolveOptions(string scheme)
         {
             var tenant = _httpContextAccessor.HttpContext.GetTenant<SiteContext>();
-            
             var options = new CookieAuthenticationOptions();
             _cookieOptionsInitializer.PostConfigure(scheme, options);
-           
-            if(scheme == IdentityConstants.ApplicationScheme)
-            {
-                ConfigureApplicationCookie(tenant, options, scheme);
-            }
-            else
-            {
-                ConfigureOtherCookies(tenant, options, scheme);
-            }
-            
+            AdjustOptionsForTenant(tenant, options, scheme);
             return options;
 
         }
 
-        private void ConfigureApplicationCookie(SiteContext tenant, CookieAuthenticationOptions options, string scheme)
+        private void AdjustOptionsForTenant(SiteContext tenant, CookieAuthenticationOptions options, string scheme)
         {
             if (tenant == null)
             {
@@ -65,13 +80,14 @@ namespace cloudscribe.Core.Identity
 
             if (_multiTenantOptions.UseRelatedSitesMode)
             {
-                options.CookieName = scheme;
-                options.CookiePath = "/";
+                options.Cookie.Name = scheme;
+                options.Cookie.Path = "/";
             }
             else
             {
-                options.CookieName = $"{scheme}-{tenant.SiteFolderName}";
-                options.CookiePath = "/" + tenant.SiteFolderName;
+
+                options.Cookie.Name = $"{scheme}-{tenant.SiteFolderName}";
+                options.Cookie.Path = "/" + tenant.SiteFolderName;
                 options.Events.OnValidatePrincipal = SiteAuthCookieValidator.ValidatePrincipalAsync;
             }
 
@@ -85,28 +101,7 @@ namespace cloudscribe.Core.Identity
 
         }
 
-        private void ConfigureOtherCookies(SiteContext tenant, CookieAuthenticationOptions options, string scheme)
-        {
-            if (tenant == null)
-            {
-                _log.LogError("tenant was null");
-                return;
-            }
-
-            if (_multiTenantOptions.UseRelatedSitesMode)
-            {
-                options.CookieName = scheme;
-                options.CookiePath = "/";
-            }
-            else
-            {
-                options.CookieName = $"{scheme}-{tenant.SiteFolderName}";
-                options.CookiePath = "/" + tenant.SiteFolderName;      
-            }
-            
-        }
-
-        public CookieAuthenticationOptions Value
+        public CookieAuthenticationOptions CurrentValue
         {
             get
             {
@@ -116,21 +111,54 @@ namespace cloudscribe.Core.Identity
 
         public CookieAuthenticationOptions Get(string name)
         {
-            _log.LogInformation($"CookieAuthenticationOptions requested for {name}");
+            return ResolveOptions(name);      
+        }
 
-            return ResolveOptions(name);
+        private void InvokeChanged(string name)
+        {
+            name = name ?? Options.DefaultName;
+            _cache.TryRemove(name);
+            var options = Get(name);
+            if (_onChange != null)
+            {
+                _onChange.Invoke(options, name);
+            }
+        }
+
+        public IDisposable OnChange(Action<CookieAuthenticationOptions, string> listener)
+        {
+            _log.LogDebug("onchange invoked");
+
+            var disposable = new ChangeTrackerDisposable(this, listener);
+            _onChange += disposable.OnChange;
+            return disposable;
+        }
+
+       
+        internal class ChangeTrackerDisposable : IDisposable
+        {
+            private readonly Action<CookieAuthenticationOptions, string> _listener;
+            private readonly SiteCookieAuthenticationOptions _monitor;
+
+            public ChangeTrackerDisposable(SiteCookieAuthenticationOptions monitor, Action<CookieAuthenticationOptions, string> listener)
+            {
+                _listener = listener;
+                _monitor = monitor;
+            }
+
+            public void OnChange(CookieAuthenticationOptions options, string name) => _listener.Invoke(options, name);
+
+            public void Dispose() => _monitor._onChange -= OnChange;
         }
     }
 
-    // in 2.0 this will be consumed by CookieAuthHandler but in preview 2 IOptionsSnapshot is used
-
-    //public class SiteCookieAuthenticationOptions : IOptionsMonitor<CookieAuthenticationOptions>
+    //public class SiteCookieAuthenticationOptionsPreview : IOptionsSnapshot<CookieAuthenticationOptions>
     //{
-    //    public SiteCookieAuthenticationOptions(
+    //    public SiteCookieAuthenticationOptionsPreview(
     //        IOptions<MultiTenantOptions> multiTenantOptionsAccessor,
     //        IPostConfigureOptions<CookieAuthenticationOptions> cookieOptionsInitializer,
     //        IHttpContextAccessor httpContextAccessor,
-    //        ILogger<SiteCookieAuthenticationOptions> logger
+    //        ILogger<SiteCookieAuthenticationOptionsPreview> logger
     //        )
     //    {
     //        _multiTenantOptions = multiTenantOptionsAccessor.Value;
@@ -143,21 +171,30 @@ namespace cloudscribe.Core.Identity
     //    private IPostConfigureOptions<CookieAuthenticationOptions> _cookieOptionsInitializer;
     //    private IHttpContextAccessor _httpContextAccessor;
     //    private ILogger _log;
-    //    internal event Action<CookieAuthenticationOptions> _onChange;
 
     //    private CookieAuthenticationOptions ResolveOptions(string scheme)
     //    {
     //        var tenant = _httpContextAccessor.HttpContext.GetTenant<SiteContext>();
+
     //        var options = new CookieAuthenticationOptions();
     //        _cookieOptionsInitializer.PostConfigure(scheme, options);
-    //        AdjustOptionsForTenant(tenant, options, scheme);
+
+    //        if (scheme == IdentityConstants.ApplicationScheme)
+    //        {
+    //            ConfigureApplicationCookie(tenant, options, scheme);
+    //        }
+    //        else
+    //        {
+    //            ConfigureOtherCookies(tenant, options, scheme);
+    //        }
+
     //        return options;
-            
+
     //    }
 
-    //    private void AdjustOptionsForTenant(SiteContext tenant, CookieAuthenticationOptions options, string scheme)
+    //    private void ConfigureApplicationCookie(SiteContext tenant, CookieAuthenticationOptions options, string scheme)
     //    {
-    //        if(tenant == null)
+    //        if (tenant == null)
     //        {
     //            _log.LogError("tenant was null");
     //            return;
@@ -165,14 +202,13 @@ namespace cloudscribe.Core.Identity
 
     //        if (_multiTenantOptions.UseRelatedSitesMode)
     //        {
-    //            options.CookieName = scheme;
-    //            options.CookiePath = "/";
+    //            options.Cookie.Name = scheme;
+    //            options.Cookie.Path = "/";
     //        }
     //        else
     //        {
-
-    //            options.CookieName = $"{scheme}-{tenant.SiteFolderName}";
-    //            options.CookiePath = "/" + tenant.SiteFolderName;
+    //            options.Cookie.Name = $"{scheme}-{tenant.SiteFolderName}";
+    //            options.Cookie.Path = "/" + tenant.SiteFolderName;
     //            options.Events.OnValidatePrincipal = SiteAuthCookieValidator.ValidatePrincipalAsync;
     //        }
 
@@ -186,37 +222,40 @@ namespace cloudscribe.Core.Identity
 
     //    }
 
-    //    public CookieAuthenticationOptions CurrentValue
+    //    private void ConfigureOtherCookies(SiteContext tenant, CookieAuthenticationOptions options, string scheme)
+    //    {
+    //        if (tenant == null)
+    //        {
+    //            _log.LogError("tenant was null");
+    //            return;
+    //        }
+
+    //        if (_multiTenantOptions.UseRelatedSitesMode)
+    //        {
+    //            options.Cookie.Name = scheme;
+    //            options.Cookie.Path = "/";
+    //        }
+    //        else
+    //        {
+    //            options.Cookie.Name = $"{scheme}-{tenant.SiteFolderName}";
+    //            options.Cookie.Path = "/" + tenant.SiteFolderName;
+    //        }
+
+    //    }
+
+    //    public CookieAuthenticationOptions Value
     //    {
     //        get
     //        {
     //            return ResolveOptions(IdentityConstants.ApplicationScheme);
     //        }
     //    }
-        
-    //    public IDisposable OnChange(Action<CookieAuthenticationOptions> listener)
+
+    //    public CookieAuthenticationOptions Get(string name)
     //    {
-    //        _log.LogInformation("onchange invoked");
+    //        _log.LogInformation($"CookieAuthenticationOptions requested for {name}");
 
-    //        var disposable = new ChangeTrackerDisposable(this, listener);
-    //        _onChange += disposable.OnChange;
-    //        return disposable;
-    //    }
-
-    //    internal class ChangeTrackerDisposable : IDisposable
-    //    {
-    //        private readonly Action<CookieAuthenticationOptions> _listener;
-    //        private readonly SiteCookieAuthenticationOptions _monitor;
-
-    //        public ChangeTrackerDisposable(SiteCookieAuthenticationOptions monitor, Action<CookieAuthenticationOptions> listener)
-    //        {
-    //            _listener = listener;
-    //            _monitor = monitor;
-    //        }
-
-    //        public void OnChange(CookieAuthenticationOptions options) => _listener.Invoke(options);
-
-    //        public void Dispose() => _monitor._onChange -= OnChange;
+    //        return ResolveOptions(name);
     //    }
     //}
 }
