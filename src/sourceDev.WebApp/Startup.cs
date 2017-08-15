@@ -214,7 +214,7 @@ namespace sourceDev.WebApp
             app.UseRequestLocalization(localizationOptionsAccessor.Value);
 
             // this uses the policy called "default"
-            app.UseCors("default");
+            //app.UseCors("default");
 
             var multiTenantOptions = multiTenantOptionsAccessor.Value;
 

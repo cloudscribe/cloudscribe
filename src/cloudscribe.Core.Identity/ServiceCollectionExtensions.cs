@@ -48,11 +48,11 @@ namespace Microsoft.Extensions.DependencyInjection
             services.AddSingleton<IOptionsMonitor<CookieAuthenticationOptions>, SiteCookieAuthenticationOptions>();
             //services.AddSingleton<IOptionsSnapshot<CookieAuthenticationOptions>, SiteCookieAuthenticationOptionsPreview>();
 
-           // services.AddSingleton<IOptionsSnapshot<FacebookOptions>, SiteFacebookOptions>();
-            services.AddSingleton<IOptionsSnapshot<GoogleOptions>, SiteGoogleOptions>();
-            services.AddSingleton<IOptionsSnapshot<MicrosoftAccountOptions>, SiteMicrosoftAccountOptions>();
-            services.AddSingleton<IOptionsSnapshot<TwitterOptions>, SiteTwitterOptions>();
-            services.AddSingleton<IOptionsSnapshot<OpenIdConnectOptions>, SiteOpenIdConnectOptions>();
+            services.AddSingleton<IOptionsMonitor<FacebookOptions>, SiteFacebookOptions>();
+            services.AddSingleton<IOptionsMonitor<GoogleOptions>, SiteGoogleOptions>();
+            services.AddSingleton<IOptionsMonitor<MicrosoftAccountOptions>, SiteMicrosoftAccountOptions>();
+            services.AddSingleton<IOptionsMonitor<TwitterOptions>, SiteTwitterOptions>();
+            services.AddSingleton<IOptionsMonitor<OpenIdConnectOptions>, SiteOpenIdConnectOptions>();
 
             services.AddAuthentication(options =>
             {

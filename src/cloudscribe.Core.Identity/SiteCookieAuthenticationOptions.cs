@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2017-07-26
-// Last Modified:			2017-07-27
+// Last Modified:			2017-08-14
 // 
 
 using cloudscribe.Core.Models;
@@ -63,14 +63,24 @@ namespace cloudscribe.Core.Identity
         private CookieAuthenticationOptions ResolveOptions(string scheme)
         {
             var tenant = _httpContextAccessor.HttpContext.GetTenant<SiteContext>();
+
             var options = new CookieAuthenticationOptions();
             _cookieOptionsInitializer.PostConfigure(scheme, options);
-            AdjustOptionsForTenant(tenant, options, scheme);
+
+            if (scheme == IdentityConstants.ApplicationScheme)
+            {
+                ConfigureApplicationCookie(tenant, options, scheme);
+            }
+            else
+            {
+                ConfigureOtherCookies(tenant, options, scheme);
+            }
+
             return options;
 
         }
 
-        private void AdjustOptionsForTenant(SiteContext tenant, CookieAuthenticationOptions options, string scheme)
+        private void ConfigureApplicationCookie(SiteContext tenant, CookieAuthenticationOptions options, string scheme)
         {
             if (tenant == null)
             {
@@ -85,7 +95,6 @@ namespace cloudscribe.Core.Identity
             }
             else
             {
-
                 options.Cookie.Name = $"{scheme}-{tenant.SiteFolderName}";
                 options.Cookie.Path = "/" + tenant.SiteFolderName;
                 options.Events.OnValidatePrincipal = SiteAuthCookieValidator.ValidatePrincipalAsync;
@@ -98,6 +107,27 @@ namespace cloudscribe.Core.Identity
             options.LoginPath = tenantPathBase + "/account/login";
             options.LogoutPath = tenantPathBase + "/account/logoff";
             options.AccessDeniedPath = tenantPathBase + "/account/accessdenied";
+
+        }
+
+        private void ConfigureOtherCookies(SiteContext tenant, CookieAuthenticationOptions options, string scheme)
+        {
+            if (tenant == null)
+            {
+                _log.LogError("tenant was null");
+                return;
+            }
+
+            if (_multiTenantOptions.UseRelatedSitesMode)
+            {
+                options.Cookie.Name = scheme;
+                options.Cookie.Path = "/";
+            }
+            else
+            {
+                options.Cookie.Name = $"{scheme}-{tenant.SiteFolderName}";
+                options.Cookie.Path = "/" + tenant.SiteFolderName;
+            }
 
         }
 
