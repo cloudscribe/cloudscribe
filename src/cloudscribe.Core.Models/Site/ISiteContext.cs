@@ -31,7 +31,13 @@ namespace cloudscribe.Core.Models
         bool RequireApprovalBeforeLogin { get; } 
         string AccountApprovalEmailCsv { get; }
         int MaxInvalidPasswordAttempts { get; }
-        int MinRequiredPasswordLength { get; } 
+        int MinRequiredPasswordLength { get; }
+
+        bool PwdRequireNonAlpha { get; }
+        bool PwdRequireLowercase { get; }
+        bool PwdRequireUppercase { get; }
+        bool PwdRequireDigit { get; }
+
         bool UseEmailForLogin { get; }
         bool RequiresQuestionAndAnswer { get; }
         bool ReallyDeleteUsers { get; }

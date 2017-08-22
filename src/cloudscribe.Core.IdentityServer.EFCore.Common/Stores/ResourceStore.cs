@@ -125,7 +125,7 @@ namespace cloudscribe.Core.IdentityServer.EFCore.Stores
             return results.Select(x => x.ToModel()).ToArray().AsEnumerable();
         }
 
-        public async Task<Resources> GetAllResources()
+        public async Task<Resources> GetAllResourcesAsync()
         {
             var site = _contextAccessor.HttpContext.GetTenant<SiteContext>();
             if (site == null) return null;

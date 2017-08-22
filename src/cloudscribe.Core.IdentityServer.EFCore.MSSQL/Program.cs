@@ -9,7 +9,7 @@ namespace cloudscribe.Core.IdentityServer.EFCore.MSSQL
         {
             var host = new WebHostBuilder()
                 .UseContentRoot(Directory.GetCurrentDirectory())
-                .UseStartup<Startup>()
+                //.UseStartup<Startup>()
                 .Build();
 
             host.Run();

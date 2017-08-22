@@ -6,18 +6,14 @@ using cloudscribe.Core.Models;
 using IdentityModel;
 using IdentityServer4;
 using IdentityServer4.Configuration;
+using IdentityServer4.Endpoints;
 using IdentityServer4.Hosting;
-using IdentityServer4.Infrastructure;
 using IdentityServer4.Services;
 using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Cors.Infrastructure;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Mvc.Razor;
-using Microsoft.Extensions.FileProviders;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
-using System;
-using System.Reflection;
+using System.Collections.Generic;
 
 // https://github.com/IdentityServer/IdentityServer4/issues/19
 
@@ -31,22 +27,23 @@ namespace Microsoft.Extensions.DependencyInjection
 
             builder.Services.Configure<IdentityServerOptions>(options =>
             {
-                //options.AuthenticationOptions.AuthenticationScheme = AuthenticationScheme.Application;
-                options.Authentication.AuthenticationScheme = AuthenticationScheme.Application;
+               options.Authentication.AuthenticationScheme = AuthenticationScheme.Application;
+ 
             });
 
             builder.Services.AddSingleton<IEndpointRouter>(resolver =>
             {
-                return new MultiTenantEndpointRouter(CustomConstants.EndpointPathToNameMap,
+                return new MultiTenantEndpointRouter(
+                    resolver.GetService<IEnumerable<Endpoint>>(),
                     resolver.GetRequiredService<IdentityServerOptions>(),
-                    resolver.GetServices<EndpointMapping>(),
                     resolver.GetService<IOptions<MultiTenantOptions>>(),
                     resolver.GetRequiredService<ILogger<MultiTenantEndpointRouter>>());
             });
 
             builder.Services.Configure<IdentityOptions>(options =>
             {
-                options.Cookies.ApplicationCookie.AuthenticationScheme = AuthenticationScheme.Application;
+                // commented out 2017-07-25 breaking change in 2.0
+                //options.Cookies.ApplicationCookie.AuthenticationScheme = AuthenticationScheme.Application;
                 options.ClaimsIdentity.UserIdClaimType = JwtClaimTypes.Subject;
                 options.ClaimsIdentity.UserNameClaimType = JwtClaimTypes.Name;
                 options.ClaimsIdentity.RoleClaimType = JwtClaimTypes.Role;
@@ -56,7 +53,7 @@ namespace Microsoft.Extensions.DependencyInjection
             builder.Services.AddTransient<IProfileService, ProfileService<SiteUser>>();
             builder.Services.AddTransient<IJwtClaimsProcessor<SiteUser>, DefaultJwtClaimsProcessor>();
 
-            builder.Services.AddTransient<ISecurityStampValidator, cloudscribe.Core.IdentityServerIntegration.SecurityStampValidator<SiteUser>>();
+            //builder.Services.AddTransient<ISecurityStampValidator, cloudscribe.Core.IdentityServerIntegration.SecurityStampValidator<SiteUser>>();
 
             builder.Services.AddScoped<IMatchAuthorizeProtocolRoutePaths, MultiTenantAuthorizeProtocolRouteMatcher>();
             builder.Services.AddScoped<IMatchEndSessionProtocolRoutePaths, MultiTenantEndSessionProtocolRouteMatcher>();
@@ -73,24 +70,7 @@ namespace Microsoft.Extensions.DependencyInjection
 
 
 
-        //public static IServiceCollection AddCloudscribeIdentityServerIntegration(this IServiceCollection services)
-        //{
-        //    services.AddScoped<IIdentityServerIntegration, Integration>();
-
-        //    return services;
-        //}
-
-        //[Obsolete("AddEmbeddedViewsForCloudscribeIdentityServerIntegration is deprecated, please use AddEmbeddedBootstrap3ViewsForCloudscribeCoreIdentityServerIntegration instead.")]
-        //public static RazorViewEngineOptions AddEmbeddedViewsForCloudscribeIdentityServerIntegration(this RazorViewEngineOptions options)
-        //{
-        //    options.AddEmbeddedBootstrap3ViewsForCloudscribeCoreIdentityServerIntegration();
-        //    //options.FileProviders.Add(new EmbeddedFileProvider(
-        //    //        typeof(CloudscribeIntegration).GetTypeInfo().Assembly,
-        //    //        "cloudscribe.Core.IdentityServerIntegration"
-        //    //    ));
-
-        //    return options;
-        //}
+        
 
     }
 }

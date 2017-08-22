@@ -202,7 +202,8 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
             model.UseEmailForLogin = Site.UseEmailForLogin;
             model.LoginInfoTop = Site.LoginInfoTop;
             model.LoginInfoBottom = Site.LoginInfoBottom;
-            model.ExternalAuthenticationList = accountService.GetExternalAuthenticationSchemes();
+            var externalSchemes = await accountService.GetExternalAuthenticationSchemes();
+            model.ExternalAuthenticationList = externalSchemes.ToList();
             // don't disable db auth if there are no social auth providers configured
             model.DisableDbAuth = Site.DisableDbAuth && Site.HasAnySocialAuthEnabled();
 
@@ -226,7 +227,7 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
             model.UseEmailForLogin = Site.UseEmailForLogin;
             model.LoginInfoTop = Site.LoginInfoTop;
             model.LoginInfoBottom = Site.LoginInfoBottom;
-            model.ExternalAuthenticationList = accountService.GetExternalAuthenticationSchemes();
+            model.ExternalAuthenticationList = await accountService.GetExternalAuthenticationSchemes();
             // don't disable db auth if there are no social auth providers configured
             model.DisableDbAuth = Site.DisableDbAuth && Site.HasAnySocialAuthEnabled();
 
@@ -316,7 +317,7 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
             model.RegistrationPreamble = Site.RegistrationPreamble;
             model.RegistrationAgreement = Site.RegistrationAgreement;
             model.AgreementRequired = Site.RegistrationAgreement.Length > 0;
-            model.ExternalAuthenticationList = accountService.GetExternalAuthenticationSchemes();
+            model.ExternalAuthenticationList = await accountService.GetExternalAuthenticationSchemes();
 
             var viewName = await customRegistration.GetRegisterViewName(Site, HttpContext);
 
@@ -345,7 +346,7 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
             model.RegistrationPreamble = Site.RegistrationPreamble;
             model.RegistrationAgreement = Site.RegistrationAgreement;
             model.AgreementRequired = Site.RegistrationAgreement.Length > 0;
-            model.ExternalAuthenticationList = accountService.GetExternalAuthenticationSchemes();
+            model.ExternalAuthenticationList = await accountService.GetExternalAuthenticationSchemes();
 
             bool isValid = ModelState.IsValid;
             

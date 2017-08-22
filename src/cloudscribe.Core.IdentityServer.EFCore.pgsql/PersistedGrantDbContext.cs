@@ -16,7 +16,8 @@ namespace cloudscribe.Core.IdentityServer.EFCore.pgsql
         
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            
+            base.OnModelCreating(modelBuilder);
+
             modelBuilder.Entity<PersistedGrant>(entity =>
             {
                 entity.ToTable(EfConstants.TableNames.PersistedGrant);
@@ -39,7 +40,7 @@ namespace cloudscribe.Core.IdentityServer.EFCore.pgsql
 
             });
 
-            base.OnModelCreating(modelBuilder);
+            
         }
     }
 }

@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2016-05-03
-// Last Modified:			2016-12-07
+// Last Modified:			2017-08-18
 // 
 
 using cloudscribe.Core.Models;
@@ -14,6 +14,8 @@ using System;
 using System.Diagnostics;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Primitives;
+
+//https://github.com/aspnet/Antiforgery/blob/dev/src/Microsoft.AspNetCore.Antiforgery/Internal/DefaultAntiforgeryTokenStore.cs
 
 namespace cloudscribe.Core.Identity
 {
@@ -42,11 +44,11 @@ namespace cloudscribe.Core.Identity
             {
                 if(!string.IsNullOrEmpty(tenant.SiteFolderName))
                 {
-                    return _options.CookieName + tenant.SiteFolderName;
+                    return _options.Cookie.Name + tenant.SiteFolderName;
                 }
             }
 
-            return _options.CookieName;
+            return _options.Cookie.Name;
         }
 
         private string GetCookiePath(SiteContext tenant)
@@ -113,16 +115,29 @@ namespace cloudscribe.Core.Identity
             Debug.Assert(httpContext != null);
             Debug.Assert(token != null);
 
-            var options = new CookieOptions() { HttpOnly = true };
+            //var options = new CookieOptions() { HttpOnly = true };
+            var options = _options.Cookie.Build(httpContext);
 
-            // Note: don't use "newCookie.Secure = _options.RequireSSL;" since the default
-            // value of newCookie.Secure is poulated out of band.
-            if (_options.RequireSsl)
+
+            //if (_options.RequireSsl)
+            //{
+            //    options.Secure = true;
+            //}
+
+            if (_options.Cookie.Path != null)
             {
-                options.Secure = true;
+                options.Path = _options.Cookie.Path.ToString();
+            }
+            else
+            {
+                var pathBase = httpContext.Request.PathBase.ToString();
+                if (!string.IsNullOrEmpty(pathBase))
+                {
+                    options.Path = pathBase;
+                }
             }
 
-            
+
             var tenant = httpContext.GetTenant<SiteContext>();
             options.Path = new PathString(GetCookiePath(tenant));
             

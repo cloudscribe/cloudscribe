@@ -2,19 +2,27 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2016-05-07
-// Last Modified:			2016-11-26
+// Last Modified:			2017-07-28
 // 
 
 using cloudscribe.Core.Identity;
 using cloudscribe.Core.Models;
-using Microsoft.AspNetCore.Antiforgery.Internal;
 using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Antiforgery.Internal;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Options;
 using System;
+using Microsoft.AspNetCore.Authentication.MicrosoftAccount;
+using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authentication.Google;
+using Microsoft.AspNetCore.Authentication.Facebook;
+using Microsoft.AspNetCore.Authentication.Twitter;
+using Microsoft.AspNetCore.Authentication.OpenIdConnect;
 
 namespace Microsoft.Extensions.DependencyInjection
 {
@@ -25,16 +33,98 @@ namespace Microsoft.Extensions.DependencyInjection
             Action<IdentityOptions> setupAction = null
             )
         {
-            services.AddSingleton<IOptions<IdentityOptions>, SiteIdentityOptionsResolver>();
+            //services.AddScoped<IAuthenticationHandlerProvider, SiteAuthenticationHandlerProvider>();
+
+            // Services used by identity
+            // this will change in 2.0 AddCookieAuthentication => AddCookie
+            //https://github.com/aspnet/Identity/blob/dev/src/Microsoft.AspNetCore.Identity/IdentityServiceCollectionExtensions.cs
+            //services.AddAuthenticationCore(options =>
+            //{
+            //    options.DefaultAuthenticateScheme = IdentityConstants.ApplicationScheme;
+            //    options.DefaultChallengeScheme = IdentityConstants.ApplicationScheme;
+            //    options.DefaultSignInScheme = IdentityConstants.ExternalScheme;
+            //});
+
+            services.AddSingleton<IOptionsMonitor<CookieAuthenticationOptions>, SiteCookieAuthenticationOptions>();
+            //services.AddSingleton<IOptionsSnapshot<CookieAuthenticationOptions>, SiteCookieAuthenticationOptionsPreview>();
+
+            services.AddSingleton<IOptionsMonitor<FacebookOptions>, SiteFacebookOptions>();
+            services.AddSingleton<IOptionsMonitor<GoogleOptions>, SiteGoogleOptions>();
+            services.AddSingleton<IOptionsMonitor<MicrosoftAccountOptions>, SiteMicrosoftAccountOptions>();
+            services.AddSingleton<IOptionsMonitor<TwitterOptions>, SiteTwitterOptions>();
+            services.AddSingleton<IOptionsMonitor<OpenIdConnectOptions>, SiteOpenIdConnectOptions>();
+
+            services.AddAuthentication(options =>
+            {
+                options.DefaultAuthenticateScheme = IdentityConstants.ApplicationScheme;
+                options.DefaultChallengeScheme = IdentityConstants.ApplicationScheme;
+                options.DefaultSignInScheme = IdentityConstants.ExternalScheme;
+            })
+           .AddCookie(IdentityConstants.ApplicationScheme, o =>
+            {
+                o.LoginPath = new PathString("/Account/Login");
+                o.Events = new CookieAuthenticationEvents
+                {
+                    OnValidatePrincipal = SiteAuthCookieValidator.ValidatePrincipalAsync
+                };
+
+            })
+            .AddCookie(IdentityConstants.ExternalScheme, o =>
+            {
+                o.Cookie.Name = IdentityConstants.ExternalScheme;
+                o.ExpireTimeSpan = TimeSpan.FromMinutes(5);
+            })
+            .AddCookie(IdentityConstants.TwoFactorRememberMeScheme,
+                o => o.Cookie.Name = IdentityConstants.TwoFactorRememberMeScheme
+                )
+            .AddCookie(IdentityConstants.TwoFactorUserIdScheme, o =>
+            {
+                o.Cookie.Name = IdentityConstants.TwoFactorUserIdScheme;
+                o.ExpireTimeSpan = TimeSpan.FromMinutes(5);
+            })
+            .AddFacebook(o =>
+            {
+                o.AppId = "placeholder";
+                o.AppSecret = "placeholder";
+            })
+            .AddGoogle(o =>
+            {
+                o.ClientId = "placeholder";
+                o.ClientSecret = "placeholder";
+            })
+            .AddMicrosoftAccount(o =>
+            {
+                o.ClientId = "placeholder";
+                o.ClientSecret = "placeholder";
+            })
+            .AddTwitter(o =>
+            {
+                o.ConsumerKey = "placeholder";
+                o.ConsumerSecret = "placeholder";
+            })
+            .AddOpenIdConnect(o =>
+            {
+                o.ClientId = "placeholder";
+                o.ClientSecret = "placeholder";
+                o.Authority = "https://placeholder.com";
+               
+            });
 
             
+
+
+
             // Services used by identity
+            services.AddSingleton<IOptions<IdentityOptions>, SiteIdentityOptionsResolver>();
 
             services.TryAddScoped<IUserClaimsPrincipalFactory<SiteUser>, SiteUserClaimsPrincipalFactory<SiteUser, SiteRole>>();
             services.TryAddScoped<IPasswordHasher<SiteUser>, SitePasswordHasher<SiteUser>>();
-            services.TryAddScoped<SiteSignInManager<SiteUser>, SiteSignInManager<SiteUser>>();
+            //services.TryAddScoped<SiteSignInManager<SiteUser>, SiteSignInManager<SiteUser>>();
+
+            services.TryAddScoped<SignInManager<SiteUser>, SignInManager<SiteUser>>();
+
             services.TryAddSingleton<SiteAuthCookieValidator, SiteAuthCookieValidator>();
-            services.TryAddScoped<SiteCookieAuthenticationEvents, SiteCookieAuthenticationEvents>();
+            //services.TryAddScoped<SiteCookieAuthenticationEvents, SiteCookieAuthenticationEvents>();
             services.TryAddScoped<ISocialAuthEmailVerfificationPolicy, DefaultSocialAuthEmailVerfificationPolicy>();
 
             services.TryAddScoped<ISiteAcountCapabilitiesProvider, DefaultSiteAcountCapabilitiesProvider>();
@@ -45,25 +135,24 @@ namespace Microsoft.Extensions.DependencyInjection
             services.AddAuthentication(options =>
             {
                 // This is the Default value for ExternalCookieAuthenticationScheme
-                options.SignInScheme = new IdentityCookieOptions().ExternalCookieAuthenticationScheme;
+                //commented out 2017-07-25 breaking change in 2.0
+                //options.SignInScheme = new IdentityCookieOptions().ExternalCookieAuthenticationScheme;
             });
 
             // Hosting doesn't add IHttpContextAccessor by default
             services.TryAddSingleton<IHttpContextAccessor, HttpContextAccessor>();
             // Identity services
-            services.TryAddSingleton<IdentityMarkerService>();
+            //commented out 20170-07-25 breaking change in 2.0
+            //services.TryAddSingleton<IdentityMarkerService>();
+
             services.TryAddScoped<IUserValidator<SiteUser>, UserValidator<SiteUser>>();
             services.TryAddScoped<IPasswordValidator<SiteUser>, PasswordValidator<SiteUser>>();
-            //services.TryAddScoped<IPasswordHasher<SiteUser>, PasswordHasher<SiteUser>>();
             services.TryAddScoped<ILookupNormalizer, UpperInvariantLookupNormalizer>();
             services.TryAddScoped<IRoleValidator<SiteRole>, RoleValidator<SiteRole>>();
             // No interface for the error describer so we can add errors without rev'ing the interface
             services.TryAddScoped<IdentityErrorDescriber>();
             services.TryAddScoped<ISecurityStampValidator, SecurityStampValidator<SiteUser>>();
-            //services.TryAddScoped<IUserClaimsPrincipalFactory<SiteUser>, UserClaimsPrincipalFactory<SiteUser, SiteRole>>();
-            //services.TryAddScoped<UserManager<SiteUser>, UserManager<SiteUser>>();
-            //services.TryAddScoped<SignInManager<SiteUser>, SignInManager<SiteUser>>();
-            //services.TryAddScoped<RoleManager<SiteRole>, RoleManager<SiteRole>>();
+            
 
             services.AddScoped<UserEvents, UserEvents>();
 

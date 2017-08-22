@@ -21,6 +21,8 @@ namespace cloudscribe.Core.IdentityServer.EFCore.pgsql
         
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            base.OnModelCreating(modelBuilder);
+
             modelBuilder.Entity<Client>(entity =>
             {
                 entity.ToTable(EfConstants.TableNames.Client)
@@ -195,7 +197,7 @@ namespace cloudscribe.Core.IdentityServer.EFCore.pgsql
                 entity.Property(x => x.Type).HasMaxLength(200).IsRequired();
             });
 
-            base.OnModelCreating(modelBuilder);
+            
         }
     }
 }

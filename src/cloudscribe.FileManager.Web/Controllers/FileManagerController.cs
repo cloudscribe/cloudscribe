@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. 
 // Author:                  Joe Audette
 // Created:                 2017-02-14
-// Last Modified:           2017-06-09
+// Last Modified:           2017-07-25
 // 
 
 //using cloudscribe.FileManager.Web.Filters;
@@ -72,7 +72,8 @@ namespace cloudscribe.FileManager.Web.Controllers
             model.RenameFolderServiceUrl = Url.Action("RenameFolder", "FileManager");
             model.DeleteFileServiceUrl = Url.Action("DeleteFile", "FileManager");
             model.RenameFileServiceUrl = Url.Action("RenameFile", "FileManager");
-            model.CanDelete = await authorizationService.AuthorizeAsync(User, "FileManagerDeletePolicy");
+            var authResult = await authorizationService.AuthorizeAsync(User, "FileManagerDeletePolicy");
+            model.CanDelete = authResult.Succeeded;
 
             //model.AllowedFileExtensionsRegex = @"/(\.|\/)(gif|GIF|jpg|JPG|jpeg|JPEG|png|PNG|flv|FLV|swf|SWF|wmv|WMV|mp3|MP3|mp4|MP4|m4a|M4A|m4v|M4V|oga|OGA|ogv|OGV|webma|WEBMA|webmv|WEBMV|webm|WEBM|wav|WAV|fla|FLA|tif|TIF|asf|ASF|asx|ASX|avi|AVI|mov|MOV|mpeg|MPEG|mpg|MPG|zip|ZIP|pdf|PDF|doc|DOC|docx|DOCX|xls|XLS|xlsx|XLSX|ppt|PPT|pptx|PPTX|pps|PPS|csv|CSV|txt|TXT|htm|HTM|html|HTML|css|CSS)$/i";
             if (model.Type == "image")

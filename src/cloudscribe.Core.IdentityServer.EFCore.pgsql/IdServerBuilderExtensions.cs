@@ -85,20 +85,16 @@ namespace Microsoft.Extensions.DependencyInjection
             )
         {
             services.AddEntityFrameworkNpgsql()
-                .AddDbContext<ConfigurationDbContext>((serviceProvider, options) =>
-                options.UseNpgsql(connectionString)
-                       .UseInternalServiceProvider(serviceProvider)
-                       );
+                .AddDbContext<ConfigurationDbContext>(options =>
+                    options.UseNpgsql(connectionString));
 
             services.AddCloudscribeCoreIdentityServerStores();
 
             services.AddScoped<IConfigurationDbContext, ConfigurationDbContext>();
 
             services.AddEntityFrameworkNpgsql()
-                .AddDbContext<PersistedGrantDbContext>((serviceProvider, options) =>
-                options.UseNpgsql(connectionString)
-                       .UseInternalServiceProvider(serviceProvider)
-                       );
+                .AddDbContext<PersistedGrantDbContext>(options =>
+                    options.UseNpgsql(connectionString));
 
             services.AddScoped<IPersistedGrantDbContext, PersistedGrantDbContext>();
 

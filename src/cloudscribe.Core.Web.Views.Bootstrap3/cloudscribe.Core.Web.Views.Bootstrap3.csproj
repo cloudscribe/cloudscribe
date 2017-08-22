@@ -3,8 +3,9 @@
   <PropertyGroup>
     <Description>Bootstrap 3 views for cloudscribe.Core.Web</Description>
     <VersionPrefix>1.1.2</VersionPrefix>
+    <VersionPrefix>2.0.0</VersionPrefix>
     <Authors>Joe Audette</Authors>
-    <TargetFrameworks>netstandard1.6</TargetFrameworks>
+    <TargetFrameworks>netstandard2.0</TargetFrameworks>
     <AssemblyName>cloudscribe.Core.Web.Views.Bootstrap3</AssemblyName>
     <PackageId>cloudscribe.Core.Web.Views.Bootstrap3</PackageId>
     <PackageTags>cloudscribe.Core;Bootstrap3</PackageTags>
@@ -21,8 +22,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.AspNetCore.Mvc.Razor" Version="1.1.*" />
-    <PackageReference Include="Microsoft.Extensions.FileProviders.Embedded" Version="1.1.*" />
+    <PackageReference Include="Microsoft.AspNetCore.Mvc.Razor" Version="2.0.*" />
+    <PackageReference Include="Microsoft.Extensions.FileProviders.Embedded" Version="2.0.*" />
   </ItemGroup>
 
 </Project>

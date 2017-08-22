@@ -1,9 +1,10 @@
-﻿using Microsoft.AspNetCore.Antiforgery.Internal;
-using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.WebUtilities;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.FileProviders;
 using System;
+using System.Security.Cryptography;
+
 
 namespace cloudscribe.Core.Web.TagHelpers
 {
@@ -103,7 +104,9 @@ namespace cloudscribe.Core.Web.TagHelpers
 
         private static string GetHashForFile(IFileInfo fileInfo)
         {
-            using (var sha256 = CryptographyAlgorithms.CreateSHA256())
+            //System.Security.Cryptography.SHA256.Create
+            //using (var sha256 = CryptographyAlgorithms.CreateSHA256())
+            using (var sha256 = SHA256.Create())
             {
                 using (var readStream = fileInfo.CreateReadStream())
                 {

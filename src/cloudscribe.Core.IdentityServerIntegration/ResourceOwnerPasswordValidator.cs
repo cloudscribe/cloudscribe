@@ -6,17 +6,19 @@ using System.Threading.Tasks;
 using static IdentityModel.OidcConstants;
 using cloudscribe.Core.Models;
 using cloudscribe.Core.Identity;
+using Microsoft.AspNetCore.Identity;
 
 namespace cloudscribe.Core.IdentityServerIntegration
 {
     public class ResourceOwnerPasswordValidator<TUser> : IResourceOwnerPasswordValidator
         where TUser : SiteUser
     {
-        private readonly SiteSignInManager<TUser> _signInManager;
+        private readonly SignInManager<TUser> _signInManager;
         private readonly SiteUserManager<TUser> _userManager;
 
-        public ResourceOwnerPasswordValidator(SiteUserManager<TUser> userManager,
-            SiteSignInManager<TUser> signInManager)
+        public ResourceOwnerPasswordValidator(
+            SiteUserManager<TUser> userManager,
+            SignInManager<TUser> signInManager)
         {
             _userManager = userManager;
             _signInManager = signInManager;

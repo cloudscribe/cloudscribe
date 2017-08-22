@@ -11,8 +11,7 @@ namespace cloudscribe.Core.Storage.EFCore.MySql.Migrations
             migrationBuilder.AddColumn<bool>(
                 name: "UseInvisibleRecaptcha",
                 table: "cs_Site",
-                nullable: false,
-                defaultValue: false);
+                nullable: false);
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)

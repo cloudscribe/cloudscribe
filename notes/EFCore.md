@@ -1,7 +1,25 @@
 
+
+// initialization/migration changes in 2.0
+https://github.com/aspnet/Docs/issues/3864
+
+https://docs.microsoft.com/en-us/aspnet/core/data/ef-mvc/
+
+
 https://stackoverflow.com/questions/44206205/ef-core-inject-dbcontext-with-many-potential-connection-strings
 
 https://en.wikipedia.org/wiki/Object-relational_impedance_mismatch
+
+
+about default values
+https://github.com/aspnet/EntityFramework/issues/7089
+
+In my efforts to update cloudscribe to EFCore 2.0 I learned something that I did not know before. If you use default values in the db (ie defined in OnModelCreating) as of EFCore2.0 there are warnings shown when generating migrations and also in logging. For example:
+The 'bool' property 'AllowNewRegistration' on entity type 'SiteSettings' is configured with a database-generated default. This default will always be used when the property has the value 'false', since this is the CLR default for the 'bool' type. Consider using the nullable 'bool?' type instead so that the default will only be used when the property value is 'null'. The above warning only affects inserts not updates.
+
+So in general, you should avoid using db defaults and just use default values on the entity. But, if you need to add new bool properties and you need existing rows to get true, the solution is use a db default of true, generate the migration with the new properties, then remove the default value and generate another migration. Now existing rows will get true from the first migration but the default value will be removed by the second migration. The default value on the entity itself will be used for inserts.
+The behavior was the same in EFCore 1.x, but in 2.x the warning was added bringing to light that I was doing it wrong by using db defaults.
+
 
 
 https://blogs.msdn.microsoft.com/dotnet/2016/11/16/announcing-entity-framework-core-1-1/

@@ -14,7 +14,7 @@ namespace Microsoft.Extensions.DependencyInjection
     {
         public static IServiceCollection AddCloudscribeFileManagerIntegration(
             this IServiceCollection services,
-            IConfigurationRoot configuration = null
+            IConfiguration configuration = null
             )
         {
             services.TryAddScoped<IMediaPathResolver, MediaPathResolver>();

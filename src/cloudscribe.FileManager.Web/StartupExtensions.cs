@@ -18,7 +18,7 @@ namespace Microsoft.Extensions.DependencyInjection
     {
         public static IServiceCollection AddCloudscribeFileManager(
             this IServiceCollection services,
-            IConfigurationRoot configuration = null
+            IConfiguration configuration = null
             )
         {
             services.TryAddScoped<FileManagerService>();

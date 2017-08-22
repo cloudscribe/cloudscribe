@@ -19,7 +19,7 @@ namespace Microsoft.Extensions.DependencyInjection
     {
         public static IServiceCollection AddCloudscribeCommmon(
             this IServiceCollection services,
-            IConfigurationRoot configuration = null)
+            IConfiguration configuration = null)
         {
             services.TryAddSingleton<IDateTimeZoneProvider>(new DateTimeZoneCache(TzdbDateTimeZoneSource.Default));
             services.TryAddScoped<ITimeZoneHelper, TimeZoneHelper>();

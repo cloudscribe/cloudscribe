@@ -21,6 +21,8 @@ namespace cloudscribe.Core.IdentityServer.EFCore.MSSQL
         
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            base.OnModelCreating(modelBuilder);
+
             modelBuilder.Entity<Client>(entity =>
             {
                 entity.ToTable(EfConstants.TableNames.Client)
@@ -198,7 +200,7 @@ namespace cloudscribe.Core.IdentityServer.EFCore.MSSQL
 
            
 
-            base.OnModelCreating(modelBuilder);
+            
         }
     }
 }

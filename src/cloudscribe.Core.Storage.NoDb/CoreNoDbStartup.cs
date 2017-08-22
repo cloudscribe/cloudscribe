@@ -2,12 +2,11 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2016-05-15
-// Last Modified:			2016-08-03
+// Last Modified:			2017-07-30
 // 
 
 using cloudscribe.Core.Models;
 using cloudscribe.Core.Models.Geography;
-using cloudscribe.Core.Storage.NoDb;
 using Microsoft.Extensions.DependencyInjection;
 using NoDb;
 using System;
@@ -133,6 +132,7 @@ namespace Microsoft.AspNetCore.Hosting // so it will show up in startup without 
                 {
                     var adminUser = InitialData.BuildInitialAdmin();
                     adminUser.SiteId = siteId;
+                    adminUser.CanAutoLockout = false;
                     await userCommands.Create(adminUser);
                     
                     await userCommands.AddUserToRole(siteId, role.Id, adminUser.Id);

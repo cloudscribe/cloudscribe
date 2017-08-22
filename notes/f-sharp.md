@@ -2,6 +2,8 @@
 
 https://blogs.msdn.microsoft.com/dotnet/2017/07/24/get-started-with-f-as-a-c-developer/
 
+http://blog.ploeh.dk/2017/08/07/f-free-monad-recipe/
+
 Conquer the JavaScript ecosystem with F# and Fable! 
 https://www.youtube.com/watch?v=iRDcpkphrKs&list=PL03Lrmd9CiGewi0lbnahxEpisoP5WZocX&index=132
 
@@ -29,6 +31,8 @@ https://ask.slashdot.org/story/17/04/24/0149259/ask-slashdot-do-you-like-functio
 http://www.codemag.com/article/1705051
 
 http://connelhooley.uk/blog/2017/04/30/f-sharp-to-c-sharp
+
+http://blog.ploeh.dk/2017/07/31/combining-free-monads-in-f/
 
 ## Language
 
@@ -213,6 +217,8 @@ http://www.fssnip.net/4z
 
 ## Videos
 
+https://thomasbandt.com/the-problem-with-fsharp-evangelism
+
 Michael Newton - F# for the curly brace developer 42 minutes
 https://www.youtube.com/watch?v=4t95-S7GQe4
 
@@ -223,6 +229,8 @@ https://vimeo.com/97514630
 https://www.youtube.com/embed/-0BB3lU_qr4
 
 https://channel9.msdn.com/Shows/On-NET/Phillip-Carter-F
+
+https://blogs.msdn.microsoft.com/dotnet/2017/08/14/f-and-net-core-roadmap-update/
 
 F# in the real world
 https://vimeo.com/183301783
@@ -243,3 +251,23 @@ https://www.infoq.com/articles/pickering-fsharp-workflow
 https://docs.microsoft.com/en-us/dotnet/articles/fsharp/language-reference/asynchronous-workflows
 
 https://www.exceptionnotfound.net/designing-a-workflow-engine-database-part-1-introduction-and-purpose/
+
+## ASP.NET Core
+
+https://dusted.codes/functional-aspnet-core
+
+https://github.com/dustinmoris/Giraffe
+
+## Data Science
+
+https://blogs.msdn.microsoft.com/visualstudio/2016/12/05/azure-notebooks-now-support-f/
+
+https://notebooks.azure.com/
+
+https://notebooks.azure.com/Microsoft/libraries/fsharp
+
+http://jupyter-notebook.readthedocs.io/en/stable/
+
+https://github.com/jmp75/rdotnet
+
+http://jmp75.github.io/rdotnet/

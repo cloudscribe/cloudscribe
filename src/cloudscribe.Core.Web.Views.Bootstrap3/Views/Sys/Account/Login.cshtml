@@ -1,12 +1,13 @@
 ﻿@model  cloudscribe.Core.Web.ViewModels.SiteUser.LoginViewModel
 @using System.Collections.Generic
 @using Microsoft.AspNetCore.Http
-@using Microsoft.AspNetCore.Http.Authentication
+@using Microsoft.AspNetCore.Authentication
 @using cloudscribe.Core.Models
 @using cloudscribe.Core.Web
 @using cloudscribe.Core.Web.Components
 @using Microsoft.Extensions.Options
 @using Microsoft.Extensions.Localization
+@inject SiteContext Tenant
 @inject IStringLocalizer<CloudscribeCore> sr
 @inject SiteContext site
 @inject IOptions<UIOptions>  uiOptionsAccessor
@@ -34,6 +35,16 @@
             }
 
             return "<i class='fa fa-arrow-circle-right' aria-hidden='true'></i>";
+        }
+        public string GetDisplayName(string displayName)
+        {
+            if (displayName == "OpenIdConnect")
+            {
+                return Tenant.OidConnectDisplayName;
+                
+            }
+
+            return displayName;
         }
     }
     @section Meta {
@@ -159,12 +170,12 @@
                         <form asp-controller="Account" asp-action="ExternalLogin" asp-route-returnurl='@ViewData["ReturnUrl"]' method="post" class="form-horizontal" role="form">
                             <div id="socialLoginList">
                                 <p>
-                                    @foreach (AuthenticationDescription p in LoginProviders)
+                                    @foreach (AuthenticationScheme p in LoginProviders)
                                     {
-                                        <button type="submit" class="btn btn-default" id="@p.AuthenticationScheme" name="provider" value="@p.AuthenticationScheme"
+                                        <button type="submit" class="btn btn-default" id="@p.Name" name="provider" value="@p.Name"
                                                 title="@string.Format(socFormat,p.DisplayName)">
                                             @Html.Raw(GetIconForLogin(p.DisplayName))
-                                            @p.DisplayName
+                                            @GetDisplayName(p.DisplayName)
                                         </button>
                                     }
                                 </p>

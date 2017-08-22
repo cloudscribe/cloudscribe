@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:				    2014-07-17
-// Last Modified:		    2016-12-07
+// Last Modified:		    2017-07-25
 // 
 //
 
@@ -41,8 +41,7 @@ namespace cloudscribe.Core.Identity
                 roleValidators,
                 keyNormalizer, 
                 errors, 
-                logger, 
-                contextAccessor)
+                logger)
         {
             if (currentSite == null) { throw new ArgumentNullException(nameof(currentSite)); }
             if (roleStore == null) { throw new ArgumentNullException(nameof(roleStore)); }
@@ -60,7 +59,7 @@ namespace cloudscribe.Core.Identity
         }
 
         private readonly HttpContext _context;
-        private CancellationToken CancellationToken => _context?.RequestAborted ?? CancellationToken.None;
+        //private CancellationToken CancellationToken => _context?.RequestAborted ?? CancellationToken.None;
 
         private MultiTenantOptions multiTenantOptions;
         private IUserCommands commands;

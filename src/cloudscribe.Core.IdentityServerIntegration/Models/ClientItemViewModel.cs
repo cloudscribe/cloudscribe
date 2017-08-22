@@ -36,8 +36,10 @@ namespace cloudscribe.Core.IdentityServerIntegration.Models
             IdentityTokenLifetime = client.IdentityTokenLifetime;
             IncludeJwtId = client.IncludeJwtId;
             LogoUri = client.LogoUri;
-            LogoutSessionRequired = client.LogoutSessionRequired;
-            LogoutUri = client.LogoutUri;
+            FrontChannelLogoutSessionRequired = client.FrontChannelLogoutSessionRequired;
+            FrontChannelLogoutUri = client.FrontChannelLogoutUri;
+            BackChannelLogoutSessionRequired = client.BackChannelLogoutSessionRequired;
+            BackChannelLogoutUri = client.BackChannelLogoutUri;
             PrefixClientClaims = client.PrefixClientClaims;
             RequireClientSecret = client.RequireClientSecret;
             RequireConsent = client.RequireConsent;
@@ -87,8 +89,11 @@ namespace cloudscribe.Core.IdentityServerIntegration.Models
         public int IdentityTokenLifetime { get; set; }
         public bool IncludeJwtId { get; set; }
         public string LogoUri { get; set; }
-        public bool LogoutSessionRequired { get; set; }
-        public string LogoutUri { get; set; }
+        public bool FrontChannelLogoutSessionRequired { get; set; }
+        public string FrontChannelLogoutUri { get; set; }
+
+        public bool BackChannelLogoutSessionRequired { get; set; }
+        public string BackChannelLogoutUri { get; set; }
 
         public bool PrefixClientClaims { get; set; }
 

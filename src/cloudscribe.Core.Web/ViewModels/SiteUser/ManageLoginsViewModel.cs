@@ -3,13 +3,13 @@
 
 using System.Collections.Generic;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Http.Authentication;
+using Microsoft.AspNetCore.Authentication;
 
 namespace cloudscribe.Core.Web.ViewModels.SiteUser
 {
     public class ManageLoginsViewModel
     {
         public IList<UserLoginInfo> CurrentLogins { get; set; }
-        public IList<AuthenticationDescription> OtherLogins { get; set; }
+        public IList<AuthenticationScheme> OtherLogins { get; set; }
     }
 }

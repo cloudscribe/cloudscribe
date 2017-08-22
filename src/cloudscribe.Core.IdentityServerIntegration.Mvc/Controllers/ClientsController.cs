@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2016-10-13
-// Last Modified:			2017-06-28
+// Last Modified:			2017-08-20
 // 
 
 using cloudscribe.Core.IdentityServerIntegration.Models;
@@ -148,8 +148,10 @@ namespace cloudscribe.Core.IdentityServerIntegration.Controllers.Mvc
             client.IdentityTokenLifetime = clientModel.IdentityTokenLifetime;
             client.IncludeJwtId = clientModel.IncludeJwtId;
             client.LogoUri = clientModel.LogoUri;
-            client.LogoutSessionRequired = clientModel.LogoutSessionRequired;
-            client.LogoutUri = clientModel.LogoutUri;
+            client.FrontChannelLogoutSessionRequired = clientModel.FrontChannelLogoutSessionRequired;
+            client.FrontChannelLogoutUri = clientModel.FrontChannelLogoutUri;
+            client.BackChannelLogoutSessionRequired = clientModel.BackChannelLogoutSessionRequired;
+            client.BackChannelLogoutUri = clientModel.BackChannelLogoutUri;
             client.PrefixClientClaims = clientModel.PrefixClientClaims;
             client.RefreshTokenExpiration = clientModel.RefreshTokenExpiration;
             client.RefreshTokenUsage = clientModel.RefreshTokenUsage;

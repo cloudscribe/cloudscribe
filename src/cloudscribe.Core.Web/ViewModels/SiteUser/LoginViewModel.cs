@@ -4,7 +4,6 @@
 using cloudscribe.Web.Common.DataAnnotations;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using Microsoft.AspNetCore.Http.Authentication;
 
 namespace cloudscribe.Core.Web.ViewModels.SiteUser
 {
@@ -12,7 +11,7 @@ namespace cloudscribe.Core.Web.ViewModels.SiteUser
     {
         public LoginViewModel()
         {
-            ExternalAuthenticationList = new List<AuthenticationDescription>();
+            ExternalAuthenticationList = new List<Microsoft.AspNetCore.Authentication.AuthenticationScheme>();
         }
 
         public bool UseEmailForLogin { get; set; } = true;
@@ -44,6 +43,6 @@ namespace cloudscribe.Core.Web.ViewModels.SiteUser
         public string LoginInfoBottom { get; set; } = string.Empty;
 
 
-        public IEnumerable<AuthenticationDescription> ExternalAuthenticationList {get;set;}
+        public IEnumerable<Microsoft.AspNetCore.Authentication.AuthenticationScheme> ExternalAuthenticationList {get;set;}
     }
 }

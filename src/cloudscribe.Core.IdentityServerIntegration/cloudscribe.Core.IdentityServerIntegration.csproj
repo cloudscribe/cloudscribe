@@ -2,9 +2,10 @@
 
   <PropertyGroup>
     <Description>cloudscribe multi-tenant identity integration for IdentityServer4</Description>
-    <VersionPrefix>1.2.1</VersionPrefix>
+    <VersionPrefix>2.0.0</VersionPrefix>
+	<VersionSuffix>preview20170821</VersionSuffix>
     <Authors>Joe Audette</Authors>
-    <TargetFrameworks>netstandard1.6</TargetFrameworks>
+    <TargetFrameworks>netstandard2.0</TargetFrameworks>
     <AssemblyName>cloudscribe.Core.IdentityServerIntegration</AssemblyName>
     <PackageId>cloudscribe.Core.IdentityServerIntegration</PackageId>
     <PackageTags>cloudscribe;identity</PackageTags>
@@ -22,22 +23,17 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.Extensions.Options" Version="1.1.*" />
-    <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="1.1.*" />
-    <PackageReference Include="Microsoft.Extensions.FileProviders.Embedded" Version="1.1.*" />
-    <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="1.1.*" />
-    <PackageReference Include="Microsoft.AspNetCore.Mvc" Version="1.1.*" />
-    <PackageReference Include="cloudscribe.Web.Pagination" Version="1.1.*" />
-    <PackageReference Include="cloudscribe.IDS4Fork" Version="1.5.*" />
+    <PackageReference Include="Microsoft.Extensions.Options" Version="2.0.*" />
+    <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="2.0.*" />
+    <PackageReference Include="Microsoft.Extensions.FileProviders.Embedded" Version="2.0.*" />
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="2.0.*" />
+    <PackageReference Include="Microsoft.AspNetCore.Mvc" Version="2.0.*" />
+    <PackageReference Include="cloudscribe.Web.Pagination" Version="2.0.*" />
+    
+    <PackageReference Include="cloudscribe.IDS4Fork" Version="2.0.0-*" />
+   
     
     
   </ItemGroup>
-
- 
-<!--
-  <ItemGroup Condition=" '$(TargetFramework)' == 'netstandard1.6' ">
-    <PackageReference Include="System.Security.Claims" Version="4.3.0" />
-  </ItemGroup>
-  -->
 
 </Project>
