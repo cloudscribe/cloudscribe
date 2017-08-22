@@ -1,5 +1,9 @@
 
 
+https://github.com/blog/2412-learn-graphql-with-github
+
+https://services.github.com/on-demand/graphql/
+
 https://codeopinion.com/building-self-descriptive-http-api-asp-net-core/
 https://codeopinion.com/self-descriptive-http-api-in-asp-net-core-object-as-resource/
 https://codeopinion.com/self-descriptive-http-api-in-asp-net-core-hypermedia/

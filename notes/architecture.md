@@ -1,4 +1,5 @@
 
+https://blogs.msdn.microsoft.com/dotnet/2017/08/09/__trashed/
 
 
 https://www.microsoft.com/net/learn/architecture
