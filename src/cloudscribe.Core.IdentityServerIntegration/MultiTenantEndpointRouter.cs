@@ -9,54 +9,81 @@ using Microsoft.Extensions.Options;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using static cloudscribe.Core.IdentityServerIntegration.CustomConstants;
 
 namespace cloudscribe.Core.IdentityServerIntegration
 {
     public class MultiTenantEndpointRouter : IEndpointRouter
     {
-        private readonly Dictionary<string, EndpointName> _pathToNameMap;
+        //private readonly Dictionary<string, EndpointName> _pathToNameMap;
         private readonly IdentityServerOptions _options;
-        private readonly IEnumerable<EndpointMapping> _mappings;
+        //private readonly IEnumerable<EndpointMapping> _mappings;
+        private readonly IEnumerable<Endpoint> _endpoints;
+        
         private readonly ILogger<MultiTenantEndpointRouter> _logger;
         private MultiTenantOptions multiTenantOptions;
 
         public MultiTenantEndpointRouter(
-            Dictionary<string, EndpointName> pathToNameMap, 
-            IdentityServerOptions options, 
-            IEnumerable<EndpointMapping> mappings, 
+            IEnumerable<Endpoint> endpoints, 
+            IdentityServerOptions options,
             IOptions<MultiTenantOptions> multiTenantOptionsAccessor,
             ILogger<MultiTenantEndpointRouter> logger
             )
         {
-            _pathToNameMap = pathToNameMap;
+            //_pathToNameMap = pathToNameMap;
+            _endpoints = endpoints;
             _options = options;
-            _mappings = mappings;
+            //_mappings = mappings;
             _logger = logger;
             multiTenantOptions = multiTenantOptionsAccessor.Value;
         }
 
-        public IEndpoint Find(HttpContext context)
+        public IEndpointHandler Find(HttpContext context)
         {
             if (context == null) throw new ArgumentNullException(nameof(context));
 
-           // _logger.LogInformation("hey this is the custom endpointrouter find method");
-
-            foreach (var key in _pathToNameMap.Keys)
+            foreach (var endpoint in _endpoints)
             {
-                var path = key.EnsureLeadingSlash();
+                var path = endpoint.Path;
+                //if (context.Request.Path.StartsWithSegments(path))
                 if (IsMatch(context, path))
                 {
-                    var endpointName = _pathToNameMap[key];
-                    _logger.LogDebug("Request path {0} matched to endpoint type {1}", context.Request.Path, endpointName);
+                    var endpointName = endpoint.Name;
+                    _logger.LogDebug("Request path {path} matched to endpoint type {endpoint}", context.Request.Path, endpointName);
 
-                    return GetEndpoint(endpointName, context);
+                    return GetEndpointHandler(endpoint, context);
                 }
             }
 
-            _logger.LogTrace("No endpoint entry found for request path: {0}", context.Request.Path);
+            _logger.LogTrace("No endpoint entry found for request path: {path}", context.Request.Path);
 
             return null;
         }
+
+
+
+        //public IEndpoint Find(HttpContext context)
+        //{
+        //    if (context == null) throw new ArgumentNullException(nameof(context));
+
+        //   // _logger.LogInformation("hey this is the custom endpointrouter find method");
+
+        //    foreach (var key in _pathToNameMap.Keys)
+        //    {
+        //        var path = key.EnsureLeadingSlash();
+        //        if (IsMatch(context, path))
+        //        {
+        //            var endpointName = _pathToNameMap[key];
+        //            _logger.LogDebug("Request path {0} matched to endpoint type {1}", context.Request.Path, endpointName);
+
+        //            return GetEndpoint(endpointName, context);
+        //        }
+        //    }
+
+        //    _logger.LogTrace("No endpoint entry found for request path: {0}", context.Request.Path);
+
+        //    return null;
+        //}
 
         private bool IsMatch(HttpContext context, string path)
         {
@@ -79,28 +106,51 @@ namespace cloudscribe.Core.IdentityServerIntegration
             return false;
         }
 
-        private IEndpoint GetEndpoint(EndpointName endpointName, HttpContext context)
+        private IEndpointHandler GetEndpointHandler(Endpoint endpoint, HttpContext context)
         {
-            if (_options.Endpoints.IsEndpointEnabled(endpointName))
+            if (_options.Endpoints.IsEndpointEnabled(endpoint))
             {
-                var mapping = _mappings.Where(x => x.Endpoint == endpointName).LastOrDefault();
-                if (mapping != null)
+                var handler = context.RequestServices.GetService(endpoint.Handler) as IEndpointHandler;
+                if (handler != null)
                 {
-                    _logger.LogDebug("Mapping found for endpoint: {0}, creating handler: {1}", endpointName, mapping.Handler.FullName);
-                    return context.RequestServices.GetService(mapping.Handler) as IEndpoint;
+                    _logger.LogDebug("Endpoint enabled: {endpoint}, successfully created handler: {endpointHandler}", endpoint.Name, endpoint.Handler.FullName);
+                    return handler;
                 }
                 else
                 {
-                    _logger.LogError("No mapping found for endpoint: {0}", endpointName);
+                    _logger.LogDebug("Endpoint enabled: {endpoint}, failed to create handler: {endpointHandler}", endpoint.Name, endpoint.Handler.FullName);
                 }
             }
             else
             {
-                _logger.LogWarning("{0} endpoint requested, but is diabled in endpoint options.", endpointName);
+                _logger.LogWarning("Endpoint disabled: {endpoint}", endpoint.Name);
             }
 
             return null;
         }
+
+        //private IEndpoint GetEndpoint(EndpointName endpointName, HttpContext context)
+        //{
+        //    if (_options.Endpoints.IsEndpointEnabled(endpointName))
+        //    {
+        //        var mapping = _mappings.Where(x => x.Endpoint == endpointName).LastOrDefault();
+        //        if (mapping != null)
+        //        {
+        //            _logger.LogDebug("Mapping found for endpoint: {0}, creating handler: {1}", endpointName, mapping.Handler.FullName);
+        //            return context.RequestServices.GetService(mapping.Handler) as IEndpoint;
+        //        }
+        //        else
+        //        {
+        //            _logger.LogError("No mapping found for endpoint: {0}", endpointName);
+        //        }
+        //    }
+        //    else
+        //    {
+        //        _logger.LogWarning("{0} endpoint requested, but is diabled in endpoint options.", endpointName);
+        //    }
+
+        //    return null;
+        //}
     }
 
     internal static class EndpointExtensions
@@ -125,29 +175,55 @@ namespace cloudscribe.Core.IdentityServerIntegration
             return url;
         }
 
-        public static bool IsEndpointEnabled(this EndpointsOptions options, EndpointName endpointName)
+        public static bool IsEndpointEnabled(this EndpointsOptions options, Endpoint endpoint)
         {
-            switch (endpointName)
+            switch (endpoint?.Name)
             {
-                case EndpointName.Authorize:
+                case EndpointNames.Authorize:
                     return options.EnableAuthorizeEndpoint;
-                case EndpointName.CheckSession:
+                case EndpointNames.CheckSession:
                     return options.EnableCheckSessionEndpoint;
-                case EndpointName.Discovery:
+                case EndpointNames.Discovery:
                     return options.EnableDiscoveryEndpoint;
-                case EndpointName.EndSession:
+                case EndpointNames.EndSession:
                     return options.EnableEndSessionEndpoint;
-                case EndpointName.Introspection:
+                case EndpointNames.Introspection:
                     return options.EnableIntrospectionEndpoint;
-                case EndpointName.Revocation:
+                case EndpointNames.Revocation:
                     return options.EnableTokenRevocationEndpoint;
-                case EndpointName.Token:
+                case EndpointNames.Token:
                     return options.EnableTokenEndpoint;
-                case EndpointName.UserInfo:
+                case EndpointNames.UserInfo:
                     return options.EnableUserInfoEndpoint;
                 default:
-                    return false;
+                    // fall thru to true to allow custom endpoints
+                    return true;
             }
         }
+
+        //public static bool IsEndpointEnabled(this EndpointsOptions options, EndpointName endpointName)
+        //{
+        //    switch (endpointName)
+        //    {
+        //        case EndpointName.Authorize:
+        //            return options.EnableAuthorizeEndpoint;
+        //        case EndpointName.CheckSession:
+        //            return options.EnableCheckSessionEndpoint;
+        //        case EndpointName.Discovery:
+        //            return options.EnableDiscoveryEndpoint;
+        //        case EndpointName.EndSession:
+        //            return options.EnableEndSessionEndpoint;
+        //        case EndpointName.Introspection:
+        //            return options.EnableIntrospectionEndpoint;
+        //        case EndpointName.Revocation:
+        //            return options.EnableTokenRevocationEndpoint;
+        //        case EndpointName.Token:
+        //            return options.EnableTokenEndpoint;
+        //        case EndpointName.UserInfo:
+        //            return options.EnableUserInfoEndpoint;
+        //        default:
+        //            return false;
+        //    }
+        //}
     }
 }

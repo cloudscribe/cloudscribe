@@ -6,12 +6,14 @@ using cloudscribe.Core.Models;
 using IdentityModel;
 using IdentityServer4;
 using IdentityServer4.Configuration;
+using IdentityServer4.Endpoints;
 using IdentityServer4.Hosting;
 using IdentityServer4.Services;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
+using System.Collections.Generic;
 
 // https://github.com/IdentityServer/IdentityServer4/issues/19
 
@@ -25,15 +27,15 @@ namespace Microsoft.Extensions.DependencyInjection
 
             builder.Services.Configure<IdentityServerOptions>(options =>
             {
-                //options.AuthenticationOptions.AuthenticationScheme = AuthenticationScheme.Application;
-                options.Authentication.AuthenticationScheme = AuthenticationScheme.Application;
+               options.Authentication.AuthenticationScheme = AuthenticationScheme.Application;
+ 
             });
 
             builder.Services.AddSingleton<IEndpointRouter>(resolver =>
             {
-                return new MultiTenantEndpointRouter(CustomConstants.EndpointPathToNameMap,
+                return new MultiTenantEndpointRouter(
+                    resolver.GetService<IEnumerable<Endpoint>>(),
                     resolver.GetRequiredService<IdentityServerOptions>(),
-                    resolver.GetServices<EndpointMapping>(),
                     resolver.GetService<IOptions<MultiTenantOptions>>(),
                     resolver.GetRequiredService<ILogger<MultiTenantEndpointRouter>>());
             });

@@ -1,4 +1,5 @@
 ﻿using cloudscribe.Core.Models;
+using IdentityServer4.Endpoints;
 using IdentityServer4.Hosting;
 using Microsoft.Extensions.Options;
 using System;

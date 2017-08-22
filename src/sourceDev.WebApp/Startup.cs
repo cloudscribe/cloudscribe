@@ -59,7 +59,7 @@ namespace sourceDev.WebApp
 
             services.AddMemoryCache();
 
-            //services.AddSession();
+            services.AddSession();
 
             // add authorization policies 
             ConfigureAuthPolicy(services);
@@ -77,6 +77,8 @@ namespace sourceDev.WebApp
             /* end cloudscribe Setup */
 
             services.AddScoped<cloudscribe.Core.Web.ExtensionPoints.IHandleCustomRegistration, sourceDev.WebApp.Components.CustomRegistrationHandler>();
+
+            AddDataStorageServices(services);
 
             services.AddCloudscribeCore(Configuration);
             
@@ -162,7 +164,7 @@ namespace sourceDev.WebApp
                         options.AddCloudscribeFileManagerBootstrap3Views();
                         options.AddCloudscribeLoggingBootstrap3Views();
 
-                        //options.AddCloudscribeCoreIdentityServerIntegrationBootstrap3Views();
+                        options.AddCloudscribeCoreIdentityServerIntegrationBootstrap3Views();
 
                         options.ViewLocationExpanders.Add(new cloudscribe.Core.Web.Components.SiteViewLocationExpander());
                         
@@ -171,7 +173,7 @@ namespace sourceDev.WebApp
 
             //services.AddSingleton<ITempDataProvider, CookieTempDataProvider>();
 
-            AddDataStorageServices(services);
+            //AddDataStorageServices(services);
 
 
 
@@ -209,22 +211,23 @@ namespace sourceDev.WebApp
             app.UseStaticFiles();
 
             // we don't need session
-            //app.UseSession();
+            app.UseSession();
 
             app.UseRequestLocalization(localizationOptionsAccessor.Value);
 
             // this uses the policy called "default"
-            //app.UseCors("default");
-
+            app.UseCors("default");
+            
             var multiTenantOptions = multiTenantOptionsAccessor.Value;
-
+            
             app.UseCloudscribeCore(
                     loggerFactory,
                     multiTenantOptions,
-                    SslIsAvailable,
-                    IdentityServerIntegratorFunc
+                    SslIsAvailable
                     );
 
+            app.UseIdentityServer();
+            
             UseMvc(app, multiTenantOptions.Mode == cloudscribe.Core.Models.MultiTenantMode.FolderName);
 
 
@@ -274,38 +277,7 @@ namespace sourceDev.WebApp
                     );
             });
         }
-
-        // this Func is passed optionally in to app.UseCloudscribeCore
-        // to wire up identity server integration at the right point in the middleware pipeline
-        private bool IdentityServerIntegratorFunc(IApplicationBuilder builder, cloudscribe.Core.Models.ISiteContext tenant)
-        {
-            //2017-07-28 commented out currently broken under netcore20
-            // need to re-fork identityserver4
-            //builder.UseIdentityServer();
-
-            //// this sets up the authentication for apis within this application endpoint
-            //// ie apis that are hosted in the same web app endpoint with the authority server
-            //// this is not needed here if you are only using separate api endpoints
-            //// it is needed in the startup of those separate endpoints
-            //// note that with both cookie auth and jwt auth middleware the principal is merged from both the cookie and the jwt token if it is passed
-            //builder.UseIdentityServerAuthentication(new IdentityServerAuthenticationOptions
-            //{
-            //    Authority = "https://localhost:44399",
-            //    // using the site aliasid as the scope so each tenant has a different scope
-            //    // you can view the aliasid from site settings
-            //    // clients must be configured with the scope to have access to the apis for the tenant
-            //    ApiName = ctx.Tenant.AliasId,
-            //    //RoleClaimType = "http://schemas.microsoft.com/ws/2008/06/identity/claims/role",
-            //    //AuthenticationScheme = AuthenticationScheme.Application,
-
-            //    RequireHttpsMetadata = true
-            //});
-
-            return true;
-        }
-
         
-
 
         private void ConfigureAuthPolicy(IServiceCollection services)
         {
@@ -359,11 +331,11 @@ namespace sourceDev.WebApp
                     services.AddCloudscribeCoreNoDbStorage();
                     services.AddCloudscribeLoggingNoDbStorage(Configuration);
 
-                    //services.AddIdentityServer()
-                    //    .AddCloudscribeCoreNoDbIdentityServerStorage()
-                     //   .AddCloudscribeIdentityServerIntegration()
-                     //   .AddTemporarySigningCredential()
-                     //   ;
+                    services.AddIdentityServer()
+                        .AddCloudscribeCoreNoDbIdentityServerStorage()
+                        .AddCloudscribeIdentityServerIntegration()
+                        .AddDeveloperSigningCredential()
+                        ;
 
                     break;
 
@@ -375,26 +347,26 @@ namespace sourceDev.WebApp
                         case "pgsql":
                             var pgConnection = Configuration.GetConnectionString("PostgreSqlEntityFrameworkConnectionString");
                             services.AddCloudscribeCoreEFStoragePostgreSql(pgConnection);
-                            //services.AddCloudscribeLoggingEFStoragePostgreSql(pgConnection);
+                            services.AddCloudscribeLoggingEFStoragePostgreSql(pgConnection);
 
-                            //services.AddIdentityServer()
-                            //    .AddCloudscribeCoreEFIdentityServerStoragePostgreSql(pgConnection)
-                            //    .AddCloudscribeIdentityServerIntegration()
-                            //    .AddTemporarySigningCredential()
-                            //    ;
+                            services.AddIdentityServer()
+                                .AddCloudscribeCoreEFIdentityServerStoragePostgreSql(pgConnection)
+                                .AddCloudscribeIdentityServerIntegration()
+                                .AddDeveloperSigningCredential()
+                                ;
 
                             break;
 
                         case "MySql":
                             var mysqlConnection = Configuration.GetConnectionString("MySqlEntityFrameworkConnectionString");
                             services.AddCloudscribeCoreEFStorageMySql(mysqlConnection);
-                            //services.AddCloudscribeLoggingEFStorageMySQL(mysqlConnection);
+                            services.AddCloudscribeLoggingEFStorageMySQL(mysqlConnection);
 
-                            //services.AddIdentityServer()
-                            //    .AddCloudscribeCoreEFIdentityServerStorageMySql(mysqlConnection)
-                            //    .AddCloudscribeIdentityServerIntegration()
-                            //    .AddTemporarySigningCredential()
-                            //    ;
+                            services.AddIdentityServer()
+                                .AddCloudscribeCoreEFIdentityServerStorageMySql(mysqlConnection)
+                                .AddCloudscribeIdentityServerIntegration()
+                                .AddDeveloperSigningCredential()
+                                ;
 
                             break;
 
@@ -404,11 +376,11 @@ namespace sourceDev.WebApp
                             services.AddCloudscribeCoreEFStorageMSSQL(connectionString);
                             services.AddCloudscribeLoggingEFStorageMSSQL(connectionString);
 
-                            //services.AddIdentityServer()
-                            //    .AddCloudscribeCoreEFIdentityServerStorageMSSQL(connectionString)
-                            //    .AddCloudscribeIdentityServerIntegration()
-                            //    .AddTemporarySigningCredential()
-                            //    ;
+                            services.AddIdentityServer()
+                                .AddCloudscribeCoreEFIdentityServerStorageMSSQL(connectionString)
+                                .AddCloudscribeIdentityServerIntegration()
+                                .AddDeveloperSigningCredential()
+                                ;
 
                             break;
                     }

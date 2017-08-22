@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:                  Joe Audette
 // Created:                 2016-10-12
-// Last Modified:           2016-12-06
+// Last Modified:           2017-08-20
 // 
 
 using cloudscribe.Core.Models;
@@ -63,7 +63,7 @@ namespace cloudscribe.Core.IdentityServer.NoDb
             return new List<IdentityResource>();
         }
 
-        public async Task<Resources> GetAllResources()
+        public async Task<Resources> GetAllResourcesAsync()
         {
             var ids = await GetAllIdentityResources().ConfigureAwait(false);
             var apis = await GetAllApis().ConfigureAwait(false);

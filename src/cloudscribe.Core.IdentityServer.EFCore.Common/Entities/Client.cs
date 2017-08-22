@@ -29,10 +29,15 @@ namespace cloudscribe.Core.IdentityServer.EFCore.Entities
         public bool AllowAccessTokensViaBrowser { get; set; }
         public List<ClientRedirectUri> RedirectUris { get; set; }
         public List<ClientPostLogoutRedirectUri> PostLogoutRedirectUris { get; set; }
-        public string LogoutUri { get; set; }
-        public bool LogoutSessionRequired { get; set; } = true;
-        public List<ClientScope> AllowedScopes { get; set; }
+        //public string LogoutUri { get; set; }
+        //public bool LogoutSessionRequired { get; set; } = true;
+        public string FrontChannelLogoutUri { get; set; }
+        public bool FrontChannelLogoutSessionRequired { get; set; } = true;
+        public string BackChannelLogoutUri { get; set; }
+        public bool BackChannelLogoutSessionRequired { get; set; } = true;
         public bool AllowOfflineAccess { get; set; }
+        public List<ClientScope> AllowedScopes { get; set; }
+        public bool AlwaysIncludeUserClaimsInIdToken { get; set; } = false;
         public int IdentityTokenLifetime { get; set; } = 300;
         public int AccessTokenLifetime { get; set; } = 3600;
         public int AuthorizationCodeLifetime { get; set; } = 300;

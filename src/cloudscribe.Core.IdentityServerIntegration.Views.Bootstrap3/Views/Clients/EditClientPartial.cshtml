@@ -63,10 +63,17 @@
                 </div>
             </div>
             <div class="form-group">
-                <label for="LogoutUri" class="col-md-2 control-label">@sr["Logout Uri"]</label>
+                <label for="FrontChannelLogoutUri" class="col-md-2 control-label">@sr["Front Channel Logout Uri"]</label>
                 <div class="col-md-10">
-                    <input class="form-control" asp-for="LogoutUri"  />
-                    <span asp-validation-for="LogoutUri" class="text-danger"></span> 
+                    <input class="form-control" asp-for="FrontChannelLogoutUri"  />
+                    <span asp-validation-for="FrontChannelLogoutUri" class="text-danger"></span> 
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="BackChannelLogoutUri" class="col-md-2 control-label">@sr["Back Channel Logout Uri"]</label>
+                <div class="col-md-10">
+                    <input class="form-control" asp-for="BackChannelLogoutUri" />
+                    <span asp-validation-for="BackChannelLogoutUri" class="text-danger"></span>
                 </div>
             </div>
             <div class="form-group">
@@ -198,7 +205,7 @@
                 <div class="col-md-10 col-md-offset-2">
                     <div class="checkbox">
                         <label>
-                            <input asp-for="LogoutSessionRequired" /> @sr["Logout Session Required"]
+                            <input asp-for="FrontChannelLogoutSessionRequired" /> @sr["Logout Session Required"]
                         </label>
                     </div>
                 </div>

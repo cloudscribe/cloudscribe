@@ -9,6 +9,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using System.Reflection;
 using Microsoft.Extensions.DependencyInjection;
+using sourceDev.WebApp.Configuration;
 
 namespace sourceDev.WebApp
 {
@@ -62,15 +63,15 @@ namespace sourceDev.WebApp
                     // site1 05301194-da1d-43a8-9aa4-6c5f8959f37b
                     // site2 a9e2c249-90b4-4770-9e99-9702d89f73b6
                     // replace null with your siteid and run the app, then change it back to null since it can only be a one time task
-                    //string sId = null;
+                    string sId = null;
 
-                    //CloudscribeIdentityServerIntegrationNoDbStorage.InitializeDatabaseAsync(
-                    //    services,
-                    //    sId,
-                    //    IdServerClients.Get(),
-                    //    IdServerResources.GetApiResources(),
-                    //    IdServerResources.GetIdentityResources()
-                    //    ).Wait();
+                    CloudscribeIdentityServerIntegrationNoDbStorage.InitializeDatabaseAsync(
+                        services,
+                        sId,
+                        IdServerClients.Get(),
+                        IdServerResources.GetApiResources(),
+                        IdServerResources.GetIdentityResources()
+                        ).Wait();
 
                     break;
 
@@ -92,15 +93,15 @@ namespace sourceDev.WebApp
                     // site1 8f54733c-3f3a-4971-bb1f-8950cea42f1a
                     // site2 7c111db3-e270-497a-9a12-aed436c764c6
                     // replace null with your siteid and run the app, then change it back to null since it can only be a one time task
-                    //string siteId = null;
+                    string siteId = null;
 
-                    //CloudscribeIdentityServerIntegrationEFCoreStorage.InitializeDatabaseAsync(
-                    //    services,
-                    //    siteId,
-                    //    IdServerClients.Get(),
-                    //    IdServerResources.GetApiResources(),
-                    //    IdServerResources.GetIdentityResources()
-                    //    ).Wait();
+                    CloudscribeIdentityServerIntegrationEFCoreStorage.InitializeDatabaseAsync(
+                        services,
+                        siteId,
+                        IdServerClients.Get(),
+                        IdServerResources.GetApiResources(),
+                        IdServerResources.GetIdentityResources()
+                        ).Wait();
 
                     break;
             }
