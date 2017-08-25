@@ -23,12 +23,12 @@ namespace sourceDev.WebApp
             var loggerFactory = host.Services.GetRequiredService<ILoggerFactory>();
             var env = host.Services.GetRequiredService<IHostingEnvironment>();
 
+            ConfigureLogging(env, loggerFactory, host.Services);
+
             using (var scope = host.Services.CreateScope())
             {
                 var services = scope.ServiceProvider;
-
-                ConfigureLogging(env, loggerFactory, services);
-
+                
                 try
                 {
                     EnsureDataStorageIsReady(config, services);
@@ -81,7 +81,7 @@ namespace sourceDev.WebApp
                     CoreEFStartup.InitializeDatabaseAsync(services).Wait();
 
                     // this one is only needed if using cloudscribe Logging with EF as the logging storage
-                    LoggingEFStartup.InitializeDatabaseAsync(services).Wait();
+                    //LoggingEFStartup.InitializeDatabaseAsync(services).Wait();
 
                     // you can use this hack to add clients and scopes into the db during startup if needed
                     // I used this before we implemented the UI for adding them
@@ -122,9 +122,7 @@ namespace sourceDev.WebApp
             {
                 minimumLevel = LogLevel.Information;
             }
-
-            var logRepo = serviceProvider.GetService<cloudscribe.Logging.Web.ILogRepository>();
-
+            
             // a customizable filter for logging
             // add exclusions to remove noise in the logs
             var excludedLoggers = new List<string>
@@ -148,7 +146,7 @@ namespace sourceDev.WebApp
                 return true;
             };
 
-            loggerFactory.AddDbLogger(serviceProvider, logFilter, logRepo);
+            loggerFactory.AddDbLogger(serviceProvider, logFilter);
         }
 
 

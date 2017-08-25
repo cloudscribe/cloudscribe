@@ -1,5 +1,9 @@
 ## Icon frameworks
 
+https://feathericons.com/
+
+https://vmware.github.io/clarity/icons/clarity-icons
+
 https://github.com/edent/SuperTinySocialIcons/
 
 http://fontawesome.io/

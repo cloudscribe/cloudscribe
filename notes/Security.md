@@ -1,4 +1,8 @@
 
+sms bug in aspnetcore 2.0 broke 2 factor auth
+https://github.com/aspnet/Identity/issues/1388
+
+
 https://www.troyhunt.com/passwords-evolved-authentication-guidance-for-the-modern-era/
 
 http://jameschambers.com/2016/04/github-authentication-asp-net-core/
