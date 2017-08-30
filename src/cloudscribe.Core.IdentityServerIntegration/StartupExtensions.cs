@@ -28,6 +28,7 @@ namespace Microsoft.Extensions.DependencyInjection
             builder.Services.Configure<IdentityServerOptions>(options =>
             {
                options.Authentication.AuthenticationScheme = AuthenticationScheme.Application;
+               
  
             });
 

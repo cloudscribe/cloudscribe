@@ -2,6 +2,8 @@
 sms bug in aspnetcore 2.0 broke 2 factor auth
 https://github.com/aspnet/Identity/issues/1388
 
+https://dotnetcore.gaprogman.com/2017/08/24/net-core-middleware-owasp-headers-part-3-finishing-what-we-started/
+
 
 https://www.troyhunt.com/passwords-evolved-authentication-guidance-for-the-modern-era/
 

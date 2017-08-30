@@ -34,6 +34,10 @@ http://connelhooley.uk/blog/2017/04/30/f-sharp-to-c-sharp
 
 http://blog.ploeh.dk/2017/07/31/combining-free-monads-in-f/
 
+http://blog.ploeh.dk/2017/08/28/the-builder-functor/
+
+https://finai.com/en/newsroom/there-is-no-such-thing-as-a-free-free-monad/
+
 ## Language
 
 http://fsharp.org/

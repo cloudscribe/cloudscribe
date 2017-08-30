@@ -2,6 +2,9 @@ a good introduction to async await, at about 25 minutes it is also about using t
 but shows the correct way to use async await and common wrong way mistakes to avoid
 https://www.youtube.com/watch?v=k81OaT_P6K0#t=60
 
+
+https://andrewlock.net/using-cancellationtokens-in-asp-net-core-mvc-controllers/
+
 http://stackoverflow.com/questions/13489065/best-practice-to-call-configureawait-for-all-server-side-code
 
 

@@ -25,6 +25,7 @@
   <ItemGroup>
     
     <PackageReference Include="cloudscribe.IDS4Fork" Version="2.0.0-*" />
+    
    
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="2.0.*" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Relational" Version="2.0.*" />

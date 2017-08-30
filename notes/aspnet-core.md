@@ -2,6 +2,8 @@
 how to control max request length
 https://github.com/aspnet/Announcements/issues/267
 
+https://nblumhardt.com/2017/08/use-serilog/
+
 https://www.stevejgordon.co.uk/asp-net-core-2-ihostedservice
 
 https://andrewlock.net/reloading-strongly-typed-options-in-asp-net-core-1-1-0/

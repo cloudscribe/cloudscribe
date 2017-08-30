@@ -52,11 +52,13 @@ namespace Microsoft.AspNetCore.Builder
                 builder.UseSiteAndThemeStaticFiles(loggerFactory, multiTenantOptions, ctx.Tenant);
 
                 
-                builder.UseAuthentication();
+                //builder.UseAuthentication();
                 
             });
 
             app.UseCloudscribeEnforceSiteRulesMiddleware();
+
+            app.UseAuthentication();
 
             return app;
 

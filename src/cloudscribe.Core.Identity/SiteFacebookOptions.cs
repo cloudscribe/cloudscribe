@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2017-07-27
-// Last Modified:			2017-08-15
+// Last Modified:			2017-08-30
 // 
 
 using cloudscribe.Core.Models;
@@ -17,6 +17,7 @@ using System.Net.Http;
 using System;
 using System.Collections.Generic;
 using Microsoft.Extensions.Primitives;
+using Microsoft.AspNetCore.Identity;
 
 namespace cloudscribe.Core.Identity
 {
@@ -123,6 +124,7 @@ namespace cloudscribe.Core.Identity
             {
                 options.AppId = tenant.FacebookAppId;
                 options.AppSecret = tenant.FacebookAppSecret;
+                options.SignInScheme = IdentityConstants.ExternalScheme;
 
                 if (useFolder)
                 {

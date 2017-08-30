@@ -91,6 +91,8 @@ namespace Microsoft.Extensions.DependencyInjection
             {
                 o.ClientId = "placeholder";
                 o.ClientSecret = "placeholder";
+                o.SignInScheme = IdentityConstants.ExternalScheme;
+                //o.ClaimActions
             })
             .AddMicrosoftAccount(o =>
             {
@@ -117,7 +119,7 @@ namespace Microsoft.Extensions.DependencyInjection
             // Services used by identity
             services.AddSingleton<IOptions<IdentityOptions>, SiteIdentityOptionsResolver>();
 
-            services.TryAddScoped<IUserClaimsPrincipalFactory<SiteUser>, SiteUserClaimsPrincipalFactory<SiteUser, SiteRole>>();
+            services.AddScoped<IUserClaimsPrincipalFactory<SiteUser>, SiteUserClaimsPrincipalFactory<SiteUser, SiteRole>>();
             services.TryAddScoped<IPasswordHasher<SiteUser>, SitePasswordHasher<SiteUser>>();
             //services.TryAddScoped<SiteSignInManager<SiteUser>, SiteSignInManager<SiteUser>>();
 
