@@ -219,12 +219,18 @@ namespace sourceDev.WebApp
             app.UseCors("default");
             
             var multiTenantOptions = multiTenantOptionsAccessor.Value;
+
             
+
             app.UseCloudscribeCore(
                     loggerFactory,
                     multiTenantOptions,
                     SslIsAvailable
                     );
+
+            //app.UseIdentityServerPreAuth();
+
+            //app.UseIdentityServerPostAuth();
 
             app.UseIdentityServer();
             
@@ -376,7 +382,10 @@ namespace sourceDev.WebApp
                             services.AddCloudscribeCoreEFStorageMSSQL(connectionString);
                             services.AddCloudscribeLoggingEFStorageMSSQL(connectionString);
 
-                            services.AddIdentityServer()
+                            services.AddIdentityServer(options => {
+
+                                //options.Authentication.AuthenticationScheme.
+                            })
                                 .AddCloudscribeCoreEFIdentityServerStorageMSSQL(connectionString)
                                 .AddCloudscribeIdentityServerIntegration()
                                 .AddDeveloperSigningCredential()

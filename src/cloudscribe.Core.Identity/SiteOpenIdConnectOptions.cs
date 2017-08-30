@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2017-07-28
-// Last Modified:			2017-08-15
+// Last Modified:			2017-08-30
 // 
 
 using cloudscribe.Core.Models;
@@ -10,6 +10,7 @@ using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.OpenIdConnect;
 using Microsoft.AspNetCore.DataProtection;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Microsoft.Extensions.Primitives;
@@ -99,6 +100,7 @@ namespace cloudscribe.Core.Identity
             options.ClientId = "placeholder";
             options.ClientSecret = "placeholder";
             options.Authority = "https://placeholder.com";
+            options.SignInScheme = IdentityConstants.ExternalScheme;
 
             _optionsInitializer.PostConfigure(scheme, options);
 

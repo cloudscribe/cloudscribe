@@ -1,6 +1,8 @@
 
 https://blogs.msdn.microsoft.com/dotnet/2017/08/09/__trashed/
 
+http://www.forevolve.com/en/articles/2017/08/25/design-patterns-web-api-service-and-repository-part-5/
+
 
 https://www.microsoft.com/net/learn/architecture
 

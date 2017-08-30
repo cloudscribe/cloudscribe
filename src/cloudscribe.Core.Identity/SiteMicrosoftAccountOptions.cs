@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2017-07-27
-// Last Modified:			2017-08-15
+// Last Modified:			2017-08-30
 // 
 
 using cloudscribe.Core.Models;
@@ -11,6 +11,7 @@ using Microsoft.AspNetCore.Authentication.MicrosoftAccount;
 using Microsoft.AspNetCore.Authentication.OAuth;
 using Microsoft.AspNetCore.DataProtection;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Microsoft.Extensions.Primitives;
@@ -122,6 +123,7 @@ namespace cloudscribe.Core.Identity
             {
                 options.ClientId = tenant.MicrosoftClientId;
                 options.ClientSecret = tenant.MicrosoftClientSecret;
+                options.SignInScheme = IdentityConstants.ExternalScheme;
 
                 if (useFolder)
                 {
