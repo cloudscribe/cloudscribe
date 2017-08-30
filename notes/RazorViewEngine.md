@@ -104,6 +104,12 @@ usage example:
     
 }
 
+## View Pre-compilation
+
+https://github.com/aspnet/Mvc/issues/6021
+https://github.com/aspnet/MvcPrecompilation/tree/rel/1.1.0/testapps/ClassLibraryWithPrecompiledViews
+https://github.com/aspnet/MvcPrecompilation/blob/rel/1.1.0/testapps/ClassLibraryWithPrecompiledViews/ClassLibraryWithPrecompiledViews.csproj
+
 
 other references:
 
