@@ -10,3 +10,6 @@ https://developers.googleblog.com/2017/05/the-modern-mobile-web-state-of-union.h
 
 Progressive Web Apps: Great Experiences Everywhere (Google I/O '17)
 https://www.youtube.com/watch?v=m-sCdS0sQO8
+
+
+https://alistapart.com/article/yes-that-web-project-should-be-a-pwa

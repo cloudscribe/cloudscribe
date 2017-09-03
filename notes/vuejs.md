@@ -1,5 +1,7 @@
 
 
+https://medium.com/reverdev/why-we-moved-from-angular-2-to-vue-js-and-why-we-didnt-choose-react-ef807d9f4163
+
 https://vuejs.org/v2/guide/
 
 https://vuejs.org/v2/api/

@@ -1,4 +1,4 @@
-﻿using System.Drawing;
+﻿
 
 namespace cloudscribe.FileManager.Web.Models
 {
@@ -25,8 +25,7 @@ namespace cloudscribe.FileManager.Web.Models
             int maxWidth,
             int maxHeight,
             bool allowEnlargement = false,
-            long quality = 90, 
-            Color backgroundColor = default(Color)
+            int quality = 90 
             );
     }
 }
