@@ -38,6 +38,8 @@ http://blog.ploeh.dk/2017/08/28/the-builder-functor/
 
 https://finai.com/en/newsroom/there-is-no-such-thing-as-a-free-free-monad/
 
+https://blog.mavnn.co.uk/trying-dotnetcore-2-dot-0-with-f-number-today/
+
 ## Language
 
 http://fsharp.org/

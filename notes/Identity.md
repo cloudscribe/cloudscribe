@@ -3,6 +3,8 @@ https://leastprivilege.com/2016/12/16/identity-vs-permissions/
 
 https://identityserver4.readthedocs.io/en/release/topics/federation_gateway.html
 
+https://brockallen.com/2017/08/30/beware-in-asp-net-core-2-0-claims-transformation-might-run-multiple-times/
+
 
 http://stackoverflow.com/questions/41682434/how-to-put-asp-net-identity-roles-into-the-identityserver4-identity-token
 

@@ -44,6 +44,8 @@ http://stackoverflow.com/questions/21097592/mixing-angular-and-asp-net-mvc-web-a
 
 http://stackoverflow.com/questions/20208388/integrating-angularjs-1-2-into-existing-mvc-site
 
+https://medium.freecodecamp.org/why-i-hate-your-single-page-app-f08bb4ff9134
+
 
 
 
