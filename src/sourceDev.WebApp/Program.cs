@@ -20,11 +20,8 @@ namespace sourceDev.WebApp
             var host = BuildWebHost(args);
 
             var config = host.Services.GetRequiredService<IConfiguration>();
-            var loggerFactory = host.Services.GetRequiredService<ILoggerFactory>();
             var env = host.Services.GetRequiredService<IHostingEnvironment>();
-
-            ConfigureLogging(env, loggerFactory, host.Services);
-
+            
             using (var scope = host.Services.CreateScope())
             {
                 var services = scope.ServiceProvider;
@@ -40,6 +37,9 @@ namespace sourceDev.WebApp
                     logger.LogError(ex, "An error occurred while migrating the database.");
                 }
             }
+
+            var loggerFactory = host.Services.GetRequiredService<ILoggerFactory>();
+            ConfigureLogging(env, loggerFactory, host.Services);
 
             host.Run();
         }
@@ -81,7 +81,7 @@ namespace sourceDev.WebApp
                     CoreEFStartup.InitializeDatabaseAsync(services).Wait();
 
                     // this one is only needed if using cloudscribe Logging with EF as the logging storage
-                    //LoggingEFStartup.InitializeDatabaseAsync(services).Wait();
+                    LoggingEFStartup.InitializeDatabaseAsync(services).Wait();
 
                     // you can use this hack to add clients and scopes into the db during startup if needed
                     // I used this before we implemented the UI for adding them

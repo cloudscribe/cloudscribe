@@ -13,3 +13,5 @@ https://www.youtube.com/watch?v=MiLAE6HMr10
 
 https://github.com/aspnet/Blazor-Hackathon/tree/master/samples/ConferencePlanner
 
+https://github.com/AssemblyScript
+
