@@ -17,45 +17,45 @@ namespace cloudscribe.Core.IdentityServer.EFCore.MySql.Migrations
                 name: "LogoutUri",
                 table: "csids_Clients");
 
-            migrationBuilder.AlterColumn<int>(
-                name: "Id",
-                table: "csids_IdentityResources",
-                type: "int",
-                nullable: false,
-                oldClrType: typeof(int))
-                .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn);
+            //migrationBuilder.AlterColumn<int>(
+            //    name: "Id",
+            //    table: "csids_IdentityResources",
+            //    type: "int",
+            //    nullable: false,
+            //    oldClrType: typeof(int))
+            //    .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn);
 
-            migrationBuilder.AlterColumn<int>(
-                name: "Id",
-                table: "csids_IdentityClaims",
-                type: "int",
-                nullable: false,
-                oldClrType: typeof(int))
-                .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn);
+            //migrationBuilder.AlterColumn<int>(
+            //    name: "Id",
+            //    table: "csids_IdentityClaims",
+            //    type: "int",
+            //    nullable: false,
+            //    oldClrType: typeof(int))
+            //    .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn);
 
-            migrationBuilder.AlterColumn<int>(
-                name: "Id",
-                table: "csids_ClientSecrets",
-                type: "int",
-                nullable: false,
-                oldClrType: typeof(int))
-                .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn);
+            //migrationBuilder.AlterColumn<int>(
+            //    name: "Id",
+            //    table: "csids_ClientSecrets",
+            //    type: "int",
+            //    nullable: false,
+            //    oldClrType: typeof(int))
+            //    .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn);
 
-            migrationBuilder.AlterColumn<int>(
-                name: "Id",
-                table: "csids_ClientScopes",
-                type: "int",
-                nullable: false,
-                oldClrType: typeof(int))
-                .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn);
+            //migrationBuilder.AlterColumn<int>(
+            //    name: "Id",
+            //    table: "csids_ClientScopes",
+            //    type: "int",
+            //    nullable: false,
+            //    oldClrType: typeof(int))
+            //    .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn);
 
-            migrationBuilder.AlterColumn<int>(
-                name: "Id",
-                table: "csids_Clients",
-                type: "int",
-                nullable: false,
-                oldClrType: typeof(int))
-                .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn);
+            //migrationBuilder.AlterColumn<int>(
+            //    name: "Id",
+            //    table: "csids_Clients",
+            //    type: "int",
+            //    nullable: false,
+            //    oldClrType: typeof(int))
+            //    .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn);
 
             migrationBuilder.AddColumn<bool>(
                 name: "AlwaysIncludeUserClaimsInIdToken",
@@ -90,93 +90,93 @@ namespace cloudscribe.Core.IdentityServer.EFCore.MySql.Migrations
                 type: "longtext",
                 nullable: true);
 
-            migrationBuilder.AlterColumn<int>(
-                name: "Id",
-                table: "csids_ClientRedirectUris",
-                type: "int",
-                nullable: false,
-                oldClrType: typeof(int))
-                .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn);
+            //migrationBuilder.AlterColumn<int>(
+            //    name: "Id",
+            //    table: "csids_ClientRedirectUris",
+            //    type: "int",
+            //    nullable: false,
+            //    oldClrType: typeof(int))
+            //    .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn);
 
-            migrationBuilder.AlterColumn<int>(
-                name: "Id",
-                table: "csids_ClientPostLogoutRedirectUris",
-                type: "int",
-                nullable: false,
-                oldClrType: typeof(int))
-                .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn);
+            //migrationBuilder.AlterColumn<int>(
+            //    name: "Id",
+            //    table: "csids_ClientPostLogoutRedirectUris",
+            //    type: "int",
+            //    nullable: false,
+            //    oldClrType: typeof(int))
+            //    .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn);
 
-            migrationBuilder.AlterColumn<int>(
-                name: "Id",
-                table: "csids_ClientIdPRestrictions",
-                type: "int",
-                nullable: false,
-                oldClrType: typeof(int))
-                .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn);
+            //migrationBuilder.AlterColumn<int>(
+            //    name: "Id",
+            //    table: "csids_ClientIdPRestrictions",
+            //    type: "int",
+            //    nullable: false,
+            //    oldClrType: typeof(int))
+            //    .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn);
 
-            migrationBuilder.AlterColumn<int>(
-                name: "Id",
-                table: "csids_ClientGrantTypes",
-                type: "int",
-                nullable: false,
-                oldClrType: typeof(int))
-                .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn);
+            //migrationBuilder.AlterColumn<int>(
+            //    name: "Id",
+            //    table: "csids_ClientGrantTypes",
+            //    type: "int",
+            //    nullable: false,
+            //    oldClrType: typeof(int))
+            //    .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn);
 
-            migrationBuilder.AlterColumn<int>(
-                name: "Id",
-                table: "csids_ClientCorsOrigins",
-                type: "int",
-                nullable: false,
-                oldClrType: typeof(int))
-                .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn);
+            //migrationBuilder.AlterColumn<int>(
+            //    name: "Id",
+            //    table: "csids_ClientCorsOrigins",
+            //    type: "int",
+            //    nullable: false,
+            //    oldClrType: typeof(int))
+            //    .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn);
 
-            migrationBuilder.AlterColumn<int>(
-                name: "Id",
-                table: "csids_ClientClaims",
-                type: "int",
-                nullable: false,
-                oldClrType: typeof(int))
-                .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn);
+            //migrationBuilder.AlterColumn<int>(
+            //    name: "Id",
+            //    table: "csids_ClientClaims",
+            //    type: "int",
+            //    nullable: false,
+            //    oldClrType: typeof(int))
+            //    .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn);
 
-            migrationBuilder.AlterColumn<int>(
-                name: "Id",
-                table: "csids_ApiSecrets",
-                type: "int",
-                nullable: false,
-                oldClrType: typeof(int))
-                .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn);
+            //migrationBuilder.AlterColumn<int>(
+            //    name: "Id",
+            //    table: "csids_ApiSecrets",
+            //    type: "int",
+            //    nullable: false,
+            //    oldClrType: typeof(int))
+            //    .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn);
 
-            migrationBuilder.AlterColumn<int>(
-                name: "Id",
-                table: "csids_ApiScopes",
-                type: "int",
-                nullable: false,
-                oldClrType: typeof(int))
-                .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn);
+            //migrationBuilder.AlterColumn<int>(
+            //    name: "Id",
+            //    table: "csids_ApiScopes",
+            //    type: "int",
+            //    nullable: false,
+            //    oldClrType: typeof(int))
+            //    .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn);
 
-            migrationBuilder.AlterColumn<int>(
-                name: "Id",
-                table: "csids_ApiScopeClaims",
-                type: "int",
-                nullable: false,
-                oldClrType: typeof(int))
-                .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn);
+            //migrationBuilder.AlterColumn<int>(
+            //    name: "Id",
+            //    table: "csids_ApiScopeClaims",
+            //    type: "int",
+            //    nullable: false,
+            //    oldClrType: typeof(int))
+            //    .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn);
 
-            migrationBuilder.AlterColumn<int>(
-                name: "Id",
-                table: "csids_ApiResources",
-                type: "int",
-                nullable: false,
-                oldClrType: typeof(int))
-                .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn);
+            //migrationBuilder.AlterColumn<int>(
+            //    name: "Id",
+            //    table: "csids_ApiResources",
+            //    type: "int",
+            //    nullable: false,
+            //    oldClrType: typeof(int))
+            //    .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn);
 
-            migrationBuilder.AlterColumn<int>(
-                name: "Id",
-                table: "csids_ApiClaims",
-                type: "int",
-                nullable: false,
-                oldClrType: typeof(int))
-                .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn);
+            //migrationBuilder.AlterColumn<int>(
+            //    name: "Id",
+            //    table: "csids_ApiClaims",
+            //    type: "int",
+            //    nullable: false,
+            //    oldClrType: typeof(int))
+            //    .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn);
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
@@ -201,45 +201,45 @@ namespace cloudscribe.Core.IdentityServer.EFCore.MySql.Migrations
                 name: "FrontChannelLogoutUri",
                 table: "csids_Clients");
 
-            migrationBuilder.AlterColumn<int>(
-                name: "Id",
-                table: "csids_IdentityResources",
-                nullable: false,
-                oldClrType: typeof(int),
-                oldType: "int")
-                .OldAnnotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn);
+            //migrationBuilder.AlterColumn<int>(
+            //    name: "Id",
+            //    table: "csids_IdentityResources",
+            //    nullable: false,
+            //    oldClrType: typeof(int),
+            //    oldType: "int")
+            //    .OldAnnotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn);
 
-            migrationBuilder.AlterColumn<int>(
-                name: "Id",
-                table: "csids_IdentityClaims",
-                nullable: false,
-                oldClrType: typeof(int),
-                oldType: "int")
-                .OldAnnotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn);
+            //migrationBuilder.AlterColumn<int>(
+            //    name: "Id",
+            //    table: "csids_IdentityClaims",
+            //    nullable: false,
+            //    oldClrType: typeof(int),
+            //    oldType: "int")
+            //    .OldAnnotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn);
 
-            migrationBuilder.AlterColumn<int>(
-                name: "Id",
-                table: "csids_ClientSecrets",
-                nullable: false,
-                oldClrType: typeof(int),
-                oldType: "int")
-                .OldAnnotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn);
+            //migrationBuilder.AlterColumn<int>(
+            //    name: "Id",
+            //    table: "csids_ClientSecrets",
+            //    nullable: false,
+            //    oldClrType: typeof(int),
+            //    oldType: "int")
+            //    .OldAnnotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn);
 
-            migrationBuilder.AlterColumn<int>(
-                name: "Id",
-                table: "csids_ClientScopes",
-                nullable: false,
-                oldClrType: typeof(int),
-                oldType: "int")
-                .OldAnnotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn);
+            //migrationBuilder.AlterColumn<int>(
+            //    name: "Id",
+            //    table: "csids_ClientScopes",
+            //    nullable: false,
+            //    oldClrType: typeof(int),
+            //    oldType: "int")
+            //    .OldAnnotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn);
 
-            migrationBuilder.AlterColumn<int>(
-                name: "Id",
-                table: "csids_Clients",
-                nullable: false,
-                oldClrType: typeof(int),
-                oldType: "int")
-                .OldAnnotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn);
+            //migrationBuilder.AlterColumn<int>(
+            //    name: "Id",
+            //    table: "csids_Clients",
+            //    nullable: false,
+            //    oldClrType: typeof(int),
+            //    oldType: "int")
+            //    .OldAnnotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn);
 
             migrationBuilder.AddColumn<bool>(
                 name: "LogoutSessionRequired",
@@ -252,93 +252,93 @@ namespace cloudscribe.Core.IdentityServer.EFCore.MySql.Migrations
                 table: "csids_Clients",
                 nullable: true);
 
-            migrationBuilder.AlterColumn<int>(
-                name: "Id",
-                table: "csids_ClientRedirectUris",
-                nullable: false,
-                oldClrType: typeof(int),
-                oldType: "int")
-                .OldAnnotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn);
+            //migrationBuilder.AlterColumn<int>(
+            //    name: "Id",
+            //    table: "csids_ClientRedirectUris",
+            //    nullable: false,
+            //    oldClrType: typeof(int),
+            //    oldType: "int")
+            //    .OldAnnotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn);
 
-            migrationBuilder.AlterColumn<int>(
-                name: "Id",
-                table: "csids_ClientPostLogoutRedirectUris",
-                nullable: false,
-                oldClrType: typeof(int),
-                oldType: "int")
-                .OldAnnotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn);
+            //migrationBuilder.AlterColumn<int>(
+            //    name: "Id",
+            //    table: "csids_ClientPostLogoutRedirectUris",
+            //    nullable: false,
+            //    oldClrType: typeof(int),
+            //    oldType: "int")
+            //    .OldAnnotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn);
 
-            migrationBuilder.AlterColumn<int>(
-                name: "Id",
-                table: "csids_ClientIdPRestrictions",
-                nullable: false,
-                oldClrType: typeof(int),
-                oldType: "int")
-                .OldAnnotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn);
+            //migrationBuilder.AlterColumn<int>(
+            //    name: "Id",
+            //    table: "csids_ClientIdPRestrictions",
+            //    nullable: false,
+            //    oldClrType: typeof(int),
+            //    oldType: "int")
+            //    .OldAnnotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn);
 
-            migrationBuilder.AlterColumn<int>(
-                name: "Id",
-                table: "csids_ClientGrantTypes",
-                nullable: false,
-                oldClrType: typeof(int),
-                oldType: "int")
-                .OldAnnotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn);
+            //migrationBuilder.AlterColumn<int>(
+            //    name: "Id",
+            //    table: "csids_ClientGrantTypes",
+            //    nullable: false,
+            //    oldClrType: typeof(int),
+            //    oldType: "int")
+            //    .OldAnnotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn);
 
-            migrationBuilder.AlterColumn<int>(
-                name: "Id",
-                table: "csids_ClientCorsOrigins",
-                nullable: false,
-                oldClrType: typeof(int),
-                oldType: "int")
-                .OldAnnotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn);
+            //migrationBuilder.AlterColumn<int>(
+            //    name: "Id",
+            //    table: "csids_ClientCorsOrigins",
+            //    nullable: false,
+            //    oldClrType: typeof(int),
+            //    oldType: "int")
+            //    .OldAnnotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn);
 
-            migrationBuilder.AlterColumn<int>(
-                name: "Id",
-                table: "csids_ClientClaims",
-                nullable: false,
-                oldClrType: typeof(int),
-                oldType: "int")
-                .OldAnnotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn);
+            //migrationBuilder.AlterColumn<int>(
+            //    name: "Id",
+            //    table: "csids_ClientClaims",
+            //    nullable: false,
+            //    oldClrType: typeof(int),
+            //    oldType: "int")
+            //    .OldAnnotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn);
 
-            migrationBuilder.AlterColumn<int>(
-                name: "Id",
-                table: "csids_ApiSecrets",
-                nullable: false,
-                oldClrType: typeof(int),
-                oldType: "int")
-                .OldAnnotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn);
+            //migrationBuilder.AlterColumn<int>(
+            //    name: "Id",
+            //    table: "csids_ApiSecrets",
+            //    nullable: false,
+            //    oldClrType: typeof(int),
+            //    oldType: "int")
+            //    .OldAnnotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn);
 
-            migrationBuilder.AlterColumn<int>(
-                name: "Id",
-                table: "csids_ApiScopes",
-                nullable: false,
-                oldClrType: typeof(int),
-                oldType: "int")
-                .OldAnnotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn);
+            //migrationBuilder.AlterColumn<int>(
+            //    name: "Id",
+            //    table: "csids_ApiScopes",
+            //    nullable: false,
+            //    oldClrType: typeof(int),
+            //    oldType: "int")
+            //    .OldAnnotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn);
 
-            migrationBuilder.AlterColumn<int>(
-                name: "Id",
-                table: "csids_ApiScopeClaims",
-                nullable: false,
-                oldClrType: typeof(int),
-                oldType: "int")
-                .OldAnnotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn);
+            //migrationBuilder.AlterColumn<int>(
+            //    name: "Id",
+            //    table: "csids_ApiScopeClaims",
+            //    nullable: false,
+            //    oldClrType: typeof(int),
+            //    oldType: "int")
+            //    .OldAnnotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn);
 
-            migrationBuilder.AlterColumn<int>(
-                name: "Id",
-                table: "csids_ApiResources",
-                nullable: false,
-                oldClrType: typeof(int),
-                oldType: "int")
-                .OldAnnotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn);
+            //migrationBuilder.AlterColumn<int>(
+            //    name: "Id",
+            //    table: "csids_ApiResources",
+            //    nullable: false,
+            //    oldClrType: typeof(int),
+            //    oldType: "int")
+            //    .OldAnnotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn);
 
-            migrationBuilder.AlterColumn<int>(
-                name: "Id",
-                table: "csids_ApiClaims",
-                nullable: false,
-                oldClrType: typeof(int),
-                oldType: "int")
-                .OldAnnotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn);
+            //migrationBuilder.AlterColumn<int>(
+            //    name: "Id",
+            //    table: "csids_ApiClaims",
+            //    nullable: false,
+            //    oldClrType: typeof(int),
+            //    oldType: "int")
+            //    .OldAnnotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn);
         }
     }
 }

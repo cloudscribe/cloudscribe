@@ -36,6 +36,8 @@ http://blog.ploeh.dk/2017/07/31/combining-free-monads-in-f/
 
 http://blog.ploeh.dk/2017/08/28/the-builder-functor/
 
+http://blog.ploeh.dk/2017/09/04/builder-as-identity/
+
 https://finai.com/en/newsroom/there-is-no-such-thing-as-a-free-free-monad/
 
 https://blog.mavnn.co.uk/trying-dotnetcore-2-dot-0-with-f-number-today/
