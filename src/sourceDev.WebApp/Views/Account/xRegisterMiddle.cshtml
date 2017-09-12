@@ -1,0 +1,60 @@
+﻿@model cloudscribe.Core.Web.ViewModels.Account.RegisterViewModel
+@using cloudscribe.Core.Web
+@using cloudscribe.Core.Web.Components
+@using Microsoft.Extensions.Options
+@using Microsoft.Extensions.Localization
+@using Microsoft.AspNetCore.Http.Authentication
+@inject IStringLocalizer<CloudscribeCore> sr
+@inject IOptions<UIOptions> uiOptionsAccessor
+@{ 
+    var uiOptions = uiOptionsAccessor.Value;
+    
+}
+<div class="form-group">
+    <label for="FirstName" class="col-md-2 control-label">@sr["First Name"]</label>
+    <div class="col-md-10">
+        <div class="input-group">
+            <span class="input-group-addon"><i class="@uiOptions.IconFirstName" aria-hidden="true"></i></span>
+            <input id="FirstName" name="FirstName" value="@ViewData["FirstName"]" class="form-control" data-val="true" data-val-required="First Name is required" />
+        </div>
+        <span class="text-danger field-validation-valid" data-valmsg-for="FirstName" data-valmsg-replace="true"></span>
+        @Html.ValidationMessage("firstNameError", new { @class = "text-danger" })
+        </div>
+</div>
+<div class="form-group">
+    <label for="LastName" class="col-md-2 control-label">@sr["Last Name"]</label>
+    <div class="col-md-10">
+        <div class="input-group">
+            <span class="input-group-addon"><i class="@uiOptions.IconLastName" aria-hidden="true"></i></span>
+            <input id="LastName" name="LastName" value="@ViewData["LastName"]" class="form-control" data-val="true" data-val-required="Last Name is required" />
+        </div>
+        <span class="text-danger field-validation-valid" data-valmsg-for="LastName" data-valmsg-replace="true"></span>
+        @Html.ValidationMessage("lastNameError", new { @class = "text-danger" })
+    </div>
+</div>
+<div class="form-group">
+    <label for="DateOfBirth" class="col-md-2 control-label">@sr["Date of Birth"]</label>
+    <div class="col-md-10">
+        <div class="input-group">
+            <span class="input-group-addon"><i class="@uiOptions.IconDateOfBirth" aria-hidden="true"></i></span>
+            <input name="DateOfBirth" value="@ViewData["DateOfBirth"]"
+                   class="form-control"
+                   data-val="true"
+                   data-val-required="Date of Birth is required"
+                   data-bs-datepicker="true"
+                   data-bs-datepicker-debug="false"
+                   data-bs-datepicker-keepOpen="false"
+                   data-bs-datepicker-allowInputToggle="true"
+                   data-bs-datepicker-format="L"
+                   data-bs-datepicker-locale="@System.Globalization.CultureInfo.CurrentCulture.Name"
+                   data-bs-datepicker-viewMode="years"
+                   data-bs-datepicker-usecurrent="false"
+                   data-bs-datepicker-use-fontawesome="false"
+                   data-bs-datepicker-mindate="@DateTime.UtcNow.AddYears(-120).ToString("O")"
+                   data-bs-datepicker-maxdate="@DateTime.UtcNow.AddYears(-10).ToString("O")"
+                   data-bs-datepicker-viewDate="@DateTime.UtcNow.AddYears(-10).ToString("O")" />
+        </div>
+        <span class="text-danger field-validation-valid" data-valmsg-for="DateOfBirth" data-valmsg-replace="true"></span>
+        @Html.ValidationMessage("DOBError", new { @class = "text-danger" })
+    </div>
+</div>

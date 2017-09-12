@@ -16,6 +16,8 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Razor;
 using Microsoft.Extensions.Options;
 using sourceDev.WebApp.Configuration;
+using cloudscribe.UserProperties.Services;
+using cloudscribe.UserProperties.Models;
 
 namespace sourceDev.WebApp
 {
@@ -59,12 +61,18 @@ namespace sourceDev.WebApp
 
             services.AddMemoryCache();
 
-            services.AddSession();
+            services.Configure<ProfilePropertySetContainer>(Configuration.GetSection("ProfilePropertySetContainer"));
+            //services.AddScoped<TenantProfileOptionsResolver>();
+
+            //services.AddSession();
 
             // add authorization policies 
             ConfigureAuthPolicy(services);
 
             services.AddOptions();
+            services.AddCloudscribeKvpUserProperties();
+
+            AddDataStorageServices(services);
 
             /* optional and only needed if you are using cloudscribe Logging  */
             services.AddCloudscribeLogging();
@@ -76,10 +84,8 @@ namespace sourceDev.WebApp
             //services.AddScoped<IVersionProvider, CloudscribeLoggingVersionProvider>();
             /* end cloudscribe Setup */
 
-            services.AddScoped<cloudscribe.Core.Web.ExtensionPoints.IHandleCustomRegistration, sourceDev.WebApp.Components.CustomRegistrationHandler>();
-
-            AddDataStorageServices(services);
-
+            //services.AddScoped<cloudscribe.Core.Web.ExtensionPoints.IHandleCustomRegistration, sourceDev.WebApp.Components.CustomRegistrationHandler>();
+            
             services.AddCloudscribeCore(Configuration);
             
             services.Configure<GlobalResourceOptions>(Configuration.GetSection("GlobalResourceOptions"));
@@ -211,7 +217,7 @@ namespace sourceDev.WebApp
             app.UseStaticFiles();
 
             // we don't need session
-            app.UseSession();
+            //app.UseSession();
 
             app.UseRequestLocalization(localizationOptionsAccessor.Value);
 
@@ -336,6 +342,7 @@ namespace sourceDev.WebApp
                 case "NoDb":
                     services.AddCloudscribeCoreNoDbStorage();
                     services.AddCloudscribeLoggingNoDbStorage(Configuration);
+                    services.AddCloudscribeKvpNoDbStorage();
 
                     services.AddIdentityServer()
                         .AddCloudscribeCoreNoDbIdentityServerStorage()
@@ -354,6 +361,7 @@ namespace sourceDev.WebApp
                             var pgConnection = Configuration.GetConnectionString("PostgreSqlEntityFrameworkConnectionString");
                             services.AddCloudscribeCoreEFStoragePostgreSql(pgConnection);
                             services.AddCloudscribeLoggingEFStoragePostgreSql(pgConnection);
+                            services.AddCloudscribeKvpEFStoragePostgreSql(pgConnection);
 
                             services.AddIdentityServer()
                                 .AddCloudscribeCoreEFIdentityServerStoragePostgreSql(pgConnection)
@@ -367,6 +375,7 @@ namespace sourceDev.WebApp
                             var mysqlConnection = Configuration.GetConnectionString("MySqlEntityFrameworkConnectionString");
                             services.AddCloudscribeCoreEFStorageMySql(mysqlConnection);
                             services.AddCloudscribeLoggingEFStorageMySQL(mysqlConnection);
+                            services.AddCloudscribeKvpEFStorageMySql(mysqlConnection);
 
                             services.AddIdentityServer()
                                 .AddCloudscribeCoreEFIdentityServerStorageMySql(mysqlConnection)
@@ -381,6 +390,7 @@ namespace sourceDev.WebApp
                             var connectionString = Configuration.GetConnectionString("EntityFrameworkConnectionString");
                             services.AddCloudscribeCoreEFStorageMSSQL(connectionString);
                             services.AddCloudscribeLoggingEFStorageMSSQL(connectionString);
+                            services.AddCloudscribeKvpEFStorageMSSQL(connectionString);
 
                             services.AddIdentityServer(options => {
 
