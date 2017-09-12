@@ -149,6 +149,7 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
             model.SiteName = selectedSite.SiteName;
             model.AliasId = selectedSite.AliasId;
             model.GoogleAnalyticsProfileId = selectedSite.GoogleAnalyticsProfileId;
+            model.AddThisProfileId = selectedSite.AddThisDotComUsername;
             
             model.IsClosed = selectedSite.SiteIsClosed;
             model.ClosedMessage = selectedSite.SiteIsClosedMessage;
@@ -296,6 +297,7 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
             selectedSite.SiteIsClosedMessage = model.ClosedMessage;
             selectedSite.Theme = model.Theme;
             selectedSite.GoogleAnalyticsProfileId = model.GoogleAnalyticsProfileId;
+            selectedSite.AddThisDotComUsername = model.AddThisProfileId;
 
             selectedSite.ForcedCulture = model.ForcedCulture;
             selectedSite.ForcedUICulture = model.ForcedUICulture;

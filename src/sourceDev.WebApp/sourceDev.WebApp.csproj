@@ -54,6 +54,13 @@
     <PackageReference Include="cloudscribe.Logging.EFCore.MySql" Version="2.1.0-*" />
     <PackageReference Include="cloudscribe.Logging.EFCore.pgsql" Version="2.1.*" />
     <PackageReference Include="cloudscribe.Logging.NoDb" Version="2.1.*" />
+
+    <PackageReference Include="cloudscribe.Kvp.Storage.EFCore.MSSQL" Version="2.0.*" />
+    <PackageReference Include="cloudscribe.Kvp.Storage.EFCore.pgsql" Version="2.0.*" />
+    <PackageReference Include="cloudscribe.Kvp.Storage.EFCore.MySql" Version="2.0.0-*" />
+    <PackageReference Include="cloudscribe.Kvp.Storage.NoDb" Version="2.0.*" />
+    <PackageReference Include="cloudscribe.UserProperties.Kvp" Version="2.0.*" />
+    <PackageReference Include="cloudscribe.UserProperties" Version="2.0.*" />
 	
     <PackageReference Include="Microsoft.AspNetCore.All" Version="2.0.*" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="2.0.*" PrivateAssets="All" />

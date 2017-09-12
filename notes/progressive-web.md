@@ -13,3 +13,6 @@ https://www.youtube.com/watch?v=m-sCdS0sQO8
 
 
 https://alistapart.com/article/yes-that-web-project-should-be-a-pwa
+
+https://joreteg.com/blog/betting-on-the-web
+

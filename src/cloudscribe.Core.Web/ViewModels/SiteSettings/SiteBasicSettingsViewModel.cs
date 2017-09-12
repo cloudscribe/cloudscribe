@@ -72,6 +72,9 @@ namespace cloudscribe.Core.Web.ViewModels.SiteSettings
         [StringLength(255, ErrorMessage = "Google Analytics ProfileId has a maximum length of 25 characters")]
         public string GoogleAnalyticsProfileId { get; set; }
 
+        [StringLength(255, ErrorMessage = "AddThis ProfileId has a maximum length of 25 characters")]
+        public string AddThisProfileId { get; set; }
+
 
         [Required(ErrorMessage = "Time zone is required")]
         public string TimeZoneId { get; set; } = "America/New_York";

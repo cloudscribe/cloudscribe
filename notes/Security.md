@@ -1,4 +1,6 @@
 
+https://www.scientificamerican.com/article/the-only-safe-e-mail-is-text-only-e-mail/
+
 sms bug in aspnetcore 2.0 broke 2 factor auth
 https://github.com/aspnet/Identity/issues/1388
 

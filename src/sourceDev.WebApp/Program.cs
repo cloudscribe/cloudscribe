@@ -154,6 +154,10 @@ namespace sourceDev.WebApp
 
         public static IWebHost BuildWebHost(string[] args) =>
             WebHost.CreateDefaultBuilder(args)
+            .ConfigureAppConfiguration((builderContext, config) =>
+            {
+                config.AddJsonFile("app-userproperties.json", optional: true, reloadOnChange: true);
+            })
                 .UseStartup<Startup>()
                 .Build();
 
