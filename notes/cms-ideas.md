@@ -30,3 +30,5 @@ https://getkirby.com/
 http://www.cmswire.com/digital-experience/15-flat-file-cms-options-for-lean-website-building/
 
 http://www.cmswire.com/digital-experience/flipping-the-headless-cms-debate-dont-lose-your-head/
+
+https://cmsreport.com/article/custom-cmss-are-back-and-its-good-thing-11

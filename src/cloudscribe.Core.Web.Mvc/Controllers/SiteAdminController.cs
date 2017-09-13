@@ -307,12 +307,13 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
             
             this.AlertSuccess(string.Format(sr["Basic site settings for {0} were successfully updated."],
                         selectedSite.SiteName), true);
-            
-            if (siteManager.CurrentSite.IsServerAdminSite)
-            {
-                // just edited from site list so redirect there
-                return RedirectToAction("SiteList", new { pageNumber = model.ReturnPageNumber });
-            }
+            // 2017-09-13 given many sites are single tenant
+            // lets not redirect to site list here, I often remove that from the menu when only one tenant is planned
+            //if (siteManager.CurrentSite.IsServerAdminSite)
+            //{
+            //    // just edited from site list so redirect there
+            //    return RedirectToAction("SiteList", new { pageNumber = model.ReturnPageNumber });
+            //}
             
             return RedirectToAction("Index");
         }
