@@ -20,7 +20,6 @@ namespace sourceDev.WebApp
             var host = BuildWebHost(args);
 
             var config = host.Services.GetRequiredService<IConfiguration>();
-            var env = host.Services.GetRequiredService<IHostingEnvironment>();
             
             using (var scope = host.Services.CreateScope())
             {
@@ -38,6 +37,7 @@ namespace sourceDev.WebApp
                 }
             }
 
+            var env = host.Services.GetRequiredService<IHostingEnvironment>();
             var loggerFactory = host.Services.GetRequiredService<ILoggerFactory>();
             ConfigureLogging(env, loggerFactory, host.Services);
 
@@ -82,6 +82,8 @@ namespace sourceDev.WebApp
 
                     // this one is only needed if using cloudscribe Logging with EF as the logging storage
                     LoggingEFStartup.InitializeDatabaseAsync(services).Wait();
+
+                    KvpEFCoreStartup.InitializeDatabaseAsync(services).Wait();
 
                     // you can use this hack to add clients and scopes into the db during startup if needed
                     // I used this before we implemented the UI for adding them

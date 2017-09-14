@@ -13,7 +13,7 @@
 }
 @if (SignInManager.IsSignedIn(User))
 {
-    <form asp-controller="Account" asp-action="LogOff" method="post" id="logoutForm" class="navbar-right">
+    <form asp-controller="Account" asp-action="LogOff" method="post" id="logoutForm">
         <ul class="nav navbar-nav navbar-right">
             <li>
                 <div class="pull-right navbar-text navbar-gravatar">
@@ -24,7 +24,9 @@
             <li> 
                 <a asp-controller="Manage" asp-action="Index" title='@sr["Manage"]'>@string.Format(helloFormat,User.GetDisplayName())</a>
             </li> 
-            <li><a href="javascript:document.getElementById('logoutForm').submit()">@sr["Log off"]</a></li>
+            <li>
+            <a href="javascript:document.getElementById('logoutForm').submit()">@sr["Log off"]</a>
+            </li>
         </ul>
     </form>
 }
