@@ -6,6 +6,10 @@
 	<VersionSuffix>preview20170828</VersionSuffix>
     <Authors>Joe Audette</Authors>
     <TargetFrameworks>netstandard2.0</TargetFrameworks>
+    <PackageTags>cloudscribe;identity</PackageTags>
+    <PackageIconUrl>https://raw.githubusercontent.com/joeaudette/cloudscribe/master/cloudscribe-icon-32.png</PackageIconUrl>
+    <PackageProjectUrl>https://github.com/joeaudette/cloudscribe</PackageProjectUrl>
+    <PackageLicenseUrl>http://www.apache.org/licenses/LICENSE-2.0</PackageLicenseUrl>
   </PropertyGroup>
   
   <ItemGroup>
