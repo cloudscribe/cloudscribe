@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2016-11-10
-// Last Modified:			2017-08-04
+// Last Modified:			2017-09-15
 // 
 
 using cloudscribe.Core.Models;
@@ -205,6 +205,10 @@ namespace cloudscribe.Core.Storage.EFCore.MySql
 
                 entity.Property(p => p.CompanyPublicEmail)
                 .HasMaxLength(100);
+                ;
+
+                entity.Property(p => p.CompanyWebsite)
+                .HasMaxLength(255);
                 ;
 
                 entity.Property(p => p.CompanyPhone)

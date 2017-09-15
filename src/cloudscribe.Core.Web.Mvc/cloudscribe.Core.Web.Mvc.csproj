@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <Description>MVC Controllers for cloudscribe.Core.Web</Description>
-    <VersionPrefix>2.0.7</VersionPrefix>
+    <VersionPrefix>2.0.8</VersionPrefix>
     <Authors>Joe Audette</Authors>
     <PackageIconUrl>https://raw.githubusercontent.com/joeaudette/cloudscribe/master/cloudscribe-icon-32.png</PackageIconUrl>
     <PackageProjectUrl>https://github.com/joeaudette/cloudscribe</PackageProjectUrl>

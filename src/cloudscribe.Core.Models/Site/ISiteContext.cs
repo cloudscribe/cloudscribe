@@ -60,6 +60,7 @@ namespace cloudscribe.Core.Models
         string CompanyRegion { get; }
         string CompanyStreetAddress { get; }
         string CompanyStreetAddress2 { get; }
+        string CompanyWebsite { get; }
         string LoginInfoBottom { get;  }
         string LoginInfoTop { get; }
         string RegistrationAgreement { get; }

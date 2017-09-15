@@ -321,6 +321,11 @@ namespace cloudscribe.Core.Models
             get { return site.CompanyPublicEmail; }
         }
 
+        public string CompanyWebsite
+        {
+            get { return site.CompanyWebsite; }
+        }
+
         public string DefaultEmailFromAddress
         {
             get { return site.DefaultEmailFromAddress; }

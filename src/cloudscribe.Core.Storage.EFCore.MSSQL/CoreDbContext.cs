@@ -244,6 +244,10 @@ namespace cloudscribe.Core.Storage.EFCore.MSSQL
                 .HasMaxLength(100);
                 ;
 
+                entity.Property(p => p.CompanyWebsite)
+                .HasMaxLength(255);
+                ;
+
                 entity.Property(p => p.CompanyPhone)
                 .HasMaxLength(20);
                 ;

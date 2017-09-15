@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2014-10-26
-// Last Modified:			2016-06-14
+// Last Modified:			2017-09-15
 // 
 
 using System;
@@ -47,6 +47,10 @@ namespace cloudscribe.Core.Web.ViewModels.SiteSettings
         [EmailAddress(ErrorMessage = "The Email field is not a valid e-mail address.")]
         [StringLength(100, ErrorMessage = "Email has a maximum length of 100 characters")]
         public string CompanyPublicEmail { get; set; } = string.Empty;
+
+        [Url(ErrorMessage = "The Company website field is not a valid url.")]
+        [StringLength(100, ErrorMessage = "Company website has a maximum length of 100 characters")]
+        public string CompanyWebsite { get; set; } = string.Empty;
 
     }
 }

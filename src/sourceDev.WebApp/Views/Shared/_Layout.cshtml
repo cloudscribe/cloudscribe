@@ -50,7 +50,7 @@
         <hr />
         @await Html.PartialAsync("_SelectLanguagePartial")
         <footer class="text-center" role="contentinfo" itemscope itemtype="http://schema.org/Person" itemprop="author">
-            <small>Copyright &copy; @DateTime.Now.Year - @(Tenant?.SiteName ?? "Sample")</small>
+            <small>Copyright &copy; @DateTime.Now.Year - <a href="@Tenant.CompanyWebsite">@(Tenant.CompanyName)</a></small>
         </footer>
     </div>
     @RenderSection("Toolbar", required: false)
