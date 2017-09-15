@@ -53,6 +53,8 @@ https://rehansaeed.com/custom-project-templates-using-dotnet-new/
 
 https://rehansaeed.com/dotnet-new-feature-selection/
 
+https://github.com/dotnet/templating/blob/cb9edbfe02c038a306fbcb6bbe162462d5fb59f0/src/Microsoft.TemplateEngine.Orchestrator.RunnableProjects/Config/ConditionalConfig.cs
+
 dotnet new --install C:\_c\cloudscribe.templates\Content\WebApp
 
 dotnet new --debug:reinit

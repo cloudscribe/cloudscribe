@@ -55,10 +55,9 @@ namespace Microsoft.AspNetCore.Builder
                 //builder.UseAuthentication();
                 
             });
-
-            app.UseCloudscribeEnforceSiteRulesMiddleware();
-
+            
             app.UseAuthentication();
+            app.UseCloudscribeEnforceSiteRulesMiddleware();
 
             return app;
 

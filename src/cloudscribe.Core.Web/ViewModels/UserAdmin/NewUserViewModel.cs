@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:				    2014-08-31
-// Last Modified:		    2016-06-16
+// Last Modified:		    2017-09-15
 // 
 
 using System;
@@ -27,6 +27,8 @@ namespace cloudscribe.Core.Web.ViewModels.UserAdmin
         [DataType(DataType.Password)]
         [Compare("Password", ErrorMessage = "Confirm password doesn't match password")]
         public string ConfirmPassword { get; set; }
+
+        public bool MustChangePwd { get; set; }
 
         [Remote("UsernameAvailable", "Account", AdditionalFields = "UserId",
            ErrorMessage = "Username not available, please try another value",

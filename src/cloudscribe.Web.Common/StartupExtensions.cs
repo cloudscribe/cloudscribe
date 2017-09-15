@@ -33,6 +33,8 @@ namespace Microsoft.Extensions.DependencyInjection
             if (configuration != null)
             {
                 services.Configure<CkeditorOptions>(configuration.GetSection("CkeditorOptions"));
+                services.Configure<BannerImageMap>(configuration.GetSection("BannerImageMap"));
+                services.TryAddScoped<IBannerService, ConfigBannerService>();
             }
             else
             {

@@ -206,5 +206,10 @@ namespace cloudscribe.Core.Models
         {
             get { return user.RolesChanged; }
         }
+
+        public bool MustChangePwd
+        {
+            get { return user.MustChangePwd; }
+        }
     }
 }

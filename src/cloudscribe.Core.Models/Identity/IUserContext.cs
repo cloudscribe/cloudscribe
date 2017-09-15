@@ -33,5 +33,7 @@ namespace cloudscribe.Core.Models
         string AvatarUrl { get;  }
         string Gender { get;  }
         bool RolesChanged { get; }
+
+        bool MustChangePwd { get; }
     }
 }

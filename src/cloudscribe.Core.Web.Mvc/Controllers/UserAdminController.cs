@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2014-12-08
-// Last Modified:			2017-07-13
+// Last Modified:			2017-09-15
 // 
 
 using cloudscribe.Core.Identity;
@@ -320,31 +320,38 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
 
             if (ModelState.IsValid)
             { 
-                    var user = new SiteUser()
-                    {
-                        SiteId = selectedSite.Id,
-                        UserName = model.Username,
-                        Email = model.Email,
-                        FirstName = model.FirstName,
-                        LastName = model.LastName,
-                        DisplayName = model.DisplayName
-                    };
+                var user = new SiteUser()
+                {
+                    SiteId = selectedSite.Id,
+                    UserName = model.Username,
+                    Email = model.Email,
+                    FirstName = model.FirstName,
+                    LastName = model.LastName,
+                    DisplayName = model.DisplayName
+                       
+                };
 
-                    if (model.DateOfBirth.HasValue)
-                    {
-                        user.DateOfBirth = model.DateOfBirth.Value;
-                    }
-
-                    var result = await UserManager.CreateAsync(user, model.Password);
-                    if (result.Succeeded)
-                    {
-                        this.AlertSuccess(string.Format(sr["user account for {0} was successfully created."],
-                            user.DisplayName), true);
-
-                        return RedirectToAction("Index", "UserAdmin", new { siteId = selectedSite.Id });
-                    }
-                    AddErrors(result);
+                if (model.DateOfBirth.HasValue)
+                {
+                    user.DateOfBirth = model.DateOfBirth.Value;
                 }
+
+                var result = await UserManager.CreateAsync(user, model.Password);
+                if (result.Succeeded)
+                {
+                    if(model.MustChangePwd)
+                    {
+                        user.MustChangePwd = true;
+                        await UserManager.UpdateAsync(user);
+                    }
+
+                    this.AlertSuccess(string.Format(sr["user account for {0} was successfully created."],
+                        user.DisplayName), true);
+
+                    return RedirectToAction("Index", "UserAdmin", new { siteId = selectedSite.Id });
+                }
+                AddErrors(result);
+            }
 
             // If we got this far, something failed, redisplay form
             return View(model);

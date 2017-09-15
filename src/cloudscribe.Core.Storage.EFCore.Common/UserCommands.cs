@@ -74,6 +74,23 @@ namespace cloudscribe.Core.Storage.EFCore.Common
             {
                 dbContext.Users.Update(siteUser);
             }
+            else
+            {
+                var tracked = dbContext.ChangeTracker.Entries<SiteUser>().FirstOrDefault(x => x.Entity.Id == siteUser.Id);
+                var s = tracked.State;
+                if(s == EntityState.Unchanged)
+                {
+                    tracked.State = EntityState.Detached;
+                    try
+                    {
+                        dbContext.Users.Update(siteUser);
+                    }
+                    catch(Exception)
+                    {
+
+                    }
+                }
+            }
             
             int rowsAffected =
                 await dbContext.SaveChangesAsync(cancellationToken)
