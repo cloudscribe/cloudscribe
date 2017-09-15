@@ -127,7 +127,9 @@ namespace cloudscribe.Core.Models
         string CompanyRegion { get; set; }
         string CompanyStreetAddress { get; set; }
         string CompanyStreetAddress2 { get; set; }
-        
+
+        string CompanyWebsite { get; set; }
+
         string LoginInfoBottom { get; set; }
         string LoginInfoTop { get; set; }
         string RegistrationAgreement { get; set; }

@@ -17,7 +17,7 @@ namespace cloudscribe.Core.Storage.EFCore.MSSQL.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "2.0.0-preview2-25794")
+                .HasAnnotation("ProductVersion", "2.0.0-rtm-26452")
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
             modelBuilder.Entity("cloudscribe.Core.Models.Geography.GeoCountry", b =>
@@ -186,6 +186,9 @@ namespace cloudscribe.Core.Storage.EFCore.MSSQL.Migrations
 
                     b.Property<string>("CompanyStreetAddress2")
                         .HasMaxLength(250);
+
+                    b.Property<string>("CompanyWebsite")
+                        .HasMaxLength(255);
 
                     b.Property<string>("ConcurrencyStamp");
 

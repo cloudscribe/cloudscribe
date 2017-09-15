@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2014-08-16
-// Last Modified:			2017-07-28
+// Last Modified:			2017-09-15
 // 
 
 using System;
@@ -285,6 +285,8 @@ namespace cloudscribe.Core.Models
             set { companyPublicEmail = value; }
         }
 
+        public string CompanyWebsite { get; set; }
+
         private string defaultEmailFromAddress = string.Empty;
         public string DefaultEmailFromAddress
         {
@@ -513,6 +515,7 @@ namespace cloudscribe.Core.Models
             s.CompanyPhone = i.CompanyPhone;
             s.CompanyPostalCode = i.CompanyPostalCode;
             s.CompanyPublicEmail = i.CompanyPublicEmail;
+            s.CompanyWebsite = i.CompanyWebsite;
             s.CompanyRegion = i.CompanyRegion;
             s.CompanyStreetAddress = i.CompanyStreetAddress;
             s.CompanyStreetAddress2 = i.CompanyStreetAddress2;

@@ -3,7 +3,7 @@
   <PropertyGroup>
     <Description>MySql Entity Framework Core implementation of cloudscribe core storage</Description>
     <VersionPrefix>2.0.0</VersionPrefix>
-    <VersionSuffix>preview20170915</VersionSuffix>
+    <VersionSuffix>preview20170916</VersionSuffix>
     <Authors>Joe Audette</Authors>
     <TargetFramework>netcoreapp2.0</TargetFramework>
     <AssemblyName>cloudscribe.Core.Storage.EFCore.MySql</AssemblyName>
@@ -48,6 +48,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <DotNetCliToolReference Include="Microsoft.EntityFrameworkCore.Tools" Version="2.0.*" />
     <DotNetCliToolReference Include="Microsoft.EntityFrameworkCore.Tools.DotNet" Version="2.0.*" />
   </ItemGroup>
 
