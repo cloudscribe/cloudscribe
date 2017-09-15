@@ -1135,4 +1135,7 @@
   <data name="Website Url" xml:space="preserve">
     <value>Website Url</value>
   </data>
+  <data name="Must Change Password" xml:space="preserve">
+    <value>Must Change Password</value>
+  </data>
 </root>

@@ -43,6 +43,7 @@
         </div>
     </div>
     <div class="container body-content">
+        @await Component.InvokeAsync("BannerImage")
         @await Component.InvokeAsync("Navigation", new { viewName = "BootstrapBreadcrumbs", filterName = NamedNavigationFilters.Breadcrumbs, startingNodeKey = "" })
         @await Html.PartialAsync("AlertsPartial")
         @RenderBody()

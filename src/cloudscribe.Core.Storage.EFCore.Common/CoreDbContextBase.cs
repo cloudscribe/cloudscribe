@@ -17,6 +17,7 @@ namespace cloudscribe.Core.Storage.EFCore.Common
         public CoreDbContextBase(DbContextOptions options) : base(options)
         {
 
+            
         }
 
         protected CoreDbContextBase() { }

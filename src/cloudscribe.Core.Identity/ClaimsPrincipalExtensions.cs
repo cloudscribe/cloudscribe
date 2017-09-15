@@ -7,7 +7,6 @@
 
 using System;
 using System.Security.Claims;
-using Microsoft.AspNetCore.Identity;
 
 namespace cloudscribe.Core.Identity
 {
