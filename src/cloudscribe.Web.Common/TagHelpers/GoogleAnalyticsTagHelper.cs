@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0.
 // Author:                  Joe Audette
 // Created:                 2017-01-04
-// Last Modified:           2017-01-04
+// Last Modified:           2017-09-18
 // 
 
 using Microsoft.AspNetCore.Razor.TagHelpers;
@@ -13,10 +13,14 @@ namespace cloudscribe.Web.Common.TagHelpers
     public class GoogleAnalyticsTagHelper : TagHelper
     {
         private const string ProfileIdAttributeName = "profile-id";
+        private const string UserIdAttributeName = "user-id";
         private const string AllowAnchorAttributeName = "allow-anchor";
 
         [HtmlAttributeName(ProfileIdAttributeName)]
         public string ProfileId { get; set; }
+
+        [HtmlAttributeName(UserIdAttributeName)]
+        public string UserId { get; set; } = string.Empty;
 
         [HtmlAttributeName(AllowAnchorAttributeName)]
         public bool AllowAnchor { get; set; } = false;
@@ -39,13 +43,34 @@ namespace cloudscribe.Web.Common.TagHelpers
             sb.AppendLine("})(window,document,'script','https://www.google-analytics.com/analytics.js','ga');");
             sb.Append("ga('create',");
             sb.Append("'" + ProfileId + "', 'auto'");
-            if(AllowAnchor)
+            
+            sb.Append(", { ");
+
+            var comma = "";
+
+            if (!string.IsNullOrWhiteSpace(UserId))
             {
-                sb.Append(", { 'allowAnchor': true }");
+                sb.Append("userId: " + UserId);
+                comma = ",";
             }
+
+            if (AllowAnchor)
+            {
+                sb.Append(comma);
+                sb.Append(" 'allowAnchor': true ");
+            }
+            
+            sb.Append(" }");
+            
             sb.Append(");");
+
             sb.AppendLine("");
             sb.AppendLine("ga('send', 'pageview');");
+            //if(!string.IsNullOrWhiteSpace(UserId))
+            //{
+            //    sb.AppendLine(" ga('set', 'userId', '" + UserId + "');");
+                
+            //}
 
             output.Content.SetHtmlContent(sb.ToString());
 

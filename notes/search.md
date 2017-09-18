@@ -1,6 +1,12 @@
 
+https://github.com/apache/lucenenet
+https://www.nuget.org/packages/Lucene.Net/
+https://lucene.apache.org/core/4_8_0/
 
 https://www.elastic.co/guide/en/elasticsearch/reference/current/index.html
+
+https://www.algolia.com/integrations
+https://github.com/algolia/algoliasearch-client-csharp
 
 https://auth0.com/blog/azure-search-with-aspnetcore/
 
