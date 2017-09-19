@@ -19,6 +19,7 @@ You will only session stitch authenticated and unauthenticated sessions of your 
 
 PII Viewer for Google Analytics is a Google Chrome extension which allows you to map the user ID stored in Google Analytics to locally stored personally identifiable information (PII) such as name and email address.
 https://davidsimpson.me/pii-viewer-for-google-analytics/
+https://davidsimpson.me/2014/04/20/tutorial-send-user-ids-google-analytics/
 
 ## Tracking code notes
 
@@ -46,3 +47,30 @@ https://www.cloudscribe.com/?utm_source=trailwise.org.uk&amp;utm_medium=referral
 ### server side tracking
 
 https://stackoverflow.com/questions/9503329/is-there-any-way-to-post-events-to-google-analytics-via-server-side-api
+
+https://developers.google.com/analytics/devguides/collection/protocol/v1/
+https://developers.google.com/analytics/devguides/collection/protocol/v1/devguide
+https://developers.google.com/analytics/devguides/collection/protocol/v1/parameters
+
+http://localhost:50827/campaignimages/arlo1.jpg?utm_source=projecttemplate&utm_medium=referral&utm_campaign=newproject-mytest
+
+## Views
+
+About views
+https://support.google.com/analytics/answer/2649553?hl=en
+
+Adding views
+https://support.google.com/analytics/answer/1009714?hl=en
+
+If you enable UserId in a view then only traffic with a userid provided will appear in that view
+
+## Filtering
+
+https://www.lunametrics.com/blog/2015/12/10/basic-google-analytics-filters/
+
+when you use a filter for ip address such as include or exclude internal traffic 
+https://stackoverflow.com/questions/30872288/google-analytics-cant-seem-to-exclude-own-traffic
+it won't work if ip anonymization is enabled
+
+https://support.google.com/analytics/answer/2763052?hl=en
+

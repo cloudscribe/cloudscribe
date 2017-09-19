@@ -50,7 +50,7 @@ namespace cloudscribe.Web.Common.TagHelpers
 
             if (!string.IsNullOrWhiteSpace(UserId))
             {
-                sb.Append("userId: " + UserId);
+                sb.Append("'userId': " + "'" + UserId + "'");
                 comma = ",";
             }
 
