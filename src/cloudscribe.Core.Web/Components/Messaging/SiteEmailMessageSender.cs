@@ -219,7 +219,7 @@ namespace cloudscribe.Core.Web.Components.Messaging
             }
             catch (Exception ex)
             {
-                log.LogError("error sending email verification email", ex);
+                log.LogError("error sending new account notification to admins: " + ex.Message + " stacktrace:" + ex.StackTrace);
             }
 
         }
