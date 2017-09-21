@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2016-05-07
-// Last Modified:			2017-08-02
+// Last Modified:			2017-09-20
 // 
 
 
@@ -69,6 +69,8 @@ namespace Microsoft.Extensions.DependencyInjection
             services.TryAddScoped<IHandleCustomRegistration, NoRegistrationCustomization>();
             services.TryAddScoped<IHandleCustomUserInfo, NoUserInfoCustomization>();
             services.TryAddScoped<IHandleCustomUserInfoAdmin, NoUserEditCustomization>();
+
+            //services.TryAddScoped<IServerSideTelemetry, NoopServerSideTelemetry>();
 
             //
 

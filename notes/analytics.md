@@ -21,6 +21,9 @@ PII Viewer for Google Analytics is a Google Chrome extension which allows you to
 https://davidsimpson.me/pii-viewer-for-google-analytics/
 https://davidsimpson.me/2014/04/20/tutorial-send-user-ids-google-analytics/
 
+
+http://www.charlesfarina.com/login-and-signup-naming-conventions-for-google-analytics/
+
 ## Tracking code notes
 
 https://support.google.com/analytics/answer/1033863?visit_id=1-636413345736273758-1215674834&rd=1
