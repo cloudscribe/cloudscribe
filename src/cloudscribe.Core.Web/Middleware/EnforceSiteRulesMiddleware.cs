@@ -118,7 +118,12 @@ namespace cloudscribe.Core.Web.Middleware
             {
                 var agreementUrl = folderSegment + "/account/termsofuse";
 
-                if (!context.Request.Path.StartsWithSegments(agreementUrl))
+                if (
+                    (!context.Request.Path.StartsWithSegments(agreementUrl))
+                    && (!context.Request.Path.StartsWithSegments("/oops/error"))
+                    && (!context.Request.Path.StartsWithSegments("/account/logoff"))
+                    && (!context.Request.Path.Value.EndsWith("css.map")) //css.map
+                    )
                 {
                     var logMessage = $"user {userContext.Email} has not accepted terms of use so redirecting to terms of use acceptance page from requested path {context.Request.Path}";
                     _logger.LogWarning(logMessage);

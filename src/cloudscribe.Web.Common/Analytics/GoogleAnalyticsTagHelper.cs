@@ -2,19 +2,37 @@
 // Licensed under the Apache License, Version 2.0.
 // Author:                  Joe Audette
 // Created:                 2017-01-04
-// Last Modified:           2017-09-18
+// Last Modified:           2017-09-21
 // 
 
+using cloudscribe.Web.Common.Analytics;
+using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using Microsoft.AspNetCore.Razor.TagHelpers;
+using Microsoft.Extensions.Options;
 using System.Text;
 
 namespace cloudscribe.Web.Common.TagHelpers
 {
     public class GoogleAnalyticsTagHelper : TagHelper
     {
+        public GoogleAnalyticsTagHelper(
+            IOptions<GoogleAnalyticsOptions> optionsAccessor
+            )
+        {
+           
+            _options = optionsAccessor.Value;
+        }
+
+        private GoogleAnalyticsOptions _options;
+        //private ITempDataDictionary _tempData;
+
         private const string ProfileIdAttributeName = "profile-id";
         private const string UserIdAttributeName = "user-id";
         private const string AllowAnchorAttributeName = "allow-anchor";
+
+        [ViewContext]
+        public ViewContext ViewContext { get; set; }
 
         [HtmlAttributeName(ProfileIdAttributeName)]
         public string ProfileId { get; set; }
@@ -48,7 +66,7 @@ namespace cloudscribe.Web.Common.TagHelpers
 
             var comma = "";
 
-            if (!string.IsNullOrWhiteSpace(UserId))
+            if (_options.TrackUserId && !string.IsNullOrWhiteSpace(UserId))
             {
                 sb.Append("'userId': " + "'" + UserId + "'");
                 comma = ",";
@@ -66,11 +84,47 @@ namespace cloudscribe.Web.Common.TagHelpers
 
             sb.AppendLine("");
             sb.AppendLine("ga('send', 'pageview');");
-            //if(!string.IsNullOrWhiteSpace(UserId))
-            //{
-            //    sb.AppendLine(" ga('set', 'userId', '" + UserId + "');");
-                
-            //}
+            
+            var eventList = ViewContext.TempData.GetGoogleAnalyticsEvents();
+            foreach(var e in eventList)
+            {
+                if(e.IsValid())
+                {
+                    sb.Append("ga('send', 'event'");
+                    sb.Append(", '" + e.Category + "'");
+                    sb.Append(", '" + e.Action + "'");
+
+                    if(!string.IsNullOrWhiteSpace(e.Label))
+                    {
+                        sb.Append(", '" + e.Label + "'");
+                    }
+                    else
+                    {
+                        sb.Append(", 'undefined'");
+                    }
+
+                    if (!string.IsNullOrWhiteSpace(e.Value))
+                    {
+                        sb.Append(", '" + e.Value + "'");
+                    }
+
+                    if(e.Fields.Count > 0)
+                    {
+                        sb.Append(",{ ");
+                         comma = "";
+                        foreach(var f in e.Fields)
+                        {
+                            sb.Append(comma + "'" + f.Key + "' : '" + f.Value + "'");
+                            comma = ",";
+                        }
+                        sb.Append("}");
+                    }
+
+                    sb.Append(");");
+                    sb.AppendLine("");
+                }
+            }
+            
 
             output.Content.SetHtmlContent(sb.ToString());
 

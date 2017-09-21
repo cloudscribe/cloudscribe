@@ -1,4 +1,5 @@
 ﻿using cloudscribe.Web.Common;
+using cloudscribe.Web.Common.Analytics;
 using cloudscribe.Web.Common.Components;
 using cloudscribe.Web.Common.Helpers;
 using cloudscribe.Web.Common.Models;
@@ -27,14 +28,15 @@ namespace Microsoft.Extensions.DependencyInjection
 
             services.TryAddScoped<ITimeZoneIdResolver, GmtTimeZoneIdResolver>();
             services.TryAddScoped<ICkeditorOptionsResolver, DefaultCkeditorOptionsResolver>();
-
             
-
             if (configuration != null)
             {
                 services.Configure<CkeditorOptions>(configuration.GetSection("CkeditorOptions"));
                 services.Configure<BannerImageMap>(configuration.GetSection("BannerImageMap"));
                 services.TryAddScoped<IBannerService, ConfigBannerService>();
+
+                services.Configure<GoogleAnalyticsOptions>(configuration.GetSection("GoogleAnalyticsOptions"));
+                
             }
             else
             {
@@ -44,7 +46,8 @@ namespace Microsoft.Extensions.DependencyInjection
                     // not doing anything just configuring the default
                 });
             }
-            
+
+            services.AddScoped<GoogleAnalyticsApiService>();
 
             return services;
         }

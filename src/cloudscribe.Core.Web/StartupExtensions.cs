@@ -2,13 +2,14 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2016-05-07
-// Last Modified:			2017-09-20
+// Last Modified:			2017-09-21
 // 
 
 
 using cloudscribe.Core.Models;
 using cloudscribe.Core.Models.Setup;
 using cloudscribe.Core.Web;
+using cloudscribe.Core.Web.Analytics;
 using cloudscribe.Core.Web.Components;
 using cloudscribe.Core.Web.Components.Messaging;
 using cloudscribe.Core.Web.ExtensionPoints;
@@ -70,7 +71,7 @@ namespace Microsoft.Extensions.DependencyInjection
             services.TryAddScoped<IHandleCustomUserInfo, NoUserInfoCustomization>();
             services.TryAddScoped<IHandleCustomUserInfoAdmin, NoUserEditCustomization>();
 
-            //services.TryAddScoped<IServerSideTelemetry, NoopServerSideTelemetry>();
+            services.TryAddScoped<IHandleAccountAnalytics, GoogleAccountAnalytics>();
 
             //
 
