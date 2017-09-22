@@ -5,6 +5,7 @@
 @inject IStringLocalizer<CloudscribeCore> sr
 @{
     ViewData["Title"] = sr["Remove Login"];
+    ViewData["BodyClass"] = "manage-section remove-login";
     var removeFormat = sr["Remove this {0} login from your account"];
 }
 @if (Model.Count > 0)

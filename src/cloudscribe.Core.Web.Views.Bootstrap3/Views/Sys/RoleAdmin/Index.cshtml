@@ -10,6 +10,7 @@
 @inject IOptions<SiteConfigOptions> setupOptionsAccessor
 @{
     var setupOptions = setupOptionsAccessor.Value;
+    ViewData["BodyClass"] = "admin-section role-index";
 }
 <div class="row">
     <div class="col-md-10 col-md-push-2">

@@ -5,6 +5,7 @@
 @inject IStringLocalizer<CloudscribeCore> sr
 @{
     ViewData["Title"] = sr["Verify"];
+    ViewData["BodyClass"] = "account-section send-code";
 }
 <h2>@ViewData["Title"]</h2>
 <form asp-controller="Account" asp-action="VerifyCode" asp-route-returnurl="@ViewBag.ReturnUrl" method="post" class="form-horizontal" role="form">

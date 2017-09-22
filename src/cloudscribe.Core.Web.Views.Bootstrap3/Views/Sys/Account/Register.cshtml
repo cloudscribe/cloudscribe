@@ -9,6 +9,7 @@
 @inject IStringLocalizer<CloudscribeCore> sr
 @inject IOptions<UIOptions> uiOptionsAccessor
 @{
+    ViewData["BodyClass"] = "account-section registration-page";
     ViewData["SocialFormat"] = sr["Register using your {0} account"];
     ViewData["SocialHeading"] = sr["Use an existing account"];
     var uiOptions = uiOptionsAccessor.Value;

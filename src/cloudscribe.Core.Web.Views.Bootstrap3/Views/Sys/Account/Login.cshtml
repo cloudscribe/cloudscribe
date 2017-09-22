@@ -12,6 +12,7 @@
 @inject SiteContext site
 @inject IOptions<UIOptions>  uiOptionsAccessor
 @{
+    ViewData["BodyClass"] = "account-section login-page";
     ViewData["SocialFormat"] = sr["Log in using your {0} account"];
     ViewData["SocialHeading"] = sr["Use an existing account to log in"];
     var socialAuthoColumnWidth = 4;

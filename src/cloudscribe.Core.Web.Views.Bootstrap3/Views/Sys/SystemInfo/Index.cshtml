@@ -4,6 +4,9 @@
 @using Microsoft.Extensions.Options
 @using Microsoft.Extensions.Localization
 @inject IStringLocalizer<CloudscribeCore> sr
+@{ 
+    ViewData["BodyClass"] = "admin-section system-info";
+}
 <h1>@ViewData["Title"]</h1>
 <dl class="dl-horizontal">
     <dt>@sr["Server Host Name"]</dt>
