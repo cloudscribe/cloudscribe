@@ -88,7 +88,7 @@ namespace cloudscribe.Core.Web.Components
             }
             catch (Exception ex)
             {
-                log.LogError("error in iptracker", ex);
+                log.LogError("error in iptracker: " + ex.Message + " stacktrace: " + ex.StackTrace);
 
             }
 

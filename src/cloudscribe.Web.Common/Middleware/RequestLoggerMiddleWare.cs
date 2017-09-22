@@ -34,7 +34,7 @@ namespace cloudscribe.Web.Common.Middleware
             }
             catch(Exception ex)
             {
-                _logger.LogError("can middleware invoke exceptions be swallowed?", ex);
+                _logger.LogError("can middleware invoke exceptions be swallowed" + ex.Message + " stacktrace: " + ex.StackTrace);
             }
             
 

@@ -171,7 +171,7 @@ namespace cloudscribe.Web.Common.Analytics
             }
             catch (Exception ex)
             {
-                _log.LogError(ex, "error posting to google analytics", null);
+                _log.LogError("error posting to google analytics: " + ex.Message + " stacktrace: " + ex.StackTrace);
             }
 
 
@@ -290,7 +290,7 @@ namespace cloudscribe.Web.Common.Analytics
             }
             catch (Exception ex)
             {
-                _log.LogError(ex, "error posting to google analytics", null);
+                _log.LogError("error posting to google analytics: " + ex.Message + " stacktrace: " + ex.StackTrace);
             }
 
 
