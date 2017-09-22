@@ -87,7 +87,7 @@ namespace cloudscribe.FileManager.CoreIntegration
                 }
                 catch(Exception ex)
                 {
-                    log.LogError($"failed to create folder {siteFilesPath}", ex);
+                    log.LogError($"failed to create folder {siteFilesPath}: " + ex.Message + " stacktrace: " + ex.StackTrace);
                     result.DidError = true;
                     return result;
                 }
@@ -119,7 +119,7 @@ namespace cloudscribe.FileManager.CoreIntegration
                 }
                 catch (Exception ex)
                 {
-                    log.LogError($"failed to create folder {tenantWwwRoot}", ex);
+                    log.LogError($"failed to create folder {tenantWwwRoot}: " + ex.Message + " stacktrace: " + ex.StackTrace);
                     result.DidError = true;
                     return result;
                 }

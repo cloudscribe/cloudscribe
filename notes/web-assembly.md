@@ -15,3 +15,5 @@ https://github.com/aspnet/Blazor-Hackathon/tree/master/samples/ConferencePlanner
 
 https://github.com/AssemblyScript
 
+https://blog.acolyer.org/2017/09/18/bringing-the-web-up-to-speed-with-webassembly/
+

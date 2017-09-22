@@ -47,7 +47,7 @@ namespace cloudscribe.Core.Web.Components
                 }
                 catch (System.Security.Cryptography.CryptographicException ex)
                 {
-                    log.LogError("data protection error", ex);
+                    log.LogError("data protection error: " + ex.Message + " stacktrace: " + ex.StackTrace);
                 }
 
             }
@@ -61,7 +61,7 @@ namespace cloudscribe.Core.Web.Components
                 }
                 catch (System.Security.Cryptography.CryptographicException ex)
                 {
-                    log.LogError("data protection error", ex);
+                    log.LogError("data protection error: " + ex.Message + " stacktrace: " + ex.StackTrace);
                 }
 
             }
@@ -75,7 +75,7 @@ namespace cloudscribe.Core.Web.Components
                 }
                 catch (System.Security.Cryptography.CryptographicException ex)
                 {
-                    log.LogError("data protection error", ex);
+                    log.LogError("data protection error: " + ex.Message + " stacktrace: " + ex.StackTrace);
                 }
 
             }
@@ -89,7 +89,7 @@ namespace cloudscribe.Core.Web.Components
                 }
                 catch (System.Security.Cryptography.CryptographicException ex)
                 {
-                    log.LogError("data protection error", ex);
+                    log.LogError("data protection error: " + ex.Message + " stacktrace: " + ex.StackTrace);
                 }
 
             }
@@ -103,7 +103,7 @@ namespace cloudscribe.Core.Web.Components
                 }
                 catch (System.Security.Cryptography.CryptographicException ex)
                 {
-                    log.LogError("data protection error", ex);
+                    log.LogError("data protection error: " + ex.Message + " stacktrace: " + ex.StackTrace);
                 }
 
             }
@@ -117,7 +117,7 @@ namespace cloudscribe.Core.Web.Components
                 }
                 catch (System.Security.Cryptography.CryptographicException ex)
                 {
-                    log.LogError("data protection error", ex);
+                    log.LogError("data protection error:" + ex.Message + " stacktrace: " + ex.StackTrace);
                 }
 
             }
@@ -131,7 +131,7 @@ namespace cloudscribe.Core.Web.Components
                 }
                 catch (System.Security.Cryptography.CryptographicException ex)
                 {
-                    log.LogError("data protection error", ex);
+                    log.LogError("data protection error:" + ex.Message + " stacktrace: " + ex.StackTrace);
                 }
 
             }
@@ -145,7 +145,7 @@ namespace cloudscribe.Core.Web.Components
                 }
                 catch (System.Security.Cryptography.CryptographicException ex)
                 {
-                    log.LogError("data protection error", ex);
+                    log.LogError("data protection error:" + ex.Message + " stacktrace: " + ex.StackTrace);
                 }
 
             }
@@ -170,11 +170,11 @@ namespace cloudscribe.Core.Web.Components
                 }
                 catch (System.Security.Cryptography.CryptographicException ex)
                 {
-                    log.LogError("data protection error", ex);
+                    log.LogError("data protection error:" + ex.Message + " stacktrace: " + ex.StackTrace);
                 }
                 catch (FormatException ex)
                 {
-                    log.LogError("data protection error", ex);
+                    log.LogError("data protection error: " + ex.Message + " stacktrace: " + ex.StackTrace);
                 }
 
             }
@@ -187,11 +187,11 @@ namespace cloudscribe.Core.Web.Components
                 }
                 catch (System.Security.Cryptography.CryptographicException ex)
                 {
-                    log.LogError("data protection error", ex);
+                    log.LogError("data protection error: " + ex.Message + " stacktrace: " + ex.StackTrace);
                 }
                 catch (FormatException ex)
                 {
-                    log.LogError("data protection error", ex);
+                    log.LogError("data protection error:" + ex.Message + " stacktrace: " + ex.StackTrace);
                 }
 
             }
@@ -204,11 +204,11 @@ namespace cloudscribe.Core.Web.Components
                 }
                 catch (System.Security.Cryptography.CryptographicException ex)
                 {
-                    log.LogError("data protection error", ex);
+                    log.LogError("data protection error:" + ex.Message + " stacktrace: " + ex.StackTrace);
                 }
                 catch (FormatException ex)
                 {
-                    log.LogError("data protection error", ex);
+                    log.LogError("data protection error:" + ex.Message + " stacktrace: " + ex.StackTrace);
                 }
 
             }
@@ -221,11 +221,11 @@ namespace cloudscribe.Core.Web.Components
                 }
                 catch (System.Security.Cryptography.CryptographicException ex)
                 {
-                    log.LogError("data protection error", ex);
+                    log.LogError("data protection error: " + ex.Message + " stacktrace: " + ex.StackTrace);
                 }
                 catch (FormatException ex)
                 {
-                    log.LogError("data protection error", ex);
+                    log.LogError("data protection error: " + ex.Message + " stacktrace: " + ex.StackTrace);
                 }
 
             }
@@ -238,11 +238,11 @@ namespace cloudscribe.Core.Web.Components
                 }
                 catch (System.Security.Cryptography.CryptographicException ex)
                 {
-                    log.LogError("data protection error", ex);
+                    log.LogError("data protection error: " + ex.Message + " stacktrace: " + ex.StackTrace);
                 }
                 catch (FormatException ex)
                 {
-                    log.LogError("data protection error", ex);
+                    log.LogError("data protection error:" + ex.Message + " stacktrace: " + ex.StackTrace);
                 }
 
             }
@@ -255,11 +255,11 @@ namespace cloudscribe.Core.Web.Components
                 }
                 catch (System.Security.Cryptography.CryptographicException ex)
                 {
-                    log.LogError("data protection error", ex);
+                    log.LogError("data protection error: " + ex.Message + " stacktrace: " + ex.StackTrace);
                 }
                 catch (FormatException ex)
                 {
-                    log.LogError("data protection error", ex);
+                    log.LogError("data protection error: " + ex.Message + " stacktrace: " + ex.StackTrace);
                 }
 
             }
@@ -272,11 +272,11 @@ namespace cloudscribe.Core.Web.Components
                 }
                 catch (System.Security.Cryptography.CryptographicException ex)
                 {
-                    log.LogError("data protection error", ex);
+                    log.LogError("data protection error: " + ex.Message + " stacktrace: " + ex.StackTrace);
                 }
                 catch (FormatException ex)
                 {
-                    log.LogError("data protection error", ex);
+                    log.LogError("data protection error: " + ex.Message + " stacktrace: " + ex.StackTrace);
                 }
 
             }
@@ -289,11 +289,11 @@ namespace cloudscribe.Core.Web.Components
                 }
                 catch (System.Security.Cryptography.CryptographicException ex)
                 {
-                    log.LogError("data protection error", ex);
+                    log.LogError("data protection error:" + ex.Message + " stacktrace: " + ex.StackTrace);
                 }
                 catch (FormatException ex)
                 {
-                    log.LogError("data protection error", ex);
+                    log.LogError("data protection error:" + ex.Message + " stacktrace: " + ex.StackTrace);
                 }
 
             }
