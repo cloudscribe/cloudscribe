@@ -7,6 +7,7 @@
 
 using cloudscribe.Core.Identity;
 using cloudscribe.Core.Models;
+using cloudscribe.Core.Web.Analytics;
 using cloudscribe.Core.Web.Components;
 using cloudscribe.Core.Web.Components.Messaging;
 using cloudscribe.Core.Web.ExtensionPoints;
@@ -42,6 +43,7 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
             IStringLocalizer<CloudscribeCore> localizer,
             IRecaptchaKeysProvider recaptchaKeysProvider,
             IHandleCustomRegistration customRegistration,
+            IHandleAccountAnalytics analyticsHandler,
             ILogger<AccountController> logger
             )
         {
@@ -56,6 +58,7 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
             this.recaptchaKeysProvider = recaptchaKeysProvider;
             this.timeZoneHelper = timeZoneHelper;
             this.customRegistration = customRegistration;
+            analytics = analyticsHandler;
         }
 
         private readonly AccountService accountService;
@@ -69,9 +72,12 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
         private IRecaptchaKeysProvider recaptchaKeysProvider;
         private SiteTimeZoneService timeZoneHelper;
         private IHandleCustomRegistration customRegistration;
+        private IHandleAccountAnalytics analytics;
 
         private async Task<IActionResult> HandleLoginSuccess(UserLoginResult result, string returnUrl)
         {
+            analytics.HandleLoginSuccess(result).Forget();
+
             if (result.User != null)
             {
                 await ipAddressTracker.TackUserIpAddress(Site.Id, result.User.Id);
@@ -102,6 +108,8 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
 
         private IActionResult HandleLoginNotAllowed(UserLoginResult result)
         {
+            analytics.HandleLoginNotAllowed(result).Forget();
+
             if (result.User != null)
             {
                 if (result.NeedsEmailConfirmation)
@@ -147,6 +155,8 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
 
         private IActionResult HandleRequiresTwoFactor(UserLoginResult result, string returnUrl, bool rememberMe)
         {
+            analytics.HandleRequiresTwoFactor(result).Forget();
+
             if (result.User != null)
             {
                 log.LogWarning($"redirecting from login for {result.User.Email} because 2 factor not configured yet for account");
@@ -157,6 +167,8 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
 
         private IActionResult HandleLockout(UserLoginResult result = null)
         {
+            analytics.HandleLockout(result).Forget();
+
             ViewData["Title"] = sr["Locked out"];
 
             if (result != null && result.User != null)
@@ -218,6 +230,9 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
         {
             ViewData["Title"] = sr["Log In"];
             ViewData["ReturnUrl"] = returnUrl;
+
+            analytics.HandleLoginSubmit("Onsite").Forget();
+
             var recaptchaKeys = await recaptchaKeysProvider.GetKeys().ConfigureAwait(false);
             if ((Site.CaptchaOnLogin) && (!string.IsNullOrEmpty(recaptchaKeys.PublicKey)))
             {
@@ -233,6 +248,10 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
 
             if (!ModelState.IsValid)
             {
+                var errors = ModelState.Keys.Where(k => ModelState[k].Errors.Count > 0).Select(k => new { propertyName = k, errorMessage = ModelState[k].Errors[0].ErrorMessage });
+                var trackedError = errors.FirstOrDefault().errorMessage;
+                analytics.HandleLoginFail("Onsite", trackedError).Forget();
+
                 return View(model);
             }
 
@@ -243,6 +262,8 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
 
                 if (!captchaResponse.Success)
                 {
+                    analytics.HandleLoginFail("Onsite", "reCAPTCHA Error").Forget();
+
                     ModelState.AddModelError("recaptchaerror", sr["reCAPTCHA Error occured. Please try again"]);
                     return View(model);
                 }
@@ -277,6 +298,8 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
             }
             else
             {
+                analytics.HandleLoginFail("Onsite", sr["Invalid login attempt."]).Forget();
+
                 log.LogInformation($"login did not succeed for {model.Email}");
                 ModelState.AddModelError(string.Empty, sr["Invalid login attempt."]);
                 return View(model);
@@ -337,6 +360,9 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
         public async Task<IActionResult> Register(RegisterViewModel model, string returnUrl = null)
         {
             ViewData["Title"] = sr["Register"];
+
+            analytics.HandleRegisterSubmit("Onsite").Forget();
+
             if ((Site.CaptchaOnRegistration) && (Site.RecaptchaPublicKey.Length > 0))
             {
                 model.RecaptchaSiteKey = Site.RecaptchaPublicKey;
@@ -412,11 +438,20 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
                 {
                     return HandleLoginNotAllowed(result);
                 }
-                
+
+                var te = result.RejectReasons.FirstOrDefault();
+                if(string.IsNullOrEmpty(te)) { te = "unknown"; }
+
+                analytics.HandleRegisterFail("Onsite", te).Forget();
+
                 log.LogInformation($"registration did not succeed for {model.Email}");
                // ModelState.AddModelError(string.Empty, sr["Invalid registration attempt."]);
                 return View(viewName, model);           
             }
+
+            var errors = ModelState.Keys.Where(k => ModelState[k].Errors.Count > 0).Select(k => new { propertyName = k, errorMessage = ModelState[k].Errors[0].ErrorMessage });
+            var trackedError = errors.FirstOrDefault().errorMessage;
+            analytics.HandleRegisterFail("Onsite", trackedError).Forget();
 
             // If we got this far, something failed, redisplay form
             return View(model);
@@ -429,6 +464,8 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
         public IActionResult ExternalLogin(string provider, string returnUrl = null)
         {
             log.LogDebug("ExternalLogin called for " + provider + " with returnurl " + returnUrl);
+
+            analytics.HandleLoginSubmit(provider).Forget();
 
             // Request a redirect to the external login provider.
             var redirectUrl = Url.Action("ExternalLoginCallback", "Account", new { ReturnUrl = returnUrl });
@@ -446,6 +483,9 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
             if (remoteError != null)
             {
                 var errormessage = string.Format(sr["Error from external provider: {0}"], remoteError);
+
+                analytics.HandleLoginFail("Social", errormessage).Forget();
+
                 ModelState.AddModelError("providererror", errormessage);
                 return RedirectToAction("Login");
             }
@@ -458,6 +498,8 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
                 {
                     if (result.MustAcceptTerms)
                     {
+                        await analytics.HandleLoginSuccess(result);
+                        
                         return RedirectToAction("TermsOfUse");
                     }
                 }
@@ -548,6 +590,9 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
                 if (result.ExternalLoginInfo == null)
                 {
                     log.LogWarning("ExternalLoginInfo was null");
+
+                    analytics.HandleLoginFail("Social", "ExternalLoginInfo was null").Forget();
+
                     return View("ExternalLoginFailure");
                 }
 

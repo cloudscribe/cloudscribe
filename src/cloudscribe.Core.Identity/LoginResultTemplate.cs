@@ -6,6 +6,10 @@ namespace cloudscribe.Core.Identity
 {
     public class LoginResultTemplate
     {
+        public LoginResultTemplate()
+        {
+            RejectReasons = new List<string>();
+        }
         public bool MustAcceptTerms { get; set; }
         public bool NeedsAccountApproval { get; set; }
         public bool NeedsEmailConfirmation { get; set; }
@@ -14,6 +18,7 @@ namespace cloudscribe.Core.Identity
         public ExternalLoginInfo ExternalLoginInfo { get; set; } = null;
         public List<string> RejectReasons { get; set; } = new List<string>();
         public SiteUser User { get; set; } = null;
+        public bool IsNewUserRegistration { get; set; }
         public SignInResult SignInResult { get; set; } = SignInResult.Failed;
     }
 }

@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2017-05-22
-// Last Modified:			2017-05-24
+// Last Modified:			2017-09-21
 // 
 
 using cloudscribe.Core.Models;
@@ -15,13 +15,14 @@ namespace cloudscribe.Core.Identity
     {
         public UserLoginResult(
             SignInResult signInResult,
-            List<string> rejectReasons = null,
-            IUserContext user = null,
-            bool mustAcceptTerms = false,
-            bool needsAccountApproval = false,
-            bool needsEmailConfirmation = false,
-            string emailConfirmationToken = "",
-            bool needsPhoneConfirmation = false,
+            List<string> rejectReasons,
+            IUserContext user,
+            bool isNewUserRegistration,
+            bool mustAcceptTerms,
+            bool needsAccountApproval,
+            bool needsEmailConfirmation,
+            string emailConfirmationToken,
+            bool needsPhoneConfirmation,
             ExternalLoginInfo externalLoginInfo = null
             )
         {
@@ -33,6 +34,7 @@ namespace cloudscribe.Core.Identity
                 RejectReasons = new List<string>();
             }
             User = user;
+            IsNewUserRegistration = isNewUserRegistration;
             MustAcceptTerms = mustAcceptTerms;
             NeedsAccountApproval = needsAccountApproval;
             NeedsEmailConfirmation = needsEmailConfirmation;
@@ -63,6 +65,8 @@ namespace cloudscribe.Core.Identity
         public List<string> RejectReasons { get; }
 
         public IUserContext User { get; }
+
+        public bool IsNewUserRegistration { get; }
     }
 
 }

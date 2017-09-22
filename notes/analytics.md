@@ -21,6 +21,9 @@ PII Viewer for Google Analytics is a Google Chrome extension which allows you to
 https://davidsimpson.me/pii-viewer-for-google-analytics/
 https://davidsimpson.me/2014/04/20/tutorial-send-user-ids-google-analytics/
 
+
+http://www.charlesfarina.com/login-and-signup-naming-conventions-for-google-analytics/
+
 ## Tracking code notes
 
 https://support.google.com/analytics/answer/1033863?visit_id=1-636413345736273758-1215674834&rd=1
@@ -74,3 +77,98 @@ it won't work if ip anonymization is enabled
 
 https://support.google.com/analytics/answer/2763052?hl=en
 
+## Dimensions and Metrics
+
+Dimensions are attributes of your data. For example, the dimension City indicates the city, for example, "Paris" or "New York", from which a session originates. The dimension Page indicates the URL of a page that is viewed.
+
+Metrics are quantitative measurements. The metric Sessions is the total number of sessions. The metric Pages/Session is the average number of pages viewed per session.
+
+Default Dimensions and Metrics
+https://support.google.com/analytics/answer/1033861
+
+
+Create and edit custom dimensions and metrics
+https://support.google.com/analytics/answer/2709829?hl=en
+
+## Custom Dimenstions and metircs used in cloudscribe
+
+Define these in your google analytics per prooperty where using cloudscribe
+
+### Custom Dimensions
+Name = User ID (Hit Scoped)
+   Index = 1
+   Scope = Hit //Pass this on all hits while logged in for GA User-ID feature. See Simo for options and GA for benefits
+   Value = <User ID> //Pass ID from your database
+   
+Name = Registered User
+    Index = 2
+    Scope = User
+    Value = Yes
+	
+Name = Login/Register Source
+    Index = 3
+    Scope = Hit
+    Value = <Method> //Facebook, Twitter, Onsite
+	
+	
+### Custom Metrics
+
+Name = Register Success
+    Index = 1
+    Value = 1
+    Minimum Value = 1
+    Maximum Value = 1
+    Formating Type = Integer
+	
+Name = Register Fail
+    Index = 2
+    Value = 1
+    Minimum Value = 1
+    Maximum Value = 1
+    Formating Type = Integer
+	
+Name = Register Submit
+    Index = 3
+    Value = 1
+    Minimum Value = 1
+    Maximum Value = 1
+    Formating Type = Integer
+	
+Name = Login Success
+    Index = 4
+    Value = 1
+    Minimum Value = 1
+    Maximum Value = 1
+    Formating Type = Integer
+	
+Name = Login Fail
+    Index = 5
+    Value = 1
+    Minimum Value = 1
+    Maximum Value = 1
+    Formating Type = Integer
+	
+Name = Login Submit
+   Index = 6
+   Value = 1
+   Minimum Value = 1
+   Maximum Value = 1
+   Formating Type = Integer
+
+## Events
+
+https://developers.google.com/analytics/devguides/collection/analyticsjs/events
+
+Anatomy of Events 
+https://support.google.com/analytics/answer/1033068#Anatomy
+
+ga('send', 'event', [eventCategory], [eventAction], [eventLabel], [eventValue], [fieldsObject]);
+Event fields
+
+The following table summarizes the event fields:
+
+Field Name	Value Type	Required	Description
+eventCategory	text	yes	Typically the object that was interacted with (e.g. 'Video')
+eventAction	text	yes	The type of interaction (e.g. 'play')
+eventLabel	text	no	Useful for categorizing events (e.g. 'Fall Campaign')
+eventValue	integer	no	A numeric value associated with the event (e.g. 42)

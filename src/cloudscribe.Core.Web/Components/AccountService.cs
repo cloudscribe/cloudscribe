@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2017-05-22
-// Last Modified:			2017-07-27
+// Last Modified:			2017-09-20
 // 
 
 using cloudscribe.Core.Identity;
@@ -123,6 +123,7 @@ namespace cloudscribe.Core.Web.Components
                 if (template.User == null)
                 {
                     template.User = await CreateUserFromExternalLogin(template.ExternalLoginInfo, email, didAcceptTerms);
+                    if(template.User != null) { template.IsNewUserRegistration = true; }
                 }
             }
  
@@ -155,6 +156,7 @@ namespace cloudscribe.Core.Web.Components
                 template.SignInResult,
                 template.RejectReasons,
                 userContext,
+                template.IsNewUserRegistration,
                 template.MustAcceptTerms,
                 template.NeedsAccountApproval,
                 template.NeedsEmailConfirmation,
@@ -226,6 +228,7 @@ namespace cloudscribe.Core.Web.Components
                 template.SignInResult, 
                 template.RejectReasons, 
                 userContext,
+                template.IsNewUserRegistration,
                 template.MustAcceptTerms,
                 template.NeedsAccountApproval,
                 template.NeedsEmailConfirmation,
@@ -284,6 +287,7 @@ namespace cloudscribe.Core.Web.Components
             if (result.Succeeded)
             {
                 template.User = user;
+                template.IsNewUserRegistration = true;
                 await loginRulesProcessor.ProcessAccountLoginRules(template);
             }
             else
@@ -314,6 +318,7 @@ namespace cloudscribe.Core.Web.Components
                 template.SignInResult,
                 template.RejectReasons,
                 userContext,
+                template.IsNewUserRegistration,
                 template.MustAcceptTerms,
                 template.NeedsAccountApproval,
                 template.NeedsEmailConfirmation,
