@@ -280,7 +280,7 @@ namespace cloudscribe.Core.Web.Analytics
                 {
                     var props = GetStandardProps();
                     var dimensionAndMetrics = new List<KeyValuePair<string, string>>();
-                    if (result.User != null)
+                    if (_options.TrackUserId && result.User != null)
                     {
                         dimensionAndMetrics.Add(new KeyValuePair<string, string>("cd" + _options.UserIdDimensionIndex.ToInvariantString(), result.User.Id.ToString()));
                     }
@@ -309,7 +309,7 @@ namespace cloudscribe.Core.Web.Analytics
                     e.Action = _options.LoginSuccessEventAction;
 
                     e.Label = source;
-                    if (result.User != null)
+                    if (_options.TrackUserId && result.User != null)
                     {
                         e.Fields.Add(new KeyValuePair<string, string>("dimension" + _options.UserIdDimensionIndex.ToInvariantString(), result.User.Id.ToString()));
                     }
@@ -351,6 +351,10 @@ namespace cloudscribe.Core.Web.Analytics
                     {
                         var props = GetStandardProps();
                         var dimensionAndMetrics = new List<KeyValuePair<string, string>>();
+                        if (_options.TrackUserId && result.User != null)
+                        {
+                            dimensionAndMetrics.Add(new KeyValuePair<string, string>("cd" + _options.UserIdDimensionIndex.ToInvariantString(), result.User.Id.ToString()));
+                        }
                         dimensionAndMetrics.Add(new KeyValuePair<string, string>("cd" + _options.LoginRegisterSourceDimenstionIdex.ToInvariantString(), source));
                         dimensionAndMetrics.Add(new KeyValuePair<string, string>("cm" + _options.LoginFailMetricIndex.ToInvariantString(), "1"));
 
@@ -375,6 +379,10 @@ namespace cloudscribe.Core.Web.Analytics
                         e.Action = _options.LoginFailEventAction;
                         e.Label = source;
                         e.Value = reason;
+                        if (_options.TrackUserId && result.User != null)
+                        {
+                            e.Fields.Add(new KeyValuePair<string, string>("dimension" + _options.UserIdDimensionIndex.ToInvariantString(), result.User.Id.ToString()));
+                        }
                         e.Fields.Add(new KeyValuePair<string, string>("dimension" + _options.LoginRegisterSourceDimenstionIdex.ToInvariantString(), source));
                         e.Fields.Add(new KeyValuePair<string, string>("metric" + _options.LoginFailMetricIndex.ToInvariantString(), "1"));
 
@@ -400,7 +408,7 @@ namespace cloudscribe.Core.Web.Analytics
             {
                 var props = GetStandardProps();
                 var dimensionAndMetrics = new List<KeyValuePair<string, string>>();
-                if (result.User != null)
+                if (_options.TrackUserId && result.User != null)
                 {
                     dimensionAndMetrics.Add(new KeyValuePair<string, string>("cd" + _options.UserIdDimensionIndex.ToInvariantString(), result.User.Id.ToString()));
                 }
@@ -428,7 +436,7 @@ namespace cloudscribe.Core.Web.Analytics
                 e.Category = _options.LoginRegisterEventCategory;
                 e.Action = _options.RegisterSuccessEventAction;
                 e.Label = source;
-                if (result.User != null)
+                if (_options.TrackUserId && result.User != null)
                 {
                     e.Fields.Add(new KeyValuePair<string, string>("dimension" + _options.UserIdDimensionIndex.ToInvariantString(), result.User.Id.ToString()));
                 }
@@ -456,6 +464,10 @@ namespace cloudscribe.Core.Web.Analytics
                 }
                 e.Label = source;
                 e.Value = "Requires 2 Factor";
+                if (_options.TrackUserId && result.User != null)
+                {
+                    e.Fields.Add(new KeyValuePair<string, string>("dimension" + _options.UserIdDimensionIndex.ToInvariantString(), result.User.Id.ToString()));
+                }
                 e.Fields.Add(new KeyValuePair<string, string>("dimension" + _options.LoginRegisterSourceDimenstionIdex.ToInvariantString(), source));
                 e.Fields.Add(new KeyValuePair<string, string>("metric" + _options.LoginFailMetricIndex.ToInvariantString(), "1"));
 
@@ -479,6 +491,10 @@ namespace cloudscribe.Core.Web.Analytics
                 }
                 e.Label = source;
                 e.Value = "Account lockout";
+                if (_options.TrackUserId && result.User != null)
+                {
+                    e.Fields.Add(new KeyValuePair<string, string>("dimension" + _options.UserIdDimensionIndex.ToInvariantString(), result.User.Id.ToString()));
+                }
                 e.Fields.Add(new KeyValuePair<string, string>("dimension" + _options.LoginRegisterSourceDimenstionIdex.ToInvariantString(), source));
                 e.Fields.Add(new KeyValuePair<string, string>("metric" + _options.LoginFailMetricIndex.ToInvariantString(), "1"));
 
