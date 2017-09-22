@@ -4,4 +4,8 @@
 @using Microsoft.Extensions.Localization
 @using Microsoft.AspNetCore.Http.Authentication
 @inject IStringLocalizer<CloudscribeCore> sr
-
+<div class="row">
+    <div class="col-md-12">
+        @Html.Raw(Model.RegistrationPreamble)
+    </div>
+</div>
