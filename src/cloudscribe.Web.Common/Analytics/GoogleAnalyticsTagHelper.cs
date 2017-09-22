@@ -84,9 +84,10 @@ namespace cloudscribe.Web.Common.TagHelpers
 
             sb.AppendLine("");
             sb.AppendLine("ga('send', 'pageview');");
-            
+
             var eventList = ViewContext.TempData.GetGoogleAnalyticsEvents();
-            foreach(var e in eventList)
+            
+            foreach (var e in eventList)
             {
                 if(e.IsValid())
                 {

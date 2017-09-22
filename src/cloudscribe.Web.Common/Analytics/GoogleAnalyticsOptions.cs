@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace cloudscribe.Web.Common.Analytics
+﻿namespace cloudscribe.Web.Common.Analytics
 {
     public class GoogleAnalyticsOptions
     {
@@ -29,6 +25,14 @@ namespace cloudscribe.Web.Common.Analytics
         public string RegisterSuccessEventAction { get; set; } = "Register Success";
         public string RegisterFailEventAction { get; set; } = "Register Fail";
         public string RegisterSubmitEventAction { get; set; } = "Register Submit";
+
+        /// <summary>
+        /// for some reason the TempData is lost if we set it in the callback after a redirect back from the social auth provider
+        /// and the tracking doesn't appear in rendered markup so making this true
+        /// but making it an option in case it can be resolved later
+        /// as I don't know why it isn't working
+        /// </summary>
+        public bool TrackSocialLoginServerSide { get; set; } = true;
 
     }
 }

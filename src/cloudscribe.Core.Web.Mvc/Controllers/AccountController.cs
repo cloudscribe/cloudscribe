@@ -231,7 +231,7 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
             ViewData["Title"] = sr["Log In"];
             ViewData["ReturnUrl"] = returnUrl;
 
-            analytics.HandleLoginSubmit(sr["Onsite"]).Forget();
+            analytics.HandleLoginSubmit("Onsite").Forget();
 
             var recaptchaKeys = await recaptchaKeysProvider.GetKeys().ConfigureAwait(false);
             if ((Site.CaptchaOnLogin) && (!string.IsNullOrEmpty(recaptchaKeys.PublicKey)))
@@ -250,7 +250,7 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
             {
                 var errors = ModelState.Keys.Where(k => ModelState[k].Errors.Count > 0).Select(k => new { propertyName = k, errorMessage = ModelState[k].Errors[0].ErrorMessage });
                 var trackedError = errors.FirstOrDefault().errorMessage;
-                analytics.HandleLoginFail(sr["Onsite"], trackedError).Forget();
+                analytics.HandleLoginFail("Onsite", trackedError).Forget();
 
                 return View(model);
             }
@@ -262,7 +262,7 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
 
                 if (!captchaResponse.Success)
                 {
-                    analytics.HandleLoginFail(sr["Onsite"], "reCAPTCHA Error").Forget();
+                    analytics.HandleLoginFail("Onsite", "reCAPTCHA Error").Forget();
 
                     ModelState.AddModelError("recaptchaerror", sr["reCAPTCHA Error occured. Please try again"]);
                     return View(model);
@@ -298,7 +298,7 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
             }
             else
             {
-                analytics.HandleLoginFail(sr["Onsite"], sr["Invalid login attempt."]).Forget();
+                analytics.HandleLoginFail("Onsite", sr["Invalid login attempt."]).Forget();
 
                 log.LogInformation($"login did not succeed for {model.Email}");
                 ModelState.AddModelError(string.Empty, sr["Invalid login attempt."]);
@@ -361,7 +361,7 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
         {
             ViewData["Title"] = sr["Register"];
 
-            analytics.HandleRegisterSubmit(sr["Onsite"]).Forget();
+            analytics.HandleRegisterSubmit("Onsite").Forget();
 
             if ((Site.CaptchaOnRegistration) && (Site.RecaptchaPublicKey.Length > 0))
             {
@@ -442,7 +442,7 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
                 var te = result.RejectReasons.FirstOrDefault();
                 if(string.IsNullOrEmpty(te)) { te = "unknown"; }
 
-                analytics.HandleRegisterFail(sr["Onsite"], te).Forget();
+                analytics.HandleRegisterFail("Onsite", te).Forget();
 
                 log.LogInformation($"registration did not succeed for {model.Email}");
                // ModelState.AddModelError(string.Empty, sr["Invalid registration attempt."]);
@@ -451,7 +451,7 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
 
             var errors = ModelState.Keys.Where(k => ModelState[k].Errors.Count > 0).Select(k => new { propertyName = k, errorMessage = ModelState[k].Errors[0].ErrorMessage });
             var trackedError = errors.FirstOrDefault().errorMessage;
-            analytics.HandleRegisterFail(sr["Onsite"], trackedError).Forget();
+            analytics.HandleRegisterFail("Onsite", trackedError).Forget();
 
             // If we got this far, something failed, redisplay form
             return View(model);
@@ -499,7 +499,7 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
                     if (result.MustAcceptTerms)
                     {
                         await analytics.HandleLoginSuccess(result);
-
+                        
                         return RedirectToAction("TermsOfUse");
                     }
                 }

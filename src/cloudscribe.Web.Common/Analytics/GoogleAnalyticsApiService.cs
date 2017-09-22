@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0.
 // Author:                  Joe Audette
 // Created:                 2017-09-21
-// Last Modified:           2017-09-21
+// Last Modified:           2017-09-22
 // 
 
 using Microsoft.AspNetCore.Http;
@@ -188,16 +188,7 @@ namespace cloudscribe.Web.Common.Analytics
             string eventValue = "",
             string ipAddress = "",
             string userAgent = "",
-            string dimension1 = "",
-            string dimension2 = "",
-            string dimension3 = "",
-            string dimension4 = "",
-            string dimension5 = "",
-            string metric1 = "",
-            string metric2 = "",
-            string metric3 = "",
-            string metric4 = "",
-            string metric5 = ""
+            List<KeyValuePair<string, string>> dimensionsAndMetrics = null
 
             )
         {
@@ -242,6 +233,16 @@ namespace cloudscribe.Web.Common.Analytics
             {
                 keyValues.Add(new KeyValuePair<string, string>("dh", hostName));
             }
+            if (!string.IsNullOrWhiteSpace(userAgent))
+            {
+                keyValues.Add(new KeyValuePair<string, string>("ua", userAgent));
+            }
+
+            if (!string.IsNullOrWhiteSpace(ipAddress))
+            {
+                keyValues.Add(new KeyValuePair<string, string>("uip", ipAddress));
+            }
+
             // these 2 required
             keyValues.Add(new KeyValuePair<string, string>("ec", eventCategory));
             keyValues.Add(new KeyValuePair<string, string>("ea", eventAction));
@@ -256,66 +257,14 @@ namespace cloudscribe.Web.Common.Analytics
                 keyValues.Add(new KeyValuePair<string, string>("ev", eventValue));
             }
 
-            if (!string.IsNullOrWhiteSpace(dimension1))
+            if(dimensionsAndMetrics != null)
             {
-                keyValues.Add(new KeyValuePair<string, string>("cd1", dimension1));
+                foreach(var prop in dimensionsAndMetrics)
+                {
+                    keyValues.Add(new KeyValuePair<string, string>(prop.Key, prop.Value));
+                }
             }
-
-            if (!string.IsNullOrWhiteSpace(dimension2))
-            {
-                keyValues.Add(new KeyValuePair<string, string>("cd2", dimension2));
-            }
-
-            if (!string.IsNullOrWhiteSpace(dimension3))
-            {
-                keyValues.Add(new KeyValuePair<string, string>("cd3", dimension3));
-            }
-
-            if (!string.IsNullOrWhiteSpace(dimension4))
-            {
-                keyValues.Add(new KeyValuePair<string, string>("cd4", dimension4));
-            }
-
-            if (!string.IsNullOrWhiteSpace(dimension5))
-            {
-                keyValues.Add(new KeyValuePair<string, string>("cd5", dimension5));
-            }
-
-            if (!string.IsNullOrWhiteSpace(metric1))
-            {
-                keyValues.Add(new KeyValuePair<string, string>("cm1", metric1));
-            }
-
-            if (!string.IsNullOrWhiteSpace(metric2))
-            {
-                keyValues.Add(new KeyValuePair<string, string>("cm2", metric2));
-            }
-
-            if (!string.IsNullOrWhiteSpace(metric3))
-            {
-                keyValues.Add(new KeyValuePair<string, string>("cm3", metric3));
-            }
-
-            if (!string.IsNullOrWhiteSpace(metric4))
-            {
-                keyValues.Add(new KeyValuePair<string, string>("cm4", metric4));
-            }
-
-            if (!string.IsNullOrWhiteSpace(metric5))
-            {
-                keyValues.Add(new KeyValuePair<string, string>("cm5", metric5));
-            }
-
-            if (!string.IsNullOrWhiteSpace(userAgent))
-            {
-                keyValues.Add(new KeyValuePair<string, string>("ua", userAgent));
-            }
-
-            if (!string.IsNullOrWhiteSpace(ipAddress))
-            {
-                keyValues.Add(new KeyValuePair<string, string>("uip", ipAddress));
-            }
-
+            
             var content = new FormUrlEncodedContent(keyValues);
 
             try
