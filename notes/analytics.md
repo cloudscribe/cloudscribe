@@ -154,6 +154,20 @@ Name = Login Submit
    Minimum Value = 1
    Maximum Value = 1
    Formating Type = Integer
+   
+ Name = Newsletter Signup Submit
+   Index = 7
+   Value = 1
+   Minimum Value = 1
+   Maximum Value = 1
+   Formating Type = Integer
+   
+ Name = Newsletter Signup Confirmed
+   Index = 8
+   Value = 1
+   Minimum Value = 1
+   Maximum Value = 1
+   Formating Type = Integer
 
 ## Events
 
@@ -172,3 +186,9 @@ eventCategory	text	yes	Typically the object that was interacted with (e.g. 'Vide
 eventAction	text	yes	The type of interaction (e.g. 'play')
 eventLabel	text	no	Useful for categorizing events (e.g. 'Fall Campaign')
 eventValue	integer	no	A numeric value associated with the event (e.g. 42)
+
+## Setting Goals
+
+https://blog.kissmetrics.com/critical-goal-types/
+
+http://online-metrics.com/analytics-goals/

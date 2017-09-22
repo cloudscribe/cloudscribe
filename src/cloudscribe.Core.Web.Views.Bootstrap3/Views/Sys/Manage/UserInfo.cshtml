@@ -5,6 +5,7 @@
 @inject IStringLocalizer<CloudscribeCore> sr
 @{
     ViewData["Title"] = sr["Update User Info"];
+    ViewData["BodyClass"] = "manage-section user-info";
 }
 @section Styles {
 @{await Html.RenderPartialAsync("UserInfoStylePartial"); }

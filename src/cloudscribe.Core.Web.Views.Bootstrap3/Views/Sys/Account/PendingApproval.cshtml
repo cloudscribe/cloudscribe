@@ -5,6 +5,7 @@
 @inject IStringLocalizer<CloudscribeCore> sr
 @{
     ViewData["Title"] = sr["Thanks for registering!"];
+    ViewData["BodyClass"] = "account-section account-pending";
 }
 
 <h2>@ViewData["Title"]</h2>

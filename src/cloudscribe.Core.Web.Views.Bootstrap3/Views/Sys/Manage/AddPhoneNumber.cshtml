@@ -5,6 +5,7 @@
 @inject IStringLocalizer<CloudscribeCore> sr
 @{
     ViewData["Title"] = sr["Add Phone Number"];
+    ViewData["BodyClass"] = "manage-section add-phone";
 }
 <h2>@ViewData["Title"]</h2>
 <form asp-controller="Manage" asp-action="AddPhoneNumber" method="post" class="form-horizontal" role="form">

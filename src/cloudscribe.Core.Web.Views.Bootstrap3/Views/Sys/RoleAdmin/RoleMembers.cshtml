@@ -6,6 +6,9 @@
 @using Microsoft.Extensions.Options
 @using Microsoft.Extensions.Localization
 @inject IStringLocalizer<CloudscribeCore> sr
+@{ 
+    ViewData["BodyClass"] = "admin-section role-members";
+}
 <h2>@Model.Heading1</h2>
 <h3>@Model.Heading2</h3>
 <form class="form-inline" role="form" asp-controller="RoleAdmin" asp-action="RoleMembers" method="get">
