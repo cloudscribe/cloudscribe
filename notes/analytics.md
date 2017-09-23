@@ -168,8 +168,11 @@ Name = Login Submit
    Minimum Value = 1
    Maximum Value = 1
    Formating Type = Integer
+   
 
 ## Events
+
+https://support.google.com/analytics/answer/1033068?hl=en
 
 https://developers.google.com/analytics/devguides/collection/analyticsjs/events
 
@@ -192,3 +195,28 @@ eventValue	integer	no	A numeric value associated with the event (e.g. 42)
 https://blog.kissmetrics.com/critical-goal-types/
 
 http://online-metrics.com/analytics-goals/
+
+## Tracking Email opens and non-interaction events
+
+https://www.lunametrics.com/blog/2014/05/06/noninteraction-events-google-analytics/
+
+https://developers.google.com/analytics/devguides/collection/protocol/v1/email
+
+Event
+    Category = Offsite Interactions
+    Action = Project Created
+    Label = newproject-mssql, newproject-pgsql, newproject-nodb, newproject-mysql
+    Non-Interaction = true
+  Custom Dimensions
+    Name = Project Type (Hit Scoped)
+      Index = 4
+      Scope = Hit 
+      Value = newproject-mssql, newproject-pgsql, newproject-nodb, newproject-mysql
+  Custom Metrics
+    Name = Project Creation
+      Index = 7
+      Value = 1
+      Minimum Value = 1
+      Maximum Value = 1
+      Formating Type = Integer
+	  

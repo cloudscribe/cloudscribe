@@ -2,13 +2,14 @@
 // Licensed under the Apache License, Version 2.0.
 // Author:                  Joe Audette
 // Created:                 2017-09-21
-// Last Modified:           2017-09-22
+// Last Modified:           2017-09-23
 // 
 
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
+using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
 
@@ -47,6 +48,23 @@ namespace cloudscribe.Web.Common.Analytics
 
             return null;
         }
+
+        public StandardPostProps GetStandardProps(HttpContext context)
+        {
+            var props = new StandardPostProps();
+            
+            props.ClientId = GetGAClientIdFromCookie(context);
+            props.Host = context.Request.Host.Value;
+            props.IpAddress = context.Connection.RemoteIpAddress.ToString();
+            props.UserAgent = context.Request.Headers["User-Agent"].ToString();
+            if (!string.IsNullOrWhiteSpace(props.UserAgent))
+            {
+                props.UserAgent = WebUtility.UrlEncode(props.UserAgent);
+            }
+
+            return props;
+        }
+
 
         public async Task TrackPageView(
             string profileId,

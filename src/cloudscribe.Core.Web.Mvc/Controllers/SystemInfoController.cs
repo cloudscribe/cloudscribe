@@ -50,6 +50,7 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
             serverInfo.EnvironmentName = systemInfo.EnvironmentName;
             serverInfo.DatabasePlatform = systemInfo.DatabasePlatform;
             serverInfo.CloudscribeCoreVersion = systemInfo.CloudscribeCoreVersion;
+            serverInfo.OtherVersions = systemInfo.GetOtherVersions();
             
             return View(serverInfo);
         }

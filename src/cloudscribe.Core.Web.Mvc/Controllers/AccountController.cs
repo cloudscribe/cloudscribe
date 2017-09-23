@@ -87,7 +87,10 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
             {
                 // when site is closed login is still allowed
                 // but don't redirect to closed paged
-                if(!returnUrl.Contains("/closed"))
+                if(
+                    (!returnUrl.Contains("/closed"))
+                    && (!returnUrl.Contains("/oops/error"))
+                    )
                 {
                     return LocalRedirect(returnUrl);
                 }

@@ -2,12 +2,12 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2016-05-07
-// Last Modified:			2017-09-21
+// Last Modified:			2017-09-23
 // 
 
 
 using cloudscribe.Core.Models;
-using cloudscribe.Core.Models.Setup;
+using cloudscribe.Web.Common.Setup;
 using cloudscribe.Core.Web;
 using cloudscribe.Core.Web.Analytics;
 using cloudscribe.Core.Web.Components;
@@ -85,6 +85,7 @@ namespace Microsoft.Extensions.DependencyInjection
             services.AddScoped<IVersionProviderFactory, VersionProviderFactory>();
             services.AddScoped<IVersionProvider, CloudscribeCoreVersionProvider>();
             
+
             services.AddTransient<ISiteMessageEmailSender, SiteEmailMessageSender>();
             //services.AddTransient<ISiteMessageEmailSender, FakeSiteEmailSender>();
             
