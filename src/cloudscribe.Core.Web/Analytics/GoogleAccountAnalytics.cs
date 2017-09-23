@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0.
 // Author:                  Joe Audette
 // Created:                 2017-09-21
-// Last Modified:           2017-09-22
+// Last Modified:           2017-09-23
 // 
 
 using cloudscribe.Core.Identity;
@@ -12,7 +12,6 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using Microsoft.Extensions.Options;
 using System.Collections.Generic;
-using System.Net;
 using System.Threading.Tasks;
 
 namespace cloudscribe.Core.Web.Analytics
@@ -40,32 +39,7 @@ namespace cloudscribe.Core.Web.Analytics
         private IHttpContextAccessor _contextAccessor;
         private ITempDataDictionaryFactory _tempaDataFactory;
         private ITempDataDictionary _tempData = null;
-
-        internal class StandardPostProps
-        {
-            public string ClientId { get; set; }
-            public string IpAddress { get; set; }
-            public string UserAgent { get; set; }
-            public string Host { get; set; }
-        }
-
-        private StandardPostProps GetStandardProps()
-        {
-            var props = new StandardPostProps();
-            var context = _contextAccessor.HttpContext;
-            props.ClientId = _analyticsApi.GetGAClientIdFromCookie(context);
-            props.Host = context.Request.Host.Value;
-            props.IpAddress = context.Connection.RemoteIpAddress.ToString();
-            props.UserAgent = context.Request.Headers["User-Agent"].ToString();
-            if (!string.IsNullOrWhiteSpace(props.UserAgent))
-            {
-                props.UserAgent = WebUtility.UrlEncode(props.UserAgent);
-            }
-
-            return props;
-        }
-
-
+        
         private ITempDataDictionary GetTempData()
         {
             if(_tempData == null)
@@ -92,7 +66,7 @@ namespace cloudscribe.Core.Web.Analytics
             {
                 if(_options.TrackSocialLoginServerSide && source != "Onsite")
                 {
-                    var props = GetStandardProps();
+                    var props = _analyticsApi.GetStandardProps(_contextAccessor.HttpContext);
                     var dimensionAndMetrics = new List<KeyValuePair<string, string>>();
                     dimensionAndMetrics.Add(new KeyValuePair<string, string>("cd" + _options.LoginRegisterSourceDimenstionIdex.ToInvariantString(), source));
                     dimensionAndMetrics.Add(new KeyValuePair<string, string>("cm" + _options.LoginSubmitMetricIndex.ToInvariantString(), "1"));
@@ -134,7 +108,7 @@ namespace cloudscribe.Core.Web.Analytics
             {
                 if (_options.TrackSocialLoginServerSide && source != "Onsite")
                 {
-                    var props = GetStandardProps();
+                    var props = _analyticsApi.GetStandardProps(_contextAccessor.HttpContext);
                     var dimensionAndMetrics = new List<KeyValuePair<string, string>>();
                     dimensionAndMetrics.Add(new KeyValuePair<string, string>("cd" + _options.LoginRegisterSourceDimenstionIdex.ToInvariantString(), source));
                     dimensionAndMetrics.Add(new KeyValuePair<string, string>("cm" + _options.LoginFailMetricIndex.ToInvariantString(), "1"));
@@ -178,7 +152,7 @@ namespace cloudscribe.Core.Web.Analytics
             {
                 if (_options.TrackSocialLoginServerSide && source != "Onsite")
                 {
-                    var props = GetStandardProps();
+                    var props = _analyticsApi.GetStandardProps(_contextAccessor.HttpContext);
                     var dimensionAndMetrics = new List<KeyValuePair<string, string>>();
                     dimensionAndMetrics.Add(new KeyValuePair<string, string>("cd" + _options.LoginRegisterSourceDimenstionIdex.ToInvariantString(), source));
                     dimensionAndMetrics.Add(new KeyValuePair<string, string>("cm" + _options.RegisterSubmitMetricIndex.ToInvariantString(), "1"));
@@ -221,7 +195,7 @@ namespace cloudscribe.Core.Web.Analytics
             {
                 if (_options.TrackSocialLoginServerSide && source != "Onsite")
                 {
-                    var props = GetStandardProps();
+                    var props = _analyticsApi.GetStandardProps(_contextAccessor.HttpContext);
                     var dimensionAndMetrics = new List<KeyValuePair<string, string>>();
                     dimensionAndMetrics.Add(new KeyValuePair<string, string>("cd" + _options.LoginRegisterSourceDimenstionIdex.ToInvariantString(), source));
                     dimensionAndMetrics.Add(new KeyValuePair<string, string>("cm" + _options.RegisterFailMetricIndex.ToInvariantString(), "1"));
@@ -278,7 +252,7 @@ namespace cloudscribe.Core.Web.Analytics
 
                 if (_options.TrackSocialLoginServerSide && result.ExternalLoginInfo != null)
                 {
-                    var props = GetStandardProps();
+                    var props = _analyticsApi.GetStandardProps(_contextAccessor.HttpContext);
                     var dimensionAndMetrics = new List<KeyValuePair<string, string>>();
                     if (_options.TrackUserId && result.User != null)
                     {
@@ -349,7 +323,7 @@ namespace cloudscribe.Core.Web.Analytics
 
                     if (_options.TrackSocialLoginServerSide && result.ExternalLoginInfo != null)
                     {
-                        var props = GetStandardProps();
+                        var props = _analyticsApi.GetStandardProps(_contextAccessor.HttpContext);
                         var dimensionAndMetrics = new List<KeyValuePair<string, string>>();
                         if (_options.TrackUserId && result.User != null)
                         {
@@ -406,7 +380,7 @@ namespace cloudscribe.Core.Web.Analytics
 
             if (_options.TrackSocialLoginServerSide && result.ExternalLoginInfo != null)
             {
-                var props = GetStandardProps();
+                var props = _analyticsApi.GetStandardProps(_contextAccessor.HttpContext);
                 var dimensionAndMetrics = new List<KeyValuePair<string, string>>();
                 if (_options.TrackUserId && result.User != null)
                 {

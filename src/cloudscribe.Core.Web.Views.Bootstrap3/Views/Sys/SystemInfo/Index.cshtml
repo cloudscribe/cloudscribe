@@ -6,40 +6,49 @@
 @inject IStringLocalizer<CloudscribeCore> sr
 @{ 
     ViewData["BodyClass"] = "admin-section system-info";
+    var versionFormat = sr["{0} Version"];
 }
 <h1>@ViewData["Title"]</h1>
-<dl class="dl-horizontal">
-    <dt>@sr["Server Host Name"]</dt>
-    <dd>
-        @Model.Name
-    </dd>
-    <dt>@sr["Server IP Address"]</dt>
-    <dd>
-        @Model.LocalAddress
-    </dd>
-    <dt>@sr["Operating System"]</dt>
-    <dd>
-        @Model.OperatingSystem
-    </dd>
-    <dt>@sr["Runtime"]</dt>
-    <dd>
-        @Model.Runtime
-    </dd>
-    <dt>@sr["Environment Name"]</dt>
-    <dd>
-        @Model.EnvironmentName
-    </dd>
-    <dt>@sr["Cloudscribe Version"]</dt>
-    <dd>
-        @Model.CloudscribeCoreVersion
-    </dd>
-    <dt>@sr["Database Platform"]</dt>
-    <dd>
-        @Model.DatabasePlatform
-    </dd>
-    <dt>@sr["Server Time UTC"]</dt>
-    <dd>
-        @Model.ServerTimeUtc
-    </dd>
-</dl>
+
+<table class="table table-striped">
+    <tr>
+        <th>@sr["Server Host Name"]</th>
+        <td>@Model.Name</td>
+    </tr>
+    <tr>
+        <th>@sr["Server IP Address"]</th>
+        <td>@Model.LocalAddress</td>
+    </tr>
+    <tr>
+        <th>@sr["Server Time UTC"]</th>
+        <td>@Model.ServerTimeUtc</td>
+    </tr>
+    <tr>
+        <th>@sr["Operating System"]</th>
+        <td>@Model.OperatingSystem</td>
+    </tr>
+    <tr>
+        <th>@sr["Runtime"]</th>
+        <td>@Model.Runtime</td>
+    </tr>
+    <tr>
+        <th>@sr["Environment Name"]</th>
+        <td>@Model.EnvironmentName</td>
+    </tr>
+    <tr>
+        <th>@sr["Database Platform"]</th>
+        <td>@Model.DatabasePlatform</td>
+    </tr>
+    <tr>
+        <th>@sr["cloudscribe Core"]</th>
+        <td>@Model.CloudscribeCoreVersion</td>
+    </tr>
+    @foreach (var v in Model.OtherVersions)
+    {
+        <tr>
+            <th>@v.Key</th>
+            <td>@v.Value</td>
+        </tr>  
+    } 
+</table>
 @await Component.InvokeAsync("Navigation", new { viewName = "ChildTree", filterName = NamedNavigationFilters.ChildTree, startingNodeKey = "" })
