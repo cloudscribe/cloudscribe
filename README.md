@@ -26,7 +26,7 @@ To get started building your own features and applications with cloudscribe, [pl
 
 [See the full documentation at cloudscribe.com](https://www.cloudscribe.com/docs) (work in progress)
 
-[Introduction](https://www.cloudscribe.com/docs/introduction) - get the big picture
+[Introduction](https://www.cloudscribe.com/docs/introduction) - get the big picture and learn how to start new projects using our project template for Visual Studio or the .NET CLI
 
 ##### What Is Included?:
 
