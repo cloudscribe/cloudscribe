@@ -20,13 +20,13 @@ Every web application or website project tends to need a certain amount of basic
 
 If you start a new web application project in Visual Studio using the standard project templates, what you get is just a basic implementation for user accounts via ASP.NET Identity. Those templates don't provide you any method for creating administrative users or creating roles or managing users and user role membership. You would typically have to implement that stuff yourself, and if you are like me, you don't want to have to implement that stuff again and again on every project. cloudscribe.Core aims to provide that for you with careful, well thought out implementations that adhere to [OWASP web security guidelines](https://www.owasp.org/index.php/Main_Page).
 
-To get started building your own features and applications with cloudscribe, [please see our StarterKit repository](https://github.com/joeaudette/cloudscribe.StarterKits)
+To get started building your own features and applications with cloudscribe, [please see our Introduction](https://www.cloudscribe.com/docs/introduction) to learn about our project template for Visual Studio or the .NET Core CLI
 
 #### Documentation
 
 [See the full documentation at cloudscribe.com](https://www.cloudscribe.com/docs) (work in progress)
 
-[Introduction](https://www.cloudscribe.com/docs/introduction) - get the big picture and learn how to start new projects using our project template for Visual Studio or the .NET CLI
+[Introduction](https://www.cloudscribe.com/docs/introduction) - get the big picture and learn how to start new projects using our project template for Visual Studio or the .NET Core CLI
 
 ##### What Is Included?:
 
