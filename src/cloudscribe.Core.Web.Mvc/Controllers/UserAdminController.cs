@@ -527,6 +527,113 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
             return RedirectToAction("Index", "UserAdmin", new { siteId = selectedSite.Id });
         }
 
+        [HttpGet]
+        public async Task<ActionResult> ChangeUserPassword(
+            Guid userId,
+            Guid? siteId
+            )
+        {
+            if(!uiOptions.AllowAdminsToChangeUserPasswords)
+            {
+                return RedirectToAction("Index");
+            }
+            if (userId == Guid.Empty)
+            {
+                return RedirectToAction("Index");
+            }
+
+            
+            var selectedSite = await siteManager.GetSiteForDataOperations(siteId);
+            // only server admin site can edit other sites users
+            if (selectedSite.Id != siteManager.CurrentSite.Id)
+            {
+                ViewData["Title"] = string.Format(CultureInfo.CurrentUICulture, sr["{0} - Change User Password"], selectedSite.SiteName);
+            }
+            else
+            {
+                ViewData["Title"] = sr["Change User Password"];
+            }
+
+            var user = await UserManager.Fetch(selectedSite.Id, userId);
+
+            if (user == null)
+            {
+                return RedirectToAction("Index");
+            }
+
+
+            var model = new ChangeUserPasswordViewModel();
+            model.SiteId = selectedSite.Id;
+            model.UserId = user.Id;
+            model.DisplayName = user.DisplayName;
+            model.Email = user.Email;
+
+            var currentCrumbAdjuster = new NavigationNodeAdjuster(Request.HttpContext);
+            currentCrumbAdjuster.KeyToAdjust = "UserEdit";
+            currentCrumbAdjuster.AdjustedText = user.DisplayName;
+            currentCrumbAdjuster.AddToContext();
+
+            return View(model);
+
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> ChangeUserPassword(ChangeUserPasswordViewModel model)
+        {
+            if (!uiOptions.AllowAdminsToChangeUserPasswords)
+            {
+                return RedirectToAction("Index");
+            }
+
+            if (model.UserId == Guid.Empty)
+            {
+                return RedirectToAction("Index");
+            }
+
+
+            var selectedSite = await siteManager.GetSiteForDataOperations(model.SiteId);
+            // only server admin site can edit other sites users
+            if (selectedSite.Id != siteManager.CurrentSite.Id)
+            {
+                ViewData["Title"] = string.Format(CultureInfo.CurrentUICulture, sr["{0} - Change User Password"], selectedSite.SiteName);
+            }
+            else
+            {
+                ViewData["Title"] = sr["Change User Password"];
+            }
+
+            var user = await UserManager.Fetch(selectedSite.Id, model.UserId);
+
+            if (user == null)
+            {
+                return RedirectToAction("Index");
+            }
+
+            if (!ModelState.IsValid)
+            {
+                return View(model);
+            }
+            user.MustChangePwd = model.MustChangePwd;
+
+            var result = await UserManager.ChangeUserPassword(user as SiteUser, model.NewPassword, true);
+            if (result.Succeeded)
+            {
+               
+
+                this.AlertSuccess(sr["The user password has been changed."]);
+                return RedirectToAction("Index");
+            }
+            else
+            {
+                this.AlertDanger(sr["oops something went wrong please try again"]);
+            }
+            AddErrors(result);
+
+            return View(model);
+
+        }
+
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize(Policy = "AdminPolicy")]

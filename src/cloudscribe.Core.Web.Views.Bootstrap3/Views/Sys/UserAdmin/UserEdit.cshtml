@@ -12,21 +12,23 @@
 @section Styles {
     @{await Html.RenderPartialAsync("UserEditStylePartial"); }
 }
-<h2>@ViewData["Title"]</h2>
-@if (Model.UserId != Guid.Empty && !Model.AccountApproved)
-{
-    <div class="col-md-10 col-md-offset-2">
-        <form class="form-inline" role="form" asp-controller="UserAdmin" asp-action="ApproveUserAccount" asp-route-returnurl='@ViewData["ReturnUrl"]'>
-            <input asp-for="UserId" type="hidden" />
-            <input asp-for="SiteId" type="hidden" />
-            <div class="checkbox">
-                <label>
-                    <input type="checkbox" asp-for="SendApprovalEmail"> @sr["Send Email Notification"]
-                </label>
+<div class="row">
+    <div class="col-md-10 col-md-push-2">
+        <h2>@ViewData["Title"]</h2>
+        @if (Model.UserId != Guid.Empty && !Model.AccountApproved)
+        {
+            <div class="col-md-10 col-md-offset-2">
+                <form class="form-inline" role="form" asp-controller="UserAdmin" asp-action="ApproveUserAccount" asp-route-returnurl='@ViewData["ReturnUrl"]'>
+                    <input asp-for="UserId" type="hidden" />
+                    <input asp-for="SiteId" type="hidden" />
+                    <div class="checkbox">
+                        <label>
+                            <input type="checkbox" asp-for="SendApprovalEmail"> @sr["Send Email Notification"]
+                        </label>
+                    </div>
+                    <button type="submit" class="btn btn-success">@sr["Approve this account"]</button>
+                </form>
             </div>
-            <button type="submit" class="btn btn-success">@sr["Approve this account"]</button>
-        </form>
-    </div>   
         }
         <form class="form-horizontal" role="form" asp-controller="UserAdmin" asp-action="UserEdit">
             <input asp-for="UserId" type="hidden" />
@@ -88,8 +90,7 @@
                            data-bs-datepicker-locale="@System.Globalization.CultureInfo.CurrentCulture.Name"
                            data-bs-datepicker-mindate="@DateTime.UtcNow.AddYears(-120).ToString("O")"
                            data-bs-datepicker-maxdate="@DateTime.UtcNow.AddYears(-10).ToString("O")"
-                           data-bs-datepicker-viewDate="@DateTime.UtcNow.AddYears(-10).ToString("O")"
-                            />
+                           data-bs-datepicker-viewDate="@DateTime.UtcNow.AddYears(-10).ToString("O")" />
                     <span asp-validation-for="DateOfBirth" class="text-danger"></span>
                 </div>
             </div>
@@ -108,7 +109,7 @@
                 </div>
             </div>
             <div class="form-group">
-                <div class="col-md-offset-2 col-md-12">
+                <div class="col-md-offset-2 col-md-10">
                     <div class="checkbox">
                         <label>
                             <input asp-for="EmailConfirmed" /> @sr["Email Confirmed"]
@@ -117,7 +118,7 @@
                 </div>
             </div>
             <div class="form-group">
-                <div class="col-md-offset-2 col-md-12">
+                <div class="col-md-offset-2 col-md-10">
                     <div class="checkbox">
                         <label>
                             <input asp-for="IsLockedOut" /> @sr["Account Locked"]
@@ -129,12 +130,12 @@
                 <label asp-for="Comment" class="col-md-2 control-label"></label>
                 <div class="col-md-10">
                     <textarea class="form-control" rows="5" asp-for="Comment"
-                          data-ckeditor-unobtrusive=""
-                          data-ckeditor-config-url="@ckOptions.CustomConfigPath"
-                          data-ckeditor-config-language="@ckOptions.LanguageCode"
-                          data-ckeditor-config-dropfileuploadurl="@ckOptions.DropFileUrl"
-                          data-ckeditor-config-filebrowserurl="@ckOptions.FileBrowseUrl"
-                          data-ckeditor-config-imagebrowseurl="@ckOptions.ImageBrowseUrl"></textarea>
+                              data-ckeditor-unobtrusive=""
+                              data-ckeditor-config-url="@ckOptions.CustomConfigPath"
+                              data-ckeditor-config-language="@ckOptions.LanguageCode"
+                              data-ckeditor-config-dropfileuploadurl="@ckOptions.DropFileUrl"
+                              data-ckeditor-config-filebrowserurl="@ckOptions.FileBrowseUrl"
+                              data-ckeditor-config-imagebrowseurl="@ckOptions.ImageBrowseUrl"></textarea>
                 </div>
             </div>
 
@@ -149,6 +150,7 @@
                             @sr["Delete"]
                         </button>
                         @Html.ValidationMessage("deleteerror", new { @class = "text-danger" })
+                        <a asp-controller="UserAdmin" asp-action="ChangeUserPassword" asp-route-siteid="@Model.SiteId" asp-route-userid="@Model.UserId">@sr["Change Password"]</a>
                     }
                 </div>
             </div>
@@ -161,9 +163,16 @@
                 <input asp-for="UserId" type="hidden" />
             </form>
         }
-<div class="col-md-offset-2 col-md-10">
-    @{ await Html.RenderPartialAsync("UserClaims", Model); }
+        <div class="col-md-offset-2 col-md-10">
+            @{ await Html.RenderPartialAsync("UserClaims", Model); }
+        </div>
+    </div>
+    <div class="col-md-2 col-md-pull-10">
+        @await Component.InvokeAsync("Navigation", new { viewName = "SideNavAlt1", filterName = NamedNavigationFilters.ParentTree, startingNodeKey = "SiteAdmin" })
+    </div>
 </div>
+
 @section Scripts {
-    @{await Html.RenderPartialAsync("UserEditScriptsPartial"); }
+@{ await Html.RenderPartialAsync("_SideMenuScriptsPartial"); }
+@{await Html.RenderPartialAsync("UserEditScriptsPartial"); }
 }

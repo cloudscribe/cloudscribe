@@ -7,107 +7,115 @@
 @section Styles {
 @{ await Html.RenderPartialAsync("_DatePickerCssPartial"); }
 }
-<h2>@ViewBag.Title</h2>
-<form class="form-horizontal" role="form" asp-controller="UserAdmin" asp-action="NewUser">
-    <input asp-for="UserId" type="hidden" />
-    <input asp-for="SiteId" type="hidden" />
-    @if (Model.UserId != Guid.Empty)
-    {
-        <div class="form-group">
-            <label asp-for="UserId" class="col-md-2 control-label">@sr["UserId"]</label>
-            <div class="col-md-10">
-                <label class="control-label">@Model.UserId.ToString()</label>
-            </div>
-        </div>
-    }
-    <div class="form-group">
-        <label asp-for="Email" class="col-md-2 control-label">@sr["Email"]</label>
-        <div class="col-md-10">
-            <input asp-for="Email" class="form-control" />
-            <span asp-validation-for="Email" class="text-danger"></span>
-        </div>
-    </div>
-    <div class="form-group">
-        <label asp-for="Username" class="col-md-2 control-label">@sr["Username"]</label>
-        <div class="col-md-10">
-            <input asp-for="Username" class="form-control" />
-            <span asp-validation-for="Username" class="text-danger"></span>
-        </div>
-    </div>
-    <div class="form-group">
-        <label asp-for="DisplayName" class="col-md-2 control-label">@sr["Display Name"]</label>
-        <div class="col-md-10">
-            <input asp-for="DisplayName" class="form-control" />
-            <span asp-validation-for="DisplayName" class="text-danger"></span>
-        </div>
-    </div>
-    <div class="form-group">
-        <label asp-for="FirstName" class="col-md-2 control-label">@sr["First Name"]</label>
-        <div class="col-md-10">
-            <input asp-for="FirstName" class="form-control" />
-        </div>
-    </div>
-    <div class="form-group">
-        <label asp-for="LastName" class="col-md-2 control-label">@sr["Last Name"]</label>
-        <div class="col-md-10">
-            <input asp-for="LastName" class="form-control" />
-        </div>
-    </div>
-    @if (Model.UserId == Guid.Empty)
-    {
-        <div class="form-group">
-            <label asp-for="Password" class="col-md-2 control-label">@sr["Password"]</label>
-            <div class="col-md-10">
-                <input asp-for="Password" type="password" class="form-control" />
-                <span asp-validation-for="Password" class="text-danger"></span>
-            </div>
-        </div>
-        <div class="form-group">
-            <label asp-for="ConfirmPassword" class="col-md-2 control-label">@sr["Confirm Password"]</label>
-            <div class="col-md-10">
-                <input asp-for="ConfirmPassword" type="password" class="form-control" />
-                <span asp-validation-for="ConfirmPassword" class="text-danger"></span>
-            </div>
-        </div>
-        <div class="form-group">
-            <div class="col-md-offset-2 col-md-12">
-                <div class="checkbox">
-                    <label>
-                        <input asp-for="MustChangePwd" /> @sr["Must Change Password"]
-                    </label>
+<div class="row">
+    <div class="col-md-10 col-md-push-2">
+        <h2>@ViewBag.Title</h2>
+        <form class="form-horizontal" role="form" asp-controller="UserAdmin" asp-action="NewUser">
+            <input asp-for="UserId" type="hidden" />
+            <input asp-for="SiteId" type="hidden" />
+            @if (Model.UserId != Guid.Empty)
+            {
+                <div class="form-group">
+                    <label asp-for="UserId" class="col-md-2 control-label">@sr["UserId"]</label>
+                    <div class="col-md-10">
+                        <label class="control-label">@Model.UserId.ToString()</label>
+                    </div>
+                </div>
+            }
+            <div class="form-group">
+                <label asp-for="Email" class="col-md-2 control-label">@sr["Email"]</label>
+                <div class="col-md-10">
+                    <input asp-for="Email" class="form-control" />
+                    <span asp-validation-for="Email" class="text-danger"></span>
                 </div>
             </div>
-        </div>
-    }
-    <div class="form-group">
-        <label asp-for="DateOfBirth" class="col-md-2 control-label">@sr["Date of Birth"]</label>
-        <div class="col-md-10">
-            <input name="DateOfBirth" value="@(Model.DateOfBirth.HasValue ? Model.DateOfBirth.Value.ToString("d") : string.Empty)"
-                   class="form-control"
-                   data-bs-datepicker="true"
-                   data-bs-datepicker-debug="false"
-                   data-bs-datepicker-keepOpen="false"
-                   data-bs-datepicker-allowInputToggle="true"
-                   data-bs-datepicker-format="L"
-                   data-bs-datepicker-viewMode="years"
-                   data-bs-datepicker-usecurrent="false"
-                   data-bs-datepicker-mindate="@DateTime.UtcNow.AddYears(-120).ToString("O")"
-                   data-bs-datepicker-maxdate="@DateTime.UtcNow.AddYears(-10).ToString("O")"
-                   data-bs-datepicker-viewDate="@DateTime.UtcNow.AddYears(-10).ToString("O")"
-                   data-cs-datepicker-timeformat="@ViewBag.TimeFormat" 
-                   />
-            <span asp-validation-for="DateOfBirth" class="text-danger"></span>
-        </div>
+            <div class="form-group">
+                <label asp-for="Username" class="col-md-2 control-label">@sr["Username"]</label>
+                <div class="col-md-10">
+                    <input asp-for="Username" class="form-control" />
+                    <span asp-validation-for="Username" class="text-danger"></span>
+                </div>
+            </div>
+            <div class="form-group">
+                <label asp-for="DisplayName" class="col-md-2 control-label">@sr["Display Name"]</label>
+                <div class="col-md-10">
+                    <input asp-for="DisplayName" class="form-control" />
+                    <span asp-validation-for="DisplayName" class="text-danger"></span>
+                </div>
+            </div>
+            <div class="form-group">
+                <label asp-for="FirstName" class="col-md-2 control-label">@sr["First Name"]</label>
+                <div class="col-md-10">
+                    <input asp-for="FirstName" class="form-control" />
+                </div>
+            </div>
+            <div class="form-group">
+                <label asp-for="LastName" class="col-md-2 control-label">@sr["Last Name"]</label>
+                <div class="col-md-10">
+                    <input asp-for="LastName" class="form-control" />
+                </div>
+            </div>
+            @if (Model.UserId == Guid.Empty)
+            {
+                <div class="form-group">
+                    <label asp-for="Password" class="col-md-2 control-label">@sr["Password"]</label>
+                    <div class="col-md-10">
+                        <input asp-for="Password" type="password" class="form-control" />
+                        <span asp-validation-for="Password" class="text-danger"></span>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label asp-for="ConfirmPassword" class="col-md-2 control-label">@sr["Confirm Password"]</label>
+                    <div class="col-md-10">
+                        <input asp-for="ConfirmPassword" type="password" class="form-control" />
+                        <span asp-validation-for="ConfirmPassword" class="text-danger"></span>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-md-offset-2 col-md-12">
+                        <div class="checkbox">
+                            <label>
+                                <input asp-for="MustChangePwd" /> @sr["Must Change Password"]
+                            </label>
+                        </div>
+                    </div>
+                </div>
+            }
+            <div class="form-group">
+                <label asp-for="DateOfBirth" class="col-md-2 control-label">@sr["Date of Birth"]</label>
+                <div class="col-md-10">
+                    <input name="DateOfBirth" value="@(Model.DateOfBirth.HasValue ? Model.DateOfBirth.Value.ToString("d") : string.Empty)"
+                           class="form-control"
+                           data-bs-datepicker="true"
+                           data-bs-datepicker-debug="false"
+                           data-bs-datepicker-keepOpen="false"
+                           data-bs-datepicker-allowInputToggle="true"
+                           data-bs-datepicker-format="L"
+                           data-bs-datepicker-viewMode="years"
+                           data-bs-datepicker-usecurrent="false"
+                           data-bs-datepicker-mindate="@DateTime.UtcNow.AddYears(-120).ToString("O")"
+                           data-bs-datepicker-maxdate="@DateTime.UtcNow.AddYears(-10).ToString("O")"
+                           data-bs-datepicker-viewDate="@DateTime.UtcNow.AddYears(-10).ToString("O")"
+                           data-cs-datepicker-timeformat="@ViewBag.TimeFormat" />
+                    <span asp-validation-for="DateOfBirth" class="text-danger"></span>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-md-offset-2 col-md-10">
+                    <input type="submit" class="btn btn-default" value='@sr["Save"]' />
+                </div>
+            </div>
+            <div asp-validation-summary="All" class="text-danger"></div>
+        </form>
     </div>
-    <div class="form-group">
-        <div class="col-md-offset-2 col-md-10">
-            <input type="submit" class="btn btn-default" value='@sr["Save"]' />
-        </div>
+    <div class="col-md-2 col-md-pull-10">
+        @await Component.InvokeAsync("Navigation", new { viewName = "SideNavAlt1", filterName = NamedNavigationFilters.ParentTree, startingNodeKey = "SiteAdmin" })
     </div>
-    <div asp-validation-summary="All" class="text-danger"></div>
-</form>
+</div>
+
 @section Scripts {
-    @{ await Html.RenderPartialAsync("_UnobtrusiveValidationScriptsPartial"); }
-    @{ await Html.RenderPartialAsync("_UnobtrusiveEditorScriptsPartial"); }
-    @{ await Html.RenderPartialAsync("_DatePickerScriptsPartial"); }
+@{ await Html.RenderPartialAsync("_SideMenuScriptsPartial"); }
+@{ await Html.RenderPartialAsync("_UnobtrusiveValidationScriptsPartial"); }
+@{ await Html.RenderPartialAsync("_UnobtrusiveEditorScriptsPartial"); }
+@{ await Html.RenderPartialAsync("_DatePickerScriptsPartial"); }
 }

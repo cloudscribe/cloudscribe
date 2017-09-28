@@ -1,5 +1,11 @@
 
+## To www or not to www
+http://www.yes-www.org/why-use-www/
 https://www.netlify.com/blog/2017/02/28/to-www-or-not-www/
+https://www.sitepoint.com/domain-www-or-no-www/
+http://www.wpbeginner.com/beginners-guide/www-vs-non-www-which-is-better-for-wordpress-seo/
+
+
 
 
 https://www.hanselman.com/blog/URLsAreUI.aspx

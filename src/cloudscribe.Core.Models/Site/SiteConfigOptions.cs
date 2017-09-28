@@ -10,8 +10,9 @@ namespace cloudscribe.Core.Models
     public class SiteConfigOptions
     {
        
-        public string DefaultLayout { get; set; } = "Default_Layout.cshtml";
+        public string DefaultLayout { get; set; } = "default";
         public string RolesThatCannotBeDeleted { get; set; } = string.Empty;
+        public bool AllowAdminsToChangeUserPasswords { get; set; }
 
     }
 }

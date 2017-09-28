@@ -55,7 +55,9 @@ https://developers.google.com/analytics/devguides/collection/protocol/v1/
 https://developers.google.com/analytics/devguides/collection/protocol/v1/devguide
 https://developers.google.com/analytics/devguides/collection/protocol/v1/parameters
 
-http://localhost:50827/campaignimages/arlo1.jpg?utm_source=projecttemplate&utm_medium=referral&utm_campaign=newproject-mytest
+http://localhost:50827/campaignimages/cloudscribe-logo650pt.png?utm_source=projecttemplate&utm_medium=referral&utm_campaign=newproject-mytest
+
+http://localhost:50827/
 
 ## Views
 
