@@ -2,6 +2,17 @@
 http://xoofx.com/blog/2016/06/13/implementing-a-markdown-processor-for-dotnet/
 https://github.com/lunet-io/markdig
 
+https://dotnetthoughts.net/markdown-tag-helper-for-aspnet-core/
+https://github.com/lunet-io/markdig
+https://www.nuget.org/packages/Markdig/
+
+https://www.nuget.org/packages/Markdown/
+
+http://commonmark.org/
+https://github.com/commonmark/CommonMark
+
+
+
 markdown is used in github frequently for documentation
 it is also used on stackoverflow and other sites for users to enter text that can be safely converted to html and preventing xss
 
@@ -39,3 +50,21 @@ https://www.nuget.org/packages/bootstrap-markdown.less
 http://www.codingdrama.com/bootstrap-markdown/
 
 https://github.com/evilstreak/markdown-js
+
+## Markdown with metadata
+
+If we were to support makrdown in simplecontent we would need to be able to store additional metadata that is not neccessarily rendered.
+ie postid, pubdate, lastmodified, settings
+
+https://hiltmon.com/blog/2012/06/18/markdown-metadata/
+https://github.com/fletcher/MultiMarkdown - no longer maintained
+
+## Markdown static site generators
+
+https://easystatic.com/  - node
+
+https://wyam.io/ - .NET
+
+https://github.com/mixu/markdown-styles
+
+http://www.mkdocs.org/  python

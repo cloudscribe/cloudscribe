@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:				    2014-07-22
-// Last Modified:		    2017-07-25
+// Last Modified:		    2017-09-28
 // 
 //
 
@@ -68,6 +68,7 @@ namespace cloudscribe.Core.Identity
             this.contextAccessor = contextAccessor;
             httpContext = contextAccessor?.HttpContext;
             eventHandlers = userEventHandlers;
+            this.passwordHasher = passwordHasher;
         }
         
         private IdentityOptions identityOptions;
@@ -78,6 +79,7 @@ namespace cloudscribe.Core.Identity
         private IHttpContextAccessor contextAccessor;
         private HttpContext httpContext;
         private UserEvents eventHandlers;
+        private IPasswordHasher<TUser> passwordHasher;
 
         //private CancellationToken CancellationToken => httpContext?.RequestAborted ?? CancellationToken.None;
 
@@ -243,6 +245,59 @@ namespace cloudscribe.Core.Identity
 
 
             return result;
+        }
+
+        private IUserPasswordStore<TUser> GetPasswordStore()
+        {
+            var cast = Store as IUserPasswordStore<TUser>;
+            if (cast == null)
+            {
+                throw new NotSupportedException("StoreNotIUserPasswordStore");
+            }
+            return cast;
+        }
+
+        public async Task<IdentityResult> ChangeUserPassword(TUser user, string newPassword, bool validatePassword)
+        {
+            if (validatePassword)
+            {
+                var validate = await ValidatePassword(user, newPassword);
+                if (!validate.Succeeded)
+                {
+                    return validate;
+                }
+            }
+            // user.MustChangePwd will be set false by passwordStore.SetPasswordHashAsync so preserve it because this method is called by admins changing
+            // a user password and would still want this as true after admin changes the user password
+            var mustChangePwd = user.MustChangePwd; 
+
+            var hash = newPassword != null ? this.passwordHasher.HashPassword(user, newPassword) : null;
+            var passwordStore = GetPasswordStore();
+            await passwordStore.SetPasswordHashAsync(user, hash, CancellationToken);
+            user.MustChangePwd = mustChangePwd;
+            await UpdateAsync(user);
+            
+            return IdentityResult.Success;
+
+        }
+
+        protected async Task<IdentityResult> ValidatePassword(TUser user, string password)
+        {
+            var errors = new List<IdentityError>();
+            foreach (var v in PasswordValidators)
+            {
+                var result = await v.ValidateAsync(this, user, password);
+                if (!result.Succeeded)
+                {
+                    errors.AddRange(result.Errors);
+                }
+            }
+            if (errors.Count > 0)
+            {
+                Logger.LogWarning(14, "User {userId} password validation failed: {errors}.", await GetUserIdAsync(user), string.Join(";", errors.Select(e => e.Code)));
+                return IdentityResult.Failed(errors.ToArray());
+            }
+            return IdentityResult.Success;
         }
 
         #region Overrides
