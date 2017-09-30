@@ -1,5 +1,10 @@
 # F# 
 
+
+https://github.com/SAFE-Stack/SAFE-BookStore
+
+https://github.com/dustinmoris/Giraffe
+
 https://blogs.msdn.microsoft.com/dotnet/2017/07/24/get-started-with-f-as-a-c-developer/
 
 http://blog.ploeh.dk/2017/08/07/f-free-monad-recipe/
