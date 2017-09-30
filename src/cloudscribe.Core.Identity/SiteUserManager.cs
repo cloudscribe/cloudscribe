@@ -18,6 +18,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Builder;
 using System.Security.Claims;
+using cloudscribe.Core.Models.EventHandlers;
 
 namespace cloudscribe.Core.Identity
 {
@@ -30,6 +31,7 @@ namespace cloudscribe.Core.Identity
         public SiteUserManager(
             SiteContext currentSite,
             UserEvents userEventHandlers,
+            IEnumerable<IHandleUserEmailConfirmed> emailConfirmedHandlers,
             IUserCommands userCommands,
             IUserQueries userQueries,
             IUserStore<TUser> store,
@@ -69,6 +71,7 @@ namespace cloudscribe.Core.Identity
             httpContext = contextAccessor?.HttpContext;
             eventHandlers = userEventHandlers;
             this.passwordHasher = passwordHasher;
+            _emailConfirmedHandlers = emailConfirmedHandlers;
         }
         
         private IdentityOptions identityOptions;
@@ -80,6 +83,7 @@ namespace cloudscribe.Core.Identity
         private HttpContext httpContext;
         private UserEvents eventHandlers;
         private IPasswordHasher<TUser> passwordHasher;
+        private IEnumerable<IHandleUserEmailConfirmed> _emailConfirmedHandlers;
 
         //private CancellationToken CancellationToken => httpContext?.RequestAborted ?? CancellationToken.None;
 
@@ -301,6 +305,30 @@ namespace cloudscribe.Core.Identity
         }
 
         #region Overrides
+
+        public override async Task<IdentityResult> ConfirmEmailAsync(TUser user, string token)
+        {
+            var result = await base.ConfirmEmailAsync(user, token);
+
+            if(result.Succeeded)
+            {
+                foreach(var handler in _emailConfirmedHandlers)
+                {
+                    try
+                    {
+                        await handler.HandleUserEmailConfirmed(user);
+                    }
+                    catch(Exception ex)
+                    {
+                        Logger.LogError(ex.Message + " stack trace: " + ex.StackTrace);
+                    }
+                }
+            }
+
+            return result;
+
+            
+        }
 
         public override async Task<IdentityResult> CreateAsync(TUser user)
         {

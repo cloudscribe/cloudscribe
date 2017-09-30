@@ -1,4 +1,6 @@
 
+TODO: learn about new 2.0 two factor auth with QR codes, see latest project templates and docs
+
 https://www.scientificamerican.com/article/the-only-safe-e-mail-is-text-only-e-mail/
 
 sms bug in aspnetcore 2.0 broke 2 factor auth
@@ -291,3 +293,9 @@ add allowed scopes
 openid and profile which also must be created as identoty resources
 
 optional add scopes for protected resource apis if applicable
+
+options.AddPolicy("api", policy =>
+{
+    policy.AuthenticationSchemes.Add("Bearer");
+	policy.RequireAuithenticatedUser();
+}
