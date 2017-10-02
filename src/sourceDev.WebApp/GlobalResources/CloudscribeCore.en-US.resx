@@ -1138,4 +1138,28 @@
   <data name="Must Change Password" xml:space="preserve">
     <value>Must Change Password</value>
   </data>
+  <data name="{0} - Users" xml:space="preserve">
+    <value>{0} - Users</value>
+  </data>
+  <data name="Activity" xml:space="preserve">
+    <value>Activity</value>
+  </data>
+  <data name="Capture Count" xml:space="preserve">
+    <value>Capture Count</value>
+  </data>
+  <data name="First Capture" xml:space="preserve">
+    <value>First Capture</value>
+  </data>
+  <data name="Ip Address" xml:space="preserve">
+    <value>Ip Address</value>
+  </data>
+  <data name="Last Capture" xml:space="preserve">
+    <value>Last Capture</value>
+  </data>
+  <data name="User Activity - {0}" xml:space="preserve">
+    <value>User Activity - {0}</value>
+  </data>
+  <data name="{0} - User Activity - {1}" xml:space="preserve">
+    <value>{0} - User Activity - {1}</value>
+  </data>
 </root>

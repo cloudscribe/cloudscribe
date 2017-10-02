@@ -1,5 +1,6 @@
 # F# 
 
+see also fable.md
 
 https://github.com/SAFE-Stack/SAFE-BookStore
 
