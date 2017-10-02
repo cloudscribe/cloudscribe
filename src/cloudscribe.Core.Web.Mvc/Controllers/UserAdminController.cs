@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2014-12-08
-// Last Modified:			2017-09-15
+// Last Modified:			2017-10-02
 // 
 
 using cloudscribe.Core.Identity;
@@ -354,6 +354,65 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
             }
 
             // If we got this far, something failed, redisplay form
+            return View(model);
+        }
+
+        [HttpGet]
+        public async Task<ActionResult> UserActivity(
+            Guid userId,
+            Guid? siteId,
+            int pageNumber = 1, 
+            int pageSize = 10
+            )
+        {
+            if (userId == Guid.Empty)
+            {
+                return RedirectToAction("Index");
+            }
+
+            var selectedSite = await siteManager.GetSiteForDataOperations(siteId);
+
+            var user = await UserManager.Fetch(selectedSite.Id, userId);
+
+            if (user == null)
+            {
+                return RedirectToAction("Index");
+            }
+
+            // only server admin site can edit other sites settings
+            if (selectedSite.Id != siteManager.CurrentSite.Id)
+            {
+                ViewData["Title"] = string.Format(CultureInfo.CurrentUICulture, sr["{0} - User Activity - {1}"], selectedSite.SiteName, user.Email);
+            }
+            else
+            {
+                ViewData["Title"] = string.Format(CultureInfo.CurrentUICulture, sr["User Activity - {0}"], user.Email);
+            }
+
+            var model = new UserActivityViewModel();
+            model.SiteId = selectedSite.Id;
+            model.UserId = user.Id;
+            model.CreatedUtc = user.CreatedUtc;
+            model.DisplayName = user.DisplayName;
+            model.Email = user.Email;
+            model.FirstName = user.FirstName;
+            model.LastLoginUtc = user.LastLoginUtc;
+            model.LastName = user.LastName;
+            model.LastPassswordChangenUtc = user.LastPasswordChangeUtc;
+            model.TimeZoneId = await timeZoneIdResolver.GetUserTimeZoneId();
+            model.Locations = await UserManager.GetUserLocations(
+                selectedSite.Id,
+                userId,
+                pageNumber,
+                pageSize
+                );
+
+            var currentCrumbAdjuster = new NavigationNodeAdjuster(Request.HttpContext);
+            currentCrumbAdjuster.KeyToAdjust = "UserActivity";
+            currentCrumbAdjuster.AdjustedText = string.Format(CultureInfo.CurrentUICulture, sr["Activity - {0}"], user.Email); 
+            currentCrumbAdjuster.ViewFilterName = NamedNavigationFilters.Breadcrumbs; // this is default but showing here for readers of code 
+            currentCrumbAdjuster.AddToContext();
+
             return View(model);
         }
 

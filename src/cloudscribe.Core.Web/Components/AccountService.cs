@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2017-05-22
-// Last Modified:			2017-09-20
+// Last Modified:			2017-10-02
 // 
 
 using cloudscribe.Core.Identity;
@@ -79,7 +79,8 @@ namespace cloudscribe.Core.Web.Components
                     LastName = externalLoginInfo.Principal.FindFirstValue(ClaimTypes.Surname),
                     AccountApproved = userManager.Site.RequireApprovalBeforeLogin ? false : true,
                     EmailConfirmed = socialAuthEmailVerificationPolicy.HasVerifiedEmail(externalLoginInfo),
-                    AgreementAcceptedUtc = termsAcceptedDate
+                    AgreementAcceptedUtc = termsAcceptedDate,
+                    LastLoginUtc = DateTime.UtcNow
                 };
                 var identityResult = await userManager.CreateAsync(newUser);
                 if (identityResult.Succeeded)
@@ -137,8 +138,15 @@ namespace cloudscribe.Core.Web.Components
                 template.SignInResult = await signInManager.ExternalLoginSignInAsync(template.ExternalLoginInfo.LoginProvider, template.ExternalLoginInfo.ProviderKey, isPersistent: false);
                 if(template.SignInResult.Succeeded)
                 {
-                    // TODO:
+                  
                     //update last login time
+                    if(!template.IsNewUserRegistration)
+                    {
+                        //already tracked if user was just created
+                        template.User.LastLoginUtc = DateTime.UtcNow;
+                        await userManager.UpdateAsync(template.User);
+                    }
+                    
                 }      
             }
 
@@ -222,6 +230,13 @@ namespace cloudscribe.Core.Web.Components
                         persistent,
                         lockoutOnFailure: false);
                 }
+
+                if(template.SignInResult.Succeeded)
+                {
+                    //update last login time
+                    template.User.LastLoginUtc = DateTime.UtcNow;
+                    await userManager.UpdateAsync(template.User);
+                }
             }
             
             return new UserLoginResult(
@@ -263,6 +278,7 @@ namespace cloudscribe.Core.Web.Components
                 FirstName = model.FirstName,
                 LastName = model.LastName,
                 DisplayName = model.DisplayName,
+                LastLoginUtc = DateTime.UtcNow,
                 AccountApproved = userManager.Site.RequireApprovalBeforeLogin ? false : true
             };
 

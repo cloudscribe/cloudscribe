@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2015-11-16
-// Last Modified:			2016-08-017
+// Last Modified:			2017-10-02
 // 
 
 
@@ -166,66 +166,7 @@ namespace cloudscribe.Core.Storage.EFCore.Common
 
             int offset = (pageSize * pageNumber) - pageSize;
 
-            //IQueryable<IUserInfo> query 
-            //    = from x in dbContext.Users
-
-            //            where 
-            //            (
-            //                x.SiteId == siteId
-            //                && x.IsDeleted == false
-            //                && x.AccountApproved == true
-            //                && (
-            //                userNameBeginsWith == string.Empty
-            //                || x.DisplayName.StartsWith(userNameBeginsWith)
-            //                )
-            //            )
-            //           // orderby x.DisplayName
-            //            select new UserInfo
-            //            {
-            //                AvatarUrl = x.AvatarUrl,
-            //                AccountApproved = x.AccountApproved,
-            //                Country = x.Country,
-            //                CreatedUtc = x.CreatedUtc,
-            //                DateOfBirth = x.DateOfBirth,
-            //                DisplayInMemberList = x.DisplayInMemberList,
-            //                DisplayName = x.DisplayName,
-            //                Email = x.Email,
-            //                FirstName = x.FirstName,
-            //                Gender = x.Gender,
-            //                IsDeleted = x.IsDeleted,
-            //                IsLockedOut = x.IsLockedOut,
-            //                LastActivityDate = x.LastActivityDate,
-            //                LastLoginDate = x.LastLoginDate,
-            //                LastName= x.LastName,
-            //                PhoneNumber = x.PhoneNumber,
-            //                PhoneNumberConfirmed = x.PhoneNumberConfirmed,
-            //                SiteGuid = x.SiteGuid,
-            //                SiteId = x.SiteId,
-            //                State = x.State,
-            //                TimeZoneId = x.TimeZoneId,
-            //                Trusted = x.Trusted,
-            //                UserGuid = x.UserGuid,
-            //                UserId = x.UserId,
-            //                UserName = x.UserName,
-            //                WebSiteUrl = x.WebSiteUrl
-
-            //            };
-
-
-            //switch (sortMode)
-            //{
-            //    case 2:
-            //        query = query.OrderBy(sl => sl.LastName).ThenBy(s2 => s2.FirstName).AsQueryable();
-            //        break;
-            //    case 1:
-            //        query = query.OrderByDescending(sl => sl.CreatedUtc).AsQueryable();
-            //        break;
-
-            //    case 0:
-            //    default:
-            //        query = query.OrderBy(sl => sl.DisplayName).AsQueryable();
-            //        break;
-            //}
+            
 
             //this is pretty ugly, surely there is a better way to dynamically set the order by
 
@@ -1332,7 +1273,9 @@ namespace cloudscribe.Core.Storage.EFCore.Common
         {
             cancellationToken.ThrowIfCancellationRequested();
 
-            return dbContext.UserLocations.CountAsync<UserLocation>(cancellationToken);
+            return dbContext.UserLocations
+                .Where(x => x.UserId == userId)
+                .CountAsync<UserLocation>(cancellationToken);
 
 
         }
@@ -1350,11 +1293,12 @@ namespace cloudscribe.Core.Storage.EFCore.Common
             int offset = (pageSize * pageNumber) - pageSize;
 
             var query = dbContext.UserLocations
-                .OrderBy(x => x.IpAddressLong)
-                .Select(p => p)
+                .Where(x => x.UserId == userId)
+                .OrderByDescending(x => x.LastCaptureUtc)
+                //.Select(p => p)
                 .Skip(offset)
                 .Take(pageSize)
-                .Where(x => x.UserId == userId)
+                
                 ;
 
 

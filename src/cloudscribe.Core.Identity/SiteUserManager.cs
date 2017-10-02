@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:				    2014-07-22
-// Last Modified:		    2017-09-28
+// Last Modified:		    2017-10-02
 // 
 //
 
@@ -19,6 +19,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Builder;
 using System.Security.Claims;
 using cloudscribe.Core.Models.EventHandlers;
+using cloudscribe.Pagination.Models;
 
 namespace cloudscribe.Core.Identity
 {
@@ -302,6 +303,18 @@ namespace cloudscribe.Core.Identity
                 return IdentityResult.Failed(errors.ToArray());
             }
             return IdentityResult.Success;
+        }
+
+        public async Task<PagedResult<IUserLocation>> GetUserLocations(Guid siteId, Guid userId, int pageNumber, int pageSize)
+        {
+            var result = new PagedResult<IUserLocation>();
+            var list = await queries.GetUserLocationsByUser(siteId, userId, pageNumber, pageSize);
+            result.Data = list.ToList();
+            result.TotalItems = await queries.CountUserLocationsByUser(siteId, userId);
+            result.PageNumber = pageNumber;
+            result.PageSize = pageSize;
+
+            return result;
         }
 
         #region Overrides

@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:                  Joe Audette
 // Created:                 2016-04-26
-// Last Modified:           2016-08-17
+// Last Modified:           2017-10-02
 // 
 
 using cloudscribe.Core.Models;
@@ -1583,11 +1583,11 @@ namespace cloudscribe.Core.Storage.NoDb
             var all = await locationQueries.GetAllAsync(projectId, cancellationToken).ConfigureAwait(false);
 
             var query = all
-                .OrderBy(x => x.IpAddressLong)
+                .Where(x => x.UserId == userId)
+                .OrderByDescending(x => x.LastCaptureUtc)
                 .Select(p => p)
                 .Skip(offset)
                 .Take(pageSize)
-                .Where(x => x.UserId == userId)
                 ;
 
             return query.ToList() as IList<IUserLocation>;
