@@ -28,7 +28,9 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
                 var statusFeature = HttpContext.Features.Get<IStatusCodeReExecuteFeature>();
                 if (statusFeature != null)
                 {
-                    log.LogWarning("handled 404 for url: {OriginalPath}", statusFeature.OriginalPath);
+                    var originalPath = statusFeature.OriginalPath;
+                    var ipAddress = HttpContext.Connection.RemoteIpAddress.ToString();
+                    log.LogWarning($"handled 404 for url: {originalPath} from ipaddress {ipAddress}");
                 }
 
             }
