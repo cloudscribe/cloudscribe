@@ -2,8 +2,8 @@
 
   <PropertyGroup>
     <Description>media file management</Description>
-    <VersionPrefix>2.0.3</VersionPrefix>
-    <AssemblyVersion>2.0.3</AssemblyVersion>
+    <VersionPrefix>2.0.4</VersionPrefix>
+    <AssemblyVersion>2.0.4</AssemblyVersion>
     <Authors>Joe Audette</Authors>
     <TargetFrameworks>netstandard2.0</TargetFrameworks>
     <DebugType>portable</DebugType>

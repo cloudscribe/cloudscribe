@@ -3,6 +3,7 @@ using cloudscribe.Web.Common.Analytics;
 using cloudscribe.Web.Common.Components;
 using cloudscribe.Web.Common.Helpers;
 using cloudscribe.Web.Common.Models;
+using cloudscribe.Web.Common.Setup;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc.Razor;
@@ -48,6 +49,8 @@ namespace Microsoft.Extensions.DependencyInjection
             }
 
             services.AddScoped<GoogleAnalyticsApiService>();
+
+            services.AddScoped<IVersionProvider, CommonVersionProvider>();
 
             return services;
         }
