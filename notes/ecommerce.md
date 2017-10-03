@@ -1,4 +1,8 @@
 
+
+https://blogs.dropbox.com/tech/2017/09/handling-system-failures-during-payment-communication/
+
+
 https://www.nuget.org/packages/Square.Connect/
 https://www.nuget.org/packages/RestSharp/
 

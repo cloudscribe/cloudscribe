@@ -4,6 +4,7 @@ see also fable.md
 
 https://github.com/SAFE-Stack/SAFE-BookStore
 
+https://dusted.codes/functional-aspnet-core
 https://github.com/dustinmoris/Giraffe
 
 https://blogs.msdn.microsoft.com/dotnet/2017/07/24/get-started-with-f-as-a-c-developer/

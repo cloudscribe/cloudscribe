@@ -171,6 +171,20 @@ Name = Login Submit
    Maximum Value = 1
    Formating Type = Integer
    
+Name = Newsletter Signup Success
+   Index = 9
+   Value = 1
+   Minimum Value = 1
+   Maximum Value = 1
+   Formating Type = Integer
+   
+Name = Newsletter Signup Fail
+   Index = 10
+   Value = 1
+   Minimum Value = 1
+   Maximum Value = 1
+   Formating Type = Integer
+   
 
 ## Events
 
