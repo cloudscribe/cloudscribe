@@ -179,10 +179,10 @@ namespace cloudscribe.Core.Models
         /// http://stackoverflow.com/questions/22629951/suppressing-warning-cs4014-because-this-call-is-not-awaited-execution-of-the
         /// </summary>
         /// <param name="task"></param>
-        public static void Forget(this Task task)
-        {
+        //public static void Forget(this Task task)
+        //{
 
-        }
+        //}
 
 
 
