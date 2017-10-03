@@ -30,7 +30,7 @@
             <div class="form-group">
                 <input type="text" class="form-control" disabled id="newFolderCurrentDir" name="newFolderCurrentDir" value="@Model.InitialVirtualPath" />
                 <input type="hidden" id="hdnCurrentVirtualPath" name="currentVirtualPath" value="@Model.InitialVirtualPath" />
-                <input type="text" class="form-control" id="newFolderName" name="newFolderName">
+                <input type="text" class="form-control" id="newFolderName" name="newFolderName" />
             </div>
             <button id="btnCreateFolder" type="submit" class="btn btn-default"><i class="fa fa-folder-o" aria-hidden="true"></i> @sr["Create Folder"]</button>
         </form>
@@ -45,7 +45,7 @@
         </form>
         <form id="frmRenameFile" asp-action="RenameFile" asp-controller="FileManager" class="form-inline collapse">
             <input type="hidden" id="fileToRename" name="fileToRename" />
-            <input type="text" class="form-control" id="newFileNameSegment" name="newNameSegment" style="min-width:50%;">
+            <input type="text" class="form-control" id="newFileNameSegment" name="newNameSegment" style="min-width:50%;" />
             <button id="btnRenameFile" type="submit" class="btn btn-default">@sr["Rename File"]</button>
         </form>
         <form id="frmDeleteFile" asp-action="DeleteFile" asp-controller="FileManager" class="form-inline collapse">
