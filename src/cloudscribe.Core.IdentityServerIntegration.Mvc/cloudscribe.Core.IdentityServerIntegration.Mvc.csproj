@@ -3,7 +3,8 @@
   <PropertyGroup>
     <Description>MVC Controllers for cloudscribe.Core.IdentityServerIntegration</Description>
     <VersionPrefix>2.0.0</VersionPrefix>
-	<VersionSuffix>preview20170927</VersionSuffix>
+    <AssemblyVersion>2.0.0</AssemblyVersion>
+	<VersionSuffix>preview20171003</VersionSuffix>
     <Authors>Joe Audette</Authors>
     <TargetFrameworks>netstandard2.0</TargetFrameworks>
     <PackageTags>cloudscribe;identity</PackageTags>

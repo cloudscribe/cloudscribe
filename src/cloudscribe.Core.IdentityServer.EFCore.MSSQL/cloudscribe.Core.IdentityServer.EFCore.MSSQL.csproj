@@ -3,7 +3,8 @@
   <PropertyGroup>
     <Description>Microsoft Sql Server Entity Framework configuration and operational stores for IdentityServer4 cloudscribe multi-tenant identity integration</Description>
     <VersionPrefix>2.0.0</VersionPrefix>
-	<VersionSuffix>preview20170821</VersionSuffix>
+    <AssemblyVersion>2.0.0</AssemblyVersion>
+	<VersionSuffix>preview20171002</VersionSuffix>
     <Authors>Joe Audette</Authors>
     <TargetFramework>netcoreapp2.0</TargetFramework>
     <AssemblyName>cloudscribe.Core.IdentityServer.EFCore.MSSQL</AssemblyName>
@@ -13,9 +14,7 @@
     <PackageIconUrl>https://raw.githubusercontent.com/joeaudette/cloudscribe/master/cloudscribe-icon-32.png</PackageIconUrl>
     <PackageProjectUrl>https://github.com/joeaudette/cloudscribe</PackageProjectUrl>
     <PackageLicenseUrl>http://www.apache.org/licenses/LICENSE-2.0</PackageLicenseUrl>
-    <GenerateAssemblyConfigurationAttribute>false</GenerateAssemblyConfigurationAttribute>
-    <GenerateAssemblyCompanyAttribute>false</GenerateAssemblyCompanyAttribute>
-    <GenerateAssemblyProductAttribute>false</GenerateAssemblyProductAttribute>
+    
   </PropertyGroup>
 
   <ItemGroup>

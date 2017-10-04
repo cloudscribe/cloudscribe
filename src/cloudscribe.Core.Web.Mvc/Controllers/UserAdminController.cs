@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2014-12-08
-// Last Modified:			2017-10-02
+// Last Modified:			2017-10-04
 // 
 
 using cloudscribe.Core.Identity;
@@ -695,7 +695,6 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        [Authorize(Policy = "AdminPolicy")]
         public async Task<ActionResult> ApproveUserAccount(
             Guid siteId, 
             Guid userId, 
@@ -740,7 +739,6 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        [Authorize(Policy = "AdminPolicy")]
         public async Task<ActionResult> UserDelete(Guid siteId, Guid userId, int returnPageNumber = 1)
         {
             var selectedSite = await siteManager.GetSiteForDataOperations(siteId);

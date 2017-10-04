@@ -2,13 +2,14 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 //	Author:                 Joe Audette
 //  Created:			    2011-08-21
-//	Last Modified:		    2017-09-23
+//	Last Modified:		    2017-10-04
 // 
 
 using cloudscribe.Core.Models;
 using cloudscribe.Web.Common.Setup;
 using Microsoft.AspNetCore.Hosting;
 using System.Collections.Generic;
+using System.Linq;
 using System.Runtime.InteropServices;
 
 namespace cloudscribe.Core.Web.Components
@@ -23,7 +24,7 @@ namespace cloudscribe.Core.Web.Components
             hostingInfo = hostingEnvironment;
             dbInfo = databaseInfo;
             versionProviders = versionProviderFactory;
-            cloudscribeVersionProvider = versionProviders.Get("cloudscribe-core");
+            cloudscribeVersionProvider = versionProviders.Get("cloudscribe.Core.Web");
 
             //runtimeInfo = PlatformServices.Default.Runtime;
         }
@@ -71,9 +72,9 @@ namespace cloudscribe.Core.Web.Components
         {
             var list = new List<KeyValuePair<string,string>>();
 
-            foreach(var v in versionProviders.VersionProviders)
+            foreach(var v in versionProviders.VersionProviders.OrderBy(v => v.Name))
             {
-                if(v.Name != "cloudscribe-core")
+                if(v.Name != "cloudscribe.Core.Web")
                 {
                     list.Add(new KeyValuePair<string, string>(v.Name, v.CurrentVersion.ToString()));
                 }

@@ -35,7 +35,17 @@ namespace Microsoft.Extensions.DependencyInjection
 {
     public static class StartupExtensions
     {
+        [Obsolete("This method is deprecated, you should use services.AddCloudscribeCoreMvc instead.")]
         public static IServiceCollection AddCloudscribeCore(this IServiceCollection services, IConfiguration configuration)
+        {
+
+            services.AddCloudscribeCoreCommon(configuration);
+
+            return services;
+        }
+
+
+        public static IServiceCollection AddCloudscribeCoreCommon(this IServiceCollection services, IConfiguration configuration)
         {
             services.TryAddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 
@@ -84,7 +94,9 @@ namespace Microsoft.Extensions.DependencyInjection
 
             services.AddScoped<IVersionProviderFactory, VersionProviderFactory>();
             services.AddScoped<IVersionProvider, CloudscribeCoreVersionProvider>();
-            
+            services.AddScoped<IVersionProvider, DataStorageVersionInfo>();
+            services.AddScoped<IVersionProvider, IdentityVersionInfo>();
+
 
             services.AddTransient<ISiteMessageEmailSender, SiteEmailMessageSender>();
             //services.AddTransient<ISiteMessageEmailSender, FakeSiteEmailSender>();
