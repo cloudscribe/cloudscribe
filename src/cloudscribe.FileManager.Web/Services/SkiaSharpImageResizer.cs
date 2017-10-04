@@ -7,10 +7,10 @@ using System.IO;
 
 namespace cloudscribe.FileManager.Web.Services
 {
-    public class ImageResizerService : IImageResizer
+    public class SkiaSharpImageResizer : IImageResizer
     {
-        public ImageResizerService(
-            ILogger<ImageResizerService> logger
+        public SkiaSharpImageResizer(
+            ILogger<SkiaSharpImageResizer> logger
             )
         {
             log = logger;
