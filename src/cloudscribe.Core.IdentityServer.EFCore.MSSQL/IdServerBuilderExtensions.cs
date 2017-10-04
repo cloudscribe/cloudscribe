@@ -6,6 +6,7 @@ using cloudscribe.Core.IdentityServer.EFCore.Extensions;
 using cloudscribe.Core.IdentityServer.EFCore.Interfaces;
 using cloudscribe.Core.IdentityServer.EFCore.MSSQL;
 using cloudscribe.Core.IdentityServer.EFCore.Stores;
+using cloudscribe.Core.IdentityServerIntegration;
 using Microsoft.EntityFrameworkCore;
 using System;
 
@@ -21,6 +22,7 @@ namespace Microsoft.Extensions.DependencyInjection
             //builder.AddConfigurationStoreMSSQL(connectionString);    
             //builder.AddOperationalStoreMSSQL(connectionString);
             builder.Services.AddCloudscribeCoreIdentityServerEFStorageMSSQL(connectionString);
+            builder.Services.AddScoped<IStorageInfo, StorageInfo>();
 
             return builder;
         }

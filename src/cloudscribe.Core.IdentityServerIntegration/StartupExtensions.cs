@@ -3,6 +3,7 @@ using cloudscribe.Core.Identity;
 using cloudscribe.Core.IdentityServerIntegration;
 using cloudscribe.Core.IdentityServerIntegration.Services;
 using cloudscribe.Core.Models;
+using cloudscribe.Web.Common.Setup;
 using IdentityModel;
 using IdentityServer4;
 using IdentityServer4.Configuration;
@@ -13,6 +14,7 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
+using System;
 using System.Collections.Generic;
 
 // https://github.com/IdentityServer/IdentityServer4/issues/19
@@ -21,7 +23,14 @@ namespace Microsoft.Extensions.DependencyInjection
 {
     public static class StartupExtensions
     {
-        public static IIdentityServerBuilder AddCloudscribeIdentityServerIntegration(this IIdentityServerBuilder builder)   
+        [Obsolete("this method is deprected, please use .AddCloudscribeIdentityServerIntegrationMvc instead.")]
+        public static IIdentityServerBuilder AddCloudscribeIdentityServerIntegration(this IIdentityServerBuilder builder)
+        {
+            builder.AddCloudscribeIdentityServerIntegrationCommon();
+
+            return builder;
+        }
+        public static IIdentityServerBuilder AddCloudscribeIdentityServerIntegrationCommon(this IIdentityServerBuilder builder)   
         {
             builder.Services.AddScoped<IIdentityServerIntegration, CloudscribeIntegration>();
 
@@ -65,6 +74,9 @@ namespace Microsoft.Extensions.DependencyInjection
 
             //builder.Services.AddTransientDecorator<ICorsPolicyProvider, CorsPolicyProvider>();
             builder.Services.AddTransient<ICorsPathValidator, CorsPathValidator>();
+
+            builder.Services.AddScoped<IVersionProvider, IntegrationVersionProvider>();
+            builder.Services.AddScoped<IVersionProvider, StorageVersionProvider>();
 
             return builder;
         }

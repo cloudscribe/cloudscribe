@@ -13,7 +13,7 @@ namespace cloudscribe.Core.Web.Components
 {
     public class CloudscribeCoreVersionProvider : IVersionProvider
     {
-        public string Name { get { return "cloudscribe-core"; } }
+        public string Name { get { return "cloudscribe.Core.Web"; } }
 
         public Guid ApplicationId { get { return new Guid("b7dcd727-91c3-477f-bc42-d4e5c8721daa"); } }
 

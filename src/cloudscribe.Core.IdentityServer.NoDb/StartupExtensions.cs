@@ -7,6 +7,7 @@
 
 using cloudscribe.Core.IdentityServer.NoDb;
 using cloudscribe.Core.IdentityServer.NoDb.Models;
+using cloudscribe.Core.IdentityServerIntegration;
 using cloudscribe.Core.IdentityServerIntegration.Storage;
 using IdentityServer4.Models;
 using IdentityServer4.Services;
@@ -23,6 +24,8 @@ namespace Microsoft.Extensions.DependencyInjection
         {
             builder.AddConfigurationStore();
             builder.AddOperationalStore();
+
+            builder.Services.AddScoped<IStorageInfo, StorageInfo>();
 
             return builder;
         }

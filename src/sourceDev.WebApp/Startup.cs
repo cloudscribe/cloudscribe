@@ -85,9 +85,11 @@ namespace sourceDev.WebApp
             /* end cloudscribe Setup */
 
             //services.AddScoped<cloudscribe.Core.Web.ExtensionPoints.IHandleCustomRegistration, sourceDev.WebApp.Components.CustomRegistrationHandler>();
+
             
-            services.AddCloudscribeCore(Configuration);
-            
+            //services.AddCloudscribeCore(Configuration);
+            services.AddCloudscribeCoreMvc(Configuration);
+
             services.Configure<GlobalResourceOptions>(Configuration.GetSection("GlobalResourceOptions"));
             services.AddSingleton<IStringLocalizerFactory, GlobalResourceManagerStringLocalizerFactory>();
 
@@ -346,7 +348,7 @@ namespace sourceDev.WebApp
 
                     services.AddIdentityServer()
                         .AddCloudscribeCoreNoDbIdentityServerStorage()
-                        .AddCloudscribeIdentityServerIntegration()
+                        .AddCloudscribeIdentityServerIntegrationMvc()
                         .AddDeveloperSigningCredential()
                         ;
 
@@ -365,7 +367,7 @@ namespace sourceDev.WebApp
 
                             services.AddIdentityServer()
                                 .AddCloudscribeCoreEFIdentityServerStoragePostgreSql(pgConnection)
-                                .AddCloudscribeIdentityServerIntegration()
+                                .AddCloudscribeIdentityServerIntegrationMvc()
                                 .AddDeveloperSigningCredential()
                                 ;
 
@@ -379,7 +381,7 @@ namespace sourceDev.WebApp
 
                             services.AddIdentityServer()
                                 .AddCloudscribeCoreEFIdentityServerStorageMySql(mysqlConnection)
-                                .AddCloudscribeIdentityServerIntegration()
+                                .AddCloudscribeIdentityServerIntegrationMvc()
                                 .AddDeveloperSigningCredential()
                                 ;
 
@@ -397,7 +399,7 @@ namespace sourceDev.WebApp
                                 //options.Authentication.AuthenticationScheme.
                             })
                                 .AddCloudscribeCoreEFIdentityServerStorageMSSQL(connectionString)
-                                .AddCloudscribeIdentityServerIntegration()
+                                .AddCloudscribeIdentityServerIntegrationMvc()
                                 .AddDeveloperSigningCredential()
                                 ;
 
