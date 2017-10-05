@@ -7,4 +7,8 @@ https://github.com/deebloo/ts-custom-elements
 
 https://developers.google.com/web/updates/2016/03/access-usb-devices-on-the-web
 
+The magical, reusable web component generator.
+https://stenciljs.com/
+
+
 

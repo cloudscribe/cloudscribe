@@ -1,4 +1,5 @@
 
+http://blog.ionic.io/the-end-of-framework-churn/
 
 https://medium.com/javascript-scene/elements-of-javascript-style-caa8821cb99f
 
