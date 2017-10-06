@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2015-11-16
-// Last Modified:			2017-08-03
+// Last Modified:			2017-10-06
 // 
 
 using cloudscribe.Core.Models;
@@ -32,6 +32,7 @@ namespace cloudscribe.Core.Storage.EFCore.Common
         public DbSet<SiteRole> Roles { get; set; }
         public DbSet<UserLocation> UserLocations { get; set; }
         public DbSet<UserRole> UserRoles { get; set; }
+        public DbSet<UserToken> UserTokens { get; set; }
 
         //protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         //{    
@@ -40,7 +41,7 @@ namespace cloudscribe.Core.Storage.EFCore.Common
 
         //protected override void OnModelCreating(ModelBuilder modelBuilder)
         //{ 
-            
+
         //    base.OnModelCreating(modelBuilder);
 
         //}

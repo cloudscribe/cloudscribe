@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2015-11-16
-// Last Modified:			2017-10-02
+// Last Modified:			2017-10-06
 // 
 
 
@@ -1238,6 +1238,34 @@ namespace cloudscribe.Core.Storage.EFCore.Common
 
             return items;
 
+        }
+
+        #endregion
+
+        #region UserTokens
+
+        public async Task<IUserToken> FindToken(
+            Guid siteId,
+            Guid userId,
+            string loginProvider,
+            string name,
+            CancellationToken cancellationToken = default(CancellationToken))
+        {
+            var query = from l in dbContext.UserTokens
+                        where (
+                        l.SiteId == siteId
+                        && l.UserId == userId
+                        && l.LoginProvider == loginProvider
+                        && l.Name == name
+                        )
+                        select l;
+
+            var items = await query
+                .AsNoTracking()
+                .SingleOrDefaultAsync<IUserToken>(cancellationToken)
+                .ConfigureAwait(false);
+
+            return items;
         }
 
         #endregion

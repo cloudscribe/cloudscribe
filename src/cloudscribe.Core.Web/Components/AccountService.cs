@@ -480,6 +480,16 @@ namespace cloudscribe.Core.Web.Components
             return await signInManager.TwoFactorSignInAsync(provider, code, rememberMe, rememberBrowser);
         }
 
+        public async Task<SignInResult> TwoFactorAuthenticatorSignInAsync(string code, bool rememberMe, bool rememberBrowser)
+        {
+            return await signInManager.TwoFactorAuthenticatorSignInAsync(code, rememberMe, rememberBrowser);
+        }
+
+        public async Task<SignInResult> TwoFactorRecoveryCodeSignInAsync(string code)
+        {
+            return await signInManager.TwoFactorRecoveryCodeSignInAsync(code);
+        }
+
         public AuthenticationProperties ConfigureExternalAuthenticationProperties(string provider, string returnUrl = null)
         {
             return signInManager.ConfigureExternalAuthenticationProperties(provider, returnUrl);

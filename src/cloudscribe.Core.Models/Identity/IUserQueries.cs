@@ -259,5 +259,12 @@ namespace cloudscribe.Core.Models
             int pageSize,
             CancellationToken cancellationToken = default(CancellationToken));
 
+        Task<IUserToken> FindToken(
+            Guid siteId,
+            Guid userId,
+            string loginProvider,
+            string name,
+            CancellationToken cancellationToken = default(CancellationToken));
+
     }
 }

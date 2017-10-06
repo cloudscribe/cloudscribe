@@ -11,7 +11,7 @@
     var showExternal = currentSite.HasAnySocialAuthEnabled();
 }
 <h2>@ViewData["Title"]</h2>
-<p class="text-success">@ViewData["StatusMessage"]</p>
+
 <div>
     <h4>@sr["Change your account settings"]</h4>
     <hr />
@@ -40,44 +40,10 @@
                 @Model.Logins.Count [<a asp-controller="Manage" asp-action="ManageLogins">@sr["Manage"]</a>]
             </dd>
         }
-        <dt>@sr["Phone Number:"]</dt>
-        <dd>
-            <p>
-                @sr["Phone Numbers can used as a second factor of verification in two-factor authentication, for better account security add your phone number now."]
-            </p>
-            @(Model.PhoneNumber ?? sr["None"]) [
-            @if (Model.PhoneNumber != null)
-            {
-                <a asp-controller="Manage" asp-action="AddPhoneNumber">@sr["Change"]</a>
-                    @: &nbsp;|&nbsp;
-                    <a asp-controller="Manage" asp-action="RemovePhoneNumber">@sr["Remove"]</a>
-            }
-            else
-            {
-                <a asp-controller="Manage" asp-action="AddPhoneNumber">@sr["Add"]</a>
-            }
-            ]
-        </dd>
+       
         <dt>@sr["Two-Factor Authentication:"]</dt>
         <dd>
-            @if (Model.TwoFactor)
-            {
-                <form asp-controller="Manage" asp-action="DisableTwoFactorAuthentication" method="post" class="form-horizontal" role="form">
-                    <text>
-                        @sr["Enabled"]
-                        <input type="submit" value='@sr["Disable"]' class="btn btn-link" />
-                    </text>
-                </form>
-            }
-            else
-            {
-                <form asp-controller="Manage" asp-action="EnableTwoFactorAuthentication" method="post" class="form-horizontal" role="form">
-                    <text>
-                        @sr["Disabled"]
-                        <input type="submit" value='@sr["Enable"]' class="btn btn-link" />
-                    </text>
-                </form>
-            }
+            <a asp-controller="Manage" asp-action="TwoFactorAuthentication">@sr["Two-factor authentication"]</a>
         </dd>
         <dt>@sr["Time Zone:"]</dt>
         <dd>

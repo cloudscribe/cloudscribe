@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2016-11-10
-// Last Modified:			2017-09-15
+// Last Modified:			2017-10-06
 // 
 
 using cloudscribe.Core.Models;
@@ -608,6 +608,28 @@ namespace cloudscribe.Core.Storage.EFCore.MySql
                 entity.Property(p => p.ProviderDisplayName)
                 .HasMaxLength(100)
                 ;
+            });
+
+            modelBuilder.Entity<UserToken>(entity =>
+            {
+                entity.ToTable(tableNames.TablePrefix + tableNames.UserTokenTableName);
+
+                entity.HasKey(p => new { p.UserId, p.SiteId, p.LoginProvider, p.Name });
+
+                entity.Property(p => p.LoginProvider).HasMaxLength(450);
+
+                entity.Property(p => p.Name).HasMaxLength(450);
+
+                entity.Property(p => p.UserId).IsRequired();
+
+                entity.HasIndex(p => p.UserId);
+
+                entity.Property(p => p.SiteId).IsRequired();
+
+                entity.HasIndex(p => p.SiteId);
+
+                entity.Property(p => p.Value);
+
             });
 
             modelBuilder.Entity<GeoCountry>(entity =>

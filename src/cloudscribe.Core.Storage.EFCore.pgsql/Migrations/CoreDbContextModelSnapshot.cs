@@ -592,6 +592,29 @@ namespace cloudscribe.Core.Storage.EFCore.pgsql.Migrations
 
                     b.ToTable("cs_UserRole");
                 });
+
+            modelBuilder.Entity("cloudscribe.Core.Models.UserToken", b =>
+                {
+                    b.Property<Guid>("UserId");
+
+                    b.Property<Guid>("SiteId");
+
+                    b.Property<string>("LoginProvider")
+                        .HasMaxLength(450);
+
+                    b.Property<string>("Name")
+                        .HasMaxLength(450);
+
+                    b.Property<string>("Value");
+
+                    b.HasKey("UserId", "SiteId", "LoginProvider", "Name");
+
+                    b.HasIndex("SiteId");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("cs_UserToken");
+                });
 #pragma warning restore 612, 618
         }
     }

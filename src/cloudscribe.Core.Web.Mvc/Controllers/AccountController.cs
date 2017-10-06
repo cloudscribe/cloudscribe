@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2014-10-26
-// Last Modified:			2017-07-14
+// Last Modified:			2017-10-06
 // 
 
 using cloudscribe.Core.Identity;
@@ -165,7 +165,9 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
                 log.LogWarning($"redirecting from login for {result.User.Email} because 2 factor not configured yet for account");
             }
 
-            return RedirectToAction(nameof(SendCode), new { ReturnUrl = returnUrl, RememberMe = rememberMe });
+            return RedirectToAction(nameof(LoginWith2fa), new { returnUrl, rememberMe });
+
+            //return RedirectToAction(nameof(SendCode), new { ReturnUrl = returnUrl, RememberMe = rememberMe });
         }
 
         private IActionResult HandleLockout(UserLoginResult result = null)
@@ -308,6 +310,130 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
                 return View(model);
             }
         }
+
+        [HttpGet]
+        [AllowAnonymous]
+        public async Task<IActionResult> LoginWith2fa(bool rememberMe, string returnUrl = null)
+        {
+            ViewData["Title"] = sr["Two-factor authentication"];
+
+            // Ensure the user has gone through the username & password screen first
+            var user = await accountService.GetTwoFactorAuthenticationUserAsync();
+
+            if (user == null)
+            {
+                throw new ApplicationException($"Unable to load two-factor authentication user.");
+            }
+
+            var model = new LoginWith2faViewModel { RememberMe = rememberMe };
+            ViewData["ReturnUrl"] = returnUrl;
+
+            return View(model);
+        }
+
+        [HttpPost]
+        [AllowAnonymous]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> LoginWith2fa(LoginWith2faViewModel model, bool rememberMe, string returnUrl = null)
+        {
+            ViewData["Title"] = sr["Two-factor authentication"];
+
+            if (!ModelState.IsValid)
+            {
+                return View(model);
+            }
+
+            var user = await accountService.GetTwoFactorAuthenticationUserAsync();
+            if (user == null)
+            {
+                throw new ApplicationException($"Unable to load user with ID '{User.GetUserId()}'.");
+            }
+
+            var authenticatorCode = model.TwoFactorCode.Replace(" ", string.Empty).Replace("-", string.Empty);
+
+            var result = await accountService.TwoFactorAuthenticatorSignInAsync(authenticatorCode, rememberMe, model.RememberMachine);
+
+            if (result.Succeeded)
+            {
+                if (!string.IsNullOrEmpty(returnUrl))
+                {
+                    return LocalRedirect(returnUrl);
+                }
+
+                return this.RedirectToSiteRoot(Site);
+            }
+
+            if (result.IsLockedOut)
+            {
+                return HandleLockout();
+            }
+            else
+            {
+                ModelState.AddModelError(string.Empty, "Invalid authenticator code.");
+                return View(model);
+            }
+
+           
+        }
+
+        [HttpGet]
+        [AllowAnonymous]
+        public async Task<IActionResult> LoginWithRecoveryCode(string returnUrl = null)
+        {
+            ViewData["Title"] = sr["Recovery code verification"];
+
+            // Ensure the user has gone through the username & password screen first
+            var user = await accountService.GetTwoFactorAuthenticationUserAsync();
+            if (user == null)
+            {
+                throw new ApplicationException($"Unable to load two-factor authentication user.");
+            }
+
+            ViewData["ReturnUrl"] = returnUrl;
+
+            return View();
+        }
+
+        [HttpPost]
+        [AllowAnonymous]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> LoginWithRecoveryCode(LoginWithRecoveryCodeViewModel model, string returnUrl = null)
+        {
+            ViewData["Title"] = sr["Recovery code verification"];
+
+            if (!ModelState.IsValid)
+            {
+                return View(model);
+            }
+
+            var user = await accountService.GetTwoFactorAuthenticationUserAsync();
+            if (user == null)
+            {
+                throw new ApplicationException($"Unable to load two-factor authentication user.");
+            }
+
+            var recoveryCode = model.RecoveryCode.Replace(" ", string.Empty);
+
+            var result = await accountService.TwoFactorRecoveryCodeSignInAsync(recoveryCode);
+
+            if (result.Succeeded)
+            {
+                //_logger.LogInformation("User with ID {UserId} logged in with a recovery code.", user.Id);
+                return LocalRedirect(returnUrl);
+            }
+            if (result.IsLockedOut)
+            {
+                //_logger.LogWarning("User with ID {UserId} account locked out.", user.Id);
+                return HandleLockout();
+            }
+            else
+            {
+                //_logger.LogWarning("Invalid recovery code entered for user with ID {UserId}", user.Id);
+                ModelState.AddModelError(string.Empty, "Invalid recovery code entered.");
+                return View();
+            }
+        }
+
 
         // GET: /Account/Register
         [HttpGet]
@@ -1036,6 +1162,8 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
         }
 
         #region Helpers
+
+        
 
         private void AddErrors(IdentityResult result)
         {

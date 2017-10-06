@@ -1162,4 +1162,79 @@
   <data name="{0} - User Activity - {1}" xml:space="preserve">
     <value>{0} - User Activity - {1}</value>
   </data>
+  <data name="Add authenticator app" xml:space="preserve">
+    <value>Add authenticator app</value>
+  </data>
+  <data name="Authenticator app" xml:space="preserve">
+    <value>Authenticator app</value>
+  </data>
+  <data name="Configure authenticator app" xml:space="preserve">
+    <value>Configure authenticator app</value>
+  </data>
+  <data name="Disable 2FA" xml:space="preserve">
+    <value>Disable 2FA</value>
+  </data>
+  <data name="Disable two-factor authentication (2FA)" xml:space="preserve">
+    <value>Disable two-factor authentication (2FA)</value>
+  </data>
+  <data name="Enable authenticator" xml:space="preserve">
+    <value>Enable authenticator</value>
+  </data>
+  <data name="If you lose your device and don't have the recovery codes you will lose access to your account." xml:space="preserve">
+    <value>If you lose your device and don't have the recovery codes you will lose access to your account.</value>
+  </data>
+  <data name="If you reset your authenticator key your authenticator app will not work until you reconfigure it." xml:space="preserve">
+    <value>If you reset your authenticator key your authenticator app will not work until you reconfigure it.</value>
+  </data>
+  <data name="Once you have scanned the QR code or input the key above, your two factor authentication app will provide you with a unique code. Enter the code in the confirmation box below." xml:space="preserve">
+    <value>Once you have scanned the QR code or input the key above, your two factor authentication app will provide you with a unique code. Enter the code in the confirmation box below.</value>
+  </data>
+  <data name="Put these codes in a safe place." xml:space="preserve">
+    <value>Put these codes in a safe place.</value>
+  </data>
+  <data name="Recovery code verification" xml:space="preserve">
+    <value>Recovery code verification</value>
+  </data>
+  <data name="Recovery codes" xml:space="preserve">
+    <value>Recovery codes</value>
+  </data>
+  <data name="Reset authenticator key" xml:space="preserve">
+    <value>Reset authenticator key</value>
+  </data>
+  <data name="Reset recovery codes" xml:space="preserve">
+    <value>Reset recovery codes</value>
+  </data>
+  <data name="This action only disables 2FA." xml:space="preserve">
+    <value>This action only disables 2FA.</value>
+  </data>
+  <data name="This process disables 2FA until you verify your authenticator app and will also reset your 2FA recovery codes.  If you do not complete your authenticator app configuration you may lose access to your account." xml:space="preserve">
+    <value>This process disables 2FA until you verify your authenticator app and will also reset your 2FA recovery codes.  If you do not complete your authenticator app configuration you may lose access to your account.</value>
+  </data>
+  <data name="To use an authenticator app go through the following steps:" xml:space="preserve">
+    <value>To use an authenticator app go through the following steps:</value>
+  </data>
+  <data name="Two-factor authentication" xml:space="preserve">
+    <value>Two-factor authentication</value>
+  </data>
+  <data name="Verification Code" xml:space="preserve">
+    <value>Verification Code</value>
+  </data>
+  <data name="You have 1 recovery code left." xml:space="preserve">
+    <value>You have 1 recovery code left.</value>
+  </data>
+  <data name="You have no recovery codes left." xml:space="preserve">
+    <value>You have no recovery codes left.</value>
+  </data>
+  <data name="You have requested to login with a recovery code. This login will not be remembered until you provide an authenticator app code at login or disable 2FA and login again." xml:space="preserve">
+    <value>You have requested to login with a recovery code. This login will not be remembered until you provide an authenticator app code at login or disable 2FA and login again.</value>
+  </data>
+  <data name="Your login is protected with an authenticator app. Enter your authenticator code below." xml:space="preserve">
+    <value>Your login is protected with an authenticator app. Enter your authenticator code below.</value>
+  </data>
+  <data name="Disable 2 Factor Authentication" xml:space="preserve">
+    <value>Disable 2 Factor Authentication</value>
+  </data>
+  <data name="Reset Authenticator" xml:space="preserve">
+    <value>Reset Authenticator</value>
+  </data>
 </root>
