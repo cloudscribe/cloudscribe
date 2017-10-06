@@ -8,6 +8,7 @@
 @inject IStringLocalizer<CloudscribeCore> sr
 @{ 
     var socFormat = sr["Log in using your {0} account"];
+    ViewData["BodyClass"] = "manage-section manage-logins";
 }
 @functions {
     public string GetIconForLogin(string displayName)

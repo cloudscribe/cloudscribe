@@ -3,8 +3,8 @@
 @using Microsoft.Extensions.Localization
 @inject IStringLocalizer<CloudscribeCore> sr
 @{
-    
-    
+    ViewData["BodyClass"] = "manage-section manage-2fa";
+
 }
 <h4>@ViewData["Title"]</h4>
 @if (Model.Is2faEnabled)

@@ -1,6 +1,9 @@
 ﻿@using cloudscribe.Core.Web
 @using Microsoft.Extensions.Localization
 @inject IStringLocalizer<CloudscribeCore> sr
+@{ 
+    ViewData["BodyClass"] = "manage-section manage-disable-2fa";
+}
 
 <h2>@ViewData["Title"]</h2>
 
