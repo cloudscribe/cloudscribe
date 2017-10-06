@@ -343,37 +343,69 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
                 return View(model);
             }
 
-            var user = await accountService.GetTwoFactorAuthenticationUserAsync();
-            if (user == null)
+            //var user = await accountService.GetTwoFactorAuthenticationUserAsync();
+            //if (user == null)
+            //{
+            //    throw new ApplicationException($"Unable to load user with ID '{User.GetUserId()}'.");
+            //}
+
+            //var authenticatorCode = model.TwoFactorCode.Replace(" ", string.Empty).Replace("-", string.Empty);
+
+            //var result = await accountService.TwoFactorAuthenticatorSignInAsync(authenticatorCode, rememberMe, model.RememberMachine);
+
+            //if (result.Succeeded)
+            //{
+            //    if (!string.IsNullOrEmpty(returnUrl))
+            //    {
+            //        return LocalRedirect(returnUrl);
+            //    }
+
+            //    return this.RedirectToSiteRoot(Site);
+            //}
+
+            //if (result.IsLockedOut)
+            //{
+            //    return HandleLockout();
+            //}
+            //else
+            //{
+            //    ModelState.AddModelError(string.Empty, "Invalid authenticator code.");
+            //    return View(model);
+            //}
+
+            var result = await accountService.Try2FaLogin(model, rememberMe);
+
+            if (result.SignInResult.Succeeded)
             {
-                throw new ApplicationException($"Unable to load user with ID '{User.GetUserId()}'.");
+                return await HandleLoginSuccess(result, returnUrl);
             }
 
-            var authenticatorCode = model.TwoFactorCode.Replace(" ", string.Empty).Replace("-", string.Empty);
-
-            var result = await accountService.TwoFactorAuthenticatorSignInAsync(authenticatorCode, rememberMe, model.RememberMachine);
-
-            if (result.Succeeded)
+            foreach (var reason in result.RejectReasons)
             {
-                if (!string.IsNullOrEmpty(returnUrl))
-                {
-                    return LocalRedirect(returnUrl);
-                }
-
-                return this.RedirectToSiteRoot(Site);
+                //these reasons are not meant to be shown in the ui
+                // but we can log them so admin will see failed attempts in the log along with reasons
+                log.LogWarning(reason);
             }
 
-            if (result.IsLockedOut)
+            if (result.SignInResult.IsNotAllowed)
             {
-                return HandleLockout();
+                return HandleLoginNotAllowed(result);
+            }
+            
+            if (result.SignInResult.IsLockedOut)
+            {
+                return HandleLockout(result);
             }
             else
             {
-                ModelState.AddModelError(string.Empty, "Invalid authenticator code.");
+                analytics.HandleLoginFail("Onsite", sr["Invalid authenticator code."]).Forget();
+
+
+                ModelState.AddModelError(string.Empty, sr["Invalid authenticator code."]);
                 return View(model);
             }
 
-           
+
         }
 
         [HttpGet]
@@ -406,32 +438,66 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
                 return View(model);
             }
 
-            var user = await accountService.GetTwoFactorAuthenticationUserAsync();
-            if (user == null)
+            //var user = await accountService.GetTwoFactorAuthenticationUserAsync();
+            //if (user == null)
+            //{
+            //    throw new ApplicationException($"Unable to load two-factor authentication user.");
+            //}
+
+            //var recoveryCode = model.RecoveryCode.Replace(" ", string.Empty);
+
+            //var result = await accountService.TwoFactorRecoveryCodeSignInAsync(recoveryCode);
+
+            //if (result.Succeeded)
+            //{
+            //    //_logger.LogInformation("User with ID {UserId} logged in with a recovery code.", user.Id);
+            //    return LocalRedirect(returnUrl);
+            //}
+            //if (result.IsLockedOut)
+            //{
+            //    //_logger.LogWarning("User with ID {UserId} account locked out.", user.Id);
+            //    return HandleLockout();
+            //}
+            //else
+            //{
+            //    //_logger.LogWarning("Invalid recovery code entered for user with ID {UserId}", user.Id);
+            //    ModelState.AddModelError(string.Empty, "Invalid recovery code entered.");
+            //    return View();
+            //}
+
+            var result = await accountService.TryLoginWithRecoveryCode(model);
+
+            if (result.SignInResult.Succeeded)
             {
-                throw new ApplicationException($"Unable to load two-factor authentication user.");
+                return await HandleLoginSuccess(result, returnUrl);
             }
 
-            var recoveryCode = model.RecoveryCode.Replace(" ", string.Empty);
-
-            var result = await accountService.TwoFactorRecoveryCodeSignInAsync(recoveryCode);
-
-            if (result.Succeeded)
+            foreach (var reason in result.RejectReasons)
             {
-                //_logger.LogInformation("User with ID {UserId} logged in with a recovery code.", user.Id);
-                return LocalRedirect(returnUrl);
+                //these reasons are not meant to be shown in the ui
+                // but we can log them so admin will see failed attempts in the log along with reasons
+                log.LogWarning(reason);
             }
-            if (result.IsLockedOut)
+
+            if (result.SignInResult.IsNotAllowed)
             {
-                //_logger.LogWarning("User with ID {UserId} account locked out.", user.Id);
-                return HandleLockout();
+                return HandleLoginNotAllowed(result);
+            }
+
+            if (result.SignInResult.IsLockedOut)
+            {
+                return HandleLockout(result);
             }
             else
             {
-                //_logger.LogWarning("Invalid recovery code entered for user with ID {UserId}", user.Id);
-                ModelState.AddModelError(string.Empty, "Invalid recovery code entered.");
-                return View();
+                analytics.HandleLoginFail("Onsite", sr["Invalid recovery code entered."]).Forget();
+
+
+                ModelState.AddModelError(string.Empty, sr["Invalid recovery code entered."]);
+                return View(model);
             }
+
+
         }
 
 

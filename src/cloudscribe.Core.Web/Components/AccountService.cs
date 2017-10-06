@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2017-05-22
-// Last Modified:			2017-10-02
+// Last Modified:			2017-10-06
 // 
 
 using cloudscribe.Core.Identity;
@@ -252,7 +252,100 @@ namespace cloudscribe.Core.Web.Components
                 );
         }
 
-        
+        public async Task<UserLoginResult> Try2FaLogin(LoginWith2faViewModel model, bool rememberMe)
+        {
+            var template = new LoginResultTemplate();
+            IUserContext userContext = null;
+            template.User = await signInManager.GetTwoFactorAuthenticationUserAsync();
+
+            if (template.User != null)
+            {
+                await loginRulesProcessor.ProcessAccountLoginRules(template);
+            }
+
+            if (template.User != null)
+            {
+                userContext = new UserContext(template.User);
+            }
+            
+            if(userContext != null
+                && template.SignInResult == SignInResult.Failed //initial state
+                && template.RejectReasons.Count == 0
+                )
+            {
+                var authenticatorCode = model.TwoFactorCode.Replace(" ", string.Empty).Replace("-", string.Empty);
+                template.SignInResult = await signInManager.TwoFactorAuthenticatorSignInAsync(authenticatorCode, rememberMe, model.RememberMachine);
+            }
+            
+            if (template.SignInResult.Succeeded)
+            {
+                //update last login time
+                template.User.LastLoginUtc = DateTime.UtcNow;
+                await userManager.UpdateAsync(template.User);
+            }
+
+            return new UserLoginResult(
+                template.SignInResult,
+                template.RejectReasons,
+                userContext,
+                template.IsNewUserRegistration,
+                template.MustAcceptTerms,
+                template.NeedsAccountApproval,
+                template.NeedsEmailConfirmation,
+                template.EmailConfirmationToken,
+                template.NeedsPhoneConfirmation
+                );
+
+        }
+
+        public async Task<UserLoginResult> TryLoginWithRecoveryCode(LoginWithRecoveryCodeViewModel model)
+        {
+            var template = new LoginResultTemplate();
+            IUserContext userContext = null;
+            template.User = await signInManager.GetTwoFactorAuthenticationUserAsync();
+
+            if (template.User != null)
+            {
+                await loginRulesProcessor.ProcessAccountLoginRules(template);
+            }
+
+            if (template.User != null)
+            {
+                userContext = new UserContext(template.User);
+            }
+
+            if (userContext != null
+                && template.SignInResult == SignInResult.Failed //initial state
+                && template.RejectReasons.Count == 0
+                )
+            {
+                var recoveryCode = model.RecoveryCode.Replace(" ", string.Empty);
+                template.SignInResult = await signInManager.TwoFactorRecoveryCodeSignInAsync(recoveryCode);
+            }
+
+            if(template.SignInResult.Succeeded)
+            {
+                //update last login time
+                template.User.LastLoginUtc = DateTime.UtcNow;
+                await userManager.UpdateAsync(template.User);
+            }
+
+            return new UserLoginResult(
+                template.SignInResult,
+                template.RejectReasons,
+                userContext,
+                template.IsNewUserRegistration,
+                template.MustAcceptTerms,
+                template.NeedsAccountApproval,
+                template.NeedsEmailConfirmation,
+                template.EmailConfirmationToken,
+                template.NeedsPhoneConfirmation
+                );
+
+        }
+
+
+
         public async Task<UserLoginResult> TryRegister(
             RegisterViewModel model, 
             ModelStateDictionary modelState,
