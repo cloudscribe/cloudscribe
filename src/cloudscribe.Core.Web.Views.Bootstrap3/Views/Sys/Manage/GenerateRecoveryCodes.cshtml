@@ -2,6 +2,9 @@
 @using cloudscribe.Core.Web
 @using Microsoft.Extensions.Localization
 @inject IStringLocalizer<CloudscribeCore> sr
+@{ 
+    ViewData["BodyClass"] = "manage-section manage-recovery2fa";
+}
 <h4>@ViewData["Title"]</h4>
 <div class="alert alert-warning" role="alert">
     <p>
