@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2015-11-16
-// Last Modified:			2016-08-03
+// Last Modified:			2016-10-06
 // 
 
 
@@ -133,6 +133,7 @@ namespace cloudscribe.Core.Storage.EFCore.Common
                 await DeleteLoginsByUser(itemToRemove.SiteId, itemToRemove.Id, false);
                 await DeleteClaimsByUser(itemToRemove.SiteId, itemToRemove.Id, false);
                 await DeleteUserRoles(siteId, itemToRemove.Id, false);
+                await DeleteTokensByUser(itemToRemove.SiteId, itemToRemove.Id, false);
 
 
                 dbContext.Users.Remove(itemToRemove);
@@ -154,6 +155,7 @@ namespace cloudscribe.Core.Storage.EFCore.Common
             await DeleteLoginsBySite(siteId);
             await DeleteClaimsBySite(siteId);
             await DeleteUserRolesBySite(siteId);
+            await DeleteTokensBySite(siteId);
 
             var query = from x in dbContext.Users.Where(x => x.SiteId == siteId)
                         select x;
@@ -767,8 +769,113 @@ namespace cloudscribe.Core.Storage.EFCore.Common
 
         #endregion
 
+        #region UserToken
+
+        public async Task CreateToken(
+            IUserToken userToken,
+            CancellationToken cancellationToken = default(CancellationToken))
+        {
+            ThrowIfDisposed();
+            cancellationToken.ThrowIfCancellationRequested();
+
+            if (userToken == null) { throw new ArgumentException("userToken can't be null"); }
+            if (userToken.LoginProvider.Length == -1) { throw new ArgumentException("userToken must have a loginprovider"); }
+            if (userToken.Name.Length == -1) { throw new ArgumentException("userToken must have a Name"); }
+            if (userToken.UserId == Guid.Empty) { throw new ArgumentException("userToken must have a user id"); }
+
+            var token = UserToken.FromIUserToken(userToken);
+
+            dbContext.UserTokens.Add(token);
+
+            int rowsAffected = await dbContext.SaveChangesAsync(cancellationToken)
+                .ConfigureAwait(false);
+
+        }
+
+        public async Task DeleteToken(
+            Guid siteId,
+            Guid userId,
+            string loginProvider,
+            string name,
+            CancellationToken cancellationToken = default(CancellationToken))
+        {
+            ThrowIfDisposed();
+            cancellationToken.ThrowIfCancellationRequested();
+
+            var query = from l in dbContext.UserTokens
+                        where (
+                        l.SiteId == siteId
+                        && l.UserId == userId
+                        && l.LoginProvider == loginProvider
+                        && l.Name == name
+                        )
+                        select l;
+
+            dbContext.UserTokens.RemoveRange(query);
+            int rowsAffected = await dbContext.SaveChangesAsync(cancellationToken)
+                .ConfigureAwait(false);
+
+        }
+
+        public async Task DeleteTokensBySite(
+            Guid siteId,
+            CancellationToken cancellationToken = default(CancellationToken))
+        {
+            ThrowIfDisposed();
+            cancellationToken.ThrowIfCancellationRequested();
+
+            var query = from l in dbContext.UserTokens
+                        where (l.SiteId == siteId)
+                        select l;
+
+            dbContext.UserTokens.RemoveRange(query);
+            int rowsAffected = await dbContext.SaveChangesAsync(cancellationToken)
+                .ConfigureAwait(false);
+
+        }
+
+        public async Task DeleteTokensByUser(
+            Guid siteId,
+            Guid userId,
+            CancellationToken cancellationToken = default(CancellationToken))
+        {
+            ThrowIfDisposed();
+            cancellationToken.ThrowIfCancellationRequested();
+            await DeleteTokensByUser(siteId, userId, true, cancellationToken);
+
+        }
+
+        private async Task DeleteTokensByUser(
+            Guid siteId,
+            Guid userId,
+            bool saveChanges,
+            CancellationToken cancellationToken = default(CancellationToken))
+        {
+            ThrowIfDisposed();
+            cancellationToken.ThrowIfCancellationRequested();
+
+            var query = from l in dbContext.UserTokens
+                        where (
+                        l.SiteId == siteId
+                        && l.UserId == userId
+                        )
+                        select l;
+
+            dbContext.UserTokens.RemoveRange(query);
+            if (saveChanges)
+            {
+                int rowsAffected = await dbContext.SaveChangesAsync(cancellationToken)
+                    .ConfigureAwait(false);
+
+            }
+
+
+        }
+
+        #endregion
+
         #region UserLocation
-        
+
         public async Task AddUserLocation(
             IUserLocation userLocation,
             CancellationToken cancellationToken = default(CancellationToken)

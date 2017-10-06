@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2014-10-26
-// Last Modified:			2017-07-27
+// Last Modified:			2017-10-06
 // 
 
 using cloudscribe.Core.Identity;
@@ -16,8 +16,11 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.Extensions.Localization;
+using Microsoft.Extensions.Logging;
 using System;
 using System.Linq;
+using System.Text;
+using System.Text.Encodings.Web;
 using System.Threading.Tasks;
 
 namespace cloudscribe.Core.Web.Controllers.Mvc
@@ -33,7 +36,9 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
             IStringLocalizer<CloudscribeCore> localizer,
             ITimeZoneIdResolver timeZoneIdResolver,
             ITimeZoneHelper timeZoneHelper,
-            IHandleCustomUserInfo customUserInfo
+            IHandleCustomUserInfo customUserInfo,
+            ILogger<ManageController> logger,
+            UrlEncoder urlEncoder
             )
         {
             Site = currentSite; 
@@ -44,8 +49,11 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
             this.timeZoneIdResolver = timeZoneIdResolver;
             tzHelper = timeZoneHelper;
             this.customUserInfo = customUserInfo;
+            _logger = logger;
+            _urlEncoder = urlEncoder;
         }
 
+        private readonly ILogger _logger;
         private readonly ISiteContext Site;
         private readonly SiteUserManager<SiteUser> userManager;
         private readonly SignInManager<SiteUser> signInManager;
@@ -55,6 +63,11 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
         private ITimeZoneIdResolver timeZoneIdResolver;
         private ITimeZoneHelper tzHelper;
         private IHandleCustomUserInfo customUserInfo;
+        private const string AuthenicatorUriFormat = "otpauth://totp/{0}:{1}?secret={2}&issuer={0}&digits=6";
+        private readonly UrlEncoder _urlEncoder;
+
+        [TempData]
+        public string StatusMessage { get; set; }
 
 
         // GET: /Manage/Index
@@ -70,6 +83,7 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
                 Logins = await userManager.GetLoginsAsync(user),
                 BrowserRemembered = await signInManager.IsTwoFactorClientRememberedAsync(user),
                 TimeZone = user.TimeZoneId
+                
             };
 
             if(string.IsNullOrEmpty(model.TimeZone))
@@ -127,7 +141,8 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
                 FirstName = user.FirstName,
                 LastName = user.LastName,
                 DateOfBirth = user.DateOfBirth,
-                WebSiteUrl = user.WebSiteUrl
+                WebSiteUrl = user.WebSiteUrl,
+                PhoneNumber = user.PhoneNumber
             };
 
             var viewName = await customUserInfo.GetUserInfoViewName(Site, user, HttpContext);
@@ -166,6 +181,7 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
             {
                 user.FirstName = model.FirstName;
                 user.LastName = model.LastName;
+                user.PhoneNumber = model.PhoneNumber;
                 if(model.DateOfBirth.HasValue)
                 {
                     user.DateOfBirth = model.DateOfBirth;
@@ -258,13 +274,187 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
 
         }
 
+        [HttpGet]
+        public async Task<IActionResult> TwoFactorAuthentication()
+        {
+            ViewData["Title"] = sr["Two-factor authentication"];
+
+            var user = await userManager.FindByIdAsync(User.GetUserId());
+            if (user == null)
+            {
+                throw new ApplicationException($"Unable to load user with ID '{userManager.GetUserId(User)}'.");
+            }
+
+            var model = new TwoFactorAuthenticationViewModel
+            {
+                HasAuthenticator = await userManager.GetAuthenticatorKeyAsync(user) != null,
+                Is2faEnabled = user.TwoFactorEnabled,
+                RecoveryCodesLeft = await userManager.CountRecoveryCodesAsync(user),
+            };
+
+            return View(model);
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> Disable2faWarning()
+        {
+            ViewData["Title"] = sr["Disable two-factor authentication (2FA)"];
+
+            var user = await userManager.FindByIdAsync(User.GetUserId());
+            if (user == null)
+            {
+                throw new ApplicationException($"Unable to load user with ID '{User.GetUserId()}'.");
+            }
+
+            if (!user.TwoFactorEnabled)
+            {
+                throw new ApplicationException($"Unexpected error occured disabling 2FA for user with ID '{user.Id}'.");
+            }
+
+            return View(nameof(Disable2fa));
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Disable2fa()
+        {
+            ViewData["Title"] = sr["Disable two-factor authentication (2FA)"];
+
+            var user = await userManager.FindByIdAsync(User.GetUserId());
+            if (user == null)
+            {
+                throw new ApplicationException($"Unable to load user with ID '{User.GetUserId()}'.");
+            }
+
+            var disable2faResult = await userManager.SetTwoFactorEnabledAsync(user, false);
+            if (!disable2faResult.Succeeded)
+            {
+                throw new ApplicationException($"Unexpected error occured disabling 2FA for user with ID '{user.Id}'.");
+            }
+            
+            _logger.LogInformation("User with ID {UserId} has disabled 2fa.", user.Id);
+            return RedirectToAction(nameof(TwoFactorAuthentication));
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> EnableAuthenticator()
+        {
+            ViewData["Title"] = sr["Enable authenticator"];
+
+            var user = await userManager.FindByIdAsync(User.GetUserId());
+            if (user == null)
+            {
+                throw new ApplicationException($"Unable to load user with ID '{User.GetUserId()}'.");
+            }
+
+            var unformattedKey = await userManager.GetAuthenticatorKeyAsync(user);
+            if (string.IsNullOrEmpty(unformattedKey))
+            {
+                await userManager.ResetAuthenticatorKeyAsync(user);
+                unformattedKey = await userManager.GetAuthenticatorKeyAsync(user);
+            }
+
+            var model = new EnableAuthenticatorViewModel
+            {
+                SharedKey = FormatKey(unformattedKey),
+                AuthenticatorUri = GenerateQrCodeUri(user.Email, unformattedKey)
+            };
+
+            return View(model);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> EnableAuthenticator(EnableAuthenticatorViewModel model)
+        {
+            ViewData["Title"] = sr["Enable authenticator"];
+
+            if (!ModelState.IsValid)
+            {
+                return View(model);
+            }
+
+            var user = await userManager.FindByIdAsync(User.GetUserId());
+            if (user == null)
+            {
+                throw new ApplicationException($"Unable to load user with ID '{User.GetUserId()}'.");
+            }
+
+            // Strip spaces and hypens
+            var verificationCode = model.Code.Replace(" ", string.Empty).Replace("-", string.Empty);
+
+            var is2faTokenValid = await userManager.VerifyTwoFactorTokenAsync(
+                user, userManager.Options.Tokens.AuthenticatorTokenProvider, verificationCode);
+
+            if (!is2faTokenValid)
+            {
+                ModelState.AddModelError("model.Code", "Verification code is invalid.");
+                return View(model);
+            }
+
+            await userManager.SetTwoFactorEnabledAsync(user, true);
+            _logger.LogInformation("User with ID {UserId} has enabled 2FA with an authenticator app.", user.Id);
+            return RedirectToAction(nameof(GenerateRecoveryCodes));
+        }
+
+        [HttpGet]
+        public IActionResult ResetAuthenticatorWarning()
+        {
+            ViewData["Title"] = sr["Reset authenticator key"];
+
+            return View(nameof(ResetAuthenticator));
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> ResetAuthenticator()
+        {
+            ViewData["Title"] = sr["Reset authenticator key"];
+
+            var user = await userManager.FindByIdAsync(User.GetUserId());
+            if (user == null)
+            {
+                throw new ApplicationException($"Unable to load user with ID '{User.GetUserId()}'.");
+            }
+
+            await userManager.SetTwoFactorEnabledAsync(user, false);
+            await userManager.ResetAuthenticatorKeyAsync(user);
+            _logger.LogInformation("User with id '{UserId}' has reset their authentication app key.", user.Id);
+
+            return RedirectToAction(nameof(EnableAuthenticator));
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> GenerateRecoveryCodes()
+        {
+            ViewData["Title"] = sr["Recovery codes"];
+
+            var user = await userManager.FindByIdAsync(User.GetUserId());
+            if (user == null)
+            {
+                throw new ApplicationException($"Unable to load user with ID '{User.GetUserId()}'.");
+            }
+
+            if (!user.TwoFactorEnabled)
+            {
+                throw new ApplicationException($"Cannot generate recovery codes for user with ID '{user.Id}' as they do not have 2FA enabled.");
+            }
+
+            var recoveryCodes = await userManager.GenerateNewTwoFactorRecoveryCodesAsync(user, 10);
+            var model = new GenerateRecoveryCodesViewModel { RecoveryCodes = recoveryCodes.ToArray() };
+
+            _logger.LogInformation("User with ID {UserId} has generated new 2FA recovery codes.", user.Id);
+
+            return View(model);
+        }
+
 
         // POST: /Manage/EnableTwoFactorAuthentication
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> EnableTwoFactorAuthentication()
         {
-            var user = await userManager.FindByIdAsync(HttpContext.User.GetUserId());
+            var user = await userManager.FindByIdAsync(User.GetUserId());
             if (user != null)
             {
                 await userManager.SetTwoFactorEnabledAsync(user, true);
@@ -279,7 +469,7 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DisableTwoFactorAuthentication()
         {
-            var user = await userManager.FindByIdAsync(HttpContext.User.GetUserId());
+            var user = await userManager.FindByIdAsync(User.GetUserId());
             if (user != null)
             {
                 await userManager.SetTwoFactorEnabledAsync(user, false);
@@ -450,12 +640,16 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
             var userLogins = await userManager.GetLoginsAsync(user);
             var externalSchemes = await signInManager.GetExternalAuthenticationSchemesAsync();
             var otherLogins = externalSchemes.Where(auth => userLogins.All(ul => auth.Name != ul.LoginProvider)).ToList();
-            ViewBag.ShowRemoveButton = user.PasswordHash != null || userLogins.Count > 1;
-            return View(new ManageLoginsViewModel
+            
+            var model = new ManageLoginsViewModel
             {
                 CurrentLogins = userLogins,
                 OtherLogins = otherLogins
-            });  
+
+            };
+            model.ShowRemoveButton = await userManager.HasPasswordAsync(user) || model.CurrentLogins.Count > 1;
+
+            return View(model);  
         }
 
 
@@ -497,8 +691,33 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
         }
 
         #region Helpers
- 
-        
+
+        private string FormatKey(string unformattedKey)
+        {
+            var result = new StringBuilder();
+            int currentPosition = 0;
+            while (currentPosition + 4 < unformattedKey.Length)
+            {
+                result.Append(unformattedKey.Substring(currentPosition, 4)).Append(" ");
+                currentPosition += 4;
+            }
+            if (currentPosition < unformattedKey.Length)
+            {
+                result.Append(unformattedKey.Substring(currentPosition));
+            }
+
+            return result.ToString().ToLowerInvariant();
+        }
+
+        private string GenerateQrCodeUri(string email, string unformattedKey)
+        {
+            return string.Format(
+                AuthenicatorUriFormat,
+                _urlEncoder.Encode(userManager.Site.SiteName),
+                _urlEncoder.Encode(email),
+                unformattedKey);
+        }
+
         private void AddErrors(IdentityResult result)
         {
             foreach (var error in result.Errors)

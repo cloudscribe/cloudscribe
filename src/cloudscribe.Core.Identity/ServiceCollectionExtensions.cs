@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2016-05-07
-// Last Modified:			2017-07-28
+// Last Modified:			2017-10-06
 // 
 
 using cloudscribe.Core.Identity;
@@ -176,15 +176,18 @@ namespace Microsoft.Extensions.DependencyInjection
             var dataProtectionProviderType = typeof(DataProtectorTokenProvider<SiteUser>);
             var phoneNumberProviderType = typeof(PhoneNumberTokenProvider<SiteUser>);
             var emailTokenProviderType = typeof(EmailTokenProvider<SiteUser>);
+            var authenticatorProviderType = typeof(AuthenticatorTokenProvider<SiteUser>);
             services.Configure<TokenOptions>(options =>
             {
                 options.ProviderMap[TokenOptions.DefaultProvider] = new TokenProviderDescriptor(dataProtectionProviderType);
                 options.ProviderMap[TokenOptions.DefaultEmailProvider] = new TokenProviderDescriptor(emailTokenProviderType);
                 options.ProviderMap[TokenOptions.DefaultPhoneProvider] = new TokenProviderDescriptor(phoneNumberProviderType);
+                options.ProviderMap[TokenOptions.DefaultAuthenticatorProvider] = new TokenProviderDescriptor(authenticatorProviderType);
             });
             services.TryAddTransient(dataProtectionProviderType);
             services.TryAddTransient(emailTokenProviderType);
             services.TryAddTransient(phoneNumberProviderType);
+            services.TryAddTransient(authenticatorProviderType);
 
 
             services.TryAddScoped<IIdentityServerIntegration, NotIntegratedIdentityServerIntegration>();

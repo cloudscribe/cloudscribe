@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:                  Joe Audette
 // Created:                 2016-04-26
-// Last Modified:           2017-10-02
+// Last Modified:           2017-10-06
 // 
 
 using cloudscribe.Core.Models;
@@ -25,8 +25,10 @@ namespace cloudscribe.Core.Storage.NoDb
             IBasicQueries<UserRole> userRoleQueries,
             IBasicQueries<UserClaim> claimQueries,
             IBasicQueries<UserLogin> loginQueries,
+            IBasicQueries<UserToken> tokenQueries,
             IBasicQueries<UserLocation> locationQueries,
-            IStoragePathResolver<UserLogin> loginPathResolver
+            IStoragePathResolver<UserLogin> loginPathResolver,
+            IStoragePathResolver<UserToken> tokenPathResolver
             )
         {
             //this.projectResolver = projectResolver;
@@ -37,6 +39,8 @@ namespace cloudscribe.Core.Storage.NoDb
             this.locationQueries = locationQueries;
             this.loginPathResolver = loginPathResolver;
             this.loginQueries = loginQueries;
+            this.tokenQueries = tokenQueries;
+            this.tokenPathResolver = tokenPathResolver;
         }
 
         //private IProjectResolver projectResolver;
@@ -45,8 +49,10 @@ namespace cloudscribe.Core.Storage.NoDb
         private IBasicQueries<UserRole> userRoleQueries;
         private IBasicQueries<UserClaim> claimQueries;
         private IBasicQueries<UserLogin> loginQueries;
+        private IBasicQueries<UserToken> tokenQueries;
         private IBasicQueries<UserLocation> locationQueries;
         private IStoragePathResolver<UserLogin> loginPathResolver;
+        private IStoragePathResolver<UserToken> tokenPathResolver;
 
         //protected string projectId;
 
@@ -1514,6 +1520,62 @@ namespace cloudscribe.Core.Storage.NoDb
 
 
         }
+
+        #endregion
+
+        #region UserTokens
+
+        public async Task<IUserToken> FindToken(
+            Guid siteId,
+            Guid userId,
+            string loginProvider,
+            string name,
+            CancellationToken cancellationToken = default(CancellationToken))
+        {
+            var projectId = siteId.ToString();
+
+            //var folderPath = await tokenPathResolver.ResolvePath(projectId).ConfigureAwait(false);
+
+            //if (!Directory.Exists(folderPath)) return null;
+
+            // understand structure of key which is the filename
+            //var key = login.UserGuid.ToString()
+            //    + "~" + login.SiteGuid.ToString()
+            //    + "~" + login.LoginProvider
+            //    + "~" + login.Name;
+
+            var key =
+                userId.ToString()
+                + "~" + siteId.ToString()
+                + "~" + loginProvider
+                + "~" + name;
+
+            return await tokenQueries.FetchAsync(
+                    projectId,
+                    key,
+                    cancellationToken).ConfigureAwait(false);
+
+            //var dir = new DirectoryInfo(folderPath);
+            //var matches = dir.GetFiles(matchPattern);
+            //var foundFileKey = string.Empty;
+            //foreach (var match in matches)
+            //{
+            //    foundFileKey = Path.GetFileNameWithoutExtension(match.Name);
+            //    break; // should only be one so we won't keep interating
+            //}
+
+            //if (!string.IsNullOrEmpty(foundFileKey))
+            //{
+            //    return await tokenQueries.FetchAsync(
+            //        projectId,
+            //        foundFileKey,
+            //        cancellationToken).ConfigureAwait(false);
+            //}
+
+            //return null;
+        }
+
+
 
         #endregion
 

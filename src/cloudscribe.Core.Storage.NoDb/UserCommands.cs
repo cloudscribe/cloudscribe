@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:                  Joe Audette
 // Created:                 2016-04-26
-// Last Modified:           2016-08-03
+// Last Modified:           2017-10-06
 // 
 
 using cloudscribe.Core.Models;
@@ -24,13 +24,15 @@ namespace cloudscribe.Core.Storage.NoDb
             IBasicCommands<UserRole> userRoleCommands,
             IBasicCommands<UserClaim> claimCommands,
             IBasicCommands<UserLogin> loginCommands,
+            IBasicCommands<UserToken> tokenCommands,
             IBasicCommands<UserLocation> locationCommands,
             IBasicQueries<SiteUser> userQueries,
             IBasicQueries<SiteRole> roleQueries,
             IBasicQueries<UserRole> userRoleQueries,
             IBasicQueries<UserClaim> claimQueries,
             IBasicQueries<UserLocation> locationQueries,
-            IStoragePathResolver<UserLogin> loginPathResolver
+            IStoragePathResolver<UserLogin> loginPathResolver,
+            IStoragePathResolver<UserToken> tokenPathResolver
             )
         {
             //this.projectResolver = projectResolver;
@@ -48,6 +50,9 @@ namespace cloudscribe.Core.Storage.NoDb
             this.claimQueries = claimQueries;
             this.locationQueries = locationQueries;
 
+            this.tokenCommands = tokenCommands;
+            this.tokenPathResolver = tokenPathResolver;
+
         }
 
         //private IProjectResolver projectResolver;
@@ -58,6 +63,8 @@ namespace cloudscribe.Core.Storage.NoDb
         private IBasicCommands<UserLogin> loginCommands;
         private IBasicCommands<UserLocation> locationCommands;
         private IStoragePathResolver<UserLogin> loginPathResolver;
+        private IBasicCommands<UserToken> tokenCommands;
+        private IStoragePathResolver<UserToken> tokenPathResolver;
 
         private IBasicQueries<SiteUser> userQueries;
         private IBasicQueries<SiteRole> roleQueries;
@@ -125,23 +132,26 @@ namespace cloudscribe.Core.Storage.NoDb
             CancellationToken cancellationToken = default(CancellationToken))
         {
 
-            //await EnsureProjectId().ConfigureAwait(false);
             var projectId = siteId.ToString();
 
             await userCommands.DeleteAsync(projectId, userId.ToString(), cancellationToken).ConfigureAwait(false);
- 
+            await DeleteLoginsByUser(siteId, userId);
+            await DeleteClaimsByUser(siteId, userId);
+            await DeleteUserRoles(siteId, userId);
+            await DeleteTokensByUser(siteId, userId);
+
         }
 
         public async Task DeleteUsersBySite(
             Guid siteId,
             CancellationToken cancellationToken = default(CancellationToken))
         {
-            //await EnsureProjectId().ConfigureAwait(false);
             var projectId = siteId.ToString();
 
             await DeleteLoginsBySite(siteId);
             await DeleteClaimsBySite(siteId);
             await DeleteUserRolesBySite(siteId);
+            await DeleteTokensBySite(siteId);
 
             var all = await userQueries.GetAllAsync(projectId, cancellationToken).ConfigureAwait(false);
             var users = all.ToList().AsQueryable();
@@ -914,8 +924,146 @@ namespace cloudscribe.Core.Storage.NoDb
 
         #endregion
 
+        #region UserToken
+
+        public async Task CreateToken(
+            IUserToken userToken,
+            CancellationToken cancellationToken = default(CancellationToken))
+        {
+            ThrowIfDisposed();
+            cancellationToken.ThrowIfCancellationRequested();
+
+            if (userToken == null) { throw new ArgumentException("userToken can't be null"); }
+            if (userToken.LoginProvider.Length == -1) { throw new ArgumentException("userToken must have a loginprovider"); }
+            if (userToken.Name.Length == -1) { throw new ArgumentException("userToken must have a Name"); }
+            if (userToken.UserId == Guid.Empty) { throw new ArgumentException("userToken must have a user id"); }
+
+            var projectId = userToken.SiteId.ToString();
+
+            var token = UserToken.FromIUserToken(userToken);
+
+            // this will be a tricky one for queries because the key consists of 4 columns
+            // TODO: review this and whether we really need all the  parts of the key in EF
+            // http://www.jerriepelser.com/blog/using-aspnet-oauth-providers-without-identity
+            // ProviderKey is the unique key associated with the login on that service
+            var key = token.UserId.ToString()
+                + "~" + token.SiteId.ToString()
+                + "~" + token.LoginProvider
+                + "~" + token.Name;
+
+            await tokenCommands.CreateAsync(
+                projectId,
+                key,
+                token,
+                cancellationToken).ConfigureAwait(false);
+
+
+        }
+
+        public async Task DeleteToken(
+            Guid siteId,
+            Guid userId,
+            string loginProvider,
+            string name,
+            CancellationToken cancellationToken = default(CancellationToken))
+        {
+            ThrowIfDisposed();
+            cancellationToken.ThrowIfCancellationRequested();
+            
+            var projectId = siteId.ToString();
+
+            var key = userId.ToString()
+                + "~" + siteId.ToString()
+                + "~" + loginProvider
+                + "~" + name;
+
+            await tokenCommands.DeleteAsync(
+                projectId,
+                key,
+                cancellationToken).ConfigureAwait(false);
+
+        }
+
+        public async Task DeleteTokensBySite(
+            Guid siteId,
+            CancellationToken cancellationToken = default(CancellationToken))
+        {
+            ThrowIfDisposed();
+            cancellationToken.ThrowIfCancellationRequested();
+
+            if (siteId == Guid.Empty) throw new ArgumentException("siteId must be provided");
+
+            var projectId = siteId.ToString();
+
+            var folderPath = await tokenPathResolver.ResolvePath(projectId).ConfigureAwait(false);
+
+            // understand structure of key which is the filename
+            //var key = login.UserGuid.ToString()
+            //    + "~" + login.SiteGuid.ToString()
+            //    + "~" + login.LoginProvider
+            //    + "~" + login.Name;
+
+            var matchPattern = "*~" + siteId.ToString() + "~*";
+
+            var dir = new DirectoryInfo(folderPath);
+            var matches = dir.GetFiles(matchPattern);
+
+            foreach (var match in matches)
+            {
+                var foundFileKey = Path.GetFileNameWithoutExtension(match.Name);
+                await tokenCommands.DeleteAsync(
+                    projectId,
+                    foundFileKey,
+                    cancellationToken).ConfigureAwait(false);
+
+            }
+        }
+
+        public async Task DeleteTokensByUser(
+            Guid siteId,
+            Guid userId,
+            CancellationToken cancellationToken = default(CancellationToken))
+        {
+            ThrowIfDisposed();
+            cancellationToken.ThrowIfCancellationRequested();
+
+            if (siteId == Guid.Empty) throw new ArgumentException("siteId must be provided");
+            if (userId == Guid.Empty) throw new ArgumentException("userId must be provided");
+
+            var projectId = siteId.ToString();
+
+            var folderPath = await tokenPathResolver.ResolvePath(projectId).ConfigureAwait(false);
+
+            // understand structure of key which is the filename
+            //var key = login.UserGuid.ToString()
+            //    + "~" + login.SiteGuid.ToString()
+            //    + "~" + login.LoginProvider
+            //    + "~" + login.Name;
+
+            var matchPattern = userId.ToString() +
+                "~" + siteId.ToString()
+                + "~*";
+
+            var dir = new DirectoryInfo(folderPath);
+            var matches = dir.GetFiles(matchPattern);
+
+            foreach (var match in matches)
+            {
+                var foundFileKey = Path.GetFileNameWithoutExtension(match.Name);
+                await tokenCommands.DeleteAsync(
+                    projectId,
+                    foundFileKey,
+                    cancellationToken).ConfigureAwait(false);
+
+            }
+        }
+
+
+
+        #endregion
+
         #region UserLocation
-        
+
         public async Task AddUserLocation(
             IUserLocation userLocation,
             CancellationToken cancellationToken = default(CancellationToken)

@@ -20,6 +20,7 @@
         public string UserLoginTableName { get; set; } = "UserLogin";
         public string UserLocationTableName { get; set; } = "UserLocation";
         public string UserRoleTableName { get; set; } = "UserRole";
+        public string UserTokenTableName { get; set; } = "UserToken";
 
         public string GeoCountryTableName { get; set; } = "GeoCountry";
         public string GeoZoneTableName { get; set; } = "GeoZone";

@@ -11,5 +11,6 @@ namespace cloudscribe.Core.Web.ViewModels.SiteUser
     {
         public IList<UserLoginInfo> CurrentLogins { get; set; }
         public IList<AuthenticationScheme> OtherLogins { get; set; }
+        public bool ShowRemoveButton { get; set; }
     }
 }

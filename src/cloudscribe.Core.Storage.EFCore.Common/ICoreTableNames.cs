@@ -15,5 +15,6 @@
         string UserLoginTableName { get; }
         string UserRoleTableName { get; }
         string UserTableName { get; }
+        string UserTokenTableName { get; }
     }
 }

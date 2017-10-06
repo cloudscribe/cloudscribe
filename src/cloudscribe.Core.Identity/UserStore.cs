@@ -14,11 +14,12 @@ using System.Collections.Generic;
 using System.Security.Claims;
 using System.Threading;
 using System.Threading.Tasks;
-
+using System.Linq;
 
 namespace cloudscribe.Core.Identity
 {
     public sealed class UserStore<TUser> :
+        //UserStoreBase<TUser, TKey, TUserClaim, TUserLogin, TUserToken>,
         IUserStore<TUser>,
         IUserSecurityStampStore<TUser>,
         IUserPasswordStore<TUser>,
@@ -28,19 +29,27 @@ namespace cloudscribe.Core.Identity
         IUserClaimStore<TUser>,
         IUserPhoneNumberStore<TUser>,
         IUserLockoutStore<TUser>,
-        IUserTwoFactorStore<TUser>
+        IUserTwoFactorStore<TUser>,
+        IUserAuthenticationTokenStore<TUser>,
+        IUserAuthenticatorKeyStore<TUser>,
+        IUserTwoFactorRecoveryCodeStore<TUser>
         where TUser : SiteUser
+        //where TKey : IEquatable<Guid>
+        //where TUserClaim : UserClaim
+        //where TUserLogin : UserLogin
+        //where TUserToken : IdentityUserToken<TKey>, new()
     {
         
-        private UserStore() { }
+        //private UserStore() { }
 
         public UserStore(
             SiteContext currentSite,
             ILogger<UserStore<TUser>> logger,
             IUserCommands userCommands,
             IUserQueries userQueries,
-            IOptions<MultiTenantOptions> multiTenantOptionsAccessor
-            )
+            IOptions<MultiTenantOptions> multiTenantOptionsAccessor,
+            IdentityErrorDescriber describer = null
+            ) //: base(describer ?? new IdentityErrorDescriber())
         {
             
             log = logger;
@@ -1108,9 +1117,132 @@ namespace cloudscribe.Core.Identity
 
         #endregion
 
+        #region IUserAuthenticatorKeyStore, IUserAuthenticationTokenStore, IUserTwoFactorRecoveryCodeStore
+
+        public async Task<string> GetTokenAsync(TUser user, string loginProvider, string name, CancellationToken cancellationToken)
+        {
+            cancellationToken.ThrowIfCancellationRequested();
+            ThrowIfDisposed();
+
+            if (user == null)
+            {
+                throw new ArgumentNullException(nameof(user));
+            }
+            var entry = await queries.FindToken(siteSettings.Id, user.Id, loginProvider, name, cancellationToken);
+            return entry?.Value;
+        }
+
+        private const string InternalLoginProvider = "[AspNetUserStore]";
+        private const string AuthenticatorKeyTokenName = "AuthenticatorKey";
+        private const string RecoveryCodeTokenName = "RecoveryCodes";
+
+        public Task SetAuthenticatorKeyAsync(TUser user, string key, CancellationToken cancellationToken)
+            => SetTokenAsync(user, InternalLoginProvider, AuthenticatorKeyTokenName, key, cancellationToken);
+
+        
+        public Task<string> GetAuthenticatorKeyAsync(TUser user, CancellationToken cancellationToken)
+            => GetTokenAsync(user, InternalLoginProvider, AuthenticatorKeyTokenName, cancellationToken);
+        
+
+        public async Task SetTokenAsync(TUser user, string loginProvider, string name, string value, CancellationToken cancellationToken)
+        {
+            cancellationToken.ThrowIfCancellationRequested();
+            ThrowIfDisposed();
+
+            if (user == null)
+            {
+                throw new ArgumentNullException(nameof(user));
+            }
+
+            var token = await queries.FindToken(siteSettings.Id, user.Id, loginProvider, name, cancellationToken);
+            if (token == null)
+            {
+                var newToken = new UserToken();
+                newToken.SiteId = siteSettings.Id;
+                newToken.UserId = user.Id;
+                newToken.LoginProvider = loginProvider;
+                newToken.Name = name;
+                newToken.Value = value;
+                await commands.CreateToken(newToken);
+            }
+            else
+            {
+                token.Value = value;
+            }
+        }
+
+        
+        public async Task RemoveTokenAsync(TUser user, string loginProvider, string name, CancellationToken cancellationToken)
+        {
+            cancellationToken.ThrowIfCancellationRequested();
+            ThrowIfDisposed();
+
+            if (user == null)
+            {
+                throw new ArgumentNullException(nameof(user));
+            }
+            var entry = await queries.FindToken(siteSettings.Id, user.Id, loginProvider, name, cancellationToken);
+            if (entry != null)
+            {
+                await commands.DeleteToken(entry.SiteId, entry.UserId, entry.LoginProvider, entry.Name);
+            }
+        }
+
+        
+
+        public Task ReplaceCodesAsync(TUser user, IEnumerable<string> recoveryCodes, CancellationToken cancellationToken)
+        {
+            var mergedCodes = string.Join(";", recoveryCodes);
+            return SetTokenAsync(user, InternalLoginProvider, RecoveryCodeTokenName, mergedCodes, cancellationToken);
+        }
+
+        public async Task<bool> RedeemCodeAsync(TUser user, string code, CancellationToken cancellationToken)
+        {
+            cancellationToken.ThrowIfCancellationRequested();
+            ThrowIfDisposed();
+
+            if (user == null)
+            {
+                throw new ArgumentNullException(nameof(user));
+            }
+            if (code == null)
+            {
+                throw new ArgumentNullException(nameof(code));
+            }
+
+            var mergedCodes = await GetTokenAsync(user, InternalLoginProvider, RecoveryCodeTokenName, cancellationToken) ?? "";
+            var splitCodes = mergedCodes.Split(';');
+            if (splitCodes.Contains(code))
+            {
+                var updatedCodes = new List<string>(splitCodes.Where(s => s != code));
+                await ReplaceCodesAsync(user, updatedCodes, cancellationToken);
+                return true;
+            }
+            return false;
+        }
+
+        public async Task<int> CountCodesAsync(TUser user, CancellationToken cancellationToken)
+        {
+            cancellationToken.ThrowIfCancellationRequested();
+            ThrowIfDisposed();
+
+            if (user == null)
+            {
+                throw new ArgumentNullException(nameof(user));
+            }
+            var mergedCodes = await GetTokenAsync(user, InternalLoginProvider, RecoveryCodeTokenName, cancellationToken) ?? "";
+            if (mergedCodes.Length > 0)
+            {
+                return mergedCodes.Split(';').Length;
+            }
+            return 0;
+        }
+
+        #endregion
+
         #region IUserPhoneNumberStore
 
-       
+
         public Task<string> GetPhoneNumberAsync(TUser user, CancellationToken cancellationToken)
         {
             ThrowIfDisposed();
@@ -1351,6 +1483,10 @@ namespace cloudscribe.Core.Identity
             // TODO: uncomment the following line if the finalizer is overridden above.
             // GC.SuppressFinalize(this);
         }
+
+        
+
+
         #endregion
 
     }

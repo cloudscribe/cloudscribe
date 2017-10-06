@@ -21,6 +21,7 @@ namespace cloudscribe.Core.Storage.EFCore.Common
         DbSet<UserLogin> UserLogins { get; set; }
         DbSet<UserRole> UserRoles { get; set; }
         DbSet<SiteUser> Users { get; set; }
+        DbSet<UserToken> UserTokens { get; set; }
 
         ChangeTracker ChangeTracker { get; }
 

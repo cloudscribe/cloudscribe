@@ -14,5 +14,6 @@ namespace cloudscribe.Core.Web.ViewModels.SiteUser
         public bool TwoFactor { get; set; }
         public bool BrowserRemembered { get; set; }
         public string TimeZone { get; set; }
+        
     }
 }

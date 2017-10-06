@@ -1,13 +1,18 @@
 ﻿@model cloudscribe.Core.Web.ViewModels.SiteUser.ManageLoginsViewModel
 @using Microsoft.AspNetCore.Http.Authentication
+@using cloudscribe.Core.Models
 @using cloudscribe.Core.Web
 @using Microsoft.Extensions.Options
 @using Microsoft.Extensions.Localization
+@inject SiteContext Tenant
 @inject IStringLocalizer<CloudscribeCore> sr
+@{ 
+    var socFormat = sr["Log in using your {0} account"];
+}
 @functions {
     public string GetIconForLogin(string displayName)
     {
-        switch(displayName)
+        switch (displayName)
         {
             case "Facebook":
                 return "<i class='fa fa-facebook-square' aria-hidden='true'></i>";
@@ -22,6 +27,16 @@
         }
 
         return "<i class='fa fa-arrow-circle-right' aria-hidden='true'></i>";
+    }
+    public string GetDisplayName(string displayName)
+    {
+        if (displayName == "OpenIdConnect")
+        {
+            return Tenant.OidConnectDisplayName;
+
+        }
+
+        return displayName;
     }
 }
 
@@ -43,7 +58,7 @@
                 <tr>
                     <td>@account.LoginProvider</td>
                     <td>
-                        @if (ViewBag.ShowRemoveButton)
+                        @if (Model.ShowRemoveButton)
                         {
                             <form asp-controller="Manage" asp-action="RemoveLogin" method="post" class="form-horizontal" role="form">
                                 <div>
@@ -70,11 +85,12 @@
     <form asp-controller="Manage" asp-action="LinkLogin" method="post" class="form-horizontal" role="form">
         <div id="socialLoginList">
             <p>
-                @foreach (AuthenticationDescription p in Model.OtherLogins)
+                @foreach (Microsoft.AspNetCore.Authentication.AuthenticationScheme p in Model.OtherLogins)
                 {
-                    <button type="submit" class="btn btn-default" id="@p.AuthenticationScheme" name="provider" value="@p.AuthenticationScheme" title="@string.Format(loginFormat, @p.DisplayName)">
-					@Html.Raw(GetIconForLogin(p.DisplayName)) 
-					@p.DisplayName
+                    <button type="submit" class="btn btn-default" id="@p.Name" name="provider" value="@p.Name" 
+                             title="@string.Format(socFormat,p.DisplayName)">
+                        @Html.Raw(GetIconForLogin(p.DisplayName))
+                        @GetDisplayName(p.DisplayName)
 					</button>
                 }
             </p>

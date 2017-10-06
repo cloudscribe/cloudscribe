@@ -179,5 +179,25 @@ namespace cloudscribe.Core.Models
             Guid siteId,
             CancellationToken cancellationToken = default(CancellationToken));
 
+        Task CreateToken(
+            IUserToken userToken,
+            CancellationToken cancellationToken = default(CancellationToken));
+
+        Task DeleteToken(
+            Guid siteId,
+            Guid userId,
+            string loginProvider,
+            string name,
+            CancellationToken cancellationToken = default(CancellationToken));
+
+        Task DeleteTokensBySite(
+            Guid siteId,
+            CancellationToken cancellationToken = default(CancellationToken));
+
+        Task DeleteTokensByUser(
+            Guid siteId,
+            Guid userId,
+            CancellationToken cancellationToken = default(CancellationToken));
+
     }
 }

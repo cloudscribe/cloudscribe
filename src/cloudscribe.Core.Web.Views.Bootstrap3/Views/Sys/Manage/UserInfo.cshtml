@@ -51,6 +51,13 @@ else
         </div>
     </div>
 }
+    <div class="form-group">
+        <label asp-for="PhoneNumber" class="col-md-2 control-label">@sr["Phone Number"]</label>
+        <div class="col-md-10">
+            <input asp-for="PhoneNumber" class="form-control" />
+            <span asp-validation-for="PhoneNumber" class="text-danger"></span>
+        </div>
+    </div>
  @{await Html.RenderPartialAsync("UserInfoDobPartial", Model); }
 
     <div class="form-group">
