@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2014-12-08
-// Last Modified:			2017-10-04
+// Last Modified:			2017-10-07
 // 
 
 using cloudscribe.Core.Identity;
@@ -406,6 +406,18 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
                 pageNumber,
                 pageSize
                 );
+            
+            model.TwoFactor = user.TwoFactorEnabled;
+            model.Logins = await UserManager.GetLoginsAsync(user as SiteUser);
+            if(!string.IsNullOrWhiteSpace(user.TimeZoneId))
+            {
+                model.UserTimeZone = user.TimeZoneId;
+            }
+            else
+            {
+                model.UserTimeZone = UserManager.Site.TimeZoneId;
+            }
+            
 
             var currentCrumbAdjuster = new NavigationNodeAdjuster(Request.HttpContext);
             currentCrumbAdjuster.KeyToAdjust = "UserActivity";

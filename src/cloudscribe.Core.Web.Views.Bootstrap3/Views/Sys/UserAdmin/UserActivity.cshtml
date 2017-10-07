@@ -11,11 +11,11 @@
 @{
     var lastLogin = "";
     var lastPasswordChange = "";
-    if(Model.LastLoginUtc != null)
+    if (Model.LastLoginUtc != null)
     {
         lastLogin = tzHelper.ConvertToLocalTime(Model.LastLoginUtc.Value, Model.TimeZoneId).ToString("g");
     }
-    if(Model.LastPassswordChangenUtc != null)
+    if (Model.LastPassswordChangenUtc != null)
     {
         lastPasswordChange = tzHelper.ConvertToLocalTime(Model.LastPassswordChangenUtc.Value, Model.TimeZoneId).ToString("g");
 
@@ -24,6 +24,9 @@
 <div class="row">
     <div class="col-md-10 col-md-push-2">
         <h2>@ViewData["Title"]</h2>
+        <a asp-controller="UserAdmin" asp-action="UserEdit" asp-route-siteid="@Model.SiteId" asp-route-userid="@Model.UserId" title="Manage">
+            <img gravatar-email="@Model.Email" gravatar-size="60" />
+        </a>
         <table class="table table-striped">
             <tr>
                 <th>@sr["Email"]</th>
@@ -49,6 +52,28 @@
                     @lastPasswordChange
                 </td>
             </tr>
+            <tr>
+                <th>@sr["2 Factor Enabled"]</th>
+                <td>@Model.TwoFactor</td>
+            </tr>
+            <tr>
+                <th>@sr["Time Zone"]</th>
+                <td>@Model.UserTimeZone</td>
+            </tr>
+            @if (Model.Logins.Count > 0)
+            {
+                <tr>
+                    <th>
+                        @sr["Social Logins"]
+                    </th>
+                    <td>
+                        @foreach (var account in Model.Logins)
+                        {
+                            @account.LoginProvider @:&nbsp;
+                        }
+                    </td>
+                </tr>
+            }
 
         </table>
 
@@ -69,7 +94,7 @@
                         @sr["Last Capture"]
                     </th>
                 </tr>
-                @foreach(var loc in Model.Locations.Data)
+                @foreach (var loc in Model.Locations.Data)
                 {
                     <tr>
                         <td>
@@ -87,8 +112,7 @@
                 }
             </table>
             <div>
-                <cs-pager 
-                          asp-action="UserActivity" asp-controller="UserAdmin"
+                <cs-pager asp-action="UserActivity" asp-controller="UserAdmin"
                           asp-route-siteId="@Model.SiteId"
                           asp-route-userid="@Model.UserId"
                           asp-route-pagesize="@Model.Locations.PageSize"
@@ -102,7 +126,7 @@
                           cs-next-page-title='@sr["Next page"]'></cs-pager>
             </div>
         }
-   </div>
+    </div>
     <div class="col-md-2 col-md-pull-10 hidden-xs hidden-sm">
         @await Component.InvokeAsync("Navigation", new { viewName = "SideNavAlt1", filterName = NamedNavigationFilters.ParentTree, startingNodeKey = "SiteAdmin" })
     </div>

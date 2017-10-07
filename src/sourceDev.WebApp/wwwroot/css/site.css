@@ -58,6 +58,20 @@ div.navbar-gravatar { margin: 10px 0 0 0; }
 }
 
 
+.no-gutter {
+    padding-right: 0;
+    padding-left: 0;
+}
+
+.tiny-gutter {
+    padding-right: 5px;
+    padding-left: 5px;
+}
+
+
+
+
+
 /*
 
 .sidebar .sidebar-search {

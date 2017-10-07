@@ -15,6 +15,34 @@
 <div class="row">
     <div class="col-md-10 col-md-push-2">
         <h2>@ViewData["Title"]</h2>
+        <div col-md-12>
+            <div class="col-md-2">
+                <a asp-controller="UserAdmin" asp-action="UserActivity" asp-route-siteid="@Model.SiteId" asp-route-userid="@Model.UserId" title="Activty">
+                    <img class="pull-right" gravatar-email="@Model.Email" gravatar-size="60" />
+                </a>
+            </div>
+            <div class="col-md-10 tiny-gutter">
+                <div class="form-group">
+                    <div class="">
+                        <div class="checkbox">
+                            <label>
+                                <input asp-for="EmailConfirmed" /> @sr["Email Confirmed"]
+                            </label>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="">
+                        <div class="checkbox">
+                            <label>
+                                <input asp-for="IsLockedOut" /> @sr["Account Locked"]
+                            </label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
         @if (Model.UserId != Guid.Empty && !Model.AccountApproved)
         {
             <div class="col-md-10 col-md-offset-2">
@@ -108,24 +136,7 @@
                     <input asp-for="WebSiteUrl" class="form-control" />
                 </div>
             </div>
-            <div class="form-group">
-                <div class="col-md-offset-2 col-md-10">
-                    <div class="checkbox">
-                        <label>
-                            <input asp-for="EmailConfirmed" /> @sr["Email Confirmed"]
-                        </label>
-                    </div>
-                </div>
-            </div>
-            <div class="form-group">
-                <div class="col-md-offset-2 col-md-10">
-                    <div class="checkbox">
-                        <label>
-                            <input asp-for="IsLockedOut" /> @sr["Account Locked"]
-                        </label>
-                    </div>
-                </div>
-            </div>
+            
             <div class="form-group">
                 <label asp-for="Comment" class="col-md-2 control-label"></label>
                 <div class="col-md-10">
