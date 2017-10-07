@@ -1,4 +1,21 @@
 
+## IdentityServer4 2.0
+
+https://leastprivilege.com/2017/10/06/identityserver4-v2/
+https://github.com/IdentityServer/IdentityServer4/releases/tag/2.0.0
+
+previous problem was EndPoint is internal, now public so endpoints can be replaced?
+https://github.com/IdentityServer/IdentityServer4/issues/1514
+http://www.cloudidentity.com/blog/2014/08/26/the-common-endpoint-walks-like-a-tenant-talks-like-a-tenant-but-is-not-a-tenant/
+
+https://github.com/IdentityServer/IdentityServer4/issues/1364
+Do we want to allow our endpoints to be replaced? e.g. /authorize, etc?
+I think the outcome of our conversation was "no" that's not something we're trying to design for.
+
+https://github.com/IdentityServer/IdentityServer4/pull/1576
+
+
+
 https://leastprivilege.com/2016/12/16/identity-vs-permissions/
 
 https://identityserver4.readthedocs.io/en/release/topics/federation_gateway.html
