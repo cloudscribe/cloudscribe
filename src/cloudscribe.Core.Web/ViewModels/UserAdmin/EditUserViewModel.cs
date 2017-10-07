@@ -8,7 +8,6 @@
 
 using System;
 using System.ComponentModel.DataAnnotations;
-//using cloudscribe.Web.Common.DataAnnotations;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using System.Collections.Generic;
 using Microsoft.AspNetCore.Mvc;

@@ -1,5 +1,6 @@
 ﻿using cloudscribe.Core.Models;
 using cloudscribe.Pagination.Models;
+using Microsoft.AspNetCore.Identity;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -31,5 +32,12 @@ namespace cloudscribe.Core.Web.ViewModels.UserAdmin
         public PagedResult<IUserLocation> Locations { get; set; }
 
         public string TimeZoneId { get; set; } = "America/New_York";
+
+        public string UserTimeZone { get; set; } = "";
+
+        
+        public IList<UserLoginInfo> Logins { get; set; }
+        public bool TwoFactor { get; set; }
+        
     }
 }
