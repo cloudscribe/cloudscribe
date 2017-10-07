@@ -6,9 +6,10 @@
 @inject IStringLocalizer<CloudscribeCore> sr
 @{
     ViewData["Title"] = sr["Register"];
-	var loginProvider = ViewData["LoginProvider"];
-	var subHeadMessage = string.Format(CultureInfo.CurrentUICulture, sr["Associate your {0} account"], loginProvider);
-	var successMessage = string.Format(CultureInfo.CurrentUICulture, sr["You've successfully authenticated with <strong>{0}</strong>."], loginProvider);
+    ViewData["BodyClass"] = "account-section external-confirm";
+    var loginProvider = ViewData["LoginProvider"];
+    var subHeadMessage = string.Format(CultureInfo.CurrentUICulture, sr["Associate your {0} account"], loginProvider);
+    var successMessage = string.Format(CultureInfo.CurrentUICulture, sr["You've successfully authenticated with <strong>{0}</strong>."], loginProvider);
 }
 <h2>@ViewData["Title"]</h2>
 <h3>@subHeadMessage</h3>

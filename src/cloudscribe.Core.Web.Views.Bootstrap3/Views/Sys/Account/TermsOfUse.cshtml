@@ -4,6 +4,9 @@
 @using Microsoft.Extensions.Localization
 @using Microsoft.AspNetCore.Http.Authentication
 @inject IStringLocalizer<CloudscribeCore> sr
+@{ 
+    ViewData["BodyClass"] = "account-section terms-of-use";
+}
 
 @section Meta {
     <meta name="robots" content="noindex" />
