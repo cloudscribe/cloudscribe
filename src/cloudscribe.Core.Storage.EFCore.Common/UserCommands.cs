@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2015-11-16
-// Last Modified:			2016-10-06
+// Last Modified:			2016-10-08
 // 
 
 
@@ -786,6 +786,36 @@ namespace cloudscribe.Core.Storage.EFCore.Common
             var token = UserToken.FromIUserToken(userToken);
 
             dbContext.UserTokens.Add(token);
+
+            int rowsAffected = await dbContext.SaveChangesAsync(cancellationToken)
+                .ConfigureAwait(false);
+
+        }
+
+        public async Task UpdateToken(
+            IUserToken userToken,
+            CancellationToken cancellationToken = default(CancellationToken))
+        {
+            ThrowIfDisposed();
+            cancellationToken.ThrowIfCancellationRequested();
+
+            if (userToken == null) { throw new ArgumentException("userToken can't be null"); }
+            if (userToken.LoginProvider.Length == -1) { throw new ArgumentException("userToken must have a loginprovider"); }
+            if (userToken.Name.Length == -1) { throw new ArgumentException("userToken must have a Name"); }
+            if (userToken.UserId == Guid.Empty) { throw new ArgumentException("userToken must have a user id"); }
+
+            var token = UserToken.FromIUserToken(userToken);
+
+            bool tracking = dbContext.ChangeTracker.Entries<UserToken>().Any(x => 
+            x.Entity.SiteId == token.SiteId
+            && x.Entity.UserId == token.UserId
+            && x.Entity.LoginProvider == token.LoginProvider
+            && x.Entity.Name == token.Name
+            );
+            if (!tracking)
+            {
+                dbContext.UserTokens.Update(token);
+            }
 
             int rowsAffected = await dbContext.SaveChangesAsync(cancellationToken)
                 .ConfigureAwait(false);

@@ -2,8 +2,8 @@
 
   <PropertyGroup>
     <Description>asp.net identity implementation for cloudscribe web application foundation</Description>
-    <VersionPrefix>2.0.9</VersionPrefix>
-    <AssemblyVersion>2.0.9</AssemblyVersion>
+    <VersionPrefix>2.0.10</VersionPrefix>
+    <AssemblyVersion>2.0.10</AssemblyVersion>
     <Authors>Joe Audette</Authors>
     <TargetFrameworks>netstandard2.0</TargetFrameworks>
     <AssemblyName>cloudscribe.Core.Identity</AssemblyName>
@@ -44,9 +44,7 @@
     <PackageReference Include="cloudscribe.Pagination.Models" Version="1.0.*" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Properties\" />
-  </ItemGroup>
+  
 
 
 </Project>

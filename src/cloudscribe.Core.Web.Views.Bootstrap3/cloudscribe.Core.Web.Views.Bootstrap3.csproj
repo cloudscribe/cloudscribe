@@ -2,8 +2,8 @@
 
   <PropertyGroup>
     <Description>Bootstrap 3 views for cloudscribe.Core.Web</Description>
-    <VersionPrefix>2.0.17</VersionPrefix>
-    <AssemblyVersion>2.0.17</AssemblyVersion>
+    <VersionPrefix>2.0.18</VersionPrefix>
+    <AssemblyVersion>2.0.18</AssemblyVersion>
     <Authors>Joe Audette</Authors>
     <TargetFrameworks>netstandard2.0</TargetFrameworks>
     <AssemblyName>cloudscribe.Core.Web.Views.Bootstrap3</AssemblyName>
@@ -24,8 +24,5 @@
     <PackageReference Include="Microsoft.Extensions.FileProviders.Embedded" Version="2.0.*" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Properties\" />
-  </ItemGroup>
 
 </Project>
