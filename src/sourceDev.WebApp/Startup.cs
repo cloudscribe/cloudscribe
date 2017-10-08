@@ -235,11 +235,7 @@ namespace sourceDev.WebApp
                     multiTenantOptions,
                     SslIsAvailable
                     );
-
-            //app.UseIdentityServerPreAuth();
-
-            //app.UseIdentityServerPostAuth();
-
+            
             app.UseIdentityServer();
             
             UseMvc(app, multiTenantOptions.Mode == cloudscribe.Core.Models.MultiTenantMode.FolderName);
@@ -394,7 +390,9 @@ namespace sourceDev.WebApp
                             services.AddCloudscribeLoggingEFStorageMSSQL(connectionString);
                             services.AddCloudscribeKvpEFStorageMSSQL(connectionString);
 
-                            services.AddIdentityServer(options => {
+                            services.AddIdentityServerForUseWithCloudscribe(options =>
+                            {
+
 
                                 //options.Authentication.AuthenticationScheme.
                             })

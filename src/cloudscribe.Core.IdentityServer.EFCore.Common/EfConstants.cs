@@ -28,6 +28,7 @@ namespace cloudscribe.Core.IdentityServer.EFCore
             public const string ClientPostLogoutRedirectUri = "csids_ClientPostLogoutRedirectUris";
             public const string ClientScopes = "csids_ClientScopes";
             public const string ClientSecret = "csids_ClientSecrets";
+            public const string ClientProps = "csids_ClientProps";
             public const string ClientClaim = "csids_ClientClaims";
             public const string ClientIdPRestriction = "csids_ClientIdPRestrictions";
             public const string ClientCorsOrigin = "csids_ClientCorsOrigins";

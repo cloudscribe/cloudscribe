@@ -108,6 +108,10 @@ namespace cloudscribe.Core.Identity
             options.LogoutPath = tenantPathBase + "/account/logoff";
             options.AccessDeniedPath = tenantPathBase + "/account/accessdenied";
 
+            //https://github.com/IdentityServer/IdentityServer4.AspNetIdentity/blob/dev/src/IdentityServer4.AspNetIdentity/IdentityServerBuilderExtensions.cs
+            // we need to disable to allow iframe for authorize requests
+            options.Cookie.SameSite = SameSiteMode.None;
+
         }
 
         private void ConfigureOtherCookies(SiteContext tenant, CookieAuthenticationOptions options, string scheme)

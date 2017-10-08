@@ -152,7 +152,12 @@ namespace cloudscribe.Core.IdentityServerIntegration.Controllers.Mvc
             client.FrontChannelLogoutUri = clientModel.FrontChannelLogoutUri;
             client.BackChannelLogoutSessionRequired = clientModel.BackChannelLogoutSessionRequired;
             client.BackChannelLogoutUri = clientModel.BackChannelLogoutUri;
-            client.PrefixClientClaims = clientModel.PrefixClientClaims;
+            //Consider making client claims prefix value configurable
+            //https://github.com/IdentityServer/IdentityServer4/issues/1534
+            //PrefixClientClaims = client.PrefixClientClaims;
+            //client.PrefixClientClaims = clientModel.PrefixClientClaims;
+            client.ClientClaimsPrefix = clientModel.ClientClaimsPrefix;
+
             client.RefreshTokenExpiration = clientModel.RefreshTokenExpiration;
             client.RefreshTokenUsage = clientModel.RefreshTokenUsage;
             client.RequireClientSecret = clientModel.RequireClientSecret;

@@ -40,7 +40,11 @@ namespace cloudscribe.Core.IdentityServerIntegration.Models
             FrontChannelLogoutUri = client.FrontChannelLogoutUri;
             BackChannelLogoutSessionRequired = client.BackChannelLogoutSessionRequired;
             BackChannelLogoutUri = client.BackChannelLogoutUri;
-            PrefixClientClaims = client.PrefixClientClaims;
+            //Consider making client claims prefix value configurable
+            //https://github.com/IdentityServer/IdentityServer4/issues/1534
+            //PrefixClientClaims = client.PrefixClientClaims;
+            ClientClaimsPrefix = client.ClientClaimsPrefix;
+
             RequireClientSecret = client.RequireClientSecret;
             RequireConsent = client.RequireConsent;
             RequirePkce = client.RequirePkce;
@@ -95,7 +99,8 @@ namespace cloudscribe.Core.IdentityServerIntegration.Models
         public bool BackChannelLogoutSessionRequired { get; set; }
         public string BackChannelLogoutUri { get; set; }
 
-        public bool PrefixClientClaims { get; set; }
+        //public bool PrefixClientClaims { get; set; }
+        public string ClientClaimsPrefix { get; set; }
 
         public bool RequireClientSecret { get; set; }
         public bool RequireConsent { get; set; }

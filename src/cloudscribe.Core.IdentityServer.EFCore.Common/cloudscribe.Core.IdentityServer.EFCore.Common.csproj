@@ -17,13 +17,13 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\..\IdentityServer4\src\IdentityServer4\IdentityServer4.csproj" />
     <ProjectReference Include="..\cloudscribe.Core.IdentityServerIntegration\cloudscribe.Core.IdentityServerIntegration.csproj" />
     <ProjectReference Include="..\cloudscribe.Core.Models\cloudscribe.Core.Models.csproj" />
   </ItemGroup>
 
   <ItemGroup>
     
-    <PackageReference Include="cloudscribe.IDS4Fork" Version="2.0.0-*" />
     
    
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="2.0.*" />
@@ -34,8 +34,6 @@
     <PackageReference Include="Microsoft.AspNetCore.Hosting" Version="2.0.*" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Properties\" />
-  </ItemGroup>
+ 
 
 </Project>

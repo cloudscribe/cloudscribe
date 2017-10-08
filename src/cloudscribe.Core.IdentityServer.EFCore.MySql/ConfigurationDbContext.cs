@@ -34,6 +34,12 @@ namespace cloudscribe.Core.IdentityServer.EFCore.MySql
                 entity.Property(x => x.ProtocolType).HasMaxLength(200).IsRequired();
                 entity.Property(x => x.ClientName).HasMaxLength(200);
                 entity.Property(x => x.ClientUri).HasMaxLength(2000);
+                //new in 2.0
+                entity.Property(x => x.ClientClaimsPrefix).HasMaxLength(200);
+                entity.Property(x => x.BackChannelLogoutUri).HasMaxLength(2000);
+                entity.Property(x => x.Description).HasMaxLength(1000);
+                entity.Property(x => x.FrontChannelLogoutUri).HasMaxLength(2000);
+                entity.Property(x => x.PairWiseSubjectSalt).HasMaxLength(200);
 
                 entity.HasIndex(x => new { x.SiteId, x.ClientId })
                 .IsUnique();
@@ -67,6 +73,29 @@ namespace cloudscribe.Core.IdentityServer.EFCore.MySql
             {
                 entity.ToTable(EfConstants.TableNames.ClientPostLogoutRedirectUri);
                 entity.Property(x => x.PostLogoutRedirectUri).HasMaxLength(2000).IsRequired();
+
+            });
+
+            modelBuilder.Entity<ClientProperty>(b =>
+            {
+                b.ToTable(EfConstants.TableNames.ClientProps);
+                b.Property<int>("Id")
+                        .ValueGeneratedOnAdd();
+
+                b.Property<int?>("ClientId")
+                    .IsRequired();
+
+                b.Property<string>("Key")
+                    .IsRequired()
+                    .HasMaxLength(250);
+
+                b.Property<string>("Value")
+                    .IsRequired()
+                    .HasMaxLength(2000);
+
+                b.HasKey("Id");
+
+                b.HasIndex("ClientId");
 
             });
 

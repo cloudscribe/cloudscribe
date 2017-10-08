@@ -18,6 +18,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\..\IdentityServer4\src\IdentityServer4\IdentityServer4.csproj" />
     <ProjectReference Include="..\cloudscribe.Core.IdentityServerIntegration\cloudscribe.Core.IdentityServerIntegration.csproj" />
     <ProjectReference Include="..\cloudscribe.Core.Models\cloudscribe.Core.Models.csproj" />
     <ProjectReference Include="..\cloudscribe.Core.IdentityServer.EFCore.Common\cloudscribe.Core.IdentityServer.EFCore.Common.csproj" />
@@ -35,7 +36,6 @@
 
   <ItemGroup>
     
-    <PackageReference Include="cloudscribe.IDS4Fork" Version="2.0.0-*" />
     
    
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="2.0.*" />
