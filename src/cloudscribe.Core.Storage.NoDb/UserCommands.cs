@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:                  Joe Audette
 // Created:                 2016-04-26
-// Last Modified:           2017-10-06
+// Last Modified:           2017-10-08
 // 
 
 using cloudscribe.Core.Models;
@@ -958,6 +958,38 @@ namespace cloudscribe.Core.Storage.NoDb
                 cancellationToken).ConfigureAwait(false);
 
 
+        }
+
+        public async Task UpdateToken(
+            IUserToken userToken,
+            CancellationToken cancellationToken = default(CancellationToken))
+        {
+            ThrowIfDisposed();
+            cancellationToken.ThrowIfCancellationRequested();
+
+            if (userToken == null) { throw new ArgumentException("userToken can't be null"); }
+            if (userToken.LoginProvider.Length == -1) { throw new ArgumentException("userToken must have a loginprovider"); }
+            if (userToken.Name.Length == -1) { throw new ArgumentException("userToken must have a Name"); }
+            if (userToken.UserId == Guid.Empty) { throw new ArgumentException("userToken must have a user id"); }
+
+            var projectId = userToken.SiteId.ToString();
+
+            var token = UserToken.FromIUserToken(userToken);
+
+            // this will be a tricky one for queries because the key consists of 4 columns
+            // TODO: review this and whether we really need all the  parts of the key in EF
+            // http://www.jerriepelser.com/blog/using-aspnet-oauth-providers-without-identity
+            // ProviderKey is the unique key associated with the login on that service
+            var key = token.UserId.ToString()
+                + "~" + token.SiteId.ToString()
+                + "~" + token.LoginProvider
+                + "~" + token.Name;
+
+            await tokenCommands.UpdateAsync(
+                projectId,
+                key,
+                token,
+                cancellationToken).ConfigureAwait(false);
         }
 
         public async Task DeleteToken(

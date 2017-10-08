@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2014-10-26
-// Last Modified:			2017-10-06
+// Last Modified:			2017-10-08
 // 
 
 using cloudscribe.Core.Identity;
@@ -342,37 +342,7 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
             {
                 return View(model);
             }
-
-            //var user = await accountService.GetTwoFactorAuthenticationUserAsync();
-            //if (user == null)
-            //{
-            //    throw new ApplicationException($"Unable to load user with ID '{User.GetUserId()}'.");
-            //}
-
-            //var authenticatorCode = model.TwoFactorCode.Replace(" ", string.Empty).Replace("-", string.Empty);
-
-            //var result = await accountService.TwoFactorAuthenticatorSignInAsync(authenticatorCode, rememberMe, model.RememberMachine);
-
-            //if (result.Succeeded)
-            //{
-            //    if (!string.IsNullOrEmpty(returnUrl))
-            //    {
-            //        return LocalRedirect(returnUrl);
-            //    }
-
-            //    return this.RedirectToSiteRoot(Site);
-            //}
-
-            //if (result.IsLockedOut)
-            //{
-            //    return HandleLockout();
-            //}
-            //else
-            //{
-            //    ModelState.AddModelError(string.Empty, "Invalid authenticator code.");
-            //    return View(model);
-            //}
-
+            
             var result = await accountService.Try2FaLogin(model, rememberMe);
 
             if (result.SignInResult.Succeeded)
@@ -437,34 +407,7 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
             {
                 return View(model);
             }
-
-            //var user = await accountService.GetTwoFactorAuthenticationUserAsync();
-            //if (user == null)
-            //{
-            //    throw new ApplicationException($"Unable to load two-factor authentication user.");
-            //}
-
-            //var recoveryCode = model.RecoveryCode.Replace(" ", string.Empty);
-
-            //var result = await accountService.TwoFactorRecoveryCodeSignInAsync(recoveryCode);
-
-            //if (result.Succeeded)
-            //{
-            //    //_logger.LogInformation("User with ID {UserId} logged in with a recovery code.", user.Id);
-            //    return LocalRedirect(returnUrl);
-            //}
-            //if (result.IsLockedOut)
-            //{
-            //    //_logger.LogWarning("User with ID {UserId} account locked out.", user.Id);
-            //    return HandleLockout();
-            //}
-            //else
-            //{
-            //    //_logger.LogWarning("Invalid recovery code entered for user with ID {UserId}", user.Id);
-            //    ModelState.AddModelError(string.Empty, "Invalid recovery code entered.");
-            //    return View();
-            //}
-
+            
             var result = await accountService.TryLoginWithRecoveryCode(model);
 
             if (result.SignInResult.Succeeded)
