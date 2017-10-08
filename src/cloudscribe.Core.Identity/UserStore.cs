@@ -1168,6 +1168,7 @@ namespace cloudscribe.Core.Identity
             else
             {
                 token.Value = value;
+                await commands.UpdateToken(token);
             }
         }
 
