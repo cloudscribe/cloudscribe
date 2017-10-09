@@ -27,13 +27,13 @@ namespace Microsoft.Extensions.DependencyInjection
 
 
 
-        public static IIdentityServerBuilder AddIdentityServerForUseWithCloudscribe(this IServiceCollection services)
+        public static IIdentityServerBuilder AddIdentityServerConfiguredForCloudscribe(this IServiceCollection services)
         {
             var builder = services.AddIdentityServerBuilder();
 
             builder
                 .AddRequiredPlatformServices()
-                //.AddCookieAuthentication()
+                //.AddCookieAuthentication() //cloudscribe already does this and we don't want the Identityserver defaults here
                 .AddCoreServices()
                 .AddDefaultEndpoints()
                 .AddPluggableServices()
@@ -47,10 +47,10 @@ namespace Microsoft.Extensions.DependencyInjection
             
         }
 
-        public static IIdentityServerBuilder AddIdentityServerForUseWithCloudscribe(this IServiceCollection services, Action<IdentityServerOptions> setupAction)
+        public static IIdentityServerBuilder AddIdentityServerConfiguredForCloudscribe(this IServiceCollection services, Action<IdentityServerOptions> setupAction)
         {
             services.Configure(setupAction);
-            return services.AddIdentityServerForUseWithCloudscribe();
+            return services.AddIdentityServerConfiguredForCloudscribe();
         }
 
 
@@ -92,7 +92,7 @@ namespace Microsoft.Extensions.DependencyInjection
 
             builder.AddResourceOwnerValidator<ResourceOwnerPasswordValidator<SiteUser>>();
             builder.Services.AddTransient<IProfileService, ProfileService<SiteUser>>();
-            builder.Services.AddTransient<IJwtClaimsProcessor<SiteUser>, DefaultJwtClaimsProcessor>();
+            
 
            
             //builder.Services.AddScoped<IMatchAuthorizeProtocolRoutePaths, MultiTenantAuthorizeProtocolRouteMatcher>();
@@ -111,22 +111,7 @@ namespace Microsoft.Extensions.DependencyInjection
             return builder;
         }
 
-
-
-
-
-
-
-
-
-        [Obsolete("this method is deprected, please use .AddCloudscribeIdentityServerIntegrationMvc instead.")]
-        public static IIdentityServerBuilder AddCloudscribeIdentityServerIntegration(this IIdentityServerBuilder builder)
-        {
-            builder.AddCloudscribeIdentityServerIntegrationCommon();
-
-            return builder;
-        }
-
+        
 
     }
 }

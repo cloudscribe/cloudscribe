@@ -112,6 +112,13 @@
                 </div>
             </div>
             <div class="form-group">
+                <label for="ClientClaimsPrefix" class="col-md-2 control-label">@sr["Client Claims Prefix"]</label>
+                <div class="col-md-10">
+                    <input class="form-control" asp-for="ClientClaimsPrefix" />
+                    <span asp-validation-for="ClientClaimsPrefix" class="text-danger"></span>
+                </div>
+            </div>
+            <div class="form-group">
                 <div class="col-md-10 col-md-offset-2">
                     <div class="checkbox">
                         <label>
@@ -210,15 +217,7 @@
                     </div>
                 </div>
             </div>
-            <div class="form-group">
-                <div class="col-md-10 col-md-offset-2">
-                    <div class="checkbox">
-                        <label>
-                            <input asp-for="PrefixClientClaims" /> @sr["Prefix Client Claims"]
-                        </label>
-                    </div>
-                </div>
-            </div>
+            
             <div class="form-group">
                 <div class="col-md-10 col-md-offset-2">
                     <div class="checkbox">

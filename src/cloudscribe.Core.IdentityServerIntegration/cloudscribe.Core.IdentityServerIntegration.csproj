@@ -5,9 +5,7 @@
     <VersionPrefix>2.1.0</VersionPrefix>
     <AssemblyVersion>2.1.0</AssemblyVersion>
     
-	<VersionSuffix>preview20171003</VersionSuffix>
-    
-    
+	
     <Authors>Joe Audette</Authors>
     <TargetFrameworks>netstandard2.0</TargetFrameworks>
     <AssemblyName>cloudscribe.Core.IdentityServerIntegration</AssemblyName>
@@ -20,7 +18,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\..\IdentityServer4\src\IdentityServer4\IdentityServer4.csproj" />
+    
     <ProjectReference Include="..\cloudscribe.Core.Identity\cloudscribe.Core.Identity.csproj" />
     <ProjectReference Include="..\cloudscribe.Web.Common\cloudscribe.Web.Common.csproj" />
  
@@ -33,6 +31,7 @@
     <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="2.0.*" />
     <PackageReference Include="Microsoft.AspNetCore.Mvc" Version="2.0.*" />
     <PackageReference Include="cloudscribe.Web.Pagination" Version="2.1.*" />
+    <PackageReference Include="IdentityServer4" Version="2.0.*" />
     
     
   </ItemGroup>

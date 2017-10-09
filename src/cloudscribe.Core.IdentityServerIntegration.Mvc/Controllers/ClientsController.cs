@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2016-10-13
-// Last Modified:			2017-08-20
+// Last Modified:			2017-10-09
 // 
 
 using cloudscribe.Core.IdentityServerIntegration.Models;
