@@ -8,7 +8,6 @@ using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using static cloudscribe.Core.IdentityServerIntegration.CustomConstants;
 
 namespace cloudscribe.Core.IdentityServerIntegration
@@ -21,7 +20,7 @@ namespace cloudscribe.Core.IdentityServerIntegration
         private readonly IEnumerable<Endpoint> _endpoints;
         
         private readonly ILogger<MultiTenantEndpointRouter> _logger;
-        private MultiTenantOptions multiTenantOptions;
+        private MultiTenantOptions _multiTenantOptions;
 
         public MultiTenantEndpointRouter(
             IEnumerable<Endpoint> endpoints, 
@@ -35,7 +34,7 @@ namespace cloudscribe.Core.IdentityServerIntegration
             _options = options;
             //_mappings = mappings;
             _logger = logger;
-            multiTenantOptions = multiTenantOptionsAccessor.Value;
+            _multiTenantOptions = multiTenantOptionsAccessor.Value;
         }
 
         public IEndpointHandler Find(HttpContext context)
@@ -88,7 +87,7 @@ namespace cloudscribe.Core.IdentityServerIntegration
         private bool IsMatch(HttpContext context, string path)
         {
             if (context.Request.Path.StartsWithSegments(path)) return true;
-            if(multiTenantOptions.Mode == MultiTenantMode.FolderName && !multiTenantOptions.UseRelatedSitesMode)
+            if(_multiTenantOptions.Mode == MultiTenantMode.FolderName && !_multiTenantOptions.UseRelatedSitesMode)
             {
                 var site = context.GetTenant<SiteContext>();
                 if(site != null && (!string.IsNullOrEmpty(site.SiteFolderName)))
@@ -129,28 +128,7 @@ namespace cloudscribe.Core.IdentityServerIntegration
             return null;
         }
 
-        //private IEndpoint GetEndpoint(EndpointName endpointName, HttpContext context)
-        //{
-        //    if (_options.Endpoints.IsEndpointEnabled(endpointName))
-        //    {
-        //        var mapping = _mappings.Where(x => x.Endpoint == endpointName).LastOrDefault();
-        //        if (mapping != null)
-        //        {
-        //            _logger.LogDebug("Mapping found for endpoint: {0}, creating handler: {1}", endpointName, mapping.Handler.FullName);
-        //            return context.RequestServices.GetService(mapping.Handler) as IEndpoint;
-        //        }
-        //        else
-        //        {
-        //            _logger.LogError("No mapping found for endpoint: {0}", endpointName);
-        //        }
-        //    }
-        //    else
-        //    {
-        //        _logger.LogWarning("{0} endpoint requested, but is diabled in endpoint options.", endpointName);
-        //    }
-
-        //    return null;
-        //}
+        
     }
 
     internal static class EndpointExtensions
@@ -201,29 +179,6 @@ namespace cloudscribe.Core.IdentityServerIntegration
             }
         }
 
-        //public static bool IsEndpointEnabled(this EndpointsOptions options, EndpointName endpointName)
-        //{
-        //    switch (endpointName)
-        //    {
-        //        case EndpointName.Authorize:
-        //            return options.EnableAuthorizeEndpoint;
-        //        case EndpointName.CheckSession:
-        //            return options.EnableCheckSessionEndpoint;
-        //        case EndpointName.Discovery:
-        //            return options.EnableDiscoveryEndpoint;
-        //        case EndpointName.EndSession:
-        //            return options.EnableEndSessionEndpoint;
-        //        case EndpointName.Introspection:
-        //            return options.EnableIntrospectionEndpoint;
-        //        case EndpointName.Revocation:
-        //            return options.EnableTokenRevocationEndpoint;
-        //        case EndpointName.Token:
-        //            return options.EnableTokenEndpoint;
-        //        case EndpointName.UserInfo:
-        //            return options.EnableUserInfoEndpoint;
-        //        default:
-        //            return false;
-        //    }
-        //}
+       
     }
 }

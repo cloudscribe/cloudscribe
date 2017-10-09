@@ -21,6 +21,7 @@
             await Html.RenderPartialAsync("ClientAllowedGrantTypesPartial", Model.CurrentClient);
             await Html.RenderPartialAsync("ClientAllowedScopesPartial", Model.CurrentClient);
             await Html.RenderPartialAsync("ClientProviderRestrictionsPartial", Model.CurrentClient);
+            await Html.RenderPartialAsync("ClientPropertiesPartial", Model.CurrentClient);
 
         }
     </div>

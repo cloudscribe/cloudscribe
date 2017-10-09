@@ -1,0 +1,43 @@
+﻿@model cloudscribe.Core.IdentityServerIntegration.Models.ClientItemViewModel
+@using cloudscribe.Core.IdentityServerIntegration
+@using Microsoft.Extensions.Localization
+@inject IStringLocalizer<CloudscribeIds4Resources> sr
+
+<div class="col-md-offset-2 col-md-10">
+    <h3>@sr["Custom Properties"] </h3>
+    @{ await Html.RenderPartialAsync("AddClientPropertyPartial", Model);} 
+    @if (Model.Client.Properties.Count > 0)
+    {
+        <table class="table table-striped">
+            <tr>
+                <th></th>
+                <th>
+                    @sr["Key"]
+                </th>
+                <th>
+                    @sr["Value"]
+                </th>  
+            </tr>
+            @foreach (var c in Model.Client.Properties)
+            {
+                <tr>
+                    <td>
+                        <form asp-controller="Clients" asp-action="DeleteClientProperty"> 
+                            <button type="submit"
+                                    class="btn btn-danger btn-xs"
+                                    onclick="javascript: return confirm('@Html.FormatValue(c.Key, sr["Are you sure you want to delete {0}?"])');">
+                                @sr["Delete"]
+                            </button>
+                            <input asp-for="SiteId" type="hidden" />
+                            <input name="ClientId" value="@Model.Client.ClientId" type="hidden" />
+                            <input name="Key" value="@c.Key" type="hidden" />
+                            <input name="Value" value="@c.Value" type="hidden" />
+                        </form>
+                    </td>
+                    <td>@c.Key</td>
+                    <td>@c.Value</td>
+                </tr>
+            }
+        </table>
+    }
+</div>

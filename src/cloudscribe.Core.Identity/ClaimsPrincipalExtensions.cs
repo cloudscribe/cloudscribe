@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2015-07-11
-// Last Modified:			2016-05-18
+// Last Modified:			2017-10-08
 // 
 
 using System;
@@ -72,6 +72,12 @@ namespace cloudscribe.Core.Identity
                 throw new ArgumentNullException(nameof(principal));
             }
             var claim = principal.FindFirst(ClaimTypes.NameIdentifier);
+
+            if(claim == null)
+            {
+                claim = principal.FindFirst("sub");  //JwtClaimTypes.Subject;
+            }
+
             return claim != null ? claim.Value : null;
         }
     }

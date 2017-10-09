@@ -32,7 +32,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       <div class="circle">1</div>
       <h1>View One</h1>
         <template is="dom-if" if="{{_computeIsSignedIn(user)}}">
-            <span class="buttonText">Welcome {{user.profile.name}}!</span>
+            <span class="buttonText">Welcome {{user.profile.name}} {{user.profile.email}}!</span>
             <paper-button raised on-click="_callApi" on-keydown="_callApiKeyPress">Call API</paper-button>
             <iron-list items="[[apiData]]" as="item">
                 <template>
