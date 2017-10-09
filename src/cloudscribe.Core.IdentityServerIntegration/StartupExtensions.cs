@@ -23,22 +23,54 @@ namespace Microsoft.Extensions.DependencyInjection
 {
     public static class StartupExtensions
     {
-        [Obsolete("this method is deprected, please use .AddCloudscribeIdentityServerIntegrationMvc instead.")]
-        public static IIdentityServerBuilder AddCloudscribeIdentityServerIntegration(this IIdentityServerBuilder builder)
-        {
-            builder.AddCloudscribeIdentityServerIntegrationCommon();
+        
 
-            return builder;
+
+
+        public static IIdentityServerBuilder AddIdentityServerConfiguredForCloudscribe(this IServiceCollection services)
+        {
+            var builder = services.AddIdentityServerBuilder();
+
+            builder
+                .AddRequiredPlatformServices()
+                //.AddCookieAuthentication() //cloudscribe already does this and we don't want the Identityserver defaults here
+                .AddCoreServices()
+                .AddDefaultEndpoints()
+                .AddPluggableServices()
+                .AddValidators()
+                .AddResponseGenerators()
+                .AddDefaultSecretParsers()
+                .AddDefaultSecretValidators();
+
+           
+            return new IdentityServerBuilder(services);
+            
         }
+
+        public static IIdentityServerBuilder AddIdentityServerConfiguredForCloudscribe(this IServiceCollection services, Action<IdentityServerOptions> setupAction)
+        {
+            services.Configure(setupAction);
+            return services.AddIdentityServerConfiguredForCloudscribe();
+        }
+
+
+
         public static IIdentityServerBuilder AddCloudscribeIdentityServerIntegrationCommon(this IIdentityServerBuilder builder)   
         {
+
+            builder.Services.AddSingleton<IIdentityOptionsFactory, IdentityOptionsFactory>();
+            builder.Services.AddScoped<ICustomClaimProvider, IdentityServerCustomClaimsProvider>();
+
             builder.Services.AddScoped<IIdentityServerIntegration, CloudscribeIntegration>();
 
             builder.Services.Configure<IdentityServerOptions>(options =>
             {
-               options.Authentication.AuthenticationScheme = AuthenticationScheme.Application;
-               
- 
+                //https://github.com/IdentityServer/IdentityServer4/releases/tag/2.0.0
+                // related? https://github.com/IdentityServer/IdentityServer4/issues/1477
+                //options.Authentication.AuthenticationScheme = AuthenticationScheme.Application;
+
+
+
             });
 
             builder.Services.AddSingleton<IEndpointRouter>(resolver =>
@@ -52,8 +84,7 @@ namespace Microsoft.Extensions.DependencyInjection
 
             builder.Services.Configure<IdentityOptions>(options =>
             {
-                // commented out 2017-07-25 breaking change in 2.0
-                //options.Cookies.ApplicationCookie.AuthenticationScheme = AuthenticationScheme.Application;
+                
                 options.ClaimsIdentity.UserIdClaimType = JwtClaimTypes.Subject;
                 options.ClaimsIdentity.UserNameClaimType = JwtClaimTypes.Name;
                 options.ClaimsIdentity.RoleClaimType = JwtClaimTypes.Role;
@@ -61,27 +92,24 @@ namespace Microsoft.Extensions.DependencyInjection
 
             builder.AddResourceOwnerValidator<ResourceOwnerPasswordValidator<SiteUser>>();
             builder.Services.AddTransient<IProfileService, ProfileService<SiteUser>>();
-            builder.Services.AddTransient<IJwtClaimsProcessor<SiteUser>, DefaultJwtClaimsProcessor>();
+            
 
-            //builder.Services.AddTransient<ISecurityStampValidator, cloudscribe.Core.IdentityServerIntegration.SecurityStampValidator<SiteUser>>();
-
-            builder.Services.AddScoped<IMatchAuthorizeProtocolRoutePaths, MultiTenantAuthorizeProtocolRouteMatcher>();
-            builder.Services.AddScoped<IMatchEndSessionProtocolRoutePaths, MultiTenantEndSessionProtocolRouteMatcher>();
+           
+            //builder.Services.AddScoped<IMatchAuthorizeProtocolRoutePaths, MultiTenantAuthorizeProtocolRouteMatcher>();
+            //builder.Services.AddScoped<IMatchEndSessionProtocolRoutePaths, MultiTenantEndSessionProtocolRouteMatcher>();
 
             builder.Services.AddScoped<ApiResourceManager, ApiResourceManager>();
             builder.Services.AddScoped<IdentityResourceManager, IdentityResourceManager>();
             builder.Services.AddScoped<ClientsManager, ClientsManager>();
 
-            //builder.Services.AddTransientDecorator<ICorsPolicyProvider, CorsPolicyProvider>();
-            builder.Services.AddTransient<ICorsPathValidator, CorsPathValidator>();
+            
+            //builder.Services.AddTransient<ICorsPathValidator, CorsPathValidator>();
 
             builder.Services.AddScoped<IVersionProvider, IntegrationVersionProvider>();
             builder.Services.AddScoped<IVersionProvider, StorageVersionProvider>();
 
             return builder;
         }
-
-
 
         
 

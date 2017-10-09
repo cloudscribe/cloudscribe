@@ -179,7 +179,11 @@ namespace cloudscribe.Core.IdentityServer.EFCore.MSSQL.Migrations
 
                     b.Property<bool>("BackChannelLogoutSessionRequired");
 
-                    b.Property<string>("BackChannelLogoutUri");
+                    b.Property<string>("BackChannelLogoutUri")
+                        .HasMaxLength(2000);
+
+                    b.Property<string>("ClientClaimsPrefix")
+                        .HasMaxLength(200);
 
                     b.Property<string>("ClientId")
                         .IsRequired()
@@ -191,13 +195,19 @@ namespace cloudscribe.Core.IdentityServer.EFCore.MSSQL.Migrations
                     b.Property<string>("ClientUri")
                         .HasMaxLength(2000);
 
+                    b.Property<int?>("ConsentLifetime");
+
+                    b.Property<string>("Description")
+                        .HasMaxLength(1000);
+
                     b.Property<bool>("EnableLocalLogin");
 
                     b.Property<bool>("Enabled");
 
                     b.Property<bool>("FrontChannelLogoutSessionRequired");
 
-                    b.Property<string>("FrontChannelLogoutUri");
+                    b.Property<string>("FrontChannelLogoutUri")
+                        .HasMaxLength(2000);
 
                     b.Property<int>("IdentityTokenLifetime");
 
@@ -205,7 +215,8 @@ namespace cloudscribe.Core.IdentityServer.EFCore.MSSQL.Migrations
 
                     b.Property<string>("LogoUri");
 
-                    b.Property<bool>("PrefixClientClaims");
+                    b.Property<string>("PairWiseSubjectSalt")
+                        .HasMaxLength(200);
 
                     b.Property<string>("ProtocolType")
                         .IsRequired()
@@ -336,6 +347,29 @@ namespace cloudscribe.Core.IdentityServer.EFCore.MSSQL.Migrations
                     b.HasIndex("ClientId");
 
                     b.ToTable("csids_ClientPostLogoutRedirectUris");
+                });
+
+            modelBuilder.Entity("cloudscribe.Core.IdentityServer.EFCore.Entities.ClientProperty", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<int?>("ClientId")
+                        .IsRequired();
+
+                    b.Property<string>("Key")
+                        .IsRequired()
+                        .HasMaxLength(250);
+
+                    b.Property<string>("Value")
+                        .IsRequired()
+                        .HasMaxLength(2000);
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ClientId");
+
+                    b.ToTable("csids_ClientProps");
                 });
 
             modelBuilder.Entity("cloudscribe.Core.IdentityServer.EFCore.Entities.ClientRedirectUri", b =>
@@ -527,6 +561,14 @@ namespace cloudscribe.Core.IdentityServer.EFCore.MSSQL.Migrations
                 {
                     b.HasOne("cloudscribe.Core.IdentityServer.EFCore.Entities.Client", "Client")
                         .WithMany("PostLogoutRedirectUris")
+                        .HasForeignKey("ClientId")
+                        .OnDelete(DeleteBehavior.Cascade);
+                });
+
+            modelBuilder.Entity("cloudscribe.Core.IdentityServer.EFCore.Entities.ClientProperty", b =>
+                {
+                    b.HasOne("cloudscribe.Core.IdentityServer.EFCore.Entities.Client", "Client")
+                        .WithMany("Properties")
                         .HasForeignKey("ClientId")
                         .OnDelete(DeleteBehavior.Cascade);
                 });

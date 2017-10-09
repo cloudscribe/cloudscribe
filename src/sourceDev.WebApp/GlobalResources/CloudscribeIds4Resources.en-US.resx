@@ -588,4 +588,31 @@
   <data name="{0} &lt;small&gt;is requesting your permission&lt;/small&gt;" xml:space="preserve">
     <value>{0} &lt;small&gt;is requesting your permission&lt;/small&gt;</value>
   </data>
+  <data name="Always Include User Claims In Id Token" xml:space="preserve">
+    <value>Always Include User Claims In Id Token</value>
+  </data>
+  <data name="Client Claims Prefix" xml:space="preserve">
+    <value>Client Claims Prefix</value>
+  </data>
+  <data name="Pairwise Subject Salt" xml:space="preserve">
+    <value>Pairwise Subject Salt</value>
+  </data>
+  <data name="Client already has a property with that key, to change a proprty you must delete it and then add it back with the new value." xml:space="preserve">
+    <value>Client already has a property with that key, to change a proprty you must delete it and then add it back with the new value.</value>
+  </data>
+  <data name="Invalid request, client property not found." xml:space="preserve">
+    <value>Invalid request, client property not found.</value>
+  </data>
+  <data name="The property &lt;b&gt;{0}&lt;/b&gt; was successfully added." xml:space="preserve">
+    <value>The property &lt;b&gt;{0}&lt;/b&gt; was successfully added.</value>
+  </data>
+  <data name="The property &lt;b&gt;{0}&lt;/b&gt; was successfully removed." xml:space="preserve">
+    <value>The property &lt;b&gt;{0}&lt;/b&gt; was successfully removed.</value>
+  </data>
+  <data name="Custom Properties" xml:space="preserve">
+    <value>Custom Properties</value>
+  </data>
+  <data name="Key" xml:space="preserve">
+    <value>Key</value>
+  </data>
 </root>

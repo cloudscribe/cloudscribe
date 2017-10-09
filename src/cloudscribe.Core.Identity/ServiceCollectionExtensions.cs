@@ -54,6 +54,8 @@ namespace Microsoft.Extensions.DependencyInjection
             services.AddSingleton<IOptionsMonitor<TwitterOptions>, SiteTwitterOptions>();
             services.AddSingleton<IOptionsMonitor<OpenIdConnectOptions>, SiteOpenIdConnectOptions>();
 
+            services.TryAddSingleton<IIdentityOptionsFactory, DefaultIdentityOptionsFactory>();
+
             services.AddAuthentication(options =>
             {
                 options.DefaultAuthenticateScheme = IdentityConstants.ApplicationScheme;

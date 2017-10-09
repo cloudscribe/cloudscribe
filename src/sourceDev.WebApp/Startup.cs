@@ -227,19 +227,13 @@ namespace sourceDev.WebApp
             app.UseCors("default");
             
             var multiTenantOptions = multiTenantOptionsAccessor.Value;
-
             
-
             app.UseCloudscribeCore(
                     loggerFactory,
                     multiTenantOptions,
                     SslIsAvailable
                     );
-
-            //app.UseIdentityServerPreAuth();
-
-            //app.UseIdentityServerPostAuth();
-
+            
             app.UseIdentityServer();
             
             UseMvc(app, multiTenantOptions.Mode == cloudscribe.Core.Models.MultiTenantMode.FolderName);
@@ -346,7 +340,7 @@ namespace sourceDev.WebApp
                     services.AddCloudscribeLoggingNoDbStorage(Configuration);
                     services.AddCloudscribeKvpNoDbStorage();
 
-                    services.AddIdentityServer()
+                    services.AddIdentityServerConfiguredForCloudscribe()
                         .AddCloudscribeCoreNoDbIdentityServerStorage()
                         .AddCloudscribeIdentityServerIntegrationMvc()
                         .AddDeveloperSigningCredential()
@@ -365,7 +359,7 @@ namespace sourceDev.WebApp
                             services.AddCloudscribeLoggingEFStoragePostgreSql(pgConnection);
                             services.AddCloudscribeKvpEFStoragePostgreSql(pgConnection);
 
-                            services.AddIdentityServer()
+                            services.AddIdentityServerConfiguredForCloudscribe()
                                 .AddCloudscribeCoreEFIdentityServerStoragePostgreSql(pgConnection)
                                 .AddCloudscribeIdentityServerIntegrationMvc()
                                 .AddDeveloperSigningCredential()
@@ -379,7 +373,7 @@ namespace sourceDev.WebApp
                             services.AddCloudscribeLoggingEFStorageMySQL(mysqlConnection);
                             services.AddCloudscribeKvpEFStorageMySql(mysqlConnection);
 
-                            services.AddIdentityServer()
+                            services.AddIdentityServerConfiguredForCloudscribe()
                                 .AddCloudscribeCoreEFIdentityServerStorageMySql(mysqlConnection)
                                 .AddCloudscribeIdentityServerIntegrationMvc()
                                 .AddDeveloperSigningCredential()
@@ -394,10 +388,7 @@ namespace sourceDev.WebApp
                             services.AddCloudscribeLoggingEFStorageMSSQL(connectionString);
                             services.AddCloudscribeKvpEFStorageMSSQL(connectionString);
 
-                            services.AddIdentityServer(options => {
-
-                                //options.Authentication.AuthenticationScheme.
-                            })
+                            services.AddIdentityServerConfiguredForCloudscribe()
                                 .AddCloudscribeCoreEFIdentityServerStorageMSSQL(connectionString)
                                 .AddCloudscribeIdentityServerIntegrationMvc()
                                 .AddDeveloperSigningCredential()
