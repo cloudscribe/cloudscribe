@@ -137,6 +137,7 @@ namespace cloudscribe.Core.IdentityServerIntegration.Controllers.Mvc
             client.AccessTokenLifetime = clientModel.AccessTokenLifetime;
             client.AccessTokenType = clientModel.AccessTokenType;
             //client.AllowAccessToAllScopes = clientModel.AllowAccessToAllScopes;
+            client.AlwaysIncludeUserClaimsInIdToken = clientModel.AlwaysIncludeUserClaimsInIdToken;
             client.AllowAccessTokensViaBrowser = clientModel.AllowAccessTokensViaBrowser;
             client.AllowRememberConsent = clientModel.AllowRememberConsent;
             client.AlwaysSendClientClaims = clientModel.AlwaysSendClientClaims;
@@ -158,6 +159,7 @@ namespace cloudscribe.Core.IdentityServerIntegration.Controllers.Mvc
             //client.PrefixClientClaims = clientModel.PrefixClientClaims;
             client.ClientClaimsPrefix = clientModel.ClientClaimsPrefix;
 
+            client.PairWiseSubjectSalt = clientModel.PairWiseSubjectSalt;
             client.RefreshTokenExpiration = clientModel.RefreshTokenExpiration;
             client.RefreshTokenUsage = clientModel.RefreshTokenUsage;
             client.RequireClientSecret = clientModel.RequireClientSecret;
@@ -295,6 +297,73 @@ namespace cloudscribe.Core.IdentityServerIntegration.Controllers.Mvc
 
             return RedirectToAction("EditClient", new { siteId = siteId.ToString(), clientId = clientId });
         }
+
+        [HttpPost]
+        public async Task<IActionResult> AddClientProperty(NewClientPropertyViewModel model)
+        {
+            if (!ModelState.IsValid)
+            {
+                return RedirectToAction("EditClient", new { siteId = model.SiteId, clientId = model.ClientId });
+            }
+
+            Guid siteId = siteManager.CurrentSite.Id;
+            if (!string.IsNullOrEmpty(model.SiteId) && model.SiteId.Length == 36)
+            {
+                siteId = new Guid(model.SiteId);
+            }
+            var selectedSite = await siteManager.GetSiteForDataOperations(siteId);
+
+            var client = await clientsManager.FetchClient(selectedSite.Id.ToString(), model.ClientId);
+            if (client == null)
+            {
+                this.AlertDanger(sr["Invalid request, Client not found."], true);
+                return RedirectToAction("Index");
+            }
+
+            if(client.Properties.Keys.Contains(model.Key))
+            {
+                //client.Properties[model.Key] = model.Value;
+                this.AlertDanger(sr["Client already has a property with that key, to change a proprty you must delete it and then add it back with the new value."], true);
+                return RedirectToAction("EditClient", new { siteId = selectedSite.Id.ToString(), clientId = model.ClientId });
+            }
+            else
+            {
+                client.Properties.Add(model.Key, model.Value);
+            }
+            
+            await clientsManager.UpdateClient(selectedSite.Id.ToString(), client);
+
+            var successFormat = sr["The property <b>{0}</b> was successfully added."];
+
+            this.AlertSuccess(string.Format(successFormat, model.Key), true);
+
+            return RedirectToAction("EditClient", new { siteId = selectedSite.Id.ToString(), clientId = model.ClientId });
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> DeleteClientProperty(Guid siteId, string clientId, string key, string value)
+        {
+            var client = await clientsManager.FetchClient(siteId.ToString(), clientId);
+            if (client == null)
+            {
+                this.AlertDanger(sr["Invalid request, client not found."], true);
+                return RedirectToAction("Index");
+            }
+
+            if (!client.Properties.Keys.Contains(key))
+            {
+                this.AlertDanger(sr["Invalid request, client property not found."], true);
+            }
+
+            client.Properties.Remove(key);
+            
+            await clientsManager.UpdateClient(siteId.ToString(), client);
+            var successFormat = sr["The property <b>{0}</b> was successfully removed."];
+            this.AlertSuccess(string.Format(successFormat, key), true);
+            
+            return RedirectToAction("EditClient", new { siteId = siteId.ToString(), clientId = clientId });
+        }
+
 
         [HttpPost]
         public async Task<IActionResult> AddClientSecret(NewClientSecretViewModel model)

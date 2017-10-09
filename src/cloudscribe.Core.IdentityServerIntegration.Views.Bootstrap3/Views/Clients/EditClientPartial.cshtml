@@ -119,6 +119,13 @@
                 </div>
             </div>
             <div class="form-group">
+                <label for="PairWiseSubjectSalt" class="col-md-2 control-label">@sr["Pairwise Subject Salt"]</label>
+                <div class="col-md-10">
+                    <input class="form-control" asp-for="PairWiseSubjectSalt" />
+                    <span asp-validation-for="PairWiseSubjectSalt" class="text-danger"></span>
+                </div>
+            </div>
+            <div class="form-group">
                 <div class="col-md-10 col-md-offset-2">
                     <div class="checkbox">
                         <label>
@@ -176,7 +183,7 @@
                 <div class="col-md-10 col-md-offset-2">
                     <div class="checkbox">
                         <label>
-                            <input asp-for="AllowAccessToAllScopes" /> @sr["Allow Access To All Scopes"]
+                            <input asp-for="AlwaysIncludeUserClaimsInIdToken" /> @sr["Always Include User Claims In Id Token"]
                         </label>
                     </div>
                 </div>

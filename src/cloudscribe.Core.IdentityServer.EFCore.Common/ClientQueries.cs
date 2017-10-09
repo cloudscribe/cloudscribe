@@ -50,6 +50,7 @@ namespace cloudscribe.Core.IdentityServer.EFCore
                 .Include(x => x.ClientSecrets)
                 .Include(x => x.Claims)
                 .Include(x => x.IdentityProviderRestrictions)
+                .Include(x => x.Properties)
                 .Include(x => x.AllowedCorsOrigins)
                 .FirstOrDefaultAsync(x => x.SiteId == siteId && x.ClientId == clientId);
 
