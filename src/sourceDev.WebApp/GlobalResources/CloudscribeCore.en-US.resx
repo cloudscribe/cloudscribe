@@ -997,8 +997,8 @@
   <data name="Site Closed To Public Temporarily" xml:space="preserve">
     <value>Site Closed To Public Temporarily</value>
   </data>
-  <data name="Sorry for the delay, but this site requires approval of new accounts. An email has been site to the site managers notifying them of your registration request. You should recieve an email notifying you once your account has been approved." xml:space="preserve">
-    <value>Sorry for the delay, but this site requires approval of new accounts. An email has been site to the site managers notifying them of your registration request. You should recieve an email notifying you once your account has been approved.</value>
+  <data name="Sorry for the delay, but this site requires approval of new accounts. An email has been sent to the site managers notifying them of your registration request. You should recieve an email notifying you once your account has been approved." xml:space="preserve">
+    <value>Sorry for the delay, but this site requires approval of new accounts. An email has been sent to the site managers notifying them of your registration request. You should recieve an email notifying you once your account has been approved.</value>
   </data>
   <data name="The role name is already in use." xml:space="preserve">
     <value>The role name is already in use.</value>
