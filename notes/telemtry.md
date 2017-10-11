@@ -25,3 +25,9 @@ https://docs.microsoft.com/en-us/azure/application-insights/app-insights-monitor
 https://docs.microsoft.com/en-us/azure/application-insights/app-insights-api-custom-events-metrics
 
 https://docs.microsoft.com/en-us/azure/application-insights/app-insights-asp-net-trace-logs
+
+How to disable application insights in asp.net core 2.0?
+https://github.com/aspnet/Home/issues/2051
+
+var configuration = app.ApplicationServices.GetService<TelemetryConfiguration>();
+configuration.DisableTelemetry = true;        
