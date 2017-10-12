@@ -20,12 +20,10 @@ namespace cloudscribe.Web.Common.TagHelpers
             IOptions<GoogleAnalyticsOptions> optionsAccessor
             )
         {
-           
             _options = optionsAccessor.Value;
         }
 
         private GoogleAnalyticsOptions _options;
-        //private ITempDataDictionary _tempData;
 
         private const string ProfileIdAttributeName = "profile-id";
         private const string UserIdAttributeName = "user-id";

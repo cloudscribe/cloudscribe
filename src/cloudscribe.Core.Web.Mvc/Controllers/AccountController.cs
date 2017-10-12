@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2014-10-26
-// Last Modified:			2017-10-08
+// Last Modified:			2017-10-12
 // 
 
 using cloudscribe.Core.Identity;
@@ -109,12 +109,14 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
             return false;
         }
 
-        private IActionResult HandleLoginNotAllowed(UserLoginResult result)
+        private async Task<IActionResult> HandleLoginNotAllowed(UserLoginResult result)
         {
             analytics.HandleLoginNotAllowed(result).Forget();
 
             if (result.User != null)
-            {
+            {      
+                await ipAddressTracker.TackUserIpAddress(Site.Id, result.User.Id);
+
                 if (result.NeedsEmailConfirmation)
                 {
                     if(ShouldSendConfirmation(result.User))
@@ -156,12 +158,14 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
             return this.RedirectToSiteRoot(Site);
         }
 
-        private IActionResult HandleRequiresTwoFactor(UserLoginResult result, string returnUrl, bool rememberMe)
+        private async Task<IActionResult> HandleRequiresTwoFactor(UserLoginResult result, string returnUrl, bool rememberMe)
         {
             analytics.HandleRequiresTwoFactor(result).Forget();
 
             if (result.User != null)
             {
+                await ipAddressTracker.TackUserIpAddress(Site.Id, result.User.Id);
+
                 log.LogWarning($"redirecting from login for {result.User.Email} because 2 factor not configured yet for account");
             }
 
@@ -170,7 +174,7 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
             //return RedirectToAction(nameof(SendCode), new { ReturnUrl = returnUrl, RememberMe = rememberMe });
         }
 
-        private IActionResult HandleLockout(UserLoginResult result = null)
+        private async Task<IActionResult> HandleLockout(UserLoginResult result = null)
         {
             analytics.HandleLockout(result).Forget();
 
@@ -178,6 +182,8 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
 
             if (result != null && result.User != null)
             {
+                await ipAddressTracker.TackUserIpAddress(Site.Id, result.User.Id);
+
                 log.LogWarning($"redirecting to lockout page for {result.User.Email} because account is locked");
             }
 
@@ -289,17 +295,17 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
             
             if (result.SignInResult.IsNotAllowed)
             {
-                return HandleLoginNotAllowed(result);
+                return await HandleLoginNotAllowed(result);
             }
             
             if (result.SignInResult.RequiresTwoFactor)
             {
-                return HandleRequiresTwoFactor(result, returnUrl, model.RememberMe);
+                return await HandleRequiresTwoFactor(result, returnUrl, model.RememberMe);
             }
 
             if (result.SignInResult.IsLockedOut)
             {
-                return HandleLockout(result);
+                return await HandleLockout(result);
             }
             else
             {
@@ -359,12 +365,12 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
 
             if (result.SignInResult.IsNotAllowed)
             {
-                return HandleLoginNotAllowed(result);
+                return await HandleLoginNotAllowed(result);
             }
             
             if (result.SignInResult.IsLockedOut)
             {
-                return HandleLockout(result);
+                return await HandleLockout(result);
             }
             else
             {
@@ -424,12 +430,12 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
 
             if (result.SignInResult.IsNotAllowed)
             {
-                return HandleLoginNotAllowed(result);
+                return await HandleLoginNotAllowed(result);
             }
 
             if (result.SignInResult.IsLockedOut)
             {
-                return HandleLockout(result);
+                return await HandleLockout(result);
             }
             else
             {
@@ -574,7 +580,7 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
 
                 if (result.SignInResult.IsNotAllowed)
                 {
-                    return HandleLoginNotAllowed(result);
+                    return await HandleLoginNotAllowed(result);
                 }
 
                 var te = result.RejectReasons.FirstOrDefault();
@@ -653,7 +659,7 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
 
             if (result.SignInResult.IsNotAllowed)
             {
-                return HandleLoginNotAllowed(result);
+                return await HandleLoginNotAllowed(result);
             }
 
             if (result.ExternalLoginInfo == null)
@@ -664,12 +670,12 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
 
             if (result.SignInResult.RequiresTwoFactor)
             {
-                return HandleRequiresTwoFactor(result, returnUrl, false);
+                return await HandleRequiresTwoFactor(result, returnUrl, false);
             }
 
             if (result.SignInResult.IsLockedOut)
             {
-                return HandleLockout(result); 
+                return await HandleLockout(result); 
             }
 
             // result.Failed
@@ -722,7 +728,7 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
 
                 if (result.SignInResult.IsNotAllowed)
                 {
-                    return HandleLoginNotAllowed(result);
+                    return await HandleLoginNotAllowed(result);
                 }
 
                 if (result.ExternalLoginInfo == null)
@@ -1153,7 +1159,7 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
 
             if (result.IsLockedOut)
             {
-                return HandleLockout();
+                return await HandleLockout();
             }
             else
             {
