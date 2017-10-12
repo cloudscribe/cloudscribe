@@ -1,4 +1,7 @@
 
+https://joonasw.net/view/find-out-if-url-matches-action
+
+
 http://benjii.me/2016/08/global-routes-for-asp-net-core-mvc/
 
 http://codeclimber.net.nz/archive/2017/07/14/how-to-get-the-correct-requesturl-when-behind-a-load-balancer/
