@@ -49,6 +49,7 @@ namespace Microsoft.Extensions.DependencyInjection
             }
 
             services.AddScoped<GoogleAnalyticsApiService>();
+            services.AddScoped<GoogleAnalyticsHelper>();
 
             services.AddScoped<IVersionProvider, CommonVersionProvider>();
 

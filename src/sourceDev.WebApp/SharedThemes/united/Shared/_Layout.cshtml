@@ -15,7 +15,7 @@
         <link rel="stylesheet" href="~/css/site.min.css" asp-append-version="true" />
     </environment>
     @RenderSection("Styles", required: false)
-    <google-analytics profile-id="@Tenant.GoogleAnalyticsProfileId"></google-analytics>
+    <google-analytics profile-id="@Tenant.GoogleAnalyticsProfileId" user-id="@User.GetUserId()"></google-analytics>
 </head>
 <body>
     <header class="navbar navbar-default navbar-fixed-top">

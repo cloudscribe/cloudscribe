@@ -2,14 +2,13 @@
 // Licensed under the Apache License, Version 2.0.
 // Author:                  Joe Audette
 // Created:                 2017-09-21
-// Last Modified:           2017-09-23
+// Last Modified:           2017-10-12
 // 
 
 using cloudscribe.Core.Identity;
 using cloudscribe.Core.Models;
 using cloudscribe.Web.Common.Analytics;
 using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using Microsoft.Extensions.Options;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -21,45 +20,24 @@ namespace cloudscribe.Core.Web.Analytics
         public GoogleAccountAnalytics(
             SiteContext currentSite,
             GoogleAnalyticsApiService analyticsApi,
+            GoogleAnalyticsHelper analyticsHelper,
             IOptions<GoogleAnalyticsOptions> optionsAccessor,
-            ITempDataDictionaryFactory tempaDataFactory,
             IHttpContextAccessor contextAccessor
             )
         {
             _currentSite = currentSite;
             _analyticsApi = analyticsApi;
+            _analyticsHelper = analyticsHelper;
             _options = optionsAccessor.Value;
-            _tempaDataFactory = tempaDataFactory;
             _contextAccessor = contextAccessor;
         }
 
         private SiteContext _currentSite;
         private GoogleAnalyticsApiService _analyticsApi;
+        private GoogleAnalyticsHelper _analyticsHelper;
         private GoogleAnalyticsOptions _options;
         private IHttpContextAccessor _contextAccessor;
-        private ITempDataDictionaryFactory _tempaDataFactory;
-        private ITempDataDictionary _tempData = null;
         
-        private ITempDataDictionary GetTempData()
-        {
-            if(_tempData == null)
-            {
-                _tempData = _tempaDataFactory.GetTempData(_contextAccessor.HttpContext);
-            }
-            
-            return _tempData;
-        }
-
-        private void AddGoogleAnalyticsEvent(GoogleAnalyticsEvent ev)
-        {
-            //these are detected by the google analytics taghelper
-            var tempData = GetTempData();
-            if (tempData != null)
-            {
-                tempData.AddEvent(ev);
-            }
-        }
-
         public async Task HandleLoginSubmit(string source)
         {
             if(!string.IsNullOrEmpty(_currentSite.GoogleAnalyticsProfileId))
@@ -94,7 +72,7 @@ namespace cloudscribe.Core.Web.Analytics
                     e.Fields.Add(new KeyValuePair<string, string>("dimension" + _options.LoginRegisterSourceDimenstionIdex.ToInvariantString(), source));
                     e.Fields.Add(new KeyValuePair<string, string>("metric" + _options.LoginSubmitMetricIndex.ToInvariantString(), "1"));
 
-                    AddGoogleAnalyticsEvent(e);
+                    _analyticsHelper.AddEvent(e);
                 }
                 
             }
@@ -137,7 +115,7 @@ namespace cloudscribe.Core.Web.Analytics
                     e.Fields.Add(new KeyValuePair<string, string>("dimension" + _options.LoginRegisterSourceDimenstionIdex.ToInvariantString(), source));
                     e.Fields.Add(new KeyValuePair<string, string>("metric" + _options.LoginFailMetricIndex.ToInvariantString(), "1"));
 
-                    AddGoogleAnalyticsEvent(e);
+                    _analyticsHelper.AddEvent(e);
                 }
 
                 
@@ -180,7 +158,7 @@ namespace cloudscribe.Core.Web.Analytics
                     e.Fields.Add(new KeyValuePair<string, string>("dimension" + _options.LoginRegisterSourceDimenstionIdex.ToInvariantString(), source));
                     e.Fields.Add(new KeyValuePair<string, string>("metric" + _options.RegisterSubmitMetricIndex.ToInvariantString(), "1"));
 
-                    AddGoogleAnalyticsEvent(e);
+                    _analyticsHelper.AddEvent(e);
                 }
 
                 
@@ -224,7 +202,7 @@ namespace cloudscribe.Core.Web.Analytics
                     e.Fields.Add(new KeyValuePair<string, string>("dimension" + _options.LoginRegisterSourceDimenstionIdex.ToInvariantString(), source));
                     e.Fields.Add(new KeyValuePair<string, string>("metric" + _options.RegisterFailMetricIndex.ToInvariantString(), "1"));
 
-                    AddGoogleAnalyticsEvent(e);
+                    _analyticsHelper.AddEvent(e);
                 }
 
                 
@@ -291,7 +269,7 @@ namespace cloudscribe.Core.Web.Analytics
                     e.Fields.Add(new KeyValuePair<string, string>("dimension" + _options.LoginRegisterSourceDimenstionIdex.ToInvariantString(), source));
                     e.Fields.Add(new KeyValuePair<string, string>("metric" + _options.LoginSuccessMetricIndex.ToInvariantString(), "1"));
 
-                    AddGoogleAnalyticsEvent(e);
+                    _analyticsHelper.AddEvent(e);
                 }
 
                 
@@ -360,7 +338,7 @@ namespace cloudscribe.Core.Web.Analytics
                         e.Fields.Add(new KeyValuePair<string, string>("dimension" + _options.LoginRegisterSourceDimenstionIdex.ToInvariantString(), source));
                         e.Fields.Add(new KeyValuePair<string, string>("metric" + _options.LoginFailMetricIndex.ToInvariantString(), "1"));
 
-                        AddGoogleAnalyticsEvent(e);
+                        _analyticsHelper.AddEvent(e);
                     }
                     
 
@@ -418,7 +396,7 @@ namespace cloudscribe.Core.Web.Analytics
                 e.Fields.Add(new KeyValuePair<string, string>("dimension" + _options.LoginRegisterSourceDimenstionIdex.ToInvariantString(), source));
                 e.Fields.Add(new KeyValuePair<string, string>("metric" + _options.RegisterSuccessMetricIndex.ToInvariantString(), "1"));
 
-                AddGoogleAnalyticsEvent(e);
+                _analyticsHelper.AddEvent(e);
             }
 
             
@@ -445,7 +423,7 @@ namespace cloudscribe.Core.Web.Analytics
                 e.Fields.Add(new KeyValuePair<string, string>("dimension" + _options.LoginRegisterSourceDimenstionIdex.ToInvariantString(), source));
                 e.Fields.Add(new KeyValuePair<string, string>("metric" + _options.LoginFailMetricIndex.ToInvariantString(), "1"));
 
-                AddGoogleAnalyticsEvent(e);
+                _analyticsHelper.AddEvent(e);
             }
 
             return Task.FromResult(0);
@@ -472,7 +450,7 @@ namespace cloudscribe.Core.Web.Analytics
                 e.Fields.Add(new KeyValuePair<string, string>("dimension" + _options.LoginRegisterSourceDimenstionIdex.ToInvariantString(), source));
                 e.Fields.Add(new KeyValuePair<string, string>("metric" + _options.LoginFailMetricIndex.ToInvariantString(), "1"));
 
-                AddGoogleAnalyticsEvent(e);
+                _analyticsHelper.AddEvent(e);
             }
 
             return Task.FromResult(0);
