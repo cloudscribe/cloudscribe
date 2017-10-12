@@ -3,6 +3,10 @@ solution: cloudscribe.sln
 sudo: false
 dist: trusty
 mono: none
+
+before_install:
+  - if [ "$TRAVIS_OS_NAME" == "osx" ]; then brew update; fi;
+
 dotnet: 2.0.0
 env:
   global:
@@ -12,9 +16,9 @@ os:
   - linux
   - osx
 osx_image: xcode8.3
+
 script:
   - if test "$TRAVIS_OS_NAME" == "linux"; then dotnet restore; fi
-  - if test "$TRAVIS_OS_NAME" == "osx"; then brew update && brew bundle; fi
   - if test "$TRAVIS_OS_NAME" == "osx"; then dotnet restore --disable-parallel; fi
   - dotnet build -c Release
   - dotnet test -c Release ./test/cloudscribe.Core.Web.Test/cloudscribe.Core.Web.Test.csproj
