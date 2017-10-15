@@ -1,4 +1,4 @@
-﻿@model cloudscribe.Core.Web.ViewModels.SiteSettings.LoginInfoViewModel
+﻿@model cloudscribe.Core.Web.ViewModels.SiteSettings.RegisterInfoViewModel
 @using cloudscribe.Web.Common.Models
 @using cloudscribe.Web.Common.Components
 @using cloudscribe.Core.Web
@@ -17,29 +17,38 @@
             <div asp-validation-summary="All" class="text-danger"></div>
             <input asp-for="SiteId" type="hidden" />
             <div class="form-group">
-                <label asp-for="LoginInfoTop" class="control-label">@sr["Login Info Top"]</label>
-                <textarea class="form-control" rows="5" asp-for="LoginInfoTop"
+                <label asp-for="RegistrationPreamble" class="control-label">@sr["Registration Preamble"]</label>
+                <textarea class="form-control" rows="5" asp-for="RegistrationPreamble"
                           data-ckeditor-unobtrusive=""
                           data-ckeditor-config-url="@ckOptions.CustomConfigPath"
                           data-ckeditor-config-language="@ckOptions.LanguageCode"
                           data-ckeditor-config-dropfileuploadurl="@ckOptions.DropFileUrl"
                           data-ckeditor-config-filebrowserurl="@ckOptions.FileBrowseUrl"
                           data-ckeditor-config-imagebrowseurl="@ckOptions.ImageBrowseUrl"></textarea>
-                <span asp-validation-for="LoginInfoTop" class="text-danger"></span>
+                <span asp-validation-for="RegistrationPreamble" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="LoginInfoBottom" class="control-label">@sr["Login Info Bottom"]</label>
-                <textarea class="form-control" rows="5" asp-for="LoginInfoBottom"
+                <label asp-for="RegistrationAgreement" class="control-label">@sr["Registration Agreement/Terms of Use"]</label>
+                <textarea class="form-control" rows="5" asp-for="RegistrationAgreement"
                           data-ckeditor-unobtrusive=""
                           data-ckeditor-config-url="@ckOptions.CustomConfigPath"
                           data-ckeditor-config-language="@ckOptions.LanguageCode"
                           data-ckeditor-config-dropfileuploadurl="@ckOptions.DropFileUrl"
                           data-ckeditor-config-filebrowserurl="@ckOptions.FileBrowseUrl"
                           data-ckeditor-config-imagebrowseurl="@ckOptions.ImageBrowseUrl"></textarea>
-                <span asp-validation-for="LoginInfoBottom" class="text-danger"></span>
+                <span asp-validation-for="RegistrationAgreement" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <button name="submit" type="submit" class="btn btn-default">@sr["Save"]</button>
+                <div class="col-md-offset-2 col-md-10">
+                    <div class="checkbox">
+                        <label>
+                            <input asp-for="RequireUsersToAcceptChangedAgreement" /> @sr["Require Users To Accept Changed Agreement?"]
+                        </label>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <button id="btnSave" name="submit" type="submit" class="btn btn-default">@sr["Save"]</button>
             </div>
         </form>
     </div>
@@ -47,9 +56,8 @@
         @await Component.InvokeAsync("Navigation", new { viewName = "SideNavAlt1", filterName = NamedNavigationFilters.ParentTree, startingNodeKey = "SiteAdmin" })
     </div>
 </div>
-
 @section Scripts {
 @{ await Html.RenderPartialAsync("_SideMenuScriptsPartial"); }
-@{ await Html.RenderPartialAsync("_UnobtrusiveEditorScriptsPartial"); }
 @{ await Html.RenderPartialAsync("_UnobtrusiveValidationScriptsPartial"); }
+@{ await Html.RenderPartialAsync("_UnobtrusiveEditorScriptsPartial"); }
 }

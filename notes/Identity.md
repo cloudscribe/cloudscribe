@@ -32,19 +32,7 @@ https://damienbod.com/2016/02/14/authorization-policies-and-data-protection-with
 
 https://blogs.msdn.microsoft.com/webdev/2017/01/23/asp-net-core-authentication-with-identityserver4/
 
-## My Thoughts around IdentityServer4
 
-All the samples separate the OP (OpenID Connect provider) aka Identity Server, into a separate web app which is great for scalability. The samples often have multiple clients and maybe an api so you spin up 3 or 4 web apps which is a good way to show how the distributed system can work.
-
-Being able to separate those services to different end points is crucial for the scalability.
-
-From my point of view, it is good to build all apps with scalability in mind, but that doesn't mean all apps really need it or will see the work load to justify it. So the kind of starter template I want for Identity server is a way to run all the parts from a single endpoint in such a way that you can still separate them to different endpoints later if the need for scale merits it. It is too much ceremony to have a bunch of separate web apps for every project, and of course costs to deploy multiple end points is higher. I want a pattern to build apps at a single endpoint where the pieces are composed together from nugets. But, this must be done in such a way that by packaging and configuration changes the pieces can be split apart later and one by one separate pieces can be moved to different endpoints if the workload gets to the point where that is needed.
-
-Within a single web deployement there can be the identity server, mvc web app, various apis, as a single endpoint, with different urls of course but deployed as a single web application in a single IIS web site or nginx/docker web setup. There could also be within the same deployment SPA apps with a single html page each that talks to apis. At any point where the load merits it the spa apps could be separated to their own end points but until then they can be packaged together under one website.
-
-
-A signing certificate is a dedicated certificate used to sign tokens, allowing for client applications to verify that the contents of the token have not been altered in transit. This involves a private key used to sign the token and a public key to verify the signature. This public key is accessible to client applications via the jwks_uri in the OpenID Connect discovery document.
-When you go to create and use your own signing certificate, feel free to use a self-signed certificate. This certificate does not need to be issued by a trusted certificate authority.
 https://www.scottbrady91.com/Identity-Server/Getting-Started-with-IdentityServer-4
 
 
@@ -127,148 +115,16 @@ https://github.com/IdentityModel/oidc-client-js/wiki
 https://mderriey.github.io/2016/08/21/openid-connect-and-js-applications-with-oidc-client-js/
 https://identityserver.github.io/Documentation/docsv2/overview/jsGettingStarted.html
 
-### Old Notes
+## OIDC and Xamarin
 
-MS does not show much interest in helping us with multi tenancy
-https://github.com/aspnet/Security/issues/35
+https://leastprivilege.com/2016/06/01/identitymodel-openid-connect-oauth-2-0-client-library-for-mobilenative-applications/
+https://github.com/IdentityModel/IdentityModel.OidcClient.Samples
 
-seems like this is what we want to override
-IAuthenticationHandler
-https://github.com/aspnet/HttpAbstractions/blob/dev/src/Microsoft.AspNet.Http.Features/Authentication/IAuthenticationHandler.cs
-public interface IAuthenticationHandler
-{
-	void GetDescriptions(DescribeSchemesContext context);
+https://stackoverflow.com/questions/41687800/connecting-xamarin-client-to-identity-server4
 
-	Task AuthenticateAsync(AuthenticateContext context);
-
-	Task ChallengeAsync(ChallengeContext context);
-
-	Task SignInAsync(SignInContext context);
-
-	Task SignOutAsync(SignOutContext context);
-}
-
-public abstract class AuthenticationHandler : IAuthenticationHandler
-https://github.com/aspnet/Security/blob/dev/src/Microsoft.AspNet.Authentication/AuthenticationHandler.cs
-
-https://github.com/aspnet/Security/blob/dev/src/Microsoft.AspNet.Authentication/AuthenticationHandler%601.cs
-
-HttpAuthenticationFeature implements IHttpAuthenticationFeature contains ref to IAuthenticationHandler and ClaimsPrincipal User
+https://developer.xamarin.com/guides/xamarin-forms/cloud-services/authentication/oauth/
+these are for old version of identityserver
+https://github.com/KevinDockx/XamarinFormsOIDCSample
 
 
-
-http://blog.dudak.me/2015/non-linear-middleware-chains-in-asp-net-5/
-
-https://github.com/OrchardCMS/Orchard2/blob/5342a792dbac9fb70a7d76c2e17bfee7b9c0ba2c/src/Orchard.Hosting.Web/Routing/Routes/TenantRoute.cs
-
-
-
-
-https://github.com/aspnet/HttpAbstractions/blob/dev/src/Microsoft.AspNet.Http/Features/Authentication/HttpAuthenticationFeature.cs
-
-abstract AuthenticationManager
-https://github.com/aspnet/HttpAbstractions/blob/dev/src/Microsoft.AspNet.Http.Abstractions/Authentication/AuthenticationManager.cs
-
-DefaultAuthenticationManager inherits AuthenticationManager
-https://github.com/aspnet/HttpAbstractions/blob/dev/src/Microsoft.AspNet.Http/Authentication/DefaultAuthenticationManager.cs
-private FeatureReference<IHttpAuthenticationFeature> _authentication = FeatureReference<IHttpAuthenticationFeature>.Default;
-takes IFeatureCollection features in its constructor
-private IHttpAuthenticationFeature HttpAuthenticationFeature
-{
-	get { return _authentication.Fetch(_features) ?? _authentication.Update(_features, new HttpAuthenticationFeature()); }
-}
-
-this is internal so we can't inherit from it and it depends on wired up cookie options
-CookieAuthenticationHandler 
-https://github.com/aspnet/Security/blob/dev/src/Microsoft.AspNet.Authentication.Cookies/CookieAuthenticationHandler.cs
-
-CookieAuthenticationMiddleware is public so we can perhaps inherit from it and override things
-public class CookieAuthenticationMiddleware : AuthenticationMiddleware<CookieAuthenticationOptions>
-https://github.com/aspnet/Security/blob/dev/src/Microsoft.AspNet.Authentication.Cookies/CookieAuthenticationMiddleware.cs
-
-it creates the CookieAuthenticationHandler
-protected override AuthenticationHandler<CookieAuthenticationOptions> CreateHandler()
-{
-	return new CookieAuthenticationHandler();
-}
-
-which in turn uses the wired up cookie options
-by implementing ourt own cookie middleware we could wire up our own handler that inherits from AuthenticationHandler<CookieAuthenticationOptions>
-internally we could ignore the options or use them depending on context
-
-public abstract class AuthenticationMiddleware<TOptions> where TOptions : AuthenticationOptions, new()
-https://github.com/aspnet/Security/blob/dev/src/Microsoft.AspNet.Authentication/AuthenticationMiddleware.cs
-
-{"issuer":"https://localhost:44399",
-"authorization_endpoint":"https://localhost:44399/connect/authorize",
-"token_endpoint":"https://localhost:44399/connect/token",
-"userinfo_endpoint":"https://localhost:44399/connect/userinfo",
-"end_session_endpoint":"https://localhost:44399/connect/endsession",
-"check_session_iframe":"https://localhost:44399/connect/checksession",
-"revocation_endpoint":"https://localhost:44399/connect/revocation",
-"introspection_endpoint":"https://localhost:44399/connect/introspect",
-"frontchannel_logout_supported":true,"frontchannel_logout_session_supported":true,
-"scopes_supported":["openid","profile","offline_access","api1"],
-"claims_supported":["sub","name","family_name","given_name","middle_name","nickname","preferred_username","profile","picture","website","gender","birthdate","zoneinfo","locale","updated_at"],
-"response_types_supported":["code","token","id_token","id_token token","code id_token","code token","code id_token token"],
-"response_modes_supported":["form_post","query","fragment"],
-"grant_types_supported":["authorization_code","client_credentials","refresh_token","implicit","password"],
-"subject_types_supported":["public"],
-"id_token_signing_alg_values_supported":["RS256"],
-"token_endpoint_auth_methods_supported":["client_secret_basic","client_secret_post"],
-"code_challenge_methods_supported":["plain","S256"]
-}
-
-{"issuer":"https://localhost:44399/two",
-"authorization_endpoint":"https://localhost:44399/two/connect/authorize",
-"token_endpoint":"https://localhost:44399/two/connect/token",
-"userinfo_endpoint":"https://localhost:44399/two/connect/userinfo",
-"end_session_endpoint":"https://localhost:44399/two/connect/endsession",
-"check_session_iframe":"https://localhost:44399/two/connect/checksession",
-"revocation_endpoint":"https://localhost:44399/two/connect/revocation",
-"introspection_endpoint":"https://localhost:44399/two/connect/introspect",
-"frontchannel_logout_supported":true,
-"frontchannel_logout_session_supported":true,
-"scopes_supported":["openid","profile","offline_access","api1"],
-"claims_supported":["sub","name","family_name","given_name","middle_name","nickname","preferred_username","profile","picture","website","gender","birthdate","zoneinfo","locale","updated_at"],
-"response_types_supported":["code","token","id_token","id_token token","code id_token","code token","code id_token token"],
-"response_modes_supported":["form_post","query","fragment"],
-"grant_types_supported":["authorization_code","client_credentials","refresh_token","implicit","password"],
-"subject_types_supported":["public"],
-"id_token_signing_alg_values_supported":["RS256"],
-"token_endpoint_auth_methods_supported":["client_secret_basic","client_secret_post"],
-"code_challenge_methods_supported":["plain","S256"]}
-
-
-https://localhost:44399/consent?returnUrl=%2Fconnect%2Fauthorize%2Fconsent%3Fclient_id%3Djs%26redirect_uri%3Dhttps%253A%252F%252Flocalhost%253A44399%252Fcallback.html%26response_type%3Did_token%2520token%26scope%3Dopenid%2520profile%2520api1%26state%3D8902207321e94c978e2a71b356b576e4%26nonce%3D2c8de8c871e54a73884ff7c6217620ea
-
-    public async Task<IEndpointResult> ProcessAsync(HttpContext context)
-	{
-		if (context.Request.Method != "GET")
-		{
-			_logger.LogWarning("Invalid HTTP method for authorize endpoint.");
-			return new StatusCodeResult(HttpStatusCode.MethodNotAllowed);
-		}
-
-		if (_matcher.IsAuthorizePath(context.Request.Path))
-		{
-			return await ProcessAuthorizeAsync(context);
-		}
-
-		if (_matcher.IsAuthorizeAfterLoginPath(context.Request.Path))
-		{
-			return await ProcessAuthorizeAfterLoginAsync(context);
-		}
-
-		if (_matcher.IsAuthorizeAfterConsentPath(context.Request.Path))
-		{
-			return await ProcessAuthorizeAfterConsentAsync(context);
-		}
-
-		return new StatusCodeResult(HttpStatusCode.NotFound);
-	}
-
-
- <VersionSuffix>rc20170328</VersionSuffix> 
- <AssemblyName>cloudscribe.IDS4Fork</AssemblyName>
- <PackageId>cloudscribe.IDS4Fork</PackageId>
+ 

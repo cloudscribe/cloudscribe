@@ -147,7 +147,8 @@ namespace Microsoft.Extensions.DependencyInjection
         //}
 
         
-
+        
+        /// this strategy to support views under /Sys really is a relic from mvc 5 not really needed now
         public static RazorViewEngineOptions AddCloudscribeViewLocationFormats(this RazorViewEngineOptions options)
         {
             options.ViewLocationFormats.Add("/Views/Sys/{1}/{0}" + RazorViewEngine.ViewExtension);
