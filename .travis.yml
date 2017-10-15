@@ -1,20 +1,46 @@
 language: csharp
 solution: cloudscribe.sln
-sudo: false
-dist: trusty
-mono: none
-dotnet: 2.0.0
-env:
-  global:
-    - DOTNET_SKIP_FIRST_TIME_EXPERIENCE: true
-    - DOTNET_CLI_TELEMETRY_OPTOUT: 1   
-os:
-  - linux
+
+before_install:
+  - if [ "$OS" = "linux" ]; then sudo apt-get install libunwind8; fi
+
+script:
+  - wget https://dot.net/v1/dotnet-install.sh && chmod +x dotnet-install.sh
+  - ./dotnet-install.sh --version 2.0.0 --install-dir $HOME/.dotnet
+  - $HOME/.dotnet/dotnet restore
+  - $HOME/.dotnet/dotnet build 
+  - $HOME/.dotnet/dotnet test -c Release ./test/cloudscribe.Core.Web.Test/cloudscribe.Core.Web.Test.csproj
+
+matrix:
+  include:
+    - os: linux
+      dist: trusty
+      env: OS=linux
+    - os: osx
+      osx_image: xcode9
+      env: OS=osx
+
+branches:
+  only:
+    - master
+
+
+
+# sudo: false
+# dist: trusty
+# mono: none
+# dotnet: 2.0.0
+# env:
+#  global:
+#    - DOTNET_SKIP_FIRST_TIME_EXPERIENCE: true
+#    - DOTNET_CLI_TELEMETRY_OPTOUT: 1   
+# os:
+#  - linux
 #  - osx
 # osx_image: xcode8.3
 
-script:
-  - if test "$TRAVIS_OS_NAME" == "linux"; then dotnet restore; fi
-  - if test "$TRAVIS_OS_NAME" == "osx"; then dotnet restore --disable-parallel; fi
-  - dotnet build -c Release
-  - dotnet test -c Release ./test/cloudscribe.Core.Web.Test/cloudscribe.Core.Web.Test.csproj
+# script:
+#  - if test "$TRAVIS_OS_NAME" == "linux"; then dotnet restore; fi
+#  - if test "$TRAVIS_OS_NAME" == "osx"; then dotnet restore --disable-parallel; fi
+#  - dotnet build -c Release
+#  - dotnet test -c Release ./test/cloudscribe.Core.Web.Test/cloudscribe.Core.Web.Test.csproj
