@@ -46,6 +46,7 @@ utm_content: Used to differentiate similar content, or links within the same ad.
 
 
 https://www.cloudscribe.com/?utm_source=trailwise.org.uk&amp;utm_medium=referral&amp;utm_campaign=poweredby
+https://www.cloudscribe.com/?utm_source=vsix&amp;utm_medium=referral&amp;utm_campaign=vsix
 
 ### server side tracking
 
@@ -207,6 +208,8 @@ eventLabel	text	no	Useful for categorizing events (e.g. 'Fall Campaign')
 eventValue	integer	no	A numeric value associated with the event (e.g. 42)
 
 ## Setting Goals
+
+https://www.google.com/search?q=setting+goals+in+google+analytics
 
 https://blog.kissmetrics.com/critical-goal-types/
 

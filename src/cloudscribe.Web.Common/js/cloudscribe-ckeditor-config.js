@@ -7,6 +7,7 @@
 	//config.justifyClasses = [ 'AlignLeft', 'AlignCenter', 'AlignRight', 'AlignJustify' ];
 	//config.indentClasses = ['Indent1', 'Indent2', 'Indent3'];
     config.extraPlugins = 'oembed,cloudscribe-filedrop,sourcedialog,codesnippet,autosave,notification';
+    config.autosave = {saveDetectionSelectors : "a[href^='javascript:__doPostBack'][id*='Save'],a[id*='Cancel'],button[id*='Save']"};
 	
     config.removePlugins = 'scayt,wsc';
 	//config.oembed_maxWidth = '560';
