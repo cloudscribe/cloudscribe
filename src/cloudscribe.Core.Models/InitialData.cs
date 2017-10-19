@@ -19,7 +19,7 @@ namespace cloudscribe.Core.Models
             newSite.SiteName = "Sample Site";
             newSite.AliasId = "s1";
             newSite.IsServerAdminSite = true;
-            newSite.Theme = "default";
+            newSite.Theme = "";
             newSite.AllowNewRegistration = true;
             newSite.AutoCreateLdapUserOnFirstLogin = true;
             newSite.ReallyDeleteUsers = true;

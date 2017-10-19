@@ -40,6 +40,9 @@ Marketing and other content centric websites that are not applications per se, p
 
 ### Related links
 
+Ask HN: Anyone getting sick of all the 'web apps'? aka spa style apps
+https://news.ycombinator.com/item?id=15506763
+
 http://stackoverflow.com/questions/21097592/mixing-angular-and-asp-net-mvc-web-api
 
 http://stackoverflow.com/questions/20208388/integrating-angularjs-1-2-into-existing-mvc-site

@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2014-10-26
-// Last Modified:			2017-09-15
+// Last Modified:			2017-10-19
 // 
 
 using cloudscribe.Core.Models;
@@ -360,8 +360,7 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
 
             if (multiTenantOptions.Mode == MultiTenantMode.FolderName)
             {
-                //https://github.com/joeaudette/cloudscribe.StarterKits/issues/27
-                model.SiteFolderName = model.SiteFolderName.ToLowerInvariant();
+                
 
                 if (string.IsNullOrEmpty(model.SiteFolderName))
                 {
@@ -374,6 +373,11 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
                                });
                     ModelState.AddModelError("foldererror", sr["Folder name is required."]);
                     return View(model);
+                }
+                else
+                {
+                    //https://github.com/joeaudette/cloudscribe.StarterKits/issues/27
+                    model.SiteFolderName = model.SiteFolderName.ToLowerInvariant();
                 }
 
                 bool folderAvailable = await siteManager.FolderNameIsAvailable(newSite.Id, model.SiteFolderName);

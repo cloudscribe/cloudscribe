@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2015-07-22
-// Last Modified:			2016-12-07
+// Last Modified:			2017-10-19
 // 
 
 using cloudscribe.Core.Models;
@@ -240,9 +240,8 @@ namespace cloudscribe.Core.Web.Components
 
         public async Task<SiteSettings> CreateNewSite(bool isServerAdminSite)
         {
-            var newSite = new SiteSettings();
-            newSite.Id = Guid.NewGuid();
-            newSite.SiteName = "Sample Site";
+            var newSite = InitialData.BuildInitialSite();
+            newSite.Theme = setupOptions.FirstSiteTheme;
             newSite.IsServerAdminSite = isServerAdminSite;
             var siteNumber = 1 + await queries.CountOtherSites(Guid.Empty);
             newSite.AliasId = $"s{siteNumber}";
@@ -256,8 +255,11 @@ namespace cloudscribe.Core.Web.Components
         {
             if (newSite == null) { throw new ArgumentNullException("you must pass in an instance of ISiteSettings"); }
             
-            newSite.Theme = setupOptions.DefaultLayout;
-            
+            if(string.IsNullOrEmpty(newSite.Theme))
+            {
+                newSite.Theme = setupOptions.DefaultTheme;
+            }
+           
             await commands.Create(newSite, CancellationToken.None);
 
             if(multiTenantOptions.Mode == MultiTenantMode.FolderName)

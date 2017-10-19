@@ -120,6 +120,8 @@ https://identityserver.github.io/Documentation/docsv2/overview/jsGettingStarted.
 https://leastprivilege.com/2016/06/01/identitymodel-openid-connect-oauth-2-0-client-library-for-mobilenative-applications/
 https://github.com/IdentityModel/IdentityModel.OidcClient.Samples
 
+https://leastprivilege.com/2016/01/17/which-openid-connectoauth-2-o-flow-is-the-right-one/
+
 https://stackoverflow.com/questions/41687800/connecting-xamarin-client-to-identity-server4
 
 https://developer.xamarin.com/guides/xamarin-forms/cloud-services/authentication/oauth/
