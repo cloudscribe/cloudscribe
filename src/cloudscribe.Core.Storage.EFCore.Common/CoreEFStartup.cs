@@ -11,6 +11,7 @@ using cloudscribe.Core.Models.Geography;
 using cloudscribe.Core.Storage.EFCore.Common;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Options;
 using System;
 using System.Threading.Tasks;
 
@@ -22,36 +23,20 @@ namespace Microsoft.AspNetCore.Hosting // so it will show up in startup without 
 
         public static async Task InitializeDatabaseAsync(IServiceProvider serviceProvider)
         {
-            //var scopeFactory = serviceProvider.GetRequiredService<IServiceScopeFactory>();
-            //using (var scope = scopeFactory.CreateScope())
-            //{
-            //    var db = scope.ServiceProvider.GetService<ICoreDbContext>();
-            //    await db.Database.MigrateAsync();
-            //    await EnsureData(db);
-
-            //}
-
-            //using (var serviceScope = serviceProvider.CreateScope())
-            //{
-            //    var db = serviceScope.ServiceProvider.GetService<ICoreDbContext>();
-            //    await db.Database.MigrateAsync();
-            //    await EnsureData(db);
-            //}
-
+            var siteConfigAccessor = serviceProvider.GetService<IOptions<SiteConfigOptions>>();
             var db = serviceProvider.GetService<ICoreDbContext>();
             await db.Database.MigrateAsync();
-            await EnsureData(db);
-
+            await EnsureData(db, siteConfigAccessor.Value);
 
         }
 
         private static async Task EnsureData(
-            ICoreDbContext db
+            ICoreDbContext db,
+            SiteConfigOptions config
             )
         {
             int rowsAffected = 0;
-
-
+            
             int count = await db.Countries.CountAsync<GeoCountry>();
             if(count == 0)
             {
@@ -80,6 +65,7 @@ namespace Microsoft.AspNetCore.Hosting // so it will show up in startup without 
             {
                 // create first site
                 newSite = InitialData.BuildInitialSite();
+                newSite.Theme = config.FirstSiteTheme;
                 
                 db.Sites.Add(newSite);
                 

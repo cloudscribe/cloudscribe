@@ -2,12 +2,13 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2016-05-15
-// Last Modified:			2017-07-30
+// Last Modified:			2017-10-19
 // 
 
 using cloudscribe.Core.Models;
 using cloudscribe.Core.Models.Geography;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Options;
 using NoDb;
 using System;
 using System.Threading.Tasks;
@@ -18,30 +19,32 @@ namespace Microsoft.AspNetCore.Hosting // so it will show up in startup without 
     {
         public static async Task InitializeDataAsync(IServiceProvider serviceProvider)
         {
-            using (var serviceScope = serviceProvider.GetRequiredService<IServiceScopeFactory>().CreateScope())
-            {
-                var siteQueries = serviceScope.ServiceProvider.GetService<ISiteQueries>();
-                var siteCommands = serviceScope.ServiceProvider.GetService<ISiteCommands>();
-                var userQueries = serviceScope.ServiceProvider.GetService<IUserQueries>();
-                var userCommands = serviceScope.ServiceProvider.GetService<IUserCommands>();
-                var geoQueries = serviceScope.ServiceProvider.GetService<IGeoQueries>();
-                var geoCommands = serviceScope.ServiceProvider.GetService<IGeoCommands>();
-                var roleQueries = serviceScope.ServiceProvider.GetService<IBasicQueries<SiteRole>>();
-                //var projectResolver = serviceScope.ServiceProvider.GetService<IProjectResolver>();
-                var userBasic = serviceScope.ServiceProvider.GetService<IBasicQueries<SiteUser>>();
+            
+            var siteQueries = serviceProvider.GetService<ISiteQueries>();
+            var siteCommands = serviceProvider.GetService<ISiteCommands>();
+            var userQueries = serviceProvider.GetService<IUserQueries>();
+            var userCommands = serviceProvider.GetService<IUserCommands>();
+            var geoQueries = serviceProvider.GetService<IGeoQueries>();
+            var geoCommands = serviceProvider.GetService<IGeoCommands>();
+            var roleQueries = serviceProvider.GetService<IBasicQueries<SiteRole>>();
+            //var projectResolver = serviceProvider.GetService<IProjectResolver>();
+            var userBasic = serviceProvider.GetService<IBasicQueries<SiteUser>>();
 
-                await EnsureData(
-                    siteQueries,
-                    siteCommands,
-                    userQueries,
-                    userCommands,
-                    geoQueries,
-                    geoCommands,
-                    roleQueries,
-                    userBasic
-                    );
+            var siteConfigAccessor = serviceProvider.GetService<IOptions<SiteConfigOptions>>();
 
-            }
+            await EnsureData(
+                siteQueries,
+                siteCommands,
+                userQueries,
+                userCommands,
+                geoQueries,
+                geoCommands,
+                roleQueries,
+                userBasic,
+                siteConfigAccessor.Value
+                );
+
+            
         }
 
 
@@ -53,7 +56,8 @@ namespace Microsoft.AspNetCore.Hosting // so it will show up in startup without 
             IGeoQueries geoQueries,
             IGeoCommands geoCommands,
             IBasicQueries<SiteRole> roleQueries,
-            IBasicQueries<SiteUser> userBasic
+            IBasicQueries<SiteUser> userBasic,
+            SiteConfigOptions config
             
             )
         {
@@ -80,6 +84,7 @@ namespace Microsoft.AspNetCore.Hosting // so it will show up in startup without 
             {
                 // create first site
                 newSite = InitialData.BuildInitialSite();
+                newSite.Theme = config.FirstSiteTheme;
                 await siteCommands.Create(newSite);
                 siteId = newSite.Id;
                 
