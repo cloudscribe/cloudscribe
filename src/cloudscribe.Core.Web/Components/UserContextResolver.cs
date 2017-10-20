@@ -35,5 +35,27 @@ namespace cloudscribe.Core.Web.Components
             
         }
 
+        public async Task<IUserContext> GetUserById(string userId, CancellationToken cancellationToken = default(CancellationToken))
+        {
+            cancellationToken.ThrowIfCancellationRequested();
+            
+            var user = await userManager.FindByIdAsync(userId);
+            if (user == null) return null;
+
+            return new UserContext(user);
+
+        }
+
+        public async Task<IUserContext> GetUserByEmail(string emailAddress, CancellationToken cancellationToken = default(CancellationToken))
+        {
+            cancellationToken.ThrowIfCancellationRequested();
+
+            var user = await userManager.FindByEmailAsync(emailAddress);
+            if (user == null) return null;
+
+            return new UserContext(user);
+
+        }
+
     }
 }
