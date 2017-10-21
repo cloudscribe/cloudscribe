@@ -11,7 +11,7 @@ env:
 os:
   - linux
 
- script:
+script:
   - dotnet restore
   - dotnet build -c Release
   - dotnet test -c Release ./test/cloudscribe.Core.Web.Test/cloudscribe.Core.Web.Test.csproj
