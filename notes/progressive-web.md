@@ -16,3 +16,4 @@ https://alistapart.com/article/yes-that-web-project-should-be-a-pwa
 
 https://joreteg.com/blog/betting-on-the-web
 
+https://medium.com/samsung-internet-dev/6-myths-of-progressive-web-apps-81e28ca9d2b1

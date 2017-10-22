@@ -1,4 +1,8 @@
 
+
+https://medium.com/@mikeal/react-is-the-new-dojo-18bd9059378f
+
+
 https://medium.com/unicorn-supplies/angular-vs-react-vs-vue-a-2017-comparison-c5c52d620176
 
 https://www.robinwieruch.de/learn-react-before-using-redux/
