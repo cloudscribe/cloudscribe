@@ -86,7 +86,7 @@ namespace Microsoft.Extensions.Configuration // so we don't need another using i
             {
                 using (var inputStream = inputFile.CreateReadStream())
                 {
-                    using (var outputStream = File.OpenWrite(inputFile.PhysicalPath + ".gz"))
+                    using (var outputStream = File.Open(inputFile.PhysicalPath + ".gz", FileMode.Create))
                     {
                         using (var gs = new GZipStream(outputStream, CompressionMode.Compress))
                         {
@@ -138,6 +138,11 @@ namespace Microsoft.Extensions.Configuration // so we don't need another using i
                         var gzfileInfo = fileProvider.GetFileInfo(subpath + ".gz");
                         if (gzfileInfo != null && gzfileInfo.Exists)
                         {
+                            if(gzfileInfo.LastModified < fileInfo.LastModified)
+                            {
+                                return TryAutoCreateGzip(subpath, fileProvider, fileInfo);
+                            }
+
                             return gzfileInfo;
                         }
                         else
