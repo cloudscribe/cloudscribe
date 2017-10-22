@@ -45,11 +45,11 @@
     </footer>
     @RenderSection("Toolbar", required: false)
     <environment names="Development">
-        <script src="~/js/jquery.js" cs-resolve-theme-resource="true" cs-shared-theme="true" cs-tenant="@Tenant"></script>
+        <script src="~/js/jquery.js" cs-resolve-theme-resource="false" cs-shared-theme="true" cs-tenant="@Tenant"></script>
         <script src="~/js/bootstrap.js" cs-resolve-theme-resource="true" cs-shared-theme="true" cs-tenant="@Tenant"></script>
     </environment>
     <environment names="Staging,Production">
-        <script src="~/js/jquery.min.js" cs-resolve-theme-resource="true" cs-shared-theme="true" cs-tenant="@Tenant"></script>
+        <script src="~/js/jquery.min.js" asp-append-version="true"></script>
         <script src="~/js/bootstrap.min.js" cs-resolve-theme-resource="true" cs-shared-theme="true" cs-tenant="@Tenant"></script>
     </environment>
     @RenderSection("Bottom", required: false)

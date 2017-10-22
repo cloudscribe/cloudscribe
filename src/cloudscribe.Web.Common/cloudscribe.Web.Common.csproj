@@ -28,12 +28,11 @@
     <PackageReference Include="Microsoft.Extensions.FileProviders.Embedded" Version="2.0.*" />
     <PackageReference Include="Microsoft.Extensions.Options" Version="2.0.*" />
     <PackageReference Include="Microsoft.Extensions.Options.ConfigurationExtensions" Version="2.0.*" />
+    <PackageReference Include="Microsoft.Extensions.FileProviders.Physical" Version="2.0.*" />
     <PackageReference Include="System.Text.Encodings.Web" Version="4.4.*" />
     <PackageReference Include="NodaTime" Version="2.2.*" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Properties\" />
-  </ItemGroup>
+ 
 
 </Project>

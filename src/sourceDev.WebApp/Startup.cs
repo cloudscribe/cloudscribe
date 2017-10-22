@@ -27,12 +27,24 @@ namespace sourceDev.WebApp
         {
             Configuration = configuration;
             Environment = env;
+
+            DisableIdentityServer = Configuration.GetValue<bool>("AppSettings:DisableIdentityServer");
+            IdentityServerX509CertificateThumbprintName = Configuration.GetValue<string>("AppSettings:IdentityServerX509CertificateThumbprintName");
+            if (!DisableIdentityServer && Environment.IsProduction())
+            {
+                if (string.IsNullOrEmpty(IdentityServerX509CertificateThumbprintName))
+                {
+                    DisableIdentityServer = true;
+                }
+            }
         }
 
         private IHostingEnvironment Environment;
         public IConfiguration Configuration { get; }
 
-        public bool SslIsAvailable = false;
+        public bool SslIsAvailable { get; set; }
+        public bool DisableIdentityServer { get; set; }
+        public string IdentityServerX509CertificateThumbprintName { get; set; }
 
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
@@ -216,12 +228,12 @@ namespace sourceDev.WebApp
             
             app.UseForwardedHeaders();
 
-            app.UseStaticFiles();
-            //app.UseStaticFiles(new StaticFileOptions()
-            //{
-            //    OnPrepareResponse = GzipMappingFileProvider.OnPrepareResponse,
-            //    FileProvider = new GzipMappingFileProvider(Environment.WebRootFileProvider)
-            //});
+            //app.UseStaticFiles();
+            app.UseStaticFiles(new StaticFileOptions()
+            {
+                OnPrepareResponse = GzipMappingFileProvider.OnPrepareResponse,
+                FileProvider = new GzipMappingFileProvider(Environment.WebRootFileProvider)
+            });
 
             // we don't need session
             //app.UseSession();
@@ -238,9 +250,12 @@ namespace sourceDev.WebApp
                     multiTenantOptions,
                     SslIsAvailable
                     );
-            
-            app.UseIdentityServer();
-            
+
+            if (!DisableIdentityServer)
+            {
+                app.UseIdentityServer();
+            }
+                
             UseMvc(app, multiTenantOptions.Mode == cloudscribe.Core.Models.MultiTenantMode.FolderName);
 
 
@@ -345,11 +360,15 @@ namespace sourceDev.WebApp
                     services.AddCloudscribeLoggingNoDbStorage(Configuration);
                     services.AddCloudscribeKvpNoDbStorage();
 
-                    services.AddIdentityServerConfiguredForCloudscribe()
-                        .AddCloudscribeCoreNoDbIdentityServerStorage()
-                        .AddCloudscribeIdentityServerIntegrationMvc()
-                        .AddDeveloperSigningCredential()
-                        ;
+                    if (!DisableIdentityServer)
+                    {
+                        services.AddIdentityServerConfiguredForCloudscribe()
+                            .AddCloudscribeCoreNoDbIdentityServerStorage()
+                            .AddCloudscribeIdentityServerIntegrationMvc()
+                            .AddDeveloperSigningCredential()
+                            ;
+                    }
+                        
 
                     break;
 
@@ -364,11 +383,16 @@ namespace sourceDev.WebApp
                             services.AddCloudscribeLoggingEFStoragePostgreSql(pgConnection);
                             services.AddCloudscribeKvpEFStoragePostgreSql(pgConnection);
 
-                            services.AddIdentityServerConfiguredForCloudscribe()
-                                .AddCloudscribeCoreEFIdentityServerStoragePostgreSql(pgConnection)
-                                .AddCloudscribeIdentityServerIntegrationMvc()
-                                .AddDeveloperSigningCredential()
+                            if (!DisableIdentityServer)
+                            {
+                                services.AddIdentityServerConfiguredForCloudscribe()
+                                    .AddCloudscribeCoreEFIdentityServerStoragePostgreSql(pgConnection)
+                                    .AddCloudscribeIdentityServerIntegrationMvc()
+                                    .AddDeveloperSigningCredential()
                                 ;
+                            }
+
+                            
 
                             break;
 
@@ -378,11 +402,16 @@ namespace sourceDev.WebApp
                             services.AddCloudscribeLoggingEFStorageMySQL(mysqlConnection);
                             services.AddCloudscribeKvpEFStorageMySql(mysqlConnection);
 
-                            services.AddIdentityServerConfiguredForCloudscribe()
-                                .AddCloudscribeCoreEFIdentityServerStorageMySql(mysqlConnection)
-                                .AddCloudscribeIdentityServerIntegrationMvc()
-                                .AddDeveloperSigningCredential()
-                                ;
+                            if (!DisableIdentityServer)
+                            {
+                                services.AddIdentityServerConfiguredForCloudscribe()
+                                    .AddCloudscribeCoreEFIdentityServerStorageMySql(mysqlConnection)
+                                    .AddCloudscribeIdentityServerIntegrationMvc()
+                                    .AddDeveloperSigningCredential()
+                                    ;
+                            }
+
+                            
 
                             break;
 
@@ -393,11 +422,16 @@ namespace sourceDev.WebApp
                             services.AddCloudscribeLoggingEFStorageMSSQL(connectionString);
                             services.AddCloudscribeKvpEFStorageMSSQL(connectionString);
 
-                            services.AddIdentityServerConfiguredForCloudscribe()
-                                .AddCloudscribeCoreEFIdentityServerStorageMSSQL(connectionString)
-                                .AddCloudscribeIdentityServerIntegrationMvc()
-                                .AddDeveloperSigningCredential()
-                                ;
+                            if (!DisableIdentityServer)
+                            {
+                                services.AddIdentityServerConfiguredForCloudscribe()
+                                    .AddCloudscribeCoreEFIdentityServerStorageMSSQL(connectionString)
+                                    .AddCloudscribeIdentityServerIntegrationMvc()
+                                    .AddDeveloperSigningCredential()
+                                    ;
+                            }
+
+                            
 
                             break;
                     }
