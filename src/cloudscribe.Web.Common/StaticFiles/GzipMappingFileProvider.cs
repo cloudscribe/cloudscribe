@@ -6,16 +6,12 @@
 using Microsoft.AspNetCore.StaticFiles;
 using Microsoft.Extensions.FileProviders;
 using Microsoft.Extensions.FileProviders.Composite;
+using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Primitives;
 using Microsoft.Net.Http.Headers;
-using System;
 using System.Collections.Generic;
 using System.IO;
 using System.IO.Compression;
-using System.Linq;
-
-// https://gist.github.com/PinpointTownes/ac7059733afcf91ec319
-// https://stackoverflow.com/questions/7343465/compression-decompression-string-with-c-sharp
 
 
 namespace Microsoft.Extensions.Configuration // so we don't need another using in startup
@@ -31,72 +27,89 @@ namespace Microsoft.Extensions.Configuration // so we don't need another using i
     /// Usage:
     ///   app.UseStaticFiles(new StaticFileOptions()
     ///   {
-    ///       OnPrepareResponse = GzipMappingFileProvider.OnPrepareResponse,
-    ///       FileProvider = new GzipMappingFileProvider(Environment.WebRootFileProvider)
-    ///   });
+    ///        OnPrepareResponse = GzipMappingFileProvider.OnPrepareResponse,
+    ///        FileProvider = new GzipMappingFileProvider(
+    ///            loggerFactory,
+    ///            true,
+    ///            Environment.WebRootFileProvider
+    ///           )
+    ///  });
     /// 
     /// 
     /// </summary>
     public class GzipMappingFileProvider : IFileProvider
     {
         private readonly IFileProvider[] _fileProviders;
+        private ILogger _log = null;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="CompositeFileProvider" /> class using a collection of file provider.
         /// </summary>
         /// <param name="fileProviders">The collection of <see cref="IFileProvider" /></param>
-        public GzipMappingFileProvider(params IFileProvider[] fileProviders)
+        public GzipMappingFileProvider(
+            ILoggerFactory loggerFactory = null,
+            bool autoGenGzip = false,
+            params IFileProvider[] fileProviders
+            
+            )
         {
             _fileProviders = fileProviders ?? new IFileProvider[0];
+            if(loggerFactory != null)
+            {
+                _log = loggerFactory.CreateLogger<GzipMappingFileProvider>();
+            }
         }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="CompositeFileProvider" /> class using a collection of file provider.
         /// </summary>
         /// <param name="fileProviders">The collection of <see cref="IFileProvider" /></param>
-        public GzipMappingFileProvider(IEnumerable<IFileProvider> fileProviders)
-        {
-            if (fileProviders == null)
-            {
-                throw new ArgumentNullException(nameof(fileProviders));
-            }
-            _fileProviders = fileProviders.ToArray();
-        }
+        //public GzipMappingFileProvider(IEnumerable<IFileProvider> fileProviders)
+        //{
+        //    if (fileProviders == null)
+        //    {
+        //        throw new ArgumentNullException(nameof(fileProviders));
+        //    }
+        //    _fileProviders = fileProviders.ToArray();
+        //}
 
         private IFileInfo TryAutoCreateGzip(string subpath, IFileProvider fileProvider, IFileInfo inputFile)
         {
-            if (fileProvider is PhysicalFileProvider && inputFile != null)
+            if(inputFile == null) { return inputFile; }
+            if(!(fileProvider is PhysicalFileProvider)) { return inputFile; }
+            if (inputFile.Length <= 10240) { return inputFile; }
+
+            try
             {
-                if (inputFile.Length <= 10240) { return inputFile; }
-
-                try
+                using (var inputStream = inputFile.CreateReadStream())
                 {
-                    using (var inputStream = inputFile.CreateReadStream())
+                    using (var outputStream = File.OpenWrite(inputFile.PhysicalPath + ".gz"))
                     {
-                        using (var outputStream = File.OpenWrite(inputFile.PhysicalPath + ".gz"))
+                        using (var gs = new GZipStream(outputStream, CompressionMode.Compress))
                         {
-                            using (var gs = new GZipStream(outputStream, CompressionMode.Compress))
-                            {
-                                inputStream.CopyTo(gs);
-                            }
-
+                            inputStream.CopyTo(gs);
                         }
-                    }
 
-                    // return the new fileInfo
-                    var gzfileInfo = fileProvider.GetFileInfo(subpath + ".gz");
-                    if (gzfileInfo != null && gzfileInfo.Exists)
-                    {
-                        return gzfileInfo;
                     }
-
                 }
-                catch (IOException)
+
+                // return the new fileInfo
+                var gzfileInfo = fileProvider.GetFileInfo(subpath + ".gz");
+                if (gzfileInfo != null && gzfileInfo.Exists)
                 {
-                    //var e = ex; // temporary for a breakpoint
+                    return gzfileInfo;
                 }
 
             }
+            catch (IOException ex)
+            {
+                if(_log != null)
+                {
+                    _log.LogError(ex.Message + " " + ex.StackTrace);
+                }
+            }
+
+            
 
             return inputFile;
         }
