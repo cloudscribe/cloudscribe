@@ -41,6 +41,7 @@ namespace Microsoft.Extensions.Configuration // so we don't need another using i
     {
         private readonly IFileProvider[] _fileProviders;
         private ILogger _log = null;
+        private bool _autoGenGzip;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="CompositeFileProvider" /> class using a collection of file provider.
@@ -58,6 +59,7 @@ namespace Microsoft.Extensions.Configuration // so we don't need another using i
             {
                 _log = loggerFactory.CreateLogger<GzipMappingFileProvider>();
             }
+            _autoGenGzip = autoGenGzip;
         }
 
         /// <summary>
@@ -76,6 +78,7 @@ namespace Microsoft.Extensions.Configuration // so we don't need another using i
         private IFileInfo TryAutoCreateGzip(string subpath, IFileProvider fileProvider, IFileInfo inputFile)
         {
             if(inputFile == null) { return inputFile; }
+            if(!_autoGenGzip) { return inputFile; }
             if(!(fileProvider is PhysicalFileProvider)) { return inputFile; }
             if (inputFile.Length <= 10240) { return inputFile; }
 
