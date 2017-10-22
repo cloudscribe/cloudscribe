@@ -217,6 +217,11 @@ namespace sourceDev.WebApp
             app.UseForwardedHeaders();
 
             app.UseStaticFiles();
+            //app.UseStaticFiles(new StaticFileOptions()
+            //{
+            //    OnPrepareResponse = GzipMappingFileProvider.OnPrepareResponse,
+            //    FileProvider = new GzipMappingFileProvider(Environment.WebRootFileProvider)
+            //});
 
             // we don't need session
             //app.UseSession();
