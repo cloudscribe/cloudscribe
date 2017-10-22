@@ -1,11 +1,22 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿// Author:                  Joe Audette
+// Created:                 2017-10-22
+// Last Modified:           2017-10-22
+// based on https://github.com/aspnet/FileSystem/blob/dev/src/FS.Composite/CompositeFileProvider.cs
+
+using Microsoft.AspNetCore.StaticFiles;
+using Microsoft.Extensions.FileProviders;
 using Microsoft.Extensions.FileProviders.Composite;
 using Microsoft.Extensions.Primitives;
-using Microsoft.Extensions.FileProviders;
-using Microsoft.AspNetCore.StaticFiles;
 using Microsoft.Net.Http.Headers;
+using System;
+using System.Collections.Generic;
+using System.IO;
+using System.IO.Compression;
+using System.Linq;
+
+// https://gist.github.com/PinpointTownes/ac7059733afcf91ec319
+// https://stackoverflow.com/questions/7343465/compression-decompression-string-with-c-sharp
+
 
 namespace Microsoft.Extensions.Configuration // so we don't need another using in startup
 {
@@ -15,6 +26,8 @@ namespace Microsoft.Extensions.Configuration // so we don't need another using i
     /// If there is a request for a js or css file this will check if there exists the same file with .gz
     /// and if so that will be returned instead.
     /// 
+    /// To be even more usefull, added logic to try to auto create the .gz file if it does not exist
+    /// 
     /// Usage:
     ///   app.UseStaticFiles(new StaticFileOptions()
     ///   {
@@ -22,7 +35,7 @@ namespace Microsoft.Extensions.Configuration // so we don't need another using i
     ///       FileProvider = new GzipMappingFileProvider(Environment.WebRootFileProvider)
     ///   });
     /// 
-    /// forked from https://github.com/aspnet/FileSystem/blob/dev/src/FS.Composite/CompositeFileProvider.cs
+    /// 
     /// </summary>
     public class GzipMappingFileProvider : IFileProvider
     {
@@ -50,6 +63,46 @@ namespace Microsoft.Extensions.Configuration // so we don't need another using i
             _fileProviders = fileProviders.ToArray();
         }
 
+        private IFileInfo TryAutoCreateGzip(string subpath, IFileProvider fileProvider, IFileInfo inputFile)
+        {
+            if (fileProvider is PhysicalFileProvider && inputFile != null)
+            {
+                if (inputFile.Length <= 10240) { return inputFile; }
+
+                try
+                {
+                    using (var inputStream = inputFile.CreateReadStream())
+                    {
+                        using (var outputStream = File.OpenWrite(inputFile.PhysicalPath + ".gz"))
+                        {
+                            using (var gs = new GZipStream(outputStream, CompressionMode.Compress))
+                            {
+                                inputStream.CopyTo(gs);
+                            }
+
+                        }
+                    }
+
+                    // return the new fileInfo
+                    var gzfileInfo = fileProvider.GetFileInfo(subpath + ".gz");
+                    if (gzfileInfo != null && gzfileInfo.Exists)
+                    {
+                        return gzfileInfo;
+                    }
+
+                }
+                catch (IOException)
+                {
+                    //var e = ex; // temporary for a breakpoint
+                }
+
+            }
+
+            return inputFile;
+        }
+
+        #region IFileProvider
+
         /// <summary>
         /// Locates a file at the given path.
         /// </summary>
@@ -71,6 +124,10 @@ namespace Microsoft.Extensions.Configuration // so we don't need another using i
                         {
                             return gzfileInfo;
                         }
+                        else
+                        {
+                            return TryAutoCreateGzip(subpath,fileProvider, fileInfo);
+                        }
 
                     }
 
@@ -79,7 +136,7 @@ namespace Microsoft.Extensions.Configuration // so we don't need another using i
             }
             return new NotFoundFileInfo(subpath);
         }
-
+        
         /// <summary>
         /// Enumerate a directory at the given path, if any.
         /// </summary>
@@ -150,5 +207,7 @@ namespace Microsoft.Extensions.Configuration // so we don't need another using i
             }
   
         }
+
+        #endregion
     }
 }

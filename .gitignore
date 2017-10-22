@@ -207,3 +207,4 @@ src/cloudscribe.Logging.EF/appsettings.local.overrides.json
 **/appsettings.local.overrides.json
 src/sourceDev.WebApp/wwwroot/images/main-header-image-13.jpg
 *.jpg
+src/sourceDev.WebApp/wwwroot/css/site.min.css.gz
