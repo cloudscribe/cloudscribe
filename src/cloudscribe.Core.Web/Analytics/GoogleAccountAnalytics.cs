@@ -46,7 +46,7 @@ namespace cloudscribe.Core.Web.Analytics
                 {
                     var props = _analyticsApi.GetStandardProps(_contextAccessor.HttpContext);
                     var dimensionAndMetrics = new List<KeyValuePair<string, string>>();
-                    dimensionAndMetrics.Add(new KeyValuePair<string, string>("cd" + _options.LoginRegisterSourceDimenstionIdex.ToInvariantString(), source));
+                    dimensionAndMetrics.Add(new KeyValuePair<string, string>("cd" + _options.LoginRegisterSourceDimenstionIndex.ToInvariantString(), source));
                     dimensionAndMetrics.Add(new KeyValuePair<string, string>("cm" + _options.LoginSubmitMetricIndex.ToInvariantString(), "1"));
 
                     await _analyticsApi.TrackEvent(
@@ -69,7 +69,7 @@ namespace cloudscribe.Core.Web.Analytics
                     e.Category = _options.LoginRegisterEventCategory;
                     e.Action = _options.LoginSubmitEventAction;
                     e.Label = source;
-                    e.Fields.Add(new KeyValuePair<string, string>("dimension" + _options.LoginRegisterSourceDimenstionIdex.ToInvariantString(), source));
+                    e.Fields.Add(new KeyValuePair<string, string>("dimension" + _options.LoginRegisterSourceDimenstionIndex.ToInvariantString(), source));
                     e.Fields.Add(new KeyValuePair<string, string>("metric" + _options.LoginSubmitMetricIndex.ToInvariantString(), "1"));
 
                     _analyticsHelper.AddEvent(e);
@@ -88,7 +88,7 @@ namespace cloudscribe.Core.Web.Analytics
                 {
                     var props = _analyticsApi.GetStandardProps(_contextAccessor.HttpContext);
                     var dimensionAndMetrics = new List<KeyValuePair<string, string>>();
-                    dimensionAndMetrics.Add(new KeyValuePair<string, string>("cd" + _options.LoginRegisterSourceDimenstionIdex.ToInvariantString(), source));
+                    dimensionAndMetrics.Add(new KeyValuePair<string, string>("cd" + _options.LoginRegisterSourceDimenstionIndex.ToInvariantString(), source));
                     dimensionAndMetrics.Add(new KeyValuePair<string, string>("cm" + _options.LoginFailMetricIndex.ToInvariantString(), "1"));
 
                     await _analyticsApi.TrackEvent(
@@ -112,7 +112,7 @@ namespace cloudscribe.Core.Web.Analytics
                     e.Action = _options.LoginFailEventAction;
                     e.Label = source;
                     e.Value = reason;
-                    e.Fields.Add(new KeyValuePair<string, string>("dimension" + _options.LoginRegisterSourceDimenstionIdex.ToInvariantString(), source));
+                    e.Fields.Add(new KeyValuePair<string, string>("dimension" + _options.LoginRegisterSourceDimenstionIndex.ToInvariantString(), source));
                     e.Fields.Add(new KeyValuePair<string, string>("metric" + _options.LoginFailMetricIndex.ToInvariantString(), "1"));
 
                     _analyticsHelper.AddEvent(e);
@@ -132,7 +132,7 @@ namespace cloudscribe.Core.Web.Analytics
                 {
                     var props = _analyticsApi.GetStandardProps(_contextAccessor.HttpContext);
                     var dimensionAndMetrics = new List<KeyValuePair<string, string>>();
-                    dimensionAndMetrics.Add(new KeyValuePair<string, string>("cd" + _options.LoginRegisterSourceDimenstionIdex.ToInvariantString(), source));
+                    dimensionAndMetrics.Add(new KeyValuePair<string, string>("cd" + _options.LoginRegisterSourceDimenstionIndex.ToInvariantString(), source));
                     dimensionAndMetrics.Add(new KeyValuePair<string, string>("cm" + _options.RegisterSubmitMetricIndex.ToInvariantString(), "1"));
 
                     await _analyticsApi.TrackEvent(
@@ -155,7 +155,7 @@ namespace cloudscribe.Core.Web.Analytics
                     e.Category = _options.LoginRegisterEventCategory;
                     e.Action = _options.RegisterSubmitEventAction;
                     e.Label = source;
-                    e.Fields.Add(new KeyValuePair<string, string>("dimension" + _options.LoginRegisterSourceDimenstionIdex.ToInvariantString(), source));
+                    e.Fields.Add(new KeyValuePair<string, string>("dimension" + _options.LoginRegisterSourceDimenstionIndex.ToInvariantString(), source));
                     e.Fields.Add(new KeyValuePair<string, string>("metric" + _options.RegisterSubmitMetricIndex.ToInvariantString(), "1"));
 
                     _analyticsHelper.AddEvent(e);
@@ -175,7 +175,7 @@ namespace cloudscribe.Core.Web.Analytics
                 {
                     var props = _analyticsApi.GetStandardProps(_contextAccessor.HttpContext);
                     var dimensionAndMetrics = new List<KeyValuePair<string, string>>();
-                    dimensionAndMetrics.Add(new KeyValuePair<string, string>("cd" + _options.LoginRegisterSourceDimenstionIdex.ToInvariantString(), source));
+                    dimensionAndMetrics.Add(new KeyValuePair<string, string>("cd" + _options.LoginRegisterSourceDimenstionIndex.ToInvariantString(), source));
                     dimensionAndMetrics.Add(new KeyValuePair<string, string>("cm" + _options.RegisterFailMetricIndex.ToInvariantString(), "1"));
 
                     await _analyticsApi.TrackEvent(
@@ -199,7 +199,7 @@ namespace cloudscribe.Core.Web.Analytics
                     e.Action = _options.RegisterFailEventAction;
                     e.Label = source;
                     e.Value = reason;
-                    e.Fields.Add(new KeyValuePair<string, string>("dimension" + _options.LoginRegisterSourceDimenstionIdex.ToInvariantString(), source));
+                    e.Fields.Add(new KeyValuePair<string, string>("dimension" + _options.LoginRegisterSourceDimenstionIndex.ToInvariantString(), source));
                     e.Fields.Add(new KeyValuePair<string, string>("metric" + _options.RegisterFailMetricIndex.ToInvariantString(), "1"));
 
                     _analyticsHelper.AddEvent(e);
@@ -236,8 +236,8 @@ namespace cloudscribe.Core.Web.Analytics
                     {
                         dimensionAndMetrics.Add(new KeyValuePair<string, string>("cd" + _options.UserIdDimensionIndex.ToInvariantString(), result.User.Id.ToString()));
                     }
-                    dimensionAndMetrics.Add(new KeyValuePair<string, string>("cd" + _options.RegisteredUserDimensionIdex.ToInvariantString(), "Yes"));
-                    dimensionAndMetrics.Add(new KeyValuePair<string, string>("cd" + _options.LoginRegisterSourceDimenstionIdex.ToInvariantString(), source));
+                    dimensionAndMetrics.Add(new KeyValuePair<string, string>("cd" + _options.RegisteredUserDimensionIndex.ToInvariantString(), "Yes"));
+                    dimensionAndMetrics.Add(new KeyValuePair<string, string>("cd" + _options.LoginRegisterSourceDimenstionIndex.ToInvariantString(), source));
                     dimensionAndMetrics.Add(new KeyValuePair<string, string>("cm" + _options.LoginSuccessMetricIndex.ToInvariantString(), "1"));
 
                     await _analyticsApi.TrackEvent(
@@ -265,8 +265,8 @@ namespace cloudscribe.Core.Web.Analytics
                     {
                         e.Fields.Add(new KeyValuePair<string, string>("dimension" + _options.UserIdDimensionIndex.ToInvariantString(), result.User.Id.ToString()));
                     }
-                    e.Fields.Add(new KeyValuePair<string, string>("dimension" + _options.RegisteredUserDimensionIdex.ToInvariantString(), "Yes"));
-                    e.Fields.Add(new KeyValuePair<string, string>("dimension" + _options.LoginRegisterSourceDimenstionIdex.ToInvariantString(), source));
+                    e.Fields.Add(new KeyValuePair<string, string>("dimension" + _options.RegisteredUserDimensionIndex.ToInvariantString(), "Yes"));
+                    e.Fields.Add(new KeyValuePair<string, string>("dimension" + _options.LoginRegisterSourceDimenstionIndex.ToInvariantString(), source));
                     e.Fields.Add(new KeyValuePair<string, string>("metric" + _options.LoginSuccessMetricIndex.ToInvariantString(), "1"));
 
                     _analyticsHelper.AddEvent(e);
@@ -307,7 +307,7 @@ namespace cloudscribe.Core.Web.Analytics
                         {
                             dimensionAndMetrics.Add(new KeyValuePair<string, string>("cd" + _options.UserIdDimensionIndex.ToInvariantString(), result.User.Id.ToString()));
                         }
-                        dimensionAndMetrics.Add(new KeyValuePair<string, string>("cd" + _options.LoginRegisterSourceDimenstionIdex.ToInvariantString(), source));
+                        dimensionAndMetrics.Add(new KeyValuePair<string, string>("cd" + _options.LoginRegisterSourceDimenstionIndex.ToInvariantString(), source));
                         dimensionAndMetrics.Add(new KeyValuePair<string, string>("cm" + _options.LoginFailMetricIndex.ToInvariantString(), "1"));
 
                         await _analyticsApi.TrackEvent(
@@ -335,7 +335,7 @@ namespace cloudscribe.Core.Web.Analytics
                         {
                             e.Fields.Add(new KeyValuePair<string, string>("dimension" + _options.UserIdDimensionIndex.ToInvariantString(), result.User.Id.ToString()));
                         }
-                        e.Fields.Add(new KeyValuePair<string, string>("dimension" + _options.LoginRegisterSourceDimenstionIdex.ToInvariantString(), source));
+                        e.Fields.Add(new KeyValuePair<string, string>("dimension" + _options.LoginRegisterSourceDimenstionIndex.ToInvariantString(), source));
                         e.Fields.Add(new KeyValuePair<string, string>("metric" + _options.LoginFailMetricIndex.ToInvariantString(), "1"));
 
                         _analyticsHelper.AddEvent(e);
@@ -364,8 +364,8 @@ namespace cloudscribe.Core.Web.Analytics
                 {
                     dimensionAndMetrics.Add(new KeyValuePair<string, string>("cd" + _options.UserIdDimensionIndex.ToInvariantString(), result.User.Id.ToString()));
                 }
-                dimensionAndMetrics.Add(new KeyValuePair<string, string>("cd" + _options.RegisteredUserDimensionIdex.ToInvariantString(), "Yes"));
-                dimensionAndMetrics.Add(new KeyValuePair<string, string>("cd" + _options.LoginRegisterSourceDimenstionIdex.ToInvariantString(), source));
+                dimensionAndMetrics.Add(new KeyValuePair<string, string>("cd" + _options.RegisteredUserDimensionIndex.ToInvariantString(), "Yes"));
+                dimensionAndMetrics.Add(new KeyValuePair<string, string>("cd" + _options.LoginRegisterSourceDimenstionIndex.ToInvariantString(), source));
                 dimensionAndMetrics.Add(new KeyValuePair<string, string>("cm" + _options.RegisterSuccessMetricIndex.ToInvariantString(), "1"));
 
                 await _analyticsApi.TrackEvent(
@@ -392,8 +392,8 @@ namespace cloudscribe.Core.Web.Analytics
                 {
                     e.Fields.Add(new KeyValuePair<string, string>("dimension" + _options.UserIdDimensionIndex.ToInvariantString(), result.User.Id.ToString()));
                 }
-                e.Fields.Add(new KeyValuePair<string, string>("dimension" + _options.RegisteredUserDimensionIdex.ToInvariantString(), "Yes"));
-                e.Fields.Add(new KeyValuePair<string, string>("dimension" + _options.LoginRegisterSourceDimenstionIdex.ToInvariantString(), source));
+                e.Fields.Add(new KeyValuePair<string, string>("dimension" + _options.RegisteredUserDimensionIndex.ToInvariantString(), "Yes"));
+                e.Fields.Add(new KeyValuePair<string, string>("dimension" + _options.LoginRegisterSourceDimenstionIndex.ToInvariantString(), source));
                 e.Fields.Add(new KeyValuePair<string, string>("metric" + _options.RegisterSuccessMetricIndex.ToInvariantString(), "1"));
 
                 _analyticsHelper.AddEvent(e);
@@ -420,7 +420,7 @@ namespace cloudscribe.Core.Web.Analytics
                 {
                     e.Fields.Add(new KeyValuePair<string, string>("dimension" + _options.UserIdDimensionIndex.ToInvariantString(), result.User.Id.ToString()));
                 }
-                e.Fields.Add(new KeyValuePair<string, string>("dimension" + _options.LoginRegisterSourceDimenstionIdex.ToInvariantString(), source));
+                e.Fields.Add(new KeyValuePair<string, string>("dimension" + _options.LoginRegisterSourceDimenstionIndex.ToInvariantString(), source));
                 e.Fields.Add(new KeyValuePair<string, string>("metric" + _options.LoginFailMetricIndex.ToInvariantString(), "1"));
 
                 _analyticsHelper.AddEvent(e);
@@ -447,7 +447,7 @@ namespace cloudscribe.Core.Web.Analytics
                 {
                     e.Fields.Add(new KeyValuePair<string, string>("dimension" + _options.UserIdDimensionIndex.ToInvariantString(), result.User.Id.ToString()));
                 }
-                e.Fields.Add(new KeyValuePair<string, string>("dimension" + _options.LoginRegisterSourceDimenstionIdex.ToInvariantString(), source));
+                e.Fields.Add(new KeyValuePair<string, string>("dimension" + _options.LoginRegisterSourceDimenstionIndex.ToInvariantString(), source));
                 e.Fields.Add(new KeyValuePair<string, string>("metric" + _options.LoginFailMetricIndex.ToInvariantString(), "1"));
 
                 _analyticsHelper.AddEvent(e);
