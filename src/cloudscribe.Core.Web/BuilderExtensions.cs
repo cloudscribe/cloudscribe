@@ -84,6 +84,8 @@ namespace Microsoft.AspNetCore.Builder
                 // this allows serving static files from the "wwwroot" folder beneath the theme folder
                 // we don't want to serve the view files over http, but we can serve css and js etc from the static folder beneath the theme folder
                 // without serving theme views
+                // TODO: we could possibly use the GzipMappingFileProvider here to handle .gz
+                // but probably would want a config setting to make that optional
                 if (!string.IsNullOrEmpty(themeName))
                 {
                     var themePath = Path.Combine(Directory.GetCurrentDirectory(),

@@ -1,5 +1,6 @@
 
-TODO: learn about new 2.0 two factor auth with QR codes, see latest project templates and docs
+
+https://docs.nwebsec.com/en/latest/index.html
 
 https://www.scientificamerican.com/article/the-only-safe-e-mail-is-text-only-e-mail/
 

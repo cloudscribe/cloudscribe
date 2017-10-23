@@ -44,12 +44,14 @@ namespace Microsoft.Extensions.Configuration // so we don't need another using i
         private bool _autoGenGzip;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="CompositeFileProvider" /> class using a collection of file provider.
+        /// Initializes a new instance of the <see cref="GzipMappingFileProvider" /> class using a collection of file provider.
         /// </summary>
+        /// <param name="loggerFactory">The ILoggerFactory. </param>
+        /// <param name="autoGenerateMissingGzipFiles">bool indicating whether to try auto creating misssing .gz files </param>
         /// <param name="fileProviders">The collection of <see cref="IFileProvider" /></param>
         public GzipMappingFileProvider(
-            ILoggerFactory loggerFactory = null,
-            bool autoGenGzip = false,
+            ILoggerFactory loggerFactory,
+            bool autoGenerateMissingGzipFiles,
             params IFileProvider[] fileProviders
             
             )
@@ -59,27 +61,14 @@ namespace Microsoft.Extensions.Configuration // so we don't need another using i
             {
                 _log = loggerFactory.CreateLogger<GzipMappingFileProvider>();
             }
-            _autoGenGzip = autoGenGzip;
+            _autoGenGzip = autoGenerateMissingGzipFiles;
         }
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="CompositeFileProvider" /> class using a collection of file provider.
-        /// </summary>
-        /// <param name="fileProviders">The collection of <see cref="IFileProvider" /></param>
-        //public GzipMappingFileProvider(IEnumerable<IFileProvider> fileProviders)
-        //{
-        //    if (fileProviders == null)
-        //    {
-        //        throw new ArgumentNullException(nameof(fileProviders));
-        //    }
-        //    _fileProviders = fileProviders.ToArray();
-        //}
-
+        
         private IFileInfo TryAutoCreateGzip(string subpath, IFileProvider fileProvider, IFileInfo inputFile)
         {
-            if(inputFile == null) { return inputFile; }
-            if(!_autoGenGzip) { return inputFile; }
-            if(!(fileProvider is PhysicalFileProvider)) { return inputFile; }
+            if (inputFile == null) { return inputFile; }
+            if (!_autoGenGzip) { return inputFile; }
+            if (!(fileProvider is PhysicalFileProvider)) { return inputFile; }
             if (inputFile.Length <= 10240) { return inputFile; }
 
             try
@@ -222,7 +211,7 @@ namespace Microsoft.Extensions.Configuration // so we don't need another using i
                 }
                 if (file.Name.EndsWith(".js.gz"))
                 {
-                    response.Headers[HeaderNames.ContentType] = "text/javascript";
+                    response.Headers[HeaderNames.ContentType] = "application/javascript";
                 }
                 return;
             }
