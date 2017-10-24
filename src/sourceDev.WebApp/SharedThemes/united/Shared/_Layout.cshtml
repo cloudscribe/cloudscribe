@@ -40,7 +40,7 @@
         @await Html.PartialAsync("AlertsPartial")
         @RenderBody()
     </div>
-    <footer class="text-center" role="contentinfo" itemscope itemtype="http://schema.org/Person" itemprop="author">
+    <footer class="text-center">
         <small>Copyright &copy; @DateTime.Now.Year - @(Tenant?.SiteName ?? "Sample")</small>
     </footer>
     @RenderSection("Toolbar", required: false)
