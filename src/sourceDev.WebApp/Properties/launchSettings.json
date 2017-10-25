@@ -24,12 +24,20 @@
         "ASPNETCORE_ENVIRONMENT": "Production"
       }
     },
-    "example.WebApp": {
+    "web-dev": {
       "commandName": "Project",
       "launchBrowser": true,
-      "launchUrl": "http://localhost:5000",
+      "launchUrl": "http://localhost:56853",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development"
+      }
+    },
+    "web-prod": {
+      "commandName": "Project",
+      "launchBrowser": true,
+      "launchUrl": "http://localhost:56853",
+      "environmentVariables": {
+        "ASPNETCORE_ENVIRONMENT": "Production"
       }
     }
   }
