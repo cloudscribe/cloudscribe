@@ -23,9 +23,6 @@
         <link rel="stylesheet" href="~/css/bootstrap.min.css" cs-resolve-theme-resource="true" cs-shared-theme="true" cs-tenant="@Tenant" />
         <link rel="stylesheet" href="~/css/site.min.css" asp-append-version="true" />
     </environment>
-    <style>
-	  .navbar-gravatar { padding-top: 5px;  }
-	</style>
     @RenderSection("Styles", required: false)
     <google-analytics profile-id="@Tenant.GoogleAnalyticsProfileId" user-id="@User.GetUserId()"></google-analytics>
 </head>
@@ -53,7 +50,7 @@
         @await Html.PartialAsync("AlertsPartial")
         @RenderBody()
     </div>
-    <footer class="text-center">
+    <footer class="container text-center">
         <small>Copyright &copy; @DateTime.Now.Year - @(Tenant?.SiteName ?? "Sample")</small><br />
         <small>
         <a href="/sitemap">Site Map</a> |
