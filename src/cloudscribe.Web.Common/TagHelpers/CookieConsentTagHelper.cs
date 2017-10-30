@@ -87,6 +87,9 @@ namespace cloudscribe.Web.Common.TagHelpers
         [HtmlAttributeName("enabled")]
         public bool Enabled { get; set; } = true;
 
+        [HtmlAttributeName("debug")]
+        public bool Debug { get; set; } = false;
+
         public override void Process(TagHelperContext context, TagHelperOutput output)
         {
             if (!Enabled)
@@ -102,6 +105,8 @@ namespace cloudscribe.Web.Common.TagHelpers
             sb.AppendLine("<link rel='stylesheet' type='text/css' href='" + CssUrl + "' />");
             sb.AppendLine("<script src='" + JsUrl + "'></script>");
             sb.AppendLine("<script>");
+            
+            sb.AppendLine("document.addEventListener(\"DOMContentLoaded\", function(){");
 
             // init
             sb.Append("var consentStatus = {};");
@@ -110,10 +115,8 @@ namespace cloudscribe.Web.Common.TagHelpers
             sb.Append("window.CookieConsentStatus = consentStatus;");
             //sb.Append("alert(window.CookieConsentStatus.DidConsent);");
 
-            sb.AppendLine("document.addEventListener(\"DOMContentLoaded\", function(){");
-            sb.AppendLine("console.log(\"cookie consent\");");
-
-
+            if (Debug) sb.AppendLine("console.log(\"cookie consent\");");
+            
             sb.AppendLine("window.cookieconsent.initialise({");
             sb.AppendLine("\"palette\": {");
             sb.AppendLine("\"popup\": {");
@@ -171,6 +174,7 @@ namespace cloudscribe.Web.Common.TagHelpers
             sb.Append("consentStatus.DidConsent = this.hasConsented();");
             sb.Append("window.CookieConsentStatus = consentStatus;");
             //sb.Append("alert(window.CookieConsentStatus.DidConsent);");
+            if (Debug) sb.Append("console.log(\"cookieConsent.onInitialize\");");
             sb.Append("}"); // end onInitialise
 
             sb.Append(",onStatusChange: function(status, chosenBefore) {");
@@ -179,6 +183,7 @@ namespace cloudscribe.Web.Common.TagHelpers
             sb.Append("consentStatus.DidConsent = this.hasConsented();");
             sb.Append("window.CookieConsentStatus = consentStatus;");
             //sb.Append("alert(window.CookieConsentStatus.DidConsent);");
+            if (Debug) sb.Append("console.log(\"cookieConsent.onStatusChange\");");
             sb.Append("}"); //end onStatusChange
 
 

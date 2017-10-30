@@ -7,6 +7,15 @@ https://github.com/philipwalton/analyticsjs-boilerplate
 
 http://googledevelopers.blogspot.com/2016/02/introducing-autotrack-for-analyticsjs.html
 
+forceSSL
+By default, tracking beacons sent from https pages will be sent using https while beacons sent from http pages will be sent using http. Setting forceSSL to true will force http pages to also send all beacons using https.
+
+Display Features
+https://developers.google.com/analytics/devguides/collection/analyticsjs/display-features
+https://support.google.com/analytics/answer/3450482
+
+https://www.themarketingtechnologist.co/setting-up-a-cookie-law-compliant-google-analytics-tracker/
+
 ## Tracking Users
 
 https://support.google.com/analytics/answer/3123662?hl=en
@@ -25,6 +34,8 @@ http://www.charlesfarina.com/login-and-signup-naming-conventions-for-google-anal
 
 userid vs &uid  short answer they are equivalent in js usage
 https://stackoverflow.com/questions/23379338/set-google-analytics-user-id-after-creating-the-tracker
+
+ga('set', '&uid', '1234567');
 
 ## Tracking code notes
 

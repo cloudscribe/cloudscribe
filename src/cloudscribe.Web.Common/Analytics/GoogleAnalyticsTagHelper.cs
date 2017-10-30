@@ -85,11 +85,11 @@ namespace cloudscribe.Web.Common.TagHelpers
 
             var comma = "";
 
-            if (_options.TrackUserId && !string.IsNullOrWhiteSpace(UserId))
-            {
-                sb.Append("'userId': " + "'" + UserId + "'");
-                comma = ",";
-            }
+            //if (_options.TrackUserId && !string.IsNullOrWhiteSpace(UserId))
+            //{
+            //    sb.Append("'userId': " + "'" + UserId + "'");
+            //    comma = ",";
+            //}
 
             if (AllowAnchor)
             {
@@ -103,9 +103,32 @@ namespace cloudscribe.Web.Common.TagHelpers
             
             sb.AppendLine("");
 
-            // ga('require', 'displayfeatures');
-            // Since display features can be enabled through your Google Analytics admin settings, there may be cases where you need to disable it programmatically.
-            // ga('set', 'displayFeaturesTask', null);
+            
+            sb.Append("if(gacanUseCookies) {");
+
+            if (_options.TrackUserId && !string.IsNullOrWhiteSpace(UserId))
+            {
+                sb.Append("ga('set','userId'," + "'" + UserId + "'");
+            }
+            sb.Append("ga('require', 'displayfeatures');");
+            sb.Append("ga('set', 'anonymizeIp', undefined);");
+
+            if(Debug)
+            {
+                sb.Append("console.log('ga tracked with cookies'); ");
+            }
+
+            sb.Append("} else {"); //can't use cookies
+
+            sb.Append("ga('set', 'displayFeaturesTask', null);");
+            sb.Append("ga('set', 'anonymizeIp', true);");
+
+            if (Debug)
+            {
+                sb.Append("console.log('ga tracked without cookies'); ");
+            }
+
+            sb.Append("}");
 
 
             sb.AppendLine("ga('send', 'pageview');");
