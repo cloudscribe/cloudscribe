@@ -1,4 +1,7 @@
 
+https://madskristensen.net/blog/miniblogcore-is-a-new-blog-engine-built-using-aspnet-core-20/
+
+
 http://alistapart.com/article/content-modelling-a-master-skill
 
 https://www.smashingmagazine.com/2016/12/how-my-api-driven-website-helps-me-travel-the-world/

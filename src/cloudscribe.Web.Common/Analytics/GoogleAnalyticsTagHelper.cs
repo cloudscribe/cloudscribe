@@ -41,6 +41,12 @@ namespace cloudscribe.Web.Common.TagHelpers
         [HtmlAttributeName(AllowAnchorAttributeName)]
         public bool AllowAnchor { get; set; } = false;
 
+        [HtmlAttributeName("track-after-page-load")]
+        public bool TrackAfterPageLoad { get; set; } = false;
+
+        [HtmlAttributeName("debug")]
+        public bool Debug { get; set; } = false;
+
         public override void Process(TagHelperContext context, TagHelperOutput output)
         {
             if(string.IsNullOrEmpty(ProfileId))
@@ -57,6 +63,21 @@ namespace cloudscribe.Web.Common.TagHelpers
             sb.AppendLine("(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),");
             sb.AppendLine("m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)");
             sb.AppendLine("})(window,document,'script','https://www.google-analytics.com/analytics.js','ga');");
+
+            if(TrackAfterPageLoad)
+            {
+                sb.AppendLine("window.addEventListener(\"load\", function(){");
+                if(Debug) sb.AppendLine("console.log(\"analytics\");");
+            }
+
+            //sb.Append("alert(window.CookieConsentStatus === undefined || window.CookieConsentStatus.DidConsent);");
+            sb.Append("var gacanUseCookies = window.CookieConsentStatus === undefined || window.CookieConsentStatus.DidConsent;");
+            if(Debug)
+            {
+                sb.Append("if(gacanUseCookies) { console.log('cookie ok'); } else { console.log('no cookies'); }");
+            }
+            
+
             sb.Append("ga('create',");
             sb.Append("'" + ProfileId + "', 'auto'");
             
@@ -79,8 +100,14 @@ namespace cloudscribe.Web.Common.TagHelpers
             sb.Append(" }");
             
             sb.Append(");");
-
+            
             sb.AppendLine("");
+
+            // ga('require', 'displayfeatures');
+            // Since display features can be enabled through your Google Analytics admin settings, there may be cases where you need to disable it programmatically.
+            // ga('set', 'displayFeaturesTask', null);
+
+
             sb.AppendLine("ga('send', 'pageview');");
 
             var eventList = ViewContext.TempData.GetGoogleAnalyticsEvents();
@@ -123,7 +150,12 @@ namespace cloudscribe.Web.Common.TagHelpers
                     sb.AppendLine("");
                 }
             }
-            
+
+            if (TrackAfterPageLoad)
+            {
+                sb.Append("});"); //end add event listener
+            }
+
 
             output.Content.SetHtmlContent(sb.ToString());
 

@@ -21,8 +21,10 @@ PII Viewer for Google Analytics is a Google Chrome extension which allows you to
 https://davidsimpson.me/pii-viewer-for-google-analytics/
 https://davidsimpson.me/2014/04/20/tutorial-send-user-ids-google-analytics/
 
-
 http://www.charlesfarina.com/login-and-signup-naming-conventions-for-google-analytics/
+
+userid vs &uid  short answer they are equivalent in js usage
+https://stackoverflow.com/questions/23379338/set-google-analytics-user-id-after-creating-the-tracker
 
 ## Tracking code notes
 
