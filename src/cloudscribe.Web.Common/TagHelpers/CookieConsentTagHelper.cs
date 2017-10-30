@@ -5,10 +5,7 @@
 // Last Modified:           2017-10-30
 // 
 
-using Microsoft.AspNetCore.Mvc.Rendering;
-using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using Microsoft.AspNetCore.Razor.TagHelpers;
-using Microsoft.Extensions.Options;
 using System.Text;
 
 
