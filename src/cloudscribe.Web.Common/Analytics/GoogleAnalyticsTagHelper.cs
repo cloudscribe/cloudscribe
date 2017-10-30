@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0.
 // Author:                  Joe Audette
 // Created:                 2017-01-04
-// Last Modified:           2017-09-21
+// Last Modified:           2017-10-30
 // 
 
 using cloudscribe.Web.Common.Analytics;
@@ -108,7 +108,7 @@ namespace cloudscribe.Web.Common.TagHelpers
 
             if (_options.TrackUserId && !string.IsNullOrWhiteSpace(UserId))
             {
-                sb.Append("ga('set','userId'," + "'" + UserId + "'");
+                sb.Append("ga('set','userId'," + "'" + UserId + "');");
             }
             sb.Append("ga('require', 'displayfeatures');");
             sb.Append("ga('set', 'anonymizeIp', undefined);");
