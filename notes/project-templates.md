@@ -2,6 +2,8 @@
 
 https://github.com/dotnet/templating/wiki/Post-Action-Registry
 
+https://www.cloudscribe.com/docs/advanced-client-side-development-with-webpack?utm_source=projecttemplate&utm_medium=referral&utm_campaign=newproject-vsix
+
 
 https://marketplace.visualstudio.com/items?itemName=joeaudette.cloudscribeProjectTemplate
 https://www.nuget.org/packages/cloudscribe.templates/1.0.0

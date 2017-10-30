@@ -1,5 +1,7 @@
 
 
+https://aspdotnetcodehelp.wordpress.com/2017/03/27/how-to-access-wcf-service-in-asp-net-core-application/
+
 https://github.com/blog/2412-learn-graphql-with-github
 
 https://services.github.com/on-demand/graphql/

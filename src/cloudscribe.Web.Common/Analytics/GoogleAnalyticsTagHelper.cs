@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0.
 // Author:                  Joe Audette
 // Created:                 2017-01-04
-// Last Modified:           2017-09-21
+// Last Modified:           2017-10-30
 // 
 
 using cloudscribe.Web.Common.Analytics;
@@ -41,6 +41,12 @@ namespace cloudscribe.Web.Common.TagHelpers
         [HtmlAttributeName(AllowAnchorAttributeName)]
         public bool AllowAnchor { get; set; } = false;
 
+        [HtmlAttributeName("track-after-page-load")]
+        public bool TrackAfterPageLoad { get; set; } = false;
+
+        [HtmlAttributeName("debug")]
+        public bool Debug { get; set; } = false;
+
         public override void Process(TagHelperContext context, TagHelperOutput output)
         {
             if(string.IsNullOrEmpty(ProfileId))
@@ -57,6 +63,21 @@ namespace cloudscribe.Web.Common.TagHelpers
             sb.AppendLine("(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),");
             sb.AppendLine("m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)");
             sb.AppendLine("})(window,document,'script','https://www.google-analytics.com/analytics.js','ga');");
+
+            if(TrackAfterPageLoad)
+            {
+                sb.AppendLine("window.addEventListener(\"load\", function(){");
+                if(Debug) sb.AppendLine("console.log(\"analytics\");");
+            }
+
+            //sb.Append("alert(window.CookieConsentStatus === undefined || window.CookieConsentStatus.DidConsent);");
+            sb.Append("var gacanUseCookies = window.CookieConsentStatus === undefined || window.CookieConsentStatus.DidConsent;");
+            if(Debug)
+            {
+                sb.Append("if(gacanUseCookies) { console.log('cookie ok'); } else { console.log('no cookies'); }");
+            }
+            
+
             sb.Append("ga('create',");
             sb.Append("'" + ProfileId + "', 'auto'");
             
@@ -64,11 +85,11 @@ namespace cloudscribe.Web.Common.TagHelpers
 
             var comma = "";
 
-            if (_options.TrackUserId && !string.IsNullOrWhiteSpace(UserId))
-            {
-                sb.Append("'userId': " + "'" + UserId + "'");
-                comma = ",";
-            }
+            //if (_options.TrackUserId && !string.IsNullOrWhiteSpace(UserId))
+            //{
+            //    sb.Append("'userId': " + "'" + UserId + "'");
+            //    comma = ",";
+            //}
 
             if (AllowAnchor)
             {
@@ -79,8 +100,37 @@ namespace cloudscribe.Web.Common.TagHelpers
             sb.Append(" }");
             
             sb.Append(");");
-
+            
             sb.AppendLine("");
+
+            
+            sb.Append("if(gacanUseCookies) {");
+
+            if (_options.TrackUserId && !string.IsNullOrWhiteSpace(UserId))
+            {
+                sb.Append("ga('set','userId'," + "'" + UserId + "');");
+            }
+            sb.Append("ga('require', 'displayfeatures');");
+            sb.Append("ga('set', 'anonymizeIp', undefined);");
+
+            if(Debug)
+            {
+                sb.Append("console.log('ga tracked with cookies'); ");
+            }
+
+            sb.Append("} else {"); //can't use cookies
+
+            sb.Append("ga('set', 'displayFeaturesTask', null);");
+            sb.Append("ga('set', 'anonymizeIp', true);");
+
+            if (Debug)
+            {
+                sb.Append("console.log('ga tracked without cookies'); ");
+            }
+
+            sb.Append("}");
+
+
             sb.AppendLine("ga('send', 'pageview');");
 
             var eventList = ViewContext.TempData.GetGoogleAnalyticsEvents();
@@ -123,7 +173,12 @@ namespace cloudscribe.Web.Common.TagHelpers
                     sb.AppendLine("");
                 }
             }
-            
+
+            if (TrackAfterPageLoad)
+            {
+                sb.Append("});"); //end add event listener
+            }
+
 
             output.Content.SetHtmlContent(sb.ToString());
 

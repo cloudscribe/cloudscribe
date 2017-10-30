@@ -3,6 +3,9 @@
 @{
     ViewData["Title"] = "Contact";
 }
+@section Styles {
+@{ await Html.RenderPartialAsync("_DatePickerCssPartial"); }
+}
 <h2>@ViewData["Title"].</h2>
 <h3>@ViewData["Message"]</h3>
 
@@ -17,3 +20,30 @@
     <strong>Email:</strong> <a href="mailto:@Tenant.CompanyPublicEmail">@Tenant.CompanyPublicEmail</a><br />
    
 </address>
+
+<div class="form-group">
+    <label for="Status">From date</label>
+    <div class='input-group date' id='fromDateDisplay'>
+        <input type="text"
+               name="fromDateDisplay"
+               class="form-control"
+               data-bs-datepicker="true"
+               data-bs-datepicker-format="DD/MM/YYYY"
+               data-bs-datepicker-iso-target-id="fromDate"
+               data-bs-datepicker-iso-format="YYYY-MM-DD"
+               data-bs-datepicker-toggle-target-id="fromDateToggle"
+               data-bs-datepicker-use-fontawesome="false"
+               data-bs-datepicker-allowinputtoggle="true"
+               data-bs-datepicker-locale="@System.Globalization.CultureInfo.CurrentCulture.Name" />
+        <span class="input-group-addon">
+            <span id="fromDateToggle" class="glyphicon glyphicon-calendar"></span>
+        </span>
+    </div>
+</div>
+<input type="hidden" id="fromDate" name="fromDate" value="" />
+
+@section Scripts {
+<script src="~/cr/js/moment-with-locales.js"></script>
+<script src="~/cr/js/bootstrap-datetimepicker.js"></script>
+<script src="~/cr/js/cloudscribe-datepicker-bootstrap-unobtrusive.js" asp-append-version="true"></script>
+}
