@@ -599,7 +599,7 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
 
             await siteManager.Update(selectedSite);
             
-            this.AlertSuccess(string.Format(sr["Company Info for {0} wwas successfully updated."],
+            this.AlertSuccess(string.Format(sr["Company Info for {0} was successfully updated."],
                         selectedSite.SiteName), true);
             
             if ((siteManager.CurrentSite.IsServerAdminSite)
@@ -873,7 +873,7 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
             
             await siteManager.Update(selectedSite);
             
-            this.AlertSuccess(string.Format(sr["Security Settings for {0} wwas successfully updated."],
+            this.AlertSuccess(string.Format(sr["Security Settings for {0} was successfully updated."],
                         selectedSite.SiteName), true);
             
             if ((siteManager.CurrentSite.IsServerAdminSite)
@@ -956,7 +956,7 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
 
             await siteManager.Update(selectedSite);
             
-            this.AlertSuccess(string.Format(sr["Captcha Settings for {0} wwas successfully updated."],
+            this.AlertSuccess(string.Format(sr["Captcha Settings for {0} was successfully updated."],
                         selectedSite.SiteName), true);
             
             if ((siteManager.CurrentSite.IsServerAdminSite)
