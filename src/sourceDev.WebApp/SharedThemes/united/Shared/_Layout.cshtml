@@ -8,6 +8,10 @@
 @addTagHelper "*, cloudscribe.Web.Pagination"
 @addTagHelper "*, cloudscribe.Core.Web"
 @inject SiteContext Tenant
+@{
+    var siteRoot = "";
+    if (!string.IsNullOrWhiteSpace(Tenant.SiteFolderName)) { siteRoot = "/" + Tenant.SiteFolderName; }
+}
 <!DOCTYPE html>
 <html>
 <head>
@@ -23,9 +27,50 @@
         <link rel="stylesheet" href="~/css/bootstrap.min.css" cs-resolve-theme-resource="true" cs-shared-theme="true" cs-tenant="@Tenant" />
         <link rel="stylesheet" href="~/css/site.min.css" asp-append-version="true" />
     </environment>
-    <cookie-consent compliance-type="opt-out" position="bottom" enabled="true" debug="true"></cookie-consent>
+    <script>
+        function myPopupOpenCallback() {
+            alert('popup open callback');
+        }
+        function myPopupCloseCallback() {
+            alert('popup close callback');
+        }
+        function myOnInitCallback(status) {
+            alert('consent init callback ' + status);
+        }
+        function myConsentStatusCallback(status, chosenBefore) {
+            alert('consent status change callback ' + status);
+        }
+        function myRevokeChoiceCallback() {
+            alert('revoke choice callback');
+        }
+
+
+        function getCookie(name) {
+            var value = "; " + document.cookie;
+            var parts = value.split("; " + name + "=");
+            if (parts.length == 2) return parts.pop().split(";").shift();
+        }
+        function myCookieConsentCheck() {
+            var consentStatus = getCookie("cookieconsent_status");
+            if (consentStatus == "deny") return false;
+            return true;
+        }
+    </script>
+    <cookie-consent enabled="true" 
+                    layout="basic" 
+                    compliance-type="info" 
+                    position="bottom" 
+                    dismiss-on-timeout="false"
+                    dismiss-on-scroll="false"
+                    popup-open-callback=""
+                    popup-close-callback=""
+                    initialise-callback=""
+                    status-change-callback=""
+                    cookie-name="myconsentcookie"
+                    debug="true"></cookie-consent>
     @RenderSection("Styles", required: false)
-    <google-analytics profile-id="@Tenant.GoogleAnalyticsProfileId" user-id="@User.GetUserId()" track-after-page-load="true" debug="true"></google-analytics>
+    
+    <google-analytics profile-id="@Tenant.GoogleAnalyticsProfileId" user-id="@User.GetUserId()" debug="true" check-cookie-consent="true" require-explicit-cookie-consent="false" consent-cookie-name="myconsentcookie"></google-analytics>
 </head>
 <body class="@ViewData["BodyClass"]">
     <header class="navbar navbar-default navbar-fixed-top">
@@ -54,7 +99,7 @@
     <footer class="text-center">
         <small>Copyright &copy; @DateTime.Now.Year - @(Tenant?.SiteName ?? "Sample")</small><br />
         <small>
-        <a href="/sitemap">Site Map</a> |
+        <a href="@siteRoot/sitemap">Site Map</a> |
         @* you are free to remove the powered by cloudscribe link but we appreciate it if you choose to keep it! *@
         <a target="_blank" href="https://www.cloudscribe.com/?utm_source=@Context.Request.Host.Value&amp;utm_medium=referral&amp;utm_campaign=poweredbycloudscribe">Powered by cloudscribe</a>
         </small>   

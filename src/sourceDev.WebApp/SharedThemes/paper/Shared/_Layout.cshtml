@@ -8,6 +8,10 @@
 @addTagHelper "*, cloudscribe.Web.Pagination"
 @addTagHelper "*, cloudscribe.Core.Web"
 @inject SiteContext Tenant
+@{ 
+    var siteRoot = "";
+    if(!string.IsNullOrWhiteSpace(Tenant.SiteFolderName)) { siteRoot = "/" + Tenant.SiteFolderName; }
+}
 <!DOCTYPE html>
 <html>
 <head>
@@ -57,7 +61,7 @@
     <footer class="text-center">
         <small>Copyright &copy; @DateTime.Now.Year - @(Tenant?.SiteName ?? "Sample")</small><br />
         <small>
-        <a href="/sitemap">Site Map</a> |
+        <a href="@siteRoot/sitemap">Site Map</a> |
         @* you are free to remove the powered by cloudscribe link but we appreciate it if you choose to keep it! *@
         <a target="_blank" href="https://www.cloudscribe.com/?utm_source=@Context.Request.Host.Value&amp;utm_medium=referral&amp;utm_campaign=poweredbycloudscribe">Powered by cloudscribe</a>
         </small>   
