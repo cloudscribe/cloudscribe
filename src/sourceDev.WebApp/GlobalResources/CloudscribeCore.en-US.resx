@@ -774,14 +774,14 @@
   <data name="Captcha Settings" xml:space="preserve">
     <value>Captcha Settings</value>
   </data>
-  <data name="Captcha Settings for {0} wwas successfully updated." xml:space="preserve">
-    <value>Captcha Settings for {0} wwas successfully updated.</value>
+  <data name="Captcha Settings for {0} was successfully updated." xml:space="preserve">
+    <value>Captcha Settings for {0} was successfully updated.</value>
   </data>
   <data name="Company Info" xml:space="preserve">
     <value>Company Info</value>
   </data>
-  <data name="Company Info for {0} wwas successfully updated." xml:space="preserve">
-    <value>Company Info for {0} wwas successfully updated.</value>
+  <data name="Company Info for {0} was successfully updated." xml:space="preserve">
+    <value>Company Info for {0} was successfully updated.</value>
   </data>
   <data name="Create New Site" xml:space="preserve">
     <value>Create New Site</value>
@@ -837,8 +837,8 @@
   <data name="Security Settings" xml:space="preserve">
     <value>Security Settings</value>
   </data>
-  <data name="Security Settings for {0} wwas successfully updated." xml:space="preserve">
-    <value>Security Settings for {0} wwas successfully updated.</value>
+  <data name="Security Settings for {0} was successfully updated." xml:space="preserve">
+    <value>Security Settings for {0} was successfully updated.</value>
   </data>
   <data name="Site Administration" xml:space="preserve">
     <value>Site Administration</value>
