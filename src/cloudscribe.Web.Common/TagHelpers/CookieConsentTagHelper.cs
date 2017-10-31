@@ -58,11 +58,23 @@ namespace cloudscribe.Web.Common.TagHelpers
         [HtmlAttributeName("button-text-color")]
         public string ButtonTextColor { get; set; }
 
+        [HtmlAttributeName("cdn-js-url")]
+        public string CdnJsUrl { get; set; } = "//cdnjs.cloudflare.com/ajax/libs/cookieconsent2/3.0.3/cookieconsent.min.js";
+
+        [HtmlAttributeName("cdn-css-url")]
+        public string CdnCssUrl { get; set; } = "//cdnjs.cloudflare.com/ajax/libs/cookieconsent2/3.0.3/cookieconsent.min.css";
+
         [HtmlAttributeName("js-url")]
-        public string JsUrl { get; set; } = "//cdnjs.cloudflare.com/ajax/libs/cookieconsent2/3.0.3/cookieconsent.min.js";
+        public string LocalJsUrl { get; set; } = "/cr/js/cookieconsent.min.js";
 
         [HtmlAttributeName("css-url")]
-        public string CssUrl { get; set; } = "//cdnjs.cloudflare.com/ajax/libs/cookieconsent2/3.0.3/cookieconsent.min.css";
+        public string LocalCssUrl { get; set; } = "/cr/css/cookieconsent.min.css";
+
+        [HtmlAttributeName("cdn-enable")]
+        public bool UseCdn { get; set; } = true;
+
+        [HtmlAttributeName("local-disable")]
+        public bool DisableLocalJsAndCss { get; set; } 
 
         [HtmlAttributeName("header-text")]
         public string HeaderText { get; set; } = "Cookies used on the website!";
@@ -110,8 +122,23 @@ namespace cloudscribe.Web.Common.TagHelpers
         [HtmlAttributeName("auto-open")]
         public bool AutoOpen { get; set; } = true;
 
+        /// <summary>
+        /// By Default, the tool is automatically appended to the HTML body. Use this option to select the parent element. 
+        /// Use autoOpen: false to prevent the tool automatically appending itself to any container.
+        /// This setting supports use of a css selector ie #someelementid, div.container
+        /// best to use a very specific css selector if you use this setting
+        /// </summary>
+        [HtmlAttributeName("container")]
+        public string Container { get; set; }
+
+        /// <summary>
+        /// default: true. Used to disable link on existing layouts. If false, replaces element messagelink with message and removes content of link.
+        /// </summary>
         [HtmlAttributeName("show-link")]
         public bool ShowLink { get; set; } = true;
+
+        [HtmlAttributeName("revocable")]
+        public bool Revocable { get; set; }
 
         [HtmlAttributeName("theme")]
         public string Theme { get; set; }
@@ -147,7 +174,47 @@ namespace cloudscribe.Web.Common.TagHelpers
         /// default is cookieconsent_status
         /// </summary>
         [HtmlAttributeName("cookie-name")]
-        public string CookieName { get; set; }
+        public string CookieName { get; set; } = "cookieconsent_status";
+
+        [HtmlAttributeName("cookie-path")]
+        public string CookiePath { get; set; } = "/";
+
+        [HtmlAttributeName("cookie-domain")]
+        public string CookieDomain { get; set; } = "";
+
+        [HtmlAttributeName("cookie-expiry-days")]
+        public int CookieExpiryDays { get; set; } = 365;
+
+
+        /// <summary>
+        /// array ,  not clear to me the difference between whitelist and blacklist, documentation doesn't say
+        /// </summary>
+        [HtmlAttributeName("whitelist-pages")]
+        public string WhitelistPages { get; set; } = "[]";
+
+        [HtmlAttributeName("backlist-pages")]
+        public string BlacklistPages { get; set; } = "[]";
+
+        /// <summary>
+        /// The location services are disabled by default. You are encouraged to implement a handler 
+        /// to your own service, rather than using the free ones provided.
+        /// To enable the basic location services, set ‘location’ to ‘true’. To add you own services 
+        /// or configure the order or execution, pass an object with configuration properties.
+        /// </summary>
+        [HtmlAttributeName("location")]
+        public string Location { get; set; } = "false";
+
+        /// <summary>
+        /// Rather than getting the country code from the location services, you can hard code a particular country into the tool.
+        /// </summary>
+        [HtmlAttributeName("law-country-code")]
+        public string LawCountryCode { get; set; }
+
+        /// <summary>
+        /// If false, then we only enable the popup if the country has the cookie law. We ignore all other country specific rules.
+        /// </summary>
+        [HtmlAttributeName("law-regional-law")]
+        public bool LawRegionalLaw { get; set; } = true;
 
 
         public override void Process(TagHelperContext context, TagHelperOutput output)
@@ -162,25 +229,40 @@ namespace cloudscribe.Web.Common.TagHelpers
 
             var sb = new StringBuilder();
 
-            sb.AppendLine("<link rel='stylesheet' type='text/css' href='" + CssUrl + "' />");
-            sb.AppendLine("<script src='" + JsUrl + "'></script>");
+            if(UseCdn)
+            {
+                sb.AppendLine("<link rel='stylesheet' type='text/css' href='" + CdnCssUrl + "' />");
+                sb.AppendLine("<script src='" + CdnJsUrl + "'></script>");
+            }
+            else if(!DisableLocalJsAndCss)
+            {
+                sb.AppendLine("<link rel='stylesheet' type='text/css' href='" + LocalCssUrl + "' />");
+                sb.AppendLine("<script src='" + LocalJsUrl + "'></script>");
+            }
+            
             sb.AppendLine("<script>");
             
-            sb.AppendLine("document.addEventListener(\"DOMContentLoaded\", function(){");
+            sb.Append("document.addEventListener(\"DOMContentLoaded\", function(){");
             
-            if (Debug) sb.AppendLine("console.log(\"cookie consent about to initialize\");");
+            if (Debug) sb.Append("console.log(\"cookie consent about to initialize\");");
             
             sb.Append("window.cookieconsent.initialise({");
             sb.Append("\"layout\": \"" + Layout + "\"");
+
+            if(!string.IsNullOrWhiteSpace(Container))
+            {
+                sb.Append(",\"container\": \"" + Container + "\"");
+            }
+
             sb.Append(",\"palette\": {");
-            sb.AppendLine("\"popup\": {");
+            sb.Append("\"popup\": {");
             sb.Append("\"background\": \"" + PopupBackgroundColor + "\"");
             if(!string.IsNullOrEmpty(PopupTextColor))
             {
                 sb.Append(",\"text\": \"" + PopupTextColor + "\"");
             }
             sb.Append("},"); //end popup
-            sb.AppendLine("\"button\": {");
+            sb.Append("\"button\": {");
             sb.Append("\"background\": \"" + ButtonBackgroundColor + "\"");
             if (!string.IsNullOrEmpty(ButtonTextColor))
             {
@@ -226,13 +308,25 @@ namespace cloudscribe.Web.Common.TagHelpers
                 sb.Append(",\"dismissOnScroll\":" + DismissOnScroll);
             }
 
-            if(!string.IsNullOrWhiteSpace(CookieName) && CookieName != "cookieconsent_status")
+            if(!ShowLink)
             {
-                //sb.Append(",\"cookie.name\": \"" + CookieName + "\"");
-                sb.Append(",cookie:{");
-                sb.Append("\"name\":\"" + CookieName + "\"");
-                sb.Append("}");
+                sb.Append(",\"showLink\":false");
             }
+
+            if(Revocable)
+            {
+                //https://cookieconsent.insites.com/documentation/javascript-api/
+                // this spelling comes from the documentation could be typo in the documentation
+                sb.Append(",\"revokable\":true");
+            }
+
+            sb.Append(",cookie:{");
+            sb.Append("\"name\":\"" + CookieName + "\"");
+            sb.Append(",\"path\":\"" + CookiePath + "\"");
+            sb.Append(",\"domain\":\"" + CookieDomain + "\"");
+            sb.Append(",\"expiryDays\":" + CookieExpiryDays );
+            sb.Append("}");
+            
 
 
             if(!string.IsNullOrWhiteSpace(PopupOpenCallback))
@@ -260,32 +354,45 @@ namespace cloudscribe.Web.Common.TagHelpers
                 sb.Append(",onRevokeChoice:" + RevokeChoiceCallback);
             }
 
-            sb.Append(",onInitialise: function (status) {"); //this apparently only fires if the user has already consented or declined
-                                                             //sb.Append("alert('oninitialize');");
-            sb.Append("console.log('cookie name ' + this.options.cookie.name);");
+            if (!string.IsNullOrWhiteSpace(WhitelistPages))
+            {
+                sb.Append(",whitelistPage:" + WhitelistPages);
+            }
+
+            if (!string.IsNullOrWhiteSpace(BlacklistPages))
+            {
+                sb.Append(",blacklistPage:" + BlacklistPages);
+            }
+
+            if(!string.IsNullOrWhiteSpace(Location) && Location != "false")
+            {
+                if(Location.StartsWith("{"))
+                {
+                    sb.Append(",location:" + Location);
+                }
+                else
+                {
+                    sb.Append(",location:\"" + Location + "\"");
+                }
+            }
+
+            sb.Append(",law:{");
+            sb.Append("\"regionalLaw\":" + LawRegionalLaw.ToString().ToLowerInvariant());
+            if (!string.IsNullOrWhiteSpace(LawCountryCode))
+            {
+                sb.Append(",countryCode:\"" + LawCountryCode + "\"");
+            }
             
-            if (Debug) sb.Append("console.log(\"cookieConsent.onInitialize\");");
-            sb.Append("}"); // end onInitialise
+            sb.Append("}");
+
+            
 
             //sb.Append(",onInitialise: function (status) {"); //this apparently only fires if the user has already consented or declined
-            //                                                    //sb.Append("alert('oninitialize');");
-            //sb.Append("var consentStatus = {};");
-            //sb.Append("consentStatus.ComplianceType = this.options.type;");
-            //sb.Append("consentStatus.DidConsent = this.hasConsented();");
-            //sb.Append("window.CookieConsentStatus = consentStatus;");
-            ////sb.Append("alert(window.CookieConsentStatus.DidConsent);");
+            //                                                 //sb.Append("alert('oninitialize');");
+            //sb.Append("console.log('cookie name ' + this.options.cookie.name);");
+
             //if (Debug) sb.Append("console.log(\"cookieConsent.onInitialize\");");
             //sb.Append("}"); // end onInitialise
-
-            //sb.Append(",onStatusChange: function(status, chosenBefore) {");
-            //sb.Append("var consentStatus = {};");
-            //sb.Append("consentStatus.ComplianceType = this.options.type;");
-            //sb.Append("consentStatus.DidConsent = this.hasConsented();");
-            //sb.Append("window.CookieConsentStatus = consentStatus;");
-            ////sb.Append("alert(window.CookieConsentStatus.DidConsent);");
-            //if (Debug) sb.Append("console.log(\"cookieConsent.onStatusChange\");");
-            //sb.Append("}"); //end onStatusChange
-
 
             sb.Append("})");
             sb.Append("})"); //end add event listener

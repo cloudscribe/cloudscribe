@@ -11,6 +11,8 @@
 @{
     var siteRoot = "";
     if (!string.IsNullOrWhiteSpace(Tenant.SiteFolderName)) { siteRoot = "/" + Tenant.SiteFolderName; }
+    var consentCookieName = Tenant.SiteFolderName + "cookieconsent_status";
+    var consentCookiePath = "/" + Tenant.SiteFolderName;
 }
 <!DOCTYPE html>
 <html>
@@ -62,15 +64,25 @@
                     position="bottom" 
                     dismiss-on-timeout="false"
                     dismiss-on-scroll="false"
+                    show-link="true"
+                    cdn-enable="false"
                     popup-open-callback=""
                     popup-close-callback=""
                     initialise-callback=""
                     status-change-callback=""
-                    cookie-name="myconsentcookie"
+                    cookie-name='@consentCookieName'
+                    cookie-path="@consentCookiePath"
+                    location="false"
+                    revocable="false"
                     debug="true"></cookie-consent>
     @RenderSection("Styles", required: false)
     
-    <google-analytics profile-id="@Tenant.GoogleAnalyticsProfileId" user-id="@User.GetUserId()" debug="true" check-cookie-consent="true" require-explicit-cookie-consent="false" consent-cookie-name="myconsentcookie"></google-analytics>
+    <google-analytics profile-id="@Tenant.GoogleAnalyticsProfileId" 
+                      user-id="@User.GetUserId()" 
+                      debug="true" 
+                      check-cookie-consent="true" 
+                      require-explicit-cookie-consent="false" 
+                      consent-cookie-name="@consentCookieName"></google-analytics>
 </head>
 <body class="@ViewData["BodyClass"]">
     <header class="navbar navbar-default navbar-fixed-top">
