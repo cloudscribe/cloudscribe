@@ -10,7 +10,7 @@ This document is just a first draft put together quickly because people are begi
 
 [What should I know before I get started?](#what-should-i-know-before-i-get-started)
   * [Code of Conduct](#code-of-conduct)
-  * [Before You Do Any Work](#before you do any work)
+  * [Before You Do Any Work](#before-you-do-any-work)
   
 ## What should I know before I get started?
 
