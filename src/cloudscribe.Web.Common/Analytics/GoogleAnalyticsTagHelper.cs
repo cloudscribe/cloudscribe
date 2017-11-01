@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0.
 // Author:                  Joe Audette
 // Created:                 2017-01-04
-// Last Modified:           2017-10-31
+// Last Modified:           2017-11-01
 // 
 
 using cloudscribe.Web.Common.Analytics;
@@ -80,6 +80,16 @@ namespace cloudscribe.Web.Common.TagHelpers
         [HtmlAttributeName("require-explicit-cookie-consent")]
         public bool RequireExplicitCookieConsent { get; set; } = false;
 
+        /// <summary>
+        /// this setting applies to the default cookie consent function.
+        /// if true, then a value of "dismiss" in the consent cookie is treated 
+        /// the same as "allow". This is useful especially for compliance type info
+        /// where all the user can do is dismiss the popup and no opt-out option is provided
+        /// the default is true
+        /// </summary>
+        [HtmlAttributeName("cookie-consent-accept-dismiss")]
+        public bool AcceptDismissAsCookieConsent { get; set; } = true;
+
         public override void Process(TagHelperContext context, TagHelperOutput output)
         {
             if(string.IsNullOrEmpty(ProfileId))
@@ -113,7 +123,11 @@ namespace cloudscribe.Web.Common.TagHelpers
                     sb.Append("console.log('cookie consent status:' + consentStatus);");
                 }
                 sb.Append("if (consentStatus == \"deny\") return false;");
-                sb.Append("if (consentStatus == \"dismiss\") return true;");
+                if(AcceptDismissAsCookieConsent)
+                {
+                    sb.Append("if (consentStatus == \"dismiss\") return true;");
+                }
+                
                 sb.Append("if (consentStatus == \"allow\") return true;");
                 if (RequireExplicitCookieConsent)
                 {

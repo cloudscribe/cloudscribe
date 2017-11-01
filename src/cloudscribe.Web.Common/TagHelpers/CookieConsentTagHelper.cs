@@ -2,10 +2,11 @@
 // Licensed under the Apache License, Version 2.0.
 // Author:                  Joe Audette
 // Created:                 2017-10-30
-// Last Modified:           2017-10-31
+// Last Modified:           2017-11-01
 // 
 
 using Microsoft.AspNetCore.Razor.TagHelpers;
+using Microsoft.Extensions.Localization;
 using System.Text;
 
 
@@ -216,6 +217,15 @@ namespace cloudscribe.Web.Common.TagHelpers
         [HtmlAttributeName("law-regional-law")]
         public bool LawRegionalLaw { get; set; } = true;
 
+        [HtmlAttributeName("localizer")]
+        public IStringLocalizer Localizer { get; set; } = null;
+
+        private string Localize(string input)
+        {
+            if (Localizer == null) return input;
+            return Localizer[input];
+        }
+
 
         public override void Process(TagHelperContext context, TagHelperOutput output)
         {
@@ -283,14 +293,14 @@ namespace cloudscribe.Web.Common.TagHelpers
             }
 
             sb.Append(",\"content\": {");
-            sb.Append("\"header\": '" + HeaderText + "',");
-            sb.Append("\"message\": '" + MessageText + "',");
-            sb.Append("\"dismiss\": '" + DismissText + "',");
-            sb.Append("\"allow\": '" + AllowText + "',");
-            sb.Append("\"deny\": '" + DenyText + "',");
-            sb.Append("\"link\": '" + LinkText + "',");
-            sb.Append("\"href\": '" + LinkUrl + "',");
-            sb.Append("\"close\": '" + CloseText + "'");
+            sb.Append("\"header\": '" + Localize(HeaderText) + "',");
+            sb.Append("\"message\": '" + Localize(MessageText) + "',");
+            sb.Append("\"dismiss\": '" + Localize(DismissText) + "',");
+            sb.Append("\"allow\": '" + Localize(AllowText) + "',");
+            sb.Append("\"deny\": '" + Localize(DenyText) + "',");
+            sb.Append("\"link\": '" + Localize(LinkText) + "',");
+            sb.Append("\"href\": '" + Localize(LinkUrl) + "',");
+            sb.Append("\"close\": '" + Localize(CloseText) + "'");
             sb.Append("}"); //end content
 
             if (!AutoOpen)
