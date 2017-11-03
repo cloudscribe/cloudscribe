@@ -33,7 +33,7 @@ namespace cloudscribe.Core.Web.Middleware
             SiteContext currentSite,
             IOptions<MultiTenantOptions> multiTenantOptionsAccessor,
             IUserContextResolver userResolver,
-            AccountService accountService
+            IAccountService accountService
             )
         {
             var multiTenantOptions = multiTenantOptionsAccessor.Value;
