@@ -23,7 +23,7 @@ using System.Threading.Tasks;
 
 namespace cloudscribe.Core.Web.Components
 {
-    public class AccountService
+    public class AccountService : IAccountService
     {
         public AccountService(
             SiteUserManager<SiteUser> userManager,
@@ -44,11 +44,11 @@ namespace cloudscribe.Core.Web.Components
             //log = logger;
         }
 
-        private readonly SiteUserManager<SiteUser> userManager;
-        private readonly SignInManager<SiteUser> signInManager;
-        private readonly IIdentityServerIntegration identityServerIntegration;
-        private readonly ISocialAuthEmailVerfificationPolicy socialAuthEmailVerificationPolicy;
-        private readonly IProcessAccountLoginRules loginRulesProcessor;
+        protected readonly SiteUserManager<SiteUser> userManager;
+        protected readonly SignInManager<SiteUser> signInManager;
+        protected readonly IIdentityServerIntegration identityServerIntegration;
+        protected readonly ISocialAuthEmailVerfificationPolicy socialAuthEmailVerificationPolicy;
+        protected readonly IProcessAccountLoginRules loginRulesProcessor;
         // private ILogger log;
 
         private async Task<SiteUser> CreateUserFromExternalLogin(
@@ -93,7 +93,7 @@ namespace cloudscribe.Core.Web.Components
         }
 
         
-        public async Task<UserLoginResult> TryExternalLogin(string providedEmail = "", bool? didAcceptTerms = null)
+        public virtual async Task<UserLoginResult> TryExternalLogin(string providedEmail = "", bool? didAcceptTerms = null)
         {
             var template = new LoginResultTemplate();
             IUserContext userContext = null;
@@ -180,7 +180,7 @@ namespace cloudscribe.Core.Web.Components
         //    return passwordValidator.
         //}
         
-        public async Task<UserLoginResult> TryLogin(LoginViewModel model)
+        public virtual async Task<UserLoginResult> TryLogin(LoginViewModel model)
         {
             var template = new LoginResultTemplate();
             IUserContext userContext = null;
@@ -252,7 +252,7 @@ namespace cloudscribe.Core.Web.Components
                 );
         }
 
-        public async Task<UserLoginResult> Try2FaLogin(LoginWith2faViewModel model, bool rememberMe)
+        public virtual async Task<UserLoginResult> Try2FaLogin(LoginWith2faViewModel model, bool rememberMe)
         {
             var template = new LoginResultTemplate();
             IUserContext userContext = null;
@@ -298,7 +298,7 @@ namespace cloudscribe.Core.Web.Components
 
         }
 
-        public async Task<UserLoginResult> TryLoginWithRecoveryCode(LoginWithRecoveryCodeViewModel model)
+        public virtual async Task<UserLoginResult> TryLoginWithRecoveryCode(LoginWithRecoveryCodeViewModel model)
         {
             var template = new LoginResultTemplate();
             IUserContext userContext = null;
@@ -346,7 +346,7 @@ namespace cloudscribe.Core.Web.Components
 
 
 
-        public async Task<UserLoginResult> TryRegister(
+        public virtual async Task<UserLoginResult> TryRegister(
             RegisterViewModel model, 
             ModelStateDictionary modelState,
             HttpContext httpContext,
@@ -480,7 +480,7 @@ namespace cloudscribe.Core.Web.Components
             return new VerifyEmailInfo(userContext, token);
         }
 
-        public async Task<VerifyEmailResult> ConfirmEmailAsync(string userId, string code)
+        public virtual async Task<VerifyEmailResult> ConfirmEmailAsync(string userId, string code)
         {
             IUserContext userContext = null;
             IdentityResult result = IdentityResult.Failed(null);

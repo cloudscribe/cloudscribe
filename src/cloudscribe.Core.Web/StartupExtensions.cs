@@ -66,7 +66,7 @@ namespace Microsoft.Extensions.DependencyInjection
 
             services.AddScoped<SiteEvents, SiteEvents>();
             services.AddScoped<SiteManager, SiteManager>();
-            services.AddScoped<AccountService, AccountService>();
+            services.TryAddScoped<IAccountService, AccountService>();
             services.AddScoped<GeoDataManager, GeoDataManager>();
             services.AddScoped<SystemInfoManager, SystemInfoManager>();
             services.AddScoped<IpAddressTracker, IpAddressTracker>();

@@ -33,7 +33,7 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
     public class AccountController : Controller
     {
         public AccountController(
-            AccountService accountService,
+            IAccountService accountService,
             SiteContext currentSite,
             IpAddressTracker ipAddressTracker,
             ISiteMessageEmailSender emailSender,
@@ -61,7 +61,7 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
             analytics = analyticsHandler;
         }
 
-        private readonly AccountService accountService;
+        private readonly IAccountService accountService;
         private readonly ISiteContext Site;
         private readonly IIdentityServerIntegration identityServerIntegration;
         private readonly ISiteMessageEmailSender emailSender;
