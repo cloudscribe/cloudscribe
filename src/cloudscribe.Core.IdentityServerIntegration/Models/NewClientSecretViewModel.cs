@@ -29,5 +29,8 @@ namespace cloudscribe.Core.IdentityServerIntegration.Models
         public string Type { get; set; }
 
         public string Description { get; set; }
+
+        public string HashOption { get; set; }
     }
+
 }

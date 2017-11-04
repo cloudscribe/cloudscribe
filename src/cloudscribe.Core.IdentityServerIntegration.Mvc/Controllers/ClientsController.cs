@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2016-10-13
-// Last Modified:			2017-10-09
+// Last Modified:			2017-11-04
 // 
 
 using cloudscribe.Core.IdentityServerIntegration.Models;
@@ -10,6 +10,7 @@ using cloudscribe.Core.IdentityServerIntegration.Services;
 using cloudscribe.Core.Web.Components;
 using cloudscribe.Web.Common.Extensions;
 using cloudscribe.Web.Navigation;
+using IdentityServer4;
 using IdentityServer4.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Localization;
@@ -387,7 +388,22 @@ namespace cloudscribe.Core.IdentityServerIntegration.Controllers.Mvc
                 return RedirectToAction("Index");
             }
 
-            var secret = new Secret(model.Value, model.Description, model.Expiration);
+            
+            var secretValue = model.Value;
+            if(model.Type == IdentityServerConstants.SecretTypes.SharedSecret)
+            {
+                switch (model.HashOption)
+                {
+                    case "sha256":
+                        secretValue = model.Value.Sha256();
+                        break;
+                    case "sha512":
+                        secretValue = model.Value.Sha512();
+                        break;
+                }
+            }
+            
+            var secret = new Secret(secretValue, model.Description, model.Expiration);
             secret.Type = model.Type;
 
             if (client.ClientSecrets.Contains(secret))

@@ -615,4 +615,13 @@
   <data name="Key" xml:space="preserve">
     <value>Key</value>
   </data>
+  <data name="Apply Sha256 Hash" xml:space="preserve">
+    <value>Apply Sha256 Hash</value>
+  </data>
+  <data name="Apply Sha512 Hash" xml:space="preserve">
+    <value>Apply Sha512 Hash</value>
+  </data>
+  <data name="Don't Hash" xml:space="preserve">
+    <value>Don't Hash</value>
+  </data>
 </root>
