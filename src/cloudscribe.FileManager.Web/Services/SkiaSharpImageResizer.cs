@@ -17,7 +17,14 @@ namespace cloudscribe.FileManager.Web.Services
         }
 
         private ILogger log;
-        
+
+        public ImageSize GetImageSize(string pathToImage)
+        {
+            //TODO: this processor is not currently used
+            return null;
+        }
+
+
         public bool ResizeImage(
             string sourceFilePath,
             string targetDirectoryPath,

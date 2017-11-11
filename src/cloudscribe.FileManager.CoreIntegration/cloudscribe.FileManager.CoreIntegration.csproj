@@ -2,8 +2,8 @@
 
   <PropertyGroup>
     <Description>integration for cloudscribe Core and cloudscribe FileManager</Description>
-    <VersionPrefix>2.0.5</VersionPrefix>
-    <AssemblyInfo>2.0.5</AssemblyInfo>
+    <VersionPrefix>2.0.6</VersionPrefix>
+    <AssemblyInfo>2.0.6</AssemblyInfo>
     <Authors>Joe Audette</Authors>
     <TargetFrameworks>netstandard2.0</TargetFrameworks>
     <DebugType>portable</DebugType>

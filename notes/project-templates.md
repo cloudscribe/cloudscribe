@@ -1,4 +1,5 @@
 
+https://packagesearch.azurewebsites.net/
 
 https://github.com/dotnet/templating/wiki/Post-Action-Registry
 

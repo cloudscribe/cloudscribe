@@ -1,6 +1,8 @@
 
 http://blog.ionic.io/the-end-of-framework-churn/
 
+https://remotestorage.io/
+
 https://medium.com/javascript-scene/elements-of-javascript-style-caa8821cb99f
 
 https://javascriptweblog.wordpress.com/2011/05/31/a-fresh-look-at-javascript-mixins/

@@ -27,6 +27,29 @@ namespace cloudscribe.FileManager.Web.Services
 
         private ILogger _log;
 
+        public ImageSize GetImageSize(string pathToImage)
+        {
+            try
+            {
+                using (Stream tmpFileStream = File.OpenRead(pathToImage))
+                {
+
+                    using (Image<Rgba32> image = Image.Load(tmpFileStream))
+                    {
+                        return new ImageSize(image.Width, image.Height);
+                    }
+
+                }
+            }
+            catch (Exception ex)
+            {
+                _log.LogError(ex.Message + " " + ex.StackTrace);
+            }
+
+
+            return null;
+        }
+
         public bool ResizeImage(
             string sourceFilePath,
             string targetDirectoryPath,
