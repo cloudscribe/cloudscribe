@@ -27,5 +27,7 @@ namespace cloudscribe.FileManager.Web.Models
             bool allowEnlargement = false,
             int quality = 90 
             );
+
+        ImageSize GetImageSize(string pathToImage);
     }
 }

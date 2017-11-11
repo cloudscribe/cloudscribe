@@ -1,4 +1,6 @@
 
+https://getstream.io/blog/stop-using-io-domain-names-for-production-traffic/
+
 ## To www or not to www
 http://www.yes-www.org/why-use-www/
 https://www.netlify.com/blog/2017/02/28/to-www-or-not-www/
