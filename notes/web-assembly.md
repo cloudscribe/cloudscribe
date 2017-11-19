@@ -17,3 +17,7 @@ https://github.com/AssemblyScript
 
 https://blog.acolyer.org/2017/09/18/bringing-the-web-up-to-speed-with-webassembly/
 
+http://sellsbrothers.com/webassembly-explodes-client-side-programming
+
+https://blog.mozilla.org/blog/2017/11/13/webassembly-in-browsers/
+
