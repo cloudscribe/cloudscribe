@@ -1,5 +1,7 @@
 # F# 
 
+https://blogs.msdn.microsoft.com/dotnet/2017/11/15/announcing-f-support-for-net-core-and-net-standard-projects-in-visual-studio/
+
 see also fable.md
 
 https://github.com/SAFE-Stack/SAFE-BookStore

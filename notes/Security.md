@@ -1,6 +1,9 @@
 
+https://www.troyhunt.com/locking-down-your-website-scripts-with-csp-hashes-nonces-and-report-uri/
 
 https://docs.nwebsec.com/en/latest/index.html
+
+https://www.jitbit.com/alexblog/256-targetblank---the-most-underestimated-vulnerability-ever/
 
 https://www.scientificamerican.com/article/the-only-safe-e-mail-is-text-only-e-mail/
 

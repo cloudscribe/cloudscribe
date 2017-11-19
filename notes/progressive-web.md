@@ -1,5 +1,7 @@
 
 
+https://madskristensen.net/blog/offline-aspnet-core-apps-with-service-workers/
+
 http://www.pwabuilder.com/
 
 Progressive web apps and the Windows ecosystem
