@@ -29,9 +29,9 @@
 
         public int ResizeMinAllowedHeight { get; set; } = 50;
 
-        public string AllowedFileExtensions { get; set; } = ".gif|.jpg|.jpeg|.png|.flv|.swf|.wmv|.mp3|.mp4|.m4a|.m4v|.oga|.ogv|.webma|.webmv|.webm|.wav|.fla|.tif|.asf|.asx|.avi|.mov|.mpeg|.mpg|.zip|.pdf|.doc|.docx|.xls|.xlsx|.ppt|.pptx|.pps|.csv|.txt|.htm|.html|.css";
+        public string AllowedFileExtensions { get; set; } = ".gif|.jpg|.jpeg|.svg|.svgz|.png|.flv|.swf|.wmv|.mp3|.mp4|.m4a|.m4v|.oga|.ogv|.webma|.webmv|.webm|.wav|.fla|.tif|.asf|.asx|.avi|.mov|.mpeg|.mpg|.zip|.pdf|.doc|.docx|.xls|.xlsx|.ppt|.pptx|.pps|.csv|.txt|.htm|.html|.css";
 
-        public string ImageFileExtensions { get; set; } = ".gif|.jpg|.jpeg|.png";
+        public string ImageFileExtensions { get; set; } = ".gif|.jpg|.jpeg|.png|.svg|.svgz";
 
         //public string AudioFileExtensions { get; set; } = ".wma|.mp3|.m4a|.m4a|.oga|.webma|.webm|.wav|.asf|.asx|.fla";
 

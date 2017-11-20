@@ -47,7 +47,8 @@ CKEDITOR.plugins.add( 'cloudscribe-filedrop',
 				case "image/jpeg":
 				case "image/jpg":
 				case "image/gif":
-				case "image/png":
+                case "image/png":
+                case "image/svg+xml":
 
 				var formData = new FormData();
 				formData.append("__RequestVerificationToken", xsrfToken);
