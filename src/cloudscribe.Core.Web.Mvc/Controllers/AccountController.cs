@@ -560,7 +560,7 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
                 
                 var result = await accountService.TryRegister(model, ModelState, HttpContext, customRegistration);
 
-                if (result.SignInResult.Succeeded)
+                if (result.SignInResult.Succeeded || (result.SignInResult.IsNotAllowed && result.User != null))
                 {
                     await customRegistration.HandleRegisterPostSuccess(
                         Site,
@@ -568,9 +568,13 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
                         HttpContext,
                         result);
 
-                    return await HandleLoginSuccess(result, returnUrl);
+                    if(result.SignInResult.Succeeded)
+                    {
+                        return await HandleLoginSuccess(result, returnUrl);
+                    }
+                    
                 }
-
+                
                 foreach (var reason in result.RejectReasons)
                 {
                     //these reasons are not meant to be shown in the ui
