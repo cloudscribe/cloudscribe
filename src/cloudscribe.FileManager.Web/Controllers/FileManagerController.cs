@@ -2,13 +2,14 @@
 // Licensed under the Apache License, Version 2.0. 
 // Author:                  Joe Audette
 // Created:                 2017-02-14
-// Last Modified:           2017-07-25
+// Last Modified:           2017-11-25
 // 
 
 //using cloudscribe.FileManager.Web.Filters;
 using cloudscribe.FileManager.Web.Models;
 using cloudscribe.FileManager.Web.Services;
 using cloudscribe.Web.Common.Helpers;
+using cloudscribe.Web.Common.Extensions;
 using Microsoft.AspNetCore.Antiforgery;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
@@ -85,6 +86,10 @@ namespace cloudscribe.FileManager.Web.Controllers
                 model.AllowedFileExtensionsRegex = allowedFilesRegexBuilder.BuildRegex(autoUploadOptions.AllowedFileExtensions);
             }
 
+            if(HttpContext.Request.IsAjaxRequest())
+            {
+                return PartialView(model);
+            }
 
             return View(model);
         }

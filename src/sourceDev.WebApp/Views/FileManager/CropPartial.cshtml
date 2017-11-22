@@ -1,0 +1,209 @@
+﻿@using cloudscribe.FileManager.Web.Models
+@using Microsoft.Extensions.Localization
+@using Microsoft.Extensions.Options
+@model BrowseModel
+@inject IOptions<AutomaticUploadOptions> autoUploadOptionsAccessor
+@inject IStringLocalizer<FileManagerStringResources> sr
+@{
+    var upoadOptions = autoUploadOptionsAccessor.Value;
+}
+    <div class="container">
+        <div class="row">
+            <div class="col-md-12">
+
+                <div class="img-container">
+                    <img id="image" src="~/cr/css/1x1.gif" alt="Picture" class="cropper-hidden" />
+                    <div class="cropper-container cropper-bgx" style="width: 825px; height: 469px;">
+                        <div class="cropper-wrap-box">
+                            <div class="cropper-canvas" style="width: 825px; height: 464.063px; transform: translateY(2.46875px);">
+                                <img src="~/cr/css/1x1.gif" style="width: 825px; height: 464.063px; transform: none;" />
+                            </div>
+                        </div> 
+                    </div>
+                </div>
+            </div>   
+        </div>
+        <div class="row docs-data">
+            <div class="col-md-6">
+                <div class="input-group input-group-sm">
+                    <label class="input-group-addon" for="dataWidth">@sr["Crop Width"]</label>
+                    <input type="text" class="form-control" id="dataWidth" disabled placeholder='@sr["width"]' />
+                    <span class="input-group-addon">px</span>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="input-group input-group-sm">
+                    <label class="input-group-addon" for="dataHeight">@sr["Crop Height"]</label>
+                    <input type="text" class="form-control" id="dataHeight" disabled placeholder='@sr["height"]' />
+                    <span class="input-group-addon">px</span>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12 docs-buttons">
+                <div class="btn-group">
+                    <label class="btn btn-primary btn-upload" for="inputImage">
+                        <input type="file" class="sr-only" id="inputImage" name="file" accept=".jpg,.jpeg,.png,.gif,.tiff" />
+                        @sr["Choose an image from your device"]
+                    </label>
+                </div>
+                <div class="btn-group">
+                    <button type="button" class="btn btn-primary" data-method="zoom" data-option="0.1" title='@sr["Zoom In"]'>
+                        <span class="docs-tooltip" data-toggle="tooltip" data-animation="false" title="" data-original-title='@sr["Zoom In"]'>
+                            <span class="fa fa-search-plus"></span>
+                        </span>
+                    </button>
+                    <button type="button" class="btn btn-primary" data-method="zoom" data-option="-0.1" title='@sr["Zoom Out"]'>
+                        <span class="docs-tooltip" data-toggle="tooltip" data-animation="false" title="" data-original-title='@sr["Zoom Out"]'>
+                            <span class="fa fa-search-minus"></span>
+                        </span>
+                    </button>
+                </div>
+                <div class="btn-group">
+                    <button type="button" class="btn btn-primary" data-method="move" data-option="-10" data-second-option="0" title='@sr["Move Left"]'>
+                        <span class="docs-tooltip" data-toggle="tooltip" data-animation="false" title="" data-original-title='@sr["Move Left"]'>
+                            <span class="fa fa-arrow-left"></span>
+                        </span>
+                    </button>
+                    <button type="button" class="btn btn-primary" data-method="move" data-option="10" data-second-option="0" title='@sr["Move Right"]'>
+                        <span class="docs-tooltip" data-toggle="tooltip" data-animation="false" title="" data-original-title='@sr["Move Right"]'>
+                            <span class="fa fa-arrow-right"></span>
+                        </span>
+                    </button>
+                    <button type="button" class="btn btn-primary" data-method="move" data-option="0" data-second-option="-10" title='@sr["Move Up"]'>
+                        <span class="docs-tooltip" data-toggle="tooltip" data-animation="false" title="" data-original-title='@sr["Move Up"]'>
+                            <span class="fa fa-arrow-up"></span>
+                        </span>
+                    </button>
+                    <button type="button" class="btn btn-primary" data-method="move" data-option="0" data-second-option="10" title='@sr["Move Down"]'>
+                        <span class="docs-tooltip" data-toggle="tooltip" data-animation="false" title="" data-original-title='@sr["Move Down"]'>
+                            <span class="fa fa-arrow-down"></span>
+                        </span>
+                    </button>
+                </div>
+                <div class="btn-group">
+                    <button type="button" class="btn btn-primary" data-method="rotate" data-option="-45" title='@sr["Rotate Left"]'>
+                        <span class="docs-tooltip" data-toggle="tooltip" data-animation="false" title="" data-original-title='@sr["Rotate Left"]'>
+                            <span class="fa fa-rotate-left"></span>
+                        </span>
+                    </button>
+                    <button type="button" class="btn btn-primary" data-method="rotate" data-option="45" title='@sr["Rotate Right"]'>
+                        <span class="docs-tooltip" data-toggle="tooltip" data-animation="false" title="" data-original-title='@sr["Rotate Right"]'>
+                            <span class="fa fa-rotate-right"></span>
+                        </span>
+                    </button>
+                </div>
+                <div class="btn-group">
+                    <button type="button" class="btn btn-primary" data-method="scaleX" data-option="-1" title='@sr["Flip Horizontal"]'>
+                        <span class="docs-tooltip" data-toggle="tooltip" data-animation="false" title="" data-original-title='@sr["Flip Horizontal"]'>
+                            <span class="fa fa-arrows-h"></span>
+                        </span>
+                    </button>
+                    <button type="button" class="btn btn-primary" data-method="scaleY" data-option="-1" title='@sr["Flip Vertical"]'>
+                        <span class="docs-tooltip" data-toggle="tooltip" data-animation="false" title="" data-original-title='@sr["Flip Vertical"]'>
+                            <span class="fa fa-arrows-v"></span>
+                        </span>
+                    </button>
+                </div>
+                <button type="button" class="btn btn-primary" data-method="zoomTo" data-option="1">
+                    <span class="docs-tooltip" data-toggle="tooltip" data-animation="false" title="" data-original-title='@sr["Zoom to 100%"]'>
+                        @sr["Zoom to 100%"]
+                    </span>
+                </button>
+                <div class="btn-group">
+                    <button type="button" class="btn btn-primary" data-method="reset" title='@sr["Reset"]'>
+                        <span class="docs-tooltip" data-toggle="tooltip" data-animation="false" title="" data-original-title='@sr["Reset"]'>
+                            <span class="fa fa-refresh"></span>
+                        </span>
+                    </button>
+                </div>
+                <div class="docs-toggles btn-group d-flex flex-nowrap" data-toggle="buttons">
+                    <label class="btn btn-primary active">
+                        <input type="radio" class="sr-only" id="aspectRatio0" name="aspectRatio" value="1.7777777777777777" />
+                        <span class="docs-tooltip" data-toggle="tooltip" data-animation="false" title="" data-original-title='@sr["aspectRatio: 16 / 9"]'>
+                            16:9
+                        </span>
+                    </label>
+                    <label class="btn btn-primary">
+                        <input type="radio" class="sr-only" id="aspectRatio1" name="aspectRatio" value="1.3333333333333333" />
+                        <span class="docs-tooltip" data-toggle="tooltip" data-animation="false" title="" data-original-title='@sr["aspectRatio: 4 / 3"]'>
+                            4:3
+                        </span>
+                    </label>
+                    <label class="btn btn-primary">
+                        <input type="radio" class="sr-only" id="aspectRatio2" name="aspectRatio" value="1" />
+                        <span class="docs-tooltip" data-toggle="tooltip" data-animation="false" title="" data-original-title='@sr["aspectRatio: 1 / 1"]'>
+                            1:1
+                        </span>
+                    </label>
+                    <label class="btn btn-primary">
+                        <input type="radio" class="sr-only" id="aspectRatio3" name="aspectRatio" value="0.6666666666666666" />
+                        <span class="docs-tooltip" data-toggle="tooltip" data-animation="false" title="" data-original-title='@sr["aspectRatio: 2 / 3"]'>
+                            2:3
+                        </span>
+                    </label>
+                    <label class="btn btn-primary">
+                        <input type="radio" class="sr-only" id="aspectRatio4" name="aspectRatio" value="NaN" />
+                        <span class="docs-tooltip" data-toggle="tooltip" data-animation="false" title="" data-original-title='@sr["aspectRatio: Free Form"]'>
+                            Free
+                        </span>
+                    </label>
+                </div>
+                <div class="form-inline">
+                    <div class="input-group input-group-sm">
+                        <label class="input-group-addon" for="dataWidth">@sr["Output Width"]</label>
+                        <input type="text" class="form-control" id="dataNewWidth" placeholder="output width" style="max-width:70px;" />
+                        <span class="input-group-addon">px</span>
+                    </div>
+                    <div class="input-group input-group-sm">
+                        <label class="input-group-addon" for="dataHeight">@sr["Output Height"]</label>
+                        <input type="text" class="form-control" id="dataNewHeight" placeholder="output height" style="max-width:70px;" />
+                        <span class="input-group-addon">px</span>
+                    </div>
+                    <div class="input-group input-group-sm">
+                        <label class="input-group-addon" for="maxWidth">@sr["Max Width"]</label>
+                        <input type="text" class="form-control" id="cropMaxWidth" style="max-width:70px;" value="@upoadOptions.WebSizeImageMaxWidth" />
+                    </div>
+                    <div class="input-group input-group-sm">
+                        <div class="checkbox">
+                            <label>
+                                <input type="checkbox" id="chkContrainWidthOfCrop" checked /> @sr["Constrain Width"]
+                            </label>
+                        </div>
+                    </div>
+                    <div class="btn-group btn-group-crop form-group">
+                        <button id="btnUploadCrop" type="button" class="btn btn-primary" data-method="getCroppedCanvas">
+                            @sr["Upload/Save"]
+                        </button>
+                    </div>
+                </div>
+                <div class="modal fade docs-cropped" id="getCroppedCanvasModal" aria-hidden="true" aria-labelledby="getCroppedCanvasTitle" role="dialog" tabindex="-1">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="getCroppedCanvasTitle">@sr["Cropped Preview"]</h5>
+                            </div>
+                            <div class="modal-body"></div>
+                            <div class="modal-footer">
+
+                                <form id="frmUploadCropped" class="form-inline" asp-controller="FileManager" asp-action="Upload">
+                                    <input type="hidden" id="cropResizeImages" name="resizeImages" value="false" />
+                                    <input type="hidden" id="cropCurrentDir" name="currentDir" value="" />
+                                    <input type="hidden" class="form-control" id="origFileName" />
+                                    <span class="form-control " id="cropCurrentDirLabel" style="float:left;width:100%;margin-bottom:7px;text-align:left;"></span>
+                                    <div class="form-group">
+                                        <input type="text" class="form-control " id="croppedFileName" name="croppedFileName" />
+                                    </div>
+
+                                    <button id="btnUploadCropped" type="submit" class="btn btn-primary"><i class="fa fa-cloud-upload" aria-hidden="true"></i>&nbsp;@sr["Upload"]</button>
+                                    <a class="btn btn-primary" id="btnSaveLocal" href="javascript:void(0);" download="cropped.jpg">@sr["Save Locally"]</a>
+                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">@sr["Close"]</button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>

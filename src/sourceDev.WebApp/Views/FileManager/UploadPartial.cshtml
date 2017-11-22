@@ -1,0 +1,67 @@
+﻿@using cloudscribe.FileManager.Web.Models
+@using Microsoft.Extensions.Localization
+@using Microsoft.Extensions.Options
+@model BrowseModel
+@inject IOptions<AutomaticUploadOptions> autoUploadOptionsAccessor
+@inject IStringLocalizer<FileManagerStringResources> sr
+@{
+    var upoadOptions = autoUploadOptionsAccessor.Value;
+}
+<div class="col-md-12 fileupload">
+    @if (Model.Type == "image")
+    {
+        <h2>@sr["Upload Image Files"]</h2>
+    }
+    else
+    {
+        <h2>@sr["Upload Files"]</h2>
+    }
+    
+    <span class="operationinstructions">
+        @sr["First use the browse tab to select the folder where you would like the new files to be placed. Then drag and drop files onto the dropzone or browse to select the files on your computer, once files are selected an Upload button will appear.  Files will be uploaded to the current folder:"]"
+    </span>
+    <div>
+        <span class="form-control" id="currentFolder" name="fileSelection">@Model.InitialVirtualPath</span>
+    </div>
+    <form id="frmUpload" method="post" enctype="multipart/form-data" asp-controller="FileManager" asp-action="AutomaticUpload">
+        <input type="hidden" id="uploadCurrentDir" name="currentDir" />
+
+        <div class="form-inline">
+            <div class="form-group">
+                <label for="maxWidth">@sr["Max Width"]</label>
+                <input type="text" class="form-control" id="maxWidth" name="maxWidth" value="@upoadOptions.WebSizeImageMaxWidth" />
+            </div>
+            <div class="form-group">
+                <label for="maxHeight">@sr["Max Height"]</label>
+                <input type="text" class="form-control" id="maxHeight" name="maxHeight" value="@upoadOptions.WebSizeImageMaxHeight" />
+            </div>
+            <div class="form-group">
+                <div class="checkbox">
+                    <label>
+                        <input asp-for="ResizeImages" /> @sr["Reduce Image Size For Web"]
+                    </label>
+                </div>
+            </div>
+        </div>
+        <div class="form-group">
+            <div id="divFileUpload" class="fileupload">
+                <p>@sr["Upload one or more files using this form:"]</p>
+                <div id="dropZone" class="fileupload-dropzone">
+                    <span>@sr["Drag and drop files here"]</span>
+                </div>
+                <div id="pnlFiles" class="uploadcontainer">
+                    <div id="browseButton" class="btn btn-success fileinput-button">
+                        <i class="fa fa-plus"></i>
+                        <span>@sr["Choose Files"]</span>
+                        <input id="fileupload" type="file" name="fileupload" multiple />
+                    </div>
+                </div>
+            </div>
+            <div id="progress" class="progress">
+                <div class="progress-bar progress-bar-success"></div>
+            </div>
+            <div id="fileList" class='uploadfilelist'></div>
+            <div id="ui" class='uploadfilesui'></div>
+        </div>
+    </form>
+</div>

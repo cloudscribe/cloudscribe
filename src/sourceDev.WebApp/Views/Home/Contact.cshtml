@@ -2,9 +2,19 @@
 @inject SiteContext Tenant
 @{
     ViewData["Title"] = "Contact";
+    var contentId = "my-content" + DateTime.UtcNow.ToString("yyyy-MM-dd-hh");
 }
 @section Styles {
 @{ await Html.RenderPartialAsync("_DatePickerCssPartial"); }
+<link rel="stylesheet" href="~/cr/css/simplemde.min.css" />
+<style>
+    .editor-toolbar.fullscreen {
+        z-index: 1040;
+    }
+</style>
+
+
+
 }
 <h2>@ViewData["Title"].</h2>
 <h3>@ViewData["Message"]</h3>
@@ -22,28 +32,61 @@
 </address>
 
 <div class="form-group">
-    <label for="Status">From date</label>
-    <div class='input-group date' id='fromDateDisplay'>
-        <input type="text"
-               name="fromDateDisplay"
-               class="form-control"
-               data-bs-datepicker="true"
-               data-bs-datepicker-format="DD/MM/YYYY"
-               data-bs-datepicker-iso-target-id="fromDate"
-               data-bs-datepicker-iso-format="YYYY-MM-DD"
-               data-bs-datepicker-toggle-target-id="fromDateToggle"
-               data-bs-datepicker-use-fontawesome="false"
-               data-bs-datepicker-allowinputtoggle="true"
-               data-bs-datepicker-locale="@System.Globalization.CultureInfo.CurrentCulture.Name" />
-        <span class="input-group-addon">
-            <span id="fromDateToggle" class="glyphicon glyphicon-calendar"></span>
-        </span>
+    <textarea id="content" name="content" class="form-control" rows="10" cols="70"
+              data-markdown-unobtrusive=""
+              data-markdown-autosave="true"
+              data-markdown-contentid="@contentId"
+              data-markdown-forceSync="true"
+              data-markdown-indentWithTabs="true"
+              data-markdown-spellChecker="true"
+              data-markdown-filedialogid="#fileBrowseDialog"
+              data-markdown-filebrowseurl="/filemanager/filedialog"
+              data-markdown-dropfileuploadurl="/filemanager/dropfile"></textarea>
+
+</div>
+
+<div id="fileBrowseDialog" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-lg" style="height:99%;width:99%;">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true"><i title="Close" class="fa fa-close"></i></button>
+            </div>
+            @*<div class="loading">Please wait</div>*@
+            <iframe id="frFileDialog" frameborder="0" style="overflow:hidden;height:100%;width:100%;min-height: 600px;" height="100%" width="100%"></iframe>
+        </div>
     </div>
 </div>
-<input type="hidden" id="fromDate" name="fromDate" value="" />
 
-@section Scripts {
-<script src="~/cr/js/moment-with-locales.js"></script>
-<script src="~/cr/js/bootstrap-datetimepicker.js"></script>
-<script src="~/cr/js/cloudscribe-datepicker-bootstrap-unobtrusive.js" asp-append-version="true"></script>
-}
+
+    <div class="form-group">
+        <label for="Status">From date</label>
+        <div class='input-group date' id='fromDateDisplay'>
+            <input type="text"
+                   name="fromDateDisplay"
+                   class="form-control"
+                   data-bs-datepicker="true"
+                   data-bs-datepicker-format="DD/MM/YYYY"
+                   data-bs-datepicker-iso-target-id="fromDate"
+                   data-bs-datepicker-iso-format="YYYY-MM-DD"
+                   data-bs-datepicker-toggle-target-id="fromDateToggle"
+                   data-bs-datepicker-use-fontawesome="false"
+                   data-bs-datepicker-allowinputtoggle="true"
+                   data-bs-datepicker-locale="@System.Globalization.CultureInfo.CurrentCulture.Name" />
+            <span class="input-group-addon">
+                <span id="fromDateToggle" class="glyphicon glyphicon-calendar"></span>
+            </span>
+        </div>
+    </div>
+    <input type="hidden" id="fromDate" name="fromDate" value="" />
+
+    @section Scripts {
+        <script src="~/cr/js/moment-with-locales.js"></script>
+        <script src="~/cr/js/bootstrap-datetimepicker.js"></script>
+        <script src="~/cr/js/cloudscribe-datepicker-bootstrap-unobtrusive.js" asp-append-version="true"></script>
+<script src="~/cr/js/jquery.unobtrusive-ajax.min.js"></script>
+<script src="~/cr/js/cloudscribe-modaldialog-bootstrap.min.js"></script>
+<script src="~/cr/js/simplemde.min.js"></script>
+@*<script src="~/cr/js/simplemde-unobtrusive.min.js"></script>*@
+<script src="~/js/simplemde-unobtrusive.js" asp-append-version="true"></script>
+
+    }

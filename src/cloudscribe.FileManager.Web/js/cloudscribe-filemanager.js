@@ -348,8 +348,15 @@
                 fileManager.notify('Please select a file in the browse tab', 'alert-danger');
             }
             else {
-                window.opener.CKEDITOR.tools.callFunction(funcNum, fileUrl);
-                window.close();
+                if (window.parent && window.parent.FileSelectCallback) {
+                    window.parent.FileSelectCallback(fileUrl);
+                }
+                else {
+                    window.opener.CKEDITOR.tools.callFunction(funcNum, fileUrl);
+                    window.close();
+                }
+
+                
             }
         },
         removeNode: function (id) {
