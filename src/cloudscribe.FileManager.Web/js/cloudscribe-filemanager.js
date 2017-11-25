@@ -340,7 +340,7 @@
 
             return false; //cancel form submit
         },
-        ckReturnFile: function () {
+        selectfile: function () {
             var funcNum = $("#fmconfig").data("ckfunc");
             var fileUrl = fileManager.selectedFileInput.val();
             //alert(funcNum);
@@ -348,8 +348,15 @@
                 fileManager.notify('Please select a file in the browse tab', 'alert-danger');
             }
             else {
-                window.opener.CKEDITOR.tools.callFunction(funcNum, fileUrl);
-                window.close();
+                if (window.parent && window.parent.FileSelectCallback) {
+                    window.parent.FileSelectCallback(fileUrl);
+                }
+                else {
+                    window.opener.CKEDITOR.tools.callFunction(funcNum, fileUrl);
+                    window.close();
+                }
+
+                
             }
         },
         removeNode: function (id) {
@@ -559,7 +566,7 @@
             this.loadTree();
             this.setupFileLoader();
             this.newFolderButton.on('click', fileManager.createFolder);
-            this.fileSelectorButton.on('click', fileManager.ckReturnFile);
+            this.fileSelectorButton.on('click', fileManager.selectfile);
             this.deleteFolderButton.on('click', fileManager.deleteFolder);
             this.renameFolderButton.on('click', fileManager.renameFolder);
             this.deleteFileButton.on('click', fileManager.deleteFile);
