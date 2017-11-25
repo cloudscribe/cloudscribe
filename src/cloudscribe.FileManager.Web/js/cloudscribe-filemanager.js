@@ -340,7 +340,7 @@
 
             return false; //cancel form submit
         },
-        ckReturnFile: function () {
+        selectfile: function () {
             var funcNum = $("#fmconfig").data("ckfunc");
             var fileUrl = fileManager.selectedFileInput.val();
             //alert(funcNum);
@@ -566,7 +566,7 @@
             this.loadTree();
             this.setupFileLoader();
             this.newFolderButton.on('click', fileManager.createFolder);
-            this.fileSelectorButton.on('click', fileManager.ckReturnFile);
+            this.fileSelectorButton.on('click', fileManager.selectfile);
             this.deleteFolderButton.on('click', fileManager.deleteFolder);
             this.renameFolderButton.on('click', fileManager.renameFolder);
             this.deleteFileButton.on('click', fileManager.deleteFile);

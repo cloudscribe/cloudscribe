@@ -2,8 +2,8 @@
 
   <PropertyGroup>
     <Description>cloudscribe common helpers for web applications</Description>
-    <VersionPrefix>2.0.19</VersionPrefix>
-    <AssemblyVersion>2.0.19</AssemblyVersion>
+    <VersionPrefix>2.0.20</VersionPrefix>
+    <AssemblyVersion>2.0.20</AssemblyVersion>
     <Authors>Joe Audette</Authors>
     <TargetFrameworks>netstandard2.0</TargetFrameworks>
     <AssemblyName>cloudscribe.Web.Common</AssemblyName>
