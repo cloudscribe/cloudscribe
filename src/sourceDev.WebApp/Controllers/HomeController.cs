@@ -29,6 +29,13 @@ namespace sourceDev.WebApp.Controllers
             return View();
         }
 
+        public IActionResult Test1()
+        {
+            
+
+            return View();
+        }
+
         [HttpPost]
         public IActionResult SetLanguage(string culture, string returnUrl)
         {

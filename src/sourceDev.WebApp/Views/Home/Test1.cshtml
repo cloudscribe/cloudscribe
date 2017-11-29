@@ -1,0 +1,26 @@
+﻿@using cloudscribe.FileManager.Web.Services
+@using cloudscribe.Web.Common.Gps
+@{
+    ViewData["Title"] = "Test1";
+    var exifHelper = new ExifHelper();
+    var data = exifHelper.ExtractExif("C:\\_c\\cloudscribe\\src\\sourceDev.WebApp\\sitefiles\\s1\\wwwroot\\media\\images\\IMG_2063.JPG");
+    var dms = exifHelper.ExtractDmsLocation(data);
+    var location = exifHelper.ExtractLocation(data);
+}
+
+<h2>Test1</h2>
+@dms.ToString()
+<br />
+@dms.ToLocation().ToString()
+<hr />
+@location.ToString()
+<br />
+@location.ToDmsLocation().ToString()
+<hr />
+
+@foreach (var item in data)
+{
+    @item.Key  @:- @item.Value
+        @:<br />
+}
+
