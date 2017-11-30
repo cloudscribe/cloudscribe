@@ -1,5 +1,7 @@
 ## Icon frameworks
 
+https://shkspr.mobi/blog/2017/11/super-tiny-website-logos-in-svg/
+
 https://feathericons.com/
 
 https://vmware.github.io/clarity/icons/clarity-icons

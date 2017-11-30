@@ -100,6 +100,7 @@ namespace cloudscribe.FileManager.Web.Services
 
                     using (Image<Rgba32> fullsizeImage = Image.Load(tmpFileStream))
                     {
+                        
                         scaleFactor = GetScaleFactor(fullsizeImage.Width, fullsizeImage.Height, maxWidth, maxHeight);
                         if (!allowEnlargement)
                         {
