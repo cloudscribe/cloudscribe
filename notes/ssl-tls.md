@@ -1,4 +1,6 @@
 
+https://blogs.msdn.microsoft.com/webdev/2017/11/29/configuring-https-in-asp-net-core-across-different-platforms/
+
 https://blog.benroux.me/running-multiple-https-domains-from-the-same-server/
 
 https://weblog.west-wind.com/posts/2016/Feb/22/Using-Lets-Encrypt-with-IIS-on-Windows

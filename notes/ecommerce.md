@@ -1,4 +1,35 @@
 
+Square does not yet support asp.net core
+https://github.com/square/connect-csharp-sdk
+
+javascript form
+https://docs.connect.squareup.com/payments/sqpaymentform/sqpaymentform-overview
+
+https://docs.connect.squareup.com/payments/sqpaymentform/sqpaymentform-setup
+
+https://docs.connect.squareup.com/articles/using-sandbox
+
+https://github.com/square/connect-csharp-sdk/blob/master/docs/TransactionsApi.md#charge
+https://github.com/square/connect-csharp-sdk/blob/master/docs/TransactionsApi.md#createrefund
+https://squareup.com/dashboard/business/receipt
+https://github.com/square/connect-csharp-sdk/blob/master/docs/TransactionsApi.md#listtransactions
+https://github.com/square/connect-csharp-sdk/blob/master/docs/OrdersApi.md#batchretrieveorders
+
+Refunds
+https://squareup.com/help/us/en/article/5060
+
+
+https://github.com/square/connect-api-examples/tree/master/connect-examples/v2/csharp_payment
+
+https://connect.squareup.com/apps
+https://github.com/square/connect-csharp-sdk
+https://docs.connect.squareup.com/
+https://docs.connect.squareup.com/api/connect/v2
+https://docs.connect.squareup.com/articles/processing-payment-rest
+
+
+Stripe does
+https://github.com/stripe/stripe-dotnet
 
 https://blogs.dropbox.com/tech/2017/09/handling-system-failures-during-payment-communication/
 
