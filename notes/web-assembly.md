@@ -21,3 +21,5 @@ http://sellsbrothers.com/webassembly-explodes-client-side-programming
 
 https://blog.mozilla.org/blog/2017/11/13/webassembly-in-browsers/
 
+https://blog.octo.com/en/webassembly-an-executable-format-for-the-web/
+

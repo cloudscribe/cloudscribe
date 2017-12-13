@@ -1,4 +1,4 @@
-﻿// Author: J Audette 2016-06-22, 2017-10-30
+﻿// Author: J Audette 2016-06-22, 2017-12-13
 $(function () {
     var $elems = $('input[data-bs-datepicker]');
     if ($elems) {
@@ -101,7 +101,13 @@ $(function () {
 
             if (isoTargetId !== undefined) {
                 $(ele).on("dp.change", function (e) {
-                    $('#' + isoTargetId).val(e.date.format(isoFormat));
+                    if (e.date) {
+                        $('#' + isoTargetId).val(e.date.format(isoFormat));
+                    }
+                    else {
+                        $('#' + isoTargetId).val('');
+                    }
+                    
                 });
             }
 

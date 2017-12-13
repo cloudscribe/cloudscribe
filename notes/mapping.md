@@ -57,6 +57,8 @@ https://www.movable-type.co.uk/scripts/latlong-os-gridref.html
 
 https://en.wikipedia.org/wiki/Universal_Transverse_Mercator_coordinate_system
 
+http://wiki.openstreetmap.org/wiki/EPSG:3857
+
 http://www.uwgb.edu/dutchs/usefuldata/utmformulas.htm
 
 https://gis.stackexchange.com/questions/142866/how-to-convert-latitude-longitude-to-epsg-3857

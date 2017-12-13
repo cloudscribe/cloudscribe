@@ -1,5 +1,7 @@
 
 
+https://www.smashingmagazine.com/2017/11/comprehensive-guide-web-design/
+
 https://alistapart.com/article/user-interfaces-for-variable-fonts
 
 
