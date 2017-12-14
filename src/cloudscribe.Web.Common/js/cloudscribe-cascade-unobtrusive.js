@@ -1,7 +1,8 @@
-﻿// Author: J Audette 2015-05-07
+﻿// Author: J Audette 2015-05-07,2017-12-14
 $(function () {
     var $elems = $('select[data-cascade-childof]');
     if ($elems) {
+        //console.log("found cascade child");
         $elems.each(function (index, ele) {
             var $parent = $('#' + $(ele).data('cascade-childof'));
             var serviceUrl = $(ele).data('cascade-serviceurl');
@@ -9,7 +10,9 @@ $(function () {
             var selectLabel = $(ele).data('cascade-select-label');
             var disableOnEmptyParent = $(ele).data('cascade-disableonemptyparent');
             var emptyParentValue = $(ele).data('cascade-parent-emptyvalue');
+            var triggerChangeOnDataLoad = $(ele).data('cascade-trigger-change-after-load');
             $parent.change(function () {
+                //console.log("cascade parent changed to " + $parent.val());
                 $.getJSON(serviceUrl + $parent.val(), function (data) {
                     var items = '<option>' + selectLabel + '</option>';
                     $.each(data, function (i, item) {
@@ -22,6 +25,11 @@ $(function () {
                             $(ele).val(origVal);
                         }
                     }
+                    
+                    if (triggerChangeOnDataLoad) {
+                        $(ele).change();
+                    }
+                   
                 });
                 if (disableOnEmptyParent) {
                     var emptyParent = ($parent.val() === emptyParentValue);
