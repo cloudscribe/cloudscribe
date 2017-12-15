@@ -19,7 +19,7 @@ $(function () {
                         items += "<option value='" + item.value + "'>" + item.text + "</option>";
                     });
                     $(ele).html(items);
-                    if (origVal.length > 0) {
+                    if (origVal && origVal.length > 0) {
                         var found = $(ele).find("option[value=" + origVal + "]").length > 0;
                         if (found) {
                             $(ele).val(origVal);
