@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Linq;
 using System.Reflection;
 using System.Text;
@@ -111,6 +112,172 @@ namespace cloudscribe.Web.Common.Serialization
                 sb.Append(str);
             }
 
+        }
+
+        public static string ToCsv(this DataTable table)
+        {
+            var sb = new StringBuilder();
+
+            var iColCount = table.Columns.Count;
+            int i;
+            for (i = 0; i <= iColCount - 1; i++)
+            {
+                sb.Append(table.Columns[i]);
+                if (i < iColCount - 1)
+                {
+                    sb.Append(",");
+                }
+            }
+            sb.AppendLine("");
+
+            i = 0;
+
+            foreach (DataRow row in table.Rows)
+            {
+
+                for (i = 0; i <= iColCount - 1; i++)
+                {
+                    if (!Convert.IsDBNull(row[i]))
+                    {
+                        sb.Append("\"");
+                        // see #7 in this article
+                        //http://tools.ietf.org/html/rfc4180
+                        sb.Append(row[i].ToString().CsvEscapeQuotes());
+                        sb.Append("\"");
+                    }
+                    else
+                    {
+                        sb.Append("");
+                    }
+                    if (i < iColCount - 1)
+                    {
+                        sb.Append(",");
+                    }
+                }
+                sb.AppendLine("");
+            }
+
+
+
+            return sb.ToString();
+
+        }
+
+        public static string CsvEscapeQuotes(this string s)
+        {
+            if (string.IsNullOrEmpty(s)) { return s; }
+
+            return s.Replace("\"", "\"\"");
+
+        }
+
+        public static string ToWordDocString(this DataTable table)
+        {
+            var wordString = new StringBuilder();
+
+            wordString.Append(@"<html " +
+                    "xmlns:o='urn:schemas-microsoft-com:office:office' " +
+                    "xmlns:w='urn:schemas-microsoft-com:office:word'" +
+                    "xmlns='http://www.w3.org/TR/REC-html40'>" +
+                    "<head><title>Time</title>");
+
+            wordString.Append(@"<!--[if gte mso 9]>" +
+                                     "<xml>" +
+                                     "<w:WordDocument>" +
+                                     "<w:View>Print</w:View>" +
+                                     "<w:Zoom>90</w:Zoom>" +
+                                     "</w:WordDocument>" +
+                                     "</xml>" +
+                                     "<![endif]-->");
+
+            wordString.Append(@"<style>" +
+                                    "<!-- /* Style Definitions */" +
+                                    "@page Section1" +
+                                    "   {size:8.5in 11.0in; " +
+                                    "   margin:1.0in 1.25in 1.0in 1.25in ; " +
+                                    "   mso-header-margin:.5in; " +
+                                    "   mso-footer-margin:.5in; mso-paper-source:0;}" +
+                                    " div.Section1" +
+                                    "   {page:Section1;}" +
+                                    "-->" +
+                                   "</style></head>");
+
+            wordString.Append(@"<body lang=EN-US style='tab-interval:.5in'>" +
+                                    "<div class=Section1>" +
+                                    "<h1>Time and tide wait for none</h1>" +
+                                    "<p style='color:red'><I>" +
+                                    DateTime.Now + "</I></p></div><table border='1'>");
+
+
+            wordString.Append("<tr>");
+            for (int i = 0; i < table.Columns.Count; i++)
+            {
+                wordString.Append("<td>" + table.Columns[i].ColumnName + "</td>");
+            }
+            wordString.Append("</tr>");
+
+            //Items
+            for (int x = 0; x < table.Rows.Count; x++)
+            {
+                wordString.Append("<tr>");
+                for (int i = 0; i < table.Columns.Count; i++)
+                {
+                    wordString.Append("<td>" + table.Rows[x][i] + "</td>");
+                }
+                wordString.Append("</tr>");
+            }
+
+            wordString.Append(@"</table></body></html>");
+
+            return wordString.ToString();
+        }
+
+        public static string ToDateTimeStringForFileName(this DateTime d, bool includeMiliseconds = false)
+        {
+           
+            string dateString = d.Year.ToString();
+
+            string monthString = d.Month.ToString();
+            if (monthString.Length == 1)
+            {
+                monthString = "0" + monthString;
+            }
+            string dayString = d.Day.ToString();
+            if (dayString.Length == 1)
+            {
+                dayString = "0" + dayString;
+            }
+            string hourString = d.Hour.ToString();
+            if (hourString.Length == 1)
+            {
+                hourString = "0" + hourString;
+            }
+
+            string minuteString = d.Minute.ToString();
+            if (minuteString.Length == 1)
+            {
+                minuteString = "0" + minuteString;
+            }
+
+            string secondString = d.Second.ToString();
+            if (secondString.Length == 1)
+            {
+                secondString = "0" + secondString;
+            }
+
+            dateString
+                = dateString
+                + monthString
+                + dayString
+                + hourString
+                + minuteString + secondString;
+
+            if (includeMiliseconds)
+            {
+                return dateString + d.Millisecond.ToString();
+            }
+
+            return dateString;
         }
 
     }
