@@ -11,3 +11,5 @@ https://github.com/jqwidgets/Chart.AspNetCore.Mvc
 
 https://github.com/Anderman/Mvc.JQuery.Datatables
 
+https://github.com/benkeen/d3pie
+
