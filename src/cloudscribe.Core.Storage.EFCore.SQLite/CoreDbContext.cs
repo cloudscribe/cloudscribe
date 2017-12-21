@@ -1,21 +1,10 @@
-﻿// Copyright (c) Source Tree Solutions, LLC. All rights reserved.
-// Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
-// Author:					Joe Audette
-// Created:					2015-11-16
-// Last Modified:			2017-10-06
-// 
-
-using cloudscribe.Core.Models;
+﻿using cloudscribe.Core.Models;
 using cloudscribe.Core.Models.Geography;
 using cloudscribe.Core.Storage.EFCore.Common;
 using Microsoft.EntityFrameworkCore;
-using Npgsql.EntityFrameworkCore.PostgreSQL;
 
-
-namespace cloudscribe.Core.Storage.EFCore.pgsql
+namespace cloudscribe.Core.Storage.EFCore.SQLite
 {
-
-
     public class CoreDbContext : CoreDbContextBase, ICoreDbContext
     {
         public CoreDbContext(DbContextOptions<CoreDbContext> options) : base(options)
@@ -30,19 +19,17 @@ namespace cloudscribe.Core.Storage.EFCore.pgsql
             base.OnModelCreating(modelBuilder);
 
             var tableNames = new CoreTableNames();
-         
-            modelBuilder.HasPostgresExtension("uuid-ossp");
-
+            
             modelBuilder.Entity<SiteSettings>(entity =>
             {
                 entity.ToTable(tableNames.TablePrefix + tableNames.SiteTableName);
-                
+
                 entity.HasKey(p => p.Id);
 
                 entity.Property(p => p.Id);
 
                 entity.Property(p => p.AliasId).HasMaxLength(36);
-                
+
                 entity.HasIndex(p => p.AliasId);
 
                 entity.Property(p => p.SiteName).HasMaxLength(255).IsRequired();
@@ -66,8 +53,7 @@ namespace cloudscribe.Core.Storage.EFCore.pgsql
                 entity.Property(p => p.LdapPort);
 
                 entity.Property(p => p.LdapDomain).HasMaxLength(255);
-
-
+                
                 entity.Property(p => p.LdapRootDN).HasMaxLength(255);
 
                 entity.Property(p => p.LdapUserDNKey).HasMaxLength(10);
@@ -79,8 +65,7 @@ namespace cloudscribe.Core.Storage.EFCore.pgsql
                 entity.Property(p => p.RequiresQuestionAndAnswer).IsRequired();
 
                 entity.Property(p => p.MaxInvalidPasswordAttempts);
-
-
+                
                 entity.Property(p => p.MinRequiredPasswordLength);
 
                 entity.Property(p => p.DefaultEmailFromAddress).HasMaxLength(100);
@@ -108,11 +93,11 @@ namespace cloudscribe.Core.Storage.EFCore.pgsql
                 entity.Property(p => p.CaptchaOnRegistration).IsRequired();
 
                 entity.Property(p => p.SiteIsClosed).IsRequired();
-                
+
                 entity.Property(p => p.TimeZoneId).HasMaxLength(50);
 
                 entity.Property(p => p.GoogleAnalyticsProfileId).HasMaxLength(25);
-                
+
                 entity.Property(p => p.CompanyName).HasMaxLength(250);
 
                 entity.Property(p => p.CompanyStreetAddress).HasMaxLength(250);
@@ -166,12 +151,12 @@ namespace cloudscribe.Core.Storage.EFCore.pgsql
                 entity.HasIndex(p => p.SiteFolderName);
 
                 entity.Property(p => p.AddThisDotComUsername).HasMaxLength(50);
-                
+
                 entity.Property(p => p.SmtpServer).HasMaxLength(200);
 
                 entity.Property(p => p.SmtpPort);
 
-                entity.Property(p => p.SmtpUser).HasMaxLength(500); 
+                entity.Property(p => p.SmtpUser).HasMaxLength(500);
 
                 entity.Property(p => p.SmtpPassword);
 
@@ -188,7 +173,7 @@ namespace cloudscribe.Core.Storage.EFCore.pgsql
                 entity.Property(p => p.SignEmailWithDkim).IsRequired();
 
                 entity.Property(p => p.SmsClientId).HasMaxLength(255);
-                
+
                 entity.Property(p => p.SmsFrom).HasMaxLength(100);
 
                 entity.Property(p => p.IsDataProtected).IsRequired();
@@ -222,11 +207,11 @@ namespace cloudscribe.Core.Storage.EFCore.pgsql
                 entity.HasIndex(p => p.SiteId);
 
                 entity.Property(p => p.HostName).IsRequired().HasMaxLength(255);
-                
+
                 entity.HasIndex(p => p.HostName);
 
             });
-            
+
             modelBuilder.Entity<SiteUser>(entity =>
             {
                 entity.ToTable(tableNames.TablePrefix + tableNames.UserTableName);
@@ -238,7 +223,7 @@ namespace cloudscribe.Core.Storage.EFCore.pgsql
                 entity.Property(p => p.SiteId).IsRequired();
 
                 entity.HasIndex(p => p.SiteId);
-                
+
                 entity.Property(p => p.AccountApproved).IsRequired();
 
                 entity.Property(p => p.DisplayInMemberList).IsRequired();
@@ -323,7 +308,7 @@ namespace cloudscribe.Core.Storage.EFCore.pgsql
             modelBuilder.Entity<UserClaim>(entity =>
             {
                 entity.ToTable(tableNames.TablePrefix + tableNames.UserClaimTableName);
-                
+
                 entity.HasKey(p => p.Id);
 
                 entity.Property(p => p.Id).IsRequired();
@@ -339,13 +324,13 @@ namespace cloudscribe.Core.Storage.EFCore.pgsql
                 entity.Property(p => p.ClaimType).HasMaxLength(255);
 
                 entity.HasIndex(p => p.ClaimType);
-               
+
             });
 
             modelBuilder.Entity<UserLogin>(entity =>
             {
                 entity.ToTable(tableNames.TablePrefix + tableNames.UserLoginTableName);
-                
+
                 entity.HasKey(p => new { p.UserId, p.SiteId, p.LoginProvider, p.ProviderKey });
 
                 entity.Property(p => p.LoginProvider).HasMaxLength(128);
@@ -422,12 +407,12 @@ namespace cloudscribe.Core.Storage.EFCore.pgsql
 
                 entity.HasIndex(p => p.Code);
             });
-            
+
             modelBuilder.Entity<UserRole>(entity =>
             {
                 entity.ToTable(tableNames.TablePrefix + tableNames.UserRoleTableName);
 
-                entity.Property(p => p.UserId) ;
+                entity.Property(p => p.UserId);
 
                 entity.HasIndex(p => p.UserId);
 
@@ -438,7 +423,7 @@ namespace cloudscribe.Core.Storage.EFCore.pgsql
                 entity.HasKey(p => new { p.UserId, p.RoleId });
 
             });
-            
+
             modelBuilder.Entity<UserLocation>(entity =>
             {
                 entity.ToTable(tableNames.TablePrefix + tableNames.UserLocationTableName);
@@ -481,13 +466,12 @@ namespace cloudscribe.Core.Storage.EFCore.pgsql
 
                 entity.HasIndex(p => p.UserId);
 
-               
+
             });
 
 
-            
+
 
         }
-
     }
 }

@@ -12,16 +12,15 @@ namespace Microsoft.Extensions.DependencyInjection
     public static class CloudscribeIdentityServerIntegrationEFCoreStorage
     {
         public static async Task InitializeDatabaseAsync(
-            IServiceProvider serviceProvider
+            IServiceProvider scopedService
             , string siteId = null
             , IEnumerable<Client> initialClients = null,
             IEnumerable<ApiResource> initialApiResources = null,
             IEnumerable<IdentityResource> initialIdentityResources = null
             )
         {
-            using (var serviceScope = serviceProvider.GetService<IServiceScopeFactory>().CreateScope())
-            {
-                var grantContext = serviceScope.ServiceProvider.GetRequiredService<IPersistedGrantDbContext>();
+           
+                var grantContext = scopedService.GetRequiredService<IPersistedGrantDbContext>();
                 try
                 {
                     await grantContext.Database.MigrateAsync();
@@ -32,7 +31,7 @@ namespace Microsoft.Extensions.DependencyInjection
                 }
                 
 
-                var configContext = serviceScope.ServiceProvider.GetRequiredService<IConfigurationDbContext>();
+                var configContext = scopedService.GetRequiredService<IConfigurationDbContext>();
                 try
                 {
                     await configContext.Database.MigrateAsync();
@@ -80,7 +79,7 @@ namespace Microsoft.Extensions.DependencyInjection
                 }
 
 
-            }
+            
 
         }
     }
