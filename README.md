@@ -45,7 +45,7 @@ To get started building your own features and applications with cloudscribe, [pl
 * There is a company information section where you can define company name, address, email etc, and then you could show that information in the footer for example by customizing the layout. SiteContext is already injected into the layout and the company information are just properties on that so you can wrap your own markup around whichever of those properties you want to show.
 * Integration with [IdentityServer4](https://github.com/IdentityServer/IdentityServer4) providing management of users, clients and scopes. This brings us support for [Jwt](https://jwt.io/) as an alternative to cookie authentication so we can more readily support SPA (Single Page Application) style web apps as well as authentication from mobile devices.
 * [Localization Support](https://www.cloudscribe.com/docs/localization)
-* For data access, supports Entity Framework Core with either MSSQL, MySql, or PostgreSql. [NoDb](https://github.com/joeaudette/NoDb) file system storage is also supported for small sites or proptypes.
+* For data access, supports Entity Framework Core with either SQLite, MSSQL, MySql, or PostgreSql. [NoDb](https://github.com/joeaudette/NoDb) file system storage is also supported for small sites or proptypes.
 * Data and IO operations are async all the way down
 * This project aims to follow the [OWASP](https://www.owasp.org/index.php/Main_Page) Guidelines for best practices in security
 
