@@ -2,8 +2,8 @@
 
   <PropertyGroup>
     <Description>MySql Entity Framework configuration and operational stores for IdentityServer4 cloudscribe multi-tenant identity integration</Description>
-    <VersionPrefix>2.1.1</VersionPrefix>
-    <AssemblyVersion>2.1.1</AssemblyVersion>
+    <VersionPrefix>2.1.2</VersionPrefix>
+    <AssemblyVersion>2.1.2</AssemblyVersion>
 
     <Authors>Joe Audette</Authors>
     <TargetFramework>netcoreapp2.0</TargetFramework>

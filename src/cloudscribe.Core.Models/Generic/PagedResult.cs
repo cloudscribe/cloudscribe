@@ -7,6 +7,7 @@ namespace cloudscribe.Core.Models.Generic
 {
     public class PagedResult<T> where T : class
     {
+        [Obsolete("this class is obsolete and will be removed in a future release. Please use cloudscribe.Pagination.Models.PagedResult instead")]
         public PagedResult()
         {
             Data = new List<T>();

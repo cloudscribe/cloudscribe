@@ -2,12 +2,12 @@
 // Licensed under the Apache License, Version 2.0
 // Author:					Joe Audette
 // Created:					2016-10-17
-// Last Modified:			2016-10-19
+// Last Modified:			2017-12-28
 // 
 
 using cloudscribe.Core.IdentityServer.NoDb.Models;
 using cloudscribe.Core.IdentityServerIntegration.Storage;
-using cloudscribe.Core.Models.Generic;
+using cloudscribe.Pagination.Models;
 using IdentityServer4.Models;
 using NoDb;
 using System.Collections.Generic;
@@ -107,6 +107,8 @@ namespace cloudscribe.Core.IdentityServer.NoDb
                 .OrderBy(x => x.ClientName)
                 .Skip(offset)
                 .Take(pageSize).ToList();
+            result.PageNumber = pageNumber;
+            result.PageSize = pageSize;
 
             return result;
         }

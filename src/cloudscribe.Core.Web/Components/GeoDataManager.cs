@@ -2,10 +2,11 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2015-07-22
-// Last Modified:			2016-06-15
+// Last Modified:			2017-12-28
 // 
 
 using cloudscribe.Core.Models.Geography;
+using cloudscribe.Pagination.Models;
 using Microsoft.AspNetCore.Http;
 using System;
 using System.Collections.Generic;
@@ -31,7 +32,7 @@ namespace cloudscribe.Core.Web.Components
         private readonly HttpContext _context;
         private CancellationToken CancellationToken => _context?.RequestAborted ?? CancellationToken.None;
 
-        public Task<List<IGeoCountry>> GetCountriesPage(int pageNumber, int pageSize)
+        public Task<PagedResult<IGeoCountry>> GetCountriesPage(int pageNumber, int pageSize)
         {
             return queries.GetCountriesPage(pageNumber, pageSize, CancellationToken);
         }
@@ -79,7 +80,7 @@ namespace cloudscribe.Core.Web.Components
             return queries.GetGeoZonesByCountry(countryGuid, CancellationToken);
         }
 
-        public Task<List<IGeoZone>> GetGeoZonePage(Guid countryGuid, int pageNumber, int pageSize)
+        public Task<PagedResult<IGeoZone>> GetGeoZonePage(Guid countryGuid, int pageNumber, int pageSize)
         {
             return queries.GetGeoZonePage(countryGuid, pageNumber, pageSize, CancellationToken);
         }

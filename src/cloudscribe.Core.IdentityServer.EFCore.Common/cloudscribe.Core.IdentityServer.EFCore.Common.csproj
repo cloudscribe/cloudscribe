@@ -2,8 +2,8 @@
 
   <PropertyGroup>
     <Description>Entity Framework configuration and operational stores for IdentityServer4 cloudscribe multi-tenant identity integration</Description>
-    <VersionPrefix>2.1.0</VersionPrefix>
-    <AssemblyVersion>2.1.0</AssemblyVersion>
+    <VersionPrefix>2.1.1</VersionPrefix>
+    <AssemblyVersion>2.1.1</AssemblyVersion>
 
     <Authors>Joe Audette</Authors>
     <TargetFrameworks>netstandard2.0</TargetFrameworks>
@@ -30,6 +30,7 @@
     <PackageReference Include="Microsoft.Extensions.Configuration.FileExtensions" Version="2.0.*" />
     <PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="2.0.*" />
     <PackageReference Include="Microsoft.AspNetCore.Hosting" Version="2.0.*" />
+    <PackageReference Include="cloudscribe.Pagination.Models" Version="1.0.*" />
   </ItemGroup>
 
  

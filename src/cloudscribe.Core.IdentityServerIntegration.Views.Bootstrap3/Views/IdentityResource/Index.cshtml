@@ -29,7 +29,7 @@
                         @sr["Required"]
                     </th>
                 </tr>
-                @foreach (var s in Model.IdentityResources)
+                @foreach (var s in Model.IdentityResources.Data)
             {
                     <tr>
                         <td>
@@ -63,10 +63,12 @@
                 }
             </table>
             <div>
-                <cs-pager cs-paging-info="@Model.Paging"
+                <cs-pager 
                           asp-action="Index" asp-controller="IdentityResource"
                           asp-route-siteId="@Model.SiteId"
-                          asp-route-pagesize="@Model.Paging.ItemsPerPage"
+                          asp-route-pagesize="@Model.IdentityResources.PageSize"
+                          cs-paging-pagenumber="@Model.IdentityResources.PageNumber"
+                          cs-paging-totalitems="@Model.IdentityResources.TotalItems"
                           cs-first-page-title='@sr["First Page"]'
                           cs-last-page-title='@sr["Last Page"]'
                           cs-previous-page-title='@sr["Previous page"]'

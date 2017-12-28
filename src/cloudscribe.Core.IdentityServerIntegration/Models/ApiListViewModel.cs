@@ -1,5 +1,5 @@
 ﻿
-using cloudscribe.Web.Pagination;
+using cloudscribe.Pagination.Models;
 using IdentityServer4.Models;
 using System.Collections.Generic;
 
@@ -9,15 +9,15 @@ namespace cloudscribe.Core.IdentityServerIntegration.Models
     {
         public ApiListViewModel()
         {
-            Apis = new List<ApiResource>();
-            Paging = new PaginationSettings();
+            Apis = new PagedResult<ApiResource>();
+            //Paging = new PaginationSettings();
         }
 
         public string SiteId { get; set; } = string.Empty;
 
-        public IList<ApiResource> Apis { get; set; }
+        public PagedResult<ApiResource> Apis { get; set; }
 
-        public PaginationSettings Paging { get; set; }
+        //public PaginationSettings Paging { get; set; }
 
     }
 }

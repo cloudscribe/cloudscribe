@@ -1,4 +1,4 @@
-﻿using cloudscribe.Web.Pagination;
+﻿using cloudscribe.Pagination.Models;
 using IdentityServer4.Models;
 using System;
 using System.Collections.Generic;
@@ -11,14 +11,14 @@ namespace cloudscribe.Core.IdentityServerIntegration.Models
     {
         public IdentityListViewModel()
         {
-            IdentityResources = new List<IdentityResource>();
-            Paging = new PaginationSettings();
+            IdentityResources = new PagedResult<IdentityResource>();
+            //Paging = new PaginationSettings();
         }
 
         public string SiteId { get; set; } = string.Empty;
 
-        public IList<IdentityResource> IdentityResources { get; set; }
+        public PagedResult<IdentityResource> IdentityResources { get; set; }
 
-        public PaginationSettings Paging { get; set; }
+        //public PaginationSettings Paging { get; set; }
     }
 }

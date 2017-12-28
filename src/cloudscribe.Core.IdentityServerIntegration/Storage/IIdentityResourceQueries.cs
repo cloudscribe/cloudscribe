@@ -5,7 +5,7 @@
 // Last Modified:			2016-12-05
 // 
 
-using cloudscribe.Core.Models.Generic;
+using cloudscribe.Pagination.Models;
 using IdentityServer4.Models;
 using System.Threading;
 using System.Threading.Tasks;

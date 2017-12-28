@@ -6,7 +6,7 @@
 // 
 
 using cloudscribe.Core.IdentityServerIntegration.Storage;
-using cloudscribe.Core.Models.Generic;
+using cloudscribe.Pagination.Models;
 using IdentityServer4.Models;
 using Microsoft.AspNetCore.Http;
 using System.Threading;

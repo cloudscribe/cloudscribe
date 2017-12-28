@@ -30,7 +30,7 @@
                         @sr["Enabled"]
                     </th>
                 </tr>
-                @foreach (var s in Model.Apis)
+                @foreach (var s in Model.Apis.Data)
             {
                     <tr>
                         <td>
@@ -64,10 +64,12 @@
                 }
             </table>
             <div>
-                <cs-pager cs-paging-info="@Model.Paging"
+                <cs-pager 
                           asp-action="Index" asp-controller="ApiResource"
                           asp-route-siteId="@Model.SiteId"
-                          asp-route-pagesize="@Model.Paging.ItemsPerPage"
+                          asp-route-pagesize="@Model.Apis.PageSize"
+                          cs-paging-pagenumber="@Model.Apis.PageNumber"
+                          cs-paging-totalitems="@Model.Apis.TotalItems"
                           cs-first-page-title='@sr["First Page"]'
                           cs-last-page-title='@sr["Last Page"]'
                           cs-previous-page-title='@sr["Previous page"]'

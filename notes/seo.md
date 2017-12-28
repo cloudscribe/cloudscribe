@@ -1,4 +1,9 @@
 
+Search Engine Optimization (SEO) Starter Guide
+https://support.google.com/webmasters/answer/7451184
+SEO Snippets
+https://www.youtube.com/watch?v=p74HC4x5AUE&list=PLKoqnv2vTMUPhLQ054sMg3vgzy9md9tWg
+
 https://getstream.io/blog/stop-using-io-domain-names-for-production-traffic/
 
 ## To www or not to www

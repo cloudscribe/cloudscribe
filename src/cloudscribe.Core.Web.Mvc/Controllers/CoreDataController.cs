@@ -64,9 +64,9 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
 
             var model = new CountryListPageViewModel();
             model.Countries = await dataManager.GetCountriesPage(pageNumber, itemsPerPage);
-            model.Paging.CurrentPage = pageNumber;
-            model.Paging.ItemsPerPage = itemsPerPage;
-            model.Paging.TotalItems = await dataManager.GetCountryCount();
+            //model.Paging.CurrentPage = pageNumber;
+            //model.Paging.ItemsPerPage = itemsPerPage;
+            //model.Paging.TotalItems = await dataManager.GetCountryCount();
 
             return View(model);
         }
@@ -181,9 +181,9 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
             model.Country = GeoCountryViewModel.FromIGeoCountry(country);
             model.States = await dataManager.GetGeoZonePage(countryId.Value, pageNumber, itemsPerPage);
 
-            model.Paging.CurrentPage = pageNumber;
-            model.Paging.ItemsPerPage = itemsPerPage;
-            model.Paging.TotalItems = await dataManager.GetGeoZoneCount(countryId.Value);
+            //model.Paging.CurrentPage = pageNumber;
+            //model.Paging.ItemsPerPage = itemsPerPage;
+            //model.Paging.TotalItems = await dataManager.GetGeoZoneCount(countryId.Value);
             model.CountryListReturnPageNumber = crp;
 
             // below we are just manipiulating the bread crumbs

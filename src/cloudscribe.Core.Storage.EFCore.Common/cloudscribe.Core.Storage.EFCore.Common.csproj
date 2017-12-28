@@ -2,8 +2,8 @@
 
   <PropertyGroup>
     <Description>Entity Framework Core implementation of cloudscribe core commands and queries - typically you do not use this directly, use cloudscribe.Core.Storage.EFCore.MSSQL</Description>
-    <VersionPrefix>2.0.5</VersionPrefix>
-    <AssemblyVersion>2.0.5</AssemblyVersion>
+    <VersionPrefix>2.0.6</VersionPrefix>
+    <AssemblyVersion>2.0.6</AssemblyVersion>
     <Authors>Joe Audette</Authors>
     <TargetFrameworks>netstandard2.0</TargetFrameworks>
     <AssemblyName>cloudscribe.Core.Storage.EFCore.Common</AssemblyName>
@@ -23,6 +23,7 @@
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="2.0.*" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Relational" Version="2.0.*" />
     <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="2.0.*" />
+    <PackageReference Include="cloudscribe.Pagination.Models" Version="1.0.*" />
   </ItemGroup>
 
   

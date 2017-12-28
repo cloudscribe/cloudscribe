@@ -1,4 +1,10 @@
 
+https://flow.microsoft.com/en-us/
+
+https://ifttt.com/
+
+
+
 http://ahmedopeyemi.com/main/workflow-engines-why-use-them/
 
 http://www.dematte.org/2013/06/24/AMiniWorkflowEnginePart41FromDelegatesToPatterns.aspx
