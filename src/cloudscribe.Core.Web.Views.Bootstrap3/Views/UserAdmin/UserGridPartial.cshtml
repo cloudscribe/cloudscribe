@@ -9,7 +9,7 @@
 @inject IStringLocalizer<CloudscribeCore> sr
 @inject ITimeZoneHelper tzHelper
 @{ 
-    var totlaUsersMessage = string.Format(sr["{0} - Users"], Model.Paging.TotalItems);
+    var totlaUsersMessage = string.Format(sr["{0} - Users"], Model.UserList.TotalItems);
 }
 <table class="table table-striped">
     <tr>
@@ -20,7 +20,7 @@
             <a asp-action="@Model.ActionName" asp-controller="UserAdmin"
               asp-route-siteId="@Model.SiteId"
               asp-route-query="@Model.AlphaQuery"
-              asp-route-pagesize="@Model.Paging.ItemsPerPage"
+              asp-route-pagesize="@Model.UserList.PageSize"
               asp-route-sortmode="1">@sr["Created"]</a>
         </th>
         <th></th>
@@ -31,7 +31,7 @@
             <a asp-action="@Model.ActionName" asp-controller="UserAdmin"
                asp-route-siteId="@Model.SiteId"
                asp-route-query="@Model.AlphaQuery"
-               asp-route-pagesize="@Model.Paging.ItemsPerPage"
+               asp-route-pagesize="@Model.UserList.PageSize"
                asp-route-sortmode="0">@sr["Display Name"]</a>
         </th>
         <th>
@@ -41,11 +41,11 @@
             <a asp-action="@Model.ActionName" asp-controller="UserAdmin"
                asp-route-siteId="@Model.SiteId"
                asp-route-query="@Model.AlphaQuery"
-               asp-route-pagesize="@Model.Paging.ItemsPerPage"
+               asp-route-pagesize="@Model.UserList.PageSize"
                asp-route-sortmode="2">@sr["Last Name"]</a>
         </th>
     </tr>
-    @foreach (var item in Model.UserList)
+    @foreach (var item in Model.UserList.Data)
     {
         <tr>
             <td>
@@ -81,12 +81,15 @@
 </table>
 <div>
     <div>@totlaUsersMessage</div>
-    <cs-pager cs-paging-info="@Model.Paging"
+    <cs-pager 
               asp-action="@Model.ActionName" asp-controller="UserAdmin"
               asp-route-siteId="@Model.SiteId"
               asp-route-query="@Model.AlphaQuery"
               asp-route-sortmode="@Model.SortMode"
-              asp-route-pagesize="@Model.Paging.ItemsPerPage"
+              asp-route-pagesize="@Model.UserList.PageSize"
+              cs-paging-pagesize="@Model.UserList.PageSize"
+              cs-paging-pagenumber="@Model.UserList.PageNumber"
+              cs-paging-totalitems="@Model.UserList.TotalItems"
               cs-first-page-title='@sr["First Page"]'
               cs-last-page-title='@sr["Last Page"]'
               cs-previous-page-title='@sr["Previous page"]'

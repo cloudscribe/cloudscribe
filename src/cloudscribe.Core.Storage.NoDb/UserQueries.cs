@@ -2,10 +2,11 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:                  Joe Audette
 // Created:                 2016-04-26
-// Last Modified:           2017-10-06
+// Last Modified:           2017-12-29
 // 
 
 using cloudscribe.Core.Models;
+using cloudscribe.Pagination.Models;
 using NoDb;
 using System;
 using System.Collections.Generic;
@@ -212,7 +213,7 @@ namespace cloudscribe.Core.Storage.NoDb
 
         }
 
-        public async Task<List<IUserInfo>> GetPage(
+        public async Task<PagedResult<IUserInfo>> GetPage(
             Guid siteId,
             int pageNumber,
             int pageSize,
@@ -379,12 +380,19 @@ namespace cloudscribe.Core.Storage.NoDb
             }
 
 
-            return query
+            var data = query
                 .Skip(offset)
                 .Take(pageSize)
                 .ToList<IUserInfo>()
                 ;
 
+            var result = new PagedResult<IUserInfo>();
+            result.Data = data;
+            result.PageNumber = pageNumber;
+            result.PageSize = pageSize;
+            result.TotalItems = await CountUsers(siteId, userNameBeginsWith, cancellationToken).ConfigureAwait(false);
+
+            return result;
 
         }
 
@@ -420,7 +428,7 @@ namespace cloudscribe.Core.Storage.NoDb
                 .ToList().Count;
         }
 
-        public async Task<List<IUserInfo>> GetUserAdminSearchPage(
+        public async Task<PagedResult<IUserInfo>> GetUserAdminSearchPage(
             Guid siteId,
             int pageNumber,
             int pageSize,
@@ -498,12 +506,17 @@ namespace cloudscribe.Core.Storage.NoDb
                     break;
             }
 
-            return query
+            var data = query
                 .Skip(offset)
                 .Take(pageSize)
                 .ToList<IUserInfo>()
                 ;
-
+            var result = new PagedResult<IUserInfo>();
+            result.Data = data;
+            result.PageNumber = pageNumber;
+            result.PageSize = pageSize;
+            result.TotalItems = await CountUsersForAdminSearch(siteId, searchInput, cancellationToken).ConfigureAwait(false);
+            return result;
 
         }
 
@@ -525,7 +538,7 @@ namespace cloudscribe.Core.Storage.NoDb
                 .ToList().Count;
         }
 
-        public async Task<List<IUserInfo>> GetPageLockedByAdmin(
+        public async Task<PagedResult<IUserInfo>> GetPageLockedByAdmin(
             Guid siteId,
             int pageNumber,
             int pageSize,
@@ -578,11 +591,17 @@ namespace cloudscribe.Core.Storage.NoDb
                   };
 
 
-            return query
+            var data = query
                 .Skip(offset)
                 .Take(pageSize)
                 .ToList<IUserInfo>()
                 ;
+            var result = new PagedResult<IUserInfo>();
+            result.Data = data;
+            result.PageNumber = pageNumber;
+            result.PageSize = pageSize;
+            result.TotalItems = await CountLockedByAdmin(siteId, cancellationToken).ConfigureAwait(false);
+            return result;
 
         }
 
@@ -607,7 +626,7 @@ namespace cloudscribe.Core.Storage.NoDb
         }
 
 
-        public async Task<List<IUserInfo>> GetPageFutureLockoutEndDate(
+        public async Task<PagedResult<IUserInfo>> GetPageFutureLockoutEndDate(
             Guid siteId,
             int pageNumber,
             int pageSize,
@@ -661,11 +680,17 @@ namespace cloudscribe.Core.Storage.NoDb
                   };
 
 
-            return query
+            var data = query
                 .Skip(offset)
                 .Take(pageSize)
-                .ToList<IUserInfo>()
-                ;
+                .ToList<IUserInfo>();
+
+            var result = new PagedResult<IUserInfo>();
+            result.Data = data;
+            result.PageNumber = pageNumber;
+            result.PageSize = pageSize;
+            result.TotalItems = await CountFutureLockoutEndDate(siteId, cancellationToken).ConfigureAwait(false);
+            return result;
 
         }
 
@@ -688,7 +713,7 @@ namespace cloudscribe.Core.Storage.NoDb
                 .ToList().Count;
         }
 
-        public async Task<List<IUserInfo>> GetPageUnconfirmedEmailUsers(
+        public async Task<PagedResult<IUserInfo>> GetPageUnconfirmedEmailUsers(
             Guid siteId,
             int pageNumber,
             int pageSize,
@@ -741,11 +766,17 @@ namespace cloudscribe.Core.Storage.NoDb
                   };
 
 
-            return query
+            var data = query
                 .Skip(offset)
                 .Take(pageSize)
-                .ToList<IUserInfo>()
-                ;
+                .ToList<IUserInfo>();
+
+            var result = new PagedResult<IUserInfo>();
+            result.Data = data;
+            result.PageNumber = pageNumber;
+            result.PageSize = pageSize;
+            result.TotalItems = await CountUnconfirmedEmail(siteId, cancellationToken);
+            return result;
 
         }
 
@@ -768,7 +799,7 @@ namespace cloudscribe.Core.Storage.NoDb
                 .ToList().Count;
         }
 
-        public async Task<List<IUserInfo>> GetPageUnconfirmedPhoneUsers(
+        public async Task<PagedResult<IUserInfo>> GetPageUnconfirmedPhoneUsers(
             Guid siteId,
             int pageNumber,
             int pageSize,
@@ -821,11 +852,17 @@ namespace cloudscribe.Core.Storage.NoDb
                   };
 
 
-            return query
+            var data = query
                 .Skip(offset)
                 .Take(pageSize)
-                .ToList<IUserInfo>()
-                ;
+                .ToList<IUserInfo>();
+
+            var result = new PagedResult<IUserInfo>();
+            result.Data = data;
+            result.PageNumber = pageNumber;
+            result.PageSize = pageSize;
+            result.TotalItems = await CountUnconfirmedPhone(siteId, cancellationToken).ConfigureAwait(false);
+            return result;
 
         }
 
@@ -848,7 +885,7 @@ namespace cloudscribe.Core.Storage.NoDb
 
         }
 
-        public async Task<List<IUserInfo>> GetNotApprovedUsers(
+        public async Task<PagedResult<IUserInfo>> GetNotApprovedUsers(
             Guid siteId,
             int pageNumber,
             int pageSize,
@@ -900,11 +937,17 @@ namespace cloudscribe.Core.Storage.NoDb
                   };
 
 
-            return query
+            var data = query
                 .Skip(offset)
                 .Take(pageSize)
-                .ToList<IUserInfo>()
-                ;
+                .ToList<IUserInfo>();
+
+            var result = new PagedResult<IUserInfo>();
+            result.Data = data;
+            result.PageNumber = pageNumber;
+            result.PageSize = pageSize;
+            result.TotalItems = await CountNotApprovedUsers(siteId, cancellationToken).ConfigureAwait(false);
+            return result;
 
         }
 
@@ -1101,7 +1144,7 @@ namespace cloudscribe.Core.Storage.NoDb
 
         }
 
-        public async Task<IList<ISiteRole>> GetRolesBySite(
+        public async Task<PagedResult<ISiteRole>> GetRolesBySite(
             Guid siteId,
             string searchInput,
             int pageNumber,
@@ -1139,11 +1182,17 @@ namespace cloudscribe.Core.Storage.NoDb
                                 MemberCount = allUserRoles.Count<UserRole>(u => u.RoleId == x.Id)
                             };
 
-            return listQuery
+            var data = listQuery
                 .Skip(offset)
                 .Take(pageSize)
-                .ToList<ISiteRole>()
-                ;
+                .ToList<ISiteRole>();
+
+            var result = new PagedResult<ISiteRole>();
+            result.Data = data;
+            result.PageNumber = pageNumber;
+            result.PageSize = pageSize;
+            result.TotalItems = await CountOfRoles(siteId, searchInput, cancellationToken).ConfigureAwait(false);
+            return result;
 
         }
 
@@ -1184,7 +1233,7 @@ namespace cloudscribe.Core.Storage.NoDb
 
         }
 
-        public async Task<IList<IUserInfo>> GetUsersInRole(
+        public async Task<PagedResult<IUserInfo>> GetUsersInRole(
             Guid siteId,
             Guid roleId,
             string searchInput,
@@ -1223,11 +1272,17 @@ namespace cloudscribe.Core.Storage.NoDb
 
             int offset = (pageSize * pageNumber) - pageSize;
 
-            return query
+            var data = query
                 .Skip(offset)
                 .Take(pageSize)
-                .ToList<IUserInfo>()
-                ;
+                .ToList<IUserInfo>();
+
+            var result = new PagedResult<IUserInfo>();
+            result.Data = data;
+            result.PageNumber = pageNumber;
+            result.PageSize = pageSize;
+            result.TotalItems = await CountUsersInRole(siteId, roleId, searchInput, cancellationToken).ConfigureAwait(false);
+            return result;
 
         }
 
@@ -1310,7 +1365,7 @@ namespace cloudscribe.Core.Storage.NoDb
 
         }
 
-        public async Task<IList<IUserInfo>> GetUsersNotInRole(
+        public async Task<PagedResult<IUserInfo>> GetUsersNotInRole(
             Guid siteId,
             Guid roleId,
             string searchInput,
@@ -1354,11 +1409,17 @@ namespace cloudscribe.Core.Storage.NoDb
 
             int offset = (pageSize * pageNumber) - pageSize;
 
-            return query
+            var data = query
                 .Skip(offset)
                 .Take(pageSize)
-                .ToList<IUserInfo>()
-                ;
+                .ToList<IUserInfo>();
+
+            var result = new PagedResult<IUserInfo>();
+            result.Data = data;
+            result.PageNumber = pageNumber;
+            result.PageSize = pageSize;
+            result.TotalItems = await CountUsersNotInRole(siteId, roleId, searchInput, cancellationToken).ConfigureAwait(false);
+            return result;
 
         }
 
@@ -1626,7 +1687,7 @@ namespace cloudscribe.Core.Storage.NoDb
 
         }
 
-        public async Task<IList<IUserLocation>> GetUserLocationsByUser(
+        public async Task<PagedResult<IUserLocation>> GetUserLocationsByUser(
             Guid siteId,
             Guid userId,
             int pageNumber,
@@ -1652,7 +1713,13 @@ namespace cloudscribe.Core.Storage.NoDb
                 .Take(pageSize)
                 ;
 
-            return query.ToList() as IList<IUserLocation>;
+            var data = query.ToList<IUserLocation>();
+            var result = new PagedResult<IUserLocation>();
+            result.Data = data;
+            result.PageNumber = pageNumber;
+            result.PageSize = pageSize;
+            result.TotalItems = await CountUserLocationsByUser(siteId, userId, cancellationToken).ConfigureAwait(false);
+            return result;
 
         }
 

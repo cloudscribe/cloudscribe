@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2014-12-06
-// Last Modified:			2016-12-07
+// Last Modified:			2017-12-29
 // 
 
 using cloudscribe.Core.Identity;
@@ -76,21 +76,13 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
             {
                 itemsPerPage = pageSize;
             }
-
-            var totalItems = await RoleManager.CountOfRoles(
-                selectedSite.Id,
-                searchInput);
-
+            
             model.SiteRoles = await RoleManager.GetRolesBySite(
                 selectedSite.Id,
                 searchInput,
                 pageNumber,
                 itemsPerPage);
-
-            model.Paging.CurrentPage = pageNumber;
-            model.Paging.ItemsPerPage = itemsPerPage;
-            model.Paging.TotalItems = totalItems;
-
+            
             return View(model);
 
         }
@@ -130,20 +122,13 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
             }
 
             if (searchInput == null) searchInput = string.Empty;
-            var totalItems = await RoleManager.CountOfRoles(
-                selectedSite.Id,
-                searchInput);
-
+            
             model.SiteRoles = await RoleManager.GetRolesBySite(
                 selectedSite.Id,
                 searchInput,
                 pageNumber,
                 itemsPerPage);
-
-            model.Paging.CurrentPage = pageNumber;
-            model.Paging.ItemsPerPage = itemsPerPage;
-            model.Paging.TotalItems = totalItems;
-
+            
             if(ajaxGrid)
             {
                 return PartialView("ModalListPartial", model);
@@ -323,10 +308,6 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
                 searchInput,
                 pageNumber,
                 itemsPerPage);
-
-            model.Paging.CurrentPage = pageNumber;
-            model.Paging.ItemsPerPage = itemsPerPage;
-            model.Paging.TotalItems = await RoleManager.CountUsersInRole(role.SiteId, role.Id, searchInput);
             
             return View(model);
 
@@ -385,13 +366,6 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
                 searchInput,
                 pageNumber,
                 itemsPerPage);
-
-            model.Paging.CurrentPage = pageNumber;
-            model.Paging.ItemsPerPage = itemsPerPage;
-            model.Paging.TotalItems = await RoleManager.CountUsersNotInRole(
-                role.SiteId,
-                role.Id,
-                searchInput);
             
             if (ajaxGrid)
             {

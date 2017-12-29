@@ -2,19 +2,18 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:				    2014-07-17
-// Last Modified:		    2017-07-25
+// Last Modified:		    2017-12-29
 // 
 //
 
 using cloudscribe.Core.Models;
-using Microsoft.AspNetCore.Identity;
+using cloudscribe.Pagination.Models;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using System;
 using System.Collections.Generic;
-using System.Security.Claims;
-using System.Threading;
 using System.Threading.Tasks;
 
 namespace cloudscribe.Core.Identity
@@ -82,7 +81,7 @@ namespace cloudscribe.Core.Identity
             return await queries.CountOfRoles(siteId, searchInput, CancellationToken);
         }
 
-        public async Task<IList<ISiteRole>> GetRolesBySite(
+        public async Task<PagedResult<ISiteRole>> GetRolesBySite(
             Guid siteId,
             string searchInput,
             int pageNumber,
@@ -118,7 +117,7 @@ namespace cloudscribe.Core.Identity
         //    return await queries.RoleExists(siteId, roleName, CancellationToken);
         //}
 
-        public async Task<IList<IUserInfo>> GetUsersInRole(
+        public async Task<PagedResult<IUserInfo>> GetUsersInRole(
             Guid siteId, 
             Guid roleId, 
             string searchInput, 
@@ -140,7 +139,7 @@ namespace cloudscribe.Core.Identity
             return await queries.CountUsersInRole(siteId, roleId, searchInput, CancellationToken);
         }
 
-        public async Task<IList<IUserInfo>> GetUsersNotInRole(
+        public async Task<PagedResult<IUserInfo>> GetUsersNotInRole(
             Guid siteId, 
             Guid roleId, 
             string searchInput, 
