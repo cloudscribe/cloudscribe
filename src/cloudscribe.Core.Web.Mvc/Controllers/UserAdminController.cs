@@ -115,7 +115,9 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
             string query = "",
             int sortMode = 2,
             int pageNumber = 1,
-            int pageSize = -1)
+            int pageSize = -1,
+            bool ajaxGrid = false
+            )
         {
             var selectedSite = await siteManager.GetSiteForDataOperations(siteId);
             // only server admin site can edit other sites settings
@@ -133,6 +135,8 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
             {
                 itemsPerPage = pageSize;
             }
+
+            if(query == null) { query = string.Empty; }
             
             var siteMembers = await UserManager.GetUserAdminSearchPage(
                 selectedSite.Id,
@@ -148,6 +152,18 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
             model.SortMode = sortMode;
             model.ActionName = "Search";
             model.TimeZoneId = await timeZoneIdResolver.GetUserTimeZoneId();
+
+            if(Request.IsAjaxRequest())
+            {
+                if(ajaxGrid)
+                {
+                    return PartialView("UserModalGridPartial", model);
+                }
+                else
+                {
+                    return PartialView("UserLookupModal", model);
+                }
+            }
 
             return View("Index", model);
         }

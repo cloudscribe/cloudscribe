@@ -4,10 +4,12 @@
 <h2>@ViewData["Title"].</h2>
 <h3>@ViewData["Message"]</h3>
 
+<a class="btn btn-xs btn-default" asp-action="Search" asp-controller="UserAdmin" bs-modal-link="true">Lookup User</a>
+
 <p>Use this area to provide additional information.</p>
 <p>
     Lorem ipsum dolor sit amet, vocent adolescens efficiantur ea mea, paulo deserunt consequat no eam. Cum alia feugiat partiendo te, ei brute commune sit. Nec id dico tollit dolorum, erant fierent efficiendi vel et. Cu vim eligendi perfecto disputationi. Eu suscipit concludaturque ius, modus regione eum ea.
-    </p><p>
+</p><p>
     Cu cibo prima alienum eam, eum ea graece detraxit, harum everti disputando vel in. Debitis atomorum mnesarchum eum te, usu te idque mundi electram. Natum numquam mei ea, no tibique accusamus nam, modus fastidii vituperata sea no. Eam ex homero theophrastus, has ei patrioque forensibus maiestatis.
 </p><p>
     Nibh platonem assueverit vix ex, in qui probo volumus. In solet minimum omnesque vis, quaerendum scribentur ad eam. Mel eu dolorum incorrupte. Ex prima elaboraret vix, mea cibo epicurei hendrerit in.
@@ -39,3 +41,34 @@
 </p><p>
     Sit in soleat officiis, invidunt concludaturque ei sed. Id has alia elitr possim, te pri atqui dicunt singulis. Ea singulis adipisci per. Eum modo quot ne, eam nobis periculis disputando eu. Nobis ullamcorper definitionem quo in.
 </p>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_UnobtrusiveValidationScriptsPartial"); }
+    <script src="~/cr/js/jquery.unobtrusive-ajax.min.js"></script>
+    <script src="~/cr/js/cloudscribe-modaldialog-bootstrap.min.js"></script>
+    <script>
+
+        window.UserSelectedCallback = function (data) {
+            if (data) {
+                alert(JSON.stringify(data));
+
+            }
+
+        }
+
+        //window.UserSelectedCallback = function (ele) {
+        //    if (ele.dataset.userId) {
+        //        alert(ele.dataset.userId);
+
+        //    }
+
+        //}
+
+        //function userSelected(ele) {
+        //    if (window.UserSelectedCallback) {
+        //        window.UserSelectedCallback(ele);
+        //    }
+
+        //}
+    </script>
+}
