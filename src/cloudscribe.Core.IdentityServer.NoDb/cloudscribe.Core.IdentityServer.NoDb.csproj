@@ -2,8 +2,8 @@
 
   <PropertyGroup>
     <Description>NoDb configuration and operational stores for IdentityServer4 cloudscribe multi-tenant identity integration</Description>
-    <VersionPrefix>2.1.0</VersionPrefix>
-    <AssemblyVersion>2.1.0</AssemblyVersion>
+    <VersionPrefix>2.1.1</VersionPrefix>
+    <AssemblyVersion>2.1.1</AssemblyVersion>
     
     <Authors>Joe Audette</Authors>
     <TargetFramework>netstandard2.0</TargetFramework>

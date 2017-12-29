@@ -49,7 +49,7 @@
                     @sr["Last Name"]
                 </th>
             </tr>
-            @foreach (var item in Model.Members)
+            @foreach (var item in Model.Members.Data)
             {
                 <tr>
                     <td>
@@ -86,12 +86,15 @@
             }
         </table>
         <div>
-            <cs-pager cs-paging-info="@Model.Paging"
+            <cs-pager 
                       asp-action="RoleMembers" asp-controller="RoleAdmin"
                       asp-route-siteId="@Model.Role.SiteId"
                       asp-route-roleId="@Model.Role.Id"
                       asp-route-searchinput="@Model.SearchQuery"
-                      asp-route-pagesize="@Model.Paging.ItemsPerPage"
+                      asp-route-pagesize="@Model.Members.PageSize"
+                      cs-paging-pagesize="@Model.Members.PageSize"
+                      cs-paging-pagenumber="@Model.Members.PageNumber"
+                      cs-paging-totalitems="@Model.Members.TotalItems"
                       cs-first-page-title='@sr["First Page"]'
                       cs-last-page-title='@sr["Last Page"]'
                       cs-previous-page-title='@sr["Previous page"]'

@@ -2,10 +2,11 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2015-07-22
-// Last Modified:			2017-10-19
+// Last Modified:			2017-12-29
 // 
 
 using cloudscribe.Core.Models;
+using cloudscribe.Pagination.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
@@ -114,7 +115,7 @@ namespace cloudscribe.Core.Web.Components
             return await Fetch(CurrentSite.Id);
         }
 
-        public Task<List<ISiteInfo>> GetPageOtherSites(
+        public Task<PagedResult<ISiteInfo>> GetPageOtherSites(
             Guid currentSiteId,
             int pageNumber,
             int pageSize)

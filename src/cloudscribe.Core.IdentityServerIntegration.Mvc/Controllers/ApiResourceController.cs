@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2016-10-13
-// Last Modified:			2017-06-28
+// Last Modified:			2017-12-28
 // 
 
 using cloudscribe.Core.IdentityServerIntegration.Models;
@@ -63,11 +63,11 @@ namespace cloudscribe.Core.IdentityServerIntegration.Controllers.Mvc
             var model = new ApiListViewModel();
             model.SiteId = selectedSite.Id.ToString();
             var result = await apiManager.GetApiResources(selectedSite.Id.ToString(), pageNumber, itemsPerPage);
-            model.Apis = result.Data;
+            model.Apis = result;
 
-            model.Paging.CurrentPage = pageNumber;
-            model.Paging.ItemsPerPage = itemsPerPage;
-            model.Paging.TotalItems = result.TotalItems;
+            //model.Paging.CurrentPage = pageNumber;
+            //model.Paging.ItemsPerPage = itemsPerPage;
+            //model.Paging.TotalItems = result.TotalItems;
 
             return View(model);
         }

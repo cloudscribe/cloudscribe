@@ -2,10 +2,11 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2015-11-16
-// Last Modified:			2016-08-03
+// Last Modified:			2017-12-28
 // 
 
 using cloudscribe.Core.Models.Geography;
+using cloudscribe.Pagination.Models;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -77,7 +78,7 @@ namespace cloudscribe.Core.Storage.EFCore.Common
 
         }
 
-        public async Task<List<IGeoCountry>> GetCountriesPage(
+        public async Task<PagedResult<IGeoCountry>> GetCountriesPage(
             int pageNumber,
             int pageSize,
             CancellationToken cancellationToken = default(CancellationToken))
@@ -94,10 +95,18 @@ namespace cloudscribe.Core.Storage.EFCore.Common
                 ;
 
 
-            return await query
+            var data = await query
                  .AsNoTracking()
                  .ToListAsync<IGeoCountry>(cancellationToken)
                  .ConfigureAwait(false);
+
+            var result = new PagedResult<IGeoCountry>();
+            result.Data = data;
+            result.PageNumber = pageNumber;
+            result.PageSize = pageSize;
+            result.TotalItems = await GetCountryCount(cancellationToken);
+
+            return result;
 
         }
 
@@ -218,7 +227,7 @@ namespace cloudscribe.Core.Storage.EFCore.Common
 
         }
 
-        public async Task<List<IGeoZone>> GetGeoZonePage(
+        public async Task<PagedResult<IGeoZone>> GetGeoZonePage(
             Guid countryId,
             int pageNumber,
             int pageSize,
@@ -237,10 +246,18 @@ namespace cloudscribe.Core.Storage.EFCore.Common
                .Select(p => p)
                ;
 
-            return await query
+            var data = await query
                 .AsNoTracking()
                 .ToListAsync<IGeoZone>(cancellationToken)
                 .ConfigureAwait(false);
+
+            var result = new PagedResult<IGeoZone>();
+            result.Data = data;
+            result.PageNumber = pageNumber;
+            result.PageSize = pageSize;
+            result.TotalItems = await GetGeoZoneCount(countryId, cancellationToken);
+
+            return result;
 
         }
         

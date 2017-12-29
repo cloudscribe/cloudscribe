@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:				    2014-07-22
-// Last Modified:		    2017-10-02
+// Last Modified:		    2017-12-29
 // 
 //
 
@@ -112,7 +112,7 @@ namespace cloudscribe.Core.Identity
         }
 
         
-        public Task<List<IUserInfo>> GetPage(Guid siteId, int pageNumber, int pageSize, string userNameBeginsWith, int sortMode)
+        public Task<PagedResult<IUserInfo>> GetPage(Guid siteId, int pageNumber, int pageSize, string userNameBeginsWith, int sortMode)
         {
             if (multiTenantOptions.UseRelatedSitesMode) { siteId = multiTenantOptions.RelatedSiteId; }
 
@@ -133,7 +133,7 @@ namespace cloudscribe.Core.Identity
             return queries.CountLockedByAdmin(siteId, CancellationToken);
         }
 
-        public Task<List<IUserInfo>> GetPageLockedUsers(
+        public Task<PagedResult<IUserInfo>> GetPageLockedUsers(
             Guid siteId,
             int pageNumber,
             int pageSize)
@@ -143,7 +143,7 @@ namespace cloudscribe.Core.Identity
             return queries.GetPageLockedByAdmin(siteId, pageNumber, pageSize, CancellationToken);
         }
 
-        public Task<List<IUserInfo>> GetUserAdminSearchPage(Guid siteId, int pageNumber, int pageSize, string searchInput, int sortMode)
+        public Task<PagedResult<IUserInfo>> GetUserAdminSearchPage(Guid siteId, int pageNumber, int pageSize, string searchInput, int sortMode)
         {
             if (multiTenantOptions.UseRelatedSitesMode) { siteId = multiTenantOptions.RelatedSiteId; }
 
@@ -165,7 +165,7 @@ namespace cloudscribe.Core.Identity
             return queries.CountNotApprovedUsers(siteId, CancellationToken);
         }
 
-        public Task<List<IUserInfo>> GetNotApprovedUsers(
+        public Task<PagedResult<IUserInfo>> GetNotApprovedUsers(
             Guid siteId,
             int pageNumber,
             int pageSize)
@@ -307,14 +307,15 @@ namespace cloudscribe.Core.Identity
 
         public async Task<PagedResult<IUserLocation>> GetUserLocations(Guid siteId, Guid userId, int pageNumber, int pageSize)
         {
-            var result = new PagedResult<IUserLocation>();
-            var list = await queries.GetUserLocationsByUser(siteId, userId, pageNumber, pageSize);
-            result.Data = list.ToList();
-            result.TotalItems = await queries.CountUserLocationsByUser(siteId, userId);
-            result.PageNumber = pageNumber;
-            result.PageSize = pageSize;
+            return await queries.GetUserLocationsByUser(siteId, userId, pageNumber, pageSize);
+            //var result = new PagedResult<IUserLocation>();
+            //var list = await queries.GetUserLocationsByUser(siteId, userId, pageNumber, pageSize);
+            //result.Data = list.ToList();
+            //result.TotalItems = await queries.CountUserLocationsByUser(siteId, userId);
+            //result.PageNumber = pageNumber;
+            //result.PageSize = pageSize;
 
-            return result;
+            //return result;
         }
 
         #region Overrides

@@ -1,5 +1,7 @@
 
 
+http://alistapart.com/article/the-new-css-layout-excerpt
+
 off canvas nav
 https://blackrockdigital.github.io/startbootstrap-simple-sidebar/
 

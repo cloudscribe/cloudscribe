@@ -2,10 +2,10 @@
 // Licensed under the Apache License, Version 2.0
 // Author:					Joe Audette
 // Created:					2016-12-06
-// Last Modified:			2016-12-06
+// Last Modified:			2017-12-28
 // 
 
-using cloudscribe.Core.Models.Generic;
+using cloudscribe.Pagination.Models;
 using cloudscribe.Core.IdentityServerIntegration.Storage;
 using IdentityServer4.Models;
 using NoDb;
@@ -68,11 +68,14 @@ namespace cloudscribe.Core.IdentityServer.NoDb
             int offset = (pageSize * pageNumber) - pageSize;
 
             var result = new PagedResult<ApiResource>();
-            result.TotalItems = all.Count;
+            
             result.Data = all
                 .OrderBy(x => x.Name)
                 .Skip(offset)
                 .Take(pageSize).ToList();
+            result.TotalItems = all.Count;
+            result.PageNumber = pageNumber;
+            result.PageSize = pageSize;
 
             return result;
 

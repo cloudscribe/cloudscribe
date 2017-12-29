@@ -8,7 +8,7 @@
 using cloudscribe.Core.IdentityServer.EFCore.Interfaces;
 using cloudscribe.Core.IdentityServer.EFCore.Mappers;
 using cloudscribe.Core.IdentityServerIntegration.Storage;
-using cloudscribe.Core.Models.Generic;
+using cloudscribe.Pagination.Models;
 using IdentityServer4.Models;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -76,9 +76,12 @@ namespace cloudscribe.Core.IdentityServer.EFCore
                 .Take(pageSize).ToListAsync();
 
             var result = new PagedResult<ApiResource>();
-            result.TotalItems = await CountApiResources(siteId, cancellationToken).ConfigureAwait(false);
+            
             var model = list.Select(x => x.ToModel());
             result.Data = model.ToList();
+            result.PageNumber = pageNumber;
+            result.PageSize = pageSize;
+            result.TotalItems = await CountApiResources(siteId, cancellationToken).ConfigureAwait(false);
 
             return result;
 

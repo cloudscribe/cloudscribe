@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2014-12-08
-// Last Modified:			2017-10-07
+// Last Modified:			2017-12-29
 // 
 
 using cloudscribe.Core.Identity;
@@ -12,6 +12,7 @@ using cloudscribe.Core.Web.Components.Messaging;
 using cloudscribe.Core.Web.ExtensionPoints;
 using cloudscribe.Core.Web.ViewModels.Account;
 using cloudscribe.Core.Web.ViewModels.UserAdmin;
+using cloudscribe.Pagination.Models;
 using cloudscribe.Web.Common;
 using cloudscribe.Web.Common.Extensions;
 using cloudscribe.Web.Navigation;
@@ -96,17 +97,12 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
                 itemsPerPage,
                 query,
                 sortMode);
-
-            var count = await UserManager.CountUsers(selectedSite.Id, query);
-
+            
             var model = new UserListViewModel();
             model.SiteId = selectedSite.Id;
             model.UserList = siteMembers;
-            model.Paging.CurrentPage = pageNumber;
-            model.Paging.ItemsPerPage = itemsPerPage;
-            model.Paging.TotalItems = count;
             model.SortMode = sortMode;
-            model.AlphaQuery = query; //TODO: sanitize?
+            model.AlphaQuery = query; 
             model.TimeZoneId = await timeZoneIdResolver.GetUserTimeZoneId();
 
             return View(model);
@@ -144,16 +140,11 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
                 itemsPerPage,
                 query,
                 sortMode);
-
-            var count = await UserManager.CountUsersForAdminSearch(selectedSite.Id, query);
-
+            
             var model = new UserListViewModel();
             model.SiteId = selectedSite.Id;
             model.UserList = siteMembers;
-            model.Paging.CurrentPage = pageNumber;
-            model.Paging.ItemsPerPage = itemsPerPage;
-            model.Paging.TotalItems = count;
-            model.SearchQuery = query; //TODO: sanitize?
+            model.SearchQuery = query; 
             model.SortMode = sortMode;
             model.ActionName = "Search";
             model.TimeZoneId = await timeZoneIdResolver.GetUserTimeZoneId();
@@ -180,13 +171,17 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
             var siteMembers = await UserManager.GetByIPAddress(
                 selectedSite.Id,
                 ipQuery);
+
+            // not really paged in UI but re-using the ViewModel which needs a PagedResult
+            var data = new PagedResult<IUserInfo>();
+            data.Data = siteMembers;
+            data.PageNumber = 1;
+            data.PageSize = 2000;
+            data.TotalItems = siteMembers.Count();
             
             var model = new UserListViewModel();
             model.SiteId = selectedSite.Id;
-            model.UserList = siteMembers;
-            //model.Paging.CurrentPage = pageNumber;
-            //model.Paging.ItemsPerPage = itemsPerPage;
-            model.Paging.TotalItems = 1;
+            model.UserList = data;
             model.IpQuery = ipQuery; //TODO: sanitize
             model.ShowAlphaPager = false;
             model.TimeZoneId = await timeZoneIdResolver.GetUserTimeZoneId();
@@ -222,15 +217,10 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
                 selectedSite.Id,
                 pageNumber,
                 itemsPerPage);
-
-            var count = await UserManager.CountLockedOutUsers(selectedSite.Id);
-
+            
             var model = new UserListViewModel();
             model.SiteId = selectedSite.Id;
             model.UserList = siteMembers;
-            model.Paging.CurrentPage = pageNumber;
-            model.Paging.ItemsPerPage = itemsPerPage;
-            model.Paging.TotalItems = count;
             model.ShowAlphaPager = false;
             model.TimeZoneId = await timeZoneIdResolver.GetUserTimeZoneId();
             model.ActionName = "LockedUsers";
@@ -265,15 +255,10 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
                 selectedSite.Id,
                 pageNumber,
                 itemsPerPage);
-
-            var count = await UserManager.CountNotApprovedUsers(selectedSite.Id);
-
+            
             var model = new UserListViewModel();
             model.SiteId = selectedSite.Id;
             model.UserList = siteMembers;
-            model.Paging.CurrentPage = pageNumber;
-            model.Paging.ItemsPerPage = itemsPerPage;
-            model.Paging.TotalItems = count;
             model.ShowAlphaPager = false;
             model.TimeZoneId = await timeZoneIdResolver.GetUserTimeZoneId();
             model.ActionName = "UnApprovedUsers";

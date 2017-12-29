@@ -2,12 +2,11 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2014-11-24
-// Last Modified:			2016-06-04
+// Last Modified:			2017-12-29
 //
 
 using cloudscribe.Core.Models;
-using cloudscribe.Web.Pagination;
-using System.Collections.Generic;
+using cloudscribe.Pagination.Models;
 
 namespace cloudscribe.Core.Web.ViewModels.SiteSettings
 {
@@ -15,11 +14,11 @@ namespace cloudscribe.Core.Web.ViewModels.SiteSettings
     {
         public SiteListViewModel()
         {
-            Sites = new List<ISiteInfo>();
-            Paging = new PaginationSettings();
+            Sites = new PagedResult<ISiteInfo>();
+            
         }
 
-        public List<ISiteInfo> Sites { get; set; }
-        public PaginationSettings Paging { get; set; }
+        public PagedResult<ISiteInfo> Sites { get; set; }
+        
     }
 }

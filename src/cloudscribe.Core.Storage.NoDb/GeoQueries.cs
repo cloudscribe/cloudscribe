@@ -2,10 +2,11 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:                  Joe Audette
 // Created:                 2016-05-14
-// Last Modified:           2016-08-03
+// Last Modified:           2017-12-28
 // 
 
 using cloudscribe.Core.Models.Geography;
+using cloudscribe.Pagination.Models;
 using NoDb;
 using System;
 using System.Collections.Generic;
@@ -108,7 +109,7 @@ namespace cloudscribe.Core.Storage.NoDb
             
         }
 
-        public async Task<List<IGeoCountry>> GetCountriesPage(
+        public async Task<PagedResult<IGeoCountry>> GetCountriesPage(
             int pageNumber,
             int pageSize,
             CancellationToken cancellationToken = default(CancellationToken))
@@ -130,7 +131,14 @@ namespace cloudscribe.Core.Storage.NoDb
                 .Take(pageSize)
                 ;
 
-            return query.ToList<IGeoCountry>();
+            var data = query.ToList<IGeoCountry>();
+            var result = new PagedResult<IGeoCountry>();
+            result.Data = data;
+            result.PageNumber = pageNumber;
+            result.PageSize = pageSize;
+            result.TotalItems = await GetCountryCount(cancellationToken);
+
+            return result;
 
         }
 
@@ -244,7 +252,7 @@ namespace cloudscribe.Core.Storage.NoDb
 
         }
 
-        public async Task<List<IGeoZone>> GetGeoZonePage(
+        public async Task<PagedResult<IGeoZone>> GetGeoZonePage(
             Guid countryId,
             int pageNumber,
             int pageSize,
@@ -269,7 +277,14 @@ namespace cloudscribe.Core.Storage.NoDb
                .Select(p => p)
                ;
 
-            return  query.ToList<IGeoZone>();
+            var data =  query.ToList<IGeoZone>();
+            var result = new PagedResult<IGeoZone>();
+            result.Data = data;
+            result.PageNumber = pageNumber;
+            result.PageSize = pageSize;
+            result.TotalItems = await GetGeoZoneCount(countryId, cancellationToken);
+
+            return result;
 
         }
 

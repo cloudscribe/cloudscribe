@@ -2,13 +2,13 @@
 // Licensed under the Apache License, Version 2.0
 // Author:					Joe Audette
 // Created:					2016-12-05
-// Last Modified:			2016-12-05
+// Last Modified:			2017-12-28
 // 
 
 using cloudscribe.Core.IdentityServer.EFCore.Interfaces;
 using cloudscribe.Core.IdentityServer.EFCore.Mappers;
 using cloudscribe.Core.IdentityServerIntegration.Storage;
-using cloudscribe.Core.Models.Generic;
+using cloudscribe.Pagination.Models;
 using IdentityServer4.Models;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -73,9 +73,12 @@ namespace cloudscribe.Core.IdentityServer.EFCore
                 .Take(pageSize).ToListAsync();
 
             var result = new PagedResult<IdentityResource>();
-            result.TotalItems = await CountIdentityResources(siteId, cancellationToken).ConfigureAwait(false);
+            
             var model = list.Select(x => x.ToModel());
             result.Data = model.ToList();
+            result.PageNumber = pageNumber;
+            result.PageSize = pageSize;
+            result.TotalItems = await CountIdentityResources(siteId, cancellationToken).ConfigureAwait(false);
 
             return result;
 

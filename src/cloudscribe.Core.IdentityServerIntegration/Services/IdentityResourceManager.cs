@@ -2,11 +2,11 @@
 // Licensed under the Apache License, Version 2.0
 // Author:					Joe Audette
 // Created:					2016-10-13
-// Last Modified:			2016-12-15
+// Last Modified:			2017-12-28
 // 
 
 using cloudscribe.Core.IdentityServerIntegration.Storage;
-using cloudscribe.Core.Models.Generic;
+using cloudscribe.Pagination.Models;
 using IdentityServer4.Models;
 using Microsoft.AspNetCore.Http;
 using System.Threading;

@@ -19,7 +19,7 @@
                     <a class="btn btn-xs btn-default" asp-action="StateEdit" asp-controller="CoreData"
                        asp-route-countryId="@Model.Country.Id"
                        asp-route-crp="@Model.CountryListReturnPageNumber"
-                       asp-route-returnPageNumber="@Model.Paging.CurrentPage">@sr["New State"]</a>
+                       asp-route-returnPageNumber="@Model.States.PageNumber">@sr["New State"]</a>
                 </th>
                 <th>
                     @sr["Name"]
@@ -29,7 +29,7 @@
                 </th>
             </tr>
 
-            @foreach (var item in Model.States)
+            @foreach (var item in Model.States.Data)
             {
                 <tr>
                     <td>
@@ -38,12 +38,12 @@
                                asp-route-countryId="@Model.Country.Id"
                                asp-route-stateId="@item.Id"
                                asp-route-crp="@Model.CountryListReturnPageNumber"
-                               asp-route-returnpagenumber="@Model.Paging.CurrentPage">@sr["Edit"]</a>
+                               asp-route-returnpagenumber="@Model.States.PageNumber">@sr["Edit"]</a>
 
                             <input type="hidden" name="countryId" value="@item.CountryId" />
                             <input type="hidden" name="stateId" value="@item.Id" />
                             <input type="hidden" name="crp" value="@Model.CountryListReturnPageNumber" />
-                            <input type="hidden" name="returnPageNumber" value="@Model.Paging.CurrentPage" />
+                            <input type="hidden" name="returnPageNumber" value="@Model.States.PageNumber" />
                             <button type="submit" name="submit"
                                     onclick="javascript: return confirm('@Html.FormatValue(item.Name, sr["Are you sure you want to delete {0}?"])');"
                                     class="btn btn-xs btn-default">
@@ -61,11 +61,13 @@
             }
         </table>
         <div>
-            <cs-pager cs-paging-info="@Model.Paging"
+            <cs-pager 
                       asp-action="StateListPage" asp-controller="CoreData"
                       asp-route-countryId="@Model.Country.Id"
                       asp-route-crp="@Model.CountryListReturnPageNumber"
-                      asp-route-pagesize="@Model.Paging.ItemsPerPage"
+                      asp-route-pagesize="@Model.States.PageSize"
+                      cs-paging-pagenumber="@Model.States.PageNumber"
+                      cs-paging-totalitems="@Model.States.TotalItems"
                       cs-first-page-title='@sr["First Page"]'
                       cs-last-page-title='@sr["Last Page"]'
                       cs-previous-page-title='@sr["Previous page"]'
