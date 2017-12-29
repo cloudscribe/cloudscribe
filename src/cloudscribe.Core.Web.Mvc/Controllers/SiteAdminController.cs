@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2014-10-26
-// Last Modified:			2017-10-19
+// Last Modified:			2017-12-29
 // 
 
 using cloudscribe.Core.Models;
@@ -103,14 +103,10 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
                 filteredSiteId,
                 pageNumber,
                 itemsPerPage);
-
-            var count = await siteManager.CountOtherSites(filteredSiteId);
+            
             var model = new SiteListViewModel();
             model.Sites = sites;
-            model.Paging.CurrentPage = pageNumber;
-            model.Paging.ItemsPerPage = itemsPerPage;
-            model.Paging.TotalItems = count;
-
+            
             return View(model);
 
         }

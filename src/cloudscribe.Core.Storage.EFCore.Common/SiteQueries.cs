@@ -2,10 +2,11 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2015-11-16
-// Last Modified:			2016-08-28
+// Last Modified:			2017-12-29
 // 
 
 using cloudscribe.Core.Models;
+using cloudscribe.Pagination.Models;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -248,7 +249,7 @@ namespace cloudscribe.Core.Storage.EFCore.Common
                 , cancellationToken);
         }
 
-        public async Task<List<ISiteInfo>> GetPageOtherSites(
+        public async Task<PagedResult<ISiteInfo>> GetPageOtherSites(
             Guid currentSiteId,
             int pageNumber,
             int pageSize,
@@ -274,13 +275,19 @@ namespace cloudscribe.Core.Storage.EFCore.Common
                         };
 
 
-            return await query
+            var data = await query
                 .AsNoTracking()
                 .Skip(offset)
                 .Take(pageSize)
                 .ToListAsync<ISiteInfo>(cancellationToken)
                 .ConfigureAwait(false);
 
+            var result = new PagedResult<ISiteInfo>();
+            result.Data = data;
+            result.PageNumber = pageNumber;
+            result.PageSize = pageSize;
+            result.TotalItems = await CountOtherSites(currentSiteId, cancellationToken).ConfigureAwait(false);
+            return result;
 
         }
 
@@ -320,7 +327,7 @@ namespace cloudscribe.Core.Storage.EFCore.Common
             return await dbContext.SiteHosts.CountAsync<SiteHost>(cancellationToken);
         }
 
-        public async Task<List<ISiteHost>> GetPageHosts(
+        public async Task<PagedResult<ISiteHost>> GetPageHosts(
             int pageNumber,
             int pageSize,
             CancellationToken cancellationToken = default(CancellationToken))
@@ -336,12 +343,20 @@ namespace cloudscribe.Core.Storage.EFCore.Common
                         select x
                         ;
 
-            return await query
+            var data = await query
                 .AsNoTracking()
                 .Skip(offset)
                 .Take(pageSize)
                 .ToListAsync<ISiteHost>(cancellationToken)
                 .ConfigureAwait(false);
+
+            var result = new PagedResult<ISiteHost>();
+            result.Data = data;
+            result.PageNumber = pageNumber;
+            result.PageSize = pageSize;
+            result.TotalItems = await GetHostCount(cancellationToken).ConfigureAwait(false);
+            return result;
+
         }
 
         public async Task<List<ISiteHost>> GetSiteHosts(

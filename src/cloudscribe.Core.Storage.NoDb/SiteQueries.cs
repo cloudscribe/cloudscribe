@@ -2,14 +2,14 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:                  Joe Audette
 // Created:                 2016-05-13
-// Last Modified:           2016-08-28
+// Last Modified:           2017-12-29
 // 
 
 using cloudscribe.Core.Models;
+using cloudscribe.Pagination.Models;
 using NoDb;
 using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -243,7 +243,7 @@ namespace cloudscribe.Core.Storage.NoDb
             return allSites.Where(x => x.Id != currentSiteId).ToList().Count;
         }
 
-        public async Task<List<ISiteInfo>> GetPageOtherSites(
+        public async Task<PagedResult<ISiteInfo>> GetPageOtherSites(
             Guid currentSiteId,
             int pageNumber,
             int pageSize,
@@ -272,11 +272,17 @@ namespace cloudscribe.Core.Storage.NoDb
                             SiteName = x.SiteName
                         };
 
-            return query
+            var data = query
                 .Skip(offset)
                 .Take(pageSize)
-                .ToList<ISiteInfo>()
-                ;
+                .ToList<ISiteInfo>();
+
+            var result = new PagedResult<ISiteInfo>();
+            result.Data = data;
+            result.PageNumber = pageNumber;
+            result.PageSize = pageSize;
+            result.TotalItems = await CountOtherSites(currentSiteId, cancellationToken).ConfigureAwait(false);
+            return result;
         }
 
         public async Task<List<ISiteHost>> GetAllHosts(CancellationToken cancellationToken = default(CancellationToken))
@@ -309,7 +315,7 @@ namespace cloudscribe.Core.Storage.NoDb
             return allHosts.ToList().Count;
         }
 
-        public async Task<List<ISiteHost>> GetPageHosts(
+        public async Task<PagedResult<ISiteHost>> GetPageHosts(
             int pageNumber,
             int pageSize,
             CancellationToken cancellationToken = default(CancellationToken))
@@ -329,11 +335,17 @@ namespace cloudscribe.Core.Storage.NoDb
                         select x
                         ;
 
-            return query
+            var data = query
                 .Skip(offset)
                 .Take(pageSize)
-                .ToList<ISiteHost>()
-                ;
+                .ToList<ISiteHost>();
+
+            var result = new PagedResult<ISiteHost>();
+            result.Data = data;
+            result.PageNumber = pageNumber;
+            result.PageSize = pageSize;
+            result.TotalItems = await GetHostCount(cancellationToken).ConfigureAwait(false);
+            return result;
         }
 
         public async Task<List<ISiteHost>> GetSiteHosts(
