@@ -168,6 +168,65 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
             return View("Index", model);
         }
 
+        /// <summary>
+        /// this method is for use by custom features that need to lookup users to get the userid email etc
+        /// It is protected by UserLookupPolicy so that th epolicy could allow looking up users without
+        /// providing user management permissions. ie when creating an ecommerce order or other tasks that require looking up a user
+        /// to assign to a custom entity such as an order
+        /// </summary>
+        /// <param name="siteId"></param>
+        /// <param name="query"></param>
+        /// <param name="sortMode"></param>
+        /// <param name="pageNumber"></param>
+        /// <param name="pageSize"></param>
+        /// <param name="ajaxGrid"></param>
+        /// <returns></returns>
+        [Authorize(Policy = "UserLookupPolicy")]
+        [HttpGet]
+        public async Task<IActionResult> SearchModal(
+            Guid? siteId,
+            string query = "",
+            int sortMode = 2,
+            int pageNumber = 1,
+            int pageSize = -1,
+            bool ajaxGrid = false
+            )
+        {
+            var selectedSite = await siteManager.GetSiteForDataOperations(siteId);
+            
+            var itemsPerPage = uiOptions.DefaultPageSize_UserList;
+            if (pageSize > 0)
+            {
+                itemsPerPage = pageSize;
+            }
+
+            if (query == null) { query = string.Empty; }
+
+            var siteMembers = await UserManager.GetUserAdminSearchPage(
+                selectedSite.Id,
+                pageNumber,
+                itemsPerPage,
+                query,
+                sortMode);
+
+            var model = new UserListViewModel();
+            model.SiteId = selectedSite.Id;
+            model.UserList = siteMembers;
+            model.SearchQuery = query;
+            model.SortMode = sortMode;
+            model.ActionName = "SearchModal";
+            model.TimeZoneId = await timeZoneIdResolver.GetUserTimeZoneId();
+
+            
+            if (ajaxGrid)
+            {
+                return PartialView("UserModalGridPartial", model);
+            }
+            
+            return PartialView("UserLookupModal", model);
+            
+        }
+
         [HttpGet]
         public async Task<IActionResult> IpSearch(
             Guid? siteId,

@@ -192,6 +192,13 @@ namespace Microsoft.Extensions.DependencyInjection
                 });
 
             options.AddPolicy(
+                "UserLookupPolicy",
+                authBuilder =>
+                {
+                    authBuilder.RequireRole("ServerAdmins", "Administrators");
+                });
+
+            options.AddPolicy(
                 "RoleAdminPolicy",
                 authBuilder =>
                 {
