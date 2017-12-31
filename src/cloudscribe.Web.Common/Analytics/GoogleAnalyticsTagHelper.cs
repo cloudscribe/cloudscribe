@@ -269,7 +269,7 @@ namespace cloudscribe.Web.Common.TagHelpers
                     sb.Append("'id': '" + t.Id + "'");
                     if(!string.IsNullOrWhiteSpace(t.Affilitation))
                     {
-                        sb.Append(",affiliation': '" + t.Affilitation + "'");
+                        sb.Append(",'affiliation': '" + t.Affilitation + "'");
                     }
                     if (t.Revenue > 0)
                     {
@@ -289,7 +289,7 @@ namespace cloudscribe.Web.Common.TagHelpers
                     }
                     if (!string.IsNullOrWhiteSpace(t.CurrencyCode))
                     {
-                        sb.Append(",currency': '" + t.CurrencyCode + "'");
+                        sb.Append(",'currency': '" + t.CurrencyCode + "'");
                     }
 
 
@@ -302,11 +302,11 @@ namespace cloudscribe.Web.Common.TagHelpers
                         sb.Append(",'name': '" + item.Name + "'");
                         if (!string.IsNullOrWhiteSpace(item.Sku))
                         {
-                            sb.Append(",sku': '" + item.Sku + "'");
+                            sb.Append(",'sku': '" + item.Sku + "'");
                         }
                         if (!string.IsNullOrWhiteSpace(item.Category))
                         {
-                            sb.Append(",category': '" + item.Category + "'");
+                            sb.Append(",'category': '" + item.Category + "'");
                         }
                         if (item.Price > 0)
                         {
@@ -320,7 +320,7 @@ namespace cloudscribe.Web.Common.TagHelpers
                         }
                         if (!string.IsNullOrWhiteSpace(item.CurrencyCode))
                         {
-                            sb.Append(",currency': '" + item.CurrencyCode + "'");
+                            sb.Append(",'currency': '" + item.CurrencyCode + "'");
                         }
 
                         sb.Append("});");
