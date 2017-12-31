@@ -10,6 +10,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using Microsoft.AspNetCore.Razor.TagHelpers;
 using Microsoft.Extensions.Options;
+using System.Globalization;
 using System.Text;
 
 namespace cloudscribe.Web.Common.TagHelpers
@@ -256,6 +257,78 @@ namespace cloudscribe.Web.Common.TagHelpers
                     sb.Append(");");
                     sb.AppendLine("");
                 }
+            }
+
+            var transactions = ViewContext.TempData.GetGoogleAnalyticsTransactions();
+            if(transactions.Count > 0)
+            {
+                sb.Append("ga('require', 'ecommerce');");
+                foreach(var t in transactions)
+                {
+                    sb.Append("ga('ecommerce:addTransaction', {");
+                    sb.Append("'id': '" + t.Id + "'");
+                    if(!string.IsNullOrWhiteSpace(t.Affilitation))
+                    {
+                        sb.Append(",affiliation': '" + t.Affilitation + "'");
+                    }
+                    if (t.Revenue > 0)
+                    {
+                        //decimal point with up to 6 decimal places
+                        var num = string.Format(CultureInfo.InvariantCulture, "{0:#.######}", t.Revenue);
+                        sb.Append(",'revenue': '" + num + "'");
+                    }
+                    if (t.Shipping > 0)
+                    {
+                        var num = string.Format(CultureInfo.InvariantCulture, "{0:#.######}", t.Shipping);
+                        sb.Append(",'shipping': '" + num + "'");
+                    }
+                    if (t.Tax > 0)
+                    {
+                        var num = string.Format(CultureInfo.InvariantCulture, "{0:#.######}", t.Tax);
+                        sb.Append(",'tax': '" + num + "'");
+                    }
+                    if (!string.IsNullOrWhiteSpace(t.CurrencyCode))
+                    {
+                        sb.Append(",currency': '" + t.CurrencyCode + "'");
+                    }
+
+
+                    sb.Append("});");
+
+                    foreach(var item in t.Items)
+                    {
+                        sb.Append("ga('ecommerce:addItem', {");
+                        sb.Append("'id': '" + t.Id + "'");
+                        sb.Append(",'name': '" + item.Name + "'");
+                        if (!string.IsNullOrWhiteSpace(item.Sku))
+                        {
+                            sb.Append(",sku': '" + item.Sku + "'");
+                        }
+                        if (!string.IsNullOrWhiteSpace(item.Category))
+                        {
+                            sb.Append(",category': '" + item.Category + "'");
+                        }
+                        if (item.Price > 0)
+                        {
+                            //decimal point with up to 6 decimal places
+                            var num = string.Format(CultureInfo.InvariantCulture, "{0:#.######}", item.Price);
+                            sb.Append(",'price': '" + num + "'");
+                        }
+                        if(item.Quantity > 0)
+                        {
+                            sb.Append(",'quantity': '" + item.Quantity.ToString(CultureInfo.InvariantCulture) + "'");
+                        }
+                        if (!string.IsNullOrWhiteSpace(item.CurrencyCode))
+                        {
+                            sb.Append(",currency': '" + item.CurrencyCode + "'");
+                        }
+
+                        sb.Append("});");
+                    }
+
+                }
+
+                sb.Append("ga('ecommerce:send');");
             }
 
             if (TrackAfterPageLoad)

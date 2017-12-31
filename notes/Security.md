@@ -1,4 +1,7 @@
 
+https://www.jerriepelser.com/blog/creating-dynamic-authorization-policies-aspnet-core/
+
+
 https://www.troyhunt.com/locking-down-your-website-scripts-with-csp-hashes-nonces-and-report-uri/
 
 https://docs.nwebsec.com/en/latest/index.html

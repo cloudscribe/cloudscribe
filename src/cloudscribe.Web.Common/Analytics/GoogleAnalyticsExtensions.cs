@@ -37,7 +37,37 @@ namespace cloudscribe.Web.Common.Analytics
             return new List<GoogleAnalyticsEvent>();
         }
 
-        
+        public static void AddTransaction(this ITempDataDictionary tempData, Transaction transaction)
+        {
+            List<Transaction> list;
+            if (tempData.ContainsKey(Transaction.TempDataKey))
+            {
+                string json = (string)tempData[Transaction.TempDataKey];
+                list = JsonConvert.DeserializeObject<List<Transaction>>(json);
+            }
+            else
+            {
+                list = new List<Transaction>();
+            }
+            list.Add(transaction);
+
+            tempData[Transaction.TempDataKey] = JsonConvert.SerializeObject(list);
+        }
+
+        public static List<Transaction> GetGoogleAnalyticsTransactions(this ITempDataDictionary tempData)
+        {
+
+            if (tempData.ContainsKey(Transaction.TempDataKey))
+            {
+                string json = (string)tempData[Transaction.TempDataKey];
+                List<Transaction> list = JsonConvert.DeserializeObject<List<Transaction>>(json);
+                return list;
+            }
+
+            return new List<Transaction>();
+        }
+
+
 
 
     }

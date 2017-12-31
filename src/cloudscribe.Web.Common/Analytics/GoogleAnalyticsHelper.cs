@@ -55,5 +55,18 @@ namespace cloudscribe.Web.Common.Analytics
             }
         }
 
+        public void AddTransaction(Transaction transaction)
+        {
+            var tempData = GetTempData();
+            if (tempData != null)
+            {
+                tempData.AddTransaction(transaction); //these are detected by the google analytics taghelper and rendered
+            }
+            else
+            {
+                _log.LogWarning("failed to add google analytics transaction because tempData was null");
+            }
+        }
+
     }
 }
