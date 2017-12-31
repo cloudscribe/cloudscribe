@@ -252,3 +252,46 @@ Event
       Maximum Value = 1
       Formating Type = Integer
 	  
+## Tracking Ecommerce
+
+https://developers.google.com/analytics/devguides/collection/analyticsjs/ecommerce
+
+ga('require', 'ecommerce');
+
+Adding a Transaction
+
+Once the plugin has been loaded, it creates a transparent shopping cart object. You can add transaction and item data to the shopping cart, and once fully configured, you send all the data at once.
+
+You add transaction data to the shopping cart using the ecommerce:addTransaction command:
+
+ga('ecommerce:addTransaction', {
+  'id': '1234',                     // Transaction ID. Required.
+  'affiliation': 'Acme Clothing',   // Affiliation or store name.
+  'revenue': '11.99',               // Grand Total.
+  'shipping': '5',                  // Shipping.
+  'tax': '1.29'                     // Tax.
+});
+
+Adding Items
+
+Next, to add items to the shopping cart, you use the ecommerce:addItem command:
+
+ga('ecommerce:addItem', {
+  'id': '1234',                     // Transaction ID. Required.
+  'name': 'Fluffy Pink Bunnies',    // Product name. Required.
+  'sku': 'DD23444',                 // SKU/code.
+  'category': 'Party Toys',         // Category or variation.
+  'price': '11.99',                 // Unit price.
+  'quantity': '1'                   // Quantity.
+});
+
+Sending Data
+
+Finally, once you have configured all your ecommerce data in the shopping cart, you send the data to Google Analytics using the ecommerce:send command:
+
+ga('ecommerce:send');
+
+This command will go through each transaction and item in the shopping cart and send the respective data to Google Analytics. Once complete, the shopping cart is cleared and ready to send data for a new transaction. If a previous ecommerce:send command was issued, only new transaction and item data will be sent.
+
+Note: While most implementations will send both transaction and item data, you can send transactions without items, and items without transactions. If you send an item hit without a transaction, a transaction hit with only the ID will be sent automatically.
+	  
