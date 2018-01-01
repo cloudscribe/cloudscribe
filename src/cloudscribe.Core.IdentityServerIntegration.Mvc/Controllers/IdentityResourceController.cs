@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2016-12-15
-// Last Modified:			2017-12-28
+// Last Modified:			2018-01-01
 // 
 
 using cloudscribe.Core.IdentityServerIntegration.Models;
@@ -11,6 +11,7 @@ using cloudscribe.Core.Web.Components;
 using cloudscribe.Web.Common.Extensions;
 using cloudscribe.Web.Navigation;
 using IdentityServer4.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Localization;
 using System;
@@ -19,6 +20,7 @@ using System.Threading.Tasks;
 
 namespace cloudscribe.Core.IdentityServerIntegration.Controllers.Mvc
 {
+    [Authorize(Policy = "IdentityServerAdminPolicy")]
     public class IdentityResourceController : Controller
     {
         public IdentityResourceController(
