@@ -1269,7 +1269,7 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
         }
 
         [HttpGet]
-        [Authorize(Policy = "AdminPolicy")]
+        [Authorize(Policy = "ServerAdminPolicy")]
         public async Task<ActionResult> SiteHostMappings(
             Guid? siteId,
             int slp = -1)
