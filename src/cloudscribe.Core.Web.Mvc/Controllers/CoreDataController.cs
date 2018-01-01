@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2014-11-15
-// Last Modified:			2016-10-08
+// Last Modified:			2018-01-01
 // 
 
 using cloudscribe.Core.Models;
@@ -22,7 +22,7 @@ using System.Threading.Tasks;
 
 namespace cloudscribe.Core.Web.Controllers.Mvc
 {
-    [Authorize(Policy = "CoreDataPolicy")]
+    
     public class CoreDataController : Controller
     {
         public CoreDataController(
@@ -44,13 +44,14 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
         private IStringLocalizer sr;
 
         // GET: /CoreData/
+        [Authorize(Policy = "CoreDataPolicy")]
         [HttpGet]
         public IActionResult Index()
         {
             return View();
         }
 
-
+        [Authorize(Policy = "CoreDataPolicy")]
         [HttpGet]
         public async Task<IActionResult> CountryListPage(
             int pageNumber = 1,
@@ -64,14 +65,11 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
 
             var model = new CountryListPageViewModel();
             model.Countries = await dataManager.GetCountriesPage(pageNumber, itemsPerPage);
-            //model.Paging.CurrentPage = pageNumber;
-            //model.Paging.ItemsPerPage = itemsPerPage;
-            //model.Paging.TotalItems = await dataManager.GetCountryCount();
-
+           
             return View(model);
         }
 
-
+        [Authorize(Policy = "CoreDataPolicy")]
         [HttpGet]
         public async Task<IActionResult> CountryEdit(
             Guid? countryId,
@@ -102,6 +100,7 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
             return View(model);
         }
 
+        [Authorize(Policy = "CoreDataPolicy")]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> CountryEdit(
@@ -137,6 +136,7 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
 
         // probably should hide by config by default
         // seems like an unusual event to delete a country and its states
+        [Authorize(Policy = "CoreDataPolicy")]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> CountryDelete(Guid countryId, int returnPageNumber = 1)
@@ -156,6 +156,7 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
             return RedirectToAction("CountryListPage", new { pageNumber = returnPageNumber });
         }
 
+        [Authorize(Policy = "CoreDataPolicy")]
         [HttpGet]
         public async Task<IActionResult> StateListPage(
             Guid? countryId,
@@ -180,10 +181,6 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
             var country = await dataManager.FetchCountry(countryId.Value);
             model.Country = GeoCountryViewModel.FromIGeoCountry(country);
             model.States = await dataManager.GetGeoZonePage(countryId.Value, pageNumber, itemsPerPage);
-
-            //model.Paging.CurrentPage = pageNumber;
-            //model.Paging.ItemsPerPage = itemsPerPage;
-            //model.Paging.TotalItems = await dataManager.GetGeoZoneCount(countryId.Value);
             model.CountryListReturnPageNumber = crp;
 
             // below we are just manipiulating the bread crumbs
@@ -204,6 +201,7 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
             
             return View(model);
         }
+
 
         [HttpGet]
         [AllowAnonymous]
@@ -258,6 +256,7 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
 
         }
 
+        [Authorize(Policy = "CoreDataPolicy")]
         [HttpGet]
         public async Task<IActionResult> StateEdit(
             Guid countryId,
@@ -315,6 +314,7 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
 
         }
 
+        [Authorize(Policy = "CoreDataPolicy")]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> StateEdit(GeoZoneViewModel model)
@@ -348,6 +348,7 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
 
         }
 
+        [Authorize(Policy = "CoreDataPolicy")]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> StateDelete(

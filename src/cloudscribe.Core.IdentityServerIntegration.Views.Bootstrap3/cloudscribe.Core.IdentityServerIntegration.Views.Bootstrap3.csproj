@@ -25,9 +25,6 @@
     <PackageReference Include="Microsoft.Extensions.FileProviders.Embedded" Version="2.0.*" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Properties\" />
-  </ItemGroup>
-
+  
 
 </Project>
