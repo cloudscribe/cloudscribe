@@ -21,7 +21,7 @@ using System.Threading.Tasks;
 
 namespace cloudscribe.Core.Web.Controllers.Mvc
 {
-    [Authorize(Policy = "RoleAdminPolicy")]
+    
     public class RoleAdminController : Controller
     {
         public RoleAdminController(
@@ -93,7 +93,7 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
         //https://blog4rami.wordpress.com/2014/01/09/preserving-check-box-states-pagedlist-mvc3/
 
         [HttpGet]
-        [Authorize(Policy = "RoleAdminPolicy")]
+        [Authorize(Policy = "RoleLookupPolicy")]
         public async Task<IActionResult> Modal(
             Guid? siteId,
             string searchInput = "",
