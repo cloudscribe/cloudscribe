@@ -54,6 +54,7 @@ namespace cloudscribe.Core.IdentityServerIntegration.Models
             UpdateAccessTokenClaimsOnRefresh = client.UpdateAccessTokenClaimsOnRefresh;
             RefreshTokenExpiration = client.RefreshTokenExpiration;
             RefreshTokenUsage = client.RefreshTokenUsage;
+            AllowOfflineAccess = client.AllowOfflineAccess;
 
             Client = client;
 
@@ -123,7 +124,7 @@ namespace cloudscribe.Core.IdentityServerIntegration.Models
         /// </summary>
         public string PairWiseSubjectSalt { get; set; }
 
-
+        public bool AllowOfflineAccess { get; set; }
 
 
         //these are not implemented in the UI but could be if somone really needs it

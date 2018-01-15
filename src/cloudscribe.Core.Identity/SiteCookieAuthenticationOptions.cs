@@ -98,6 +98,7 @@ namespace cloudscribe.Core.Identity
                 options.Cookie.Name = $"{scheme}-{tenant.SiteFolderName}";
                 options.Cookie.Path = "/" + tenant.SiteFolderName;
                 options.Events.OnValidatePrincipal = SiteAuthCookieValidator.ValidatePrincipalAsync;
+                
             }
 
             var tenantPathBase = string.IsNullOrEmpty(tenant.SiteFolderName)

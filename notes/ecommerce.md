@@ -48,3 +48,9 @@ https://stripe.com/us/pricing
 2.9%  + 30¢ per transaction
 per successful card charge
 fees icon No setup, monthly, or hidden fees
+
+Test Card
+Card Number 4532 7597 3454 5858
+Card CVV 111
+Card Expiration (Any time in the future)
+Card Postal Code (Any valid US postal code)
