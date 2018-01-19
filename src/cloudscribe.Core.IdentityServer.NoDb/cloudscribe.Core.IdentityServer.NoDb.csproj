@@ -2,8 +2,8 @@
 
   <PropertyGroup>
     <Description>NoDb configuration and operational stores for IdentityServer4 cloudscribe multi-tenant identity integration</Description>
-    <VersionPrefix>2.1.1</VersionPrefix>
-    <AssemblyVersion>2.1.1</AssemblyVersion>
+    <VersionPrefix>2.1.2</VersionPrefix>
+    <AssemblyVersion>2.1.2</AssemblyVersion>
     
     <Authors>Joe Audette</Authors>
     <TargetFramework>netstandard2.0</TargetFramework>
@@ -26,7 +26,7 @@
     
     <PackageReference Include="NoDb" Version="1.1.*" />
     <PackageReference Include="Microsoft.Extensions.Caching.Memory" Version="2.0.*" />
-    <PackageReference Include="IdentityServer4" Version="2.0.*" />
+    <PackageReference Include="IdentityServer4" Version="2.1.*" />
   </ItemGroup>
 
   

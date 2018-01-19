@@ -129,4 +129,53 @@ these are for old version of identityserver
 https://github.com/KevinDockx/XamarinFormsOIDCSample
 
 
+
+https://wildermuth.com/2017/08/19/Two-AuthorizationSchemes-in-ASP-NET-Core-2
+
+## Signing Certificates
+
+https://msdn.microsoft.com/library/windows/desktop/aa386968.aspx
+
+
+
+https://brockallen.com/2015/06/01/makecert-and-creating-ssl-or-signing-certificates/
+
+https://blogs.msdn.microsoft.com/webdev/2016/10/27/bearer-token-authentication-in-asp-net-core/
+
+https://blogs.msdn.microsoft.com/webdev/2017/01/23/asp-net-core-authentication-with-identityserver4/
+
+http://amilspage.com/signing-certificates-idsv4/
+
+services.AddTransient<ICorsPolicyService, IdServerCorsPolicy>();
+services.AddTransient<IRedirectUriValidator, IdServerRedirectValidator>();
+
+var certPath = Configuration.GetValue<string>("AppSettings:KeyFilePath");
+var certPwd = Configuration.GetValue<string>("AppSettings:KeyFilePassword");
+//var store = new X509Store(StoreName.My, StoreLocation.LocalMachine);
+//X509Certificate2 cert =null;
+//store.Open(OpenFlags.ReadOnly);
+//var certificates = store.Certificates.Find(X509FindType.FindByIssuerName, issuer, true);
+//if(certificates.Count > 0) { cert = certificates[0]; }
+//var issuer = Configuration.GetValue<string>("appsettings:KeyStoreIssuer");
+
+
+var cert = new X509Certificate2(
+	File.ReadAllBytes(certPath), 
+	certPwd,
+	X509KeyStorageFlags.MachineKeySet |
+	X509KeyStorageFlags.PersistKeySet |
+	X509KeyStorageFlags.Exportable);
+	
+services.AddIdentityServerConfiguredForCloudscribe()
+	.AddCloudscribeCoreEFIdentityServerStorageMSSQL(connectionString)
+	.AddCloudscribeIdentityServerIntegrationMvc()
+	// don't use AddDeveloperSigningCredential in production
+	// https://identityserver4.readthedocs.io/en/dev/topics/crypto.html
+	// https://identityserver4.readthedocs.io/en/dev/topics/startup.html#refstartupkeymaterial
+	// you can use a self signed cert, you could but should not use your ssl certificate
+	// https://github.com/IdentityServer/IdentityServer3/issues/2888
+	//.AddSigningCredential(cert)
+	.AddSigningCredential(cert);
+
+
  

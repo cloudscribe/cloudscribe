@@ -28,6 +28,8 @@ namespace Microsoft.Extensions.DependencyInjection
 {
     public static class ServiceCollectionExtensions
     {
+        public static object SecurityStampValidatorCallback { get; private set; }
+
         public static IdentityBuilder AddCloudscribeIdentity(
             this IServiceCollection services,
             Action<IdentityOptions> setupAction = null

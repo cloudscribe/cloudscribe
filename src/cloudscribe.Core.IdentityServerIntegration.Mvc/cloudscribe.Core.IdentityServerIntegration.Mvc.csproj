@@ -2,8 +2,8 @@
 
   <PropertyGroup>
     <Description>MVC Controllers for cloudscribe.Core.IdentityServerIntegration</Description>
-    <VersionPrefix>2.1.3</VersionPrefix>
-    <AssemblyVersion>2.1.3</AssemblyVersion>
+    <VersionPrefix>2.1.7</VersionPrefix>
+    <AssemblyVersion>2.1.7</AssemblyVersion>
 
     <Authors>Joe Audette</Authors>
     <TargetFrameworks>netstandard2.0</TargetFrameworks>
@@ -32,7 +32,7 @@
     
     <PackageReference Include="cloudscribe.Web.Navigation" Version="2.0.*" />
     <PackageReference Include="cloudscribe.Web.Pagination" Version="2.1.*" />
-    <PackageReference Include="IdentityServer4" Version="2.0.*" />
+    <PackageReference Include="IdentityServer4" Version="2.1.*" />
     
    
    

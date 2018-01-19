@@ -73,6 +73,11 @@ namespace Microsoft.Extensions.DependencyInjection
 
             });
 
+            builder.Services.Configure<SecurityStampValidatorOptions>(opts =>
+            {
+                opts.OnRefreshingPrincipal = SecurityStampValidatorCallback.UpdatePrincipal;
+            });
+
             builder.Services.AddSingleton<IEndpointRouter>(resolver =>
             {
                 return new MultiTenantEndpointRouter(
