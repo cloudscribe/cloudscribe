@@ -15,4 +15,6 @@ https://jeremenichelli.github.io/2017/10/the-web-components-experience/
 
 https://www.tpeczek.com/2017/10/exploring-head-method-behavior-in.html
 
+http://alistapart.com/article/the-best-request-is-no-request-revisited
+
 

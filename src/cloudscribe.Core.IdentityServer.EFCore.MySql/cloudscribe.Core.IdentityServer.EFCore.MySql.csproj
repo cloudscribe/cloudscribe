@@ -2,8 +2,8 @@
 
   <PropertyGroup>
     <Description>MySql Entity Framework configuration and operational stores for IdentityServer4 cloudscribe multi-tenant identity integration</Description>
-    <VersionPrefix>2.1.2</VersionPrefix>
-    <AssemblyVersion>2.1.2</AssemblyVersion>
+    <VersionPrefix>2.1.3</VersionPrefix>
+    <AssemblyVersion>2.1.3</AssemblyVersion>
 
     <Authors>Joe Audette</Authors>
     <TargetFramework>netcoreapp2.0</TargetFramework>
@@ -42,7 +42,7 @@
     <PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="2.0.*" />
     <PackageReference Include="Microsoft.AspNetCore.Hosting" Version="2.0.*" />
     <PackageReference Include="Pomelo.EntityFrameworkCore.MySql" Version="2.0.*" />
-    <PackageReference Include="IdentityServer4" Version="2.0.*" />
+    <PackageReference Include="IdentityServer4" Version="2.1.*" />
   </ItemGroup>
 
   <ItemGroup>

@@ -2,8 +2,8 @@
 
   <PropertyGroup>
     <Description>Entity Framework configuration and operational stores for IdentityServer4 cloudscribe multi-tenant identity integration</Description>
-    <VersionPrefix>2.1.1</VersionPrefix>
-    <AssemblyVersion>2.1.1</AssemblyVersion>
+    <VersionPrefix>2.1.2</VersionPrefix>
+    <AssemblyVersion>2.1.2</AssemblyVersion>
 
     <Authors>Joe Audette</Authors>
     <TargetFrameworks>netstandard2.0</TargetFrameworks>
@@ -23,7 +23,7 @@
 
   <ItemGroup>
     
-    <PackageReference Include="IdentityServer4" Version="2.0.*" />
+    <PackageReference Include="IdentityServer4" Version="2.1.*" />
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="2.0.*" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Relational" Version="2.0.*" />
     <PackageReference Include="AutoMapper" Version="6.0.*" />

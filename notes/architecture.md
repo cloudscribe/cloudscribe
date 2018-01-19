@@ -1,4 +1,5 @@
 
+
 https://blogs.msdn.microsoft.com/dotnet/2017/08/09/__trashed/
 
 http://www.forevolve.com/en/articles/2017/08/25/design-patterns-web-api-service-and-repository-part-5/
@@ -115,3 +116,7 @@ https://blogs.msdn.microsoft.com/ericlippert/2009/05/04/the-stack-is-an-implemen
 
 
 https://visualstudiomagazine.com/articles/2017/04/01/template-method-pattern.aspx
+
+## Data Architecture
+
+https://blogs.msdn.microsoft.com/sqlserverfaq/2010/05/27/guid-vs-int-debate/
