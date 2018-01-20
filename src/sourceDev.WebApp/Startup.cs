@@ -18,6 +18,7 @@ using Microsoft.Extensions.Options;
 using sourceDev.WebApp.Configuration;
 using cloudscribe.UserProperties.Services;
 using cloudscribe.UserProperties.Models;
+using IdentityServer4.AccessTokenValidation;
 
 namespace sourceDev.WebApp
 {
@@ -149,7 +150,10 @@ namespace sourceDev.WebApp
                 // this defines a CORS policy called "default"
                 options.AddPolicy("default", policy =>
                 {
-                    policy.WithOrigins("http://localhost:5010", "http://localhost:5011")
+                    //policy.WithOrigins("http://localhost:5010", "http://localhost:5011")
+                    //    .AllowAnyHeader()
+                    //    .AllowAnyMethod();
+                    policy.AllowAnyOrigin()
                         .AllowAnyHeader()
                         .AllowAnyMethod();
                 });
@@ -190,6 +194,24 @@ namespace sourceDev.WebApp
                         
                     })
                     ;
+
+            //services.AddAuthentication("Bearer")
+            //    .AddJwtBearer("Bearer", options =>
+            //    {
+            //        options.Authority = "https://localhost:44399";
+            //        options.Audience = "idserverapi";
+            //        options.RequireHttpsMetadata = false;
+            //    });
+
+            services.AddAuthentication()
+                .AddIdentityServerAuthentication(IdentityServerAuthenticationDefaults.AuthenticationScheme, options =>
+                {
+                    options.Authority = "https://localhost:44399";
+
+                    options.ApiName = "idserverapi";
+                    options.ApiSecret = "secret";
+                });
+
 
             //services.AddSingleton<ITempDataProvider, CookieTempDataProvider>();
 

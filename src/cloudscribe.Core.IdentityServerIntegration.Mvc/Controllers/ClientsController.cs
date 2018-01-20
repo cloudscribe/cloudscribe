@@ -393,7 +393,7 @@ namespace cloudscribe.Core.IdentityServerIntegration.Controllers.Mvc
 
             
             var secretValue = model.Value;
-            if(model.Type == IdentityServerConstants.SecretTypes.SharedSecret)
+            if(string.IsNullOrEmpty(model.Type) || model.Type == IdentityServerConstants.SecretTypes.SharedSecret)
             {
                 switch (model.HashOption)
                 {

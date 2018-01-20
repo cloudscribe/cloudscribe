@@ -10,6 +10,7 @@ using cloudscribe.Core.IdentityServerIntegration.Services;
 using cloudscribe.Core.Web.Components;
 using cloudscribe.Web.Common.Extensions;
 using cloudscribe.Web.Navigation;
+using IdentityServer4;
 using IdentityServer4.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -324,7 +325,21 @@ namespace cloudscribe.Core.IdentityServerIntegration.Controllers.Mvc
                 return RedirectToAction("Index");
             }
 
-            var secret = new Secret(apiModel.Value, apiModel.Description, apiModel.Expiration);
+            var secretValue = apiModel.Value;
+            if (string.IsNullOrEmpty(apiModel.Type) || apiModel.Type == IdentityServerConstants.SecretTypes.SharedSecret)
+            {
+                switch (apiModel.HashOption)
+                {
+                    case "sha256":
+                        secretValue = apiModel.Value.Sha256();
+                        break;
+                    case "sha512":
+                        secretValue = apiModel.Value.Sha512();
+                        break;
+                }
+            }
+
+            var secret = new Secret(secretValue, apiModel.Description, apiModel.Expiration);
             secret.Type = apiModel.Type;
 
             if (apiResource.ApiSecrets.Contains(secret))

@@ -2,6 +2,8 @@
 using cloudscribe.Core.Identity;
 using cloudscribe.Core.IdentityServerIntegration;
 using cloudscribe.Core.IdentityServerIntegration.Services;
+using cloudscribe.Core.IdentityServerIntegration.Configuration;
+using cloudscribe.Core.IdentityServerIntegration.Hosting;
 using cloudscribe.Core.Models;
 using cloudscribe.Web.Common.Setup;
 using IdentityModel;
@@ -10,12 +12,15 @@ using IdentityServer4.Configuration;
 using IdentityServer4.Endpoints;
 using IdentityServer4.Hosting;
 using IdentityServer4.Services;
+using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 // https://github.com/IdentityServer/IdentityServer4/issues/19
 
@@ -34,6 +39,7 @@ namespace Microsoft.Extensions.DependencyInjection
             builder
                 .AddRequiredPlatformServices()
                 //.AddCookieAuthentication() //cloudscribe already does this and we don't want the Identityserver defaults here
+                .AddCookieAuthenticationForCloudscribe()
                 .AddCoreServices()
                 .AddDefaultEndpoints()
                 .AddPluggableServices()
@@ -45,6 +51,20 @@ namespace Microsoft.Extensions.DependencyInjection
            
             return new IdentityServerBuilder(services);
             
+        }
+
+        public static IIdentityServerBuilder AddCookieAuthenticationForCloudscribe(this IIdentityServerBuilder builder)
+        {
+            //builder.Services.AddAuthentication(IdentityServerConstants.DefaultCookieAuthenticationScheme)
+            //    .AddCookie(IdentityServerConstants.DefaultCookieAuthenticationScheme)
+            //    .AddCookie(IdentityServerConstants.ExternalCookieAuthenticationScheme);
+
+            builder.Services.AddSingleton<IConfigureOptions<CookieAuthenticationOptions>, ConfigureInternalCookieOptions>();
+            builder.Services.AddSingleton<IPostConfigureOptions<CookieAuthenticationOptions>, PostConfigureInternalCookieOptions>();
+            builder.Services.AddTransientDecorator<IAuthenticationService, IdentityServerAuthenticationService>();
+            builder.Services.AddTransientDecorator<IAuthenticationHandlerProvider, FederatedSignoutAuthenticationHandlerProvider>();
+
+            return builder;
         }
 
         public static IIdentityServerBuilder AddIdentityServerConfiguredForCloudscribe(this IServiceCollection services, Action<IdentityServerOptions> setupAction)
@@ -116,7 +136,81 @@ namespace Microsoft.Extensions.DependencyInjection
             return builder;
         }
 
-        
 
+        internal static void AddTransientDecorator<TService, TImplementation>(this IServiceCollection services)
+            where TService : class
+            where TImplementation : class, TService
+        {
+            services.AddDecorator<TService>();
+            services.AddTransient<TService, TImplementation>();
+        }
+
+        internal static void AddDecorator<TService>(this IServiceCollection services)
+        {
+            var registration = services.LastOrDefault(x => x.ServiceType == typeof(TService));
+            if (registration == null)
+            {
+                throw new InvalidOperationException("Service type: " + typeof(TService).Name + " not registered.");
+            }
+            if (services.Any(x => x.ServiceType == typeof(Decorator<TService>)))
+            {
+                throw new InvalidOperationException("Decorator already registered for type: " + typeof(TService).Name + ".");
+            }
+
+            services.Remove(registration);
+
+            if (registration.ImplementationInstance != null)
+            {
+                var type = registration.ImplementationInstance.GetType();
+                var innerType = typeof(Decorator<,>).MakeGenericType(typeof(TService), type);
+                services.Add(new ServiceDescriptor(typeof(Decorator<TService>), innerType, ServiceLifetime.Transient));
+                services.Add(new ServiceDescriptor(type, registration.ImplementationInstance));
+            }
+            else if (registration.ImplementationFactory != null)
+            {
+                services.Add(new ServiceDescriptor(typeof(Decorator<TService>), provider =>
+                {
+                    return new DisposableDecorator<TService>((TService)registration.ImplementationFactory(provider));
+                }, registration.Lifetime));
+            }
+            else
+            {
+                var type = registration.ImplementationType;
+                var innerType = typeof(Decorator<,>).MakeGenericType(typeof(TService), registration.ImplementationType);
+                services.Add(new ServiceDescriptor(typeof(Decorator<TService>), innerType, ServiceLifetime.Transient));
+                services.Add(new ServiceDescriptor(type, type, registration.Lifetime));
+            }
+        }
+
+    }
+
+    internal class Decorator<TService>
+    {
+        public TService Instance { get; set; }
+
+        public Decorator(TService instance)
+        {
+            Instance = instance;
+        }
+    }
+
+    internal class Decorator<TService, TImpl> : Decorator<TService>
+        where TImpl : class, TService
+    {
+        public Decorator(TImpl instance) : base(instance)
+        {
+        }
+    }
+
+    internal class DisposableDecorator<TService> : Decorator<TService>, IDisposable
+    {
+        public DisposableDecorator(TService instance) : base(instance)
+        {
+        }
+
+        public void Dispose()
+        {
+            (Instance as IDisposable)?.Dispose();
+        }
     }
 }
