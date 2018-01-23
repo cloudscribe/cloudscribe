@@ -1,5 +1,7 @@
 
 
+http://www.learnentityframeworkcore.com/walkthroughs/existing-database
+
 // initialization/migration changes in 2.0
 https://github.com/aspnet/Docs/issues/3864
 
