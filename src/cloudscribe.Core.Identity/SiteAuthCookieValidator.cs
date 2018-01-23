@@ -7,9 +7,9 @@
 
 using cloudscribe.Core.Models;
 using Microsoft.AspNetCore.Authentication.Cookies;
-using Microsoft.Extensions.DependencyInjection;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using System.Security.Claims;
 using System.Threading.Tasks;
@@ -18,7 +18,6 @@ namespace cloudscribe.Core.Identity
 {
     public class SiteAuthCookieValidator
     {
-        
         public static async Task ValidatePrincipalAsync(CookieValidatePrincipalContext context)
         {
             var tenant = context.HttpContext.GetTenant<SiteContext>();
@@ -42,5 +41,6 @@ namespace cloudscribe.Core.Identity
             }
             
         }
+
     }
 }

@@ -130,6 +130,7 @@ namespace Microsoft.Extensions.DependencyInjection
             services.TryAddScoped<SignInManager<SiteUser>, SignInManager<SiteUser>>();
 
             services.TryAddSingleton<SiteAuthCookieValidator, SiteAuthCookieValidator>();
+            services.TryAddSingleton<ICookieAuthRedirector, ApiAwareCookieAuthRedirector>();
             //services.TryAddScoped<SiteCookieAuthenticationEvents, SiteCookieAuthenticationEvents>();
             services.TryAddScoped<ISocialAuthEmailVerfificationPolicy, DefaultSocialAuthEmailVerfificationPolicy>();
 

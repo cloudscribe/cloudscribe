@@ -9,7 +9,9 @@ namespace sourceDev.WebApp.Controllers
     
     public class IdentityController : ControllerBase
     {
-        [Authorize(Policy ="AdminPolicy", AuthenticationSchemes = IdentityServerAuthenticationDefaults.AuthenticationScheme)]
+        private const string AuthSchemes = "Identity.Application," + IdentityServerAuthenticationDefaults.AuthenticationScheme;
+
+        [Authorize(Policy ="AdminPolicy", AuthenticationSchemes = AuthSchemes)]
         [HttpGet]
         public IActionResult Get()
         {
