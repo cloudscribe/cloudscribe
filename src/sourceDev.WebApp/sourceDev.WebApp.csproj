@@ -62,7 +62,7 @@
     <PackageReference Include="cloudscribe.Kvp.Storage.EFCore.MySql" Version="2.0.*" />
     <PackageReference Include="cloudscribe.Kvp.Storage.EFCore.SQLite" Version="2.0.*" />
     <PackageReference Include="cloudscribe.Kvp.Storage.NoDb" Version="2.0.*" />
-    <PackageReference Include="cloudscribe.UserProperties.Kvp" Version="2.0.*" />
+    <PackageReference Include="cloudscribe.UserProperties.Kvp" Version="2.1.*" />
     <PackageReference Include="cloudscribe.UserProperties" Version="2.0.*" />
 	
     <PackageReference Include="Microsoft.AspNetCore.All" Version="2.0.*" />
