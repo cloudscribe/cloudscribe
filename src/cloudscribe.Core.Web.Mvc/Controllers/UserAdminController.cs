@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2014-12-08
-// Last Modified:			2018-01-24
+// Last Modified:			2018-01-01
 // 
 
 using cloudscribe.Core.Identity;
@@ -364,15 +364,8 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
 
             var model = new NewUserViewModel();
             model.SiteId = selectedSite.Id;
-
-            var viewName = await customUserInfo.GetNewUserViewName(UserManager.Site, HttpContext);
-            await customUserInfo.HandleNewUserGet(
-                UserManager.Site,
-                model,
-                HttpContext,
-                ViewData);
-
-            return View(viewName, model);
+            
+            return View(model);
         }
 
         [Authorize(Policy = "UserManagementPolicy")]
@@ -391,17 +384,7 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
                 ViewData["Title"] = sr["New User"];
             }
 
-            bool isValid = ModelState.IsValid;
-
-            bool customDataIsValid = await customUserInfo.HandleNewUserValidation(
-                selectedSite,
-                model,
-                HttpContext,
-                ViewData,
-                ModelState);
-
-
-            if (isValid && customDataIsValid)
+            if (ModelState.IsValid)
             { 
                 var user = new SiteUser()
                 {
@@ -419,18 +402,10 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
                     user.DateOfBirth = model.DateOfBirth.Value;
                 }
 
-                await customUserInfo.ProcessUserBeforeCreate(user, HttpContext);
-
                 var result = await UserManager.CreateAsync(user, model.Password);
                 if (result.Succeeded)
                 {
-                    await customUserInfo.HandleNewUserPostSuccess(
-                        selectedSite,
-                        user,
-                        model,
-                        HttpContext);
-
-                    if (model.MustChangePwd)
+                    if(model.MustChangePwd)
                     {
                         user.MustChangePwd = true;
                         await UserManager.UpdateAsync(user);
@@ -444,10 +419,8 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
                 AddErrors(result);
             }
 
-            var viewName = await customUserInfo.GetNewUserViewName(UserManager.Site, HttpContext);
-
             // If we got this far, something failed, redisplay form
-            return View(viewName, model);
+            return View(model);
         }
 
         [Authorize(Policy = "UserManagementPolicy")]

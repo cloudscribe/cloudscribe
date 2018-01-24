@@ -83,17 +83,6 @@ namespace sourceDev.WebApp
             ConfigureAuthPolicy(services);
 
             services.AddOptions();
-
-
-            //services.AddScoped<IUserPropertyService, cloudscribe.UserProperties.Kvp.UserPropertyService>();
-            //services.AddScoped<IUserPropertyValidator, UserPropertyValidator>();
-            //services.AddScoped<IProfileOptionsResolver, TenantProfileOptionsResolver>();
-            //services.AddScoped<cloudscribe.Kvp.Models.IKvpStorageService, cloudscribe.Kvp.Models.KvpStorageService>();
-
-            //services.AddScoped<cloudscribe.Core.Web.ExtensionPoints.IHandleCustomRegistration, cloudscribe.UserProperties.Kvp.KvpRegistrationHandler>();
-            //services.AddScoped<cloudscribe.Core.Web.ExtensionPoints.IHandleCustomUserInfo, cloudscribe.UserProperties.Kvp.KvpUserInfoHandler>();
-            //services.AddScoped<cloudscribe.Core.Web.ExtensionPoints.IHandleCustomUserInfoAdmin, cloudscribe.UserProperties.Kvp.KvpUserInfoAdminHandler2>();
-
             services.AddCloudscribeKvpUserProperties();
 
             AddDataStorageServices(services);
