@@ -1,0 +1,44 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <Description>Configurable custom user properties for cloudscribe core using per tenant or global configuration based custom proprties with key/value storage</Description>
+    <VersionPrefix>2.1.0</VersionPrefix>
+    <Authors>Joe Audette</Authors>
+    <TargetFrameworks>netstandard2.0</TargetFrameworks>
+    <PackageTags>cloudscribe;userprofile;customization</PackageTags>
+    <PackageIconUrl>https://raw.githubusercontent.com/joeaudette/cloudscribe/master/cloudscribe-icon-32.png</PackageIconUrl>
+    <PackageProjectUrl>https://github.com/joeaudette/cloudscribe.Entropy/tree/master/solutions/cloudscribe.CustomRegistration.Kvp</PackageProjectUrl>
+    <PackageLicenseUrl>http://www.apache.org/licenses/LICENSE-2.0</PackageLicenseUrl>
+    <GenerateAssemblyConfigurationAttribute>false</GenerateAssemblyConfigurationAttribute>
+    <GenerateAssemblyCompanyAttribute>false</GenerateAssemblyCompanyAttribute>
+    <GenerateAssemblyProductAttribute>false</GenerateAssemblyProductAttribute>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <!--<PackageReference Include="cloudscribe.Core.Models" Version="2.0.*" />
+    <PackageReference Include="cloudscribe.Core.Identity" Version="2.0.*" />
+    <PackageReference Include="cloudscribe.Core.Web" Version="2.0.*" />-->
+    <PackageReference Include="Microsoft.AspNetCore.Mvc" Version="2.0.*" />
+    <PackageReference Include="Microsoft.Extensions.Configuration.Abstractions" Version="2.0.*" />
+    <PackageReference Include="Microsoft.Extensions.Localization" Version="2.0.*" />
+    <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="2.0.*" />
+    <PackageReference Include="Microsoft.Extensions.Options" Version="2.0.*" />
+    <PackageReference Include="Microsoft.Extensions.Options.ConfigurationExtensions" Version="2.0.*" />
+
+    <PackageReference Include="cloudscribe.Kvp.Models" Version="1.0.*" />
+    <PackageReference Include="cloudscribe.UserProperties" Version="2.0.*" />
+
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\cloudscribe.Core.Identity\cloudscribe.Core.Identity.csproj" />
+    <ProjectReference Include="..\cloudscribe.Core.Models\cloudscribe.Core.Models.csproj" />
+    <ProjectReference Include="..\cloudscribe.Core.Web\cloudscribe.Core.Web.csproj" />
+  </ItemGroup>
+
+  <!--<ItemGroup>
+    <ProjectReference Include="..\cloudscribe.Kvp.Models\cloudscribe.Kvp.Models.csproj" />
+    <ProjectReference Include="..\cloudscribe.UserProperties\cloudscribe.UserProperties.csproj" />
+  </ItemGroup>-->
+  
+</Project>
