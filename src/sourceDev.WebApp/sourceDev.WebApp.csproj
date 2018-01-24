@@ -42,7 +42,6 @@
     <ProjectReference Include="..\cloudscribe.Core.IdentityServer.EFCore.MySql\cloudscribe.Core.IdentityServer.EFCore.MySql.csproj" />
     <ProjectReference Include="..\cloudscribe.Core.IdentityServer.EFCore.pgsql\cloudscribe.Core.IdentityServer.EFCore.pgsql.csproj" />
     <ProjectReference Include="..\cloudscribe.Core.IdentityServer.NoDb\cloudscribe.Core.IdentityServer.NoDb.csproj" />
-    <ProjectReference Include="..\cloudscribe.UserProperties.Kvp\cloudscribe.UserProperties.Kvp.csproj" />
   </ItemGroup>
   
   <ItemGroup>
@@ -63,7 +62,7 @@
     <PackageReference Include="cloudscribe.Kvp.Storage.EFCore.MySql" Version="2.0.*" />
     <PackageReference Include="cloudscribe.Kvp.Storage.EFCore.SQLite" Version="2.0.*" />
     <PackageReference Include="cloudscribe.Kvp.Storage.NoDb" Version="2.0.*" />
-    <!--<PackageReference Include="cloudscribe.UserProperties.Kvp" Version="2.0.*" />-->
+    <PackageReference Include="cloudscribe.UserProperties.Kvp" Version="2.1.*" />
     <PackageReference Include="cloudscribe.UserProperties" Version="2.0.*" />
 	
     <PackageReference Include="Microsoft.AspNetCore.All" Version="2.0.*" />

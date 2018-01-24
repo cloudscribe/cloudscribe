@@ -72,8 +72,6 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "cloudscribe.Core.IdentitySe
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Tenant1SpaLocalApi", "src\Tenant1SpaLocalApi\Tenant1SpaLocalApi.csproj", "{7AAE4A99-0688-4ADC-A45A-149AF82D2EC1}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "cloudscribe.UserProperties.Kvp", "src\cloudscribe.UserProperties.Kvp\cloudscribe.UserProperties.Kvp.csproj", "{91BAD58B-E451-43A2-BF78-B8F3981A0CE2}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -200,10 +198,6 @@ Global
 		{7AAE4A99-0688-4ADC-A45A-149AF82D2EC1}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{7AAE4A99-0688-4ADC-A45A-149AF82D2EC1}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{7AAE4A99-0688-4ADC-A45A-149AF82D2EC1}.Release|Any CPU.Build.0 = Release|Any CPU
-		{91BAD58B-E451-43A2-BF78-B8F3981A0CE2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{91BAD58B-E451-43A2-BF78-B8F3981A0CE2}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{91BAD58B-E451-43A2-BF78-B8F3981A0CE2}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{91BAD58B-E451-43A2-BF78-B8F3981A0CE2}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -239,7 +233,6 @@ Global
 		{3B253931-F359-49F8-A129-B8D498603DC0} = {9C16B47A-B712-4237-B62F-B4403ACF1CD5}
 		{6BF15DED-80FC-4BD8-935F-A5A72B9BCF96} = {9C16B47A-B712-4237-B62F-B4403ACF1CD5}
 		{7AAE4A99-0688-4ADC-A45A-149AF82D2EC1} = {9C16B47A-B712-4237-B62F-B4403ACF1CD5}
-		{91BAD58B-E451-43A2-BF78-B8F3981A0CE2} = {9C16B47A-B712-4237-B62F-B4403ACF1CD5}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {3FDA23E8-B945-4001-92C5-F6A70186E3B0}
