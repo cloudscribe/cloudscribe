@@ -1,4 +1,7 @@
 
+https://stackoverflow.com/questions/41829993/hangfire-dependency-injection-with-net-core
+
+
 http://www.quartz-scheduler.net/
 https://github.com/quartznet/quartznet
 apache2

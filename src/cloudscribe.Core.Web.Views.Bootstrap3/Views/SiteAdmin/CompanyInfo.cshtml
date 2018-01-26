@@ -96,7 +96,7 @@
             </div>
             <div class="form-group">
                 <div class="col-md-offset-2 col-md-10">
-                    <button name="submit" type="submit" class="btn btn-default">@sr["Save"]</button>
+                    <button name="submit" type="submit" class="btn btn-default" data-disabled-text='@sr["Working..."]'>@sr["Save"]</button>
                 </div>
             </div>
         </form>
@@ -109,4 +109,5 @@
     @{ await Html.RenderPartialAsync("_SideMenuScriptsPartial"); }
     @{ await Html.RenderPartialAsync("_UnobtrusiveValidationScriptsPartial"); }
     @{ await Html.RenderPartialAsync("_CascadeScriptsPartial"); }
+    <script src="~/cr/js/submitonce-unobtrusive.min.js"></script>
 }

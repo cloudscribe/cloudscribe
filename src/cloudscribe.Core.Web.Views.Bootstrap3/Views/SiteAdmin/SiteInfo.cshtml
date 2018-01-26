@@ -10,7 +10,9 @@
     </div>
 </div>
 @section scripts {
-@{ await Html.RenderPartialAsync("_SideMenuScriptsPartial"); }
-@{ await Html.RenderPartialAsync("_UnobtrusiveValidationScriptsPartial"); }
-@{ await Html.RenderPartialAsync("_UnobtrusiveEditorScriptsPartial"); }
+    @{ await Html.RenderPartialAsync("_SideMenuScriptsPartial"); }
+    @{ await Html.RenderPartialAsync("_UnobtrusiveValidationScriptsPartial"); }
+    @{ await Html.RenderPartialAsync("_UnobtrusiveEditorScriptsPartial"); }
+    @*<script src="~/js/submitOnce.js" asp-append-version="true"></script>*@
+    <script src="~/cr/js/submitonce-unobtrusive.min.js"></script>
 }
