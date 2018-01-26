@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Diagnostics;
+﻿using cloudscribe.Core.Web.Mvc.Components;
+using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Localization;
 using Microsoft.Extensions.Logging;
@@ -9,19 +10,22 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
     {
         public OopsController(
             IStringLocalizer<CloudscribeCore> localizer,
+            IDecideErrorResponseType responseTypeDecider,
             ILogger<OopsController> logger
             )
         {
-            sr = localizer;
-            log = logger;
+            _sr = localizer;
+            _log = logger;
+            _responseTypeDecider = responseTypeDecider;
         }
 
-        private IStringLocalizer sr;
-        private ILogger log;
+        private IStringLocalizer _sr;
+        private ILogger _log;
+        private IDecideErrorResponseType _responseTypeDecider;
 
         public IActionResult Error(int statusCode = 500)
         {
-            ViewData["Title"] = sr["Oops!"];
+            ViewData["Title"] = _sr["Oops!"];
 
 
             var statusFeature = HttpContext.Features.Get<IStatusCodeReExecuteFeature>();
@@ -32,12 +36,15 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
                 if (statusCode == 404)
                 {
                     var ipAddress = HttpContext.Connection.RemoteIpAddress.ToString();
-                    log.LogWarning($"handled 404 for url: {originalPath} from ipaddress {ipAddress}");
+                    _log.LogWarning($"handled 404 for url: {originalPath} from ipaddress {ipAddress}");
 
                 }
 
-                if (originalPath.Contains("/api/"))
+                var shouldReturnJson = _responseTypeDecider.ShouldReturnJson(originalPath, statusCode);
+
+                if (shouldReturnJson)
                 {
+
                     var errorMessage = string.Empty;
                     switch (statusCode)
                     {
@@ -53,9 +60,14 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
                         case 404:
                             errorMessage = "Page Not Found";
                             break;
-                        case 500:
+                       
                         default:
-                            errorMessage = "Unexpected Error";
+
+                            if (statusCode >= 500)
+                            {
+                                errorMessage = "Unexpected Error";
+                            }
+
                             break;
                     }
 
