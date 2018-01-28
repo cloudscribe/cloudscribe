@@ -86,6 +86,7 @@ namespace sourceDev.WebApp
             
             services.AddCloudscribeKvpUserProperties();
 
+            
             AddDataStorageServices(services);
 
             /* optional and only needed if you are using cloudscribe Logging  */
@@ -196,13 +197,7 @@ namespace sourceDev.WebApp
                     })
                     ;
 
-            //services.AddAuthentication("Bearer")
-            //    .AddJwtBearer("Bearer", options =>
-            //    {
-            //        options.Authority = "https://localhost:44399";
-            //        options.Audience = "idserverapi";
-            //        options.RequireHttpsMetadata = false;
-            //    });
+
 
             services.AddAuthentication()
                 .AddIdentityServerAuthentication(IdentityServerAuthenticationDefaults.AuthenticationScheme, options =>
@@ -212,6 +207,7 @@ namespace sourceDev.WebApp
                     options.ApiName = "idserverapi";
                     options.ApiSecret = "secret";
                 });
+
 
 
             //services.AddSingleton<ITempDataProvider, CookieTempDataProvider>();

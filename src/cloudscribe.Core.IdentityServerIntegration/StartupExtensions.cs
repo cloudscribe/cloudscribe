@@ -59,6 +59,8 @@ namespace Microsoft.Extensions.DependencyInjection
             //    .AddCookie(IdentityServerConstants.DefaultCookieAuthenticationScheme)
             //    .AddCookie(IdentityServerConstants.ExternalCookieAuthenticationScheme);
 
+            builder.Services.AddAuthentication();
+
             builder.Services.AddSingleton<IConfigureOptions<CookieAuthenticationOptions>, ConfigureInternalCookieOptions>();
             builder.Services.AddSingleton<IPostConfigureOptions<CookieAuthenticationOptions>, PostConfigureInternalCookieOptions>();
             builder.Services.AddTransientDecorator<IAuthenticationService, IdentityServerAuthenticationService>();
