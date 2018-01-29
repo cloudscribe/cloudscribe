@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2015-11-16
-// Last Modified:			2017-12-29
+// Last Modified:			2018-01-29
 // 
 
 using cloudscribe.Core.Models;
@@ -32,7 +32,9 @@ namespace cloudscribe.Core.Storage.EFCore.Common
             ThrowIfDisposed();
             cancellationToken.ThrowIfCancellationRequested();
 
-            var item = await dbContext.Sites.AsNoTracking().SingleOrDefaultAsync(
+            var item = await dbContext.Sites
+                .AsNoTracking()
+                .SingleOrDefaultAsync(
                     x => x.Id.Equals(siteId)
                     , cancellationToken)
                     .ConfigureAwait(false);
@@ -55,22 +57,30 @@ namespace cloudscribe.Core.Storage.EFCore.Common
             ThrowIfDisposed();
             cancellationToken.ThrowIfCancellationRequested();
 
-            var host = await dbContext.SiteHosts.AsNoTracking().FirstOrDefaultAsync(
+            var host = await dbContext.SiteHosts
+                .AsNoTracking()
+                .FirstOrDefaultAsync(
                 x => x.HostName.Equals(hostName)
                 , cancellationToken)
                 .ConfigureAwait(false);
 
             if (host == null)
             {
-                var query = from s in dbContext.Sites
-                            .Take(1)
-                            orderby s.CreatedUtc ascending
-                            select s;
-
-                return await query
+                //var query = from s in dbContext.Sites
+                //            .Take(1)
+                //            orderby s.CreatedUtc ascending
+                //            select s;
+                return await dbContext.Sites
                     .AsNoTracking()
-                    .SingleOrDefaultAsync<SiteSettings>(cancellationToken)
-                    .ConfigureAwait(false);
+                    .OrderBy(s => s.CreatedUtc)
+                    .FirstOrDefaultAsync(cancellationToken)
+                    .ConfigureAwait(false)
+                    ;
+
+                //return await query
+                //    .AsNoTracking()
+                //    .SingleOrDefaultAsync<SiteSettings>(cancellationToken)
+                //    .ConfigureAwait(false);
             }
 
             return await dbContext.Sites
@@ -99,22 +109,25 @@ namespace cloudscribe.Core.Storage.EFCore.Common
             ISiteSettings site = null;
             if (!string.IsNullOrEmpty(folderName) && folderName != "root")
             {
-                site = await dbContext.Sites.AsNoTracking().FirstOrDefaultAsync(
-                x => x.SiteFolderName == folderName
+                site = await dbContext.Sites
+                    .AsNoTracking()
+                    .FirstOrDefaultAsync(x => x.SiteFolderName == folderName
                 , cancellationToken)
                 .ConfigureAwait(false);
             }
 
             if (site == null)
             {
-                var query = from s in dbContext.Sites
-                            where string.IsNullOrEmpty(s.SiteFolderName)
-                            orderby s.CreatedUtc ascending
-                            select s;
+                //var query = from s in dbContext.Sites
+                //            where string.IsNullOrEmpty(s.SiteFolderName)
+                //            orderby s.CreatedUtc ascending
+                //            select s;
 
-                site = await query.Take(1)
+                site = await dbContext.Sites
                     .AsNoTracking()
-                    .SingleOrDefaultAsync<SiteSettings>(cancellationToken)
+                    .Where(x => string.IsNullOrEmpty(x.SiteFolderName))
+                    .OrderBy(x => x.CreatedUtc)
+                    .FirstOrDefaultAsync(cancellationToken)
                     .ConfigureAwait(false);
             }
 

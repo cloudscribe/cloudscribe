@@ -80,5 +80,17 @@ namespace cloudscribe.Core.Identity
 
             return claim != null ? claim.Value : null;
         }
+
+        public static Guid GetUserIdAsGuid(this ClaimsPrincipal principal)
+        {
+            var s = principal.GetUserId();
+            if(string.IsNullOrWhiteSpace(s) || s.Length != 36)
+            {
+                return Guid.Empty;
+            }
+
+            return new Guid(s);
+        }
+
     }
 }
