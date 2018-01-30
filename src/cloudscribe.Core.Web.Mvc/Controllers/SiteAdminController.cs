@@ -115,11 +115,11 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
         [HttpGet]
         [Authorize(Policy = "AdminPolicy")]
         public async Task<IActionResult> SiteInfo(
-            Guid? siteId,
+            Guid siteId,
             int slp = 1)
         {
 
-            var selectedSite = await siteManager.GetSiteForDataOperations(siteId);
+            var selectedSite = await siteManager.Fetch(siteId);
             // only server admin site can edit other sites settings
             if (selectedSite.Id != siteManager.CurrentSite.Id)
             {
@@ -133,13 +133,7 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
             var model = new SiteBasicSettingsViewModel();
             model.ReturnPageNumber = slp; // site list page number to return to
             model.TimeZoneId = selectedSite.TimeZoneId;
-            model.AllTimeZones = tzHelper.GetTimeZoneList().Select(x =>
-                               new SelectListItem
-                               {
-                                   Text = x,
-                                   Value = x,
-                                   Selected = model.TimeZoneId == x
-                               });
+           
 
             model.SiteId = selectedSite.Id;
             model.SiteName = selectedSite.SiteName;
@@ -160,7 +154,7 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
             }
             
             model.Theme = selectedSite.Theme;
-            model.AvailableThemes = layoutListBuilder.GetAvailableThemes(selectedSite.AliasId);
+            
             
             // can only delete from server admin site/cannot delete server admin site
             if (siteManager.CurrentSite.IsServerAdminSite)
@@ -171,9 +165,48 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
                 }
             }
 
+            PopulateLists(model, selectedSite);
+
+            //model.AvailableThemes = layoutListBuilder.GetAvailableThemes(selectedSite.AliasId);
+            //model.AllTimeZones = tzHelper.GetTimeZoneList().Select(x =>
+            //                  new SelectListItem
+            //                  {
+            //                      Text = x,
+            //                      Value = x,
+            //                      Selected = model.TimeZoneId == x
+            //                  });
+
+            //model.ForcedUICulture = selectedSite.ForcedUICulture;
+            //model.AvailableUICultures = localization.SupportedUICultures
+            //                          .Select(c => new SelectListItem { Value = c.Name, Text = c.Name , Selected = model.ForcedUICulture == c.Name  })
+            //                          .ToList();
+            //model.AvailableUICultures.Insert(0, new SelectListItem { Value = "", Text = sr["Any"] });
+
+            //model.ForcedCulture = selectedSite.ForcedCulture;
+            //model.AvailableCultures = localization.SupportedCultures
+            //                          .Select(c => new SelectListItem { Value = c.Name, Text = c.Name, Selected = model.ForcedCulture == c.Name })
+            //                          .ToList();
+            //model.AvailableCultures.Insert(0, new SelectListItem { Value = "", Text = sr["Any"] });
+
+
+
+            return View(model);
+        }
+
+        private void PopulateLists(SiteBasicSettingsViewModel model, ISiteSettings selectedSite)
+        {
+            model.AvailableThemes = layoutListBuilder.GetAvailableThemes(selectedSite.AliasId);
+            model.AllTimeZones = tzHelper.GetTimeZoneList().Select(x =>
+                              new SelectListItem
+                              {
+                                  Text = x,
+                                  Value = x,
+                                  Selected = model.TimeZoneId == x
+                              });
+
             model.ForcedUICulture = selectedSite.ForcedUICulture;
             model.AvailableUICultures = localization.SupportedUICultures
-                                      .Select(c => new SelectListItem { Value = c.Name, Text = c.Name , Selected = model.ForcedUICulture == c.Name  })
+                                      .Select(c => new SelectListItem { Value = c.Name, Text = c.Name, Selected = model.ForcedUICulture == c.Name })
                                       .ToList();
             model.AvailableUICultures.Insert(0, new SelectListItem { Value = "", Text = sr["Any"] });
 
@@ -182,10 +215,6 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
                                       .Select(c => new SelectListItem { Value = c.Name, Text = c.Name, Selected = model.ForcedCulture == c.Name })
                                       .ToList();
             model.AvailableCultures.Insert(0, new SelectListItem { Value = "", Text = sr["Any"] });
-
-
-
-            return View(model);
         }
 
         // Post: /SiteAdmin/SiteInfo
@@ -202,13 +231,7 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
                     model.ShowDelete = uiOptions.AllowDeleteChildSites;
                 }
             }
-
-            if (!ModelState.IsValid)
-            {
-                
-                return View(model);
-            }
-
+            
             if (model.SiteId == Guid.Empty)
             {
                 this.AlertDanger(sr["oops something went wrong, site was not found."], true);
@@ -228,6 +251,12 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
                 ViewData["Title"] = string.Format(CultureInfo.CurrentUICulture, sr["{0} - Settings"], selectedSite.SiteName);
             }
 
+            if (!ModelState.IsValid)
+            {
+                PopulateLists(model, selectedSite);
+                return View(model);
+            }
+
             if (selectedSite == null)
             {
                 this.AlertDanger(sr["oops something went wrong."], true);
@@ -244,7 +273,7 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
                 {
                     // only the server admin site can be without a folder
                     ModelState.AddModelError("foldererror", sr["Folder name is required."]);
-
+                    PopulateLists(model, selectedSite);
                     return View(model);
                 }
                 
@@ -252,7 +281,7 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
                 if (!folderAvailable)
                 {
                     ModelState.AddModelError("foldererror", "The selected folder name is already in use on another site.");
-
+                    PopulateLists(model, selectedSite);
                     return View(model);
                 }
 
@@ -271,6 +300,7 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
                         if (host.SiteId != selectedSite.Id)
                         {
                             ModelState.AddModelError("hosterror", sr["The selected host/domain name is already in use on another site."]);
+                            PopulateLists(model, selectedSite);
                             return View(model);
                         }
                     }
@@ -465,11 +495,15 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
         }
 
         [HttpPost]
-        public async Task<JsonResult> FolderNameAvailable(Guid? siteId, string folderName)
-        {            
+        public async Task<JsonResult> FolderNameAvailable(Guid? siteId, string siteFolderName)
+        {           
+            if(string.IsNullOrWhiteSpace(siteFolderName))
+            {
+                return Json(false);
+            }
             var selectedSiteId = Guid.Empty;
             if (siteId.HasValue) { selectedSiteId = siteId.Value; }
-            bool available = await siteManager.FolderNameIsAvailable(selectedSiteId, folderName);
+            bool available = await siteManager.FolderNameIsAvailable(selectedSiteId, siteFolderName);
             return Json(available);
         }
 

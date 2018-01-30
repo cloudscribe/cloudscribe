@@ -43,17 +43,13 @@ namespace cloudscribe.Core.Web.ViewModels.SiteSettings
         /// TODO: need to validate this so that one site cannaot change their aliasid to match a different site
         /// and thus steal use of their themes, unless multi-tenant options allow it
         /// </summary>
-        [Remote("AliasIdAvailable", "SiteAdmin", AdditionalFields = "SiteId",
-           ErrorMessage = "AliasId not available, please try another value",
-           HttpMethod = "Post")]
+        //[Remote("AliasIdAvailable", "SiteAdmin", AdditionalFields = "SiteId", ErrorMessage = "AliasId not available, please try another value", HttpMethod = "Post")]
         [RegularExpression(@"^[a-zA-Z0-9_-]+$", ErrorMessage = "For AliasId, only digits, numbers, - and _ allowed, no spaces allowed")]
         [StringLength(36, ErrorMessage = "AliasId has a maximum length of 36 characters")]
         public string AliasId { get; set; } = string.Empty;
 
 
-        [Remote("FolderNameAvailable", "SiteAdmin", AdditionalFields = "SiteId",
-           ErrorMessage = "Requested Site Folder Name is not available, please try another value",
-           HttpMethod = "Post")]
+        //[Remote("FolderNameAvailable", "SiteAdmin", AdditionalFields = "SiteId", ErrorMessage = "Requested Site Folder Name is not available, please try another value", HttpMethod = "Post")]
         [RegularExpression(@"^[a-zA-Z0-9_-]+$", ErrorMessage = "For Site Folder Name, only digits, numbers, - and _ allowed, no spaces allowed")]
         [StringLength(50, ErrorMessage = "Site Folder name has a maximum length of 50 characters")]
         public string SiteFolderName { get; set; } = string.Empty;

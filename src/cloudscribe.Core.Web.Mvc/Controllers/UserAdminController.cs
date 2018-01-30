@@ -393,6 +393,13 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
 
             bool isValid = ModelState.IsValid;
 
+            bool userNameAvailable = await UserManager.LoginIsAvailable(model.UserId, model.Username);
+            if (!userNameAvailable)
+            {
+                ModelState.AddModelError("usernameerror", sr["Username is already in use"]);
+                isValid = false;
+            }
+
             bool customDataIsValid = await customUserInfo.HandleNewUserValidation(
                 selectedSite,
                 model,
@@ -621,23 +628,35 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
             {
                 ViewData["Title"] = sr["Manage User"];
             }
+
             
+
             bool isValid = ModelState.IsValid && (model.UserId != Guid.Empty);
+            bool userNameAvailable = await UserManager.LoginIsAvailable(model.UserId, model.Username);
+            if (!userNameAvailable)
+            {
+                ModelState.AddModelError("usernameerror", sr["Username is already in use"]);
+                isValid = false;
+            }
+
             bool customDataIsValid = await customUserInfo.HandleUserEditValidation(
                 UserManager.Site,
                 model,
                 HttpContext,
                 ViewData,
                 ModelState);
+
             var viewName = await customUserInfo.GetUserEditViewName(UserManager.Site, HttpContext);
+            var user = await UserManager.Fetch(selectedSite.Id, model.UserId);
 
             if (!isValid || !customDataIsValid)
             {
+                model.AccountApproved = user.AccountApproved;
                 return View(viewName, model);
             }
 
             //editing an existing user
-            var user = await UserManager.Fetch(selectedSite.Id, model.UserId);
+            
             if (user != null)
             {
                 user.Email = model.Email;

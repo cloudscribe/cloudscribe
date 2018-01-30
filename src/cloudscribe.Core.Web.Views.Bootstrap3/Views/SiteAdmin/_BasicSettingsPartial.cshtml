@@ -19,7 +19,7 @@
     var ckOptions = await editorOptionsResolver.GetCkeditorOptions();
     var baseUrl = this.Context.Request.GetCurrentBaseUrl() + "/";
 }
-<form method="post" class="form-horizontal" role="form" asp-antiforgery="true">
+<form method="post" class="form-horizontal" role="form" asp-antiforgery="true" data-submit-once="true">
         <div asp-validation-summary="All" class="text-danger"></div> 
         <input asp-for="SiteId" type="hidden" />
         <input asp-for="ReturnPageNumber" type="hidden" />
@@ -43,9 +43,14 @@
                 <label asp-for="SiteFolderName" class="col-md-2 control-label">@sr["Site Folder Name"]</label>
                 <div class="col-md-10">
                     <div class="input-group">
-                        <span class="input-group-addon" >@baseUrl</span>
-                        <input asp-for="SiteFolderName" class="form-control" />
+                        <span class="input-group-addon">@baseUrl</span>
+                        <input asp-for="SiteFolderName" class="form-control"
+                               data-remote-validate-onblur="true"
+                               data-error-target-id="spnFolderNameWarn"
+                               data-additional-input-ids="SiteId"
+                               data-validation-url='@Url.Action("FolderNameAvailable", "SiteAdmin")' />
                     </div>
+                    <span id="spnFolderNameWarn" class="text-danger" data-error-message='@sr["Requested Site Folder Name is not available, please try another value"]'></span>
                     <span asp-validation-for="SiteFolderName" class="text-danger"></span>
                     @Html.ValidationMessage("foldererror", new { @class = "text-danger" })
                 </div>
