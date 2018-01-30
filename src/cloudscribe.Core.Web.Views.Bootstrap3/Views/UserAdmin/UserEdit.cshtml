@@ -8,10 +8,12 @@
 @inject ICkeditorOptionsResolver editorOptionsResolver
 @{
     var ckOptions = await editorOptionsResolver.GetCkeditorOptions();
+
 }
 @section Styles {
     @{await Html.RenderPartialAsync("UserEditStylePartial"); }
 }
+
 <div class="row">
     <div class="col-md-10 col-md-push-2">
         <h2>@ViewData["Title"]</h2>
@@ -58,7 +60,7 @@
                 </form>
             </div>
         }
-        <form class="form-horizontal" role="form" asp-controller="UserAdmin" asp-action="UserEdit">
+        <form data-submit-once="true" class="form-horizontal" role="form" asp-controller="UserAdmin" asp-action="UserEdit">
             <input asp-for="UserId" type="hidden" />
             <input asp-for="SiteId" type="hidden" />
             @if (Model.UserId != Guid.Empty)
@@ -80,8 +82,14 @@
             <div class="form-group">
                 <label asp-for="Username" class="col-md-2 control-label">@sr["Username"]</label>
                 <div class="col-md-10">
-                    <input asp-for="Username" class="form-control" />
+                    <input asp-for="Username" class="form-control"
+                           data-remote-validate-onblur="true"
+                           data-error-target-id="spnUserNameWarn"
+                           data-additional-input-ids="UserId"
+                           data-validation-url='@Url.Action("UsernameAvailable", "Account")' />
                     <span asp-validation-for="Username" class="text-danger"></span>
+                    <span id="spnUserNameWarn" class="text-danger" data-error-message='@sr["Username is already in use"]'></span>
+                    @Html.ValidationMessage("usernameerror", new { @class = "text-danger" })
                 </div>
             </div>
             <div class="form-group">
@@ -153,7 +161,7 @@
 
             <div class="form-group">
                 <div class="col-md-offset-2 col-md-10">
-                    <button id="btnSave" name="submit" type="submit" class="btn btn-default" data-disabled-text='@sr["Working..."]'>@sr["Save"]</button>
+                    <button id="btnSave" type="submit" class="btn btn-default" data-enabled-text='@sr["Save"]' data-disabled-text='@sr["Working..."]'>@sr["Save"]</button>
                     @if (Model.UserId != Guid.Empty)
                     {
                         <button name="button" type="button" class="btn btn-default"
@@ -187,4 +195,10 @@
     @{ await Html.RenderPartialAsync("_SideMenuScriptsPartial"); }
     @{await Html.RenderPartialAsync("UserEditScriptsPartial"); }
     <script src="~/cr/js/submitonce-unobtrusive.min.js"></script>
+    @* https://gist.github.com/remi/957732/437f4572dd22012758753004a5a7eb131e620c62 *@
+    @*<script src="~/js/submitonce-unobtrusive.js" asp-append-version="true"></script>*@
+    <script src="~/cr/js/remote-validation-onblur-unobtrusive.min.js" ></script>
+   
+      
+    
 }

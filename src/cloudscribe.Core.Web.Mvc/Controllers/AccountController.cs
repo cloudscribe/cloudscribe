@@ -950,12 +950,18 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
         [AllowAnonymous]
         public async Task<JsonResult> UsernameAvailable(Guid? userId, string userName)
         {
+            if(string.IsNullOrWhiteSpace(userName))
+            {
+                return Json(false);
+            }
             // same validation is used when editing or creating a user
             // if editing then the loginname is valid if found attached to the selected user
             // otherwise if found it is not already in use and not available
             Guid selectedUserGuid = Guid.Empty;
             if (userId.HasValue) { selectedUserGuid = userId.Value; }
             bool available = await accountService.LoginNameIsAvailable(selectedUserGuid, userName);
+
+            
             
             return Json(available);
         }
