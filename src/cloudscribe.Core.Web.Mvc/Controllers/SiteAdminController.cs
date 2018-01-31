@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2014-10-26
-// Last Modified:			2017-12-29
+// Last Modified:			2018-01-31
 // 
 
 using cloudscribe.Core.Models;
@@ -115,11 +115,19 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
         [HttpGet]
         [Authorize(Policy = "AdminPolicy")]
         public async Task<IActionResult> SiteInfo(
-            Guid siteId,
+            Guid? siteId,
             int slp = 1)
         {
 
-            var selectedSite = await siteManager.Fetch(siteId);
+            ISiteSettings selectedSite;
+            if(siteId.HasValue)
+            {
+                selectedSite = await siteManager.Fetch(siteId.Value);
+            }
+            else
+            {
+                selectedSite = await siteManager.Fetch(siteManager.CurrentSite.Id);
+            }
             // only server admin site can edit other sites settings
             if (selectedSite.Id != siteManager.CurrentSite.Id)
             {
