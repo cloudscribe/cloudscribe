@@ -194,11 +194,10 @@
 @section Scripts {
     @{ await Html.RenderPartialAsync("_SideMenuScriptsPartial"); }
     @{await Html.RenderPartialAsync("UserEditScriptsPartial"); }
-    <script src="~/cr/js/submitonce-unobtrusive.min.js"></script>
-    @* https://gist.github.com/remi/957732/437f4572dd22012758753004a5a7eb131e620c62 *@
-    @*<script src="~/js/submitonce-unobtrusive.js" asp-append-version="true"></script>*@
-    <script src="~/cr/js/remote-validation-onblur-unobtrusive.min.js" ></script>
-   
-      
-    
+    <script src="~/cr/js/jquery.validate.hooks.min.js"></script>
+    <script src="~/cr/js/jqueryvaildation.submitonce-unobtrusive.min.js"></script>
+    <script src="~/cr/js/remote-validation-onblur-unobtrusive.min.js"></script>
+
+
+
 }

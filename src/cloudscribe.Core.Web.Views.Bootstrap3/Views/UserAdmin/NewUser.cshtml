@@ -110,7 +110,8 @@
             @{await Html.RenderPartialAsync("NewUserMiddlePartial", Model); }
             <div class="form-group">
                 <div class="col-md-offset-2 col-md-10">
-                    <input type="submit" class="btn btn-default" value='@sr["Save"]' data-disabled-text='@sr["Working..."]' />
+                    <input type="submit" class="btn btn-default" value='@sr["Save"]' data-disabled-text='@sr["Working..."]' data-enabled-text='@sr["Save"]' data-loading-indicator-id="loader" />
+                    <span id="loader" style="display:none;">Working...</span>
                 </div>
             </div>
             <div asp-validation-summary="All" class="text-danger"></div>
@@ -122,6 +123,10 @@
 </div>
 @section Scripts {
     @{ await Html.RenderPartialAsync("NewUserScriptsPartial"); }
-    <script src="~/cr/js/submitonce-unobtrusive.min.js"></script>
+
     <script src="~/cr/js/remote-validation-onblur-unobtrusive.min.js"></script>
+    <script src="~/cr/js/jquery.validate.hooks.min.js"></script>
+    <script src="~/cr/js/jqueryvaildation.submitonce-unobtrusive.min.js"></script>
+    @*<script src="~/js/jquery.validate.hooks.js" asp-append-version="true"></script>*@
+    @*<script src="~/js/jqueryvaildation.submitonce-unobtrusive.js" asp-append-version="true"></script>*@
 }
