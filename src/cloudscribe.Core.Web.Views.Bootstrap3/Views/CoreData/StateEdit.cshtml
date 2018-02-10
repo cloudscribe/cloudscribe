@@ -4,7 +4,7 @@
 @using Microsoft.Extensions.Localization
 @inject IStringLocalizer<CloudscribeCore> sr
 @{
-    if(Model.Id == Guid.Empty)
+    if (Model.Id == Guid.Empty)
     {
         ViewData["Title"] = sr["New State"];
     }
@@ -19,7 +19,7 @@
         <h2>@ViewData["Title"]</h2>
         <h3>@Model.CountryName</h3>
         <div class="form-horizontal">
-            <form role="form" asp-action="StateEdit" asp-controller="CoreData">
+            <form role="form" class="form-horizontal" asp-action="StateEdit" asp-controller="CoreData" data-submit-once="true">
                 <div asp-validation-summary="All" class="text-danger"></div>
                 <input asp-for="Id" type="hidden" />
                 <input asp-for="CountryId" type="hidden" />
@@ -41,11 +41,15 @@
                 </div>
                 <div class="form-group">
                     <div class="col-md-offset-2 col-md-10">
-                        <button name="submit" type="submit" class="btn btn-default">@sr["Save"]</button>
+                        <a class="btn btn-default" asp-action="StateListPage"
+                           asp-controller="CoreData"
+                           asp-route-countryId="@Model.CountryId"
+                           asp-route-crp="@Model.CountryListReturnPageNumber"
+                           asp-route-pageNumber="@Model.ReturnPageNumber">@sr["Back To State List"]</a>
+                        <button name="submit" type="submit" class="btn btn-default" data-enabled-text='@sr["Save"]' data-disabled-text='@sr["Working..."]'>@sr["Save"]</button>
                         @if (Model.Id != Guid.Empty)
                         {
-                            <button name="button" type="button" class="btn btn-default"
-                                    onclick="javascript: if(confirm('@Html.FormatValue(Model.Name, sr["Are you sure you want to delete {0}?"])')) {$('#deleteform').submit();}">
+                            <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#confirmDeleteModal">
                                 @sr["Delete"]
                             </button>
                         }
@@ -57,25 +61,38 @@
         @if (Model.Id != Guid.Empty)
         {
             <form id="deleteform" asp-action="StateDelete" asp-controller="CoreData">
-                <input asp-for="Id" type="hidden" />
+                <input name="stateId" value="@Model.Id" type="hidden" />
                 <input asp-for="CountryId" type="hidden" />
                 <input asp-for="ReturnPageNumber" type="hidden" />
                 <input id="crp" name="crp" type="hidden" value="@Model.CountryListReturnPageNumber" />
+                <div class="modal fade" id="confirmDeleteModal" tabindex="-1" role="dialog" aria-labelledby="confirmDeleteHeading">
+                    <div class="modal-dialog modal-sm" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <button type="button" class="close" data-dismiss="modal" aria-label='@sr["Close"]'><span aria-hidden="true">&times;</span></button>
+                                <h4 class="modal-title" id="confirmDeleteHeading">@sr["Confirm Delete"]</h4>
+                            </div>
+                            <div class="modal-body">
+                                @string.Format(sr["Are you sure you want to delete {0}?"], Model.Name)
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-default" data-dismiss="modal">@sr["Cancel"]</button>
+                                <input type="submit" value='@sr["Delete"]' class="btn btn-danger btn-ok" />
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </form>
         }
-        <div>
-            <a class="btn btn-default" asp-action="StateListPage"
-               asp-controller="CoreData"
-               asp-route-countryId="@Model.CountryId"
-               asp-route-crp="@Model.CountryListReturnPageNumber"
-               asp-route-pageNumber="@Model.ReturnPageNumber">@sr["Back To State List"]</a>
-        </div>
+
     </div>
     <div class="col-md-2 col-md-pull-10 hidden-xs hidden-sm">
         @await Component.InvokeAsync("Navigation", new { viewName = "SideNavAlt1", filterName = NamedNavigationFilters.ParentTree, startingNodeKey = "SiteAdmin" })
     </div>
 </div>
 @section scripts {
-@{ await Html.RenderPartialAsync("_SideMenuScriptsPartial"); }
-@{ await Html.RenderPartialAsync("_UnobtrusiveValidationScriptsPartial"); }
+    @{ await Html.RenderPartialAsync("_SideMenuScriptsPartial"); }
+    @{ await Html.RenderPartialAsync("_UnobtrusiveValidationScriptsPartial"); }
+    <script src="~/cr/js/jquery.validate.hooks.min.js"></script>
+    <script src="~/cr/js/jqueryvaildation.submitonce-unobtrusive.min.js"></script>
 }

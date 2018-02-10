@@ -12,7 +12,6 @@
     <div class="col-md-10 col-md-push-2">
         <h2>@ViewData["Title"]</h2>
         <h3>@Model.Country.Name</h3>
-
         <table class="table table-striped">
             <tr>
                 <th>
@@ -28,29 +27,42 @@
                     @sr["Code"]
                 </th>
             </tr>
-
             @foreach (var item in Model.States.Data)
             {
                 <tr>
                     <td>
+                        <a class="btn btn-xs btn-default" asp-action="StateEdit" asp-controller="CoreData"
+                           asp-route-countryId="@Model.Country.Id"
+                           asp-route-stateId="@item.Id"
+                           asp-route-crp="@Model.CountryListReturnPageNumber"
+                           asp-route-returnpagenumber="@Model.States.PageNumber">@sr["Edit"]</a>
+                        <button type="button" class="btn btn-danger btn-xs" data-toggle="modal" data-target="@("#confirmDeleteModal" + item.Id)">
+                            @sr["Delete"]
+                        </button>
                         <form asp-controller="CoreData" asp-action="StateDelete">
-                            <a class="btn btn-xs btn-default" asp-action="StateEdit" asp-controller="CoreData"
-                               asp-route-countryId="@Model.Country.Id"
-                               asp-route-stateId="@item.Id"
-                               asp-route-crp="@Model.CountryListReturnPageNumber"
-                               asp-route-returnpagenumber="@Model.States.PageNumber">@sr["Edit"]</a>
-
                             <input type="hidden" name="countryId" value="@item.CountryId" />
                             <input type="hidden" name="stateId" value="@item.Id" />
                             <input type="hidden" name="crp" value="@Model.CountryListReturnPageNumber" />
                             <input type="hidden" name="returnPageNumber" value="@Model.States.PageNumber" />
-                            <button type="submit" name="submit"
-                                    onclick="javascript: return confirm('@Html.FormatValue(item.Name, sr["Are you sure you want to delete {0}?"])');"
-                                    class="btn btn-xs btn-default">
-                                @sr["Delete"]
-                                </button>
-                            </form>
-                        </td>
+                            <div class="modal fade" id="@("confirmDeleteModal" + item.Id)" tabindex="-1" role="dialog" aria-labelledby="confirmDeleteHeading">
+                                <div class="modal-dialog modal-sm" role="document">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <button type="button" class="close" data-dismiss="modal" aria-label='@sr["Close"]'><span aria-hidden="true">&times;</span></button>
+                                            <h4 class="modal-title" id="confirmDeleteHeading">@sr["Confirm Delete"]</h4>
+                                        </div>
+                                        <div class="modal-body">
+                                            @string.Format(sr["Are you sure you want to delete {0}?"], item.Name)
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn btn-default" data-dismiss="modal">@sr["Cancel"]</button>
+                                            <input type="submit" value='@sr["Delete"]' class="btn btn-danger btn-ok" />
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                    </td>
                         <td>
                             @Html.DisplayFor(modelItem => item.Name)
                         </td>
