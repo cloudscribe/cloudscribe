@@ -72,7 +72,8 @@
         buttonManager.disableButtonsOnClick();
         $("form[data-submit-once='true']").formValidAndInvalid(function (valid) {
             //console.log('form was valid');
-            buttonManager.enableButtons()
+			// don't enable buttons form is about to submit
+            //buttonManager.enableButtons()
         }, function (invalid) {
             //console.log('form was invalid');
             buttonManager.enableButtons()

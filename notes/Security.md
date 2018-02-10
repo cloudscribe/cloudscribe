@@ -1,6 +1,8 @@
 
 https://www.jerriepelser.com/blog/creating-dynamic-authorization-policies-aspnet-core/
 
+https://scottsauber.com/2018/01/29/increasing-password-hashing-iterations-with-asp-net-core-identity/
+
 
 https://www.troyhunt.com/locking-down-your-website-scripts-with-csp-hashes-nonces-and-report-uri/
 

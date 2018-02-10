@@ -9,6 +9,7 @@ using cloudscribe.Core.IdentityServer.EFCore.Stores;
 using cloudscribe.Core.IdentityServerIntegration;
 using Microsoft.EntityFrameworkCore;
 using System;
+using System.Collections.Generic;
 
 namespace Microsoft.Extensions.DependencyInjection
 {
@@ -16,12 +17,15 @@ namespace Microsoft.Extensions.DependencyInjection
     {
         public static IIdentityServerBuilder AddCloudscribeCoreEFIdentityServerStoragePostgreSql(
             this IIdentityServerBuilder builder,
-            string connectionString
+            string connectionString,
+            int maxConnectionRetryCount = 0,
+            int maxConnectionRetryDelaySeconds = 30,
+            ICollection<string> transientErrorCodesToAdd = null
             )
         {
             //builder.AddConfigurationStoreMSSQL(connectionString);    
             //builder.AddOperationalStoreMSSQL(connectionString);
-            builder.Services.AddCloudscribeCoreIdentityServerEFStoragePostgreSql(connectionString);
+            builder.Services.AddCloudscribeCoreIdentityServerEFStoragePostgreSql(connectionString, maxConnectionRetryCount, maxConnectionRetryDelaySeconds, transientErrorCodesToAdd);
             builder.Services.AddScoped<IStorageInfo, StorageInfo>();
 
             return builder;
@@ -83,7 +87,10 @@ namespace Microsoft.Extensions.DependencyInjection
 
         public static IServiceCollection AddCloudscribeCoreIdentityServerEFStoragePostgreSql(
             this IServiceCollection services,
-            string connectionString
+            string connectionString,
+            int maxConnectionRetryCount = 0,
+            int maxConnectionRetryDelaySeconds = 30,
+            ICollection<string> transientErrorCodesToAdd = null
             )
         {
             services.AddEntityFrameworkNpgsql()
@@ -94,9 +101,26 @@ namespace Microsoft.Extensions.DependencyInjection
 
             services.AddScoped<IConfigurationDbContext, ConfigurationDbContext>();
 
+            //services.AddEntityFrameworkNpgsql()
+            //    .AddDbContext<PersistedGrantDbContext>(options =>
+            //        options.UseNpgsql(connectionString));
+
             services.AddEntityFrameworkNpgsql()
                 .AddDbContext<PersistedGrantDbContext>(options =>
-                    options.UseNpgsql(connectionString));
+                    options.UseNpgsql(connectionString,
+                    NpgsqlOptionsAction: sqlOptions =>
+                    {
+                        if (maxConnectionRetryCount > 0)
+                        {
+                            //Configuring Connection Resiliency: https://docs.microsoft.com/en-us/ef/core/miscellaneous/connection-resiliency 
+                            sqlOptions.EnableRetryOnFailure(
+                                maxRetryCount: maxConnectionRetryCount,
+                                maxRetryDelay: TimeSpan.FromSeconds(maxConnectionRetryDelaySeconds),
+                                errorCodesToAdd: transientErrorCodesToAdd);
+                        }
+
+
+                    }));
 
             services.AddScoped<IPersistedGrantDbContext, PersistedGrantDbContext>();
 

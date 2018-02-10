@@ -40,6 +40,8 @@ Marketing and other content centric websites that are not applications per se, p
 
 ### Related links
 
+http://blog.bloomca.me/2018/02/04/spa-is-not-silver-bullet.html
+
 Ask HN: Anyone getting sick of all the 'web apps'? aka spa style apps
 https://news.ycombinator.com/item?id=15506763
 
