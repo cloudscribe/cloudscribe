@@ -1,4 +1,6 @@
 
+http://www.natemcmaster.com/blog/2018/02/02/dotnet-global-tool/
+
 https://packagesearch.azurewebsites.net/
 
 https://github.com/dotnet/templating/wiki/Post-Action-Registry

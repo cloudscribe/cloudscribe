@@ -2,6 +2,8 @@
 Introducing .NET IL Linker
 https://github.com/dotnet/announcements/issues/30
 
+Tips
+https://biarity.gitlab.io/2018/02/08/asp-net-core-todo/
 
 how to control max request length
 https://github.com/aspnet/Announcements/issues/267
