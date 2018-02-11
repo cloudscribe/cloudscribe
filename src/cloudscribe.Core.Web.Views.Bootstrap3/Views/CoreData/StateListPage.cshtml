@@ -44,12 +44,12 @@
                             <input type="hidden" name="stateId" value="@item.Id" />
                             <input type="hidden" name="crp" value="@Model.CountryListReturnPageNumber" />
                             <input type="hidden" name="returnPageNumber" value="@Model.States.PageNumber" />
-                            <div class="modal fade" id="@("confirmDeleteModal" + item.Id)" tabindex="-1" role="dialog" aria-labelledby="confirmDeleteHeading">
+                            <div class="modal fade" id="@("confirmDeleteModal" + item.Id)" tabindex="-1" role="dialog" aria-labelledby="@("confirmDeleteHeading" + item.Id)">
                                 <div class="modal-dialog modal-sm" role="document">
                                     <div class="modal-content">
                                         <div class="modal-header">
                                             <button type="button" class="close" data-dismiss="modal" aria-label='@sr["Close"]'><span aria-hidden="true">&times;</span></button>
-                                            <h4 class="modal-title" id="confirmDeleteHeading">@sr["Confirm Delete"]</h4>
+                                            <h4 class="modal-title" id="@("confirmDeleteHeading" + item.Id)">@sr["Confirm Delete"]</h4>
                                         </div>
                                         <div class="modal-body">
                                             @string.Format(sr["Are you sure you want to delete {0}?"], item.Name)

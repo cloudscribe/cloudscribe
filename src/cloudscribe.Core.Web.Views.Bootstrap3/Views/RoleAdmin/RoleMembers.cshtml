@@ -25,10 +25,10 @@
         <table class="table table-striped">
             <tr>
                 <th>
-                    <a class="btn btn-xs btn-default" asp-action="RoleNonMembers" asp-controller="RoleAdmin"
+                    <a id="parentModalLink" class="btn btn-xs btn-default" asp-action="RoleNonMembers" asp-controller="RoleAdmin"
                        asp-route-siteId="@Model.Role.SiteId"
                        asp-route-roleId="@Model.Role.Id"
-                       bs-modal-link="true">@sr["Add User"]</a>
+                       bs-modal-link="true" bs-modal-id='@Model.Role.Id.ToString()'>@sr["Add User"]</a>
                 </th>
                 <th>
                    @sr["Email"]
@@ -53,16 +53,38 @@
             {
                 <tr>
                     <td>
+                        <button type="button" class="btn btn-danger btn-xs" data-toggle="modal" data-target="@("#confirmModal" + item.Id)">
+                            @sr["Remove"]
+                        </button>
                         <form asp-controller="RoleAdmin" asp-action="RemoveUser">
                             <input name="SiteId" value="@Model.SiteId" type="hidden" />
                             <input name="roleId" value="@Model.Role.Id" type="hidden" />
                             <input name="userId" value="@item.Id" type="hidden" />
-                            <button type="submit"
+                            <div class="modal fade" id="@("confirmModal" + item.Id)" tabindex="-1" role="dialog" aria-labelledby="@("confirmHeading" + item.Id)">
+                                <div class="modal-dialog modal-sm" role="document">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <button type="button" class="close" data-dismiss="modal" aria-label='@sr["Close"]'><span aria-hidden="true">&times;</span></button>
+                                            <h4 class="modal-title" id="@("confirmHeading" + item.Id)">@sr["Confirm Remove User From Role"]</h4>
+                                        </div>
+                                        <div class="modal-body">
+                                            @string.Format(sr["Are you sure you want to remove {0} from the role {1}?"], item.DisplayName, Model.Role.RoleName)
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn btn-default" data-dismiss="modal">@sr["Cancel"]</button>
+                                            <input type="submit" value='@sr["Remove"]' class="btn btn-danger btn-ok" />
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+
+                            @*<button type="submit"
                                     class="btn btn-danger btn-xs"
                                     onclick="javascript: return confirm('@Html.FormatValue(item.DisplayName, sr["Are you sure you want to remove {0}?"])');">
                                 @sr["Remove"]
-                            </button>
-                        </form>                      
+                            </button>*@
+                        </form>
                     </td>
                     <td>
                         @Html.DisplayFor(modelItem => item.Email)
@@ -102,6 +124,25 @@
                       ></cs-pager>
         </div>
     </div>
+
+    <div class="modal fade" id="confirmAddRoleModal" tabindex="-1" role="dialog" aria-labelledby="confirmHeading" style="z-index:999999;">
+        <div class="modal-dialog modal-sm" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label='@sr["Close"]'><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title" id="confirmHeading">@sr["Confirm Add User To Role"]</h4>
+                </div>
+                <div class="modal-body">
+                    <span id="spnMessage"></span>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">@sr["Cancel"]</button>
+                    <input id="btnAddUser" type="button" value='@sr["Add"]' class="btn btn-success btn-ok" />
+                </div>
+            </div>
+        </div>
+    </div>
+
 @*
        <div>
         <label id="selectedRolesDisplay"></label>
@@ -123,4 +164,16 @@
 @{await Html.RenderPartialAsync("_UnobtrusiveValidationScriptsPartial"); }
 <script src="~/cr/js/jquery.unobtrusive-ajax.min.js"></script>
 <script src="~/cr/js/cloudscribe-modaldialog-bootstrap.min.js"></script>
+<script>
+    $('#confirmAddRoleModal').on('show.bs.modal', function (e) {
+        var message = $(e.relatedTarget).data('message');
+        var formId = $(e.relatedTarget).data('form-id');
+        $(e.currentTarget).find('span[id="spnMessage"]').html(message);
+        $("#btnAddUser").click(function () {
+            //alert(formId);
+            $("#" + formId).submit();
+        });
+    });
+</script>
+     
  }

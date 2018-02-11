@@ -27,35 +27,53 @@
                         &nbsp;
                     </h3>
                     <div class=" col-md-6" role="group">
-                        <form class="form-inline" asp-controller="RoleAdmin" asp-action="RoleDelete">
-                            <input name="SiteId" value="@item.SiteId" type="hidden" />
-                            <input id="roleId" name="roleId" type="hidden" value="@item.Id" />
-                            <span class="btn btn-default ">
-                                <a asp-action="RoleMembers"
-                                   asp-controller="RoleAdmin"
-                                   asp-route-siteId="@item.SiteId"
-                                   asp-route-roleId="@item.Id">@sr["Members"]</a>
-                                <span class="badge">@Html.DisplayFor(modelItem => item.MemberCount)</span>
-                            </span>
-                            <a class="btn btn-default" asp-action="RoleEdit" asp-controller="RoleAdmin"
-                               asp-route-siteId="@Model.SiteId"
-                               asp-route-roleId="@item.Id">@sr["Edit"]</a>
-                            @if (item.IsDeletable(setupOptions.RolesThatCannotBeDeleted))
-                            {
-                                <button type="submit"
-                                        onclick="javascript: return confirm('@Html.FormatValue(item.RoleName, sr["Are you sure you want to delete {0}?"])');"
-                                        class="btn btn-default">
-                                    @sr["Delete"]
-                                </button>
-                            }
-                        </form>
+                        <span class="btn btn-default ">
+                            <a asp-action="RoleMembers"
+                               asp-controller="RoleAdmin"
+                               asp-route-siteId="@item.SiteId"
+                               asp-route-roleId="@item.Id">@sr["Members"]</a>
+                            <span class="badge">@Html.DisplayFor(modelItem => item.MemberCount)</span>
+                        </span>
+                        <a class="btn btn-default" asp-action="RoleEdit" asp-controller="RoleAdmin"
+                           asp-route-siteId="@Model.SiteId"
+                           asp-route-roleId="@item.Id">@sr["Edit"]</a>
+                        @if (item.IsDeletable(setupOptions.RolesThatCannotBeDeleted))
+                        {
+                            <button type="button" class="btn btn-danger" data-toggle="modal" data-target="@("#confirmDeleteModal" + item.Id)">
+                                @sr["Delete"]
+                            </button>
+                            <form class="form-inline" asp-controller="RoleAdmin" asp-action="RoleDelete">
+                                <input name="SiteId" value="@item.SiteId" type="hidden" />
+                                <input id="roleId" name="roleId" type="hidden" value="@item.Id" />
+                                <div class="modal fade" id="@("confirmDeleteModal" + item.Id)" tabindex="-1" role="dialog" aria-labelledby="confirmDeleteHeading">
+                                    <div class="modal-dialog modal-sm" role="document">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <button type="button" class="close" data-dismiss="modal" aria-label='@sr["Close"]'><span aria-hidden="true">&times;</span></button>
+                                                <h4 class="modal-title" id="confirmDeleteHeading">@sr["Confirm Delete"]</h4>
+                                            </div>
+                                            <div class="modal-body">
+                                                @string.Format(sr["Are you sure you want to delete {0}?"], item.RoleName)
+                                            </div>
+                                            <div class="modal-footer">
+                                                <button type="button" class="btn btn-default" data-dismiss="modal">@sr["Cancel"]</button>
+                                                <input type="submit" value='@sr["Delete"]' class="btn btn-danger btn-ok" />
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </form>
+
+                        }
+
+
                     </div>
                 </li>
             }
         </ul>
         <div>
-            <cs-pager
-                      asp-action="Index" asp-controller="RoleAdmin"
+            <cs-pager asp-action="Index" asp-controller="RoleAdmin"
                       asp-route-siteId="@Model.SiteId"
                       asp-route-pageSize="@Model.SiteRoles.PageSize"
                       cs-paging-pagesize="@Model.SiteRoles.PageSize"
@@ -64,8 +82,7 @@
                       cs-first-page-title='@sr["First Page"]'
                       cs-last-page-title='@sr["Last Page"]'
                       cs-previous-page-title='@sr["Previous page"]'
-                      cs-next-page-title='@sr["Next page"]'
-                      ></cs-pager>
+                      cs-next-page-title='@sr["Next page"]'></cs-pager>
         </div>
     </div>
     <div class="col-md-2 col-md-pull-10 hidden-xs hidden-sm">

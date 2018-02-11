@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2014-12-09
-// Last Modified:			2016-10-08
+// Last Modified:			2018-02-11
 // 
 
 using System.Collections.Generic;
@@ -20,10 +20,15 @@ namespace cloudscribe.Core.Models
 
         public static bool IsDeletable(this ISiteRole role, List<string> rolesThatCannotBeDeleted)
         {
-            if (role.NormalizedRoleName == "Admins") { return false; }
+            if (role.RoleName == "Administrators") { return false; }
+            if (role.RoleName == "Content Administrators") { return false; }
+            if (role.RoleName == "Authenticated Users") { return false; }
+            if (role.RoleName == "Role Administrators") { return false; }
+
+            if (role.NormalizedRoleName == "Administrators") { return false; }
             if (role.NormalizedRoleName == "Content Administrators") { return false; }
             if (role.NormalizedRoleName == "Authenticated Users") { return false; }
-            if (role.NormalizedRoleName == "Role Admins") { return false; }
+            if (role.NormalizedRoleName == "Role Administrators") { return false; }
 
             if (rolesThatCannotBeDeleted != null)
             {
