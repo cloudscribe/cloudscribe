@@ -47,15 +47,17 @@
     {
         <tr>
             <td>
-                <form role="form" asp-controller="RoleAdmin" asp-action="AddUser">
+                <button type="button" class="btn btn-success btn-xs" data-toggle="modal" 
+                        data-target="#confirmAddRoleModal" 
+                        data-message="@string.Format(sr["Are you sure you want to add {0} to the role {1}?"], item.DisplayName, Model.Role.RoleName)"
+                        data-form-id="@("frmAdd" + item.Id)"
+                        >
+                    @sr["Add"]
+                </button>
+                <form id="@("frmAdd" + item.Id)" role="form" asp-controller="RoleAdmin" asp-action="AddUser">
                     <input name="siteId" type="hidden" value="@Model.Role.SiteId" />
                     <input name="RoleId" type="hidden" value="@Model.Role.Id" />
                     <input name="UserId" type="hidden" value="@item.Id" />
-                    <button type="submit"
-                            class="btn btn-success"
-                            onclick="javascript: return confirm('@Html.FormatValue(item.DisplayName, sr["Are you sure you want to add {0}?"])');">
-                        @sr["Add"]
-                    </button>
                 </form>
             </td>
             <td>

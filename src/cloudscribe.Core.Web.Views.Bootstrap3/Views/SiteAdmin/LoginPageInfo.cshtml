@@ -39,7 +39,7 @@
                 <span asp-validation-for="LoginInfoBottom" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <button id="btnSave" name="submit" type="submit" class="btn btn-default">@sr["Save"]</button>
+                <button id="btnSave" name="submit" type="submit" class="btn btn-default" data-enabled-text='@sr["Save"]' data-disabled-text='@sr["Working..."]'>@sr["Save"]</button>
             </div>
         </form>
     </div>
@@ -49,7 +49,9 @@
 </div>
 
 @section Scripts {
-@{ await Html.RenderPartialAsync("_SideMenuScriptsPartial"); }
-@{ await Html.RenderPartialAsync("_UnobtrusiveEditorScriptsPartial"); }
-@{ await Html.RenderPartialAsync("_UnobtrusiveValidationScriptsPartial"); }
+    @{ await Html.RenderPartialAsync("_SideMenuScriptsPartial"); }
+    @{ await Html.RenderPartialAsync("_UnobtrusiveEditorScriptsPartial"); }
+    @{ await Html.RenderPartialAsync("_UnobtrusiveValidationScriptsPartial"); }
+    <script src="~/cr/js/jquery.validate.hooks.min.js"></script>
+    <script src="~/cr/js/jqueryvaildation.submitonce-unobtrusive.min.js"></script>
 }

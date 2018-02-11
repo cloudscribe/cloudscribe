@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2014-12-08
-// Last Modified:			2018-01-24
+// Last Modified:			2018-02-11
 // 
 
 using cloudscribe.Core.Identity;
@@ -900,7 +900,7 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
             var selectedSite = siteManager.CurrentSite;
             var user = await UserManager.Fetch(selectedSite.Id, userId);
 
-            if(user != null)
+            if(user != null && !string.IsNullOrWhiteSpace(claimType) && !string.IsNullOrWhiteSpace(claimValue))
             {
                 var claim = new Claim(claimType, claimValue);
                 var result = await UserManager.AddClaimAsync((SiteUser)user, claim);
