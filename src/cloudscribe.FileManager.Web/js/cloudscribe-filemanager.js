@@ -13,10 +13,14 @@
         rootVirtualPath: $("#fmconfig").data("root-virtual-path"),
         rootButton: $('#btnRoot'),
         fileSelectorButton: $('#btnSelector'),
+        deleteFolderPromptButton: $('#btnDeleteFolderPrompt'),
         deleteFolderButton: $('#btnDeleteFolder'),
+        renameFolderPromptButton: $('#btnRenameFolderPrompt'),
         renameFolderButton: $('#btnRenameFolder'),
         selectForCropButton: $('#btnSelectForCrop'),
+        deleteFilePromptButton: $('#btnDeleteFilePrompt'),
         deleteFileButton: $('#btnDeleteFile'),
+        renameFilePromptButton: $('#btnRenameFilePrompt'),
         renameFileButton: $('#btnRenameFile'),
         selectedFileInput: $("#fileSelection"),
         newFolderButton: $('#btnCreateFolder'),
@@ -191,82 +195,114 @@
 
             return false; //cancel form submit
         },
-        deleteFolder: function () {
+        deleteFolderPrompt: function () {
             var currentPath = $("#folderToDelete").val();
             if (currentPath === fileManager.rootVirtualPath) {
                 return false;
             }
-            if (confirm("Are you sure you want to permanently delete the folder " + currentPath + " and any files or folders below it?")) {
-                var formData = $('#frmDeleteFolder').serializeArray();
-                //alert(JSON.stringify(formData));
-                $.ajax({
-                    method: "POST",
-                    url: fileManager.deleteFolderApiUrl,
-                    data: formData
-                }).done(function (data) {
-                    if (data.succeeded) {
-                        fileManager.removeNode(currentPath);
-                        fileManager.clearCurrentDirectory();
-                        
-                    }
-                    else {
-                        fileManager.notify(data.message, 'alert-danger');
-
-                    }
-
-                })
-                .fail(function () {
-                    fileManager.notify('An error occured', 'alert-danger');
-                });
+            var message = "Are you sure you want to permanently delete the folder " + currentPath + " and any files or folders below it?";
+            $("#deleteFolderModalBody").html(message);
+            $("#mdlDeleteFolder").modal('show');
+            return false;
+        },
+        deleteFolder: function () {
+            $("#mdlDeleteFolder").modal('hide');
+            var currentPath = $("#folderToDelete").val();
+            if (currentPath === fileManager.rootVirtualPath) {
+                return false;
             }
+            
+            var formData = $('#frmDeleteFolder').serializeArray();
+            //alert(JSON.stringify(formData));
+            $.ajax({
+                method: "POST",
+                url: fileManager.deleteFolderApiUrl,
+                data: formData
+            }).done(function (data) {
+                if (data.succeeded) {
+                    fileManager.removeNode(currentPath);
+                    fileManager.clearCurrentDirectory();
+                        
+                }
+                else {
+                    fileManager.notify(data.message, 'alert-danger');
 
+                }
+
+            })
+            .fail(function () {
+                fileManager.notify('An error occured', 'alert-danger');
+            });
+          
             return false; //cancel form submit
         },
-        renameFolder: function () {
+        renameFolderPrompt: function () {
             var currentPath = $("#folderToRename").val();
             if (currentPath === fileManager.rootVirtualPath) {
                 return false;
             }
-            if (confirm("Are you sure you want to rename the folder " + currentPath + "?")) {
-                var formData = $('#frmRenameFolder').serializeArray();
-                //alert(JSON.stringify(formData));
-                $.ajax({
-                    method: "POST",
-                    url: fileManager.renameFolderApiUrl,
-                    data: formData
-                }).done(function (data) {
-                    if (data.succeeded) {
-                        var tree = $('#tree').treeview(true);
-                        var matchingNodes = tree.findNodes(currentPath, 'id');
-                        if (matchingNodes) {
-                            var parents = tree.getParents(matchingNodes);
-                            if (parents && parents.length > 0) {
-                                fileManager.reloadSubTree(parents[0].id);
-                            }
-                            else {
-                                fileManager.loadTree();
-                            }
+            var message = "Are you sure you want to rename the folder " + currentPath + "?";
+            $("#renameFolderModalBody").html(message);
+            $("#mdlRenameFolder").modal('show');
 
-                        }
-                        $('#newNameSegment').val('');
-                            
-                        fileManager.clearCurrentDirectory();
-
-                    }
-                    else {
-                        fileManager.notify(data.message, 'alert-danger');
-
-                    }
-
-                })
-                .fail(function () {
-                    fileManager.notify('An error occured', 'alert-danger');
-                });
+            return false;
+        },
+        renameFolder: function () {
+            $("#mdlRenameFolder").modal('hide');
+            var currentPath = $("#folderToRename").val();
+            if (currentPath === fileManager.rootVirtualPath) {
+                return false;
             }
+           
+            var formData = $('#frmRenameFolder').serializeArray();
+            //alert(JSON.stringify(formData));
+            $.ajax({
+                method: "POST",
+                url: fileManager.renameFolderApiUrl,
+                data: formData
+            }).done(function (data) {
+                if (data.succeeded) {
+                    var tree = $('#tree').treeview(true);
+                    var matchingNodes = tree.findNodes(currentPath, 'id');
+                    if (matchingNodes) {
+                        var parents = tree.getParents(matchingNodes);
+                        if (parents && parents.length > 0) {
+                            fileManager.reloadSubTree(parents[0].id);
+                        }
+                        else {
+                            fileManager.loadTree();
+                        }
 
+                    }
+                    $('#newNameSegment').val('');
+                            
+                    fileManager.clearCurrentDirectory();
+
+                }
+                else {
+                    fileManager.notify(data.message, 'alert-danger');
+
+                }
+
+            })
+            .fail(function () {
+                fileManager.notify('An error occured', 'alert-danger');
+            });
+           
             return false; //cancel form submit
         },
+        deleteFilePrompt: function () {
+            var currentPath = $("#fileToDelete").val();
+            if (currentPath === '') {
+                return false;
+            }
+            var message = "Are you sure you want to permanently delete the file " + currentPath + "?";
+            $("#deleteFileModalBody").html(message);
+            $("#mdlDeleteFile").modal('show');
+            return false;
+        },
         deleteFile: function () {
+            $("#mdlDeleteFile").modal('hide');
             var currentPath = $("#fileToDelete").val();
             if (currentPath === '') {
                 return false;
@@ -274,30 +310,42 @@
             if (currentPath === fileManager.rootVirtualPath) {
                 return false;
             }
-            if (confirm("Are you sure you want to permanently delete the file " + currentPath + "?")) {
-                var formData = $('#frmDeleteFile').serializeArray();
-                //alert(JSON.stringify(formData));
-                $.ajax({
-                    method: "POST",
-                    url: fileManager.deleteFileApiUrl,
-                    data: formData
-                }).done(function (data) {
-                    if (data.succeeded) {
-                        fileManager.removeNode(currentPath);
-                        fileManager.clearCurrentFile();
-                    }
-                    else {
-                        fileManager.notify(data.message, 'alert-danger');
-                    }
-                })
-                .fail(function () {
-                    fileManager.notify('An error occured', 'alert-danger');
-                });
-            }
-
+            
+            var formData = $('#frmDeleteFile').serializeArray();
+            //alert(JSON.stringify(formData));
+            $.ajax({
+                method: "POST",
+                url: fileManager.deleteFileApiUrl,
+                data: formData
+            }).done(function (data) {
+                if (data.succeeded) {
+                    fileManager.removeNode(currentPath);
+                    fileManager.clearCurrentFile();
+                }
+                else {
+                    fileManager.notify(data.message, 'alert-danger');
+                }
+            })
+            .fail(function () {
+                fileManager.notify('An error occured', 'alert-danger');
+            });
+            
             return false; //cancel form submit
         },
+        renameFilePrompt: function () {
+            var currentPath = $("#fileToRename").val();
+            if (currentPath === '') {
+                return false;
+            }
+            var message = "Are you sure you want to rename the file " + currentPath + "?";
+            $("#renameFileModalBody").html(message);
+            $("#mdlRenameFile").modal('show');
+
+            return false;
+
+        },
         renameFile: function () {
+            $("#mdlRenameFile").modal('hide');
             var currentPath = $("#fileToRename").val();
             if (currentPath === '') {
                 return false;
@@ -305,39 +353,38 @@
             if (currentPath === fileManager.rootVirtualPath) {
                 return false;
             }
-            if (confirm("Are you sure you want to rename the file " + currentPath + "?")) {
-                var formData = $('#frmRenameFile').serializeArray();
-                //alert(JSON.stringify(formData));
-                $.ajax({
-                    method: "POST",
-                    url: fileManager.renameFileApiUrl,
-                    data: formData
-                }).done(function (data) {
-                    if (data.succeeded) {
-                        var tree = $('#tree').treeview(true);
-                        var matchingNodes = tree.findNodes(currentPath, 'id');
-                        if (matchingNodes) {
-                            var parents = tree.getParents(matchingNodes);
-                            if (parents && parents.length > 0) {
-                                fileManager.reloadSubTree(parents[0].id);
-                            }
 
+            var formData = $('#frmRenameFile').serializeArray();
+            //alert(JSON.stringify(formData));
+            $.ajax({
+                method: "POST",
+                url: fileManager.renameFileApiUrl,
+                data: formData
+            }).done(function (data) {
+                if (data.succeeded) {
+                    var tree = $('#tree').treeview(true);
+                    var matchingNodes = tree.findNodes(currentPath, 'id');
+                    if (matchingNodes) {
+                        var parents = tree.getParents(matchingNodes);
+                        if (parents && parents.length > 0) {
+                            fileManager.reloadSubTree(parents[0].id);
                         }
 
-                        fileManager.clearCurrentFile();
-
-                    }
-                    else {
-                        fileManager.notify(data.message, 'alert-danger');
-
                     }
 
-                })
-                .fail(function () {
-                    fileManager.notify('An error occured', 'alert-danger');
-                });
-            }
+                    fileManager.clearCurrentFile();
 
+                }
+                else {
+                    fileManager.notify(data.message, 'alert-danger');
+
+                }
+
+            })
+            .fail(function () {
+                fileManager.notify('An error occured', 'alert-danger');
+            });
+       
             return false; //cancel form submit
         },
         selectfile: function () {
@@ -567,9 +614,13 @@
             this.setupFileLoader();
             this.newFolderButton.on('click', fileManager.createFolder);
             this.fileSelectorButton.on('click', fileManager.selectfile);
+            this.deleteFolderPromptButton.on('click', fileManager.deleteFolderPrompt);
             this.deleteFolderButton.on('click', fileManager.deleteFolder);
+            this.renameFolderPromptButton.on('click', fileManager.renameFolderPrompt);
             this.renameFolderButton.on('click', fileManager.renameFolder);
+            this.deleteFilePromptButton.on('click', fileManager.deleteFilePrompt);
             this.deleteFileButton.on('click', fileManager.deleteFile);
+            this.renameFilePromptButton.on('click', fileManager.renameFilePrompt);
             this.renameFileButton.on('click', fileManager.renameFile);
             this.selectForCropButton.on('click', fileManager.setCropImageFromServer);
             this.setCurrentDirectory(this.rootVirtualPath);
