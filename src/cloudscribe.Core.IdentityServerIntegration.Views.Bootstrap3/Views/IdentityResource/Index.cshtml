@@ -4,6 +4,9 @@
 @using Microsoft.Extensions.Localization
 @addTagHelper "*, cloudscribe.Web.Pagination"
 @inject IStringLocalizer<CloudscribeIds4Resources> sr
+@{
+    var i = 0;
+}
 <div class="row">
     <div class="col-md-10 col-md-push-2">
         <h2>@ViewData["Title"]</h2>
@@ -30,20 +33,35 @@
                     </th>
                 </tr>
                 @foreach (var s in Model.IdentityResources.Data)
-            {
+                {
                     <tr>
                         <td>
+                            <a class="btn btn-xs btn-default" asp-action="EditResource" asp-controller="IdentityResource"
+                               asp-route-siteId="@Model.SiteId"
+                               asp-route-resourcename="@s.Name">@sr["Edit"]</a>
+                            <button type="button" class="btn btn-danger btn-xs" data-toggle="modal" data-target="@("#confirmDeleteModal" + i)">
+                                @sr["Delete"]
+                            </button>
                             <form asp-controller="IdentityResource" asp-action="DeleteResource">
-                                <a class="btn btn-xs btn-default" asp-action="EditResource" asp-controller="IdentityResource"
-                                   asp-route-siteId="@Model.SiteId"
-                                   asp-route-resourcename="@s.Name">@sr["Edit"]</a>
-                                <button type="submit"
-                                        class="btn btn-danger btn-xs"
-                                        onclick="javascript: return confirm('@Html.FormatValue(s.Name, sr["Are you sure you want to delete {0}?"])');">
-                                    @sr["Delete"]
-                                </button>
                                 <input name="SiteId" value="@Model.SiteId" type="hidden" />
                                 <input name="ResourceName" value="@s.Name" type="hidden" />
+                                <div class="modal fade" id="@("confirmDeleteModal" + i)" tabindex="-1" role="dialog" aria-labelledby="@("confirmDeleteHeading" + i)">
+                                    <div class="modal-dialog modal-sm" role="document">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <button type="button" class="close" data-dismiss="modal" aria-label='@sr["Close"]'><span aria-hidden="true">&times;</span></button>
+                                                <h4 class="modal-title" id="@("confirmDeleteHeading" + i)">@sr["Confirm Delete"]</h4>
+                                            </div>
+                                            <div class="modal-body">
+                                                @string.Format(sr["Are you sure you want to delete {0}?"], s.Name)
+                                            </div>
+                                            <div class="modal-footer">
+                                                <button type="button" class="btn btn-default" data-dismiss="modal">@sr["Cancel"]</button>
+                                                <input type="submit" value='@sr["Delete"]' class="btn btn-danger btn-ok" />
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
                             </form>
                         </td>
 
@@ -60,11 +78,13 @@
                             @Html.DisplayFor(modelItem => s.Required)
                         </td>
                     </tr>
+                    {
+                        i += 1;
+                    }
                 }
             </table>
             <div>
-                <cs-pager 
-                          asp-action="Index" asp-controller="IdentityResource"
+                <cs-pager asp-action="Index" asp-controller="IdentityResource"
                           asp-route-siteId="@Model.SiteId"
                           asp-route-pagesize="@Model.IdentityResources.PageSize"
                           cs-paging-pagenumber="@Model.IdentityResources.PageNumber"
@@ -82,5 +102,5 @@
 </div>
 @section scripts {
     @{ await Html.RenderPartialAsync("_SideMenuScriptsPartial"); }
-    
+
 }

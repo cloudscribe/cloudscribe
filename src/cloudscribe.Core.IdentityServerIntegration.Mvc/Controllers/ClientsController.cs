@@ -691,6 +691,8 @@ namespace cloudscribe.Core.IdentityServerIntegration.Controllers.Mvc
                 grants.Clear();
                 grants.Add(grantType);
                 client.AllowedGrantTypes = grants;
+
+                this.AlertWarning(sr["There was a conflicting grant type that had to be removed in order to add the new one."], true);
             }
             
 
@@ -725,16 +727,23 @@ namespace cloudscribe.Core.IdentityServerIntegration.Controllers.Mvc
             }
             if (found != null)
             {
+                var didRemove = true;
                 grants.Remove(found);
                 // empty is not allowed, default is implicit
                 if(grants.Count == 0)
                 {
                     grants.Add(GrantType.Implicit);
+                    this.AlertWarning(sr["A client must have at least one grant type, implicit is the default grant type."], true);
+                    didRemove = false;
                 }
                 
                 client.AllowedGrantTypes = grants;
                 await clientsManager.UpdateClient(siteId.ToString(), client);
-                this.AlertSuccess(sr["The Grant Type was successfully removed."], true);
+                if(didRemove)
+                {
+                    this.AlertSuccess(sr["The Grant Type was successfully removed."], true);
+                }
+                
             }
             else
             {
