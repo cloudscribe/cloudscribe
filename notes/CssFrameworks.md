@@ -4,6 +4,9 @@
 CSS Grid changes everything
 https://www.youtube.com/watch?v=7kVeCqQCxlk
 
+https://hacks.mozilla.org/2018/02/css-grid-for-ui-layouts/
+https://codepen.io/joshmarinacci/pen/EQXyvM/
+
 https://hackernoon.com/how-css-grid-beats-bootstrap-85d5881cf163
 Learn CSS Grid for free
 https://scrimba.com/g/gR8PTE

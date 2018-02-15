@@ -4,7 +4,9 @@
 @using Microsoft.Extensions.Localization
 @addTagHelper "*, cloudscribe.Web.Pagination"
 @inject IStringLocalizer<CloudscribeIds4Resources> sr
-
+@{
+    var rIndex = 0;
+}
 <div class="row">
     <div class="col-md-10 col-md-push-2">
         <h2>@ViewData["Title"]</h2>
@@ -31,20 +33,35 @@
                     </th>
                 </tr>
                 @foreach (var s in Model.Apis.Data)
-            {
+                {
                     <tr>
                         <td>
+                            <a class="btn btn-xs btn-default" asp-action="EditApiResource" asp-controller="ApiResource"
+                               asp-route-siteId="@Model.SiteId"
+                               asp-route-apiname="@s.Name">@sr["Edit"]</a>
+                            <button type="button" class="btn btn-danger btn-xs" data-toggle="modal" data-target="@("#confirmDeleteResourceModal" + rIndex)">
+                                @sr["Delete"]
+                            </button>
                             <form asp-controller="ApiResource" asp-action="DeleteApiResource">
-                                <a class="btn btn-xs btn-default" asp-action="EditApiResource" asp-controller="ApiResource"
-                                   asp-route-siteId="@Model.SiteId"
-                                   asp-route-apiname="@s.Name">@sr["Edit"]</a>
-                                <button type="submit"
-                                        class="btn btn-danger btn-xs"
-                                        onclick="javascript: return confirm('@Html.FormatValue(s.Name, sr["Are you sure you want to delete {0}?"])');">
-                                    @sr["Delete"]
-                                </button>
                                 <input name="SiteId" value="@Model.SiteId" type="hidden" />
                                 <input name="ApiName" value="@s.Name" type="hidden" />
+                                <div class="modal fade" id="@("confirmDeleteResourceModal" + rIndex)" tabindex="-1" role="dialog" aria-labelledby="@("confirmDeleteResourceHeading" + rIndex)">
+                                    <div class="modal-dialog modal-sm" role="document">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <button type="button" class="close" data-dismiss="modal" aria-label='@sr["Close"]'><span aria-hidden="true">&times;</span></button>
+                                                <h4 class="modal-title" id="@("confirmDeleteResourceHeading" + rIndex)">@sr["Confirm Delete"]</h4>
+                                            </div>
+                                            <div class="modal-body">
+                                                @string.Format(sr["Are you sure you want to delete the API Resource {0}?"], s.Name)
+                                            </div>
+                                            <div class="modal-footer">
+                                                <button type="button" class="btn btn-default" data-dismiss="modal">@sr["Cancel"]</button>
+                                                <input type="submit" value='@sr["Delete"]' class="btn btn-danger btn-ok" />
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
                             </form>
                         </td>
 
@@ -61,11 +78,13 @@
                             @Html.DisplayFor(modelItem => s.Enabled)
                         </td>
                     </tr>
+                    {
+                        rIndex += 1;
+                    }
                 }
             </table>
             <div>
-                <cs-pager 
-                          asp-action="Index" asp-controller="ApiResource"
+                <cs-pager asp-action="Index" asp-controller="ApiResource"
                           asp-route-siteId="@Model.SiteId"
                           asp-route-pagesize="@Model.Apis.PageSize"
                           cs-paging-pagenumber="@Model.Apis.PageNumber"
