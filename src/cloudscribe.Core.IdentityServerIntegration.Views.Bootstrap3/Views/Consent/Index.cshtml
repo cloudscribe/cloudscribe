@@ -4,7 +4,7 @@
 @inject IStringLocalizer<CloudscribeIds4Resources> sr
 @{
     var format = sr["{0} <small>is requesting your permission</small>"];
-	var messageHtml = string.Format(format, Model.ClientName);
+    var messageHtml = string.Format(format, Model.ClientName);
 
 }
 
@@ -25,11 +25,11 @@
         <div class="col-sm-8">
             @Html.Partial("_ValidationSummary")
 
-            <form asp-action="Index" class="consent-form">
+            <form asp-action="Index" class="consent-form" data-submit-once="true">
                 <input type="hidden" asp-for="ReturnUrl" />
 
                 <div>@sr["Uncheck the permissions you do not wish to grant."]</div>
-                
+
                 @if (Model.IdentityScopes.Any())
                 {
                     <div class="panel panel-default consent-buttons">
@@ -71,10 +71,9 @@
                         </label>
                     </div>
                 }
-
                 <div class="consent-buttons">
-                    <button name="button" value="yes" class="btn btn-primary" autofocus>@sr["Yes, Allow"]</button>
-                    <button name="button" value="no" class="btn">@sr["No, Do Not Allow"]</button>
+                    <button name="button" value="yes" class="btn btn-primary" autofocus data-enabled-text='@sr["Yes, Allow"]' data-disabled-text='@sr["Working..."]'>@sr["Yes, Allow"]</button>
+                    <button name="button" value="no" class="btn" data-enabled-text='@sr["No, Do Not Allow"]' data-disabled-text='@sr["Working..."]'>@sr["No, Do Not Allow"]</button>
                     @if (Model.ClientUrl != null)
                     {
                         <a class="pull-right btn btn-default" target="_blank" href="@Model.ClientUrl">
@@ -83,7 +82,14 @@
                         </a>
                     }
                 </div>
+
             </form>
         </div>
     </div>
 </div>
+@section Scripts {
+    @{await Html.RenderPartialAsync("_UnobtrusiveValidationScriptsPartial"); }
+    <script src="~/cr/js/cloudscribe-validation-requiredwhen.min.js"></script>
+    <script src="~/cr/js/jquery.validate.hooks.min.js"></script>
+    <script src="~/cr/js/jqueryvaildation.submitonce-unobtrusive.min.js"></script>
+}

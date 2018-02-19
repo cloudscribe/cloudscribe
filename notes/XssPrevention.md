@@ -1,5 +1,7 @@
 
 
+https://www.mike-gualtieri.com/posts/stealing-data-with-css-attack-and-defense
+
 https://davidmurdoch.com/2017/09/02/the-grave-accent-and-xss/
 
 https://www.contextis.com/resources/blog/comma-separated-vulnerabilities/

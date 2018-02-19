@@ -1,4 +1,5 @@
 
+https://blog.emacsen.net/blog/2018/02/16/osm-is-in-trouble/
 
 https://trackchanges.postlight.com/open-source-geo-is-really-something-right-now-f8e310c5f57a?gi=38bcde83fcf8#.wbks9g5ea
 
