@@ -33,9 +33,9 @@
 <h2>@ViewData["Title"]</h2>
 @if (Model.RegistrationPreamble.Length > 0)
 {
-    await Html.RenderPartialAsync("RegisterPreamblePartial", Model); 
+    await Html.RenderPartialAsync("RegisterPreamblePartial", Model);
 }
-<form id="register-form" asp-controller="Account" asp-action="Register" method="post" class="form-horizontal" role="form">
+<form id="register-form" asp-controller="Account" asp-action="Register" method="post" class="form-horizontal" role="form" data-submit-once="true">
     <input asp-for="UserId" type="hidden" />
     <h4>@sr["Create a new account."]</h4>
     <hr />
@@ -63,7 +63,7 @@
                 <input asp-for="Email" class="form-control" />
             </div>
             <span asp-validation-for="Email" class="text-danger"></span>
-       </div>
+        </div>
     </div>
     @{await Html.RenderPartialAsync("RegisterMiddle", Model); }
     <div class="form-group">
@@ -88,32 +88,32 @@
     </div>
     @if (Model.RegistrationAgreement.Length > 0)
     {
-        await Html.RenderPartialAsync("RegisterAgreementPartial", Model); 
+        await Html.RenderPartialAsync("RegisterAgreementPartial", Model);
     }
     else
     {
         <input name="AgreeToTerms" value="true" type="hidden" />
     }
-@if (Model.RecaptchaSiteKey.Length > 0 && !Model.UseInvisibleCaptcha)
-{
-    <div class="form-group">
-        <div class="col-md-offset-2 col-md-10">
-            <div class="g-recaptcha" data-sitekey="@Model.RecaptchaSiteKey"></div>
-            @Html.ValidationMessage("recaptchaerror", new { @class = "text-danger" })
+    @if (Model.RecaptchaSiteKey.Length > 0 && !Model.UseInvisibleCaptcha)
+    {
+        <div class="form-group">
+            <div class="col-md-offset-2 col-md-10">
+                <div class="g-recaptcha" data-sitekey="@Model.RecaptchaSiteKey"></div>
+                @Html.ValidationMessage("recaptchaerror", new { @class = "text-danger" })
+            </div>
         </div>
-    </div>
-}
-    
+    }
+
     <div class="form-group">
         <div class="col-md-offset-2 col-md-10">
-@if (Model.RecaptchaSiteKey.Length > 0 && Model.UseInvisibleCaptcha)
-{
-    <button class="btn btn-default g-recaptcha" data-sitekey="@Model.RecaptchaSiteKey" data-callback='onCaptchaSubmit'>@sr["Register"]</button>
-}
-else
-{
-    <button name="submit" type="submit" class="btn btn-default">@sr["Register"]</button>
-}    
+            @if (Model.RecaptchaSiteKey.Length > 0 && Model.UseInvisibleCaptcha)
+            {
+                <button class="btn btn-default g-recaptcha" data-sitekey="@Model.RecaptchaSiteKey" data-callback='onCaptchaSubmit' data-enabled-text='@sr["Register"]' data-disabled-text='@sr["Working..."]'>@sr["Register"]</button>
+            }
+            else
+            {
+                <button name="submit" type="submit" class="btn btn-default" data-enabled-text='@sr["Register"]' data-disabled-text='@sr["Working..."]'>@sr["Register"]</button>
+            }
             <input type="hidden" asp-for="UseEmailForLogin" />
         </div>
     </div>
@@ -127,4 +127,6 @@ else
 }
 @section Scripts {
     @{await Html.RenderPartialAsync("RegistrationScriptsPartial"); }
+    <script src="~/cr/js/jquery.validate.hooks.min.js"></script>
+    <script src="~/cr/js/jqueryvaildation.submitonce-unobtrusive.min.js"></script>
 }
