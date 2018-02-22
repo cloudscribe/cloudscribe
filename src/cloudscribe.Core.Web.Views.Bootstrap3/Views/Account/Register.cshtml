@@ -35,7 +35,7 @@
 {
     await Html.RenderPartialAsync("RegisterPreamblePartial", Model);
 }
-<form id="register-form" asp-controller="Account" asp-action="Register" method="post" class="form-horizontal" role="form" data-submit-once="true">
+<form id="register-form" asp-controller="Account" asp-action="Register" method="post" asp-route-returnurl='@ViewData["ReturnUrl"]' class="form-horizontal" role="form" data-submit-once="true">
     <input asp-for="UserId" type="hidden" />
     <h4>@sr["Create a new account."]</h4>
     <hr />

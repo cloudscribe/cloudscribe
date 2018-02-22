@@ -25,10 +25,17 @@
     {
         <span><em>(required)</em></span>
     }
-    @if (Model.Description != null)
+    @if (!string.IsNullOrWhiteSpace(Model.Description))
     {
         <div class="consent-description">
             <label for="scopes_@Model.Name">@Model.Description</label>
         </div>
+    }
+    else
+    {
+        <div class="consent-description">
+            <label for="scopes_@Model.Name">@Model.Name</label>
+        </div>
+
     }
 </li>

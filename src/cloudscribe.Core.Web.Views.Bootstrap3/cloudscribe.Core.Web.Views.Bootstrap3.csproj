@@ -2,8 +2,8 @@
 
   <PropertyGroup>
     <Description>Bootstrap 3 views for cloudscribe.Core.Web</Description>
-    <VersionPrefix>2.1.7</VersionPrefix>
-    <AssemblyVersion>2.1.7</AssemblyVersion>
+    <VersionPrefix>2.1.8</VersionPrefix>
+    <AssemblyVersion>2.1.8</AssemblyVersion>
     <Authors>Joe Audette</Authors>
     <TargetFrameworks>netstandard2.0</TargetFrameworks>
     <AssemblyName>cloudscribe.Core.Web.Views.Bootstrap3</AssemblyName>
