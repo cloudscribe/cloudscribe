@@ -471,7 +471,18 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
             }
 
             ViewData["Title"] = sr["Register"];
-            
+
+            returnUrl = identityServerIntegration.EnsureFolderSegmentIfNeeded(Site, returnUrl);
+            //identityserver integration point
+            var idProvider = await identityServerIntegration.GetAuthorizationContextAsync(returnUrl);
+
+            if (!string.IsNullOrEmpty(idProvider))
+            {
+                // if IdP is passed, then bypass showing the login screen
+                return ExternalLogin(idProvider, returnUrl);
+            }
+            ViewData["ReturnUrl"] = returnUrl;
+
             var model = new RegisterViewModel();
             model.SiteId = Site.Id;
             
@@ -504,6 +515,8 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
         public async Task<IActionResult> Register(RegisterViewModel model, string returnUrl = null)
         {
             ViewData["Title"] = sr["Register"];
+
+            ViewData["ReturnUrl"] = returnUrl;
 
             analytics.HandleRegisterSubmit("Onsite").Forget();
 

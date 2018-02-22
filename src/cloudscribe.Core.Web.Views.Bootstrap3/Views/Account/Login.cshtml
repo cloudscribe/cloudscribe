@@ -122,7 +122,7 @@
                     @if (site.AllowNewRegistration)
                     {
                         <p>
-                            <a asp-action="Register">@sr["Register as a new user?"]</a>
+                            <a asp-action="Register" asp-route-returnurl="@ViewData["ReturnUrl"]">@sr["Register as a new user?"]</a>
                         </p>
                     }
                     <p>

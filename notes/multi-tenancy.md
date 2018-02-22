@@ -1,5 +1,7 @@
 
 
+https://www.citusdata.com/blog/2018/01/22/multi-tenant-web-apps-with-dot-net-core-and-postgres/
+
 http://gunnarpeipman.com/2017/08/tenant-providers/
 
 http://gunnarpeipman.com/2017/08/database-per-tenant/
