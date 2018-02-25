@@ -29,7 +29,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Options;
 using System;
-
+using cloudscribe.Core.Models.Identity;
 
 namespace Microsoft.Extensions.DependencyInjection
 {
@@ -121,6 +121,8 @@ namespace Microsoft.Extensions.DependencyInjection
 
             services.TryAddSingleton<ITempDataProvider, CookieTempDataProvider>();
             services.TryAddScoped<IRecaptchaKeysProvider, SiteRecaptchaKeysProvider>();
+
+            services.TryAddScoped<INewUserDisplayNameResolver, DefaultNewUserDisplayNameResolver>();
 
             services.AddCloudscribeFileManagerIntegration(configuration);
 
