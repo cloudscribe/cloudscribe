@@ -30,19 +30,25 @@ using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Options;
 using System;
 using cloudscribe.Core.Models.Identity;
+using cloudscribe.Core.Web.Mvc;
+using cloudscribe.Core.Web.Mvc.Components;
 
 namespace Microsoft.Extensions.DependencyInjection
 {
     public static class StartupExtensions
     {
-        [Obsolete("This method is deprecated, you should use services.AddCloudscribeCoreMvc instead.")]
-        public static IServiceCollection AddCloudscribeCore(this IServiceCollection services, IConfiguration configuration)
+        public static IServiceCollection AddCloudscribeCoreMvc(this IServiceCollection services, IConfiguration configuration)
         {
-
             services.AddCloudscribeCoreCommon(configuration);
+            services.AddScoped<IVersionProvider, ControllerVersionInfo>();
+
+            services.TryAddScoped<IDecideErrorResponseType, DefaultErrorResponseTypeDecider>();
+
 
             return services;
         }
+
+        
 
 
         public static IServiceCollection AddCloudscribeCoreCommon(this IServiceCollection services, IConfiguration configuration)
@@ -215,6 +221,15 @@ namespace Microsoft.Extensions.DependencyInjection
                 });
 
             return options;
+        }
+
+        [Obsolete("This method is deprecated, you should use services.AddCloudscribeCoreMvc instead.")]
+        public static IServiceCollection AddCloudscribeCore(this IServiceCollection services, IConfiguration configuration)
+        {
+
+            services.AddCloudscribeCoreCommon(configuration);
+
+            return services;
         }
 
     }

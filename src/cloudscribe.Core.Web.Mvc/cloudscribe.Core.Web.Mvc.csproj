@@ -2,8 +2,8 @@
 
   <PropertyGroup>
     <Description>MVC Controllers for cloudscribe.Core.Web</Description>
-    <VersionPrefix>2.1.10</VersionPrefix>
-    <AssemblyVersion>2.1.10</AssemblyVersion>
+    <VersionPrefix>2.1.11</VersionPrefix>
+    <AssemblyVersion>2.1.11</AssemblyVersion>
     <Authors>Joe Audette</Authors>
     <PackageIconUrl>https://raw.githubusercontent.com/joeaudette/cloudscribe/master/cloudscribe-icon-32.png</PackageIconUrl>
     <PackageProjectUrl>https://github.com/joeaudette/cloudscribe</PackageProjectUrl>
@@ -20,9 +20,7 @@
   </ItemGroup>
   
   <ItemGroup>
-    <PackageReference Include="cloudscribe.Web.Navigation" Version="2.0.*" />
-    <PackageReference Include="cloudscribe.Web.Pagination" Version="2.1.*" />
-
+    
     <PackageReference Include="Microsoft.AspNetCore.Http" Version="2.0.*" />
     <PackageReference Include="Microsoft.AspNetCore.Mvc" Version="2.0.*" />
     <PackageReference Include="Microsoft.AspNetCore.StaticFiles" Version="2.0.*" />
