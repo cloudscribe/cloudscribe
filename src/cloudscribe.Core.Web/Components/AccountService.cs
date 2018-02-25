@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2017-05-22
-// Last Modified:			2017-10-06
+// Last Modified:			2018-02-25
 // 
 
 using cloudscribe.Core.Identity;
@@ -19,7 +19,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
-
+using cloudscribe.Core.Models.Identity;
 
 namespace cloudscribe.Core.Web.Components
 {
@@ -30,7 +30,8 @@ namespace cloudscribe.Core.Web.Components
             SignInManager<SiteUser> signInManager,
             IIdentityServerIntegration identityServerIntegration,
             ISocialAuthEmailVerfificationPolicy socialAuthEmailVerificationPolicy,
-            IProcessAccountLoginRules loginRulesProcessor
+            IProcessAccountLoginRules loginRulesProcessor,
+            INewUserDisplayNameResolver displayNameResolver
             //,ILogger<AccountService> logger
             )
         {
@@ -39,7 +40,8 @@ namespace cloudscribe.Core.Web.Components
             this.identityServerIntegration = identityServerIntegration;
             this.socialAuthEmailVerificationPolicy = socialAuthEmailVerificationPolicy;
             this.loginRulesProcessor = loginRulesProcessor;
-            
+            this.displayNameResolver = displayNameResolver;
+
 
             //log = logger;
         }
@@ -49,6 +51,7 @@ namespace cloudscribe.Core.Web.Components
         protected readonly IIdentityServerIntegration identityServerIntegration;
         protected readonly ISocialAuthEmailVerfificationPolicy socialAuthEmailVerificationPolicy;
         protected readonly IProcessAccountLoginRules loginRulesProcessor;
+        protected readonly INewUserDisplayNameResolver displayNameResolver;
         // private ILogger log;
 
         private async Task<SiteUser> CreateUserFromExternalLogin(
@@ -74,7 +77,6 @@ namespace cloudscribe.Core.Web.Components
                     SiteId = userManager.Site.Id,
                     UserName = userName,
                     Email = email,
-                    DisplayName = email.Substring(0, email.IndexOf("@")),
                     FirstName = externalLoginInfo.Principal.FindFirstValue(ClaimTypes.GivenName),
                     LastName = externalLoginInfo.Principal.FindFirstValue(ClaimTypes.Surname),
                     AccountApproved = userManager.Site.RequireApprovalBeforeLogin ? false : true,
@@ -82,6 +84,9 @@ namespace cloudscribe.Core.Web.Components
                     AgreementAcceptedUtc = termsAcceptedDate,
                     LastLoginUtc = DateTime.UtcNow
                 };
+                //https://github.com/joeaudette/cloudscribe/issues/346
+                newUser.DisplayName = displayNameResolver.ResolveDisplayName(newUser);
+
                 var identityResult = await userManager.CreateAsync(newUser);
                 if (identityResult.Succeeded)
                 {

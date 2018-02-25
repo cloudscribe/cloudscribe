@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:				    2014-07-22
-// Last Modified:		    2017-12-29
+// Last Modified:		    2018-02-25
 // 
 //
 
@@ -20,6 +20,7 @@ using Microsoft.AspNetCore.Builder;
 using System.Security.Claims;
 using cloudscribe.Core.Models.EventHandlers;
 using cloudscribe.Pagination.Models;
+using cloudscribe.Core.Models.Identity;
 
 namespace cloudscribe.Core.Identity
 {
@@ -38,6 +39,7 @@ namespace cloudscribe.Core.Identity
             IUserStore<TUser> store,
             IOptions<IdentityOptions> optionsAccessor,
             IOptions<MultiTenantOptions> multiTenantOptionsAccessor,
+            INewUserDisplayNameResolver displayNameResolver,
             IPasswordHasher<TUser> passwordHasher,
             IEnumerable<IUserValidator<TUser>> userValidators,
             IEnumerable<IPasswordValidator<TUser>> passwordValidators,
@@ -73,6 +75,7 @@ namespace cloudscribe.Core.Identity
             eventHandlers = userEventHandlers;
             this.passwordHasher = passwordHasher;
             _emailConfirmedHandlers = emailConfirmedHandlers;
+            _displayNameResolver = displayNameResolver;
         }
         
         private IdentityOptions identityOptions;
@@ -85,6 +88,7 @@ namespace cloudscribe.Core.Identity
         private UserEvents eventHandlers;
         private IPasswordHasher<TUser> passwordHasher;
         private IEnumerable<IHandleUserEmailConfirmed> _emailConfirmedHandlers;
+        private INewUserDisplayNameResolver _displayNameResolver;
 
         //private CancellationToken CancellationToken => httpContext?.RequestAborted ?? CancellationToken.None;
 
@@ -237,11 +241,13 @@ namespace cloudscribe.Core.Identity
                 SiteId = Site.Id,
                 UserName = userName,
                 Email = email,
-                DisplayName = email.Substring(0, email.IndexOf("@")),
                 FirstName = info.Principal.FindFirstValue(ClaimTypes.GivenName),
                 LastName = info.Principal.FindFirstValue(ClaimTypes.Surname),
                 AccountApproved = Site.RequireApprovalBeforeLogin ? false : true
             };
+            //https://github.com/joeaudette/cloudscribe/issues/346
+            user.DisplayName = _displayNameResolver.ResolveDisplayName(user);
+
             var result = await CreateAsync(user as TUser);
             if(result.Succeeded)
             {
