@@ -9,6 +9,7 @@ using cloudscribe.Core.Models;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.OpenIdConnect;
 using Microsoft.AspNetCore.DataProtection;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Logging;
@@ -33,12 +34,14 @@ namespace cloudscribe.Core.Identity
             IPostConfigureOptions<OpenIdConnectOptions> optionsInitializer,
             IDataProtectionProvider dataProtection,
             IHttpContextAccessor httpContextAccessor,
+            IHostingEnvironment environment,
             ILogger<SiteOpenIdConnectOptions> logger
             )
         {
             _multiTenantOptions = multiTenantOptionsAccessor.Value;
             _httpContextAccessor = httpContextAccessor;
             _dp = dataProtection;
+            _environment = environment;
             _log = logger;
             _optionsInitializer = optionsInitializer;
 
@@ -64,6 +67,7 @@ namespace cloudscribe.Core.Identity
         private MultiTenantOptions _multiTenantOptions;
         private IHttpContextAccessor _httpContextAccessor;
         private readonly IDataProtectionProvider _dp;
+        private IHostingEnvironment _environment;
         private ILogger _log;
         private IPostConfigureOptions<OpenIdConnectOptions> _optionsInitializer;
 
@@ -102,6 +106,11 @@ namespace cloudscribe.Core.Identity
             options.Authority = "https://placeholder.com";
             options.SignInScheme = IdentityConstants.ExternalScheme;
 
+            if(_environment.IsDevelopment())
+            {
+                options.RequireHttpsMetadata = false;
+            }
+
             _optionsInitializer.PostConfigure(scheme, options);
 
             options.DataProtectionProvider = options.DataProtectionProvider ?? _dp;
@@ -112,7 +121,7 @@ namespace cloudscribe.Core.Identity
             //{
             //    options.SignInScheme = IdentityConstants.ExternalScheme;
             //}
-
+            
             if (string.IsNullOrEmpty(options.SignOutScheme))
             {
                 options.SignOutScheme = options.SignInScheme;
