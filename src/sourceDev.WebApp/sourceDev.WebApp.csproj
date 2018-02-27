@@ -27,6 +27,8 @@
   
   <ItemGroup>
     <ProjectReference Include="..\cloudscribe.Core.IdentityServer.EFCore.SQLite\cloudscribe.Core.IdentityServer.EFCore.SQLite.csproj" />
+    <ProjectReference Include="..\cloudscribe.Core.IdentityServerIntegration.Views.Bootstrap3\cloudscribe.Core.IdentityServerIntegration.Views.Bootstrap3.csproj" />
+    <ProjectReference Include="..\cloudscribe.Core.IdentityServerIntegration\cloudscribe.Core.IdentityServerIntegration.csproj" />
     <ProjectReference Include="..\cloudscribe.Core.Identity\cloudscribe.Core.Identity.csproj" />
     <ProjectReference Include="..\cloudscribe.Core.Models\cloudscribe.Core.Models.csproj" />
     <ProjectReference Include="..\cloudscribe.Core.Storage.EFCore.MSSQL\cloudscribe.Core.Storage.EFCore.MSSQL.csproj" />
@@ -34,10 +36,9 @@
     <ProjectReference Include="..\cloudscribe.Core.Storage.EFCore.pgsql\cloudscribe.Core.Storage.EFCore.pgsql.csproj" />
     <ProjectReference Include="..\cloudscribe.Core.Storage.EFCore.SQLite\cloudscribe.Core.Storage.EFCore.SQLite.csproj" />
     <ProjectReference Include="..\cloudscribe.Core.Storage.NoDb\cloudscribe.Core.Storage.NoDb.csproj" />
-    <ProjectReference Include="..\cloudscribe.Core.Web.Mvc\cloudscribe.Core.Web.Mvc.csproj" />
+    <ProjectReference Include="..\cloudscribe.Core.Web.Views.Bootstrap3\cloudscribe.Core.Web.Views.Bootstrap3.csproj" />
     <ProjectReference Include="..\cloudscribe.Core.Web\cloudscribe.Core.Web.csproj" />
     <ProjectReference Include="..\cloudscribe.Messaging.Email\cloudscribe.Messaging.Email.csproj" />
-    <ProjectReference Include="..\cloudscribe.Core.IdentityServerIntegration.Mvc\cloudscribe.Core.IdentityServerIntegration.Mvc.csproj" />
     <ProjectReference Include="..\cloudscribe.Core.IdentityServer.EFCore.MSSQL\cloudscribe.Core.IdentityServer.EFCore.MSSQL.csproj" />
     <ProjectReference Include="..\cloudscribe.Core.IdentityServer.EFCore.MySql\cloudscribe.Core.IdentityServer.EFCore.MySql.csproj" />
     <ProjectReference Include="..\cloudscribe.Core.IdentityServer.EFCore.pgsql\cloudscribe.Core.IdentityServer.EFCore.pgsql.csproj" />
