@@ -40,7 +40,7 @@ namespace Microsoft.Extensions.DependencyInjection
         public static IServiceCollection AddCloudscribeCoreMvc(this IServiceCollection services, IConfiguration configuration)
         {
             services.AddCloudscribeCoreCommon(configuration);
-            services.AddScoped<IVersionProvider, ControllerVersionInfo>();
+            //services.AddScoped<IVersionProvider, ControllerVersionInfo>();
 
             services.TryAddScoped<IDecideErrorResponseType, DefaultErrorResponseTypeDecider>();
 

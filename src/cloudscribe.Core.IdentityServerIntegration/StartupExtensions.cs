@@ -33,7 +33,7 @@ namespace Microsoft.Extensions.DependencyInjection
         {
             builder.AddCloudscribeIdentityServerIntegrationCommon();
 
-            builder.Services.AddScoped<IVersionProvider, VersionProvider>();
+           // builder.Services.AddScoped<IVersionProvider, VersionProvider>();
 
             return builder;
         }
