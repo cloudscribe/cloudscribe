@@ -21,6 +21,7 @@ using Microsoft.Extensions.Options;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using cloudscribe.Core.IdentityServerIntegration.Mvc;
 
 // https://github.com/IdentityServer/IdentityServer4/issues/19
 
@@ -28,7 +29,14 @@ namespace Microsoft.Extensions.DependencyInjection
 {
     public static class StartupExtensions
     {
-        
+        public static IIdentityServerBuilder AddCloudscribeIdentityServerIntegrationMvc(this IIdentityServerBuilder builder)
+        {
+            builder.AddCloudscribeIdentityServerIntegrationCommon();
+
+            builder.Services.AddScoped<IVersionProvider, VersionProvider>();
+
+            return builder;
+        }
 
 
 
