@@ -7,14 +7,14 @@ namespace cloudscribe.Messaging.Email
     {
         public ConfigSmtpOptionsProvider(IOptions<SmtpOptions> smtpOptionsAccessor)
         {
-            smtpSettings = smtpOptionsAccessor.Value;
+            _smtpSettings = smtpOptionsAccessor.Value;
         }
 
-        private SmtpOptions smtpSettings;
+        private SmtpOptions _smtpSettings;
 
         public Task<SmtpOptions> GetSmtpOptions()
         {
-            return Task.FromResult(smtpSettings);
+            return Task.FromResult(_smtpSettings);
         }
     }
 }

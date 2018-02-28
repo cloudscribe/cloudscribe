@@ -1,47 +1,60 @@
 ﻿// Copyright (c) Source Tree Solutions, LLC. All rights reserved.
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
-// Created:					2018-02-27
-// Last Modified:			2018-02-27
+// Created:					2018-02-28
+// Last Modified:			2018-02-28
 // 
 
-using MailKit.Net.Smtp;
-using MimeKit;
+using Microsoft.Extensions.Logging;
+using SendGrid;
+using SendGrid.Helpers.Mail;
 using System;
+using System.IO;
 using System.Threading.Tasks;
 
-namespace cloudscribe.Messaging.Email
+namespace cloudscribe.Messaging.Email.SendGrid
 {
-    public class SmtpMessageSender : IMessageSender
+    public class SendGridEmailSender : IEmailSender
     {
-        public SmtpMessageSender(ISmtpOptionsProvider smtpOptionsProvider)
+        public SendGridEmailSender(
+            ISendGridOptionsProvider optionsProvider,
+            ILogger<SendGridEmailSender> logger
+            )
         {
-            _smtpOptionsProvider = smtpOptionsProvider;
+            _optionsProvider = optionsProvider;
+            _log = logger;
         }
 
-        private ISmtpOptionsProvider _smtpOptionsProvider;
+        private ISendGridOptionsProvider _optionsProvider;
+        private ILogger _log;
 
-        private async Task<SmtpOptions> GetSmptOptions()
-        {
-            return await _smtpOptionsProvider.GetSmtpOptions().ConfigureAwait(false);
-            
-        }
-
-        private MessageImportance GetMessageImportance(Importance importance)
+        private string GetMessageImportance(Importance importance)
         {
             switch (importance)
             {
                 case Importance.Low:
-                    return MessageImportance.Low;
+                    return "low";
                 case Importance.High:
-                    return MessageImportance.High;
+                    return "high";
                 case Importance.Normal:
                 default:
-                    return MessageImportance.Normal;
+                    return "normal";
             }
         }
 
-        public string Name { get; } = "SmtpMailSender";
+
+        public string Name { get; } = "SendGridEmailSender";
+
+        public async Task<bool> IsConfigured()
+        {
+            var options = await _optionsProvider.GetSendGridOptions();
+            if (options == null || string.IsNullOrWhiteSpace(options.ApiKey))
+            {
+                return false;
+            }
+            return true;
+
+        }
 
         public async Task SendEmailAsync(
             string toEmailCsv,
@@ -62,6 +75,14 @@ namespace cloudscribe.Messaging.Email
             string[] attachmentFilePaths = null
             )
         {
+            var options = await _optionsProvider.GetSendGridOptions();
+            if(options == null || string.IsNullOrWhiteSpace(options.ApiKey))
+            {
+                _log.LogError($"failed to send email with subject {subject} because sendgrid api key is empty or not configured");
+
+                return;
+            }
+
             if (string.IsNullOrWhiteSpace(toEmailCsv))
             {
                 throw new ArgumentException("no to addresses provided");
@@ -84,14 +105,20 @@ namespace cloudscribe.Messaging.Email
                 throw new ArgumentException("no message provided");
             }
 
-            var m = new MimeMessage();
+            var m = new SendGridMessage
+            {
+                From = new EmailAddress(fromEmail, fromName)
+            };
 
-            m.From.Add(new MailboxAddress(fromName, fromEmail));
             if (!string.IsNullOrWhiteSpace(replyToEmail))
             {
-                m.ReplyTo.Add(new MailboxAddress(replyToName, replyToEmail));
+                m.ReplyTo = new EmailAddress(replyToEmail, replyToName);
             }
 
+            m.Subject = subject;
+            m.HtmlContent = htmlMessage;
+            m.PlainTextContent = plainTextMessage;
+            
             if (toEmailCsv.Contains(","))
             {
                 var useToAliases = false;
@@ -100,33 +127,34 @@ namespace cloudscribe.Messaging.Email
                 if (toAliasCsv != null && toAliasCsv.Contains(","))
                 {
                     toAliases = toAliasCsv.Split(',');
-                    if(toAliases.Length > 0 && toAliases.Length == adrs.Length)
+                    if (toAliases.Length > 0 && toAliases.Length == adrs.Length)
                     {
                         useToAliases = true;
                     }
                 }
-                if(useToAliases)
+                if (useToAliases)
                 {
-                    for(int i = 0; i< adrs.Length; i++)
+                    for (int i = 0; i < adrs.Length; i++)
                     {
-                        if (!string.IsNullOrEmpty(adrs[i])) { m.To.Add(new MailboxAddress(toAliases[i].Trim(), adrs[i].Trim())); }
+                        if (!string.IsNullOrEmpty(adrs[i])) { m.AddTo(new EmailAddress(adrs[i].Trim(), toAliases[i].Trim())); }
                     }
                 }
                 else
                 {
                     foreach (string item in adrs)
                     {
-                        if (!string.IsNullOrEmpty(item)) { m.To.Add(new MailboxAddress("", item.Trim())); }
+                        if (!string.IsNullOrEmpty(item)) { m.AddTo(new EmailAddress(item.Trim(), "")); }
                     }
                 }
-                
+
             }
             else
             {
-                m.To.Add(new MailboxAddress(toAliasCsv, toEmailCsv));
+                //not really a csv
+                m.AddTo(new EmailAddress(toEmailCsv, toAliasCsv));
             }
 
-            if(!string.IsNullOrWhiteSpace(ccEmailCsv))
+            if (!string.IsNullOrWhiteSpace(ccEmailCsv))
             {
                 if (ccEmailCsv.Contains(","))
                 {
@@ -145,21 +173,21 @@ namespace cloudscribe.Messaging.Email
                     {
                         for (int i = 0; i < adrs.Length; i++)
                         {
-                            if (!string.IsNullOrEmpty(adrs[i])) { m.Cc.Add(new MailboxAddress(aliases[i].Trim(), adrs[i].Trim())); }
+                            if (!string.IsNullOrEmpty(adrs[i])) { m.AddCc(new EmailAddress(adrs[i].Trim(), aliases[i].Trim())); }
                         }
                     }
                     else
                     {
                         foreach (string item in adrs)
                         {
-                            if (!string.IsNullOrEmpty(item)) { m.Cc.Add(new MailboxAddress("", item.Trim())); }
+                            if (!string.IsNullOrEmpty(item)) { m.AddCc(new EmailAddress(item.Trim(), "")); }
                         }
                     }
 
                 }
                 else
                 {
-                    m.Cc.Add(new MailboxAddress(ccAliasCsv, ccEmailCsv));
+                    m.AddCc(new EmailAddress(ccEmailCsv, ccAliasCsv));
                 }
             }
 
@@ -182,85 +210,55 @@ namespace cloudscribe.Messaging.Email
                     {
                         for (int i = 0; i < adrs.Length; i++)
                         {
-                            if (!string.IsNullOrEmpty(adrs[i])) { m.Bcc.Add(new MailboxAddress(aliases[i].Trim(), adrs[i].Trim())); }
+                            if (!string.IsNullOrEmpty(adrs[i])) { m.AddBcc(new EmailAddress(adrs[i].Trim(), aliases[i].Trim())); }
                         }
                     }
                     else
                     {
                         foreach (string item in adrs)
                         {
-                            if (!string.IsNullOrEmpty(item)) { m.Bcc.Add(new MailboxAddress("", item.Trim())); }
+                            if (!string.IsNullOrEmpty(item)) { m.AddBcc(new EmailAddress(item.Trim(), "")); }
                         }
                     }
 
                 }
                 else
                 {
-                    m.Bcc.Add(new MailboxAddress(bccAliasCsv, bccEmailCsv));
+                    m.AddBcc(new EmailAddress(bccEmailCsv, bccAliasCsv));
                 }
             }
 
-
-            m.Subject = subject;
-            m.Importance = GetMessageImportance(importance);
-
-            if(!isTransactional)
-            {
-                var h = new Header(HeaderId.Precedence, "Bulk");
-                m.Headers.Add(h);
-            }
-
-            var bodyBuilder = new BodyBuilder();
-            if (hasPlainText)
-            {
-                bodyBuilder.TextBody = plainTextMessage;
-            }
-
-            if (hasHtml)
-            {
-                bodyBuilder.HtmlBody = htmlMessage;
-            }
-
-            if(attachmentFilePaths != null && attachmentFilePaths.Length > 0)
-            {
-                foreach(var filePath in attachmentFilePaths)
-                {
-                    bodyBuilder.Attachments.Add(filePath);
-                }
-            }
-
-            m.Body = bodyBuilder.ToMessageBody();
+            m.AddHeader("Importance", GetMessageImportance(importance));
             
-            
-
-            var smtpOptions = await GetSmptOptions();
-
-            using (var client = new SmtpClient())
+            if (!isTransactional)
             {
-                await client.ConnectAsync(
-                    smtpOptions.Server,
-                    smtpOptions.Port,
-                    smtpOptions.UseSsl).ConfigureAwait(false);
+                m.AddHeader("Precedence", "bulk");
+            }
 
-                // Note: since we don't have an OAuth2 token, disable
-                // the XOAUTH2 authentication mechanism.
-                client.AuthenticationMechanisms.Remove("XOAUTH2");
-
-                // Note: only needed if the SMTP server requires authentication
-                if (smtpOptions.RequiresAuthentication)
+            if (attachmentFilePaths != null && attachmentFilePaths.Length > 0)
+            {
+                foreach (var filePath in attachmentFilePaths)
                 {
-                    await client.AuthenticateAsync(
-                        smtpOptions.User,
-                        smtpOptions.Password).ConfigureAwait(false);
+                    try
+                    {
+                        var bytes = File.ReadAllBytes(filePath);
+                        var content = Convert.ToBase64String(bytes);
+                        m.AddAttachment(Path.GetFileName(filePath),content);
+                    }
+                    catch (Exception ex)
+                    {
+                        _log.LogError($"failed to add attachment with path {filePath}, error was {ex.Message} : {ex.StackTrace}");
+                    }
                 }
+            }
 
-                await client.SendAsync(m).ConfigureAwait(false);
-                await client.DisconnectAsync(true).ConfigureAwait(false);
+            var client = new SendGridClient(options.ApiKey);
+            var response = await client.SendEmailAsync(m);
+            if(response.StatusCode != System.Net.HttpStatusCode.OK)
+            {
+                _log.LogError($"did not get expected 200 status code from SendGrid, response was {response.StatusCode} {response.Body.ToString()} ");
             }
 
         }
-
-
-        
     }
 }

@@ -2,9 +2,11 @@
 
 namespace cloudscribe.Messaging.Email
 {
-    public interface IMessageSender
+    public interface IEmailSender
     {
         string Name { get; }
+
+        Task<bool> IsConfigured();
         Task SendEmailAsync(
             string toEmailCsv,
             string fromEmail,

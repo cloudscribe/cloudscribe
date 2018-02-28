@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2014-12-08
-// Last Modified:			2018-02-11
+// Last Modified:			2018-02-28
 // 
 
 using cloudscribe.Core.Identity;
@@ -70,7 +70,7 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
         public async Task<IActionResult> Index(
             Guid? siteId,
             string query = "",
-            int sortMode = 0,  //sortMode: 0 = DisplayName asc, 1 = JoinDate desc, 2 = Last, First
+            int sortMode = 1,  //sortMode: 0 = DisplayName asc, 1 = JoinDate desc, 2 = Last, First
             int pageNumber = 1,
             int pageSize = -1
             )
