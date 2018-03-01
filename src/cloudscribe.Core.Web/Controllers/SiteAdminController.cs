@@ -9,6 +9,7 @@ using cloudscribe.Core.Models;
 using cloudscribe.Core.Web.Components;
 using cloudscribe.Core.Web.ViewModels.SiteSettings;
 using cloudscribe.Messaging.Email;
+using cloudscribe.Messaging.Email.Smtp;
 using cloudscribe.Web.Common;
 using cloudscribe.Web.Common.Extensions;
 using cloudscribe.Web.Common.Razor;
@@ -59,8 +60,11 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
         private SiteManager siteManager;
         private GeoDataManager geoDataManager;
         private MultiTenantOptions multiTenantOptions;
+
+        //TODO: use ISiteAcountCapabilitiesProvider instead 
         private ISmtpOptionsProvider smtpOptionsProvider;
-        //private ITriggerStartup startup
+
+
         private IStringLocalizer sr;
         private IThemeListBuilder layoutListBuilder;
         private UIOptions uiOptions;

@@ -5,6 +5,7 @@
 // Last Modified:			2018-02-28
 // 
 
+using cloudscribe.Messaging.Email.Smtp;
 using MailKit.Net.Smtp;
 using MimeKit;
 using System;

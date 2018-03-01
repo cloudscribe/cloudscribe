@@ -15,10 +15,11 @@ using System.Text;
 using System.Threading.Tasks;
 
 //https://api.elasticemail.com/public/help#Email_Send
+//https://elasticemail.com/resources/api/attachments-upload/
 
 namespace cloudscribe.Messaging.Email.ElasticEmail
 {
-    public class ElasticEmailSender
+    public class ElasticEmailSender : IEmailSender
     {
         public ElasticEmailSender(
             IElasticEmailOptionsProvider optionsProvider,
@@ -102,7 +103,10 @@ namespace cloudscribe.Messaging.Email.ElasticEmail
                 throw new ArgumentException("no message provided");
             }
             
+#pragma warning disable IDE0028 // Simplify collection initialization
             var keyValues = new List<KeyValuePair<string, string>>();
+#pragma warning restore IDE0028 // Simplify collection initialization
+
             keyValues.Add(new KeyValuePair<string, string>("from", fromEmail));
             if(!string.IsNullOrWhiteSpace(fromName))
             {

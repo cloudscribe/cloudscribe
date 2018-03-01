@@ -19,7 +19,7 @@ using System.Threading.Tasks;
 //http://www.mimekit.net/docs/html/T_MimeKit_TextPart.htm
 //http://www.mimekit.net/docs/html/M_MimeKit_TextPart_SetText_1.htm
 
-namespace cloudscribe.Messaging.Email
+namespace cloudscribe.Messaging.Email.Smtp
 {
     public class SmtpEmailSender : IEmailSender
     {
@@ -124,8 +124,16 @@ namespace cloudscribe.Messaging.Email
             }
 
             var m = new MimeMessage();
+            if(!string.IsNullOrEmpty(fromEmail))
+            {
+                m.From.Add(new MailboxAddress(fromName, fromEmail));
+            }
+            else
+            {
+                m.From.Add(new MailboxAddress(smtpOptions.DefaultEmailFromAlias, smtpOptions.DefaultEmailFromAddress));
+            }
+            
 
-            m.From.Add(new MailboxAddress(fromName, fromEmail));
             if (!string.IsNullOrWhiteSpace(replyToEmail))
             {
                 m.ReplyTo.Add(new MailboxAddress(replyToName, replyToEmail));
