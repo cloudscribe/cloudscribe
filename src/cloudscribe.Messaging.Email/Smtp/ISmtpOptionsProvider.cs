@@ -4,6 +4,6 @@ namespace cloudscribe.Messaging.Email
 {
     public interface ISmtpOptionsProvider
     {
-        Task<SmtpOptions> GetSmtpOptions();
+        Task<SmtpOptions> GetSmtpOptions(string lookupKey = null);
     }
 }

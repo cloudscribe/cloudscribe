@@ -7,6 +7,10 @@ namespace cloudscribe.Core.Web.Components.Messaging
 {
     public class SiteSmtpOptionsResolver : ISmtpOptionsProvider
     {
+        //TODO: when email is sent as a task on a background thread
+        // SiteContext cannot be resolved because there is no httprequest
+        // need to pass in siteid as lookupkey
+
         public SiteSmtpOptionsResolver(
             SiteContext currentSite,
             IOptions<SmtpOptions> smtpOptionsAccessor
@@ -19,7 +23,7 @@ namespace cloudscribe.Core.Web.Components.Messaging
         private SiteContext currentSite;
         private SmtpOptions globalSmtp;
 
-        public Task<SmtpOptions> GetSmtpOptions()
+        public Task<SmtpOptions> GetSmtpOptions(string lookupKey = null)
         {
             if (string.IsNullOrEmpty(currentSite.SmtpServer)) { return Task.FromResult(globalSmtp); }
 

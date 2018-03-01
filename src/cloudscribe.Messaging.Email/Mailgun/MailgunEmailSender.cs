@@ -1,14 +1,22 @@
-﻿using FluentEmail.Core.Models;
+﻿// Copyright (c) Source Tree Solutions, LLC. All rights reserved.
+// Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
+// Author:					Joe Audette
+// Created:					2018-02-28
+// Last Modified:			2018-03-01
+// 
+
+
 using FluentEmail.Mailgun;
 using Microsoft.Extensions.Logging;
 using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Text;
 using System.Threading.Tasks;
 
 //https://elanderson.net/2017/02/email-with-asp-net-core-using-mailgun/
 //https://github.com/lukencode/FluentEmail/blob/master/src/Senders/FluentEmail.Mailgun/MailgunSender.cs
+//TODO: not sure but we may need some changes in this class to support some languages
+// open to a pull request
+//https://stackoverflow.com/questions/7266935/how-to-send-utf-8-email
+//https://stackoverflow.com/questions/15566632/different-content-types-in-email
 
 namespace cloudscribe.Messaging.Email.Mailgun
 {
@@ -28,9 +36,9 @@ namespace cloudscribe.Messaging.Email.Mailgun
 
         public string Name { get; } = "MailgunEmailSender";
 
-        public async Task<bool> IsConfigured()
+        public async Task<bool> IsConfigured(string configLookupKey = null)
         {
-            var options = await _optionsProvider.GetMailgunOptions();
+            var options = await _optionsProvider.GetMailgunOptions(configLookupKey);
             if (options == null || string.IsNullOrWhiteSpace(options.ApiKey) || string.IsNullOrWhiteSpace(options.DomainName))
             {
                 return false;
@@ -55,10 +63,18 @@ namespace cloudscribe.Messaging.Email.Mailgun
             string ccAliasCsv = null,
             string bccEmailCsv = null,
             string bccAliasCsv = null,
-            string[] attachmentFilePaths = null
+            string[] attachmentFilePaths = null,
+            string charsetBodyHtml = null,
+            string charsetBodyText = null,
+            object config = null,
+            string configLookupKey = null
             )
         {
-            var options = await _optionsProvider.GetMailgunOptions();
+            MailgunOptions options = config as MailgunOptions;
+            if(options == null)
+            {
+                options = await _optionsProvider.GetMailgunOptions(configLookupKey);
+            }
             if (options == null || string.IsNullOrWhiteSpace(options.ApiKey) || string.IsNullOrWhiteSpace(options.DomainName))
             {
                 _log.LogError($"failed to send email with subject {subject} because mailgun api key or domain is empty or not configured");
@@ -101,6 +117,8 @@ namespace cloudscribe.Messaging.Email.Mailgun
                 .Body(htmlMessage, true)
                 .PlaintextAlternativeBody(plainTextMessage)
                 ;
+
+         
 
             if (toEmailCsv.Contains(","))
             {
@@ -253,15 +271,23 @@ namespace cloudscribe.Messaging.Email.Mailgun
 
             email.Sender = sender;
 
-            var response = await email.SendAsync();
-            if (!response.Successful)
+            try
             {
-                foreach (var m in response.ErrorMessages)
+                var response = await email.SendAsync();
+                if (!response.Successful)
                 {
-                    _log.LogError($"failed to send message with subject {subject} error messages include {m}");
+                    foreach (var m in response.ErrorMessages)
+                    {
+                        _log.LogError($"failed to send message with subject {subject} error messages include {m}");
+                    }
                 }
             }
+            catch(Exception ex)
+            {
+                _log.LogError($"failed to send email with subject {subject} error was {ex.Message} : {ex.StackTrace}");
+            }
 
+           
 
         }
 

@@ -12,7 +12,7 @@ namespace cloudscribe.Messaging.Email
 
         private SmtpOptions _smtpSettings;
 
-        public Task<SmtpOptions> GetSmtpOptions()
+        public Task<SmtpOptions> GetSmtpOptions(string lookupKey = null)
         {
             return Task.FromResult(_smtpSettings);
         }

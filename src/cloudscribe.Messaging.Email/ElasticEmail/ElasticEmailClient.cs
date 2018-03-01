@@ -4,7 +4,7 @@ using System.Text;
 
 namespace cloudscribe.Messaging.Email.ElasticEmail
 {
-    class ElasticEmailClient
+    public class ElasticEmailClient
     {
     }
 }

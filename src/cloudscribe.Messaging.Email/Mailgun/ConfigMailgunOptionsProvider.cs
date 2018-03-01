@@ -12,7 +12,7 @@ namespace cloudscribe.Messaging.Email.Mailgun
 
         private MailgunOptions _options;
 
-        public Task<MailgunOptions> GetMailgunOptions()
+        public Task<MailgunOptions> GetMailgunOptions(string lookupKey = null)
         {
             return Task.FromResult(_options);
         }

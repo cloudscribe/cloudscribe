@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2018-02-27
-// Last Modified:			2018-02-28
+// Last Modified:			2018-03-01
 // 
 
 using MailKit.Net.Smtp;
@@ -11,6 +11,13 @@ using MimeKit;
 using System;
 using System.IO;
 using System.Threading.Tasks;
+
+//TODO: not sure but we may need some changes in this class to support some languages
+// open to a pull request
+//https://stackoverflow.com/questions/7266935/how-to-send-utf-8-email
+//https://stackoverflow.com/questions/15566632/different-content-types-in-email
+//http://www.mimekit.net/docs/html/T_MimeKit_TextPart.htm
+//http://www.mimekit.net/docs/html/M_MimeKit_TextPart_SetText_1.htm
 
 namespace cloudscribe.Messaging.Email
 {
@@ -28,9 +35,9 @@ namespace cloudscribe.Messaging.Email
         private ISmtpOptionsProvider _smtpOptionsProvider;
         private ILogger _log;
 
-        private async Task<SmtpOptions> GetSmptOptions()
+        private async Task<SmtpOptions> GetSmptOptions(string configLookupKey = null)
         {
-            return await _smtpOptionsProvider.GetSmtpOptions().ConfigureAwait(false);
+            return await _smtpOptionsProvider.GetSmtpOptions(configLookupKey).ConfigureAwait(false);
             
         }
 
@@ -50,9 +57,9 @@ namespace cloudscribe.Messaging.Email
 
         public string Name { get; } = "SmtpMailSender";
 
-        public async Task<bool> IsConfigured()
+        public async Task<bool> IsConfigured(string configLookupKey = null)
         {
-            var options = await GetSmptOptions();
+            var options = await GetSmptOptions(configLookupKey);
             if (options == null) return false;
 
             return !string.IsNullOrWhiteSpace(options.Server);
@@ -74,9 +81,26 @@ namespace cloudscribe.Messaging.Email
             string ccAliasCsv = null,
             string bccEmailCsv = null,
             string bccAliasCsv = null,
-            string[] attachmentFilePaths = null
+            string[] attachmentFilePaths = null,
+            string charsetBodyHtml = null, // not currently used in this implementation
+            string charsetBodyText = null, //not currently used in this implementation
+            object config = null,
+            string configLookupKey = null
             )
         {
+            SmtpOptions smtpOptions = config as SmtpOptions;
+            if(smtpOptions == null)
+            {
+                smtpOptions = await GetSmptOptions(configLookupKey);
+            }
+
+            if (smtpOptions == null || string.IsNullOrWhiteSpace(smtpOptions.Server))
+            {
+                _log.LogError($"failed to send email with subject {subject} because smtp options are not configured");
+
+                return;
+            }
+
             if (string.IsNullOrWhiteSpace(toEmailCsv))
             {
                 throw new ArgumentException("no to addresses provided");
@@ -253,10 +277,11 @@ namespace cloudscribe.Messaging.Email
                     
                 }
             }
-
+            
             m.Body = bodyBuilder.ToMessageBody();
             
-            var smtpOptions = await GetSmptOptions();
+            
+            
 
             using (var client = new SmtpClient())
             {
@@ -277,8 +302,16 @@ namespace cloudscribe.Messaging.Email
                         smtpOptions.Password).ConfigureAwait(false);
                 }
 
-                await client.SendAsync(m).ConfigureAwait(false);
-                await client.DisconnectAsync(true).ConfigureAwait(false);
+                try
+                {
+                    await client.SendAsync(m).ConfigureAwait(false);
+                    await client.DisconnectAsync(true).ConfigureAwait(false);
+                }
+                catch(Exception ex)
+                {
+                    _log.LogError($"failed to send email with subject {subject} error was {ex.Message} : {ex.StackTrace}");
+                }
+                
             }
 
         }

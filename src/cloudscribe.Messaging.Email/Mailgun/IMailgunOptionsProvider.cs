@@ -4,6 +4,6 @@ namespace cloudscribe.Messaging.Email.Mailgun
 {
     public interface IMailgunOptionsProvider
     {
-        Task<MailgunOptions> GetMailgunOptions();
+        Task<MailgunOptions> GetMailgunOptions(string lookupKey = null);
     }
 }

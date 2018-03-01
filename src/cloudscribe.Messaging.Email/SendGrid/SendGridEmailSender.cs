@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2018-02-28
-// Last Modified:			2018-02-28
+// Last Modified:			2018-03-01
 // 
 
 using Microsoft.Extensions.Logging;
@@ -11,6 +11,11 @@ using SendGrid.Helpers.Mail;
 using System;
 using System.IO;
 using System.Threading.Tasks;
+
+//TODO: not sure but we may need some changes in this class to support some languages
+// open to a pull request
+//https://stackoverflow.com/questions/7266935/how-to-send-utf-8-email
+//https://stackoverflow.com/questions/15566632/different-content-types-in-email
 
 namespace cloudscribe.Messaging.Email.SendGrid
 {
@@ -45,9 +50,9 @@ namespace cloudscribe.Messaging.Email.SendGrid
 
         public string Name { get; } = "SendGridEmailSender";
 
-        public async Task<bool> IsConfigured()
+        public async Task<bool> IsConfigured(string configLookupKey = null)
         {
-            var options = await _optionsProvider.GetSendGridOptions();
+            var options = await _optionsProvider.GetSendGridOptions(configLookupKey);
             if (options == null || string.IsNullOrWhiteSpace(options.ApiKey))
             {
                 return false;
@@ -72,10 +77,18 @@ namespace cloudscribe.Messaging.Email.SendGrid
             string ccAliasCsv = null,
             string bccEmailCsv = null,
             string bccAliasCsv = null,
-            string[] attachmentFilePaths = null
+            string[] attachmentFilePaths = null,
+            string charsetBodyHtml = null,
+            string charsetBodyText = null,
+            object config = null,
+            string configLookupKey = null
             )
         {
-            var options = await _optionsProvider.GetSendGridOptions();
+            SendGridOptions options = config as SendGridOptions;
+            if(_optionsProvider == null)
+            {
+                options = await _optionsProvider.GetSendGridOptions(configLookupKey);
+            }
             if(options == null || string.IsNullOrWhiteSpace(options.ApiKey))
             {
                 _log.LogError($"failed to send email with subject {subject} because sendgrid api key is empty or not configured");
@@ -118,7 +131,7 @@ namespace cloudscribe.Messaging.Email.SendGrid
             m.Subject = subject;
             m.HtmlContent = htmlMessage;
             m.PlainTextContent = plainTextMessage;
-            
+           
             if (toEmailCsv.Contains(","))
             {
                 var useToAliases = false;
@@ -253,11 +266,20 @@ namespace cloudscribe.Messaging.Email.SendGrid
             }
 
             var client = new SendGridClient(options.ApiKey);
-            var response = await client.SendEmailAsync(m);
-            if(response.StatusCode != System.Net.HttpStatusCode.OK)
+            try
             {
-                _log.LogError($"did not get expected 200 status code from SendGrid, response was {response.StatusCode} {response.Body.ToString()} ");
+                var response = await client.SendEmailAsync(m);
+                if (response.StatusCode != System.Net.HttpStatusCode.OK)
+                {
+                    _log.LogError($"did not get expected 200 status code from SendGrid, response was {response.StatusCode} {response.Body.ToString()} ");
+                }
             }
+            catch(Exception ex)
+            {
+                _log.LogError($"failed to send email with subject {subject} error was {ex.Message} : {ex.StackTrace}");
+            }
+
+            
 
         }
     }

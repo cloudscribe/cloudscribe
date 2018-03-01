@@ -6,7 +6,7 @@ namespace cloudscribe.Messaging.Email
     {
         string Name { get; }
 
-        Task<bool> IsConfigured();
+        Task<bool> IsConfigured(string configLookupKey = null);
         Task SendEmailAsync(
             string toEmailCsv,
             string fromEmail,
@@ -23,7 +23,11 @@ namespace cloudscribe.Messaging.Email
             string ccAliasCsv = null,
             string bccEmailCsv = null,
             string bccAliasCsv = null,
-            string[] attachmentFilePaths = null
+            string[] attachmentFilePaths = null,
+            string charsetBodyHtml = null,
+            string charsetBodyText = null,
+            object config = null,
+            string configLookupKey = null
             );
 
     }

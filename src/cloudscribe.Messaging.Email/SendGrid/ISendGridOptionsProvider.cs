@@ -4,6 +4,6 @@ namespace cloudscribe.Messaging.Email.SendGrid
 {
     public interface ISendGridOptionsProvider
     {
-        Task<SendGridOptions> GetSendGridOptions();
+        Task<SendGridOptions> GetSendGridOptions(string lookupKey = null);
     }
 }
