@@ -38,6 +38,7 @@ namespace cloudscribe.Messaging.Email.Mailgun
 
         private IMailgunOptionsProvider _optionsProvider;
         private ILogger _log;
+        private const string apiBaseUrl = "https://api.mailgun.net/v3";
 
         public string Name { get; } = "MailgunEmailSender";
 
@@ -328,8 +329,10 @@ namespace cloudscribe.Messaging.Email.Mailgun
             using (var client = new HttpClient())
             {
                 client.DefaultRequestHeaders.Authorization =
-                  new AuthenticationHeaderValue("Basic",
-                Convert.ToBase64String(Encoding.ASCII.GetBytes(options.ApiKey)));
+                  new AuthenticationHeaderValue("Basic", Convert.ToBase64String(Encoding.ASCII.GetBytes(options.ApiKey)));
+
+                //client.DefaultRequestHeaders.Authorization =
+                //  new AuthenticationHeaderValue("Basic", options.ApiKey);
 
                 var content = new FormUrlEncodedContent(keyValues);
 
