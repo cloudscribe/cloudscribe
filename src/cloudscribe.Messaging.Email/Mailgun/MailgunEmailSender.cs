@@ -292,40 +292,7 @@ namespace cloudscribe.Messaging.Email.Mailgun
             //    email.LowPriority();
             //}
 
-            if (attachmentFilePaths != null && attachmentFilePaths.Length > 0)
-            {
-                foreach (var filePath in attachmentFilePaths)
-                {
-                    try
-                    {
-                        email.AttachFromFilename(filePath);
-                    }
-                    catch (Exception ex)
-                    {
-                        _log.LogError($"failed to add attachment with path {filePath}, error was {ex.Message} : {ex.StackTrace}");
-                    }
-                }
-            }
-
-
-            email.Sender = sender;
-
-            try
-            {
-                var response = await email.SendAsync();
-                if (!response.Successful)
-                {
-                    foreach (var m in response.ErrorMessages)
-                    {
-                        _log.LogError($"failed to send message with subject {subject} error messages include {m}");
-                    }
-                }
-            }
-            catch (Exception ex)
-            {
-                _log.LogError($"failed to send email with subject {subject} error was {ex.Message} : {ex.StackTrace}");
-            }
-
+            
             if (attachmentFilePaths == null || attachmentFilePaths.Length == 0)
             {
                 await SendWithoutAttachments(keyValues, options, subject);

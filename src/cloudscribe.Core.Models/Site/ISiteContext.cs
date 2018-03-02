@@ -82,6 +82,10 @@ namespace cloudscribe.Core.Models
         string DkimDomain { get; }
         string DkimSelector { get; }
         bool SignEmailWithDkim { get; }
+        string EmailSenderName { get; }
+        string EmailApiKey { get; }
+        string EmailApiEndpoint { get; }
+
         string SmsClientId { get; }
         string SmsSecureToken { get; } 
         string SmsFrom { get; }

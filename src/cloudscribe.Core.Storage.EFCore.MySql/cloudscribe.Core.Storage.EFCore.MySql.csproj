@@ -2,8 +2,8 @@
 
   <PropertyGroup>
     <Description>MySql Entity Framework Core implementation of cloudscribe core storage</Description>
-    <VersionPrefix>2.0.7</VersionPrefix>
-    <AssemblyVersion>2.0.7</AssemblyVersion>
+    <VersionPrefix>2.0.8</VersionPrefix>
+    <AssemblyVersion>2.0.8</AssemblyVersion>
     <Authors>Joe Audette</Authors>
     <TargetFramework>netcoreapp2.0</TargetFramework>
     <AssemblyName>cloudscribe.Core.Storage.EFCore.MySql</AssemblyName>

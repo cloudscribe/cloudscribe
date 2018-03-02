@@ -394,6 +394,19 @@ namespace cloudscribe.Core.Models
             get { return site.SignEmailWithDkim; }
         }
 
+        public string EmailSenderName
+        {
+            get { return site.EmailSenderName; }
+        } 
+        public string EmailApiKey
+        {
+            get { return site.EmailApiKey; }
+        }
+        public string EmailApiEndpoint
+        {
+            get { return site.EmailApiEndpoint; }
+        }
+
         public string SmsClientId
         {
             get { return site.SmsClientId; }

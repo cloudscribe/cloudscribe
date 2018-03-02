@@ -17,7 +17,7 @@ namespace cloudscribe.Core.Storage.EFCore.MSSQL.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "2.0.0-rtm-26452")
+                .HasAnnotation("ProductVersion", "2.0.1-rtm-125")
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
             modelBuilder.Entity("cloudscribe.Core.Models.Geography.GeoCountry", b =>
@@ -216,8 +216,18 @@ namespace cloudscribe.Core.Storage.EFCore.MSSQL.Migrations
                     b.Property<string>("DkimSelector")
                         .HasMaxLength(128);
 
+                    b.Property<string>("EmailApiEndpoint");
+
+                    b.Property<string>("EmailApiKey");
+
                     b.Property<bool>("EmailLdapDbFallback")
                         .HasColumnType("bit");
+
+                    b.Property<string>("EmailSenderName")
+                        .IsRequired()
+                        .ValueGeneratedOnAdd()
+                        .HasDefaultValue("SmtpMailSender")
+                        .HasMaxLength(100);
 
                     b.Property<string>("FacebookAppId")
                         .HasMaxLength(100);
