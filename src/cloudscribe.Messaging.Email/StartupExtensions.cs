@@ -28,9 +28,9 @@ namespace Microsoft.Extensions.DependencyInjection
             services.Configure<SendGridOptions>(configuration.GetSection("SendGridOptions"));
             services.AddScoped<IEmailSender, SendGridEmailSender>();
 
-            services.TryAddScoped<IMailgunOptionsProvider, ConfigMailgunOptionsProvider>();
-            services.Configure<MailgunOptions>(configuration.GetSection("MailgunOptions"));
-            services.AddScoped<IEmailSender, MailgunEmailSender>();
+            //services.TryAddScoped<IMailgunOptionsProvider, ConfigMailgunOptionsProvider>();
+            //services.Configure<MailgunOptions>(configuration.GetSection("MailgunOptions"));
+            //services.AddScoped<IEmailSender, MailgunEmailSender>();
 
             services.TryAddScoped<IElasticEmailOptionsProvider, ConfigElasticEmailOptionsProvider>();
             services.Configure<ElasticEmailOptions>(configuration.GetSection("ElasticEmailOptions"));

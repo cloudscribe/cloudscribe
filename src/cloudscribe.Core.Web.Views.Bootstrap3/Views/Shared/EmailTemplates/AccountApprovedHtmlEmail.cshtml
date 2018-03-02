@@ -1,10 +1,9 @@
-﻿@using cloudscribe.Core.Models
-@inject SiteContext Site
-@model string 
+﻿@model cloudscribe.Core.Web.ViewModels.Email.AccountApprovedEmailViewModel
 
 @{
     Layout = "_LayoutEmailNotification";
     ViewData["Title"] = "Account Approved";
+    ViewData["Site"] = Model.Tenant;
 }
 
-Your account at @Site.SiteName has been approved. You may now login by clicking here: <a href="@Model">link</a>
+Your account at @Model.Tenant.SiteName has been approved. You may now login by clicking here: <a href="@Model.LoginUrl">link</a>
