@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace cloudscribe.Messaging.Email
@@ -26,9 +24,9 @@ namespace cloudscribe.Messaging.Email
         /// </summary>
         /// <param name="lookupKey"></param>
         /// <returns></returns>
-        public async Task<IEmailSender> GetEmailSender(string lookupKey = null)
+        public virtual async Task<IEmailSender> GetEmailSender(string lookupKey = null)
         {
-            
+            //if lookupkey matches provider name return that one
             if(!string.IsNullOrEmpty(lookupKey))
             {
                 foreach(var sender in _allSenders)
@@ -43,7 +41,7 @@ namespace cloudscribe.Messaging.Email
             // return first configured one
             foreach (var sender in _allSenders)
             {
-                var configured = await sender.IsConfigured();
+                var configured = await sender.IsConfigured(lookupKey);
                 if(configured) { return sender; }
             }
 

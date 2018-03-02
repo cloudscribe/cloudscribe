@@ -12,7 +12,7 @@ namespace cloudscribe.Messaging.Email.SendGrid
 
         private SendGridOptions _options;
 
-        public Task<SendGridOptions> GetSendGridOptions(string lookupKey = null)
+        public virtual Task<SendGridOptions> GetSendGridOptions(string lookupKey = null)
         {
             return Task.FromResult(_options);
         }

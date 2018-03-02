@@ -26,7 +26,6 @@ namespace cloudscribe.Messaging.Email
             string[] attachmentFilePaths = null,
             string charsetBodyHtml = null,
             string charsetBodyText = null,
-            object config = null,
             string configLookupKey = null
             );
 

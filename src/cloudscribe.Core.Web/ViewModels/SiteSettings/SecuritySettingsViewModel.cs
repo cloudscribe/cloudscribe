@@ -22,7 +22,7 @@ namespace cloudscribe.Core.Web.ViewModels.SiteSettings
         [Display(Name = "Allow New Registrations")]
         public bool AllowNewRegistration { get; set; }
 
-        public bool SmtpIsConfigured { get; set; } = false;
+        public bool EmailIsConfigured { get; set; } = false;
 
         [Display(Name = "Require Confirmed Email")]
         public bool RequireConfirmedEmail { get; set; }

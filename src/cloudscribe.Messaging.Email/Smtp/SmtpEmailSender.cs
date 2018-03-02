@@ -34,13 +34,7 @@ namespace cloudscribe.Messaging.Email.Smtp
 
         private ISmtpOptionsProvider _smtpOptionsProvider;
         private ILogger _log;
-
-        private async Task<SmtpOptions> GetSmptOptions(string configLookupKey = null)
-        {
-            return await _smtpOptionsProvider.GetSmtpOptions(configLookupKey).ConfigureAwait(false);
-            
-        }
-
+        
         private MessageImportance GetMessageImportance(Importance importance)
         {
             switch (importance)
@@ -57,12 +51,17 @@ namespace cloudscribe.Messaging.Email.Smtp
 
         public string Name { get; } = "SmtpMailSender";
 
+        private SmtpOptions smtpOptions = null;
         public async Task<bool> IsConfigured(string configLookupKey = null)
         {
-            var options = await GetSmptOptions(configLookupKey);
-            if (options == null) return false;
+            if(smtpOptions == null)
+            {
+                smtpOptions = await _smtpOptionsProvider.GetSmtpOptions(configLookupKey).ConfigureAwait(false);
+            }
+            
+            if (smtpOptions == null) return false;
 
-            return !string.IsNullOrWhiteSpace(options.Server);
+            return !string.IsNullOrWhiteSpace(smtpOptions.Server);
         }
 
         public async Task SendEmailAsync(
@@ -84,17 +83,12 @@ namespace cloudscribe.Messaging.Email.Smtp
             string[] attachmentFilePaths = null,
             string charsetBodyHtml = null, // not currently used in this implementation
             string charsetBodyText = null, //not currently used in this implementation
-            object config = null,
             string configLookupKey = null
             )
         {
-            SmtpOptions smtpOptions = config as SmtpOptions;
-            if(smtpOptions == null)
-            {
-                smtpOptions = await GetSmptOptions(configLookupKey);
-            }
-
-            if (smtpOptions == null || string.IsNullOrWhiteSpace(smtpOptions.Server))
+            var isConfigured = await IsConfigured(configLookupKey);
+          
+            if (!isConfigured)
             {
                 _log.LogError($"failed to send email with subject {subject} because smtp options are not configured");
 
@@ -106,7 +100,7 @@ namespace cloudscribe.Messaging.Email.Smtp
                 throw new ArgumentException("no to addresses provided");
             }
 
-            if (string.IsNullOrWhiteSpace(fromEmail))
+            if (string.IsNullOrWhiteSpace(fromEmail) && string.IsNullOrWhiteSpace(smtpOptions.DefaultEmailFromAddress))
             {
                 throw new ArgumentException("no from address provided");
             }
@@ -288,9 +282,6 @@ namespace cloudscribe.Messaging.Email.Smtp
             
             m.Body = bodyBuilder.ToMessageBody();
             
-            
-            
-
             using (var client = new SmtpClient())
             {
                 await client.ConnectAsync(

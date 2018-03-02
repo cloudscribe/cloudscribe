@@ -1,6 +1,5 @@
 ﻿using cloudscribe.Core.Models;
 using cloudscribe.Messaging.Email;
-using cloudscribe.Messaging.Email.Smtp;
 using System.Threading.Tasks;
 
 namespace cloudscribe.Core.Web.Components
@@ -8,25 +7,24 @@ namespace cloudscribe.Core.Web.Components
     public class SiteAcountCapabilitiesProvider : ISiteAcountCapabilitiesProvider
     {
         public SiteAcountCapabilitiesProvider(
-            ISmtpOptionsProvider smtpOptionsProvider
+            IEmailSenderResolver emailSenderResolver
             )
         {
-            this.smtpOptionsProvider = smtpOptionsProvider;
+            _emailSenderResolver = emailSenderResolver;
         }
-
-        private readonly ISmtpOptionsProvider smtpOptionsProvider;
-        private SmtpOptions smtpOptions = null;
+        
+        private IEmailSenderResolver _emailSenderResolver;
 
         public async Task<bool> SupportsEmailNotification(ISiteContext site)
         {
-            //TODO: account for other email providers
-            if (smtpOptions == null) { smtpOptions = await smtpOptionsProvider.GetSmtpOptions(site.Id.ToString()).ConfigureAwait(false); }
-            if(smtpOptions != null)
+            var sender = await _emailSenderResolver.GetEmailSender(site.Id.ToString());
+            if(sender != null)
             {
-                return !string.IsNullOrEmpty(smtpOptions.Server);
+                var configured = await sender.IsConfigured(site.Id.ToString());
+                return configured;
             }
-            return false;
             
+            return false;
         }
 
         public Task<bool> SupportsSmsNotification(ISiteContext site)

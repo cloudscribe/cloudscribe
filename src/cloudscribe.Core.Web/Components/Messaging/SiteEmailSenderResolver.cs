@@ -8,24 +8,24 @@ using System.Threading.Tasks;
 
 namespace cloudscribe.Core.Web.Components.Messaging
 {
-    public class SiteEmailSenderResolver : IEmailSenderResolver
+    public class SiteEmailSenderResolver : ConfigEmailSenderResolver
     {
         public SiteEmailSenderResolver(
             ISiteQueries siteQueries,
             IEnumerable<IEmailSender> allConfiguredSenders,
             ILogger<SiteEmailSenderResolver> logger
-            )
+            ):base(allConfiguredSenders)
         {
             _siteQueries = siteQueries;
-            _configSenders = allConfiguredSenders;
+            //_configSenders = allConfiguredSenders;
             _log = logger;
         }
 
         private ISiteQueries _siteQueries;
-        private IEnumerable<IEmailSender> _configSenders;
+        //private IEnumerable<IEmailSender> _configSenders;
         private ILogger _log;
 
-        public async Task<IEmailSender> GetEmailSender(string lookupKey = null)
+        public override async Task<IEmailSender> GetEmailSender(string lookupKey = null)
         {
             // expected lookupKey in cloudscribe is siteId
             if(!string.IsNullOrWhiteSpace(lookupKey) && lookupKey.Length == 36)
@@ -52,34 +52,8 @@ namespace cloudscribe.Core.Web.Components.Messaging
                 
             }
 
-            //next try lookup by name
-            if (!string.IsNullOrEmpty(lookupKey))
-            {
-                foreach (var sender in _configSenders)
-                {
-                    if (sender.Name == lookupKey)
-                    {
-                        return sender;
-                    }
-                }
-            }
-
-            // return first configured one
-            foreach (var sender in _configSenders)
-            {
-                var configured = await sender.IsConfigured();
-                if (configured) { return sender; }
-            }
-
-            // last ditch return the first one in the list configured or not
-            foreach (var sender in _configSenders)
-            {
-                return sender;
-            }
-
-
-            return null;
-
+            return await base.GetEmailSender(lookupKey);
+            
         }
 
     }

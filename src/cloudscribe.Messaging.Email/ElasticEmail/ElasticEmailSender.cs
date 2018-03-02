@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2018-03-01
-// Last Modified:			2018-03-01
+// Last Modified:			2018-03-02
 // 
 
 using Microsoft.Extensions.Logging;
@@ -35,9 +35,14 @@ namespace cloudscribe.Messaging.Email.ElasticEmail
 
         public string Name { get; } = "ElasticEmailSender";
 
+        private ElasticEmailOptions options = null;
         public async Task<bool> IsConfigured(string configLookupKey = null)
         {
-            var options = await _optionsProvider.GetElasticEmailOptions(configLookupKey);
+            if(options == null)
+            {
+                options = await _optionsProvider.GetElasticEmailOptions(configLookupKey);
+            }
+            
             if (options == null || string.IsNullOrWhiteSpace(options.ApiKey))
             {
                 return false;
@@ -65,16 +70,12 @@ namespace cloudscribe.Messaging.Email.ElasticEmail
             string[] attachmentFilePaths = null,
             string charsetBodyHtml = null,
             string charsetBodyText = null,
-            object config = null,
             string configLookupKey = null
             )
         {
-            ElasticEmailOptions options = config as ElasticEmailOptions;
-            if (_optionsProvider == null)
-            {
-                options = await _optionsProvider.GetElasticEmailOptions(configLookupKey);
-            }
-            if (options == null || string.IsNullOrWhiteSpace(options.ApiKey) || string.IsNullOrWhiteSpace(options.EndpointUrl))
+            var isConfigured = await IsConfigured(configLookupKey);
+            
+            if (!isConfigured)
             {
                 _log.LogError($"failed to send email with subject {subject} because elasticemail api key is empty or not configured");
 
@@ -86,7 +87,7 @@ namespace cloudscribe.Messaging.Email.ElasticEmail
                 throw new ArgumentException("no to addresses provided");
             }
 
-            if (string.IsNullOrWhiteSpace(fromEmail))
+            if (string.IsNullOrWhiteSpace(fromEmail) && string.IsNullOrWhiteSpace(options.DefaultEmailFromAddress))
             {
                 throw new ArgumentException("no from address provided");
             }
@@ -107,11 +108,23 @@ namespace cloudscribe.Messaging.Email.ElasticEmail
             var keyValues = new List<KeyValuePair<string, string>>();
 #pragma warning restore IDE0028 // Simplify collection initialization
 
-            keyValues.Add(new KeyValuePair<string, string>("from", fromEmail));
-            if(!string.IsNullOrWhiteSpace(fromName))
+            if(!string.IsNullOrWhiteSpace(fromEmail))
             {
-                keyValues.Add(new KeyValuePair<string, string>("fromName", fromName));
+                keyValues.Add(new KeyValuePair<string, string>("from", fromEmail));
+                if (!string.IsNullOrWhiteSpace(fromName))
+                {
+                    keyValues.Add(new KeyValuePair<string, string>("fromName", fromName));
+                }
             }
+            else
+            {
+                keyValues.Add(new KeyValuePair<string, string>("from", options.DefaultEmailFromAddress));
+                if (!string.IsNullOrWhiteSpace(options.DefaultEmailFromAlias))
+                {
+                    keyValues.Add(new KeyValuePair<string, string>("fromName", options.DefaultEmailFromAlias));
+                }
+            }
+            
             if (!string.IsNullOrWhiteSpace(replyToEmail))
             {
                 keyValues.Add(new KeyValuePair<string, string>("replyTo", replyToEmail));

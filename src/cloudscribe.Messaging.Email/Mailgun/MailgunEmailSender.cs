@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2018-02-28
-// Last Modified:			2018-03-01
+// Last Modified:			2018-03-02
 // 
 
 
@@ -36,9 +36,14 @@ namespace cloudscribe.Messaging.Email.Mailgun
 
         public string Name { get; } = "MailgunEmailSender";
 
+        private MailgunOptions options = null;
         public async Task<bool> IsConfigured(string configLookupKey = null)
         {
-            var options = await _optionsProvider.GetMailgunOptions(configLookupKey);
+            if(options == null)
+            {
+                options = await _optionsProvider.GetMailgunOptions(configLookupKey);
+            }
+            
             if (options == null || string.IsNullOrWhiteSpace(options.ApiKey) || string.IsNullOrWhiteSpace(options.DomainName))
             {
                 return false;
@@ -66,19 +71,14 @@ namespace cloudscribe.Messaging.Email.Mailgun
             string[] attachmentFilePaths = null,
             string charsetBodyHtml = null,
             string charsetBodyText = null,
-            object config = null,
             string configLookupKey = null
             )
         {
-            MailgunOptions options = config as MailgunOptions;
-            if(options == null)
-            {
-                options = await _optionsProvider.GetMailgunOptions(configLookupKey);
-            }
-            if (options == null || string.IsNullOrWhiteSpace(options.ApiKey) || string.IsNullOrWhiteSpace(options.DomainName))
+            var isConfigured = await IsConfigured(configLookupKey);
+            
+            if (!isConfigured)
             {
                 _log.LogError($"failed to send email with subject {subject} because mailgun api key or domain is empty or not configured");
-
                 return;
             }
 
@@ -87,7 +87,7 @@ namespace cloudscribe.Messaging.Email.Mailgun
                 throw new ArgumentException("no to addresses provided");
             }
 
-            if (string.IsNullOrWhiteSpace(fromEmail))
+            if (string.IsNullOrWhiteSpace(fromEmail) && string.IsNullOrWhiteSpace(options.DefaultEmailFromAddress))
             {
                 throw new ArgumentException("no from address provided");
             }
@@ -103,23 +103,31 @@ namespace cloudscribe.Messaging.Email.Mailgun
             {
                 throw new ArgumentException("no message provided");
             }
-
-
+            
             var sender = new MailgunSender(
                 options.DomainName, // Mailgun Domain
                 "key-" + options.ApiKey // Mailgun API Key
                     );
 
+            var fromEmailToUse = fromEmail;
+            var fromAliasToUse = fromName;
+            if(string.IsNullOrWhiteSpace(fromEmailToUse))
+            {
+                fromEmailToUse = options.DefaultEmailFromAddress;
+            }
+            if (string.IsNullOrWhiteSpace(fromAliasToUse))
+            {
+                fromAliasToUse = options.DefaultEmailFromAlias;
+            }
+            
             var email = FluentEmail.Core.Email
-                .From(fromEmail, fromName)
+                .From(fromEmailToUse, fromAliasToUse)
                 .ReplyTo(replyToEmail, replyToName)
                 .Subject(subject)
                 .Body(htmlMessage, true)
                 .PlaintextAlternativeBody(plainTextMessage)
                 ;
-
-         
-
+            
             if (toEmailCsv.Contains(","))
             {
                 var useToAliases = false;

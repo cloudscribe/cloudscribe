@@ -12,7 +12,7 @@ namespace cloudscribe.Messaging.Email.ElasticEmail
 
         private ElasticEmailOptions _options;
 
-        public Task<ElasticEmailOptions> GetElasticEmailOptions(string lookupKey = null)
+        public virtual Task<ElasticEmailOptions> GetElasticEmailOptions(string lookupKey = null)
         {
             return Task.FromResult(_options);
         }

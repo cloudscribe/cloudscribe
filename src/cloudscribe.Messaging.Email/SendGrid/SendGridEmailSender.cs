@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2018-02-28
-// Last Modified:			2018-03-01
+// Last Modified:			2018-03-02
 // 
 
 using Microsoft.Extensions.Logging;
@@ -50,9 +50,14 @@ namespace cloudscribe.Messaging.Email.SendGrid
 
         public string Name { get; } = "SendGridEmailSender";
 
+        private SendGridOptions options = null;
         public async Task<bool> IsConfigured(string configLookupKey = null)
         {
-            var options = await _optionsProvider.GetSendGridOptions(configLookupKey);
+            if(options == null)
+            {
+                options = await _optionsProvider.GetSendGridOptions(configLookupKey);
+            }
+            
             if (options == null || string.IsNullOrWhiteSpace(options.ApiKey))
             {
                 return false;
@@ -80,19 +85,14 @@ namespace cloudscribe.Messaging.Email.SendGrid
             string[] attachmentFilePaths = null,
             string charsetBodyHtml = null,
             string charsetBodyText = null,
-            object config = null,
             string configLookupKey = null
             )
         {
-            SendGridOptions options = config as SendGridOptions;
-            if(_optionsProvider == null)
-            {
-                options = await _optionsProvider.GetSendGridOptions(configLookupKey);
-            }
-            if(options == null || string.IsNullOrWhiteSpace(options.ApiKey))
+            var isConfigured = await IsConfigured(configLookupKey);
+            
+            if(!isConfigured)
             {
                 _log.LogError($"failed to send email with subject {subject} because sendgrid api key is empty or not configured");
-
                 return;
             }
 
@@ -101,7 +101,7 @@ namespace cloudscribe.Messaging.Email.SendGrid
                 throw new ArgumentException("no to addresses provided");
             }
 
-            if (string.IsNullOrWhiteSpace(fromEmail))
+            if (string.IsNullOrWhiteSpace(fromEmail) && string.IsNullOrWhiteSpace(options.DefaultEmailFromAddress))
             {
                 throw new ArgumentException("no from address provided");
             }
@@ -118,11 +118,16 @@ namespace cloudscribe.Messaging.Email.SendGrid
                 throw new ArgumentException("no message provided");
             }
 
-            var m = new SendGridMessage
+            var m = new SendGridMessage();
+            if(!string.IsNullOrWhiteSpace(fromEmail))
             {
-                From = new EmailAddress(fromEmail, fromName)
-            };
-
+                m.From = new EmailAddress(fromEmail, fromName);
+            }
+            else
+            {
+                m.From = new EmailAddress(options.DefaultEmailFromAddress, options.DefaultEmailFromAlias);
+            }
+            
             if (!string.IsNullOrWhiteSpace(replyToEmail))
             {
                 m.ReplyTo = new EmailAddress(replyToEmail, replyToName);
