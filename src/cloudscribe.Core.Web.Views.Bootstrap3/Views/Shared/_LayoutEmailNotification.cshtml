@@ -1,5 +1,10 @@
 ﻿@using cloudscribe.Core.Models
-@inject SiteContext Tenant
+@*@inject SiteContext Tenant*@
+@{ 
+    // email is sent on a background thread so
+    //SiteContext cannot be injected
+    //ISiteContext Tenant = ViewData["Site"] as ISiteContext;
+}
 
 @*
     <!--
@@ -342,7 +347,7 @@
                                                                 <td valign="top" bgcolor="#E1E1E1">
 
                                                                     <div style="font-family:Helvetica,Arial,sans-serif;font-size:13px;color:#828282;text-align:center;line-height:120%;">
-                                                                        <div>Copyright &copy; @DateTime.Now.Year - @(Tenant?.SiteName ?? "Sample") All&nbsp;rights&nbsp;reserved.</div>
+                                                                        <div>Copyright &copy; @DateTime.Now.Year - @((ViewData["Site"] as ISiteContext)?.SiteName ?? "") All&nbsp;rights&nbsp;reserved.</div>
                                                                         
                                                                     </div>
 

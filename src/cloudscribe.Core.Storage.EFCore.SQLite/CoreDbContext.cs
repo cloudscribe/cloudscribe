@@ -192,6 +192,12 @@ namespace cloudscribe.Core.Storage.EFCore.SQLite
 
                 entity.Property(p => p.PwdRequireDigit).IsRequired();
 
+                entity.Property(p => p.EmailSenderName)
+                .HasMaxLength(100)
+                .IsRequired()
+                .HasDefaultValue("SmtpMailSender")
+                ;
+
             });
 
             modelBuilder.Entity<SiteHost>(entity =>

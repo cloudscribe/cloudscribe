@@ -2,31 +2,39 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2018-02-27
-// Last Modified:			2018-02-27
+// Last Modified:			2018-03-01
 // 
 
 using MailKit.Net.Smtp;
+using Microsoft.Extensions.Logging;
 using MimeKit;
 using System;
+using System.IO;
 using System.Threading.Tasks;
 
-namespace cloudscribe.Messaging.Email
+//TODO: not sure but we may need some changes in this class to support some languages
+// open to a pull request
+//https://stackoverflow.com/questions/7266935/how-to-send-utf-8-email
+//https://stackoverflow.com/questions/15566632/different-content-types-in-email
+//http://www.mimekit.net/docs/html/T_MimeKit_TextPart.htm
+//http://www.mimekit.net/docs/html/M_MimeKit_TextPart_SetText_1.htm
+
+namespace cloudscribe.Messaging.Email.Smtp
 {
-    public class SmtpMessageSender : IMessageSender
+    public class SmtpEmailSender : IEmailSender
     {
-        public SmtpMessageSender(ISmtpOptionsProvider smtpOptionsProvider)
+        public SmtpEmailSender(
+            ISmtpOptionsProvider smtpOptionsProvider,
+            ILogger<SmtpEmailSender> logger
+            )
         {
             _smtpOptionsProvider = smtpOptionsProvider;
+            _log = logger;
         }
 
         private ISmtpOptionsProvider _smtpOptionsProvider;
-
-        private async Task<SmtpOptions> GetSmptOptions()
-        {
-            return await _smtpOptionsProvider.GetSmtpOptions().ConfigureAwait(false);
-            
-        }
-
+        private ILogger _log;
+        
         private MessageImportance GetMessageImportance(Importance importance)
         {
             switch (importance)
@@ -42,6 +50,19 @@ namespace cloudscribe.Messaging.Email
         }
 
         public string Name { get; } = "SmtpMailSender";
+
+        private SmtpOptions smtpOptions = null;
+        public async Task<bool> IsConfigured(string configLookupKey = null)
+        {
+            if(smtpOptions == null)
+            {
+                smtpOptions = await _smtpOptionsProvider.GetSmtpOptions(configLookupKey).ConfigureAwait(false);
+            }
+            
+            if (smtpOptions == null) return false;
+
+            return !string.IsNullOrWhiteSpace(smtpOptions.Server);
+        }
 
         public async Task SendEmailAsync(
             string toEmailCsv,
@@ -59,15 +80,27 @@ namespace cloudscribe.Messaging.Email
             string ccAliasCsv = null,
             string bccEmailCsv = null,
             string bccAliasCsv = null,
-            string[] attachmentFilePaths = null
+            string[] attachmentFilePaths = null,
+            string charsetBodyHtml = null, // not currently used in this implementation
+            string charsetBodyText = null, //not currently used in this implementation
+            string configLookupKey = null
             )
         {
+            var isConfigured = await IsConfigured(configLookupKey);
+          
+            if (!isConfigured)
+            {
+                _log.LogError($"failed to send email with subject {subject} because smtp options are not configured");
+
+                return;
+            }
+
             if (string.IsNullOrWhiteSpace(toEmailCsv))
             {
                 throw new ArgumentException("no to addresses provided");
             }
 
-            if (string.IsNullOrWhiteSpace(fromEmail))
+            if (string.IsNullOrWhiteSpace(fromEmail) && string.IsNullOrWhiteSpace(smtpOptions.DefaultEmailFromAddress))
             {
                 throw new ArgumentException("no from address provided");
             }
@@ -85,8 +118,16 @@ namespace cloudscribe.Messaging.Email
             }
 
             var m = new MimeMessage();
+            if(!string.IsNullOrEmpty(fromEmail))
+            {
+                m.From.Add(new MailboxAddress(fromName, fromEmail));
+            }
+            else
+            {
+                m.From.Add(new MailboxAddress(smtpOptions.DefaultEmailFromAlias, smtpOptions.DefaultEmailFromAddress));
+            }
+            
 
-            m.From.Add(new MailboxAddress(fromName, fromEmail));
             if (!string.IsNullOrWhiteSpace(replyToEmail))
             {
                 m.ReplyTo.Add(new MailboxAddress(replyToName, replyToEmail));
@@ -206,7 +247,7 @@ namespace cloudscribe.Messaging.Email
 
             if(!isTransactional)
             {
-                var h = new Header(HeaderId.Precedence, "Bulk");
+                var h = new Header(HeaderId.Precedence, "bulk");
                 m.Headers.Add(h);
             }
 
@@ -225,16 +266,22 @@ namespace cloudscribe.Messaging.Email
             {
                 foreach(var filePath in attachmentFilePaths)
                 {
-                    bodyBuilder.Attachments.Add(filePath);
+                    try
+                    {
+                        var bytes = File.ReadAllBytes(filePath);
+                        bodyBuilder.Attachments.Add(Path.GetFileName(filePath), bytes);
+                    }
+                    catch(Exception ex)
+                    {
+                        _log.LogError($"failed to add attachment with path {filePath}, error was {ex.Message} : {ex.StackTrace}");
+                    }
+
+                    
                 }
             }
-
+            
             m.Body = bodyBuilder.ToMessageBody();
             
-            
-
-            var smtpOptions = await GetSmptOptions();
-
             using (var client = new SmtpClient())
             {
                 await client.ConnectAsync(
@@ -254,8 +301,16 @@ namespace cloudscribe.Messaging.Email
                         smtpOptions.Password).ConfigureAwait(false);
                 }
 
-                await client.SendAsync(m).ConfigureAwait(false);
-                await client.DisconnectAsync(true).ConfigureAwait(false);
+                try
+                {
+                    await client.SendAsync(m).ConfigureAwait(false);
+                    await client.DisconnectAsync(true).ConfigureAwait(false);
+                }
+                catch(Exception ex)
+                {
+                    _log.LogError($"failed to send email with subject {subject} error was {ex.Message} : {ex.StackTrace}");
+                }
+                
             }
 
         }

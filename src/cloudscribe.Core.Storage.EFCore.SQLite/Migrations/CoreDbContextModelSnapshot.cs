@@ -194,7 +194,17 @@ namespace cloudscribe.Core.Storage.EFCore.SQLite.Migrations
                     b.Property<string>("DkimSelector")
                         .HasMaxLength(128);
 
+                    b.Property<string>("EmailApiEndpoint");
+
+                    b.Property<string>("EmailApiKey");
+
                     b.Property<bool>("EmailLdapDbFallback");
+
+                    b.Property<string>("EmailSenderName")
+                        .IsRequired()
+                        .ValueGeneratedOnAdd()
+                        .HasDefaultValue("SmtpMailSender")
+                        .HasMaxLength(100);
 
                     b.Property<string>("FacebookAppId")
                         .HasMaxLength(100);

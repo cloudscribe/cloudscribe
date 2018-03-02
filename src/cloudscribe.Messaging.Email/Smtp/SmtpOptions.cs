@@ -6,7 +6,7 @@
 // 
 
 
-namespace cloudscribe.Messaging.Email
+namespace cloudscribe.Messaging.Email.Smtp
 {
     public class SmtpOptions
     {
@@ -16,7 +16,8 @@ namespace cloudscribe.Messaging.Email
         public string Password { get; set; } = string.Empty;
         public bool UseSsl { get; set; } = false;
         public bool RequiresAuthentication { get; set; } = false;
-        public string PreferredEncoding { get; set; } = string.Empty;
+        public string HtmlBodyDefaultEncoding { get; set; }
+        public string PlainTextBodyDefaultEncoding { get; set; }
 
         public string DefaultEmailFromAddress { get; set; } = string.Empty;
 

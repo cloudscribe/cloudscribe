@@ -2,8 +2,8 @@
 
   <PropertyGroup>
     <Description>SQLite Entity Framework Core implementation of cloudscribe core storage</Description>
-    <VersionPrefix>2.0.2</VersionPrefix>
-    <AssemblyVersion>2.0.2</AssemblyVersion>
+    <VersionPrefix>2.0.3</VersionPrefix>
+    <AssemblyVersion>2.0.3</AssemblyVersion>
     <Authors>Joe Audette</Authors>
     <TargetFramework>netcoreapp2.0</TargetFramework>
     <OutputType>Exe</OutputType>

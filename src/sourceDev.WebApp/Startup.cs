@@ -460,7 +460,21 @@ namespace sourceDev.WebApp
                         case "MSSQL":
                         default:
                             var connectionString = Configuration.GetConnectionString("EntityFrameworkConnectionString");
-                            services.AddCloudscribeCoreEFStorageMSSQL(connectionString);
+
+                            // this shows all the params with default values
+                            // only connectionstring is required to be passed in
+                            services.AddCloudscribeCoreEFStorageMSSQL(
+                                connectionString:connectionString,
+                                maxConnectionRetryCount: 0,
+                                maxConnectionRetryDelaySeconds: 30,
+                                transientSqlErrorNumbersToAdd: null,
+                                useSql2008Compatibility:false);
+
+                            //services.AddCloudscribeCoreEFStorageMSSQL(
+                            //    connectionString: connectionString,
+                            //    useSql2008Compatibility: true);
+
+
                             services.AddCloudscribeLoggingEFStorageMSSQL(connectionString);
                             services.AddCloudscribeKvpEFStorageMSSQL(connectionString);
 

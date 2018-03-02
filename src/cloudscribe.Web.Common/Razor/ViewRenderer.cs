@@ -2,14 +2,19 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:                  Joe Audette
 // Created:                 2016-04-22
-// Last Modified:           2016-06-25
+// Last Modified:           2018-03-02
 // 
 
-using Microsoft.AspNetCore.Mvc.Infrastructure;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Abstractions;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
+using Microsoft.AspNetCore.Mvc.Razor;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.AspNetCore.Mvc.ViewEngines;
 using Microsoft.AspNetCore.Mvc.ViewFeatures;
+using Microsoft.AspNetCore.Routing;
+using System;
 using System.IO;
 using System.Threading.Tasks;
 
@@ -22,20 +27,21 @@ namespace cloudscribe.Web.Common.Razor
     public class ViewRenderer
     {
         public ViewRenderer(
-            ICompositeViewEngine viewEngine,
+            IRazorViewEngine viewEngine,
             ITempDataProvider tempDataProvider,
-            IActionContextAccessor actionAccessor
+            IServiceProvider serviceProvider
             )
         {
-            this.viewEngine = viewEngine;
-            this.tempDataProvider = tempDataProvider;
-            this.actionAccessor = actionAccessor;
-            
+            _viewEngine = viewEngine;
+            _tempDataProvider = tempDataProvider;
+            _serviceProvider = serviceProvider;
+
+
         }
 
-        private ICompositeViewEngine viewEngine;
-        private ITempDataProvider tempDataProvider;
-        private IActionContextAccessor actionAccessor;
+        private IRazorViewEngine _viewEngine;
+        private ITempDataProvider _tempDataProvider;
+        private IServiceProvider _serviceProvider;
         
         public async Task<string> RenderViewAsString<TModel>(string viewName, TModel model)
         {
@@ -47,14 +53,15 @@ namespace cloudscribe.Web.Common.Razor
                 Model = model
             };
 
-            var actionContext = actionAccessor.ActionContext;
             
-            var tempData = new TempDataDictionary(actionContext.HttpContext, tempDataProvider);
+            var httpContext = new DefaultHttpContext { RequestServices = _serviceProvider };
+            var actionContext = new ActionContext(httpContext, new RouteData(), new ActionDescriptor());
+            var tempData = new TempDataDictionary(actionContext.HttpContext, _tempDataProvider);
 
             using (StringWriter output = new StringWriter())
             {
               
-                ViewEngineResult viewResult = viewEngine.FindView(actionContext, viewName, true);
+                ViewEngineResult viewResult = _viewEngine.FindView(actionContext, viewName, true);
 
                 ViewContext viewContext = new ViewContext(
                     actionContext,

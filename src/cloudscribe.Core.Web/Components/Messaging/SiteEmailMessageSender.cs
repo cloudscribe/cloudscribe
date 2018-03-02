@@ -2,15 +2,15 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2015-08-11
-// Last Modified:			2017-05-23
+// Last Modified:			2018-03-02
 // 
 
 using cloudscribe.Core.Models;
+using cloudscribe.Core.Web.ViewModels.Email;
 using cloudscribe.Messaging.Email;
 using cloudscribe.Web.Common.Razor;
 using Microsoft.Extensions.Localization;
 using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Options;
 using System;
 using System.Threading.Tasks;
 
@@ -24,79 +24,66 @@ namespace cloudscribe.Core.Web.Components.Messaging
 
         public SiteEmailMessageSender(
             ViewRenderer viewRenderer,
-            ISmtpOptionsProvider smtpOptionsProvider,
-            //IOptions<SmtpOptions> smtpOptionsAccessor,
+            IEmailSenderResolver emailSenderResolver,
             IStringLocalizer<CloudscribeCore> localizer,
             ILogger<SiteEmailMessageSender> logger
             )
         {
-            log = logger;
-            sr = localizer;
-            this.viewRenderer = viewRenderer;
-            this.smtpOptionsProvider = smtpOptionsProvider;
-            //globalSmtpSettings = smtpOptionsAccessor.Value;
-
+            _log = logger;
+            _sr = localizer;
+            _viewRenderer = viewRenderer;
+            _emailSenderResolver = emailSenderResolver;
+            
         }
 
-        private ViewRenderer viewRenderer;
-        private ISmtpOptionsProvider smtpOptionsProvider;
-        //private SmtpOptions globalSmtpSettings;
-        private IStringLocalizer sr;
-        private ILogger log;
-
-        private async Task<SmtpOptions> GetSmptOptions()
-        {
-            return await smtpOptionsProvider.GetSmtpOptions().ConfigureAwait(false);
-            //if(!siteSettings.SmtpIsConfigured()) { return globalSmtpSettings; }
-
-            //SmtpOptions smtpOptions = new SmtpOptions();
-            //smtpOptions.Password = siteSettings.SmtpPassword;
-            //smtpOptions.Port = siteSettings.SmtpPort;
-            //smtpOptions.PreferredEncoding = siteSettings.SmtpPreferredEncoding;
-            //smtpOptions.RequiresAuthentication = siteSettings.SmtpRequiresAuth;
-            //smtpOptions.Server = siteSettings.SmtpServer;
-            //smtpOptions.User = siteSettings.SmtpUser;
-            //smtpOptions.UseSsl = siteSettings.SmtpUseSsl;
-            //smtpOptions.DefaultEmailFromAddress = siteSettings.DefaultEmailFromAddress;
-            //smtpOptions.DefaultEmailFromAlias = siteSettings.DefaultEmailFromAlias;
-
-            //return smtpOptions;
-        }
-
+        private ViewRenderer _viewRenderer;
+        private IEmailSenderResolver _emailSenderResolver;
+        private IStringLocalizer _sr;
+        private ILogger _log;
+        
         public async Task SendAccountConfirmationEmailAsync(
             ISiteContext siteSettings,
             string toAddress,
             string subject,
             string confirmationUrl)
         {
-            var smtpOptions = await GetSmptOptions().ConfigureAwait(false);
-            if (smtpOptions == null)
+            
+            var sender = await _emailSenderResolver.GetEmailSender(siteSettings.Id.ToString());
+            if (sender == null)
             {
-                var logMessage = $"failed to send account confirmation email because smtp settings are not populated for site {siteSettings.SiteName}";
-                log.LogError(logMessage);
+                var logMessage = $"failed to send account confirmation email because email settings are not populated for site {siteSettings.SiteName}";
+                _log.LogError(logMessage);
                 return;
             }
-            
-            var sender = new EmailSender();
+
+            var model = new ConfirmEmailAddessViewModel
+            {
+                ConfirmationUrl = confirmationUrl,
+                Tenant = siteSettings
+            };
+
+
             try
             {
                 var plainTextMessage
-                = await viewRenderer.RenderViewAsString<string>("EmailTemplates/ConfirmAccountTextEmail", confirmationUrl).ConfigureAwait(false);
+                = await _viewRenderer.RenderViewAsString<ConfirmEmailAddessViewModel>("EmailTemplates/ConfirmAccountTextEmail", model).ConfigureAwait(false);
 
                 var htmlMessage
-                    = await viewRenderer.RenderViewAsString<string>("EmailTemplates/ConfirmAccountHtmlEmail", confirmationUrl).ConfigureAwait(false);
+                    = await _viewRenderer.RenderViewAsString<ConfirmEmailAddessViewModel>("EmailTemplates/ConfirmAccountHtmlEmail", model).ConfigureAwait(false);
 
                 await sender.SendEmailAsync(
-                    smtpOptions,
                     toAddress,
-                    smtpOptions.DefaultEmailFromAddress,
+                    siteSettings.DefaultEmailFromAddress,
                     subject,
                     plainTextMessage,
-                    htmlMessage).ConfigureAwait(false);
+                    htmlMessage,
+                    configLookupKey: siteSettings.Id.ToString()
+                    
+                    ).ConfigureAwait(false);
             }
             catch (Exception ex)
             {
-                log.LogError("error sending account confirmation email: " + ex.Message + " stacktrace: " + ex.StackTrace);
+                _log.LogError($"error sending account confirmation email: {ex.Message} stacktrace: {ex.StackTrace}");
             }
 
         }
@@ -107,16 +94,19 @@ namespace cloudscribe.Core.Web.Components.Messaging
             string subject,
             string resetUrl)
         {
-            var smtpOptions = await GetSmptOptions().ConfigureAwait(false);
-
-            if (smtpOptions == null)
+            var sender = await _emailSenderResolver.GetEmailSender(siteSettings.Id.ToString());
+            if (sender == null)
             {
-                var logMessage = $"failed to send password reset email because smtp settings are not populated for site {siteSettings.SiteName}";
-                log.LogError(logMessage);
+                var logMessage = $"failed to send password reset email because email settings are not populated for site {siteSettings.SiteName}";
+                _log.LogError(logMessage);
                 return;
             }
-            
-            var sender = new EmailSender();
+
+            var model = new PasswordResetEmailViewModel
+            {
+                Tenant = siteSettings,
+                ResetUrl = resetUrl
+            };
             // in account controller we are calling this method without await
             // so it doesn't block the UI. Which means it is running on a background thread
             // similar as the old ThreadPool.QueueWorkItem
@@ -125,22 +115,23 @@ namespace cloudscribe.Core.Web.Components.Messaging
             try
             {
                 var plainTextMessage
-                   = await viewRenderer.RenderViewAsString<string>("EmailTemplates/PasswordResetTextEmail", resetUrl);
+                   = await _viewRenderer.RenderViewAsString<PasswordResetEmailViewModel>("EmailTemplates/PasswordResetTextEmail", model);
 
                 var htmlMessage
-                    = await viewRenderer.RenderViewAsString<string>("EmailTemplates/PasswordResetHtmlEmail", resetUrl);
+                    = await _viewRenderer.RenderViewAsString<PasswordResetEmailViewModel>("EmailTemplates/PasswordResetHtmlEmail", model);
 
                 await sender.SendEmailAsync(
-                    smtpOptions,
                     toAddress,
-                    smtpOptions.DefaultEmailFromAddress,
+                    siteSettings.DefaultEmailFromAddress,
                     subject,
                     plainTextMessage,
-                    htmlMessage).ConfigureAwait(false);
+                    htmlMessage,
+                    configLookupKey: siteSettings.Id.ToString()
+                    ).ConfigureAwait(false);
             }
             catch (Exception ex)
             {
-                log.LogError("error sending password reset email: " + ex.Message + " stacktrace: " + ex.StackTrace);
+                _log.LogError("error sending password reset email: " + ex.Message + " stacktrace: " + ex.StackTrace);
             }
 
         }
@@ -151,35 +142,40 @@ namespace cloudscribe.Core.Web.Components.Messaging
             string subject,
             string securityCode)
         {
-            var smtpOptions = await GetSmptOptions().ConfigureAwait(false);
-
-            if (smtpOptions == null)
+            var sender = await _emailSenderResolver.GetEmailSender(siteSettings.Id.ToString());
+            if (sender == null)
             {
-                var logMessage = $"failed to send security code email because smtp settings are not populated for site {siteSettings.SiteName}";
-                log.LogError(logMessage);
+                var logMessage = $"failed to send security code email because email settings are not populated for site {siteSettings.SiteName}";
+                _log.LogError(logMessage);
                 return;
             }
-            
-            var sender = new EmailSender();
+
+            var model = new SecurityCodeEmailViewModel
+            {
+                Tenant = siteSettings,
+                SecurityCode = securityCode
+            };
+
             try
             {
                 var plainTextMessage
-                   = await viewRenderer.RenderViewAsString<string>("EmailTemplates/SendSecurityCodeTextEmail", securityCode);
+                   = await _viewRenderer.RenderViewAsString<SecurityCodeEmailViewModel>("EmailTemplates/SendSecurityCodeTextEmail", model);
 
                 var htmlMessage
-                    = await viewRenderer.RenderViewAsString<string>("EmailTemplates/SendSecurityCodeHtmlEmail", securityCode);
+                    = await _viewRenderer.RenderViewAsString<SecurityCodeEmailViewModel>("EmailTemplates/SendSecurityCodeHtmlEmail", model);
 
                 await sender.SendEmailAsync(
-                smtpOptions,
                 toAddress,
-                smtpOptions.DefaultEmailFromAddress,
+                siteSettings.DefaultEmailFromAddress,
                 subject,
                 plainTextMessage,
-                htmlMessage).ConfigureAwait(false);
+                htmlMessage,
+                configLookupKey: siteSettings.Id.ToString()
+                ).ConfigureAwait(false);
             }
             catch (Exception ex)
             {
-                log.LogError("error sending security code email: " + ex.Message + " stacktrace: " + ex.StackTrace);
+                _log.LogError("error sending security code email: " + ex.Message + " stacktrace: " + ex.StackTrace);
             }
         }
 
@@ -188,38 +184,43 @@ namespace cloudscribe.Core.Web.Components.Messaging
             IUserContext user)
         {
             if (siteSettings.AccountApprovalEmailCsv.Length == 0) { return; }
+            
+            string subject = _sr["New Account Pending Approval"];
 
-            var smtpOptions = await GetSmptOptions().ConfigureAwait(false);
-
-            if (smtpOptions == null)
+            var sender = await _emailSenderResolver.GetEmailSender(siteSettings.Id.ToString());
+            if (sender == null)
             {
-                var logMessage = $"failed to send new account notifications to admins because smtp settings are not populated for site {siteSettings.SiteName}";
-                log.LogError(logMessage);
+                var logMessage = $"failed to send new account notifications to admins because email settings are not populated for site {siteSettings.SiteName}";
+                _log.LogError(logMessage);
                 return;
             }
 
-            string subject = sr["New Account Pending Approval"];
-           
-            var sender = new EmailSender();
+            var model = new AccountPendingApprovalEmailViewModel
+            {
+                Tenant = siteSettings,
+                User = user
+            };
+
             try
             {
                 var plainTextMessage
-                   = await viewRenderer.RenderViewAsString<IUserContext>("EmailTemplates/AccountPendingApprovalAdminNotificationTextEmail", user).ConfigureAwait(false);
+                   = await _viewRenderer.RenderViewAsString<AccountPendingApprovalEmailViewModel>("EmailTemplates/AccountPendingApprovalAdminNotificationTextEmail", model).ConfigureAwait(false);
 
                 var htmlMessage
-                    = await viewRenderer.RenderViewAsString<IUserContext>("EmailTemplates/AccountPendingApprovalAdminNotificationHtmlEmail", user).ConfigureAwait(false);
+                    = await _viewRenderer.RenderViewAsString<AccountPendingApprovalEmailViewModel>("EmailTemplates/AccountPendingApprovalAdminNotificationHtmlEmail", model).ConfigureAwait(false);
 
-                await sender.SendMultipleEmailAsync(
-                    smtpOptions,
+                await sender.SendEmailAsync(
                     siteSettings.AccountApprovalEmailCsv,
-                    smtpOptions.DefaultEmailFromAddress,
+                    siteSettings.DefaultEmailFromAddress,
                     subject,
                     plainTextMessage,
-                    htmlMessage).ConfigureAwait(false);
+                    htmlMessage,
+                    configLookupKey: siteSettings.Id.ToString()
+                    ).ConfigureAwait(false);
             }
             catch (Exception ex)
             {
-                log.LogError("error sending new account notification to admins: " + ex.Message + " stacktrace: " + ex.StackTrace);
+                _log.LogError("error sending new account notification to admins: " + ex.Message + " stacktrace: " + ex.StackTrace);
             }
 
         }
@@ -230,16 +231,20 @@ namespace cloudscribe.Core.Web.Components.Messaging
             string subject,
             string loginUrl)
         {
-            var smtpOptions = await GetSmptOptions().ConfigureAwait(false);
-
-            if (smtpOptions == null)
+            var sender = await _emailSenderResolver.GetEmailSender(siteSettings.Id.ToString());
+            if (sender == null)
             {
-                var logMessage = $"failed to send account approval email because smtp settings are not populated for site {siteSettings.SiteName}";
-                log.LogError(logMessage);
+                var logMessage = $"failed to send account approval email because email settings are not populated for site {siteSettings.SiteName}";
+                _log.LogError(logMessage);
                 return;
             }
-            
-            var sender = new EmailSender();
+
+            var model = new AccountApprovedEmailViewModel
+            {
+                Tenant = siteSettings,
+                LoginUrl = loginUrl
+            };
+
             // in account controller we are calling this method without await
             // so it doesn't block the UI. Which means it is running on a background thread
             // similar as the old ThreadPool.QueueWorkItem
@@ -248,22 +253,23 @@ namespace cloudscribe.Core.Web.Components.Messaging
             try
             {
                 var plainTextMessage
-                   = await viewRenderer.RenderViewAsString<string>("EmailTemplates/AccountApprovedTextEmail", loginUrl);
+                   = await _viewRenderer.RenderViewAsString<AccountApprovedEmailViewModel>("EmailTemplates/AccountApprovedTextEmail", model);
 
                 var htmlMessage
-                    = await viewRenderer.RenderViewAsString<string>("EmailTemplates/AccountApprovedHtmlEmail", loginUrl);
+                    = await _viewRenderer.RenderViewAsString<AccountApprovedEmailViewModel>("EmailTemplates/AccountApprovedHtmlEmail", model);
 
                 await sender.SendEmailAsync(
-                    smtpOptions,
                     toAddress,
-                    smtpOptions.DefaultEmailFromAddress,
+                    siteSettings.DefaultEmailFromAddress,
                     subject,
                     plainTextMessage,
-                    htmlMessage).ConfigureAwait(false);
+                    htmlMessage,
+                    configLookupKey: siteSettings.Id.ToString()
+                    ).ConfigureAwait(false);
             }
             catch (Exception ex)
             {
-                log.LogError("error sending password reset email: " + ex.Message + " stacktrace: " + ex.StackTrace);
+                _log.LogError("error sending password reset email: " + ex.Message + " stacktrace: " + ex.StackTrace);
             }
 
         }

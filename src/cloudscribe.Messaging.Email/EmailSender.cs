@@ -2,9 +2,10 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2015-07-22
-// Last Modified:			2016-12-01
+// Last Modified:			2018-02-28
 // 
 
+using cloudscribe.Messaging.Email.Smtp;
 using MailKit.Net.Smtp;
 using MimeKit;
 using System;
@@ -13,6 +14,7 @@ using System.Threading.Tasks;
 namespace cloudscribe.Messaging.Email
 {
 
+    [Obsolete("this class is obsolete you should take a dependency on IEmailSender instead. This class will be removed in a future version")]
     public class EmailSender
     {
         public EmailSender()

@@ -32,6 +32,7 @@ using System;
 using cloudscribe.Core.Models.Identity;
 using cloudscribe.Core.Web.Mvc;
 using cloudscribe.Core.Web.Mvc.Components;
+using cloudscribe.Messaging.Email.Smtp;
 
 namespace Microsoft.Extensions.DependencyInjection
 {
@@ -55,9 +56,9 @@ namespace Microsoft.Extensions.DependencyInjection
         {
             services.TryAddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 
-            services.TryAddScoped<ISmtpOptionsProvider, SiteSmtpOptionsResolver>();
+            
             services.Configure<MultiTenantOptions>(configuration.GetSection("MultiTenantOptions"));
-            services.Configure<SmtpOptions>(configuration.GetSection("SmtpOptions"));
+            
             services.Configure<RecaptchaKeys>(configuration.GetSection("RecaptchaKeys"));
             services.Configure<SiteConfigOptions>(configuration.GetSection("SiteConfigOptions"));
             services.Configure<UIOptions>(configuration.GetSection("UIOptions"));
@@ -88,14 +89,9 @@ namespace Microsoft.Extensions.DependencyInjection
             services.TryAddScoped<IHandleCustomUserInfoAdmin, NoUserEditCustomization>();
 
             services.TryAddScoped<IHandleAccountAnalytics, GoogleAccountAnalytics>();
-
-            //
-
-            //
-
+            
             services.AddCloudscribeCommmon(configuration);
             
-
             services.AddCloudscribePagination();
 
             services.AddScoped<IVersionProviderFactory, VersionProviderFactory>();
@@ -103,9 +99,12 @@ namespace Microsoft.Extensions.DependencyInjection
             services.AddScoped<IVersionProvider, DataStorageVersionInfo>();
             services.AddScoped<IVersionProvider, IdentityVersionInfo>();
 
-
+            services.Configure<SmtpOptions>(configuration.GetSection("SmtpOptions"));
+            services.TryAddScoped<ISmtpOptionsProvider, SiteSmtpOptionsResolver>();
+            services.TryAddScoped<IEmailSenderResolver, SiteEmailSenderResolver>();
             services.AddTransient<ISiteMessageEmailSender, SiteEmailMessageSender>();
             //services.AddTransient<ISiteMessageEmailSender, FakeSiteEmailSender>();
+            services.AddCloudscribeEmailSenders(configuration);
             
             services.AddTransient<ISmsSender, SiteSmsSender>();
 

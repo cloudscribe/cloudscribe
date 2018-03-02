@@ -1,40 +1,71 @@
 ﻿using cloudscribe.Core.Models;
-using cloudscribe.Messaging.Email;
+using cloudscribe.Messaging.Email.Smtp;
+using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
+using System;
 using System.Threading.Tasks;
 
 namespace cloudscribe.Core.Web.Components.Messaging
 {
-    public class SiteSmtpOptionsResolver : ISmtpOptionsProvider
+    public class SiteSmtpOptionsResolver : ConfigSmtpOptionsProvider
     {
         public SiteSmtpOptionsResolver(
-            SiteContext currentSite,
+            SiteManager siteManager,
+            ILogger<SiteSmtpOptionsResolver> logger,
             IOptions<SmtpOptions> smtpOptionsAccessor
-            )
+            ):base(smtpOptionsAccessor)
         {
-            this.currentSite = currentSite;
-            globalSmtp = smtpOptionsAccessor.Value;
+            _siteManager = siteManager;
+            _log = logger;
         }
 
-        private SiteContext currentSite;
-        private SmtpOptions globalSmtp;
+        private SiteManager _siteManager;
+        private ILogger _log;
 
-        public Task<SmtpOptions> GetSmtpOptions()
+
+        public override async Task<SmtpOptions> GetSmtpOptions(string lookupKey = null)
         {
-            if (string.IsNullOrEmpty(currentSite.SmtpServer)) { return Task.FromResult(globalSmtp); }
+            ISiteSettings currentSite = null;
+            if (!string.IsNullOrWhiteSpace(lookupKey) && lookupKey.Length == 36)
+            {
+                try
+                {
+                    currentSite = await _siteManager.Fetch(new Guid(lookupKey));
+                    if (currentSite != null)
+                    {
+                        if (string.IsNullOrEmpty(currentSite.SmtpServer)) { return await base.GetSmtpOptions(lookupKey); }
 
-            SmtpOptions smtpOptions = new SmtpOptions();
-            smtpOptions.Password = currentSite.SmtpPassword;
-            smtpOptions.Port = currentSite.SmtpPort;
-            smtpOptions.PreferredEncoding = currentSite.SmtpPreferredEncoding;
-            smtpOptions.RequiresAuthentication = currentSite.SmtpRequiresAuth;
-            smtpOptions.Server = currentSite.SmtpServer;
-            smtpOptions.User = currentSite.SmtpUser;
-            smtpOptions.UseSsl = currentSite.SmtpUseSsl;
-            smtpOptions.DefaultEmailFromAddress = currentSite.DefaultEmailFromAddress;
-            smtpOptions.DefaultEmailFromAlias = currentSite.DefaultEmailFromAlias;
+                        SmtpOptions smtpOptions = new SmtpOptions
+                        {
+                            Password = currentSite.SmtpPassword,
+                            Port = currentSite.SmtpPort,
+                            PlainTextBodyDefaultEncoding = currentSite.SmtpPreferredEncoding,
+                            RequiresAuthentication = currentSite.SmtpRequiresAuth,
+                            Server = currentSite.SmtpServer,
+                            User = currentSite.SmtpUser,
+                            UseSsl = currentSite.SmtpUseSsl,
+                            DefaultEmailFromAddress = currentSite.DefaultEmailFromAddress,
+                            DefaultEmailFromAlias = currentSite.DefaultEmailFromAlias
+                        };
 
-            return Task.FromResult(smtpOptions);
+                        return smtpOptions;
+
+
+                    }
+                    else
+                    {
+                        _log.LogError($"failed to lookup site to get email settings, no site found using lookupKey {lookupKey}");
+                    }
+                }
+                catch (Exception ex)
+                {
+                    _log.LogError($"failed to lookup site to get email settings, lookupKey was not a valid guid string for siteid. {ex.Message} - {ex.StackTrace}");
+                }
+
+            }
+
+            return await base.GetSmtpOptions(lookupKey);
+
         }
     }
 }

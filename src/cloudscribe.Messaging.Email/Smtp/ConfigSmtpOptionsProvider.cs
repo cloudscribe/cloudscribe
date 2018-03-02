@@ -1,20 +1,20 @@
 ﻿using Microsoft.Extensions.Options;
 using System.Threading.Tasks;
 
-namespace cloudscribe.Messaging.Email
+namespace cloudscribe.Messaging.Email.Smtp
 {
     public class ConfigSmtpOptionsProvider : ISmtpOptionsProvider
     {
         public ConfigSmtpOptionsProvider(IOptions<SmtpOptions> smtpOptionsAccessor)
         {
-            smtpSettings = smtpOptionsAccessor.Value;
+            _smtpSettings = smtpOptionsAccessor.Value;
         }
 
-        private SmtpOptions smtpSettings;
+        private SmtpOptions _smtpSettings;
 
-        public Task<SmtpOptions> GetSmtpOptions()
+        public virtual Task<SmtpOptions> GetSmtpOptions(string lookupKey = null)
         {
-            return Task.FromResult(smtpSettings);
+            return Task.FromResult(_smtpSettings);
         }
     }
 }

@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2016-11-10
-// Last Modified:			2017-10-06
+// Last Modified:			2018-03-02
 // 
 
 using cloudscribe.Core.Models;
@@ -360,6 +360,12 @@ namespace cloudscribe.Core.Storage.EFCore.MySql
                 entity.Property(p => p.PwdRequireDigit)
                 .IsRequired()
                // .HasDefaultValue(true)
+                ;
+
+                entity.Property(p => p.EmailSenderName)
+                .HasMaxLength(100)
+                .IsRequired()
+                .HasDefaultValue("SmtpMailSender")
                 ;
 
             });

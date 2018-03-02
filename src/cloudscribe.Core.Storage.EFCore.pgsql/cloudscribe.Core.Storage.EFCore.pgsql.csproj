@@ -2,8 +2,8 @@
 
   <PropertyGroup>
     <Description>PostgreSql Entity Framework Core implementation of cloudscribe core storage</Description>
-    <VersionPrefix>2.0.9</VersionPrefix>
-    <AssemblyVersion>2.0.9</AssemblyVersion>
+    <VersionPrefix>2.0.10</VersionPrefix>
+    <AssemblyVersion>2.0.10</AssemblyVersion>
     <Authors>Joe Audette</Authors>
     <TargetFramework>netcoreapp2.0</TargetFramework>
     <AssemblyName>cloudscribe.Core.Storage.EFCore.pgsql</AssemblyName>
