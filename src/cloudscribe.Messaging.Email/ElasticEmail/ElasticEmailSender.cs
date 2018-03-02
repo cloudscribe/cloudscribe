@@ -231,6 +231,10 @@ namespace cloudscribe.Messaging.Email.ElasticEmail
             using (var client = new HttpClient())
             using (var formData = new MultipartFormDataContent())
             {
+                client.DefaultRequestHeaders.Authorization =
+                  new AuthenticationHeaderValue("Basic",
+                Convert.ToBase64String(Encoding.ASCII.GetBytes(options.ApiKey)));
+
                 foreach (var item in keyValues)
                 {
                     HttpContent stringContent = new StringContent(item.Value);

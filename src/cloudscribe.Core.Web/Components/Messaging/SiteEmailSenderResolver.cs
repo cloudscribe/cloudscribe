@@ -10,18 +10,16 @@ namespace cloudscribe.Core.Web.Components.Messaging
     public class SiteEmailSenderResolver : ConfigEmailSenderResolver
     {
         public SiteEmailSenderResolver(
-            ISiteQueries siteQueries,
+            SiteManager siteManager,
             IEnumerable<IEmailSender> allConfiguredSenders,
             ILogger<SiteEmailSenderResolver> logger
             ):base(allConfiguredSenders)
         {
-            _siteQueries = siteQueries;
-            //_configSenders = allConfiguredSenders;
+            _siteManager = siteManager;
             _log = logger;
         }
 
-        private ISiteQueries _siteQueries;
-        //private IEnumerable<IEmailSender> _configSenders;
+        private SiteManager _siteManager;
         private ILogger _log;
 
         public override async Task<IEmailSender> GetEmailSender(string lookupKey = null)
@@ -31,7 +29,7 @@ namespace cloudscribe.Core.Web.Components.Messaging
             {
                 try
                 {
-                    var site = await _siteQueries.Fetch(new Guid(lookupKey));
+                    var site = await _siteManager.Fetch(new Guid(lookupKey));
                     if(site != null)
                     {
                         //TODO: need new property on sitesettings for the name of the email sender to use

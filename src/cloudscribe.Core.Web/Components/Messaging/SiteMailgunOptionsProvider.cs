@@ -12,16 +12,16 @@ namespace cloudscribe.Core.Web.Components.Messaging
     public class SiteMailgunOptionsProvider : ConfigMailgunOptionsProvider
     {
         public SiteMailgunOptionsProvider(
-            ISiteQueries siteQueries,
+            SiteManager siteManager,
             ILogger<SiteMailgunOptionsProvider> logger,
             IOptions<MailgunOptions> optionsAccessor
             ):base(optionsAccessor)
         {
-            _siteQueries = siteQueries;
+            _siteManager = siteManager;
             _log = logger;
         }
 
-        private ISiteQueries _siteQueries;
+        private SiteManager _siteManager;
         private ILogger _log;
 
         public override async Task<MailgunOptions> GetMailgunOptions(string lookupKey = null)

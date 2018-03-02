@@ -12,16 +12,16 @@ namespace cloudscribe.Core.Web.Components.Messaging
     public class SiteElasticEmailOptionsProvider : ConfigElasticEmailOptionsProvider
     {
         public SiteElasticEmailOptionsProvider(
-            ISiteQueries siteQueries,
+            SiteManager siteManager,
             ILogger<SiteElasticEmailOptionsProvider> logger,
             IOptions<ElasticEmailOptions> optionsAccessor
             ):base(optionsAccessor)
         {
-            _siteQueries = siteQueries;
+            _siteManager = siteManager;
             _log = logger;
         }
 
-        private ISiteQueries _siteQueries;
+        private SiteManager _siteManager;
         private ILogger _log;
 
         public override async Task<ElasticEmailOptions> GetElasticEmailOptions(string lookupKey = null)

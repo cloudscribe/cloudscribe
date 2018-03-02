@@ -10,17 +10,18 @@ namespace cloudscribe.Core.Web.Components.Messaging
     public class SiteSmtpOptionsResolver : ConfigSmtpOptionsProvider
     {
         public SiteSmtpOptionsResolver(
-            ISiteQueries siteQueries,
+            SiteManager siteManager,
             ILogger<SiteSmtpOptionsResolver> logger,
             IOptions<SmtpOptions> smtpOptionsAccessor
             ):base(smtpOptionsAccessor)
         {
-            _siteQueries = siteQueries;
+            _siteManager = siteManager;
             _log = logger;
         }
 
-        private ISiteQueries _siteQueries;
+        private SiteManager _siteManager;
         private ILogger _log;
+
 
         public override async Task<SmtpOptions> GetSmtpOptions(string lookupKey = null)
         {
@@ -29,7 +30,7 @@ namespace cloudscribe.Core.Web.Components.Messaging
             {
                 try
                 {
-                    currentSite = await _siteQueries.Fetch(new Guid(lookupKey));
+                    currentSite = await _siteManager.Fetch(new Guid(lookupKey));
                     if (currentSite != null)
                     {
                         if (string.IsNullOrEmpty(currentSite.SmtpServer)) { return await base.GetSmtpOptions(lookupKey); }
