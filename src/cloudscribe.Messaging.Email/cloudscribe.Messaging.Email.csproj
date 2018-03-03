@@ -1,19 +1,17 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <Description>a friendly wrapper around Mailkit/Mimekit</Description>
-    <VersionPrefix>2.0.1</VersionPrefix>
+    <Description>Classes for sending email with smtp or popular email apis including SendGrid, Mailgun, and ElasticEmail</Description>
+    <VersionPrefix>2.1.0</VersionPrefix>
+    <AssemblyVersion>2.1.0</AssemblyVersion>
     <Authors>Joe Audette</Authors>
     <TargetFramework>netstandard2.0</TargetFramework>
     <AssemblyName>cloudscribe.Messaging.Email</AssemblyName>
     <PackageId>cloudscribe.Messaging.Email</PackageId>
-    <PackageTags>cloudscribe;messaging;smtp;email</PackageTags>
+    <PackageTags>smtp;email;SendGrid,Mailgun,ElasticEmail</PackageTags>
     <PackageIconUrl>https://raw.githubusercontent.com/joeaudette/cloudscribe/master/cloudscribe-icon-32.png</PackageIconUrl>
     <PackageProjectUrl>https://github.com/joeaudette/cloudscribe</PackageProjectUrl>
     <PackageLicenseUrl>http://www.apache.org/licenses/LICENSE-2.0</PackageLicenseUrl>
-    <GenerateAssemblyConfigurationAttribute>false</GenerateAssemblyConfigurationAttribute>
-    <GenerateAssemblyCompanyAttribute>false</GenerateAssemblyCompanyAttribute>
-    <GenerateAssemblyProductAttribute>false</GenerateAssemblyProductAttribute>
   </PropertyGroup>
 
   <ItemGroup>
@@ -25,7 +23,6 @@
     <PackageReference Include="MailKit" Version="1.20.*" />
     <PackageReference Include="MimeKit" Version="1.22.*" />
     <PackageReference Include="SendGrid" Version="9.9.*" />
-    <PackageReference Include="FluentEmail.Mailgun" Version="2.3.*" />
   </ItemGroup>
 
 </Project>

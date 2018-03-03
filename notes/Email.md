@@ -95,8 +95,8 @@ Response
 
 
 ## MailGun
-
 https://documentation.mailgun.com/en/latest/api_reference.html
+
 
 ## Elastic Email
 

@@ -1,0 +1,93 @@
+﻿@model sourceDev.WebApp.ViewModels.TestSendEmailViewModel
+
+@{
+    ViewData["Title"] = "TestEmail";
+}
+
+<h2>TestEmail</h2>
+
+<h4>TestSendEmailViewModel</h4>
+<hr />
+<div class="row">
+    <div class="col-md-12">
+        <form asp-action="TestEmail">
+            <div asp-validation-summary="All" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="FromEmail" class="control-label"></label>
+                <input asp-for="FromEmail" class="form-control" />
+                <span asp-validation-for="FromEmail" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="FromName" class="control-label"></label>
+                <input asp-for="FromName" class="form-control" />
+                <span asp-validation-for="FromName" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="ReplyToEmail" class="control-label"></label>
+                <input asp-for="ReplyToEmail" class="form-control" />
+                <span asp-validation-for="ReplyToEmail" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="ReplyToName" class="control-label"></label>
+                <input asp-for="ReplyToName" class="form-control" />
+                <span asp-validation-for="ReplyToName" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="ToEmailCsv" class="control-label"></label>
+                <input asp-for="ToEmailCsv" class="form-control" />
+                <span asp-validation-for="ToEmailCsv" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="ToAliasCsv" class="control-label"></label>
+                <input asp-for="ToAliasCsv" class="form-control" />
+                <span asp-validation-for="ToAliasCsv" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="CcEmailCsv" class="control-label"></label>
+                <input asp-for="CcEmailCsv" class="form-control" />
+                <span asp-validation-for="CcEmailCsv" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="CcAliasCsv" class="control-label"></label>
+                <input asp-for="CcAliasCsv" class="form-control" />
+                <span asp-validation-for="CcAliasCsv" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="BccEmailCsv" class="control-label"></label>
+                <input asp-for="BccEmailCsv" class="form-control" />
+                <span asp-validation-for="BccEmailCsv" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="BccAliasCsv" class="control-label"></label>
+                <input asp-for="BccAliasCsv" class="form-control" />
+                <span asp-validation-for="BccAliasCsv" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Subject" class="control-label"></label>
+                <input asp-for="Subject" class="form-control" />
+                <span asp-validation-for="Subject" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Message" class="control-label"></label>
+                <textarea asp-for="Message" class="form-control" rows="10" cols="70"></textarea>
+                <span asp-validation-for="Message" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="AttachmentFilePathsCsv" class="control-label"></label>
+                <input asp-for="AttachmentFilePathsCsv" class="form-control" />
+                <span asp-validation-for="AttachmentFilePathsCsv" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="ConfigLookupKey" class="control-label"></label>
+                <input asp-for="ConfigLookupKey" class="form-control" />
+                <span asp-validation-for="ConfigLookupKey" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Send" class="btn btn-default" />
+            </div>
+        </form>
+    </div>
+</div>
+
+
+
