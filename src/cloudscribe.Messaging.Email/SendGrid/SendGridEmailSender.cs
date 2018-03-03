@@ -12,11 +12,6 @@ using System;
 using System.IO;
 using System.Threading.Tasks;
 
-//TODO: not sure but we may need some changes in this class to support some languages
-// open to a pull request
-//https://stackoverflow.com/questions/7266935/how-to-send-utf-8-email
-//https://stackoverflow.com/questions/15566632/different-content-types-in-email
-
 namespace cloudscribe.Messaging.Email.SendGrid
 {
     public class SendGridEmailSender : IEmailSender

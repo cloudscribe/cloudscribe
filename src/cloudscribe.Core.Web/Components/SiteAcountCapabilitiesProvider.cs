@@ -1,5 +1,6 @@
 ﻿using cloudscribe.Core.Models;
 using cloudscribe.Messaging.Email;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace cloudscribe.Core.Web.Components

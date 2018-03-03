@@ -2,8 +2,8 @@
 
   <PropertyGroup>
     <Description>NoDb implementation of cloudscribe core commands and queries</Description>
-    <VersionPrefix>2.0.5</VersionPrefix>
-    <AssemblyVersion>2.0.5</AssemblyVersion>
+    <VersionPrefix>2.0.6</VersionPrefix>
+    <AssemblyVersion>2.0.6</AssemblyVersion>
     <Authors>Joe Audette</Authors>
     <TargetFrameworks>netstandard2.0</TargetFrameworks>
     <AssemblyName>cloudscribe.Core.Storage.NoDb</AssemblyName>

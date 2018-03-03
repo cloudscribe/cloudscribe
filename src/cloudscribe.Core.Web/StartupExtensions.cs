@@ -33,6 +33,9 @@ using cloudscribe.Core.Models.Identity;
 using cloudscribe.Core.Web.Mvc;
 using cloudscribe.Core.Web.Mvc.Components;
 using cloudscribe.Messaging.Email.Smtp;
+using cloudscribe.Messaging.Email.SendGrid;
+using cloudscribe.Messaging.Email.Mailgun;
+using cloudscribe.Messaging.Email.ElasticEmail;
 
 namespace Microsoft.Extensions.DependencyInjection
 {
@@ -104,6 +107,9 @@ namespace Microsoft.Extensions.DependencyInjection
             services.TryAddScoped<IEmailSenderResolver, SiteEmailSenderResolver>();
             services.AddTransient<ISiteMessageEmailSender, SiteEmailMessageSender>();
             //services.AddTransient<ISiteMessageEmailSender, FakeSiteEmailSender>();
+            services.TryAddScoped<ISendGridOptionsProvider, SiteSendGridOptionsProvider>();
+            services.TryAddScoped<IMailgunOptionsProvider, SiteMailgunOptionsProvider>();
+            services.TryAddScoped<IElasticEmailOptionsProvider, SiteElasticEmailOptionsProvider>();
             services.AddCloudscribeEmailSenders(configuration);
             
             services.AddTransient<ISmsSender, SiteSmsSender>();

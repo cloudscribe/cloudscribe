@@ -15,13 +15,6 @@ using System.Net.Http.Headers;
 using System.Text;
 using System.Threading.Tasks;
 
-//https://elanderson.net/2017/02/email-with-asp-net-core-using-mailgun/
-//https://github.com/lukencode/FluentEmail/blob/master/src/Senders/FluentEmail.Mailgun/MailgunSender.cs
-//TODO: not sure but we may need some changes in this class to support some languages
-// open to a pull request
-//https://stackoverflow.com/questions/7266935/how-to-send-utf-8-email
-//https://stackoverflow.com/questions/15566632/different-content-types-in-email
-
 namespace cloudscribe.Messaging.Email.Mailgun
 {
     public class MailgunEmailSender : IEmailSender

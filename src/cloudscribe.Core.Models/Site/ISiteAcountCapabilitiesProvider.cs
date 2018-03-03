@@ -1,10 +1,12 @@
-﻿using System.Threading.Tasks;
+﻿using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace cloudscribe.Core.Models
 {
     public interface ISiteAcountCapabilitiesProvider
     {
         Task<bool> SupportsEmailNotification(ISiteContext site);
+        
         Task<bool> SupportsSmsNotification(ISiteContext site);
     }
 

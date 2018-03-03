@@ -12,9 +12,6 @@ using System.IO;
 using System.Net.Http;
 using System.Threading.Tasks;
 
-//https://api.elasticemail.com/public/help#Email_Send
-//https://elasticemail.com/resources/api/attachments-upload/
-
 namespace cloudscribe.Messaging.Email.ElasticEmail
 {
     public class ElasticEmailSender : IEmailSender
@@ -30,6 +27,8 @@ namespace cloudscribe.Messaging.Email.ElasticEmail
 
         private IElasticEmailOptionsProvider _optionsProvider;
         private ILogger _log;
+
+        private const string apiEndpoint = "https://api.elasticemail.com/v2";
 
         public string Name { get; } = "ElasticEmailSender";
 
@@ -202,10 +201,15 @@ namespace cloudscribe.Messaging.Email.ElasticEmail
             using (var client = new HttpClient())
             {
                 var content = new FormUrlEncodedContent(keyValues);
+                var endpoint = apiEndpoint;
+                if(!string.IsNullOrWhiteSpace(options.EndpointUrl))
+                {
+                    endpoint = options.EndpointUrl;
+                }
 
                 try
                 {
-                    var response = await client.PostAsync(options.EndpointUrl + "/email/send", content).ConfigureAwait(false);
+                    var response = await client.PostAsync(endpoint + "/email/send", content).ConfigureAwait(false);
                     var result = await response.Content.ReadAsStringAsync();
                     if (!response.IsSuccessStatusCode || result.Contains("Oops"))
                     {
@@ -241,7 +245,13 @@ namespace cloudscribe.Messaging.Email.ElasticEmail
 
                 try
                 {
-                    var response = await client.PostAsync(options.EndpointUrl + "/email/send", formData);
+                    var endpoint = apiEndpoint;
+                    if (!string.IsNullOrWhiteSpace(options.EndpointUrl))
+                    {
+                        endpoint = options.EndpointUrl;
+                    }
+
+                    var response = await client.PostAsync(endpoint + "/email/send", formData);
                     var result = await response.Content.ReadAsStringAsync();
                     if (!response.IsSuccessStatusCode || result.Contains("Oops"))
                     {
