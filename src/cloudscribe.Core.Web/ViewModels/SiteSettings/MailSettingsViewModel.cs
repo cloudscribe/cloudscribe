@@ -2,17 +2,30 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2016-01-18
-// Last Modified:			2016-06-14
+// Last Modified:			2018-03-03
 // 
 
+using Microsoft.AspNetCore.Mvc.Rendering;
 using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
 namespace cloudscribe.Core.Web.ViewModels.SiteSettings
 {
     public class MailSettingsViewModel
     {
+        public MailSettingsViewModel()
+        {
+            AvailableEmailProviders = new List<SelectListItem>();
+        }
+
         public Guid SiteId { get; set; } = Guid.Empty;
+
+        public IList<SelectListItem> AvailableEmailProviders { get; set; }
+
+        public string EmailSenderName { get; set; } = "SmtpMailSender";
+        public string EmailApiKey { get; set; }
+        public string EmailApiEndpoint { get; set; }
 
         [EmailAddress]
         [StringLength(100, ErrorMessage = "Email has a maximum length of 100 characters")]

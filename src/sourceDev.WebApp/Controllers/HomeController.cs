@@ -6,16 +6,32 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Localization;
 using Microsoft.AspNetCore.Http;
 using cloudscribe.Web.Common.Analytics;
+using sourceDev.WebApp.ViewModels;
+using cloudscribe.Messaging.Email;
+using cloudscribe.Core.Models;
+using cloudscribe.Web.Common.Extensions;
+using cloudscribe.Web.Common.Razor;
 
 namespace sourceDev.WebApp.Controllers
 {
     public class HomeController : Controller
     {
-        public HomeController(GoogleAnalyticsHelper analyticsHelper)
+        public HomeController(
+            SiteContext currentSite,
+            IEmailSenderResolver emailSenderResolver,
+            ViewRenderer viewRenderer,
+            GoogleAnalyticsHelper analyticsHelper
+            )
         {
+            _currentSite = currentSite;
+            _emailSenderResolver = emailSenderResolver;
+            _viewRenderer = viewRenderer;
             _analyticsHelper = analyticsHelper;
         }
 
+        private SiteContext _currentSite;
+        private IEmailSenderResolver _emailSenderResolver;
+        private ViewRenderer _viewRenderer;
         private GoogleAnalyticsHelper _analyticsHelper;
 
         public IActionResult Index()
@@ -64,6 +80,70 @@ namespace sourceDev.WebApp.Controllers
             
 
             return View();
+        }
+
+        [HttpGet]
+        public IActionResult TestEmail()
+        {
+            var model = new TestSendEmailViewModel();
+            model.Subject = "Testing Email Providers";
+            model.ConfigLookupKey = _currentSite.Id.ToString();
+
+            
+            return View(model);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> TestEmail(TestSendEmailViewModel model)
+        {
+            var sender = await _emailSenderResolver.GetEmailSender(model.ConfigLookupKey);
+            var messageModel = new TestEmailMessageViewModel
+            {
+                Tenant = _currentSite,
+                Greeting = "Hey there from " + sender.Name,
+                Message = model.Message
+            };
+
+            var htmlMessage
+                    = await _viewRenderer.RenderViewAsString<TestEmailMessageViewModel>("TestEmailMessage", messageModel).ConfigureAwait(false);
+
+            if (model.AttachmentFilePathsCsv == "joetest")
+            {
+                model.AttachmentFilePathsCsv = @"C:\_c\cloudscribe\src\sourceDev.WebApp\wwwroot\testfiles\PowerShell_Examples_v4.pdf,C:\_c\cloudscribe\src\sourceDev.WebApp\wwwroot\testfiles\Shortcut-Keys-For-Windows-10.docx";
+
+            }
+
+            string[] attachmentPaths = null;
+            if(!string.IsNullOrWhiteSpace(model.AttachmentFilePathsCsv))
+            {
+                attachmentPaths = model.AttachmentFilePathsCsv.Split(',');
+            }
+            
+
+
+            await sender.SendEmailAsync(
+                model.ToEmailCsv,
+                model.FromEmail,
+                model.Subject,
+                null,
+                htmlMessage,
+                replyToEmail: model.ReplyToEmail,
+                replyToName: model.ReplyToName,
+                fromName: model.FromName,
+                toAliasCsv:model.ToAliasCsv,
+                ccEmailCsv:model.CcEmailCsv,
+                ccAliasCsv:model.CcAliasCsv,
+                bccEmailCsv:model.BccEmailCsv,
+                bccAliasCsv:model.BccAliasCsv,
+                attachmentFilePaths: attachmentPaths,
+                configLookupKey: model.ConfigLookupKey
+
+
+                ).ConfigureAwait(false);
+
+            this.AlertSuccess("message sent", true);
+
+            return RedirectToAction("TestEmail");
         }
 
         [HttpPost]

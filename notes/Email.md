@@ -56,6 +56,8 @@ http://blog.guessbox.io/the-persuasive-power-of-professional-email-signatures/
 
 https://sendgrid.com/docs/API_Reference/index.html
 
+https://sendgrid.com/partners/contact-us-reseller/
+
 NetStandard
 https://github.com/sendgrid/sendgrid-csharp
 
@@ -95,8 +97,8 @@ Response
 
 
 ## MailGun
-
 https://documentation.mailgun.com/en/latest/api_reference.html
+
 
 ## Elastic Email
 

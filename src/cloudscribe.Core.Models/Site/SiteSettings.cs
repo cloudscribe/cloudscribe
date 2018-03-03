@@ -598,6 +598,9 @@ namespace cloudscribe.Core.Models
             s.UseEmailForLogin = i.UseEmailForLogin;
             s.UseLdapAuth = i.UseLdapAuth;
             s.TermsUpdatedUtc = i.TermsUpdatedUtc;
+            s.EmailApiEndpoint = i.EmailApiEndpoint;
+            s.EmailApiKey = i.EmailApiKey;
+            s.EmailSenderName = i.EmailSenderName;
            
             return s;
         }

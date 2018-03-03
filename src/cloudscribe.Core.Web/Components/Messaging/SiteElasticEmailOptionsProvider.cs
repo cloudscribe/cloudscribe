@@ -1,10 +1,7 @@
-﻿using cloudscribe.Core.Models;
-using cloudscribe.Messaging.Email.ElasticEmail;
+﻿using cloudscribe.Messaging.Email.ElasticEmail;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using System;
-using System.Collections.Generic;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace cloudscribe.Core.Web.Components.Messaging
@@ -26,7 +23,32 @@ namespace cloudscribe.Core.Web.Components.Messaging
 
         public override async Task<ElasticEmailOptions> GetElasticEmailOptions(string lookupKey = null)
         {
-            //TODO:
+            if (!string.IsNullOrWhiteSpace(lookupKey) && lookupKey.Length == 36)
+            {
+                try
+                {
+                    var site = await _siteManager.Fetch(new Guid(lookupKey));
+                    if (site != null)
+                    {
+                        if (site.EmailSenderName == "ElasticEmailSender"
+                            && !string.IsNullOrWhiteSpace(site.EmailApiKey)
+                            )
+                        {
+                            return new ElasticEmailOptions
+                            {
+                                ApiKey = site.EmailApiKey,
+                                EndpointUrl = site.EmailApiEndpoint,
+                                DefaultEmailFromAddress = site.DefaultEmailFromAddress,
+                                DefaultEmailFromAlias = site.DefaultEmailFromAlias
+                            };
+                        }
+                    }
+                }
+                catch (Exception ex)
+                {
+                    _log.LogError($"failed to lookup site to get email settings, lookupKey was not a valid guid string. {ex.Message} - {ex.StackTrace}");
+                }
+            }
 
             return await base.GetElasticEmailOptions(lookupKey);
         }

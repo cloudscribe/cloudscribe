@@ -1,5 +1,4 @@
-﻿using cloudscribe.Core.Models;
-using cloudscribe.Messaging.Email;
+﻿using cloudscribe.Messaging.Email;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
@@ -15,25 +14,34 @@ namespace cloudscribe.Core.Web.Components.Messaging
             ILogger<SiteEmailSenderResolver> logger
             ):base(allConfiguredSenders)
         {
+            _allConfiguredSenders = allConfiguredSenders;
             _siteManager = siteManager;
             _log = logger;
         }
 
         private SiteManager _siteManager;
+        private IEnumerable<IEmailSender> _allConfiguredSenders;
         private ILogger _log;
 
         public override async Task<IEmailSender> GetEmailSender(string lookupKey = null)
         {
             // expected lookupKey in cloudscribe is siteId
+            // site specific settings override config settings if configured
             if(!string.IsNullOrWhiteSpace(lookupKey) && lookupKey.Length == 36)
             {
                 try
                 {
                     var site = await _siteManager.Fetch(new Guid(lookupKey));
                     if(site != null)
-                    {
-                        //TODO: need new property on sitesettings for the name of the email sender to use
-
+                    { 
+                        foreach(var sender in _allConfiguredSenders)
+                        {
+                            if(sender.Name == site.EmailSenderName)
+                            {
+                                var configured = await sender.IsConfigured(site.Id.ToString());
+                                if(configured) { return sender; }
+                            }
+                        }
                    
 
                     }
@@ -49,6 +57,7 @@ namespace cloudscribe.Core.Web.Components.Messaging
                 
             }
 
+            // return sender from config if no site specific configured sender if found
             return await base.GetEmailSender(lookupKey);
             
         }

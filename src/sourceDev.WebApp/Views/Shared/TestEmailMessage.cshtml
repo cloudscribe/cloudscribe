@@ -1,0 +1,29 @@
+﻿@model sourceDev.WebApp.ViewModels.TestEmailMessageViewModel
+
+@{
+    ViewData["Title"] = "TestEmailMessage";
+    Layout = "_LayoutEmailNotification";
+    ViewData["Site"] = Model.Tenant;
+}
+
+<h2>TestEmailMessage</h2>
+
+<div>
+    <h4>TestEmailMessageViewModel</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.Greeting)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.Greeting)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.Message)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.Message)
+        </dd>
+    </dl>
+</div>
+

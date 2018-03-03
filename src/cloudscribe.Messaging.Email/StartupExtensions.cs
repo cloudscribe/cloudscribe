@@ -5,9 +5,6 @@ using cloudscribe.Messaging.Email.SendGrid;
 using cloudscribe.Messaging.Email.Smtp;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection.Extensions;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace Microsoft.Extensions.DependencyInjection
 {
@@ -18,8 +15,6 @@ namespace Microsoft.Extensions.DependencyInjection
             IConfiguration configuration
             )
         {
-
-
             services.TryAddScoped<ISmtpOptionsProvider, ConfigSmtpOptionsProvider>();
             services.Configure<SmtpOptions>(configuration.GetSection("SmtpOptions"));
             services.AddScoped<IEmailSender, SmtpEmailSender>();
@@ -35,11 +30,7 @@ namespace Microsoft.Extensions.DependencyInjection
             services.TryAddScoped<IElasticEmailOptionsProvider, ConfigElasticEmailOptionsProvider>();
             services.Configure<ElasticEmailOptions>(configuration.GetSection("ElasticEmailOptions"));
             services.AddScoped<IEmailSender, ElasticEmailSender>();
-
-
-
-
-
+            
             return services;
         }
 

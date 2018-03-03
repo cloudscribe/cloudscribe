@@ -11,6 +11,28 @@
             <div asp-validation-summary="All" class="text-danger"></div>
             <input asp-for="SiteId" type="hidden" />
             <div class="form-group">
+                <label asp-for="EmailSenderName" class="col-md-2 control-label">@sr["Email Sender"]</label>
+                <div class="col-md-10">
+                    <select id="EmailSenderName" asp-for="EmailSenderName"
+                            asp-items="Model.AvailableEmailProviders" class="form-control"></select>
+                    <span asp-validation-for="EmailSenderName" class="text-danger"></span>
+                </div>
+            </div>
+            <div class="form-group">
+                <label asp-for="EmailApiKey" class="col-md-2 control-label">@sr["Email Api Key"]</label>
+                <div class="col-md-10">
+                    <input asp-for="EmailApiKey" class="form-control" />
+                    <span asp-validation-for="EmailApiKey" class="text-danger"></span>
+                </div>
+            </div>
+            <div class="form-group">
+                <label asp-for="EmailApiEndpoint" class="col-md-2 control-label">@sr["Email Api Endpoint"]</label>
+                <div class="col-md-10">
+                    <input asp-for="EmailApiEndpoint" class="form-control" />
+                    <span asp-validation-for="EmailApiEndpoint" class="text-danger"></span>
+                </div>
+            </div>
+            <div class="form-group">
                 <label asp-for="DefaultEmailFromAddress" class="col-md-2 control-label">@sr["Default Email From Address"]</label>
                 <div class="col-md-10">
                     <input asp-for="DefaultEmailFromAddress" class="form-control" />
@@ -24,52 +46,58 @@
                     <span asp-validation-for="DefaultEmailFromAlias" class="text-danger"></span>
                 </div>
             </div>
-            <div class="form-group">
-                <label asp-for="SmtpUser" class="col-md-2 control-label">@sr["Smtp User"]</label>
-                <div class="col-md-10">
-                    <input asp-for="SmtpUser" class="form-control" />
-                    <span asp-validation-for="SmtpUser" class="text-danger"></span>
-                </div>
-            </div>
-            <div class="form-group">
-                <label asp-for="SmtpPassword" class="col-md-2 control-label">@sr["Smtp Password"]</label>
-                <div class="col-md-10">
-                    <input asp-for="SmtpPassword" class="form-control" />
-                    <span asp-validation-for="SmtpPassword" class="text-danger"></span>
-                </div>
-            </div>
-            <div class="form-group">
-                <label asp-for="SmtpServer" class="col-md-2 control-label">@sr["Smtp Server"]</label>
-                <div class="col-md-10">
-                    <input asp-for="SmtpServer" class="form-control" />
-                    <span asp-validation-for="SmtpServer" class="text-danger"></span>
-                </div>
-            </div>
-            <div class="form-group">
-                <label asp-for="SmtpPort" class="col-md-2 control-label">@sr["Port"]</label>
-                <div class="col-md-10">
-                    <input asp-for="SmtpPort" class="form-control" />
-                    <span asp-validation-for="SmtpPort" class="text-danger"></span>
-                </div>
-            </div>
-            <div class="form-group">
-                <div class="col-md-offset-2 col-md-10">
-                    <div class="checkbox">
-                        <label>
-                            <input asp-for="SmtpRequiresAuth" /> @sr["Requires Authentication?"]
-                        </label>
+            <fieldset>
+                <legend>@sr["SMTP Settings"]</legend>
+
+                <div class="form-group">
+                    <label asp-for="SmtpUser" class="col-md-2 control-label">@sr["Smtp User"]</label>
+                    <div class="col-md-10">
+                        <input asp-for="SmtpUser" class="form-control" />
+                        <span asp-validation-for="SmtpUser" class="text-danger"></span>
                     </div>
                 </div>
-            </div>
-            <div class="form-group">
-                <div class="col-md-offset-2 col-md-10">
-                    <div class="checkbox">
-                        <label>
-                            <input asp-for="SmtpUseSsl" /> @sr["Requires SSL?"]
-                        </label>
+                <div class="form-group">
+                    <label asp-for="SmtpPassword" class="col-md-2 control-label">@sr["Smtp Password"]</label>
+                    <div class="col-md-10">
+                        <input asp-for="SmtpPassword" class="form-control" />
+                        <span asp-validation-for="SmtpPassword" class="text-danger"></span>
                     </div>
                 </div>
-            </div>
+                <div class="form-group">
+                    <label asp-for="SmtpServer" class="col-md-2 control-label">@sr["Smtp Server"]</label>
+                    <div class="col-md-10">
+                        <input asp-for="SmtpServer" class="form-control" />
+                        <span asp-validation-for="SmtpServer" class="text-danger"></span>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label asp-for="SmtpPort" class="col-md-2 control-label">@sr["Port"]</label>
+                    <div class="col-md-10">
+                        <input asp-for="SmtpPort" class="form-control" />
+                        <span asp-validation-for="SmtpPort" class="text-danger"></span>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-md-offset-2 col-md-10">
+                        <div class="checkbox">
+                            <label>
+                                <input asp-for="SmtpRequiresAuth" /> @sr["Requires Authentication?"]
+                            </label>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-md-offset-2 col-md-10">
+                        <div class="checkbox">
+                            <label>
+                                <input asp-for="SmtpUseSsl" /> @sr["Requires SSL?"]
+                            </label>
+                        </div>
+                    </div>
+                </div>
+            </fieldset>
+
+
             <div class="form-group">
                 <div class="col-md-offset-2 col-md-10">
                     <button name="submit" type="submit" class="btn btn-default" data-disabled-text='@sr["Working..."]' data-enabled-text='@sr["Save"]'>@sr["Save"]</button>

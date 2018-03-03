@@ -21,8 +21,7 @@ namespace cloudscribe.Core.Web.Components.Messaging
 
         private SiteManager _siteManager;
         private ILogger _log;
-
-
+        
         public override async Task<SmtpOptions> GetSmtpOptions(string lookupKey = null)
         {
             ISiteSettings currentSite = null;
@@ -49,8 +48,6 @@ namespace cloudscribe.Core.Web.Components.Messaging
                         };
 
                         return smtpOptions;
-
-
                     }
                     else
                     {
@@ -61,7 +58,6 @@ namespace cloudscribe.Core.Web.Components.Messaging
                 {
                     _log.LogError($"failed to lookup site to get email settings, lookupKey was not a valid guid string for siteid. {ex.Message} - {ex.StackTrace}");
                 }
-
             }
 
             return await base.GetSmtpOptions(lookupKey);

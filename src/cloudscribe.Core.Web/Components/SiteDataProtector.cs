@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2016-01-18
-// Last Modified:			2016-05-28
+// Last Modified:			2018-03-03
 // 
 
 
@@ -38,7 +38,7 @@ namespace cloudscribe.Core.Web.Components
 
             var countOfProtectedItems = 0;
 
-            if (site.FacebookAppSecret.Length > 0)
+            if (!string.IsNullOrWhiteSpace(site.FacebookAppSecret))
             {
                 try
                 {
@@ -47,12 +47,12 @@ namespace cloudscribe.Core.Web.Components
                 }
                 catch (System.Security.Cryptography.CryptographicException ex)
                 {
-                    log.LogError("data protection error: " + ex.Message + " stacktrace: " + ex.StackTrace);
+                    log.LogError($"data protection error: {ex.Message} stacktrace: {ex.StackTrace}");
                 }
 
             }
 
-            if (site.GoogleClientSecret.Length > 0)
+            if (!string.IsNullOrWhiteSpace(site.GoogleClientSecret))
             {
                 try
                 {
@@ -61,12 +61,12 @@ namespace cloudscribe.Core.Web.Components
                 }
                 catch (System.Security.Cryptography.CryptographicException ex)
                 {
-                    log.LogError("data protection error: " + ex.Message + " stacktrace: " + ex.StackTrace);
+                    log.LogError($"data protection error: {ex.Message} stacktrace: {ex.StackTrace}");
                 }
 
             }
 
-            if (site.MicrosoftClientSecret.Length > 0)
+            if (!string.IsNullOrWhiteSpace(site.MicrosoftClientSecret))
             {
                 try
                 {
@@ -75,12 +75,12 @@ namespace cloudscribe.Core.Web.Components
                 }
                 catch (System.Security.Cryptography.CryptographicException ex)
                 {
-                    log.LogError("data protection error: " + ex.Message + " stacktrace: " + ex.StackTrace);
+                    log.LogError($"data protection error: {ex.Message} stacktrace: {ex.StackTrace}");
                 }
 
             }
 
-            if (site.TwitterConsumerSecret.Length > 0)
+            if (!string.IsNullOrWhiteSpace(site.TwitterConsumerSecret))
             {
                 try
                 {
@@ -89,12 +89,12 @@ namespace cloudscribe.Core.Web.Components
                 }
                 catch (System.Security.Cryptography.CryptographicException ex)
                 {
-                    log.LogError("data protection error: " + ex.Message + " stacktrace: " + ex.StackTrace);
+                    log.LogError($"data protection error: {ex.Message} stacktrace: {ex.StackTrace}");
                 }
 
             }
 
-            if (site.SmtpPassword.Length > 0)
+            if (!string.IsNullOrWhiteSpace(site.SmtpPassword))
             {
                 try
                 {
@@ -103,12 +103,26 @@ namespace cloudscribe.Core.Web.Components
                 }
                 catch (System.Security.Cryptography.CryptographicException ex)
                 {
-                    log.LogError("data protection error: " + ex.Message + " stacktrace: " + ex.StackTrace);
+                    log.LogError($"data protection error: {ex.Message} stacktrace: {ex.StackTrace}");
                 }
 
             }
 
-            if (site.OidConnectAppSecret.Length > 0)
+            if (!string.IsNullOrWhiteSpace(site.EmailApiKey))
+            {
+                try
+                {
+                    site.EmailApiKey = dataProtector.PersistentProtect(site.EmailApiKey);
+                    countOfProtectedItems += 1;
+                }
+                catch (System.Security.Cryptography.CryptographicException ex)
+                {
+                    log.LogError($"data protection error: {ex.Message} stacktrace: {ex.StackTrace}");
+                }
+
+            }
+
+            if (!string.IsNullOrWhiteSpace(site.OidConnectAppSecret))
             {
                 try
                 {
@@ -117,12 +131,12 @@ namespace cloudscribe.Core.Web.Components
                 }
                 catch (System.Security.Cryptography.CryptographicException ex)
                 {
-                    log.LogError("data protection error:" + ex.Message + " stacktrace: " + ex.StackTrace);
+                    log.LogError($"data protection error: {ex.Message} stacktrace: {ex.StackTrace}");
                 }
 
             }
 
-            if (site.DkimPrivateKey.Length > 0)
+            if (!string.IsNullOrWhiteSpace(site.DkimPrivateKey))
             {
                 try
                 {
@@ -131,12 +145,12 @@ namespace cloudscribe.Core.Web.Components
                 }
                 catch (System.Security.Cryptography.CryptographicException ex)
                 {
-                    log.LogError("data protection error:" + ex.Message + " stacktrace: " + ex.StackTrace);
+                    log.LogError($"data protection error: {ex.Message} stacktrace: {ex.StackTrace}");
                 }
 
             }
 
-            if (site.SmsSecureToken.Length > 0)
+            if (!string.IsNullOrWhiteSpace(site.SmsSecureToken))
             {
                 try
                 {
@@ -145,7 +159,7 @@ namespace cloudscribe.Core.Web.Components
                 }
                 catch (System.Security.Cryptography.CryptographicException ex)
                 {
-                    log.LogError("data protection error:" + ex.Message + " stacktrace: " + ex.StackTrace);
+                    log.LogError($"data protection error: {ex.Message} stacktrace: {ex.StackTrace}");
                 }
 
             }
@@ -162,7 +176,7 @@ namespace cloudscribe.Core.Web.Components
             if (site == null) { throw new ArgumentNullException("you must pass in an implementation of ISiteSettings"); }
             if (!site.IsDataProtected) { return; }
 
-            if (site.FacebookAppSecret.Length > 0)
+            if (!string.IsNullOrWhiteSpace(site.FacebookAppSecret))
             {
                 try
                 {
@@ -170,16 +184,16 @@ namespace cloudscribe.Core.Web.Components
                 }
                 catch (System.Security.Cryptography.CryptographicException ex)
                 {
-                    log.LogError("data protection error:" + ex.Message + " stacktrace: " + ex.StackTrace);
+                    log.LogError($"data protection error:{ex.Message} stacktrace: {ex.StackTrace}");
                 }
                 catch (FormatException ex)
                 {
-                    log.LogError("data protection error: " + ex.Message + " stacktrace: " + ex.StackTrace);
+                    log.LogError($"data protection error:{ex.Message} stacktrace: {ex.StackTrace}");
                 }
 
             }
 
-            if (site.GoogleClientSecret.Length > 0)
+            if (!string.IsNullOrWhiteSpace(site.GoogleClientSecret))
             {
                 try
                 {
@@ -187,16 +201,16 @@ namespace cloudscribe.Core.Web.Components
                 }
                 catch (System.Security.Cryptography.CryptographicException ex)
                 {
-                    log.LogError("data protection error: " + ex.Message + " stacktrace: " + ex.StackTrace);
+                    log.LogError($"data protection error:{ex.Message} stacktrace: {ex.StackTrace}");
                 }
                 catch (FormatException ex)
                 {
-                    log.LogError("data protection error:" + ex.Message + " stacktrace: " + ex.StackTrace);
+                    log.LogError($"data protection error:{ex.Message} stacktrace: {ex.StackTrace}");
                 }
 
             }
 
-            if (site.MicrosoftClientSecret.Length > 0)
+            if (!string.IsNullOrWhiteSpace(site.MicrosoftClientSecret))
             {
                 try
                 {
@@ -204,16 +218,16 @@ namespace cloudscribe.Core.Web.Components
                 }
                 catch (System.Security.Cryptography.CryptographicException ex)
                 {
-                    log.LogError("data protection error:" + ex.Message + " stacktrace: " + ex.StackTrace);
+                    log.LogError($"data protection error:{ex.Message} stacktrace: {ex.StackTrace}");
                 }
                 catch (FormatException ex)
                 {
-                    log.LogError("data protection error:" + ex.Message + " stacktrace: " + ex.StackTrace);
+                    log.LogError($"data protection error:{ex.Message} stacktrace: {ex.StackTrace}");
                 }
 
             }
 
-            if (site.TwitterConsumerSecret.Length > 0)
+            if (!string.IsNullOrWhiteSpace(site.TwitterConsumerSecret))
             {
                 try
                 {
@@ -221,16 +235,16 @@ namespace cloudscribe.Core.Web.Components
                 }
                 catch (System.Security.Cryptography.CryptographicException ex)
                 {
-                    log.LogError("data protection error: " + ex.Message + " stacktrace: " + ex.StackTrace);
+                    log.LogError($"data protection error:{ex.Message} stacktrace: {ex.StackTrace}");
                 }
                 catch (FormatException ex)
                 {
-                    log.LogError("data protection error: " + ex.Message + " stacktrace: " + ex.StackTrace);
+                    log.LogError($"data protection error:{ex.Message} stacktrace: {ex.StackTrace}");
                 }
 
             }
 
-            if (site.SmtpPassword.Length > 0)
+            if (!string.IsNullOrWhiteSpace(site.SmtpPassword))
             {
                 try
                 {
@@ -238,16 +252,33 @@ namespace cloudscribe.Core.Web.Components
                 }
                 catch (System.Security.Cryptography.CryptographicException ex)
                 {
-                    log.LogError("data protection error: " + ex.Message + " stacktrace: " + ex.StackTrace);
+                    log.LogError($"data protection error:{ex.Message} stacktrace: {ex.StackTrace}");
                 }
                 catch (FormatException ex)
                 {
-                    log.LogError("data protection error:" + ex.Message + " stacktrace: " + ex.StackTrace);
+                    log.LogError($"data protection error:{ex.Message} stacktrace: {ex.StackTrace}");
                 }
 
             }
 
-            if (site.OidConnectAppSecret.Length > 0)
+            if (!string.IsNullOrWhiteSpace(site.EmailApiKey))
+            {
+                try
+                {
+                    site.EmailApiKey = dataProtector.PersistentUnprotect(site.EmailApiKey, out requiresMigration, out wasRevoked);
+                }
+                catch (System.Security.Cryptography.CryptographicException ex)
+                {
+                    log.LogError($"data protection error:{ex.Message} stacktrace: {ex.StackTrace}");
+                }
+                catch (FormatException ex)
+                {
+                    log.LogError($"data protection error:{ex.Message} stacktrace: {ex.StackTrace}");
+                }
+
+            }
+
+            if (!string.IsNullOrWhiteSpace(site.OidConnectAppSecret))
             {
                 try
                 {
@@ -255,16 +286,17 @@ namespace cloudscribe.Core.Web.Components
                 }
                 catch (System.Security.Cryptography.CryptographicException ex)
                 {
-                    log.LogError("data protection error: " + ex.Message + " stacktrace: " + ex.StackTrace);
+                    log.LogError($"data protection error:{ex.Message} stacktrace: {ex.StackTrace}");
                 }
                 catch (FormatException ex)
                 {
-                    log.LogError("data protection error: " + ex.Message + " stacktrace: " + ex.StackTrace);
+                    log.LogError($"data protection error:{ex.Message} stacktrace: {ex.StackTrace}");
                 }
+                
 
             }
 
-            if (site.SmsSecureToken.Length > 0)
+            if (!string.IsNullOrWhiteSpace(site.SmsSecureToken))
             {
                 try
                 {
@@ -272,16 +304,16 @@ namespace cloudscribe.Core.Web.Components
                 }
                 catch (System.Security.Cryptography.CryptographicException ex)
                 {
-                    log.LogError("data protection error: " + ex.Message + " stacktrace: " + ex.StackTrace);
+                    log.LogError($"data protection error:{ex.Message} stacktrace: {ex.StackTrace}");
                 }
                 catch (FormatException ex)
                 {
-                    log.LogError("data protection error: " + ex.Message + " stacktrace: " + ex.StackTrace);
+                    log.LogError($"data protection error:{ex.Message} stacktrace: {ex.StackTrace}");
                 }
 
             }
 
-            if (site.DkimPrivateKey.Length > 0)
+            if (!string.IsNullOrWhiteSpace(site.DkimPrivateKey))
             {
                 try
                 {
@@ -289,11 +321,11 @@ namespace cloudscribe.Core.Web.Components
                 }
                 catch (System.Security.Cryptography.CryptographicException ex)
                 {
-                    log.LogError("data protection error:" + ex.Message + " stacktrace: " + ex.StackTrace);
+                    log.LogError($"data protection error:{ex.Message} stacktrace: {ex.StackTrace}");
                 }
                 catch (FormatException ex)
                 {
-                    log.LogError("data protection error:" + ex.Message + " stacktrace: " + ex.StackTrace);
+                    log.LogError($"data protection error:{ex.Message} stacktrace: {ex.StackTrace}");
                 }
 
             }
@@ -302,7 +334,7 @@ namespace cloudscribe.Core.Web.Components
 
             if (requiresMigration || wasRevoked)
             {
-                log.LogWarning("DataProtection key wasRevoked or requires migration, save site settings for " + site.SiteName + " to protect with a new key");
+                log.LogWarning($"DataProtection key wasRevoked or requires migration, save site settings for {site.SiteName} to protect with a new key");
             }
 
             

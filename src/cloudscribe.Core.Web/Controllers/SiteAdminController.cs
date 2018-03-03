@@ -2,12 +2,13 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2014-10-26
-// Last Modified:			2018-03-02
+// Last Modified:			2018-03-03
 // 
 
 using cloudscribe.Core.Models;
 using cloudscribe.Core.Web.Components;
 using cloudscribe.Core.Web.ViewModels.SiteSettings;
+using cloudscribe.Messaging.Email;
 using cloudscribe.Web.Common;
 using cloudscribe.Web.Common.Extensions;
 using cloudscribe.Web.Common.Razor;
@@ -18,6 +19,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.Extensions.Localization;
 using Microsoft.Extensions.Options;
 using System;
+using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
@@ -31,6 +33,7 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
             SiteManager siteManager,
             GeoDataManager geoDataManager,
             ISiteAcountCapabilitiesProvider siteCapabilities,
+            IEnumerable<IEmailSender> allEmailSenders,
             IOptions<MultiTenantOptions> multiTenantOptions,
             IOptions<UIOptions> uiOptionsAccessor,
             IThemeListBuilder layoutListBuilder,
@@ -51,13 +54,16 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
             _tzHelper = timeZoneHelper;
             _siteCapabilities = siteCapabilities;
             _localization = localizationOptions.Value;
+            _emailSenders = allEmailSenders;
         }
 
         private SiteManager _siteManager;
         private GeoDataManager _geoDataManager;
         private MultiTenantOptions _multiTenantOptions;
         private ISiteAcountCapabilitiesProvider _siteCapabilities;
-        
+        private IEnumerable<IEmailSender> _emailSenders;
+
+
         private IStringLocalizer _sr;
         private IThemeListBuilder _layoutListBuilder;
         private UIOptions _uiOptions;
@@ -638,7 +644,17 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
             model.SmtpServer = selectedSite.SmtpServer;
             model.SmtpUser = selectedSite.SmtpUser;
             model.SmtpUseSsl = selectedSite.SmtpUseSsl;
-            
+            model.AvailableEmailProviders = _emailSenders.Select(x =>
+                              new SelectListItem
+                              {
+                                  Text = x.Name,
+                                  Value = x.Name,
+                                  Selected = model.EmailSenderName == x.Name
+                              }).ToList();
+            model.EmailSenderName = selectedSite.EmailSenderName;
+            model.EmailApiEndpoint = selectedSite.EmailApiEndpoint;
+            model.EmailApiKey = selectedSite.EmailApiKey;
+
             return View(model);
         }
 
@@ -666,6 +682,14 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
 
             if (!ModelState.IsValid)
             {
+                model.AvailableEmailProviders = _emailSenders.Select(x =>
+                              new SelectListItem
+                              {
+                                  Text = x.Name,
+                                  Value = x.Name,
+                                  Selected = model.EmailSenderName == x.Name
+                              }).ToList();
+
                 return View(model);
             }
 
@@ -684,6 +708,9 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
             selectedSite.SmtpServer = model.SmtpServer;
             selectedSite.SmtpUser = model.SmtpUser;
             selectedSite.SmtpUseSsl = model.SmtpUseSsl;
+            selectedSite.EmailSenderName = model.EmailSenderName;
+            selectedSite.EmailApiKey = model.EmailApiKey;
+            selectedSite.EmailApiEndpoint = model.EmailApiEndpoint;
             
             await _siteManager.Update(selectedSite);
             

@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2018-03-01
-// Last Modified:			2018-03-02
+// Last Modified:			2018-03-03
 // 
 
 using Microsoft.Extensions.Logging;
@@ -10,12 +10,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Net.Http;
-using System.Net.Http.Headers;
-using System.Text;
 using System.Threading.Tasks;
-
-//https://api.elasticemail.com/public/help#Email_Send
-//https://elasticemail.com/resources/api/attachments-upload/
 
 namespace cloudscribe.Messaging.Email.ElasticEmail
 {
@@ -32,6 +27,8 @@ namespace cloudscribe.Messaging.Email.ElasticEmail
 
         private IElasticEmailOptionsProvider _optionsProvider;
         private ILogger _log;
+
+        private const string apiEndpoint = "https://api.elasticemail.com/v2";
 
         public string Name { get; } = "ElasticEmailSender";
 
@@ -108,7 +105,9 @@ namespace cloudscribe.Messaging.Email.ElasticEmail
             var keyValues = new List<KeyValuePair<string, string>>();
 #pragma warning restore IDE0028 // Simplify collection initialization
 
-            if(!string.IsNullOrWhiteSpace(fromEmail))
+            keyValues.Add(new KeyValuePair<string, string>("apikey", options.ApiKey));
+
+            if (!string.IsNullOrWhiteSpace(fromEmail))
             {
                 keyValues.Add(new KeyValuePair<string, string>("from", fromEmail));
                 if (!string.IsNullOrWhiteSpace(fromName))
@@ -201,17 +200,18 @@ namespace cloudscribe.Messaging.Email.ElasticEmail
         {
             using (var client = new HttpClient())
             {
-                client.DefaultRequestHeaders.Authorization =
-                  new AuthenticationHeaderValue("Basic",
-                Convert.ToBase64String(Encoding.ASCII.GetBytes(options.ApiKey)));
-
                 var content = new FormUrlEncodedContent(keyValues);
+                var endpoint = apiEndpoint;
+                if(!string.IsNullOrWhiteSpace(options.EndpointUrl))
+                {
+                    endpoint = options.EndpointUrl;
+                }
 
                 try
                 {
-                    var response = await client.PostAsync(options.EndpointUrl, content).ConfigureAwait(false);
+                    var response = await client.PostAsync(endpoint + "/email/send", content).ConfigureAwait(false);
                     var result = await response.Content.ReadAsStringAsync();
-                    if (!response.IsSuccessStatusCode)
+                    if (!response.IsSuccessStatusCode || result.Contains("Oops"))
                     {
                         _log.LogError($"failed to send email with subject {subject} error was {response.StatusCode} : {result}");
                     }
@@ -231,10 +231,6 @@ namespace cloudscribe.Messaging.Email.ElasticEmail
             using (var client = new HttpClient())
             using (var formData = new MultipartFormDataContent())
             {
-                client.DefaultRequestHeaders.Authorization =
-                  new AuthenticationHeaderValue("Basic",
-                Convert.ToBase64String(Encoding.ASCII.GetBytes(options.ApiKey)));
-
                 foreach (var item in keyValues)
                 {
                     HttpContent stringContent = new StringContent(item.Value);
@@ -249,14 +245,18 @@ namespace cloudscribe.Messaging.Email.ElasticEmail
 
                 try
                 {
-                    var response = await client.PostAsync(options.EndpointUrl, formData);
+                    var endpoint = apiEndpoint;
+                    if (!string.IsNullOrWhiteSpace(options.EndpointUrl))
+                    {
+                        endpoint = options.EndpointUrl;
+                    }
+
+                    var response = await client.PostAsync(endpoint + "/email/send", formData);
                     var result = await response.Content.ReadAsStringAsync();
-                    if (!response.IsSuccessStatusCode)
+                    if (!response.IsSuccessStatusCode || result.Contains("Oops"))
                     {
                         _log.LogError($"failed to send email with subject {subject} error was {response.StatusCode} : {result}");
                     }
-
-                    
                 }
                 catch(Exception ex)
                 {
