@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2018-02-28
-// Last Modified:			2018-03-02
+// Last Modified:			2018-03-03
 // 
 
 using Microsoft.Extensions.Logging;
@@ -274,7 +274,7 @@ namespace cloudscribe.Messaging.Email.SendGrid
             try
             {
                 var response = await client.SendEmailAsync(m);
-                if (response.StatusCode != System.Net.HttpStatusCode.OK)
+                if (response.StatusCode != System.Net.HttpStatusCode.Accepted && response.StatusCode != System.Net.HttpStatusCode.OK)
                 {
                     _log.LogError($"did not get expected 200 status code from SendGrid, response was {response.StatusCode} {response.Body.ToString()} ");
                 }
