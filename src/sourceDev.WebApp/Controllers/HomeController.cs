@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.Localization;
 using Microsoft.AspNetCore.Http;
 using cloudscribe.Web.Common.Analytics;
 using sourceDev.WebApp.ViewModels;
-using cloudscribe.Messaging.Email;
+using cloudscribe.Email;
 using cloudscribe.Core.Models;
 using cloudscribe.Web.Common.Extensions;
 using cloudscribe.Web.Common.Razor;

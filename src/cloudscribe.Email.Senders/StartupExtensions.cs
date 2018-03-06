@@ -1,8 +1,8 @@
-﻿using cloudscribe.Messaging.Email;
-using cloudscribe.Messaging.Email.ElasticEmail;
-using cloudscribe.Messaging.Email.Mailgun;
-using cloudscribe.Messaging.Email.SendGrid;
-using cloudscribe.Messaging.Email.Smtp;
+﻿using cloudscribe.Email;
+using cloudscribe.Email.ElasticEmail;
+using cloudscribe.Email.Mailgun;
+using cloudscribe.Email.SendGrid;
+using cloudscribe.Email.Smtp;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 

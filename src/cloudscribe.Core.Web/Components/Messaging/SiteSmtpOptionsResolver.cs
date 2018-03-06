@@ -1,5 +1,5 @@
 ﻿using cloudscribe.Core.Models;
-using cloudscribe.Messaging.Email.Smtp;
+using cloudscribe.Email.Smtp;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using System;

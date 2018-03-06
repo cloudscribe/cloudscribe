@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2018-02-28
-// Last Modified:			2018-03-03
+// Last Modified:			2018-03-06
 // 
 
 using Microsoft.Extensions.Logging;
@@ -12,7 +12,7 @@ using System;
 using System.IO;
 using System.Threading.Tasks;
 
-namespace cloudscribe.Messaging.Email.SendGrid
+namespace cloudscribe.Email.SendGrid
 {
     public class SendGridEmailSender : IEmailSender
     {
@@ -61,7 +61,7 @@ namespace cloudscribe.Messaging.Email.SendGrid
 
         }
 
-        public async Task SendEmailAsync(
+        public async Task<EmailSendResult> SendEmailAsync(
             string toEmailCsv,
             string fromEmail,
             string subject,
@@ -87,8 +87,9 @@ namespace cloudscribe.Messaging.Email.SendGrid
             
             if(!isConfigured)
             {
-                _log.LogError($"failed to send email with subject {subject} because sendgrid api key is empty or not configured");
-                return;
+                var message = $"failed to send email with subject {subject} because sendgrid api key is empty or not configured";
+                _log.LogError(message);
+                return new EmailSendResult(false, message);
             }
 
             if (string.IsNullOrWhiteSpace(toEmailCsv))
@@ -271,15 +272,19 @@ namespace cloudscribe.Messaging.Email.SendGrid
                 var response = await client.SendEmailAsync(m);
                 if (response.StatusCode != System.Net.HttpStatusCode.Accepted && response.StatusCode != System.Net.HttpStatusCode.OK)
                 {
-                    _log.LogError($"did not get expected 200 status code from SendGrid, response was {response.StatusCode} {response.Body.ToString()} ");
+                    var message = $"did not get expected 200 status code from SendGrid, response was {response.StatusCode} {response.Body.ToString()} ";
+                    _log.LogError(message);
+                    return new EmailSendResult(false, message);
                 }
             }
             catch(Exception ex)
             {
-                _log.LogError($"failed to send email with subject {subject} error was {ex.Message} : {ex.StackTrace}");
+                var message = $"failed to send email with subject {subject} error was {ex.Message} : {ex.StackTrace}";
+                _log.LogError(message);
+                return new EmailSendResult(false, message);
             }
 
-            
+            return new EmailSendResult(true);
 
         }
     }

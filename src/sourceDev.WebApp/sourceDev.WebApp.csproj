@@ -38,7 +38,6 @@
     <ProjectReference Include="..\cloudscribe.Core.Storage.NoDb\cloudscribe.Core.Storage.NoDb.csproj" />
     <ProjectReference Include="..\cloudscribe.Core.Web.Views.Bootstrap3\cloudscribe.Core.Web.Views.Bootstrap3.csproj" />
     <ProjectReference Include="..\cloudscribe.Core.Web\cloudscribe.Core.Web.csproj" />
-    <ProjectReference Include="..\cloudscribe.Messaging.Email\cloudscribe.Messaging.Email.csproj" />
     <ProjectReference Include="..\cloudscribe.Core.IdentityServer.EFCore.MSSQL\cloudscribe.Core.IdentityServer.EFCore.MSSQL.csproj" />
     <ProjectReference Include="..\cloudscribe.Core.IdentityServer.EFCore.MySql\cloudscribe.Core.IdentityServer.EFCore.MySql.csproj" />
     <ProjectReference Include="..\cloudscribe.Core.IdentityServer.EFCore.pgsql\cloudscribe.Core.IdentityServer.EFCore.pgsql.csproj" />

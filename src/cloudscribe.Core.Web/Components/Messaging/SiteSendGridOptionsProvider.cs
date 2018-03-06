@@ -1,4 +1,4 @@
-﻿using cloudscribe.Messaging.Email.SendGrid;
+﻿using cloudscribe.Email.SendGrid;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using System;

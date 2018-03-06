@@ -8,7 +8,7 @@
 using cloudscribe.Core.Models;
 using cloudscribe.Core.Web.Components;
 using cloudscribe.Core.Web.ViewModels.SiteSettings;
-using cloudscribe.Messaging.Email;
+using cloudscribe.Email;
 using cloudscribe.Web.Common;
 using cloudscribe.Web.Common.Extensions;
 using cloudscribe.Web.Common.Razor;

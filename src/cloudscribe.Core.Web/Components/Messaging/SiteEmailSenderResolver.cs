@@ -1,4 +1,4 @@
-﻿using cloudscribe.Messaging.Email;
+﻿using cloudscribe.Email;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;

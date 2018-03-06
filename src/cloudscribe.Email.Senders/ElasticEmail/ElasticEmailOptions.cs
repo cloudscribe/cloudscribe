@@ -1,4 +1,4 @@
-﻿namespace cloudscribe.Messaging.Email.ElasticEmail
+﻿namespace cloudscribe.Email.ElasticEmail
 {
     public class ElasticEmailOptions
     {

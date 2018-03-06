@@ -6,7 +6,7 @@
 // 
 
 
-namespace cloudscribe.Messaging.Email.Smtp
+namespace cloudscribe.Email.Smtp
 {
     public class SmtpOptions
     {

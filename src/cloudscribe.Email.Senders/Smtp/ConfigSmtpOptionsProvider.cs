@@ -1,7 +1,7 @@
 ﻿using Microsoft.Extensions.Options;
 using System.Threading.Tasks;
 
-namespace cloudscribe.Messaging.Email.Smtp
+namespace cloudscribe.Email.Smtp
 {
     public class ConfigSmtpOptionsProvider : ISmtpOptionsProvider
     {

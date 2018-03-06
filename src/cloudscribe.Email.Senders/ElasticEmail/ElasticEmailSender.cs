@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2018-03-01
-// Last Modified:			2018-03-03
+// Last Modified:			2018-03-06
 // 
 
 using Microsoft.Extensions.Logging;
@@ -12,7 +12,7 @@ using System.IO;
 using System.Net.Http;
 using System.Threading.Tasks;
 
-namespace cloudscribe.Messaging.Email.ElasticEmail
+namespace cloudscribe.Email.ElasticEmail
 {
     public class ElasticEmailSender : IEmailSender
     {
@@ -48,7 +48,7 @@ namespace cloudscribe.Messaging.Email.ElasticEmail
 
         }
 
-        public async Task SendEmailAsync(
+        public async Task<EmailSendResult> SendEmailAsync(
             string toEmailCsv,
             string fromEmail,
             string subject,
@@ -74,9 +74,10 @@ namespace cloudscribe.Messaging.Email.ElasticEmail
             
             if (!isConfigured)
             {
-                _log.LogError($"failed to send email with subject {subject} because elasticemail api key is empty or not configured");
+                var message = $"failed to send email with subject {subject} because elasticemail api key is empty or not configured";
+                _log.LogError(message);
 
-                return;
+                return new EmailSendResult(false, message);
             }
 
             if (string.IsNullOrWhiteSpace(toEmailCsv))
@@ -169,7 +170,7 @@ namespace cloudscribe.Messaging.Email.ElasticEmail
 
             if(attachmentFilePaths == null || attachmentFilePaths.Length == 0)
             {
-                await SendWithoutAttachments(keyValues, options, subject);
+                return await SendWithoutAttachments(keyValues, options, subject);
             }
             else
             {
@@ -189,14 +190,14 @@ namespace cloudscribe.Messaging.Email.ElasticEmail
                     }
                 }
 
-                await SendWithAttachments(keyValues, options, subject, filesStream.ToArray(), fileNames.ToArray());
+                return await SendWithAttachments(keyValues, options, subject, filesStream.ToArray(), fileNames.ToArray());
 
             }
                
             
         }
 
-        private async Task SendWithoutAttachments(List<KeyValuePair<string, string>> keyValues, ElasticEmailOptions options, string subject)
+        private async Task<EmailSendResult> SendWithoutAttachments(List<KeyValuePair<string, string>> keyValues, ElasticEmailOptions options, string subject)
         {
             using (var client = new HttpClient())
             {
@@ -213,20 +214,25 @@ namespace cloudscribe.Messaging.Email.ElasticEmail
                     var result = await response.Content.ReadAsStringAsync();
                     if (!response.IsSuccessStatusCode || result.Contains("Oops"))
                     {
-                        _log.LogError($"failed to send email with subject {subject} error was {response.StatusCode} : {result}");
+                        var message = $"failed to send email with subject {subject} error was {response.StatusCode} : {result}";
+                        _log.LogError(message);
+                        return new EmailSendResult(false, message);
                     }
                 }
                 catch (Exception ex)
                 {
-                    _log.LogError($"failed to send email with subject {subject} error was {ex.Message} : {ex.StackTrace}");
+                    var message = $"failed to send email with subject {subject} error was {ex.Message} : {ex.StackTrace}";
+                    _log.LogError(message);
+                    return new EmailSendResult(false, message);
                 }
 
+                return new EmailSendResult(true);
             }
 
                 
         }
 
-        public async Task SendWithAttachments(List<KeyValuePair<string, string>> keyValues, ElasticEmailOptions options, string subject, Stream[] paramFileStream = null, string[] filenames = null)
+        public async Task<EmailSendResult> SendWithAttachments(List<KeyValuePair<string, string>> keyValues, ElasticEmailOptions options, string subject, Stream[] paramFileStream = null, string[] filenames = null)
         {
             using (var client = new HttpClient())
             using (var formData = new MultipartFormDataContent())
@@ -255,15 +261,19 @@ namespace cloudscribe.Messaging.Email.ElasticEmail
                     var result = await response.Content.ReadAsStringAsync();
                     if (!response.IsSuccessStatusCode || result.Contains("Oops"))
                     {
-                        _log.LogError($"failed to send email with subject {subject} error was {response.StatusCode} : {result}");
+                        var message = $"failed to send email with subject {subject} error was {response.StatusCode} : {result}";
+                        _log.LogError(message);
+                        return new EmailSendResult(false, message);
                     }
                 }
                 catch(Exception ex)
                 {
-                    _log.LogError($"failed to send email with subject {subject} error was {ex.Message} : {ex.StackTrace}");
+                    var message = $"failed to send email with subject {subject} error was {ex.Message} : {ex.StackTrace}";
+                    _log.LogError(message);
+                    return new EmailSendResult(false, message);
                 }
 
-                
+                return new EmailSendResult(true);
             }
         }
 

@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2018-02-28
-// Last Modified:			2018-03-03
+// Last Modified:			2018-03-06
 // 
 
 
@@ -15,7 +15,7 @@ using System.Net.Http.Headers;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace cloudscribe.Messaging.Email.Mailgun
+namespace cloudscribe.Email.Mailgun
 {
     public class MailgunEmailSender : IEmailSender
     {
@@ -50,7 +50,7 @@ namespace cloudscribe.Messaging.Email.Mailgun
 
         }
 
-        public async Task SendEmailAsync(
+        public async Task<EmailSendResult> SendEmailAsync(
             string toEmailCsv,
             string fromEmail,
             string subject,
@@ -76,8 +76,9 @@ namespace cloudscribe.Messaging.Email.Mailgun
 
             if (!isConfigured)
             {
-                _log.LogError($"failed to send email with subject {subject} because mailgun api key or domain is empty or not configured");
-                return;
+                var message = $"failed to send email with subject {subject} because mailgun api key or domain is empty or not configured";
+                _log.LogError(message);
+                return new EmailSendResult(false, message);
             }
 
             if (string.IsNullOrWhiteSpace(toEmailCsv))
@@ -288,7 +289,7 @@ namespace cloudscribe.Messaging.Email.Mailgun
             
             if (attachmentFilePaths == null || attachmentFilePaths.Length == 0)
             {
-                await SendWithoutAttachments(keyValues, options, subject);
+                return await SendWithoutAttachments(keyValues, options, subject);
             }
             else
             {
@@ -313,7 +314,7 @@ namespace cloudscribe.Messaging.Email.Mailgun
                     }
                 }
 
-                await SendWithAttachments(keyValues, options, subject, files);
+                return await SendWithAttachments(keyValues, options, subject, files);
 
             }
 
@@ -332,7 +333,7 @@ namespace cloudscribe.Messaging.Email.Mailgun
             return apiKey;
         }
 
-        private async Task SendWithoutAttachments(List<KeyValuePair<string, string>> keyValues, MailgunOptions options, string subject)
+        private async Task<EmailSendResult> SendWithoutAttachments(List<KeyValuePair<string, string>> keyValues, MailgunOptions options, string subject)
         {
             using (var client = new HttpClient())
             {
@@ -347,20 +348,24 @@ namespace cloudscribe.Messaging.Email.Mailgun
                     var result = await response.Content.ReadAsStringAsync();
                     if (!response.IsSuccessStatusCode)
                     {
-                        _log.LogError($"failed to send email with subject {subject} error was {response.StatusCode} : {result}");
+                        var message = $"failed to send email with subject {subject} error was {response.StatusCode} : {result}";
+                        _log.LogError(message);
+                        return new EmailSendResult(false, message);
                     }
                 }
                 catch (Exception ex)
                 {
-                    _log.LogError($"failed to send email with subject {subject} error was {ex.Message} : {ex.StackTrace}");
+                    var message = $"failed to send email with subject {subject} error was {ex.Message} : {ex.StackTrace}";
+                    _log.LogError(message);
+                    return new EmailSendResult(false, message);
                 }
 
             }
 
-
+            return new EmailSendResult(true);
         }
 
-        public async Task SendWithAttachments(List<KeyValuePair<string, string>> keyValues, MailgunOptions options, string subject, List<ByteArrayContent> files = null)
+        public async Task<EmailSendResult> SendWithAttachments(List<KeyValuePair<string, string>> keyValues, MailgunOptions options, string subject, List<ByteArrayContent> files = null)
         {
             using (var client = new HttpClient())
             using (var formData = new MultipartFormDataContent())
@@ -385,17 +390,21 @@ namespace cloudscribe.Messaging.Email.Mailgun
                     var result = await response.Content.ReadAsStringAsync();
                     if (!response.IsSuccessStatusCode)
                     {
-                        _log.LogError($"failed to send email with subject {subject} error was {response.StatusCode} : {result}");
+                        var message = $"failed to send email with subject {subject} error was {response.StatusCode} : {result}";
+                        _log.LogError(message);
+                        return new EmailSendResult(false, message);
                     }
 
 
                 }
                 catch (Exception ex)
                 {
-                    _log.LogError($"failed to send email with subject {subject} error was {ex.Message} : {ex.StackTrace}");
+                    var message = $"failed to send email with subject {subject} error was {ex.Message} : {ex.StackTrace}";
+                    _log.LogError(message);
+                    return new EmailSendResult(false, message);
                 }
 
-
+                return new EmailSendResult(true);
             }
         }
 

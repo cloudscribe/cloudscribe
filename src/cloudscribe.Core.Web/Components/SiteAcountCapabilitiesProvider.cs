@@ -1,5 +1,5 @@
 ﻿using cloudscribe.Core.Models;
-using cloudscribe.Messaging.Email;
+using cloudscribe.Email;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 

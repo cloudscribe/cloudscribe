@@ -1,6 +1,6 @@
 ﻿using System.Threading.Tasks;
 
-namespace cloudscribe.Messaging.Email.Smtp
+namespace cloudscribe.Email.Smtp
 {
     public interface ISmtpOptionsProvider
     {

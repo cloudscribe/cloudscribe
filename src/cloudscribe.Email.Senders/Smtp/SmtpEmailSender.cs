@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2018-02-27
-// Last Modified:			2018-03-01
+// Last Modified:			2018-03-06
 // 
 
 using MailKit.Net.Smtp;
@@ -19,7 +19,7 @@ using System.Threading.Tasks;
 //http://www.mimekit.net/docs/html/T_MimeKit_TextPart.htm
 //http://www.mimekit.net/docs/html/M_MimeKit_TextPart_SetText_1.htm
 
-namespace cloudscribe.Messaging.Email.Smtp
+namespace cloudscribe.Email.Smtp
 {
     public class SmtpEmailSender : IEmailSender
     {
@@ -64,7 +64,7 @@ namespace cloudscribe.Messaging.Email.Smtp
             return !string.IsNullOrWhiteSpace(smtpOptions.Server);
         }
 
-        public async Task SendEmailAsync(
+        public async Task<EmailSendResult> SendEmailAsync(
             string toEmailCsv,
             string fromEmail,
             string subject,
@@ -90,9 +90,9 @@ namespace cloudscribe.Messaging.Email.Smtp
           
             if (!isConfigured)
             {
-                _log.LogError($"failed to send email with subject {subject} because smtp options are not configured");
-
-                return;
+                var message = $"failed to send email with subject {subject} because smtp options are not configured";
+                _log.LogError(message);
+                return new EmailSendResult(false, message);
             }
 
             if (string.IsNullOrWhiteSpace(toEmailCsv))
@@ -308,8 +308,12 @@ namespace cloudscribe.Messaging.Email.Smtp
                 }
                 catch(Exception ex)
                 {
-                    _log.LogError($"failed to send email with subject {subject} error was {ex.Message} : {ex.StackTrace}");
+                    var message = $"failed to send email with subject {subject} error was {ex.Message} : {ex.StackTrace}";
+                    _log.LogError(message);
+                    return new EmailSendResult(false, message);
                 }
+
+                return new EmailSendResult(true);
                 
             }
 

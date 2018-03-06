@@ -1,6 +1,6 @@
 ﻿using System.Threading.Tasks;
 
-namespace cloudscribe.Messaging.Email.ElasticEmail
+namespace cloudscribe.Email.ElasticEmail
 {
     public interface IElasticEmailOptionsProvider
     {
