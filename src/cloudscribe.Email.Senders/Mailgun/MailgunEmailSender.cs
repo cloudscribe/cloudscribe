@@ -66,7 +66,7 @@ namespace cloudscribe.Email.Mailgun
             string ccAliasCsv = null,
             string bccEmailCsv = null,
             string bccAliasCsv = null,
-            string[] attachmentFilePaths = null,
+            List<EmailAttachment> attachments = null,
             string charsetBodyHtml = null,
             string charsetBodyText = null,
             string configLookupKey = null
@@ -287,30 +287,30 @@ namespace cloudscribe.Email.Mailgun
             //}
 
             
-            if (attachmentFilePaths == null || attachmentFilePaths.Length == 0)
+            if (attachments == null || attachments.Count == 0)
             {
                 return await SendWithoutAttachments(keyValues, options, subject);
             }
             else
             {
                 var files = new List<ByteArrayContent>();
-                foreach (var filePath in attachmentFilePaths)
+                foreach (var attachment in attachments)
                 {
                     try
                     {
-                        var fileContent = new ByteArrayContent(File.ReadAllBytes(filePath));
+                        var fileContent = new ByteArrayContent(attachment.Stream.ToByteArray());
 
                         fileContent.Headers.ContentDisposition = new ContentDispositionHeaderValue("form-data")
                         {
                             Name = "attachment",
-                            FileName = Path.GetFileName(filePath)
+                            FileName = Path.GetFileName(attachment.FileName)
                         };
 
                         files.Add(fileContent);
                     }
                     catch (Exception ex)
                     {
-                        _log.LogError($"failed to add attachment with path {filePath}, error was {ex.Message} : {ex.StackTrace}");
+                        _log.LogError($"failed to add attachment with path {attachment.FileName}, error was {ex.Message} : {ex.StackTrace}");
                     }
                 }
 
@@ -365,7 +365,12 @@ namespace cloudscribe.Email.Mailgun
             return new EmailSendResult(true);
         }
 
-        public async Task<EmailSendResult> SendWithAttachments(List<KeyValuePair<string, string>> keyValues, MailgunOptions options, string subject, List<ByteArrayContent> files = null)
+        public async Task<EmailSendResult> SendWithAttachments(
+            List<KeyValuePair<string, string>> keyValues, 
+            MailgunOptions options, 
+            string subject,
+            List<ByteArrayContent> files
+            )
         {
             using (var client = new HttpClient())
             using (var formData = new MultipartFormDataContent())

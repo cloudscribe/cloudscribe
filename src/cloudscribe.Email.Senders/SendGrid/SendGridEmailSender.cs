@@ -9,6 +9,7 @@ using Microsoft.Extensions.Logging;
 using SendGrid;
 using SendGrid.Helpers.Mail;
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Threading.Tasks;
 
@@ -77,7 +78,7 @@ namespace cloudscribe.Email.SendGrid
             string ccAliasCsv = null,
             string bccEmailCsv = null,
             string bccAliasCsv = null,
-            string[] attachmentFilePaths = null,
+            List<EmailAttachment> attachments = null,
             string charsetBodyHtml = null,
             string charsetBodyText = null,
             string configLookupKey = null
@@ -249,20 +250,24 @@ namespace cloudscribe.Email.SendGrid
                 m.AddHeader("Precedence", "bulk");
             }
 
-            if (attachmentFilePaths != null && attachmentFilePaths.Length > 0)
+            if (attachments != null && attachments.Count > 0)
             {
-                foreach (var filePath in attachmentFilePaths)
+                foreach (var attachment in attachments)
                 {
-                    try
+                    using (attachment.Stream)
                     {
-                        var bytes = File.ReadAllBytes(filePath);
-                        var content = Convert.ToBase64String(bytes);
-                        m.AddAttachment(Path.GetFileName(filePath),content);
+                        try
+                        {
+                            var bytes = attachment.Stream.ToByteArray();
+                            var content = Convert.ToBase64String(bytes);
+                            m.AddAttachment(Path.GetFileName(attachment.FileName), content);
+                        }
+                        catch (Exception ex)
+                        {
+                            _log.LogError($"failed to add attachment with path {attachment.FileName}, error was {ex.Message} : {ex.StackTrace}");
+                        }
                     }
-                    catch (Exception ex)
-                    {
-                        _log.LogError($"failed to add attachment with path {filePath}, error was {ex.Message} : {ex.StackTrace}");
-                    }
+                        
                 }
             }
 

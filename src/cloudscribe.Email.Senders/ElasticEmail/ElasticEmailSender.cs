@@ -8,7 +8,6 @@
 using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Net.Http;
 using System.Threading.Tasks;
 
@@ -64,7 +63,7 @@ namespace cloudscribe.Email.ElasticEmail
             string ccAliasCsv = null,
             string bccEmailCsv = null,
             string bccAliasCsv = null,
-            string[] attachmentFilePaths = null,
+            List<EmailAttachment> attachments = null,
             string charsetBodyHtml = null,
             string charsetBodyText = null,
             string configLookupKey = null
@@ -134,7 +133,6 @@ namespace cloudscribe.Email.ElasticEmail
                 keyValues.Add(new KeyValuePair<string, string>("replyToName", replyToName));
             }
 
-
             keyValues.Add(new KeyValuePair<string, string>("subject", subject));
             if(!string.IsNullOrWhiteSpace(htmlMessage))
             {
@@ -167,34 +165,14 @@ namespace cloudscribe.Email.ElasticEmail
                 keyValues.Add(new KeyValuePair<string, string>("msgBcc", bccEmailCsv));
             }
 
-
-            if(attachmentFilePaths == null || attachmentFilePaths.Length == 0)
+            if(attachments == null || attachments.Count == 0)
             {
                 return await SendWithoutAttachments(keyValues, options, subject);
             }
             else
             {
-                var filesStream = new List<Stream>();
-                var fileNames = new List<string>();
-                foreach (var filePath in attachmentFilePaths)
-                {
-                    try
-                    {
-                        var file = File.OpenRead(filePath);
-                        filesStream.Add(file);
-                        fileNames.Add(Path.GetFileName(filePath));
-                    }
-                    catch (Exception ex)
-                    {
-                        _log.LogError($"failed to add attachment with path {filePath}, error was {ex.Message} : {ex.StackTrace}");
-                    }
-                }
-
-                return await SendWithAttachments(keyValues, options, subject, filesStream.ToArray(), fileNames.ToArray());
-
-            }
-               
-            
+                return await SendWithAttachments(keyValues, options, subject, attachments);
+            }  
         }
 
         private async Task<EmailSendResult> SendWithoutAttachments(List<KeyValuePair<string, string>> keyValues, ElasticEmailOptions options, string subject)
@@ -232,7 +210,11 @@ namespace cloudscribe.Email.ElasticEmail
                 
         }
 
-        public async Task<EmailSendResult> SendWithAttachments(List<KeyValuePair<string, string>> keyValues, ElasticEmailOptions options, string subject, Stream[] paramFileStream = null, string[] filenames = null)
+        public async Task<EmailSendResult> SendWithAttachments(
+            List<KeyValuePair<string, string>> keyValues, 
+            ElasticEmailOptions options, 
+            string subject,
+            List<EmailAttachment> attachments)
         {
             using (var client = new HttpClient())
             using (var formData = new MultipartFormDataContent())
@@ -243,10 +225,12 @@ namespace cloudscribe.Email.ElasticEmail
                     formData.Add(stringContent, item.Key);
                 }
 
-                for (int i = 0; i < paramFileStream.Length; i++)
+                int i = 0;
+                foreach(var attachement in attachments)
                 {
-                    HttpContent fileStreamContent = new StreamContent(paramFileStream[i]);
-                    formData.Add(fileStreamContent, "file" + i, filenames[i]);
+                    HttpContent fileStreamContent = new StreamContent(attachement.Stream);
+                    formData.Add(fileStreamContent, "file" + i, attachement.FileName);
+                    i++;
                 }
 
                 try

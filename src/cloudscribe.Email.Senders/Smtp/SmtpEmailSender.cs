@@ -9,6 +9,7 @@ using MailKit.Net.Smtp;
 using Microsoft.Extensions.Logging;
 using MimeKit;
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Threading.Tasks;
 
@@ -80,7 +81,7 @@ namespace cloudscribe.Email.Smtp
             string ccAliasCsv = null,
             string bccEmailCsv = null,
             string bccAliasCsv = null,
-            string[] attachmentFilePaths = null,
+            List<EmailAttachment> attachments = null,
             string charsetBodyHtml = null, // not currently used in this implementation
             string charsetBodyText = null, //not currently used in this implementation
             string configLookupKey = null
@@ -262,18 +263,22 @@ namespace cloudscribe.Email.Smtp
                 bodyBuilder.HtmlBody = htmlMessage;
             }
 
-            if(attachmentFilePaths != null && attachmentFilePaths.Length > 0)
+            if(attachments != null && attachments.Count > 0)
             {
-                foreach(var filePath in attachmentFilePaths)
+                foreach(var attachment in attachments)
                 {
                     try
                     {
-                        var bytes = File.ReadAllBytes(filePath);
-                        bodyBuilder.Attachments.Add(Path.GetFileName(filePath), bytes);
+                        using (attachment.Stream)
+                        {
+                            var bytes = attachment.Stream.ToByteArray();
+                            bodyBuilder.Attachments.Add(Path.GetFileName(attachment.FileName), bytes);
+                        }
+                        
                     }
                     catch(Exception ex)
                     {
-                        _log.LogError($"failed to add attachment with path {filePath}, error was {ex.Message} : {ex.StackTrace}");
+                        _log.LogError($"failed to add attachment {attachment.FileName}, error was {ex.Message} : {ex.StackTrace}");
                     }
 
                     
