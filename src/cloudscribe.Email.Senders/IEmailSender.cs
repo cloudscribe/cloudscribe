@@ -1,13 +1,18 @@
-﻿using System.Threading.Tasks;
+﻿using System.Collections.Generic;
+using System.Threading.Tasks;
 
-namespace cloudscribe.Messaging.Email
+//TODO: comments and documentation
+
+namespace cloudscribe.Email
 {
     public interface IEmailSender
     {
         string Name { get; }
 
         Task<bool> IsConfigured(string configLookupKey = null);
-        Task SendEmailAsync(
+
+       
+        Task<EmailSendResult> SendEmailAsync(
             string toEmailCsv,
             string fromEmail,
             string subject,
@@ -23,7 +28,7 @@ namespace cloudscribe.Messaging.Email
             string ccAliasCsv = null,
             string bccEmailCsv = null,
             string bccAliasCsv = null,
-            string[] attachmentFilePaths = null,
+            List<EmailAttachment> attachments = null,
             string charsetBodyHtml = null,
             string charsetBodyText = null,
             string configLookupKey = null

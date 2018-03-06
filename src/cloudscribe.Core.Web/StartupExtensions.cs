@@ -14,7 +14,7 @@ using cloudscribe.Core.Web.Components;
 using cloudscribe.Core.Web.Components.Messaging;
 using cloudscribe.Core.Web.ExtensionPoints;
 using cloudscribe.Core.Web.Navigation;
-using cloudscribe.Messaging.Email;
+using cloudscribe.Email;
 using cloudscribe.Web.Common;
 using cloudscribe.Web.Common.Components;
 using cloudscribe.Web.Common.Models;
@@ -32,10 +32,10 @@ using System;
 using cloudscribe.Core.Models.Identity;
 using cloudscribe.Core.Web.Mvc;
 using cloudscribe.Core.Web.Mvc.Components;
-using cloudscribe.Messaging.Email.Smtp;
-using cloudscribe.Messaging.Email.SendGrid;
-using cloudscribe.Messaging.Email.Mailgun;
-using cloudscribe.Messaging.Email.ElasticEmail;
+using cloudscribe.Email.Smtp;
+using cloudscribe.Email.SendGrid;
+using cloudscribe.Email.Mailgun;
+using cloudscribe.Email.ElasticEmail;
 
 namespace Microsoft.Extensions.DependencyInjection
 {

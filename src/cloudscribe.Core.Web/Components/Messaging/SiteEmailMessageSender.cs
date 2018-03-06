@@ -7,7 +7,7 @@
 
 using cloudscribe.Core.Models;
 using cloudscribe.Core.Web.ViewModels.Email;
-using cloudscribe.Messaging.Email;
+using cloudscribe.Email;
 using cloudscribe.Web.Common.Razor;
 using Microsoft.Extensions.Localization;
 using Microsoft.Extensions.Logging;

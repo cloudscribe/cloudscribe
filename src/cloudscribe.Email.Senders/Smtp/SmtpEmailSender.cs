@@ -2,13 +2,14 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2018-02-27
-// Last Modified:			2018-03-01
+// Last Modified:			2018-03-06
 // 
 
 using MailKit.Net.Smtp;
 using Microsoft.Extensions.Logging;
 using MimeKit;
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Threading.Tasks;
 
@@ -19,7 +20,7 @@ using System.Threading.Tasks;
 //http://www.mimekit.net/docs/html/T_MimeKit_TextPart.htm
 //http://www.mimekit.net/docs/html/M_MimeKit_TextPart_SetText_1.htm
 
-namespace cloudscribe.Messaging.Email.Smtp
+namespace cloudscribe.Email.Smtp
 {
     public class SmtpEmailSender : IEmailSender
     {
@@ -64,7 +65,7 @@ namespace cloudscribe.Messaging.Email.Smtp
             return !string.IsNullOrWhiteSpace(smtpOptions.Server);
         }
 
-        public async Task SendEmailAsync(
+        public async Task<EmailSendResult> SendEmailAsync(
             string toEmailCsv,
             string fromEmail,
             string subject,
@@ -80,7 +81,7 @@ namespace cloudscribe.Messaging.Email.Smtp
             string ccAliasCsv = null,
             string bccEmailCsv = null,
             string bccAliasCsv = null,
-            string[] attachmentFilePaths = null,
+            List<EmailAttachment> attachments = null,
             string charsetBodyHtml = null, // not currently used in this implementation
             string charsetBodyText = null, //not currently used in this implementation
             string configLookupKey = null
@@ -90,9 +91,9 @@ namespace cloudscribe.Messaging.Email.Smtp
           
             if (!isConfigured)
             {
-                _log.LogError($"failed to send email with subject {subject} because smtp options are not configured");
-
-                return;
+                var message = $"failed to send email with subject {subject} because smtp options are not configured";
+                _log.LogError(message);
+                return new EmailSendResult(false, message);
             }
 
             if (string.IsNullOrWhiteSpace(toEmailCsv))
@@ -262,18 +263,22 @@ namespace cloudscribe.Messaging.Email.Smtp
                 bodyBuilder.HtmlBody = htmlMessage;
             }
 
-            if(attachmentFilePaths != null && attachmentFilePaths.Length > 0)
+            if(attachments != null && attachments.Count > 0)
             {
-                foreach(var filePath in attachmentFilePaths)
+                foreach(var attachment in attachments)
                 {
                     try
                     {
-                        var bytes = File.ReadAllBytes(filePath);
-                        bodyBuilder.Attachments.Add(Path.GetFileName(filePath), bytes);
+                        using (attachment.Stream)
+                        {
+                            var bytes = attachment.Stream.ToByteArray();
+                            bodyBuilder.Attachments.Add(Path.GetFileName(attachment.FileName), bytes);
+                        }
+                        
                     }
                     catch(Exception ex)
                     {
-                        _log.LogError($"failed to add attachment with path {filePath}, error was {ex.Message} : {ex.StackTrace}");
+                        _log.LogError($"failed to add attachment {attachment.FileName}, error was {ex.Message} : {ex.StackTrace}");
                     }
 
                     
@@ -308,8 +313,12 @@ namespace cloudscribe.Messaging.Email.Smtp
                 }
                 catch(Exception ex)
                 {
-                    _log.LogError($"failed to send email with subject {subject} error was {ex.Message} : {ex.StackTrace}");
+                    var message = $"failed to send email with subject {subject} error was {ex.Message} : {ex.StackTrace}";
+                    _log.LogError(message);
+                    return new EmailSendResult(false, message);
                 }
+
+                return new EmailSendResult(true);
                 
             }
 

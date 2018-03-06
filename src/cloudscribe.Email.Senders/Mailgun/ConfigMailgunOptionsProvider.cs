@@ -1,7 +1,7 @@
 ﻿using Microsoft.Extensions.Options;
 using System.Threading.Tasks;
 
-namespace cloudscribe.Messaging.Email.Mailgun
+namespace cloudscribe.Email.Mailgun
 {
     public class ConfigMailgunOptionsProvider : IMailgunOptionsProvider
     {

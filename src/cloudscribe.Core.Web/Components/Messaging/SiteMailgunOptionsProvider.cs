@@ -1,4 +1,4 @@
-﻿using cloudscribe.Messaging.Email.Mailgun;
+﻿using cloudscribe.Email.Mailgun;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using System;

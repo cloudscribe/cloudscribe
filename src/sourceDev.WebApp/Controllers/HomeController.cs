@@ -1,13 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.IO;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Localization;
 using Microsoft.AspNetCore.Http;
 using cloudscribe.Web.Common.Analytics;
 using sourceDev.WebApp.ViewModels;
-using cloudscribe.Messaging.Email;
+using cloudscribe.Email;
 using cloudscribe.Core.Models;
 using cloudscribe.Web.Common.Extensions;
 using cloudscribe.Web.Common.Razor;
@@ -113,15 +114,21 @@ namespace sourceDev.WebApp.Controllers
 
             }
 
+            List<EmailAttachment> attachments = null;
             string[] attachmentPaths = null;
             if(!string.IsNullOrWhiteSpace(model.AttachmentFilePathsCsv))
             {
+                attachments = new List<EmailAttachment>();
                 attachmentPaths = model.AttachmentFilePathsCsv.Split(',');
+                foreach(var path in attachmentPaths)
+                {
+                    var stream = System.IO.File.OpenRead(path);
+                    var attachment = new EmailAttachment(stream, Path.GetFileName(path));
+                    attachments.Add(attachment);
+                }
             }
             
-
-
-            await sender.SendEmailAsync(
+            var result = await sender.SendEmailAsync(
                 model.ToEmailCsv,
                 model.FromEmail,
                 model.Subject,
@@ -135,13 +142,21 @@ namespace sourceDev.WebApp.Controllers
                 ccAliasCsv:model.CcAliasCsv,
                 bccEmailCsv:model.BccEmailCsv,
                 bccAliasCsv:model.BccAliasCsv,
-                attachmentFilePaths: attachmentPaths,
+                attachments: attachments,
                 configLookupKey: model.ConfigLookupKey
 
 
                 ).ConfigureAwait(false);
 
-            this.AlertSuccess("message sent", true);
+            if(result.Succeeded)
+            {
+                this.AlertSuccess("message sent", true);
+            }
+            else
+            {
+                this.AlertDanger(result.ErrorMessage, true);
+            }
+            
 
             return RedirectToAction("TestEmail");
         }

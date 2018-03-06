@@ -1,6 +1,6 @@
 ﻿using System.Threading.Tasks;
 
-namespace cloudscribe.Messaging.Email.Mailgun
+namespace cloudscribe.Email.Mailgun
 {
     public interface IMailgunOptionsProvider
     {

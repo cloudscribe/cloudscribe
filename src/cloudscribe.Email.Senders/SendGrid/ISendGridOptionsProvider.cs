@@ -1,6 +1,6 @@
 ﻿using System.Threading.Tasks;
 
-namespace cloudscribe.Messaging.Email.SendGrid
+namespace cloudscribe.Email.SendGrid
 {
     public interface ISendGridOptionsProvider
     {

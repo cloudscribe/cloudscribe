@@ -1,8 +1,7 @@
-﻿namespace cloudscribe.Messaging.Email.Mailgun
+﻿namespace cloudscribe.Email.SendGrid
 {
-    public class MailgunOptions
+    public class SendGridOptions
     {
-        public string EndpointUrl { get; set; }
         public string ApiKey { get; set; }
         public string DefaultEmailFromAddress { get; set; }
         public string DefaultEmailFromAlias { get; set; }

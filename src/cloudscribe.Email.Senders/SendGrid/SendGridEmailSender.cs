@@ -2,17 +2,18 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2018-02-28
-// Last Modified:			2018-03-03
+// Last Modified:			2018-03-06
 // 
 
 using Microsoft.Extensions.Logging;
 using SendGrid;
 using SendGrid.Helpers.Mail;
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Threading.Tasks;
 
-namespace cloudscribe.Messaging.Email.SendGrid
+namespace cloudscribe.Email.SendGrid
 {
     public class SendGridEmailSender : IEmailSender
     {
@@ -61,7 +62,7 @@ namespace cloudscribe.Messaging.Email.SendGrid
 
         }
 
-        public async Task SendEmailAsync(
+        public async Task<EmailSendResult> SendEmailAsync(
             string toEmailCsv,
             string fromEmail,
             string subject,
@@ -77,7 +78,7 @@ namespace cloudscribe.Messaging.Email.SendGrid
             string ccAliasCsv = null,
             string bccEmailCsv = null,
             string bccAliasCsv = null,
-            string[] attachmentFilePaths = null,
+            List<EmailAttachment> attachments = null,
             string charsetBodyHtml = null,
             string charsetBodyText = null,
             string configLookupKey = null
@@ -87,8 +88,9 @@ namespace cloudscribe.Messaging.Email.SendGrid
             
             if(!isConfigured)
             {
-                _log.LogError($"failed to send email with subject {subject} because sendgrid api key is empty or not configured");
-                return;
+                var message = $"failed to send email with subject {subject} because sendgrid api key is empty or not configured";
+                _log.LogError(message);
+                return new EmailSendResult(false, message);
             }
 
             if (string.IsNullOrWhiteSpace(toEmailCsv))
@@ -248,20 +250,24 @@ namespace cloudscribe.Messaging.Email.SendGrid
                 m.AddHeader("Precedence", "bulk");
             }
 
-            if (attachmentFilePaths != null && attachmentFilePaths.Length > 0)
+            if (attachments != null && attachments.Count > 0)
             {
-                foreach (var filePath in attachmentFilePaths)
+                foreach (var attachment in attachments)
                 {
-                    try
+                    using (attachment.Stream)
                     {
-                        var bytes = File.ReadAllBytes(filePath);
-                        var content = Convert.ToBase64String(bytes);
-                        m.AddAttachment(Path.GetFileName(filePath),content);
+                        try
+                        {
+                            var bytes = attachment.Stream.ToByteArray();
+                            var content = Convert.ToBase64String(bytes);
+                            m.AddAttachment(Path.GetFileName(attachment.FileName), content);
+                        }
+                        catch (Exception ex)
+                        {
+                            _log.LogError($"failed to add attachment with path {attachment.FileName}, error was {ex.Message} : {ex.StackTrace}");
+                        }
                     }
-                    catch (Exception ex)
-                    {
-                        _log.LogError($"failed to add attachment with path {filePath}, error was {ex.Message} : {ex.StackTrace}");
-                    }
+                        
                 }
             }
 
@@ -271,15 +277,19 @@ namespace cloudscribe.Messaging.Email.SendGrid
                 var response = await client.SendEmailAsync(m);
                 if (response.StatusCode != System.Net.HttpStatusCode.Accepted && response.StatusCode != System.Net.HttpStatusCode.OK)
                 {
-                    _log.LogError($"did not get expected 200 status code from SendGrid, response was {response.StatusCode} {response.Body.ToString()} ");
+                    var message = $"did not get expected 200 status code from SendGrid, response was {response.StatusCode} {response.Body.ToString()} ";
+                    _log.LogError(message);
+                    return new EmailSendResult(false, message);
                 }
             }
             catch(Exception ex)
             {
-                _log.LogError($"failed to send email with subject {subject} error was {ex.Message} : {ex.StackTrace}");
+                var message = $"failed to send email with subject {subject} error was {ex.Message} : {ex.StackTrace}";
+                _log.LogError(message);
+                return new EmailSendResult(false, message);
             }
 
-            
+            return new EmailSendResult(true);
 
         }
     }

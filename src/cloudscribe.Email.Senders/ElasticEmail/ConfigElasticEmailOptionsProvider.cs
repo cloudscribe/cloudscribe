@@ -1,7 +1,7 @@
 ﻿using Microsoft.Extensions.Options;
 using System.Threading.Tasks;
 
-namespace cloudscribe.Messaging.Email.ElasticEmail
+namespace cloudscribe.Email.ElasticEmail
 {
     public class ConfigElasticEmailOptionsProvider : IElasticEmailOptionsProvider
     {
