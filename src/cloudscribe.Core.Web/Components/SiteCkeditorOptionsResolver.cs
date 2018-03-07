@@ -23,27 +23,27 @@ namespace cloudscribe.Core.Web.Components
             IActionContextAccessor actionContextAccesor
             )
         {
-            this.urlHelperFactory = urlHelperFactory;
-            this.actionContextAccesor = actionContextAccesor;
-            options = ckOptionsAccessor.Value;
+            _urlHelperFactory = urlHelperFactory;
+            _actionContextAccesor = actionContextAccesor;
+            _options = ckOptionsAccessor.Value;
         }
 
-        private CkeditorOptions options;
-        private IUrlHelperFactory urlHelperFactory;
-        private IActionContextAccessor actionContextAccesor;
+        private CkeditorOptions _options;
+        private IUrlHelperFactory _urlHelperFactory;
+        private IActionContextAccessor _actionContextAccesor;
 
         public Task<CkeditorOptions> GetCkeditorOptions()
         {
             
-            var urlHelper = urlHelperFactory.GetUrlHelper(actionContextAccesor.ActionContext);
+            var urlHelper = _urlHelperFactory.GetUrlHelper(_actionContextAccesor.ActionContext);
 
-            options.CustomConfigPath = urlHelper.Content(options.CustomConfigPath);
-            options.FileBrowseUrl = urlHelper.Action("FileDialog", "FileManager", new { type = "file" });
-            options.ImageBrowseUrl = urlHelper.Action("FileDialog", "FileManager", new { type = "image" });
-            options.DropFileUrl = urlHelper.Action("DropFile", "FileManager");
+            _options.CustomConfigPath = urlHelper.Content(_options.CustomConfigPath);
+            _options.FileBrowseUrl = urlHelper.Action("FileDialog", "FileManager", new { type = "file" });
+            _options.ImageBrowseUrl = urlHelper.Action("FileDialog", "FileManager", new { type = "image" });
+            _options.DropFileUrl = urlHelper.Action("DropFile", "FileManager");
            
 
-            return Task.FromResult(options);
+            return Task.FromResult(_options);
         }
     }
 }

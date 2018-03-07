@@ -23,23 +23,23 @@ namespace cloudscribe.Core.Web.Components
             SiteUserManager<SiteUser> userManager
             )
         {
-            this.contextAccessor = contextAccessor;
-            this.siteResolver = siteResolver;
-            this.userManager = userManager;
+            _contextAccessor = contextAccessor;
+            _siteResolver = siteResolver;
+            _userManager = userManager;
         }
 
-        private IHttpContextAccessor contextAccessor;
-        private ITenantResolver<SiteContext> siteResolver;
-        private SiteUserManager<SiteUser> userManager;
+        private IHttpContextAccessor _contextAccessor;
+        private ITenantResolver<SiteContext> _siteResolver;
+        private SiteUserManager<SiteUser> _userManager;
 
         public async Task<string> GetUserTimeZoneId(CancellationToken cancellationToken = default(CancellationToken))
         {
             cancellationToken.ThrowIfCancellationRequested();
 
-            var context = contextAccessor.HttpContext;
+            var context = _contextAccessor.HttpContext;
             if (context.User.Identity.IsAuthenticated)
             {
-                var user = await userManager.FindByIdAsync(context.User.GetUserId());
+                var user = await _userManager.FindByIdAsync(context.User.GetUserId());
                 if ((user != null) && (!string.IsNullOrEmpty(user.TimeZoneId)))
                 {
                     return user.TimeZoneId;
@@ -53,7 +53,7 @@ namespace cloudscribe.Core.Web.Components
         {
             cancellationToken.ThrowIfCancellationRequested();
 
-            var tenant = contextAccessor.HttpContext.GetTenant<SiteContext>();
+            var tenant = _contextAccessor.HttpContext.GetTenant<SiteContext>();
             if (tenant != null)
             {
                 if (!string.IsNullOrEmpty(tenant.TimeZoneId))
