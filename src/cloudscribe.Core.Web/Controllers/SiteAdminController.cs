@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2014-10-26
-// Last Modified:			2018-03-03
+// Last Modified:			2018-03-07
 // 
 
 using cloudscribe.Core.Models;
@@ -42,12 +42,11 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
             IOptions<RequestLocalizationOptions> localizationOptions
             )
         {
-            if (geoDataManager == null) { throw new ArgumentNullException(nameof(geoDataManager)); }
             if (multiTenantOptions == null) { throw new ArgumentNullException(nameof(multiTenantOptions)); }
 
             _multiTenantOptions = multiTenantOptions.Value;
             _siteManager = siteManager ?? throw new ArgumentNullException(nameof(siteManager));
-            _geoDataManager = geoDataManager;
+            _geoDataManager = geoDataManager ?? throw new ArgumentNullException(nameof(geoDataManager));
             _uiOptions = uiOptionsAccessor.Value;
             _layoutListBuilder = layoutListBuilder;
             _sr = localizer;
@@ -106,10 +105,12 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
                 filteredSiteId,
                 pageNumber,
                 itemsPerPage);
-            
-            var model = new SiteListViewModel();
-            model.Sites = sites;
-            
+
+            var model = new SiteListViewModel
+            {
+                Sites = sites
+            };
+
             return View(model);
 
         }
@@ -140,21 +141,20 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
             {
                 ViewData["Title"] = _sr["Site Settings"];
             }
-            
-            var model = new SiteBasicSettingsViewModel();
-            model.ReturnPageNumber = slp; // site list page number to return to
-            model.TimeZoneId = selectedSite.TimeZoneId;
-           
 
-            model.SiteId = selectedSite.Id;
-            model.SiteName = selectedSite.SiteName;
-            model.AliasId = selectedSite.AliasId;
-            model.GoogleAnalyticsProfileId = selectedSite.GoogleAnalyticsProfileId;
-            model.AddThisProfileId = selectedSite.AddThisDotComUsername;
-            
-            model.IsClosed = selectedSite.SiteIsClosed;
-            model.ClosedMessage = selectedSite.SiteIsClosedMessage;
-            
+            var model = new SiteBasicSettingsViewModel
+            {
+                ReturnPageNumber = slp, // site list page number to return to
+                TimeZoneId = selectedSite.TimeZoneId,
+                SiteId = selectedSite.Id,
+                SiteName = selectedSite.SiteName,
+                AliasId = selectedSite.AliasId,
+                GoogleAnalyticsProfileId = selectedSite.GoogleAnalyticsProfileId,
+                AddThisProfileId = selectedSite.AddThisDotComUsername,
+                IsClosed = selectedSite.SiteIsClosed,
+                ClosedMessage = selectedSite.SiteIsClosedMessage
+            };
+
             if (_multiTenantOptions.Mode == MultiTenantMode.FolderName)
             {
                 model.SiteFolderName = selectedSite.SiteFolderName;
@@ -330,10 +330,12 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
         {
             ViewData["Title"] = _sr["Create New Site"];
 
-            var model = new NewSiteViewModel();
-            model.ReturnPageNumber = slp; //site list return page
-            model.SiteId = Guid.Empty;
-            model.TimeZoneId = _siteManager.CurrentSite.TimeZoneId;
+            var model = new NewSiteViewModel
+            {
+                ReturnPageNumber = slp, //site list return page
+                SiteId = Guid.Empty,
+                TimeZoneId = _siteManager.CurrentSite.TimeZoneId
+            };
             model.AllTimeZones = _tzHelper.GetTimeZoneList().Select(x =>
                                new SelectListItem
                                {
@@ -358,9 +360,11 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
             }
             
             bool addHostName = false;
-            var newSite = new SiteSettings();
-            newSite.Id = Guid.NewGuid();
-            
+            var newSite = new SiteSettings
+            {
+                Id = Guid.NewGuid()
+            };
+
             if (_multiTenantOptions.Mode == MultiTenantMode.FolderName)
             {
                 if (string.IsNullOrEmpty(model.SiteFolderName))
@@ -506,20 +510,22 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
             {
                 ViewData["Title"] = _sr["Company Info"];
             }
-            
-            var model = new CompanyInfoViewModel();
-            model.SiteId = selectedSite.Id;
-            model.CompanyName = selectedSite.CompanyName;
-            model.CompanyStreetAddress = selectedSite.CompanyStreetAddress;
-            model.CompanyStreetAddress2 = selectedSite.CompanyStreetAddress2;
-            model.CompanyLocality = selectedSite.CompanyLocality;
-            model.CompanyRegion = selectedSite.CompanyRegion;
-            model.CompanyPostalCode = selectedSite.CompanyPostalCode;
-            model.CompanyCountry = selectedSite.CompanyCountry;
-            model.CompanyPhone = selectedSite.CompanyPhone;
-            model.CompanyFax = selectedSite.CompanyFax;
-            model.CompanyPublicEmail = selectedSite.CompanyPublicEmail;
-            model.CompanyWebsite = selectedSite.CompanyWebsite;
+
+            var model = new CompanyInfoViewModel
+            {
+                SiteId = selectedSite.Id,
+                CompanyName = selectedSite.CompanyName,
+                CompanyStreetAddress = selectedSite.CompanyStreetAddress,
+                CompanyStreetAddress2 = selectedSite.CompanyStreetAddress2,
+                CompanyLocality = selectedSite.CompanyLocality,
+                CompanyRegion = selectedSite.CompanyRegion,
+                CompanyPostalCode = selectedSite.CompanyPostalCode,
+                CompanyCountry = selectedSite.CompanyCountry,
+                CompanyPhone = selectedSite.CompanyPhone,
+                CompanyFax = selectedSite.CompanyFax,
+                CompanyPublicEmail = selectedSite.CompanyPublicEmail,
+                CompanyWebsite = selectedSite.CompanyWebsite
+            };
 
             model.AvailableCountries.Add(new SelectListItem { Text = _sr["-Please select-"], Value = "" });
             var countries = await _geoDataManager.GetAllCountries();
@@ -633,17 +639,19 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
                 ViewData["Title"] = _sr["Email Settings"];
             }
 
-            var model = new MailSettingsViewModel();
-            model.SiteId = selectedSite.Id;
-            model.DefaultEmailFromAddress = selectedSite.DefaultEmailFromAddress;
-            model.DefaultEmailFromAlias = selectedSite.DefaultEmailFromAlias;
-            model.SmtpPassword = selectedSite.SmtpPassword;
-            model.SmtpPort = selectedSite.SmtpPort;
-            model.SmtpPreferredEncoding = selectedSite.SmtpPreferredEncoding;
-            model.SmtpRequiresAuth = selectedSite.SmtpRequiresAuth;
-            model.SmtpServer = selectedSite.SmtpServer;
-            model.SmtpUser = selectedSite.SmtpUser;
-            model.SmtpUseSsl = selectedSite.SmtpUseSsl;
+            var model = new MailSettingsViewModel
+            {
+                SiteId = selectedSite.Id,
+                DefaultEmailFromAddress = selectedSite.DefaultEmailFromAddress,
+                DefaultEmailFromAlias = selectedSite.DefaultEmailFromAlias,
+                SmtpPassword = selectedSite.SmtpPassword,
+                SmtpPort = selectedSite.SmtpPort,
+                SmtpPreferredEncoding = selectedSite.SmtpPreferredEncoding,
+                SmtpRequiresAuth = selectedSite.SmtpRequiresAuth,
+                SmtpServer = selectedSite.SmtpServer,
+                SmtpUser = selectedSite.SmtpUser,
+                SmtpUseSsl = selectedSite.SmtpUseSsl
+            };
             model.AvailableEmailProviders = _emailSenders.Select(x =>
                               new SelectListItem
                               {
@@ -727,87 +735,87 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
             return RedirectToAction("MailSettings");
         }
 
-        [HttpGet]
-        [Authorize(Policy = "AdminPolicy")]
-        public async Task<IActionResult> SmsSettings(
-            Guid? siteId,
-            int slp = 1)
-        {
+        //[HttpGet]
+        //[Authorize(Policy = "AdminPolicy")]
+        //public async Task<IActionResult> SmsSettings(
+        //    Guid? siteId,
+        //    int slp = 1)
+        //{
 
-            // this is no longer used, previously sms was for 2fa, but now uses authenticator
-            // currently using generic labels but only supports twilio
+        //    // this is no longer used, previously sms was for 2fa, but now uses authenticator
+        //    // currently using generic labels but only supports twilio
 
-            var selectedSite = await _siteManager.GetSiteForEdit(siteId);
-            // only server admin site can edit other sites settings
-            if (selectedSite.Id != _siteManager.CurrentSite.Id)
-            {
-                ViewData["Title"] = string.Format(CultureInfo.CurrentUICulture, _sr["{0} - SMS Settings"], selectedSite.SiteName);
-            }
-            else
-            {
-                ViewData["Title"] = _sr["SMS Settings"];
-            }
+        //    var selectedSite = await _siteManager.GetSiteForEdit(siteId);
+        //    // only server admin site can edit other sites settings
+        //    if (selectedSite.Id != _siteManager.CurrentSite.Id)
+        //    {
+        //        ViewData["Title"] = string.Format(CultureInfo.CurrentUICulture, _sr["{0} - SMS Settings"], selectedSite.SiteName);
+        //    }
+        //    else
+        //    {
+        //        ViewData["Title"] = _sr["SMS Settings"];
+        //    }
 
-            var model = new SmsSettingsViewModel();
-            model.SiteId = selectedSite.Id;
-            model.SmsFrom = selectedSite.SmsFrom;
-            model.SmsClientId = selectedSite.SmsClientId;
-            model.SmsSecureToken = selectedSite.SmsSecureToken;
+        //    var model = new SmsSettingsViewModel();
+        //    model.SiteId = selectedSite.Id;
+        //    model.SmsFrom = selectedSite.SmsFrom;
+        //    model.SmsClientId = selectedSite.SmsClientId;
+        //    model.SmsSecureToken = selectedSite.SmsSecureToken;
             
-            return View(model);
-        }
+        //    return View(model);
+        //}
 
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        [Authorize(Policy = "AdminPolicy")]
-        public async Task<ActionResult> SmsSettings(SmsSettingsViewModel model)
-        {
-            var selectedSite = await _siteManager.GetSiteForEdit(model.SiteId);
-            // only server admin site can edit other sites settings
-            if (selectedSite.Id == _siteManager.CurrentSite.Id)
-            {
-                ViewData["Title"] = _sr["SMS Settings"];
-            }
-            else 
-            {
-                ViewData["Title"] = string.Format(CultureInfo.CurrentUICulture, _sr["{0} - SMS Settings"], selectedSite.SiteName);
-            }
+        //[HttpPost]
+        //[ValidateAntiForgeryToken]
+        //[Authorize(Policy = "AdminPolicy")]
+        //public async Task<ActionResult> SmsSettings(SmsSettingsViewModel model)
+        //{
+        //    var selectedSite = await _siteManager.GetSiteForEdit(model.SiteId);
+        //    // only server admin site can edit other sites settings
+        //    if (selectedSite.Id == _siteManager.CurrentSite.Id)
+        //    {
+        //        ViewData["Title"] = _sr["SMS Settings"];
+        //    }
+        //    else 
+        //    {
+        //        ViewData["Title"] = string.Format(CultureInfo.CurrentUICulture, _sr["{0} - SMS Settings"], selectedSite.SiteName);
+        //    }
 
-            if (selectedSite == null)
-            {
-                this.AlertDanger(_sr["oops something went wrong."], true);
-                return RedirectToAction("Index");
-            }
+        //    if (selectedSite == null)
+        //    {
+        //        this.AlertDanger(_sr["oops something went wrong."], true);
+        //        return RedirectToAction("Index");
+        //    }
 
-            if (!ModelState.IsValid)
-            {
-                return View(model);
-            }
+        //    if (!ModelState.IsValid)
+        //    {
+        //        return View(model);
+        //    }
 
-            if (model.SiteId == Guid.Empty)
-            {
-                this.AlertDanger(_sr["oops something went wrong, site was not found."], true);
-                return RedirectToAction("Index");
-            }
+        //    if (model.SiteId == Guid.Empty)
+        //    {
+        //        this.AlertDanger(_sr["oops something went wrong, site was not found."], true);
+        //        return RedirectToAction("Index");
+        //    }
             
-            selectedSite.SmsFrom = model.SmsFrom;
-            selectedSite.SmsClientId = model.SmsClientId;
-            selectedSite.SmsSecureToken = model.SmsSecureToken;
+        //    selectedSite.SmsFrom = model.SmsFrom;
+        //    selectedSite.SmsClientId = model.SmsClientId;
+        //    selectedSite.SmsSecureToken = model.SmsSecureToken;
             
-            await _siteManager.Update(selectedSite);
+        //    await _siteManager.Update(selectedSite);
             
-            this.AlertSuccess(string.Format(_sr["SMS Settings for {0} were successfully updated."],
-                        selectedSite.SiteName), true);
+        //    this.AlertSuccess(string.Format(_sr["SMS Settings for {0} were successfully updated."],
+        //                selectedSite.SiteName), true);
             
-            if ((_siteManager.CurrentSite.IsServerAdminSite)
-                && (_siteManager.CurrentSite.Id != selectedSite.Id)
-                )
-            {
-                return RedirectToAction("SmsSettings", new { siteId = model.SiteId });
-            }
+        //    if ((_siteManager.CurrentSite.IsServerAdminSite)
+        //        && (_siteManager.CurrentSite.Id != selectedSite.Id)
+        //        )
+        //    {
+        //        return RedirectToAction("SmsSettings", new { siteId = model.SiteId });
+        //    }
 
-            return RedirectToAction("SmsSettings");
-        }
+        //    return RedirectToAction("SmsSettings");
+        //}
 
         [HttpGet]
         [Authorize(Policy = "AdminPolicy")]
@@ -826,22 +834,23 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
                 ViewData["Title"] = _sr["Security Settings"];
             }
 
-            
-            var model = new SecuritySettingsViewModel();
-            model.SiteId = selectedSite.Id;
-            model.AllowNewRegistration = selectedSite.AllowNewRegistration;
-            model.AllowPersistentLogin = selectedSite.AllowPersistentLogin;
-            model.DisableDbAuth = selectedSite.DisableDbAuth;
-            model.ReallyDeleteUsers = selectedSite.ReallyDeleteUsers;
-            model.RequireApprovalBeforeLogin = selectedSite.RequireApprovalBeforeLogin;
-            model.RequireConfirmedEmail = selectedSite.RequireConfirmedEmail;
-            model.UseEmailForLogin = selectedSite.UseEmailForLogin;
-            model.RequireConfirmedPhone = selectedSite.RequireConfirmedPhone;
-            model.AccountApprovalEmailCsv = selectedSite.AccountApprovalEmailCsv;
 
-            model.EmailIsConfigured = await _siteCapabilities.SupportsEmailNotification(new SiteContext(selectedSite));
-            model.SmsIsConfigured = selectedSite.SmsIsConfigured();
-            model.HasAnySocialAuthEnabled = selectedSite.HasAnySocialAuthEnabled();
+            var model = new SecuritySettingsViewModel
+            {
+                SiteId = selectedSite.Id,
+                AllowNewRegistration = selectedSite.AllowNewRegistration,
+                AllowPersistentLogin = selectedSite.AllowPersistentLogin,
+                DisableDbAuth = selectedSite.DisableDbAuth,
+                ReallyDeleteUsers = selectedSite.ReallyDeleteUsers,
+                RequireApprovalBeforeLogin = selectedSite.RequireApprovalBeforeLogin,
+                RequireConfirmedEmail = selectedSite.RequireConfirmedEmail,
+                UseEmailForLogin = selectedSite.UseEmailForLogin,
+                RequireConfirmedPhone = selectedSite.RequireConfirmedPhone,
+                AccountApprovalEmailCsv = selectedSite.AccountApprovalEmailCsv,
+                EmailIsConfigured = await _siteCapabilities.SupportsEmailNotification(new SiteContext(selectedSite)),
+                SmsIsConfigured = selectedSite.SmsIsConfigured(),
+                HasAnySocialAuthEnabled = selectedSite.HasAnySocialAuthEnabled()
+            };
 
             return View(model);
         }
@@ -923,14 +932,16 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
             {
                 ViewData["Title"] = _sr["Captcha Settings"];
             }
-            
-            var model = new CaptchaSettingsViewModel();
-            model.SiteId = selectedSite.Id;
-            model.RecaptchaPrivateKey = selectedSite.RecaptchaPrivateKey;
-            model.RecaptchaPublicKey = selectedSite.RecaptchaPublicKey;
-            model.UseInvisibleCaptcha = selectedSite.UseInvisibleRecaptcha;
-            model.RequireCaptchaOnLogin = selectedSite.CaptchaOnLogin;
-            model.RequireCaptchaOnRegistration = selectedSite.CaptchaOnRegistration;
+
+            var model = new CaptchaSettingsViewModel
+            {
+                SiteId = selectedSite.Id,
+                RecaptchaPrivateKey = selectedSite.RecaptchaPrivateKey,
+                RecaptchaPublicKey = selectedSite.RecaptchaPublicKey,
+                UseInvisibleCaptcha = selectedSite.UseInvisibleRecaptcha,
+                RequireCaptchaOnLogin = selectedSite.CaptchaOnLogin,
+                RequireCaptchaOnRegistration = selectedSite.CaptchaOnRegistration
+            };
 
             return View("CaptchaSettings", model);
         }
@@ -1007,21 +1018,23 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
             {
                 ViewData["Title"] = _sr["Social Login Settings"];
             }
-            
-            var model = new SocialLoginSettingsViewModel();
-            model.SiteId = selectedSite.Id;
-            model.FacebookAppId = selectedSite.FacebookAppId;
-            model.FacebookAppSecret = selectedSite.FacebookAppSecret;
-            model.GoogleClientId = selectedSite.GoogleClientId;
-            model.GoogleClientSecret = selectedSite.GoogleClientSecret;
-            model.MicrosoftClientId = selectedSite.MicrosoftClientId;
-            model.MicrosoftClientSecret = selectedSite.MicrosoftClientSecret;
-            model.TwitterConsumerKey = selectedSite.TwitterConsumerKey;
-            model.TwitterConsumerSecret = selectedSite.TwitterConsumerSecret;
-            model.OidConnectDisplayName = selectedSite.OidConnectDisplayName;
-            model.OidConnectAppId = selectedSite.OidConnectAppId;
-            model.OidConnectAppSecret = selectedSite.OidConnectAppSecret;
-            model.OidConnectAuthority = selectedSite.OidConnectAuthority;
+
+            var model = new SocialLoginSettingsViewModel
+            {
+                SiteId = selectedSite.Id,
+                FacebookAppId = selectedSite.FacebookAppId,
+                FacebookAppSecret = selectedSite.FacebookAppSecret,
+                GoogleClientId = selectedSite.GoogleClientId,
+                GoogleClientSecret = selectedSite.GoogleClientSecret,
+                MicrosoftClientId = selectedSite.MicrosoftClientId,
+                MicrosoftClientSecret = selectedSite.MicrosoftClientSecret,
+                TwitterConsumerKey = selectedSite.TwitterConsumerKey,
+                TwitterConsumerSecret = selectedSite.TwitterConsumerSecret,
+                OidConnectDisplayName = selectedSite.OidConnectDisplayName,
+                OidConnectAppId = selectedSite.OidConnectAppId,
+                OidConnectAppSecret = selectedSite.OidConnectAppSecret,
+                OidConnectAuthority = selectedSite.OidConnectAuthority
+            };
 
             return View(model);
 
@@ -1109,12 +1122,14 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
             {
                 ViewData["Title"] = _sr["Login Page Content"];
             }
-            
-            var model = new LoginInfoViewModel();
-            model.SiteId = selectedSite.Id;
-            model.LoginInfoTop = selectedSite.LoginInfoTop;
-            model.LoginInfoBottom = selectedSite.LoginInfoBottom;
-            
+
+            var model = new LoginInfoViewModel
+            {
+                SiteId = selectedSite.Id,
+                LoginInfoTop = selectedSite.LoginInfoTop,
+                LoginInfoBottom = selectedSite.LoginInfoBottom
+            };
+
             return View(model);
         }
 
@@ -1187,12 +1202,14 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
             {
                 ViewData["Title"] = _sr["Registration Page Content"];
             }
-            
-            var model = new RegisterInfoViewModel();
-            model.SiteId = selectedSite.Id;
-            model.RegistrationPreamble = selectedSite.RegistrationPreamble;
-            model.RegistrationAgreement = selectedSite.RegistrationAgreement;
-            
+
+            var model = new RegisterInfoViewModel
+            {
+                SiteId = selectedSite.Id,
+                RegistrationPreamble = selectedSite.RegistrationPreamble,
+                RegistrationAgreement = selectedSite.RegistrationAgreement
+            };
+
             return View(model);
         }
 
@@ -1312,9 +1329,11 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
                 ViewData["Title"] = _sr["Domain/Host Name Mappings"];
             }
 
-            var model = new SiteHostMappingsViewModel();
-            model.SiteId = selectedSite.Id;
-            model.HostMappings = await _siteManager.GetSiteHosts(selectedSite.Id);
+            var model = new SiteHostMappingsViewModel
+            {
+                SiteId = selectedSite.Id,
+                HostMappings = await _siteManager.GetSiteHosts(selectedSite.Id)
+            };
             if (slp > -1)
             {
                 model.SiteListReturnPageNumber = slp;
@@ -1367,7 +1386,7 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
                 }
             }
 
-            return RedirectToAction("SiteHostMappings", new { siteId = siteId, slp = slp });
+            return RedirectToAction("SiteHostMappings", new { siteId, slp });
         }
 
         [HttpPost]
@@ -1409,7 +1428,7 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
                 }
             }
 
-            return RedirectToAction("SiteHostMappings", new { siteId = siteId, slp = slp });
+            return RedirectToAction("SiteHostMappings", new { siteId, slp });
         }
   
     }

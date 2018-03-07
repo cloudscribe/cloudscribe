@@ -20,7 +20,6 @@
     <ProjectReference Include="..\cloudscribe.Core.Identity\cloudscribe.Core.Identity.csproj" />
     <ProjectReference Include="..\cloudscribe.Core.Models\cloudscribe.Core.Models.csproj" />
     <ProjectReference Include="..\cloudscribe.Email.Senders\cloudscribe.Email.Senders.csproj" />
-    <ProjectReference Include="..\cloudscribe.Messaging.Sms\cloudscribe.Messaging.Sms.csproj" />
     <ProjectReference Include="..\cloudscribe.Web.Common\cloudscribe.Web.Common.csproj" />
     <ProjectReference Include="..\cloudscribe.FileManager.CoreIntegration\cloudscribe.FileManager.CoreIntegration.csproj" />
   </ItemGroup>
