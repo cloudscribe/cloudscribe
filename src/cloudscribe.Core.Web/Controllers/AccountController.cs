@@ -484,7 +484,7 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
                 SiteId = _currentSite.Id
             };
 
-            if ((_currentSite.CaptchaOnRegistration)&& (_currentSite.RecaptchaPublicKey.Length > 0))
+            if ((_currentSite.CaptchaOnRegistration)&& (!string.IsNullOrWhiteSpace(_currentSite.RecaptchaPublicKey)))
             {
                 model.RecaptchaSiteKey = _currentSite.RecaptchaPublicKey;
                 model.UseInvisibleCaptcha = _currentSite.UseInvisibleRecaptcha;
@@ -492,7 +492,7 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
             model.UseEmailForLogin = _currentSite.UseEmailForLogin;
             model.RegistrationPreamble = _currentSite.RegistrationPreamble;
             model.RegistrationAgreement = _currentSite.RegistrationAgreement;
-            model.AgreementRequired = _currentSite.RegistrationAgreement.Length > 0;
+            model.AgreementRequired = !string.IsNullOrWhiteSpace(_currentSite.RegistrationAgreement);
             model.ExternalAuthenticationList = await _accountService.GetExternalAuthenticationSchemes();
 
             var viewName = await _customRegistration.GetRegisterViewName(_currentSite, HttpContext);
@@ -518,7 +518,7 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
 
             _analytics.HandleRegisterSubmit("Onsite").Forget();
 
-            if ((_currentSite.CaptchaOnRegistration) && (_currentSite.RecaptchaPublicKey.Length > 0))
+            if ((_currentSite.CaptchaOnRegistration) && (!string.IsNullOrWhiteSpace(_currentSite.RecaptchaPublicKey)))
             {
                 model.RecaptchaSiteKey = _currentSite.RecaptchaPublicKey;
                 model.UseInvisibleCaptcha = _currentSite.UseInvisibleRecaptcha;
@@ -526,7 +526,7 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
             model.UseEmailForLogin = _currentSite.UseEmailForLogin;
             model.RegistrationPreamble = _currentSite.RegistrationPreamble;
             model.RegistrationAgreement = _currentSite.RegistrationAgreement;
-            model.AgreementRequired = _currentSite.RegistrationAgreement.Length > 0;
+            model.AgreementRequired = !string.IsNullOrWhiteSpace(_currentSite.RegistrationAgreement);
             model.ExternalAuthenticationList = await _accountService.GetExternalAuthenticationSchemes();
 
             bool isValid = ModelState.IsValid;
@@ -540,7 +540,7 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
 
             if (isValid && customDataIsValid)
             {
-                if ((_currentSite.CaptchaOnRegistration) && (_currentSite.RecaptchaPublicKey.Length > 0))
+                if ((_currentSite.CaptchaOnRegistration) && (!string.IsNullOrWhiteSpace(_currentSite.RecaptchaPublicKey)))
                 {
                     string recpatchaSecretKey = _currentSite.RecaptchaPrivateKey;
 
@@ -553,7 +553,7 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
                     }
                 }
 
-                if (_currentSite.RegistrationAgreement.Length > 0)
+                if (!string.IsNullOrWhiteSpace(_currentSite.RegistrationAgreement))
                 {
                     if (!model.AgreeToTerms)
                     {
@@ -709,7 +709,7 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
                 Email = email,
                 RegistrationPreamble = _currentSite.RegistrationPreamble,
                 RegistrationAgreement = _currentSite.RegistrationAgreement,
-                AgreementRequired = _currentSite.RegistrationAgreement.Length > 0
+                AgreementRequired = !string.IsNullOrWhiteSpace(_currentSite.RegistrationAgreement)
             };
             return View("ExternalLoginConfirmation", model);
         }
@@ -763,7 +763,7 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
                 _log.LogDebug("ExternalLoginConfirmation called with ModelStateInvalid ");
                 model.RegistrationPreamble = _currentSite.RegistrationPreamble;
                 model.RegistrationAgreement = _currentSite.RegistrationAgreement;
-                model.AgreementRequired = _currentSite.RegistrationAgreement.Length > 0;
+                model.AgreementRequired = !string.IsNullOrWhiteSpace(_currentSite.RegistrationAgreement);
             }
 
             ViewData["ReturnUrl"] = returnUrl;

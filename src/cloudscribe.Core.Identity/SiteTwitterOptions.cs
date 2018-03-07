@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2017-07-27
-// Last Modified:			2017-08-30
+// Last Modified:			2018-03-07
 // 
 
 using cloudscribe.Core.Models;
@@ -78,9 +78,11 @@ namespace cloudscribe.Core.Identity
         private TwitterOptions ResolveOptions(string scheme)
         {
             var tenant = _httpContextAccessor.HttpContext.GetTenant<SiteContext>();
-            var options = new TwitterOptions();
-            options.ConsumerKey = "placeholder";
-            options.ConsumerSecret = "placeholder";
+            var options = new TwitterOptions
+            {
+                ConsumerKey = "placeholder",
+                ConsumerSecret = "placeholder"
+            };
 
             _optionsInitializer.PostConfigure(scheme, options);
 
@@ -88,9 +90,11 @@ namespace cloudscribe.Core.Identity
 
             if (options.Backchannel == null)
             {
-                options.Backchannel = new HttpClient(options.BackchannelHttpHandler ?? new HttpClientHandler());
-                options.Backchannel.Timeout = options.BackchannelTimeout;
-                options.Backchannel.MaxResponseContentBufferSize = 1024 * 1024 * 10; // 10 MB
+                options.Backchannel = new HttpClient(options.BackchannelHttpHandler ?? new HttpClientHandler())
+                {
+                    Timeout = options.BackchannelTimeout,
+                    MaxResponseContentBufferSize = 1024 * 1024 * 10 // 10 MB
+                };
                 options.Backchannel.DefaultRequestHeaders.Accept.ParseAdd("*/*");
                 options.Backchannel.DefaultRequestHeaders.UserAgent.ParseAdd("Microsoft ASP.NET Core Twitter handler");
                 options.Backchannel.DefaultRequestHeaders.ExpectContinue = false;
@@ -121,7 +125,7 @@ namespace cloudscribe.Core.Identity
             }
             var useFolder = !_multiTenantOptions.UseRelatedSitesMode
                                         && _multiTenantOptions.Mode == cloudscribe.Core.Models.MultiTenantMode.FolderName
-                                        && tenant.SiteFolderName.Length > 0;
+                                        && !string.IsNullOrWhiteSpace(tenant.SiteFolderName);
 
             if (!string.IsNullOrWhiteSpace(tenant.TwitterConsumerKey))
             {

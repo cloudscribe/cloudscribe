@@ -62,7 +62,7 @@
                         }
                         else
                         {
-                            if (item.PreferredHostName.Length > 0)
+                            if (!string.IsNullOrWhiteSpace(item.PreferredHostName))
                             {
                                 <a href="http://@item.PreferredHostName" target="_blank">@item.PreferredHostName</a>
                             }

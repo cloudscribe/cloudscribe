@@ -106,7 +106,7 @@ namespace cloudscribe.Core.Web.Components
 
             if (_multiTenantOptions.Mode == MultiTenantMode.FolderName)
             {
-                if (context.Tenant.SiteFolderName.Length > 0)
+                if (!string.IsNullOrWhiteSpace(context.Tenant.SiteFolderName))
                 {
                     identifiers.Add(context.Tenant.SiteFolderName);
                 }

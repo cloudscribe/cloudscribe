@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 //  Author:                     Joe Audette
 //  Created:                    2015-10-09
-//	Last Modified:              2016-10-08
+//	Last Modified:              2018-03-07
 //
 
 using cloudscribe.Core.Models;
@@ -27,20 +27,20 @@ namespace cloudscribe.Core.Web.Components
         {
             if (hostingEnvironment == null) { throw new ArgumentNullException(nameof(hostingEnvironment)); }
 
-            appBasePath = hostingEnvironment.ContentRootPath;
-            this.contextAccessor = contextAccessor ?? throw new ArgumentNullException(nameof(contextAccessor));
-            options = multiTenantOptionsAccessor.Value;
+            _appBasePath = hostingEnvironment.ContentRootPath;
+            _contextAccessor = contextAccessor ?? throw new ArgumentNullException(nameof(contextAccessor));
+            _options = multiTenantOptionsAccessor.Value;
 
         }
 
-        private string appBasePath;
-        private IHttpContextAccessor contextAccessor;
-        private MultiTenantOptions options;
+        private string _appBasePath;
+        private IHttpContextAccessor _contextAccessor;
+        private MultiTenantOptions _options;
 
         public List<SelectListItem> GetAvailableThemes(string aliasId = null)
         {
             List<SelectListItem> layouts = new List<SelectListItem>();
-            if(options.UserPerSiteThemes)
+            if(_options.UserPerSiteThemes)
             {
                 string pathToViews = GetPathToViews(aliasId);
                 if (Directory.Exists(pathToViews))
@@ -60,7 +60,7 @@ namespace cloudscribe.Core.Web.Components
             }
             
 
-            if(options.UseSharedThemes)
+            if(_options.UseSharedThemes)
             {
                 var sharedThemes = GetSharedThemes();
                 layouts.AddRange(sharedThemes);
@@ -80,7 +80,7 @@ namespace cloudscribe.Core.Web.Components
         {
             List<SelectListItem> layouts = new List<SelectListItem>();
 
-            string pathToViews = Path.Combine(appBasePath, options.SharedThemesFolderName);
+            string pathToViews = Path.Combine(_appBasePath, _options.SharedThemesFolderName);
 
             if (Directory.Exists(pathToViews))
             {
@@ -105,11 +105,11 @@ namespace cloudscribe.Core.Web.Components
         {
             if(string.IsNullOrEmpty(aliasId))
             {
-                var tenant = contextAccessor.HttpContext.GetTenant<SiteContext>();
+                var tenant = _contextAccessor.HttpContext.GetTenant<SiteContext>();
                 aliasId = tenant.AliasId;
             }
             
-            return Path.Combine(appBasePath, options.SiteFilesFolderName, aliasId, options.SiteThemesFolderName);
+            return Path.Combine(_appBasePath, _options.SiteFilesFolderName, aliasId, _options.SiteThemesFolderName);
         }
 
     }

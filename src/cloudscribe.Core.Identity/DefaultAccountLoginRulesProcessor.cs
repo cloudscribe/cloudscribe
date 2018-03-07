@@ -18,19 +18,19 @@ namespace cloudscribe.Core.Identity
             ISiteAcountCapabilitiesProvider capabilitiesProvider
             )
         {
-            this.userManager = userManager;
-            this.capabilitiesProvider = capabilitiesProvider;
+            _userManager = userManager;
+            _capabilitiesProvider = capabilitiesProvider;
         }
 
-        private readonly SiteUserManager<SiteUser> userManager;
-        private readonly ISiteAcountCapabilitiesProvider capabilitiesProvider;
+        private readonly SiteUserManager<SiteUser> _userManager;
+        private readonly ISiteAcountCapabilitiesProvider _capabilitiesProvider;
         
 
         private async Task<bool> RequireConfirmedEmail()
         {
-            if (!userManager.Site.RequireConfirmedEmail) return false;
+            if (!_userManager.Site.RequireConfirmedEmail) return false;
             // if true check if it is possible, it is only possible to confirm email if email notification is setup
-            return await capabilitiesProvider.SupportsEmailNotification(userManager.Site);
+            return await _capabilitiesProvider.SupportsEmailNotification(_userManager.Site);
         }
 
         public async Task ProcessAccountLoginRules(LoginResultTemplate template)
@@ -45,12 +45,12 @@ namespace cloudscribe.Core.Identity
                     var reason = $"login not allowed for {template.User.Email} because email is not confirmed";
                     template.RejectReasons.Add(reason);
                     template.NeedsEmailConfirmation = true;
-                    template.EmailConfirmationToken = await userManager.GenerateEmailConfirmationTokenAsync(template.User);
+                    template.EmailConfirmationToken = await _userManager.GenerateEmailConfirmationTokenAsync(template.User);
                     template.SignInResult = SignInResult.NotAllowed;
                 }
             }
 
-            if (userManager.Site.RequireApprovalBeforeLogin)
+            if (_userManager.Site.RequireApprovalBeforeLogin)
             {
                 if (!template.User.AccountApproved)
                 {
@@ -61,7 +61,7 @@ namespace cloudscribe.Core.Identity
                 }
             }
 
-            if (userManager.Site.RequireConfirmedPhone && userManager.Site.SmsIsConfigured())
+            if (_userManager.Site.RequireConfirmedPhone && _userManager.Site.SmsIsConfigured())
             {
                 if (string.IsNullOrEmpty(template.User.PhoneNumber))
                 {
@@ -83,11 +83,11 @@ namespace cloudscribe.Core.Identity
 
             }
 
-            if (!string.IsNullOrWhiteSpace(userManager.Site.RegistrationAgreement))
+            if (!string.IsNullOrWhiteSpace(_userManager.Site.RegistrationAgreement))
             {
                 // need to not block login otherwise how can we make the user agree agree to terms on account
                 // enforced with middleware
-                if (template.User.AgreementAcceptedUtc == null || template.User.AgreementAcceptedUtc < userManager.Site.TermsUpdatedUtc)
+                if (template.User.AgreementAcceptedUtc == null || template.User.AgreementAcceptedUtc < _userManager.Site.TermsUpdatedUtc)
                 {
                     template.MustAcceptTerms = true;
                 }

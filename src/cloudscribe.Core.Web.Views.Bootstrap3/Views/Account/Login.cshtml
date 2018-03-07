@@ -22,7 +22,7 @@
 @section Meta {
     <meta name="robots" content="noindex" />
 }
-@if (Model.RecaptchaSiteKey.Length > 0)
+@if (!string.IsNullOrWhiteSpace(Model.RecaptchaSiteKey))
 {
     <script src='https://www.google.com/recaptcha/api.js'></script>
 }
@@ -33,7 +33,7 @@
     </script>
 }
 <h2>@ViewData["Title"]</h2>
-@if (Model.LoginInfoTop.Length > 0)
+@if (!string.IsNullOrWhiteSpace(Model.LoginInfoTop))
 {
     <div class="row">
         <div class="col-md-12">
@@ -96,7 +96,7 @@
                             </div>
                         </div>
                     }
-                    @if (Model.RecaptchaSiteKey.Length > 0 && !Model.UseInvisibleCaptcha)
+                    @if (!string.IsNullOrWhiteSpace(Model.RecaptchaSiteKey) && !Model.UseInvisibleCaptcha)
                     {
                         <div class="form-group">
                             <div class="col-md-offset-2 col-md-10">
@@ -107,7 +107,7 @@
                     }
                     <div class="form-group">
                         <div class="col-md-offset-2 col-md-10">
-                            @if (Model.RecaptchaSiteKey.Length > 0 && Model.UseInvisibleCaptcha)
+                            @if (!string.IsNullOrWhiteSpace(Model.RecaptchaSiteKey) && Model.UseInvisibleCaptcha)
                             {
                                 <button class="btn btn-default g-recaptcha" data-sitekey="@Model.RecaptchaSiteKey" data-callback='onCaptchaSubmit' data-enabled-text='@sr["log in"]' data-disabled-text='@sr["Working..."]'>@sr["Log in"]</button>
                             }
@@ -142,7 +142,7 @@
         }
     </div>
 </div>
-@if (Model.LoginInfoBottom.Length > 0)
+@if (!string.IsNullOrWhiteSpace(Model.LoginInfoBottom))
 {
     <div class="row">
         <div class="col-md-12">

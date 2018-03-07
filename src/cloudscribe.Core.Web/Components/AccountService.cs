@@ -358,7 +358,7 @@ namespace cloudscribe.Core.Web.Components
             var template = new LoginResultTemplate();
             IUserContext userContext = null;
 
-            var userName = model.Username.Length > 0 ? model.Username : await _userManager.SuggestLoginNameFromEmail(_userManager.Site.Id, model.Email);
+            var userName = !string.IsNullOrWhiteSpace(model.Username) ? model.Username : await _userManager.SuggestLoginNameFromEmail(_userManager.Site.Id, model.Email);
             var userNameAvailable = await _userManager.LoginIsAvailable(Guid.Empty, userName);
             if (!userNameAvailable)
             {
@@ -385,7 +385,7 @@ namespace cloudscribe.Core.Web.Components
                 user.DateOfBirth = model.DateOfBirth.Value;
             }
 
-            if (_userManager.Site.RegistrationAgreement.Length > 0)
+            if (!string.IsNullOrWhiteSpace(_userManager.Site.RegistrationAgreement))
             {
                 if (model.AgreeToTerms)
                 {

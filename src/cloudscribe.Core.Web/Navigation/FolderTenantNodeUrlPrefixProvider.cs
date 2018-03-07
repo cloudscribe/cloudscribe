@@ -28,7 +28,7 @@ namespace cloudscribe.Core.Web.Navigation
         {
             if(options.Mode == MultiTenantMode.FolderName)
             {
-                if((site != null)&&(site.SiteFolderName.Length > 0))
+                if((site != null)&&(!string.IsNullOrWhiteSpace(site.SiteFolderName)))
                 {
                     return site.SiteFolderName;
                 }

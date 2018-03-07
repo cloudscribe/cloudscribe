@@ -25,39 +25,32 @@ namespace cloudscribe.Core.Identity
             IUserQueries userQueries
             )
         {
-            if (logger == null) { throw new ArgumentNullException(nameof(logger)); }
-            if (currentSite == null) { throw new ArgumentNullException(nameof(currentSite)); }
-            if (userCommands == null) { throw new ArgumentNullException(nameof(userCommands)); }
-            commands = userCommands;
-
-            if (userQueries == null) { throw new ArgumentNullException(nameof(userQueries)); }
-            queries = userQueries;
-
-            log = logger;
-            siteSettings = currentSite;
-
-            multiTenantOptions = multiTenantOptionsAccessor.Value;
+            _commands = userCommands ?? throw new ArgumentNullException(nameof(userCommands));
+            _queries = userQueries ?? throw new ArgumentNullException(nameof(userQueries));
+            _log = logger ?? throw new ArgumentNullException(nameof(logger));
+            _siteSettings = currentSite ?? throw new ArgumentNullException(nameof(currentSite));
+            _multiTenantOptions = multiTenantOptionsAccessor.Value;
             
         }
 
-        private MultiTenantOptions multiTenantOptions;
-        private ILogger log;
-        private IUserCommands commands;
-        private IUserQueries queries;
-        private ISiteContext siteSettings = null;
+        private MultiTenantOptions _multiTenantOptions;
+        private ILogger _log;
+        private IUserCommands _commands;
+        private IUserQueries _queries;
+        private ISiteContext _siteSettings = null;
         
         private ISiteContext Site
         {
-            get { return siteSettings; }
+            get { return _siteSettings; }
         }
 
         private Guid GetSiteId()
         {
-            if(multiTenantOptions.UseRelatedSitesMode)
+            if(_multiTenantOptions.UseRelatedSitesMode)
             {
-                if(multiTenantOptions.RelatedSiteId != Guid.Empty)
+                if(_multiTenantOptions.RelatedSiteId != Guid.Empty)
                 {
-                    return multiTenantOptions.RelatedSiteId;
+                    return _multiTenantOptions.RelatedSiteId;
                 }
             }
 
@@ -76,7 +69,7 @@ namespace cloudscribe.Core.Identity
             ThrowIfDisposed();
             cancellationToken.ThrowIfCancellationRequested();
             
-            await commands.CreateRole(role, cancellationToken);
+            await _commands.CreateRole(role, cancellationToken);
             return IdentityResult.Success;
 
         }
@@ -92,8 +85,8 @@ namespace cloudscribe.Core.Identity
             }
 
             // remove all users form the role
-            await commands.DeleteUserRolesByRole(role.SiteId, role.Id, cancellationToken);
-            await commands.DeleteRole(role.SiteId, role.Id, cancellationToken);
+            await _commands.DeleteUserRolesByRole(role.SiteId, role.Id, cancellationToken);
+            await _commands.DeleteRole(role.SiteId, role.Id, cancellationToken);
 
             return IdentityResult.Success; 
             
@@ -106,7 +99,7 @@ namespace cloudscribe.Core.Identity
             if (string.IsNullOrWhiteSpace(roleId)) throw new ArgumentException("invalid roleid");
             if(roleId.Length != 36) throw new ArgumentException("invalid roleid");
             var roleGuid = new Guid(roleId);
-            var role = await queries.FetchRole(GetSiteId(), roleGuid, cancellationToken);
+            var role = await _queries.FetchRole(GetSiteId(), roleGuid, cancellationToken);
 
             return (TRole)role;
         }
@@ -116,7 +109,7 @@ namespace cloudscribe.Core.Identity
             cancellationToken.ThrowIfCancellationRequested();
             ThrowIfDisposed();
             
-            var role = await queries.FetchRole(GetSiteId(), normalizedRoleName, cancellationToken);
+            var role = await _queries.FetchRole(GetSiteId(), normalizedRoleName, cancellationToken);
 
             return (TRole)role;
         }
@@ -197,7 +190,7 @@ namespace cloudscribe.Core.Identity
                 throw new ArgumentNullException("role");
             }
 
-            await commands.UpdateRole(role, cancellationToken);
+            await _commands.UpdateRole(role, cancellationToken);
 
             return IdentityResult.Success; 
 

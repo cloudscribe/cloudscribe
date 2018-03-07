@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2017-07-28
-// Last Modified:			2017-08-30
+// Last Modified:			2018-03-07
 // 
 
 using cloudscribe.Core.Models;
@@ -98,15 +98,16 @@ namespace cloudscribe.Core.Identity
         private OpenIdConnectOptions ResolveOptions(string scheme)
         {
             var tenant = _httpContextAccessor.HttpContext.GetTenant<SiteContext>();
-            var options = new OpenIdConnectOptions();
+            var options = new OpenIdConnectOptions
+            {
+                // will throw an error if these are not populated
+                ClientId = "placeholder",
+                ClientSecret = "placeholder",
+                Authority = "https://placeholder.com",
+                SignInScheme = IdentityConstants.ExternalScheme
+            };
 
-            // will throw an error if these are not populated
-            options.ClientId = "placeholder";
-            options.ClientSecret = "placeholder";
-            options.Authority = "https://placeholder.com";
-            options.SignInScheme = IdentityConstants.ExternalScheme;
-
-            if(_environment.IsDevelopment())
+            if (_environment.IsDevelopment())
             {
                 options.RequireHttpsMetadata = false;
             }
@@ -202,7 +203,7 @@ namespace cloudscribe.Core.Identity
             }
             var useFolder = !_multiTenantOptions.UseRelatedSitesMode
                                         && _multiTenantOptions.Mode == cloudscribe.Core.Models.MultiTenantMode.FolderName
-                                        && tenant.SiteFolderName.Length > 0;
+                                        && !string.IsNullOrWhiteSpace(tenant.SiteFolderName);
 
             if (!string.IsNullOrWhiteSpace(tenant.OidConnectAppId))
             {

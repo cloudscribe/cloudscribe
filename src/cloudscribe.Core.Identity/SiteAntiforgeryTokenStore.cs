@@ -22,7 +22,7 @@ namespace cloudscribe.Core.Identity
     public class SiteAntiforgeryTokenStore : IAntiforgeryTokenStore
     {
         private readonly AntiforgeryOptions _options;
-        private MultiTenantOptions multiTenantOptions;
+        private MultiTenantOptions _multiTenantOptions;
 
         public SiteAntiforgeryTokenStore(
             IOptions<MultiTenantOptions> multiTenantOptionsAccessor,
@@ -35,12 +35,12 @@ namespace cloudscribe.Core.Identity
             }
 
             _options = optionsAccessor.Value;
-            multiTenantOptions = multiTenantOptionsAccessor.Value;
+            _multiTenantOptions = multiTenantOptionsAccessor.Value;
         }
 
         private string GetCookieName(SiteContext tenant)
         {
-            if(multiTenantOptions.Mode == MultiTenantMode.FolderName)
+            if(_multiTenantOptions.Mode == MultiTenantMode.FolderName)
             {
                 if(!string.IsNullOrEmpty(tenant.SiteFolderName))
                 {
@@ -53,7 +53,7 @@ namespace cloudscribe.Core.Identity
 
         private string GetCookiePath(SiteContext tenant)
         {
-            if (multiTenantOptions.Mode == MultiTenantMode.FolderName)
+            if (_multiTenantOptions.Mode == MultiTenantMode.FolderName)
             {
                 if (!string.IsNullOrEmpty(tenant.SiteFolderName))
                 {
