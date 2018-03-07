@@ -18,8 +18,6 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "cloudscribe.Core.Identity",
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "cloudscribe.Web.Common", "src\cloudscribe.Web.Common\cloudscribe.Web.Common.csproj", "{1431289E-CB67-47D7-971F-0E38E6AB24EB}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "cloudscribe.Messaging.Sms", "src\cloudscribe.Messaging.Sms\cloudscribe.Messaging.Sms.csproj", "{BD12E0A5-DEBA-439C-8E15-C70B4A02ABEC}"
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "cloudscribe.Core.Storage.NoDb", "src\cloudscribe.Core.Storage.NoDb\cloudscribe.Core.Storage.NoDb.csproj", "{2CC25CD6-2EAD-4608-95E9-F16A43BE767B}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "cloudscribe.Core.Web", "src\cloudscribe.Core.Web\cloudscribe.Core.Web.csproj", "{E3434F61-5FF1-4DAF-83F0-CDBFA2D8FB47}"
@@ -70,7 +68,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "cloudscribe.Core.IdentitySe
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Tenant1SpaLocalApi", "src\Tenant1SpaLocalApi\Tenant1SpaLocalApi.csproj", "{7AAE4A99-0688-4ADC-A45A-149AF82D2EC1}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "cloudscribe.Email.Senders", "src\cloudscribe.Email.Senders\cloudscribe.Email.Senders.csproj", "{A0243B8F-FC85-4A1F-B56C-7D4B793F8875}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "cloudscribe.Email.Senders", "src\cloudscribe.Email.Senders\cloudscribe.Email.Senders.csproj", "{A0243B8F-FC85-4A1F-B56C-7D4B793F8875}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -90,10 +88,6 @@ Global
 		{1431289E-CB67-47D7-971F-0E38E6AB24EB}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{1431289E-CB67-47D7-971F-0E38E6AB24EB}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{1431289E-CB67-47D7-971F-0E38E6AB24EB}.Release|Any CPU.Build.0 = Release|Any CPU
-		{BD12E0A5-DEBA-439C-8E15-C70B4A02ABEC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{BD12E0A5-DEBA-439C-8E15-C70B4A02ABEC}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{BD12E0A5-DEBA-439C-8E15-C70B4A02ABEC}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{BD12E0A5-DEBA-439C-8E15-C70B4A02ABEC}.Release|Any CPU.Build.0 = Release|Any CPU
 		{2CC25CD6-2EAD-4608-95E9-F16A43BE767B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{2CC25CD6-2EAD-4608-95E9-F16A43BE767B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{2CC25CD6-2EAD-4608-95E9-F16A43BE767B}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -206,7 +200,6 @@ Global
 		{88448767-8DE6-4167-838A-71DB859A4644} = {9C16B47A-B712-4237-B62F-B4403ACF1CD5}
 		{1FCC067D-392A-41CF-B5FD-B01FA0807F81} = {9C16B47A-B712-4237-B62F-B4403ACF1CD5}
 		{1431289E-CB67-47D7-971F-0E38E6AB24EB} = {9C16B47A-B712-4237-B62F-B4403ACF1CD5}
-		{BD12E0A5-DEBA-439C-8E15-C70B4A02ABEC} = {9C16B47A-B712-4237-B62F-B4403ACF1CD5}
 		{2CC25CD6-2EAD-4608-95E9-F16A43BE767B} = {9C16B47A-B712-4237-B62F-B4403ACF1CD5}
 		{E3434F61-5FF1-4DAF-83F0-CDBFA2D8FB47} = {9C16B47A-B712-4237-B62F-B4403ACF1CD5}
 		{FA25ABC0-74D2-479A-B8F0-18A6463BBB08} = {18722DAD-1668-4F56-A915-F6C65C1A6B74}

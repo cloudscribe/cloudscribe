@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2014-12-08
-// Last Modified:			2018-02-28
+// Last Modified:			2018-03-07
 // 
 
 using cloudscribe.Core.Identity;
@@ -45,25 +45,24 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
             IHandleCustomUserInfoAdmin customUserEdit
             )
         {
-           
-            UserManager = userManager;
-            this.siteManager = siteManager;
-            this.emailSender = emailSender;
-            uiOptions = uiOptionsAccessor.Value;
-            sr = localizer;
-            this.timeZoneIdResolver = timeZoneIdResolver;
-            tzHelper = timeZoneHelper;
-            this.customUserInfo = customUserEdit;
+            _userManager = userManager;
+            _siteManager = siteManager;
+            _emailSender = emailSender;
+            _uiOptions = uiOptionsAccessor.Value;
+            _sr = localizer;
+            _timeZoneIdResolver = timeZoneIdResolver;
+            _tzHelper = timeZoneHelper;
+            _customUserInfo = customUserEdit;
         }
 
-        private SiteManager siteManager;
-        public SiteUserManager<SiteUser> UserManager { get; private set; }
-        private ISiteMessageEmailSender emailSender;
-        private UIOptions uiOptions;
-        private IStringLocalizer sr; // string resources
-        private ITimeZoneIdResolver timeZoneIdResolver;
-        private ITimeZoneHelper tzHelper;
-        private IHandleCustomUserInfoAdmin customUserInfo;
+        private SiteManager _siteManager;
+        private SiteUserManager<SiteUser> _userManager;
+        private ISiteMessageEmailSender _emailSender;
+        private UIOptions _uiOptions;
+        private IStringLocalizer _sr; // string resources
+        private ITimeZoneIdResolver _timeZoneIdResolver;
+        private ITimeZoneHelper _tzHelper;
+        private IHandleCustomUserInfoAdmin _customUserInfo;
 
         [Authorize(Policy = "UserManagementPolicy")]
         [HttpGet]
@@ -75,24 +74,24 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
             int pageSize = -1
             )
         {
-            var selectedSite = await siteManager.GetSiteForDataOperations(siteId);
+            var selectedSite = await _siteManager.GetSiteForDataOperations(siteId);
             // only server admin site can edit other sites settings
-            if (selectedSite.Id != siteManager.CurrentSite.Id)
+            if (selectedSite.Id != _siteManager.CurrentSite.Id)
             {
-                ViewData["Title"] = string.Format(CultureInfo.CurrentUICulture, sr["{0} - User Management"], selectedSite.SiteName);
+                ViewData["Title"] = string.Format(CultureInfo.CurrentUICulture, _sr["{0} - User Management"], selectedSite.SiteName);
             }
             else
             {
-                ViewData["Title"] = sr["User Management"];
+                ViewData["Title"] = _sr["User Management"];
             }
             
-            var itemsPerPage = uiOptions.DefaultPageSize_UserList;
+            var itemsPerPage = _uiOptions.DefaultPageSize_UserList;
             if (pageSize > 0)
             {
                 itemsPerPage = pageSize;
             }
             
-            var siteMembers = await UserManager.GetPage(
+            var siteMembers = await _userManager.GetPage(
                 selectedSite.Id,
                 pageNumber,
                 itemsPerPage,
@@ -104,7 +103,7 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
             model.UserList = siteMembers;
             model.SortMode = sortMode;
             model.AlphaQuery = query; 
-            model.TimeZoneId = await timeZoneIdResolver.GetUserTimeZoneId();
+            model.TimeZoneId = await _timeZoneIdResolver.GetUserTimeZoneId();
 
             return View(model);
 
@@ -121,18 +120,18 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
             bool ajaxGrid = false
             )
         {
-            var selectedSite = await siteManager.GetSiteForDataOperations(siteId);
+            var selectedSite = await _siteManager.GetSiteForDataOperations(siteId);
             // only server admin site can edit other sites settings
-            if (selectedSite.Id != siteManager.CurrentSite.Id)
+            if (selectedSite.Id != _siteManager.CurrentSite.Id)
             {
-                ViewData["Title"] = string.Format(CultureInfo.CurrentUICulture, sr["{0} - User Management"], selectedSite.SiteName);
+                ViewData["Title"] = string.Format(CultureInfo.CurrentUICulture, _sr["{0} - User Management"], selectedSite.SiteName);
             }
             else
             {
-                ViewData["Title"] = sr["User Management"];
+                ViewData["Title"] = _sr["User Management"];
             }
             
-            var itemsPerPage = uiOptions.DefaultPageSize_UserList;
+            var itemsPerPage = _uiOptions.DefaultPageSize_UserList;
             if (pageSize > 0)
             {
                 itemsPerPage = pageSize;
@@ -140,7 +139,7 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
 
             if(query == null) { query = string.Empty; }
             
-            var siteMembers = await UserManager.GetUserAdminSearchPage(
+            var siteMembers = await _userManager.GetUserAdminSearchPage(
                 selectedSite.Id,
                 pageNumber,
                 itemsPerPage,
@@ -153,7 +152,7 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
             model.SearchQuery = query; 
             model.SortMode = sortMode;
             model.ActionName = "Search";
-            model.TimeZoneId = await timeZoneIdResolver.GetUserTimeZoneId();
+            model.TimeZoneId = await _timeZoneIdResolver.GetUserTimeZoneId();
 
             if(Request.IsAjaxRequest())
             {
@@ -194,9 +193,9 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
             bool ajaxGrid = false
             )
         {
-            var selectedSite = await siteManager.GetSiteForDataOperations(siteId);
+            var selectedSite = await _siteManager.GetSiteForDataOperations(siteId);
             
-            var itemsPerPage = uiOptions.DefaultPageSize_UserList;
+            var itemsPerPage = _uiOptions.DefaultPageSize_UserList;
             if (pageSize > 0)
             {
                 itemsPerPage = pageSize;
@@ -204,7 +203,7 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
 
             if (query == null) { query = string.Empty; }
 
-            var siteMembers = await UserManager.GetUserAdminSearchPage(
+            var siteMembers = await _userManager.GetUserAdminSearchPage(
                 selectedSite.Id,
                 pageNumber,
                 itemsPerPage,
@@ -217,7 +216,7 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
             model.SearchQuery = query;
             model.SortMode = sortMode;
             model.ActionName = "SearchModal";
-            model.TimeZoneId = await timeZoneIdResolver.GetUserTimeZoneId();
+            model.TimeZoneId = await _timeZoneIdResolver.GetUserTimeZoneId();
 
             
             if (ajaxGrid)
@@ -235,18 +234,18 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
             Guid? siteId,
             string ipQuery = "")
         {
-            var selectedSite = await siteManager.GetSiteForDataOperations(siteId);
+            var selectedSite = await _siteManager.GetSiteForDataOperations(siteId);
             // only server admin site can edit other sites settings
-            if (selectedSite.Id != siteManager.CurrentSite.Id)
+            if (selectedSite.Id != _siteManager.CurrentSite.Id)
             {
-                ViewData["Title"] = string.Format(CultureInfo.CurrentUICulture, sr["{0} - User Management"], selectedSite.SiteName);
+                ViewData["Title"] = string.Format(CultureInfo.CurrentUICulture, _sr["{0} - User Management"], selectedSite.SiteName);
             }
             else
             {
-                ViewData["Title"] = sr["User Management"];
+                ViewData["Title"] = _sr["User Management"];
             }
             
-            var siteMembers = await UserManager.GetByIPAddress(
+            var siteMembers = await _userManager.GetByIPAddress(
                 selectedSite.Id,
                 ipQuery);
 
@@ -262,7 +261,7 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
             model.UserList = data;
             model.IpQuery = ipQuery; //TODO: sanitize
             model.ShowAlphaPager = false;
-            model.TimeZoneId = await timeZoneIdResolver.GetUserTimeZoneId();
+            model.TimeZoneId = await _timeZoneIdResolver.GetUserTimeZoneId();
             model.ActionName = "IpSearch";
             return View("Index", model);
 
@@ -275,24 +274,24 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
             int pageNumber = 1,
             int pageSize = -1)
         {
-            var selectedSite = await siteManager.GetSiteForDataOperations(siteId);
+            var selectedSite = await _siteManager.GetSiteForDataOperations(siteId);
             // only server admin site can edit other sites settings
-            if (selectedSite.Id != siteManager.CurrentSite.Id)
+            if (selectedSite.Id != _siteManager.CurrentSite.Id)
             {
-                ViewData["Title"] = string.Format(CultureInfo.CurrentUICulture, sr["{0} - Locked Out User Accounts"], selectedSite.SiteName);
+                ViewData["Title"] = string.Format(CultureInfo.CurrentUICulture, _sr["{0} - Locked Out User Accounts"], selectedSite.SiteName);
             }
             else
             {
-                ViewData["Title"] = sr["Locked Out User Accounts"];
+                ViewData["Title"] = _sr["Locked Out User Accounts"];
             }
             
-            var itemsPerPage = uiOptions.DefaultPageSize_UserList;
+            var itemsPerPage = _uiOptions.DefaultPageSize_UserList;
             if (pageSize > 0)
             {
                 itemsPerPage = pageSize;
             }
             
-            var siteMembers = await UserManager.GetPageLockedUsers(
+            var siteMembers = await _userManager.GetPageLockedUsers(
                 selectedSite.Id,
                 pageNumber,
                 itemsPerPage);
@@ -301,7 +300,7 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
             model.SiteId = selectedSite.Id;
             model.UserList = siteMembers;
             model.ShowAlphaPager = false;
-            model.TimeZoneId = await timeZoneIdResolver.GetUserTimeZoneId();
+            model.TimeZoneId = await _timeZoneIdResolver.GetUserTimeZoneId();
             model.ActionName = "LockedUsers";
             return View(model);
 
@@ -314,24 +313,24 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
             int pageNumber = 1,
             int pageSize = -1)
         {
-            var selectedSite = await siteManager.GetSiteForDataOperations(siteId);
+            var selectedSite = await _siteManager.GetSiteForDataOperations(siteId);
             // only server admin site can edit other sites settings
-            if (selectedSite.Id != siteManager.CurrentSite.Id)
+            if (selectedSite.Id != _siteManager.CurrentSite.Id)
             {
-                ViewData["Title"] = string.Format(CultureInfo.CurrentUICulture, sr["{0} - User Accounts Pending Approval"], selectedSite.SiteName);
+                ViewData["Title"] = string.Format(CultureInfo.CurrentUICulture, _sr["{0} - User Accounts Pending Approval"], selectedSite.SiteName);
             }
             else
             {
-                ViewData["Title"] = sr["User Accounts Pending Approval"];
+                ViewData["Title"] = _sr["User Accounts Pending Approval"];
             }
 
-            var itemsPerPage = uiOptions.DefaultPageSize_UserList;
+            var itemsPerPage = _uiOptions.DefaultPageSize_UserList;
             if (pageSize > 0)
             {
                 itemsPerPage = pageSize;
             }
             
-            var siteMembers = await UserManager.GetNotApprovedUsers(
+            var siteMembers = await _userManager.GetNotApprovedUsers(
                 selectedSite.Id,
                 pageNumber,
                 itemsPerPage);
@@ -340,7 +339,7 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
             model.SiteId = selectedSite.Id;
             model.UserList = siteMembers;
             model.ShowAlphaPager = false;
-            model.TimeZoneId = await timeZoneIdResolver.GetUserTimeZoneId();
+            model.TimeZoneId = await _timeZoneIdResolver.GetUserTimeZoneId();
             model.ActionName = "UnApprovedUsers";
             return View(model);
         }
@@ -351,23 +350,23 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
         public async Task<ActionResult> NewUser(
             Guid? siteId)
         {
-            var selectedSite = await siteManager.GetSiteForDataOperations(siteId);
+            var selectedSite = await _siteManager.GetSiteForDataOperations(siteId);
             // only server admin site can edit other sites settings
-            if (selectedSite.Id != siteManager.CurrentSite.Id)
+            if (selectedSite.Id != _siteManager.CurrentSite.Id)
             {
-                ViewData["Title"] = string.Format(CultureInfo.CurrentUICulture, sr["{0} - New User"], selectedSite.SiteName);
+                ViewData["Title"] = string.Format(CultureInfo.CurrentUICulture, _sr["{0} - New User"], selectedSite.SiteName);
             }
             else
             {
-                ViewData["Title"] = sr["New User"];
+                ViewData["Title"] = _sr["New User"];
             }
 
             var model = new NewUserViewModel();
             model.SiteId = selectedSite.Id;
 
-            var viewName = await customUserInfo.GetNewUserViewName(UserManager.Site, HttpContext);
-            await customUserInfo.HandleNewUserGet(
-                UserManager.Site,
+            var viewName = await _customUserInfo.GetNewUserViewName(_userManager.Site, HttpContext);
+            await _customUserInfo.HandleNewUserGet(
+                _userManager.Site,
                 model,
                 HttpContext,
                 ViewData);
@@ -380,27 +379,27 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> NewUser(NewUserViewModel model)
         {
-            var selectedSite = await siteManager.GetSiteForDataOperations(model.SiteId);
+            var selectedSite = await _siteManager.GetSiteForDataOperations(model.SiteId);
             // only server admin site can edit other sites settings
-            if (selectedSite.Id != siteManager.CurrentSite.Id)
+            if (selectedSite.Id != _siteManager.CurrentSite.Id)
             {
-                ViewData["Title"] = string.Format(CultureInfo.CurrentUICulture, sr["{0} - New User"], selectedSite.SiteName);
+                ViewData["Title"] = string.Format(CultureInfo.CurrentUICulture, _sr["{0} - New User"], selectedSite.SiteName);
             }
             else
             {
-                ViewData["Title"] = sr["New User"];
+                ViewData["Title"] = _sr["New User"];
             }
 
             bool isValid = ModelState.IsValid;
 
-            bool userNameAvailable = await UserManager.LoginIsAvailable(model.UserId, model.Username);
+            bool userNameAvailable = await _userManager.LoginIsAvailable(model.UserId, model.Username);
             if (!userNameAvailable)
             {
-                ModelState.AddModelError("usernameerror", sr["Username is already in use"]);
+                ModelState.AddModelError("usernameerror", _sr["Username is already in use"]);
                 isValid = false;
             }
 
-            bool customDataIsValid = await customUserInfo.HandleNewUserValidation(
+            bool customDataIsValid = await _customUserInfo.HandleNewUserValidation(
                 selectedSite,
                 model,
                 HttpContext,
@@ -426,12 +425,12 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
                     user.DateOfBirth = model.DateOfBirth.Value;
                 }
 
-                await customUserInfo.ProcessUserBeforeCreate(user, HttpContext);
+                await _customUserInfo.ProcessUserBeforeCreate(user, HttpContext);
 
-                var result = await UserManager.CreateAsync(user, model.Password);
+                var result = await _userManager.CreateAsync(user, model.Password);
                 if (result.Succeeded)
                 {
-                    await customUserInfo.HandleNewUserPostSuccess(
+                    await _customUserInfo.HandleNewUserPostSuccess(
                         selectedSite,
                         user,
                         model,
@@ -440,10 +439,10 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
                     if (model.MustChangePwd)
                     {
                         user.MustChangePwd = true;
-                        await UserManager.UpdateAsync(user);
+                        await _userManager.UpdateAsync(user);
                     }
 
-                    this.AlertSuccess(string.Format(sr["user account for {0} was successfully created."],
+                    this.AlertSuccess(string.Format(_sr["user account for {0} was successfully created."],
                         user.DisplayName), true);
 
                     return RedirectToAction("Index", "UserAdmin", new { siteId = selectedSite.Id });
@@ -451,7 +450,7 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
                 AddErrors(result);
             }
 
-            var viewName = await customUserInfo.GetNewUserViewName(UserManager.Site, HttpContext);
+            var viewName = await _customUserInfo.GetNewUserViewName(_userManager.Site, HttpContext);
 
             // If we got this far, something failed, redisplay form
             return View(viewName, model);
@@ -471,9 +470,9 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
                 return RedirectToAction("Index");
             }
 
-            var selectedSite = await siteManager.GetSiteForDataOperations(siteId);
+            var selectedSite = await _siteManager.GetSiteForDataOperations(siteId);
 
-            var user = await UserManager.Fetch(selectedSite.Id, userId);
+            var user = await _userManager.Fetch(selectedSite.Id, userId);
 
             if (user == null)
             {
@@ -481,13 +480,13 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
             }
 
             // only server admin site can edit other sites settings
-            if (selectedSite.Id != siteManager.CurrentSite.Id)
+            if (selectedSite.Id != _siteManager.CurrentSite.Id)
             {
-                ViewData["Title"] = string.Format(CultureInfo.CurrentUICulture, sr["{0} - User Activity - {1}"], selectedSite.SiteName, user.Email);
+                ViewData["Title"] = string.Format(CultureInfo.CurrentUICulture, _sr["{0} - User Activity - {1}"], selectedSite.SiteName, user.Email);
             }
             else
             {
-                ViewData["Title"] = string.Format(CultureInfo.CurrentUICulture, sr["User Activity - {0}"], user.Email);
+                ViewData["Title"] = string.Format(CultureInfo.CurrentUICulture, _sr["User Activity - {0}"], user.Email);
             }
 
             var model = new UserActivityViewModel();
@@ -500,8 +499,8 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
             model.LastLoginUtc = user.LastLoginUtc;
             model.LastName = user.LastName;
             model.LastPassswordChangenUtc = user.LastPasswordChangeUtc;
-            model.TimeZoneId = await timeZoneIdResolver.GetUserTimeZoneId();
-            model.Locations = await UserManager.GetUserLocations(
+            model.TimeZoneId = await _timeZoneIdResolver.GetUserTimeZoneId();
+            model.Locations = await _userManager.GetUserLocations(
                 selectedSite.Id,
                 userId,
                 pageNumber,
@@ -509,20 +508,20 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
                 );
             
             model.TwoFactor = user.TwoFactorEnabled;
-            model.Logins = await UserManager.GetLoginsAsync(user as SiteUser);
+            model.Logins = await _userManager.GetLoginsAsync(user as SiteUser);
             if(!string.IsNullOrWhiteSpace(user.TimeZoneId))
             {
                 model.UserTimeZone = user.TimeZoneId;
             }
             else
             {
-                model.UserTimeZone = UserManager.Site.TimeZoneId;
+                model.UserTimeZone = _userManager.Site.TimeZoneId;
             }
             
 
             var currentCrumbAdjuster = new NavigationNodeAdjuster(Request.HttpContext);
             currentCrumbAdjuster.KeyToAdjust = "UserActivity";
-            currentCrumbAdjuster.AdjustedText = string.Format(CultureInfo.CurrentUICulture, sr["Activity - {0}"], user.Email); 
+            currentCrumbAdjuster.AdjustedText = string.Format(CultureInfo.CurrentUICulture, _sr["Activity - {0}"], user.Email); 
             currentCrumbAdjuster.ViewFilterName = NamedNavigationFilters.Breadcrumbs; // this is default but showing here for readers of code 
             currentCrumbAdjuster.AddToContext();
 
@@ -542,15 +541,15 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
             }
 
             ViewData["ReturnUrl"] = Request.Path + Request.QueryString;
-            var selectedSite = await siteManager.GetSiteForDataOperations(siteId);
+            var selectedSite = await _siteManager.GetSiteForDataOperations(siteId);
             // only server admin site can edit other sites settings
-            if (selectedSite.Id != siteManager.CurrentSite.Id)
+            if (selectedSite.Id != _siteManager.CurrentSite.Id)
             {
-                ViewData["Title"] = string.Format(CultureInfo.CurrentUICulture, sr["{0} - Manage User"], selectedSite.SiteName);
+                ViewData["Title"] = string.Format(CultureInfo.CurrentUICulture, _sr["{0} - Manage User"], selectedSite.SiteName);
             }
             else
             {
-                ViewData["Title"] = sr["Manage User"];
+                ViewData["Title"] = _sr["Manage User"];
             }
 
             
@@ -558,7 +557,7 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
             var model = new EditUserViewModel();
             model.SiteId = selectedSite.Id;
             
-            var user = await UserManager.Fetch(selectedSite.Id, userId);
+            var user = await _userManager.Fetch(selectedSite.Id, userId);
             if (user != null)
             {
                 model.UserId = user.Id;
@@ -577,9 +576,9 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
 
                 if(string.IsNullOrEmpty(model.TimeZoneId))
                 {
-                    model.TimeZoneId = await timeZoneIdResolver.GetSiteTimeZoneId();
+                    model.TimeZoneId = await _timeZoneIdResolver.GetSiteTimeZoneId();
                 }
-                model.AllTimeZones = tzHelper.GetTimeZoneList().Select(x =>
+                model.AllTimeZones = _tzHelper.GetTimeZoneList().Select(x =>
                                new SelectListItem
                                {
                                    Text = x,
@@ -592,7 +591,7 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
                     model.DateOfBirth = user.DateOfBirth;
                 }
 
-                model.UserClaims = await UserManager.GetClaimsAsync((SiteUser)user);
+                model.UserClaims = await _userManager.GetClaimsAsync((SiteUser)user);
 
 
                 var currentCrumbAdjuster = new NavigationNodeAdjuster(Request.HttpContext);
@@ -603,9 +602,9 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
                 
             }
 
-            var viewName = await customUserInfo.GetUserEditViewName(UserManager.Site, HttpContext);
-            await customUserInfo.HandleUserEditGet(
-                UserManager.Site,
+            var viewName = await _customUserInfo.GetUserEditViewName(_userManager.Site, HttpContext);
+            await _customUserInfo.HandleUserEditGet(
+                _userManager.Site,
                 model,
                 HttpContext,
                 ViewData);
@@ -618,36 +617,36 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> UserEdit(EditUserViewModel model)
         {
-            var selectedSite = await siteManager.GetSiteForDataOperations(model.SiteId);
+            var selectedSite = await _siteManager.GetSiteForDataOperations(model.SiteId);
             // only server admin site can edit other sites settings
-            if (selectedSite.Id != siteManager.CurrentSite.Id)
+            if (selectedSite.Id != _siteManager.CurrentSite.Id)
             {
-                ViewData["Title"] = string.Format(CultureInfo.CurrentUICulture, sr["{0} - Manage User"], selectedSite.SiteName);
+                ViewData["Title"] = string.Format(CultureInfo.CurrentUICulture, _sr["{0} - Manage User"], selectedSite.SiteName);
             }
             else
             {
-                ViewData["Title"] = sr["Manage User"];
+                ViewData["Title"] = _sr["Manage User"];
             }
 
             
 
             bool isValid = ModelState.IsValid && (model.UserId != Guid.Empty);
-            bool userNameAvailable = await UserManager.LoginIsAvailable(model.UserId, model.Username);
+            bool userNameAvailable = await _userManager.LoginIsAvailable(model.UserId, model.Username);
             if (!userNameAvailable)
             {
-                ModelState.AddModelError("usernameerror", sr["Username is already in use"]);
+                ModelState.AddModelError("usernameerror", _sr["Username is already in use"]);
                 isValid = false;
             }
 
-            bool customDataIsValid = await customUserInfo.HandleUserEditValidation(
-                UserManager.Site,
+            bool customDataIsValid = await _customUserInfo.HandleUserEditValidation(
+                _userManager.Site,
                 model,
                 HttpContext,
                 ViewData,
                 ModelState);
 
-            var viewName = await customUserInfo.GetUserEditViewName(UserManager.Site, HttpContext);
-            var user = await UserManager.Fetch(selectedSite.Id, model.UserId);
+            var viewName = await _customUserInfo.GetUserEditViewName(_userManager.Site, HttpContext);
+            var user = await _userManager.Fetch(selectedSite.Id, model.UserId);
 
             if (!isValid || !customDataIsValid)
             {
@@ -687,18 +686,18 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
                 }
                 user.WebSiteUrl = model.WebSiteUrl;
 
-                await customUserInfo.HandleUserEditPostSuccess(
-                        UserManager.Site,
+                await _customUserInfo.HandleUserEditPostSuccess(
+                        _userManager.Site,
                         user,
                         model,
                         HttpContext
                         );
 
-                await UserManager.UpdateAsync((SiteUser)user);
+                await _userManager.UpdateAsync((SiteUser)user);
 
                 
 
-                this.AlertSuccess(string.Format(sr["user account for {0} was successfully updated."],
+                this.AlertSuccess(string.Format(_sr["user account for {0} was successfully updated."],
                         user.DisplayName), true);
                         
                     
@@ -719,7 +718,7 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
             Guid? siteId
             )
         {
-            if(!uiOptions.AllowAdminsToChangeUserPasswords)
+            if(!_uiOptions.AllowAdminsToChangeUserPasswords)
             {
                 return RedirectToAction("Index");
             }
@@ -729,18 +728,18 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
             }
 
             
-            var selectedSite = await siteManager.GetSiteForDataOperations(siteId);
+            var selectedSite = await _siteManager.GetSiteForDataOperations(siteId);
             // only server admin site can edit other sites users
-            if (selectedSite.Id != siteManager.CurrentSite.Id)
+            if (selectedSite.Id != _siteManager.CurrentSite.Id)
             {
-                ViewData["Title"] = string.Format(CultureInfo.CurrentUICulture, sr["{0} - Change User Password"], selectedSite.SiteName);
+                ViewData["Title"] = string.Format(CultureInfo.CurrentUICulture, _sr["{0} - Change User Password"], selectedSite.SiteName);
             }
             else
             {
-                ViewData["Title"] = sr["Change User Password"];
+                ViewData["Title"] = _sr["Change User Password"];
             }
 
-            var user = await UserManager.Fetch(selectedSite.Id, userId);
+            var user = await _userManager.Fetch(selectedSite.Id, userId);
 
             if (user == null)
             {
@@ -768,7 +767,7 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> ChangeUserPassword(ChangeUserPasswordViewModel model)
         {
-            if (!uiOptions.AllowAdminsToChangeUserPasswords)
+            if (!_uiOptions.AllowAdminsToChangeUserPasswords)
             {
                 return RedirectToAction("Index");
             }
@@ -779,18 +778,18 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
             }
 
 
-            var selectedSite = await siteManager.GetSiteForDataOperations(model.SiteId);
+            var selectedSite = await _siteManager.GetSiteForDataOperations(model.SiteId);
             // only server admin site can edit other sites users
-            if (selectedSite.Id != siteManager.CurrentSite.Id)
+            if (selectedSite.Id != _siteManager.CurrentSite.Id)
             {
-                ViewData["Title"] = string.Format(CultureInfo.CurrentUICulture, sr["{0} - Change User Password"], selectedSite.SiteName);
+                ViewData["Title"] = string.Format(CultureInfo.CurrentUICulture, _sr["{0} - Change User Password"], selectedSite.SiteName);
             }
             else
             {
-                ViewData["Title"] = sr["Change User Password"];
+                ViewData["Title"] = _sr["Change User Password"];
             }
 
-            var user = await UserManager.Fetch(selectedSite.Id, model.UserId);
+            var user = await _userManager.Fetch(selectedSite.Id, model.UserId);
 
             if (user == null)
             {
@@ -803,17 +802,17 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
             }
             user.MustChangePwd = model.MustChangePwd;
 
-            var result = await UserManager.ChangeUserPassword(user as SiteUser, model.NewPassword, true);
+            var result = await _userManager.ChangeUserPassword(user as SiteUser, model.NewPassword, true);
             if (result.Succeeded)
             {
                
 
-                this.AlertSuccess(sr["The user password has been changed."]);
+                this.AlertSuccess(_sr["The user password has been changed."]);
                 return RedirectToAction("Index");
             }
             else
             {
-                this.AlertDanger(sr["oops something went wrong please try again"]);
+                this.AlertDanger(_sr["oops something went wrong please try again"]);
             }
             AddErrors(result);
 
@@ -830,17 +829,17 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
             bool sendApprovalEmail,
             string returnUrl = null)
         {
-            var selectedSite = await siteManager.GetSiteForDataOperations(siteId);
+            var selectedSite = await _siteManager.GetSiteForDataOperations(siteId);
 
             if (selectedSite != null)
             {
-                var user = await UserManager.Fetch(selectedSite.Id, userId);
+                var user = await _userManager.Fetch(selectedSite.Id, userId);
                 if(user != null)
                 {
                     user.AccountApproved = true;
-                    await UserManager.UpdateAsync((SiteUser)user);
+                    await _userManager.UpdateAsync((SiteUser)user);
 
-                    this.AlertSuccess(string.Format(sr["user account for {0} was successfully approved."],
+                    this.AlertSuccess(string.Format(_sr["user account for {0} was successfully approved."],
                             user.DisplayName), true);
                     
                     if(sendApprovalEmail)
@@ -849,10 +848,10 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
                             null,
                             protocol: HttpContext.Request.Scheme);
 
-                        emailSender.SendAccountApprovalNotificationAsync(
+                        _emailSender.SendAccountApprovalNotificationAsync(
                         selectedSite,
                         user.Email,
-                        sr["Account Approved"],
+                        _sr["Account Approved"],
                         loginUrl).Forget();
                     }
                 }   
@@ -871,15 +870,15 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> UserDelete(Guid siteId, Guid userId, int returnPageNumber = 1)
         {
-            var selectedSite = await siteManager.GetSiteForDataOperations(siteId);
+            var selectedSite = await _siteManager.GetSiteForDataOperations(siteId);
 
             if (selectedSite != null)
             {
-                var user = await UserManager.Fetch(selectedSite.Id, userId);
-                var result = await UserManager.DeleteAsync((SiteUser)user);
+                var user = await _userManager.Fetch(selectedSite.Id, userId);
+                var result = await _userManager.DeleteAsync((SiteUser)user);
                 if (result.Succeeded)
                 {
-                    this.AlertSuccess(string.Format(sr["user account for {0} was successfully deleted."],
+                    this.AlertSuccess(string.Format(_sr["user account for {0} was successfully deleted."],
                         user.DisplayName), true);
  
                 }        
@@ -897,16 +896,16 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
             string claimType, 
             string claimValue)
         {
-            var selectedSite = siteManager.CurrentSite;
-            var user = await UserManager.Fetch(selectedSite.Id, userId);
+            var selectedSite = _siteManager.CurrentSite;
+            var user = await _userManager.Fetch(selectedSite.Id, userId);
 
             if(user != null && !string.IsNullOrWhiteSpace(claimType) && !string.IsNullOrWhiteSpace(claimValue))
             {
                 var claim = new Claim(claimType, claimValue);
-                var result = await UserManager.AddClaimAsync((SiteUser)user, claim);
+                var result = await _userManager.AddClaimAsync((SiteUser)user, claim);
                 if(result.Succeeded)
                 {
-                    this.AlertSuccess(string.Format(sr["The claim {0} was successfully added."],
+                    this.AlertSuccess(string.Format(_sr["The claim {0} was successfully added."],
                              claimType), true);
                 }
             }
@@ -923,16 +922,16 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
             string claimType,
             string claimValue)
         {
-            var selectedSite = siteManager.CurrentSite;
-            var user = await UserManager.Fetch(selectedSite.Id, userId);
+            var selectedSite = _siteManager.CurrentSite;
+            var user = await _userManager.Fetch(selectedSite.Id, userId);
 
             if (user != null)
             {
                 var claim = new Claim(claimType, claimValue);
-                var result = await UserManager.RemoveClaimAsync((SiteUser)user, claim);
+                var result = await _userManager.RemoveClaimAsync((SiteUser)user, claim);
                 if (result.Succeeded)
                 {
-                    this.AlertSuccess(string.Format(sr["The claim {0} was successfully removed."],
+                    this.AlertSuccess(string.Format(_sr["The claim {0} was successfully removed."],
                              claimType), true);
                 }
             }

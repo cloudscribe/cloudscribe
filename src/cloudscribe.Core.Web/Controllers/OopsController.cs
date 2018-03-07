@@ -71,8 +71,10 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
                             break;
                     }
 
-                    var jsonResult = new JsonResult(new { error = errorMessage });
-                    jsonResult.StatusCode = statusCode;
+                    var jsonResult = new JsonResult(new { error = errorMessage })
+                    {
+                        StatusCode = statusCode
+                    };
                     return jsonResult;
                 }
 
