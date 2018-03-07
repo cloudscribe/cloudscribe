@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2015-07-22
-// Last Modified:			2017-12-28
+// Last Modified:			2018-03-07
 // 
 
 using cloudscribe.Core.Models.Geography;
@@ -22,103 +22,103 @@ namespace cloudscribe.Core.Web.Components
             IGeoQueries geoQueries,
             IHttpContextAccessor contextAccessor)
         {
-            commands = geoCommands;
-            queries = geoQueries;
+            _commands = geoCommands;
+            _queries = geoQueries;
             _context = contextAccessor?.HttpContext;
         }
 
-        private IGeoCommands commands;
-        private IGeoQueries queries;
+        private IGeoCommands _commands;
+        private IGeoQueries _queries;
         private readonly HttpContext _context;
         private CancellationToken CancellationToken => _context?.RequestAborted ?? CancellationToken.None;
 
         public Task<PagedResult<IGeoCountry>> GetCountriesPage(int pageNumber, int pageSize)
         {
-            return queries.GetCountriesPage(pageNumber, pageSize, CancellationToken);
+            return _queries.GetCountriesPage(pageNumber, pageSize, CancellationToken);
         }
 
         public Task<int> GetCountryCount()
         {
-            return queries.GetCountryCount(CancellationToken);
+            return _queries.GetCountryCount(CancellationToken);
         }
 
         public Task<IGeoCountry> FetchCountry(Guid guid)
         {
-            return queries.FetchCountry(guid, CancellationToken);
+            return _queries.FetchCountry(guid, CancellationToken);
         }
 
         public Task<IGeoCountry> FetchCountry(string isoCode2)
         {
-            return queries.FetchCountry(isoCode2, CancellationToken);
+            return _queries.FetchCountry(isoCode2, CancellationToken);
         }
 
         public Task<List<IGeoCountry>> GetAllCountries()
         {
-            return queries.GetAllCountries(CancellationToken);
+            return _queries.GetAllCountries(CancellationToken);
         }
 
         public async Task Add(IGeoCountry geoCountry)
         {
             if (geoCountry.Id == Guid.Empty) geoCountry.Id = Guid.NewGuid();
-            await commands.Add(geoCountry, CancellationToken.None);
+            await _commands.Add(geoCountry, CancellationToken.None);
         }
 
         public async Task Update(IGeoCountry geoCountry)
         {
-            await commands.Update(geoCountry, CancellationToken.None);
+            await _commands.Update(geoCountry, CancellationToken.None);
         }
 
         public async Task DeleteCountry(IGeoCountry country)
         {
-            await commands.DeleteGeoZonesByCountry(country.Id, CancellationToken.None);
-            await commands.DeleteCountry(country.Id, CancellationToken.None);
+            await _commands.DeleteGeoZonesByCountry(country.Id, CancellationToken.None);
+            await _commands.DeleteCountry(country.Id, CancellationToken.None);
             
         }
 
         public Task<List<IGeoZone>> GetGeoZonesByCountry(Guid countryGuid)
         {
-            return queries.GetGeoZonesByCountry(countryGuid, CancellationToken);
+            return _queries.GetGeoZonesByCountry(countryGuid, CancellationToken);
         }
 
         public Task<PagedResult<IGeoZone>> GetGeoZonePage(Guid countryGuid, int pageNumber, int pageSize)
         {
-            return queries.GetGeoZonePage(countryGuid, pageNumber, pageSize, CancellationToken);
+            return _queries.GetGeoZonePage(countryGuid, pageNumber, pageSize, CancellationToken);
         }
 
         public Task<int> GetGeoZoneCount(Guid countryGuid)
         {
-            return queries.GetGeoZoneCount(countryGuid, CancellationToken);
+            return _queries.GetGeoZoneCount(countryGuid, CancellationToken);
         }
 
         public Task<List<IGeoCountry>> CountryAutoComplete(string query, int maxRows)
         {
-            return queries.CountryAutoComplete(query, maxRows, CancellationToken);
+            return _queries.CountryAutoComplete(query, maxRows, CancellationToken);
         }
 
         public Task<List<IGeoZone>> StateAutoComplete(Guid countryGuid, string query, int maxRows)
         {
-            return queries.StateAutoComplete(countryGuid, query, maxRows, CancellationToken);
+            return _queries.StateAutoComplete(countryGuid, query, maxRows, CancellationToken);
         }
 
         public Task<IGeoZone> FetchGeoZone(Guid guid)
         {
-            return queries.FetchGeoZone(guid, CancellationToken);
+            return _queries.FetchGeoZone(guid, CancellationToken);
         }
 
         public async Task Add(IGeoZone geoZone)
         {
             if (geoZone.Id == Guid.Empty) geoZone.Id = Guid.NewGuid();
-            await commands.Add(geoZone, CancellationToken.None);
+            await _commands.Add(geoZone, CancellationToken.None);
         }
 
         public async Task Update(IGeoZone geoZone)
         {
-            await commands.Update(geoZone, CancellationToken.None);
+            await _commands.Update(geoZone, CancellationToken.None);
         }
 
         public async Task DeleteGeoZone(IGeoZone geoZone)
         {
-            await commands.DeleteGeoZone(geoZone.Id, CancellationToken.None);
+            await _commands.DeleteGeoZone(geoZone.Id, CancellationToken.None);
         }
         
     }

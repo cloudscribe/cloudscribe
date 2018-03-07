@@ -12,14 +12,14 @@ namespace cloudscribe.Core.Web.Components
             SiteContext currentSite
             )
         {
-            this.currentSite = currentSite;
+            _currentSite = currentSite;
         }
 
-        private SiteContext currentSite;
+        private SiteContext _currentSite;
 
         public Guid GetCurrentSiteId()
         {
-            return currentSite.Id;
+            return _currentSite.Id;
         }
 
     }

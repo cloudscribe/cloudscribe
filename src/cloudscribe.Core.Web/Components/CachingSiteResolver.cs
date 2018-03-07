@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:              Joe Audette
 // Created:             2016-02-04
-// Last Modified:       2016-10-08
+// Last Modified:       2018-03-07
 // 
 
 //  2016-02-04 found this blog post by Ben Foster
@@ -39,30 +39,29 @@ namespace cloudscribe.Core.Web.Components
             )
             : base(cache, loggerFactory)
         {
-            siteRepo = siteRepository;
-            this.multiTenantOptions = multiTenantOptions.Value;
-            this.dataProtector = dataProtector;
-            cachingOptions = cachingOptionsAccessor.Value;
+            _siteQueries = siteRepository;
+            _multiTenantOptions = multiTenantOptions.Value;
+            _dataProtector = dataProtector;
+            _cachingOptions = cachingOptionsAccessor.Value;
         }
 
-        private MultiTenantOptions multiTenantOptions;
-        private ISiteQueries siteRepo;
-        private SiteDataProtector dataProtector;
-        private CachingSiteResolverOptions cachingOptions;
+        private MultiTenantOptions _multiTenantOptions;
+        private ISiteQueries _siteQueries;
+        private SiteDataProtector _dataProtector;
+        private CachingSiteResolverOptions _cachingOptions;
 
         private async Task<List<string>> GetAllSiteFoldersFolders()
         {
             var listCacheKey = "folderList";
-            var result = cache.Get(listCacheKey) as List<string>;
-            if(result != null)
+            if (cache.Get(listCacheKey) is List<string> result)
             {
                 log.LogDebug("Folder List retrieved from cache with key \"{cacheKey}\".", listCacheKey);
                 return result;
             }
 
-            result = await siteRepo.GetAllSiteFolders();
+            result = await _siteQueries.GetAllSiteFolders();
             var cacheEntryOptions = new MemoryCacheEntryOptions()
-                .SetAbsoluteExpiration(cachingOptions.FolderListCacheDuration);
+                .SetAbsoluteExpiration(_cachingOptions.FolderListCacheDuration);
 
             log.LogDebug("Caching folder list with keys \"{cacheKey}\".", listCacheKey);
             cache.Set(listCacheKey, result, cacheEntryOptions);
@@ -74,13 +73,13 @@ namespace cloudscribe.Core.Web.Components
         protected override MemoryCacheEntryOptions CreateCacheEntryOptions()
         {
             return new MemoryCacheEntryOptions()
-                .SetAbsoluteExpiration(cachingOptions.SiteCacheDuration); 
+                .SetAbsoluteExpiration(_cachingOptions.SiteCacheDuration); 
         }
 
         // Determines what information in the current request should be used to do a cache lookup e.g.the hostname.
         protected override async Task<string> GetContextIdentifier(HttpContext context)
         {
-            if (multiTenantOptions.Mode == MultiTenantMode.FolderName)
+            if (_multiTenantOptions.Mode == MultiTenantMode.FolderName)
             {
                 var fullPath = context.Request.PathBase + context.Request.Path;
                 var siteFolderName = fullPath.StartingSegment();
@@ -105,7 +104,7 @@ namespace cloudscribe.Core.Web.Components
         {
             var identifiers = new List<string>();
 
-            if (multiTenantOptions.Mode == MultiTenantMode.FolderName)
+            if (_multiTenantOptions.Mode == MultiTenantMode.FolderName)
             {
                 if (context.Tenant.SiteFolderName.Length > 0)
                 {
@@ -127,7 +126,7 @@ namespace cloudscribe.Core.Web.Components
         //Resolve a tenant context from the current request. This will only be executed on cache misses.
         protected override Task<TenantContext<SiteContext>> ResolveAsync(HttpContext context)
         {
-            if (multiTenantOptions.Mode == MultiTenantMode.FolderName)
+            if (_multiTenantOptions.Mode == MultiTenantMode.FolderName)
             {
                 return ResolveByFolderAsync(context);
             }
@@ -143,11 +142,11 @@ namespace cloudscribe.Core.Web.Components
 
             CancellationToken cancellationToken = context?.RequestAborted ?? CancellationToken.None;
 
-            var site = await siteRepo.FetchByFolderName(siteFolderName, cancellationToken);
+            var site = await _siteQueries.FetchByFolderName(siteFolderName, cancellationToken);
 
             if (site != null)
             {
-                dataProtector.UnProtect(site);
+                _dataProtector.UnProtect(site);
                 var siteContext = new SiteContext(site);
                 tenantContext = new TenantContext<SiteContext>(siteContext);
             }
@@ -161,11 +160,11 @@ namespace cloudscribe.Core.Web.Components
 
             CancellationToken cancellationToken = context?.RequestAborted ?? CancellationToken.None;
 
-            ISiteSettings site = await siteRepo.Fetch(context.Request.Host.Value, cancellationToken);
+            ISiteSettings site = await _siteQueries.Fetch(context.Request.Host.Value, cancellationToken);
 
             if (site != null)
             {
-                dataProtector.UnProtect(site);
+                _dataProtector.UnProtect(site);
                 var siteContext = new SiteContext(site);
                 tenantContext = new TenantContext<SiteContext>(siteContext);
             }

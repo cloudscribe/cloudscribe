@@ -23,14 +23,14 @@ namespace cloudscribe.Core.Web.Components
             SiteManager siteManager,
             GeoDataManager geoDataManager)
         {
-            this.siteManager = siteManager;
-            this.contextAccessor = contextAccessor;
-            this.geoDataManager = geoDataManager;
+            _siteManager = siteManager;
+            _contextAccessor = contextAccessor;
+            _geoDataManager = geoDataManager;
         }
 
-        private SiteManager siteManager;
-        private GeoDataManager geoDataManager;
-        private IHttpContextAccessor contextAccessor;
+        private SiteManager _siteManager;
+        private GeoDataManager _geoDataManager;
+        private IHttpContextAccessor _contextAccessor;
 
         public async Task DoSetupStep(
             Func<string, bool, Task> output,
@@ -82,7 +82,7 @@ namespace cloudscribe.Core.Web.Components
                 }
             }
 
-            int countryCount = await geoDataManager.GetCountryCount();
+            int countryCount = await _geoDataManager.GetCountryCount();
             if(countryCount == 0)
             {
                 await output("creating initial country data", true);
@@ -90,18 +90,18 @@ namespace cloudscribe.Core.Web.Components
                 List<GeoCountry> countries = InitialData.BuildCountryList();
                 foreach(GeoCountry c in countries)
                 {
-                    await geoDataManager.Add(c);
+                    await _geoDataManager.Add(c);
                 }
 
                 await output("creating initial state/region data", true);
                 List<GeoZone> states = InitialData.BuildStateList();
                 foreach (GeoZone s in states)
                 {
-                    await geoDataManager.Add(s);
+                    await _geoDataManager.Add(s);
                 }
             }
             
-            int existingSiteCount = await siteManager.ExistingSiteCount();
+            int existingSiteCount = await _siteManager.ExistingSiteCount();
 
             await output(
                         string.Format(
@@ -113,13 +113,13 @@ namespace cloudscribe.Core.Web.Components
             {
                 await output("CreatingSite", true);
 
-                SiteSettings newSite = await siteManager.CreateNewSite(true);
+                SiteSettings newSite = await _siteManager.CreateNewSite(true);
 
                 await output("CreatingRolesAndAdminUser", true);
 
-                await siteManager.CreateRequiredRolesAndAdminUser(newSite);
+                await _siteManager.CreateRequiredRolesAndAdminUser(newSite);
 
-                existingSiteCount = await siteManager.ExistingSiteCount();
+                existingSiteCount = await _siteManager.ExistingSiteCount();
                 if(existingSiteCount > 0)
                 {
                     await output(BuildHomeLink(), false);
@@ -132,23 +132,23 @@ namespace cloudscribe.Core.Web.Components
                 // if something went wrong with creating admin user
                 // setup page should try to correct it on subsequent runs
                 // ie create an admin user if no users exist
-                if (contextAccessor.HttpContext.Request.Host.HasValue)
+                if (_contextAccessor.HttpContext.Request.Host.HasValue)
                 {
-                    var site = await siteManager.Fetch(contextAccessor.HttpContext.Request.Host.Value);
+                    var site = await _siteManager.Fetch(_contextAccessor.HttpContext.Request.Host.Value);
                     if (site != null)
                     {
-                        int roleCount = await siteManager.GetRoleCount(site.Id);
+                        int roleCount = await _siteManager.GetRoleCount(site.Id);
                         if (roleCount == 0)
                         {
                             await output("CreatingRoles", true);
-                            await siteManager.EnsureRequiredRoles(site);
+                            await _siteManager.EnsureRequiredRoles(site);
                         }
  
-                        int userCount = await siteManager.GetUserCount(site.Id);
+                        int userCount = await _siteManager.GetUserCount(site.Id);
                         if (userCount == 0)
                         {
                             await output("CreatingAdminUser", true);
-                            await siteManager.CreateAdminUser(site);
+                            await _siteManager.CreateAdminUser(site);
                         }
                         
                     }

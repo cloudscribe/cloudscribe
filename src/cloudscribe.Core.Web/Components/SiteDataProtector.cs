@@ -19,22 +19,22 @@ namespace cloudscribe.Core.Web.Components
             IDataProtectionProvider dataProtectionProvider,
             ILogger<SiteDataProtector> logger)
         {
-            rawProtector = dataProtectionProvider.CreateProtector("cloudscribe.Core.Models.SiteSettings");
-            log = logger;
+            _rawProtector = dataProtectionProvider.CreateProtector("cloudscribe.Core.Models.SiteSettings");
+            _log = logger;
         }
 
-        private ILogger log;
-        private IDataProtector rawProtector = null;
-        private IPersistedDataProtector dataProtector
+        private ILogger _log;
+        private IDataProtector _rawProtector = null;
+        private IPersistedDataProtector DataProtector
         {
-            get { return rawProtector as IPersistedDataProtector; }
+            get { return _rawProtector as IPersistedDataProtector; }
         }
 
         public void Protect(ISiteSettings site)
         {
             if (site == null) { throw new ArgumentNullException("you must pass in an implementation of ISiteSettings"); }
             if (site.IsDataProtected) { return; }
-            if (dataProtector == null) { return; }
+            if (DataProtector == null) { return; }
 
             var countOfProtectedItems = 0;
 
@@ -42,12 +42,12 @@ namespace cloudscribe.Core.Web.Components
             {
                 try
                 {
-                    site.FacebookAppSecret = dataProtector.PersistentProtect(site.FacebookAppSecret);
+                    site.FacebookAppSecret = DataProtector.PersistentProtect(site.FacebookAppSecret);
                     countOfProtectedItems += 1;
                 }
                 catch (System.Security.Cryptography.CryptographicException ex)
                 {
-                    log.LogError($"data protection error: {ex.Message} stacktrace: {ex.StackTrace}");
+                    _log.LogError($"data protection error: {ex.Message} stacktrace: {ex.StackTrace}");
                 }
 
             }
@@ -56,12 +56,12 @@ namespace cloudscribe.Core.Web.Components
             {
                 try
                 {
-                    site.GoogleClientSecret = dataProtector.PersistentProtect(site.GoogleClientSecret);
+                    site.GoogleClientSecret = DataProtector.PersistentProtect(site.GoogleClientSecret);
                     countOfProtectedItems += 1;
                 }
                 catch (System.Security.Cryptography.CryptographicException ex)
                 {
-                    log.LogError($"data protection error: {ex.Message} stacktrace: {ex.StackTrace}");
+                    _log.LogError($"data protection error: {ex.Message} stacktrace: {ex.StackTrace}");
                 }
 
             }
@@ -70,12 +70,12 @@ namespace cloudscribe.Core.Web.Components
             {
                 try
                 {
-                    site.MicrosoftClientSecret = dataProtector.PersistentProtect(site.MicrosoftClientSecret);
+                    site.MicrosoftClientSecret = DataProtector.PersistentProtect(site.MicrosoftClientSecret);
                     countOfProtectedItems += 1;
                 }
                 catch (System.Security.Cryptography.CryptographicException ex)
                 {
-                    log.LogError($"data protection error: {ex.Message} stacktrace: {ex.StackTrace}");
+                    _log.LogError($"data protection error: {ex.Message} stacktrace: {ex.StackTrace}");
                 }
 
             }
@@ -84,12 +84,12 @@ namespace cloudscribe.Core.Web.Components
             {
                 try
                 {
-                    site.TwitterConsumerSecret = dataProtector.PersistentProtect(site.TwitterConsumerSecret);
+                    site.TwitterConsumerSecret = DataProtector.PersistentProtect(site.TwitterConsumerSecret);
                     countOfProtectedItems += 1;
                 }
                 catch (System.Security.Cryptography.CryptographicException ex)
                 {
-                    log.LogError($"data protection error: {ex.Message} stacktrace: {ex.StackTrace}");
+                    _log.LogError($"data protection error: {ex.Message} stacktrace: {ex.StackTrace}");
                 }
 
             }
@@ -98,12 +98,12 @@ namespace cloudscribe.Core.Web.Components
             {
                 try
                 {
-                    site.SmtpPassword = dataProtector.PersistentProtect(site.SmtpPassword);
+                    site.SmtpPassword = DataProtector.PersistentProtect(site.SmtpPassword);
                     countOfProtectedItems += 1;
                 }
                 catch (System.Security.Cryptography.CryptographicException ex)
                 {
-                    log.LogError($"data protection error: {ex.Message} stacktrace: {ex.StackTrace}");
+                    _log.LogError($"data protection error: {ex.Message} stacktrace: {ex.StackTrace}");
                 }
 
             }
@@ -112,12 +112,12 @@ namespace cloudscribe.Core.Web.Components
             {
                 try
                 {
-                    site.EmailApiKey = dataProtector.PersistentProtect(site.EmailApiKey);
+                    site.EmailApiKey = DataProtector.PersistentProtect(site.EmailApiKey);
                     countOfProtectedItems += 1;
                 }
                 catch (System.Security.Cryptography.CryptographicException ex)
                 {
-                    log.LogError($"data protection error: {ex.Message} stacktrace: {ex.StackTrace}");
+                    _log.LogError($"data protection error: {ex.Message} stacktrace: {ex.StackTrace}");
                 }
 
             }
@@ -126,12 +126,12 @@ namespace cloudscribe.Core.Web.Components
             {
                 try
                 {
-                    site.OidConnectAppSecret = dataProtector.PersistentProtect(site.OidConnectAppSecret);
+                    site.OidConnectAppSecret = DataProtector.PersistentProtect(site.OidConnectAppSecret);
                     countOfProtectedItems += 1;
                 }
                 catch (System.Security.Cryptography.CryptographicException ex)
                 {
-                    log.LogError($"data protection error: {ex.Message} stacktrace: {ex.StackTrace}");
+                    _log.LogError($"data protection error: {ex.Message} stacktrace: {ex.StackTrace}");
                 }
 
             }
@@ -140,12 +140,12 @@ namespace cloudscribe.Core.Web.Components
             {
                 try
                 {
-                    site.DkimPrivateKey = dataProtector.PersistentProtect(site.DkimPrivateKey);
+                    site.DkimPrivateKey = DataProtector.PersistentProtect(site.DkimPrivateKey);
                     countOfProtectedItems += 1;
                 }
                 catch (System.Security.Cryptography.CryptographicException ex)
                 {
-                    log.LogError($"data protection error: {ex.Message} stacktrace: {ex.StackTrace}");
+                    _log.LogError($"data protection error: {ex.Message} stacktrace: {ex.StackTrace}");
                 }
 
             }
@@ -154,12 +154,12 @@ namespace cloudscribe.Core.Web.Components
             {
                 try
                 {
-                    site.SmsSecureToken = dataProtector.PersistentProtect(site.SmsSecureToken);
+                    site.SmsSecureToken = DataProtector.PersistentProtect(site.SmsSecureToken);
                     countOfProtectedItems += 1;
                 }
                 catch (System.Security.Cryptography.CryptographicException ex)
                 {
-                    log.LogError($"data protection error: {ex.Message} stacktrace: {ex.StackTrace}");
+                    _log.LogError($"data protection error: {ex.Message} stacktrace: {ex.StackTrace}");
                 }
 
             }
@@ -180,15 +180,15 @@ namespace cloudscribe.Core.Web.Components
             {
                 try
                 {
-                    site.FacebookAppSecret = dataProtector.PersistentUnprotect(site.FacebookAppSecret, out requiresMigration, out wasRevoked);
+                    site.FacebookAppSecret = DataProtector.PersistentUnprotect(site.FacebookAppSecret, out requiresMigration, out wasRevoked);
                 }
                 catch (System.Security.Cryptography.CryptographicException ex)
                 {
-                    log.LogError($"data protection error:{ex.Message} stacktrace: {ex.StackTrace}");
+                    _log.LogError($"data protection error:{ex.Message} stacktrace: {ex.StackTrace}");
                 }
                 catch (FormatException ex)
                 {
-                    log.LogError($"data protection error:{ex.Message} stacktrace: {ex.StackTrace}");
+                    _log.LogError($"data protection error:{ex.Message} stacktrace: {ex.StackTrace}");
                 }
 
             }
@@ -197,15 +197,15 @@ namespace cloudscribe.Core.Web.Components
             {
                 try
                 {
-                    site.GoogleClientSecret = dataProtector.PersistentUnprotect(site.GoogleClientSecret, out requiresMigration, out wasRevoked);
+                    site.GoogleClientSecret = DataProtector.PersistentUnprotect(site.GoogleClientSecret, out requiresMigration, out wasRevoked);
                 }
                 catch (System.Security.Cryptography.CryptographicException ex)
                 {
-                    log.LogError($"data protection error:{ex.Message} stacktrace: {ex.StackTrace}");
+                    _log.LogError($"data protection error:{ex.Message} stacktrace: {ex.StackTrace}");
                 }
                 catch (FormatException ex)
                 {
-                    log.LogError($"data protection error:{ex.Message} stacktrace: {ex.StackTrace}");
+                    _log.LogError($"data protection error:{ex.Message} stacktrace: {ex.StackTrace}");
                 }
 
             }
@@ -214,15 +214,15 @@ namespace cloudscribe.Core.Web.Components
             {
                 try
                 {
-                    site.MicrosoftClientSecret = dataProtector.PersistentUnprotect(site.MicrosoftClientSecret, out requiresMigration, out wasRevoked);
+                    site.MicrosoftClientSecret = DataProtector.PersistentUnprotect(site.MicrosoftClientSecret, out requiresMigration, out wasRevoked);
                 }
                 catch (System.Security.Cryptography.CryptographicException ex)
                 {
-                    log.LogError($"data protection error:{ex.Message} stacktrace: {ex.StackTrace}");
+                    _log.LogError($"data protection error:{ex.Message} stacktrace: {ex.StackTrace}");
                 }
                 catch (FormatException ex)
                 {
-                    log.LogError($"data protection error:{ex.Message} stacktrace: {ex.StackTrace}");
+                    _log.LogError($"data protection error:{ex.Message} stacktrace: {ex.StackTrace}");
                 }
 
             }
@@ -231,15 +231,15 @@ namespace cloudscribe.Core.Web.Components
             {
                 try
                 {
-                    site.TwitterConsumerSecret = dataProtector.PersistentUnprotect(site.TwitterConsumerSecret, out requiresMigration, out wasRevoked);
+                    site.TwitterConsumerSecret = DataProtector.PersistentUnprotect(site.TwitterConsumerSecret, out requiresMigration, out wasRevoked);
                 }
                 catch (System.Security.Cryptography.CryptographicException ex)
                 {
-                    log.LogError($"data protection error:{ex.Message} stacktrace: {ex.StackTrace}");
+                    _log.LogError($"data protection error:{ex.Message} stacktrace: {ex.StackTrace}");
                 }
                 catch (FormatException ex)
                 {
-                    log.LogError($"data protection error:{ex.Message} stacktrace: {ex.StackTrace}");
+                    _log.LogError($"data protection error:{ex.Message} stacktrace: {ex.StackTrace}");
                 }
 
             }
@@ -248,15 +248,15 @@ namespace cloudscribe.Core.Web.Components
             {
                 try
                 {
-                    site.SmtpPassword = dataProtector.PersistentUnprotect(site.SmtpPassword, out requiresMigration, out wasRevoked);
+                    site.SmtpPassword = DataProtector.PersistentUnprotect(site.SmtpPassword, out requiresMigration, out wasRevoked);
                 }
                 catch (System.Security.Cryptography.CryptographicException ex)
                 {
-                    log.LogError($"data protection error:{ex.Message} stacktrace: {ex.StackTrace}");
+                    _log.LogError($"data protection error:{ex.Message} stacktrace: {ex.StackTrace}");
                 }
                 catch (FormatException ex)
                 {
-                    log.LogError($"data protection error:{ex.Message} stacktrace: {ex.StackTrace}");
+                    _log.LogError($"data protection error:{ex.Message} stacktrace: {ex.StackTrace}");
                 }
 
             }
@@ -265,15 +265,15 @@ namespace cloudscribe.Core.Web.Components
             {
                 try
                 {
-                    site.EmailApiKey = dataProtector.PersistentUnprotect(site.EmailApiKey, out requiresMigration, out wasRevoked);
+                    site.EmailApiKey = DataProtector.PersistentUnprotect(site.EmailApiKey, out requiresMigration, out wasRevoked);
                 }
                 catch (System.Security.Cryptography.CryptographicException ex)
                 {
-                    log.LogError($"data protection error:{ex.Message} stacktrace: {ex.StackTrace}");
+                    _log.LogError($"data protection error:{ex.Message} stacktrace: {ex.StackTrace}");
                 }
                 catch (FormatException ex)
                 {
-                    log.LogError($"data protection error:{ex.Message} stacktrace: {ex.StackTrace}");
+                    _log.LogError($"data protection error:{ex.Message} stacktrace: {ex.StackTrace}");
                 }
 
             }
@@ -282,15 +282,15 @@ namespace cloudscribe.Core.Web.Components
             {
                 try
                 {
-                    site.OidConnectAppSecret = dataProtector.PersistentUnprotect(site.OidConnectAppSecret, out requiresMigration, out wasRevoked);
+                    site.OidConnectAppSecret = DataProtector.PersistentUnprotect(site.OidConnectAppSecret, out requiresMigration, out wasRevoked);
                 }
                 catch (System.Security.Cryptography.CryptographicException ex)
                 {
-                    log.LogError($"data protection error:{ex.Message} stacktrace: {ex.StackTrace}");
+                    _log.LogError($"data protection error:{ex.Message} stacktrace: {ex.StackTrace}");
                 }
                 catch (FormatException ex)
                 {
-                    log.LogError($"data protection error:{ex.Message} stacktrace: {ex.StackTrace}");
+                    _log.LogError($"data protection error:{ex.Message} stacktrace: {ex.StackTrace}");
                 }
                 
 
@@ -300,15 +300,15 @@ namespace cloudscribe.Core.Web.Components
             {
                 try
                 {
-                    site.SmsSecureToken = dataProtector.PersistentUnprotect(site.SmsSecureToken, out requiresMigration, out wasRevoked);
+                    site.SmsSecureToken = DataProtector.PersistentUnprotect(site.SmsSecureToken, out requiresMigration, out wasRevoked);
                 }
                 catch (System.Security.Cryptography.CryptographicException ex)
                 {
-                    log.LogError($"data protection error:{ex.Message} stacktrace: {ex.StackTrace}");
+                    _log.LogError($"data protection error:{ex.Message} stacktrace: {ex.StackTrace}");
                 }
                 catch (FormatException ex)
                 {
-                    log.LogError($"data protection error:{ex.Message} stacktrace: {ex.StackTrace}");
+                    _log.LogError($"data protection error:{ex.Message} stacktrace: {ex.StackTrace}");
                 }
 
             }
@@ -317,15 +317,15 @@ namespace cloudscribe.Core.Web.Components
             {
                 try
                 {
-                    site.DkimPrivateKey = dataProtector.PersistentUnprotect(site.DkimPrivateKey, out requiresMigration, out wasRevoked);
+                    site.DkimPrivateKey = DataProtector.PersistentUnprotect(site.DkimPrivateKey, out requiresMigration, out wasRevoked);
                 }
                 catch (System.Security.Cryptography.CryptographicException ex)
                 {
-                    log.LogError($"data protection error:{ex.Message} stacktrace: {ex.StackTrace}");
+                    _log.LogError($"data protection error:{ex.Message} stacktrace: {ex.StackTrace}");
                 }
                 catch (FormatException ex)
                 {
-                    log.LogError($"data protection error:{ex.Message} stacktrace: {ex.StackTrace}");
+                    _log.LogError($"data protection error:{ex.Message} stacktrace: {ex.StackTrace}");
                 }
 
             }
@@ -334,7 +334,7 @@ namespace cloudscribe.Core.Web.Components
 
             if (requiresMigration || wasRevoked)
             {
-                log.LogWarning($"DataProtection key wasRevoked or requires migration, save site settings for {site.SiteName} to protect with a new key");
+                _log.LogWarning($"DataProtection key wasRevoked or requires migration, save site settings for {site.SiteName} to protect with a new key");
             }
 
             

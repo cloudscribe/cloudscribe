@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. 
 // Author:                  Joe Audette
 // Created:                 2016-11-26
-// Last Modified:           2016-11-26
+// Last Modified:           2018-03-07
 // 
 
 using cloudscribe.Core.Models;
@@ -25,25 +25,25 @@ namespace cloudscribe.Core.Web.Components
             ILogger<SiteEvents> logger
             )
         {
-            this.createdHandlers = createdHandlers;
-            this.preUpdateHandlers = preUpdateHandlers;
-            this.preDeleteHandlers = preDeleteHandlers;
-            this.updateHandlers = updateHandlers;
-            log = logger;
+            _createdHandlers = createdHandlers;
+            _preUpdateHandlers = preUpdateHandlers;
+            _preDeleteHandlers = preDeleteHandlers;
+            _updateHandlers = updateHandlers;
+            _log = logger;
         }
 
-        private IEnumerable<IHandleSiteCreated> createdHandlers;
-        private IEnumerable<IHandleSitePreUpdate> preUpdateHandlers;
-        private IEnumerable<IHandleSitePreDelete> preDeleteHandlers;
-        private IEnumerable<IHandleSiteUpdated> updateHandlers;
-        private ILogger log;
+        private IEnumerable<IHandleSiteCreated> _createdHandlers;
+        private IEnumerable<IHandleSitePreUpdate> _preUpdateHandlers;
+        private IEnumerable<IHandleSitePreDelete> _preDeleteHandlers;
+        private IEnumerable<IHandleSiteUpdated> _updateHandlers;
+        private ILogger _log;
 
         public async Task HandleSiteCreated(
             ISiteSettings site,
             CancellationToken cancellationToken = default(CancellationToken)
             )
         {
-            foreach (var handler in createdHandlers)
+            foreach (var handler in _createdHandlers)
             {
                 try
                 {
@@ -51,7 +51,7 @@ namespace cloudscribe.Core.Web.Components
                 }
                 catch (Exception ex)
                 {
-                    log.LogError(ex.Message + " " + ex.StackTrace);
+                    _log.LogError($"{ex.Message} :  {ex.StackTrace}");
                 }
             }
         }
@@ -61,7 +61,7 @@ namespace cloudscribe.Core.Web.Components
             CancellationToken cancellationToken = default(CancellationToken)
             )
         {
-            foreach (var handler in preUpdateHandlers)
+            foreach (var handler in _preUpdateHandlers)
             {
                 try
                 {
@@ -69,7 +69,7 @@ namespace cloudscribe.Core.Web.Components
                 }
                 catch (Exception ex)
                 {
-                    log.LogError(ex.Message + " " + ex.StackTrace);
+                    _log.LogError($"{ex.Message} :  {ex.StackTrace}");
                 }
             }
         }
@@ -79,7 +79,7 @@ namespace cloudscribe.Core.Web.Components
             CancellationToken cancellationToken = default(CancellationToken)
             )
         {
-            foreach (var handler in preDeleteHandlers)
+            foreach (var handler in _preDeleteHandlers)
             {
                 try
                 {
@@ -87,7 +87,7 @@ namespace cloudscribe.Core.Web.Components
                 }
                 catch (Exception ex)
                 {
-                    log.LogError(ex.Message + " " + ex.StackTrace);
+                    _log.LogError($"{ex.Message} :  {ex.StackTrace}");
                 }
             }
         }
@@ -97,7 +97,7 @@ namespace cloudscribe.Core.Web.Components
             CancellationToken cancellationToken = default(CancellationToken)
             )
         {
-            foreach (var handler in updateHandlers)
+            foreach (var handler in _updateHandlers)
             {
                 try
                 {
@@ -105,7 +105,7 @@ namespace cloudscribe.Core.Web.Components
                 }
                 catch (Exception ex)
                 {
-                    log.LogError(ex.Message + " " + ex.StackTrace);
+                    _log.LogError($"{ex.Message} :  {ex.StackTrace}");
                 }
             }
         }
