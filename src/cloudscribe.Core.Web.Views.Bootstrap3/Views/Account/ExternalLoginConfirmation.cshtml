@@ -20,7 +20,7 @@
         @Html.Raw(successMessage)
 		@sr["Please enter a valid email for this site below and click the Register button to finish logging in."]
     </p>
-    @if (Model.RegistrationPreamble.Length > 0)
+    @if (!string.IsNullOrWhiteSpace(Model.RegistrationPreamble))
     {
         <div class="row">
             <div class="col-md-12">
@@ -35,7 +35,7 @@
             <span asp-validation-for="Email" class="text-danger"></span>
         </div>
     </div>
-    @if (Model.RegistrationAgreement.Length > 0)
+    @if (!string.IsNullOrWhiteSpace(Model.RegistrationAgreement))
     {
         <div class="form-group">
             <div class="col-md-12 agreementcontainer">

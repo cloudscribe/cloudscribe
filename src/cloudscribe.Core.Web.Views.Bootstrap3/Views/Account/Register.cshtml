@@ -20,7 +20,7 @@
 @section Styles {
     @{await Html.RenderPartialAsync("RegistrationStylePartial"); }
 }
-@if (Model.RecaptchaSiteKey.Length > 0)
+@if (!string.IsNullOrWhiteSpace(Model.RecaptchaSiteKey))
 {
     <script src='https://www.google.com/recaptcha/api.js'></script>
 }
@@ -31,7 +31,7 @@
     </script>
 }
 <h2>@ViewData["Title"]</h2>
-@if (Model.RegistrationPreamble.Length > 0)
+@if (!string.IsNullOrWhiteSpace(Model.RegistrationPreamble))
 {
     await Html.RenderPartialAsync("RegisterPreamblePartial", Model);
 }
@@ -86,7 +86,7 @@
             <span asp-validation-for="ConfirmPassword" class="text-danger"></span>
         </div>
     </div>
-    @if (Model.RegistrationAgreement.Length > 0)
+    @if (!string.IsNullOrWhiteSpace(Model.RegistrationAgreement))
     {
         await Html.RenderPartialAsync("RegisterAgreementPartial", Model);
     }
@@ -94,7 +94,7 @@
     {
         <input name="AgreeToTerms" value="true" type="hidden" />
     }
-    @if (Model.RecaptchaSiteKey.Length > 0 && !Model.UseInvisibleCaptcha)
+    @if (!string.IsNullOrWhiteSpace(Model.RecaptchaSiteKey) && !Model.UseInvisibleCaptcha)
     {
         <div class="form-group">
             <div class="col-md-offset-2 col-md-10">
@@ -106,7 +106,7 @@
 
     <div class="form-group">
         <div class="col-md-offset-2 col-md-10">
-            @if (Model.RecaptchaSiteKey.Length > 0 && Model.UseInvisibleCaptcha)
+            @if (!string.IsNullOrWhiteSpace(Model.RecaptchaSiteKey) && Model.UseInvisibleCaptcha)
             {
                 <button class="btn btn-default g-recaptcha" data-sitekey="@Model.RecaptchaSiteKey" data-callback='onCaptchaSubmit' data-enabled-text='@sr["Register"]' data-disabled-text='@sr["Working..."]'>@sr["Register"]</button>
             }

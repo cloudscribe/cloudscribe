@@ -12,25 +12,27 @@ namespace cloudscribe.Core.Web.Components
             IOptions<RecaptchaKeys> keysAccessor
             )
         {
-            this.currentSite = currentSite;
-            configKeys = keysAccessor.Value;
+            _currentSite = currentSite;
+            _configKeys = keysAccessor.Value;
         }
 
-        private SiteContext currentSite;
-        private RecaptchaKeys configKeys;
+        private SiteContext _currentSite;
+        private RecaptchaKeys _configKeys;
 
         public Task<RecaptchaKeys> GetKeys()
         {
-            if(!string.IsNullOrEmpty(currentSite.RecaptchaPublicKey))
+            if(!string.IsNullOrEmpty(_currentSite.RecaptchaPublicKey))
             {
-                var siteKeys = new RecaptchaKeys();
-                siteKeys.PrivateKey = currentSite.RecaptchaPrivateKey;
-                siteKeys.PublicKey = currentSite.RecaptchaPublicKey;
-                siteKeys.Invisible = currentSite.UseInvisibleRecaptcha;
+                var siteKeys = new RecaptchaKeys
+                {
+                    PrivateKey = _currentSite.RecaptchaPrivateKey,
+                    PublicKey = _currentSite.RecaptchaPublicKey,
+                    Invisible = _currentSite.UseInvisibleRecaptcha
+                };
                 return Task.FromResult(siteKeys);
             }
 
-            return Task.FromResult(configKeys);
+            return Task.FromResult(_configKeys);
         }
     }
 }

@@ -44,20 +44,20 @@ namespace cloudscribe.Core.Models
 
         public static bool HasAnySocialAuthEnabled(this ISiteContext site)
         {
-            if ((site.MicrosoftClientId.Length > 0) && (site.MicrosoftClientSecret.Length > 0)) return true;
-            if ((site.FacebookAppId.Length > 0) && (site.FacebookAppSecret.Length > 0)) return true;
-            if ((site.GoogleClientId.Length > 0) && (site.GoogleClientSecret.Length > 0)) return true;
-            if ((site.TwitterConsumerKey.Length > 0) && (site.TwitterConsumerSecret.Length > 0)) return true;
+            if ((!string.IsNullOrWhiteSpace(site.MicrosoftClientId)) && (!string.IsNullOrWhiteSpace(site.MicrosoftClientSecret))) return true;
+            if ((!string.IsNullOrWhiteSpace(site.FacebookAppId)) && (!string.IsNullOrWhiteSpace(site.FacebookAppSecret))) return true;
+            if ((!string.IsNullOrWhiteSpace(site.GoogleClientId)) && (!string.IsNullOrWhiteSpace(site.GoogleClientSecret))) return true;
+            if ((!string.IsNullOrWhiteSpace(site.TwitterConsumerKey)) && (!string.IsNullOrWhiteSpace(site.TwitterConsumerSecret))) return true;
             
             return false;
         }
 
         public static bool HasAnySocialAuthEnabled(this ISiteSettings site)
         {
-            if ((site.MicrosoftClientId.Length > 0) && (site.MicrosoftClientSecret.Length > 0)) return true;
-            if ((site.FacebookAppId.Length > 0) && (site.FacebookAppSecret.Length > 0)) return true;
-            if ((site.GoogleClientId.Length > 0) && (site.GoogleClientSecret.Length > 0)) return true;
-            if ((site.TwitterConsumerKey.Length > 0) && (site.TwitterConsumerSecret.Length > 0)) return true;
+            if ((!string.IsNullOrWhiteSpace(site.MicrosoftClientId)) && (!string.IsNullOrWhiteSpace(site.MicrosoftClientSecret))) return true;
+            if ((!string.IsNullOrWhiteSpace(site.FacebookAppId)) && (!string.IsNullOrWhiteSpace(site.FacebookAppSecret))) return true;
+            if ((!string.IsNullOrWhiteSpace(site.GoogleClientId)) && (!string.IsNullOrWhiteSpace(site.GoogleClientSecret))) return true;
+            if ((!string.IsNullOrWhiteSpace(site.TwitterConsumerKey)) && (!string.IsNullOrWhiteSpace(site.TwitterConsumerSecret))) return true;
 
             return false;
         }

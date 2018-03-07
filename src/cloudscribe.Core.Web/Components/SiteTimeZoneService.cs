@@ -12,25 +12,25 @@ namespace cloudscribe.Core.Web.Components
             ITimeZoneIdResolver timeZoneIdResolver
             )
         {
-            this.timeZoneHelper = timeZoneHelper;
-            this.timeZoneIdResolver = timeZoneIdResolver;
+            _timeZoneHelper = timeZoneHelper;
+            _timeZoneIdResolver = timeZoneIdResolver;
         }
 
-        private ITimeZoneHelper timeZoneHelper;
-        private ITimeZoneIdResolver timeZoneIdResolver;
-        private string currentTimeZoneId = null;
+        private ITimeZoneHelper _timeZoneHelper;
+        private ITimeZoneIdResolver _timeZoneIdResolver;
+        private string _currentTimeZoneId = null;
 
 
         public IReadOnlyCollection<string> GetTimeZoneList()
         {
-            return timeZoneHelper.GetTimeZoneList();
+            return _timeZoneHelper.GetTimeZoneList();
         }
 
         public async Task<DateTime> ConvertToLocalTime(DateTime utcInput)
         {
-            if(string.IsNullOrEmpty(currentTimeZoneId)) { currentTimeZoneId = await timeZoneIdResolver.GetUserTimeZoneId(); }
+            if(string.IsNullOrEmpty(_currentTimeZoneId)) { _currentTimeZoneId = await _timeZoneIdResolver.GetUserTimeZoneId(); }
 
-            return timeZoneHelper.ConvertToLocalTime(utcInput, currentTimeZoneId);
+            return _timeZoneHelper.ConvertToLocalTime(utcInput, _currentTimeZoneId);
         }
     }
 }

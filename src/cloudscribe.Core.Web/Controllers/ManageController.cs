@@ -74,8 +74,8 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
             var user = await _userManager.FindByIdAsync(HttpContext.User.GetUserId());
             var model = new AccountIndexViewModel
             {
-                HasPassword = (user.PasswordHash.Length > 0),
-                PhoneNumber = user.PhoneNumber.Length > 0 ? user.PhoneNumber : null,
+                HasPassword = (!string.IsNullOrWhiteSpace(user.PasswordHash)),
+                PhoneNumber = !string.IsNullOrWhiteSpace(user.PhoneNumber) ? user.PhoneNumber : null,
                 TwoFactor = user.TwoFactorEnabled,
                 Logins = await _userManager.GetLoginsAsync(user),
                 BrowserRemembered = await _signInManager.IsTwoFactorClientRememberedAsync(user),

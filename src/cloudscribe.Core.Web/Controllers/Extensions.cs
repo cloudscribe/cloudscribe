@@ -19,7 +19,7 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
         
         public static RedirectResult RedirectToSiteRoot(this Controller controller, ISiteContext site)
         {
-            if(site.SiteFolderName.Length > 0)
+            if(!string.IsNullOrWhiteSpace(site.SiteFolderName))
             {
                 return controller.Redirect("/" + site.SiteFolderName);
             }

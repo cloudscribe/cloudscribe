@@ -78,9 +78,11 @@ namespace cloudscribe.Core.Identity
         private GoogleOptions ResolveOptions(string scheme)
         {
             var tenant = _httpContextAccessor.HttpContext.GetTenant<SiteContext>();
-            var options = new GoogleOptions();
-            options.ClientId = "placeholder";
-            options.ClientSecret = "placeholder";
+            var options = new GoogleOptions
+            {
+                ClientId = "placeholder",
+                ClientSecret = "placeholder"
+            };
             _optionsInitializer.PostConfigure(scheme, options);
 
             options.DataProtectionProvider = options.DataProtectionProvider ?? _dp;
@@ -116,7 +118,7 @@ namespace cloudscribe.Core.Identity
             }
             var useFolder = !_multiTenantOptions.UseRelatedSitesMode
                                         && _multiTenantOptions.Mode == cloudscribe.Core.Models.MultiTenantMode.FolderName
-                                        && tenant.SiteFolderName.Length > 0;
+                                        && !string.IsNullOrWhiteSpace(tenant.SiteFolderName);
 
             if (!string.IsNullOrWhiteSpace(tenant.GoogleClientId))
             {

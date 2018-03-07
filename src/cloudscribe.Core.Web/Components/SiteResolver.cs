@@ -2,15 +2,8 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:              Joe Audette
 // Created:             2016-02-04
-// Last Modified:       2016-10-08
+// Last Modified:       2018-03-07
 // 
-
-//  2016-02-04 found this blog post by Ben Foster
-//  http://benfoster.io/blog/asp-net-5-multitenancy
-//  and the related project https://github.com/saaskit/saaskit
-//  I like his approach better than mine though they are similar
-//  his seems a little cleaner so I'm adopting it here to replace my previous pattern
-//  actual resolution process is the same as before
 
 using cloudscribe.Core.Models;
 using Microsoft.AspNetCore.Http;
@@ -18,8 +11,6 @@ using Microsoft.Extensions.Options;
 using SaasKit.Multitenancy;
 using System.Threading;
 using System.Threading.Tasks;
-
-
 
 namespace cloudscribe.Core.Web.Components
 {
@@ -30,18 +21,18 @@ namespace cloudscribe.Core.Web.Components
             SiteDataProtector dataProtector,
             IOptions<MultiTenantOptions> multiTenantOptions)
         {
-            siteRepo = siteRepository;
-            this.multiTenantOptions = multiTenantOptions.Value;
-            this.dataProtector = dataProtector;
+            _siteQueries = siteRepository;
+            _multiTenantOptions = multiTenantOptions.Value;
+            _dataProtector = dataProtector;
         }
 
-        private MultiTenantOptions multiTenantOptions;
-        private ISiteQueries siteRepo;
-        private SiteDataProtector dataProtector;
+        private MultiTenantOptions _multiTenantOptions;
+        private ISiteQueries _siteQueries;
+        private SiteDataProtector _dataProtector;
 
         public Task<TenantContext<SiteContext>> ResolveAsync(HttpContext context)
         {
-            if(multiTenantOptions.Mode == MultiTenantMode.FolderName)
+            if(_multiTenantOptions.Mode == MultiTenantMode.FolderName)
             {
                 return ResolveByFolderAsync(context);
             }
@@ -58,11 +49,11 @@ namespace cloudscribe.Core.Web.Components
 
             CancellationToken cancellationToken = context?.RequestAborted ?? CancellationToken.None;
 
-            var site  = await siteRepo.FetchByFolderName(siteFolderName, cancellationToken);
+            var site  = await _siteQueries.FetchByFolderName(siteFolderName, cancellationToken);
 
             if (site != null)
             {
-                dataProtector.UnProtect(site);
+                _dataProtector.UnProtect(site);
                 var siteContext = new SiteContext(site);
                 tenantContext = new TenantContext<SiteContext>(siteContext);
             }
@@ -78,11 +69,11 @@ namespace cloudscribe.Core.Web.Components
 
             CancellationToken cancellationToken = context?.RequestAborted ?? CancellationToken.None;
 
-            var site = await siteRepo.Fetch(context.Request.Host.Value, cancellationToken);
+            var site = await _siteQueries.Fetch(context.Request.Host.Value, cancellationToken);
 
             if (site != null)
             {
-                dataProtector.UnProtect(site);
+                _dataProtector.UnProtect(site);
 
                 var siteContext = new SiteContext(site);
 

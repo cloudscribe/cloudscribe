@@ -13,7 +13,7 @@
 }
 
 <h2>@ViewData["Title"]</h2>
-@if (Model.RegistrationPreamble.Length > 0)
+@if (!string.IsNullOrWhiteSpace(Model.RegistrationPreamble))
 {
     <div class="row">
         <div class="col-md-12">
