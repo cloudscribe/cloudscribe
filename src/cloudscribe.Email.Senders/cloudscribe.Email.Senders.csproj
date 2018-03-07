@@ -6,8 +6,6 @@
     <AssemblyVersion>1.0.0</AssemblyVersion>
     <Authors>Joe Audette</Authors>
     <TargetFramework>netstandard2.0</TargetFramework>
-    <AssemblyName>cloudscribe.Messaging.Email</AssemblyName>
-    <PackageId>cloudscribe.Messaging.Email</PackageId>
     <PackageTags>smtp;email;SendGrid,Mailgun,ElasticEmail</PackageTags>
     <PackageIconUrl>https://raw.githubusercontent.com/joeaudette/cloudscribe/master/cloudscribe-icon-32.png</PackageIconUrl>
     <PackageProjectUrl>https://github.com/joeaudette/cloudscribe</PackageProjectUrl>
