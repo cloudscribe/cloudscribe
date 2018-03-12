@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2014-12-08
-// Last Modified:			2018-03-07
+// Last Modified:			2018-03-08
 // 
 
 using cloudscribe.Core.Identity;
@@ -97,13 +97,15 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
                 itemsPerPage,
                 query,
                 sortMode);
-            
-            var model = new UserListViewModel();
-            model.SiteId = selectedSite.Id;
-            model.UserList = siteMembers;
-            model.SortMode = sortMode;
-            model.AlphaQuery = query; 
-            model.TimeZoneId = await _timeZoneIdResolver.GetUserTimeZoneId();
+
+            var model = new UserListViewModel
+            {
+                SiteId = selectedSite.Id,
+                UserList = siteMembers,
+                SortMode = sortMode,
+                AlphaQuery = query,
+                TimeZoneId = await _timeZoneIdResolver.GetUserTimeZoneId()
+            };
 
             return View(model);
 
@@ -145,16 +147,18 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
                 itemsPerPage,
                 query,
                 sortMode);
-            
-            var model = new UserListViewModel();
-            model.SiteId = selectedSite.Id;
-            model.UserList = siteMembers;
-            model.SearchQuery = query; 
-            model.SortMode = sortMode;
-            model.ActionName = "Search";
-            model.TimeZoneId = await _timeZoneIdResolver.GetUserTimeZoneId();
 
-            if(Request.IsAjaxRequest())
+            var model = new UserListViewModel
+            {
+                SiteId = selectedSite.Id,
+                UserList = siteMembers,
+                SearchQuery = query,
+                SortMode = sortMode,
+                ActionName = "Search",
+                TimeZoneId = await _timeZoneIdResolver.GetUserTimeZoneId()
+            };
+
+            if (Request.IsAjaxRequest())
             {
                 if(ajaxGrid)
                 {
@@ -210,15 +214,17 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
                 query,
                 sortMode);
 
-            var model = new UserListViewModel();
-            model.SiteId = selectedSite.Id;
-            model.UserList = siteMembers;
-            model.SearchQuery = query;
-            model.SortMode = sortMode;
-            model.ActionName = "SearchModal";
-            model.TimeZoneId = await _timeZoneIdResolver.GetUserTimeZoneId();
+            var model = new UserListViewModel
+            {
+                SiteId = selectedSite.Id,
+                UserList = siteMembers,
+                SearchQuery = query,
+                SortMode = sortMode,
+                ActionName = "SearchModal",
+                TimeZoneId = await _timeZoneIdResolver.GetUserTimeZoneId()
+            };
 
-            
+
             if (ajaxGrid)
             {
                 return PartialView("UserModalGridPartial", model);
@@ -250,19 +256,23 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
                 ipQuery);
 
             // not really paged in UI but re-using the ViewModel which needs a PagedResult
-            var data = new PagedResult<IUserInfo>();
-            data.Data = siteMembers;
-            data.PageNumber = 1;
-            data.PageSize = 2000;
-            data.TotalItems = siteMembers.Count();
-            
-            var model = new UserListViewModel();
-            model.SiteId = selectedSite.Id;
-            model.UserList = data;
-            model.IpQuery = ipQuery; //TODO: sanitize
-            model.ShowAlphaPager = false;
-            model.TimeZoneId = await _timeZoneIdResolver.GetUserTimeZoneId();
-            model.ActionName = "IpSearch";
+            var data = new PagedResult<IUserInfo>
+            {
+                Data = siteMembers,
+                PageNumber = 1,
+                PageSize = 2000,
+                TotalItems = siteMembers.Count()
+            };
+
+            var model = new UserListViewModel
+            {
+                SiteId = selectedSite.Id,
+                UserList = data,
+                IpQuery = ipQuery, //TODO: sanitize
+                ShowAlphaPager = false,
+                TimeZoneId = await _timeZoneIdResolver.GetUserTimeZoneId(),
+                ActionName = "IpSearch"
+            };
             return View("Index", model);
 
         }
@@ -295,13 +305,15 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
                 selectedSite.Id,
                 pageNumber,
                 itemsPerPage);
-            
-            var model = new UserListViewModel();
-            model.SiteId = selectedSite.Id;
-            model.UserList = siteMembers;
-            model.ShowAlphaPager = false;
-            model.TimeZoneId = await _timeZoneIdResolver.GetUserTimeZoneId();
-            model.ActionName = "LockedUsers";
+
+            var model = new UserListViewModel
+            {
+                SiteId = selectedSite.Id,
+                UserList = siteMembers,
+                ShowAlphaPager = false,
+                TimeZoneId = await _timeZoneIdResolver.GetUserTimeZoneId(),
+                ActionName = "LockedUsers"
+            };
             return View(model);
 
         }
@@ -334,13 +346,15 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
                 selectedSite.Id,
                 pageNumber,
                 itemsPerPage);
-            
-            var model = new UserListViewModel();
-            model.SiteId = selectedSite.Id;
-            model.UserList = siteMembers;
-            model.ShowAlphaPager = false;
-            model.TimeZoneId = await _timeZoneIdResolver.GetUserTimeZoneId();
-            model.ActionName = "UnApprovedUsers";
+
+            var model = new UserListViewModel
+            {
+                SiteId = selectedSite.Id,
+                UserList = siteMembers,
+                ShowAlphaPager = false,
+                TimeZoneId = await _timeZoneIdResolver.GetUserTimeZoneId(),
+                ActionName = "UnApprovedUsers"
+            };
             return View(model);
         }
 
@@ -361,8 +375,10 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
                 ViewData["Title"] = _sr["New User"];
             }
 
-            var model = new NewUserViewModel();
-            model.SiteId = selectedSite.Id;
+            var model = new NewUserViewModel
+            {
+                SiteId = selectedSite.Id
+            };
 
             var viewName = await _customUserInfo.GetNewUserViewName(_userManager.Site, HttpContext);
             await _customUserInfo.HandleNewUserGet(
@@ -489,27 +505,29 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
                 ViewData["Title"] = string.Format(CultureInfo.CurrentUICulture, _sr["User Activity - {0}"], user.Email);
             }
 
-            var model = new UserActivityViewModel();
-            model.SiteId = selectedSite.Id;
-            model.UserId = user.Id;
-            model.CreatedUtc = user.CreatedUtc;
-            model.DisplayName = user.DisplayName;
-            model.Email = user.Email;
-            model.FirstName = user.FirstName;
-            model.LastLoginUtc = user.LastLoginUtc;
-            model.LastName = user.LastName;
-            model.LastPassswordChangenUtc = user.LastPasswordChangeUtc;
-            model.TimeZoneId = await _timeZoneIdResolver.GetUserTimeZoneId();
-            model.Locations = await _userManager.GetUserLocations(
+            var model = new UserActivityViewModel
+            {
+                SiteId = selectedSite.Id,
+                UserId = user.Id,
+                CreatedUtc = user.CreatedUtc,
+                DisplayName = user.DisplayName,
+                Email = user.Email,
+                FirstName = user.FirstName,
+                LastLoginUtc = user.LastLoginUtc,
+                LastName = user.LastName,
+                LastPassswordChangenUtc = user.LastPasswordChangeUtc,
+                TimeZoneId = await _timeZoneIdResolver.GetUserTimeZoneId(),
+                Locations = await _userManager.GetUserLocations(
                 selectedSite.Id,
                 userId,
                 pageNumber,
                 pageSize
-                );
-            
-            model.TwoFactor = user.TwoFactorEnabled;
-            model.Logins = await _userManager.GetLoginsAsync(user as SiteUser);
-            if(!string.IsNullOrWhiteSpace(user.TimeZoneId))
+                ),
+
+                TwoFactor = user.TwoFactorEnabled,
+                Logins = await _userManager.GetLoginsAsync(user as SiteUser)
+            };
+            if (!string.IsNullOrWhiteSpace(user.TimeZoneId))
             {
                 model.UserTimeZone = user.TimeZoneId;
             }
@@ -517,12 +535,14 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
             {
                 model.UserTimeZone = _userManager.Site.TimeZoneId;
             }
-            
 
-            var currentCrumbAdjuster = new NavigationNodeAdjuster(Request.HttpContext);
-            currentCrumbAdjuster.KeyToAdjust = "UserActivity";
-            currentCrumbAdjuster.AdjustedText = string.Format(CultureInfo.CurrentUICulture, _sr["Activity - {0}"], user.Email); 
-            currentCrumbAdjuster.ViewFilterName = NamedNavigationFilters.Breadcrumbs; // this is default but showing here for readers of code 
+
+            var currentCrumbAdjuster = new NavigationNodeAdjuster(Request.HttpContext)
+            {
+                KeyToAdjust = "UserActivity",
+                AdjustedText = string.Format(CultureInfo.CurrentUICulture, _sr["Activity - {0}"], user.Email),
+                ViewFilterName = NamedNavigationFilters.Breadcrumbs // this is default but showing here for readers of code 
+            };
             currentCrumbAdjuster.AddToContext();
 
             return View(model);
@@ -552,11 +572,13 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
                 ViewData["Title"] = _sr["Manage User"];
             }
 
-            
 
-            var model = new EditUserViewModel();
-            model.SiteId = selectedSite.Id;
-            
+
+            var model = new EditUserViewModel
+            {
+                SiteId = selectedSite.Id
+            };
+
             var user = await _userManager.Fetch(selectedSite.Id, userId);
             if (user != null)
             {
@@ -594,10 +616,12 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
                 model.UserClaims = await _userManager.GetClaimsAsync((SiteUser)user);
 
 
-                var currentCrumbAdjuster = new NavigationNodeAdjuster(Request.HttpContext);
-                currentCrumbAdjuster.KeyToAdjust = "UserEdit";
-                currentCrumbAdjuster.AdjustedText = user.DisplayName;
-                currentCrumbAdjuster.ViewFilterName = NamedNavigationFilters.Breadcrumbs; // this is default but showing here for readers of code 
+                var currentCrumbAdjuster = new NavigationNodeAdjuster(Request.HttpContext)
+                {
+                    KeyToAdjust = "UserEdit",
+                    AdjustedText = user.DisplayName,
+                    ViewFilterName = NamedNavigationFilters.Breadcrumbs // this is default but showing here for readers of code 
+                };
                 currentCrumbAdjuster.AddToContext();
                 
             }
@@ -747,15 +771,19 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
             }
 
 
-            var model = new ChangeUserPasswordViewModel();
-            model.SiteId = selectedSite.Id;
-            model.UserId = user.Id;
-            model.DisplayName = user.DisplayName;
-            model.Email = user.Email;
+            var model = new ChangeUserPasswordViewModel
+            {
+                SiteId = selectedSite.Id,
+                UserId = user.Id,
+                DisplayName = user.DisplayName,
+                Email = user.Email
+            };
 
-            var currentCrumbAdjuster = new NavigationNodeAdjuster(Request.HttpContext);
-            currentCrumbAdjuster.KeyToAdjust = "UserEdit";
-            currentCrumbAdjuster.AdjustedText = user.DisplayName;
+            var currentCrumbAdjuster = new NavigationNodeAdjuster(Request.HttpContext)
+            {
+                KeyToAdjust = "UserEdit",
+                AdjustedText = user.DisplayName
+            };
             currentCrumbAdjuster.AddToContext();
 
             return View(model);
@@ -910,7 +938,7 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
                 }
             }
             
-            return RedirectToAction("UserEdit", "UserAdmin", new { siteId = selectedSite.Id, userId = userId });
+            return RedirectToAction("UserEdit", "UserAdmin", new { siteId = selectedSite.Id, userId });
         }
 
         [Authorize(Policy = "UserManagementPolicy")]
@@ -936,7 +964,7 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
                 }
             }
 
-            return RedirectToAction("UserEdit", "UserAdmin", new { siteId = selectedSite.Id, userId = userId });
+            return RedirectToAction("UserEdit", "UserAdmin", new { siteId = selectedSite.Id, userId });
         }
 
 

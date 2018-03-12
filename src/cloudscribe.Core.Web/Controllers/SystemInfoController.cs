@@ -36,10 +36,12 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
         public IActionResult Index()
         {
             ViewData["Title"] = _sr["System Information"];
-            
-            var serverInfo = new SystemInfoViewModel();
-            serverInfo.Name = this.HttpContext.Request.Host.Value;
-            if(HttpContext.Connection.LocalIpAddress != null)
+
+            var serverInfo = new SystemInfoViewModel
+            {
+                Name = this.HttpContext.Request.Host.Value
+            };
+            if (HttpContext.Connection.LocalIpAddress != null)
             {
                 serverInfo.LocalAddress = HttpContext.Connection.LocalIpAddress.ToString();
                 
