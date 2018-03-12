@@ -2,8 +2,8 @@
 
   <PropertyGroup>
     <Description>Bootstrap 3 views for cloudscribe.Core.IdentityServerIntegration</Description>
-    <VersionPrefix>2.1.8</VersionPrefix>
-    <AssemblyVersion>2.1.8</AssemblyVersion>
+    <VersionPrefix>2.1.9</VersionPrefix>
+    <AssemblyVersion>2.1.9</AssemblyVersion>
     <Authors>Joe Audette</Authors>
     <TargetFrameworks>netstandard2.0</TargetFrameworks>
     <AssemblyName>cloudscribe.Core.IdentityServerIntegration.Views.Bootstrap3</AssemblyName>
