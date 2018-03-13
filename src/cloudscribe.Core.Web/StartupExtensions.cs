@@ -59,16 +59,18 @@ namespace Microsoft.Extensions.DependencyInjection
 
             
             services.Configure<MultiTenantOptions>(configuration.GetSection("MultiTenantOptions"));
-            
+            services.Configure<NewUserOptions>(configuration.GetSection("NewUserOptions"));
+
             services.Configure<RecaptchaKeys>(configuration.GetSection("RecaptchaKeys"));
             services.Configure<SiteConfigOptions>(configuration.GetSection("SiteConfigOptions"));
             services.Configure<UIOptions>(configuration.GetSection("UIOptions"));
             
             services.Configure<CachingSiteResolverOptions>(configuration.GetSection("CachingSiteResolverOptions"));
-            
-           
+
+
             //services.AddMultitenancy<SiteSettings, SiteResolver>();
-            
+            services.TryAddScoped<ISiteContextResolver, SiteContextResolver>();
+
             services.AddMultitenancy<SiteContext, CachingSiteResolver>();
             services.AddScoped<CacheHelper, CacheHelper>();
 

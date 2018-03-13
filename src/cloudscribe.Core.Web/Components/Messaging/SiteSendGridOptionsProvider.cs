@@ -1,4 +1,5 @@
-﻿using cloudscribe.Email.SendGrid;
+﻿using cloudscribe.Core.Models;
+using cloudscribe.Email.SendGrid;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using System;
@@ -9,16 +10,16 @@ namespace cloudscribe.Core.Web.Components.Messaging
     public class SiteSendGridOptionsProvider : ConfigSendGridOptionsProvider
     {
         public SiteSendGridOptionsProvider(
-            SiteManager siteManager,
+            ISiteContextResolver siteResolver,
             ILogger<SiteMailgunOptionsProvider> logger,
             IOptions<SendGridOptions> optionsAccessor
             ):base(optionsAccessor)
         {
-            _siteManager = siteManager;
+            _siteResolver = siteResolver;
             _log = logger;
         }
 
-        private SiteManager _siteManager;
+        private ISiteContextResolver _siteResolver;
         private ILogger _log;
 
         public override async Task<SendGridOptions> GetSendGridOptions(string lookupKey = null)
@@ -27,7 +28,7 @@ namespace cloudscribe.Core.Web.Components.Messaging
             {
                 try
                 {
-                    var site = await _siteManager.Fetch(new Guid(lookupKey));
+                    var site = await _siteResolver.GetById(new Guid(lookupKey));
                     if (site != null)
                     {
                         if (site.EmailSenderName == "SendGridEmailSender"

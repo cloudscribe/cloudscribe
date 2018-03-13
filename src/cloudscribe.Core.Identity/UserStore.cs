@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:				    2014-07-22
-// Last Modified:		    2017-10-07
+// Last Modified:		    2018-03-13
 // 
 
 using cloudscribe.Core.Models;
@@ -48,6 +48,7 @@ namespace cloudscribe.Core.Identity
             IUserCommands userCommands,
             IUserQueries userQueries,
             IOptions<MultiTenantOptions> multiTenantOptionsAccessor,
+            IOptions<NewUserOptions> newUserOptionsAccessor,
             IdentityErrorDescriber describer = null
             ) //: base(describer ?? new IdentityErrorDescriber())
         {
@@ -57,7 +58,7 @@ namespace cloudscribe.Core.Identity
             _commands = userCommands ?? throw new ArgumentNullException(nameof(userCommands));
             _queries = userQueries ?? throw new ArgumentNullException(nameof(userQueries));
 
-
+            _newUserOptions = newUserOptionsAccessor.Value;
             _multiTenantOptions = multiTenantOptionsAccessor.Value;
 
             //debugLog = config.GetOrDefault("AppSettings:UserStoreDebugEnabled", false);
@@ -69,6 +70,7 @@ namespace cloudscribe.Core.Identity
         private bool debugLog = false;
         private ISiteContext _siteSettings = null;
         private MultiTenantOptions _multiTenantOptions;
+        private NewUserOptions _newUserOptions;
         private IUserCommands _commands;
         private IUserQueries _queries;
 
@@ -123,7 +125,7 @@ namespace cloudscribe.Core.Identity
             cancellationToken.ThrowIfCancellationRequested();
             ISiteRole role;
             
-            string defaultRoles = _multiTenantOptions.DefaultNewUserRoles;
+            string defaultRoles = _newUserOptions.DefaultNewUserRoles;
 
             if (!string.IsNullOrWhiteSpace(defaultRoles))
             {
