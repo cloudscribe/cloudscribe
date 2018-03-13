@@ -57,7 +57,7 @@ namespace cloudscribe.Core.Models
         /// </summary>
         public bool AllowSharedAliasId { get; set; } = false;
 
-        public string DefaultNewUserRoles { get; set; } = "Authenticated Users";
+        //public string DefaultNewUserRoles { get; set; } = "Authenticated Users";
 
         public string SiteFilesFolderName { get; set; } = "sitefiles";
 

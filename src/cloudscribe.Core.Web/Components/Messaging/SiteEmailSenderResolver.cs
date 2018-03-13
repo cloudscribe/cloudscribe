@@ -1,4 +1,5 @@
-﻿using cloudscribe.Email;
+﻿using cloudscribe.Core.Models;
+using cloudscribe.Email;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
@@ -9,17 +10,17 @@ namespace cloudscribe.Core.Web.Components.Messaging
     public class SiteEmailSenderResolver : ConfigEmailSenderResolver
     {
         public SiteEmailSenderResolver(
-            SiteManager siteManager,
+            ISiteContextResolver siteResolver,
             IEnumerable<IEmailSender> allConfiguredSenders,
             ILogger<SiteEmailSenderResolver> logger
             ):base(allConfiguredSenders)
         {
             _allConfiguredSenders = allConfiguredSenders;
-            _siteManager = siteManager;
+            _siteResolver = siteResolver;
             _log = logger;
         }
 
-        private SiteManager _siteManager;
+        private ISiteContextResolver _siteResolver;
         private IEnumerable<IEmailSender> _allConfiguredSenders;
         private ILogger _log;
 
@@ -31,7 +32,7 @@ namespace cloudscribe.Core.Web.Components.Messaging
             {
                 try
                 {
-                    var site = await _siteManager.Fetch(new Guid(lookupKey));
+                    var site = await _siteResolver.GetById(new Guid(lookupKey));
                     if(site != null)
                     { 
                         foreach(var sender in _allConfiguredSenders)
@@ -43,7 +44,6 @@ namespace cloudscribe.Core.Web.Components.Messaging
                             }
                         }
                    
-
                     }
                     else
                     {
