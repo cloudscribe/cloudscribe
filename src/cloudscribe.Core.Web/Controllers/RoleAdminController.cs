@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2014-12-06
-// Last Modified:			2018-03-07
+// Last Modified:			2018-03-14
 // 
 
 using cloudscribe.Core.Identity;
@@ -50,7 +50,7 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
 
 
         [HttpGet]
-        [Authorize(Policy = "RoleAdminPolicy")]
+        [Authorize(Policy = PolicyConstants.RoleAdminPolicy)]
         public async Task<IActionResult> Index(
             Guid? siteId,
             string searchInput = "", 
@@ -95,7 +95,7 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
         //https://blog4rami.wordpress.com/2014/01/09/preserving-check-box-states-pagedlist-mvc3/
 
         [HttpGet]
-        [Authorize(Policy = "RoleLookupPolicy")]
+        [Authorize(Policy = PolicyConstants.RoleLookupPolicy)]
         public async Task<IActionResult> Modal(
             Guid? siteId,
             string searchInput = "",
@@ -143,7 +143,7 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
 
 
         [HttpGet]
-        [Authorize(Policy = "RoleAdminPolicy")]
+        [Authorize(Policy = PolicyConstants.RoleAdminPolicy)]
         public async Task<IActionResult> RoleEdit(
             Guid? siteId,
             Guid? roleId)
@@ -188,7 +188,7 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        [Authorize(Policy = "RoleAdminPolicy")]
+        [Authorize(Policy = PolicyConstants.RoleAdminPolicy)]
         public async Task<IActionResult> RoleEdit(RoleViewModel model, int returnPageNumber = 1)
         {
             var selectedSite = await _siteManager.GetSiteForDataOperations(model.SiteId, true);
@@ -237,7 +237,7 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        [Authorize(Policy = "RoleAdminPolicy")]
+        [Authorize(Policy = PolicyConstants.RoleAdminPolicy)]
         public async Task<IActionResult> RoleDelete(
             Guid? siteId,
             Guid roleId, 
@@ -262,7 +262,7 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
 
 
         [HttpGet]
-        [Authorize(Policy = "RoleAdminPolicy")]
+        [Authorize(Policy = PolicyConstants.RoleAdminPolicy)]
         public async Task<IActionResult> RoleMembers(
             Guid? siteId,
             Guid roleId,
@@ -323,7 +323,7 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
         }
 
         [HttpGet]
-        [Authorize(Policy = "RoleAdminPolicy")]
+        [Authorize(Policy = PolicyConstants.RoleAdminPolicy)]
         public async Task<IActionResult> RoleNonMembers(
             Guid? siteId,
             Guid roleId,
@@ -388,7 +388,7 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
         }
 
         [HttpPost]
-        [Authorize(Policy = "RoleAdminPolicy")]
+        [Authorize(Policy = PolicyConstants.RoleAdminPolicy)]
         public async Task<IActionResult> AddUser(
             Guid? siteId, 
             Guid roleId, 
@@ -416,7 +416,7 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
         }
 
         [HttpPost]
-        [Authorize(Policy = "RoleAdminPolicy")]
+        [Authorize(Policy = PolicyConstants.RoleAdminPolicy)]
         public async Task<IActionResult> RemoveUser(
             Guid? siteId,
             Guid roleId, 

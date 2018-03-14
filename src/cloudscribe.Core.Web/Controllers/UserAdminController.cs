@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2014-12-08
-// Last Modified:			2018-03-08
+// Last Modified:			2018-03-14
 // 
 
 using cloudscribe.Core.Identity;
@@ -64,7 +64,7 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
         private ITimeZoneHelper _tzHelper;
         private IHandleCustomUserInfoAdmin _customUserInfo;
 
-        [Authorize(Policy = "UserManagementPolicy")]
+        [Authorize(Policy = PolicyConstants.UserManagementPolicy)]
         [HttpGet]
         public async Task<IActionResult> Index(
             Guid? siteId,
@@ -111,7 +111,7 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
 
         }
 
-        [Authorize(Policy = "UserManagementPolicy")]
+        [Authorize(Policy = PolicyConstants.UserManagementPolicy)]
         [HttpGet]
         public async Task<IActionResult> Search(
             Guid? siteId,
@@ -186,7 +186,7 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
         /// <param name="pageSize"></param>
         /// <param name="ajaxGrid"></param>
         /// <returns></returns>
-        [Authorize(Policy = "UserLookupPolicy")]
+        [Authorize(Policy = PolicyConstants.UserLookupPolicy)]
         [HttpGet]
         public async Task<IActionResult> SearchModal(
             Guid? siteId,
@@ -234,7 +234,7 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
             
         }
 
-        [Authorize(Policy = "UserManagementPolicy")]
+        [Authorize(Policy = PolicyConstants.UserManagementPolicy)]
         [HttpGet]
         public async Task<IActionResult> IpSearch(
             Guid? siteId,
@@ -277,7 +277,7 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
 
         }
 
-        [Authorize(Policy = "UserManagementPolicy")]
+        [Authorize(Policy = PolicyConstants.UserManagementPolicy)]
         [HttpGet]
         public async Task<IActionResult> LockedUsers(
             Guid? siteId,
@@ -318,7 +318,7 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
 
         }
 
-        [Authorize(Policy = "UserManagementPolicy")]
+        [Authorize(Policy = PolicyConstants.UserManagementPolicy)]
         [HttpGet]
         public async Task<IActionResult> UnApprovedUsers(
             Guid? siteId,
@@ -359,7 +359,7 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
         }
 
 
-        [Authorize(Policy = "UserManagementPolicy")]
+        [Authorize(Policy = PolicyConstants.UserManagementPolicy)]
         [HttpGet]
         public async Task<ActionResult> NewUser(
             Guid? siteId)
@@ -390,7 +390,7 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
             return View(viewName, model);
         }
 
-        [Authorize(Policy = "UserManagementPolicy")]
+        [Authorize(Policy = PolicyConstants.UserManagementPolicy)]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> NewUser(NewUserViewModel model)
@@ -472,7 +472,7 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
             return View(viewName, model);
         }
 
-        [Authorize(Policy = "UserManagementPolicy")]
+        [Authorize(Policy = PolicyConstants.UserManagementPolicy)]
         [HttpGet]
         public async Task<ActionResult> UserActivity(
             Guid userId,
@@ -548,7 +548,7 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
             return View(model);
         }
 
-        [Authorize(Policy = "UserManagementPolicy")]
+        [Authorize(Policy = PolicyConstants.UserManagementPolicy)]
         [HttpGet]
         public async Task<ActionResult> UserEdit(
             Guid userId,
@@ -614,6 +614,7 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
                 }
 
                 model.UserClaims = await _userManager.GetClaimsAsync((SiteUser)user);
+                model.UserRoles = await _userManager.GetRolesAsync((SiteUser)user);
 
 
                 var currentCrumbAdjuster = new NavigationNodeAdjuster(Request.HttpContext)
@@ -636,7 +637,7 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
             return View(viewName, model);
         }
 
-        [Authorize(Policy = "UserManagementPolicy")]
+        [Authorize(Policy = PolicyConstants.UserManagementPolicy)]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> UserEdit(EditUserViewModel model)
@@ -675,6 +676,8 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
             if (!isValid || !customDataIsValid)
             {
                 model.AccountApproved = user.AccountApproved;
+                model.UserClaims = await _userManager.GetClaimsAsync((SiteUser)user);
+                model.UserRoles = await _userManager.GetRolesAsync((SiteUser)user);
                 return View(viewName, model);
             }
 
@@ -735,7 +738,7 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
             return RedirectToAction("Index", "UserAdmin", new { siteId = selectedSite.Id });
         }
 
-        [Authorize(Policy = "UserManagementPolicy")]
+        [Authorize(Policy = PolicyConstants.UserManagementPolicy)]
         [HttpGet]
         public async Task<ActionResult> ChangeUserPassword(
             Guid userId,
@@ -790,7 +793,7 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
 
         }
 
-        [Authorize(Policy = "UserManagementPolicy")]
+        [Authorize(Policy = PolicyConstants.UserManagementPolicy)]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> ChangeUserPassword(ChangeUserPasswordViewModel model)
@@ -848,7 +851,7 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
 
         }
 
-        [Authorize(Policy = "UserManagementPolicy")]
+        [Authorize(Policy = PolicyConstants.UserManagementPolicy)]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> ApproveUserAccount(
@@ -893,7 +896,7 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
             return RedirectToAction("Index", "UserAdmin", new { siteId = selectedSite.Id });
         }
 
-        [Authorize(Policy = "UserManagementPolicy")]
+        [Authorize(Policy = PolicyConstants.UserManagementPolicy)]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> UserDelete(Guid siteId, Guid userId, int returnPageNumber = 1)
@@ -915,7 +918,7 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
             return RedirectToAction("Index", "UserAdmin", new { siteId = selectedSite.Id, pageNumber = returnPageNumber });
         }
 
-        [Authorize(Policy = "UserManagementPolicy")]
+        [Authorize(Policy = PolicyConstants.UserManagementPolicy)]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> AddClaim(
@@ -941,7 +944,7 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
             return RedirectToAction("UserEdit", "UserAdmin", new { siteId = selectedSite.Id, userId });
         }
 
-        [Authorize(Policy = "UserManagementPolicy")]
+        [Authorize(Policy = PolicyConstants.UserManagementPolicy)]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> RemoveClaim(
@@ -964,6 +967,27 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
                 }
             }
 
+            return RedirectToAction("UserEdit", "UserAdmin", new { siteId = selectedSite.Id, userId });
+        }
+
+        [Authorize(Policy = PolicyConstants.RoleAdminPolicy)]
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> RemoveRole(
+            //Guid siteId,
+            Guid userId,
+            string roleName)
+        {
+            
+            var selectedSite = _siteManager.CurrentSite;
+
+            var result = await _userManager.RemoveUserFromRole(selectedSite.Id, userId, roleName);
+            
+            if (result.Succeeded)
+            {
+                this.AlertSuccess(string.Format(_sr["The role {0} was successfully removed."], roleName), true);
+            }
+           
             return RedirectToAction("UserEdit", "UserAdmin", new { siteId = selectedSite.Id, userId });
         }
 

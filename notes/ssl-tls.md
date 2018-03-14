@@ -1,4 +1,9 @@
 
+https://arstechnica.com/information-technology/2018/03/lets-encrypt-takes-free-wildcard-certificates-live/
+
+https://letsencrypt.org/docs/client-options/
+
+
 https://blogs.msdn.microsoft.com/webdev/2017/11/29/configuring-https-in-asp-net-core-across-different-platforms/
 
 https://blog.benroux.me/running-multiple-https-domains-from-the-same-server/

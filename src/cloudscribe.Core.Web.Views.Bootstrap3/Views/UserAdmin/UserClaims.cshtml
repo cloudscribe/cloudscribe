@@ -3,17 +3,19 @@
 @using Microsoft.Extensions.Options
 @using Microsoft.Extensions.Localization
 @inject IStringLocalizer<CloudscribeCore> sr
+<h3>@sr["User Claims"]</h3>
 <form class="form-inline" role="form" asp-controller="UserAdmin" asp-action="AddClaim" data-submit-once="true">
     <input asp-for="UserId" type="hidden" />
     <input asp-for="SiteId" type="hidden" />
     <div class="form-group">
         <input name="claimType" type="text" class="form-control" placeholder="Claim Type" />
-        <input name="claimValue" type="text" class="form-control" placeholder="Claim Value" /> 
+        <input name="claimValue" type="text" class="form-control" placeholder="Claim Value" />
     </div>
     <button type="submit" value="submit" class="btn btn-default" data-enabled-text='@sr["Add Claim"]' data-disabled-text='@sr["Working..."]'>@sr["Add Claim"]</button>
 </form>
 @if (Model.UserClaims.Count > 0)
 {
+
     <div>
         <table class="table table-striped">
             <tr>
@@ -54,17 +56,12 @@
                                 </div>
                             </div>
 
-                            @*<button type="submit"
-                    class="btn btn-danger btn-xs"
-                    onclick="javascript: return confirm('@Html.FormatValue(item.Type, sr["Are you sure you want to remove the claim {0}?"])');">
-                @sr["Remove"]
-            </button>*@
                         </form>
                     </td>
-                    <td>    
+                    <td>
                         @Html.DisplayFor(modelItem => item.Type)
                     </td>
-                   
+
                     <td>
                         @Html.DisplayFor(modelItem => item.Value)
                     </td>
@@ -73,8 +70,4 @@
         </table>
     </div>
 }
-    
- @section Scripts {
-@{await Html.RenderPartialAsync("_UnobtrusiveValidationScriptsPartial"); }
-<script src="~/cr/js/cloudscribe-modaldialog-bootstrap.min.js"></script>
- }
+

@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2014-11-15
-// Last Modified:			2018-03-07
+// Last Modified:			2018-03-14
 // 
 
 using cloudscribe.Core.Models;
@@ -44,7 +44,7 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
         private IStringLocalizer _sr;
 
         // GET: /CoreData/
-        [Authorize(Policy = "CoreDataPolicy")]
+        [Authorize(Policy = PolicyConstants.CoreDataPolicy)]
         [HttpGet]
         public IActionResult Index()
         {
@@ -71,7 +71,7 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
             return View(model);
         }
 
-        [Authorize(Policy = "CoreDataPolicy")]
+        [Authorize(Policy = PolicyConstants.CoreDataPolicy)]
         [HttpGet]
         public async Task<IActionResult> CountryEdit(
             Guid? countryId,
@@ -104,7 +104,7 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
             return View(model);
         }
 
-        [Authorize(Policy = "CoreDataPolicy")]
+        [Authorize(Policy = PolicyConstants.CoreDataPolicy)]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> CountryEdit(
@@ -140,7 +140,7 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
 
         // probably should hide by config by default
         // seems like an unusual event to delete a country and its states
-        [Authorize(Policy = "CoreDataPolicy")]
+        [Authorize(Policy = PolicyConstants.CoreDataPolicy)]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> CountryDelete(Guid countryId, int returnPageNumber = 1)
@@ -160,7 +160,7 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
             return RedirectToAction("CountryListPage", new { pageNumber = returnPageNumber });
         }
 
-        [Authorize(Policy = "CoreDataPolicy")]
+        [Authorize(Policy = PolicyConstants.CoreDataPolicy)]
         [HttpGet]
         public async Task<IActionResult> StateListPage(
             Guid? countryId,
@@ -264,7 +264,7 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
 
         }
 
-        [Authorize(Policy = "CoreDataPolicy")]
+        [Authorize(Policy = PolicyConstants.CoreDataPolicy)]
         [HttpGet]
         public async Task<IActionResult> StateEdit(
             Guid countryId,
@@ -328,7 +328,7 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
 
         }
 
-        [Authorize(Policy = "CoreDataPolicy")]
+        [Authorize(Policy = PolicyConstants.CoreDataPolicy)]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> StateEdit(GeoZoneViewModel model)
@@ -362,7 +362,7 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
 
         }
 
-        [Authorize(Policy = "CoreDataPolicy")]
+        [Authorize(Policy = PolicyConstants.CoreDataPolicy)]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> StateDelete(
