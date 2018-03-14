@@ -32,7 +32,7 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
         private UIOptions _uiOptions;
         private IStringLocalizer _sr;
 
-        [Authorize(Policy = "AdminPolicy")]
+        [Authorize(Policy = PolicyConstants.AdminPolicy)]
         public IActionResult Index()
         {
             ViewData["Title"] = _sr["System Information"];

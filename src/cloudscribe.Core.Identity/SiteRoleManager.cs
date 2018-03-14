@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:				    2014-07-17
-// Last Modified:		    2017-12-29
+// Last Modified:		    2018-03-14
 // 
 //
 
@@ -42,17 +42,12 @@ namespace cloudscribe.Core.Identity
                 errors, 
                 logger)
         {
-            if (currentSite == null) { throw new ArgumentNullException(nameof(currentSite)); }
             if (roleStore == null) { throw new ArgumentNullException(nameof(roleStore)); }
-            if (userCommands == null) { throw new ArgumentNullException(nameof(userCommands)); }
-            commands = userCommands;
-
-            if (userQueries == null) { throw new ArgumentNullException(nameof(userQueries)); }
-            queries = userQueries;
-
-            siteSettings = currentSite;
-            this.logger = logger;
-            multiTenantOptions = multiTenantOptionsAccessor.Value;
+            _commands = userCommands ?? throw new ArgumentNullException(nameof(userCommands));
+            _queries = userQueries ?? throw new ArgumentNullException(nameof(userQueries));
+            _siteSettings = currentSite ?? throw new ArgumentNullException(nameof(currentSite));
+            _log = logger;
+            _multiTenantOptions = multiTenantOptionsAccessor.Value;
             _context = contextAccessor?.HttpContext;
 
         }
@@ -60,25 +55,25 @@ namespace cloudscribe.Core.Identity
         private readonly HttpContext _context;
         //private CancellationToken CancellationToken => _context?.RequestAborted ?? CancellationToken.None;
 
-        private MultiTenantOptions multiTenantOptions;
-        private IUserCommands commands;
-        private IUserQueries queries;
-        private ILogger logger;
-        private ISiteContext siteSettings = null;
+        private MultiTenantOptions _multiTenantOptions;
+        private IUserCommands _commands;
+        private IUserQueries _queries;
+        private ILogger _log;
+        private ISiteContext _siteSettings = null;
         private ISiteContext Site
         {
             get
             {
                 //if (siteSettings == null) { siteSettings = siteResolver.Resolve(); }
-                return siteSettings;
+                return _siteSettings;
             }
         }
 
         public async Task<int> CountOfRoles(Guid siteId, string searchInput)
         {
-            if (multiTenantOptions.UseRelatedSitesMode) { siteId = multiTenantOptions.RelatedSiteId; }
+            if (_multiTenantOptions.UseRelatedSitesMode) { siteId = _multiTenantOptions.RelatedSiteId; }
 
-            return await queries.CountOfRoles(siteId, searchInput, CancellationToken);
+            return await _queries.CountOfRoles(siteId, searchInput, CancellationToken);
         }
 
         public async Task<PagedResult<ISiteRole>> GetRolesBySite(
@@ -87,9 +82,9 @@ namespace cloudscribe.Core.Identity
             int pageNumber,
             int pageSize)
         {
-            if (multiTenantOptions.UseRelatedSitesMode) { siteId = multiTenantOptions.RelatedSiteId; }
+            if (_multiTenantOptions.UseRelatedSitesMode) { siteId = _multiTenantOptions.RelatedSiteId; }
 
-            return await queries.GetRolesBySite(siteId, searchInput, pageNumber, pageSize, CancellationToken);
+            return await _queries.GetRolesBySite(siteId, searchInput, pageNumber, pageSize, CancellationToken);
 
         }
 
@@ -97,17 +92,17 @@ namespace cloudscribe.Core.Identity
         public async Task DeleteUserRolesByRole(Guid roleId)
         {
             var siteId = Site.Id;
-            if (multiTenantOptions.UseRelatedSitesMode) { siteId = multiTenantOptions.RelatedSiteId; }
+            if (_multiTenantOptions.UseRelatedSitesMode) { siteId = _multiTenantOptions.RelatedSiteId; }
 
-            await commands.DeleteUserRolesByRole(siteId, roleId, CancellationToken);
+            await _commands.DeleteUserRolesByRole(siteId, roleId, CancellationToken);
         }
 
         public async Task DeleteRole(Guid roleId)
         {
             var siteId = Site.Id;
-            if (multiTenantOptions.UseRelatedSitesMode) { siteId = multiTenantOptions.RelatedSiteId; }
+            if (_multiTenantOptions.UseRelatedSitesMode) { siteId = _multiTenantOptions.RelatedSiteId; }
 
-            await commands.DeleteRole(siteId, roleId, CancellationToken);
+            await _commands.DeleteRole(siteId, roleId, CancellationToken);
         }
 
         //public async Task<bool> RoleExists(Guid siteId, string roleName)
@@ -124,9 +119,9 @@ namespace cloudscribe.Core.Identity
             int pageNumber, 
             int pageSize)
         {
-            if (multiTenantOptions.UseRelatedSitesMode) { siteId = multiTenantOptions.RelatedSiteId; }
+            if (_multiTenantOptions.UseRelatedSitesMode) { siteId = _multiTenantOptions.RelatedSiteId; }
 
-            return await queries.GetUsersInRole(siteId, roleId, searchInput, pageNumber, pageSize, CancellationToken);
+            return await _queries.GetUsersInRole(siteId, roleId, searchInput, pageNumber, pageSize, CancellationToken);
         }
 
         public async Task<int> CountUsersInRole(
@@ -134,9 +129,9 @@ namespace cloudscribe.Core.Identity
             Guid roleId, 
             string searchInput)
         {
-            if (multiTenantOptions.UseRelatedSitesMode) { siteId = multiTenantOptions.RelatedSiteId; }
+            if (_multiTenantOptions.UseRelatedSitesMode) { siteId = _multiTenantOptions.RelatedSiteId; }
 
-            return await queries.CountUsersInRole(siteId, roleId, searchInput, CancellationToken);
+            return await _queries.CountUsersInRole(siteId, roleId, searchInput, CancellationToken);
         }
 
         public async Task<PagedResult<IUserInfo>> GetUsersNotInRole(
@@ -146,9 +141,9 @@ namespace cloudscribe.Core.Identity
             int pageNumber, 
             int pageSize)
         {
-            if (multiTenantOptions.UseRelatedSitesMode) { siteId = multiTenantOptions.RelatedSiteId; }
+            if (_multiTenantOptions.UseRelatedSitesMode) { siteId = _multiTenantOptions.RelatedSiteId; }
 
-            return await queries.GetUsersNotInRole(siteId, roleId, searchInput, pageNumber, pageSize, CancellationToken);
+            return await _queries.GetUsersNotInRole(siteId, roleId, searchInput, pageNumber, pageSize, CancellationToken);
         }
 
         public async Task<int> CountUsersNotInRole(
@@ -156,9 +151,9 @@ namespace cloudscribe.Core.Identity
             Guid roleId, 
             string searchInput)
         {
-            if (multiTenantOptions.UseRelatedSitesMode) { siteId = multiTenantOptions.RelatedSiteId; }
+            if (_multiTenantOptions.UseRelatedSitesMode) { siteId = _multiTenantOptions.RelatedSiteId; }
 
-            return await queries.CountUsersNotInRole(siteId, roleId, searchInput, CancellationToken);
+            return await _queries.CountUsersNotInRole(siteId, roleId, searchInput, CancellationToken);
         }
 
         public async Task AddUserToRole(ISiteUser user, ISiteRole role)
@@ -167,10 +162,10 @@ namespace cloudscribe.Core.Identity
             if (role == null) { throw new ArgumentNullException(nameof(role)); }
             if(role.SiteId != user.SiteId) { throw new ArgumentException("user and role must have the same siteid"); }
 
-            await commands.AddUserToRole(role.SiteId, role.Id, user.Id, CancellationToken);
+            await _commands.AddUserToRole(role.SiteId, role.Id, user.Id, CancellationToken);
             
             user.RolesChanged = true;
-            await commands.Update(user, CancellationToken);
+            await _commands.Update(user, CancellationToken);
             
             
         }
@@ -180,10 +175,10 @@ namespace cloudscribe.Core.Identity
             if (user == null) { throw new ArgumentNullException(nameof(user)); }
             if (role == null) { throw new ArgumentNullException(nameof(role)); }
 
-            await commands.RemoveUserFromRole(role.SiteId, role.Id, user.Id, CancellationToken);
+            await _commands.RemoveUserFromRole(role.SiteId, role.Id, user.Id, CancellationToken);
             
             user.RolesChanged = true;
-            await commands.Update(user, CancellationToken);
+            await _commands.Update(user, CancellationToken);
            
         }
 

@@ -6,11 +6,10 @@
 // 
 // TODO: support custom profile properties that are required for registration ?
 
-using System;
-using System.ComponentModel.DataAnnotations;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using System;
 using System.Collections.Generic;
-using Microsoft.AspNetCore.Mvc;
+using System.ComponentModel.DataAnnotations;
 using System.Security.Claims;
 
 namespace cloudscribe.Core.Web.ViewModels.Account
@@ -20,6 +19,7 @@ namespace cloudscribe.Core.Web.ViewModels.Account
         public EditUserViewModel()
         {
             AllTimeZones = new List<SelectListItem>();
+            UserRoles = new List<string>();
             UserClaims = new List<Claim>();
         }
         
@@ -69,7 +69,9 @@ namespace cloudscribe.Core.Web.ViewModels.Account
         
         public string Comment { get; set; }
 
+        public IList<string> UserRoles { get; set; }
         public IList<Claim> UserClaims { get; set; }
+       
         
     }
 }

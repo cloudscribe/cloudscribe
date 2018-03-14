@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:				    2014-07-22
-// Last Modified:		    2018-02-25
+// Last Modified:		    2018-03-14
 // 
 //
 
@@ -59,40 +59,36 @@ namespace cloudscribe.Core.Identity
                   serviceProvider,
                   logger)
         {
-            identityOptions = optionsAccessor.Value;
-            userStore = store;
+            _identityOptions = optionsAccessor.Value;
+            _userStore = store;
+            _commands = userCommands ?? throw new ArgumentNullException(nameof(userCommands));
+            _queries = userQueries ?? throw new ArgumentNullException(nameof(userQueries));
 
-            if (userCommands == null) { throw new ArgumentNullException(nameof(userCommands)); }
-            commands = userCommands;
-
-            if (userQueries == null) { throw new ArgumentNullException(nameof(userQueries)); }
-            queries = userQueries;
-
-            siteSettings = currentSite;
-            multiTenantOptions = multiTenantOptionsAccessor.Value;
-            this.contextAccessor = contextAccessor;
-            httpContext = contextAccessor?.HttpContext;
-            eventHandlers = userEventHandlers;
-            this.passwordHasher = passwordHasher;
+            _siteSettings = currentSite;
+            _multiTenantOptions = multiTenantOptionsAccessor.Value;
+            _contextAccessor = contextAccessor;
+            _httpContext = contextAccessor?.HttpContext;
+            _eventHandlers = userEventHandlers;
+            _passwordHasher = passwordHasher;
             _emailConfirmedHandlers = emailConfirmedHandlers;
             _displayNameResolver = displayNameResolver;
         }
         
-        private IdentityOptions identityOptions;
-        private IUserStore<TUser> userStore;
-        private IUserCommands commands;
-        private IUserQueries queries;
-        private MultiTenantOptions multiTenantOptions;
-        private IHttpContextAccessor contextAccessor;
-        private HttpContext httpContext;
-        private UserEvents eventHandlers;
-        private IPasswordHasher<TUser> passwordHasher;
+        private IdentityOptions _identityOptions;
+        private IUserStore<TUser> _userStore;
+        private IUserCommands _commands;
+        private IUserQueries _queries;
+        private MultiTenantOptions _multiTenantOptions;
+        private IHttpContextAccessor _contextAccessor;
+        private HttpContext _httpContext;
+        private UserEvents _eventHandlers;
+        private IPasswordHasher<TUser> _passwordHasher;
         private IEnumerable<IHandleUserEmailConfirmed> _emailConfirmedHandlers;
         private INewUserDisplayNameResolver _displayNameResolver;
 
         //private CancellationToken CancellationToken => httpContext?.RequestAborted ?? CancellationToken.None;
 
-        private ISiteContext siteSettings = null;
+        private ISiteContext _siteSettings = null;
 
         internal IUserLockoutStore<TUser> GetUserLockoutStore()
         {
@@ -104,37 +100,37 @@ namespace cloudscribe.Core.Identity
             return cast;
         }
         
-        public ISiteContext Site { get { return siteSettings; } }
+        public ISiteContext Site { get { return _siteSettings; } }
         
         public Task<bool> LoginIsAvailable(Guid userId, string loginName)
         {
             Guid siteId = Site.Id;
-            if (multiTenantOptions.UseRelatedSitesMode) { siteId = multiTenantOptions.RelatedSiteId; }
+            if (_multiTenantOptions.UseRelatedSitesMode) { siteId = _multiTenantOptions.RelatedSiteId; }
 
-            return queries.LoginIsAvailable(siteId, userId, loginName, CancellationToken);
+            return _queries.LoginIsAvailable(siteId, userId, loginName, CancellationToken);
  
         }
 
         
         public Task<PagedResult<IUserInfo>> GetPage(Guid siteId, int pageNumber, int pageSize, string userNameBeginsWith, int sortMode)
         {
-            if (multiTenantOptions.UseRelatedSitesMode) { siteId = multiTenantOptions.RelatedSiteId; }
+            if (_multiTenantOptions.UseRelatedSitesMode) { siteId = _multiTenantOptions.RelatedSiteId; }
 
-            return queries.GetPage(siteId, pageNumber, pageSize, userNameBeginsWith, sortMode, CancellationToken);
+            return _queries.GetPage(siteId, pageNumber, pageSize, userNameBeginsWith, sortMode, CancellationToken);
         }
         
         public Task<int> CountUsers(Guid siteId, string userNameBeginsWith)
         {
-            if (multiTenantOptions.UseRelatedSitesMode) { siteId = multiTenantOptions.RelatedSiteId; }
+            if (_multiTenantOptions.UseRelatedSitesMode) { siteId = _multiTenantOptions.RelatedSiteId; }
 
-            return queries.CountUsers(siteId, userNameBeginsWith, CancellationToken);
+            return _queries.CountUsers(siteId, userNameBeginsWith, CancellationToken);
         }
 
         public Task<int> CountLockedOutUsers(Guid siteId)
         {
-            if (multiTenantOptions.UseRelatedSitesMode) { siteId = multiTenantOptions.RelatedSiteId; }
+            if (_multiTenantOptions.UseRelatedSitesMode) { siteId = _multiTenantOptions.RelatedSiteId; }
 
-            return queries.CountLockedByAdmin(siteId, CancellationToken);
+            return _queries.CountLockedByAdmin(siteId, CancellationToken);
         }
 
         public Task<PagedResult<IUserInfo>> GetPageLockedUsers(
@@ -142,31 +138,31 @@ namespace cloudscribe.Core.Identity
             int pageNumber,
             int pageSize)
         {
-            if (multiTenantOptions.UseRelatedSitesMode) { siteId = multiTenantOptions.RelatedSiteId; }
+            if (_multiTenantOptions.UseRelatedSitesMode) { siteId = _multiTenantOptions.RelatedSiteId; }
 
-            return queries.GetPageLockedByAdmin(siteId, pageNumber, pageSize, CancellationToken);
+            return _queries.GetPageLockedByAdmin(siteId, pageNumber, pageSize, CancellationToken);
         }
 
         public Task<PagedResult<IUserInfo>> GetUserAdminSearchPage(Guid siteId, int pageNumber, int pageSize, string searchInput, int sortMode)
         {
-            if (multiTenantOptions.UseRelatedSitesMode) { siteId = multiTenantOptions.RelatedSiteId; }
+            if (_multiTenantOptions.UseRelatedSitesMode) { siteId = _multiTenantOptions.RelatedSiteId; }
 
-            return queries.GetUserAdminSearchPage(siteId, pageNumber, pageSize, searchInput, sortMode, CancellationToken);
+            return _queries.GetUserAdminSearchPage(siteId, pageNumber, pageSize, searchInput, sortMode, CancellationToken);
 
         }
 
         public Task<int> CountUsersForAdminSearch(Guid siteId, string searchInput)
         {
-            if (multiTenantOptions.UseRelatedSitesMode) { siteId = multiTenantOptions.RelatedSiteId; }
+            if (_multiTenantOptions.UseRelatedSitesMode) { siteId = _multiTenantOptions.RelatedSiteId; }
 
-            return queries.CountUsersForAdminSearch(siteId, searchInput, CancellationToken);
+            return _queries.CountUsersForAdminSearch(siteId, searchInput, CancellationToken);
         }
 
         public Task<int> CountNotApprovedUsers(Guid siteId)
         {
-            if (multiTenantOptions.UseRelatedSitesMode) { siteId = multiTenantOptions.RelatedSiteId; }
+            if (_multiTenantOptions.UseRelatedSitesMode) { siteId = _multiTenantOptions.RelatedSiteId; }
 
-            return queries.CountNotApprovedUsers(siteId, CancellationToken);
+            return _queries.CountNotApprovedUsers(siteId, CancellationToken);
         }
 
         public Task<PagedResult<IUserInfo>> GetNotApprovedUsers(
@@ -174,50 +170,50 @@ namespace cloudscribe.Core.Identity
             int pageNumber,
             int pageSize)
         {
-            if (multiTenantOptions.UseRelatedSitesMode) { siteId = multiTenantOptions.RelatedSiteId; }
+            if (_multiTenantOptions.UseRelatedSitesMode) { siteId = _multiTenantOptions.RelatedSiteId; }
 
-            return queries.GetNotApprovedUsers(siteId, pageNumber, pageSize, CancellationToken);
+            return _queries.GetNotApprovedUsers(siteId, pageNumber, pageSize, CancellationToken);
 
         }
 
         public Task<List<IUserInfo>> GetByIPAddress(Guid siteId, string ipv4Address)
         {
-            if (multiTenantOptions.UseRelatedSitesMode) { siteId = Guid.Empty; }
+            if (_multiTenantOptions.UseRelatedSitesMode) { siteId = Guid.Empty; }
 
-            return queries.GetByIPAddress(siteId, ipv4Address, CancellationToken);
+            return _queries.GetByIPAddress(siteId, ipv4Address, CancellationToken);
         }
         
         public Task<ISiteUser> Fetch(Guid siteId, Guid userId)
         {
-            if (multiTenantOptions.UseRelatedSitesMode) { siteId = multiTenantOptions.RelatedSiteId; }
+            if (_multiTenantOptions.UseRelatedSitesMode) { siteId = _multiTenantOptions.RelatedSiteId; }
 
-            return queries.Fetch(siteId, userId, CancellationToken);
+            return _queries.Fetch(siteId, userId, CancellationToken);
         }
 
         
         public Task<bool> EmailExistsInDB(Guid siteId, string email)
         {
-            if (multiTenantOptions.UseRelatedSitesMode) { siteId = multiTenantOptions.RelatedSiteId; }
+            if (_multiTenantOptions.UseRelatedSitesMode) { siteId = _multiTenantOptions.RelatedSiteId; }
 
-            return queries.EmailExistsInDB(siteId, email, CancellationToken);
+            return _queries.EmailExistsInDB(siteId, email, CancellationToken);
         }
 
         public Task<bool> EmailExistsInDB(Guid siteId, Guid userGuid, string email)
         {
-            if (multiTenantOptions.UseRelatedSitesMode) { siteId = multiTenantOptions.RelatedSiteId; }
+            if (_multiTenantOptions.UseRelatedSitesMode) { siteId = _multiTenantOptions.RelatedSiteId; }
 
-            return queries.EmailExistsInDB(siteId, userGuid, email, CancellationToken);
+            return _queries.EmailExistsInDB(siteId, userGuid, email, CancellationToken);
 
         }
 
         public async Task<string> SuggestLoginNameFromEmail(Guid siteGuid, string email)
         {
-            if (multiTenantOptions.UseRelatedSitesMode) { siteGuid = multiTenantOptions.RelatedSiteId; }
+            if (_multiTenantOptions.UseRelatedSitesMode) { siteGuid = _multiTenantOptions.RelatedSiteId; }
 
             var login = email.Substring(0, email.IndexOf("@"));
             var offset = 1;
             // don't think we should make this async inside a loop
-            while (await queries.LoginExistsInDB(siteGuid, login).ConfigureAwait(false))
+            while (await _queries.LoginExistsInDB(siteGuid, login).ConfigureAwait(false))
             {
                 offset += 1;
                 login = email.Substring(0, email.IndexOf("@")) + offset.ToInvariantString();
@@ -282,7 +278,7 @@ namespace cloudscribe.Core.Identity
             // a user password and would still want this as true after admin changes the user password
             var mustChangePwd = user.MustChangePwd; 
 
-            var hash = newPassword != null ? this.passwordHasher.HashPassword(user, newPassword) : null;
+            var hash = newPassword != null ? this._passwordHasher.HashPassword(user, newPassword) : null;
             var passwordStore = GetPasswordStore();
             await passwordStore.SetPasswordHashAsync(user, hash, CancellationToken);
             user.MustChangePwd = mustChangePwd;
@@ -313,7 +309,7 @@ namespace cloudscribe.Core.Identity
 
         public async Task<PagedResult<IUserLocation>> GetUserLocations(Guid siteId, Guid userId, int pageNumber, int pageSize)
         {
-            return await queries.GetUserLocationsByUser(siteId, userId, pageNumber, pageSize);
+            return await _queries.GetUserLocationsByUser(siteId, userId, pageNumber, pageSize);
             //var result = new PagedResult<IUserLocation>();
             //var list = await queries.GetUserLocationsByUser(siteId, userId, pageNumber, pageSize);
             //result.Data = list.ToList();
@@ -322,6 +318,40 @@ namespace cloudscribe.Core.Identity
             //result.PageSize = pageSize;
 
             //return result;
+        }
+
+
+        public async Task<IdentityResult> RemoveUserFromRole(Guid siteId, Guid userId, string roleName)
+        {
+            var errors = new List<IdentityError>();
+            var role = await _queries.FetchRole(siteId, roleName);
+            if(role == null)
+            {
+                var er = new IdentityError
+                {
+                    Description = "role not found"
+                };
+                errors.Add(er);
+                return IdentityResult.Failed(errors.ToArray());
+            }
+            var user = await _queries.Fetch(siteId, userId);
+            if (user == null)
+            {
+                var er = new IdentityError
+                {
+                    Description = "user not found"
+                };
+                errors.Add(er);
+                return IdentityResult.Failed(errors.ToArray());
+            }
+
+            await _commands.RemoveUserFromRole(role.SiteId, role.Id, user.Id);
+
+            user.RolesChanged = true;
+            await _commands.Update(user);
+
+
+            return IdentityResult.Success;
         }
 
         #region Overrides
@@ -355,7 +385,7 @@ namespace cloudscribe.Core.Identity
             var result = await base.CreateAsync(user);
             if(result.Succeeded)
             {
-                await eventHandlers.HandleUserCreated(user).ConfigureAwait(false);
+                await _eventHandlers.HandleUserCreated(user).ConfigureAwait(false);
             }
 
             return result;
@@ -363,19 +393,19 @@ namespace cloudscribe.Core.Identity
 
         public override async Task<IdentityResult> DeleteAsync(TUser user)
         {
-            await eventHandlers.HandleUserPreDelete(user.SiteId, user.Id).ConfigureAwait(false);
+            await _eventHandlers.HandleUserPreDelete(user.SiteId, user.Id).ConfigureAwait(false);
 
             return await base.DeleteAsync(user);
         }
 
         public override async Task<IdentityResult> UpdateAsync(TUser user)
         {
-            await eventHandlers.HandleUserPreUpdate(user.SiteId, user.Id).ConfigureAwait(false);
+            await _eventHandlers.HandleUserPreUpdate(user.SiteId, user.Id).ConfigureAwait(false);
 
             var result = await base.UpdateAsync(user);
             if (result.Succeeded)
             {
-                await eventHandlers.HandleUserUpdated(user).ConfigureAwait(false);
+                await _eventHandlers.HandleUserUpdated(user).ConfigureAwait(false);
             }
 
             return result;
@@ -430,7 +460,7 @@ namespace cloudscribe.Core.Identity
             if (count < Site.MaxInvalidPasswordAttempts)
             {
                 //return await UpdateUserAsync(user);
-                await commands.Update(user, CancellationToken.None);
+                await _commands.Update(user, CancellationToken.None);
                 return IdentityResult.Success;
             }
 
@@ -439,12 +469,12 @@ namespace cloudscribe.Core.Identity
             // TODO: should DefaultLockoutTimeSpan be promoted to a site setting?
             await store.SetLockoutEndDateAsync(
                 user, 
-                DateTimeOffset.UtcNow.Add(identityOptions.Lockout.DefaultLockoutTimeSpan),
+                DateTimeOffset.UtcNow.Add(_identityOptions.Lockout.DefaultLockoutTimeSpan),
                 CancellationToken);
 
             await store.ResetAccessFailedCountAsync(user, CancellationToken);
             //return await UpdateUserAsync(user);
-            await commands.Update(user, CancellationToken.None);
+            await _commands.Update(user, CancellationToken.None);
 
             return IdentityResult.Success;
         }
