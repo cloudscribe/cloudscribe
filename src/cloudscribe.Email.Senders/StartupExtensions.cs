@@ -30,7 +30,9 @@ namespace Microsoft.Extensions.DependencyInjection
             services.TryAddScoped<IElasticEmailOptionsProvider, ConfigElasticEmailOptionsProvider>();
             services.Configure<ElasticEmailOptions>(configuration.GetSection("ElasticEmailOptions"));
             services.AddScoped<IEmailSender, ElasticEmailSender>();
-            
+
+            services.TryAddScoped<IEmailSenderResolver, ConfigEmailSenderResolver>();
+
             return services;
         }
 
