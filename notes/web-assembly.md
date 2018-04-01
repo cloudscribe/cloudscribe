@@ -33,3 +33,4 @@ https://www.dotnetrocks.com/default.aspx?ShowNum=1517
 
 https://www.youtube.com/watch?v=Ta_qXpXQqGQ&list=PL1rZQsJPBU2StolNg0aqvQswETPcYnNKL&index=0
 
+http://www.mergeconflict.fm/89

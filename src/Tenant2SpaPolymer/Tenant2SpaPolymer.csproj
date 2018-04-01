@@ -17,7 +17,7 @@
     <PackageReference Include="Microsoft.Extensions.Logging.Console" Version="2.0.*" />
     <PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="2.0.*" />
     <PackageReference Include="Microsoft.Extensions.Options.ConfigurationExtensions" Version="2.0.*" />
-    <PackageReference Include="IdentityServer4.AccessTokenValidation" Version="1.2.*" />
+    <PackageReference Include="IdentityServer4.AccessTokenValidation" Version="2.4.*" />
     <PackageReference Include="Microsoft.AspNetCore.StaticFiles" Version="2.0.*" />
   </ItemGroup>
 

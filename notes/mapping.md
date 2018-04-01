@@ -48,6 +48,10 @@ GPSLatitude  42,56,42.960000000000001
 GPSLongitudeRef  W 
 GPSLongitude  76,25,48.299999999999997 
 
+The terms easting and northing are geographic Cartesian coordinates for a point. Easting refers to the eastward-measured distance (or the x-coordinate), while northing refers to the northward-measured distance (or the y-coordinate).
+
+Any point on the Equator's circle is of latitude 0°, the top north is 90° North, the top south is 90° South. Circles parallels to the Equator are of the same latitude. Longitude: it is the West/East value of a point on Earth. Longitudes are lines going from south pole to north pole.
+
 https://www.fcc.gov/media/radio/dms-decimal
 
 https://rantincsharp.wordpress.com/2011/08/31/convert-latitude-longitude-to-easting-northings/

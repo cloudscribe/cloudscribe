@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using IdentityServer4.AccessTokenValidation;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
@@ -27,16 +28,10 @@ namespace Tenant2SpaPolymer
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            //services.AddCors(options =>
-            //{
-            //    // this defines a CORS policy called "default"
-            //    options.AddPolicy("default", policy =>
-            //    {
-            //        policy.WithOrigins("http://localhost:5011") //HtmlClient2
-            //            .AllowAnyHeader()
-            //            .AllowAnyMethod();
-            //    });
-            //});
+            services.AddMvcCore()
+                .AddAuthorization()
+                .AddJsonFormatters();
+            
 
             services.AddAuthorization(options =>
             {
@@ -57,9 +52,25 @@ namespace Tenant2SpaPolymer
 
             });
 
-            services.AddMvcCore()
-                .AddAuthorization()
-                .AddJsonFormatters();
+            services.AddAuthentication(IdentityServerAuthenticationDefaults.AuthenticationScheme)
+                .AddIdentityServerAuthentication(IdentityServerAuthenticationDefaults.AuthenticationScheme, options =>
+                {
+                    options.Authority = "https://localhost:44399/two";
+                    options.ApiName = "tenant2RemoteApi";
+                    options.RequireHttpsMetadata = false;
+                });
+
+            services.AddCors(options =>
+            {
+                // this defines a CORS policy called "default"
+                options.AddPolicy("default", policy =>
+                {
+                    policy.WithOrigins("http://localhost:5011") //HtmlClient2
+                        .AllowAnyHeader()
+                        .AllowAnyMethod();
+                });
+            });
+
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -73,16 +84,7 @@ namespace Tenant2SpaPolymer
 
             app.UseDefaultFiles();
             app.UseStaticFiles();
-
-            app.UseIdentityServerAuthentication(new IdentityServerAuthenticationOptions
-            {
-                Authority = "https://localhost:44399/two",
-                ApiName = "tenant2RemoteApi",
-
-                RequireHttpsMetadata = false
-            });
-
-
+            app.UseAuthentication();
             app.UseMvc();
         }
 

@@ -11,7 +11,8 @@ namespace sourceDev.WebApp.Controllers
     {
         private const string AuthSchemes = "Identity.Application," + IdentityServerAuthenticationDefaults.AuthenticationScheme;
 
-        [Authorize(Policy ="AdminPolicy", AuthenticationSchemes = AuthSchemes)]
+        //[Authorize(Policy ="AdminPolicy", AuthenticationSchemes = AuthSchemes)]
+        [Authorize(Policy = "AdminPolicy", AuthenticationSchemes = IdentityServerAuthenticationDefaults.AuthenticationScheme)]
         [HttpGet]
         public IActionResult Get()
         {
