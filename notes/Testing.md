@@ -1,4 +1,9 @@
 
+https://docs.microsoft.com/en-us/aspnet/core/testing/integration-testing
+
+Selenium stand alone server
+https://www.seleniumhq.org/download/
+
 
 https://jeremydmiller.com/2017/04/18/using-storyteller-with-asp-net-core-systems/
 http://storyteller.github.io/

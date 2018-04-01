@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Linq;
+using IdentityServer4.AccessTokenValidation;
 
 namespace Tenant1SpaPolymer.Controllers
 {
@@ -9,6 +10,7 @@ namespace Tenant1SpaPolymer.Controllers
     public class IdentityController : ControllerBase
     {
         // [Authorize(Policy = "AdminPolicy")]
+        [Authorize(Policy = "ApiAccessPolicy", AuthenticationSchemes = IdentityServerAuthenticationDefaults.AuthenticationScheme)]
         [HttpGet]
         public IActionResult Get()
         {

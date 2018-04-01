@@ -1,4 +1,7 @@
 
+
+https://docs.microsoft.com/en-us/dotnet/standard/microservices-architecture/multi-container-microservice-net-applications/multi-container-applications-docker-compose
+
 https://andrewlock.net/using-docker-hub-to-automatically-build-a-docker-image-for-asp-net-core-apps/
 
 
