@@ -1,4 +1,4 @@
-﻿@model cloudscribe.Core.Web.ViewModels.Email.ConfirmEmailAddessViewModel 
+﻿@model cloudscribe.Core.Web.ViewModels.Email.ConfirmEmailAddessViewModel
 
 @{
     Layout = "_LayoutTextEmailNotification";
@@ -6,4 +6,8 @@
     ViewData["Site"] = Model.Tenant;
 }
 
-Please confirm your account by clicking this link: @Html.Raw(Model.ConfirmationUrl)
+Please confirm your account by clicking this link: @Html.Raw(Model.ConfirmationUrl). 
+
+If you still have the web page open, you can submit the code:
+
+ @Model.ConfirmationCode

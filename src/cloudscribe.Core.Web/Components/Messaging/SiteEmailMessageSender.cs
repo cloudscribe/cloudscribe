@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2015-08-11
-// Last Modified:			2018-03-02
+// Last Modified:			2018-04-02
 // 
 
 using cloudscribe.Core.Models;
@@ -45,7 +45,8 @@ namespace cloudscribe.Core.Web.Components.Messaging
             ISiteContext siteSettings,
             string toAddress,
             string subject,
-            string confirmationUrl)
+            string confirmationUrl,
+            string confirmCode)
         {
             
             var sender = await _emailSenderResolver.GetEmailSender(siteSettings.Id.ToString());
@@ -59,6 +60,7 @@ namespace cloudscribe.Core.Web.Components.Messaging
             var model = new ConfirmEmailAddessViewModel
             {
                 ConfirmationUrl = confirmationUrl,
+                ConfirmationCode = confirmCode,
                 Tenant = siteSettings
             };
 

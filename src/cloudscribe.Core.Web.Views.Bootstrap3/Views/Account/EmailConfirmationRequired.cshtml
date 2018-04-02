@@ -20,3 +20,19 @@
         </div>
     </form>
 }
+    <form asp-controller="Account" asp-action="ConfirmEmail" method="get" class="form-inline" role="form">
+        <input name="userId" value="@Model.UserId" type="hidden" />
+        <input name="returnUrl" value="@Model.ReturnUrl" type="hidden" />
+        <div class="form-group">
+            <label class="sr-only" asp-for="Code">@sr["Or submit the code provided in the email."]</label>
+            <input asp-for="Code" class="form-control" style="min-width:300px" placeholder="@sr["Or submit the code provided in the email."]" data-val="true" data-val-required="@sr["You must enter the code sent to your email address"]" />
+        </div>
+        <button name="submit" type="submit" class="btn btn-default">@sr["Submit"]</button>
+        <span class="text-danger field-validation-valid" data-valmsg-for="Code" data-valmsg-replace="true"></span>
+    </form>
+@section Scripts {
+    @{await Html.RenderPartialAsync("_UnobtrusiveValidationScriptsPartial"); }
+    
+    }
+
+
