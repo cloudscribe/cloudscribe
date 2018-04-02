@@ -6,5 +6,7 @@ namespace cloudscribe.Core.Web.ViewModels.Email
     {
         public ISiteContext Tenant { get; set; }
         public string ConfirmationUrl { get; set; }
+
+        public string ConfirmationCode { get; set; }
     }
 }

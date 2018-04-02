@@ -35,7 +35,7 @@ else
     <ul class="nav navbar-nav navbar-right">
         @if (site.AllowNewRegistration)
         {
-            <li><a id="registerLink" asp-controller="Account" asp-action="Register">@sr["Register"]</a></li>
+            <li><a id="registerLink" asp-controller="Account" asp-action="Register" asp-route-returnurl="@Context.Request.PathAndQuery()">@sr["Register"]</a></li>
         }  
         <li><a id="loginLink" asp-controller="Account" asp-action="Login" asp-route-returnurl="@Context.Request.PathAndQuery()">@sr["Log in"]</a></li>
     </ul>

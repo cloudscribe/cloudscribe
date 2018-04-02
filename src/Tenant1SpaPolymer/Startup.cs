@@ -31,9 +31,7 @@ namespace Tenant1SpaPolymer
             services.AddMvcCore()
                 .AddAuthorization()
                 .AddJsonFormatters();
-
             
-
             services.AddAuthorization(options =>
             {
                 
@@ -41,7 +39,7 @@ namespace Tenant1SpaPolymer
                     "ApiAccessPolicy",
                     authBuilder =>
                     {
-                        authBuilder.RequireRole("Administrators");
+                        authBuilder.RequireAuthenticatedUser();
                     });
 
                 

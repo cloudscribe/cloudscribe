@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2015-07-22
-// Last Modified:			2017-05-23
+// Last Modified:			2018-04-02
 // 
 
 using cloudscribe.Core.Models;
@@ -16,7 +16,8 @@ namespace cloudscribe.Core.Web.Components.Messaging
             ISiteContext siteSettings,
             string toAddress, 
             string subject, 
-            string confirmationUrl);
+            string confirmationUrl,
+            string confirmCode);
 
         Task SendSecurityCodeEmailAsync(
             ISiteContext siteSettings,

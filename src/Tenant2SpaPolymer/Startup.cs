@@ -40,7 +40,7 @@ namespace Tenant2SpaPolymer
                     "SecureApiPolicy",
                     authBuilder =>
                     {
-                        authBuilder.RequireRole("Administrators");
+                        authBuilder.RequireAuthenticatedUser();
                     });
 
                 options.AddPolicy(

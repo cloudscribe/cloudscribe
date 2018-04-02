@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2014-10-26
-// Last Modified:			2018-03-07
+// Last Modified:			2018-04-02
 // 
 
 using cloudscribe.Core.Identity;
@@ -105,7 +105,7 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
             return false;
         }
 
-        private async Task<IActionResult> HandleLoginNotAllowed(UserLoginResult result)
+        private async Task<IActionResult> HandleLoginNotAllowed(UserLoginResult result, string returnUrl)
         {
             _analytics.HandleLoginNotAllowed(result).Forget();
 
@@ -121,7 +121,7 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
                         {
                             Action = "ConfirmEmail",
                             Controller = "Account",
-                            Values = new { userId = result.User.Id.ToString(), code = result.EmailConfirmationToken },
+                            Values = new { userId = result.User.Id.ToString(), code = result.EmailConfirmationToken, returnUrl },
                             Protocol = HttpContext.Request.Scheme
                         });
 
@@ -129,13 +129,15 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
                             _currentSite,
                             result.User.Email,
                             _sr["Confirm your account"],
-                            callbackUrl).Forget();
+                            callbackUrl,
+                            result.EmailConfirmationToken
+                            ).Forget();
 
 
                         this.AlertSuccess(_sr["Please check your email inbox, we just sent you a link that you need to click to confirm your account"], true);
                     }
                    
-                    return RedirectToAction("EmailConfirmationRequired", new { userId = result.User.Id, didSend = true });
+                    return RedirectToAction("EmailConfirmationRequired", new { userId = result.User.Id, didSend = true, returnUrl });
                 }
 
                 if (result.NeedsAccountApproval)
@@ -291,7 +293,7 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
             
             if (result.SignInResult.IsNotAllowed)
             {
-                return await HandleLoginNotAllowed(result);
+                return await HandleLoginNotAllowed(result, returnUrl);
             }
             
             if (result.SignInResult.RequiresTwoFactor)
@@ -361,7 +363,7 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
 
             if (result.SignInResult.IsNotAllowed)
             {
-                return await HandleLoginNotAllowed(result);
+                return await HandleLoginNotAllowed(result, returnUrl);
             }
             
             if (result.SignInResult.IsLockedOut)
@@ -426,7 +428,7 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
 
             if (result.SignInResult.IsNotAllowed)
             {
-                return await HandleLoginNotAllowed(result);
+                return await HandleLoginNotAllowed(result, returnUrl);
             }
 
             if (result.SignInResult.IsLockedOut)
@@ -595,7 +597,7 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
 
                 if (result.SignInResult.IsNotAllowed)
                 {
-                    return await HandleLoginNotAllowed(result);
+                    return await HandleLoginNotAllowed(result, returnUrl);
                 }
 
                 var te = result.RejectReasons.FirstOrDefault();
@@ -674,7 +676,7 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
 
             if (result.SignInResult.IsNotAllowed)
             {
-                return await HandleLoginNotAllowed(result);
+                return await HandleLoginNotAllowed(result, returnUrl);
             }
 
             if (result.ExternalLoginInfo == null)
@@ -745,7 +747,7 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
 
                 if (result.SignInResult.IsNotAllowed)
                 {
-                    return await HandleLoginNotAllowed(result);
+                    return await HandleLoginNotAllowed(result, returnUrl);
                 }
 
                 if (result.ExternalLoginInfo == null)
@@ -841,7 +843,7 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
 
         [HttpGet]
         [AllowAnonymous]
-        public IActionResult EmailConfirmationRequired(Guid userId, bool didSend = false)
+        public IActionResult EmailConfirmationRequired(Guid userId, bool didSend = false, string returnUrl = null)
         {
             if (_accountService.IsSignedIn(User))
             {
@@ -850,7 +852,10 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
             var model = new PendingNotificationViewModel
             {
                 UserId = userId,
-                DidSend = didSend
+                DidSend = didSend,
+                ReturnUrl = returnUrl
+
+
             };
 
             return View("EmailConfirmationRequired", model);
@@ -881,7 +886,9 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
                             _currentSite,
                             info.User.Email,
                             _sr["Confirm your account"],
-                            callbackUrl).Forget();
+                            callbackUrl,
+                            info.EmailVerificationToken
+                            ).Forget();
 
             await _ipAddressTracker.TackUserIpAddress(_currentSite.Id, info.User.Id);
 
@@ -891,7 +898,7 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
         // GET: /Account/ConfirmEmail
         [HttpGet]
         [AllowAnonymous]
-        public async Task<IActionResult> ConfirmEmail(string userId, string code)
+        public async Task<IActionResult> ConfirmEmail(string userId, string code, string returnUrl)
         {
             if (_accountService.IsSignedIn(User))
             {
@@ -899,14 +906,14 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
             }
             if (userId == null || code == null)
             {
-                return View("Error");
+                return this.RedirectToSiteRoot(_currentSite);
             }
-
+            
             var result = await _accountService.ConfirmEmailAsync(userId, code);
             
             if (result.User == null)
             {
-                return View("Error");
+                return this.RedirectToSiteRoot(_currentSite);
             }
             
             if(result.IdentityResult.Succeeded)
@@ -916,9 +923,18 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
                     await _emailSender.AccountPendingApprovalAdminNotification(_currentSite, result.User).ConfigureAwait(false);
                     return RedirectToAction("PendingApproval", new { userId = result.User.Id, didSend = true });      
                 }
+                else if(!string.IsNullOrWhiteSpace(returnUrl))
+                {
+                    // if we have a return url we should just go aheadand redirect to login
+                    return RedirectToAction("Login", new { returnUrl });
+                }
+            }
+            else
+            {
+                this.AlertDanger(_sr["Oops something went wrong"], true);
             }
             
-            return View(result.IdentityResult.Succeeded ? "ConfirmEmail" : "Error");
+            return View();
         }
 
         // POST: /Account/LogOff

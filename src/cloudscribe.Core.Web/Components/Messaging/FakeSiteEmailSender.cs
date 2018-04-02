@@ -16,7 +16,8 @@ namespace cloudscribe.Core.Web.Components.Messaging
             ISiteContext siteSettings,
             string toAddress,
             string subject,
-            string confirmationUrl)
+            string confirmationUrl,
+            string confirmCode)
         {
             return Task.FromResult(0);
         }
