@@ -1,10 +1,27 @@
 
 
+# Fluent Validation
+
+Separation of concerns, separate validation from the model
+
+https://github.com/JeremySkinner/FluentValidation
+https://github.com/JeremySkinner/FluentValidation/wiki
+
+# Mediatr
+
+decoupling the in-proc sending of messages from handling messages
+https://codeopinion.com/thin-controllers-cqrs-mediatr/
+similar concepts as Brighter
+https://twitter.com/brightercommand/status/862286249591267329?lang=en
+
+https://github.com/jbogard/MediatR/wiki
+
 # Brighter
 
 Command Dispatcher, Processor, and Distributed Task Queue
 https://brightercommand.github.io/Brighter/
 https://github.com/BrighterCommand/Brighter
+https://www.hanselman.com/blog/ExploringCQRSWithinTheBrighterNETOpenSourceProject.aspx
 
 "A command is an imperative instruction to do something. We expect only one receiver of a command because it is point-to-point"
 "An event is an indicator to interested parties that 'something has happened'. We expect zero to many receivers as it is one-to-many communication i.e. publish-subscribe
@@ -23,7 +40,7 @@ Building for Resiliency and Scale in the Cloud - Scott Allen
 https://www.youtube.com/watch?v=SFLu6jZWXGs&feature=youtu.be&t=1440
 
 # ConEmu
-
+multi tab console for powershell and cms etc
 https://conemu.github.io/
 
 # Free servicetogetpublic ip address

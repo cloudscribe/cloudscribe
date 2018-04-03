@@ -925,7 +925,8 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
                 }
                 else if(!string.IsNullOrWhiteSpace(returnUrl))
                 {
-                    // if we have a return url we should just go aheadand redirect to login
+                    // if we have a return url we should just go ahead and redirect to login
+                    this.AlertSuccess(_sr["Thank you for confirming your email."], true);
                     return RedirectToAction("Login", new { returnUrl });
                 }
             }
