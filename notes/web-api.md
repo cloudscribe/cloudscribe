@@ -1,5 +1,8 @@
 
 
+http://buildingbettersoftware.blogspot.com/2018/04/implementing-hateos-functionality-in.html
+https://github.com/DavidCBerry13/FoodTruckNationApi/
+
 https://aspdotnetcodehelp.wordpress.com/2017/03/27/how-to-access-wcf-service-in-asp-net-core-application/
 
 https://github.com/blog/2412-learn-graphql-with-github
