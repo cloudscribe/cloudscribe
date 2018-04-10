@@ -16,6 +16,8 @@ https://twitter.com/brightercommand/status/862286249591267329?lang=en
 
 https://github.com/jbogard/MediatR/wiki
 
+https://github.com/jbogard/MediatR.Extensions.Microsoft.DependencyInjection
+
 # Brighter
 
 Command Dispatcher, Processor, and Distributed Task Queue

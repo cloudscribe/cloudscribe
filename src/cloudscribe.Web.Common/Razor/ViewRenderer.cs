@@ -35,8 +35,6 @@ namespace cloudscribe.Web.Common.Razor
             _viewEngine = viewEngine;
             _tempDataProvider = tempDataProvider;
             _serviceProvider = serviceProvider;
-
-
         }
 
         private IRazorViewEngine _viewEngine;
@@ -45,14 +43,12 @@ namespace cloudscribe.Web.Common.Razor
         
         public async Task<string> RenderViewAsString<TModel>(string viewName, TModel model)
         {
-
             var viewData = new ViewDataDictionary<TModel>(
                         metadataProvider: new EmptyModelMetadataProvider(),
                         modelState: new ModelStateDictionary())
             {
                 Model = model
             };
-
             
             var httpContext = new DefaultHttpContext { RequestServices = _serviceProvider };
             var actionContext = new ActionContext(httpContext, new RouteData(), new ActionDescriptor());
@@ -62,7 +58,7 @@ namespace cloudscribe.Web.Common.Razor
             {
               
                 ViewEngineResult viewResult = _viewEngine.FindView(actionContext, viewName, true);
-
+                
                 ViewContext viewContext = new ViewContext(
                     actionContext,
                     viewResult.View,
