@@ -56,7 +56,7 @@ namespace Microsoft.Extensions.DependencyInjection
         public static IServiceCollection AddCloudscribeCoreCommon(this IServiceCollection services, IConfiguration configuration)
         {
             services.TryAddSingleton<IHttpContextAccessor, HttpContextAccessor>();
-
+            services.AddOptions();
             
             services.Configure<MultiTenantOptions>(configuration.GetSection("MultiTenantOptions"));
             services.Configure<NewUserOptions>(configuration.GetSection("NewUserOptions"));
