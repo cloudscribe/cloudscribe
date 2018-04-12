@@ -53,3 +53,9 @@ https://www.ipify.org/
 # Selenium stand alone server
 
 https://www.seleniumhq.org/download/
+
+# Web notifications and toasts
+
+this goes well with signalr
+https://sciactive.com/pnotify/
+https://github.com/sciactive/pnotify
