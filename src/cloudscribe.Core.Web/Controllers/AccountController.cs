@@ -86,6 +86,7 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
                 if(
                     (!returnUrl.Contains("/closed"))
                     && (!returnUrl.Contains("/oops/error"))
+                    && (!returnUrl.Contains("/account/logout"))
                     )
                 {
                     return LocalRedirect(returnUrl);
