@@ -2,12 +2,11 @@
 
   <PropertyGroup>
     <Description>PostgreSql Entity Framework Core implementation of cloudscribe core storage</Description>
-    <VersionPrefix>2.0.10</VersionPrefix>
-    <AssemblyVersion>2.0.10</AssemblyVersion>
+    <VersionPrefix>2.0.11</VersionPrefix>
+    <AssemblyVersion>2.0.11</AssemblyVersion>
     <Authors>Joe Audette</Authors>
-    <TargetFramework>netcoreapp2.0</TargetFramework>
+    <TargetFramework>netstandard2.0</TargetFramework>
     <AssemblyName>cloudscribe.Core.Storage.EFCore.pgsql</AssemblyName>
-    <OutputType>Exe</OutputType>
     <PackageId>cloudscribe.Core.Storage.EFCore.pgsql</PackageId>
     <PackageTags>cloudscribe;commands;queries;ef</PackageTags>
     <PackageIconUrl>https://raw.githubusercontent.com/joeaudette/cloudscribe/master/cloudscribe-icon-32.png</PackageIconUrl>
@@ -19,18 +18,6 @@
   <ItemGroup>
     <ProjectReference Include="..\cloudscribe.Core.Models\cloudscribe.Core.Models.csproj" />
     <ProjectReference Include="..\cloudscribe.Core.Storage.EFCore.Common\cloudscribe.Core.Storage.EFCore.Common.csproj" />
-    <Content Remove="Properties\launchSettings.json" />
-    <Content Include="Properties\launchSettings.json" CopyToPublishDirectory="Never">
-      <Pack>false</Pack>
-    </Content>
-    <Content Remove="appsettings.json" CopyToPublishDirectory="Never" />
-    <Content Include="appsettings.json" CopyToPublishDirectory="Never">
-      <Pack>false</Pack>
-    </Content>
-    <Content Remove="appsettings.dev.json" CopyToPublishDirectory="Never" />
-    <Content Include="appsettings.dev.json" CopyToPublishDirectory="Never">
-      <Pack>false</Pack>
-    </Content>
   </ItemGroup>
 
   <ItemGroup>
@@ -38,7 +25,6 @@
     <PackageReference Include="Microsoft.Extensions.Configuration" Version="2.0.*" />
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="2.0.*" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="2.0.*" />
-    <PackageReference Include="Microsoft.AspNetCore.Hosting" Version="2.0.*" />
     <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="2.0.*" />
     <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="2.0.*" />
     

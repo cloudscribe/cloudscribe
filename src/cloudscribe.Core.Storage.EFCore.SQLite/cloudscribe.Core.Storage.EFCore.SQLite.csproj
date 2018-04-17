@@ -2,11 +2,10 @@
 
   <PropertyGroup>
     <Description>SQLite Entity Framework Core implementation of cloudscribe core storage</Description>
-    <VersionPrefix>2.0.3</VersionPrefix>
-    <AssemblyVersion>2.0.3</AssemblyVersion>
+    <VersionPrefix>2.0.4</VersionPrefix>
+    <AssemblyVersion>2.0.4</AssemblyVersion>
     <Authors>Joe Audette</Authors>
-    <TargetFramework>netcoreapp2.0</TargetFramework>
-    <OutputType>Exe</OutputType>
+    <TargetFramework>netstandard2.0</TargetFramework>
     <PackageTags>cloudscribe;commands;queries;ef</PackageTags>
     <PackageIconUrl>https://raw.githubusercontent.com/joeaudette/cloudscribe/master/cloudscribe-icon-32.png</PackageIconUrl>
     <PackageProjectUrl>https://github.com/joeaudette/cloudscribe</PackageProjectUrl>
@@ -24,7 +23,6 @@
     <PackageReference Include="Microsoft.Extensions.Configuration" Version="2.0.*" />
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="2.0.*" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="2.0.*" />
-    <PackageReference Include="Microsoft.AspNetCore.Hosting" Version="2.0.*" />
     <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="2.0.*" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="2.0.*" />
 

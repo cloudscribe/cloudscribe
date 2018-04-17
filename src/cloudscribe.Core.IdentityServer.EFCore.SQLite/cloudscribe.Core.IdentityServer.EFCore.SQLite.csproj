@@ -2,11 +2,10 @@
 
   <PropertyGroup>
     <Description>SQLite Entity Framework configuration and operational stores for IdentityServer4 cloudscribe multi-tenant identity integration</Description>
-    <VersionPrefix>2.0.2</VersionPrefix>
-    <AssemblyVersion>2.0.2</AssemblyVersion>
+    <VersionPrefix>2.0.3</VersionPrefix>
+    <AssemblyVersion>2.0.3</AssemblyVersion>
     <Authors>Joe Audette</Authors>
-    <TargetFramework>netcoreapp2.0</TargetFramework>
-    <OutputType>Exe</OutputType>
+    <TargetFramework>netstandard2.0</TargetFramework>
     <PackageTags>cloudscribe;identity</PackageTags>
     <PackageIconUrl>https://raw.githubusercontent.com/joeaudette/cloudscribe/master/cloudscribe-icon-32.png</PackageIconUrl>
     <PackageProjectUrl>https://github.com/joeaudette/cloudscribe</PackageProjectUrl>
@@ -28,7 +27,6 @@
     <PackageReference Include="Microsoft.EntityFrameworkCore.Relational" Version="2.0.*" />
     <PackageReference Include="Microsoft.Extensions.Configuration.FileExtensions" Version="2.0.*" />
     <PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="2.0.*" />
-    <PackageReference Include="Microsoft.AspNetCore.Hosting" Version="2.0.*" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="2.0.*" />
     <PackageReference Include="IdentityServer4" Version="2.1.*" />
 
