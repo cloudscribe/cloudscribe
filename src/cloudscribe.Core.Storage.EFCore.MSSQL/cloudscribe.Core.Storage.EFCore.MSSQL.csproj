@@ -2,12 +2,11 @@
 
   <PropertyGroup>
     <Description>Microsoft Sql Server Entity Framework Core implementation of cloudscribe core storage</Description>
-    <VersionPrefix>2.0.11</VersionPrefix>
-    <AssemblyVersion>2.0.11</AssemblyVersion>
+    <VersionPrefix>2.0.12</VersionPrefix>
+    <AssemblyVersion>2.0.12</AssemblyVersion>
     <Authors>Joe Audette</Authors>
-    <TargetFramework>netcoreapp2.0</TargetFramework>
+    <TargetFramework>netstandard2.0</TargetFramework>
     <AssemblyName>cloudscribe.Core.Storage.EFCore.MSSQL</AssemblyName>
-    <OutputType>Exe</OutputType>
     <PackageId>cloudscribe.Core.Storage.EFCore.MSSQL</PackageId>
     <PackageTags>cloudscribe;commands;queries;ef</PackageTags>
     <PackageIconUrl>https://raw.githubusercontent.com/joeaudette/cloudscribe/master/cloudscribe-icon-32.png</PackageIconUrl>
@@ -19,19 +18,6 @@
   <ItemGroup>
     <ProjectReference Include="..\cloudscribe.Core.Models\cloudscribe.Core.Models.csproj" />
     <ProjectReference Include="..\cloudscribe.Core.Storage.EFCore.Common\cloudscribe.Core.Storage.EFCore.Common.csproj" />
-
-    <Content Remove="Properties\launchSettings.json" />
-    <Content Include="Properties\launchSettings.json" CopyToPublishDirectory="Never">
-      <Pack>false</Pack>
-    </Content>
-    <Content Remove="appsettings.json" CopyToPublishDirectory="Never" />
-    <Content Include="appsettings.json" CopyToPublishDirectory="Never">
-      <Pack>false</Pack>
-    </Content>
-    <Content Remove="appsettings.dev.json" CopyToPublishDirectory="Never" />
-    <Content Include="appsettings.dev.json" CopyToPublishDirectory="Never">
-      <Pack>false</Pack>
-    </Content>
     
   </ItemGroup>
 
@@ -42,12 +28,13 @@
     <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="2.0.*" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Relational" Version="2.0.*" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="2.0.*" />
-    <PackageReference Include="Microsoft.AspNetCore.Hosting" Version="2.0.*" />
     <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="2.0.*" />
   </ItemGroup>
 
   <ItemGroup>
     <DotNetCliToolReference Include="Microsoft.EntityFrameworkCore.Tools.DotNet" Version="2.0.*" />
   </ItemGroup>
+
+  
 
 </Project>

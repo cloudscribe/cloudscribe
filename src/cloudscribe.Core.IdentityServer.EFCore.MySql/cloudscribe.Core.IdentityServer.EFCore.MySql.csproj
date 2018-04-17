@@ -2,13 +2,12 @@
 
   <PropertyGroup>
     <Description>MySql Entity Framework configuration and operational stores for IdentityServer4 cloudscribe multi-tenant identity integration</Description>
-    <VersionPrefix>2.1.4</VersionPrefix>
-    <AssemblyVersion>2.1.4</AssemblyVersion>
+    <VersionPrefix>2.1.5</VersionPrefix>
+    <AssemblyVersion>2.1.5</AssemblyVersion>
 
     <Authors>Joe Audette</Authors>
-    <TargetFramework>netcoreapp2.0</TargetFramework>
+    <TargetFramework>netstandard2.0</TargetFramework>
     <AssemblyName>cloudscribe.Core.IdentityServer.EFCore.MySql</AssemblyName>
-    <OutputType>Exe</OutputType>
     <PackageId>cloudscribe.Core.IdentityServer.EFCore.MySql</PackageId>
     <PackageTags>cloudscribe;identity</PackageTags>
     <PackageIconUrl>https://raw.githubusercontent.com/joeaudette/cloudscribe/master/cloudscribe-icon-32.png</PackageIconUrl>
@@ -22,15 +21,7 @@
     <ProjectReference Include="..\cloudscribe.Core.IdentityServerIntegration\cloudscribe.Core.IdentityServerIntegration.csproj" />
     <ProjectReference Include="..\cloudscribe.Core.Models\cloudscribe.Core.Models.csproj" />
     <ProjectReference Include="..\cloudscribe.Core.IdentityServer.EFCore.Common\cloudscribe.Core.IdentityServer.EFCore.Common.csproj" />
-
-    <Content Remove="Properties\launchSettings.json" />
-    <Content Include="Properties\launchSettings.json" CopyToPublishDirectory="Never">
-      <Pack>false</Pack>
-    </Content>
-    <Content Remove="appsettings.json" CopyToPublishDirectory="Never" />
-    <Content Include="appsettings.json" CopyToPublishDirectory="Never">
-      <Pack>false</Pack>
-    </Content>
+    
   </ItemGroup>
 
   <ItemGroup>
@@ -40,7 +31,6 @@
     <PackageReference Include="Microsoft.EntityFrameworkCore.Relational" Version="2.0.*" />
     <PackageReference Include="Microsoft.Extensions.Configuration.FileExtensions" Version="2.0.*" />
     <PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="2.0.*" />
-    <PackageReference Include="Microsoft.AspNetCore.Hosting" Version="2.0.*" />
     <PackageReference Include="Pomelo.EntityFrameworkCore.MySql" Version="2.0.*" />
     <PackageReference Include="IdentityServer4" Version="2.1.*" />
   </ItemGroup>
@@ -48,5 +38,7 @@
   <ItemGroup>
     <DotNetCliToolReference Include="Microsoft.EntityFrameworkCore.Tools.DotNet" Version="2.0.*" />
   </ItemGroup>
+
+  
 
 </Project>
