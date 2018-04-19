@@ -1,32 +1,21 @@
-﻿@using cloudscribe.FileManager.Web.Services
-@using cloudscribe.Web.Common.Gps
+﻿@using cloudscribe.Core.Web.Design
+@inject CoreThemeHelper themeHelper
 @{
     ViewData["Title"] = "Test1";
-    var exifHelper = new ExifHelper();
-    var data = exifHelper.ExtractExif("C:\\_c\\cloudscribe\\src\\sourceDev.WebApp\\sitefiles\\s1\\wwwroot\\media\\images\\IMG_2063.JPG");
-    var dms = exifHelper.ExtractDmsLocation(data);
-    var location = exifHelper.ExtractLocation(data);
 
-    var loc = new Location(57.21732, -2.345431);
+   
+    var themeSettings = themeHelper.GetThemeSettings();
 
+    
 }
 
 <h2>Test1</h2>
-@dms.ToString()
-<br />
-@dms.ToLocation().ToString()
-<hr />
-@location.ToString()
-<br />
-@location.ToDmsLocation().ToString()
-<hr />
-@loc.ToUtmLocation().Easting <br />
-@loc.ToUtmLocation().Northing <br />
 
 
-@foreach (var item in data)
+@if (themeSettings != null)
 {
-    @item.Key  @:- @item.Value
-        @:<br />
-}
+    @themeSettings.ThemeName
+    <hr />
+    @themeSettings.Icons.Email
 
+}

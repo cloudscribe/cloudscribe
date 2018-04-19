@@ -11,6 +11,7 @@ using cloudscribe.Core.Models.Identity;
 using cloudscribe.Core.Web.Analytics;
 using cloudscribe.Core.Web.Components;
 using cloudscribe.Core.Web.Components.Messaging;
+using cloudscribe.Core.Web.Design;
 using cloudscribe.Core.Web.ExtensionPoints;
 using cloudscribe.Core.Web.Mvc.Components;
 using cloudscribe.Core.Web.Navigation;
@@ -64,7 +65,11 @@ namespace Microsoft.Extensions.DependencyInjection
             services.Configure<RecaptchaKeys>(configuration.GetSection("RecaptchaKeys"));
             services.Configure<SiteConfigOptions>(configuration.GetSection("SiteConfigOptions"));
             services.Configure<UIOptions>(configuration.GetSection("UIOptions"));
-            
+
+            services.Configure<CoreIconConfig>(configuration.GetSection("CoreIconConfig"));
+            services.Configure<CoreThemeConfig>(configuration.GetSection("CoreThemeConfig"));
+            services.AddScoped<CoreThemeHelper>();
+
             services.Configure<CachingSiteResolverOptions>(configuration.GetSection("CachingSiteResolverOptions"));
 
 
