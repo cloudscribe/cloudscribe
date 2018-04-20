@@ -9,15 +9,8 @@ using System.Threading.Tasks;
 
 namespace cloudscribe.Core.Web.Components
 {
-    public interface ICachingSiteContextResolver : ISiteContextResolver
-    {
-
-    }
-
-    /// <summary>
-    /// this implementation is a baby step towards moving away from use of saaskit
-    /// </summary>
-    public class CachingSiteContextResolver : SiteContextResolver, ICachingSiteContextResolver
+    
+    public class CachingSiteContextResolver : SiteContextResolver
     {
         public CachingSiteContextResolver(
             IMemoryCache cache,
@@ -63,7 +56,7 @@ namespace cloudscribe.Core.Web.Components
             {
                 var folders = await GetAllSiteFoldersFolders();
 
-                return folders.Contains(pathStartingSegment) ? pathStartingSegment : "root";
+                return folders.Contains(pathStartingSegment) ?  pathStartingSegment : "root";
 
             }
 
@@ -80,9 +73,13 @@ namespace cloudscribe.Core.Web.Components
             var result = (SiteContext)_cache.Get(cacheKey);
             if(result == null)
             {
+                _log.LogDebug($"Site not found in cache with key {cacheKey}");
+
                 result = await base.ResolveSite(hostName, pathStartingSegment, cancellationToken);
                 if(result != null)
                 {
+                    _log.LogDebug($"Caching site with key {cacheKey}");
+
                     _cache.Set(
                         cacheKey,
                         result,
@@ -90,6 +87,10 @@ namespace cloudscribe.Core.Web.Components
                          .SetAbsoluteExpiration(_cachingOptions.SiteCacheDuration)
                          );
                 }
+            }
+            else
+            {
+                _log.LogDebug($"Site was found in cache with key {cacheKey}");
             }
 
 

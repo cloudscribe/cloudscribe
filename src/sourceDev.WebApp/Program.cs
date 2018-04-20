@@ -124,7 +124,9 @@ namespace sourceDev.WebApp
             {
                 minimumLevel = LogLevel.Information;
             }
-            
+
+            //minimumLevel = LogLevel.Debug;
+
             // a customizable filter for logging
             // add exclusions to remove noise in the logs
             var excludedLoggers = new List<string>
