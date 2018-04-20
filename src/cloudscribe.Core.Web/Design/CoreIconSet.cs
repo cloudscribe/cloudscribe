@@ -18,6 +18,7 @@
         public string Twitter { get; set; } = "fa fa-twitter";
         public string Microsoft { get; set; } = "fa fa-windows";
         public string OpenIDConnect { get; set; } = "fa fa-arrow-circle-right";
+        public string AdminSideNavToggle { get; set; } = "fas fa-bars";
 
 
     }
