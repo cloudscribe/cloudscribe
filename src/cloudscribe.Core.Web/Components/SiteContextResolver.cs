@@ -14,38 +14,38 @@ namespace cloudscribe.Core.Web.Components
             IOptions<MultiTenantOptions> multiTenantOptions
             )
         {
-            _siteQueries = siteRepository;
-            _multiTenantOptions = multiTenantOptions.Value;
-            _dataProtector = dataProtector;
+            SiteQueries = siteRepository;
+            MultiTenantOptions = multiTenantOptions.Value;
+            DataProtector = dataProtector;
         }
 
-        private MultiTenantOptions _multiTenantOptions;
-        private ISiteQueries _siteQueries;
-        private SiteDataProtector _dataProtector;
+        protected MultiTenantOptions MultiTenantOptions { get; private set; }
+        protected ISiteQueries SiteQueries { get; private set; }
+        protected SiteDataProtector DataProtector { get; private set; }
 
-        public async Task<SiteContext> ResolveSite(
+        public virtual async Task<SiteContext> ResolveSite(
             string hostName, 
             string pathStartingSegment,
             CancellationToken cancellationToken = default(CancellationToken)
             )
         {
             ISiteSettings site = null;
-            if (_multiTenantOptions.Mode == MultiTenantMode.FolderName)
+            if (MultiTenantOptions.Mode == MultiTenantMode.FolderName)
             {
                 if(string.IsNullOrWhiteSpace(pathStartingSegment))
                 {
                     pathStartingSegment = "root";
                 }
-                site = await _siteQueries.FetchByFolderName(pathStartingSegment, cancellationToken);
+                site = await SiteQueries.FetchByFolderName(pathStartingSegment, cancellationToken);
             }
             else
             {
-                site = await _siteQueries.Fetch(hostName, cancellationToken);
+                site = await SiteQueries.Fetch(hostName, cancellationToken);
             }
 
             if (site != null)
             {
-                _dataProtector.UnProtect(site);
+                DataProtector.UnProtect(site);
                 return new SiteContext(site);  
             }
 
@@ -53,12 +53,12 @@ namespace cloudscribe.Core.Web.Components
 
         }
 
-        public async Task<SiteContext> GetById(Guid siteId, CancellationToken cancellationToken = default(CancellationToken))
+        public virtual async Task<SiteContext> GetById(Guid siteId, CancellationToken cancellationToken = default(CancellationToken))
         {
-            var site = await _siteQueries.Fetch(siteId, cancellationToken);
+            var site = await SiteQueries.Fetch(siteId, cancellationToken);
             if (site != null)
             {
-                _dataProtector.UnProtect(site);
+                DataProtector.UnProtect(site);
                 return new SiteContext(site);
             }
 

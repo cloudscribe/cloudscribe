@@ -75,6 +75,7 @@ namespace Microsoft.Extensions.DependencyInjection
 
             //services.AddMultitenancy<SiteSettings, SiteResolver>();
             services.TryAddScoped<ISiteContextResolver, SiteContextResolver>();
+            services.TryAddScoped<ICachingSiteContextResolver, CachingSiteContextResolver>();
 
             services.AddMultitenancy<SiteContext, CachingSiteResolver>();
             services.AddScoped<CacheHelper, CacheHelper>();
