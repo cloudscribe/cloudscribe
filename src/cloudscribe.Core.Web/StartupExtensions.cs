@@ -73,11 +73,13 @@ namespace Microsoft.Extensions.DependencyInjection
             services.Configure<CachingSiteResolverOptions>(configuration.GetSection("CachingSiteResolverOptions"));
 
 
-            //services.AddMultitenancy<SiteSettings, SiteResolver>();
-            services.TryAddScoped<ISiteContextResolver, SiteContextResolver>();
-            services.TryAddScoped<ICachingSiteContextResolver, CachingSiteContextResolver>();
+            
+            //services.TryAddScoped<ISiteContextResolver, SiteContextResolver>();
+            services.TryAddScoped<ISiteContextResolver, CachingSiteContextResolver>();
 
-            services.AddMultitenancy<SiteContext, CachingSiteResolver>();
+            //services.AddMultitenancy<SiteContext, CachingSiteResolver>();
+            services.AddMultitenancy<SiteContext, SiteResolver>();
+
             services.AddScoped<CacheHelper, CacheHelper>();
 
             services.AddScoped<SiteEvents, SiteEvents>();
