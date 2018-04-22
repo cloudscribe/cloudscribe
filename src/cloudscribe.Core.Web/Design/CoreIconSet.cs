@@ -4,6 +4,8 @@
     {
         public string SetId { get; set; } = "glyphicons";
 
+        public string Home { get; set; } = "glyphicon glyphicon-home";
+
         public string Email { get; set; } = "glyphicon glyphicon-envelope";
         public string Username { get; set; } = "glyphicon glyphicon-circle-arrow-right";
         public string Password { get; set; } = "glyphicon glyphicon-lock";
@@ -19,6 +21,8 @@
         public string Microsoft { get; set; } = "fa fa-windows";
         public string OpenIDConnect { get; set; } = "fa fa-arrow-circle-right";
         public string AdminSideNavToggle { get; set; } = "fas fa-bars";
+
+        
 
 
     }
