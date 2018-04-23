@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2014-08-17
-// Last Modified:			2016-06-17
+// Last Modified:			2018-04-23
 // 
 
 using System;
@@ -12,35 +12,15 @@ namespace cloudscribe.Core.Models
     public class SiteUser : UserInfo, ISiteUser
     {
         
-        private string authorBio = string.Empty;
-        public string AuthorBio
-        {
-            get { return authorBio ?? string.Empty; }
-            set { authorBio = value; }
-        }
 
-        private string comment = string.Empty;
-        public string Comment
-        {
-            get { return comment ?? string.Empty; }
-            set { comment = value; }
-        }
+        public string AuthorBio { get; set; }
 
-        private string loweredEmail = string.Empty;
-        public string NormalizedEmail
-        {
-            get { return loweredEmail ?? string.Empty; }
-            set { loweredEmail = value; }
-        }
+        public string Comment { get; set; }
 
-        private string normalizedUserName = string.Empty;
-        public string NormalizedUserName
-        {
-            get { return normalizedUserName ?? string.Empty; }
-            set { normalizedUserName = value; }
-        }
+        public string NormalizedEmail { get; set; }
 
-        
+        public string NormalizedUserName { get; set; }
+
         public bool EmailConfirmed { get; set; } = false;
 
         public DateTime? EmailConfirmSentUtc { get; set; } = null;
@@ -49,12 +29,7 @@ namespace cloudscribe.Core.Models
 
         public DateTime? LockoutEndDateUtc { get; set; } = null;
 
-        private string newEmail = string.Empty;
-        public string NewEmail
-        {
-            get { return newEmail ?? string.Empty; }
-            set { newEmail = value; }
-        }
+        public string NewEmail { get; set; }
 
         public bool NewEmailApproved { get; set; } = false;
 
@@ -63,12 +38,8 @@ namespace cloudscribe.Core.Models
         
         public bool MustChangePwd { get; set; } = false;
 
-        private string passwordHash = string.Empty;
-        public string PasswordHash
-        {
-            get { return passwordHash ?? string.Empty; }
-            set { passwordHash = value; }
-        }
+     
+        public string PasswordHash { get; set; }
 
         public bool CanAutoLockout { get; set; } = true;
 
@@ -76,39 +47,28 @@ namespace cloudscribe.Core.Models
         
         public bool RolesChanged { get; set; } = false;
 
-        private string securityStamp = string.Empty;
-        public string SecurityStamp
-        {
-            get { return securityStamp ?? string.Empty; }
-            set { securityStamp = value; }
-        }
+    
+        public string SecurityStamp { get; set; }
 
-        private string signature = string.Empty;
-        public string Signature
-        {
-            get { return signature ?? string.Empty; }
-            set { signature = value; }
-        }
-        
+        public string Signature { get; set; }
+
         public bool TwoFactorEnabled { get; set; } = false;
 
-        //public string ConcurrencyStamp { get; set; } = Guid.NewGuid().ToString();
+
 
         public static SiteUser FromISiteUser(ISiteUser user)
         {
             SiteUser u = new SiteUser();
-           // u.ConcurrencyStamp = user.ConcurrencyStamp;
-            //Guid id = user.Id;
+          
             if (user.Id != Guid.Empty) u.Id = user.Id;
-            //SiteUser u = new SiteUser(id);
-            
+           
             u.AccessFailedCount = user.AccessFailedCount;
             u.AccountApproved = user.AccountApproved;
             u.AuthorBio = user.AuthorBio;
             u.AvatarUrl = user.AvatarUrl;
             u.CanAutoLockout = user.CanAutoLockout;
             u.Comment = user.Comment;
-            //u.Country = user.Country;
+      
             u.CreatedUtc = user.CreatedUtc;
             u.LastModifiedUtc = user.LastModifiedUtc;
 

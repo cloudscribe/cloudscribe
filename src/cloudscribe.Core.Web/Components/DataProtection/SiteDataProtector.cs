@@ -11,7 +11,7 @@ using Microsoft.AspNetCore.DataProtection;
 using Microsoft.Extensions.Logging;
 using System;
 
-namespace cloudscribe.Core.Web.Components
+namespace cloudscribe.Core.DataProtection
 {
     public class SiteDataProtector
     {

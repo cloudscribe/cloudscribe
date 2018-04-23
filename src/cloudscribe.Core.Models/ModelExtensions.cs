@@ -6,11 +6,38 @@
 // 
 
 using System.Collections.Generic;
+using System.Globalization;
 
 namespace cloudscribe.Core.Models
 {
     public static class ModelExtensions
     {
+        public static string ToInvariantString(this int i)
+        {
+            return i.ToString(CultureInfo.InvariantCulture);
+
+        }
+
+        public static string ToInvariantString(this float i)
+        {
+            return i.ToString(CultureInfo.InvariantCulture);
+
+        }
+
+        public static List<string> SplitOnChar(this string s, char c)
+        {
+            List<string> list = new List<string>();
+            if (string.IsNullOrWhiteSpace(s)) { return list; }
+
+            string[] a = s.Split(c);
+            foreach (string item in a)
+            {
+                if (!string.IsNullOrWhiteSpace(item)) { list.Add(item); }
+            }
+
+
+            return list;
+        }
 
         public static bool IsDeletable(this ISiteRole role, string undeletableRolesSemiColonSeparated)
         {

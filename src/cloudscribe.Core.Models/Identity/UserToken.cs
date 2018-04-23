@@ -12,13 +12,14 @@ namespace cloudscribe.Core.Models
 
         public static UserToken FromIUserToken(IUserToken i)
         {
-            UserToken l = new UserToken();
-
-            l.LoginProvider = i.LoginProvider;
-            l.Name = i.Name;
-            l.Value = i.Value;
-            l.SiteId = i.SiteId;
-            l.UserId = i.UserId;
+            UserToken l = new UserToken
+            {
+                LoginProvider = i.LoginProvider,
+                Name = i.Name,
+                Value = i.Value,
+                SiteId = i.SiteId,
+                UserId = i.UserId
+            };
 
             return l;
         }

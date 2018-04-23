@@ -1,4 +1,6 @@
-﻿using cloudscribe.Core.Models;
+﻿using cloudscribe.Core.DataProtection;
+using cloudscribe.Core.Models;
+using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
@@ -65,17 +67,19 @@ namespace cloudscribe.Core.Web.Components
 
         public override async Task<SiteContext> ResolveSite(
             string hostName,
-            string pathStartingSegment,
+            PathString path,
             CancellationToken cancellationToken = default(CancellationToken)
             )
         {
+            var pathStartingSegment = path.StartingSegment();
+
             var cacheKey = await GetCacheKey(hostName, pathStartingSegment);
             var result = (SiteContext)_cache.Get(cacheKey);
             if(result == null)
             {
                 _log.LogDebug($"Site not found in cache with key {cacheKey}");
 
-                result = await base.ResolveSite(hostName, pathStartingSegment, cancellationToken);
+                result = await base.ResolveSite(hostName, path, cancellationToken);
                 if(result != null)
                 {
                     _log.LogDebug($"Caching site with key {cacheKey}");

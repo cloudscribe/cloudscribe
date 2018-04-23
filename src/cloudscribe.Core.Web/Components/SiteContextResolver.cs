@@ -1,4 +1,6 @@
-﻿using cloudscribe.Core.Models;
+﻿using cloudscribe.Core.DataProtection;
+using cloudscribe.Core.Models;
+using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Options;
 using System;
 using System.Threading;
@@ -24,11 +26,12 @@ namespace cloudscribe.Core.Web.Components
         protected SiteDataProtector DataProtector { get; private set; }
 
         public virtual async Task<SiteContext> ResolveSite(
-            string hostName, 
-            string pathStartingSegment,
+            string hostName,
+            PathString path,
             CancellationToken cancellationToken = default(CancellationToken)
             )
         {
+            var pathStartingSegment = path.StartingSegment();
             ISiteSettings site = null;
             if (MultiTenantOptions.Mode == MultiTenantMode.FolderName)
             {

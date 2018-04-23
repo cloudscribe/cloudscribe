@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2014-08-17
-// Last Modified:			2016-11-12
+// Last Modified:			2018-04-23
 // 
 
 using System;
@@ -17,13 +17,8 @@ namespace cloudscribe.Core.Models
         }
         public Guid Id { get; set; }
 
-        private string hostName = string.Empty;
-        public string HostName
-        {
-            get { return hostName ?? string.Empty; }
-            set { hostName = value; }
-        }
-
+        public string HostName { get; set; }
+        
         public Guid SiteId { get; set; }
         
     }

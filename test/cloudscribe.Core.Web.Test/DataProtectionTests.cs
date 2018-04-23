@@ -12,7 +12,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using cloudscribe.Core.Models;
+using cloudscribe.Core.DataProtection;
 using Xunit;
 
 namespace cloudscribe.Core.Web.Tests

@@ -27,7 +27,7 @@ namespace cloudscribe.Core.Web.Components
         {
             TenantContext<SiteContext> tenantContext = null;
             CancellationToken cancellationToken = context?.RequestAborted ?? CancellationToken.None;
-            var site = await _siteContextResolver.ResolveSite(context.Request.Host.Value, context.Request.Path.StartingSegment(), cancellationToken);
+            var site = await _siteContextResolver.ResolveSite(context.Request.Host.Value, context.Request.Path, cancellationToken);
 
             if (site != null)
             {

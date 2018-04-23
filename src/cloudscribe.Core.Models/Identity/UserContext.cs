@@ -13,18 +13,12 @@ namespace cloudscribe.Core.Models
         private ISiteUser user;
         public bool AccountApproved
         {
-            get
-            {
-                return user.AccountApproved;
-            }
+            get { return user.AccountApproved; }
         }
 
         public string AvatarUrl
         {
-            get
-            {
-                return user.AvatarUrl;
-            }
+            get { return user.AvatarUrl; }
         }
 
         public DateTime CreatedUtc

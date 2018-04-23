@@ -22,7 +22,14 @@
         public string OpenIDConnect { get; set; } = "fa fa-arrow-circle-right";
         public string AdminSideNavToggle { get; set; } = "fas fa-bars";
 
-        
+        public string BadRequest { get; set; } = "fa fa-ban text-danger";
+        public string UnAuthorized { get; set; } = "fa fa-ban text-danger";
+        public string Forbidden { get; set; } = "fa fa-exclamation-circle text-danger";
+        public string NotFound { get; set; } = "fa fa-exclamation-circle text-danger";
+        public string Error { get; set; } = "fa fa-exclamation-circle text-danger";
+
+
+
 
 
     }

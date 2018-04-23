@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2014-11-02
-// Last Modified:			2016-12-02
+// Last Modified:			2018-04-23
 // 
 
 
@@ -19,36 +19,22 @@ namespace cloudscribe.Core.Models.Geography
         }
 
         public Guid Id { get; set; }
-
-        private string name = string.Empty;
-        public string Name
-        {
-            get { return name ?? string.Empty; }
-            set { name = value; }
-        }
-
-        private string iSOCode2 = string.Empty;
-        public string ISOCode2
-        {
-            get { return iSOCode2 ?? string.Empty; }
-            set { iSOCode2 = value; }
-        }
-
-        private string iSOCode3 = string.Empty;
-        public string ISOCode3
-        {
-            get { return iSOCode3 ?? string.Empty; }
-            set { iSOCode3 = value; }
-        }
-
         
+        public string Name { get; set; }
+
+        public string ISOCode2 { get; set; }
+
+        public string ISOCode3 { get; set; }
+
         public static GeoCountry FromIGeoCountry(IGeoCountry igeo)
         {
-            GeoCountry country = new GeoCountry();
-            country.Id = igeo.Id;
-            country.ISOCode2 = igeo.ISOCode2;
-            country.ISOCode3 = igeo.ISOCode3;
-            country.Name = igeo.Name;
+            GeoCountry country = new GeoCountry
+            {
+                Id = igeo.Id,
+                ISOCode2 = igeo.ISOCode2,
+                ISOCode3 = igeo.ISOCode3,
+                Name = igeo.Name
+            };
 
             return country;
         }

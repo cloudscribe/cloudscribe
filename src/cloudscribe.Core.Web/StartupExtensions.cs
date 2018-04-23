@@ -6,6 +6,7 @@
 // 
 
 
+using cloudscribe.Core.DataProtection;
 using cloudscribe.Core.Models;
 using cloudscribe.Core.Models.Identity;
 using cloudscribe.Core.Web.Analytics;
@@ -68,7 +69,7 @@ namespace Microsoft.Extensions.DependencyInjection
 
             services.Configure<CoreIconConfig>(configuration.GetSection("CoreIconConfig"));
             services.Configure<CoreThemeConfig>(configuration.GetSection("CoreThemeConfig"));
-            services.AddScoped<CoreThemeHelper>();
+            services.TryAddScoped<ICoreThemeHelper, CoreThemeHelper>();
 
             services.Configure<CachingSiteResolverOptions>(configuration.GetSection("CachingSiteResolverOptions"));
 
