@@ -2,15 +2,10 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2014-08-16
-// Last Modified:			2016-12-02
+// Last Modified:			2018-04-23
 // 
 
 using System;
-using System.Data;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace cloudscribe.Core.Models
 {
@@ -18,7 +13,7 @@ namespace cloudscribe.Core.Models
     {
         public Guid Id { get; set; } 
 
-        private string aliasId = null;
+     
         /// <summary>
         /// an optional identifier for the site, should be unique per site
         /// can be used instead of guid as folder name for tenant files/themes
@@ -27,35 +22,17 @@ namespace cloudscribe.Core.Models
         /// site specific files
         /// if not specificed then the SiteGuid.ToString wil be used
         /// </summary>
-        public string AliasId
-        {
-            get { return aliasId ; }
-            set {  aliasId = value; }
-        }
+        public string AliasId { get; set; }
+       
+        public string SiteName { get; set; }
 
-        private string siteName = string.Empty;
-        public string SiteName
-        {
-            get { return siteName ?? string.Empty; }
-            set { siteName = value; }
-        }
+        public string SiteFolderName { get; set; }
 
-        private string siteFolderName = string.Empty;
-        public string SiteFolderName
-        {
-            get { return siteFolderName ?? string.Empty; }
-            set { siteFolderName = value; }
-        }
-
-        private string preferredHostName = string.Empty;
-        public string PreferredHostName
-        {
-            get { return preferredHostName ?? string.Empty; }
-            set { preferredHostName = value; }
-        }
-
+        public string PreferredHostName { get; set; }
         
         public bool IsServerAdminSite { get; set; } = false;
+
         
+
     }
 }

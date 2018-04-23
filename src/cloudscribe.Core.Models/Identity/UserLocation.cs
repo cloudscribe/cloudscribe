@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2015-12-01
-// Last Modified:			2016-05-12
+// Last Modified:			2018-04-23
 // 
 
 using System;
@@ -19,66 +19,25 @@ namespace cloudscribe.Core.Models
         public Guid UserId { get; set; } 
         public Guid SiteId { get; set; }
 
-        private string ipAddress = string.Empty;
-        public string IpAddress
-        {
-            get { return ipAddress ?? string.Empty; }
-            set { ipAddress = value; }
-        }
-
+        public string IpAddress { get; set; }
         public long IpAddressLong { get; set; } = 0;
-
-        private string hostName = string.Empty;
-        public string HostName
-        {
-            get { return hostName ?? string.Empty; }
-            set { hostName = value; }
-        }
+        
+        public string HostName { get; set; }
 
         public double Longitude { get; set; } = 0;
         public double Latitude { get; set; } = 0;
 
-        private string isp = string.Empty;
-        public string Isp
-        {
-            get { return isp ?? string.Empty; }
-            set { isp = value; }
-        }
+        public string Isp { get; set; }
 
-        private string continent = string.Empty;
-        public string Continent
-        {
-            get { return continent ?? string.Empty; }
-            set { continent = value; }
-        }
+        public string Continent { get; set; }
 
-        private string country = string.Empty;
-        public string Country
-        {
-            get { return country ?? string.Empty; }
-            set { country = value; }
-        }
+        public string Country { get; set; }
 
-        private string region = string.Empty;
-        public string Region
-        {
-            get { return region ?? string.Empty; }
-            set { region = value; }
-        }
+        public string Region { get; set; }
 
-        private string city = string.Empty;
-        public string City
-        {
-            get { return city ?? string.Empty; }
-            set { city = value; }
-        }
+        public string City { get; set; }
 
-        private string timeZone = string.Empty;
-        public string TimeZone
-        {
-            get { return timeZone ?? string.Empty; }
-            set { timeZone = value; }
-        }
+        public string TimeZone { get; set; }
         
         public int CaptureCount { get; set; } = 0;
         public DateTime FirstCaptureUtc { get; set; } = DateTime.UtcNow;
@@ -86,24 +45,25 @@ namespace cloudscribe.Core.Models
 
         public static UserLocation FromIUserLocation(IUserLocation i)
         {
-            UserLocation l = new UserLocation();
-
-            l.CaptureCount = i.CaptureCount;
-            l.City = i.City;
-            l.Continent = i.Continent;
-            l.Country = i.Country;
-            l.FirstCaptureUtc = i.FirstCaptureUtc;
-            l.HostName = i.HostName;
-            l.IpAddress = i.IpAddress;
-            l.IpAddressLong = i.IpAddressLong;
-            l.LastCaptureUtc = i.LastCaptureUtc;
-            l.Latitude = i.Latitude;
-            l.Longitude = i.Longitude;
-            l.Region = i.Region;
-            l.Id = i.Id;
-            l.SiteId = i.SiteId;
-            l.TimeZone = i.TimeZone;
-            l.UserId = i.UserId;
+            UserLocation l = new UserLocation
+            {
+                CaptureCount = i.CaptureCount,
+                City = i.City,
+                Continent = i.Continent,
+                Country = i.Country,
+                FirstCaptureUtc = i.FirstCaptureUtc,
+                HostName = i.HostName,
+                IpAddress = i.IpAddress,
+                IpAddressLong = i.IpAddressLong,
+                LastCaptureUtc = i.LastCaptureUtc,
+                Latitude = i.Latitude,
+                Longitude = i.Longitude,
+                Region = i.Region,
+                Id = i.Id,
+                SiteId = i.SiteId,
+                TimeZone = i.TimeZone,
+                UserId = i.UserId
+            };
 
             return l;
         }

@@ -13,7 +13,7 @@ using System.Globalization;
 using System.Net;
 using System.Threading.Tasks;
 
-namespace cloudscribe.Core.Models
+namespace cloudscribe.Core.Web.Components
 {
     public static class CommonExtensions
     {
@@ -55,7 +55,7 @@ namespace cloudscribe.Core.Models
             return t.ShortDatePattern.Replace("M", "m").Replace("yyyy", "yy");
         }
 
-       
+
         public static string StartingSegment(this PathString path, out PathString remaining)
         {
             var startingSegment = string.Empty;
@@ -82,32 +82,9 @@ namespace cloudscribe.Core.Models
             return path.StartingSegment(out remainder);
         }
 
-        public static string ToInvariantString(this int i)
-        {
-            return i.ToString(CultureInfo.InvariantCulture);
-
-        }
-
-        public static string ToInvariantString(this float i)
-        {
-            return i.ToString(CultureInfo.InvariantCulture);
-
-        }
-
-        public static List<string> SplitOnChar(this string s, char c)
-        {
-            List<string> list = new List<string>();
-            if (string.IsNullOrWhiteSpace(s)) { return list; }
-
-            string[] a = s.Split(c);
-            foreach (string item in a)
-            {
-                if (!string.IsNullOrWhiteSpace(item)) { list.Add(item); }
-            }
 
 
-            return list;
-        }
+
 
         public static List<string> SplitOnCharAndTrim(this string s, char c)
         {

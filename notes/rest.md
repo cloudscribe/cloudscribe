@@ -1,4 +1,6 @@
 
+https://zalando.github.io/restful-api-guidelines/
+
 http://restful-api-design.readthedocs.io/en/latest/methods.html
 
 http://restcookbook.com/HTTP%20Methods/put-vs-post/

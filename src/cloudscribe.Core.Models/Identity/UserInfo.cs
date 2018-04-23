@@ -19,108 +19,39 @@ namespace cloudscribe.Core.Models
         public Guid Id { get; set; } 
         public Guid SiteId { get; set; } 
         
-        private string email = string.Empty;
-        public string Email
-        {
-            get { return email ?? string.Empty; }
-            set { email = value; }
-        }
+        public string Email { get; set; }
 
-        private string userName = string.Empty;
-        public string UserName
-        {
-            get { return userName ?? string.Empty; }
-            set { userName = value; }
-        }
+        public string UserName { get; set; }
 
-        private string displayName = string.Empty;
-        public string DisplayName
-        {
-            get { return displayName ?? string.Empty; }
-            set { displayName = value; }
-        }
+        public string DisplayName { get; set; }
 
-        private string firstName = string.Empty;
-        public string FirstName
-        {
-            get { return firstName ?? string.Empty; }
-            set { firstName = value; }
-        }
+        public string FirstName { get; set; }
 
-        private string lastName = string.Empty;
-        public string LastName
-        {
-            get { return lastName ?? string.Empty; }
-            set { lastName = value; }
-        }
-        
+        public string LastName { get; set; }
+
         public bool IsDeleted { get; set; } = false;
         public bool Trusted { get; set; } = false;
-
-        private string avatarUrl = string.Empty;
-        public string AvatarUrl
-        {
-            get { return avatarUrl ?? string.Empty; }
-            set { avatarUrl = value; }
-        }
-
+        
+        public string AvatarUrl { get; set; }
         
         public DateTime? DateOfBirth { get; set; } 
         public DateTime CreatedUtc { get; set; } = DateTime.UtcNow;
         public DateTime LastModifiedUtc { get; set; } = DateTime.UtcNow;
         public bool DisplayInMemberList { get; set; } = true;
-
-        private string gender = string.Empty;
-        public string Gender
-        {
-            get { return gender ?? string.Empty; }
-            set { gender = value; }
-        }
-
+        
+        public string Gender { get; set; }
+        
         public bool IsLockedOut { get; set; } = false;
-
-        //private string country = string.Empty;
-        //public string Country
-        //{
-        //    get { return country ?? string.Empty; }
-        //    set { country = value; }
-        //}
-
-        //private string state = string.Empty;
-        //public string State
-        //{
-        //    get { return state ?? string.Empty; }
-        //    set { state = value; }
-        //}
         
         public DateTime? LastLoginUtc { get; set; } 
-
-        private string phoneNumber = string.Empty;
-        public string PhoneNumber
-        {
-            get { return phoneNumber ?? string.Empty; }
-            set { phoneNumber = value; }
-        }
-
+        public string PhoneNumber { get; set; }
+        
         public bool PhoneNumberConfirmed { get; set; } = false;
         public bool AccountApproved { get; set; } = true;
-
-        private string timeZoneId = string.Empty;
-        public string TimeZoneId
-        {
-            get { return timeZoneId ?? string.Empty; }
-            set { timeZoneId = value; }
-        }
-
+        public string TimeZoneId { get; set; }
         
-        private string webSiteUrl = string.Empty;
-        public string WebSiteUrl
-        {
-            get { return webSiteUrl ?? string.Empty; }
-            set { webSiteUrl = value; }
-        }
+        public string WebSiteUrl { get; set; }
 
-       
 
     }
 }

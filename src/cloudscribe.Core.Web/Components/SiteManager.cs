@@ -5,6 +5,7 @@
 // Last Modified:			2018-03-07
 // 
 
+using cloudscribe.Core.DataProtection;
 using cloudscribe.Core.Models;
 using cloudscribe.Pagination.Models;
 using Microsoft.AspNetCore.Http;

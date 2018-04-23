@@ -3,7 +3,7 @@ using Microsoft.Extensions.Options;
 
 namespace cloudscribe.Core.Web.Design
 {
-    public class CoreThemeHelper
+    public class CoreThemeHelper : ICoreThemeHelper
     {
         public CoreThemeHelper(
             SiteContext currentSite,

@@ -4,7 +4,7 @@
 @using cloudscribe.Core.Web.Components
 @inject ISiteContextResolver siteResolver
 @{ 
-    var Tenant = await siteResolver.ResolveSite(Context.Request.Host.Host, Context.Request.Path.StartingSegment());
+    var Tenant = await siteResolver.ResolveSite(Context.Request.Host.Host, Context.Request.Path);
 }
 <!DOCTYPE html>
 <html>
