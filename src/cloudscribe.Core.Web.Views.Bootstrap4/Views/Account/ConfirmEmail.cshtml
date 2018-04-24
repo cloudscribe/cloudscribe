@@ -1,0 +1,11 @@
+﻿@inject IStringLocalizer<CloudscribeCore> sr
+@{
+    ViewData["Title"] = sr["Email Confirmed"];
+    ViewData["BodyClass"] = "account-section email-confirmed";
+}
+<h2>@ViewData["Title"]</h2>
+<div>
+    <p>
+        @sr["Thank you for confirming your email."] <a asp-controller="Account" asp-action="Login">@sr["Please Click here to Log in"]</a>.
+    </p>
+</div>

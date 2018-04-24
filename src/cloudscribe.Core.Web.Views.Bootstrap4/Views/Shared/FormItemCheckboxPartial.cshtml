@@ -1,0 +1,25 @@
+﻿@model cloudscribe.Web.Common.Models.FormItemDefinition
+@inject IStringLocalizer<CloudscribeCommonResources> sr
+@{
+    string currentVal = null;
+    if (ViewData[Model.Key] != null)
+    {
+        currentVal = ViewData[Model.Key].ToString().ToLowerInvariant();
+    }
+
+    var isChecked = (!string.IsNullOrWhiteSpace(currentVal) && currentVal.Contains("true"));
+}
+<div class="form-group @Model.CssClass">
+    <div class="form-check">
+        <input type="hidden" name="@Model.Key" value="false" />
+        @if (isChecked)
+        {
+            <input class="form-check-input" type="checkbox" checked="checked" data-val="true" data-val-required='The @sr[Model.Label] field is required.' id="@Model.Key" name="@Model.Key" value="true" />
+        }
+        else
+        {
+            <input class="form-check-input" type="checkbox" data-val="true" data-val-required='The @sr[Model.Label] field is required.' id="@Model.Key" name="@Model.Key" value="true" />
+        }
+        <label for="@Model.Key" class="form-check-label">@sr[Model.Label]</label>
+    </div>
+</div>

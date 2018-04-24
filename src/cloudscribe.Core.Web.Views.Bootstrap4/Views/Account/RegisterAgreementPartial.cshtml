@@ -1,0 +1,16 @@
+﻿@model cloudscribe.Core.Web.ViewModels.Account.RegisterViewModel
+@inject IStringLocalizer<CloudscribeCore> sr
+<div class="form-group">
+	<div class="agreementcontainer">
+		@Html.Raw(Model.RegistrationAgreement)
+	</div>
+</div>
+<div class="form-group">
+		<input type="hidden" asp-for="AgreementRequired" />
+        <div class="form-check">
+            <input asp-for="AgreeToTerms" class="form-check-input" data-val-enforcetrue='@sr["You must agree to the terms."]' />
+            <label asp-for="AgreeToTerms" class="form-check-label">@sr["I Agree to these terms of use."]</label>
+        </div>
+        <span asp-validation-for="AgreeToTerms" class="text-danger"></span>
+        @Html.ValidationMessage("agreementerror", new { @class = "text-danger" })
+</div>

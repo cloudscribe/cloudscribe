@@ -1,0 +1,11 @@
+﻿@model cloudscribe.Core.Web.ViewModels.Email.AccountPendingApprovalEmailViewModel 
+
+@{
+    Layout = "_LayoutTextEmailNotification";
+    ViewData["Title"] = "New User Account Needs Approval";
+    ViewData["Site"] = Model.Tenant;
+}
+
+A new user just registered at @Model.Tenant.SiteName with email address @Model.User.Email
+The account needs to be approved beefore the user can login.
+
