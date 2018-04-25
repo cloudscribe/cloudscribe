@@ -86,9 +86,7 @@ namespace Microsoft.AspNetCore.Builder
                     .AddRazorOptions(options =>
                     {
                         options.AddCloudscribeViewLocationFormats();
-
                         
-
                         switch (boostrapVersion)
                         {
                             case 4:
