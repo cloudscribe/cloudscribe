@@ -1,0 +1,37 @@
+﻿@inject IStringLocalizer<CloudscribeCore> sr
+@inject ISiteContextResolver siteResolver
+@inject SignInManager<SiteUser> SignInManager
+@{
+    var helloFormat = sr["Hello {0}!"];
+    var site = await siteResolver.ResolveSite(Context.Request.Host.Host, Context.Request.Path);
+}
+@if (SignInManager.IsSignedIn(User))
+{
+    <form asp-controller="Account" asp-action="LogOff" method="post" id="logoutForm">
+        <ul class="navbar-nav ml-auto my-2 my-lg-0">
+            <li class="nav-item">
+                <div class="pull-right navbar-text navbar-gravatar">
+                    <a asp-controller="Manage" asp-action="Index" title="Manage">
+                        <img gravatar-email="@User.GetEmail()" gravatar-size="20" alt="gravatar" />
+                    </a>
+                </div>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" asp-controller="Manage" asp-action="Index" title='@sr["Manage"]'>@string.Format(helloFormat, User.GetDisplayName())</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="javascript:document.getElementById('logoutForm').submit()">@sr["Log off"]</a>
+            </li>
+        </ul>
+    </form>
+}
+else
+{
+    <ul class="navbar-nav ml-auto my-2 my-lg-0">
+        @if (site.AllowNewRegistration)
+        {
+            <li class="nav-item"><a class="nav-link" id="registerLink" asp-controller="Account" asp-action="Register">@sr["Register"]</a></li>
+        }
+        <li class="nav-item"><a class="nav-link" id="loginLink" asp-controller="Account" asp-action="Login" asp-route-returnurl="@Context.Request.PathAndQuery()">@sr["Log in"]</a></li>
+    </ul>
+}

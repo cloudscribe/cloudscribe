@@ -1,0 +1,6 @@
+﻿@model cloudscribe.Web.Common.Models.FormItemDefinition
+@inject IStringLocalizer<CloudscribeCommonResources> sr
+<div class="form-group">
+    <label for="@Model.Key">@sr[Model.Label]</label>
+    <span class="form-control">@ViewData[Model.Key]</span>
+</div>

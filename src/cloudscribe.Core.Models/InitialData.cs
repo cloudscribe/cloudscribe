@@ -43,6 +43,7 @@ namespace cloudscribe.Core.Models
             adminUser.NormalizedEmail = adminUser.Email.ToUpperInvariant();
             adminUser.DisplayName = "Admin";
             adminUser.UserName = "admin";
+            adminUser.NormalizedUserName = adminUser.UserName.ToUpperInvariant();
 
             adminUser.EmailConfirmed = true;
             adminUser.AccountApproved = true;

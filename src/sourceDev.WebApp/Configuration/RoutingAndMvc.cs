@@ -55,6 +55,7 @@ namespace Microsoft.AspNetCore.Builder
 
         public static IServiceCollection SetupMvc(
             this IServiceCollection services,
+            IConfiguration config,
             bool sslIsAvailable
             )
         {
@@ -77,6 +78,7 @@ namespace Microsoft.AspNetCore.Builder
                 });
             }
 
+            var boostrapVersion = config.GetValue<int>("DevOptions:BootstrapVersion");
 
             services.AddMvc()
                     .AddViewLocalization(LanguageViewLocationExpanderFormat.Suffix)
@@ -84,14 +86,36 @@ namespace Microsoft.AspNetCore.Builder
                     .AddRazorOptions(options =>
                     {
                         options.AddCloudscribeViewLocationFormats();
+                        
+                        switch (boostrapVersion)
+                        {
+                            case 4:
 
-                        options.AddCloudscribeCommonEmbeddedViews();
-                        options.AddCloudscribeNavigationBootstrap3Views();
-                        options.AddCloudscribeCoreBootstrap3Views();
-                        options.AddCloudscribeFileManagerBootstrap3Views();
-                        options.AddCloudscribeLoggingBootstrap3Views();
+                                options.AddCloudscribeCommonEmbeddedViews();
+                                options.AddCloudscribeNavigationBootstrap4Views();
+                                options.AddCloudscribeFileManagerBootstrap3Views();
 
-                        options.AddCloudscribeCoreIdentityServerIntegrationBootstrap3Views();
+                                options.AddCloudscribeCoreBootstrap4Views();
+                                options.AddCloudscribeLoggingBootstrap3Views();
+                                options.AddCloudscribeCoreIdentityServerIntegrationBootstrap3Views();
+
+                                break;
+
+                            case 3:
+                            default:
+
+                                options.AddCloudscribeCommonEmbeddedViews();
+                                options.AddCloudscribeNavigationBootstrap3Views();
+                                options.AddCloudscribeFileManagerBootstrap3Views();
+
+                                options.AddCloudscribeCoreBootstrap3Views();
+                                options.AddCloudscribeLoggingBootstrap3Views();
+                                options.AddCloudscribeCoreIdentityServerIntegrationBootstrap3Views();
+
+                                break;
+                        }
+
+                        
 
                         options.ViewLocationExpanders.Add(new cloudscribe.Core.Web.Components.SiteViewLocationExpander());
 

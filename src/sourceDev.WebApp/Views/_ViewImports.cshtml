@@ -1,12 +1,33 @@
-﻿@using sourceDev.WebApp
+﻿@using System
+@using System.Collections.Generic
+@using System.Globalization
+@using System.Linq
+@using Microsoft.AspNetCore.Http
+@using Microsoft.AspNetCore.Http.Authentication
+@using Microsoft.AspNetCore.Authentication
 @using Microsoft.AspNetCore.Identity
+@using Microsoft.AspNetCore.Localization
+@using Microsoft.Extensions.Localization
 @using Microsoft.Extensions.Options
+
 @using cloudscribe.Core.Models
 @using cloudscribe.Core.Identity
+@using cloudscribe.Core.Web
+@using cloudscribe.Core.Web.Components
+@using cloudscribe.Core.Web.Design
 @using cloudscribe.Web.Navigation
 @using cloudscribe.Web.Pagination
-@addTagHelper  *, Microsoft.AspNetCore.Mvc.TagHelpers
-@addTagHelper  *, cloudscribe.Web.Common
-@addTagHelper  *, cloudscribe.Web.Navigation
-@addTagHelper  *, cloudscribe.Web.Pagination
-@addTagHelper  *, cloudscribe.Core.Web
+@using cloudscribe.Pagination.Models
+
+@using cloudscribe.Web.Common
+@using cloudscribe.Web.Common.Components
+@using cloudscribe.Web.Common.Helpers
+@using cloudscribe.Web.Common.Models
+@using cloudscribe.Web.Common.Extensions
+
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+@addTagHelper "*, cloudscribe.Web.Common"
+@addTagHelper "*, cloudscribe.Core.Web"
+@addTagHelper *, cloudscribe.Web.Navigation
+@addTagHelper "*, cloudscribe.Web.Pagination"
+

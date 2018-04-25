@@ -7,7 +7,6 @@ using cloudscribe.Web.Common.Setup;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc.Razor;
-using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.FileProviders;
@@ -65,37 +64,7 @@ namespace Microsoft.Extensions.DependencyInjection
 
             return options;
         }
-
-        //public static IRouteBuilder AddRoutesForCloudscribeCommonResources(this IRouteBuilder routes)
-        //{
-            
-        //    routes.MapRoute(
-        //       name: "crjs",
-        //       template: "cr/js/{*slug}"
-        //       , defaults: new { controller = "cr", action = "js" }
-        //       );
-
-        //    routes.MapRoute(
-        //       name: "crcss",
-        //       template: "cr/css/{*slug}"
-        //       , defaults: new { controller = "cr", action = "css" }
-        //       );
-
-        //    routes.MapRoute(
-        //       name: "crfonts",
-        //       template: "cr/fonts/{*slug}"
-        //       , defaults: new { controller = "cr", action = "fonts" }
-        //       );
-
-        //    routes.MapRoute(
-        //       name: "crimages",
-        //       template: "cr/images/{*slug}"
-        //       , defaults: new { controller = "cr", action = "images" }
-        //       );
-
-        //    return routes;
-        //}
-
+        
         public static IApplicationBuilder UseCloudscribeCommonStaticFiles(this IApplicationBuilder builder)
         {
 

@@ -97,7 +97,7 @@ namespace sourceDev.WebApp
             
             //*** Important ***
             // This is a custom extension method in Config/RoutingAndMvc.cs
-            services.SetupMvc(_sslIsAvailable);
+            services.SetupMvc(_configuration, _sslIsAvailable);
             
             //*** Important ***
             // This is a custom extension method in Config/IdentityServerIntegration.cs
