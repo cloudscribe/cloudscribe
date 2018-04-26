@@ -238,20 +238,23 @@ namespace cloudscribe.Core.Web.Components
                     //update last login time
                     template.User.LastLoginUtc = DateTime.UtcNow;
 
-                    if(template.User.PasswordHash == "admin||0")
+                    if (string.IsNullOrEmpty(template.User.SecurityStamp))
                     {
-                        // initial admin user has not updated the password, need to hash it
-                        await _userManager.ChangeUserPassword(template.User, "admin", false);
+                        
 
-                        if (string.IsNullOrEmpty(template.User.SecurityStamp))
+                        // if security stamp is empty then the securitystamp validation
+                        // fails when it checks after 30 minutes
+                        // users created via usermanager this gets populated but not
+                        // populated for the admin user created by seeding data
+                        // changes to the user such as password change also will populate it
+                        // but we can go ahead and check here and populate it if it is empty
+                        await _userManager.UpdateSecurityStampAsync(template.User);
+
+                        if (template.User.PasswordHash == "admin||0")
                         {
-                            // if security stamp is empty then the securitystamp validation
-                            // fails when it checks after 30 minutes
-                            // users created via usermanager this gets populated but not
-                            // populated for the admin user created by seeding data
-                            // changes to the user such as password change also will populate it
-                            // but we can go ahead and check here and populate it if it is empty
-                            await _userManager.UpdateSecurityStampAsync(template.User);
+                            // initial admin user has not updated the password, need to hash it
+                            await _userManager.ChangeUserPassword(template.User, "admin", false);
+
                             await _signInManager.SignOutAsync();
                             // security stamp needs to be there before authentication to avoid the problem
                             if (_userManager.Site.UseEmailForLogin)
@@ -270,14 +273,54 @@ namespace cloudscribe.Core.Web.Components
                                     persistent,
                                     lockoutOnFailure: false);
                             }
+
+
                         }
 
+                        
+
                     }
-                    else
-                    {
-                        // the above also updates
-                        await _userManager.UpdateAsync(template.User);
-                    }
+
+                    //if (template.User.PasswordHash == "admin||0")
+                    //{
+                    //    // initial admin user has not updated the password, need to hash it
+                    //    await _userManager.ChangeUserPassword(template.User, "admin", false);
+
+                    //    if (string.IsNullOrEmpty(template.User.SecurityStamp))
+                    //    {
+                    //        // if security stamp is empty then the securitystamp validation
+                    //        // fails when it checks after 30 minutes
+                    //        // users created via usermanager this gets populated but not
+                    //        // populated for the admin user created by seeding data
+                    //        // changes to the user such as password change also will populate it
+                    //        // but we can go ahead and check here and populate it if it is empty
+                    //        await _userManager.UpdateSecurityStampAsync(template.User);
+                    //        await _signInManager.SignOutAsync();
+                    //        // security stamp needs to be there before authentication to avoid the problem
+                    //        if (_userManager.Site.UseEmailForLogin)
+                    //        {
+                    //            template.SignInResult = await _signInManager.PasswordSignInAsync(
+                    //                model.Email,
+                    //                model.Password,
+                    //                persistent,
+                    //                lockoutOnFailure: false);
+                    //        }
+                    //        else
+                    //        {
+                    //            template.SignInResult = await _signInManager.PasswordSignInAsync(
+                    //                model.UserName,
+                    //                model.Password,
+                    //                persistent,
+                    //                lockoutOnFailure: false);
+                    //        }
+                    //    }
+
+                    //}
+                    //else
+                    //{
+                    //    // the above also updates
+                    //    await _userManager.UpdateAsync(template.User);
+                    //}
                     
                     
                     

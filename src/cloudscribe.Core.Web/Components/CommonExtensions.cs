@@ -2,16 +2,12 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2014-11-15
-// Last Modified:			2016-06-06
+// Last Modified:			2018-04-26
 // 
 
-using Microsoft.AspNetCore.Http;
-using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Globalization;
 using System.Net;
-using System.Threading.Tasks;
 
 namespace cloudscribe.Core.Web.Components
 {
@@ -56,50 +52,39 @@ namespace cloudscribe.Core.Web.Components
         }
 
 
-        public static string StartingSegment(this PathString path, out PathString remaining)
-        {
-            var startingSegment = string.Empty;
+        //public static string StartingSegment(this PathString path, out PathString remaining)
+        //{
+        //    var startingSegment = string.Empty;
 
-            var spath = path.ToString();
-            for (var i = 1; i < spath.Length; i++)
-            {
-                if (spath[i] == '/')
-                {
-                    remaining = spath.Substring(i, spath.Length - i);
-                    return startingSegment;
-                }
+        //    var spath = path.ToString();
+        //    for (var i = 1; i < spath.Length; i++)
+        //    {
+        //        if (spath[i] == '/')
+        //        {
+        //            remaining = spath.Substring(i, spath.Length - i);
+        //            return startingSegment;
+        //        }
 
-                startingSegment += spath[i];
-            }
+        //        startingSegment += spath[i];
+        //    }
 
-            remaining = PathString.Empty;
-            return startingSegment;
-        }
+        //    remaining = PathString.Empty;
+        //    return startingSegment;
+        //}
 
-        public static string StartingSegment(this PathString path)
-        {
-            PathString remainder;
-            return path.StartingSegment(out remainder);
-        }
+        //public static string StartingSegment(this PathString path)
+        //{
+        //    PathString remainder;
+        //    return path.StartingSegment(out remainder);
+        //}
 
-
-
-
-
-        public static List<string> SplitOnCharAndTrim(this string s, char c)
-        {
-            List<string> list = new List<string>();
-            if (string.IsNullOrWhiteSpace(s)) { return list; }
-
-            string[] a = s.Split(c);
-            foreach (string item in a)
-            {
-                if (!string.IsNullOrWhiteSpace(item)) { list.Add(item.Trim()); }
-            }
+        
 
 
-            return list;
-        }
+
+
+
+        
 
         public static List<string> ToStringList(this char[] chars)
         {

@@ -1,5 +1,4 @@
 ﻿using cloudscribe.Core.Models;
-using Microsoft.AspNetCore.Http;
 using System;
 using System.Threading;
 using System.Threading.Tasks;
@@ -10,7 +9,7 @@ namespace cloudscribe.Core.Web.Components
     {
         Task<SiteContext> ResolveSite(
             string hostName,
-            PathString path,
+            string path,
             CancellationToken cancellationToken = default(CancellationToken)
             );
 

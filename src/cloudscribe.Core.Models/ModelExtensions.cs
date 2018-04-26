@@ -2,16 +2,43 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2014-12-09
-// Last Modified:			2018-02-11
+// Last Modified:			2018-05-26
 // 
 
 using System.Collections.Generic;
 using System.Globalization;
+using System.Linq;
 
 namespace cloudscribe.Core.Models
 {
     public static class ModelExtensions
     {
+        public static string StartingSegment(this string requestPath)
+        {
+            if (string.IsNullOrEmpty(requestPath)) return requestPath;
+            if (!requestPath.Contains("/")) return requestPath;
+
+            var segments = requestPath.SplitOnCharAndTrim('/');
+            return segments.FirstOrDefault();
+
+
+        }
+
+        public static List<string> SplitOnCharAndTrim(this string s, char c)
+        {
+            List<string> list = new List<string>();
+            if (string.IsNullOrWhiteSpace(s)) { return list; }
+
+            string[] a = s.Split(c);
+            foreach (string item in a)
+            {
+                if (!string.IsNullOrWhiteSpace(item)) { list.Add(item.Trim()); }
+            }
+
+
+            return list;
+        }
+
         public static string ToInvariantString(this int i)
         {
             return i.ToString(CultureInfo.InvariantCulture);
