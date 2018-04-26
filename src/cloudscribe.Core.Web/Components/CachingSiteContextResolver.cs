@@ -67,7 +67,7 @@ namespace cloudscribe.Core.Web.Components
 
         public override async Task<SiteContext> ResolveSite(
             string hostName,
-            PathString path,
+            string path,
             CancellationToken cancellationToken = default(CancellationToken)
             )
         {

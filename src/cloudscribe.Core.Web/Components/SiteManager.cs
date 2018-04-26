@@ -351,6 +351,7 @@ namespace cloudscribe.Core.Web.Components
             adminUser.Email = "admin" + siteDifferentiator + "@admin.com";
             adminUser.NormalizedEmail = adminUser.Email.ToUpperInvariant();
             adminUser.UserName = "admin" + siteDifferentiator;
+            adminUser.NormalizedUserName = adminUser.UserName.ToUpperInvariant();
             
             await _userCommands.Create(adminUser, CancellationToken.None);
             

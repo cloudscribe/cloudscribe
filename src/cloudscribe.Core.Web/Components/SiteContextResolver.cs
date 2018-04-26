@@ -1,6 +1,5 @@
 ﻿using cloudscribe.Core.DataProtection;
 using cloudscribe.Core.Models;
-using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Options;
 using System;
 using System.Threading;
@@ -27,7 +26,7 @@ namespace cloudscribe.Core.Web.Components
 
         public virtual async Task<SiteContext> ResolveSite(
             string hostName,
-            PathString path,
+            string path,
             CancellationToken cancellationToken = default(CancellationToken)
             )
         {
