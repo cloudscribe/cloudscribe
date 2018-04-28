@@ -6,6 +6,7 @@
     var versionFormat = sr["{0} Version"];
     var themeSettings = themeHelper.GetThemeSettings();
     if (themeSettings.AdminSideNavExpanded) { ViewData["SideNavToggle"] = "show"; }
+    ViewData["SideNavVisible"] = true;
 }
 
 <h1>@ViewData["Title"]</h1>

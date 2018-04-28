@@ -5,6 +5,7 @@
     ViewData["BodyClass"] = "admin-section role-edit";
     var themeSettings = themeHelper.GetThemeSettings();
     if (themeSettings.AdminSideNavExpanded) { ViewData["SideNavToggle"] = "show"; }
+    ViewData["SideNavVisible"] = true;
 }
 <h2>@ViewData["Title"]</h2>
 <form asp-controller="RoleAdmin" asp-action="RoleEdit" data-submit-once="true">

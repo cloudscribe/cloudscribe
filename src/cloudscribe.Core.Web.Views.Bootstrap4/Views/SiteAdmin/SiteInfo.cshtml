@@ -4,6 +4,7 @@
 @{
     var themeSettings = themeHelper.GetThemeSettings();
     if (themeSettings.AdminSideNavExpanded) { ViewData["SideNavToggle"] = "show"; }
+    ViewData["SideNavVisible"] = true;
 }
 <h2>@ViewBag.Title</h2>
 @{await Html.RenderPartialAsync("_BasicSettingsPartial", Model); }

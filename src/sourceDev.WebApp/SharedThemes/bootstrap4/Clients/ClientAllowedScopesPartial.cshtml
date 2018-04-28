@@ -1,0 +1,51 @@
+﻿@model cloudscribe.Core.IdentityServerIntegration.Models.ClientItemViewModel
+@using cloudscribe.Core.IdentityServerIntegration.Models;
+@using cloudscribe.Core.IdentityServerIntegration
+@using Microsoft.Extensions.Localization
+@inject IStringLocalizer<CloudscribeIds4Resources> sr
+@{
+    var scopeIndex = 0;
+}
+<div class="col-md-offset-2 col-md-10">
+    <h3>@sr["Allowed Scopes"] </h3>
+    @{ await Html.RenderPartialAsync("AddClientAllowedScopePartial", Model);}
+    @if (Model.Client.AllowedScopes.Count > 0)
+    {
+        <ul class="list-unstyled">
+            @foreach (var c in Model.Client.AllowedScopes)
+            {
+            <li>
+                <form asp-controller="Clients" asp-action="DeleteClientScope">
+                    <input asp-for="SiteId" type="hidden" />
+                    <input name="ClientId" value="@Model.ClientId" type="hidden" />
+                    <input name="ScopeName" value="@c" type="hidden" />
+                    <div class="modal fade" id="@("confirmDeleteScopeModal" + scopeIndex)" tabindex="-1" role="dialog" aria-labelledby="@("confirmDeleteScopeHeading" + scopeIndex)">
+                        <div class="modal-dialog modal-sm" role="document">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <button type="button" class="close" data-dismiss="modal" aria-label='@sr["Close"]'><span aria-hidden="true">&times;</span></button>
+                                    <h4 class="modal-title" id="@("confirmDeleteScopeHeading" + scopeIndex)">@sr["Confirm Delete"]</h4>
+                                </div>
+                                <div class="modal-body">
+                                    @string.Format(sr["Are you sure you want to delete the scope {0}?"], c)
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-default" data-dismiss="modal">@sr["Cancel"]</button>
+                                    <input type="submit" value='@sr["Delete"]' class="btn btn-danger btn-ok" />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+                <button type="button" class="btn btn-danger btn-xs" data-toggle="modal" data-target="@("#confirmDeleteScopeModal" + scopeIndex)">
+                    @sr["Delete"]
+                </button>
+                @c
+            </li>
+                {
+                    scopeIndex += 1;
+                }
+            }
+        </ul>
+    }
+</div>

@@ -1,0 +1,22 @@
+﻿@model cloudscribe.Core.IdentityServerIntegration.Models.ClientItemViewModel
+@using cloudscribe.Core.IdentityServerIntegration
+@using Microsoft.Extensions.Localization
+@inject IStringLocalizer<CloudscribeIds4Resources> sr
+<form class="form-inline" asp-controller="Clients" asp-action="AddClientProperty">
+    <div class="form-group">
+        <label for="Key">@sr["Key"]</label>
+        <input class="form-control" id="Key" name="Key" data-val="true" data-val-required='@sr["The Key field is required."]'
+               aria-required="true" aria-invalid="false" aria-describedby="Key-error" />
+        <span class="text-danger field-validation-valid" data-valmsg-for="Key" data-valmsg-replace="true"></span>
+    </div>
+    <div class="form-group">
+        <label for="Value">@sr["Value"]</label>
+        <input class="form-control" id="Value" name="Value" data-val="true" data-val-required='@sr["The Value field is required."]'
+               aria-required="true" aria-invalid="false" aria-describedby="Value-error" />
+        <span class="text-danger field-validation-valid" data-valmsg-for="Value" data-valmsg-replace="true"></span>
+    </div>
+    <input asp-for="SiteId" type="hidden" />
+    <input asp-for="ClientId" type="hidden" />
+    <button type="submit" class="btn btn-default">@sr["Add Custom Property"]</button>
+    <div asp-validation-summary="All" class="text-danger"></div>
+</form>

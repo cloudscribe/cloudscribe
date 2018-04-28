@@ -81,6 +81,7 @@
   
   <ItemGroup>
     <Folder Include="SharedThemes\cosmo\Home\" />
+    <Folder Include="Views\Shared\Components\" />
   </ItemGroup>
   
   

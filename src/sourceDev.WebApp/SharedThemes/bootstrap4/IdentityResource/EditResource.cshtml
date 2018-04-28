@@ -1,0 +1,30 @@
+﻿@model cloudscribe.Core.IdentityServerIntegration.Models.IdentityEditViewModel
+@using cloudscribe.Core.IdentityServerIntegration.Models
+@using cloudscribe.Core.IdentityServerIntegration
+@using Microsoft.Extensions.Localization
+@inject IStringLocalizer<CloudscribeIds4Resources> sr
+<div class="row">
+    <div class="col-md-10 col-md-push-2">
+        @if (Model.CurrentResource == null)
+        {
+            <h2>@ViewData["Title"]</h2>
+            await Html.RenderPartialAsync("NewResourcePartial", Model.NewResource);
+        }
+        else
+        {
+            <h2>@ViewData["Title"]</h2>
+            await Html.RenderPartialAsync("EditResourcePartial", new IdentityItemViewModel(Model.SiteId, Model.CurrentResource));
+            await Html.RenderPartialAsync("IdentityClaimsPartial", Model);
+
+        }
+    </div>
+    <div class="col-md-2 col-md-pull-10">
+        @await Component.InvokeAsync("Navigation", new { viewName = "SideNavAlt1", filterName = NamedNavigationFilters.ParentTree, startingNodeKey = "SiteAdmin" })
+    </div>
+</div>
+
+
+@section Scripts {
+@{ await Html.RenderPartialAsync("_SideMenuScriptsPartial"); }
+@{await Html.RenderPartialAsync("_UnobtrusiveValidationScriptsPartial"); }
+}

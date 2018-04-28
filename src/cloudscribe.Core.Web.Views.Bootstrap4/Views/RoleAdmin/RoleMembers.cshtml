@@ -5,6 +5,7 @@
     ViewData["BodyClass"] = "admin-section role-members";
     var themeSettings = themeHelper.GetThemeSettings();
     if (themeSettings.AdminSideNavExpanded) { ViewData["SideNavToggle"] = "show"; }
+    ViewData["SideNavVisible"] = true;
 }
 <h2>@Model.Heading1</h2>
 <h3>@Model.Heading2</h3>
@@ -60,8 +61,8 @@
                         <div class="modal-dialog modal-sm" role="document">
                             <div class="modal-content">
                                 <div class="modal-header">
-                                    <button type="button" class="close" data-dismiss="modal" aria-label='@sr["Close"]'><span aria-hidden="true">&times;</span></button>
                                     <h4 class="modal-title" id="@("confirmHeading" + item.Id)">@sr["Confirm Remove User From Role"]</h4>
+                                    <button type="button" class="close" data-dismiss="modal" aria-label='@sr["Close"]'><span aria-hidden="true">&times;</span></button>
                                 </div>
                                 <div class="modal-body">
                                     @string.Format(sr["Are you sure you want to remove {0} from the role {1}?"], item.DisplayName, Model.Role.RoleName)
@@ -122,8 +123,8 @@
     <div class="modal-dialog modal-sm" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal" aria-label='@sr["Close"]'><span aria-hidden="true">&times;</span></button>
                 <h4 class="modal-title" id="confirmHeading">@sr["Confirm Add User To Role"]</h4>
+                <button type="button" class="close" data-dismiss="modal" aria-label='@sr["Close"]'><span aria-hidden="true">&times;</span></button>
             </div>
             <div class="modal-body">
                 <span id="spnMessage"></span>
@@ -145,7 +146,7 @@
     @{ await Html.RenderPartialAsync("AdminSideNavScripts"); }
     @{await Html.RenderPartialAsync("_UnobtrusiveValidationScriptsPartial"); }
     <script src="~/cr/js/jquery.unobtrusive-ajax.min.js"></script>
-    <script src="~/js/cloudscribe-modaldialog-bootstrap4.js"></script>
+    <script src="~/cr/js/cloudscribe-modaldialog-bootstrap4.min.js"></script>
     <script>
     $('#confirmAddRoleModal').on('show.bs.modal', function (e) {
         var message = $(e.relatedTarget).data('message');
