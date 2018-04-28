@@ -1,0 +1,16 @@
+﻿@model cloudscribe.Core.IdentityServerIntegration.Models.ClientItemViewModel
+@using cloudscribe.Core.IdentityServerIntegration
+@using Microsoft.Extensions.Localization
+@inject IStringLocalizer<CloudscribeIds4Resources> sr
+<form class="form-inline" asp-controller="Clients" asp-action="AddClientLogoutRedirect">
+    <div class="form-group">
+        <label for="Type">@sr["Url"]</label>
+        <input class="form-control" id="LogoutRedirectUri" name="LogoutRedirectUri" data-val="true" data-val-required='@sr["The Url field is required."]'
+               aria-required="true" aria-invalid="false" aria-describedby="LogoutRedirectUri-error" />
+        <span class="text-danger field-validation-valid" data-valmsg-for="LogoutRedirectUri" data-valmsg-replace="true"></span>
+    </div>
+    <input asp-for="SiteId" type="hidden" />
+    <input asp-for="ClientId" type="hidden" />
+    <button type="submit" class="btn btn-default">@sr["Add"]</button>
+    <div asp-validation-summary="All" class="text-danger"></div>
+</form>

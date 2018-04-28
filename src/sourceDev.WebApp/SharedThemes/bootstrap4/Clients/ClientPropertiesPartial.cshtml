@@ -1,0 +1,63 @@
+﻿@model cloudscribe.Core.IdentityServerIntegration.Models.ClientItemViewModel
+@using cloudscribe.Core.IdentityServerIntegration
+@using Microsoft.Extensions.Localization
+@inject IStringLocalizer<CloudscribeIds4Resources> sr
+@{ 
+    var propIndex = 0;
+}
+<div class="col-md-offset-2 col-md-10">
+    <h3>@sr["Custom Properties"] </h3>
+    @{ await Html.RenderPartialAsync("AddClientPropertyPartial", Model);} 
+    @if (Model.Client.Properties.Count > 0)
+    {
+        <table class="table table-striped">
+            <tr>
+                <th></th>
+                <th>
+                    @sr["Key"]
+                </th>
+                <th>
+                    @sr["Value"]
+                </th>  
+            </tr>
+            @foreach (var c in Model.Client.Properties)
+            {
+                <tr>
+                    <td>
+                        <button type="button" class="btn btn-danger btn-xs" data-toggle="modal" data-target="@("#confirmDeletePropModal" + propIndex)">
+                            @sr["Delete"]
+                        </button>
+                        <form asp-controller="Clients" asp-action="DeleteClientProperty">
+                            <input asp-for="SiteId" type="hidden" />
+                            <input name="ClientId" value="@Model.Client.ClientId" type="hidden" />
+                            <input name="Key" value="@c.Key" type="hidden" />
+                            <input name="Value" value="@c.Value" type="hidden" />
+                            <div class="modal fade" id="@("confirmDeletePropModal" + propIndex)" tabindex="-1" role="dialog" aria-labelledby="@("confirmDeletePropHeading" + propIndex)">
+                                <div class="modal-dialog modal-sm" role="document">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <button type="button" class="close" data-dismiss="modal" aria-label='@sr["Close"]'><span aria-hidden="true">&times;</span></button>
+                                            <h4 class="modal-title" id="@("confirmDeletePropHeading" + propIndex)">@sr["Confirm Delete"]</h4>
+                                        </div>
+                                        <div class="modal-body">
+                                            @string.Format(sr["Are you sure you want to delete the property {0}?"], c.Key)
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn btn-default" data-dismiss="modal">@sr["Cancel"]</button>
+                                            <input type="submit" value='@sr["Delete"]' class="btn btn-danger btn-ok" />
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                    </td>
+                    <td>@c.Key</td>
+                    <td>@c.Value</td>
+                </tr>
+                {
+                    propIndex += 1;
+                }
+            }
+        </table>
+    }
+</div>

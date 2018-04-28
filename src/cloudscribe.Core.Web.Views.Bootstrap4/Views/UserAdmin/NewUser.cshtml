@@ -4,6 +4,7 @@
 @{
     var themeSettings = themeHelper.GetThemeSettings();
     if (themeSettings.AdminSideNavExpanded) { ViewData["SideNavToggle"] = "show"; }
+    ViewData["SideNavVisible"] = true;
 }
 @section Styles {
 

@@ -6,6 +6,7 @@
     ViewData["Title"] = sr["Country List Administration"];
     var themeSettings = themeHelper.GetThemeSettings();
     if (themeSettings.AdminSideNavExpanded) { ViewData["SideNavToggle"] = "show"; }
+    ViewData["SideNavVisible"] = true;
 }
 <h2>@ViewData["Title"]</h2>
 <table class="table table-striped table-hover table-sm">

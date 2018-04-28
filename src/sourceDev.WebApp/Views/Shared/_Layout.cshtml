@@ -1,9 +1,17 @@
-﻿@using cloudscribe.Web.Navigation
-@using cloudscribe.Core.Models
-@using cloudscribe.Core.Identity
-@using cloudscribe.Core.Web.Components
-@inject ISiteContextResolver siteResolver
-@{ 
+﻿@inject ISiteContextResolver siteResolver
+@{
+    @*
+        These viewstate settings can be set by a main view to show additional columns.
+        Views that push content into the optional sections SideNav, AsidePrimary, and AsideSecondary
+        are obligated to set the needed viewtate property to true to show the section,
+        otherwise an error will occur.
+        The sideNav column also supports a toggle so it can be hidden and toggled visible even though it renders.
+    *@
+    bool sideNavVisible = true.Equals(ViewData["SideNavVisible"]);
+    string sideNavToggleClass = ViewData["SideNavToggle"]?.ToString() ?? "collapse";
+    bool asidePrimaryVisible = true.Equals(ViewData["AsidePrimaryVisible"]);
+    bool asideSecondaryVisible = true.Equals(ViewData["AsideSecondaryVisible"]);
+
     var Tenant = await siteResolver.ResolveSite(Context.Request.Host.Host, Context.Request.Path);
 }
 <!DOCTYPE html>
@@ -11,69 +19,97 @@
 <head>
     <meta charset="utf-8" />
     <title>@ViewData["Title"] - @(Tenant?.SiteName ?? "Sample")</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     @RenderSection("Meta", required: false)
     <environment names="Development">
-        <link rel="stylesheet" href="~/cssmin/themes/default/bootstrap.css" />
-        <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+        <link rel="stylesheet" href="~/css/bootstrap4.css" cs-resolve-theme-resource="true" cs-shared-theme="true" cs-tenant="@Tenant" />
+        <link rel="stylesheet" href="~/css/fontawesome-all.min.css" cs-resolve-theme-resource="true" cs-shared-theme="true" cs-tenant="@Tenant" />
+        <link rel="stylesheet" href="~/css/site.css" cs-resolve-theme-resource="true" cs-shared-theme="true" cs-tenant="@Tenant" />
     </environment>
     <environment names="Staging,Production">
-        <link rel="stylesheet" href="~/cssmin/themes/default/bootstrap.min.css" />
-        <link rel="stylesheet" href="~/css/site.min.css" asp-append-version="true" />
+        <link rel="stylesheet" href="~/css/bootstrap4.min.css" cs-resolve-theme-resource="true" cs-shared-theme="true" cs-tenant="@Tenant" />
+        <link rel="stylesheet" href="~/css/fontawesome-all.min.css" cs-resolve-theme-resource="true" cs-shared-theme="true" cs-tenant="@Tenant" />
+        <link rel="stylesheet" href="~/css/site.min.css" cs-resolve-theme-resource="true" cs-shared-theme="true" cs-tenant="@Tenant" />
     </environment>
     @RenderSection("Styles", required: false)
-    <google-analytics profile-id="@Tenant.GoogleAnalyticsProfileId" user-id="@User.GetUserId()" require-explicit-cookie-consent="true"></google-analytics>
+    <google-analytics profile-id="@Tenant.GoogleAnalyticsProfileId" user-id="@User.GetUserId()"></google-analytics>
 </head>
-<body class="@ViewData["BodyClass"]">
-    <div class="navbar navbar-inverse navbar-fixed-top">
-        <div class="container">
-            <div class="navbar-header">
-                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
-                    <span class="sr-only">Toggle navigation</span>
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                </button>
-                <a href="~/@(Tenant?.SiteFolderName ?? "")" class="navbar-brand">@(Tenant?.SiteName ?? "Sample")</a>
+<body class="d-flex flex-column @ViewData["BodyClass"]">
+    <header>
+        <a id="skippy" class="sr-only sr-only-focusable" href="#content">
+            <div class="container">
+                <span class="skiplink-text">Skip to main content</span>
             </div>
-            <div class="navbar-collapse collapse">
-                @await Component.InvokeAsync("Navigation", new { viewName = "BootstrapTopNavWithDropdowns", filterName = NamedNavigationFilters.TopNav, startingNodeKey = "" })
+        </a>
+        <nav class="navbar navbar-expand-lg navbar-dark fixed-top bg-dark">
+            <a href="~/@(Tenant?.SiteFolderName ?? "")" class="navbar-brand">@(Tenant?.SiteName ?? "Sample")</a>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <div class="collapse navbar-collapse" id="navbarNavDropdown">
+                @await Component.InvokeAsync("Navigation", new { viewName = "Bootstrap4TopNavWithDropdowns", filterName = NamedNavigationFilters.TopNav, startingNodeKey = "" })
                 @await Html.PartialAsync("_LoginPartial")
             </div>
+        </nav>
+    </header>
+    <div id="wrapper" class="container-fluid cs-container flex-fill">
+        @await Component.InvokeAsync("Navigation", new { viewName = "Bootstrap4Breadcrumbs", filterName = NamedNavigationFilters.Breadcrumbs, startingNodeKey = "" })
+        <div class="row">
+            <main id="content" role="main" class="col order-3">
+                @await Html.PartialAsync("AlertsPartial")
+                @RenderBody()
+            </main>
+            @if (sideNavVisible)
+            {
+                <nav id="sidenavmenu" class=" col col-3 order-1 @sideNavToggleClass">
+                    @RenderSection("SideNav", required: false)
+                </nav>
+
+            }
+            @if (asideSecondaryVisible)
+            {
+                <aside id="asideSecondary" class="col col-1 order-2">
+                    @RenderSection("AsideSecondary", required: false)
+                </aside>
+
+            }
+            @if (asidePrimaryVisible)
+            {
+                <aside id="asidePrimary" class="col-12 col-md-3 col-sm-12  col-sm-12 order-4">
+                    @RenderSection("AsidePrimary", required: false)
+                </aside>
+
+            }
         </div>
     </div>
+    <footer class="sticky-bottom border pt-2 d-flex h-100 flex-wrap flex-grow justify-content-center">
+        <div class="p-2">
+            <ul class="list-unstyled d-flex flex-wrap">
+                <li class=" mr-2">
+                    <a class="text-nowrap" href="/sitemap">Site Map</a>
+                </li>
+                <li class="border-left pl-2 mr-2">
+                    @* you are free to remove the powered by cloudscribe link but we appreciate it if you choose to keep it! *@
+                    <a class="text-nowrap" target="_blank" href="https://www.cloudscribe.com/?utm_source=@Context.Request.Host.Value&amp;utm_medium=referral&amp;utm_campaign=poweredbycloudscribe">Powered by cloudscribe</a>
+                </li>
+            </ul>
+        </div>
+        <div class="p-2 text-nowrap">Copyright &copy; @DateTime.Now.Year - @(Tenant?.SiteName ?? "Sample")</div>
+    </footer>
     @RenderSection("Toolbar", required: false)
-    <div class="container body-content">
-        @await Component.InvokeAsync("Navigation", new { viewName = "BootstrapBreadcrumbs", filterName = NamedNavigationFilters.Breadcrumbs, startingNodeKey = "" })
-        @await Html.PartialAsync("AlertsPartial")
-        @RenderBody()
-        <footer class="container text-center">
-            <small>Copyright &copy; @DateTime.Now.Year - @(Tenant?.SiteName ?? "Sample")</small><br />
-            <small>
-                <a href="/sitemap">Site Map</a> |
-                @* you are free to remove the powered by cloudscribe link but we appreciate it if you choose to keep it! *@
-                <a target="_blank" href="https://www.cloudscribe.com/?utm_source=@Context.Request.Host.Value&amp;utm_medium=referral&amp;utm_campaign=poweredbycloudscribe">Powered by cloudscribe</a>
-            </small>
-        </footer>
-    </div>
     <environment names="Development">
-        <script src="~/js/jquery.js"></script>
-        <script src="~/js/bootstrap.js"></script>
-        <script src="~/js/site.js" asp-append-version="true"></script>
+        <script src="~/js/jquery.js" cs-resolve-theme-resource="true" cs-shared-theme="true" cs-tenant="@Tenant"></script>
+        <script src="~/js/bootstrap4.bundle.js" cs-resolve-theme-resource="true" cs-shared-theme="true" cs-tenant="@Tenant"></script>
+        <script src="~/cr/js/bs4.smartmenus.min.js"></script>
     </environment>
     <environment names="Staging,Production">
-        <script src="https://ajax.aspnetcdn.com/ajax/jquery/jquery-2.2.0.min.js"
-                asp-fallback-src="~/js/jquery.min.js"
-                asp-fallback-test="window.jQuery">
-        </script>
-        <script src="https://ajax.aspnetcdn.com/ajax/bootstrap/3.3.6/bootstrap.min.js"
-                asp-fallback-src="~/js/bootstrap.min.js"
-                asp-fallback-test="window.jQuery && window.jQuery.fn && window.jQuery.fn.modal">
-        </script>
-        <script src="~/js/site.min.js" asp-append-version="true"></script>
+        <script src="~/js/jquery.min.js" cs-resolve-theme-resource="true" cs-shared-theme="true" cs-tenant="@Tenant"></script>
+        <script src="~/js/bootstrap4.bundle.min.js" cs-resolve-theme-resource="true" cs-shared-theme="true" cs-tenant="@Tenant"></script>
+        <script src="~/cr/js/bs4.smartmenus.min.js"></script>
     </environment>
     @RenderSection("Bottom", required: false)
-    @RenderSection("scripts", required: false)
+    @RenderSection("Scripts", required: false)
     <add-this profile-id="@Tenant.AddThisDotComUsername" async></add-this>
 </body>
 </html>

@@ -13,6 +13,7 @@
     var baseUrl = this.Context.Request.GetCurrentBaseUrl() + "/";
     var themeSettings = themeHelper.GetThemeSettings();
     if (themeSettings.AdminSideNavExpanded) { ViewData["SideNavToggle"] = "show"; }
+    ViewData["SideNavVisible"] = true;
 }
 <h2>@ViewBag.Title</h2>
 <form method="post" class="form-horizontal" role="form" asp-antiforgery="true" data-submit-once="true">

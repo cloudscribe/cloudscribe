@@ -5,7 +5,5 @@
  <h2>@ViewData["Title"]</h2>
  @await Component.InvokeAsync("Navigation", new { viewName = "ChildTree", filterName = NamedNavigationFilters.ChildTree, startingNodeKey = "" })
     
-@section scripts {
-    @{ await Html.RenderPartialAsync("_SideMenuScriptsPartial"); }
-}
+
 

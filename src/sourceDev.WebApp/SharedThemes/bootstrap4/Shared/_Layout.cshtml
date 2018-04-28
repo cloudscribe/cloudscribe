@@ -1,27 +1,36 @@
 ﻿@inject ISiteContextResolver siteResolver
-@{ 
+@{
+    @*
+        These viewstate settings can be set by a main view to show additional columns.
+        Views that push content into the optional sections SideNav, AsidePrimary, and AsideSecondary
+        are obligated to set the needed viewtate property to true to show the section,
+        otherwise an error will occur.
+        The sideNav column also supports a toggle so it can be hidden and toggled visible even though it renders.
+    *@
+    bool sideNavVisible = true.Equals(ViewData["SideNavVisible"]);
     string sideNavToggleClass = ViewData["SideNavToggle"]?.ToString() ?? "collapse";
-    string aside1ToggleClass = ViewData["AsidePrimaryToggle"]?.ToString() ?? "collapse";
-    string aside2ToggleClass = ViewData["AsideSecondaryToggle"]?.ToString() ?? "collapse";
+    bool asidePrimaryVisible = true.Equals(ViewData["AsidePrimaryVisible"]);
+    bool asideSecondaryVisible = true.Equals(ViewData["AsideSecondaryVisible"]);
+
     var Tenant = await siteResolver.ResolveSite(Context.Request.Host.Host, Context.Request.Path);
 }
 <!DOCTYPE html>
 <html>
 <head>
-  <meta charset="utf-8" />
-  <title>@ViewData["Title"] - @(Tenant?.SiteName ?? "Sample")</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta charset="utf-8" />
+    <title>@ViewData["Title"] - @(Tenant?.SiteName ?? "Sample")</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     @RenderSection("Meta", required: false)
-  <environment names="Development">
-      <link rel="stylesheet" href="~/css/bootstrap4.css" cs-resolve-theme-resource="true" cs-shared-theme="true" cs-tenant="@Tenant" />
-      <link rel="stylesheet" href="~/css/fontawesome-all.min.css" cs-resolve-theme-resource="true" cs-shared-theme="true" cs-tenant="@Tenant" />
-      <link rel="stylesheet" href="~/css/site.css" cs-resolve-theme-resource="true" cs-shared-theme="true" cs-tenant="@Tenant" />
-  </environment>
-  <environment names="Staging,Production">
-      <link rel="stylesheet" href="~/css/bootstrap4.min.css" cs-resolve-theme-resource="true" cs-shared-theme="true" cs-tenant="@Tenant" />
-      <link rel="stylesheet" href="~/css/fontawesome-all.min.css" cs-resolve-theme-resource="true" cs-shared-theme="true" cs-tenant="@Tenant" />
-      <link rel="stylesheet" href="~/css/site.min.css" cs-resolve-theme-resource="true" cs-shared-theme="true" cs-tenant="@Tenant" />
-  </environment>
+    <environment names="Development">
+        <link rel="stylesheet" href="~/css/bootstrap4.css" cs-resolve-theme-resource="true" cs-shared-theme="true" cs-tenant="@Tenant" />
+        <link rel="stylesheet" href="~/css/fontawesome-all.min.css" cs-resolve-theme-resource="true" cs-shared-theme="true" cs-tenant="@Tenant" />
+        <link rel="stylesheet" href="~/css/site.css" cs-resolve-theme-resource="true" cs-shared-theme="true" cs-tenant="@Tenant" />
+    </environment>
+    <environment names="Staging,Production">
+        <link rel="stylesheet" href="~/css/bootstrap4.min.css" cs-resolve-theme-resource="true" cs-shared-theme="true" cs-tenant="@Tenant" />
+        <link rel="stylesheet" href="~/css/fontawesome-all.min.css" cs-resolve-theme-resource="true" cs-shared-theme="true" cs-tenant="@Tenant" />
+        <link rel="stylesheet" href="~/css/site.min.css" cs-resolve-theme-resource="true" cs-shared-theme="true" cs-tenant="@Tenant" />
+    </environment>
     @RenderSection("Styles", required: false)
     <google-analytics profile-id="@Tenant.GoogleAnalyticsProfileId" user-id="@User.GetUserId()"></google-analytics>
 </head>
@@ -51,15 +60,27 @@
                 @await Html.PartialAsync("AlertsPartial")
                 @RenderBody()
             </main>
-            <nav id="sidenavmenu" class=" col col-3 order-1 @sideNavToggleClass">
-                @RenderSection("SideNav", required: false)
-            </nav>
-            <aside id="aside2" class="col col-1 order-2 @aside2ToggleClass">
-                @RenderSection("AsideSecondary", required: false)
-            </aside>
-            <aside id="aside1" class="col-12 col-md-3 col-sm-12  col-sm-12 order-4 @aside1ToggleClass">
-                @RenderSection("AsidePrimary", required: false)
-            </aside>
+            @if (sideNavVisible)
+            {
+                <nav id="sidenavmenu" class=" col col-3 order-1 @sideNavToggleClass">
+                    @RenderSection("SideNav", required: false)
+                </nav>
+
+            }
+            @if (asideSecondaryVisible)
+            {
+                <aside id="asideSecondary" class="col col-1 order-2">
+                    @RenderSection("AsideSecondary", required: false)
+                </aside>
+
+            }
+            @if (asidePrimaryVisible)
+            {
+                <aside id="asidePrimary" class="col-12 col-md-3 col-sm-12  col-sm-12 order-4">
+                    @RenderSection("AsidePrimary", required: false)
+                </aside>
+
+            }
         </div>
     </div>
     <footer class="sticky-bottom border pt-2 d-flex h-100 flex-wrap flex-grow justify-content-center">

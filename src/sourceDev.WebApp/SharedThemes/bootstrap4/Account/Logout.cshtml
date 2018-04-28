@@ -1,0 +1,24 @@
+﻿@model cloudscribe.Core.Identity.IdentityServerLogoutViewModel
+@using cloudscribe.Core.IdentityServerIntegration
+@using Microsoft.Extensions.Localization
+@inject IStringLocalizer<CloudscribeIds4Resources> sr
+
+    <div class="logout-page">
+        <div class="page-header">
+            <h1>@sr["Logout"]</h1>
+        </div>
+
+        <div class="row">
+            <div class="col-sm-6">
+                <p>@sr["Would you like to logout of IdentityServer?"]</p>
+                <form asp-action="Logout">
+                    <input type="hidden" name="logoutId" value="@Model.LogoutId" />
+                    <fieldset>
+                        <div class="form-group">
+                            <button class="btn btn-primary">@sr["Yes"]</button>
+                        </div>
+                    </fieldset>
+                </form>
+            </div>
+        </div>
+    </div>

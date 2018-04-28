@@ -4,6 +4,7 @@
 @inject ICoreThemeHelper themeHelper
 @{
     var themeSettings = themeHelper.GetThemeSettings();
+    ViewData["SideNavVisible"] = true;
     if (themeSettings.AdminSideNavExpanded) { ViewData["SideNavToggle"] = "show"; }
     var FolderHostLabel = sr["Preferred Host Name"];
     var options = multiTenantOptions.Value;

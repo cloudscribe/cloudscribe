@@ -5,6 +5,7 @@
 @{
     var themeSettings = themeHelper.GetThemeSettings();
     if (themeSettings.AdminSideNavExpanded) { ViewData["SideNavToggle"] = "show"; }
+    ViewData["SideNavVisible"] = true;
     var ckOptions = await editorOptionsResolver.GetCkeditorOptions();
 }
 <h2>@ViewBag.Title</h2>

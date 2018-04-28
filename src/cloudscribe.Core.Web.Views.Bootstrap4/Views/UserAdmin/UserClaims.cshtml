@@ -37,8 +37,8 @@
                                 <div class="modal-dialog modal-sm" role="document">
                                     <div class="modal-content">
                                         <div class="modal-header">
-                                            <button type="button" class="close" data-dismiss="modal" aria-label='@sr["Close"]'><span aria-hidden="true">&times;</span></button>
                                             <h4 class="modal-title" id="@("confirmDeleteHeading" + Model.UserClaims.IndexOf(item))">@sr["Confirm Delete"]</h4>
+                                            <button type="button" class="close" data-dismiss="modal" aria-label='@sr["Close"]'><span aria-hidden="true">&times;</span></button>
                                         </div>
                                         <div class="modal-body">
                                             @string.Format(sr["Are you sure you want to remove the claim {0}?"], item.Type)
@@ -67,5 +67,5 @@
     
  @section Scripts {
 @{await Html.RenderPartialAsync("_UnobtrusiveValidationScriptsPartial"); }
-<script src="~/cr/js/cloudscribe-modaldialog-bootstrap.min.js"></script>
+<script src="~/cr/js/cloudscribe-modaldialog-bootstrap4.min.js"></script>
  }
