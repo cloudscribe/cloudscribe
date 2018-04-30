@@ -80,11 +80,5 @@
     <DotNetCliToolReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Tools" Version="2.0.*" />
   </ItemGroup>
   
-  <ItemGroup>
-    <Folder Include="SharedThemes\cosmo\Home\" />
-    <Folder Include="Views\Shared\Components\" />
-  </ItemGroup>
-  
-  
-
+ 
 </Project>
