@@ -70,7 +70,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Tenant1SpaLocalApi", "src\T
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "cloudscribe.Email.Senders", "src\cloudscribe.Email.Senders\cloudscribe.Email.Senders.csproj", "{A0243B8F-FC85-4A1F-B56C-7D4B793F8875}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "cloudscribe.Core.Web.Views.Bootstrap4", "src\cloudscribe.Core.Web.Views.Bootstrap4\cloudscribe.Core.Web.Views.Bootstrap4.csproj", "{98F37C8F-A022-4E11-8590-9BD652DE8399}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "cloudscribe.Core.Web.Views.Bootstrap4", "src\cloudscribe.Core.Web.Views.Bootstrap4\cloudscribe.Core.Web.Views.Bootstrap4.csproj", "{98F37C8F-A022-4E11-8590-9BD652DE8399}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "cloudscribe.Core.IdentityServerIntegration.Views.Bootstrap4", "src\cloudscribe.Core.IdentityServerIntegration.Views.Bootstrap4\cloudscribe.Core.IdentityServerIntegration.Views.Bootstrap4.csproj", "{48CA22D3-943A-46BA-9002-46DF274145E5}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -198,6 +200,10 @@ Global
 		{98F37C8F-A022-4E11-8590-9BD652DE8399}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{98F37C8F-A022-4E11-8590-9BD652DE8399}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{98F37C8F-A022-4E11-8590-9BD652DE8399}.Release|Any CPU.Build.0 = Release|Any CPU
+		{48CA22D3-943A-46BA-9002-46DF274145E5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{48CA22D3-943A-46BA-9002-46DF274145E5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{48CA22D3-943A-46BA-9002-46DF274145E5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{48CA22D3-943A-46BA-9002-46DF274145E5}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -233,6 +239,7 @@ Global
 		{7AAE4A99-0688-4ADC-A45A-149AF82D2EC1} = {9C16B47A-B712-4237-B62F-B4403ACF1CD5}
 		{A0243B8F-FC85-4A1F-B56C-7D4B793F8875} = {9C16B47A-B712-4237-B62F-B4403ACF1CD5}
 		{98F37C8F-A022-4E11-8590-9BD652DE8399} = {9C16B47A-B712-4237-B62F-B4403ACF1CD5}
+		{48CA22D3-943A-46BA-9002-46DF274145E5} = {9C16B47A-B712-4237-B62F-B4403ACF1CD5}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {3FDA23E8-B945-4001-92C5-F6A70186E3B0}

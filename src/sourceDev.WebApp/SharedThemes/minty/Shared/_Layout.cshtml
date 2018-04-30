@@ -1,0 +1,115 @@
+﻿@inject ISiteContextResolver siteResolver
+@{
+    @*
+        These viewstate settings can be set by a main view to show additional columns.
+        Views that push content into the optional sections SideNav, AsidePrimary, and AsideSecondary
+        are obligated to set the needed viewtate property to true to show the section,
+        otherwise an error will occur.
+        The sideNav column also supports a toggle so it can be hidden and toggled visible even though it renders.
+    *@
+    bool sideNavVisible = true.Equals(ViewData["SideNavVisible"]);
+    string sideNavToggleClass = ViewData["SideNavToggle"]?.ToString() ?? "collapse";
+    bool asidePrimaryVisible = true.Equals(ViewData["AsidePrimaryVisible"]);
+    bool asideSecondaryVisible = true.Equals(ViewData["AsideSecondaryVisible"]);
+
+    var Tenant = await siteResolver.ResolveSite(Context.Request.Host.Host, Context.Request.Path);
+}
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title>@ViewData["Title"] - @(Tenant?.SiteName ?? "Sample")</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    @RenderSection("Meta", required: false)
+    <environment names="Development">
+        <link rel="stylesheet" href="~/css/bootstrap.css" cs-resolve-theme-resource="true" cs-shared-theme="true" cs-tenant="@Tenant" />
+        <link rel="stylesheet" href="~/css/fontawesome-all.min.css" cs-resolve-theme-resource="true" cs-shared-theme="true" cs-tenant="@Tenant" />
+        <link rel="stylesheet" href="~/css/site.css" cs-resolve-theme-resource="true" cs-shared-theme="true" cs-tenant="@Tenant" />
+    </environment>
+    <environment names="Staging,Production">
+        <link rel="stylesheet" href="~/css/bootstrap.min.css" cs-resolve-theme-resource="true" cs-shared-theme="true" cs-tenant="@Tenant" />
+        <link rel="stylesheet" href="~/css/fontawesome-all.min.css" cs-resolve-theme-resource="true" cs-shared-theme="true" cs-tenant="@Tenant" />
+        <link rel="stylesheet" href="~/css/site.min.css" cs-resolve-theme-resource="true" cs-shared-theme="true" cs-tenant="@Tenant" />
+    </environment>
+    @RenderSection("Styles", required: false)
+    <google-analytics profile-id="@Tenant.GoogleAnalyticsProfileId" user-id="@User.GetUserId()"></google-analytics>
+</head>
+<body class="d-flex flex-column @ViewData["BodyClass"]">
+    <header>
+        <a id="skippy" class="sr-only sr-only-focusable" href="#content">
+            <div class="container">
+                <span class="skiplink-text">Skip to main content</span>
+            </div>
+        </a>
+        <nav class="navbar navbar-expand-lg navbar-dark fixed-top bg-dark">
+            <a href="~/@(Tenant?.SiteFolderName ?? "")" class="navbar-brand">@(Tenant?.SiteName ?? "Sample")</a>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <div class="collapse navbar-collapse" id="navbarNavDropdown">
+                @await Component.InvokeAsync("Navigation", new { viewName = "Bootstrap4TopNavWithDropdowns", filterName = NamedNavigationFilters.TopNav, startingNodeKey = "" })
+                @await Html.PartialAsync("_LoginPartial")
+            </div>
+        </nav>
+    </header>
+    <div id="wrapper" class="container cs-container flex-fill">
+        @await Component.InvokeAsync("Navigation", new { viewName = "Bootstrap4Breadcrumbs", filterName = NamedNavigationFilters.Breadcrumbs, startingNodeKey = "" })
+        <div class="row">
+            <main id="content" role="main" class="col order-3">
+                @await Html.PartialAsync("AlertsPartial")
+                @RenderBody()
+            </main>
+            @if (sideNavVisible)
+            {
+                <nav id="sidenavmenu" class=" col col-3 order-1 @sideNavToggleClass">
+                    @RenderSection("SideNav", required: false)
+                </nav>
+
+            }
+            @if (asideSecondaryVisible)
+            {
+                <aside id="asideSecondary" class="col col-1 order-2">
+                    @RenderSection("AsideSecondary", required: false)
+                </aside>
+
+            }
+            @if (asidePrimaryVisible)
+            {
+                <aside id="asidePrimary" class="col-12 col-md-3 col-sm-12  col-sm-12 order-4">
+                    @RenderSection("AsidePrimary", required: false)
+                </aside>
+
+            }
+        </div>
+    </div>
+    <footer class="sticky-bottom border pt-2 d-flex h-100 flex-wrap flex-grow justify-content-center">
+        <div class="p-2">
+            <ul class="list-unstyled d-flex flex-wrap">
+                <li class=" mr-2">
+                    <a class="text-nowrap" href="/sitemap">Site Map</a>
+                </li>
+                <li class="border-left pl-2 mr-2">
+                    @* you are free to remove the powered by cloudscribe link but we appreciate it if you choose to keep it! *@
+                    <a class="text-nowrap" target="_blank" href="https://www.cloudscribe.com/?utm_source=@Context.Request.Host.Value&amp;utm_medium=referral&amp;utm_campaign=poweredbycloudscribe">Powered by cloudscribe</a>
+                </li>
+            </ul>
+        </div>
+        <div class="p-2 text-nowrap">Copyright &copy; @DateTime.Now.Year - @(Tenant?.SiteName ?? "Sample")</div>
+    </footer>
+    @RenderSection("Toolbar", required: false)
+    <environment names="Development">
+        <script src="~/js/jquery.js" cs-resolve-theme-resource="true" cs-shared-theme="true" cs-tenant="@Tenant"></script>
+        <script src="~/js/bootstrap4.bundle.js" cs-resolve-theme-resource="true" cs-shared-theme="true" cs-tenant="@Tenant"></script>
+        <script src="~/cr/js/bs4.smartmenus.min.js"></script>
+    </environment>
+    <environment names="Staging,Production">
+        <script src="~/js/jquery.min.js" cs-resolve-theme-resource="true" cs-shared-theme="true" cs-tenant="@Tenant"></script>
+        <script src="~/js/bootstrap4.bundle.min.js" cs-resolve-theme-resource="true" cs-shared-theme="true" cs-tenant="@Tenant"></script>
+        <script src="~/cr/js/bs4.smartmenus.min.js"></script>
+    </environment>
+    @RenderSection("Bottom", required: false)
+    @RenderSection("Scripts", required: false)
+    <add-this profile-id="@Tenant.AddThisDotComUsername" async></add-this>
+</body>
+</html>

@@ -84,5 +84,15 @@ namespace Microsoft.Extensions.DependencyInjection
             return options;
         }
 
+        public static RazorViewEngineOptions AddCloudscribeFileManagerBootstrap4Views(this RazorViewEngineOptions options)
+        {
+            options.FileProviders.Add(new EmbeddedFileProvider(
+                    typeof(FileManagerController).GetTypeInfo().Assembly,
+                    "cloudscribe.FileManager.Web"
+                ));
+
+            return options;
+        }
+
     }
 }

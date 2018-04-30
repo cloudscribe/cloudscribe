@@ -22,14 +22,14 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     @RenderSection("Meta", required: false)
     <environment names="Development">
-        <link rel="stylesheet" href="~/css/bootstrap4.css" cs-resolve-theme-resource="true" cs-shared-theme="true" cs-tenant="@Tenant" />
-        <link rel="stylesheet" href="~/css/fontawesome-all.min.css" cs-resolve-theme-resource="true" cs-shared-theme="true" cs-tenant="@Tenant" />
-        <link rel="stylesheet" href="~/css/site.css" cs-resolve-theme-resource="true" cs-shared-theme="true" cs-tenant="@Tenant" />
+        <link rel="stylesheet" href="~/css/bootstrap4.css"  />
+        <link rel="stylesheet" href="~/css/fontawesome-all.min.css"  />
+        <link rel="stylesheet" href="~/css/site.css"  />
     </environment>
     <environment names="Staging,Production">
-        <link rel="stylesheet" href="~/css/bootstrap4.min.css" cs-resolve-theme-resource="true" cs-shared-theme="true" cs-tenant="@Tenant" />
-        <link rel="stylesheet" href="~/css/fontawesome-all.min.css" cs-resolve-theme-resource="true" cs-shared-theme="true" cs-tenant="@Tenant" />
-        <link rel="stylesheet" href="~/css/site.min.css" cs-resolve-theme-resource="true" cs-shared-theme="true" cs-tenant="@Tenant" />
+        <link rel="stylesheet" href="~/css/bootstrap4.min.css"  />
+        <link rel="stylesheet" href="~/css/fontawesome-all.min.css"  />
+        <link rel="stylesheet" href="~/css/site.min.css"  />
     </environment>
     @RenderSection("Styles", required: false)
     <google-analytics profile-id="@Tenant.GoogleAnalyticsProfileId" user-id="@User.GetUserId()"></google-analytics>
@@ -99,13 +99,13 @@
     </footer>
     @RenderSection("Toolbar", required: false)
     <environment names="Development">
-        <script src="~/js/jquery.js" cs-resolve-theme-resource="true" cs-shared-theme="true" cs-tenant="@Tenant"></script>
-        <script src="~/js/bootstrap4.bundle.js" cs-resolve-theme-resource="true" cs-shared-theme="true" cs-tenant="@Tenant"></script>
+        <script src="~/js/jquery.js"></script>
+        <script src="~/js/bootstrap4.bundle.js"></script>
         <script src="~/cr/js/bs4.smartmenus.min.js"></script>
     </environment>
     <environment names="Staging,Production">
-        <script src="~/js/jquery.min.js" cs-resolve-theme-resource="true" cs-shared-theme="true" cs-tenant="@Tenant"></script>
-        <script src="~/js/bootstrap4.bundle.min.js" cs-resolve-theme-resource="true" cs-shared-theme="true" cs-tenant="@Tenant"></script>
+        <script src="~/js/jquery.min.js"></script>
+        <script src="~/js/bootstrap4.bundle.min.js"></script>
         <script src="~/cr/js/bs4.smartmenus.min.js"></script>
     </environment>
     @RenderSection("Bottom", required: false)

@@ -2,8 +2,8 @@
 
   <PropertyGroup>
     <Description>media file management</Description>
-    <VersionPrefix>2.0.10</VersionPrefix>
-    <AssemblyVersion>2.0.10</AssemblyVersion>
+    <VersionPrefix>2.0.11</VersionPrefix>
+    <AssemblyVersion>2.0.11</AssemblyVersion>
     <Authors>Joe Audette</Authors>
     <TargetFrameworks>netstandard2.0</TargetFrameworks>
     <DebugType>portable</DebugType>
@@ -42,8 +42,5 @@
     <ProjectReference Include="..\cloudscribe.Web.Common\cloudscribe.Web.Common.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Properties\" />
-  </ItemGroup>
 
 </Project>
