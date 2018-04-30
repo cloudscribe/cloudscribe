@@ -1,0 +1,26 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <Description>Bootstrap 4 views for cloudscribe.Core.IdentityServerIntegration</Description>
+    <VersionPrefix>2.0.0</VersionPrefix>
+    <AssemblyVersion>2.0.0</AssemblyVersion>
+    <Authors>Joe Audette</Authors>
+    <TargetFrameworks>netstandard2.0</TargetFrameworks>
+    <PackageTags>cloudscribe;IdentityServer4;Bootstrap4</PackageTags>
+    <PackageIconUrl>https://raw.githubusercontent.com/joeaudette/cloudscribe/master/cloudscribe-icon-32.png</PackageIconUrl>
+    <PackageProjectUrl>https://github.com/joeaudette/cloudscribe</PackageProjectUrl>
+    <PackageLicenseUrl>http://www.apache.org/licenses/LICENSE-2.0</PackageLicenseUrl>
+
+  </PropertyGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Include="Views\**" Exclude="bin\**;obj\**;**\*.xproj;packages\**;@(EmbeddedResource)" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.Mvc.Razor" Version="2.0.*" />
+    <PackageReference Include="Microsoft.Extensions.FileProviders.Embedded" Version="2.0.*" />
+  </ItemGroup>
+
+
+</Project>

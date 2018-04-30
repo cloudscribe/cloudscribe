@@ -28,6 +28,7 @@
   <ItemGroup>
     <ProjectReference Include="..\cloudscribe.Core.IdentityServer.EFCore.SQLite\cloudscribe.Core.IdentityServer.EFCore.SQLite.csproj" />
     <ProjectReference Include="..\cloudscribe.Core.IdentityServerIntegration.Views.Bootstrap3\cloudscribe.Core.IdentityServerIntegration.Views.Bootstrap3.csproj" />
+    <ProjectReference Include="..\cloudscribe.Core.IdentityServerIntegration.Views.Bootstrap4\cloudscribe.Core.IdentityServerIntegration.Views.Bootstrap4.csproj" />
     <ProjectReference Include="..\cloudscribe.Core.IdentityServerIntegration\cloudscribe.Core.IdentityServerIntegration.csproj" />
     <ProjectReference Include="..\cloudscribe.Core.Identity\cloudscribe.Core.Identity.csproj" />
     <ProjectReference Include="..\cloudscribe.Core.Models\cloudscribe.Core.Models.csproj" />

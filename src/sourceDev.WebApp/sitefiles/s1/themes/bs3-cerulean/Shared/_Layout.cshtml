@@ -11,8 +11,8 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <meta charset="utf-8" />
-  <title>@ViewData["Title"] - @(Tenant?.SiteName ?? "Sample")</title>
+    <meta charset="utf-8" />
+    <title>@ViewData["Title"] - @(Tenant?.SiteName ?? "Sample")</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     @RenderSection("Meta", required: false)
     <environment names="Development">
@@ -49,6 +49,7 @@
         @await Component.InvokeAsync("Navigation", new { viewName = "BootstrapBreadcrumbs", filterName = NamedNavigationFilters.Breadcrumbs, startingNodeKey = "" })
         @await Html.PartialAsync("AlertsPartial")
         @RenderBody()
+        @RenderSection("SideNav", required: false)
     </div>
     <footer class="container text-center">
         <small>Copyright &copy; @DateTime.Now.Year - @(Tenant?.SiteName ?? "Sample")</small><br />
@@ -70,6 +71,6 @@
     @RenderSection("Bottom", required: false)
     @RenderSection("scripts", required: false)
     <add-this profile-id="@Tenant.AddThisDotComUsername" async></add-this>
-    @{ IgnoreSection("SideNav"); }
+
 </body>
 </html>
