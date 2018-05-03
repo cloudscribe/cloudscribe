@@ -2,8 +2,8 @@
 
   <PropertyGroup>
     <Description>Bootstrap 4 views for cloudscribe.Core.Web</Description>
-    <VersionPrefix>2.1.9</VersionPrefix>
-    <AssemblyVersion>2.1.9</AssemblyVersion>
+    <VersionPrefix>2.1.10</VersionPrefix>
+    <AssemblyVersion>2.1.10</AssemblyVersion>
     <Authors>Joe Audette</Authors>
     <TargetFrameworks>netstandard2.0</TargetFrameworks>
     <PackageTags>cloudscribe.Core;Bootstrap4</PackageTags>
