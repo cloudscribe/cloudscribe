@@ -1,5 +1,9 @@
 
 
+Utilize Server Sent Events (SSE) In ASP.NET Core
+http://www.binaryintellect.net/articles/1b6d874a-3535-4af2-8e74-de9019d5607d.aspx
+
+
 https://blogs.msdn.microsoft.com/dotnet/2017/08/09/__trashed/
 
 http://www.forevolve.com/en/articles/2017/08/25/design-patterns-web-api-service-and-repository-part-5/
