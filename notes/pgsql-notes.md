@@ -1,8 +1,10 @@
 
+include all 3 of these in backup and restore operations:
 pre data = table structures, functions etc without constraints or indexes
 data = the data
 post data = constraints primary keys indexes etc
-format Plain
+
+format Custom  .backup
 
 
 https://www.pg-versus-ms.com/

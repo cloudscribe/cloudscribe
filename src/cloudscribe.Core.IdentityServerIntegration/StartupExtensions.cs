@@ -98,8 +98,9 @@ namespace Microsoft.Extensions.DependencyInjection
                 //https://github.com/IdentityServer/IdentityServer4/releases/tag/2.0.0
                 // related? https://github.com/IdentityServer/IdentityServer4/issues/1477
                 //options.Authentication.AuthenticationScheme = AuthenticationScheme.Application;
-
-
+                //TODO: are the options set here actually used?
+                // how to make this handle folder tenants?
+                options.UserInteraction.ErrorUrl = "/oops/error";
 
             });
 
