@@ -2,7 +2,9 @@
 using cloudscribe.Web.Common.Analytics;
 using cloudscribe.Web.Common.Components;
 using cloudscribe.Web.Common.Helpers;
+using cloudscribe.Web.Common.Http;
 using cloudscribe.Web.Common.Models;
+using cloudscribe.Web.Common.Recaptcha;
 using cloudscribe.Web.Common.Setup;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
@@ -23,6 +25,10 @@ namespace Microsoft.Extensions.DependencyInjection
             IConfiguration configuration = null)
         {
             services.TryAddSingleton<IDateTimeZoneProvider>(new DateTimeZoneCache(TzdbDateTimeZoneSource.Default));
+            services.TryAddSingleton<IHttpClientProvider, DefaultHttpClientProvider>();
+
+            services.TryAddScoped<IRecaptchaServerSideValidator, RecaptchaServerSideValidator>();
+
             services.TryAddScoped<ITimeZoneHelper, TimeZoneHelper>();
             services.TryAddScoped<IResourceHelper, ResourceHelper>();
 

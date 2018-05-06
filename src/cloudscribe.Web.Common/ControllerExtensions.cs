@@ -27,6 +27,8 @@ namespace cloudscribe.Web.Common.Extensions
     /// </summary>
     public static class ControllerExtensions
     {
+        
+        [Obsolete("This method is deprecated and makes bad use of HttpClient. Please inject IRecaptchServerSideValidator and use it instead.")]
         public static async Task<RecaptchaResponse> ValidateRecaptcha(
             this Controller controller,
             HttpRequest request,

@@ -2,9 +2,10 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2018-03-01
-// Last Modified:			2018-03-06
+// Last Modified:			2018-05-06
 // 
 
+using cloudscribe.Email.Senders;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
@@ -17,17 +18,20 @@ namespace cloudscribe.Email.ElasticEmail
     {
         public ElasticEmailSender(
             IElasticEmailOptionsProvider optionsProvider,
+            IServiceClientProvider httpClientFactory,
             ILogger<ElasticEmailSender> logger
             )
         {
             _optionsProvider = optionsProvider;
+            _httpClientFactory = httpClientFactory;
             _log = logger;
         }
 
         private IElasticEmailOptionsProvider _optionsProvider;
+        private IServiceClientProvider _httpClientFactory;
         private ILogger _log;
 
-        private const string apiEndpoint = "https://api.elasticemail.com/v2";
+        private const string apiEndpoint = "https://api.elasticemail.com/v2/";
 
         public string Name { get; } = "ElasticEmailSender";
 
@@ -177,35 +181,36 @@ namespace cloudscribe.Email.ElasticEmail
 
         private async Task<EmailSendResult> SendWithoutAttachments(List<KeyValuePair<string, string>> keyValues, ElasticEmailOptions options, string subject)
         {
-            using (var client = new HttpClient())
+           
+            var content = new FormUrlEncodedContent(keyValues);
+            var endpoint = apiEndpoint;
+            if(!string.IsNullOrWhiteSpace(options.EndpointUrl))
             {
-                var content = new FormUrlEncodedContent(keyValues);
-                var endpoint = apiEndpoint;
-                if(!string.IsNullOrWhiteSpace(options.EndpointUrl))
-                {
-                    endpoint = options.EndpointUrl;
-                }
+                endpoint = options.EndpointUrl;
+            }
 
-                try
+            var client = _httpClientFactory.GetOrCreateHttpClient(new Uri(endpoint));
+
+            try
+            {
+                var response = await client.PostAsync("email/send", content).ConfigureAwait(false);
+                var result = await response.Content.ReadAsStringAsync();
+                if (!response.IsSuccessStatusCode || result.Contains("Oops"))
                 {
-                    var response = await client.PostAsync(endpoint + "/email/send", content).ConfigureAwait(false);
-                    var result = await response.Content.ReadAsStringAsync();
-                    if (!response.IsSuccessStatusCode || result.Contains("Oops"))
-                    {
-                        var message = $"failed to send email with subject {subject} error was {response.StatusCode} : {result}";
-                        _log.LogError(message);
-                        return new EmailSendResult(false, message);
-                    }
-                }
-                catch (Exception ex)
-                {
-                    var message = $"failed to send email with subject {subject} error was {ex.Message} : {ex.StackTrace}";
+                    var message = $"failed to send email with subject {subject} error was {response.StatusCode} : {result}";
                     _log.LogError(message);
                     return new EmailSendResult(false, message);
                 }
-
-                return new EmailSendResult(true);
             }
+            catch (Exception ex)
+            {
+                var message = $"failed to send email with subject {subject} error was {ex.Message} : {ex.StackTrace}";
+                _log.LogError(message);
+                return new EmailSendResult(false, message);
+            }
+
+            return new EmailSendResult(true);
+            
 
                 
         }
@@ -216,7 +221,13 @@ namespace cloudscribe.Email.ElasticEmail
             string subject,
             List<EmailAttachment> attachments)
         {
-            using (var client = new HttpClient())
+            var endpoint = apiEndpoint;
+            if (!string.IsNullOrWhiteSpace(options.EndpointUrl))
+            {
+                endpoint = options.EndpointUrl;
+            }
+            var client = _httpClientFactory.GetOrCreateHttpClient(new Uri(endpoint));
+
             using (var formData = new MultipartFormDataContent())
             {
                 foreach (var item in keyValues)
@@ -235,13 +246,7 @@ namespace cloudscribe.Email.ElasticEmail
 
                 try
                 {
-                    var endpoint = apiEndpoint;
-                    if (!string.IsNullOrWhiteSpace(options.EndpointUrl))
-                    {
-                        endpoint = options.EndpointUrl;
-                    }
-
-                    var response = await client.PostAsync(endpoint + "/email/send", formData);
+                    var response = await client.PostAsync("email/send", formData);
                     var result = await response.Content.ReadAsStringAsync();
                     if (!response.IsSuccessStatusCode || result.Contains("Oops"))
                     {

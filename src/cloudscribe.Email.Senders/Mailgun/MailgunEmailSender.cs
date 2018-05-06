@@ -2,10 +2,11 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2018-02-28
-// Last Modified:			2018-03-06
+// Last Modified:			2018-05-06
 // 
 
 
+using cloudscribe.Email.Senders;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
@@ -21,14 +22,17 @@ namespace cloudscribe.Email.Mailgun
     {
         public MailgunEmailSender(
             IMailgunOptionsProvider optionsProvider,
+            IServiceClientProvider httpClientFactory,
             ILogger<MailgunEmailSender> logger
             )
         {
             _optionsProvider = optionsProvider;
+            _httpClientFactory = httpClientFactory;
             _log = logger;
         }
 
         private IMailgunOptionsProvider _optionsProvider;
+        private IServiceClientProvider _httpClientFactory;
         private ILogger _log;
         private const string apiBaseUrl = "https://api.mailgun.net/v3";
 
@@ -335,33 +339,31 @@ namespace cloudscribe.Email.Mailgun
 
         private async Task<EmailSendResult> SendWithoutAttachments(List<KeyValuePair<string, string>> keyValues, MailgunOptions options, string subject)
         {
-            using (var client = new HttpClient())
-            {
-                client.DefaultRequestHeaders.Authorization =
-                  new AuthenticationHeaderValue("Basic", Convert.ToBase64String(Encoding.ASCII.GetBytes(PrefixApiKey(options.ApiKey))));
+            var client = _httpClientFactory.GetOrCreateHttpClient(new Uri(options.EndpointUrl));
+            
+            client.DefaultRequestHeaders.Authorization =
+                new AuthenticationHeaderValue("Basic", Convert.ToBase64String(Encoding.ASCII.GetBytes(PrefixApiKey(options.ApiKey))));
                 
-                var content = new FormUrlEncodedContent(keyValues);
+            var content = new FormUrlEncodedContent(keyValues);
 
-                try
+            try
+            {
+                var response = await client.PostAsync( "messages", content).ConfigureAwait(false);
+                var result = await response.Content.ReadAsStringAsync();
+                if (!response.IsSuccessStatusCode)
                 {
-                    var response = await client.PostAsync(options.EndpointUrl + "/messages", content).ConfigureAwait(false);
-                    var result = await response.Content.ReadAsStringAsync();
-                    if (!response.IsSuccessStatusCode)
-                    {
-                        var message = $"failed to send email with subject {subject} error was {response.StatusCode} : {result}";
-                        _log.LogError(message);
-                        return new EmailSendResult(false, message);
-                    }
-                }
-                catch (Exception ex)
-                {
-                    var message = $"failed to send email with subject {subject} error was {ex.Message} : {ex.StackTrace}";
+                    var message = $"failed to send email with subject {subject} error was {response.StatusCode} : {result}";
                     _log.LogError(message);
                     return new EmailSendResult(false, message);
                 }
-
             }
-
+            catch (Exception ex)
+            {
+                var message = $"failed to send email with subject {subject} error was {ex.Message} : {ex.StackTrace}";
+                _log.LogError(message);
+                return new EmailSendResult(false, message);
+            }
+            
             return new EmailSendResult(true);
         }
 
@@ -372,7 +374,7 @@ namespace cloudscribe.Email.Mailgun
             List<ByteArrayContent> files
             )
         {
-            using (var client = new HttpClient())
+            var client = _httpClientFactory.GetOrCreateHttpClient(new Uri(options.EndpointUrl));
             using (var formData = new MultipartFormDataContent())
             {
                 client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Basic", 
@@ -391,7 +393,7 @@ namespace cloudscribe.Email.Mailgun
 
                 try
                 {
-                    var response = await client.PostAsync(options.EndpointUrl + "/messages", formData);
+                    var response = await client.PostAsync("messages", formData);
                     var result = await response.Content.ReadAsStringAsync();
                     if (!response.IsSuccessStatusCode)
                     {

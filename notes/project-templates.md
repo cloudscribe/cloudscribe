@@ -11,6 +11,8 @@ https://www.cloudscribe.com/docs/advanced-client-side-development-with-webpack?u
 https://marketplace.visualstudio.com/items?itemName=joeaudette.cloudscribeProjectTemplate
 https://www.nuget.org/packages/cloudscribe.templates/1.0.0
 
+dotnet new cloudscribe -D MSSQL -I true -S z
+
 dotnet new --install C:\_c\cloudscribe.templates\Content\WebApp
 dotnet new --debug:reinit
 

@@ -2,9 +2,10 @@
 // Licensed under the Apache License, Version 2.0.
 // Author:                  Joe Audette
 // Created:                 2017-09-21
-// Last Modified:           2017-09-23
+// Last Modified:           2018-05-06
 // 
 
+using cloudscribe.Web.Common.Http;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
 using System;
@@ -22,15 +23,18 @@ namespace cloudscribe.Web.Common.Analytics
     public class GoogleAnalyticsApiService
     {
         public GoogleAnalyticsApiService(
+            IHttpClientProvider httpClientFactory,
             ILogger<GoogleAnalyticsApiService> logger
             )
         {
+            _httpClientFactory = httpClientFactory;
             _log = logger;
         }
 
+        private IHttpClientProvider _httpClientFactory;
         private ILogger _log;
         private const string version = "1";
-        private const string gaUrl = "http://www.google-analytics.com/collect";
+        private const string gaUrl = "https://www.google-analytics.com/";
 
         //https://stackoverflow.com/questions/14227331/what-is-the-client-id-when-sending-tracking-data-to-google-analytics-via-the-mea
 
@@ -166,26 +170,25 @@ namespace cloudscribe.Web.Common.Analytics
 
             var content = new FormUrlEncodedContent(keyValues);
 
+            var client = _httpClientFactory.GetOrCreateHttpClient(new Uri(gaUrl));
+
             try
             {
-                using (var client = new HttpClient())
+                var response = await client.PostAsync(
+                    "collect",
+                    content).ConfigureAwait(false);
+
+                if (response.IsSuccessStatusCode)
                 {
-                    var response = await client.PostAsync(
-                        gaUrl,
-                        content).ConfigureAwait(false);
-
-                    if (response.IsSuccessStatusCode)
-                    {
-                        _log.LogDebug($"success posting pageview to google analytics");
-                    }
-                    else
-                    {
-                        string responseBody = await response.Content.ReadAsStringAsync();
-                        var logmessage = $"failed to send pageview data to google analytics, response was: { responseBody }";
-                        _log.LogWarning(logmessage);
-                    }
-
+                    _log.LogDebug($"success posting pageview to google analytics");
                 }
+                else
+                {
+                    string responseBody = await response.Content.ReadAsStringAsync();
+                    var logmessage = $"failed to send pageview data to google analytics, response was: { responseBody }";
+                    _log.LogWarning(logmessage);
+                }
+  
             }
             catch (Exception ex)
             {
@@ -284,27 +287,25 @@ namespace cloudscribe.Web.Common.Analytics
             }
             
             var content = new FormUrlEncodedContent(keyValues);
+            var client = _httpClientFactory.GetOrCreateHttpClient(new Uri(gaUrl));
 
             try
             {
-                using (var client = new HttpClient())
+                var response = await client.PostAsync(
+                    "collect",
+                    content).ConfigureAwait(false);
+
+                if (response.IsSuccessStatusCode)
                 {
-                    var response = await client.PostAsync(
-                        gaUrl,
-                        content).ConfigureAwait(false);
-
-                    if (response.IsSuccessStatusCode)
-                    {
-                        _log.LogDebug($"success posting event to google analytics");
-                    }
-                    else
-                    {
-                        string responseBody = await response.Content.ReadAsStringAsync();
-                        var logmessage = $"failed to send event data to google analytics, response was: { responseBody }";
-                        _log.LogWarning(logmessage);
-                    }
-
+                    _log.LogDebug($"success posting event to google analytics");
                 }
+                else
+                {
+                    string responseBody = await response.Content.ReadAsStringAsync();
+                    var logmessage = $"failed to send event data to google analytics, response was: { responseBody }";
+                    _log.LogWarning(logmessage);
+                }
+                
             }
             catch (Exception ex)
             {
