@@ -23,13 +23,13 @@
         <div class="form-group">
             <label class="sr-only" asp-for="Code">@sr["Or submit the code provided in the email."]</label>
             <input asp-for="Code" class="form-control" style="min-width:300px" placeholder="@sr["Or submit the code provided in the email."]" data-val="true" data-val-required="@sr["You must enter the code sent to your email address"]" />
+            <span class="invalid-feedback field-validation-valid" data-valmsg-for="Code" data-valmsg-replace="true"></span>
         </div>
-        <button name="submit" type="submit" class="btn btn-default">@sr["Submit"]</button>
-        <span class="text-danger field-validation-valid" data-valmsg-for="Code" data-valmsg-replace="true"></span>
+        <button name="submit" type="submit" class="btn btn-default">@sr["Submit"]</button> 
     </form>
 @section Scripts {
   @{await Html.RenderPartialAsync("_UnobtrusiveValidationScriptsPartial"); }
-    
+    <script src="~/cr/js/unobtrusive-validation-bs4.min.js"></script>
  }
 
 

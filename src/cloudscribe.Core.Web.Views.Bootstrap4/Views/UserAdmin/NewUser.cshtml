@@ -25,7 +25,7 @@
     <div class="form-group">
         <label asp-for="Email">@sr["Email"]</label>
         <input asp-for="Email" class="form-control" />
-        <span asp-validation-for="Email" class="text-danger"></span>
+        <span asp-validation-for="Email" class="invalid-feedback"></span>
     </div>
     <div class="form-group">
         <label asp-for="Username">@sr["Username"]</label>
@@ -34,7 +34,7 @@
                data-error-target-id="spnUserNameWarn"
                data-additional-input-ids="UserId"
                data-validation-url='@Url.Action("UsernameAvailable", "Account")' />
-        <span asp-validation-for="Username" class="text-danger"></span>
+        <span asp-validation-for="Username" class="invalid-feedback"></span>
         <span id="spnUserNameWarn" class="text-danger" data-error-message='@sr["Username is already in use"]'></span>
         @Html.ValidationMessage("usernameerror", new { @class = "text-danger" })
     </div>
@@ -56,12 +56,12 @@
         <div class="form-group">
             <label asp-for="Password">@sr["Password"]</label>
             <input asp-for="Password" type="password" class="form-control" />
-            <span asp-validation-for="Password" class="text-danger"></span>
+            <span asp-validation-for="Password" class="invalid-feedback"></span>
         </div>
         <div class="form-group">
             <label asp-for="ConfirmPassword">@sr["Confirm Password"]</label>
             <input asp-for="ConfirmPassword" type="password" class="form-control" />
-            <span asp-validation-for="ConfirmPassword" class="text-danger"></span>
+            <span asp-validation-for="ConfirmPassword" class="invalid-feedback"></span>
         </div>
         <div class="form-group">
             <div class="form-check">
@@ -92,7 +92,7 @@
         <input type="submit" class="btn btn-default" value='@sr["Save"]' data-disabled-text='@sr["Working..."]' data-enabled-text='@sr["Save"]' data-loading-indicator-id="loader" />
         <span id="loader" style="display:none;">Working...</span>
     </div>
-    <div asp-validation-summary="All" class="text-danger"></div>
+    @*<div asp-validation-summary="All" class="text-danger"></div>*@
 </form>
 
 @section SideNav {
@@ -104,7 +104,7 @@
 @section Scripts {
     @{ await Html.RenderPartialAsync("AdminSideNavScripts"); }
     @{ await Html.RenderPartialAsync("NewUserScriptsPartial"); }
-
+    <script src="~/cr/js/unobtrusive-validation-bs4.min.js"></script>
     <script src="~/cr/js/remote-validation-onblur-unobtrusive.min.js"></script>
     <script src="~/cr/js/jquery.validate.hooks.min.js"></script>
     <script src="~/cr/js/jqueryvaildation.submitonce-unobtrusive.min.js"></script>

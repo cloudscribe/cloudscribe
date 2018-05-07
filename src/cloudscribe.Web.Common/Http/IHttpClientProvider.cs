@@ -3,9 +3,8 @@ using System.Net.Http;
 
 namespace cloudscribe.Web.Common.Http
 {
-    public interface IHttpClientProvider
+    public interface IHttpClientProvider : IDisposable
     {
-        void Dispose();
         HttpClient GetOrCreateHttpClient(Uri baseAddress);
     }
 }

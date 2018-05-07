@@ -2,12 +2,10 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2015-01-02
-// Last Modified:			2016-07-10
+// Last Modified:			2018-05-07
 // 
 
-//using cloudscribe.Core.Models;
 using cloudscribe.Web.Common.Models;
-//using cloudscribe.Core.Web.ViewModels.Common;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.Features;
 using Microsoft.AspNetCore.Mvc;
@@ -16,7 +14,6 @@ using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Net.Http;
-using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
 namespace cloudscribe.Web.Common.Extensions

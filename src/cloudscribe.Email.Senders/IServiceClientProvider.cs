@@ -3,9 +3,8 @@ using System.Net.Http;
 
 namespace cloudscribe.Email.Senders
 {
-    public interface IServiceClientProvider
+    public interface IServiceClientProvider : IDisposable
     {
-        void Dispose();
         HttpClient GetOrCreateHttpClient(Uri baseAddress);
     }
 }

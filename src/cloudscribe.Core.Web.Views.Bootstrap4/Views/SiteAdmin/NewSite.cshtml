@@ -16,14 +16,14 @@
     ViewData["SideNavVisible"] = true;
 }
 <h2>@ViewBag.Title</h2>
-<form method="post" class="form-horizontal" role="form" asp-antiforgery="true" data-submit-once="true">
-    <div asp-validation-summary="All" class="text-danger"></div>
+<form method="post"  asp-antiforgery="true" data-submit-once="true">
+    @*<div asp-validation-summary="All" class="text-danger"></div>*@
     <input asp-for="SiteId" type="hidden" />
     <input asp-for="ReturnPageNumber" type="hidden" />
     <div class="form-group">
         <label asp-for="SiteName">@sr["Site Name"]</label>
         <input asp-for="SiteName" class="form-control" />
-        <span asp-validation-for="SiteName" class="text-danger"></span>
+        <span asp-validation-for="SiteName" class="invalid-feedback"></span>
     </div>
     @if (useFolderTenants)
     {
@@ -34,9 +34,9 @@
                     <span class="input-group-text">@baseUrl</span>
                 </div>
                 <input asp-for="SiteFolderName" class="form-control" />
-            </div>
-            <span asp-validation-for="SiteFolderName" class="text-danger"></span>
-            @Html.ValidationMessage("foldererror", new { @class = "text-danger" })
+                <span asp-validation-for="SiteFolderName" class="invalid-feedback"></span>
+                @Html.ValidationMessage("foldererror", new { @class = "text-danger" })
+            </div> 
         </div>
     }
     else if (useHostTenants)
@@ -44,7 +44,7 @@
         <div class="form-group">
             <label asp-for="HostName">@sr["Host Name"]</label>
             <input asp-for="HostName" class="form-control" />
-            <span asp-validation-for="HostName" class="text-danger"></span>
+            <span asp-validation-for="HostName" class="invalid-feedback"></span>
             @Html.ValidationMessage("hosterror", new { @class = "text-danger" })
             <a class="hostmap" asp-action="SiteHostMappings"
                asp-controller="SiteAdmin"
@@ -55,14 +55,14 @@
     <div class="form-group">
         <label asp-for="TimeZoneId">@sr["Time Zone"]</label>
         <select asp-for="TimeZoneId" asp-items="Model.AllTimeZones" class="form-control"></select>
-        <span asp-validation-for="TimeZoneId" class="text-danger"></span>
+        <span asp-validation-for="TimeZoneId" class="invalid-feedback"></span>
     </div>
     @if (Model.AvailableThemes.Count > 0)
     {
         <div class="form-group">
             <label asp-for="Theme">@sr["Theme"]</label>
             <select id="Layout" asp-for="Theme" asp-items="Model.AvailableThemes" class="form-control"></select>
-            <span asp-validation-for="Theme" class="text-danger"></span>
+            <span asp-validation-for="Theme" class="invalid-feedback"></span>
         </div>
     }
     <div class="form-group">
@@ -80,33 +80,33 @@
                   data-ckeditor-config-dropfileuploadurl="@ckOptions.DropFileUrl"
                   data-ckeditor-config-filebrowserurl="@ckOptions.FileBrowseUrl"
                   data-ckeditor-config-imagebrowseurl="@ckOptions.ImageBrowseUrl"></textarea>
-        <span asp-validation-for="ClosedMessage" class="text-danger"></span>
+        <span asp-validation-for="ClosedMessage" class="invalid-feedback"></span>
     </div>
     <h2>@sr["New Site Administrator"]</h2>
     <div class="form-group">
         <label asp-for="Email">@sr["Email"]</label>
         <input asp-for="Email" class="form-control" />
-        <span asp-validation-for="Email" class="text-danger"></span>
+        <span asp-validation-for="Email" class="invalid-feedback"></span>
     </div>
     <div class="form-group">
         <label asp-for="LoginName">@sr["Login Name"]</label>
         <input asp-for="LoginName" class="form-control" />
-        <span asp-validation-for="LoginName" class="text-danger"></span>
+        <span asp-validation-for="LoginName" class="invalid-feedback"></span>
     </div>
     <div class="form-group">
         <label asp-for="DisplayName">@sr["Display Name"]</label>
         <input asp-for="DisplayName" class="form-control" />
-        <span asp-validation-for="DisplayName" class="text-danger"></span>
+        <span asp-validation-for="DisplayName" class="invalid-feedback"></span>
     </div>
     <div class="form-group">
         <label asp-for="Password">@sr["Password"]</label>
         <input asp-for="Password" type="password" class="form-control" />
-        <span asp-validation-for="Password" class="text-danger"></span>
+        <span asp-validation-for="Password" class="invalid-feedback"></span>
     </div>
     <div class="form-group">
         <label asp-for="ConfirmPassword">@sr["Confirm Password"]</label>
         <input asp-for="ConfirmPassword" type="password" class="form-control" />
-        <span asp-validation-for="ConfirmPassword" class="text-danger"></span>
+        <span asp-validation-for="ConfirmPassword" class="invalid-feedback"></span>
     </div>
     <div class="form-group">
         <button name="submit" type="submit" class="btn btn-default" data-disabled-text='@sr["Working..."]' data-enabled-text='@sr["Save"]'>@sr["Save"]</button>
@@ -121,6 +121,7 @@
 @section Scripts {
     @{ await Html.RenderPartialAsync("AdminSideNavScripts"); }
     @{ await Html.RenderPartialAsync("_UnobtrusiveValidationScriptsPartial"); }
+    <script src="~/cr/js/unobtrusive-validation-bs4.min.js"></script>
     @{ await Html.RenderPartialAsync("_UnobtrusiveEditorScriptsPartial"); }
     <script src="~/cr/js/jquery.validate.hooks.min.js"></script>
     <script src="~/cr/js/jqueryvaildation.submitonce-unobtrusive.min.js"></script>

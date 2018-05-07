@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2015-08-11
-// Last Modified:			2018-04-02
+// Last Modified:			2018-05-07
 // 
 
 using cloudscribe.Core.Models;
@@ -272,6 +272,60 @@ namespace cloudscribe.Core.Web.Components.Messaging
             catch (Exception ex)
             {
                 _log.LogError("error sending password reset email: " + ex.Message + " stacktrace: " + ex.StackTrace);
+            }
+
+        }
+
+
+        public async Task SendSiteMessage(
+            ISiteContext siteSettings,
+            SiteMessageModel model,
+            string baseUrl
+            )
+        {
+            var sender = await _emailSenderResolver.GetEmailSender(siteSettings.Id.ToString());
+            if (sender == null)
+            {
+                var logMessage = $"failed to send account confirmation email because email settings are not populated for site {siteSettings.SiteName}";
+                _log.LogError(logMessage);
+                return;
+            }
+
+            string plainTextMessage = null;
+            string htmlMessage = null;
+
+            if (model.Tenant == null) model.Tenant = siteSettings;
+            if (string.IsNullOrWhiteSpace(model.ConfigLookupKey)) model.ConfigLookupKey = sender.Name;
+            
+            try
+            {
+                if(!string.IsNullOrWhiteSpace(model.TextBody))
+                {
+                    plainTextMessage = await _viewRenderer.RenderViewAsString<SiteMessageModel>("SiteMessageTextPartial", model).ConfigureAwait(false);
+                }
+                
+                if (!string.IsNullOrWhiteSpace(model.HtmlBody))
+                {
+                    htmlMessage = await _viewRenderer.RenderViewAsString<SiteMessageModel>("SiteMessageHtmlPartial", model).ConfigureAwait(false);
+                    if(!string.IsNullOrWhiteSpace(baseUrl))
+                    {
+                        htmlMessage = cloudscribe.Web.Common.Html.HtmlHelper.ConvertUrlsToAbsolute(baseUrl, htmlMessage);
+                    } 
+                }
+                
+                await sender.SendEmailAsync(
+                    model.ToEmailCsv,
+                    siteSettings.DefaultEmailFromAddress,
+                    model.Subject.Replace("{SenderName}", model.ConfigLookupKey),
+                    plainTextMessage,
+                    htmlMessage,
+                    configLookupKey: siteSettings.Id.ToString()
+
+                    ).ConfigureAwait(false);
+            }
+            catch (Exception ex)
+            {
+                _log.LogError($"error sending account confirmation email: {ex.Message} stacktrace: {ex.StackTrace}");
             }
 
         }

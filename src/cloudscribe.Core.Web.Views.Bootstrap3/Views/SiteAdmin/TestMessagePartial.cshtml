@@ -1,0 +1,47 @@
+﻿@model cloudscribe.Core.Web.Components.Messaging.SiteMessageModel
+@inject ICkeditorOptionsResolver editorOptionsResolver
+@inject IStringLocalizer<CloudscribeCore> sr
+@{
+    var ckOptions = await editorOptionsResolver.GetCkeditorOptions();
+    var ckBaseRef = Context.Request.GetCurrentBaseUrl();
+}
+<h3>@sr["Send Test Message"]</h3>
+<p>@sr["Check the system log for errors if the message does not arrive."]</p>
+<form asp-controller="SiteAdmin" asp-action="SendTestMessage" data-submit-once="true">
+    <input value="@Model.Tenant.Id" name="siteId" type="hidden" />
+    <div class="form-group">
+        <label asp-for="ToEmailCsv">@sr["To CSV"]</label>
+        <input asp-for="ToEmailCsv" class="form-control" />
+        <span asp-validation-for="ToEmailCsv" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="Subject">@sr["Subject"]</label>
+        <input asp-for="Subject" class="form-control" />
+        <span asp-validation-for="Subject" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="Title">@sr["Template Heading"]</label>
+        <input asp-for="Title" class="form-control" />
+        <span asp-validation-for="Title" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="HtmlBody">@sr["Message"]</label>
+        <textarea class="form-control" rows="5" id="HtmlBody-@Guid.NewGuid().ToString()" name="HtmlBody"
+                  data-ckeditor-unobtrusive=""
+                  data-ckeditor-config-basehref="@ckBaseRef"
+                  data-ckeditor-config-url="@ckOptions.CustomConfigPath"
+                  data-ckeditor-config-language="@ckOptions.LanguageCode"
+                  data-ckeditor-config-dropfileuploadurl="@ckOptions.DropFileUrl"
+                  data-ckeditor-config-filebrowserurl="@ckOptions.FileBrowseUrl"
+                  data-ckeditor-config-imagebrowseurl="@ckOptions.ImageBrowseUrl"></textarea>
+        <span asp-validation-for="HtmlBody" class="text-danger"></span>
+    </div>
+
+
+    <div class="form-group">
+        <button id="btnSave" name="submit" type="submit" class="btn btn-default" data-disabled-text='@sr["Working..."]' data-enabled-text='@sr["Send"]'>@sr["Send"]</button>
+    </div>
+
+</form>

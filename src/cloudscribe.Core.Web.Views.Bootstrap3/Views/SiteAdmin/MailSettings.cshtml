@@ -104,6 +104,7 @@
                 </div>
             </div>
         </form>
+		@{ await Html.RenderPartialAsync("TestMessagePartial", Model.TestMessage); }
     </div>
     <div class="col-md-2 col-md-pull-10 hidden-xs hidden-sm">
         @await Component.InvokeAsync("Navigation", new { viewName = "SideNavAlt1", filterName = NamedNavigationFilters.ParentTree, startingNodeKey = "SiteAdmin" })
@@ -111,6 +112,7 @@
 </div>
 @section Scripts {
     @{ await Html.RenderPartialAsync("_SideMenuScriptsPartial"); }
+	@{ await Html.RenderPartialAsync("_UnobtrusiveEditorScriptsPartial"); }
     @{ await Html.RenderPartialAsync("_UnobtrusiveValidationScriptsPartial"); }
     <script src="~/cr/js/jquery.validate.hooks.min.js"></script>
     <script src="~/cr/js/jqueryvaildation.submitonce-unobtrusive.min.js"></script>

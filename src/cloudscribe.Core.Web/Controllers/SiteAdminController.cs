@@ -2,11 +2,12 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2014-10-26
-// Last Modified:			2018-03-14
+// Last Modified:			2018-05-07
 // 
 
 using cloudscribe.Core.Models;
 using cloudscribe.Core.Web.Components;
+using cloudscribe.Core.Web.Components.Messaging;
 using cloudscribe.Core.Web.ViewModels.SiteSettings;
 using cloudscribe.Email;
 using cloudscribe.Web.Common;
@@ -34,6 +35,7 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
             GeoDataManager geoDataManager,
             ISiteAcountCapabilitiesProvider siteCapabilities,
             IEnumerable<IEmailSender> allEmailSenders,
+            ISiteMessageEmailSender messageSender,
             IOptions<MultiTenantOptions> multiTenantOptions,
             IOptions<UIOptions> uiOptionsAccessor,
             IThemeListBuilder layoutListBuilder,
@@ -54,6 +56,7 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
             _siteCapabilities = siteCapabilities;
             _localization = localizationOptions.Value;
             _emailSenders = allEmailSenders;
+            _messageSender = messageSender;
         }
 
         private SiteManager _siteManager;
@@ -61,6 +64,7 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
         private MultiTenantOptions _multiTenantOptions;
         private ISiteAcountCapabilitiesProvider _siteCapabilities;
         private IEnumerable<IEmailSender> _emailSenders;
+        private ISiteMessageEmailSender _messageSender;
 
 
         private IStringLocalizer _sr;
@@ -628,7 +632,8 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
             Guid? siteId,
             int slp = 1)
         {
-            var selectedSite = await _siteManager.GetSiteForEdit(siteId);
+            //var selectedSite = await _siteManager.GetSiteForEdit(siteId);
+            var selectedSite = await _siteManager.GetSiteForDataOperations(siteId);
             // only server admin site can edit other sites settings
             if (selectedSite.Id != _siteManager.CurrentSite.Id)
             {
@@ -662,6 +667,7 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
             model.EmailSenderName = selectedSite.EmailSenderName;
             model.EmailApiEndpoint = selectedSite.EmailApiEndpoint;
             model.EmailApiKey = selectedSite.EmailApiKey;
+            model.TestMessage.Tenant = selectedSite;
 
             return View(model);
         }
@@ -735,6 +741,17 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
             return RedirectToAction("MailSettings");
         }
 
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        [Authorize(Policy = PolicyConstants.AdminPolicy)]
+        public async Task<ActionResult> SendTestMessage(SiteMessageModel model, Guid siteId)
+        {
+            var selectedSite = await _siteManager.GetSiteForDataOperations(siteId);
+            await _messageSender.SendSiteMessage(selectedSite, model, Request.GetCurrentBaseUrl());
+
+            return RedirectToAction("MailSettings");
+        }
+
         //[HttpGet]
         //[Authorize(Policy = "AdminPolicy")]
         //public async Task<IActionResult> SmsSettings(
@@ -761,7 +778,7 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
         //    model.SmsFrom = selectedSite.SmsFrom;
         //    model.SmsClientId = selectedSite.SmsClientId;
         //    model.SmsSecureToken = selectedSite.SmsSecureToken;
-            
+
         //    return View(model);
         //}
 
@@ -797,16 +814,16 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
         //        this.AlertDanger(_sr["oops something went wrong, site was not found."], true);
         //        return RedirectToAction("Index");
         //    }
-            
+
         //    selectedSite.SmsFrom = model.SmsFrom;
         //    selectedSite.SmsClientId = model.SmsClientId;
         //    selectedSite.SmsSecureToken = model.SmsSecureToken;
-            
+
         //    await _siteManager.Update(selectedSite);
-            
+
         //    this.AlertSuccess(string.Format(_sr["SMS Settings for {0} were successfully updated."],
         //                selectedSite.SiteName), true);
-            
+
         //    if ((_siteManager.CurrentSite.IsServerAdminSite)
         //        && (_siteManager.CurrentSite.Id != selectedSite.Id)
         //        )

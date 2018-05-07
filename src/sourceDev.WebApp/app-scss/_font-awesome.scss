@@ -1,0 +1,27 @@
+﻿/*!
+ * Font Awesome Free 5.1.0-8 by @fontawesome - https://fontawesome.com
+ * License - https://fontawesome.com/license (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License)
+ */
+
+$fa-font-path: "/webfonts";
+
+
+@import 'node_modules/@fortawesome/fontawesome-free/scss/variables';
+@import 'node_modules/@fortawesome/fontawesome-free/scss/mixins';
+@import 'node_modules/@fortawesome/fontawesome-free/scss/core';
+@import 'node_modules/@fortawesome/fontawesome-free/scss/larger';
+@import 'node_modules/@fortawesome/fontawesome-free/scss/fixed-width';
+@import 'node_modules/@fortawesome/fontawesome-free/scss/list';
+@import 'node_modules/@fortawesome/fontawesome-free/scss/bordered-pulled';
+@import 'node_modules/@fortawesome/fontawesome-free/scss/animated';
+@import 'node_modules/@fortawesome/fontawesome-free/scss/rotated-flipped';
+@import 'node_modules/@fortawesome/fontawesome-free/scss/stacked';
+//@import 'node_modules/@fortawesome/fontawesome-free/scss/icons';
+@import 'icons';
+@import 'node_modules/@fortawesome/fontawesome-free/scss/screen-reader';
+
+@import 'node_modules/@fortawesome/fontawesome-free/scss/fa-solid';
+@import 'node_modules/@fortawesome/fontawesome-free/scss/fa-regular';
+@import 'node_modules/@fortawesome/fontawesome-free/scss/fa-brands';
+
+

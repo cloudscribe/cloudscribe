@@ -2,9 +2,10 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2016-01-18
-// Last Modified:			2018-03-03
+// Last Modified:			2018-05-07
 // 
 
+using cloudscribe.Core.Web.Components.Messaging;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using System;
 using System.Collections.Generic;
@@ -17,6 +18,7 @@ namespace cloudscribe.Core.Web.ViewModels.SiteSettings
         public MailSettingsViewModel()
         {
             AvailableEmailProviders = new List<SelectListItem>();
+            TestMessage = new SiteMessageModel();
         }
 
         public Guid SiteId { get; set; } = Guid.Empty;
@@ -46,6 +48,8 @@ namespace cloudscribe.Core.Web.ViewModels.SiteSettings
         public bool SmtpUseSsl { get; set; } = false;
         [StringLength(20, ErrorMessage = "Smtp Preferred Encoding has a maximum length of 20 characters")]
         public string SmtpPreferredEncoding { get; set; } = string.Empty;
+
+        public SiteMessageModel TestMessage { get; set; }
 
     }
 }

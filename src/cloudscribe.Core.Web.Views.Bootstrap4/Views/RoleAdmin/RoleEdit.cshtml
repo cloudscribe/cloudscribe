@@ -16,7 +16,7 @@
     <div class="form-group">
         <label asp-for="RoleName">@sr["Role Name"]</label>
         <input asp-for="RoleName" class="form-control" />
-        <span asp-validation-for="RoleName" class="text-danger"></span>
+        <span asp-validation-for="RoleName" class="invalid-feedback"></span>
         @Html.ValidationMessage("roleerror", new { @class = "text-danger" })
     </div>
     <div class="form-group">
@@ -32,6 +32,7 @@
 @section scripts {
     @{ await Html.RenderPartialAsync("AdminSideNavScripts"); }
     @{ await Html.RenderPartialAsync("_UnobtrusiveValidationScriptsPartial"); }
+    <script src="~/cr/js/unobtrusive-validation-bs4.min.js"></script>
     <script src="~/cr/js/jquery.validate.hooks.min.js"></script>
     <script src="~/cr/js/jqueryvaildation.submitonce-unobtrusive.min.js"></script>
 }

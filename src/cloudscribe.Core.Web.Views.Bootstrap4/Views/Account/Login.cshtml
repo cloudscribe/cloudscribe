@@ -31,12 +31,11 @@
     </p>
 }
 <div class="row">
-
     @if (!Model.DisableDbAuth)
     {
         <div class="col-md">
-            <form id="login-form" asp-controller="Account" asp-action="Login" asp-route-returnurl='@ViewData["ReturnUrl"]' method="post" role="form" data-submit-once="true">
-                <div asp-validation-summary="All" class="text-danger"></div>
+            <form id="login-form" asp-controller="Account" asp-action="Login" asp-route-returnurl='@ViewData["ReturnUrl"]' data-submit-once="true">
+                @*<div asp-validation-summary="All" class="text-danger"></div>*@
                 @if (Model.UseEmailForLogin)
                 {
                     <div class="form-group">
@@ -46,8 +45,8 @@
                                 <span class="input-group-text"><i class="@themeSettings.Icons.Email" aria-hidden="true"></i></span>
                             </div>
                             <input asp-for="Email" class="form-control" />
+                            <span asp-validation-for="Email" class="invalid-feedback"></span>
                         </div>
-                        <span asp-validation-for="Email" class="text-danger"></span>
                     </div>
                 }
                 else
@@ -59,8 +58,8 @@
                                 <span class="input-group-text"><i class="@themeSettings.Icons.Username" aria-hidden="true"></i></span>
                             </div>
                             <input asp-for="UserName" class="form-control" />
-                        </div>
-                        <span asp-validation-for="UserName" class="text-danger"></span>
+                            <span asp-validation-for="UserName" class="invalid-feedback"></span>
+                        </div>  
                     </div>
                 }
                 <div class="form-group">
@@ -70,8 +69,9 @@
                             <span class="input-group-text"><i class="@themeSettings.Icons.Password" aria-hidden="true"></i></span>
                         </div>
                         <input asp-for="Password" class="form-control" />
+                        <span asp-validation-for="Password" class="invalid-feedback"></span>
                     </div>
-                    <span asp-validation-for="Password" class="text-danger"></span>
+                    
                 </div>
                 @if (site.AllowPersistentLogin)
                 {
@@ -80,16 +80,13 @@
                             <input asp-for="RememberMe" class="form-check-input" />
                             <label asp-for="RememberMe" class="form-check-label">@sr["Remember Me"] </label>
                         </div>
-
                     </div>
                 }
                 @if (!string.IsNullOrWhiteSpace(Model.RecaptchaSiteKey) && !Model.UseInvisibleCaptcha)
                 {
                     <div class="form-group">
-
                         <div class="g-recaptcha" data-sitekey="@Model.RecaptchaSiteKey"></div>
-                        @Html.ValidationMessage("recaptchaerror", new { @class = "text-danger" })
-
+                        @Html.ValidationMessage("recaptchaerror", new { @class = "text-error" })
                     </div>
                 }
                 <div class="form-group">
@@ -105,7 +102,6 @@
 
                     <input type="hidden" asp-for="UseEmailForLogin" />
                 </div>
-
             </form>
 
             @if (site.AllowNewRegistration)
@@ -130,12 +126,7 @@
         }
     }
 
-
 </div>
-
-
-
-
 @if (!string.IsNullOrWhiteSpace(Model.LoginInfoBottom))
 {
     <p>
@@ -145,6 +136,7 @@
 @section Scripts {
     @{await Html.RenderPartialAsync("_UnobtrusiveValidationScriptsPartial"); }
     <script src="~/cr/js/cloudscribe-validation-requiredwhen.min.js"></script>
+    <script src="~/cr/js/unobtrusive-validation-bs4.min.js"></script>
     <script src="~/cr/js/jquery.validate.hooks.min.js"></script>
     <script src="~/cr/js/jqueryvaildation.submitonce-unobtrusive.min.js"></script>
 }

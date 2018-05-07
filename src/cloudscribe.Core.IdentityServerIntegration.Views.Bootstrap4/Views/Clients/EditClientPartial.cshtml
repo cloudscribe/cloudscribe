@@ -4,7 +4,7 @@
     <form asp-controller="Clients" asp-action="EditClient">
         <input asp-for="SiteId" type="hidden" />
         <input name="ClientId" value="@Model.ClientId" type="hidden" />
-        <div asp-validation-summary="All" class="text-danger"></div>
+        @*<div asp-validation-summary="All" class="text-danger"></div>*@
         <div class="form-group">
             <label>@sr["Id"]</label>
             <label class="form-control">@Model.ClientId</label>
@@ -12,13 +12,13 @@
         <div class="form-group">
             <label for="ClientName">@sr["Name"]</label>
             <input class="form-control" asp-for="ClientName" />
-            <span asp-validation-for="ClientName" class="text-danger"></span>
+            <span asp-validation-for="ClientName" class="invalid-feedback"></span>
             @Html.ValidationMessage("clienterror", new { @class = "text-danger" })
         </div>
         <div class="form-group">
             <label for="ClientUri">@sr["Client Uri"]</label>
             <input class="form-control" asp-for="ClientUri" />
-            <span asp-validation-for="ClientUri" class="text-danger"></span>
+            <span asp-validation-for="ClientUri" class="invalid-feedback"></span>
         </div>
         <div class="form-group">
             <label for="AccessTokenType">@sr["Access Token Type"]</label>
@@ -44,52 +44,52 @@
         <div class="form-group">
             <label for="LogoUri">@sr["Logo Uri"]</label>
             <input class="form-control" asp-for="LogoUri" />
-            <span asp-validation-for="LogoUri" class="text-danger"></span>
+            <span asp-validation-for="LogoUri" class="invalid-feedback"></span>
         </div>
         <div class="form-group">
             <label for="FrontChannelLogoutUri">@sr["Front Channel Logout Uri"]</label>
             <input class="form-control" asp-for="FrontChannelLogoutUri" />
-            <span asp-validation-for="FrontChannelLogoutUri" class="text-danger"></span>
+            <span asp-validation-for="FrontChannelLogoutUri" class="invalid-feedback"></span>
         </div>
         <div class="form-group">
             <label for="BackChannelLogoutUri">@sr["Back Channel Logout Uri"]</label>
             <input class="form-control" asp-for="BackChannelLogoutUri" />
-            <span asp-validation-for="BackChannelLogoutUri" class="text-danger"></span>
+            <span asp-validation-for="BackChannelLogoutUri" class="invalid-feedback"></span>
         </div>
         <div class="form-group">
             <label for="AbsoluteRefreshTokenLifetime">@sr["Absolute Refresh Token Lifetime"]</label>
             <input class="form-control" asp-for="AbsoluteRefreshTokenLifetime" />
-            <span asp-validation-for="AbsoluteRefreshTokenLifetime" class="text-danger"></span>
+            <span asp-validation-for="AbsoluteRefreshTokenLifetime" class="invalid-feedback"></span>
         </div>
         <div class="form-group">
             <label for="AccessTokenLifetime">@sr["Access Token Lifetime"]</label>
             <input class="form-control" asp-for="AccessTokenLifetime" />
-            <span asp-validation-for="AccessTokenLifetime" class="text-danger"></span>
+            <span asp-validation-for="AccessTokenLifetime" class="invalid-feedback"></span>
         </div>
         <div class="form-group">
             <label for="AuthorizationCodeLifetime">@sr["Authorization Code Lifetime"]</label>
             <input class="form-control" asp-for="AuthorizationCodeLifetime" />
-            <span asp-validation-for="AuthorizationCodeLifetime" class="text-danger"></span>
+            <span asp-validation-for="AuthorizationCodeLifetime" class="invalid-feedback"></span>
         </div>
         <div class="form-group">
             <label for="IdentityTokenLifetime">@sr["Identity Token Lifetime"]</label>
             <input class="form-control" asp-for="IdentityTokenLifetime" />
-            <span asp-validation-for="IdentityTokenLifetime" class="text-danger"></span>
+            <span asp-validation-for="IdentityTokenLifetime" class="invalid-feedback"></span>
         </div>
         <div class="form-group">
             <label for="SlidingRefreshTokenLifetime">@sr["Sliding Refresh Token Lifetime"]</label>
             <input class="form-control" asp-for="SlidingRefreshTokenLifetime" />
-            <span asp-validation-for="SlidingRefreshTokenLifetime" class="text-danger"></span>
+            <span asp-validation-for="SlidingRefreshTokenLifetime" class="invalid-feedback"></span>
         </div>
         <div class="form-group">
             <label for="ClientClaimsPrefix">@sr["Client Claims Prefix"]</label>
             <input class="form-control" asp-for="ClientClaimsPrefix" />
-            <span asp-validation-for="ClientClaimsPrefix" class="text-danger"></span>
+            <span asp-validation-for="ClientClaimsPrefix" class="invalid-feedback"></span>
         </div>
         <div class="form-group">
             <label for="PairWiseSubjectSalt">@sr["Pairwise Subject Salt"]</label>
             <input class="form-control" asp-for="PairWiseSubjectSalt" />
-            <span asp-validation-for="PairWiseSubjectSalt" class="text-danger"></span>
+            <span asp-validation-for="PairWiseSubjectSalt" class="invalid-feedback"></span>
         </div>
         <div class="form-group">
             <div class="form-check">

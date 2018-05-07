@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2014-10-26
-// Last Modified:			2018-04-05
+// Last Modified:			2018-05-07
 // 
 
 using cloudscribe.Core.Identity;
@@ -15,6 +15,7 @@ using cloudscribe.Core.Web.ViewModels.Account;
 using cloudscribe.Core.Web.ViewModels.SiteUser;
 using cloudscribe.Web.Common.Extensions;
 using cloudscribe.Web.Common.Models;
+using cloudscribe.Web.Common.Recaptcha;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -40,6 +41,7 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
             IIdentityServerIntegration identityServerIntegration,
             IStringLocalizer<CloudscribeCore> localizer,
             IRecaptchaKeysProvider recaptchaKeysProvider,
+            IRecaptchaServerSideValidator recaptchaServerSideValidator,
             IHandleCustomRegistration customRegistration,
             IHandleAccountAnalytics analyticsHandler,
             ILogger<AccountController> logger
@@ -53,6 +55,7 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
             StringLocalizer = localizer;
             Log = logger;
             RecaptchaKeysProvider = recaptchaKeysProvider;
+            RecaptchaServerSideValidator = recaptchaServerSideValidator;
             TimeZoneHelper = timeZoneHelper;
             CustomRegistration = customRegistration;
             Analytics = analyticsHandler;
@@ -66,6 +69,7 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
         protected ILogger Log { get; private set; }
         protected IStringLocalizer StringLocalizer { get; private set; }
         protected IRecaptchaKeysProvider RecaptchaKeysProvider { get; private set; }
+        protected IRecaptchaServerSideValidator RecaptchaServerSideValidator { get; private set; }
         protected SiteTimeZoneService TimeZoneHelper { get; private set; }
         protected IHandleCustomRegistration CustomRegistration { get; private set; }
         protected IHandleAccountAnalytics Analytics { get; private set; }
@@ -267,13 +271,10 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
 
             if ((CurrentSite.CaptchaOnLogin) && (!string.IsNullOrEmpty(recaptchaKeys.PrivateKey)))
             {
-                var recpatchaSecretKey = recaptchaKeys.PrivateKey;
-                var captchaResponse = await this.ValidateRecaptcha(Request, recpatchaSecretKey);
-
+                var captchaResponse = await RecaptchaServerSideValidator.ValidateRecaptcha(Request, CurrentSite.RecaptchaPrivateKey);
                 if (!captchaResponse.Success)
                 {
                     Analytics.HandleLoginFail("Onsite", "reCAPTCHA Error").Forget();
-
                     ModelState.AddModelError("recaptchaerror", StringLocalizer["reCAPTCHA Error occured. Please try again"]);
                     return View(model);
                 }
@@ -545,9 +546,7 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
             {
                 if ((CurrentSite.CaptchaOnRegistration) && (!string.IsNullOrWhiteSpace(CurrentSite.RecaptchaPublicKey)))
                 {
-                    string recpatchaSecretKey = CurrentSite.RecaptchaPrivateKey;
-
-                    var captchaResponse = await this.ValidateRecaptcha(Request, recpatchaSecretKey);
+                    var captchaResponse = await RecaptchaServerSideValidator.ValidateRecaptcha(Request, CurrentSite.RecaptchaPrivateKey);
 
                     if (!captchaResponse.Success)
                     {

@@ -31,6 +31,7 @@
     <PackageReference Include="Microsoft.Extensions.FileProviders.Physical" Version="2.0.*" />
     <PackageReference Include="System.Text.Encodings.Web" Version="4.4.*" />
     <PackageReference Include="NodaTime" Version="2.2.*" />
+    <PackageReference Include="cloudscribe.HtmlAgilityPack" Version="1.0.*" />
   </ItemGroup>
 
  

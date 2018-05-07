@@ -55,7 +55,7 @@
 		['NumberedList','BulletedList','-','Outdent','Indent','Blockquote'],
 		['JustifyLeft','JustifyCenter','JustifyRight','JustifyBlock'],
 		['Link','Unlink','Anchor'],
-		['Image','Flash','Table','HorizontalRule','Smiley','SpecialChar','PageBreak'],
+		['Image','Table','HorizontalRule','Smiley','SpecialChar','PageBreak'],
 		'/',
 		['Styles','Format','Font','FontSize'],
 		['TextColor','BGColor'],
@@ -73,7 +73,7 @@
 		'/',
 		['Blockquote','Format','Styles','FontSize'],['NumberedList','BulletedList'],
 		['Link','Unlink','Anchor'],
-		['Image','Flash','oembed','Table','HorizontalRule','Smiley','SpecialChar']
+		['Image','oembed','Table','HorizontalRule','Smiley','SpecialChar']
 
     ];
 
