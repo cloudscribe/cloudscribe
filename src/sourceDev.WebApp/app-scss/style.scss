@@ -1,0 +1,73 @@
+﻿@charset "UTF-8";
+@import "bs4";
+@import "jquery-smartmenu-bootstrap";
+@import "font-awesome";
+
+html {
+    position: relative;
+    min-height: 100%;
+}
+
+body {
+    min-height: 100vh;
+    padding-top: 3.5rem;
+}
+
+#newPostLink {
+    position: absolute;
+    top: 70px;
+    right: 0px;
+}
+
+#editPostLink {
+    position: absolute;
+    top: 100px;
+    right: 0px;
+}
+
+#pageManagerLink {
+    position: absolute;
+    top: 70px;
+    right: 0px;
+}
+
+#newPageLink {
+    position: absolute;
+    top: 100px;
+    right: 0px;
+}
+
+#editPageLink {
+    position: absolute;
+    top: 130px;
+    right: 0px
+}
+
+#sidenavtoggle {
+    position: absolute;
+    top: 120px;
+    right: 5px;
+}
+
+@media screen and (max-width: 812px) {
+    #sidenavtoggle,
+    #sidenavmenu {
+        display: none;
+    }
+}
+
+.flex-fill {
+    flex: 1 1 auto !important;
+}
+
+img, video, iframe {
+    max-width: 100%;
+}
+
+td img, video, iframe {
+    max-width: none;
+}
+
+.table td, .table th {
+    vertical-align: inherit;
+}
