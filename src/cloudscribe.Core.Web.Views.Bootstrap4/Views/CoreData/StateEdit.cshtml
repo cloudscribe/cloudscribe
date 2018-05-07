@@ -26,19 +26,19 @@
     <div class="form-group">
         <label asp-for="Name">@sr["Name"]</label>
         <input asp-for="Name" class="form-control" />
-        <span asp-validation-for="Name" class="text-danger"></span>
+        <span asp-validation-for="Name" class="invalid-feedback"></span>
     </div>
     <div class="form-group">
         <label asp-for="Code">@sr["Code"]</label>
         <input asp-for="Code" class="form-control" />
-        <span asp-validation-for="Code" class="text-danger"></span>
+        <span asp-validation-for="Code" class="invalid-feedback"></span>
     </div>
     <div class="form-group">
         <a class="btn btn-default" asp-action="StateListPage"
-            asp-controller="CoreData"
-            asp-route-countryId="@Model.CountryId"
-            asp-route-crp="@Model.CountryListReturnPageNumber"
-            asp-route-pageNumber="@Model.ReturnPageNumber">@sr["Back To State List"]</a>
+           asp-controller="CoreData"
+           asp-route-countryId="@Model.CountryId"
+           asp-route-crp="@Model.CountryListReturnPageNumber"
+           asp-route-pageNumber="@Model.ReturnPageNumber">@sr["Back To State List"]</a>
         <button name="submit" type="submit" class="btn btn-default" data-enabled-text='@sr["Save"]' data-disabled-text='@sr["Working..."]'>@sr["Save"]</button>
         @if (Model.Id != Guid.Empty)
         {
@@ -85,6 +85,7 @@
 @section scripts {
     @{ await Html.RenderPartialAsync("AdminSideNavScripts"); }
     @{ await Html.RenderPartialAsync("_UnobtrusiveValidationScriptsPartial"); }
+    <script src="~/cr/js/unobtrusive-validation-bs4.min.js"></script>
     <script src="~/cr/js/jquery.validate.hooks.min.js"></script>
     <script src="~/cr/js/jqueryvaildation.submitonce-unobtrusive.min.js"></script>
 }

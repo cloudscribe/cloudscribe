@@ -32,11 +32,12 @@
 {
     await Html.RenderPartialAsync("RegisterPreamblePartial", Model);
 }
-<form id="register-form" asp-controller="Account" asp-action="Register" method="post" asp-route-returnurl='@ViewData["ReturnUrl"]' class="form-horizontal" role="form" data-submit-once="true">
+<form id="register-form" asp-controller="Account" asp-action="Register" asp-route-returnurl='@ViewData["ReturnUrl"]'
+      data-submit-once="true" >
     <input asp-for="UserId" type="hidden" />
     <h4>@sr["Create a new account."]</h4>
     <hr />
-    <div asp-validation-summary="All" class="text-danger"></div>
+    @*<div asp-validation-summary="All" class="text-danger"></div>*@
     @if (!Model.UseEmailForLogin)
     {
         <div class="form-group">
@@ -46,9 +47,9 @@
                     <span class="input-group-text"><i class="@themeSettings.Icons.Username" aria-hidden="true"></i></span>
                 </div>
                 <input asp-for="Username" class="form-control" />
+                <span asp-validation-for="Username" class="invalid-feedback"></span>
+                @Html.ValidationMessage("usernameerror", new { @class = "text-error" })
             </div>
-            <span asp-validation-for="Username" class="text-danger"></span>
-            @Html.ValidationMessage("usernameerror", new { @class = "text-danger" })
         </div>
 
     }
@@ -59,8 +60,8 @@
                 <span class="input-group-text"><i class="@themeSettings.Icons.Email" aria-hidden="true"></i></span>
             </div>
             <input asp-for="Email" class="form-control" />
+            <span asp-validation-for="Email" class="invalid-feedback"></span>
         </div>
-        <span asp-validation-for="Email" class="text-danger"></span>
     </div>
     @{await Html.RenderPartialAsync("RegisterMiddle", Model); }
     <div class="form-group">
@@ -70,8 +71,9 @@
                 <span class="input-group-text"><i class="@themeSettings.Icons.Password" aria-hidden="true"></i></span>
             </div>
             <input asp-for="Password" class="form-control" />
+            <span asp-validation-for="Password" class="invalid-feedback"></span>
         </div>
-        <span asp-validation-for="Password" class="text-danger"></span>
+
     </div>
     <div class="form-group">
         <label asp-for="ConfirmPassword">@sr["Confirm Password"]</label>
@@ -80,6 +82,7 @@
                 <span class="input-group-text"><i class="@themeSettings.Icons.Password" aria-hidden="true"></i></span>
             </div>
             <input asp-for="ConfirmPassword" class="form-control" />
+            <span asp-validation-for="ConfirmPassword" class="invalid-feedback"></span>
         </div>
     </div>
     @if (!string.IsNullOrWhiteSpace(Model.RegistrationAgreement))
@@ -93,8 +96,8 @@
     @if (!string.IsNullOrWhiteSpace(Model.RecaptchaSiteKey) && !Model.UseInvisibleCaptcha)
     {
         <div class="form-group">
-            <div class="g-recaptcha" data-sitekey="@Model.RecaptchaSiteKey"></div>
-            @Html.ValidationMessage("recaptchaerror", new { @class = "text-danger" })
+            <div class=" g-recaptcha" data-sitekey="@Model.RecaptchaSiteKey"></div>
+            @Html.ValidationMessage("recaptchaerror", new { @class = "text-error" })
         </div>
     }
 
@@ -121,4 +124,5 @@
     @{await Html.RenderPartialAsync("RegistrationScriptsPartial"); }
     <script src="~/cr/js/jquery.validate.hooks.min.js"></script>
     <script src="~/cr/js/jqueryvaildation.submitonce-unobtrusive.min.js"></script>
+    
 }

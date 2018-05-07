@@ -3,16 +3,16 @@
 @inject IStringLocalizer<CloudscribeIds4Resources> sr
 <form asp-controller="Clients" asp-action="NewClient">
     <input asp-for="SiteId" type="hidden" />
-    <div asp-validation-summary="All" class="text-danger"></div>
+    @*<div asp-validation-summary="All" class="text-danger"></div>*@
     <div class="form-group">
         <label>@sr["Id"]</label>
         <input class="form-control" asp-for="ClientId" />
-        <span asp-validation-for="ClientId" class="text-danger"></span> 
+        <span asp-validation-for="ClientId" class="invalid-feedback"></span> 
     </div>
     <div class="form-group">
         <label for="ClientName">@sr["Name"]</label>
         <input class="form-control" asp-for="ClientName" />
-        <span asp-validation-for="ClientName" class="text-danger"></span> 
+        <span asp-validation-for="ClientName" class="invalid-feedback"></span> 
     </div>
     <div class="form-group">
         <label for="AccessTokenType">@sr["Access Token Type"]</label>

@@ -9,22 +9,22 @@
 
 <h2>@ViewData["Title"]</h2>
 <form role="form" asp-controller="CoreData" asp-action="CountryEdit" data-submit-once="true">
-    <div asp-validation-summary="All" class="text-danger"></div>
+    @*<div asp-validation-summary="All" class="text-danger"></div>*@
     <input asp-for="Id" type="hidden" />
     <div class="form-group">
         <label asp-for="Name">@sr["Name"]</label>
         <input asp-for="Name" class="form-control" />
-        <span asp-validation-for="Name" class="text-danger"></span>
+        <span asp-validation-for="Name" class="invalid-feedback"></span>
     </div>
     <div class="form-group">
         <label asp-for="ISOCode2">@sr["ISOCode2"]</label>
         <input asp-for="ISOCode2" class="form-control" />
-        <span asp-validation-for="ISOCode2" class="text-danger"></span>
+        <span asp-validation-for="ISOCode2" class="invalid-feedback"></span>
     </div>
     <div class="form-group">
         <label asp-for="ISOCode3">@sr["ISOCode3"]</label>
         <input asp-for="ISOCode3" class="form-control" />
-        <span asp-validation-for="ISOCode3" class="text-danger"></span>
+        <span asp-validation-for="ISOCode3" class="invalid-feedback"></span>
     </div>
     <div class="form-group">
         <a class="btn btn-default" asp-action="CountryListPage" asp-route-pagenumber="@Model.ReturnPageNumber">@sr["Back To Country List"]</a>
@@ -72,6 +72,7 @@
 @section scripts {
     @{ await Html.RenderPartialAsync("AdminSideNavScripts"); }
     @{ await Html.RenderPartialAsync("_UnobtrusiveValidationScriptsPartial"); }
+    <script src="~/cr/js/unobtrusive-validation-bs4.min.js"></script>
     <script src="~/cr/js/jquery.validate.hooks.min.js"></script>
     <script src="~/cr/js/jqueryvaildation.submitonce-unobtrusive.min.js"></script>
 }

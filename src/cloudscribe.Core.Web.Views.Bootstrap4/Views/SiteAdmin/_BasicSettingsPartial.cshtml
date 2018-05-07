@@ -13,13 +13,13 @@
     var baseUrl = this.Context.Request.GetCurrentBaseUrl() + "/";
 }
 <form method="post" class="form-horizontal" role="form" asp-antiforgery="true" data-submit-once="true">
-    <div asp-validation-summary="All" class="text-danger"></div>
+    @*<div asp-validation-summary="All" class="text-danger"></div>*@
     <input asp-for="SiteId" type="hidden" />
     <input asp-for="ReturnPageNumber" type="hidden" />
     <div class="form-group">
         <label asp-for="SiteName">@sr["Site Name"]</label>
         <input asp-for="SiteName" class="form-control" />
-        <span asp-validation-for="SiteName" class="text-danger"></span>
+        <span asp-validation-for="SiteName" class="invalid-feedback"></span>
     </div>
     <div class="form-group">
         <label asp-for="AliasId">@sr["AliasId"]</label>
@@ -38,10 +38,10 @@
                        data-error-target-id="spnFolderNameWarn"
                        data-additional-input-ids="SiteId"
                        data-validation-url='@Url.Action("FolderNameAvailable", "SiteAdmin")' />
+                <span id="spnFolderNameWarn" class="invalid-feedback" data-error-message='@sr["Requested Site Folder Name is not available, please try another value"]'></span>
+                <span asp-validation-for="SiteFolderName" class="text-danger"></span>
+                @Html.ValidationMessage("foldererror", new { @class = "text-danger" })
             </div>
-            <span id="spnFolderNameWarn" class="text-danger" data-error-message='@sr["Requested Site Folder Name is not available, please try another value"]'></span>
-            <span asp-validation-for="SiteFolderName" class="text-danger"></span>
-            @Html.ValidationMessage("foldererror", new { @class = "text-danger" })
         </div> 
     }
     else if (useHostTenants)
@@ -49,7 +49,7 @@
         <div class="form-group">
             <label asp-for="HostName">@sr["Host Name"]</label>
             <input asp-for="HostName" class="form-control" />
-            <span asp-validation-for="HostName" class="text-danger"></span>
+            <span asp-validation-for="HostName" class="invalid-feedback"></span>
             @Html.ValidationMessage("hosterror", new { @class = "text-danger" })
             <a class="hostmap" asp-action="SiteHostMappings"
                 asp-controller="SiteAdmin"
@@ -60,14 +60,14 @@
     <div class="form-group">
         <label asp-for="TimeZoneId">@sr["Time Zone"]</label>
         <select asp-for="TimeZoneId" asp-items="Model.AllTimeZones" class="form-control"></select>
-        <span asp-validation-for="TimeZoneId" class="text-danger"></span>
+        <span asp-validation-for="TimeZoneId" class="invalid-feedback"></span>
     </div>
     @if (Model.AvailableThemes.Count > 0)
     {
         <div class="form-group">
             <label asp-for="Theme">@sr["Theme"]</label>
             <select id="Layout" asp-for="Theme" asp-items="Model.AvailableThemes" class="form-control"></select>
-            <span asp-validation-for="Theme" class="text-danger"></span>
+            <span asp-validation-for="Theme" class="invalid-feedback"></span>
         </div>
     }
     @if (Model.AvailableCultures.Count > 0)
@@ -75,7 +75,7 @@
         <div class="form-group">
             <label asp-for="ForcedCulture">@sr["Forced Culture"]</label>
             <select asp-for="ForcedCulture" asp-items="Model.AvailableCultures" class="form-control"></select>
-            <span asp-validation-for="ForcedCulture" class="text-danger"></span>
+            <span asp-validation-for="ForcedCulture" class="invalid-feedback"></span>
         </div>
     }
     @if (Model.AvailableUICultures.Count > 0)
@@ -83,18 +83,18 @@
         <div class="form-group">
             <label asp-for="ForcedUICulture">@sr["Forced UI Culture"]</label>
             <select asp-for="ForcedUICulture" asp-items="Model.AvailableUICultures" class="form-control"></select>
-            <span asp-validation-for="ForcedUICulture" class="text-danger"></span>
+            <span asp-validation-for="ForcedUICulture" class="invalid-feedback"></span>
         </div>
     }
     <div class="form-group">
         <label asp-for="GoogleAnalyticsProfileId">@sr["Google Analytics ProfileId"]</label>
         <input asp-for="GoogleAnalyticsProfileId" class="form-control" />
-        <span asp-validation-for="GoogleAnalyticsProfileId" class="text-danger"></span>
+        <span asp-validation-for="GoogleAnalyticsProfileId" class="invalid-feedback"></span>
     </div>
     <div class="form-group">
         <label asp-for="AddThisProfileId">@sr["AddThis.com ProfileId"]</label>
         <input asp-for="AddThisProfileId" class="form-control" />
-        <span asp-validation-for="AddThisProfileId" class="text-danger"></span>
+        <span asp-validation-for="AddThisProfileId" class="invalid-feedback"></span>
     </div>
     <div class="form-group">
         <div class="form-check">
@@ -111,7 +111,7 @@
                     data-ckeditor-config-dropfileuploadurl="@ckOptions.DropFileUrl"
                     data-ckeditor-config-filebrowserurl="@ckOptions.FileBrowseUrl"
                     data-ckeditor-config-imagebrowseurl="@ckOptions.ImageBrowseUrl"></textarea>
-        <span asp-validation-for="ClosedMessage" class="text-danger"></span>
+        <span asp-validation-for="ClosedMessage" class="invalid-feedback"></span>
     </div>
     <div class="form-group">
             <button name="submit" type="submit" class="btn btn-default" data-disabled-text='@sr["Working..."]' data-enabled-text='@sr["Save"]'>@sr["Save"]</button>

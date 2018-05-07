@@ -1,7 +1,4 @@
 ﻿using cloudscribe.Core.Models;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace cloudscribe.Core.Web.Components.Messaging
@@ -19,7 +16,7 @@ namespace cloudscribe.Core.Web.Components.Messaging
             string confirmationUrl,
             string confirmCode)
         {
-            return Task.FromResult(0);
+            return Task.CompletedTask;
         }
 
         public Task SendSecurityCodeEmailAsync(
@@ -28,7 +25,7 @@ namespace cloudscribe.Core.Web.Components.Messaging
             string subject,
             string securityCode)
         {
-            return Task.FromResult(0);
+            return Task.CompletedTask;
         }
 
         public Task SendPasswordResetEmailAsync(
@@ -37,14 +34,14 @@ namespace cloudscribe.Core.Web.Components.Messaging
             string subject,
             string resetUrl)
         {
-            return Task.FromResult(0);
+            return Task.CompletedTask;
         }
 
         public Task AccountPendingApprovalAdminNotification(
             ISiteContext siteSettings,
             IUserContext user)
         {
-            return Task.FromResult(0);
+            return Task.CompletedTask;
         }
 
         public Task SendAccountApprovalNotificationAsync(
@@ -53,7 +50,15 @@ namespace cloudscribe.Core.Web.Components.Messaging
             string subject,
             string loginUrl)
         {
-            return Task.FromResult(0);
+            return Task.CompletedTask;
+        }
+
+        public Task SendSiteMessage(
+            ISiteContext siteSettings,
+            SiteMessageModel model,
+            string baseUrl)
+        {
+            return Task.CompletedTask;
         }
 
     }

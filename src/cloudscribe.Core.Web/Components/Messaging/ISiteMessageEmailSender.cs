@@ -40,5 +40,10 @@ namespace cloudscribe.Core.Web.Components.Messaging
             string toAddress,
             string subject,
             string loginUrl);
+
+        Task SendSiteMessage(
+            ISiteContext siteSettings,
+            SiteMessageModel model,
+            string baseUrl);
     }
 }

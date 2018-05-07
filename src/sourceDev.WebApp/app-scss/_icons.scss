@@ -398,7 +398,7 @@ readers do not read off random characters that represent icons */
 //.#{$fa-css-prefix}-hands:before { content: fa-content($fa-var-hands); }
 //.#{$fa-css-prefix}-hands-helping:before { content: fa-content($fa-var-hands-helping); }
 //.#{$fa-css-prefix}-handshake:before { content: fa-content($fa-var-handshake); }
-//.#{$fa-css-prefix}-hashtag:before { content: fa-content($fa-var-hashtag); }
+.#{$fa-css-prefix}-hashtag:before { content: fa-content($fa-var-hashtag); }
 //.#{$fa-css-prefix}-hdd:before { content: fa-content($fa-var-hdd); }
 //.#{$fa-css-prefix}-heading:before { content: fa-content($fa-var-heading); }
 //.#{$fa-css-prefix}-headphones:before { content: fa-content($fa-var-headphones); }
@@ -856,7 +856,7 @@ readers do not read off random characters that represent icons */
 //.#{$fa-css-prefix}-window-close:before { content: fa-content($fa-var-window-close); }
 //.#{$fa-css-prefix}-window-maximize:before { content: fa-content($fa-var-window-maximize); }
 //.#{$fa-css-prefix}-window-minimize:before { content: fa-content($fa-var-window-minimize); }
-//.#{$fa-css-prefix}-window-restore:before { content: fa-content($fa-var-window-restore); }
+.#{$fa-css-prefix}-window-restore:before { content: fa-content($fa-var-window-restore); }
 .#{$fa-css-prefix}-windows:before { content: fa-content($fa-var-windows); }
 //.#{$fa-css-prefix}-wine-glass:before { content: fa-content($fa-var-wine-glass); }
 //.#{$fa-css-prefix}-won-sign:before { content: fa-content($fa-var-won-sign); }
