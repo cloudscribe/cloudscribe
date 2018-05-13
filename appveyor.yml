@@ -1,19 +1,5 @@
 image: Visual Studio 2017
-environment:
-  nodejs_version: "6.9.1"
-# Install scripts. (runs after repo cloning)
-install:
-  # Get the latest stable version of Node.js or io.js
-  - ps: Install-Product node $env:nodejs_version
-  - ps: $env:BuildNumber= $env:APPVEYOR_BUILD_NUMBER
-init:
-  - git config --global core.autocrlf true
 build_script:
-  - dotnet restore
-  - dotnet build -c Release
-test_script:
-  - dotnet test -c Release .\test\cloudscribe.Core.Web.Test\cloudscribe.Core.Web.Test.csproj
-clone_depth: 1
-test: on
+- cmd: PowerShell -Version 2.0 .\build.ps1
+test: off
 
-  
