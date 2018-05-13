@@ -1,5 +1,5 @@
-#tool nuget:?package=xunit.runner.console&version=2.2.0
-#tool nuget:?package=xunit.runner.visualstudio&version=2.2.0
+#tool nuget:?package=xunit.runner.console&version=2.3.0
+#tool nuget:?package=xunit.runner.visualstudio&version=2.3.0
 
 #load cake/paths.cake
 
