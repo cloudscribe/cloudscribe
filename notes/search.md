@@ -1,4 +1,6 @@
 
+https://channel9.msdn.com/Shows/AI-Show/Easy-Site-Search-Solutions-with-Bing-Custom-Search
+
 https://github.com/apache/lucenenet
 https://www.nuget.org/packages/Lucene.Net/
 https://lucene.apache.org/core/4_8_0/

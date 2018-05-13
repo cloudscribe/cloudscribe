@@ -84,3 +84,11 @@ table.geog = geography::STGeomFromText('POINT(-122.360 47.656)', 4326);
 
 STGeomFromText ( 'geometry_tagged_text' , SRID )  
 https://docs.microsoft.com/en-us/sql/t-sql/spatial-geometry/stgeomfromtext-geometry-data-type
+
+## Free map layers
+
+https://maps.nls.uk/projects/api/
+http://geo.nls.uk/maps/api/openlayers.html
+
+bing to certain usage
+https://openlayers.org/en/latest/examples/bing-maps.html
