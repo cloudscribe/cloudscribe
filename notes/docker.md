@@ -1,4 +1,5 @@
 
+http://www.smashcompany.com/technology/docker-is-a-dangerous-gamble-which-we-will-regret
 
 https://docs.microsoft.com/en-us/dotnet/standard/microservices-architecture/multi-container-microservice-net-applications/multi-container-applications-docker-compose
 

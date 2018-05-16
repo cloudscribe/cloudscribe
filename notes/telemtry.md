@@ -1,4 +1,6 @@
 
+https://stackoverflow.com/questions/50371656/how-can-i-use-base-controller-in-asp-net-to-record-user-actions
+
 http://peter.bourgon.org/blog/2016/02/07/logging-v-instrumentation.html
 
 free ip geolocation
