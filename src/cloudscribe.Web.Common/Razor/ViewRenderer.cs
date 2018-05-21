@@ -8,6 +8,7 @@
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Abstractions;
+using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.AspNetCore.Mvc.Razor;
 using Microsoft.AspNetCore.Mvc.Rendering;
@@ -29,18 +30,21 @@ namespace cloudscribe.Web.Common.Razor
         public ViewRenderer(
             IRazorViewEngine viewEngine,
             ITempDataProvider tempDataProvider,
+            IActionContextAccessor actionAccessor,
             IServiceProvider serviceProvider
             )
         {
             _viewEngine = viewEngine;
             _tempDataProvider = tempDataProvider;
             _serviceProvider = serviceProvider;
+            _actionAccessor = actionAccessor;
         }
 
         private IRazorViewEngine _viewEngine;
         private ITempDataProvider _tempDataProvider;
         private IServiceProvider _serviceProvider;
-        
+        private IActionContextAccessor _actionAccessor;
+
         public async Task<string> RenderViewAsString<TModel>(string viewName, TModel model)
         {
             var viewData = new ViewDataDictionary<TModel>(
@@ -49,9 +53,12 @@ namespace cloudscribe.Web.Common.Razor
             {
                 Model = model
             };
-            
-            var httpContext = new DefaultHttpContext { RequestServices = _serviceProvider };
-            var actionContext = new ActionContext(httpContext, new RouteData(), new ActionDescriptor());
+
+            //var httpContext = new DefaultHttpContext { RequestServices = _serviceProvider };
+            //var actionContext = new ActionContext(httpContext, new RouteData(), new ActionDescriptor());
+            //var tempData = new TempDataDictionary(actionContext.HttpContext, _tempDataProvider);
+            var actionContext = _actionAccessor.ActionContext;
+
             var tempData = new TempDataDictionary(actionContext.HttpContext, _tempDataProvider);
 
             using (StringWriter output = new StringWriter())
