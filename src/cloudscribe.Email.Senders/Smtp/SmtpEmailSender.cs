@@ -6,6 +6,7 @@
 // 
 
 using MailKit.Net.Smtp;
+using MailKit.Security;
 using Microsoft.Extensions.Logging;
 using MimeKit;
 using System;
@@ -289,10 +290,21 @@ namespace cloudscribe.Email.Smtp
             
             using (var client = new SmtpClient())
             {
-                await client.ConnectAsync(
-                    smtpOptions.Server,
-                    smtpOptions.Port,
-                    smtpOptions.UseSsl).ConfigureAwait(false);
+                if(smtpOptions.UseSsl)
+                {
+                    await client.ConnectAsync(
+                        smtpOptions.Server,
+                        smtpOptions.Port,
+                        smtpOptions.UseSsl).ConfigureAwait(false);
+                }
+                else
+                {
+                    await client.ConnectAsync(
+                        smtpOptions.Server,
+                        smtpOptions.Port,
+                        SecureSocketOptions.None).ConfigureAwait(false);
+                }
+                
 
                 // Note: since we don't have an OAuth2 token, disable
                 // the XOAUTH2 authentication mechanism.
