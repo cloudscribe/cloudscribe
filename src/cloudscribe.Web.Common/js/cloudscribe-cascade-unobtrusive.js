@@ -14,7 +14,7 @@ $(function () {
             $parent.change(function () {
                 //console.log("cascade parent changed to " + $parent.val());
                 $.getJSON(serviceUrl + $parent.val(), function (data) {
-                    var items = '<option>' + selectLabel + '</option>';
+                    var items = "<option value=''>" + selectLabel + "</option>";
                     $.each(data, function (i, item) {
                         items += "<option value='" + item.value + "'>" + item.text + "</option>";
                     });
