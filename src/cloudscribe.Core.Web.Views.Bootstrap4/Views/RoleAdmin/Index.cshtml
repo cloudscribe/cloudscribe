@@ -12,7 +12,7 @@
 
 <h2>@ViewData["Title"]</h2>
 <p>
-    <a class="btn btn-sm btn-default" asp-action="RoleEdit" asp-controller="RoleAdmin" asp-route-siteId="@Model.SiteId">@sr["New Role"]</a>
+    <a class="btn btn-sm btn-primary" asp-action="RoleEdit" asp-controller="RoleAdmin" asp-route-siteId="@Model.SiteId">@sr["New Role"]</a>
 </p>
 <ul class=" list-group">
     @foreach (var item in Model.SiteRoles.Data)
@@ -23,14 +23,14 @@
                 &nbsp;
             </h3>
             <div  role="group">
-                <span class="btn btn-default ">
+                <span class="btn btn-primary ">
                     <a asp-action="RoleMembers"
                        asp-controller="RoleAdmin"
                        asp-route-siteId="@item.SiteId"
                        asp-route-roleId="@item.Id">@sr["Members"]</a>
                     <span class="badge">@Html.DisplayFor(modelItem => item.MemberCount)</span>
                 </span>
-                <a class="btn btn-default" asp-action="RoleEdit" asp-controller="RoleAdmin"
+                <a class="btn btn-primary" asp-action="RoleEdit" asp-controller="RoleAdmin"
                    asp-route-siteId="@Model.SiteId"
                    asp-route-roleId="@item.Id">@sr["Edit"]</a>
                 @if (item.IsDeletable(setupOptions.RolesThatCannotBeDeleted))
@@ -52,7 +52,7 @@
                                         @string.Format(sr["Are you sure you want to delete {0}?"], item.RoleName)
                                     </div>
                                     <div class="modal-footer">
-                                        <button type="button" class="btn btn-default" data-dismiss="modal">@sr["Cancel"]</button>
+                                        <button type="button" class="btn btn-primary" data-dismiss="modal">@sr["Cancel"]</button>
                                         <input type="submit" value='@sr["Delete"]' class="btn btn-danger btn-ok" />
                                     </div>
                                 </div>

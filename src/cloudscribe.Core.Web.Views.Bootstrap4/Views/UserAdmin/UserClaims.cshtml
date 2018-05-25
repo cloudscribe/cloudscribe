@@ -7,7 +7,7 @@
         <input name="claimType" type="text" class="form-control" placeholder="Claim Type" />
         <input name="claimValue" type="text" class="form-control" placeholder="Claim Value" /> 
     </div>
-    <button type="submit" value="submit" class="btn btn-default" data-enabled-text='@sr["Add Claim"]' data-disabled-text='@sr["Working..."]'>@sr["Add Claim"]</button>
+    <button type="submit" value="submit" class="btn btn-primary" data-enabled-text='@sr["Add Claim"]' data-disabled-text='@sr["Working..."]'>@sr["Add Claim"]</button>
 </form>
 @if (Model.UserClaims.Count > 0)
 {
@@ -44,7 +44,7 @@
                                             @string.Format(sr["Are you sure you want to remove the claim {0}?"], item.Type)
                                         </div>
                                         <div class="modal-footer">
-                                            <button type="button" class="btn btn-default" data-dismiss="modal">@sr["Cancel"]</button>
+                                            <button type="button" class="btn btn-primary" data-dismiss="modal">@sr["Cancel"]</button>
                                             <input type="submit" value='@sr["Remove"]' class="btn btn-danger btn-ok" />
                                         </div>
                                     </div>
