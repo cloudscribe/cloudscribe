@@ -202,6 +202,7 @@ namespace cloudscribe.Email.Smtp
                 }
                 else
                 {
+                    if(ccAliasCsv == null) { ccAliasCsv = string.Empty; }
                     m.Cc.Add(new MailboxAddress(ccAliasCsv, ccEmailCsv));
                 }
             }
@@ -239,6 +240,7 @@ namespace cloudscribe.Email.Smtp
                 }
                 else
                 {
+                    if(bccAliasCsv == null) { bccAliasCsv = string.Empty; }
                     m.Bcc.Add(new MailboxAddress(bccAliasCsv, bccEmailCsv));
                 }
             }
