@@ -29,19 +29,19 @@
         </div>
     }
 
-    <a asp-action="Disable2faWarning" class="btn btn-default">@sr["Disable 2FA"]</a>
-    <a asp-action="GenerateRecoveryCodes" class="btn btn-default">@sr["Reset recovery codes"]</a>
+    <a asp-action="Disable2faWarning" class="btn btn-primary">@sr["Disable 2FA"]</a>
+    <a asp-action="GenerateRecoveryCodes" class="btn btn-primary">@sr["Reset recovery codes"]</a>
 }
 
 <h5>@sr["Authenticator app"]</h5>
 @if (!Model.HasAuthenticator)
 {
-    <a asp-action="EnableAuthenticator" class="btn btn-default">@sr["Add authenticator app"]</a>
+    <a asp-action="EnableAuthenticator" class="btn btn-primary">@sr["Add authenticator app"]</a>
 }
 else
 {
-    <a asp-action="EnableAuthenticator" class="btn btn-default">@sr["Configure authenticator app"]</a>
-    <a asp-action="ResetAuthenticatorWarning" class="btn btn-default">@sr["Reset authenticator key"]</a>
+    <a asp-action="EnableAuthenticator" class="btn btn-primary">@sr["Configure authenticator app"]</a>
+    <a asp-action="ResetAuthenticatorWarning" class="btn btn-primary">@sr["Reset authenticator key"]</a>
 }
 
 @section Scripts {

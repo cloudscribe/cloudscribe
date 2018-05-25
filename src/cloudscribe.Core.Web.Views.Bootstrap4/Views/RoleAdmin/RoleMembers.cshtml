@@ -15,14 +15,14 @@
     <div class="input-group">
         <input name="searchInput" type="search" value="@Model.SearchQuery" class="form-control" />
         <span class="input-group-btn">
-            <button type="submit" value="Search" class="btn btn-default">@sr["Search"]</button>
+            <button type="submit" value="Search" class="btn btn-primary">@sr["Search"]</button>
         </span>
     </div>
 </form>
 <table class="table table-striped">
     <tr>
         <th>
-            <a id="parentModalLink" class="btn btn-xs btn-default" asp-action="RoleNonMembers" asp-controller="RoleAdmin"
+            <a id="parentModalLink" class="btn btn-xs btn-primary" asp-action="RoleNonMembers" asp-controller="RoleAdmin"
                asp-route-siteId="@Model.Role.SiteId"
                asp-route-roleId="@Model.Role.Id"
                bs-modal-link="true" bs-modal-id='@Model.Role.Id.ToString()'>@sr["Add User"]</a>
@@ -68,7 +68,7 @@
                                     @string.Format(sr["Are you sure you want to remove {0} from the role {1}?"], item.DisplayName, Model.Role.RoleName)
                                 </div>
                                 <div class="modal-footer">
-                                    <button type="button" class="btn btn-default" data-dismiss="modal">@sr["Cancel"]</button>
+                                    <button type="button" class="btn btn-primary" data-dismiss="modal">@sr["Cancel"]</button>
                                     <input type="submit" value='@sr["Remove"]' class="btn btn-danger btn-ok" />
                                 </div>
                             </div>
@@ -130,7 +130,7 @@
                 <span id="spnMessage"></span>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-default" data-dismiss="modal">@sr["Cancel"]</button>
+                <button type="button" class="btn btn-primary" data-dismiss="modal">@sr["Cancel"]</button>
                 <input id="btnAddUser" type="button" value='@sr["Add"]' class="btn btn-success btn-ok" />
             </div>
         </div>

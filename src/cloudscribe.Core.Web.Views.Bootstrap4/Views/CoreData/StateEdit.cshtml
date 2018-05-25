@@ -34,12 +34,12 @@
         <span asp-validation-for="Code" class="invalid-feedback"></span>
     </div>
     <div class="form-group">
-        <a class="btn btn-default" asp-action="StateListPage"
+        <a class="btn btn-primary" asp-action="StateListPage"
            asp-controller="CoreData"
            asp-route-countryId="@Model.CountryId"
            asp-route-crp="@Model.CountryListReturnPageNumber"
            asp-route-pageNumber="@Model.ReturnPageNumber">@sr["Back To State List"]</a>
-        <button name="submit" type="submit" class="btn btn-default" data-enabled-text='@sr["Save"]' data-disabled-text='@sr["Working..."]'>@sr["Save"]</button>
+        <button name="submit" type="submit" class="btn btn-primary" data-enabled-text='@sr["Save"]' data-disabled-text='@sr["Working..."]'>@sr["Save"]</button>
         @if (Model.Id != Guid.Empty)
         {
             <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#confirmDeleteModal">
@@ -68,7 +68,7 @@
                         @string.Format(sr["Are you sure you want to delete {0}?"], Model.Name)
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-default" data-dismiss="modal">@sr["Cancel"]</button>
+                        <button type="button" class="btn btn-primary" data-dismiss="modal">@sr["Cancel"]</button>
                         <input type="submit" value='@sr["Delete"]' class="btn btn-danger btn-ok" />
                     </div>
                 </div>

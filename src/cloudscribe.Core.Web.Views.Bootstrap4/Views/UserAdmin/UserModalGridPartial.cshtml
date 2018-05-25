@@ -14,7 +14,7 @@
     <div class="input-group">
         <input asp-for="SearchQuery" name="query" class="form-control" />
         <span class="input-group-btn">
-            <button type="submit" value='@sr["Search"]' class="btn btn-default">@sr["Search"]</button>
+            <button type="submit" value='@sr["Search"]' class="btn btn-primary">@sr["Search"]</button>
         </span>
     </div>
 </form>
@@ -41,7 +41,7 @@
     {
         <tr>
             <td>
-                <a class="btn btn-xs btn-default"  href="#" onclick="userSelected(this)"
+                <a class="btn btn-xs btn-primary"  href="#" onclick="userSelected(this)"
                    data-user-email="@item.Email"
                    data-user-display-name="@item.DisplayName"
                    data-user-first-name="@item.FirstName"

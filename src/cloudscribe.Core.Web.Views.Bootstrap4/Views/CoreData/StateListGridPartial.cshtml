@@ -3,7 +3,7 @@
 <table class="table table-striped">
     <tr>
         <th>
-            <a class="btn btn-xs btn-default" asp-action="StateEdit" asp-controller="CoreData"
+            <a class="btn btn-xs btn-primary" asp-action="StateEdit" asp-controller="CoreData"
                asp-route-countryId="@Model.Country.Id"
                asp-route-partial="true"
                asp-route-returnPageNumber="@Model.Paging.CurrentPage"
@@ -21,7 +21,7 @@
                             <td>
                                 <form asp-controller="CoreData" asp-action="StateDelete">
 
-                                    <a class="btn btn-xs btn-default" asp-action="StateEdit" asp-controller="CoreData"
+                                    <a class="btn btn-xs btn-primary" asp-action="StateEdit" asp-controller="CoreData"
                                        asp-route-countryId="@Model.Country.Id"
                                        asp-route-stateId="@item.Id"
                                        asp-route-partial="true"
@@ -34,7 +34,7 @@
 
                                     <input type="submit" value="CommonResources.Delete"
                                            onclick="javascript: return confirm('@Html.FormatValue(item.Name, sr["Are you sure you want to delete {0}?"])');"
-                                           class="btn btn-xs btn-default" />
+                                           class="btn btn-xs btn-primary" />
                                 </form>
                             </td>
                             <td>

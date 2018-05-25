@@ -8,7 +8,7 @@
 <table class="table table-striped table-hover">
     <tr>
         <th>
-            <a class="btn btn-xs btn-default" asp-action="NewUser" asp-controller="UserAdmin" asp-route-siteId="@Model.SiteId">@sr["New User"]</a>
+            <a class="btn btn-xs btn-primary" asp-action="NewUser" asp-controller="UserAdmin" asp-route-siteId="@Model.SiteId">@sr["New User"]</a>
         </th>
         <th>
             <a asp-action="@Model.ActionName" asp-controller="UserAdmin"
@@ -43,7 +43,7 @@
     {
         <tr>
             <td>
-                <a class="btn btn-xs btn-default" asp-action="UserEdit"
+                <a class="btn btn-xs btn-primary" asp-action="UserEdit"
                    asp-controller="UserAdmin"
                    asp-route-siteId="@Model.SiteId"
                    asp-route-userId="@item.Id">@sr["Manage"]</a>

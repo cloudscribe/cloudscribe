@@ -47,7 +47,7 @@ public string GetDisplayName(string displayName, ISiteContext tenant)
             <p>
                 @foreach (Microsoft.AspNetCore.Authentication.AuthenticationScheme p in Model)
                 {
-                    <button type="submit" class="btn btn-default" id="@p.Name" name="provider" value="@p.Name"
+                    <button type="submit" class="btn btn-primary" id="@p.Name" name="provider" value="@p.Name"
                             title="@string.Format(socFormat,p.DisplayName)">
                         @Html.Raw(GetIconForLogin(p.DisplayName, themeSettings))
                         @GetDisplayName(p.DisplayName, Tenant)

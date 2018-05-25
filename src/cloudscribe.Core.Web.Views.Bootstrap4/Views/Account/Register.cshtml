@@ -48,7 +48,7 @@
                 </div>
                 <input asp-for="Username" class="form-control" />
                 <span asp-validation-for="Username" class="invalid-feedback"></span>
-                @Html.ValidationMessage("usernameerror", new { @class = "text-error" })
+                @Html.ValidationMessage("usernameerror", new { @class = "text-danger" })
             </div>
         </div>
 
@@ -97,18 +97,18 @@
     {
         <div class="form-group">
             <div class=" g-recaptcha" data-sitekey="@Model.RecaptchaSiteKey"></div>
-            @Html.ValidationMessage("recaptchaerror", new { @class = "text-error" })
+            @Html.ValidationMessage("recaptchaerror", new { @class = "text-danger" })
         </div>
     }
 
     <div class="form-group">
         @if (!string.IsNullOrWhiteSpace(Model.RecaptchaSiteKey) && Model.UseInvisibleCaptcha)
         {
-            <button class="btn btn-default g-recaptcha" data-sitekey="@Model.RecaptchaSiteKey" data-callback='onCaptchaSubmit' data-enabled-text='@sr["Register"]' data-disabled-text='@sr["Working..."]'>@sr["Register"]</button>
+            <button class="btn btn-primary g-recaptcha" data-sitekey="@Model.RecaptchaSiteKey" data-callback='onCaptchaSubmit' data-enabled-text='@sr["Register"]' data-disabled-text='@sr["Working..."]'>@sr["Register"]</button>
         }
         else
         {
-            <button name="submit" type="submit" class="btn btn-default" data-enabled-text='@sr["Register"]' data-disabled-text='@sr["Working..."]'>@sr["Register"]</button>
+            <button name="submit" type="submit" class="btn btn-primary" data-enabled-text='@sr["Register"]' data-disabled-text='@sr["Working..."]'>@sr["Register"]</button>
         }
         <input type="hidden" asp-for="UseEmailForLogin" />
     </div>

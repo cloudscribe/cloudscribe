@@ -18,7 +18,7 @@
     <thead>
         <tr>
             <th>
-                <a class="btn btn-xs btn-default" asp-action="NewSite"
+                <a class="btn btn-xs btn-primary" asp-action="NewSite"
                    asp-controller="SiteAdmin"
                    asp-route-slp="@Model.Sites.PageNumber">@sr["New Site"]</a>
             </th>
@@ -35,14 +35,14 @@
         {
             <tr class="@(item.IsServerAdminSite ? "adminsite danger" : "childsite")">
                 <td>
-                    <a class="btn btn-xs btn-default" asp-action="SiteInfo"
+                    <a class="btn btn-xs btn-primary" asp-action="SiteInfo"
                        asp-controller="SiteAdmin"
                        asp-route-siteid="@item.Id"
                        asp-route-slp="@Model.Sites.PageNumber">@sr["Settings"]</a>
 
                     @if (!(options.Mode == MultiTenantMode.FolderName))
                     {
-                        <a class="btn btn-xs btn-default hostmap" asp-action="SiteHostMappings"
+                        <a class="btn btn-xs btn-primary hostmap" asp-action="SiteHostMappings"
                            asp-controller="SiteAdmin"
                            asp-route-siteid="@item.Id"
                            asp-route-slp="@Model.Sites.PageNumber">@sr["Domain Mappings"]</a>
