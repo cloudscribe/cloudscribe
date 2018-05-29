@@ -17,6 +17,12 @@ namespace cloudscribe.Core.Models.Identity
         {
             if(user == null) { throw new ArgumentNullException("user must be provided"); }
 
+            if(!string.IsNullOrWhiteSpace(user.DisplayName))
+            {
+                //if already populated just return it
+                return user.DisplayName;
+            }
+
             if(string.IsNullOrWhiteSpace(user.Email))
             {
                 throw new ArgumentException("you must set the email on the user before calling this method");
