@@ -1,4 +1,13 @@
 
+new data seeding, lazy loading, group by stuff in 2.1
+Query types
+An EF Core model can now include query types. Unlike entity types, query types do not have keys defined on them and cannot be inserted, deleted or updated (i.e. they are read-only), but they can be returned directly by queries. Some of the usage scenarios for query types are:
+Mapping to views without primary keys
+Mapping to tables without primary keys
+Mapping to queries defined in the model
+Serving as the return type for FromSql() queries
+
+https://blogs.msdn.microsoft.com/dotnet/2018/05/30/announcing-entity-framework-core-2-1/
 
 http://www.learnentityframeworkcore.com/walkthroughs/existing-database
 
