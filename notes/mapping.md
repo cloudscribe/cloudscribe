@@ -92,3 +92,14 @@ http://geo.nls.uk/maps/api/openlayers.html
 
 bing to certain usage
 https://openlayers.org/en/latest/examples/bing-maps.html
+
+
+## Online Converters
+
+http://spatialreference.org/
+
+https://epsg.io/transform
+
+https://mygeodata.cloud/cs2cs/
+
+
