@@ -2,114 +2,61 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2017-07-27
-// Last Modified:			2018-03-07
+// Last Modified:			2018-06-06
 // 
 
 using cloudscribe.Core.Models;
-using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Twitter;
-using Microsoft.AspNetCore.DataProtection;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
-using Microsoft.Extensions.Primitives;
-using System;
 using System.Collections.Generic;
-using System.Net.Http;
 
 namespace cloudscribe.Core.Identity
 {
-   
-    public class SiteTwitterOptions : IOptionsMonitor<TwitterOptions>
+
+    public class SiteTwitterOptions : OptionsMonitor<TwitterOptions>
     {
         public SiteTwitterOptions(
             IOptionsFactory<TwitterOptions> factory,
             IEnumerable<IOptionsChangeTokenSource<TwitterOptions>> sources,
             IOptionsMonitorCache<TwitterOptions> cache,
             IOptions<MultiTenantOptions> multiTenantOptionsAccessor,
-            IPostConfigureOptions<TwitterOptions> optionsInitializer,
-            IDataProtectionProvider dataProtection,
             IHttpContextAccessor httpContextAccessor,
             ILogger<SiteTwitterOptions> logger
-            )
+            ) : base(factory, sources, cache)
         {
             _multiTenantOptions = multiTenantOptionsAccessor.Value;
             _httpContextAccessor = httpContextAccessor;
-            _log = logger;
-            _optionsInitializer = optionsInitializer;
-            _dp = dataProtection;
-
             _factory = factory;
-            _sources = sources;
             _cache = cache;
-
-            foreach (var source in _sources)
-            {
-                ChangeToken.OnChange<string>(
-                    () => source.GetChangeToken(),
-                    (name) => InvokeChanged(name),
-                    source.Name);
-            }
+            _log = logger;
+          
         }
 
         private readonly IOptionsMonitorCache<TwitterOptions> _cache;
         private readonly IOptionsFactory<TwitterOptions> _factory;
-        private readonly IEnumerable<IOptionsChangeTokenSource<TwitterOptions>> _sources;
-        internal event Action<TwitterOptions, string> _onChange;
+        private readonly MultiTenantOptions _multiTenantOptions;
+        private readonly IHttpContextAccessor _httpContextAccessor;
+        private readonly ILogger _log;
 
-        private MultiTenantOptions _multiTenantOptions;
-        private IHttpContextAccessor _httpContextAccessor;
-        private ILogger _log;
-        private IPostConfigureOptions<TwitterOptions> _optionsInitializer;
-        private readonly IDataProtectionProvider _dp;
 
-        private void InvokeChanged(string name)
-        {
-            name = name ?? Options.DefaultName;
-            _cache.TryRemove(name);
-            var options = Get(name);
-            if (_onChange != null)
-            {
-                _onChange.Invoke(options, name);
-            }
-        }
-
-        private TwitterOptions ResolveOptions(string scheme)
+        public override TwitterOptions Get(string name)
         {
             var tenant = _httpContextAccessor.HttpContext.GetTenant<SiteContext>();
-            var options = new TwitterOptions
-            {
-                ConsumerKey = "placeholder",
-                ConsumerSecret = "placeholder"
-            };
+            var resolvedName = ResolveName(tenant, name);
+            return _cache.GetOrAdd(resolvedName, () => CreateOptions(resolvedName, tenant));
+            
+        }
 
-            _optionsInitializer.PostConfigure(scheme, options);
+        private TwitterOptions CreateOptions(string name, SiteContext tenant)
+        {
+            var options = _factory.Create(name);
 
-            options.DataProtectionProvider = options.DataProtectionProvider ?? _dp;
-
-            if (options.Backchannel == null)
-            {
-                options.Backchannel = new HttpClient(options.BackchannelHttpHandler ?? new HttpClientHandler())
-                {
-                    Timeout = options.BackchannelTimeout,
-                    MaxResponseContentBufferSize = 1024 * 1024 * 10 // 10 MB
-                };
-                options.Backchannel.DefaultRequestHeaders.Accept.ParseAdd("*/*");
-                options.Backchannel.DefaultRequestHeaders.UserAgent.ParseAdd("Microsoft ASP.NET Core Twitter handler");
-                options.Backchannel.DefaultRequestHeaders.ExpectContinue = false;
-            }
-
-            if (options.StateDataFormat == null)
-            {
-                var dataProtector = options.DataProtectionProvider.CreateProtector(
-                    typeof(RemoteAuthenticationHandler<TwitterOptions>).FullName, scheme, "v1");
-
-                options.StateDataFormat = new SecureDataFormat<RequestToken>(
-                    new RequestTokenSerializer(),
-                    dataProtector);
-            }
-
+            options.ConsumerKey = "placeholder";
+            options.ConsumerSecret = "placeholder";
+           
             ConfigureTenantOptions(tenant, options);
 
             return options;
@@ -140,46 +87,23 @@ namespace cloudscribe.Core.Identity
             }
         }
 
-        public TwitterOptions CurrentValue
+        private string ResolveName(SiteContext tenant, string name)
         {
-            get
+            if (tenant == null)
             {
-                return ResolveOptions(TwitterDefaults.AuthenticationScheme);
-            }
-        }
-
-        public TwitterOptions Get(string name)
-        {
-            return ResolveOptions(name);
-        }
-
-        public IDisposable OnChange(Action<TwitterOptions, string> listener)
-        {
-            _log.LogDebug("onchange invoked");
-
-            var disposable = new ChangeTrackerDisposable(this, listener);
-            _onChange += disposable.OnChange;
-            return disposable;
-        }
-
-
-        internal class ChangeTrackerDisposable : IDisposable
-        {
-            private readonly Action<TwitterOptions, string> _listener;
-            private readonly SiteTwitterOptions _monitor;
-
-            public ChangeTrackerDisposable(SiteTwitterOptions monitor, Action<TwitterOptions, string> listener)
-            {
-                _listener = listener;
-                _monitor = monitor;
+                _log.LogError("tenant was null");
+                return name;
             }
 
-            public void OnChange(TwitterOptions options, string name) => _listener.Invoke(options, name);
+            if (_multiTenantOptions.UseRelatedSitesMode)
+            {
+                return name;
+            }
 
-            public void Dispose() => _monitor._onChange -= OnChange;
+            return $"{name}-{tenant.SiteFolderName}";
         }
 
+        
     }
 
-   
 }

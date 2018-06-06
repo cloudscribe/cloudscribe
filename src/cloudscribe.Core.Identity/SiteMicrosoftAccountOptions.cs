@@ -2,108 +2,56 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2017-07-27
-// Last Modified:			2017-08-30
+// Last Modified:			2018-06-06
 // 
 
 using cloudscribe.Core.Models;
-using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.MicrosoftAccount;
-using Microsoft.AspNetCore.Authentication.OAuth;
-using Microsoft.AspNetCore.DataProtection;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
-using Microsoft.Extensions.Primitives;
-using System;
 using System.Collections.Generic;
-using System.Net.Http;
 
 namespace cloudscribe.Core.Identity
 {
-    public class SiteMicrosoftAccountOptions : IOptionsMonitor<MicrosoftAccountOptions>
+    public class SiteMicrosoftAccountOptions : OptionsMonitor<MicrosoftAccountOptions>
     {
         public SiteMicrosoftAccountOptions(
             IOptionsFactory<MicrosoftAccountOptions> factory,
             IEnumerable<IOptionsChangeTokenSource<MicrosoftAccountOptions>> sources,
             IOptionsMonitorCache<MicrosoftAccountOptions> cache,
             IOptions<MultiTenantOptions> multiTenantOptionsAccessor,
-            IPostConfigureOptions<MicrosoftAccountOptions> optionsInitializer,
-            IDataProtectionProvider dataProtection,
             IHttpContextAccessor httpContextAccessor,
             ILogger<SiteMicrosoftAccountOptions> logger
-            )
+            ) : base(factory, sources, cache)
         {
             _multiTenantOptions = multiTenantOptionsAccessor.Value;
             _httpContextAccessor = httpContextAccessor;
-            _log = logger;
-            _optionsInitializer = optionsInitializer;
-            _dp = dataProtection;
-
             _factory = factory;
-            _sources = sources;
             _cache = cache;
-
-            foreach (var source in _sources)
-            {
-                ChangeToken.OnChange<string>(
-                    () => source.GetChangeToken(),
-                    (name) => InvokeChanged(name),
-                    source.Name);
-            }
+            _log = logger;
+           
         }
 
         private readonly IOptionsMonitorCache<MicrosoftAccountOptions> _cache;
         private readonly IOptionsFactory<MicrosoftAccountOptions> _factory;
-        private readonly IEnumerable<IOptionsChangeTokenSource<MicrosoftAccountOptions>> _sources;
-        internal event Action<MicrosoftAccountOptions, string> _onChange;
+        private readonly MultiTenantOptions _multiTenantOptions;
+        private readonly IHttpContextAccessor _httpContextAccessor;
+        private readonly ILogger _log;
 
-        private MultiTenantOptions _multiTenantOptions;
-        private IHttpContextAccessor _httpContextAccessor;
-        private ILogger _log;
-        private IPostConfigureOptions<MicrosoftAccountOptions> _optionsInitializer;
-        private readonly IDataProtectionProvider _dp;
-
-        private void InvokeChanged(string name)
-        {
-            name = name ?? Options.DefaultName;
-            _cache.TryRemove(name);
-            var options = Get(name);
-            if (_onChange != null)
-            {
-                _onChange.Invoke(options, name);
-            }
-        }
-
-        private MicrosoftAccountOptions ResolveOptions(string scheme)
+        public override MicrosoftAccountOptions Get(string name)
         {
             var tenant = _httpContextAccessor.HttpContext.GetTenant<SiteContext>();
-            var options = new MicrosoftAccountOptions
-            {
-                ClientId = "placeholder",
-                ClientSecret = "placeholder"
-            };
-
-            _optionsInitializer.PostConfigure(scheme, options);
-
-            options.DataProtectionProvider = options.DataProtectionProvider ?? _dp;
-
-            if (options.Backchannel == null)
-            {
-                options.Backchannel = new HttpClient(options.BackchannelHttpHandler ?? new HttpClientHandler());
-                options.Backchannel.DefaultRequestHeaders.UserAgent.ParseAdd("Microsoft ASP.NET Core OAuth handler");
-                options.Backchannel.Timeout = options.BackchannelTimeout;
-                options.Backchannel.MaxResponseContentBufferSize = 1024 * 1024 * 10; // 10 MB
-            }
-
-            if (options.StateDataFormat == null)
-            {
-                var dataProtector = options.DataProtectionProvider.CreateProtector(
-                    typeof(OAuthHandler<MicrosoftAccountOptions>).FullName, scheme, "v1");
-
-                options.StateDataFormat = new PropertiesDataFormat(dataProtector);
-            }
-
+            var resolvedName = ResolveName(tenant, name);
+            return _cache.GetOrAdd(resolvedName, () => CreateOptions(resolvedName, tenant));
+        }
+        
+        private MicrosoftAccountOptions CreateOptions(string name, SiteContext tenant)
+        {
+            var options = _factory.Create(name);
+            options.ClientId = "placeholder";
+            options.ClientSecret = "placeholder";
             ConfigureTenantOptions(tenant, options);
 
             return options;
@@ -134,45 +82,22 @@ namespace cloudscribe.Core.Identity
             }
         }
 
-        public MicrosoftAccountOptions CurrentValue
+        private string ResolveName(SiteContext tenant, string name)
         {
-            get
+            if (tenant == null)
             {
-                return ResolveOptions(MicrosoftAccountDefaults.AuthenticationScheme);
-            }
-        }
-
-        public MicrosoftAccountOptions Get(string name)
-        {
-            return ResolveOptions(name);
-        }
-
-        public IDisposable OnChange(Action<MicrosoftAccountOptions, string> listener)
-        {
-            _log.LogDebug("onchange invoked");
-
-            var disposable = new ChangeTrackerDisposable(this, listener);
-            _onChange += disposable.OnChange;
-            return disposable;
-        }
-
-
-        internal class ChangeTrackerDisposable : IDisposable
-        {
-            private readonly Action<MicrosoftAccountOptions, string> _listener;
-            private readonly SiteMicrosoftAccountOptions _monitor;
-
-            public ChangeTrackerDisposable(SiteMicrosoftAccountOptions monitor, Action<MicrosoftAccountOptions, string> listener)
-            {
-                _listener = listener;
-                _monitor = monitor;
+                _log.LogError("tenant was null");
+                return name;
             }
 
-            public void OnChange(MicrosoftAccountOptions options, string name) => _listener.Invoke(options, name);
+            if (_multiTenantOptions.UseRelatedSitesMode)
+            {
+                return name;
+            }
 
-            public void Dispose() => _monitor._onChange -= OnChange;
+            return $"{name}-{tenant.SiteFolderName}";
         }
+        
 
     }
-
 }

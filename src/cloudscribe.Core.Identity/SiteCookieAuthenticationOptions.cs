@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2017-07-26
-// Last Modified:			2018-01-23
+// Last Modified:			2018-06-06
 // 
 
 using cloudscribe.Core.Models;
@@ -11,8 +11,6 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
-using Microsoft.Extensions.Primitives;
-using System;
 using System.Collections.Generic;
 using System.Net;
 
@@ -20,71 +18,62 @@ namespace cloudscribe.Core.Identity
 {
     //https://github.com/aspnet/Options/blob/dev/src/Microsoft.Extensions.Options/OptionsMonitor.cs
 
-    public class SiteCookieAuthenticationOptions : IOptionsMonitor<CookieAuthenticationOptions>
+    public class SiteCookieAuthenticationOptions : OptionsMonitor<CookieAuthenticationOptions>
     {
         public SiteCookieAuthenticationOptions(
-            IOptionsFactory<CookieAuthenticationOptions> factory, 
-            IEnumerable<IOptionsChangeTokenSource<CookieAuthenticationOptions>> sources, 
+            IOptionsFactory<CookieAuthenticationOptions> factory,
+            IEnumerable<IOptionsChangeTokenSource<CookieAuthenticationOptions>> sources,
             IOptionsMonitorCache<CookieAuthenticationOptions> cache,
             IOptions<MultiTenantOptions> multiTenantOptionsAccessor,
-            IPostConfigureOptions<CookieAuthenticationOptions> cookieOptionsInitializer,
             IHttpContextAccessor httpContextAccessor,
             ICookieAuthRedirector cookieAuthRedirector,
             ILogger<SiteCookieAuthenticationOptions> logger
-            )
+            ) : base(factory, sources, cache)
         {
             _multiTenantOptions = multiTenantOptionsAccessor.Value;
-            _cookieOptionsInitializer = cookieOptionsInitializer;
             _httpContextAccessor = httpContextAccessor;
             _cookieAuthRedirector = cookieAuthRedirector;
+            _factory = factory;
+            _cache = cache;
             _log = logger;
 
-            _factory = factory;
-            _sources = sources;
-            _cache = cache;
-
-            foreach (var source in _sources)
-            {
-                ChangeToken.OnChange<string>(
-                    () => source.GetChangeToken(),
-                    (name) => InvokeChanged(name),
-                    source.Name);
-            }
         }
 
-        private MultiTenantOptions _multiTenantOptions;
-        private IPostConfigureOptions<CookieAuthenticationOptions> _cookieOptionsInitializer;
-        private IHttpContextAccessor _httpContextAccessor;
-        private ICookieAuthRedirector _cookieAuthRedirector;
-        private ILogger _log;
-
+        private readonly MultiTenantOptions _multiTenantOptions;
+        private readonly IHttpContextAccessor _httpContextAccessor;
+        private readonly ICookieAuthRedirector _cookieAuthRedirector;
         private readonly IOptionsMonitorCache<CookieAuthenticationOptions> _cache;
         private readonly IOptionsFactory<CookieAuthenticationOptions> _factory;
-        private readonly IEnumerable<IOptionsChangeTokenSource<CookieAuthenticationOptions>> _sources;
-        internal event Action<CookieAuthenticationOptions, string> _onChange;
-
-
-        private CookieAuthenticationOptions ResolveOptions(string scheme)
+        private readonly ILogger _log;
+        
+        public override CookieAuthenticationOptions Get(string name)
         {
+            name = name ?? IdentityConstants.ApplicationScheme;
+            var isAppCookie = IsApplicationCookieName(name);
             var tenant = _httpContextAccessor.HttpContext.GetTenant<SiteContext>();
+            var resolvedName = ResolveName(tenant, name);
+            return _cache.GetOrAdd(resolvedName, () => CreateOptions(resolvedName, tenant, isAppCookie));
+        }
 
-            var options = new CookieAuthenticationOptions();
-            _cookieOptionsInitializer.PostConfigure(scheme, options);
 
-            if (scheme == IdentityConstants.ApplicationScheme)
+        private CookieAuthenticationOptions CreateOptions(string name, SiteContext tenant, bool isAppCookie)
+        {
+            var options = _factory.Create(name);
+            
+            if (isAppCookie)
             {
-                ConfigureApplicationCookie(tenant, options, scheme);
+                ConfigureApplicationCookie(tenant, options, name);
             }
             else
             {
-                ConfigureOtherCookies(tenant, options, scheme);
+                ConfigureOtherCookies(tenant, options, name);
             }
 
             return options;
-
         }
 
-        private void ConfigureApplicationCookie(SiteContext tenant, CookieAuthenticationOptions options, string scheme)
+
+        private void ConfigureApplicationCookie(SiteContext tenant, CookieAuthenticationOptions options, string name)
         {
             if (tenant == null)
             {
@@ -92,17 +81,17 @@ namespace cloudscribe.Core.Identity
                 return;
             }
 
+            options.Cookie.Name = name;
+
             if (_multiTenantOptions.UseRelatedSitesMode)
             {
-                options.Cookie.Name = scheme;
                 options.Cookie.Path = "/";
             }
             else
             {
-                options.Cookie.Name = $"{scheme}-{tenant.SiteFolderName}";
                 options.Cookie.Path = "/" + tenant.SiteFolderName;
                 options.Events.OnValidatePrincipal = SiteAuthCookieValidator.ValidatePrincipalAsync;
-                
+
             }
 
             var tenantPathBase = string.IsNullOrEmpty(tenant.SiteFolderName)
@@ -112,18 +101,17 @@ namespace cloudscribe.Core.Identity
             options.LoginPath = tenantPathBase + "/account/login";
             options.LogoutPath = tenantPathBase + "/account/logoff";
             options.AccessDeniedPath = tenantPathBase + "/account/accessdenied";
-            
+
             //https://github.com/IdentityServer/IdentityServer4.AspNetIdentity/blob/dev/src/IdentityServer4.AspNetIdentity/IdentityServerBuilderExtensions.cs
             // we need to disable to allow iframe for authorize requests
             options.Cookie.SameSite = SameSiteMode.None;
 
             options.Events.OnRedirectToAccessDenied = _cookieAuthRedirector.ReplaceRedirector(HttpStatusCode.Forbidden, options.Events.OnRedirectToAccessDenied);
             options.Events.OnRedirectToLogin = _cookieAuthRedirector.ReplaceRedirector(HttpStatusCode.Unauthorized, options.Events.OnRedirectToLogin);
-       
 
         }
 
-        private void ConfigureOtherCookies(SiteContext tenant, CookieAuthenticationOptions options, string scheme)
+        private void ConfigureOtherCookies(SiteContext tenant, CookieAuthenticationOptions options, string name)
         {
             if (tenant == null)
             {
@@ -131,68 +119,43 @@ namespace cloudscribe.Core.Identity
                 return;
             }
 
+            options.Cookie.Name = name;
+
             if (_multiTenantOptions.UseRelatedSitesMode)
             {
-                options.Cookie.Name = scheme;
                 options.Cookie.Path = "/";
             }
             else
             {
-                options.Cookie.Name = $"{scheme}-{tenant.SiteFolderName}";
                 options.Cookie.Path = "/" + tenant.SiteFolderName;
             }
 
         }
 
-        public CookieAuthenticationOptions CurrentValue
+        private bool IsApplicationCookieName(string name)
         {
-            get
+            if (name == IdentityConstants.ApplicationScheme)
             {
-                return ResolveOptions(IdentityConstants.ApplicationScheme);
+                return true;
             }
+            return false;
         }
 
-        public CookieAuthenticationOptions Get(string name)
+        private string ResolveName(SiteContext tenant, string name)
         {
-            return ResolveOptions(name);      
-        }
-
-        private void InvokeChanged(string name)
-        {
-            name = name ?? Options.DefaultName;
-            _cache.TryRemove(name);
-            var options = Get(name);
-            if (_onChange != null)
+            if (tenant == null)
             {
-                _onChange.Invoke(options, name);
-            }
-        }
-
-        public IDisposable OnChange(Action<CookieAuthenticationOptions, string> listener)
-        {
-            _log.LogDebug("onchange invoked");
-
-            var disposable = new ChangeTrackerDisposable(this, listener);
-            _onChange += disposable.OnChange;
-            return disposable;
-        }
-
-       
-        internal class ChangeTrackerDisposable : IDisposable
-        {
-            private readonly Action<CookieAuthenticationOptions, string> _listener;
-            private readonly SiteCookieAuthenticationOptions _monitor;
-
-            public ChangeTrackerDisposable(SiteCookieAuthenticationOptions monitor, Action<CookieAuthenticationOptions, string> listener)
-            {
-                _listener = listener;
-                _monitor = monitor;
+                _log.LogError("tenant was null");
+                return name;
             }
 
-            public void OnChange(CookieAuthenticationOptions options, string name) => _listener.Invoke(options, name);
+            if (_multiTenantOptions.UseRelatedSitesMode)
+            {
+                return name;
+            }
 
-            public void Dispose() => _monitor._onChange -= OnChange;
+            return $"{name}-{tenant.SiteFolderName}";
         }
+
     }
-
 }

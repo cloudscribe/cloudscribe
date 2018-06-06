@@ -2,8 +2,8 @@
 
   <PropertyGroup>
     <Description>Multi-tenant web application foundation with management for sites, users, roles, claims, and geographic data.</Description>
-    <VersionPrefix>2.1.18</VersionPrefix>
-    <AssemblyVersion>2.1.18</AssemblyVersion>
+    <VersionPrefix>2.1.19</VersionPrefix>
+    <AssemblyVersion>2.1.19</AssemblyVersion>
     <Authors>Joe Audette</Authors>
     <TargetFrameworks>netstandard2.0</TargetFrameworks>
     <AssemblyName>cloudscribe.Core.Web</AssemblyName>
