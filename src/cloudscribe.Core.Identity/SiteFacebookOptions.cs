@@ -2,112 +2,60 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2017-07-27
-// Last Modified:			2017-08-30
+// Last Modified:			2018-06-06
 // 
 
 using cloudscribe.Core.Models;
-using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Facebook;
-using Microsoft.AspNetCore.Authentication.OAuth;
-using Microsoft.AspNetCore.DataProtection;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
-using System.Net.Http;
-using System;
 using System.Collections.Generic;
-using Microsoft.Extensions.Primitives;
-using Microsoft.AspNetCore.Identity;
 
 namespace cloudscribe.Core.Identity
 {
-    public class SiteFacebookOptions : IOptionsMonitor<FacebookOptions>
+    public class SiteFacebookOptions : OptionsMonitor<FacebookOptions>
     {
         public SiteFacebookOptions(
             IOptionsFactory<FacebookOptions> factory,
             IEnumerable<IOptionsChangeTokenSource<FacebookOptions>> sources,
             IOptionsMonitorCache<FacebookOptions> cache,
             IOptions<MultiTenantOptions> multiTenantOptionsAccessor,
-            IPostConfigureOptions<FacebookOptions> optionsInitializer,
-            IDataProtectionProvider dataProtection,
             IHttpContextAccessor httpContextAccessor,
             ILogger<SiteFacebookOptions> logger
-            )
+            ) : base(factory, sources, cache)
         {
             _multiTenantOptions = multiTenantOptionsAccessor.Value;
             _httpContextAccessor = httpContextAccessor;
-            _log = logger;
-            _optionsInitializer = optionsInitializer;
-            _dp = dataProtection;
-
             _factory = factory;
-            _sources = sources;
             _cache = cache;
-
-            foreach (var source in _sources)
-            {
-                ChangeToken.OnChange<string>(
-                    () => source.GetChangeToken(),
-                    (name) => InvokeChanged(name),
-                    source.Name);
-            }
+            _log = logger;
+           
         }
 
         private readonly IOptionsMonitorCache<FacebookOptions> _cache;
         private readonly IOptionsFactory<FacebookOptions> _factory;
-        private readonly IEnumerable<IOptionsChangeTokenSource<FacebookOptions>> _sources;
-        internal event Action<FacebookOptions, string> _onChange;
-
-        private MultiTenantOptions _multiTenantOptions;
-        private IHttpContextAccessor _httpContextAccessor;
-        private ILogger _log;
-        private IPostConfigureOptions<FacebookOptions> _optionsInitializer;
-        private readonly IDataProtectionProvider _dp;
-
-        private void InvokeChanged(string name)
-        {
-            name = name ?? Options.DefaultName;
-            _cache.TryRemove(name);
-            var options = Get(name);
-            if (_onChange != null)
-            {
-                _onChange.Invoke(options, name);
-            }
-        }
-
-        private FacebookOptions ResolveOptions(string scheme)
+        private readonly MultiTenantOptions _multiTenantOptions;
+        private readonly IHttpContextAccessor _httpContextAccessor;
+        private readonly ILogger _log;
+       
+        public override FacebookOptions Get(string name)
         {
             var tenant = _httpContextAccessor.HttpContext.GetTenant<SiteContext>();
-            var options = new FacebookOptions
-            {
-                AppId = "placeholder",
-                AppSecret = "placeholder"
-            };
+            var resolvedName = ResolveName(tenant, name);
+            return _cache.GetOrAdd(resolvedName, () => CreateOptions(resolvedName, tenant));
 
-            _optionsInitializer.PostConfigure(scheme, options);
+        }
 
-            options.DataProtectionProvider = options.DataProtectionProvider ?? _dp;
-
-            if (options.Backchannel == null)
-            {
-                options.Backchannel = new HttpClient(options.BackchannelHttpHandler ?? new HttpClientHandler());
-                options.Backchannel.DefaultRequestHeaders.UserAgent.ParseAdd("Microsoft ASP.NET Core OAuth handler");
-                options.Backchannel.Timeout = options.BackchannelTimeout;
-                options.Backchannel.MaxResponseContentBufferSize = 1024 * 1024 * 10; // 10 MB
-            }
-
-            if (options.StateDataFormat == null)
-            {
-                var dataProtector = options.DataProtectionProvider.CreateProtector(
-                    typeof(OAuthHandler<FacebookOptions>).FullName, scheme, "v1");
-
-                options.StateDataFormat = new PropertiesDataFormat(dataProtector);
-            }
-
+        private FacebookOptions CreateOptions(string name, SiteContext tenant)
+        {
+            var options = _factory.Create(name);
+            options.AppId = "placeholder";
+            options.AppSecret = "placeholder";
             ConfigureTenantOptions(tenant, options);
 
             return options;
-
         }
 
         private void ConfigureTenantOptions(SiteContext tenant, FacebookOptions options)
@@ -134,46 +82,22 @@ namespace cloudscribe.Core.Identity
             }
         }
 
-        public FacebookOptions CurrentValue
+        private string ResolveName(SiteContext tenant, string name)
         {
-            get
+            if (tenant == null)
             {
-                return ResolveOptions(FacebookDefaults.AuthenticationScheme);
-            }
-        }
-
-        public FacebookOptions Get(string name)
-        {
-            return ResolveOptions(name);
-        }
-
-        public IDisposable OnChange(Action<FacebookOptions, string> listener)
-        {
-            _log.LogDebug("onchange invoked");
-
-            var disposable = new ChangeTrackerDisposable(this, listener);
-            _onChange += disposable.OnChange;
-            return disposable;
-        }
-        
-
-        internal class ChangeTrackerDisposable : IDisposable
-        {
-            private readonly Action<FacebookOptions, string> _listener;
-            private readonly SiteFacebookOptions _monitor;
-
-            public ChangeTrackerDisposable(SiteFacebookOptions monitor, Action<FacebookOptions, string> listener)
-            {
-                _listener = listener;
-                _monitor = monitor;
+                _log.LogError("tenant was null");
+                return name;
             }
 
-            public void OnChange(FacebookOptions options, string name) => _listener.Invoke(options, name);
+            if (_multiTenantOptions.UseRelatedSitesMode)
+            {
+                return name;
+            }
 
-            public void Dispose() => _monitor._onChange -= OnChange;
+            return $"{name}-{tenant.SiteFolderName}";
         }
 
     }
 
-    
 }

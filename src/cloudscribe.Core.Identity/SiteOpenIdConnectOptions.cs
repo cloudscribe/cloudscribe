@@ -2,162 +2,123 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2017-07-28
-// Last Modified:			2018-03-07
+// Last Modified:			2018-06-06
 // 
 
 using cloudscribe.Core.Models;
-using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.OpenIdConnect;
-using Microsoft.AspNetCore.DataProtection;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
-using Microsoft.Extensions.Primitives;
 using Microsoft.IdentityModel.Protocols;
 using Microsoft.IdentityModel.Protocols.OpenIdConnect;
 using System;
 using System.Collections.Generic;
-using System.Net.Http;
-using System.Text;
 
 namespace cloudscribe.Core.Identity
 {
-    public class SiteOpenIdConnectOptions : IOptionsMonitor<OpenIdConnectOptions>
+    public class SiteOpenIdConnectOptions : OptionsMonitor<OpenIdConnectOptions>
     {
         public SiteOpenIdConnectOptions(
             IOptionsFactory<OpenIdConnectOptions> factory,
             IEnumerable<IOptionsChangeTokenSource<OpenIdConnectOptions>> sources,
             IOptionsMonitorCache<OpenIdConnectOptions> cache,
             IOptions<MultiTenantOptions> multiTenantOptionsAccessor,
-            IPostConfigureOptions<OpenIdConnectOptions> optionsInitializer,
-            IDataProtectionProvider dataProtection,
+            //IDataProtectionProvider dataProtection,
             IHttpContextAccessor httpContextAccessor,
             IHostingEnvironment environment,
             ILogger<SiteOpenIdConnectOptions> logger
-            )
+            ) : base(factory, sources, cache)
         {
             _multiTenantOptions = multiTenantOptionsAccessor.Value;
             _httpContextAccessor = httpContextAccessor;
-            _dp = dataProtection;
+            _factory = factory;
+            _cache = cache;
+            //_dp = dataProtection;
             _environment = environment;
             _log = logger;
-            _optionsInitializer = optionsInitializer;
-
-            _factory = factory;
-            _sources = sources;
-            _cache = cache;
-
-            foreach (var source in _sources)
-            {
-                ChangeToken.OnChange<string>(
-                    () => source.GetChangeToken(),
-                    (name) => InvokeChanged(name),
-                    source.Name);
-            }
-
+            
         }
 
         private readonly IOptionsMonitorCache<OpenIdConnectOptions> _cache;
         private readonly IOptionsFactory<OpenIdConnectOptions> _factory;
-        private readonly IEnumerable<IOptionsChangeTokenSource<OpenIdConnectOptions>> _sources;
-        internal event Action<OpenIdConnectOptions, string> _onChange;
+        private readonly MultiTenantOptions _multiTenantOptions;
+        private readonly IHttpContextAccessor _httpContextAccessor;
+        
+        private readonly IHostingEnvironment _environment;
+        private readonly ILogger _log;
 
-        private MultiTenantOptions _multiTenantOptions;
-        private IHttpContextAccessor _httpContextAccessor;
-        private readonly IDataProtectionProvider _dp;
-        private IHostingEnvironment _environment;
-        private ILogger _log;
-        private IPostConfigureOptions<OpenIdConnectOptions> _optionsInitializer;
-
-        private void InvokeChanged(string name)
-        {
-            name = name ?? Options.DefaultName;
-            _cache.TryRemove(name);
-            var options = Get(name);
-            if (_onChange != null)
-            {
-                _onChange.Invoke(options, name);
-            }
-        }
-
-        private class StringSerializer : IDataSerializer<string>
-        {
-            public string Deserialize(byte[] data)
-            {
-                return Encoding.UTF8.GetString(data);
-            }
-
-            public byte[] Serialize(string model)
-            {
-                return Encoding.UTF8.GetBytes(model);
-            }
-        }
-
-        private OpenIdConnectOptions ResolveOptions(string scheme)
+        public override OpenIdConnectOptions Get(string name)
         {
             var tenant = _httpContextAccessor.HttpContext.GetTenant<SiteContext>();
-            var options = new OpenIdConnectOptions
-            {
-                // will throw an error if these are not populated
-                ClientId = "placeholder",
-                ClientSecret = "placeholder",
-                Authority = "https://placeholder.com",
-                SignInScheme = IdentityConstants.ExternalScheme
-            };
+            var resolvedName = ResolveName(tenant, name);
+            return _cache.GetOrAdd(resolvedName, () => CreateOptions(resolvedName, tenant));
+            
+        }
+        
+        private OpenIdConnectOptions CreateOptions(string name, SiteContext tenant)
+        {
+           
+            var options = _factory.Create(name);
+
+            // will throw an error if these are not populated
+            options.ClientId = "placeholder";
+            options.ClientSecret = "placeholder";
+            options.Authority = "https://placeholder.com";
+            options.SignInScheme = IdentityConstants.ExternalScheme;
+            
 
             if (_environment.IsDevelopment())
             {
                 options.RequireHttpsMetadata = false;
             }
-
-            _optionsInitializer.PostConfigure(scheme, options);
-
-            options.DataProtectionProvider = options.DataProtectionProvider ?? _dp;
+            
+            //options.DataProtectionProvider = options.DataProtectionProvider ?? _dp;
 
             ConfigureTenantOptions(tenant, options);
 
-            //if(string.IsNullOrWhiteSpace(options.SignInScheme))
-            //{
-            //    options.SignInScheme = IdentityConstants.ExternalScheme;
-            //}
-            
+            if (string.IsNullOrWhiteSpace(options.SignInScheme))
+            {
+                options.SignInScheme = IdentityConstants.ExternalScheme;
+            }
+
             if (string.IsNullOrEmpty(options.SignOutScheme))
             {
                 options.SignOutScheme = options.SignInScheme;
             }
 
-            if (options.StateDataFormat == null)
-            {
-                var dataProtector = options.DataProtectionProvider.CreateProtector(
-                    typeof(OpenIdConnectHandler).FullName, scheme, "v1");
-                options.StateDataFormat = new PropertiesDataFormat(dataProtector);
-            }
+            //if (options.StateDataFormat == null)
+            //{
+            //    var dataProtector = options.DataProtectionProvider.CreateProtector(
+            //        typeof(OpenIdConnectHandler).FullName, name, "v1");
+            //    options.StateDataFormat = new PropertiesDataFormat(dataProtector);
+            //}
 
-            if (options.StringDataFormat == null)
-            {
-                var dataProtector = options.DataProtectionProvider.CreateProtector(
-                    typeof(OpenIdConnectHandler).FullName,
-                    typeof(string).FullName,
-                    scheme,
-                    "v1");
+            //if (options.StringDataFormat == null)
+            //{
+            //    var dataProtector = options.DataProtectionProvider.CreateProtector(
+            //        typeof(OpenIdConnectHandler).FullName,
+            //        typeof(string).FullName,
+            //        name,
+            //        "v1");
 
-                options.StringDataFormat = new SecureDataFormat<string>(new StringSerializer(), dataProtector);
-            }
+            //    options.StringDataFormat = new SecureDataFormat<string>(new StringSerializer(), dataProtector);
+            //}
 
             if (string.IsNullOrEmpty(options.TokenValidationParameters.ValidAudience) && !string.IsNullOrEmpty(options.ClientId))
             {
                 options.TokenValidationParameters.ValidAudience = options.ClientId;
             }
 
-            if (options.Backchannel == null)
-            {
-                options.Backchannel = new HttpClient(options.BackchannelHttpHandler ?? new HttpClientHandler());
-                options.Backchannel.DefaultRequestHeaders.UserAgent.ParseAdd("Microsoft ASP.NET Core OpenIdConnect handler");
-                options.Backchannel.Timeout = options.BackchannelTimeout;
-                options.Backchannel.MaxResponseContentBufferSize = 1024 * 1024 * 10; // 10 MB
-            }
+            //if (options.Backchannel == null)
+            //{
+            //    options.Backchannel = new HttpClient(options.BackchannelHttpHandler ?? new HttpClientHandler());
+            //    options.Backchannel.DefaultRequestHeaders.UserAgent.ParseAdd("Microsoft ASP.NET Core OpenIdConnect handler");
+            //    options.Backchannel.Timeout = options.BackchannelTimeout;
+            //    options.Backchannel.MaxResponseContentBufferSize = 1024 * 1024 * 10; // 10 MB
+            //}
 
             if (options.ConfigurationManager == null)
             {
@@ -187,9 +148,7 @@ namespace cloudscribe.Core.Identity
                         new HttpDocumentRetriever(options.Backchannel) { RequireHttps = options.RequireHttpsMetadata });
                 }
             }
-
-
-
+            
             return options;
 
         }
@@ -225,46 +184,22 @@ namespace cloudscribe.Core.Identity
             }
         }
 
-        public OpenIdConnectOptions CurrentValue
+        private string ResolveName(SiteContext tenant, string name)
         {
-            get
+            if (tenant == null)
             {
-                return ResolveOptions(OpenIdConnectDefaults.AuthenticationScheme);
-            }
-        }
-
-        public OpenIdConnectOptions Get(string name)
-        {
-            return ResolveOptions(name);
-        }
-
-        public IDisposable OnChange(Action<OpenIdConnectOptions, string> listener)
-        {
-            _log.LogDebug("onchange invoked");
-
-            var disposable = new ChangeTrackerDisposable(this, listener);
-            _onChange += disposable.OnChange;
-            return disposable;
-        }
-
-
-        internal class ChangeTrackerDisposable : IDisposable
-        {
-            private readonly Action<OpenIdConnectOptions, string> _listener;
-            private readonly SiteOpenIdConnectOptions _monitor;
-
-            public ChangeTrackerDisposable(SiteOpenIdConnectOptions monitor, Action<OpenIdConnectOptions, string> listener)
-            {
-                _listener = listener;
-                _monitor = monitor;
+                _log.LogError("tenant was null");
+                return name;
             }
 
-            public void OnChange(OpenIdConnectOptions options, string name) => _listener.Invoke(options, name);
+            if (_multiTenantOptions.UseRelatedSitesMode)
+            {
+                return name;
+            }
 
-            public void Dispose() => _monitor._onChange -= OnChange;
+            return $"{name}-{tenant.SiteFolderName}";
         }
 
     }
-
-    
+ 
 }
