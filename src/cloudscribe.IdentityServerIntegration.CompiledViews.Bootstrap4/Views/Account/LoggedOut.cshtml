@@ -1,0 +1,26 @@
+﻿@model cloudscribe.Core.Identity.IdentityServerLoggedOutViewModel
+@using cloudscribe.Core.IdentityServerIntegration
+@inject IStringLocalizer<CloudscribeIds4Resources> sr
+@{
+    var linkFormat = sr["Click <a href='{0}'>here</a> to return to the<span>{1}</span> application."];
+    var messageHtml = string.Format(linkFormat, Model.PostLogoutRedirectUri, Model.ClientName);
+}
+
+    <div class="page-header">
+        <h1>
+            @sr["Logout"]
+            <small>@sr["You are now logged out"]</small>
+        </h1>
+
+        @if (Model.PostLogoutRedirectUri != null)
+        {
+            <div>
+                @Html.Raw(messageHtml)
+            </div>
+        }
+
+        @if (Model.SignOutIframeUrl != null)
+        {
+            <iframe style="display:none" width="0" height="0" class="signout" src="@Model.SignOutIframeUrl"></iframe>
+        }
+    </div>

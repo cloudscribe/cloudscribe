@@ -1,0 +1,25 @@
+﻿@model cloudscribe.Core.IdentityServerIntegration.Models.ApiItemViewModel
+@using cloudscribe.Core.IdentityServerIntegration
+@inject IStringLocalizer<CloudscribeIds4Resources> sr
+<form asp-controller="ApiResource" asp-action="NewApiResource">
+    <input asp-for="SiteId" type="hidden" />
+    @*<div asp-validation-summary="All" class="text-danger"></div>*@
+    <div class="form-group">
+        <label for="Name">@sr["Name"]</label>
+        <input class="form-control" asp-for="Name"  />
+        @Html.ValidationMessage("apinameinuseerror", new { @class = "text-danger" })
+    </div>
+    <div class="form-group">
+        <label for="DisplayName">@sr["Display Name"]</label>
+        <input class="form-control" asp-for="DisplayName"  />
+    </div>
+    <div class="form-group">
+        <label for="Description">@sr["Description"]</label>
+        <input class="form-control" asp-for="Description"  />
+    </div>  
+    <div class="form-group">
+        <button name="submit" type="submit" class="btn btn-primary">@sr["Create"]</button>
+        <a class="btn btn-primary" asp-action="Index" asp-controller="Scopes"
+                asp-route-siteId="@Model.SiteId">@sr["Cancel"]</a>
+    </div>
+</form>

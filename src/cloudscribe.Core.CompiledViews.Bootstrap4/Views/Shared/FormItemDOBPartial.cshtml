@@ -1,0 +1,45 @@
+﻿@model cloudscribe.Web.Common.Models.FormItemDefinition
+@inject IStringLocalizer<CloudscribeCommonResources> sr
+@{
+    var grpClass = "";// input-group
+    var spnClass = ""; //input-group-addon
+    if (!string.IsNullOrWhiteSpace(Model.IconCssClass))
+    {
+        grpClass = "input-group";
+        spnClass = "input-group-text";
+
+    }
+}
+<div class="form-group">
+    <label for="@Model.Key">@sr[Model.Label]</label>
+    <div class="@grpClass">
+        @if (!string.IsNullOrWhiteSpace(Model.IconCssClass) && Model.IconOnLeft)
+        {
+            <div class="input-group-prepend">
+                <span class="@spnClass"><i class="@Model.IconCssClass" aria-hidden="true"></i></span>
+            </div>
+        }
+        <input name="@Model.Key" value="@ViewData[Model.Key]" title="@Model.Tooltip" cs-form-item-definition="@Model"
+               class="form-control @Model.CssClass"
+               data-bs-datepicker="true"
+               data-bs-datepicker-debug="false"
+               data-bs-datepicker-keepOpen="false"
+               data-bs-datepicker-allowInputToggle="true"
+               data-bs-datepicker-format="L"
+               data-bs-datepicker-locale="@System.Globalization.CultureInfo.CurrentCulture.Name"
+               data-bs-datepicker-viewMode="years"
+               data-bs-datepicker-usecurrent="false"
+               data-bs-datepicker-use-fontawesome="false"
+               data-bs-datepicker-mindate="@DateTime.UtcNow.AddYears(-120).ToString("O")"
+               data-bs-datepicker-maxdate="@DateTime.UtcNow.AddYears(-10).ToString("O")"
+               data-bs-datepicker-viewDate="@DateTime.UtcNow.AddYears(-10).ToString("O")" />
+        @if (!string.IsNullOrWhiteSpace(Model.IconCssClass) && !Model.IconOnLeft)
+        {
+            <div class="input-group-append">
+                <span class="@spnClass"><i class="@Model.IconCssClass" aria-hidden="true"></i></span>
+            </div>
+        }
+    </div>
+    <span class="text-danger field-validation-valid" data-valmsg-for="@Model.Key" data-valmsg-replace="true"></span>
+    @Html.ValidationMessage(Model.Key + "Error", new { @class = "text-danger" })
+</div>

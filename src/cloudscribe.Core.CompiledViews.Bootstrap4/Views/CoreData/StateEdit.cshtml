@@ -1,0 +1,91 @@
+﻿@model cloudscribe.Core.Web.ViewModels.CoreData.GeoZoneViewModel
+@inject ICoreThemeHelper themeHelper
+@inject IStringLocalizer<CloudscribeCore> sr
+@{
+    if (Model.Id == Guid.Empty)
+    {
+        ViewData["Title"] = sr["New State"];
+    }
+    else
+    {
+        ViewData["Title"] = sr["Edit State"];
+    }
+    var themeSettings = themeHelper.GetThemeSettings();
+    if (themeSettings.AdminSideNavExpanded) { ViewData["SideNavToggle"] = "show"; }
+    ViewData["SideNavVisible"] = true;
+
+}
+<h2>@ViewData["Title"]</h2>
+<h3>@Model.CountryName</h3>
+<form role="form" asp-action="StateEdit" asp-controller="CoreData" data-submit-once="true">
+    <div asp-validation-summary="All" class="text-danger"></div>
+    <input asp-for="Id" type="hidden" />
+    <input asp-for="CountryId" type="hidden" />
+    <input asp-for="ReturnPageNumber" type="hidden" />
+    <input asp-for="CountryListReturnPageNumber" type="hidden" />
+    <div class="form-group">
+        <label asp-for="Name">@sr["Name"]</label>
+        <input asp-for="Name" class="form-control" />
+        <span asp-validation-for="Name" class="invalid-feedback"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="Code">@sr["Code"]</label>
+        <input asp-for="Code" class="form-control" />
+        <span asp-validation-for="Code" class="invalid-feedback"></span>
+    </div>
+    <div class="form-group">
+        <a class="btn btn-primary" asp-action="StateListPage"
+           asp-controller="CoreData"
+           asp-route-countryId="@Model.CountryId"
+           asp-route-crp="@Model.CountryListReturnPageNumber"
+           asp-route-pageNumber="@Model.ReturnPageNumber">@sr["Back To State List"]</a>
+        <button name="submit" type="submit" class="btn btn-primary" data-enabled-text='@sr["Save"]' data-disabled-text='@sr["Working..."]'>@sr["Save"]</button>
+        @if (Model.Id != Guid.Empty)
+        {
+            <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#confirmDeleteModal">
+                @sr["Delete"]
+            </button>
+        }
+    </div>
+
+</form>
+
+@if (Model.Id != Guid.Empty)
+{
+    <form id="deleteform" asp-action="StateDelete" asp-controller="CoreData">
+        <input name="stateId" value="@Model.Id" type="hidden" />
+        <input asp-for="CountryId" type="hidden" />
+        <input asp-for="ReturnPageNumber" type="hidden" />
+        <input id="crp" name="crp" type="hidden" value="@Model.CountryListReturnPageNumber" />
+        <div class="modal fade" id="confirmDeleteModal" tabindex="-1" role="dialog" aria-labelledby="confirmDeleteHeading">
+            <div class="modal-dialog modal-sm" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h4 class="modal-title" id="confirmDeleteHeading">@sr["Confirm Delete"]</h4>
+                        <button type="button" class="close" data-dismiss="modal" aria-label='@sr["Close"]'><span aria-hidden="true">&times;</span></button>
+                    </div>
+                    <div class="modal-body">
+                        @string.Format(sr["Are you sure you want to delete {0}?"], Model.Name)
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-primary" data-dismiss="modal">@sr["Cancel"]</button>
+                        <input type="submit" value='@sr["Delete"]' class="btn btn-danger btn-ok" />
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+}
+@section SideNav {
+    @{ await Html.RenderPartialAsync("AdminSideNav"); }
+}
+@section Toolbar{
+    @{ await Html.RenderPartialAsync("AdminSideNavToggle"); }
+}
+@section scripts {
+    @{ await Html.RenderPartialAsync("AdminSideNavScripts"); }
+    @{ await Html.RenderPartialAsync("_UnobtrusiveValidationScriptsPartial"); }
+    <script src="~/cr/js/unobtrusive-validation-bs4.min.js"></script>
+    <script src="~/cr/js/jquery.validate.hooks.min.js"></script>
+    <script src="~/cr/js/jqueryvaildation.submitonce-unobtrusive.min.js"></script>
+}

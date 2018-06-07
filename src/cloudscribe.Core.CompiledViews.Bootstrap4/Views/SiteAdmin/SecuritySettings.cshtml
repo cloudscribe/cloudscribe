@@ -1,0 +1,82 @@
+﻿@model cloudscribe.Core.Web.ViewModels.SiteSettings.SecuritySettingsViewModel
+@inject IStringLocalizer<CloudscribeCore> sr
+@inject ICoreThemeHelper themeHelper
+@{
+    var themeSettings = themeHelper.GetThemeSettings();
+    if (themeSettings.AdminSideNavExpanded) { ViewData["SideNavToggle"] = "show"; }
+    ViewData["SideNavVisible"] = true;
+}
+<h2>@ViewBag.Title</h2>
+<form method="post" class="form-horizontal" role="form" asp-antiforgery="true" data-submit-once="true">
+    @*<div asp-validation-summary="All" class="text-danger"></div>*@
+    <input asp-for="SiteId" type="hidden" />
+    <div class="form-group">
+        <div class="form-check">
+            <input asp-for="UseEmailForLogin" class="form-check-input" />
+            <label asp-for="UseEmailForLogin" class="form-check-label">@sr["Use Email For Login"]</label>
+        </div>
+    </div>
+    <div class="form-group">
+        <div class="form-check">
+            <input asp-for="AllowNewRegistration" class="form-check-input" />
+            <label asp-for="AllowNewRegistration" class="form-check-label">@sr["Allow New Registrations"]</label>
+        </div>
+    </div>
+    @if (Model.EmailIsConfigured)
+    {
+        <div class="form-group">
+            <div class="form-check">
+                <input asp-for="RequireConfirmedEmail" class="form-check-input" />
+                <label asp-for="RequireConfirmedEmail" class="form-check-label">@sr["Require Confirmed Email"]</label>
+            </div>
+        </div>
+    }
+    <div class="form-group">
+        <div class="form-check">
+            <input asp-for="RequireApprovalBeforeLogin" class="form-check-input" />
+            <label asp-for="RequireApprovalBeforeLogin" class="form-check-label">@sr["Require Approval Before Login"]</label>
+        </div>
+    </div>
+    <div class="form-group">
+        <label asp-for="AccountApprovalEmailCsv">@sr["Email addresses (csv) to notify of new unapproved users"]</label>
+        <input asp-for="AccountApprovalEmailCsv" class="form-control" />
+        <span asp-validation-for="AccountApprovalEmailCsv" class="invalid-feedback"></span>
+    </div>
+    <div class="form-group">
+        <div class="form-check">
+            <input asp-for="AllowPersistentLogin" class="form-check-input" />
+            <label asp-for="AllowPersistentLogin" class="form-check-label">@sr["Allow Persistent Login"]</label>
+        </div>
+    </div>
+    @if (Model.HasAnySocialAuthEnabled)
+    {
+        <div class="form-group">
+            <div class="form-check">
+                <input asp-for="DisableDbAuth" class="form-check-input" />
+                <label asp-for="DisableDbAuth" class="form-check-label">@sr["Only Use Social Authentication"]</label>
+            </div>
+        </div>
+    }
+    <div class="form-group">
+        <div class="form-check">
+            <input asp-for="ReallyDeleteUsers" class="form-check-input" />
+            <label asp-for="ReallyDeleteUsers" class="form-check-label">@sr["Really Delete Users"]</label>
+        </div>
+    </div>
+    <div class="form-group">
+        <button name="submit" type="submit" class="btn btn-primary" data-disabled-text='@sr["Working..."]' data-enabled-text='@sr["Save"]'>@sr["Save"]</button>
+    </div>
+</form>
+@section SideNav {
+    @{ await Html.RenderPartialAsync("AdminSideNav"); }
+}
+@section Toolbar{
+    @{ await Html.RenderPartialAsync("AdminSideNavToggle"); }
+}
+@section Scripts {
+    @{ await Html.RenderPartialAsync("AdminSideNavScripts"); }
+    @{ await Html.RenderPartialAsync("_UnobtrusiveValidationScriptsPartial"); }
+    <script src="~/cr/js/unobtrusive-validation-bs4.min.js"></script>
+    <script src="~/cr/js/jquery.validate.hooks.min.js"></script>
+    <script src="~/cr/js/jqueryvaildation.submitonce-unobtrusive.min.js"></script>
+}

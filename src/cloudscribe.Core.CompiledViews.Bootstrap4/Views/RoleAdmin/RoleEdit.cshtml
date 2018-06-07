@@ -1,0 +1,38 @@
+﻿@model cloudscribe.Core.Web.ViewModels.RoleAdmin.RoleViewModel
+@inject ICoreThemeHelper themeHelper
+@inject IStringLocalizer<CloudscribeCore> sr
+@{
+    ViewData["BodyClass"] = "admin-section role-edit";
+    var themeSettings = themeHelper.GetThemeSettings();
+    if (themeSettings.AdminSideNavExpanded) { ViewData["SideNavToggle"] = "show"; }
+    ViewData["SideNavVisible"] = true;
+}
+<h2>@ViewData["Title"]</h2>
+<form asp-controller="RoleAdmin" asp-action="RoleEdit" data-submit-once="true">
+    <input asp-for="Id" type="hidden" />
+    <input asp-for="SiteId" type="hidden" />
+    <input asp-for="NormalizedRoleName" type="hidden" />
+    <div asp-validation-summary="All" class="text-danger"></div>
+    <div class="form-group">
+        <label asp-for="RoleName">@sr["Role Name"]</label>
+        <input asp-for="RoleName" class="form-control" />
+        <span asp-validation-for="RoleName" class="invalid-feedback"></span>
+        @Html.ValidationMessage("roleerror", new { @class = "text-danger" })
+    </div>
+    <div class="form-group">
+        <button name="submit" type="submit" class="btn btn-primary" data-disabled-text='@sr["Working..."]' data-enabled-text='@sr["Save"]'>@sr["Save"]</button>
+    </div>
+</form>
+@section SideNav {
+    @{ await Html.RenderPartialAsync("AdminSideNav"); }
+}
+@section Toolbar{
+    @{ await Html.RenderPartialAsync("AdminSideNavToggle"); }
+}
+@section scripts {
+    @{ await Html.RenderPartialAsync("AdminSideNavScripts"); }
+    @{ await Html.RenderPartialAsync("_UnobtrusiveValidationScriptsPartial"); }
+    <script src="~/cr/js/unobtrusive-validation-bs4.min.js"></script>
+    <script src="~/cr/js/jquery.validate.hooks.min.js"></script>
+    <script src="~/cr/js/jqueryvaildation.submitonce-unobtrusive.min.js"></script>
+}

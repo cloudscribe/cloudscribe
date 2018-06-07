@@ -1,0 +1,100 @@
+﻿@model cloudscribe.Core.IdentityServerIntegration.Models.ClientListViewModel
+@using cloudscribe.Core.IdentityServerIntegration
+@using cloudscribe.Web.Pagination
+@using Microsoft.Extensions.Localization
+@addTagHelper "*, cloudscribe.Web.Pagination"
+@inject IStringLocalizer<CloudscribeIds4Resources> sr
+@{
+    var index = 0;
+}
+<div class="row">
+    <div class="col-md-10 col-md-push-2">
+        <h2>@ViewData["Title"]</h2>
+        <p>@sr["A client is a piece of software that requests tokens from IdentityServer - either for authenticating a user or for accessing a resource (also often called a relying party or RP)"]</p>
+        <p>@sr["Examples for clients are web applications, native mobile or desktop applications, SPAs, server processes etc."]</p>
+        <p>To learn more about clients see the <a href="https://identityserver4.readthedocs.io/en/release/topics/clients.html">IdentityServer Documentation</a></p>
+        <div>
+            <table class="table table-striped">
+                <tr>
+                    <th>
+                        <a class="btn btn-xs btn-default" asp-action="EditClient" asp-controller="Clients"
+                           asp-route-siteId="@Model.SiteId">@sr["New Client"]</a>
+                    </th>
+                    <th>
+                        @sr["Id"]
+                    </th>
+                    <th>
+                        @sr["Name"]
+                    </th>
+                    <th>
+                        @sr["Enabled"]
+                    </th>
+                </tr>
+                @foreach (var s in Model.Clients.Data)
+                {
+                    <tr>
+                        <td>
+                            <a class="btn btn-xs btn-default" asp-action="EditClient" asp-controller="Clients"
+                               asp-route-siteId="@Model.SiteId"
+                               asp-route-clientid="@s.ClientId">@sr["Edit"]</a>
+                            <button type="button" class="btn btn-danger btn-xs" data-toggle="modal" data-target="@("#confirmDeleteClientModal" + index)">
+                                @sr["Delete"]
+                            </button>
+                            <form asp-controller="Clients" asp-action="DeleteClient">
+                                <input name="SiteId" value="@Model.SiteId" type="hidden" />
+                                <input name="ClientId" value="@s.ClientId" type="hidden" />
+                                <div class="modal fade" id="@("confirmDeleteClientModal" + index)" tabindex="-1" role="dialog" aria-labelledby="@("confirmDeleteClientHeading" + index)">
+                                    <div class="modal-dialog modal-sm" role="document">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <button type="button" class="close" data-dismiss="modal" aria-label='@sr["Close"]'><span aria-hidden="true">&times;</span></button>
+                                                <h4 class="modal-title" id="@("confirmDeleteClientHeading" + index)">@sr["Confirm Delete"]</h4>
+                                            </div>
+                                            <div class="modal-body">
+                                                @string.Format(sr["Are you sure you want to delete the client {0}? You cannot undo this ooperation."], s.ClientName)
+                                            </div>
+                                            <div class="modal-footer">
+                                                <button type="button" class="btn btn-default" data-dismiss="modal">@sr["Cancel"]</button>
+                                                <input type="submit" value='@sr["Delete"]' class="btn btn-danger btn-ok" />
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </form>
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => s.ClientId)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => s.ClientName)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => s.Enabled)
+                        </td>
+                    </tr>
+                    {
+                        index += 1;
+                    }
+                }
+            </table>
+            <div>
+                <cs-pager asp-action="Index" asp-controller="Clients"
+                          asp-route-siteId="@Model.SiteId"
+                          asp-route-pagesize="@Model.Clients.PageSize"
+                          cs-paging-pagenumber="@Model.Clients.PageNumber"
+                          cs-paging-totalitems="@Model.Clients.TotalItems"
+                          cs-first-page-title='@sr["First Page"]'
+                          cs-last-page-title='@sr["Last Page"]'
+                          cs-previous-page-title='@sr["Previous page"]'
+                          cs-next-page-title='@sr["Next page"]'></cs-pager>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-2 col-md-pull-10">
+        @await Component.InvokeAsync("Navigation", new { viewName = "SideNavAlt1", filterName = NamedNavigationFilters.ParentTree, startingNodeKey = "SiteAdmin" })
+    </div>
+</div>
+@section scripts {
+    @{ await Html.RenderPartialAsync("_SideMenuScriptsPartial"); }
+
+}

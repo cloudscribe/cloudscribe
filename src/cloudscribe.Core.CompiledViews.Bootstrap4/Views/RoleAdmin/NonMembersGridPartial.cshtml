@@ -1,0 +1,94 @@
+﻿@model cloudscribe.Core.Web.ViewModels.RoleAdmin.RoleMemberListViewModel
+@inject IStringLocalizer<CloudscribeCore> sr
+    <form role="form" method="get" class="form-inline" asp-controller="RoleAdmin" asp-action="RoleNonMembers" asp-antiforgery="false"
+        data-ajax="true" 
+        data-ajax-method="GET" 
+        data-ajax-mode="replace" 
+        data-ajax-update="#nonmembersgridcontainer">
+         <input asp-for="Role.SiteId" type="hidden" />
+        <input name="roleId" type="hidden" value="@Model.Role.Id" />
+        <input name="ajaxGrid" type="hidden" value="true" />
+        <div class="input-group">
+            <input type="search" name="searchInput" value="@Model.SearchQuery" class="form-control" />
+            <span class="input-group-btn">
+                <button type="submit" name='submit' class="btn btn-primary">@sr["Search"]</button>
+            </span>
+        </div>
+    </form>
+<table class="table table-striped">
+    <tr>
+        <th>
+        </th>
+        <th>
+            @sr["Email"]
+        </th>
+        @if (!Model.UseEmailForLogin)
+        {
+            <th>
+                @sr["Login Name"]
+            </th>
+        }
+        <th>
+            @sr["Display Name"]
+        </th>
+        <th>
+            @sr["First Name"]
+        </th>
+        <th>
+            @sr["Last Name"]
+        </th>
+    </tr>
+    @foreach (var item in Model.Members.Data)
+    {
+        <tr>
+            <td>
+                <button type="button" class="btn btn-success btn-xs" data-toggle="modal" 
+                        data-target="#confirmAddRoleModal" 
+                        data-message="@string.Format(sr["Are you sure you want to add {0} to the role {1}?"], item.DisplayName, Model.Role.RoleName)"
+                        data-form-id="@("frmAdd" + item.Id)"
+                        >
+                    @sr["Add"]
+                </button>
+                <form id="@("frmAdd" + item.Id)" role="form" asp-controller="RoleAdmin" asp-action="AddUser">
+                    <input name="siteId" type="hidden" value="@Model.Role.SiteId" />
+                    <input name="RoleId" type="hidden" value="@Model.Role.Id" />
+                    <input name="UserId" type="hidden" value="@item.Id" />
+                </form>
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Email)
+            </td>
+            @if (!Model.UseEmailForLogin)
+            {
+                <td>
+                    @Html.DisplayFor(modelItem => item.UserName)
+                </td>
+            }
+            <td>
+                @Html.DisplayFor(modelItem => item.DisplayName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.FirstName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.LastName)
+            </td>
+        </tr>
+    }
+</table>
+<div>
+    <cs-pager 
+              asp-action="RoleNonMembers" asp-controller="RoleAdmin"
+              asp-route-siteId="@Model.Role.SiteId"
+              asp-route-roleId="@Model.Role.Id"
+              asp-route-ajaxgrid="true"
+              cs-paging-pagesize="@Model.Members.PageSize"
+              cs-paging-pagenumber="@Model.Members.PageNumber"
+              cs-paging-totalitems="@Model.Members.TotalItems"
+              cs-ajax-target="#nonmembersgridcontainer"
+              cs-first-page-title='@sr["First Page"]'
+              cs-last-page-title='@sr["Last Page"]'
+              cs-previous-page-title='@sr["Previous page"]'
+              cs-next-page-title='@sr["Next page"]'
+              ></cs-pager>
+</div>

@@ -1,0 +1,7 @@
+﻿@using cloudscribe.Core.Models
+@using cloudscribe.Core.Web
+@using Microsoft.Extensions.Options
+@using Microsoft.Extensions.Localization
+@inject IStringLocalizer<CloudscribeCore> sr
+@inject SiteContext Tenant
+<a class="btn btn-primary btn-lg" href="~/@(Tenant?.SiteFolderName ?? "")"><span aria-hidden="true" class="fa fa-home"></span> @sr["Site Home"]</a>

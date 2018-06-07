@@ -1,0 +1,53 @@
+﻿@model cloudscribe.Core.Web.ViewModels.Account.EditUserViewModel
+@using cloudscribe.Core.Web
+@using Microsoft.Extensions.Options
+@using Microsoft.Extensions.Localization
+@using Microsoft.AspNetCore.Authorization
+@inject IStringLocalizer<CloudscribeCore> sr
+@inject IAuthorizationService _authorizationService
+@{
+    var roleAuthResult = await _authorizationService.AuthorizeAsync(User, PolicyConstants.RoleAdminPolicy).ConfigureAwait(false);
+    var canManageRoles = roleAuthResult.Succeeded;
+}
+@if (Model.UserRoles.Count > 0)
+{
+    <h3>@sr["User Roles"]</h3>
+    <ul class="list-unstyled">
+        @foreach (var item in Model.UserRoles)
+        {
+            <li>
+                @item
+                @if (canManageRoles)
+                {
+                    <button type="button" class="btn btn-danger btn-xs" data-toggle="modal" data-target="@("#confirmRoleDeleteModal" + Model.UserRoles.IndexOf(item))">
+                        @sr["Remove"]
+                    </button>
+                    <form asp-controller="UserAdmin" asp-action="RemoveRole">
+                        <input name="roleName" value="@item" type="hidden" />
+
+                        <input name="userId" value="@Model.UserId" type="hidden" />
+                        <div class="modal fade" id="@("confirmRoleDeleteModal" + Model.UserRoles.IndexOf(item))" tabindex="-1" role="dialog" aria-labelledby="@("confirmRoleDeleteHeading" + Model.UserRoles.IndexOf(item))">
+                            <div class="modal-dialog modal-sm" role="document">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <button type="button" class="close" data-dismiss="modal" aria-label='@sr["Close"]'><span aria-hidden="true">&times;</span></button>
+                                        <h4 class="modal-title" id="@("confirmRoleDeleteHeading" + Model.UserRoles.IndexOf(item))">@sr["Confirm Delete"]</h4>
+                                    </div>
+                                    <div class="modal-body">
+                                        @string.Format(sr["Are you sure you want to remove the role {0}?"], item)
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-default" data-dismiss="modal">@sr["Cancel"]</button>
+                                        <input type="submit" value='@sr["Remove"]' class="btn btn-danger btn-ok" />
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                }
+            </li>
+        }
+    </ul>
+}
+
+

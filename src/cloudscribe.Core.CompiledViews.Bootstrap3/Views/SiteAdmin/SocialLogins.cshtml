@@ -1,0 +1,121 @@
+﻿@model cloudscribe.Core.Web.ViewModels.SiteSettings.SocialLoginSettingsViewModel
+@using cloudscribe.Core.Web
+@using cloudscribe.Web.Navigation
+@using Microsoft.Extensions.Options
+@using Microsoft.Extensions.Localization
+@inject IStringLocalizer<CloudscribeCore> sr
+<div class="row">
+    <div class="col-md-10 col-md-push-2">
+        <h2>@ViewBag.Title</h2>
+        <form method="post" class="form-horizontal" role="form" asp-antiforgery="true" data-submit-once="true">
+            <div asp-validation-summary="All" class="text-danger"></div>
+            <input asp-for="SiteId" type="hidden" />
+            <div class="form-group">
+                <label asp-for="MicrosoftClientId" class="col-md-3 control-label">@sr["Microsoft Client Id"]</label>
+                <div class="col-md-9">
+                    <input asp-for="MicrosoftClientId" class="form-control" />
+                    <span asp-validation-for="MicrosoftClientId" class="text-danger"></span>
+                </div>
+            </div>
+            <div class="form-group">
+                <label asp-for="MicrosoftClientSecret" class="col-md-3 control-label">@sr["Microsoft Client Secret"]</label>
+                <div class="col-md-9">
+                    <input asp-for="MicrosoftClientSecret" class="form-control" />
+                    <span asp-validation-for="MicrosoftClientSecret" class="text-danger"></span>
+                </div>
+            </div>
+            <div class="form-group">
+                <label asp-for="GoogleClientId" class="col-md-3 control-label">@sr["Google Client Id"]</label>
+                <div class="col-md-9">
+                    <input asp-for="GoogleClientId" class="form-control" />
+                    <span asp-validation-for="GoogleClientId" class="text-danger"></span>
+                </div>
+            </div>
+            <div class="form-group">
+                <label asp-for="GoogleClientSecret" class="col-md-3 control-label">@sr["Google Client Secret"]</label>
+                <div class="col-md-9">
+                    <input asp-for="GoogleClientSecret" class="form-control" />
+                    <span asp-validation-for="GoogleClientSecret" class="text-danger"></span>
+                </div>
+            </div>
+            <div class="form-group">
+                <label asp-for="FacebookAppId" class="col-md-3 control-label">@sr["Facebook App Id"]</label>
+                <div class="col-md-9">
+                    <input asp-for="FacebookAppId" class="form-control" />
+                    <span asp-validation-for="FacebookAppId" class="text-danger"></span>
+                </div>
+            </div>
+            <div class="form-group">
+                <label asp-for="FacebookAppSecret" class="col-md-3 control-label">@sr["Facebook App Secret"]</label>
+                <div class="col-md-9">
+                    <input asp-for="FacebookAppSecret" class="form-control" />
+                    <span asp-validation-for="FacebookAppSecret" class="text-danger"></span>
+                </div>
+            </div>
+            <div class="form-group">
+                <label asp-for="TwitterConsumerKey" class="col-md-3 control-label">@sr["Twitter Consumer Key"]</label>
+                <div class="col-md-9">
+                    <input asp-for="TwitterConsumerKey" class="form-control" />
+                    <span asp-validation-for="TwitterConsumerKey" class="text-danger"></span>
+                </div>
+            </div>
+            <div class="form-group">
+                <label asp-for="TwitterConsumerSecret" class="col-md-3 control-label">@sr["Twitter Consumer Secret"]</label>
+                <div class="col-md-9">
+                    <input asp-for="TwitterConsumerSecret" class="form-control" />
+                    <span asp-validation-for="TwitterConsumerSecret" class="text-danger"></span>
+                </div>
+            </div>
+
+            @*
+                    <input asp-for="OidConnectAppId" type="hidden" />
+                <input asp-for="OidConnectAppSecret" type="hidden" />
+                <input asp-for="OidConnectAuthority" type="hidden" />
+            *@
+            <div class="form-group">
+                <label asp-for="OidConnectAuthority" class="col-md-3 control-label">@sr["OpenIdConnect Authority Url"]</label>
+                <div class="col-md-9">
+                    <input asp-for="OidConnectAuthority" class="form-control" />
+                    <span asp-validation-for="OidConnectAuthority" class="text-danger"></span>
+                </div>
+            </div>
+            <div class="form-group">
+                <label asp-for="OidConnectDisplayName" class="col-md-3 control-label">@sr["OpenIdConnect Display Name"]</label>
+                <div class="col-md-9">
+                    <input asp-for="OidConnectDisplayName" class="form-control" />
+                    <span asp-validation-for="OidConnectDisplayName" class="text-danger"></span>
+                </div>
+            </div>
+            <div class="form-group">
+                <label asp-for="OidConnectAppId" class="col-md-3 control-label">@sr["OpenIdConnect App Id"]</label>
+                <div class="col-md-9">
+                    <input asp-for="OidConnectAppId" class="form-control" />
+                    <span asp-validation-for="OidConnectAppId" class="text-danger"></span>
+                </div>
+            </div>
+            <div class="form-group">
+                <label asp-for="OidConnectAppSecret" class="col-md-3 control-label">@sr["OpenIdConnect App Secret"]</label>
+                <div class="col-md-9">
+                    <input asp-for="OidConnectAppSecret" class="form-control" />
+                    <span asp-validation-for="OidConnectAppSecret" class="text-danger"></span>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <div class="col-md-offset-3 col-md-9">
+                    <button name="submit" type="submit" class="btn btn-default" data-disabled-text='@sr["Working..."]' data-enabled-text='@sr["Save"]'>@sr["Save"]</button>
+                </div>
+            </div>
+        </form>
+    </div>
+
+    <div class="col-md-2 col-md-pull-10 hidden-xs hidden-sm">
+        @await Component.InvokeAsync("Navigation", new { viewName = "SideNavAlt1", filterName = NamedNavigationFilters.ParentTree, startingNodeKey = "SiteAdmin" })
+    </div>
+</div>
+@section Scripts {
+    @{ await Html.RenderPartialAsync("_SideMenuScriptsPartial"); }
+    @{ await Html.RenderPartialAsync("_UnobtrusiveValidationScriptsPartial"); }
+    <script src="~/cr/js/jquery.validate.hooks.min.js"></script>
+    <script src="~/cr/js/jqueryvaildation.submitonce-unobtrusive.min.js"></script>
+}

@@ -1,0 +1,142 @@
+﻿@model cloudscribe.Core.Web.ViewModels.SiteUser.LoginViewModel
+@inject ISiteContextResolver siteResolver
+@inject ICoreThemeHelper themeHelper
+@inject IStringLocalizer<CloudscribeCore> sr
+@{
+    var themeSettings = themeHelper.GetThemeSettings();
+    ViewData["BodyClass"] = "account-section login-page";
+    ViewData["SocialFormat"] = sr["Log in using your {0} account"];
+    ViewData["SocialHeading"] = sr["Use an existing account to log in"];
+    var site = await siteResolver.ResolveSite(Context.Request.Host.Host, Context.Request.Path);
+
+}
+@section Meta {
+    <meta name="robots" content="noindex" />
+}
+@if (!string.IsNullOrWhiteSpace(Model.RecaptchaSiteKey))
+{
+    <script src='https://www.google.com/recaptcha/api.js'></script>
+}
+@if (Model.UseInvisibleCaptcha)
+{
+    <script>
+        function onCaptchaSubmit(token) { document.getElementById("login-form").submit(); }
+    </script>
+}
+<h2>@ViewData["Title"]</h2>
+@if (!string.IsNullOrWhiteSpace(Model.LoginInfoTop))
+{
+    <p>
+        @Html.Raw(Model.LoginInfoTop)
+    </p>
+}
+<div class="row">
+    @if (!Model.DisableDbAuth)
+    {
+        <div class="col-md">
+            <form id="login-form" asp-controller="Account" asp-action="Login" asp-route-returnurl='@ViewData["ReturnUrl"]' data-submit-once="true">
+                @*<div asp-validation-summary="All" class="text-danger"></div>*@
+                @if (Model.UseEmailForLogin)
+                {
+                    <div class="form-group">
+                        <label asp-for="Email">@sr["Email"]</label>
+                        <div class="input-group">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text"><i class="@themeSettings.Icons.Email" aria-hidden="true"></i></span>
+                            </div>
+                            <input asp-for="Email" class="form-control" />
+                            <span asp-validation-for="Email" class="invalid-feedback"></span>
+                        </div>
+                    </div>
+                }
+                else
+                {
+                    <div class="form-group">
+                        <label asp-for="UserName">@sr["Username"]</label>
+                        <div class="input-group">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text"><i class="@themeSettings.Icons.Username" aria-hidden="true"></i></span>
+                            </div>
+                            <input asp-for="UserName" class="form-control" />
+                            <span asp-validation-for="UserName" class="invalid-feedback"></span>
+                        </div>  
+                    </div>
+                }
+                <div class="form-group">
+                    <label asp-for="Password">@sr["Password"]</label>
+                    <div class="input-group">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text"><i class="@themeSettings.Icons.Password" aria-hidden="true"></i></span>
+                        </div>
+                        <input asp-for="Password" class="form-control" />
+                        <span asp-validation-for="Password" class="invalid-feedback"></span>
+                    </div>
+                    
+                </div>
+                @if (site.AllowPersistentLogin)
+                {
+                    <div class="form-group">
+                        <div class="form-check">
+                            <input asp-for="RememberMe" class="form-check-input" />
+                            <label asp-for="RememberMe" class="form-check-label">@sr["Remember Me"] </label>
+                        </div>
+                    </div>
+                }
+                @if (!string.IsNullOrWhiteSpace(Model.RecaptchaSiteKey) && !Model.UseInvisibleCaptcha)
+                {
+                    <div class="form-group">
+                        <div class="g-recaptcha" data-sitekey="@Model.RecaptchaSiteKey"></div>
+                        @Html.ValidationMessage("recaptchaerror", new { @class = "text-danger" })
+                    </div>
+                }
+                <div class="form-group">
+
+                    @if (!string.IsNullOrWhiteSpace(Model.RecaptchaSiteKey) && Model.UseInvisibleCaptcha)
+                    {
+                        <button class="btn btn-primary g-recaptcha" data-sitekey="@Model.RecaptchaSiteKey" data-callback='onCaptchaSubmit' data-enabled-text='@sr["log in"]' data-disabled-text='@sr["Working..."]'>@sr["Log in"]</button>
+                    }
+                    else
+                    {
+                        <button name="submit" type="submit" class="btn btn-primary" data-enabled-text='@sr["Log in"]' data-disabled-text='@sr["Working..."]'>@sr["Log in"]</button>
+                    }
+
+                    <input type="hidden" asp-for="UseEmailForLogin" />
+                </div>
+            </form>
+
+            @if (site.AllowNewRegistration)
+            {
+                <p>
+                    <a asp-action="Register" asp-route-returnurl="@ViewData["ReturnUrl"]">@sr["Register as a new user?"]</a>
+                </p>
+            }
+            <p>
+                <a asp-action="ForgotPassword">@sr["Forgot your password?"]</a>
+            </p>
+        </div>
+    }
+
+    @{
+        var LoginProviders = Model.ExternalAuthenticationList.ToList();
+        if (LoginProviders.Count > 0)
+        {
+            <div class="col-md">
+                @{await Html.RenderPartialAsync("SocialLoginPartial", LoginProviders); }
+            </div>
+        }
+    }
+
+</div>
+@if (!string.IsNullOrWhiteSpace(Model.LoginInfoBottom))
+{
+    <p>
+        @Html.Raw(Model.LoginInfoBottom)
+    </p>
+}
+@section Scripts {
+    @{await Html.RenderPartialAsync("_UnobtrusiveValidationScriptsPartial"); }
+    <script src="~/cr/js/cloudscribe-validation-requiredwhen.min.js"></script>
+    <script src="~/cr/js/unobtrusive-validation-bs4.min.js"></script>
+    <script src="~/cr/js/jquery.validate.hooks.min.js"></script>
+    <script src="~/cr/js/jqueryvaildation.submitonce-unobtrusive.min.js"></script>
+}

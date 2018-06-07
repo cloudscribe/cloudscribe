@@ -1,0 +1,33 @@
+﻿@model cloudscribe.Core.Web.ViewModels.UserAdmin.UserListViewModel
+@inject IStringLocalizer<CloudscribeCore> sr
+<div id="userLookupModal" class="modal-dialog modal-lg" role="document">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h2 class="modal-title" id="myModalLabel">@sr["Search Users"]</h2>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        </div>
+        <div class="modal-body">
+            <div id="usergridcontainer">
+                @{await Html.RenderPartialAsync("UserModalGridPartial", Model); }
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-primary" data-dismiss="modal">@sr["Close"]</button>
+        </div>
+    </div>
+</div>
+<script>
+function userSelected(ele) {
+    if (window.UserSelectedCallback) {
+        var userInfo = {
+            "id": ele.dataset.userId,
+            "email": ele.dataset.userEmail,
+            "displayName": ele.dataset.userDisplayName,
+            "firstName": ele.dataset.userFirstName,
+            "lastName":ele.dataset.userLastName
+        };
+        window.UserSelectedCallback(userInfo);
+    }
+    $('#userLookupModal').closest(".modal").modal("hide");
+}
+</script>

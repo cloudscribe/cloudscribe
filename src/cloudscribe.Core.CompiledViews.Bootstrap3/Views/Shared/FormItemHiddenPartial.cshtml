@@ -1,0 +1,8 @@
+﻿@model cloudscribe.Web.Common.Models.FormItemDefinition
+@using cloudscribe.Web.Common.Models
+@using cloudscribe.Web.Common
+@using Microsoft.Extensions.Localization
+@inject IStringLocalizer<CloudscribeCommonResources> sr
+@addTagHelper "*, cloudscribe.Web.Common"
+<input id="@Model.Key" name="@Model.Key" value="@ViewData[Model.Key]" type="hidden"  />
+           

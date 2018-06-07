@@ -1,0 +1,15 @@
+﻿
+@using cloudscribe.Core.Web
+@using Microsoft.Extensions.Options
+@using Microsoft.Extensions.Localization
+@inject IStringLocalizer<CloudscribeCore> sr
+@{ 
+    ViewData["BodyClass"] = "account-section access-denied";
+}
+
+<h2>@ViewData["Title"]</h2>
+
+<p>
+    @sr["Access Denied"]
+</p>
+

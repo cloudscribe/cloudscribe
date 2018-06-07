@@ -1,0 +1,16 @@
+﻿@inject ICoreThemeHelper themeHelper
+@inject IStringLocalizer<CloudscribeCore> sr
+@{ 
+    var themeSettings = themeHelper.GetThemeSettings();
+    var expanded = "false";
+    if(themeSettings.AdminSideNavExpanded)
+    {
+        expanded = "true";
+    }
+}
+<a id="sidenavtoggle"
+   class="btn btn-sm"
+   title="@sr["Toggle Side Menu"]" href="#"
+   data-target="#sidenavmenu"
+   data-toggle="collapse"
+   aria-expanded='@expanded'><i class="@themeSettings.Icons.AdminSideNavToggle"></i></a>

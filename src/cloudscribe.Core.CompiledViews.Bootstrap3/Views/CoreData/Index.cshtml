@@ -1,0 +1,21 @@
+﻿@using cloudscribe.Web.Navigation
+@using cloudscribe.Core.Web
+@using Microsoft.Extensions.Options
+@using Microsoft.Extensions.Localization
+@inject IStringLocalizer<CloudscribeCore> sr
+@{
+    ViewData["Title"] = sr["Core Data Administration"];
+}
+<div class="row">
+    <div class="col-md-10 col-md-push-2">
+        <h2>@ViewData["Title"]</h2>
+        @await Component.InvokeAsync("Navigation", new { viewName = "ChildTree", filterName = NamedNavigationFilters.ChildTree, startingNodeKey = "" })
+    </div>
+    <div class="col-md-2 col-md-pull-10 hidden-xs hidden-sm">
+        @await Component.InvokeAsync("Navigation", new { viewName = "SideNavAlt1", filterName = NamedNavigationFilters.ParentTree, startingNodeKey = "SiteAdmin" })
+    </div>
+</div>
+@section scripts {
+    @{ await Html.RenderPartialAsync("_SideMenuScriptsPartial"); }
+}
+

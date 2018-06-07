@@ -1,0 +1,15 @@
+﻿@model cloudscribe.Core.IdentityServerIntegration.Models.NewApiClaimViewModel
+@using cloudscribe.Core.IdentityServerIntegration
+@using Microsoft.Extensions.Localization
+@inject IStringLocalizer<CloudscribeIds4Resources> sr
+<form class="form-inline" asp-controller="ApiResource" asp-action="AddApiClaim">
+    <div class="form-group">
+        <label asp-for="Name">@sr["Name"]</label>
+        <input class="form-control" asp-for="Name">
+        <span asp-validation-for="Name" class="text-danger"></span>
+    </div>
+    <input asp-for="SiteId" type="hidden" />
+    <input asp-for="ApiName" type="hidden" />
+    <button type="submit" class="btn btn-default">@sr["Add Claim"]</button>
+    <div asp-validation-summary="All" class="text-danger"></div>
+</form>

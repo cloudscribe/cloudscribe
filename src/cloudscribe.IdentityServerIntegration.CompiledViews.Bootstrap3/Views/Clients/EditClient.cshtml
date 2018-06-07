@@ -1,0 +1,37 @@
+﻿@model cloudscribe.Core.IdentityServerIntegration.Models.ClientEditViewModel
+@using cloudscribe.Core.IdentityServerIntegration
+@using Microsoft.Extensions.Localization
+@inject IStringLocalizer<CloudscribeIds4Resources> sr
+<div class="row">
+    <div class="col-md-10 col-md-push-2">
+        @if (Model.CurrentClient == null)
+        {
+            <h2>@ViewData["Title"]</h2>
+            await Html.RenderPartialAsync("NewClientPartial", Model.NewClient);
+        }
+        else
+        {
+            <h2>@ViewData["Title"]</h2>
+            await Html.RenderPartialAsync("EditClientPartial", Model.CurrentClient);
+            await Html.RenderPartialAsync("ClientRedirectsPartial", Model.CurrentClient);
+            await Html.RenderPartialAsync("ClientLogoutRedirectsPartial", Model.CurrentClient);
+            await Html.RenderPartialAsync("ClientAllowedCorsOriginsPartial", Model.CurrentClient);
+            await Html.RenderPartialAsync("ClientSecretsPartial", Model.CurrentClient);
+            await Html.RenderPartialAsync("ClientClaimsPartial", Model.CurrentClient);
+            await Html.RenderPartialAsync("ClientAllowedGrantTypesPartial", Model.CurrentClient);
+            await Html.RenderPartialAsync("ClientAllowedScopesPartial", Model.CurrentClient);
+            await Html.RenderPartialAsync("ClientProviderRestrictionsPartial", Model.CurrentClient);
+            await Html.RenderPartialAsync("ClientPropertiesPartial", Model.CurrentClient);
+
+        }
+    </div>
+    <div class="col-md-2 col-md-pull-10">
+        @await Component.InvokeAsync("Navigation", new { viewName = "SideNavAlt1", filterName = NamedNavigationFilters.ParentTree, startingNodeKey = "SiteAdmin" })
+    </div>
+</div>
+
+
+@section Scripts {
+@{ await Html.RenderPartialAsync("_SideMenuScriptsPartial"); }
+@{await Html.RenderPartialAsync("_UnobtrusiveValidationScriptsPartial"); }
+}

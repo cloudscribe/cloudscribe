@@ -1,0 +1,11 @@
+﻿@using cloudscribe.Core.Web
+@using Microsoft.Extensions.Options
+@using Microsoft.Extensions.Localization
+@inject IStringLocalizer<CloudscribeCore> sr
+@{ 
+    ViewData["BodyClass"] = "account-section account-lockout";
+}
+<header>
+    <h1 class="text-danger">@ViewData["Title"]</h1>
+    <p class="text-danger">@sr["This account has been locked out, please try again later."]</p>
+</header>

@@ -1,0 +1,180 @@
+﻿@model cloudscribe.Core.IdentityServerIntegration.Models.ClientItemViewModel
+@using cloudscribe.Core.IdentityServerIntegration
+@inject IStringLocalizer<CloudscribeIds4Resources> sr
+    <form asp-controller="Clients" asp-action="EditClient">
+        <input asp-for="SiteId" type="hidden" />
+        <input name="ClientId" value="@Model.ClientId" type="hidden" />
+        @*<div asp-validation-summary="All" class="text-danger"></div>*@
+        <div class="form-group">
+            <label>@sr["Id"]</label>
+            <label class="form-control">@Model.ClientId</label>
+        </div>
+        <div class="form-group">
+            <label for="ClientName">@sr["Name"]</label>
+            <input class="form-control" asp-for="ClientName" />
+            <span asp-validation-for="ClientName" class="invalid-feedback"></span>
+            @Html.ValidationMessage("clienterror", new { @class = "text-danger" })
+        </div>
+        <div class="form-group">
+            <label for="ClientUri">@sr["Client Uri"]</label>
+            <input class="form-control" asp-for="ClientUri" />
+            <span asp-validation-for="ClientUri" class="invalid-feedback"></span>
+        </div>
+        <div class="form-group">
+            <label for="AccessTokenType">@sr["Access Token Type"]</label>
+            <select asp-for="AccessTokenType">
+                <option value="Jwt">Jwt</option>
+                <option value="Reference">Reference</option>
+            </select>
+        </div>
+        <div class="form-group">
+            <label for="RefreshTokenExpiration">@sr["Refresh Token Expiration"]</label>
+            <select asp-for="RefreshTokenExpiration">
+                <option value="Sliding">Sliding</option>
+                <option value="Absolute">Absolute</option>
+            </select>
+        </div>
+        <div class="form-group">
+            <label for="RefreshTokenUsage">@sr["Refresh Token Usage"]</label>
+            <select asp-for="RefreshTokenUsage">
+                <option value="ReUse">ReUse</option>
+                <option value="OneTimeOnly">OneTimeOnly</option>
+            </select>
+        </div>
+        <div class="form-group">
+            <label for="LogoUri">@sr["Logo Uri"]</label>
+            <input class="form-control" asp-for="LogoUri" />
+            <span asp-validation-for="LogoUri" class="invalid-feedback"></span>
+        </div>
+        <div class="form-group">
+            <label for="FrontChannelLogoutUri">@sr["Front Channel Logout Uri"]</label>
+            <input class="form-control" asp-for="FrontChannelLogoutUri" />
+            <span asp-validation-for="FrontChannelLogoutUri" class="invalid-feedback"></span>
+        </div>
+        <div class="form-group">
+            <label for="BackChannelLogoutUri">@sr["Back Channel Logout Uri"]</label>
+            <input class="form-control" asp-for="BackChannelLogoutUri" />
+            <span asp-validation-for="BackChannelLogoutUri" class="invalid-feedback"></span>
+        </div>
+        <div class="form-group">
+            <label for="AbsoluteRefreshTokenLifetime">@sr["Absolute Refresh Token Lifetime"]</label>
+            <input class="form-control" asp-for="AbsoluteRefreshTokenLifetime" />
+            <span asp-validation-for="AbsoluteRefreshTokenLifetime" class="invalid-feedback"></span>
+        </div>
+        <div class="form-group">
+            <label for="AccessTokenLifetime">@sr["Access Token Lifetime"]</label>
+            <input class="form-control" asp-for="AccessTokenLifetime" />
+            <span asp-validation-for="AccessTokenLifetime" class="invalid-feedback"></span>
+        </div>
+        <div class="form-group">
+            <label for="AuthorizationCodeLifetime">@sr["Authorization Code Lifetime"]</label>
+            <input class="form-control" asp-for="AuthorizationCodeLifetime" />
+            <span asp-validation-for="AuthorizationCodeLifetime" class="invalid-feedback"></span>
+        </div>
+        <div class="form-group">
+            <label for="IdentityTokenLifetime">@sr["Identity Token Lifetime"]</label>
+            <input class="form-control" asp-for="IdentityTokenLifetime" />
+            <span asp-validation-for="IdentityTokenLifetime" class="invalid-feedback"></span>
+        </div>
+        <div class="form-group">
+            <label for="SlidingRefreshTokenLifetime">@sr["Sliding Refresh Token Lifetime"]</label>
+            <input class="form-control" asp-for="SlidingRefreshTokenLifetime" />
+            <span asp-validation-for="SlidingRefreshTokenLifetime" class="invalid-feedback"></span>
+        </div>
+        <div class="form-group">
+            <label for="ClientClaimsPrefix">@sr["Client Claims Prefix"]</label>
+            <input class="form-control" asp-for="ClientClaimsPrefix" />
+            <span asp-validation-for="ClientClaimsPrefix" class="invalid-feedback"></span>
+        </div>
+        <div class="form-group">
+            <label for="PairWiseSubjectSalt">@sr["Pairwise Subject Salt"]</label>
+            <input class="form-control" asp-for="PairWiseSubjectSalt" />
+            <span asp-validation-for="PairWiseSubjectSalt" class="invalid-feedback"></span>
+        </div>
+        <div class="form-group">
+            <div class="form-check">
+                <input asp-for="Enabled" class="form-check-input" />
+                <label asp-for="Enabled" class="form-check-label">@sr["Enabled"]</label>
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="form-check">
+                <input asp-for="EnableLocalLogin" class="form-check-input" />
+                <label asp-for="EnableLocalLogin" class="form-check-label">@sr["Enable Local Login"]</label>
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="form-check">
+                <input asp-for="RequireConsent" class="form-check-input" />
+                <label asp-for="RequireConsent" class="form-check-label">@sr["Require Consent"]</label>
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="form-check">
+                <input asp-for="AllowRememberConsent" class="form-check-input" />
+                <label asp-for="RequireConsent" class="form-check-label">@sr["Allow Remember Consent"]</label>
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="form-check">
+                <input asp-for="RequirePkce" class="form-check-input" />
+                <label asp-for="RequirePkce" class="form-check-label">@sr["Require Pkce"]</label>
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="form-check">
+                <input asp-for="RequireClientSecret" class="form-check-input" />
+                <label asp-for="RequireClientSecret" class="form-check-label">@sr["Require Client Secret"]</label>
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="form-check">
+                <input asp-for="AlwaysIncludeUserClaimsInIdToken" class="form-check-input" />
+                <label asp-for="AlwaysIncludeUserClaimsInIdToken" class="form-check-label">@sr["Always Include User Claims In Id Token"]</label>
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="form-check">
+                <input asp-for="AllowAccessTokensViaBrowser" class="form-check-input" />
+                <label asp-for="AllowAccessTokensViaBrowser" class="form-check-label">@sr["Allow Access Tokens Via Browser"]</label>
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="form-check">
+                <input asp-for="AlwaysSendClientClaims" class="form-check-input" />
+                <label asp-for="AlwaysSendClientClaims" class="form-check-label">@sr["Always Send Client Claims"]</label>
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="form-check">
+                <input asp-for="IncludeJwtId" class="form-check-input" />
+                <label asp-for="IncludeJwtId" class="form-check-label">@sr["Include Jwt Id"]</label>
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="form-check">
+                <input asp-for="FrontChannelLogoutSessionRequired" class="form-check-input" />
+                <label asp-for="FrontChannelLogoutSessionRequired" class="form-check-label">@sr["Logout Session Required"]</label>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <div class="form-check">
+                <input asp-for="UpdateAccessTokenClaimsOnRefresh" class="form-check-input" />
+                <label asp-for="UpdateAccessTokenClaimsOnRefresh" class="form-check-label">@sr["Update Access Token Claims On Refresh"]</label>
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="form-check">
+                <input asp-for="AllowOfflineAccess" class="form-check-input" />
+                <label asp-for="AllowOfflineAccess" class="form-check-label">@sr["Allow Offline Access"]</label>
+            </div>
+        </div>
+        <div class="form-group">
+            <button name="submit" type="submit" class="btn btn-primary">@sr["Save"]</button>
+            <a class="btn btn-primary" asp-action="Index" asp-controller="Clients"
+                    asp-route-siteId="SiteId">@sr["Cancel"]</a>
+        </div>
+    
+    </form>
+   

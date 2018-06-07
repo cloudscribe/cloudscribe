@@ -1,0 +1,136 @@
+﻿@model cloudscribe.Core.Web.ViewModels.UserAdmin.UserActivityViewModel
+@using cloudscribe.Web.Pagination
+@addTagHelper "*, cloudscribe.Web.Pagination"
+@using cloudscribe.Core.Web
+@using cloudscribe.Core.Models
+@using cloudscribe.Web.Common
+@using Microsoft.Extensions.Options
+@using Microsoft.Extensions.Localization
+@inject IStringLocalizer<CloudscribeCore> sr
+@inject ITimeZoneHelper tzHelper
+@{
+    var lastLogin = "";
+    var lastPasswordChange = "";
+    if (Model.LastLoginUtc != null)
+    {
+        lastLogin = tzHelper.ConvertToLocalTime(Model.LastLoginUtc.Value, Model.TimeZoneId).ToString("g");
+    }
+    if (Model.LastPassswordChangenUtc != null)
+    {
+        lastPasswordChange = tzHelper.ConvertToLocalTime(Model.LastPassswordChangenUtc.Value, Model.TimeZoneId).ToString("g");
+
+    }
+}
+<div class="row">
+    <div class="col-md-10 col-md-push-2">
+        <h2>@ViewData["Title"]</h2>
+        <a asp-controller="UserAdmin" asp-action="UserEdit" asp-route-siteid="@Model.SiteId" asp-route-userid="@Model.UserId" title="Manage">
+            <img gravatar-email="@Model.Email" gravatar-size="60" />
+        </a>
+        <table class="table table-striped">
+            <tr>
+                <th>@sr["Email"]</th>
+                <td>@Model.Email</td>
+            </tr>
+            <tr>
+                <th>@sr["Name"]</th>
+                <td>@Model.DisplayName @Model.FirstName @Model.LastName</td>
+            </tr>
+            <tr>
+                <th>@sr["Created"]</th>
+                <td>@Model.CreatedUtc</td>
+            </tr>
+            <tr>
+                <th>@sr["Last Login"]</th>
+                <td>
+                    @lastLogin
+                </td>
+            </tr>
+            <tr>
+                <th>@sr["Last Password Change"]</th>
+                <td>
+                    @lastPasswordChange
+                </td>
+            </tr>
+            <tr>
+                <th>@sr["2 Factor Enabled"]</th>
+                <td>@Model.TwoFactor</td>
+            </tr>
+            <tr>
+                <th>@sr["Time Zone"]</th>
+                <td>@Model.UserTimeZone</td>
+            </tr>
+            @if (Model.Logins.Count > 0)
+            {
+                <tr>
+                    <th>
+                        @sr["Social Logins"]
+                    </th>
+                    <td>
+                        @foreach (var account in Model.Logins)
+                        {
+                            @account.LoginProvider @:&nbsp;
+                        }
+                    </td>
+                </tr>
+            }
+
+        </table>
+
+        @if (Model.Locations.Data.Count > 0)
+        {
+            <table class="table table-striped">
+                <tr>
+                    <th>
+                        @sr["Ip Address"]
+                    </th>
+                    <th>
+                        @sr["Capture Count"]
+                    </th>
+                    <th>
+                        @sr["First Capture"]
+                    </th>
+                    <th>
+                        @sr["Last Capture"]
+                    </th>
+                </tr>
+                @foreach (var loc in Model.Locations.Data)
+                {
+                    <tr>
+                        <td>
+                            @loc.IpAddress
+                        </td>
+                        <td>@loc.CaptureCount</td>
+                        <td>
+                            @tzHelper.ConvertToLocalTime(loc.FirstCaptureUtc, Model.TimeZoneId).ToString("g")
+                        </td>
+                        <td>
+                            @tzHelper.ConvertToLocalTime(loc.LastCaptureUtc, Model.TimeZoneId).ToString("g")
+                        </td>
+                    </tr>
+
+                }
+            </table>
+            <div>
+                <cs-pager asp-action="UserActivity" asp-controller="UserAdmin"
+                          asp-route-siteId="@Model.SiteId"
+                          asp-route-userid="@Model.UserId"
+                          asp-route-pagesize="@Model.Locations.PageSize"
+                          cs-paging-pagesize="@Model.Locations.PageSize"
+                          cs-paging-pagenumber="@Model.Locations.PageNumber"
+                          cs-paging-totalitems="@Model.Locations.TotalItems"
+                          cs-paging-maxpageritems="@Model.Locations.PageSize"
+                          cs-first-page-title='@sr["First Page"]'
+                          cs-last-page-title='@sr["Last Page"]'
+                          cs-previous-page-title='@sr["Previous page"]'
+                          cs-next-page-title='@sr["Next page"]'></cs-pager>
+            </div>
+        }
+    </div>
+    <div class="col-md-2 col-md-pull-10 hidden-xs hidden-sm">
+        @await Component.InvokeAsync("Navigation", new { viewName = "SideNavAlt1", filterName = NamedNavigationFilters.ParentTree, startingNodeKey = "SiteAdmin" })
+    </div>
+</div>
+@section scripts {
+    @{ await Html.RenderPartialAsync("_SideMenuScriptsPartial"); }
+}

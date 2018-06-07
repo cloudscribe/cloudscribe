@@ -1,0 +1,63 @@
+﻿@model cloudscribe.Core.IdentityServerIntegration.Models.ClientItemViewModel
+@using cloudscribe.Core.IdentityServerIntegration
+@using Microsoft.Extensions.Localization
+@inject IStringLocalizer<CloudscribeIds4Resources> sr
+@{
+    var claimIndex = 0;
+}
+<div class="col-md-offset-2 col-md-10">
+    <h3>@sr["Claims"] </h3>
+    @{ await Html.RenderPartialAsync("AddClientClaimPartial", Model);}
+    @if (Model.Client.Claims.Count > 0)
+    {
+        <table class="table table-striped">
+            <tr>
+                <th></th>
+                <th>
+                    @sr["Type"]
+                </th>
+                <th>
+                    @sr["Value"]
+                </th>
+            </tr>
+            @foreach (var c in Model.Client.Claims)
+            {
+                <tr>
+                    <td>
+                        <button type="button" class="btn btn-danger btn-xs" data-toggle="modal" data-target="@("#confirmDeleteClaimModal" + claimIndex)">
+                            @sr["Delete"]
+                        </button>
+                        <form asp-controller="Clients" asp-action="DeleteClientClaim">
+                            <input asp-for="SiteId" type="hidden" />
+                            <input name="ClientId" value="@Model.Client.ClientId" type="hidden" />
+                            <input name="ClaimType" value="@c.Type" type="hidden" />
+                            <input name="ClaimValue" value="@c.Value" type="hidden" />
+                            <div class="modal fade" id="@("confirmDeleteClaimModal" + claimIndex)" tabindex="-1" role="dialog" aria-labelledby="@("confirmDeleteClaimHeading" + claimIndex)">
+                                <div class="modal-dialog modal-sm" role="document">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <button type="button" class="close" data-dismiss="modal" aria-label='@sr["Close"]'><span aria-hidden="true">&times;</span></button>
+                                            <h4 class="modal-title" id="@("confirmDeleteClaimHeading" + claimIndex)">@sr["Confirm Delete"]</h4>
+                                        </div>
+                                        <div class="modal-body">
+                                            @string.Format(sr["Are you sure you want to delete the claim {0}?"], c.Type)
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn btn-default" data-dismiss="modal">@sr["Cancel"]</button>
+                                            <input type="submit" value='@sr["Delete"]' class="btn btn-danger btn-ok" />
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                    </td>
+                    <td>@c.Type</td>
+                    <td>@c.Value</td>
+                </tr>
+                {
+                    claimIndex += 1;
+                }
+            }
+        </table>
+    }
+</div>

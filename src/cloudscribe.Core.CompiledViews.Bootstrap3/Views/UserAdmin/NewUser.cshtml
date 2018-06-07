@@ -1,0 +1,113 @@
+﻿@model cloudscribe.Core.Web.ViewModels.UserAdmin.NewUserViewModel
+@using cloudscribe.Core.Web
+@using cloudscribe.Core.Web.Components
+@using Microsoft.Extensions.Options
+@using Microsoft.Extensions.Localization
+@inject IStringLocalizer<CloudscribeCore> sr
+@section Styles {
+
+    @{ await Html.RenderPartialAsync("NewUserStylePartial"); }
+}
+<div class="row">
+    <div class="col-md-10 col-md-push-2">
+        <h2>@ViewBag.Title</h2>
+        <form class="form-horizontal" role="form" asp-controller="UserAdmin" asp-action="NewUser" data-submit-once="true">
+            <input asp-for="UserId" type="hidden" />
+            <input asp-for="SiteId" type="hidden" />
+            @if (Model.UserId != Guid.Empty)
+            {
+                <div class="form-group">
+                    <label asp-for="UserId" class="col-md-2 control-label">@sr["UserId"]</label>
+                    <div class="col-md-10">
+                        <label class="control-label">@Model.UserId.ToString()</label>
+                    </div>
+                </div>
+            }
+            <div class="form-group">
+                <label asp-for="Email" class="col-md-2 control-label">@sr["Email"]</label>
+                <div class="col-md-10">
+                    <input asp-for="Email" class="form-control" />
+                    <span asp-validation-for="Email" class="text-danger"></span>
+                </div>
+            </div>
+            <div class="form-group">
+                <label asp-for="Username" class="col-md-2 control-label">@sr["Username"]</label>
+                <div class="col-md-10">
+                    <input asp-for="Username" class="form-control"
+                           data-remote-validate-onblur="true"
+                           data-error-target-id="spnUserNameWarn"
+                           data-additional-input-ids="UserId"
+                           data-validation-url='@Url.Action("UsernameAvailable", "Account")' />
+                    <span asp-validation-for="Username" class="text-danger"></span>
+                    <span id="spnUserNameWarn" class="text-danger" data-error-message='@sr["Username is already in use"]'></span>
+                    @Html.ValidationMessage("usernameerror", new { @class = "text-danger" })
+                </div>
+            </div>
+            <div class="form-group">
+                <label asp-for="DisplayName" class="col-md-2 control-label">@sr["Display Name"]</label>
+                <div class="col-md-10">
+                    <input asp-for="DisplayName" class="form-control" />
+                    <span asp-validation-for="DisplayName" class="text-danger"></span>
+                </div>
+            </div>
+            <div class="form-group">
+                <label asp-for="FirstName" class="col-md-2 control-label">@sr["First Name"]</label>
+                <div class="col-md-10">
+                    <input asp-for="FirstName" class="form-control" />
+                </div>
+            </div>
+            <div class="form-group">
+                <label asp-for="LastName" class="col-md-2 control-label">@sr["Last Name"]</label>
+                <div class="col-md-10">
+                    <input asp-for="LastName" class="form-control" />
+                </div>
+            </div>
+            @if (Model.UserId == Guid.Empty)
+            {
+                <div class="form-group">
+                    <label asp-for="Password" class="col-md-2 control-label">@sr["Password"]</label>
+                    <div class="col-md-10">
+                        <input asp-for="Password" type="password" class="form-control" />
+                        <span asp-validation-for="Password" class="text-danger"></span>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label asp-for="ConfirmPassword" class="col-md-2 control-label">@sr["Confirm Password"]</label>
+                    <div class="col-md-10">
+                        <input asp-for="ConfirmPassword" type="password" class="form-control" />
+                        <span asp-validation-for="ConfirmPassword" class="text-danger"></span>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-md-offset-2 col-md-12">
+                        <div class="checkbox">
+                            <label>
+                                <input asp-for="MustChangePwd" /> @sr["Must Change Password"]
+                            </label>
+                        </div>
+                    </div>
+                </div>
+            }
+            
+            @{await Html.RenderPartialAsync("NewUserMiddlePartial", Model); }
+            <div class="form-group">
+                <div class="col-md-offset-2 col-md-10">
+                    <button type="submit" class="btn btn-default" data-disabled-text='@sr["Working..."]' data-enabled-text='@sr["Save"]'>@sr["Save"]</button>
+                </div>
+            </div>
+            <div asp-validation-summary="All" class="text-danger"></div>
+        </form>
+    </div>
+    <div class="col-md-2 col-md-pull-10 hidden-xs hidden-sm">
+        @await Component.InvokeAsync("Navigation", new { viewName = "SideNavAlt1", filterName = NamedNavigationFilters.ParentTree, startingNodeKey = "SiteAdmin" })
+    </div>
+</div>
+@section Scripts {
+    @{ await Html.RenderPartialAsync("NewUserScriptsPartial"); }
+
+    <script src="~/cr/js/remote-validation-onblur-unobtrusive.min.js"></script>
+    <script src="~/cr/js/jquery.validate.hooks.min.js"></script>
+    <script src="~/cr/js/jqueryvaildation.submitonce-unobtrusive.min.js"></script>
+    @*<script src="~/js/jquery.validate.hooks.js" asp-append-version="true"></script>*@
+    @*<script src="~/js/jqueryvaildation.submitonce-unobtrusive.js" asp-append-version="true"></script>*@
+}

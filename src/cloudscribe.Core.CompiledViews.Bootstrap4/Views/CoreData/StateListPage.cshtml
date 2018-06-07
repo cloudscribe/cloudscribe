@@ -1,0 +1,106 @@
+﻿@model cloudscribe.Core.Web.ViewModels.CoreData.StateListPageViewModel
+@inject ICoreThemeHelper themeHelper
+@inject IStringLocalizer<CloudscribeCore> sr
+@{
+    ViewData["Title"] = sr["State List Administration"];
+    var themeSettings = themeHelper.GetThemeSettings();
+    if (themeSettings.AdminSideNavExpanded) { ViewData["SideNavToggle"] = "show"; }
+    ViewData["SideNavVisible"] = true;
+}
+
+<h2>@ViewData["Title"]</h2>
+<h3>@Model.Country.Name</h3>
+<table class="table table-striped">
+    <tr>
+        <th>
+            <a class="btn btn-xs btn-primary" asp-action="StateEdit" asp-controller="CoreData"
+               asp-route-countryId="@Model.Country.Id"
+               asp-route-crp="@Model.CountryListReturnPageNumber"
+               asp-route-returnPageNumber="@Model.States.PageNumber">@sr["New State"]</a>
+        </th>
+        <th>
+            @sr["Name"]
+        </th>
+        <th>
+            @sr["Code"]
+        </th>
+    </tr>
+    @foreach (var item in Model.States.Data)
+    {
+        <tr>
+            <td>
+                <a class="btn btn-xs btn-primary" asp-action="StateEdit" asp-controller="CoreData"
+                   asp-route-countryId="@Model.Country.Id"
+                   asp-route-stateId="@item.Id"
+                   asp-route-crp="@Model.CountryListReturnPageNumber"
+                   asp-route-returnpagenumber="@Model.States.PageNumber">@sr["Edit"]</a>
+                <button type="button" class="btn btn-danger btn-xs" data-toggle="modal" data-target="@("#confirmDeleteModal" + item.Id)">
+                    @sr["Delete"]
+                </button>
+                <form asp-controller="CoreData" asp-action="StateDelete">
+                    <input type="hidden" name="countryId" value="@item.CountryId" />
+                    <input type="hidden" name="stateId" value="@item.Id" />
+                    <input type="hidden" name="crp" value="@Model.CountryListReturnPageNumber" />
+                    <input type="hidden" name="returnPageNumber" value="@Model.States.PageNumber" />
+                    <div class="modal fade" id="@("confirmDeleteModal" + item.Id)" tabindex="-1" role="dialog" aria-labelledby="@("confirmDeleteHeading" + item.Id)">
+                        <div class="modal-dialog modal-sm" role="document">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h4 class="modal-title" id="@("confirmDeleteHeading" + item.Id)">@sr["Confirm Delete"]</h4>
+                                    <button type="button" class="close" data-dismiss="modal" aria-label='@sr["Close"]'><span aria-hidden="true">&times;</span></button>
+                                </div>
+                                <div class="modal-body">
+                                    @string.Format(sr["Are you sure you want to delete {0}?"], item.Name)
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-primary" data-dismiss="modal">@sr["Cancel"]</button>
+                                    <input type="submit" value='@sr["Delete"]' class="btn btn-danger btn-ok" />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Name)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Code)
+            </td>
+        </tr>
+    }
+</table>
+
+<cs-pager asp-action="StateListPage" asp-controller="CoreData"
+          asp-route-countryId="@Model.Country.Id"
+          asp-route-crp="@Model.CountryListReturnPageNumber"
+          asp-route-pagesize="@Model.States.PageSize"
+          cs-paging-pagenumber="@Model.States.PageNumber"
+          cs-paging-totalitems="@Model.States.TotalItems"
+          cs-first-page-title='@sr["First Page"]'
+          cs-last-page-title='@sr["Last Page"]'
+          cs-previous-page-title='@sr["Previous page"]'
+          cs-next-page-title='@sr["Next page"]'
+          cs-pager-ul-class="pagination d-flex flex-wrap"
+          cs-pager-li-current-class="page-item active"
+          cs-pager-li-other-class="page-item"
+          cs-pager-li-non-active-class="page-item disabled"
+          cs-pager-link-current-class="page-link"
+          cs-pager-link-other-class="page-link"></cs-pager>
+
+<div>
+    <a class="btn btn-primary" asp-action="CountryListPage" asp-controller="CoreData"
+       asp-route-pageNumber="@Model.CountryListReturnPageNumber">@sr["Back To Country List"]</a>
+</div>
+
+@section SideNav {
+    @{ await Html.RenderPartialAsync("AdminSideNav"); }
+}
+@section Toolbar{
+    @{ await Html.RenderPartialAsync("AdminSideNavToggle"); }
+}
+@section scripts {
+    @{ await Html.RenderPartialAsync("AdminSideNavScripts"); }
+}
+
+

@@ -1,0 +1,228 @@
+﻿@model cloudscribe.Core.Web.ViewModels.Account.EditUserViewModel
+@using cloudscribe.Web.Common.Models
+@using cloudscribe.Web.Common.Components
+@using cloudscribe.Core.Web
+@using Microsoft.Extensions.Options
+@using Microsoft.Extensions.Localization
+@inject IStringLocalizer<CloudscribeCore> sr
+@inject ICkeditorOptionsResolver editorOptionsResolver
+@{
+    var ckOptions = await editorOptionsResolver.GetCkeditorOptions();
+
+}
+@section Styles {
+    @{await Html.RenderPartialAsync("UserEditStylePartial"); }
+}
+
+<div class="row">
+    <div class="col-md-10 col-md-push-2">
+        <h2>@ViewData["Title"]</h2>
+
+
+        @if (Model.UserId != Guid.Empty && !Model.AccountApproved)
+    {
+        <div class="col-md-10 col-md-offset-2">
+            <form class="form-inline" role="form" asp-controller="UserAdmin" asp-action="ApproveUserAccount" asp-route-returnurl='@ViewData["ReturnUrl"]'>
+                <input asp-for="UserId" type="hidden" />
+                <input asp-for="SiteId" type="hidden" />
+                <div class="checkbox">
+                    <label>
+                        <input type="checkbox" asp-for="SendApprovalEmail"> @sr["Send Email Notification"]
+                    </label>
+                </div>
+                <button type="submit" class="btn btn-success">@sr["Approve this account"]</button>
+            </form>
+        </div>
+}
+        <form data-submit-once="true" class="form-horizontal" role="form" asp-controller="UserAdmin" asp-action="UserEdit">
+            <input asp-for="UserId" type="hidden" />
+            <input asp-for="SiteId" type="hidden" />
+            <div col-md-12>
+                <div class="col-md-2">
+                    <a asp-controller="UserAdmin" asp-action="UserActivity" asp-route-siteid="@Model.SiteId" asp-route-userid="@Model.UserId" title="Activty">
+                        <img class="pull-right" gravatar-email="@Model.Email" gravatar-size="60" />
+                    </a>
+                </div>
+                <div class="col-md-10 ">
+                    <div class="form-group">
+                        <div class="">
+                            <div class="checkbox">
+                                <label>
+                                    <input asp-for="EmailConfirmed" /> @sr["Email Confirmed"]
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="">
+                            <div class="checkbox">
+                                <label>
+                                    <input asp-for="IsLockedOut" /> @sr["Account Locked"]
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            @if (Model.UserId != Guid.Empty)
+        {
+            <div class="form-group">
+                <label asp-for="UserId" class="col-md-2 control-label">@sr["UserId"]</label>
+                <div class="col-md-10">
+                    <label class="control-label">@Model.UserId.ToString()</label>
+                </div>
+            </div>
+    }
+            <div class="form-group">
+                <label asp-for="Email" class="col-md-2 control-label">@sr["Email"]</label>
+                <div class="col-md-10">
+                    <input asp-for="Email" class="form-control" />
+                    <span asp-validation-for="Email" class="text-danger"></span>
+                </div>
+            </div>
+            <div class="form-group">
+                <label asp-for="Username" class="col-md-2 control-label">@sr["Username"]</label>
+                <div class="col-md-10">
+                    <input asp-for="Username" class="form-control"
+                           data-remote-validate-onblur="true"
+                           data-error-target-id="spnUserNameWarn"
+                           data-additional-input-ids="UserId"
+                           data-validation-url='@Url.Action("UsernameAvailable", "Account")' />
+                    <span asp-validation-for="Username" class="text-danger"></span>
+                    <span id="spnUserNameWarn" class="text-danger" data-error-message='@sr["Username is already in use"]'></span>
+                    @Html.ValidationMessage("usernameerror", new { @class = "text-danger" })
+                </div>
+            </div>
+            <div class="form-group">
+                <label asp-for="DisplayName" class="col-md-2 control-label">@sr["Display Name"]</label>
+                <div class="col-md-10">
+                    <input asp-for="DisplayName" class="form-control" />
+                    <span asp-validation-for="DisplayName" class="text-danger"></span>
+                </div>
+            </div>
+            <div class="form-group">
+                <label asp-for="FirstName" class="col-md-2 control-label">@sr["First Name"]</label>
+                <div class="col-md-10">
+                    <input asp-for="FirstName" class="form-control" />
+                </div>
+            </div>
+            <div class="form-group">
+                <label asp-for="LastName" class="col-md-2 control-label">@sr["Last Name"]</label>
+                <div class="col-md-10">
+                    <input asp-for="LastName" class="form-control" />
+                </div>
+            </div>
+            <div class="form-group">
+                <label asp-for="DateOfBirth" class="col-md-2 control-label">@sr["Date of Birth"]</label>
+                <div class="col-md-10">
+                    <input name="DateOfBirth" value="@(Model.DateOfBirth.HasValue ? Model.DateOfBirth.Value.ToString("d") : string.Empty)"
+                           class="form-control"
+                           data-bs-datepicker="true"
+                           data-bs-datepicker-debug="false"
+                           data-bs-datepicker-keepOpen="false"
+                           data-bs-datepicker-allowInputToggle="true"
+                           data-bs-datepicker-viewMode="years"
+                           data-bs-datepicker-usecurrent="false"
+                           data-bs-datepicker-format="L"
+                           data-bs-datepicker-locale="@System.Globalization.CultureInfo.CurrentCulture.Name"
+                           data-bs-datepicker-mindate="@DateTime.UtcNow.AddYears(-120).ToString("O")"
+                           data-bs-datepicker-maxdate="@DateTime.UtcNow.AddYears(-10).ToString("O")"
+                           data-bs-datepicker-viewDate="@DateTime.UtcNow.AddYears(-10).ToString("O")" />
+                    <span asp-validation-for="DateOfBirth" class="text-danger"></span>
+                </div>
+            </div>
+            <div class="form-group">
+                <label asp-for="TimeZoneId" class="col-md-2 control-label">@sr["Time Zone"]</label>
+                <div class="col-md-10">
+                    <select asp-for="TimeZoneId"
+                            asp-items="Model.AllTimeZones" class="form-control"></select>
+                    <span asp-validation-for="TimeZoneId" class="text-danger"></span>
+                </div>
+            </div>
+            <div class="form-group">
+                <label asp-for="WebSiteUrl" class="col-md-2 control-label">@sr["Website Url"]</label>
+                <div class="col-md-10">
+                    <input asp-for="WebSiteUrl" class="form-control" />
+                </div>
+            </div>
+            @{await Html.RenderPartialAsync("UserEditMiddlePartial", Model); }
+            <div class="form-group">
+                <label asp-for="Comment" class="col-md-2 control-label"></label>
+                <div class="col-md-10">
+                    <textarea class="form-control" rows="5" asp-for="Comment"
+                              data-ckeditor-unobtrusive=""
+                              data-ckeditor-config-url="@ckOptions.CustomConfigPath"
+                              data-ckeditor-config-language="@ckOptions.LanguageCode"
+                              data-ckeditor-config-dropfileuploadurl="@ckOptions.DropFileUrl"
+                              data-ckeditor-config-filebrowserurl="@ckOptions.FileBrowseUrl"
+                              data-ckeditor-config-imagebrowseurl="@ckOptions.ImageBrowseUrl"></textarea>
+                </div>
+            </div>
+
+
+            <div class="form-group">
+                <div class="col-md-offset-2 col-md-10">
+                    <button id="btnSave" type="submit" class="btn btn-default" data-enabled-text='@sr["Save"]' data-disabled-text='@sr["Working..."]'>@sr["Save"]</button>
+                    @if (Model.UserId != Guid.Empty)
+                {
+
+                    <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#confirmDeleteModal">
+                        @sr["Delete"]
+                    </button>
+                    @Html.ValidationMessage("deleteerror", new { @class = "text-danger" })
+                    <a asp-controller="UserAdmin" asp-action="ChangeUserPassword" asp-route-siteid="@Model.SiteId" asp-route-userid="@Model.UserId">@sr["Change Password"]</a>
+            }
+                </div>
+            </div>
+            <div asp-validation-summary="All" class="text-danger"></div>
+        </form>
+        @if (Model.UserId != Guid.Empty)
+    {
+        <form id="deleteform" class="form-inline" asp-controller="UserAdmin" asp-action="UserDelete">
+            <input asp-for="SiteId" type="hidden" />
+            <input asp-for="UserId" type="hidden" />
+
+            <div class="modal fade" id="confirmDeleteModal" tabindex="-1" role="dialog" aria-labelledby="confirmDeleteHeading">
+                <div class="modal-dialog modal-sm" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal" aria-label='@sr["Close"]'><span aria-hidden="true">&times;</span></button>
+                            <h4 class="modal-title" id="confirmDeleteHeading">@sr["Confirm Delete"]</h4>
+                        </div>
+                        <div class="modal-body">
+                            @string.Format(sr["Are you sure you want to delete the user {0}? You cannot undo this action."], Model.DisplayName)
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-default" data-dismiss="modal">@sr["Cancel"]</button>
+                            <input type="submit" value='@sr["Delete"]' class="btn btn-danger btn-ok" />
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+
+        </form>
+}
+        <div class="col-md-offset-2 col-md-10">
+            @{ await Html.RenderPartialAsync("UserRoles", Model); }
+        </div>
+        <div class="col-md-offset-2 col-md-10">
+            @{ await Html.RenderPartialAsync("UserClaims", Model); }
+        </div>
+    </div>
+    <div class="col-md-2 col-md-pull-10 hidden-xs hidden-sm">
+        @await Component.InvokeAsync("Navigation", new { viewName = "SideNavAlt1", filterName = NamedNavigationFilters.ParentTree, startingNodeKey = "SiteAdmin" })
+    </div>
+</div>
+
+@section Scripts {
+    @{ await Html.RenderPartialAsync("_SideMenuScriptsPartial"); }
+    @{await Html.RenderPartialAsync("UserEditScriptsPartial"); }
+    <script src="~/cr/js/jquery.validate.hooks.min.js"></script>
+    <script src="~/cr/js/jqueryvaildation.submitonce-unobtrusive.min.js"></script>
+    <script src="~/cr/js/remote-validation-onblur-unobtrusive.min.js"></script>
+
+
+
+}

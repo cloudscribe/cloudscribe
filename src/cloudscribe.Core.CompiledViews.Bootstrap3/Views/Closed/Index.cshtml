@@ -1,0 +1,9 @@
+﻿@model string
+@{ 
+    ViewData["BodyClass"] = "site-closed";
+}
+@section Meta {
+<meta name="robots" content="noindex, follow" />
+}
+<h1>@ViewData["Title"]</h1>
+@Html.Raw(Model)

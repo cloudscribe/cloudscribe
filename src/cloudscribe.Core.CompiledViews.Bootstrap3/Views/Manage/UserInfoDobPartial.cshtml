@@ -1,0 +1,38 @@
+﻿@model cloudscribe.Core.Web.ViewModels.SiteUser.UserInfoViewModel
+@using cloudscribe.Core.Web
+@using Microsoft.Extensions.Options
+@using Microsoft.Extensions.Localization
+@using Microsoft.AspNetCore.Http.Authentication
+@inject IStringLocalizer<CloudscribeCore> sr
+@if (Model.DateOfBirth.HasValue)
+{
+    <div class="form-group">
+        <label asp-for="DateOfBirth" class="col-md-2 control-label">@sr["Date Of Birth"]</label>
+        <div class="col-md-10">
+            <input asp-for="DateOfBirth" type="hidden" />
+            <span class="form-control">@Model.DateOfBirth.Value.ToString("d")</span>
+        </div>
+    </div>
+}
+else
+{
+    <div class="form-group">
+        <label asp-for="DateOfBirth" class="col-md-2 control-label">@sr["Date of Birth"]</label>
+        <div class="col-md-10">
+            <input name="DateOfBirth" value="@(Model.DateOfBirth.HasValue ? Model.DateOfBirth.Value.ToString("d") : string.Empty)"
+                   class="form-control"
+                   data-bs-datepicker="true"
+                   data-bs-datepicker-debug="false"
+                   data-bs-datepicker-keepOpen="false"
+                   data-bs-datepicker-allowInputToggle="true"
+                   data-bs-datepicker-viewMode="years"
+                   data-bs-datepicker-usecurrent="false"
+                   data-bs-datepicker-format="L"
+                   data-bs-datepicker-locale="@System.Globalization.CultureInfo.CurrentCulture.Name"
+                   data-bs-datepicker-mindate="@DateTime.UtcNow.AddYears(-120).ToString("O")"
+                   data-bs-datepicker-maxdate="@DateTime.UtcNow.AddYears(-10).ToString("O")"
+                   data-bs-datepicker-viewDate="@DateTime.UtcNow.AddYears(-10).ToString("O")" />
+            <span asp-validation-for="DateOfBirth" class="text-danger"></span>
+        </div>
+    </div>
+}

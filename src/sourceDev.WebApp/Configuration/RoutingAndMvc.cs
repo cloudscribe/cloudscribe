@@ -95,9 +95,9 @@ namespace Microsoft.AspNetCore.Builder
                                 options.AddCloudscribeNavigationBootstrap4Views();
                                 options.AddCloudscribeFileManagerBootstrap4Views();
 
-                                options.AddCloudscribeCoreBootstrap4Views();
+                                //options.AddCloudscribeCoreBootstrap4Views();
                                 options.AddCloudscribeLoggingBootstrap4Views();
-                                options.AddCloudscribeCoreIdentityServerIntegrationBootstrap4Views();
+                                //options.AddCloudscribeCoreIdentityServerIntegrationBootstrap4Views();
 
                                 break;
 

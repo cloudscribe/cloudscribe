@@ -1,0 +1,9 @@
+﻿@inject ICoreThemeHelper themeHelper
+@inject IStringLocalizer<CloudscribeCore> sr
+@inject ISiteContextResolver siteResolver
+@{
+    var Tenant = await siteResolver.ResolveSite(Context.Request.Host.Host, Context.Request.Path);
+    var themeSettings = themeHelper.GetThemeSettings();
+
+}
+<a class="btn btn-primary btn-lg" href="~/@(Tenant?.SiteFolderName ?? "")"><span aria-hidden="true" class="fa fa-home"></span> @sr["Site Home"]</a>

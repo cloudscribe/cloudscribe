@@ -1,0 +1,48 @@
+﻿@model cloudscribe.Core.IdentityServerIntegration.Models.ApiItemViewModel
+@using cloudscribe.Core.IdentityServerIntegration
+@using Microsoft.Extensions.Localization
+@inject IStringLocalizer<CloudscribeIds4Resources> sr
+<form asp-controller="ApiResource" asp-action="EditApiResource">
+    <input asp-for="SiteId" type="hidden" />
+    <input asp-for="Name" type="hidden" />  
+    <div class="form-horizontal">
+        <div asp-validation-summary="All" class="text-danger"></div>
+        <div class="form-group">
+            <label class="col-md-2 control-label">@sr["Name"]</label>
+            <div class="col-md-10">
+                <label class="form-control">@Model.Name</label>
+            </div>
+        </div>
+        <div class="form-group">
+            <label asp-for="DisplayName" class="col-md-2 control-label">@sr["Display Name"]</label>
+            <div class="col-md-10">
+                <input class="form-control" asp-for="DisplayName" />
+                <span asp-validation-for="DisplayName" class="text-danger"></span> 
+                @Html.ValidationMessage("apierror", new { @class = "text-danger" })
+            </div>
+        </div>
+        <div class="form-group">
+            <label asp-for="Description" class="col-md-2 control-label">@sr["Description"]</label>
+            <div class="col-md-10">
+                <input class="form-control" asp-for="Description" />
+                <span asp-validation-for="Description" class="text-danger"></span> 
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-md-10 col-md-offset-2">
+                <div class="checkbox">
+                    <label>
+                        <input asp-for="Enabled" /> @sr["Enabled"]
+                    </label>
+                </div>
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-md-offset-2 col-md-10">
+                <button name="submit" type="submit" class="btn btn-default">@sr["Save"]</button>
+                <a class="btn btn-default" asp-action="Index" asp-controller="Scopes"
+                    asp-route-siteId="@Model.SiteId">@sr["Cancel"]</a>
+            </div>
+        </div>
+    </div>
+</form>

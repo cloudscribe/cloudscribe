@@ -30,10 +30,10 @@
     <PackageReference Include="Pomelo.EntityFrameworkCore.MySql" Version="2.0.*" />
   </ItemGroup>
 
-  <ItemGroup>
+  <!--<ItemGroup>
     
     <DotNetCliToolReference Include="Microsoft.EntityFrameworkCore.Tools.DotNet" Version="2.0.*" />
-  </ItemGroup>
+  </ItemGroup>-->
 
   
 

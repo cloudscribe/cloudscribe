@@ -1,0 +1,96 @@
+﻿@model cloudscribe.Core.Web.ViewModels.SiteUser.ManageLoginsViewModel
+@inject ICoreThemeHelper themeHelper
+@inject ISiteContextResolver siteResolver
+@inject IStringLocalizer<CloudscribeCore> sr
+@{
+
+    ViewData["Title"] = sr["Manage your external logins"];
+    ViewData["BodyClass"] = "manage-section manage-logins";
+    var removeFormat = sr["Remove this {0} login from your account"];
+    var loginFormat = sr["Log in using your {0} account"];
+    var socFormat = sr["Log in using your {0} account"];
+    var Tenant = await siteResolver.ResolveSite(Context.Request.Host.Host, Context.Request.Path);
+    var themeSettings = themeHelper.GetThemeSettings();
+}
+@functions {
+public string GetIconForLogin(string displayName, CoreThemeSettings themeSettings)
+{
+    switch (displayName)
+    {
+        case "Facebook":
+            return $"<i class='{themeSettings.Icons.Facebook}' aria-hidden='true'></i>";
+        case "Google":
+            return $"<i class='{themeSettings.Icons.Google}' aria-hidden='true'></i>";
+        case "Twitter":
+            return $"<i class='{themeSettings.Icons.Twitter}' aria-hidden='true'></i>";
+        case "Microsoft":
+            return $"<i class='{themeSettings.Icons.Microsoft}' aria-hidden='true'></i>";
+
+
+    }
+
+    return $"<i class='{themeSettings.Icons.OpenIDConnect}' aria-hidden='true'></i>";
+}
+public string GetDisplayName(string displayName, SiteContext tenant)
+{
+    if (displayName == "OpenIdConnect")
+    {
+        return tenant.OidConnectDisplayName;
+
+    }
+
+    return displayName;
+}
+}
+
+<h2>@ViewData["Title"]</h2>
+<p class="text-success">@ViewData["StatusMessage"]</p>
+@if (Model.CurrentLogins.Count > 0)
+{
+    <h4>@sr["Registered Logins"]</h4>
+    <table class="table">
+        <tbody>
+            @foreach (var account in Model.CurrentLogins)
+            {
+                <tr>
+                    <td>@account.LoginProvider</td>
+                    <td>
+                        @if (Model.ShowRemoveButton)
+                        {
+                            <form asp-controller="Manage" asp-action="RemoveLogin" method="post" class="form-horizontal" role="form">
+                                <div>
+                                    <input asp-for="@account.LoginProvider" type="hidden" />
+                                    <input asp-for="@account.ProviderKey" type="hidden" />
+                                    <input type="submit" class="btn btn-primary" value='@sr["Remove"]' title="@string.Format(removeFormat, @account.LoginProvider)" />
+                                </div>
+                            </form>
+                        }
+                        else
+                        {
+                            @: &nbsp;
+                        }
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+@if (Model.OtherLogins.Count > 0)
+{
+    <h4>@sr["Add another service to log in."]</h4>
+    <hr />
+    <form asp-controller="Manage" asp-action="LinkLogin" method="post" class="form-horizontal" role="form">
+        <div id="socialLoginList">
+            <p>
+                @foreach (Microsoft.AspNetCore.Authentication.AuthenticationScheme p in Model.OtherLogins)
+                {
+                    <button type="submit" class="btn btn-primary" id="@p.Name" name="provider" value="@p.Name"
+                            title="@string.Format(socFormat,p.DisplayName)">
+                        @Html.Raw(GetIconForLogin(p.DisplayName, themeSettings))
+                        @GetDisplayName(p.DisplayName, Tenant)
+                    </button>
+                }
+            </p>
+        </div>
+    </form>
+}

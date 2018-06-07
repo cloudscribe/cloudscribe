@@ -1,0 +1,43 @@
+﻿@model cloudscribe.Web.Common.Models.FormItemDefinition
+@using cloudscribe.Web.Common.Models
+@using cloudscribe.Web.Common
+@using Microsoft.Extensions.Localization
+@inject IStringLocalizer<CloudscribeCommonResources> sr
+@addTagHelper "*, cloudscribe.Web.Common"
+@{
+    var grpClass = "";// input-group
+    var spnClass = ""; //input-group-addon
+    if (!string.IsNullOrWhiteSpace(Model.IconCssClass))
+    {
+        grpClass = "input-group";
+        spnClass = "input-group-addon";
+
+    }
+}
+<div class="form-group">
+    <label for="@Model.Key" class="col-md-2 control-label">@sr[Model.Label]</label>
+    <div class="col-md-10">
+        <div class="@grpClass">
+            @if (!string.IsNullOrWhiteSpace(Model.IconCssClass) && Model.IconOnLeft)
+            {
+                <span class="@spnClass"><i class="@Model.IconCssClass" aria-hidden="true"></i></span>
+            }
+            <input name="@Model.Key" value="@ViewData[Model.Key]" title="@Model.Tooltip" cs-form-item-definition="@Model"
+                   class="form-control @Model.CssClass"
+                   data-bs-datepicker="true"
+                   data-bs-datepicker-debug="false"
+                   data-bs-datepicker-keepOpen="false"
+                   data-bs-datepicker-allowInputToggle="true"
+                   data-bs-datepicker-format="L"
+                   data-bs-datepicker-locale="@System.Globalization.CultureInfo.CurrentCulture.Name"
+                   data-bs-datepicker-usecurrent="false"
+                   />
+            @if (!string.IsNullOrWhiteSpace(Model.IconCssClass) && !Model.IconOnLeft)
+            {
+                <span class="@spnClass"><i class="@Model.IconCssClass" aria-hidden="true"></i></span>
+            }
+        </div>
+        <span class="text-danger field-validation-valid" data-valmsg-for="@Model.Key" data-valmsg-replace="true"></span>
+        @Html.ValidationMessage(Model.Key + "Error", new { @class = "text-danger" })
+    </div>
+</div>

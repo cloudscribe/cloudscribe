@@ -1,0 +1,60 @@
+﻿@model cloudscribe.Core.IdentityServerIntegration.Models.NewClientViewModel
+@using cloudscribe.Core.IdentityServerIntegration
+@using Microsoft.Extensions.Localization
+@inject IStringLocalizer<CloudscribeIds4Resources> sr
+<form asp-controller="Clients" asp-action="NewClient">
+    <input asp-for="SiteId" type="hidden" />
+    <div class="form-horizontal">
+        <div asp-validation-summary="All" class="text-danger"></div>
+        <div class="form-group">
+            <label class="col-md-2 control-label">@sr["Id"]</label>
+            <div class="col-md-10">
+                <input class="form-control" asp-for="ClientId" />
+                <span asp-validation-for="ClientId" class="text-danger"></span> 
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="ClientName" class="col-md-2 control-label">@sr["Name"]</label>
+            <div class="col-md-10">
+                <input class="form-control" asp-for="ClientName" />
+                <span asp-validation-for="ClientName" class="text-danger"></span> 
+            </div>
+        </div>
+        
+        <div class="form-group">
+            <label for="AccessTokenType" class="col-md-2 control-label">@sr["Access Token Type"]</label>
+            <div class="col-md-10">
+                <select asp-for="AccessTokenType">
+                    <option value="Jwt">Jwt</option>
+                    <option value="Reference">Reference</option>
+                </select>
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="RefreshTokenExpiration" class="col-md-2 control-label">@sr["Refresh Token Expiration"]</label>
+            <div class="col-md-10">
+                <select asp-for="RefreshTokenExpiration">
+                    <option value="Sliding">Sliding</option>
+                    <option value="Absolute">Absolute</option>
+                </select>
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="RefreshTokenUsage" class="col-md-2 control-label">@sr["Refresh Token Usage"]</label>
+            <div class="col-md-10">
+                <select asp-for="RefreshTokenUsage">
+                    <option value="ReUse">ReUse</option>
+                    <option value="OneTimeOnly">OneTimeOnly</option>
+                </select>
+            </div>
+        </div>
+        
+        <div class="form-group">
+            <div class="col-md-offset-2 col-md-10">
+                <button name="submit" type="submit" class="btn btn-default">@sr["Create"]</button>
+                <a class="btn btn-default" asp-action="Index" asp-controller="Clients"
+                   asp-route-siteId="SiteId">@sr["Cancel"]</a>
+            </div>
+        </div>
+    </div>
+</form>

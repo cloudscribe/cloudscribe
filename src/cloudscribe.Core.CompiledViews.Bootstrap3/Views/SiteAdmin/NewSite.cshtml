@@ -1,0 +1,158 @@
+﻿@model cloudscribe.Core.Web.ViewModels.SiteSettings.NewSiteViewModel
+@using cloudscribe.Core.Models
+@using cloudscribe.Web.Common.Models
+@using cloudscribe.Web.Common.Components
+@using cloudscribe.Web.Common.Extensions
+@using cloudscribe.Core.Web
+@using Microsoft.Extensions.Options
+@using Microsoft.Extensions.Localization
+@inject IStringLocalizer<CloudscribeCore> sr
+@inject ICkeditorOptionsResolver editorOptionsResolver
+@inject IOptions<MultiTenantOptions> multiTenantOptionsAccessor
+@{
+    MultiTenantOptions multiTenantOptions = multiTenantOptionsAccessor.Value;
+    bool useFolderTenants = true;
+    if (multiTenantOptions.Mode != MultiTenantMode.FolderName) { useFolderTenants = false; }
+    bool useHostTenants = true;
+    if (multiTenantOptions.Mode != MultiTenantMode.HostName) { useHostTenants = false; }
+    var ckOptions = await editorOptionsResolver.GetCkeditorOptions();
+    var baseUrl = this.Context.Request.GetCurrentBaseUrl() + "/";
+}
+<div class="row">
+    <div class="col-md-10 col-md-push-2">
+        <h2>@ViewBag.Title</h2>
+        <form method="post" class="form-horizontal" role="form" asp-antiforgery="true" data-submit-once="true">
+            <div asp-validation-summary="All" class="text-danger"></div>
+            <input asp-for="SiteId" type="hidden" />
+            <input asp-for="ReturnPageNumber" type="hidden" />
+            <div class="form-group">
+                <label asp-for="SiteName" class="col-md-2 control-label">@sr["Site Name"]</label>
+                <div class="col-md-10">
+                    <input asp-for="SiteName" class="form-control" />
+                    <span asp-validation-for="SiteName" class="text-danger"></span>
+                </div>
+            </div>
+            @if (useFolderTenants)
+            {
+                <div class="form-group">
+                    <label asp-for="SiteFolderName" class="col-md-2 control-label">@sr["Site Folder Name"]</label>
+                    <div class="col-md-10">
+                        <div class="input-group">
+                            <span class="input-group-addon">@baseUrl</span>
+                            <input asp-for="SiteFolderName" class="form-control" />
+                        </div>
+                        <span asp-validation-for="SiteFolderName" class="text-danger"></span>
+                        @Html.ValidationMessage("foldererror", new { @class = "text-danger" })
+                    </div>
+                </div>
+            }
+            else if (useHostTenants)
+            {
+                <div class="form-group">
+                    <label asp-for="HostName" class="col-md-2 control-label">@sr["Host Name"]</label>
+                    <div class="col-md-10">
+                        <input asp-for="HostName" class="form-control" />
+                        <span asp-validation-for="HostName" class="text-danger"></span>
+                        @Html.ValidationMessage("hosterror", new { @class = "text-danger" })
+                        <a class="hostmap" asp-action="SiteHostMappings"
+                           asp-controller="SiteAdmin"
+                           asp-route-siteGuid="SiteGuid"
+                           asp-route-slp="ReturnPageNumber">@sr["Domain Mappings"]</a>
+                    </div>
+                </div>
+            }
+            <div class="form-group">
+                <label asp-for="TimeZoneId" class="col-md-2 control-label">@sr["Time Zone"]</label>
+                <div class="col-md-10">
+                    <select asp-for="TimeZoneId"
+                            asp-items="Model.AllTimeZones" class="form-control"></select>
+                    <span asp-validation-for="TimeZoneId" class="text-danger"></span>
+                </div>
+            </div>
+            @if (Model.AvailableThemes.Count > 0)
+            {
+                <div class="form-group">
+                    <label asp-for="Theme" class="col-md-2 control-label">@sr["Theme"]</label>
+                    <div class="col-md-10">
+                        <select id="Layout" asp-for="Theme"
+                                asp-items="Model.AvailableThemes" class="form-control"></select>
+                        <span asp-validation-for="Theme" class="text-danger"></span>
+                    </div>
+                </div>
+            }
+            <div class="form-group">
+                <div class="col-md-offset-2 col-md-10">
+                    <div class="checkbox">
+                        <label>
+                            <input asp-for="IsClosed" /> @sr["Close Site To Public"]
+                        </label>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <label asp-for="ClosedMessage" class="col-md-2 control-label">@sr["Closed Message"]</label>
+                <div class="col-md-10">
+                    <textarea class="form-control" rows="5" asp-for="ClosedMessage"
+                              data-ckeditor-unobtrusive=""
+                              data-ckeditor-config-url="@ckOptions.CustomConfigPath"
+                              data-ckeditor-config-language="@ckOptions.LanguageCode"
+                              data-ckeditor-config-dropfileuploadurl="@ckOptions.DropFileUrl"
+                              data-ckeditor-config-filebrowserurl="@ckOptions.FileBrowseUrl"
+                              data-ckeditor-config-imagebrowseurl="@ckOptions.ImageBrowseUrl"></textarea>
+                    <span asp-validation-for="ClosedMessage" class="text-danger"></span>
+                </div>
+            </div>
+            <h2 class="col-md-offset-2 col-md-10">@sr["New Site Administrator"]</h2>
+            <div class="form-group">
+                <label asp-for="Email" class="col-md-2 control-label">@sr["Email"]</label>
+                <div class="col-md-10">
+                    <input asp-for="Email" class="form-control" />
+                    <span asp-validation-for="Email" class="text-danger"></span>
+                </div>
+            </div>
+            <div class="form-group">
+                <label asp-for="LoginName" class="col-md-2 control-label">@sr["Login Name"]</label>
+                <div class="col-md-10">
+                    <input asp-for="LoginName" class="form-control" />
+                    <span asp-validation-for="LoginName" class="text-danger"></span>
+                </div>
+            </div>
+            <div class="form-group">
+                <label asp-for="DisplayName" class="col-md-2 control-label">@sr["Display Name"]</label>
+                <div class="col-md-10">
+                    <input asp-for="DisplayName" class="form-control" />
+                    <span asp-validation-for="DisplayName" class="text-danger"></span>
+                </div>
+            </div>
+            <div class="form-group">
+                <label asp-for="Password" class="col-md-2 control-label">@sr["Password"]</label>
+                <div class="col-md-10">
+                    <input asp-for="Password" type="password" class="form-control" />
+                    <span asp-validation-for="Password" class="text-danger"></span>
+                </div>
+            </div>
+            <div class="form-group">
+                <label asp-for="ConfirmPassword" class="col-md-2 control-label">@sr["Confirm Password"]</label>
+                <div class="col-md-10">
+                    <input asp-for="ConfirmPassword" type="password" class="form-control" />
+                    <span asp-validation-for="ConfirmPassword" class="text-danger"></span>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-md-offset-2 col-md-10">
+                    <button name="submit" type="submit" class="btn btn-default" data-disabled-text='@sr["Working..."]' data-enabled-text='@sr["Save"]'>@sr["Save"]</button>
+                </div>
+            </div>
+        </form>
+    </div>
+    <div class="col-md-2 col-md-pull-10 hidden-xs hidden-sm">
+        @await Component.InvokeAsync("Navigation", new { viewName = "SideNavAlt1", filterName = NamedNavigationFilters.ParentTree, startingNodeKey = "SiteAdmin" })
+    </div>
+</div>
+@section Scripts {
+    @{ await Html.RenderPartialAsync("_SideMenuScriptsPartial"); }
+    @{ await Html.RenderPartialAsync("_UnobtrusiveValidationScriptsPartial"); }
+    @{ await Html.RenderPartialAsync("_UnobtrusiveEditorScriptsPartial"); }
+    <script src="~/cr/js/jquery.validate.hooks.min.js"></script>
+    <script src="~/cr/js/jqueryvaildation.submitonce-unobtrusive.min.js"></script>
+}

@@ -1,0 +1,15 @@
+﻿@model cloudscribe.Core.IdentityServerIntegration.Models.ClientItemViewModel
+@using cloudscribe.Core.IdentityServerIntegration
+@inject IStringLocalizer<CloudscribeIds4Resources> sr
+<form class="form-inline" asp-controller="Clients" asp-action="AddClientScope">
+    <div class="form-group">
+        <label for="Type">@sr["Scope"]</label>
+        <input class="form-control" id="ScopeName" name="ScopeName" data-val="true" data-val-required='@sr["The Scope field is required."]'
+               aria-required="true" aria-invalid="false" aria-describedby="ScopeName-error" />
+        <span class="invalid-feedback field-validation-valid" data-valmsg-for="ScopeName" data-valmsg-replace="true"></span>
+    </div>
+    <input asp-for="SiteId" type="hidden" />
+    <input asp-for="ClientId" type="hidden" />
+    <button type="submit" class="btn btn-primary">@sr["Add"]</button>
+    @*<div asp-validation-summary="All" class="text-danger"></div>*@
+</form>

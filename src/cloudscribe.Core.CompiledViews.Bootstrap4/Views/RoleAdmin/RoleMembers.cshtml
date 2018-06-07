@@ -1,0 +1,162 @@
+﻿@model cloudscribe.Core.Web.ViewModels.RoleAdmin.RoleMemberListViewModel
+@inject ICoreThemeHelper themeHelper
+@inject IStringLocalizer<CloudscribeCore> sr
+@{
+    ViewData["BodyClass"] = "admin-section role-members";
+    var themeSettings = themeHelper.GetThemeSettings();
+    if (themeSettings.AdminSideNavExpanded) { ViewData["SideNavToggle"] = "show"; }
+    ViewData["SideNavVisible"] = true;
+}
+<h2>@Model.Heading1</h2>
+<h3>@Model.Heading2</h3>
+<form class="form-inline" role="form" asp-controller="RoleAdmin" asp-action="RoleMembers" method="get">
+    <input name="siteId" value="@Model.Role.SiteId" type="hidden" />
+    <input name="roleId" value="@Model.Role.Id" type="hidden" />
+    <div class="input-group">
+        <input name="searchInput" type="search" value="@Model.SearchQuery" class="form-control" />
+        <span class="input-group-btn">
+            <button type="submit" value="Search" class="btn btn-primary">@sr["Search"]</button>
+        </span>
+    </div>
+</form>
+<table class="table table-striped">
+    <tr>
+        <th>
+            <a id="parentModalLink" class="btn btn-xs btn-primary" asp-action="RoleNonMembers" asp-controller="RoleAdmin"
+               asp-route-siteId="@Model.Role.SiteId"
+               asp-route-roleId="@Model.Role.Id"
+               bs-modal-link="true" bs-modal-id='@Model.Role.Id.ToString()'>@sr["Add User"]</a>
+        </th>
+        <th>
+            @sr["Email"]
+        </th>
+        @if (!Model.UseEmailForLogin)
+        {
+            <th>
+                @sr["Login Name"]
+            </th>
+        }
+        <th>
+            @sr["Display Name"]
+        </th>
+        <th>
+            @sr["First Name"]
+        </th>
+        <th>
+            @sr["Last Name"]
+        </th>
+    </tr>
+    @foreach (var item in Model.Members.Data)
+    {
+        <tr>
+            <td>
+                <button type="button" class="btn btn-danger btn-xs" data-toggle="modal" data-target="@("#confirmModal" + item.Id)">
+                    @sr["Remove"]
+                </button>
+                <form asp-controller="RoleAdmin" asp-action="RemoveUser">
+                    <input name="SiteId" value="@Model.SiteId" type="hidden" />
+                    <input name="roleId" value="@Model.Role.Id" type="hidden" />
+                    <input name="userId" value="@item.Id" type="hidden" />
+                    <div class="modal fade" id="@("confirmModal" + item.Id)" tabindex="-1" role="dialog" aria-labelledby="@("confirmHeading" + item.Id)">
+                        <div class="modal-dialog modal-sm" role="document">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h4 class="modal-title" id="@("confirmHeading" + item.Id)">@sr["Confirm Remove User From Role"]</h4>
+                                    <button type="button" class="close" data-dismiss="modal" aria-label='@sr["Close"]'><span aria-hidden="true">&times;</span></button>
+                                </div>
+                                <div class="modal-body">
+                                    @string.Format(sr["Are you sure you want to remove {0} from the role {1}?"], item.DisplayName, Model.Role.RoleName)
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-primary" data-dismiss="modal">@sr["Cancel"]</button>
+                                    <input type="submit" value='@sr["Remove"]' class="btn btn-danger btn-ok" />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Email)
+            </td>
+            @if (!Model.UseEmailForLogin)
+            {
+                <td>
+                    @Html.DisplayFor(modelItem => item.UserName)
+                </td>
+            }
+            <td>
+                @Html.DisplayFor(modelItem => item.DisplayName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.FirstName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.LastName)
+            </td>
+        </tr>
+    }
+</table>
+
+<cs-pager asp-action="RoleMembers" asp-controller="RoleAdmin"
+          asp-route-siteId="@Model.Role.SiteId"
+          asp-route-roleId="@Model.Role.Id"
+          asp-route-searchinput="@Model.SearchQuery"
+          asp-route-pagesize="@Model.Members.PageSize"
+          cs-paging-pagesize="@Model.Members.PageSize"
+          cs-paging-pagenumber="@Model.Members.PageNumber"
+          cs-paging-totalitems="@Model.Members.TotalItems"
+          cs-first-page-title='@sr["First Page"]'
+          cs-last-page-title='@sr["Last Page"]'
+          cs-previous-page-title='@sr["Previous page"]'
+          cs-next-page-title='@sr["Next page"]'
+          cs-pager-ul-class="pagination d-flex flex-wrap"
+          cs-pager-li-current-class="page-item active"
+          cs-pager-li-other-class="page-item"
+          cs-pager-li-non-active-class="page-item disabled"
+          cs-pager-link-current-class="page-link"
+          cs-pager-link-other-class="page-link"></cs-pager>
+
+
+
+<div class="modal fade" id="confirmAddRoleModal" tabindex="-1" role="dialog" aria-labelledby="confirmHeading" style="z-index:999999;">
+    <div class="modal-dialog modal-sm" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="confirmHeading">@sr["Confirm Add User To Role"]</h4>
+                <button type="button" class="close" data-dismiss="modal" aria-label='@sr["Close"]'><span aria-hidden="true">&times;</span></button>
+            </div>
+            <div class="modal-body">
+                <span id="spnMessage"></span>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" data-dismiss="modal">@sr["Cancel"]</button>
+                <input id="btnAddUser" type="button" value='@sr["Add"]' class="btn btn-success btn-ok" />
+            </div>
+        </div>
+    </div>
+</div>
+@section SideNav {
+    @{ await Html.RenderPartialAsync("AdminSideNav"); }
+}
+@section Toolbar{
+    @{ await Html.RenderPartialAsync("AdminSideNavToggle"); }
+}
+@section Scripts {
+    @{ await Html.RenderPartialAsync("AdminSideNavScripts"); }
+    @{await Html.RenderPartialAsync("_UnobtrusiveValidationScriptsPartial"); }
+    <script src="~/cr/js/jquery.unobtrusive-ajax.min.js"></script>
+    <script src="~/cr/js/cloudscribe-modaldialog-bootstrap4.min.js"></script>
+    <script>
+    $('#confirmAddRoleModal').on('show.bs.modal', function (e) {
+        var message = $(e.relatedTarget).data('message');
+        var formId = $(e.relatedTarget).data('form-id');
+        $(e.currentTarget).find('span[id="spnMessage"]').html(message);
+        $("#btnAddUser").click(function () {
+            //alert(formId);
+            $("#" + formId).submit();
+        });
+    });
+    </script>
+
+}

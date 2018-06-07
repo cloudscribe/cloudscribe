@@ -1,0 +1,38 @@
+﻿@model cloudscribe.Core.Web.ViewModels.SiteUser.PendingNotificationViewModel
+@using cloudscribe.Core.Web
+@using Microsoft.Extensions.Options
+@using Microsoft.Extensions.Localization
+@inject IStringLocalizer<CloudscribeCore> sr
+@{
+    ViewData["Title"] = sr["Please Confirm Email Address"];
+    ViewData["BodyClass"] = "account-section email-confirm";
+}
+<h2>@ViewData["Title"]</h2>
+<p>
+    @sr["Before you can Log in, we need to confirm that the email address you provided is valid. We sent an email to the address you provided with a link that you need to click in order to confirm your email address is valid."]
+</p>
+@if (!Model.DidSend)
+{
+    <form asp-controller="Account" asp-action="VerifyEmail" method="post" class="form-horizontal" role="form">
+        <input name="userGuid" value="@Model.UserId" type="hidden" />
+        <div class="form-group">
+            <button name="submit" type="submit" class="btn btn-default">@sr["Re-Send Verification Email"]</button>
+        </div>
+    </form>
+}
+    <form asp-controller="Account" asp-action="ConfirmEmail" method="get" class="form-inline" role="form">
+        <input name="userId" value="@Model.UserId" type="hidden" />
+        <input name="returnUrl" value="@Model.ReturnUrl" type="hidden" />
+        <div class="form-group">
+            <label class="sr-only" asp-for="Code">@sr["Or submit the code provided in the email."]</label>
+            <input asp-for="Code" class="form-control" style="min-width:300px" placeholder="@sr["Or submit the code provided in the email."]" data-val="true" data-val-required="@sr["You must enter the code sent to your email address"]" />
+        </div>
+        <button name="submit" type="submit" class="btn btn-default">@sr["Submit"]</button>
+        <span class="text-danger field-validation-valid" data-valmsg-for="Code" data-valmsg-replace="true"></span>
+    </form>
+@section Scripts {
+    @{await Html.RenderPartialAsync("_UnobtrusiveValidationScriptsPartial"); }
+    
+    }
+
+

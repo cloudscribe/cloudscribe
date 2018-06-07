@@ -1,0 +1,91 @@
+﻿@model cloudscribe.Core.Web.ViewModels.RoleAdmin.RoleListViewModel
+@using cloudscribe.Web.Navigation
+@using cloudscribe.Web.Pagination
+@addTagHelper "*, cloudscribe.Web.Pagination"
+@using cloudscribe.Core.Models
+@using cloudscribe.Core.Web
+@using Microsoft.Extensions.Options
+@using Microsoft.Extensions.Localization
+@inject IStringLocalizer<CloudscribeCore> sr
+@inject IOptions<SiteConfigOptions> setupOptionsAccessor
+@{
+    var setupOptions = setupOptionsAccessor.Value;
+    ViewData["BodyClass"] = "admin-section role-index";
+}
+<div class="row">
+    <div class="col-md-10 col-md-push-2">
+        <h2>@ViewData["Title"]</h2>
+        <p>
+            <a class="btn btn-sm btn-default" asp-action="RoleEdit" asp-controller="RoleAdmin" asp-route-siteId="@Model.SiteId">@sr["New Role"]</a>
+        </p>
+        <ul class=" list-group">
+            @foreach (var item in Model.SiteRoles.Data)
+            {
+                <li class="list-group-item clearfix">
+                    <h3 class="col-md-6 h4">
+                        @Html.DisplayFor(modelItem => item.RoleName)
+                        &nbsp;
+                    </h3>
+                    <div class=" col-md-6" role="group">
+                        <span class="btn btn-default ">
+                            <a asp-action="RoleMembers"
+                               asp-controller="RoleAdmin"
+                               asp-route-siteId="@item.SiteId"
+                               asp-route-roleId="@item.Id">@sr["Members"]</a>
+                            <span class="badge">@Html.DisplayFor(modelItem => item.MemberCount)</span>
+                        </span>
+                        <a class="btn btn-default" asp-action="RoleEdit" asp-controller="RoleAdmin"
+                           asp-route-siteId="@Model.SiteId"
+                           asp-route-roleId="@item.Id">@sr["Edit"]</a>
+                        @if (item.IsDeletable(setupOptions.RolesThatCannotBeDeleted))
+                        {
+                            <button type="button" class="btn btn-danger" data-toggle="modal" data-target="@("#confirmDeleteModal" + item.Id)">
+                                @sr["Delete"]
+                            </button>
+                            <form class="form-inline" asp-controller="RoleAdmin" asp-action="RoleDelete">
+                                <input name="SiteId" value="@item.SiteId" type="hidden" />
+                                <input id="roleId" name="roleId" type="hidden" value="@item.Id" />
+                                <div class="modal fade" id="@("confirmDeleteModal" + item.Id)" tabindex="-1" role="dialog" aria-labelledby="confirmDeleteHeading">
+                                    <div class="modal-dialog modal-sm" role="document">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <button type="button" class="close" data-dismiss="modal" aria-label='@sr["Close"]'><span aria-hidden="true">&times;</span></button>
+                                                <h4 class="modal-title" id="confirmDeleteHeading">@sr["Confirm Delete"]</h4>
+                                            </div>
+                                            <div class="modal-body">
+                                                @string.Format(sr["Are you sure you want to delete {0}?"], item.RoleName)
+                                            </div>
+                                            <div class="modal-footer">
+                                                <button type="button" class="btn btn-default" data-dismiss="modal">@sr["Cancel"]</button>
+                                                <input type="submit" value='@sr["Delete"]' class="btn btn-danger btn-ok" />
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </form>
+
+                        }
+
+
+                    </div>
+                </li>
+            }
+        </ul>
+        <div>
+            <cs-pager asp-action="Index" asp-controller="RoleAdmin"
+                      asp-route-siteId="@Model.SiteId"
+                      asp-route-pageSize="@Model.SiteRoles.PageSize"
+                      cs-paging-pagesize="@Model.SiteRoles.PageSize"
+                      cs-paging-pagenumber="@Model.SiteRoles.PageNumber"
+                      cs-paging-totalitems="@Model.SiteRoles.TotalItems"
+                      cs-first-page-title='@sr["First Page"]'
+                      cs-last-page-title='@sr["Last Page"]'
+                      cs-previous-page-title='@sr["Previous page"]'
+                      cs-next-page-title='@sr["Next page"]'></cs-pager>
+        </div>
+    </div>
+    <div class="col-md-2 col-md-pull-10 hidden-xs hidden-sm">
+        @await Component.InvokeAsync("Navigation", new { viewName = "SideNavAlt1", filterName = NamedNavigationFilters.ParentTree, startingNodeKey = "SiteAdmin" })
+    </div>
+</div>

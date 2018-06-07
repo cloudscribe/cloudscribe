@@ -1,0 +1,74 @@
+﻿
+@model cloudscribe.Core.Web.ViewModels.CoreData.CountryListPageViewModel
+@using cloudscribe.Web.Pagination
+@addTagHelper "*, cloudscribe.Web.Pagination"
+@using cloudscribe.Core.Web
+@using Microsoft.Extensions.Options
+@using Microsoft.Extensions.Localization
+@inject IStringLocalizer<CloudscribeCore> sr
+@{
+    ViewData["Title"] = sr["Country List Administration"];
+}
+<div class="row">
+    <div class="col-md-10 col-md-push-2">
+        <h2>@ViewData["Title"]</h2>
+        <table class="table table-striped">
+            <tr>
+                <th>
+                    <a class="btn btn-xs btn-default" asp-action="CountryEdit" asp-controller="CoreData"
+                       asp-route-countryid="@Guid.Empty"
+                       asp-route-pagenumber="@Model.Countries.PageNumber">@sr["New Country"]</a>
+                </th>
+                <th>
+                    @sr["Name"]
+                </th>
+                <th>
+                    @sr["ISOCode2"]
+                </th>
+                <th>
+                    @sr["ISOCode3"]
+                </th>
+            </tr>
+            @foreach (var c in Model.Countries.Data)
+            {
+                <tr>
+                    <td>
+                        <a class="btn btn-xs btn-default" asp-action="CountryEdit" asp-controller="CoreData"
+                           asp-route-countryId="@c.Id"
+                           asp-route-returnPageNumber="@Model.Countries.PageNumber">@sr["Edit"]</a>
+
+                        <a class="btn btn-xs btn-default" asp-action="StateListPage" asp-controller="CoreData"
+                           asp-route-countryId="@c.Id"
+                           asp-route-crp="@Model.Countries.PageNumber">@sr["States"]</a>
+                    </td>
+                    <td>
+                        @c.Name
+                    </td>
+                    <td>
+                        @c.ISOCode2
+                    </td>
+                    <td>
+                        @c.ISOCode3
+                    </td>
+                </tr>
+            }
+        </table>
+        <div>
+            <cs-pager 
+                      asp-action="CountryListPage" asp-controller="CoreData"
+                      asp-route-pagesize="@Model.Countries.PageSize"
+                      cs-paging-pagenumber="@Model.Countries.PageNumber"
+                      cs-paging-totalitems="@Model.Countries.TotalItems"
+                      cs-first-page-title='@sr["First Page"]'
+                      cs-last-page-title='@sr["Last Page"]'
+                      cs-previous-page-title='@sr["Previous page"]'
+                      cs-next-page-title='@sr["Next page"]'></cs-pager>
+        </div>
+    </div>
+    <div class="col-md-2 col-md-pull-10 hidden-xs hidden-sm">
+        @await Component.InvokeAsync("Navigation", new { viewName = "SideNavAlt1", filterName = NamedNavigationFilters.ParentTree, startingNodeKey = "SiteAdmin" })
+    </div>
+</div>
+@section scripts {
+    @{ await Html.RenderPartialAsync("_SideMenuScriptsPartial"); }
+}

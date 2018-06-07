@@ -1,0 +1,42 @@
+﻿@using cloudscribe.Core.Models
+@using cloudscribe.Core.Identity
+@using cloudscribe.Web.Common.Extensions
+@using cloudscribe.Core.Web
+@using Microsoft.Extensions.Options
+@using Microsoft.Extensions.Localization
+@using Microsoft.AspNetCore.Identity
+@inject IStringLocalizer<CloudscribeCore> sr
+@inject SiteContext site
+@inject SignInManager<SiteUser> SignInManager
+@{ 
+    var helloFormat = sr["Hello {0}!"];
+}
+@if (SignInManager.IsSignedIn(User))
+{
+    <form asp-controller="Account" asp-action="LogOff" method="post" id="logoutForm">
+        <ul class="nav navbar-nav navbar-right">
+            <li>
+                <div class="pull-right navbar-text navbar-gravatar">
+                    <a asp-controller="Manage" asp-action="Index" title="Manage">
+                    <img gravatar-email="@User.GetEmail()" gravatar-size="30" alt="gravatar" /></a>
+                </div>
+            </li>
+            <li> 
+                <a asp-controller="Manage" asp-action="Index" title='@sr["Manage"]'>@string.Format(helloFormat,User.GetDisplayName())</a>
+            </li> 
+            <li>
+            <a href="javascript:document.getElementById('logoutForm').submit()">@sr["Log off"]</a>
+            </li>
+        </ul>
+    </form>
+}
+else
+{
+    <ul class="nav navbar-nav navbar-right">
+        @if (site.AllowNewRegistration)
+        {
+            <li><a id="registerLink" asp-controller="Account" asp-action="Register" asp-route-returnurl="@Context.Request.PathAndQuery()">@sr["Register"]</a></li>
+        }  
+        <li><a id="loginLink" asp-controller="Account" asp-action="Login" asp-route-returnurl="@Context.Request.PathAndQuery()">@sr["Log in"]</a></li>
+    </ul>
+}

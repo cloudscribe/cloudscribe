@@ -1,0 +1,114 @@
+﻿@model cloudscribe.Core.Web.ViewModels.SiteSettings.CompanyInfoViewModel
+@using cloudscribe.Web.Navigation
+@using cloudscribe.Core.Web
+@using Microsoft.Extensions.Options
+@using Microsoft.Extensions.Localization
+@inject IStringLocalizer<CloudscribeCore> sr
+<div class="row">
+    <div class="col-md-10 col-md-push-2">
+        <h2>@ViewBag.Title</h2>
+        <form method="post" class="form-horizontal" role="form" asp-antiforgery="true" data-submit-once="true">
+            <div asp-validation-summary="All" class="text-danger"></div>
+            <input asp-for="SiteId" type="hidden" />
+            <div class="form-group">
+                <label asp-for="CompanyName" class="col-md-2 control-label">@sr["Name"]</label>
+                <div class="col-md-10">
+                    <input asp-for="CompanyName" class="form-control" />
+                    <span asp-validation-for="CompanyName" class="text-danger"></span>
+                </div>
+            </div>
+            <div class="form-group">
+                <label asp-for="CompanyStreetAddress" class="col-md-2 control-label">@sr["Address1"]</label>
+                <div class="col-md-10">
+                    <input asp-for="CompanyStreetAddress" class="form-control" />
+                    <span asp-validation-for="CompanyStreetAddress" class="text-danger"></span>
+                </div>
+            </div>
+            <div class="form-group">
+                <label asp-for="CompanyStreetAddress2" class="col-md-2 control-label">@sr["Address2"]</label>
+                <div class="col-md-10">
+                    <input asp-for="CompanyStreetAddress2" class="form-control" />
+                    <span asp-validation-for="CompanyStreetAddress2" class="text-danger"></span>
+                </div>
+            </div>
+            <div class="form-group">
+                <label asp-for="CompanyLocality" class="col-md-2 control-label">@sr["City"]</label>
+                <div class="col-md-10">
+                    <input asp-for="CompanyLocality" class="form-control" />
+                    <span asp-validation-for="CompanyLocality" class="text-danger"></span>
+                </div>
+            </div>
+            <div class="form-group">
+                <label asp-for="CompanyCountry" class="col-md-2 control-label">@sr["Country"]</label>
+                <div class="col-md-10">
+                    <select id="CompanyCountry" asp-for="CompanyCountry"
+                            asp-items="Model.AvailableCountries" class="form-control"></select>
+                    <span asp-validation-for="CompanyCountry" class="text-danger"></span>
+                </div>
+            </div>
+            <div class="form-group">
+                <label asp-for="CompanyRegion" class="col-md-2 control-label">@sr["State"]</label>
+                <div class="col-md-10">
+                    <select id="CompanyRegion" class="form-control"
+                            asp-for="CompanyRegion"
+                            asp-items="Model.AvailableStates"
+                            data-cascade-childof="CompanyCountry"
+                            data-cascade-serviceurl='@Url.Content("~/CoreData/GetStatesJson/?countryCode=")'
+                            data-cascade-orig-val="@Model.CompanyRegion"
+                            data-cascade-select-label="-Please select-"></select>
+                    <span asp-validation-for="CompanyRegion" class="text-danger"></span>
+                </div>
+            </div>
+            <div class="form-group">
+                <label asp-for="CompanyPostalCode" class="col-md-2 control-label">@sr["Postal Code"]</label>
+                <div class="col-md-10">
+                    <input asp-for="CompanyPostalCode" class="form-control" />
+                    <span asp-validation-for="CompanyPostalCode" class="text-danger"></span>
+                </div>
+            </div>
+            <div class="form-group">
+                <label asp-for="CompanyPhone" class="col-md-2 control-label">@sr["Phone"]</label>
+                <div class="col-md-10">
+                    <input asp-for="CompanyPhone" class="form-control" />
+                    <span asp-validation-for="CompanyPhone" class="text-danger"></span>
+                </div>
+            </div>
+            <div class="form-group">
+                <label asp-for="CompanyFax" class="col-md-2 control-label">@sr["Fax"]</label>
+                <div class="col-md-10">
+                    <input asp-for="CompanyFax" class="form-control" />
+                    <span asp-validation-for="CompanyFax" class="text-danger"></span>
+                </div>
+            </div>
+            <div class="form-group">
+                <label asp-for="CompanyPublicEmail" class="col-md-2 control-label">@sr["Public Email"]</label>
+                <div class="col-md-10">
+                    <input asp-for="CompanyPublicEmail" class="form-control" />
+                    <span asp-validation-for="CompanyPublicEmail" class="text-danger"></span>
+                </div>
+            </div>
+            <div class="form-group">
+                <label asp-for="CompanyWebsite" class="col-md-2 control-label">@sr["Website"]</label>
+                <div class="col-md-10">
+                    <input asp-for="CompanyWebsite" class="form-control" />
+                    <span asp-validation-for="CompanyWebsite" class="text-danger"></span>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-md-offset-2 col-md-10">
+                    <button name="submit" type="submit" class="btn btn-default" data-disabled-text='@sr["Working..."]' data-enabled-text='@sr["Save"]'>@sr["Save"]</button>
+                </div>
+            </div>
+        </form>
+    </div>
+    <div class="col-md-2 col-md-pull-10 hidden-xs hidden-sm">
+        @await Component.InvokeAsync("Navigation", new { viewName = "SideNavAlt1", filterName = NamedNavigationFilters.ParentTree, startingNodeKey = "SiteAdmin" })
+    </div>
+</div>
+@section Scripts {
+    @{ await Html.RenderPartialAsync("_SideMenuScriptsPartial"); }
+    @{ await Html.RenderPartialAsync("_UnobtrusiveValidationScriptsPartial"); }
+    @{ await Html.RenderPartialAsync("_CascadeScriptsPartial"); }
+    <script src="~/cr/js/jquery.validate.hooks.min.js"></script>
+    <script src="~/cr/js/jqueryvaildation.submitonce-unobtrusive.min.js"></script>
+}

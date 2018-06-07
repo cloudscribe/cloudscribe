@@ -1,0 +1,57 @@
+﻿@model cloudscribe.Core.Web.ViewModels.SiteSettings.LoginInfoViewModel
+@using cloudscribe.Web.Common.Models
+@using cloudscribe.Web.Common.Components
+@using cloudscribe.Core.Web
+@using cloudscribe.Web.Navigation
+@using Microsoft.Extensions.Options
+@using Microsoft.Extensions.Localization
+@inject IStringLocalizer<CloudscribeCore> sr
+@inject ICkeditorOptionsResolver editorOptionsResolver
+@{
+    var ckOptions = await editorOptionsResolver.GetCkeditorOptions();
+}
+<div class="row">
+    <div class="col-md-10 col-md-push-2">
+        <h2>@ViewBag.Title</h2>
+        <form method="post" role="form" asp-antiforgery="true" data-submit-once="true">
+            <div asp-validation-summary="All" class="text-danger"></div>
+            <input asp-for="SiteId" type="hidden" />
+            <div class="form-group">
+                <label asp-for="LoginInfoTop" class="control-label">@sr["Login Info Top"]</label>
+                <textarea class="form-control" rows="5" asp-for="LoginInfoTop"
+                          data-ckeditor-unobtrusive=""
+                          data-ckeditor-config-url="@ckOptions.CustomConfigPath"
+                          data-ckeditor-config-language="@ckOptions.LanguageCode"
+                          data-ckeditor-config-dropfileuploadurl="@ckOptions.DropFileUrl"
+                          data-ckeditor-config-filebrowserurl="@ckOptions.FileBrowseUrl"
+                          data-ckeditor-config-imagebrowseurl="@ckOptions.ImageBrowseUrl"></textarea>
+                <span asp-validation-for="LoginInfoTop" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="LoginInfoBottom" class="control-label">@sr["Login Info Bottom"]</label>
+                <textarea class="form-control" rows="5" asp-for="LoginInfoBottom"
+                          data-ckeditor-unobtrusive=""
+                          data-ckeditor-config-url="@ckOptions.CustomConfigPath"
+                          data-ckeditor-config-language="@ckOptions.LanguageCode"
+                          data-ckeditor-config-dropfileuploadurl="@ckOptions.DropFileUrl"
+                          data-ckeditor-config-filebrowserurl="@ckOptions.FileBrowseUrl"
+                          data-ckeditor-config-imagebrowseurl="@ckOptions.ImageBrowseUrl"></textarea>
+                <span asp-validation-for="LoginInfoBottom" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <button id="btnSave" name="submit" type="submit" class="btn btn-default" data-enabled-text='@sr["Save"]' data-disabled-text='@sr["Working..."]'>@sr["Save"]</button>
+            </div>
+        </form>
+    </div>
+    <div class="col-md-2 col-md-pull-10 hidden-xs hidden-sm">
+        @await Component.InvokeAsync("Navigation", new { viewName = "SideNavAlt1", filterName = NamedNavigationFilters.ParentTree, startingNodeKey = "SiteAdmin" })
+    </div>
+</div>
+
+@section Scripts {
+    @{ await Html.RenderPartialAsync("_SideMenuScriptsPartial"); }
+    @{ await Html.RenderPartialAsync("_UnobtrusiveEditorScriptsPartial"); }
+    @{ await Html.RenderPartialAsync("_UnobtrusiveValidationScriptsPartial"); }
+    <script src="~/cr/js/jquery.validate.hooks.min.js"></script>
+    <script src="~/cr/js/jqueryvaildation.submitonce-unobtrusive.min.js"></script>
+}

@@ -1,0 +1,58 @@
+﻿@model int
+@using cloudscribe.Core.Web
+@using Microsoft.Extensions.Options
+@using Microsoft.Extensions.Localization
+@inject IStringLocalizer<CloudscribeCore> sr
+@{ 
+    ViewData["BodyClass"] = "oops-page";
+}
+@{
+    switch (Model)
+    {
+        case 400:
+            ViewData["Icon"] = "fa fa-ban text-danger";
+            ViewData["Title"] = sr["Bad Request"];
+            ViewData["Description"] = sr["Your browser sent a request that this server could not understand."];
+            break;
+        case 401:
+            ViewData["Icon"] = "fa fa-ban text-danger";
+            ViewData["Title"] = sr["Unauthorized"];
+            ViewData["Description"] = sr["Sorry, but the page requires authentication."];
+            break;
+        case 403:
+            ViewData["Icon"] = "fa fa-exclamation-circle text-danger";
+            ViewData["Title"] = sr["Forbidden"];
+            ViewData["Description"] = sr["Sorry, but you don't have permission to access this page."];
+            break;
+        case 404:
+            ViewData["Icon"] = "fa fa-exclamation-circle text-danger";
+            ViewData["Title"] = sr["Page Not Found"];
+            ViewData["Description"] = sr["Sorry, but the page you were looking for can't be found."];
+            break;
+        case 500:
+        default:
+            ViewData["Icon"] = "fa fa-exclamation-circle text-danger";
+            ViewData["Title"] = sr["Unexpected Error"];
+            ViewData["Description"] = sr["Well, this is embarrassing. An error occurred while processing your request. Rest assured, this problem has been logged and hamsters have been released to fix the problem."];
+            break;
+    }
+}
+@section Meta {
+<meta name="robots" content="noindex" />
+}
+
+<div class="jumbotron text-center">
+    <header>
+        <h1><span aria-hidden="true" class="@ViewData["Icon"]"></span> @ViewData["Title"]</h1>
+    </header>
+    <p>@ViewData["Description"]</p>
+    @try
+    {
+        @await Html.PartialAsync("TenantHomeLinkPartial")
+
+    }
+    catch
+    {
+        @await Html.PartialAsync("FailSafeHomeLinkPartial")
+    }
+</div>

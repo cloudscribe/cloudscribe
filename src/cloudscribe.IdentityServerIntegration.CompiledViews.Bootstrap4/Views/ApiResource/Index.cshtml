@@ -1,0 +1,112 @@
+﻿@model cloudscribe.Core.IdentityServerIntegration.Models.ApiListViewModel
+@using cloudscribe.Core.IdentityServerIntegration
+@inject ICoreThemeHelper themeHelper
+@inject IStringLocalizer<CloudscribeIds4Resources> sr
+@{
+    var rIndex = 0;
+    var themeSettings = themeHelper.GetThemeSettings();
+    if (themeSettings.AdminSideNavExpanded) { ViewData["SideNavToggle"] = "show"; }
+    ViewData["SideNavVisible"] = true;
+}
+
+<h2>@ViewData["Title"]</h2>
+<p>@sr["API Resources identify web APIs (also called resource servers). To get access tokens for APIs, you need to register them."]</p>
+<p>To learn more about scopes see the <a href="https://identityserver4.readthedocs.io/en/release/topics/resources.html#defining-api-resources">IdentityServer Documentation</a></p>
+  
+<table class="table table-striped table-hover">
+    <tr>
+        <th>
+            <a class="btn btn-xs btn-primary" asp-action="EditApiResource" asp-controller="ApiResource"
+                asp-route-siteId="@Model.SiteId">@sr["New Api Resource"]</a>
+        </th>
+        <th>
+            @sr["Name"]
+        </th>
+        <th>
+            @sr["Display Name"]
+        </th>
+        <th>
+            @sr["Description"]
+        </th>
+        <th>
+            @sr["Enabled"]
+        </th>
+    </tr>
+    @foreach (var s in Model.Apis.Data)
+    {
+        <tr>
+            <td>
+                <a class="btn btn-xs btn-primary" asp-action="EditApiResource" asp-controller="ApiResource"
+                    asp-route-siteId="@Model.SiteId"
+                    asp-route-apiname="@s.Name">@sr["Edit"]</a>
+                <button type="button" class="btn btn-danger btn-sm" data-toggle="modal" data-target="@("#confirmDeleteResourceModal" + rIndex)">
+                    @sr["Delete"]
+                </button>
+                <form asp-controller="ApiResource" asp-action="DeleteApiResource">
+                    <input name="SiteId" value="@Model.SiteId" type="hidden" />
+                    <input name="ApiName" value="@s.Name" type="hidden" />
+                    <div class="modal fade" id="@("confirmDeleteResourceModal" + rIndex)" tabindex="-1" role="dialog" aria-labelledby="@("confirmDeleteResourceHeading" + rIndex)">
+                        <div class="modal-dialog modal-sm" role="document">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h4 class="modal-title" id="@("confirmDeleteResourceHeading" + rIndex)">@sr["Confirm Delete"]</h4>
+                                    <button type="button" class="close" data-dismiss="modal" aria-label='@sr["Close"]'><span aria-hidden="true">&times;</span></button>
+                                </div>
+                                <div class="modal-body">
+                                    @string.Format(sr["Are you sure you want to delete the API Resource {0}?"], s.Name)
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-primary" data-dismiss="modal">@sr["Cancel"]</button>
+                                    <input type="submit" value='@sr["Delete"]' class="btn btn-danger btn-ok" />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </td>
+
+            <td>
+                @Html.DisplayFor(modelItem => s.Name)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => s.DisplayName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => s.Description)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => s.Enabled)
+            </td>
+        </tr>
+        {
+            rIndex += 1;
+        }
+    }
+</table>     
+<cs-pager asp-action="Index" asp-controller="ApiResource"
+          asp-route-siteId="@Model.SiteId"
+          asp-route-pagesize="@Model.Apis.PageSize"
+          cs-paging-pagenumber="@Model.Apis.PageNumber"
+          cs-paging-totalitems="@Model.Apis.TotalItems"
+          cs-first-page-title='@sr["First Page"]'
+          cs-last-page-title='@sr["Last Page"]'
+          cs-previous-page-title='@sr["Previous page"]'
+          cs-next-page-title='@sr["Next page"]'
+          cs-pager-ul-class="pagination d-flex flex-wrap"
+          cs-pager-li-current-class="page-item active"
+          cs-pager-li-other-class="page-item"
+          cs-pager-li-non-active-class="page-item disabled"
+          cs-pager-link-current-class="page-link"
+          cs-pager-link-other-class="page-link"
+          ></cs-pager>
+            
+@section SideNav {
+    @{ await Html.RenderPartialAsync("AdminSideNav"); }
+}
+@section Toolbar{
+    @{ await Html.RenderPartialAsync("AdminSideNavToggle"); }
+}
+@section scripts {
+    @{ await Html.RenderPartialAsync("AdminSideNavScripts"); }
+
+}

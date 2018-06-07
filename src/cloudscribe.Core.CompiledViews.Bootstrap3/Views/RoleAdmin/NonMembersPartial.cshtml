@@ -1,0 +1,23 @@
+﻿@model cloudscribe.Core.Web.ViewModels.RoleAdmin.RoleMemberListViewModel
+@using cloudscribe.Core.Web
+@using Microsoft.Extensions.Options
+@using Microsoft.Extensions.Localization
+@inject IStringLocalizer<CloudscribeCore> sr
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h2 class="modal-title" id="myModalLabel">@Model.Heading1</h2>
+            </div>
+            <div class="modal-body">
+                <h3>@Model.Heading2</h3>
+
+                <div id="nonmembersgridcontainer">
+                    @{await Html.RenderPartialAsync("NonMembersGridPartial", Model); }
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">@sr["Close"]</button>
+            </div>
+        </div>
+    </div>

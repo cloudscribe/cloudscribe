@@ -1,0 +1,48 @@
+﻿@model cloudscribe.Core.IdentityServerIntegration.Models.ClientItemViewModel
+@using cloudscribe.Core.IdentityServerIntegration
+@inject IStringLocalizer<CloudscribeIds4Resources> sr
+@{
+    var rIndex = 0;
+}
+
+<h3>@sr["Redirect Urls"] </h3>
+@{ await Html.RenderPartialAsync("AddClientRedirectPartial", Model);}
+@if (Model.Client.RedirectUris.Count > 0)
+{
+    <ul class="list-unstyled">
+        @foreach (var c in Model.Client.RedirectUris)
+        {
+        <li class="mt-1 mb-1">
+            <form asp-controller="Clients" asp-action="DeleteClientRedirect">
+                <input asp-for="SiteId" type="hidden" />
+                <input name="ClientId" value="@Model.ClientId" type="hidden" />
+                <input name="RedirectUri" value="@c" type="hidden" />
+                <div class="modal fade" id="@("confirmDeleteRedirectModal" + rIndex)" tabindex="-1" role="dialog" aria-labelledby="@("confirmDeleteRedirectHeading" + rIndex)">
+                    <div class="modal-dialog modal-sm" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h4 class="modal-title" id="@("confirmDeleteRedirectHeading" + rIndex)">@sr["Confirm Delete"]</h4>
+                                <button type="button" class="close" data-dismiss="modal" aria-label='@sr["Close"]'><span aria-hidden="true">&times;</span></button>
+                            </div>
+                            <div class="modal-body">
+                                @string.Format(sr["Are you sure you want to delete the redirect url {0}?"], c)
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-primary" data-dismiss="modal">@sr["Cancel"]</button>
+                                <input type="submit" value='@sr["Delete"]' class="btn btn-danger btn-ok" />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </form>
+            <button type="button" class="btn btn-danger btn-sm" data-toggle="modal" data-target="@("#confirmDeleteRedirectModal" + rIndex)">
+                @sr["Delete"]
+            </button>
+            @c
+        </li>
+            {
+                rIndex += 1;
+            }
+        }
+    </ul>
+}

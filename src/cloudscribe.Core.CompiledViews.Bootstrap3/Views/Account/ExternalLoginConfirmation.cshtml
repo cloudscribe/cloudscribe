@@ -1,0 +1,69 @@
+﻿@model cloudscribe.Core.Web.ViewModels.SiteUser.ExternalLoginConfirmationViewModel
+@using cloudscribe.Core.Web
+@using System.Globalization
+@using Microsoft.Extensions.Options
+@using Microsoft.Extensions.Localization
+@inject IStringLocalizer<CloudscribeCore> sr
+@{
+    ViewData["Title"] = sr["Register"];
+    ViewData["BodyClass"] = "account-section external-confirm";
+    var loginProvider = ViewData["LoginProvider"];
+    var subHeadMessage = string.Format(CultureInfo.CurrentUICulture, sr["Associate your {0} account"], loginProvider);
+    var successMessage = string.Format(CultureInfo.CurrentUICulture, sr["You've successfully authenticated with <strong>{0}</strong>."], loginProvider);
+}
+<h2>@ViewData["Title"]</h2>
+<h3>@subHeadMessage</h3>
+
+<form asp-controller="Account" asp-action="ExternalLoginConfirmation" asp-route-returnurl='@ViewData["ReturnUrl"]' method="post" class="form-horizontal">
+    <div asp-validation-summary="All" class="text-danger"></div>
+    <p class="text-info">
+        @Html.Raw(successMessage)
+		@sr["Please enter a valid email for this site below and click the Register button to finish logging in."]
+    </p>
+    @if (!string.IsNullOrWhiteSpace(Model.RegistrationPreamble))
+    {
+        <div class="row">
+            <div class="col-md-12">
+                @Html.Raw(Model.RegistrationPreamble)
+            </div>
+        </div>
+    }
+    <div class="form-group">
+        <label asp-for="Email" class="col-md-2 control-label">@sr["Email"]</label>
+        <div class="col-md-10">
+            <input asp-for="Email" class="form-control" />
+            <span asp-validation-for="Email" class="text-danger"></span>
+        </div>
+    </div>
+    @if (!string.IsNullOrWhiteSpace(Model.RegistrationAgreement))
+    {
+        <div class="form-group">
+            <div class="col-md-12 agreementcontainer">
+                @Html.Raw(Model.RegistrationAgreement)
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-md-offset-2 col-md-10">
+                <input type="hidden" asp-for="AgreementRequired" />
+                <div class="checkbox">
+                    <input asp-for="AgreeToTerms" data-val-enforcetrue='@sr["You must agree to the terms"]' />
+                    <label asp-for="AgreeToTerms">@sr["I Agree to these terms of use."]</label>
+                    <span asp-validation-for="AgreeToTerms" class="text-danger"></span>
+                    @Html.ValidationMessage("agreementerror", new { @class = "text-danger" })
+                </div>
+            </div>
+        </div>
+    }
+    else
+    {
+        <input name="AgreeToTerms" value="true" type="hidden" />
+    }
+    <div class="form-group">
+        <div class="col-md-offset-2 col-md-10">
+            <button name="submit" type="submit" class="btn btn-default">@sr["Register"]</button>
+        </div>
+    </div>
+</form>
+@section Scripts {
+    @{await Html.RenderPartialAsync("_UnobtrusiveValidationScriptsPartial"); }
+}

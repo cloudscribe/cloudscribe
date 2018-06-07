@@ -1,0 +1,44 @@
+﻿@model cloudscribe.Core.IdentityServerIntegration.Models.NewClientViewModel
+@using cloudscribe.Core.IdentityServerIntegration
+@inject IStringLocalizer<CloudscribeIds4Resources> sr
+<form asp-controller="Clients" asp-action="NewClient">
+    <input asp-for="SiteId" type="hidden" />
+    @*<div asp-validation-summary="All" class="text-danger"></div>*@
+    <div class="form-group">
+        <label>@sr["Id"]</label>
+        <input class="form-control" asp-for="ClientId" />
+        <span asp-validation-for="ClientId" class="invalid-feedback"></span> 
+    </div>
+    <div class="form-group">
+        <label for="ClientName">@sr["Name"]</label>
+        <input class="form-control" asp-for="ClientName" />
+        <span asp-validation-for="ClientName" class="invalid-feedback"></span> 
+    </div>
+    <div class="form-group">
+        <label for="AccessTokenType">@sr["Access Token Type"]</label>
+        <select asp-for="AccessTokenType">
+            <option value="Jwt">Jwt</option>
+            <option value="Reference">Reference</option>
+        </select>
+    </div>
+    <div class="form-group">
+        <label for="RefreshTokenExpiration">@sr["Refresh Token Expiration"]</label>
+        <select asp-for="RefreshTokenExpiration">
+            <option value="Sliding">Sliding</option>
+            <option value="Absolute">Absolute</option>
+        </select>
+    </div>
+    <div class="form-group">
+        <label for="RefreshTokenUsage">@sr["Refresh Token Usage"]</label>
+        <select asp-for="RefreshTokenUsage">
+            <option value="ReUse">ReUse</option>
+            <option value="OneTimeOnly">OneTimeOnly</option>
+        </select>
+    </div>
+        
+    <div class="form-group">
+        <button name="submit" type="submit" class="btn btn-primary">@sr["Create"]</button>
+        <a class="btn btn-primary" asp-action="Index" asp-controller="Clients"
+                asp-route-siteId="SiteId">@sr["Cancel"]</a>
+    </div>
+</form>

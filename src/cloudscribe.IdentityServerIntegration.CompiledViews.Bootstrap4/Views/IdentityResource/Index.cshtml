@@ -1,0 +1,113 @@
+﻿@model cloudscribe.Core.IdentityServerIntegration.Models.IdentityListViewModel
+@using cloudscribe.Core.IdentityServerIntegration
+@inject ICoreThemeHelper themeHelper
+@inject IStringLocalizer<CloudscribeIds4Resources> sr
+@{
+    var i = 0;
+    var themeSettings = themeHelper.GetThemeSettings();
+    if (themeSettings.AdminSideNavExpanded) { ViewData["SideNavToggle"] = "show"; }
+    ViewData["SideNavVisible"] = true;
+}
+
+<h2>@ViewData["Title"]</h2>
+<p>@sr["Identity resources are data like user ID, name, or email address of a user. An identity resource has a unique name, and you can assign arbitrary claim types to it. These claims will then be included in the identity token for the user. The client will use the scope parameter to request access to an identity resource."]</p>
+<p>To learn more about Identity Resources see the <a href="https://identityserver4.readthedocs.io/en/release/topics/resources.html">IdentityServer Documentation</a></p>
+       
+<table class="table table-striped">
+    <tr>
+        <th>
+            <a class="btn btn-xs btn-primary" asp-action="EditResource" asp-controller="IdentityResource"
+                asp-route-siteId="@Model.SiteId">@sr["New Identity Resource"]</a>
+        </th>
+        <th>
+            @sr["Name"]
+        </th>
+        <th>
+            @sr["Description"]
+        </th>
+        <th>
+            @sr["Enabled"]
+        </th>
+        <th>
+            @sr["Required"]
+        </th>
+    </tr>
+    @foreach (var s in Model.IdentityResources.Data)
+    {
+        <tr>
+            <td>
+                <a class="btn btn-xs btn-primary" asp-action="EditResource" asp-controller="IdentityResource"
+                    asp-route-siteId="@Model.SiteId"
+                    asp-route-resourcename="@s.Name">@sr["Edit"]</a>
+                <button type="button" class="btn btn-danger btn-sm" data-toggle="modal" data-target="@("#confirmDeleteModal" + i)">
+                    @sr["Delete"]
+                </button>
+                <form asp-controller="IdentityResource" asp-action="DeleteResource">
+                    <input name="SiteId" value="@Model.SiteId" type="hidden" />
+                    <input name="ResourceName" value="@s.Name" type="hidden" />
+                    <div class="modal fade" id="@("confirmDeleteModal" + i)" tabindex="-1" role="dialog" aria-labelledby="@("confirmDeleteHeading" + i)">
+                        <div class="modal-dialog modal-sm" role="document">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h4 class="modal-title" id="@("confirmDeleteHeading" + i)">@sr["Confirm Delete"]</h4>
+                                    <button type="button" class="close" data-dismiss="modal" aria-label='@sr["Close"]'><span aria-hidden="true">&times;</span></button>
+                                </div>
+                                <div class="modal-body">
+                                    @string.Format(sr["Are you sure you want to delete {0}?"], s.Name)
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-primary" data-dismiss="modal">@sr["Cancel"]</button>
+                                    <input type="submit" value='@sr["Delete"]' class="btn btn-danger btn-ok" />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </td>
+
+            <td>
+                @Html.DisplayFor(modelItem => s.Name)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => s.Description)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => s.Enabled)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => s.Required)
+            </td>
+        </tr>
+        {
+            i += 1;
+        }
+    }
+</table>
+            
+<cs-pager asp-action="Index" asp-controller="IdentityResource"
+            asp-route-siteId="@Model.SiteId"
+            asp-route-pagesize="@Model.IdentityResources.PageSize"
+            cs-paging-pagenumber="@Model.IdentityResources.PageNumber"
+            cs-paging-totalitems="@Model.IdentityResources.TotalItems"
+            cs-first-page-title='@sr["First Page"]'
+            cs-last-page-title='@sr["Last Page"]'
+            cs-previous-page-title='@sr["Previous page"]'
+            cs-next-page-title='@sr["Next page"]'
+          cs-pager-ul-class="pagination d-flex flex-wrap"
+          cs-pager-li-current-class="page-item active"
+          cs-pager-li-other-class="page-item"
+          cs-pager-li-non-active-class="page-item disabled"
+          cs-pager-link-current-class="page-link"
+          cs-pager-link-other-class="page-link"
+          ></cs-pager>
+           
+@section SideNav {
+    @{ await Html.RenderPartialAsync("AdminSideNav"); }
+}
+@section Toolbar{
+    @{ await Html.RenderPartialAsync("AdminSideNavToggle"); }
+}
+@section scripts {
+    @{ await Html.RenderPartialAsync("AdminSideNavScripts"); }
+
+}

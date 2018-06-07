@@ -1,0 +1,41 @@
+﻿@model cloudscribe.Core.IdentityServerIntegration.Models.ClientEditViewModel
+@using cloudscribe.Core.IdentityServerIntegration
+@inject ICoreThemeHelper themeHelper
+@inject IStringLocalizer<CloudscribeIds4Resources> sr
+@{
+    var themeSettings = themeHelper.GetThemeSettings();
+    if (themeSettings.AdminSideNavExpanded) { ViewData["SideNavToggle"] = "show"; }
+    ViewData["SideNavVisible"] = true;
+}
+@if (Model.CurrentClient == null)
+{
+    <h2>@ViewData["Title"]</h2>
+    await Html.RenderPartialAsync("NewClientPartial", Model.NewClient);
+}
+else
+{
+    <h2>@ViewData["Title"]</h2>
+    await Html.RenderPartialAsync("EditClientPartial", Model.CurrentClient);
+    await Html.RenderPartialAsync("ClientRedirectsPartial", Model.CurrentClient);
+    await Html.RenderPartialAsync("ClientLogoutRedirectsPartial", Model.CurrentClient);
+    await Html.RenderPartialAsync("ClientAllowedCorsOriginsPartial", Model.CurrentClient);
+    await Html.RenderPartialAsync("ClientSecretsPartial", Model.CurrentClient);
+    await Html.RenderPartialAsync("ClientClaimsPartial", Model.CurrentClient);
+    await Html.RenderPartialAsync("ClientAllowedGrantTypesPartial", Model.CurrentClient);
+    await Html.RenderPartialAsync("ClientAllowedScopesPartial", Model.CurrentClient);
+    await Html.RenderPartialAsync("ClientProviderRestrictionsPartial", Model.CurrentClient);
+    await Html.RenderPartialAsync("ClientPropertiesPartial", Model.CurrentClient);
+
+}
+
+@section SideNav {
+    @{ await Html.RenderPartialAsync("AdminSideNav"); }
+}
+@section Toolbar{
+    @{ await Html.RenderPartialAsync("AdminSideNavToggle"); }
+}
+@section Scripts {
+    @{ await Html.RenderPartialAsync("AdminSideNavScripts"); }
+    @{await Html.RenderPartialAsync("_UnobtrusiveValidationScriptsPartial"); }
+    <script src="~/cr/js/unobtrusive-validation-bs4.min.js"></script>
+}

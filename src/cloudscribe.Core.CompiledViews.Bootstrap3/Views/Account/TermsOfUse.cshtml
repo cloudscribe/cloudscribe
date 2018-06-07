@@ -1,0 +1,56 @@
+﻿@model cloudscribe.Core.Web.ViewModels.Account.AcceptTermsViewModel
+@using cloudscribe.Core.Web
+@using Microsoft.Extensions.Options
+@using Microsoft.Extensions.Localization
+@using Microsoft.AspNetCore.Http.Authentication
+@inject IStringLocalizer<CloudscribeCore> sr
+@{ 
+    ViewData["BodyClass"] = "account-section terms-of-use";
+}
+
+@section Meta {
+    <meta name="robots" content="noindex" />
+}
+
+<h2>@ViewData["Title"]</h2>
+@if (!string.IsNullOrWhiteSpace(Model.RegistrationPreamble))
+{
+    <div class="row">
+        <div class="col-md-12">
+            @Html.Raw(Model.RegistrationPreamble)
+        </div>
+    </div>
+}
+<form id="register-form" asp-controller="Account" asp-action="TermsOfUse" method="post" class="form-horizontal" role="form">
+    <div asp-validation-summary="All" class="text-danger"></div>
+    <div class="col-md-12">
+        @sr["Agreement  Terms as of:"] @Model.TermsUpdatedDate
+    </div>
+    <div class="form-group">
+        <div class="col-md-12 agreementcontainer">
+            @Html.Raw(Model.RegistrationAgreement)
+        </div>
+    </div>
+    <div class="form-group">
+        <div class="col-md-offset-2 col-md-10">
+            <input type="hidden" asp-for="AgreementRequired" />
+            <div class="checkbox">
+                <input asp-for="AgreeToTerms" data-val-enforcetrue='@sr["You must agree to the terms."]' />
+                <label asp-for="AgreeToTerms">@sr["I Agree to these terms of use."]</label>
+                <span asp-validation-for="AgreeToTerms" class="text-danger"></span>
+                @Html.ValidationMessage("agreementerror", new { @class = "text-danger" })
+            </div>
+        </div>
+    </div>
+    <div class="form-group">
+        <div class="col-md-offset-2 col-md-10">
+        <button name="submit" type="submit" class="btn btn-default">@sr["Submit"]</button>
+        </div>
+    </div>
+</form>
+
+@section Scripts {
+  @{await Html.RenderPartialAsync("_UnobtrusiveValidationScriptsPartial"); }
+<script src="~/cr/js/cloudscribe-validation-enforcetrue.min.js"></script>
+<script src="~/cr/js/cloudscribe-validation-requiredwhen.min.js"></script>
+}

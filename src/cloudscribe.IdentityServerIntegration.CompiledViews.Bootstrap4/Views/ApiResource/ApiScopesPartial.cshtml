@@ -1,0 +1,134 @@
+﻿@model cloudscribe.Core.IdentityServerIntegration.Models.ApiEditViewModel
+@using cloudscribe.Core.IdentityServerIntegration
+@using cloudscribe.Core.IdentityServerIntegration.Models
+@inject IStringLocalizer<CloudscribeIds4Resources> sr
+@{
+    var scopeIndex = 0;
+    var scopeClaimIndex = 0;
+}
+@if (Model.CurrentApi != null)
+{
+
+    <h3>@sr["Scopes"] </h3>
+    await Html.RenderPartialAsync("AddApiScopePartial", Model.NewScope);
+    @if (Model.CurrentApi.Scopes.Count > 0)
+    {
+        <table class="table table-striped">
+            <tr>
+                <th></th>
+                <th>
+                    @sr["Name"]
+                </th>
+                <th>
+                    @sr["Display Name"]
+                </th>
+                <th>
+                    @sr["Description"]
+                </th>
+                <th>
+                    @sr["Required"]
+                </th>
+                <th>
+                    @sr["Emphasize"]
+                </th>
+                <th>
+                    @sr["Show In Discovery"]
+                </th>
+            </tr>
+
+            @foreach (var c in Model.CurrentApi.Scopes)
+            {
+                <tr>
+                    <td>
+                        <button type="button" class="btn btn-danger btn-sm" data-toggle="modal" data-target="@("#confirmDeleteScopeModal" + scopeIndex)">
+                            @sr["Delete"]
+                        </button>
+                        <form asp-controller="ApiResource" asp-action="DeleteApiScope">
+                            <input asp-for="SiteId" type="hidden" />
+                            <input name="ApiName" value="@Model.CurrentApi.Name" type="hidden" />
+                            <input name="ScopeName" value="@c.Name" type="hidden" />
+                            <div class="modal fade" id="@("confirmDeleteScopeModal" + scopeIndex)" tabindex="-1" role="dialog" aria-labelledby="@("confirmDeleteScopeHeading" + scopeIndex)">
+                                <div class="modal-dialog modal-sm" role="document">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h4 class="modal-title" id="@("confirmDeleteScopeHeading" + scopeIndex)">@sr["Confirm Delete"]</h4>
+                                            <button type="button" class="close" data-dismiss="modal" aria-label='@sr["Close"]'><span aria-hidden="true">&times;</span></button>
+                                        </div>
+                                        <div class="modal-body">
+                                            @string.Format(sr["Are you sure you want to delete the scope {0}?"], c.Name)
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn btn-primary" data-dismiss="modal">@sr["Cancel"]</button>
+                                            <input type="submit" value='@sr["Delete"]' class="btn btn-danger btn-ok" />
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                    </td>
+                    <td>@c.Name</td>
+                    <td>@c.DisplayName</td>
+                    <td>@c.Description</td>
+                    <td>@Html.DisplayFor(modelItem => c.Required)</td>
+                    <td>@Html.DisplayFor(modelItem => c.Emphasize)</td>
+                    <td>@Html.DisplayFor(modelItem => c.ShowInDiscoveryDocument)</td>
+                </tr>
+                <tr>
+                    <td colspan="7">
+                        <h4>@sr["Scope Claims"] </h4>
+                        @{ await Html.RenderPartialAsync("AddApiScopeClaimPartial", new NewApiScopeClaimViewModel(Model.SiteId, Model.CurrentApi.Name, c.Name));}
+                        @if (c.UserClaims.Count > 0)
+                        {
+                            <ul class="list-unstyled">
+                                @foreach (var u in c.UserClaims)
+                                {
+                                    <li>
+                                        @u
+                                        <button type="button" class="btn btn-danger btn-sm" data-toggle="modal" data-target="@("#confirmDeleteScopeClaimModal" + scopeClaimIndex)">
+                                            @sr["Delete"]
+                                        </button>
+                                        <form asp-controller="ApiResource" asp-action="DeleteApiScopeClaim">
+
+                                            <input asp-for="SiteId" type="hidden" />
+                                            <input name="ApiName" value="@Model.CurrentApi.Name" type="hidden" />
+                                            <input name="ScopeName" value="@c.Name" type="hidden" />
+                                            <input name="ClaimName" value="@u" type="hidden" />
+                                            <div class="modal fade" id="@("confirmDeleteScopeClaimModal" + scopeClaimIndex)" tabindex="-1" role="dialog" aria-labelledby="@("confirmDeleteScopeClaimHeading" + scopeClaimIndex)">
+                                                <div class="modal-dialog modal-sm" role="document">
+                                                    <div class="modal-content">
+                                                        <div class="modal-header">
+                                                            <h4 class="modal-title" id="@("confirmDeleteScopeClaimHeading" + scopeClaimIndex)">@sr["Confirm Delete"]</h4>
+                                                            <button type="button" class="close" data-dismiss="modal" aria-label='@sr["Close"]'><span aria-hidden="true">&times;</span></button>
+                                                        </div>
+                                                        <div class="modal-body">
+                                                            @string.Format(sr["Are you sure you want to delete the scope claim {0}?"], u)
+                                                        </div>
+                                                        <div class="modal-footer">
+                                                            <button type="button" class="btn btn-primary" data-dismiss="modal">@sr["Cancel"]</button>
+                                                            <input type="submit" value='@sr["Delete"]' class="btn btn-danger btn-ok" />
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </form>
+                                    </li>
+                                    {
+                                        scopeClaimIndex += 1;
+                                    }
+                                }
+                            </ul>
+                        }
+
+
+                    </td>
+
+                </tr>
+                {
+                    scopeIndex += 1;
+                }
+            }
+        </table>
+    }
+
+
+}

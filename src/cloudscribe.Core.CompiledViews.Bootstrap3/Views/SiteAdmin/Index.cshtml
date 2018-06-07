@@ -1,0 +1,6 @@
+﻿@using cloudscribe.Web.Navigation;
+@{ 
+    ViewData["BodyClass"] = "admin-section admin-index";
+}
+<h2>@ViewData["Title"]</h2>
+@await Component.InvokeAsync("Navigation", new { viewName = "ChildTree", filterName = NamedNavigationFilters.ChildTree, startingNodeKey = "" })

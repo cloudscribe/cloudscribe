@@ -1,0 +1,70 @@
+﻿@model cloudscribe.Core.Web.ViewModels.SiteSettings.CaptchaSettingsViewModel
+@using cloudscribe.Core.Web
+@using cloudscribe.Web.Navigation
+@using Microsoft.Extensions.Options
+@using Microsoft.Extensions.Localization
+@inject IStringLocalizer<CloudscribeCore> sr
+<div class="row">
+    <div class="col-md-10 col-md-push-2">
+        <h2>@ViewData["Title"]</h2>
+        <form method="post" class="form-horizontal" role="form" asp-antiforgery="true" data-submit-once="true">
+            <div asp-validation-summary="All" class="text-danger"></div>
+            <input asp-for="SiteId" type="hidden" />
+            <div class="form-group">
+                <label asp-for="RecaptchaPublicKey" class="col-md-2 control-label">@sr["Recaptcha Public Key"]</label>
+                <div class="col-md-10">
+                    <input asp-for="RecaptchaPublicKey" class="form-control" />
+                    <span asp-validation-for="RecaptchaPublicKey" class="text-danger"></span>
+                </div>
+            </div>
+            <div class="form-group">
+                <label asp-for="RecaptchaPrivateKey" class="col-md-2 control-label">@sr["Recaptcha Private Key"]</label>
+                <div class="col-md-10">
+                    <input asp-for="RecaptchaPrivateKey" class="form-control" />
+                    <span asp-validation-for="RecaptchaPrivateKey" class="text-danger"></span>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-md-offset-2 col-md-10">
+                    <div class="checkbox">
+                        <label>
+                            <input asp-for="UseInvisibleCaptcha" /> @sr["Use Invisible reCaptcha?"]
+                        </label>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-md-offset-2 col-md-10">
+                    <div class="checkbox">
+                        <label>
+                            <input asp-for="RequireCaptchaOnRegistration" /> @sr["Require Captcha On Registration?"]
+                        </label>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-md-offset-2 col-md-10">
+                    <div class="checkbox">
+                        <label>
+                            <input asp-for="RequireCaptchaOnLogin" /> @sr["Require Captcha On Login?"]
+                        </label>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-md-offset-2 col-md-10">
+                    <button name="submit" type="submit" class="btn btn-default" data-disabled-text='@sr["Working..."]' data-enabled-text='@sr["Save"]'>@sr["Save"]</button>
+                </div>
+            </div>
+        </form>
+    </div>
+    <div class="col-md-2 col-md-pull-10 hidden-xs hidden-sm">
+        @await Component.InvokeAsync("Navigation", new { viewName = "SideNavAlt1", filterName = NamedNavigationFilters.ParentTree, startingNodeKey = "SiteAdmin" })
+    </div>
+</div>
+@section Scripts {
+    @{ await Html.RenderPartialAsync("_SideMenuScriptsPartial"); }
+    @{ await Html.RenderPartialAsync("_UnobtrusiveValidationScriptsPartial"); }
+    <script src="~/cr/js/jquery.validate.hooks.min.js"></script>
+    <script src="~/cr/js/jqueryvaildation.submitonce-unobtrusive.min.js"></script>
+}

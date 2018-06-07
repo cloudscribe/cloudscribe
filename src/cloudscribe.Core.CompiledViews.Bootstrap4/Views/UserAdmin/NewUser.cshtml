@@ -1,0 +1,94 @@
+﻿@model cloudscribe.Core.Web.ViewModels.UserAdmin.NewUserViewModel
+@inject ICoreThemeHelper themeHelper
+@inject IStringLocalizer<CloudscribeCore> sr
+@{
+    var themeSettings = themeHelper.GetThemeSettings();
+    if (themeSettings.AdminSideNavExpanded) { ViewData["SideNavToggle"] = "show"; }
+    ViewData["SideNavVisible"] = true;
+}
+@section Styles {
+
+    @{ await Html.RenderPartialAsync("NewUserStylePartial"); }
+}
+
+<h2>@ViewBag.Title</h2>
+<form role="form" asp-controller="UserAdmin" asp-action="NewUser" data-submit-once="true">
+    <input asp-for="UserId" type="hidden" />
+    <input asp-for="SiteId" type="hidden" />
+    @if (Model.UserId != Guid.Empty)
+    {
+        <div class="form-group">
+            <label asp-for="UserId">@sr["UserId"]</label>
+            <label class="control-label">@Model.UserId.ToString()</label>
+        </div>
+    }
+    <div class="form-group">
+        <label asp-for="Email">@sr["Email"]</label>
+        <input asp-for="Email" class="form-control" />
+        <span asp-validation-for="Email" class="invalid-feedback"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="Username">@sr["Username"]</label>
+        <input asp-for="Username" class="form-control"
+               data-remote-validate-onblur="true"
+               data-error-target-id="spnUserNameWarn"
+               data-additional-input-ids="UserId"
+               data-validation-url='@Url.Action("UsernameAvailable", "Account")' />
+        <span asp-validation-for="Username" class="invalid-feedback"></span>
+        <span id="spnUserNameWarn" class="text-danger" data-error-message='@sr["Username is already in use"]'></span>
+        @Html.ValidationMessage("usernameerror", new { @class = "text-danger" })
+    </div>
+    <div class="form-group">
+        <label asp-for="DisplayName">@sr["Display Name"]</label>
+        <input asp-for="DisplayName" class="form-control" />
+        <span asp-validation-for="DisplayName" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="FirstName">@sr["First Name"]</label>
+        <input asp-for="FirstName" class="form-control" />
+    </div>
+    <div class="form-group">
+        <label asp-for="LastName">@sr["Last Name"]</label>
+        <input asp-for="LastName" class="form-control" />
+    </div>
+    @if (Model.UserId == Guid.Empty)
+    {
+        <div class="form-group">
+            <label asp-for="Password">@sr["Password"]</label>
+            <input asp-for="Password" type="password" class="form-control" />
+            <span asp-validation-for="Password" class="invalid-feedback"></span>
+        </div>
+        <div class="form-group">
+            <label asp-for="ConfirmPassword">@sr["Confirm Password"]</label>
+            <input asp-for="ConfirmPassword" type="password" class="form-control" />
+            <span asp-validation-for="ConfirmPassword" class="invalid-feedback"></span>
+        </div>
+        <div class="form-group">
+            <div class="form-check">
+                <input asp-for="MustChangePwd" class="form-check-input" />
+                <label asp-for="MustChangePwd" class="form-check-label">@sr["Must Change Password"]</label>
+            </div>
+        </div>
+    }
+    
+    @{await Html.RenderPartialAsync("NewUserMiddlePartial", Model); }
+    <div class="form-group">
+        <button type="submit" class="btn btn-primary" data-disabled-text='@sr["Working..."]' data-enabled-text='@sr["Save"]'>@sr["Save"]</button>
+    </div>
+    @*<div asp-validation-summary="All" class="text-danger"></div>*@
+</form>
+
+@section SideNav {
+    @{ await Html.RenderPartialAsync("AdminSideNav"); }
+}
+@section Toolbar{
+    @{ await Html.RenderPartialAsync("AdminSideNavToggle"); }
+}
+@section Scripts {
+    @{ await Html.RenderPartialAsync("AdminSideNavScripts"); }
+    @{ await Html.RenderPartialAsync("NewUserScriptsPartial"); }
+    <script src="~/cr/js/unobtrusive-validation-bs4.min.js"></script>
+    <script src="~/cr/js/remote-validation-onblur-unobtrusive.min.js"></script>
+    <script src="~/cr/js/jquery.validate.hooks.min.js"></script>
+    <script src="~/cr/js/jqueryvaildation.submitonce-unobtrusive.min.js"></script>
+}

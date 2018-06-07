@@ -1,0 +1,93 @@
+﻿@model cloudscribe.Core.Web.ViewModels.SiteSettings.MailSettingsViewModel
+@inject IStringLocalizer<CloudscribeCore> sr
+@inject ICoreThemeHelper themeHelper
+@{
+    var themeSettings = themeHelper.GetThemeSettings();
+    if (themeSettings.AdminSideNavExpanded) { ViewData["SideNavToggle"] = "show"; }
+    ViewData["SideNavVisible"] = true;
+}
+<h2>@ViewBag.Title</h2>
+<form method="post" class="form-horizontal" role="form" asp-antiforgery="true" data-submit-once="true">
+    @*<div asp-validation-summary="All" class="text-danger"></div>*@
+    <input asp-for="SiteId" type="hidden" />
+    <div class="form-group">
+        <label asp-for="EmailSenderName">@sr["Email Sender"]</label>
+        <select id="EmailSenderName" asp-for="EmailSenderName" asp-items="Model.AvailableEmailProviders" class="form-control"></select>
+        <span asp-validation-for="EmailSenderName" class="invalid-feedback"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="EmailApiKey">@sr["Email Api Key"]</label>
+        <input asp-for="EmailApiKey" class="form-control" />
+        <span asp-validation-for="EmailApiKey" class="invalid-feedback"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="EmailApiEndpoint">@sr["Email Api Endpoint"]</label>
+        <input asp-for="EmailApiEndpoint" class="form-control" />
+        <span asp-validation-for="EmailApiEndpoint" class="invalid-feedback"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="DefaultEmailFromAddress">@sr["Default Email From Address"]</label>
+        <input asp-for="DefaultEmailFromAddress" class="form-control" />
+        <span asp-validation-for="DefaultEmailFromAddress" class="invalid-feedback"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="DefaultEmailFromAlias">@sr["Default Email From Name"]</label>
+        <input asp-for="DefaultEmailFromAlias" class="form-control" />
+        <span asp-validation-for="DefaultEmailFromAlias" class="invalid-feedback"></span>
+    </div>
+    <fieldset>
+        <legend>@sr["SMTP Settings"]</legend>
+
+        <div class="form-group">
+            <label asp-for="SmtpUser">@sr["Smtp User"]</label>
+            <input asp-for="SmtpUser" class="form-control" />
+            <span asp-validation-for="SmtpUser" class="invalid-feedback"></span>
+        </div>
+        <div class="form-group">
+            <label asp-for="SmtpPassword">@sr["Smtp Password"]</label>
+            <input asp-for="SmtpPassword" class="form-control" />
+            <span asp-validation-for="SmtpPassword" class="invalid-feedback"></span>
+        </div>
+        <div class="form-group">
+            <label asp-for="SmtpServer">@sr["Smtp Server"]</label>
+            <input asp-for="SmtpServer" class="form-control" />
+            <span asp-validation-for="SmtpServer" class="invalid-feedback"></span>
+        </div>
+        <div class="form-group">
+            <label asp-for="SmtpPort">@sr["Port"]</label>
+            <input asp-for="SmtpPort" class="form-control" />
+            <span asp-validation-for="SmtpPort" class="invalid-feedback"></span>
+        </div>
+        <div class="form-group">
+            <div class="form-check">
+                <input asp-for="SmtpRequiresAuth" class="form-check-input" />
+                <label asp-for="SmtpRequiresAuth" class="form-check-label">@sr["Requires Authentication?"]</label>
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="form-check">
+                <input asp-for="SmtpUseSsl" class="form-check-input" />
+                <label asp-for="SmtpUseSsl" class="form-check-label">@sr["Requires SSL?"]</label>
+            </div>
+        </div>
+    </fieldset>
+
+    <div class="form-group">
+        <button name="submit" type="submit" class="btn btn-primary" data-disabled-text='@sr["Working..."]' data-enabled-text='@sr["Save"]'>@sr["Save"]</button>
+    </div>
+</form>
+@{ await Html.RenderPartialAsync("TestMessagePartial", Model.TestMessage); }
+@section SideNav {
+    @{ await Html.RenderPartialAsync("AdminSideNav"); }
+}
+@section Toolbar{
+    @{ await Html.RenderPartialAsync("AdminSideNavToggle"); }
+}
+@section Scripts {
+    @{ await Html.RenderPartialAsync("AdminSideNavScripts"); }
+    @{ await Html.RenderPartialAsync("_UnobtrusiveEditorScriptsPartial"); }
+    @{ await Html.RenderPartialAsync("_UnobtrusiveValidationScriptsPartial"); }
+    <script src="~/cr/js/unobtrusive-validation-bs4.min.js"></script>
+    <script src="~/cr/js/jquery.validate.hooks.min.js"></script>
+    <script src="~/cr/js/jqueryvaildation.submitonce-unobtrusive.min.js"></script>
+}

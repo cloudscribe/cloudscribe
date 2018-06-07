@@ -1,0 +1,91 @@
+﻿@model cloudscribe.Core.Web.ViewModels.SiteSettings.CompanyInfoViewModel
+@inject IStringLocalizer<CloudscribeCore> sr
+@inject ICoreThemeHelper themeHelper
+@{
+    var themeSettings = themeHelper.GetThemeSettings();
+    if (themeSettings.AdminSideNavExpanded) { ViewData["SideNavToggle"] = "show"; }
+    ViewData["SideNavVisible"] = true;
+}
+<h2>@ViewBag.Title</h2>
+<form method="post" class="form-horizontal" role="form" asp-antiforgery="true" data-submit-once="true">
+    @*<div asp-validation-summary="All" class="text-danger"></div>*@
+    <input asp-for="SiteId" type="hidden" />
+    <div class="form-group">
+        <label asp-for="CompanyName">@sr["Name"]</label>
+        <input asp-for="CompanyName" class="form-control" />
+        <span asp-validation-for="CompanyName" class="invalid-feedback"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="CompanyStreetAddress">@sr["Address1"]</label>
+        <input asp-for="CompanyStreetAddress" class="form-control" />
+        <span asp-validation-for="CompanyStreetAddress" class="invalid-feedback"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="CompanyStreetAddress2">@sr["Address2"]</label>
+        <input asp-for="CompanyStreetAddress2" class="form-control" />
+        <span asp-validation-for="CompanyStreetAddress2" class="invalid-feedback"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="CompanyLocality">@sr["City"]</label>
+        <input asp-for="CompanyLocality" class="form-control" />
+        <span asp-validation-for="CompanyLocality" class="invalid-feedback"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="CompanyCountry">@sr["Country"]</label>
+        <select id="CompanyCountry" asp-for="CompanyCountry" asp-items="Model.AvailableCountries" class="form-control"></select>
+        <span asp-validation-for="CompanyCountry" class="invalid-feedback"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="CompanyRegion">@sr["State"]</label>
+        <select id="CompanyRegion" class="form-control"
+                asp-for="CompanyRegion"
+                asp-items="Model.AvailableStates"
+                data-cascade-childof="CompanyCountry"
+                data-cascade-serviceurl='@Url.Content("~/CoreData/GetStatesJson/?countryCode=")'
+                data-cascade-orig-val="@Model.CompanyRegion"
+                data-cascade-select-label="-Please select-"></select>
+        <span asp-validation-for="CompanyRegion" class="invalid-feedback"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="CompanyPostalCode">@sr["Postal Code"]</label>
+        <input asp-for="CompanyPostalCode" class="form-control" />
+        <span asp-validation-for="CompanyPostalCode" class="invalid-feedback"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="CompanyPhone">@sr["Phone"]</label>
+        <input asp-for="CompanyPhone" class="form-control" />
+        <span asp-validation-for="CompanyPhone" class="invalid-feedback"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="CompanyFax">@sr["Fax"]</label>
+        <input asp-for="CompanyFax" class="form-control" />
+        <span asp-validation-for="CompanyFax" class="invalid-feedback"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="CompanyPublicEmail">@sr["Public Email"]</label>
+        <input asp-for="CompanyPublicEmail" class="form-control" />
+        <span asp-validation-for="CompanyPublicEmail" class="invalid-feedback"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="CompanyWebsite">@sr["Website"]</label>
+        <input asp-for="CompanyWebsite" class="form-control" />
+        <span asp-validation-for="CompanyWebsite" class="invalid-feedback"></span>
+    </div>
+    <div class="form-group">
+        <button name="submit" type="submit" class="btn btn-primary" data-disabled-text='@sr["Working..."]' data-enabled-text='@sr["Save"]'>@sr["Save"]</button>
+    </div>
+</form>
+@section SideNav {
+    @{ await Html.RenderPartialAsync("AdminSideNav"); }
+}
+@section Toolbar{
+    @{ await Html.RenderPartialAsync("AdminSideNavToggle"); }
+}
+@section Scripts {
+    @{ await Html.RenderPartialAsync("AdminSideNavScripts"); }
+    @{ await Html.RenderPartialAsync("_UnobtrusiveValidationScriptsPartial"); }
+    <script src="~/cr/js/unobtrusive-validation-bs4.min.js"></script>
+    @{ await Html.RenderPartialAsync("_CascadeScriptsPartial"); }
+    <script src="~/cr/js/jquery.validate.hooks.min.js"></script>
+    <script src="~/cr/js/jqueryvaildation.submitonce-unobtrusive.min.js"></script>
+}

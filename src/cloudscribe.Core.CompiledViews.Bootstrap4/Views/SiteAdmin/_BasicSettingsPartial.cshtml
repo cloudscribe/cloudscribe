@@ -1,0 +1,151 @@
+﻿@model cloudscribe.Core.Web.ViewModels.SiteSettings.SiteBasicSettingsViewModel
+@inject IStringLocalizer<CloudscribeCore> sr
+@inject ICkeditorOptionsResolver editorOptionsResolver
+@inject IOptions<MultiTenantOptions> multiTenantOptionsAccessor
+
+@{
+    MultiTenantOptions multiTenantOptions = multiTenantOptionsAccessor.Value;
+    bool useFolderTenants = true;
+    if (multiTenantOptions.Mode != MultiTenantMode.FolderName) { useFolderTenants = false; }
+    bool useHostTenants = true;
+    if (multiTenantOptions.Mode != MultiTenantMode.HostName) { useHostTenants = false; }
+    var ckOptions = await editorOptionsResolver.GetCkeditorOptions();
+    var baseUrl = this.Context.Request.GetCurrentBaseUrl() + "/";
+}
+<form method="post" class="form-horizontal" role="form" asp-antiforgery="true" data-submit-once="true">
+    @*<div asp-validation-summary="All" class="text-danger"></div>*@
+    <input asp-for="SiteId" type="hidden" />
+    <input asp-for="ReturnPageNumber" type="hidden" />
+    <div class="form-group">
+        <label asp-for="SiteName">@sr["Site Name"]</label>
+        <input asp-for="SiteName" class="form-control" />
+        <span asp-validation-for="SiteName" class="invalid-feedback"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="AliasId">@sr["AliasId"]</label>
+        <span class="form-control">@Model.AliasId</span>
+    </div>
+    @if (useFolderTenants)
+    {
+        <div class="form-group">
+            <label asp-for="SiteFolderName">@sr["Site Folder Name"]</label>
+            <div class="input-group">
+                <div class="input-group-prepend">
+                    <span class="input-group-text">@baseUrl</span>
+                </div>
+                <input asp-for="SiteFolderName" class="form-control"
+                       data-remote-validate-onblur="true"
+                       data-error-target-id="spnFolderNameWarn"
+                       data-additional-input-ids="SiteId"
+                       data-validation-url='@Url.Action("FolderNameAvailable", "SiteAdmin")' />
+                <span id="spnFolderNameWarn" class="invalid-feedback" data-error-message='@sr["Requested Site Folder Name is not available, please try another value"]'></span>
+                <span asp-validation-for="SiteFolderName" class="text-danger"></span>
+                @Html.ValidationMessage("foldererror", new { @class = "text-danger" })
+            </div>
+        </div> 
+    }
+    else if (useHostTenants)
+    {
+        <div class="form-group">
+            <label asp-for="HostName">@sr["Host Name"]</label>
+            <input asp-for="HostName" class="form-control" />
+            <span asp-validation-for="HostName" class="invalid-feedback"></span>
+            @Html.ValidationMessage("hosterror", new { @class = "text-danger" })
+            <a class="hostmap" asp-action="SiteHostMappings"
+                asp-controller="SiteAdmin"
+                asp-route-siteGuid="SiteGuid"
+                asp-route-slp="ReturnPageNumber">@sr["Domain Mappings"]</a>
+        </div>
+    }
+    <div class="form-group">
+        <label asp-for="TimeZoneId">@sr["Time Zone"]</label>
+        <select asp-for="TimeZoneId" asp-items="Model.AllTimeZones" class="form-control"></select>
+        <span asp-validation-for="TimeZoneId" class="invalid-feedback"></span>
+    </div>
+    @if (Model.AvailableThemes.Count > 0)
+    {
+        <div class="form-group">
+            <label asp-for="Theme">@sr["Theme"]</label>
+            <select id="Layout" asp-for="Theme" asp-items="Model.AvailableThemes" class="form-control"></select>
+            <span asp-validation-for="Theme" class="invalid-feedback"></span>
+        </div>
+    }
+    @if (Model.AvailableCultures.Count > 0)
+    {
+        <div class="form-group">
+            <label asp-for="ForcedCulture">@sr["Forced Culture"]</label>
+            <select asp-for="ForcedCulture" asp-items="Model.AvailableCultures" class="form-control"></select>
+            <span asp-validation-for="ForcedCulture" class="invalid-feedback"></span>
+        </div>
+    }
+    @if (Model.AvailableUICultures.Count > 0)
+    {
+        <div class="form-group">
+            <label asp-for="ForcedUICulture">@sr["Forced UI Culture"]</label>
+            <select asp-for="ForcedUICulture" asp-items="Model.AvailableUICultures" class="form-control"></select>
+            <span asp-validation-for="ForcedUICulture" class="invalid-feedback"></span>
+        </div>
+    }
+    <div class="form-group">
+        <label asp-for="GoogleAnalyticsProfileId">@sr["Google Analytics ProfileId"]</label>
+        <input asp-for="GoogleAnalyticsProfileId" class="form-control" />
+        <span asp-validation-for="GoogleAnalyticsProfileId" class="invalid-feedback"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="AddThisProfileId">@sr["AddThis.com ProfileId"]</label>
+        <input asp-for="AddThisProfileId" class="form-control" />
+        <span asp-validation-for="AddThisProfileId" class="invalid-feedback"></span>
+    </div>
+    <div class="form-group">
+        <div class="form-check">
+            <input asp-for="IsClosed" class="form-check-input" />
+            <label asp-for="IsClosed" class="form-check-label">@sr["Close Site To Public"]</label>
+        </div>
+    </div>
+    <div class="form-group">
+        <label asp-for="ClosedMessage">@sr["Closed Message"]</label>
+        <textarea class="form-control" rows="5" asp-for="ClosedMessage"
+                    data-ckeditor-unobtrusive=""
+                    data-ckeditor-config-url="@ckOptions.CustomConfigPath"
+                    data-ckeditor-config-language="@ckOptions.LanguageCode"
+                    data-ckeditor-config-dropfileuploadurl="@ckOptions.DropFileUrl"
+                    data-ckeditor-config-filebrowserurl="@ckOptions.FileBrowseUrl"
+                    data-ckeditor-config-imagebrowseurl="@ckOptions.ImageBrowseUrl"></textarea>
+        <span asp-validation-for="ClosedMessage" class="invalid-feedback"></span>
+    </div>
+    <div class="form-group">
+            <button name="submit" type="submit" class="btn btn-primary" data-disabled-text='@sr["Working..."]' data-enabled-text='@sr["Save"]'>@sr["Save"]</button>
+            @if ((Model.ShowDelete) && (Model.SiteId != Guid.Empty))
+            {
+                <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#confirmDeleteModal">
+                    @sr["Delete"]
+                </button>
+                @Html.ValidationMessage("deleteerror", new { @class = "text-danger" })
+            }
+    </div>
+</form>
+@if ((Model.ShowDelete) && (Model.SiteId != Guid.Empty))
+{
+    <form id="deleteform" class="form-inline" asp-controller="SiteAdmin"
+          asp-action="SiteDelete">
+        <input asp-for="SiteId" type="hidden" />
+        <input asp-for="ReturnPageNumber" type="hidden" />
+        <div class="modal fade" id="confirmDeleteModal" tabindex="-1" role="dialog" aria-labelledby="confirmDeleteHeading">
+            <div class="modal-dialog modal-sm" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h4 class="modal-title" id="confirmDeleteHeading">@sr["Confirm Delete"]</h4>
+                        <button type="button" class="close" data-dismiss="modal" aria-label='@sr["Close"]'><span aria-hidden="true">&times;</span></button>
+                    </div>
+                    <div class="modal-body">
+                        @string.Format(sr["Are you sure you want to delete the site {0} and all related data? You cannot undo this action."], Model.SiteName)
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-primary" data-dismiss="modal">@sr["Cancel"]</button>
+                        <input type="submit" value='@sr["Delete"]' class="btn btn-danger btn-ok" />
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+}

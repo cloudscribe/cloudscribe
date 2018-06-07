@@ -1,0 +1,48 @@
+﻿@model cloudscribe.Core.Web.ViewModels.UserAdmin.UserListViewModel
+@using cloudscribe.Web.Navigation
+@using cloudscribe.Core.Web
+@using cloudscribe.Core.Web.Components
+@using Microsoft.Extensions.Options
+@using Microsoft.Extensions.Localization
+@inject IStringLocalizer<CloudscribeCore> sr
+@{
+
+}
+<div class="row">
+    <div class="col-md-10 col-md-push-2">
+        <h2>@ViewData["Title"]</h2>
+        <div class="row">
+            <div class="col-md-5">
+                <form class="form-inline" role="form" asp-controller="UserAdmin" asp-action="Search" method="get" asp-antiforgery="false">
+                    <input asp-for="SiteId" type="hidden" />
+                    <div class="input-group">
+                        <input asp-for="SearchQuery" name="query" class="form-control" />
+                        <span class="input-group-btn">
+                            <button type="submit" value='@sr["Search"]' class="btn btn-default">@sr["Search"]</button>
+                        </span>
+                    </div>
+                </form>
+            </div>
+            <div class="col-md-5">
+                <form class="form-inline" role="form" asp-controller="UserAdmin" asp-action="IpSearch" method="get" asp-antiforgery="false">
+                    <input asp-for="SiteId" type="hidden" />
+                    <div class="input-group">
+                        <input asp-for="IpQuery" name="ipquery" class="form-control" />
+                        <span class="input-group-btn">
+                            <button type="submit"  class="btn btn-default">@sr["Search By IP Address"]</button>
+                        </span>
+                    </div>
+                </form>
+            </div>
+        </div>
+        <div class="row">
+            @{await Html.RenderPartialAsync("UserListPartial", Model); }
+        </div>
+    </div>
+    <div class="col-md-2 col-md-pull-10 hidden-xs hidden-sm">
+        @await Component.InvokeAsync("Navigation", new { viewName = "SideNavAlt1", filterName = NamedNavigationFilters.ParentTree, startingNodeKey = "SiteAdmin" })
+    </div>
+</div>
+@section scripts {
+@{ await Html.RenderPartialAsync("_SideMenuScriptsPartial"); }
+}

@@ -1,0 +1,47 @@
+﻿@model cloudscribe.Core.Web.ViewModels.RoleAdmin.RoleListViewModel
+@using cloudscribe.Web.Pagination
+@addTagHelper "*, cloudscribe.Web.Pagination"
+@using cloudscribe.Core.Web
+@using Microsoft.Extensions.Options
+@using Microsoft.Extensions.Localization
+@inject IStringLocalizer<CloudscribeCore> sr
+    <form role="form" method="get" class="form-inline" asp-controller="RoleAdmin" asp-action="Modal" asp-antiforgery="false"
+        data-ajax="true" 
+        data-ajax-method="GET" 
+        data-ajax-mode="replace" 
+        data-ajax-success="roleSelector.syncChanges"
+        data-ajax-update="#gridcontainer">
+         
+        <input name="ajaxGrid" type="hidden" value="true" />
+        <div class="input-group">
+            <input type="search" name="searchInput" value="@Model.SearchQuery" class="form-control" />
+            <span class="input-group-btn">
+                <button type="submit" name='submit' class="btn btn-default">@sr["Search"]</button>
+            </span>
+        </div>
+    </form>
+<ul class="list-unstyled">
+    @foreach (var role in Model.SiteRoles.Data)
+    {
+        <li>
+            <input id="@role.Id" name="selectedroles" data-rolename="@role.RoleName" type="checkbox" />
+            <label for="@role.Id">@role.RoleName</label>
+        </li>
+    }
+</ul>
+<div>
+    <cs-pager 
+              asp-action="Modal" asp-controller="RoleAdmin"
+              asp-route-siteId="@Model.SiteId"
+              asp-route-ajaxgrid="true"
+              cs-paging-pagesize="@Model.SiteRoles.PageSize"
+              cs-paging-pagenumber="@Model.SiteRoles.PageNumber"
+              cs-paging-totalitems="@Model.SiteRoles.TotalItems"
+              cs-ajax-target="#gridcontainer"
+              cs-ajax-success="roleSelector.syncChanges"
+              cs-first-page-title='@sr["First Page"]'
+              cs-last-page-title='@sr["Last Page"]'
+              cs-previous-page-title='@sr["Previous page"]'
+              cs-next-page-title='@sr["Next page"]'
+              ></cs-pager>
+</div>

@@ -1,0 +1,49 @@
+﻿@model cloudscribe.Core.IdentityServerIntegration.Models.ClientItemViewModel
+@using cloudscribe.Core.IdentityServerIntegration
+@inject IStringLocalizer<CloudscribeIds4Resources> sr
+@{
+    var logoutIndex = 0;
+}
+
+<h3>@sr["Post Logout Redirect Urls"] </h3>
+@{ await Html.RenderPartialAsync("AddClientLogoutRedirectPartial", Model);}
+@if (Model.Client.PostLogoutRedirectUris.Count > 0)
+{
+    <ul class="list-unstyled">
+        @foreach (var c in Model.Client.PostLogoutRedirectUris)
+        {
+        <li class="mt-1 mb-1">
+            <form asp-controller="Clients" asp-action="DeleteClientLogoutRedirect">
+                <input asp-for="SiteId" type="hidden" />
+                <input name="ClientId" value="@Model.ClientId" type="hidden" />
+                <input name="LogoutRedirectUri" value="@c" type="hidden" />
+                <div class="modal fade" id="@("confirmDeleteLogoutModal" + logoutIndex)" tabindex="-1" role="dialog" aria-labelledby="@("confirmDeleteLogoutHeading" + logoutIndex)">
+                    <div class="modal-dialog modal-sm" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h4 class="modal-title" id="@("confirmDeleteLogoutHeading" + logoutIndex)">@sr["Confirm Delete"]</h4>
+                                <button type="button" class="close" data-dismiss="modal" aria-label='@sr["Close"]'><span aria-hidden="true">&times;</span></button>
+                            </div>
+                            <div class="modal-body">
+                                @string.Format(sr["Are you sure you want to delete the post logout redirect url {0}?"], c)
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-primary" data-dismiss="modal">@sr["Cancel"]</button>
+                                <input type="submit" value='@sr["Delete"]' class="btn btn-danger btn-ok" />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </form>
+            <button type="button" class="btn btn-danger btn-sm" data-toggle="modal" data-target="@("#confirmDeleteLogoutModal" + logoutIndex)">
+                @sr["Delete"]
+            </button>
+            @c
+        </li>
+            {
+                logoutIndex += 1;
+            }
+        }
+    </ul>
+}
+

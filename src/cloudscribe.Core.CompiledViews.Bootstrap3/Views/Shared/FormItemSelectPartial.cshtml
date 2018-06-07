@@ -1,0 +1,50 @@
+﻿@model cloudscribe.Web.Common.Models.FormItemDefinition
+@using cloudscribe.Web.Common.Models
+@using cloudscribe.Web.Common
+@using Microsoft.Extensions.Localization
+@inject IStringLocalizer<CloudscribeCommonResources> sr
+@addTagHelper "*, cloudscribe.Web.Common"
+@{
+    var grpClass = "";// input-group
+    var spnClass = ""; //input-group-addon
+    if (!string.IsNullOrWhiteSpace(Model.IconCssClass))
+    {
+        grpClass = "input-group";
+        spnClass = "input-group-addon";
+
+    }
+    if(ViewData[Model.Key] != null)
+    {
+        var currentVal = ViewData[Model.Key].ToString();
+        foreach (var o in Model.Options)
+        {
+            if(o.Value == currentVal)
+            {
+                o.Selected = true;
+            }
+            else
+            {
+                o.Selected = false;
+            }
+        }
+
+    }
+}
+<div class="form-group">
+    <label for="@Model.Key" class="col-md-2 control-label">@sr[Model.Label]</label>
+    <div class="col-md-10">
+        <div class="@grpClass">
+            @if (!string.IsNullOrWhiteSpace(Model.IconCssClass) && Model.IconOnLeft)
+            {
+                <span class="@spnClass"><i class="@Model.IconCssClass" aria-hidden="true"></i></span>
+            }
+            <select name="@Model.Key" asp-items="Model.Options" title="@Model.Tooltip" class="form-control" cs-form-item-definition="@Model" ></select>
+            @if (!string.IsNullOrWhiteSpace(Model.IconCssClass) && !Model.IconOnLeft)
+            {
+                <span class="@spnClass"><i class="@Model.IconCssClass" aria-hidden="true"></i></span>
+            }
+        </div>
+        <span class="text-danger field-validation-valid" data-valmsg-for="@Model.Key" data-valmsg-replace="true"></span>
+        @Html.ValidationMessage(Model.Key + "Error", new { @class = "text-danger" })
+    </div>
+</div>

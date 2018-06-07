@@ -1,0 +1,71 @@
+﻿@model cloudscribe.Core.Web.ViewModels.Account.EditUserViewModel
+@inject IStringLocalizer<CloudscribeCore> sr
+<form class="form-inline mb-2" role="form" asp-controller="UserAdmin" asp-action="AddClaim" data-submit-once="true">
+    <input asp-for="UserId" type="hidden" />
+    <input asp-for="SiteId" type="hidden" />
+    <div class="form-group">
+        <input name="claimType" type="text" class="form-control" placeholder="Claim Type" />
+        <input name="claimValue" type="text" class="form-control" placeholder="Claim Value" /> 
+    </div>
+    <button type="submit" value="submit" class="btn btn-primary" data-enabled-text='@sr["Add Claim"]' data-disabled-text='@sr["Working..."]'>@sr["Add Claim"]</button>
+</form>
+@if (Model.UserClaims.Count > 0)
+{
+    <div>
+        <table class="table table-striped">
+            <tr>
+                <th></th>
+                <th>
+                    @sr["Claim Type"]
+                </th>
+                <th>
+                    @sr["Claim Value"]
+                </th>
+            </tr>
+            @foreach (var item in Model.UserClaims)
+            {
+                <tr>
+                    <td>
+                        <button type="button" class="btn btn-danger btn-xs" data-toggle="modal" data-target="@("#confirmDeleteModal" + Model.UserClaims.IndexOf(item))">
+                            @sr["Remove"]
+                        </button>
+                        <form asp-controller="UserAdmin" asp-action="RemoveClaim">
+                            <input name="claimType" value="@item.Type" type="hidden" />
+                            <input name="claimValue" value="@item.Value" type="hidden" />
+                            <input name="userId" value="@Model.UserId" type="hidden" />
+                            <div class="modal fade" id="@("confirmDeleteModal" + Model.UserClaims.IndexOf(item))" tabindex="-1" role="dialog" aria-labelledby="@("confirmDeleteHeading" + Model.UserClaims.IndexOf(item))">
+                                <div class="modal-dialog modal-sm" role="document">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h4 class="modal-title" id="@("confirmDeleteHeading" + Model.UserClaims.IndexOf(item))">@sr["Confirm Delete"]</h4>
+                                            <button type="button" class="close" data-dismiss="modal" aria-label='@sr["Close"]'><span aria-hidden="true">&times;</span></button>
+                                        </div>
+                                        <div class="modal-body">
+                                            @string.Format(sr["Are you sure you want to remove the claim {0}?"], item.Type)
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn btn-primary" data-dismiss="modal">@sr["Cancel"]</button>
+                                            <input type="submit" value='@sr["Remove"]' class="btn btn-danger btn-ok" />
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                    </td>
+                    <td>    
+                        @Html.DisplayFor(modelItem => item.Type)
+                    </td>
+                   
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Value)
+                    </td>
+                </tr>
+            }
+        </table>
+    </div>
+}
+    
+ @section Scripts {
+@{await Html.RenderPartialAsync("_UnobtrusiveValidationScriptsPartial"); }
+<script src="~/cr/js/cloudscribe-modaldialog-bootstrap4.min.js"></script>
+ }

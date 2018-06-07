@@ -1,0 +1,128 @@
+﻿@model cloudscribe.Core.Web.ViewModels.SiteSettings.NewSiteViewModel
+@inject ICoreThemeHelper themeHelper
+@inject IStringLocalizer<CloudscribeCore> sr
+@inject ICkeditorOptionsResolver editorOptionsResolver
+@inject IOptions<MultiTenantOptions> multiTenantOptionsAccessor
+@{
+    MultiTenantOptions multiTenantOptions = multiTenantOptionsAccessor.Value;
+    bool useFolderTenants = true;
+    if (multiTenantOptions.Mode != MultiTenantMode.FolderName) { useFolderTenants = false; }
+    bool useHostTenants = true;
+    if (multiTenantOptions.Mode != MultiTenantMode.HostName) { useHostTenants = false; }
+    var ckOptions = await editorOptionsResolver.GetCkeditorOptions();
+    var baseUrl = this.Context.Request.GetCurrentBaseUrl() + "/";
+    var themeSettings = themeHelper.GetThemeSettings();
+    if (themeSettings.AdminSideNavExpanded) { ViewData["SideNavToggle"] = "show"; }
+    ViewData["SideNavVisible"] = true;
+}
+<h2>@ViewBag.Title</h2>
+<form method="post"  asp-antiforgery="true" data-submit-once="true">
+    @*<div asp-validation-summary="All" class="text-danger"></div>*@
+    <input asp-for="SiteId" type="hidden" />
+    <input asp-for="ReturnPageNumber" type="hidden" />
+    <div class="form-group">
+        <label asp-for="SiteName">@sr["Site Name"]</label>
+        <input asp-for="SiteName" class="form-control" />
+        <span asp-validation-for="SiteName" class="invalid-feedback"></span>
+    </div>
+    @if (useFolderTenants)
+    {
+        <div class="form-group">
+            <label asp-for="SiteFolderName">@sr["Site Folder Name"]</label>
+            <div class="input-group">
+                <div class="input-group-prepend">
+                    <span class="input-group-text">@baseUrl</span>
+                </div>
+                <input asp-for="SiteFolderName" class="form-control" />
+                <span asp-validation-for="SiteFolderName" class="invalid-feedback"></span>
+                @Html.ValidationMessage("foldererror", new { @class = "text-danger" })
+            </div> 
+        </div>
+    }
+    else if (useHostTenants)
+    {
+        <div class="form-group">
+            <label asp-for="HostName">@sr["Host Name"]</label>
+            <input asp-for="HostName" class="form-control" />
+            <span asp-validation-for="HostName" class="invalid-feedback"></span>
+            @Html.ValidationMessage("hosterror", new { @class = "text-danger" })
+            <a class="hostmap" asp-action="SiteHostMappings"
+               asp-controller="SiteAdmin"
+               asp-route-siteGuid="SiteGuid"
+               asp-route-slp="ReturnPageNumber">@sr["Domain Mappings"]</a>
+        </div>
+    }
+    <div class="form-group">
+        <label asp-for="TimeZoneId">@sr["Time Zone"]</label>
+        <select asp-for="TimeZoneId" asp-items="Model.AllTimeZones" class="form-control"></select>
+        <span asp-validation-for="TimeZoneId" class="invalid-feedback"></span>
+    </div>
+    @if (Model.AvailableThemes.Count > 0)
+    {
+        <div class="form-group">
+            <label asp-for="Theme">@sr["Theme"]</label>
+            <select id="Layout" asp-for="Theme" asp-items="Model.AvailableThemes" class="form-control"></select>
+            <span asp-validation-for="Theme" class="invalid-feedback"></span>
+        </div>
+    }
+    <div class="form-group">
+        <div class="form-check">
+            <input asp-for="IsClosed" class="form-check-input" />
+            <label asp-for="IsClosed" class="form-check-label">@sr["Close Site To Public"]</label>
+        </div>
+    </div>
+    <div class="form-group">
+        <label asp-for="ClosedMessage">@sr["Closed Message"]</label>
+        <textarea class="form-control" rows="5" asp-for="ClosedMessage"
+                  data-ckeditor-unobtrusive=""
+                  data-ckeditor-config-url="@ckOptions.CustomConfigPath"
+                  data-ckeditor-config-language="@ckOptions.LanguageCode"
+                  data-ckeditor-config-dropfileuploadurl="@ckOptions.DropFileUrl"
+                  data-ckeditor-config-filebrowserurl="@ckOptions.FileBrowseUrl"
+                  data-ckeditor-config-imagebrowseurl="@ckOptions.ImageBrowseUrl"></textarea>
+        <span asp-validation-for="ClosedMessage" class="invalid-feedback"></span>
+    </div>
+    <h2>@sr["New Site Administrator"]</h2>
+    <div class="form-group">
+        <label asp-for="Email">@sr["Email"]</label>
+        <input asp-for="Email" class="form-control" />
+        <span asp-validation-for="Email" class="invalid-feedback"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="LoginName">@sr["Login Name"]</label>
+        <input asp-for="LoginName" class="form-control" />
+        <span asp-validation-for="LoginName" class="invalid-feedback"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="DisplayName">@sr["Display Name"]</label>
+        <input asp-for="DisplayName" class="form-control" />
+        <span asp-validation-for="DisplayName" class="invalid-feedback"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="Password">@sr["Password"]</label>
+        <input asp-for="Password" type="password" class="form-control" />
+        <span asp-validation-for="Password" class="invalid-feedback"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="ConfirmPassword">@sr["Confirm Password"]</label>
+        <input asp-for="ConfirmPassword" type="password" class="form-control" />
+        <span asp-validation-for="ConfirmPassword" class="invalid-feedback"></span>
+    </div>
+    <div class="form-group">
+        <button name="submit" type="submit" class="btn btn-primary" data-disabled-text='@sr["Working..."]' data-enabled-text='@sr["Save"]'>@sr["Save"]</button>
+    </div>
+</form>
+@section SideNav {
+    @{ await Html.RenderPartialAsync("AdminSideNav"); }
+}
+@section Toolbar{
+    @{ await Html.RenderPartialAsync("AdminSideNavToggle"); }
+}
+@section Scripts {
+    @{ await Html.RenderPartialAsync("AdminSideNavScripts"); }
+    @{ await Html.RenderPartialAsync("_UnobtrusiveValidationScriptsPartial"); }
+    <script src="~/cr/js/unobtrusive-validation-bs4.min.js"></script>
+    @{ await Html.RenderPartialAsync("_UnobtrusiveEditorScriptsPartial"); }
+    <script src="~/cr/js/jquery.validate.hooks.min.js"></script>
+    <script src="~/cr/js/jqueryvaildation.submitonce-unobtrusive.min.js"></script>
+}

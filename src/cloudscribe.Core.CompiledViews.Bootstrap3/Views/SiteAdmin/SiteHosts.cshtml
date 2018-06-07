@@ -1,0 +1,73 @@
+﻿@model cloudscribe.Core.Web.ViewModels.SiteSettings.SiteHostMappingsViewModel
+@using cloudscribe.Core.Web
+@using Microsoft.Extensions.Options
+@using Microsoft.Extensions.Localization
+@inject IStringLocalizer<CloudscribeCore> sr
+<h2>@ViewBag.Title</h2>
+<table class="table table-responsive table-striped">
+    <tr>
+        <th>
+            @sr["Host Name"]
+        </th>
+        <th></th>
+    </tr>
+    @foreach (var item in Model.HostMappings)
+    {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.HostName)
+            </td>
+            <td>
+                <button type="button" class="btn btn-danger btn-xs" data-toggle="modal" data-target="@("#confirmDeleteModal" + item.Id)">
+                    @sr["Delete"]
+                </button>
+                <form class="form-inline" asp-controller="SiteAdmin" asp-action="HostDelete">
+                    <input id="SiteId" name="SiteId" type="hidden" value="@Model.SiteId" />
+                    <input id="hostName" name="hostName" type="hidden" value="@item.HostName" />
+                    <input id="slp" name="slp" type="hidden" value="@Model.SiteListReturnPageNumber" />
+                    <div class="modal fade" id="@("confirmDeleteModal" + item.Id)" tabindex="-1" role="dialog" aria-labelledby="@("confirmDeleteHeading" + item.Id)">
+                        <div class="modal-dialog modal-sm" role="document">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <button type="button" class="close" data-dismiss="modal" aria-label='@sr["Close"]'><span aria-hidden="true">&times;</span></button>
+                                    <h4 class="modal-title" id="@("confirmDeleteHeading" + item.Id)">@sr["Confirm Delete"]</h4>
+                                </div>
+                                <div class="modal-body">
+                                    @string.Format(sr["Are you sure you want to delete the host/domain name mapping {0}?"], item.HostName)
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-default" data-dismiss="modal">@sr["Cancel"]</button>
+                                    <input type="submit" value='@sr["Delete"]' class="btn btn-danger btn-ok" />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </td>
+        </tr>
+    }
+</table>
+<div class="form-group">
+    <form class="form-inline" asp-controller="SiteAdmin" asp-action="HostAdd" data-submit-once="true">
+        <input id="SiteId" name="SiteId" type="hidden" value="@Model.SiteId" />
+        <input id="slp" name="slp" type="hidden" value="@Model.SiteListReturnPageNumber" />
+        <input type="text" id="hostName" name="hostName" class="form-control" />
+        <button type="submit" name="submit" class="btn btn-default" data-enabled-text='@sr["Add Host Mapping"]' data-disabled-text='@sr["Working..."]'>@sr["Add Host Mapping"]</button>
+    </form>
+
+</div>
+<p class="bg-warning">
+    @sr["Domain/Host name mappings are used internally to resolve a specific site from the database when a web request comes in for that host/domain name. If no maping exists then the default site will be used (i.e. the first site). This is only needed if you are hosting multiple sites based on host names within a single web site installation."]
+</p>
+<p class="bg-warning">
+    @sr["Note that the request has to be coming to the web site installation for this to work. That is, you still need a DNS record for the domain or host name to resolve to the IP (Internet Protocol) address of the web site installation, and if the IP address is shared with other web site installations you also still need host name mappings in the web server bindings so that the web server maps the request to the correct web site installation."]
+</p>
+<div class="form-group">
+    <a class="btn btn-default" asp-action="SiteList" asp-controller="SiteAdmin"
+       asp-route-pagenumber="@Model.SiteListReturnPageNumber">@sr["Back to site list"]</a>
+</div>
+@section scripts {
+    @{ await Html.RenderPartialAsync("_UnobtrusiveValidationScriptsPartial"); }
+    <script src="~/cr/js/jquery.validate.hooks.min.js"></script>
+    <script src="~/cr/js/jqueryvaildation.submitonce-unobtrusive.min.js"></script>
+}

@@ -1,0 +1,89 @@
+﻿@model cloudscribe.Core.Web.ViewModels.UserAdmin.UserListViewModel
+@inject IStringLocalizer<CloudscribeCore> sr
+@inject ITimeZoneHelper tzHelper
+@{
+    var totalUsersMessage = string.Format(sr["{0} - Users"], Model.UserList.TotalItems);
+}
+<form class="form-inline" role="form" asp-controller="UserAdmin" asp-action="Search" method="get" asp-antiforgery="false"
+      data-ajax="true"
+      data-ajax-method="GET"
+      data-ajax-mode="replace"
+      data-ajax-update="#usergridcontainer">
+    <input asp-for="SiteId" type="hidden" />
+    <input name="ajaxGrid" type="hidden" value="true" />
+    <div class="input-group">
+        <input asp-for="SearchQuery" name="query" class="form-control" />
+        <span class="input-group-btn">
+            <button type="submit" value='@sr["Search"]' class="btn btn-primary">@sr["Search"]</button>
+        </span>
+    </div>
+</form>
+<table class="table table-striped table-hover">
+    <tr>
+        <th>
+           
+        </th>
+        <th></th>
+        <th>
+            @sr["Email/Login"]
+        </th>
+        <th>
+            @sr["Display Name"]
+        </th>
+        <th>
+            @sr["First Name"]
+        </th>
+        <th>
+            @sr["Last Name"]
+        </th>
+    </tr>
+    @foreach (var item in Model.UserList.Data)
+    {
+        <tr>
+            <td>
+                <a class="btn btn-xs btn-primary"  href="#" onclick="userSelected(this)"
+                   data-user-email="@item.Email"
+                   data-user-display-name="@item.DisplayName"
+                   data-user-first-name="@item.FirstName"
+                   data-user-last-name="@item.LastName"
+                   data-user-id="@item.Id">@sr["Select"]</a>
+            </td>
+            <td>
+                <img gravatar-email="@item.Email" gravatar-size="30" />
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Email) /
+                @Html.DisplayFor(modelItem => item.UserName)
+            </td>
+            <td>
+                <a asp-action="UserActivity" asp-controller="UserAdmin"
+                   asp-route-siteId="@Model.SiteId"
+                   asp-route-userid="@item.Id"
+                   title='@sr["Activity"]'>@item.DisplayName</a>
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.FirstName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.LastName)
+            </td>
+        </tr>
+    }
+</table>
+<div>
+    <div>@totalUsersMessage</div>
+    <cs-pager asp-action="@Model.ActionName" asp-controller="UserAdmin"
+              asp-route-siteId="@Model.SiteId"
+              asp-route-ajaxgrid="true"
+              asp-route-query="@Model.AlphaQuery"
+              asp-route-sortmode="@Model.SortMode"
+              asp-route-pagesize="@Model.UserList.PageSize"
+              cs-ajax-target="#usergridcontainer"
+              cs-paging-pagesize="@Model.UserList.PageSize"
+              cs-paging-pagenumber="@Model.UserList.PageNumber"
+              cs-paging-totalitems="@Model.UserList.TotalItems"
+              cs-first-page-title='@sr["First Page"]'
+              cs-last-page-title='@sr["Last Page"]'
+              cs-previous-page-title='@sr["Previous page"]'
+              cs-next-page-title='@sr["Next page"]'></cs-pager>
+</div>

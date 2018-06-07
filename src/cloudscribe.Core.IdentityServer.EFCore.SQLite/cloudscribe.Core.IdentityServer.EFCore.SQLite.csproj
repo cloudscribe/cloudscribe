@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <Description>SQLite Entity Framework configuration and operational stores for IdentityServer4 cloudscribe multi-tenant identity integration</Description>
@@ -32,8 +32,8 @@
 
   </ItemGroup>
 
-  <ItemGroup>
+  <!--<ItemGroup>
     <DotNetCliToolReference Include="Microsoft.EntityFrameworkCore.Tools.DotNet" Version="2.0.*" />
-  </ItemGroup>
+  </ItemGroup>-->
 
 </Project>

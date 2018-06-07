@@ -1,0 +1,35 @@
+﻿@model cloudscribe.Core.IdentityServerIntegration.Models.IdentityEditViewModel
+@using cloudscribe.Core.IdentityServerIntegration.Models
+@using cloudscribe.Core.IdentityServerIntegration
+@inject ICoreThemeHelper themeHelper
+@inject IStringLocalizer<CloudscribeIds4Resources> sr
+@{
+    var themeSettings = themeHelper.GetThemeSettings();
+    if (themeSettings.AdminSideNavExpanded) { ViewData["SideNavToggle"] = "show"; }
+    ViewData["SideNavVisible"] = true;
+}
+
+@if (Model.CurrentResource == null)
+{
+    <h2>@ViewData["Title"]</h2>
+    await Html.RenderPartialAsync("NewResourcePartial", Model.NewResource);
+}
+else
+{
+    <h2>@ViewData["Title"]</h2>
+    await Html.RenderPartialAsync("EditResourcePartial", new IdentityItemViewModel(Model.SiteId, Model.CurrentResource));
+    await Html.RenderPartialAsync("IdentityClaimsPartial", Model);
+
+}
+
+@section SideNav {
+    @{ await Html.RenderPartialAsync("AdminSideNav"); }
+}
+@section Toolbar{
+    @{ await Html.RenderPartialAsync("AdminSideNavToggle"); }
+}
+@section Scripts {
+    @{ await Html.RenderPartialAsync("AdminSideNavScripts"); }
+    @{await Html.RenderPartialAsync("_UnobtrusiveValidationScriptsPartial"); }
+    <script src="~/cr/js/unobtrusive-validation-bs4.min.js"></script>
+}

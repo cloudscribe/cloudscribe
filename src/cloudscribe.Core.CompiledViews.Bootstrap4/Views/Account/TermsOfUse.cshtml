@@ -1,0 +1,49 @@
+﻿@model cloudscribe.Core.Web.ViewModels.Account.AcceptTermsViewModel
+@inject IStringLocalizer<CloudscribeCore> sr
+@{
+    ViewData["BodyClass"] = "account-section terms-of-use";
+}
+
+@section Meta {
+    <meta name="robots" content="noindex" />
+}
+
+<h2>@ViewData["Title"]</h2>
+@if (!string.IsNullOrWhiteSpace(Model.RegistrationPreamble))
+{
+
+    <div class="registration-preamble">
+        @Html.Raw(Model.RegistrationPreamble)
+    </div>
+}
+<form id="register-form" asp-controller="Account" asp-action="TermsOfUse" method="post" role="form">
+    @*<div asp-validation-summary="All" class="text-danger"></div>*@
+    <div class="">
+        @sr["Agreement  Terms as of:"] @Model.TermsUpdatedDate
+    </div>
+    <div class="form-group">
+        <div class=" agreementcontainer">
+            @Html.Raw(Model.RegistrationAgreement)
+        </div>
+    </div>
+    <div class="form-group">
+        <input type="hidden" asp-for="AgreementRequired" />
+        <div class="form-check">
+            <input asp-for="AgreeToTerms" class="form-check-input" data-val-enforcetrue='@sr["You must agree to the terms."]' />
+            <label asp-for="AgreeToTerms" class="form-check-label">@sr["I Agree to these terms of use."]</label>
+            <span asp-validation-for="AgreeToTerms" class="invalid-feedback"></span>
+            @Html.ValidationMessage("agreementerror", new { @class = "text-danger" })
+        </div>
+    </div>
+    <div class="form-group">
+        <button name="submit" type="submit" class="btn btn-primary">@sr["Submit"]</button>
+    </div>
+</form>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_UnobtrusiveValidationScriptsPartial"); }
+
+    <script src="~/cr/js/cloudscribe-validation-enforcetrue.min.js"></script>
+    <script src="~/cr/js/cloudscribe-validation-requiredwhen.min.js"></script>
+    <script src="~/cr/js/unobtrusive-validation-bs4.min.js"></script>
+}
