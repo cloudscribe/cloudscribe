@@ -1,12 +1,12 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk.Razor">
 
   <PropertyGroup>
-    <Description>Bootstrap 4 pre-compiled views for cloudscribe.Core.Web</Description>
+    <Description>pre-compiled views for cloudscribe.Web.Common</Description>
     <VersionPrefix>2.1.0</VersionPrefix>
     <AssemblyVersion>2.1.0</AssemblyVersion>
     <Authors>Joe Audette</Authors>
     <TargetFrameworks>netstandard2.0</TargetFrameworks>
-    <PackageTags>cloudscribe.Core;Bootstrap4</PackageTags>
+    <PackageTags>cloudscribe</PackageTags>
     <PackageIconUrl>https://raw.githubusercontent.com/joeaudette/cloudscribe/master/cloudscribe-icon-32.png</PackageIconUrl>
     <PackageProjectUrl>https://github.com/joeaudette/cloudscribe</PackageProjectUrl>
     <PackageLicenseUrl>http://www.apache.org/licenses/LICENSE-2.0</PackageLicenseUrl>
@@ -17,8 +17,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\cloudscribe.Core.Web\cloudscribe.Core.Web.csproj" />
-    <ProjectReference Include="..\cloudscribe.FileManager.CompiledViews.Bootstrap\cloudscribe.FileManager.CompiledViews.Bootstrap.csproj" />
-    <ProjectReference Include="..\cloudscribe.Web.Common.CompiledViews\cloudscribe.Web.Common.CompiledViews.csproj" />
+    <ProjectReference Include="..\cloudscribe.Web.Common\cloudscribe.Web.Common.csproj" />
   </ItemGroup>
 </Project>

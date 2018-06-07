@@ -1,0 +1,7 @@
+﻿@model cloudscribe.Web.Common.BannerImage
+@if (!string.IsNullOrEmpty(Model.ImageUrlPath))
+{
+    <div class=" hidden-xs" style="width:100%;max-width:100%;">
+        <img class="img-responsive img-full-width" src="@Model.ImageUrlPath" alt="@Model.ImageAltText">
+    </div>
+}

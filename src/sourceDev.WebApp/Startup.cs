@@ -38,12 +38,12 @@ namespace sourceDev.WebApp
             
         }
 
-        private IHostingEnvironment _environment;
-        private IConfiguration _configuration;
-        private bool _sslIsAvailable;
-        private bool _disableIdentityServer;
+        private readonly IHostingEnvironment _environment;
+        private readonly IConfiguration _configuration;
+        private readonly bool _sslIsAvailable;
+        private readonly bool _disableIdentityServer;
         private bool _didSetupIdServer = false;
-        private ILogger _log;
+        private readonly ILogger _log;
 
         
         public void ConfigureServices(IServiceCollection services)

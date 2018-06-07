@@ -1,0 +1,125 @@
+﻿@using cloudscribe.FileManager.Web.Models
+@using Microsoft.Extensions.Localization
+@using Microsoft.Extensions.Options
+@model BrowseModel
+@inject IStringLocalizer<FileManagerStringResources> sr
+@{
+}
+<div class="row">
+    <div class="col-md-8 ">
+        <input class="form-control" disabled type="text" id="fileSelection" name="fileSelection" placeholder='@sr["Selected File"]' />
+    </div>
+    <div class="col-md-4">
+        <button class="col-md-4 btn btn-default" id="btnSelector">@sr["Select"]</button>
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-5" style="height: 500px;overflow: scroll;">
+        <a id="btnRoot" href="#" class="btn btn-default rootbutton" title='@sr["Select Root Folder"]'>@sr["root"]</a>
+        <div id="tree"></div>
+    </div>
+    <div class="col-md-7">
+        @if (Model.Type == "image")
+        {
+            <div style="border:solid thin black; max-width:570px; height:390px;overflow:auto;margin-bottom:5px;">
+                <img id="filePreview" src="~/cr/css/1x1.gif" alt='@sr["Preview selected image"]' />
+            </div>
+            <button id="btnSelectForCrop" class="btn btn-default collapse"><i class="fa fa-scissors" aria-hidden="true"></i> @sr["Crop"]</button>
+        } 
+        <form id="frmNewFolder" asp-action="CreateFolder" asp-controller="FileManager" class="form-inline">
+            <div class="form-group">
+                <input type="text" class="form-control" disabled id="newFolderCurrentDir" name="newFolderCurrentDir" value="@Model.InitialVirtualPath" />
+                <input type="hidden" id="hdnCurrentVirtualPath" name="currentVirtualPath" value="@Model.InitialVirtualPath" />
+                <input type="text" class="form-control" id="newFolderName" name="newFolderName" />
+            </div>
+            <button id="btnCreateFolder" type="submit" class="btn btn-default"><i class="fa fa-folder-o" aria-hidden="true"></i> @sr["Create Folder"]</button>
+        </form>
+        <form id="frmRenameFolder" asp-action="RenameFolder" asp-controller="FileManager" class="form-inline collapse">
+            <input type="hidden" id="folderToRename" name="folderToRename" />
+            <input type="text" class="form-control" id="newNameSegment" name="newNameSegment" />
+            <button id="btnRenameFolderPrompt" type="button" class="btn btn-danger btn-ok">@sr["Rename Folder"]</button>
+            <div id="mdlRenameFolder" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="confirmRenameFolderHeading">
+                <div class="modal-dialog modal-sm" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal" aria-label='@sr["Close"]'><span aria-hidden="true">&times;</span></button>
+                            <h4 class="modal-title" id="confirmRenameFolderHeading">@sr["Confirm Rename Folder"]</h4>
+                        </div>
+                        <div id="renameFolderModalBody" class="modal-body">
+
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-default" data-dismiss="modal">@sr["Cancel"]</button>
+                            <button id="btnRenameFolder" type="button"  class="btn btn-danger btn-ok">@sr["Rename Folder"]</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
+        <form id="frmDeleteFolder" asp-action="DeleteFolder" asp-controller="FileManager" class="form-inline collapse">
+            <input type="hidden" id="folderToDelete" name="folderToDelete" />
+            <button id="btnDeleteFolderPrompt" type="button" class="btn btn-danger btn-ok"><i class="fa fa-trash-o" aria-hidden="true"></i> @sr["Delete Folder"]</button>
+            <div id="mdlDeleteFolder" class="modal fade"  tabindex="-1" role="dialog" aria-labelledby="confirmDeleteFolderHeading">
+                <div class="modal-dialog modal-sm" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal" aria-label='@sr["Close"]'><span aria-hidden="true">&times;</span></button>
+                            <h4 class="modal-title" id="confirmDeleteFolderHeading">@sr["Confirm Delete"]</h4>
+                        </div>
+                        <div id="deleteFolderModalBody" class="modal-body">
+
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-default" data-dismiss="modal">@sr["Cancel"]</button>
+                            <button id="btnDeleteFolder" type="button"  class="btn btn-danger btn-ok"><i class="fa fa-trash-o" aria-hidden="true"></i> @sr["Delete Folder"]</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
+        <form id="frmRenameFile" asp-action="RenameFile" asp-controller="FileManager" class="form-inline collapse">
+            <input type="hidden" id="fileToRename" name="fileToRename" />
+            <input type="text" class="form-control" id="newFileNameSegment" name="newNameSegment" style="min-width:50%;" />
+            <button id="btnRenameFilePrompt" type="button" class="btn btn-default btn-ok">@sr["Rename File"]</button>
+            <div id="mdlRenameFile" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="confirmRenameFileHeading">
+                <div class="modal-dialog modal-sm" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal" aria-label='@sr["Close"]'><span aria-hidden="true">&times;</span></button>
+                            <h4 class="modal-title" id="confirmRenameFileHeading">@sr["Confirm Rename File"]</h4>
+                        </div>
+                        <div id="renameFileModalBody" class="modal-body">
+
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-default" data-dismiss="modal">@sr["Cancel"]</button>
+                            <button id="btnRenameFile" type="button" class="btn btn-danger btn-ok">@sr["Rename File"]</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
+        <form id="frmDeleteFile" asp-action="DeleteFile" asp-controller="FileManager" class="form-inline collapse">
+            <input type="hidden" id="fileToDelete" name="fileToDelete" />
+            <button id="btnDeleteFilePrompt" type="button" class="btn btn-danger btn-ok"><i class="fa fa-trash-o" aria-hidden="true"></i> @sr["Delete File"]</button>
+            <div id="mdlDeleteFile" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="confirmDeleteFileHeading">
+                <div class="modal-dialog modal-sm" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal" aria-label='@sr["Close"]'><span aria-hidden="true">&times;</span></button>
+                            <h4 class="modal-title" id="confirmDeleteFileHeading">@sr["Confirm Delete"]</h4>
+                        </div>
+                        <div id="deleteFileModalBody" class="modal-body">
+
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-default" data-dismiss="modal">@sr["Cancel"]</button>
+                            <button id="btnDeleteFile" type="button" class="btn btn-danger btn-ok"><i class="fa fa-trash-o" aria-hidden="true"></i> @sr["Delete File"]</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </form>
+    </div>
+</div>
