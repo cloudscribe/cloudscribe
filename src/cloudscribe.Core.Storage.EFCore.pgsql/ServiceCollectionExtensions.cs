@@ -26,7 +26,7 @@ namespace Microsoft.Extensions.DependencyInjection
             services.AddEntityFrameworkNpgsql()
                 .AddDbContext<CoreDbContext>(options =>
                     options.UseNpgsql(connectionString,
-                    NpgsqlOptionsAction: sqlOptions =>
+                    npgsqlOptionsAction: sqlOptions =>
                     {
                         if (maxConnectionRetryCount > 0)
                         {

@@ -2,8 +2,8 @@
 
   <PropertyGroup>
     <Description>asp.net identity implementation for cloudscribe web application foundation</Description>
-    <VersionPrefix>2.0.20</VersionPrefix>
-    <AssemblyVersion>2.0.20</AssemblyVersion>
+    <VersionPrefix>3.0.0</VersionPrefix>
+    <AssemblyVersion>3.0.0</AssemblyVersion>
     <Authors>Joe Audette</Authors>
     <TargetFrameworks>netstandard2.0</TargetFrameworks>
     <AssemblyName>cloudscribe.Core.Identity</AssemblyName>
@@ -20,25 +20,25 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.AspNetCore.Authentication.Cookies" Version="2.0.*" />
-    <PackageReference Include="Microsoft.AspNetCore.Authentication.Facebook" Version="2.0.*" />
-    <PackageReference Include="Microsoft.AspNetCore.Authentication.Google" Version="2.0.*" />
-    <PackageReference Include="Microsoft.AspNetCore.Authentication.MicrosoftAccount" Version="2.0.*" />
-    <PackageReference Include="Microsoft.AspNetCore.Authentication.Twitter" Version="2.0.*" />
-    <PackageReference Include="Microsoft.AspNetCore.Authentication.OAuth" Version="2.0.*" />
-    <PackageReference Include="Microsoft.AspNetCore.Authentication.OpenIdConnect" Version="2.0.*" />
-    <PackageReference Include="Microsoft.AspNetCore.Hosting.Abstractions" Version="2.0.*" />
-    <PackageReference Include="Microsoft.AspNetCore.Identity" Version="2.0.*" />
-    <PackageReference Include="Microsoft.Extensions.Identity.Core" Version="2.0.*" />
-    <PackageReference Include="Microsoft.Extensions.Identity.Stores" Version="2.0.*" />
-    <PackageReference Include="Microsoft.AspNetCore.Antiforgery" Version="2.0.*" />
+    <PackageReference Include="Microsoft.AspNetCore.Authentication.Cookies" Version="2.1.*" />
+    <PackageReference Include="Microsoft.AspNetCore.Authentication.Facebook" Version="2.1.*" />
+    <PackageReference Include="Microsoft.AspNetCore.Authentication.Google" Version="2.1.*" />
+    <PackageReference Include="Microsoft.AspNetCore.Authentication.MicrosoftAccount" Version="2.1.*" />
+    <PackageReference Include="Microsoft.AspNetCore.Authentication.Twitter" Version="2.1.*" />
+    <PackageReference Include="Microsoft.AspNetCore.Authentication.OAuth" Version="2.1.*" />
+    <PackageReference Include="Microsoft.AspNetCore.Authentication.OpenIdConnect" Version="2.1.*" />
+    <PackageReference Include="Microsoft.AspNetCore.Hosting.Abstractions" Version="2.1.*" />
+    <PackageReference Include="Microsoft.AspNetCore.Identity" Version="2.1.*" />
+    <PackageReference Include="Microsoft.Extensions.Identity.Core" Version="2.1.*" />
+    <PackageReference Include="Microsoft.Extensions.Identity.Stores" Version="2.1.*" />
+    <PackageReference Include="Microsoft.AspNetCore.Antiforgery" Version="2.1.*" />
     
-    <PackageReference Include="Microsoft.Extensions.Primitives" Version="2.0.*" />
-    <PackageReference Include="Microsoft.AspNetCore.Http.Abstractions" Version="2.0.*" />
-    <PackageReference Include="Microsoft.AspNetCore.Mvc.Abstractions" Version="2.0.*" />
+    <PackageReference Include="Microsoft.Extensions.Primitives" Version="2.1.*" />
+    <PackageReference Include="Microsoft.AspNetCore.Http.Abstractions" Version="2.1.*" />
+    <PackageReference Include="Microsoft.AspNetCore.Mvc.Abstractions" Version="2.1.*" />
     
-    <PackageReference Include="Microsoft.Extensions.Options" Version="2.0.*" />
-    <PackageReference Include="Microsoft.Extensions.Options.ConfigurationExtensions" Version="2.0.*" />
+    <PackageReference Include="Microsoft.Extensions.Options" Version="2.1.*" />
+    <PackageReference Include="Microsoft.Extensions.Options.ConfigurationExtensions" Version="2.1.*" />
     <PackageReference Include="SaasKit.Multitenancy" Version="1.1.4" />
     <PackageReference Include="System.Security.Claims" Version="4.3.*" />
     <PackageReference Include="cloudscribe.Pagination.Models" Version="1.0.*" />

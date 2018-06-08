@@ -61,15 +61,15 @@ namespace Microsoft.Extensions.DependencyInjection
             return services;
         }
 
-        public static RazorViewEngineOptions AddCloudscribeCommonEmbeddedViews(this RazorViewEngineOptions options)
-        {
-            options.FileProviders.Add(new EmbeddedFileProvider(
-                   typeof(CloudscribeCommonResources).GetTypeInfo().Assembly,
-                   "cloudscribe.Web.Common"
-               ));
+        //public static RazorViewEngineOptions AddCloudscribeCommonEmbeddedViews(this RazorViewEngineOptions options)
+        //{
+        //    options.FileProviders.Add(new EmbeddedFileProvider(
+        //           typeof(CloudscribeCommonResources).GetTypeInfo().Assembly,
+        //           "cloudscribe.Web.Common"
+        //       ));
 
-            return options;
-        }
+        //    return options;
+        //}
         
         public static IApplicationBuilder UseCloudscribeCommonStaticFiles(this IApplicationBuilder builder)
         {

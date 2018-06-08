@@ -87,30 +87,33 @@ namespace Microsoft.AspNetCore.Builder
                     {
                         options.AddCloudscribeViewLocationFormats();
                         
+                        // this no longer works because with embedded views we could reference both projects
+                        // with compiled views we can only reference one version at a time with a project reference
+                        // otherwise no telling which one will be used
                         switch (boostrapVersion)
                         {
                             case 4:
 
-                                options.AddCloudscribeCommonEmbeddedViews();
-                                options.AddCloudscribeNavigationBootstrap4Views();
-                                options.AddCloudscribeFileManagerBootstrap4Views();
+                                //options.AddCloudscribeCommonEmbeddedViews();
+                                //options.AddCloudscribeNavigationBootstrap4Views();
+                                //options.AddCloudscribeFileManagerBootstrap4Views();
 
-                                options.AddCloudscribeCoreBootstrap4Views();
-                                options.AddCloudscribeLoggingBootstrap4Views();
-                                options.AddCloudscribeCoreIdentityServerIntegrationBootstrap4Views();
+                                //options.AddCloudscribeCoreBootstrap4Views();
+                                //options.AddCloudscribeLoggingBootstrap4Views();
+                                //options.AddCloudscribeCoreIdentityServerIntegrationBootstrap4Views();
 
                                 break;
 
                             case 3:
                             default:
 
-                                options.AddCloudscribeCommonEmbeddedViews();
-                                options.AddCloudscribeNavigationBootstrap3Views();
-                                options.AddCloudscribeFileManagerBootstrap3Views();
+                                //options.AddCloudscribeCommonEmbeddedViews();
+                                //options.AddCloudscribeNavigationBootstrap3Views();
+                                //options.AddCloudscribeFileManagerBootstrap3Views();
 
-                                options.AddCloudscribeCoreBootstrap3Views();
-                                options.AddCloudscribeLoggingBootstrap3Views();
-                                options.AddCloudscribeCoreIdentityServerIntegrationBootstrap3Views();
+                                //options.AddCloudscribeCoreBootstrap3Views();
+                                //options.AddCloudscribeLoggingBootstrap3Views();
+                                //options.AddCloudscribeCoreIdentityServerIntegrationBootstrap3Views();
 
                                 break;
                         }
