@@ -1,9 +1,8 @@
-﻿using System;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
-using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Migrations;
-using cloudscribe.Core.Storage.EFCore.pgsql;
+using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
+using System;
 
 namespace cloudscribe.Core.Storage.EFCore.pgsql.Migrations
 {

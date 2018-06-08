@@ -2,8 +2,8 @@
 
   <PropertyGroup>
     <Description>SQLite Entity Framework Core implementation of cloudscribe core storage</Description>
-    <VersionPrefix>2.0.4</VersionPrefix>
-    <AssemblyVersion>2.0.4</AssemblyVersion>
+    <VersionPrefix>3.0.0</VersionPrefix>
+    <AssemblyVersion>3.0.0</AssemblyVersion>
     <Authors>Joe Audette</Authors>
     <TargetFramework>netstandard2.0</TargetFramework>
     <PackageTags>cloudscribe;commands;queries;ef</PackageTags>
@@ -19,17 +19,13 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="2.0.*" />
-    <PackageReference Include="Microsoft.Extensions.Configuration" Version="2.0.*" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="2.0.*" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="2.0.*" />
-    <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="2.0.*" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="2.0.*" />
+    <PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="2.1.*" />
+    <PackageReference Include="Microsoft.Extensions.Configuration" Version="2.1.*" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="2.1.*" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="2.1.*" />
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="2.1.*" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="2.1.*" />
 
   </ItemGroup>
-
-  <!--<ItemGroup>
-    <DotNetCliToolReference Include="Microsoft.EntityFrameworkCore.Tools.DotNet" Version="2.0.*" />
-  </ItemGroup>-->
 
 </Project>

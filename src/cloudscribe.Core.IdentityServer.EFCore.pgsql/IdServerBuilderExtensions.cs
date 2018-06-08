@@ -108,7 +108,7 @@ namespace Microsoft.Extensions.DependencyInjection
             services.AddEntityFrameworkNpgsql()
                 .AddDbContext<PersistedGrantDbContext>(options =>
                     options.UseNpgsql(connectionString,
-                    NpgsqlOptionsAction: sqlOptions =>
+                    npgsqlOptionsAction: sqlOptions =>
                     {
                         if (maxConnectionRetryCount > 0)
                         {

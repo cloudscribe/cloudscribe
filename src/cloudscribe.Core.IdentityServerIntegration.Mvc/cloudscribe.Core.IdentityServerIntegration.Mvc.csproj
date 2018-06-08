@@ -2,8 +2,8 @@
 
   <PropertyGroup>
     <Description>MVC Controllers for cloudscribe.Core.IdentityServerIntegration</Description>
-    <VersionPrefix>2.1.15</VersionPrefix>
-    <AssemblyVersion>2.1.15</AssemblyVersion>
+    <VersionPrefix>3.0.0</VersionPrefix>
+    <AssemblyVersion>3.0.0</AssemblyVersion>
 
     <Authors>Joe Audette</Authors>
     <TargetFrameworks>netstandard2.0</TargetFrameworks>
@@ -23,12 +23,12 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.Extensions.Options" Version="2.0.*" />
-    <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="2.0.*" />
-    <PackageReference Include="Microsoft.Extensions.FileProviders.Embedded" Version="2.0.*" />
-    <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="2.0.*" />
-    <PackageReference Include="Microsoft.AspNetCore.Mvc.Razor" Version="2.0.*" />
-    <PackageReference Include="Microsoft.AspNetCore.Mvc" Version="2.0.*" />
+    <PackageReference Include="Microsoft.Extensions.Options" Version="2.1.*" />
+    <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="2.1.*" />
+    <PackageReference Include="Microsoft.Extensions.FileProviders.Embedded" Version="2.1.*" />
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="2.1.*" />
+    <PackageReference Include="Microsoft.AspNetCore.Mvc.Razor" Version="2.1.*" />
+    <PackageReference Include="Microsoft.AspNetCore.Mvc" Version="2.1.*" />
     
     
 
