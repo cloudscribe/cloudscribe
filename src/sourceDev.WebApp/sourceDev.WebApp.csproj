@@ -13,12 +13,18 @@
     <Content Include="appsettings.Development.json" CopyToPublishDirectory="Never" />
     
   </ItemGroup>
-
+  
   <ItemGroup>
-    <None Update="wwwroot\**\*;Views\**\*;Areas\**\Views;sitefiles\**\*;dp_keys;nodb_storage;navigation.xml">
+    <None Update="wwwroot\**\*;dp_keys;nodb_storage;navigation.xml">
       <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
     </None>
   </ItemGroup>
+
+  <!--<ItemGroup>
+    <None Update="wwwroot\**\*;Views\**\*;Areas\**\Views;sitefiles\**\*;dp_keys;nodb_storage;navigation.xml">
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </None>
+  </ItemGroup>-->
   
   <ItemGroup>
     <ProjectReference Include="..\cloudscribe.Core.CompiledViews.Bootstrap4\cloudscribe.Core.CompiledViews.Bootstrap4.csproj" />
