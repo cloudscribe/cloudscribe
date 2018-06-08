@@ -18,6 +18,5 @@
 
   <ItemGroup>
     <ProjectReference Include="..\cloudscribe.Core.Web\cloudscribe.Core.Web.csproj" />
-    <ProjectReference Include="..\cloudscribe.Web.Common.CompiledViews\cloudscribe.Web.Common.CompiledViews.csproj" />
   </ItemGroup>
 </Project>
