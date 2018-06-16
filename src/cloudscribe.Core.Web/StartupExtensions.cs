@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2016-05-07
-// Last Modified:			2018-06-08
+// Last Modified:			2018-06-16
 // 
 
 
@@ -143,6 +143,8 @@ namespace Microsoft.Extensions.DependencyInjection
             services.TryAddScoped<INewUserDisplayNameResolver, DefaultNewUserDisplayNameResolver>();
 
             services.AddCloudscribeFileManagerIntegration(configuration);
+
+            services.AddScoped<IGuardNeededRoles, AdministratorsRoleGuard>();
 
             return services;
         }

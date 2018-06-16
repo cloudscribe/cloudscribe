@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2014-12-06
-// Last Modified:			2018-03-14
+// Last Modified:			2018-06-16
 // 
 
 using cloudscribe.Core.Identity;
@@ -16,6 +16,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Localization;
 using Microsoft.Extensions.Options;
 using System;
+using System.Collections.Generic;
 using System.Globalization;
 using System.Threading.Tasks;
 
@@ -30,7 +31,8 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
             SiteRoleManager<SiteRole> roleManager,
             IStringLocalizer<CloudscribeCore> localizer,
             IOptions<UIOptions> uiOptionsAccessor,
-            IOptions<SiteConfigOptions> setupOptionsAccessor
+            IOptions<SiteConfigOptions> setupOptionsAccessor,
+            IEnumerable<IGuardNeededRoles> roleGuards
             )
         {
             _userManager = userManager;
@@ -39,6 +41,7 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
             _uiOptions = uiOptionsAccessor.Value;
             _setupOptions = setupOptionsAccessor.Value;
             _sr = localizer;
+            _roleGuards = roleGuards;
         }
 
         private SiteManager _siteManager;
@@ -47,6 +50,7 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
         private SiteConfigOptions _setupOptions;
         private SiteUserManager<SiteUser> _userManager;
         private SiteRoleManager<SiteRole> _roleManager;
+        private readonly IEnumerable<IGuardNeededRoles> _roleGuards;
 
 
         [HttpGet]
@@ -169,6 +173,26 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
                 var role = await _roleManager.FindByIdAsync(roleId.Value.ToString());
                 if ((role != null) && (role.SiteId == selectedSite.Id))
                 {
+
+                    var rejectReasons = new List<string>();
+                    foreach(var guard in _roleGuards)
+                    {
+                        var rejectReason = await guard.GetEditRejectReason(role.RoleName);
+                        if(!string.IsNullOrWhiteSpace(rejectReason))
+                        {
+                            rejectReasons.Add(rejectReason);
+                        }
+                    }
+                    if(rejectReasons.Count > 0)
+                    {
+                        var alertMessage = string.Join("<br />", rejectReasons.ToArray());
+
+                        this.AlertDanger(alertMessage, true);
+
+                        return RedirectToAction("Index", new { siteId = selectedSite.Id });
+                    }
+
+
                     model = RoleViewModel.FromISiteRole(role);
                     ViewData["Title"] = _sr["Edit Role"];
                     var currentCrumbAdjuster = new NavigationNodeAdjuster(Request.HttpContext)
@@ -248,6 +272,25 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
             var role = await _roleManager.FindByIdAsync(roleId.ToString());
             if (role != null && role.SiteId == selectedSite.Id && role.IsDeletable(_setupOptions.RolesThatCannotBeDeleted))
             {
+                var rejectReasons = new List<string>();
+                foreach (var guard in _roleGuards)
+                {
+                    var rejectReason = await guard.GetEditRejectReason(role.RoleName);
+                    if (!string.IsNullOrWhiteSpace(rejectReason))
+                    {
+                        rejectReasons.Add(rejectReason);
+                    }
+                }
+                if (rejectReasons.Count > 0)
+                {
+                    var alertMessage = string.Join("<br />", rejectReasons.ToArray());
+
+                    this.AlertDanger(alertMessage, true);
+
+                    return RedirectToAction("Index", new { siteId = selectedSite.Id });
+                }
+
+
                 await _roleManager.DeleteUserRolesByRole(roleId);
                 await _roleManager.DeleteRole(roleId);
                 

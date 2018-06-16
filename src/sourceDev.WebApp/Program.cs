@@ -17,7 +17,8 @@ namespace sourceDev.WebApp
     {
         public static void Main(string[] args)
         {
-            var host = BuildWebHost(args);
+            var hostBuilder = CreateWebHostBuilder(args);
+            var host = hostBuilder.Build();
 
             var config = host.Services.GetRequiredService<IConfiguration>();
             
@@ -156,14 +157,19 @@ namespace sourceDev.WebApp
 
         //https://joonasw.net/view/aspnet-core-2-configuration-changes
 
-        public static IWebHost BuildWebHost(string[] args) =>
+        public static IWebHostBuilder CreateWebHostBuilder(string[] args) =>
             WebHost.CreateDefaultBuilder(args)
             .ConfigureAppConfiguration((builderContext, config) =>
             {
                 config.AddJsonFile("app-userproperties.json", optional: true, reloadOnChange: true);
             })
                 .UseStartup<Startup>()
-                .Build();
+                ;
+
+
+        //public static IWebHostBuilder CreateWebHostBuilder(string[] args) =>
+        //    WebHost.CreateDefaultBuilder(args)
+        //        .UseStartup<Startup>();
 
 
         //public static IWebHost BuildWebHost(string[] args)
