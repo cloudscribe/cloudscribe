@@ -2,11 +2,12 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:				    2014-07-17
-// Last Modified:		    2018-03-14
+// Last Modified:		    2018-06-16
 // 
 //
 
 using cloudscribe.Core.Models;
+using cloudscribe.Core.Models.EventHandlers;
 using cloudscribe.Pagination.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
@@ -34,7 +35,9 @@ namespace cloudscribe.Core.Identity
             ILookupNormalizer keyNormalizer,
             IdentityErrorDescriber errors,
             ILogger<RoleManager<TRole>> logger,
-            IHttpContextAccessor contextAccessor
+            IHttpContextAccessor contextAccessor,
+            IEnumerable<IHandleUserAddedToRole> userAddedToRoleHandlers,
+            IEnumerable<IHandleUserRemovedFromRole> userRemovedFromRoleHandlers
             ) : base(
                 roleStore, 
                 roleValidators,
@@ -49,6 +52,8 @@ namespace cloudscribe.Core.Identity
             _log = logger;
             _multiTenantOptions = multiTenantOptionsAccessor.Value;
             _context = contextAccessor?.HttpContext;
+            _userAddedToRoleHandlers = userAddedToRoleHandlers;
+            _userRemovedFromRoleHandlers = userRemovedFromRoleHandlers;
 
         }
 
@@ -59,7 +64,12 @@ namespace cloudscribe.Core.Identity
         private IUserCommands _commands;
         private IUserQueries _queries;
         private ILogger _log;
+        private readonly IEnumerable<IHandleUserAddedToRole> _userAddedToRoleHandlers;
+        private readonly IEnumerable<IHandleUserRemovedFromRole> _userRemovedFromRoleHandlers;
+
+
         private ISiteContext _siteSettings = null;
+
         private ISiteContext Site
         {
             get
@@ -166,6 +176,18 @@ namespace cloudscribe.Core.Identity
             
             user.RolesChanged = true;
             await _commands.Update(user, CancellationToken);
+
+            foreach(var handler in _userAddedToRoleHandlers)
+            {
+                try
+                {
+                    await handler.Handle(user, role);
+                }
+                catch(Exception ex)
+                {
+                    _log.LogError($"{ex.Message}-{ex.StackTrace}");
+                }
+            }
             
             
         }
@@ -179,7 +201,19 @@ namespace cloudscribe.Core.Identity
             
             user.RolesChanged = true;
             await _commands.Update(user, CancellationToken);
-           
+
+            foreach (var handler in _userRemovedFromRoleHandlers)
+            {
+                try
+                {
+                    await handler.Handle(user, role);
+                }
+                catch (Exception ex)
+                {
+                    _log.LogError($"{ex.Message}-{ex.StackTrace}");
+                }
+            }
+
         }
 
     }

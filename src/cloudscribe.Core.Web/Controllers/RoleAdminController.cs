@@ -177,7 +177,7 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
                     var rejectReasons = new List<string>();
                     foreach(var guard in _roleGuards)
                     {
-                        var rejectReason = await guard.GetEditRejectReason(role.RoleName);
+                        var rejectReason = await guard.GetEditRejectReason(selectedSite.Id, role.RoleName);
                         if(!string.IsNullOrWhiteSpace(rejectReason))
                         {
                             rejectReasons.Add(rejectReason);
@@ -275,7 +275,7 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
                 var rejectReasons = new List<string>();
                 foreach (var guard in _roleGuards)
                 {
-                    var rejectReason = await guard.GetEditRejectReason(role.RoleName);
+                    var rejectReason = await guard.GetEditRejectReason(selectedSite.Id, role.RoleName);
                     if (!string.IsNullOrWhiteSpace(rejectReason))
                     {
                         rejectReasons.Add(rejectReason);

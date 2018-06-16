@@ -23,7 +23,7 @@
             <label asp-for="SendApprovalEmail" class="form-check-label">@sr["Send Email Notification"]</label>
         </div>
         <button type="submit" class="btn btn-success">@sr["Approve this account"]</button>
-    </form>   
+    </form>
 }
 <form data-submit-once="true" class="form-horizontal" role="form" asp-controller="UserAdmin" asp-action="UserEdit">
     <input asp-for="UserId" type="hidden" />
@@ -161,6 +161,7 @@
         </div>
     </form>
 }
+@{ await Html.RenderPartialAsync("UserRoles", Model); }
 @{ await Html.RenderPartialAsync("UserClaims", Model); }
 
 @section SideNav {

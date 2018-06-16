@@ -1,11 +1,12 @@
 ﻿using cloudscribe.Core.Models;
+using System;
 using System.Threading.Tasks;
 
 namespace sourceDev.WebApp.Components
 {
     public class DemoRoleGuard : IGuardNeededRoles
     {
-        public Task<string> GetEditRejectReason(string role)
+        public Task<string> GetEditRejectReason(Guid siteId, string role)
         {
             string result = null;
 

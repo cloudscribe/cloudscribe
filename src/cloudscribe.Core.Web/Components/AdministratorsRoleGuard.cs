@@ -6,6 +6,7 @@
 
 using cloudscribe.Core.Models;
 using Microsoft.Extensions.Localization;
+using System;
 using System.Threading.Tasks;
 
 namespace cloudscribe.Core.Web.Components
@@ -19,7 +20,7 @@ namespace cloudscribe.Core.Web.Components
 
         private readonly IStringLocalizer<CloudscribeCore> _localizer;
 
-        public Task<string> GetEditRejectReason(string role)
+        public Task<string> GetEditRejectReason(Guid siteId, string role)
         {
             string result = null;
 

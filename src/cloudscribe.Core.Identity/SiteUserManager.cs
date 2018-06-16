@@ -47,7 +47,9 @@ namespace cloudscribe.Core.Identity
             IdentityErrorDescriber errors,
             IServiceProvider serviceProvider,
             ILogger<UserManager<TUser>> logger,
-            IHttpContextAccessor contextAccessor)
+            IHttpContextAccessor contextAccessor,
+            IEnumerable<IHandleUserRemovedFromRole> userRemovedFromRoleHandlers
+            )
             : base(
                   store,
                   optionsAccessor,
@@ -72,6 +74,8 @@ namespace cloudscribe.Core.Identity
             _passwordHasher = passwordHasher;
             _emailConfirmedHandlers = emailConfirmedHandlers;
             _displayNameResolver = displayNameResolver;
+            _userRemovedFromRoleHandlers = userRemovedFromRoleHandlers;
+            _log = logger;
         }
         
         private IdentityOptions _identityOptions;
@@ -85,6 +89,8 @@ namespace cloudscribe.Core.Identity
         private IPasswordHasher<TUser> _passwordHasher;
         private IEnumerable<IHandleUserEmailConfirmed> _emailConfirmedHandlers;
         private INewUserDisplayNameResolver _displayNameResolver;
+        private readonly IEnumerable<IHandleUserRemovedFromRole> _userRemovedFromRoleHandlers;
+        private ILogger _log;
 
         //private CancellationToken CancellationToken => httpContext?.RequestAborted ?? CancellationToken.None;
 
@@ -349,6 +355,18 @@ namespace cloudscribe.Core.Identity
 
             user.RolesChanged = true;
             await _commands.Update(user);
+
+            foreach (var handler in _userRemovedFromRoleHandlers)
+            {
+                try
+                {
+                    await handler.Handle(user, role);
+                }
+                catch (Exception ex)
+                {
+                    _log.LogError($"{ex.Message}-{ex.StackTrace}");
+                }
+            }
 
 
             return IdentityResult.Success;
