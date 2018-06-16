@@ -1,4 +1,7 @@
 
+https://docs.microsoft.com/en-us/aspnet/core/host-and-deploy/windows-service?view=aspnetcore-2.1&tabs=aspnetcore2x
+
+
 http://docs.hangfire.io/en/latest/background-processing/placing-processing-into-another-process.html
 http://docs.hangfire.io/en/latest/background-processing/processing-jobs-in-windows-service.html
 

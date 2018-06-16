@@ -11,15 +11,29 @@ https://www.cloudscribe.com/docs/advanced-client-side-development-with-webpack?u
 https://marketplace.visualstudio.com/items?itemName=joeaudette.cloudscribeProjectTemplate
 https://www.nuget.org/packages/cloudscribe.templates/1.0.0
 
-dotnet new cloudscribe -D MSSQL -I true -S z
+
+## Commands to install and unintsall local project tempaltes
 
 dotnet new --install C:\_c\cloudscribe.templates\Content\WebApp
 dotnet new --debug:reinit
 
+
+## Commands to install/uninstall nuget dotnet new project templates
+
 dotnet new -i "cloudscribe.templates::*"
 dotnet new -u cloudscribe
 
+# Command to pack the local project template into a nuget package
+
 .\packtemplate.cmd
+
+
+# Usage Samples
+
+dotnet new cloudscribe -D MSSQL -I true -C true -K true
+
+dotnet new cloudscribe -D MSSQL -I true -S z
+
 
 https://github.com/dotnet/templating
 

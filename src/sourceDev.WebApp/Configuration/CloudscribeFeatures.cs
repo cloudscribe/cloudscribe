@@ -1,5 +1,7 @@
-﻿using cloudscribe.UserProperties.Models;
+﻿using cloudscribe.Core.Models;
+using cloudscribe.UserProperties.Models;
 using Microsoft.Extensions.Configuration;
+using sourceDev.WebApp.Components;
 
 namespace Microsoft.Extensions.DependencyInjection
 {
@@ -108,7 +110,7 @@ namespace Microsoft.Extensions.DependencyInjection
             //services.AddCloudscribeCore(Configuration);
             services.AddCloudscribeCoreMvc(config);
 
-
+            services.AddScoped<IGuardNeededRoles, DemoRoleGuard>();
 
             return services;
         }

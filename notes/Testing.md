@@ -1,4 +1,7 @@
 
+Improved end to end testing support for MVC applications
+https://github.com/aspnet/Announcements/issues/275
+
 https://docs.microsoft.com/en-us/aspnet/core/testing/integration-testing
 
 Selenium stand alone server

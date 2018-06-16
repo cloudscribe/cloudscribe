@@ -75,14 +75,14 @@ namespace cloudscribe.Core.Models
         public static bool IsDeletable(this ISiteRole role, List<string> rolesThatCannotBeDeleted)
         {
             if (role.RoleName == "Administrators") { return false; }
-            if (role.RoleName == "Content Administrators") { return false; }
-            if (role.RoleName == "Authenticated Users") { return false; }
-            if (role.RoleName == "Role Administrators") { return false; }
+            //if (role.RoleName == "Content Administrators") { return false; }
+            //if (role.RoleName == "Authenticated Users") { return false; }
+            //if (role.RoleName == "Role Administrators") { return false; }
 
             if (role.NormalizedRoleName == "Administrators") { return false; }
-            if (role.NormalizedRoleName == "Content Administrators") { return false; }
-            if (role.NormalizedRoleName == "Authenticated Users") { return false; }
-            if (role.NormalizedRoleName == "Role Administrators") { return false; }
+            //if (role.NormalizedRoleName == "Content Administrators") { return false; }
+            //if (role.NormalizedRoleName == "Authenticated Users") { return false; }
+            //if (role.NormalizedRoleName == "Role Administrators") { return false; }
 
             if (rolesThatCannotBeDeleted != null)
             {
