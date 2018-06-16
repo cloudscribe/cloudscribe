@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Threading.Tasks;
 
 namespace cloudscribe.Core.Models
 {
@@ -15,6 +16,6 @@ namespace cloudscribe.Core.Models
         /// </summary>
         /// <param name="role"></param>
         /// <returns></returns>
-        Task<string> GetEditRejectReason(string role);
+        Task<string> GetEditRejectReason(Guid siteId, string role);
     }
 }
