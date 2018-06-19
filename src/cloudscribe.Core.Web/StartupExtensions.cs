@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2016-05-07
-// Last Modified:			2018-06-16
+// Last Modified:			2018-06-19
 // 
 
 
@@ -28,6 +28,7 @@ using cloudscribe.Web.Common.Razor;
 using cloudscribe.Web.Common.Setup;
 using cloudscribe.Web.Navigation;
 using cloudscribe.Web.Navigation.Caching;
+using cloudscribe.Web.SiteMap;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc.Razor;
@@ -61,6 +62,8 @@ namespace Microsoft.Extensions.DependencyInjection
             {
                 options.ConstraintMap.Add("sitefolder", typeof(SiteFolderRouteConstraint));
             });
+
+            
 
             services.TryAddSingleton<IHttpContextAccessor, HttpContextAccessor>();
             services.AddOptions();
@@ -134,6 +137,8 @@ namespace Microsoft.Extensions.DependencyInjection
             services.AddScoped<ITreeCacheKeyResolver, SiteNavigationCacheKeyResolver>();
             services.AddScoped<INodeUrlPrefixProvider, FolderTenantNodeUrlPrefixProvider>();
             services.AddCloudscribeNavigation(configuration);
+
+            services.AddScoped<ISiteMapNodeService, NavigationTreeSiteMapNodeService>();
 
             // Identity ***
             services.TryAddScoped<ISiteAcountCapabilitiesProvider, SiteAcountCapabilitiesProvider>();
