@@ -2,8 +2,8 @@
 
   <PropertyGroup>
     <Description>Multi-tenant web application foundation with management for sites, users, roles, claims, and geographic data.</Description>
-    <VersionPrefix>3.0.4</VersionPrefix>
-    <AssemblyVersion>3.0.4</AssemblyVersion>
+    <VersionPrefix>3.0.5</VersionPrefix>
+    <AssemblyVersion>3.0.5</AssemblyVersion>
     <Authors>Joe Audette</Authors>
     <TargetFrameworks>netstandard2.0</TargetFrameworks>
     <AssemblyName>cloudscribe.Core.Web</AssemblyName>
@@ -28,24 +28,25 @@
     <PackageReference Include="cloudscribe.Pagination.Models" Version="1.0.*" />
     <PackageReference Include="cloudscribe.Web.Pagination" Version="2.1.*" />
     <PackageReference Include="cloudscribe.Web.Navigation" Version="2.1.*" />
+    <PackageReference Include="cloudscribe.Web.SiteMap.FromNavigation" Version="2.1.*" />
   
-    <PackageReference Include="Microsoft.AspNetCore.Antiforgery" Version="2.1.*" />
-    <PackageReference Include="Microsoft.AspNetCore.Authentication.Cookies" Version="2.1.*" />
+    <PackageReference Include="Microsoft.AspNetCore.Antiforgery" Version="2.1.0" />
+    <PackageReference Include="Microsoft.AspNetCore.Authentication.Cookies" Version="2.1.0" />
     
-    <PackageReference Include="Microsoft.AspNetCore.Authorization" Version="2.1.*" />
-    <PackageReference Include="Microsoft.AspNetCore.Diagnostics" Version="2.1.*" />
-    <PackageReference Include="Microsoft.AspNetCore.Hosting.Abstractions" Version="2.1.*" />
-    <PackageReference Include="Microsoft.AspNetCore.Http.Abstractions" Version="2.1.*" />
-    <PackageReference Include="Microsoft.AspNetCore.Identity" Version="2.1.*" />
-    <PackageReference Include="Microsoft.AspNetCore.Mvc" Version="2.1.*" />
-    <PackageReference Include="Microsoft.AspNetCore.StaticFiles" Version="2.1.*" />
-    <PackageReference Include="Microsoft.Extensions.Caching.Abstractions" Version="2.1.*" />
-    <PackageReference Include="Microsoft.Extensions.Configuration.Abstractions" Version="2.1.*" />
-    <PackageReference Include="Microsoft.Extensions.FileProviders.Embedded" Version="2.1.*" />
-    <PackageReference Include="Microsoft.Extensions.Localization" Version="2.1.*" />
-    <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="2.1.*" />
-    <PackageReference Include="Microsoft.Extensions.Options" Version="2.1.*" />
-    <PackageReference Include="Microsoft.Extensions.Options.ConfigurationExtensions" Version="2.1.*" />
+    <PackageReference Include="Microsoft.AspNetCore.Authorization" Version="2.1.0" />
+    <PackageReference Include="Microsoft.AspNetCore.Diagnostics" Version="2.1.0" />
+    <PackageReference Include="Microsoft.AspNetCore.Hosting.Abstractions" Version="2.1.0" />
+    <PackageReference Include="Microsoft.AspNetCore.Http.Abstractions" Version="2.1.0" />
+    <PackageReference Include="Microsoft.AspNetCore.Identity" Version="2.1.0" />
+    <PackageReference Include="Microsoft.AspNetCore.Mvc" Version="2.1.0" />
+    <PackageReference Include="Microsoft.AspNetCore.StaticFiles" Version="2.1.0" />
+    <PackageReference Include="Microsoft.Extensions.Caching.Abstractions" Version="2.1.0" />
+    <PackageReference Include="Microsoft.Extensions.Configuration.Abstractions" Version="2.1.0" />
+    <PackageReference Include="Microsoft.Extensions.FileProviders.Embedded" Version="2.1.0" />
+    <PackageReference Include="Microsoft.Extensions.Localization" Version="2.1.0" />
+    <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="2.1.0" />
+    <PackageReference Include="Microsoft.Extensions.Options" Version="2.1.0" />
+    <PackageReference Include="Microsoft.Extensions.Options.ConfigurationExtensions" Version="2.1.0" />
     <PackageReference Include="SaasKit.Multitenancy" Version="1.1.4" />
   </ItemGroup>
 

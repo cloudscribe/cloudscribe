@@ -2,13 +2,10 @@
 
   <PropertyGroup>
     <Description>media file management</Description>
-    <VersionPrefix>3.0.0</VersionPrefix>
-    <AssemblyVersion>3.0.0</AssemblyVersion>
+    <VersionPrefix>3.0.1</VersionPrefix>
+    <AssemblyVersion>3.0.1</AssemblyVersion>
     <Authors>Joe Audette</Authors>
     <TargetFrameworks>netstandard2.0</TargetFrameworks>
-    <DebugType>portable</DebugType>
-    <AssemblyName>cloudscribe.FileManager.Web</AssemblyName>
-    <PackageId>cloudscribe.FileManager.Web</PackageId>
     <PackageTags>cloudscribe;filemanager</PackageTags>
     <PackageIconUrl>https://raw.githubusercontent.com/joeaudette/cloudscribe/master/cloudscribe-icon-32.png</PackageIconUrl>
     <PackageProjectUrl>https://github.com/joeaudette/cloudscribe.SimpleContent</PackageProjectUrl>
@@ -27,16 +24,16 @@
 
   <ItemGroup>
     
-    <PackageReference Include="Microsoft.AspNetCore.Mvc" Version="2.1.*" />
-    <PackageReference Include="Microsoft.Extensions.Options.ConfigurationExtensions" Version="2.1.*" />
-    <PackageReference Include="Microsoft.Extensions.Caching.Abstractions" Version="2.1.*" />
-    <PackageReference Include="Microsoft.Extensions.Configuration.Abstractions" Version="2.1.*" />
-    <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="2.1.*" />
-    <PackageReference Include="Microsoft.Extensions.Localization" Version="2.1.*" />
-    <PackageReference Include="Microsoft.AspNetCore.Routing" Version="2.1.*" />
-    <PackageReference Include="Microsoft.AspNetCore.Mvc.Abstractions" Version="2.1.*" />
-    <PackageReference Include="Microsoft.Extensions.FileProviders.Embedded" Version="2.1.*" />
-    <PackageReference Include="Microsoft.AspNetCore.Mvc.Razor" Version="2.1.*" />
+    <PackageReference Include="Microsoft.AspNetCore.Mvc" Version="2.1.0" />
+    <PackageReference Include="Microsoft.Extensions.Options.ConfigurationExtensions" Version="2.1.0" />
+    <PackageReference Include="Microsoft.Extensions.Caching.Abstractions" Version="2.1.0" />
+    <PackageReference Include="Microsoft.Extensions.Configuration.Abstractions" Version="2.1.0" />
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="2.1.0" />
+    <PackageReference Include="Microsoft.Extensions.Localization" Version="2.1.0" />
+    <PackageReference Include="Microsoft.AspNetCore.Routing" Version="2.1.0" />
+    <PackageReference Include="Microsoft.AspNetCore.Mvc.Abstractions" Version="2.1.0" />
+    <PackageReference Include="Microsoft.Extensions.FileProviders.Embedded" Version="2.1.0" />
+    <PackageReference Include="Microsoft.AspNetCore.Mvc.Razor" Version="2.1.0" />
     <PackageReference Include="SkiaSharp" Version="1.59.*" />
     <PackageReference Include="SixLabors.ImageSharp" Version="1.0.0-beta0002" />
    

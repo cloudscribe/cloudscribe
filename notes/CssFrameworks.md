@@ -1,4 +1,7 @@
 
+https://www.smashingmagazine.com/2018/06/bem-for-beginners/
+
+
 # bootstrap 
 
 https://bootstrapious.com/p/bootstrap-sidebar?ref=quuu&utm_source=quuu

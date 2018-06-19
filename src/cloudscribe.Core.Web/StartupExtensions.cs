@@ -57,6 +57,11 @@ namespace Microsoft.Extensions.DependencyInjection
 
         public static IServiceCollection AddCloudscribeCoreCommon(this IServiceCollection services, IConfiguration configuration)
         {
+            services.AddRouting(options =>
+            {
+                options.ConstraintMap.Add("sitefolder", typeof(SiteFolderRouteConstraint));
+            });
+
             services.TryAddSingleton<IHttpContextAccessor, HttpContextAccessor>();
             services.AddOptions();
             
