@@ -26,7 +26,7 @@ namespace cloudscribe.Core.Web.Controllers
 
         [HttpGet]
         [ResponseCache(CacheProfileName = "SiteMapCacheProfile")]
-        [Route("{folder:sitefolder}/api/sitemap")]
+        //[Route("{folder:sitefolder}/api/sitemap")]
         public override async Task<IActionResult> Index()
         {
             return await base.Index();

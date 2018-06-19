@@ -21,6 +21,13 @@ namespace Microsoft.AspNetCore.Builder
                    constraints: new { name = new cloudscribe.Core.Web.Components.SiteFolderRouteConstraint() }
                 );
 
+                routes.MapRoute(
+                       name: "apifoldersitemap",
+                       template: "{sitefolder}/api/sitemap"
+                       , defaults: new { controller = "FolderSiteMap", action = "Index" }
+                       , constraints: new { name = new cloudscribe.Core.Web.Components.SiteFolderRouteConstraint() }
+                       );
+
 
                 routes.MapRoute(
                     name: "folderdefault",
