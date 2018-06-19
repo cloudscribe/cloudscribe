@@ -70,13 +70,22 @@ namespace Microsoft.AspNetCore.Builder
                 options.LowercaseUrls = true;
             });
             
-            if (sslIsAvailable)
+            
+            services.Configure<MvcOptions>(options =>
             {
-                services.Configure<MvcOptions>(options =>
+                if (sslIsAvailable)
                 {
                     options.Filters.Add(new RequireHttpsAttribute());
-                });
-            }
+                }
+
+                options.CacheProfiles.Add("SiteMapCacheProfile",
+                    new CacheProfile
+                    {
+                        Duration = 30
+                    });
+
+            });
+            
 
             var boostrapVersion = config.GetValue<int>("DevOptions:BootstrapVersion");
 

@@ -2,8 +2,8 @@
 
   <PropertyGroup>
     <Description>PostgreSql (pgsql) Entity Framework configuration and operational stores for IdentityServer4 cloudscribe multi-tenant identity integration</Description>
-    <VersionPrefix>3.0.1</VersionPrefix>
-    <AssemblyVersion>3.0.1</AssemblyVersion>
+    <VersionPrefix>3.0.2</VersionPrefix>
+    <AssemblyVersion>3.0.2</AssemblyVersion>
 
     <Authors>Joe Audette</Authors>
     <TargetFramework>netstandard2.0</TargetFramework>
@@ -27,13 +27,13 @@
 
   <ItemGroup>
     
-    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="2.1.*" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="2.1.*" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.Relational" Version="2.1.*" />
-    <PackageReference Include="Microsoft.Extensions.Configuration.FileExtensions" Version="2.1.*" />
-    <PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="2.1.*" />
-    <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="2.1.*" />
-    <PackageReference Include="IdentityServer4" Version="2.2.*" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="2.1.0" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="2.1.0" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Relational" Version="2.1.0" />
+    <PackageReference Include="Microsoft.Extensions.Configuration.FileExtensions" Version="2.1.0" />
+    <PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="2.1.0" />
+    <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="2.1.0" />
+    <PackageReference Include="IdentityServer4" Version="2.2.0" />
     
   </ItemGroup>
 

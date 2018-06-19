@@ -2,13 +2,10 @@
 
   <PropertyGroup>
     <Description>integration for cloudscribe Core and cloudscribe FileManager</Description>
-    <VersionPrefix>3.0.0</VersionPrefix>
-    <AssemblyInfo>3.0.0</AssemblyInfo>
+    <VersionPrefix>3.0.1</VersionPrefix>
+    <AssemblyInfo>3.0.1</AssemblyInfo>
     <Authors>Joe Audette</Authors>
     <TargetFrameworks>netstandard2.0</TargetFrameworks>
-    <DebugType>portable</DebugType>
-    <AssemblyName>cloudscribe.FileManager.CoreIntegration</AssemblyName>
-    <PackageId>cloudscribe.FileManager.CoreIntegration</PackageId>
     <PackageTags>cloudscribe;filemanager</PackageTags>
     <PackageIconUrl>https://raw.githubusercontent.com/joeaudette/cloudscribe/master/cloudscribe-icon-32.png</PackageIconUrl>
     <PackageProjectUrl>https://github.com/joeaudette/cloudscribe.SimpleContent</PackageProjectUrl>
@@ -22,8 +19,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.Extensions.Options" Version="2.1.*" />
-    <PackageReference Include="Microsoft.Extensions.Logging" Version="2.1.*" />
+    <PackageReference Include="Microsoft.Extensions.Options" Version="2.1.0" />
+    <PackageReference Include="Microsoft.Extensions.Logging" Version="2.1.0" />
   </ItemGroup>
 
   

@@ -67,7 +67,7 @@
     <PackageReference Include="cloudscribe.UserProperties.Kvp" Version="2.1.*" />
     <PackageReference Include="cloudscribe.UserProperties" Version="2.0.*" />
 	
-    <PackageReference Include="Microsoft.AspNetCore.App" />
+    <PackageReference Include="Microsoft.AspNetCore.App" Version="2.1.0" />
     
     <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="2.1.0" />
     
