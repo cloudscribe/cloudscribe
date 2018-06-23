@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2016-01-18
-// Last Modified:			2018-03-03
+// Last Modified:			2018-06-22
 // 
 
 
@@ -334,7 +334,7 @@ namespace cloudscribe.Core.DataProtection
 
             if (requiresMigration || wasRevoked)
             {
-                _log.LogWarning($"DataProtection key wasRevoked or requires migration, save site settings for {site.SiteName} to protect with a new key");
+                _log.LogDebug($"DataProtection key was Revoked or requires migration, save site settings for {site.SiteName} to protect with a new key");
             }
 
             

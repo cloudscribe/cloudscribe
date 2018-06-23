@@ -1,21 +1,101 @@
-﻿@using cloudscribe.Core.Web.Design
-@inject CoreThemeHelper themeHelper
+﻿@using Microsoft.AspNetCore.Antiforgery
+@inject IAntiforgery antiforgery
 @{
     ViewData["Title"] = "Test1";
-
-   
-    var themeSettings = themeHelper.GetThemeSettings();
-
-    
+    var tokens = antiforgery.GetAndStoreTokens(Context);
+}
+@section Styles {
+    <link rel="stylesheet" href="/cr/css/dropzone.css" />
+    <link rel="stylesheet" href="/cr/css/croppie.css" />
 }
 
 <h2>Test1</h2>
 
 
-@if (themeSettings != null)
-{
-    @themeSettings.ThemeName
-    <hr />
-    @themeSettings.Icons.Email
+<div id="dz1"
+     data-dropzone=""
+     data-upload-url="@Url.Action("DropFile", "FileManager")"
+     data-anti-forgery-token="@tokens.RequestToken"
+     data-target-path="/media/folder2"
+     data-target-input-id="imgUrl1"
+     data-resize-width="250"
+     data-resize-height="180"
+     data-accepted-files="image/*">
+    <img src="/cr/images/240x180.png" />
+</div>
+<input class="form-control" id="imgUrl1" type="text" />
+<p>Hey now</p>
+<div id="dz2"
+     data-dropzone=""
+     data-upload-url="@Url.Action("DropFile", "FileManager")"
+     data-anti-forgery-token="@tokens.RequestToken"
+     data-target-path="/media/folder2"
+     data-target-input-id="imgUrl2"
+     data-resize-width="250"
+     data-resize-height="180"
+     data-accepted-files="image/*">
+    <img src="/cr/images/240x180.png" />
+</div>
+<input class="form-control" id="imgUrl2" type="text" />
+
+@section Scripts {
+    <script src="/cr/js/dropzone.js"></script>
+    <script src="/cr/js/croppie.js"></script>
+    <script src="~/filemanager/js/cloudscribe-unobtrusive-file-drop.min.js"></script>
+    <script>
+
+                //(function () {
+                //    document.addEventListener("DOMContentLoaded", function () {
+                //        var dropElements = document.querySelectorAll('[data-dropzone]');
+                //        var previewTemplate = "<div class=\"dz-preview dz-file-preview\"><div class=\"dz-image\"><img data-dz-thumbnail /></div><div class=\"dz-details collapse\"><div class=\"dz-size collapse\"><span data-dz-size></span></div><div class=\"dz-filename collapse\"><span data-dz-name></span></div></div><div class=\"dz-progress collapse\"><span class=\"dz-upload\" data-dz-uploadprogress></span></div><div class=\"dz-error-message collapse\"><span data-dz-errormessage></span></div><div class=\"dz-success-mark collapse\"></div><div class=\"dz-error-mark collapse\"></div></div>";
+
+                //        var dropZoneBuilder = {
+                //            buildDropZone: function (div) {
+                //                var image = item.getElementsByTagName('img')[0];
+                //                var myDropzone = new Dropzone('#' + div.id, {
+                //                    url: div.dataset.uploadUrl,
+                //                    method: "post",
+                //                    headers: {
+                //                        'X-CSRFToken': div.dataset.antiForgeryToken
+                //                    },
+                //                    maxFiles: 1,
+                //                    acceptedFiles: div.dataset.acceptedFiles,
+                //                    previewTemplate: previewTemplate,
+                //                    createImageThumbnails: false
+
+                //                });
+                //                myDropzone.on("sending", function (file, xhr, formData) {
+                //                    formData.append("maxWidth", div.dataset.resizeWidth);
+                //                    formData.append("maxHeight", div.dataset.resizeHeight);
+                //                    if (div.dataset.targetPath) {
+                //                        formData.append("targetPath", div.dataset.targetPath);
+                //                    }
+                //                });
+                //                myDropzone.on("success", function (file, serverResponse) {
+                //                    myDropzone.removeFile(file);
+                //                    var imgUrl = serverResponse[0].resizedUrl;
+                //                    if (image) {
+                //                        image.src = imgUrl;
+                //                    }
+                //                    if (div.dataset.targetInputId) {
+                //                        var input = document.getElementById(div.dataset.targetInputId);
+                //                        if (input) {
+                //                            input.value = imgUrl;
+                //                        }
+                //                    }
+                //                });
+                //            }
+                //        };
+
+                //        for (var i = 0; i < dropElements.length; i++) {
+                //            var item = dropElements[i];
+                //            var firstImg = item.getElementsByTagName('img')[0];
+                //            dropZoneBuilder.buildDropZone(item, firstImg);
+                //        }
+                //    });
+                //})();
+
+
+    </script>
 
 }

@@ -25,6 +25,8 @@ https://blog.octo.com/en/webassembly-an-executable-format-for-the-web/
 
 https://www.scirra.com/blog/218/apple-broke-webassembly-and-are-leaving-it-broken
 
+http://blog.qt.io/blog/2018/05/22/qt-for-webassembly/
+
 ## Blazor
 
 https://blogs.msdn.microsoft.com/webdev/2018/02/06/blazor-experimental-project/

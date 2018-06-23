@@ -167,8 +167,26 @@ namespace cloudscribe.FileManager.Web.Controllers
         {
             var theFiles = HttpContext.Request.Form.Files;
             var imageList = new List<UploadResult>();
-            string newFileName = string.Empty; ;
-           
+            string newFileName = string.Empty;
+
+            var requestedFilePath = Request.Form["targetPath"].ToString();
+            bool? resizeImages = null;
+            int? maxWidth = null;
+            int? maxHeight = null;
+            var smaxHeight = Request.Form["maxHeight"];
+            var smaxWidth = Request.Form["maxWidth"];
+            if(!string.IsNullOrWhiteSpace(smaxHeight) && !string.IsNullOrWhiteSpace(smaxWidth))
+            {
+                try
+                {
+                    maxWidth = Convert.ToInt32(smaxWidth);
+                    maxHeight = Convert.ToInt32(smaxHeight);
+                    resizeImages = true;
+                }
+                catch{}
+            }
+
+
             foreach (var formFile in theFiles)
             {
                 try
@@ -178,10 +196,10 @@ namespace cloudscribe.FileManager.Web.Controllers
                         var uploadResult = await fileManagerService.ProcessFile(
                             formFile,
                             autoUploadOptions,
-                            null,
-                            null,
-                            null,
-                            null,
+                            resizeImages,
+                            maxWidth,
+                            maxHeight,
+                            requestedFilePath,
                             newFileName,
                             false
                             ).ConfigureAwait(false);

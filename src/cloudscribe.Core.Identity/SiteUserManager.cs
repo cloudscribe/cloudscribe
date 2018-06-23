@@ -7,20 +7,19 @@
 //
 
 using cloudscribe.Core.Models;
-using Microsoft.AspNetCore.Identity;
+using cloudscribe.Core.Models.EventHandlers;
+using cloudscribe.Core.Models.Identity;
+using cloudscribe.Pagination.Models;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Builder;
-using System.Security.Claims;
-using cloudscribe.Core.Models.EventHandlers;
-using cloudscribe.Pagination.Models;
-using cloudscribe.Core.Models.Identity;
 
 namespace cloudscribe.Core.Identity
 {
