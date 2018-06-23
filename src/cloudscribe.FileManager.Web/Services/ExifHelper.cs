@@ -1,6 +1,7 @@
-﻿using SixLabors.ImageSharp;
-using SixLabors.ImageSharp.MetaData.Profiles.Exif;
-using cloudscribe.Web.Common.Gps;
+﻿using cloudscribe.Web.Common.Gps;
+using SixLabors.ImageSharp;
+using SixLabors.ImageSharp.PixelFormats;
+using SixLabors.ImageSharp.Primitives;
 using System;
 using System.Collections.Generic;
 using System.IO;

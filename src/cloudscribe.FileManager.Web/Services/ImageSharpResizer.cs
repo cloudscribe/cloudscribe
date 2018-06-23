@@ -1,18 +1,16 @@
-﻿using Microsoft.Extensions.Logging;
-using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using cloudscribe.FileManager.Web.Models;
+using Microsoft.Extensions.Logging;
 using SixLabors.ImageSharp;
-using System.IO;
 using SixLabors.ImageSharp.Formats;
-using SixLabors.ImageSharp.Formats.Jpeg;
 using SixLabors.ImageSharp.Formats.Gif;
+using SixLabors.ImageSharp.Formats.Jpeg;
 using SixLabors.ImageSharp.Formats.Png;
-using cloudscribe.FileManager.Web.Models;
-using SixLabors.ImageSharp.Helpers;
 using SixLabors.ImageSharp.PixelFormats;
 using SixLabors.ImageSharp.Processing;
-using SixLabors.Primitives;
+using SixLabors.ImageSharp.Processing.Transforms;
+using System;
+using System.IO;
+
 
 namespace cloudscribe.FileManager.Web.Services
 {

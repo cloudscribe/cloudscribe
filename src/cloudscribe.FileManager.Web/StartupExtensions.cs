@@ -1,17 +1,15 @@
-﻿using cloudscribe.FileManager.Web.Models;
+﻿using cloudscribe.FileManager.Web.Controllers;
+using cloudscribe.FileManager.Web.Models;
 using cloudscribe.FileManager.Web.Services;
-using cloudscribe.FileManager.Web;
-using Microsoft.AspNetCore.Routing;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.DependencyInjection.Extensions;
+using cloudscribe.Web.Common.Setup;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Mvc.Razor;
+using Microsoft.AspNetCore.Routing;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.FileProviders;
-using System.Reflection;
-using cloudscribe.FileManager.Web.Controllers;
 using System;
-using cloudscribe.Web.Common.Setup;
+using System.Reflection;
 
 namespace Microsoft.Extensions.DependencyInjection
 {
@@ -36,6 +34,11 @@ namespace Microsoft.Extensions.DependencyInjection
             {
                 services.Configure<FileManagerIcons>(configuration.GetSection("FileManagerIcons"));
             }
+
+            services.AddAntiforgery(options =>
+            {
+                options.HeaderName = "X-CSRFToken";
+            });
 
             return services;
         }
