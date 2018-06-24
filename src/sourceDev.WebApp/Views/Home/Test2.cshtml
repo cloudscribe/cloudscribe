@@ -1,0 +1,276 @@
+﻿@using Microsoft.AspNetCore.Antiforgery
+@inject IAntiforgery antiforgery
+@{
+    ViewData["Title"] = "Test2";
+    var tokens = antiforgery.GetAndStoreTokens(Context);
+}
+@section Styles {
+    <link rel="stylesheet" href="/cr/css/dropzone.css" />
+    <link rel="stylesheet" href="/cr/css/croppie.css" />
+    <style>
+
+        .cs-crop-container {
+            display:inline-block;
+        }
+
+        .cs-crop-container .croppie-container .cr-boundary {
+            margin: 0;
+        }
+
+        /*.cs-crop-container .croppie-container .cr-slider-wrap {
+            margin: 15px 0 0 0;
+            
+        }*/
+
+    </style>
+}
+
+<h2>Test2</h2>
+
+
+@*<div id="dz1"
+     data-dropzone=""
+     data-upload-url="@Url.Action("DropFile", "FileManager")"
+     data-anti-forgery-token="@tokens.RequestToken"
+     data-target-path="/media/folder2"
+     data-target-fullsize-input-id="imgUrl1"
+     data-target-resized-input-id="imgUrl1Resized"
+     data-target-thumb-input-id="imgUrl1Thumb"
+     data-resize-width="250"
+     data-resize-height="180"
+     data-create-thumb="true"
+     data-accepted-files="image/*">
+    <img src="/cr/images/240x180.png" />
+</div>
+<input class="form-control" id="imgUrl1" type="text" />
+<input class="form-control" id="imgUrl1Resized" type="text" />
+<input class="form-control" id="imgUrl1Thumb" type="text" />
+<p>Hey now</p>*@
+
+<div class="d-flex align-items-stretch">
+    <div class="cs-crop-container">
+        <img id="dz2Image" src="/cr/images/550x412.png" />
+    </div>
+    <div class="d-flex flex-column">
+        <div id="dz2" class="cloudscribe-dropzone-standalone"
+             data-dropzone=""
+             data-upload-url="@Url.Action("DropFile", "FileManager")"
+             data-anti-forgery-token="@tokens.RequestToken"
+             data-target-path="/media/folder2"
+             data-target-fullsize-input-id="imgUrl2"
+             data-target-resized-input-id="imgUrl2Resized"
+             data-target-thumb-input-id="imgUrl2Thumb"
+             data-target-fullsize-image-id="dz2Image"
+             data-target-resized-image-idx="dz2ImageResized"
+             data-enable-crop="true"
+             data-target-thumb-image-idx="dz2ImageThumb"
+             data-resize-width="550"
+             data-resize-height="412"
+             data-create-thumb="true"
+             data-accepted-files="image/*">
+            Drop file here or click to browse device for file.
+        </div>
+        <div class="pl-2 pt-1">
+            <a href="#" id="dz2-save-crop" class="mr-2 collapse" title="Save Crop"><i class="far fa-2x fa-save"></i></a>
+            <a href="#" id="dz2-cancel-crop" class="mr-2 collapse" title="Cancel Crop"><i class="fas fa-2x fa-ban"></i></a>
+            <a href="#" id="dz2-new-crop" class="mr-2 collapse" title="Re-Crop"><i class="fas fa-2x fa-crop"></i></a>
+        </div>  
+    </div>
+
+    
+</div>
+
+
+
+
+
+
+
+
+
+    @*<img id="dz2ImageResized" src="/cr/images/1x1.png" />
+        <img id="dz2ImageThumb" src="/cr/images/1x1.png" />*@
+    <input class="form-control" id="imgUrl2" type="hidden" />
+    <input class="form-control" id="imgUrl2Resized" type="hidden" />
+    <input class="form-control" id="imgUrl2Thumb" type="hidden" />
+
+    @section Scripts {
+        <script src="/cr/js/dropzone.js"></script>
+        <script src="/cr/js/croppie.js"></script>
+        @*<script src="~/filemanager/js/cloudscribe-unobtrusive-file-drop.min.js"></script>*@
+        <script>
+
+            (function () {
+                document.addEventListener("DOMContentLoaded", function () {
+                    var dropElements = document.querySelectorAll('[data-dropzone]');
+                    var previewTemplate = "<div class=\"dz-preview dz-file-preview\"><div class=\"dz-image\"><img data-dz-thumbnail /></div><div class=\"dz-details collapse\"><div class=\"dz-size collapse\"><span data-dz-size></span></div><div class=\"dz-filename collapse\"><span data-dz-name></span></div></div><div class=\"dz-progress collapse\"><span class=\"dz-upload\" data-dz-uploadprogress></span></div><div class=\"dz-error-message collapse\"><span data-dz-errormessage></span></div><div class=\"dz-success-mark collapse\"></div><div class=\"dz-error-mark collapse\"></div></div>";
+
+                    var dropZoneBuilder = {
+                        buildDropZone: function (div) {
+
+                            var myDropzone = new Dropzone('#' + div.id, {
+                                url: div.dataset.uploadUrl,
+                                method: "post",
+                                headers: {
+                                    'X-CSRFToken': div.dataset.antiForgeryToken
+                                },
+                                maxFiles: 1,
+                                acceptedFiles: div.dataset.acceptedFiles,
+                                previewTemplate: previewTemplate,
+                                createImageThumbnails: false,
+                                clickable: true
+
+                            });
+                            myDropzone.on("sending", function (file, xhr, formData) {
+                                formData.append("maxWidth", div.dataset.resizeWidth);
+                                formData.append("maxHeight", div.dataset.resizeHeight);
+                                if (div.dataset.targetPath) {
+                                    formData.append("targetPath", div.dataset.targetPath);
+                                }
+                                if (div.dataset.createThumb == 'true') {
+                                    formData.append("createThumbnail", div.dataset.createThumb);
+                                }
+                                if (window.DropZoneSendingHandler) {
+                                    window.DropZoneSendingHandler(file, xhr, formData);
+                                }
+                            });
+
+
+                            myDropzone.on("success", function (file, serverResponse) {
+                                myDropzone.removeFile(file);
+                                var fsImageUrl = serverResponse[0].originalUrl;
+                                var resizedUrl = serverResponse[0].resizedUrl;
+                                var thumbUrl = serverResponse[0].thumbUrl;
+                                var resizedImage = div.getElementsByTagName('img')[0];
+                                if (resizedImage) {
+                                    resizedImage.src = resizedUrl;
+                                }
+                                else if (div.dataset.targetResizedImageId) {
+                                    resizedImage = document.getElementById(div.dataset.targetResizedImageId);
+                                    if (resizedImage) {
+                                        resizedImage.src = resizedUrl;
+                                    }
+                                }
+
+                                if (div.dataset.targetThumbImageId) {
+                                    var thumbImage = document.getElementById(div.dataset.targetThumbImageId);
+                                    if (thumbImage) {
+                                        thumbImage.src = thumbUrl;
+                                    }
+                                }
+
+                                if (div.dataset.targetFullsizeImageId) {
+                                    var fsImage = document.getElementById(div.dataset.targetFullsizeImageId);
+                                    if (fsImage) {
+                                        fsImage.src = fsImageUrl;
+                                        if (div.dataset.enableCrop == "true") {
+                                            var c = croppieBuilder.buildCroppie(div);
+                                            myDropzone.on("addedfile", function (file) {
+                                                // if a new file is dropped destroy the old croppie
+                                                c.destroy();
+                                            });
+
+
+                                        }
+                                    }
+                                }
+
+                                if (div.dataset.targetFullsizeInputId) {
+                                    var fsInput = document.getElementById(div.dataset.targetFullsizeInputId);
+                                    if (fsInput) {
+                                        fsInput.value = fsImageUrl;
+                                    }
+                                }
+                                if (div.dataset.targetResizedInputId) {
+                                    var fsInput = document.getElementById(div.dataset.targetResizedInputId);
+                                    if (fsInput) {
+                                        fsInput.value = resizedUrl;
+                                    }
+                                }
+                                if (div.dataset.targetThumbInputId) {
+                                    var fsInput = document.getElementById(div.dataset.targetThumbInputId);
+                                    if (fsInput) {
+                                        fsInput.value = thumbUrl;
+                                    }
+                                }
+
+                                if (window.DropZoneSuccessHandler) {
+                                    window.DropZoneSuccessHandler(file, serverResponse);
+                                }
+
+                            });
+
+                            myDropzone.on("error", function (file, errorMessage) {
+                                console.log(errorMessage);
+                                if (window.DropZoneErrorHandler) {
+                                    window.DropZoneErrorHandler(file, errorMessage);
+                                }
+                            });
+                        }
+                    };
+
+                    var croppieBuilder = {
+                        buildCroppie: function (div) {
+                            var resizeWidth = new Number(div.dataset.resizeWidth);
+                            var resizeHeight = new Number(div.dataset.resizeHeight);
+                            
+
+                            var opts = {
+                                viewport: {
+                                    width: resizeWidth,
+                                    height: resizeHeight
+                                },
+                                boundary: {
+                                    width: resizeWidth + 10,
+                                    height: resizeHeight + 10
+                                }
+                            };
+                            var fsImage = document.getElementById(div.dataset.targetFullsizeImageId);
+                            var c = new Croppie(fsImage, opts);
+
+                            var btnSave = document.getElementById(div.id + "-save-crop");
+                            if (btnSave) {
+                                btnSave.classList.remove("collapse");
+                                btnSave.onclick = function ()
+                                {
+                                    var cropInfo = c.get();
+                                    console.log(cropInfo);
+                                    //TODO: post crop info to server get back
+                                    // new image url and set it
+                                };
+                                //TODO: only need to cancel if re-cropping
+                                //var btnCancel = document.getElementById(div.id + "-cancel-crop");
+                                //if (btnCancel) {
+                                //    btnCancel.classList.remove("collapse");
+                                //    btnCancel.onclick = function () {
+                                //        btnSave.classList.add("collapse");
+                                //        btnCancel.classList.add("collapse");
+                                //        c.destroy();
+                                //    };
+                                //}
+
+                            }
+                            
+
+                            //var btnNewCrop = document.getElementById(div.id + "-new-crop");
+
+
+                            return c;
+
+                        }
+
+                    };
+
+
+                    for (var i = 0; i < dropElements.length; i++) {
+                        var item = dropElements[i];
+                        var firstImg = item.getElementsByTagName('img')[0];
+                        dropZoneBuilder.buildDropZone(item, firstImg);
+                    }
+                });
+            })();
+
+
+        </script>
+
+    }

@@ -73,8 +73,8 @@ td img, video, iframe {
 }
 
 div.cloudscribe-dropzone-standalone {
-    height: 100px;
+    height: 140px;
     width: 140px;
-    border: dashed thin black;
-    padding:10px;
+    border: dashed thin $mybrand;
+    padding: 17px;
 }
