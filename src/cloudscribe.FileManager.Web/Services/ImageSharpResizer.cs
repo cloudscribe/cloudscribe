@@ -90,6 +90,12 @@ namespace cloudscribe.FileManager.Web.Services
             bool imageNeedsResizing = true;
             var targetFilePath = Path.Combine(targetDirectoryPath, newFileName);
 
+            if (File.Exists(targetFilePath))
+            {
+                _log.LogWarning($"resize requested but resized image target path {targetFilePath} already exists, so ignoring");
+                return true;
+            }
+
             try
             {
 
@@ -136,12 +142,12 @@ namespace cloudscribe.FileManager.Web.Services
             }
             catch (OutOfMemoryException ex)
             {
-                _log.LogError(MediaLoggingEvents.RESIZE_OPERATION, ex, ex.Message);
+                _log.LogError($"{ex.Message}:{ex.StackTrace}");
                 return false;
             }
             catch (ArgumentException ex)
             {
-                _log.LogError(MediaLoggingEvents.RESIZE_OPERATION, ex, ex.Message);
+                _log.LogError($"{ex.Message}:{ex.StackTrace}");
                 return false;
             }
 

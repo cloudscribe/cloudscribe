@@ -2,8 +2,9 @@
 {
     public class UploadResult 
     {
-        public string ResizedUrl { get; set; } //= string.Empty;
-        public string OriginalUrl { get; set; }// = string.Empty;
+        public string ResizedUrl { get; set; }
+        public string ThumbUrl { get; set; }
+        public string OriginalUrl { get; set; }
         public string Name { get; set; } //= string.Empty;
 
         /// <summary>

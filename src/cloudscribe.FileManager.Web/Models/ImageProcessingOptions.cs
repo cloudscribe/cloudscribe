@@ -15,6 +15,10 @@
 
         public int WebSizeImageMaxHeight { get; set; } = 550;
 
+        public int ThumbnailImageMaxWidth { get; set; } = 100;
+
+        public int ThumbnailImageMaxHeight { get; set; } = 100;
+
         /// <summary>
         /// since we allow passing in the resize options as url params
         /// we need to have limits on how large or small to allow

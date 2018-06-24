@@ -71,3 +71,10 @@ td img, video, iframe {
 .table td, .table th {
     vertical-align: inherit;
 }
+
+div.cloudscribe-dropzone-standalone {
+    height: 100px;
+    width: 140px;
+    border: dashed thin black;
+    padding:10px;
+}

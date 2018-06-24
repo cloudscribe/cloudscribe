@@ -2,28 +2,24 @@
 // Licensed under the Apache License, Version 2.0. 
 // Author:                  Joe Audette
 // Created:                 2017-02-14
-// Last Modified:           2017-11-25
+// Last Modified:           2018-06-24
 // 
 
-//using cloudscribe.FileManager.Web.Filters;
 using cloudscribe.FileManager.Web.Models;
 using cloudscribe.FileManager.Web.Services;
-using cloudscribe.Web.Common.Helpers;
 using cloudscribe.Web.Common.Extensions;
+using cloudscribe.Web.Common.Helpers;
 using Microsoft.AspNetCore.Antiforgery;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.Features;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.WebUtilities;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
-using Microsoft.Net.Http.Headers;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace cloudscribe.FileManager.Web.Controllers
@@ -168,14 +164,16 @@ namespace cloudscribe.FileManager.Web.Controllers
             var theFiles = HttpContext.Request.Form.Files;
             var imageList = new List<UploadResult>();
             string newFileName = string.Empty;
-
+            var allowRootPath = false;
+            var createThumbnail = false;
             var requestedFilePath = Request.Form["targetPath"].ToString();
             bool? resizeImages = null;
             int? maxWidth = null;
             int? maxHeight = null;
             var smaxHeight = Request.Form["maxHeight"];
             var smaxWidth = Request.Form["maxWidth"];
-            if(!string.IsNullOrWhiteSpace(smaxHeight) && !string.IsNullOrWhiteSpace(smaxWidth))
+            var sCreateThumbnail = Request.Form["createThumbnail"];
+            if (!string.IsNullOrWhiteSpace(smaxHeight) && !string.IsNullOrWhiteSpace(smaxWidth))
             {
                 try
                 {
@@ -185,8 +183,11 @@ namespace cloudscribe.FileManager.Web.Controllers
                 }
                 catch{}
             }
-
-
+            if(!string.IsNullOrWhiteSpace(sCreateThumbnail))
+            {
+                bool.TryParse(sCreateThumbnail, out createThumbnail);
+            }
+            
             foreach (var formFile in theFiles)
             {
                 try
@@ -201,7 +202,8 @@ namespace cloudscribe.FileManager.Web.Controllers
                             maxHeight,
                             requestedFilePath,
                             newFileName,
-                            false
+                            allowRootPath,
+                            createThumbnail
                             ).ConfigureAwait(false);
 
                         imageList.Add(uploadResult);
