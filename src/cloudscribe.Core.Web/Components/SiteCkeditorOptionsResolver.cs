@@ -41,7 +41,8 @@ namespace cloudscribe.Core.Web.Components
             _options.FileBrowseUrl = urlHelper.Action("FileDialog", "FileManager", new { type = "file" });
             _options.ImageBrowseUrl = urlHelper.Action("FileDialog", "FileManager", new { type = "image" });
             _options.DropFileUrl = urlHelper.Action("DropFile", "FileManager");
-           
+            _options.CropFileUrl = urlHelper.Action("CropServerImage", "FileManager");
+
 
             return Task.FromResult(_options);
         }

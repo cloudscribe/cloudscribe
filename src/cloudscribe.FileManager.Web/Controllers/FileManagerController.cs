@@ -225,6 +225,7 @@ namespace cloudscribe.FileManager.Web.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> CropServerImage(
             string sourceFilePath,
+            decimal zoom,
             int offsetX,
             int offsetY,
             int widthToCrop,
@@ -236,6 +237,7 @@ namespace cloudscribe.FileManager.Web.Controllers
             var result = await _fileManagerService.CropFile(
                 _autoUploadOptions,
                 sourceFilePath,
+                zoom,
                 offsetX,
                 offsetY,
                 widthToCrop,

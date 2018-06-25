@@ -7,6 +7,7 @@ using SixLabors.ImageSharp.Formats.Jpeg;
 using SixLabors.ImageSharp.Formats.Png;
 using SixLabors.ImageSharp.PixelFormats;
 using SixLabors.ImageSharp.Processing;
+using SixLabors.ImageSharp.Processing.Drawing;
 using SixLabors.ImageSharp.Processing.Transforms;
 using SixLabors.Primitives;
 using System;
@@ -52,6 +53,7 @@ namespace cloudscribe.FileManager.Web.Services
         public bool CropExistingImage(
             string sourceFilePath,
             string targetFilePath,
+            decimal zoom,
             int offsetX,
             int offsetY,
             int widthToCrop,
@@ -89,13 +91,63 @@ namespace cloudscribe.FileManager.Web.Services
                 {
                     using (Image<Rgba32> fullsizeImage = Image.Load(tmpFileStream))
                     {
-                        var rect = new Rectangle(offsetX, offsetY, widthToCrop, heightToCrop);
+                        var zoomWidth = Convert.ToInt32(zoom * fullsizeImage.Width);
+                        var zoomHeight = Convert.ToInt32(zoom * fullsizeImage.Height);
+
+                        var zoomX= Convert.ToInt32(zoom * offsetX);
+                        var zoomY = Convert.ToInt32(zoom * offsetY);
+                        var zoomCropWidth = Convert.ToInt32(zoom * widthToCrop);
+                        var zoomCropHeight = Convert.ToInt32(zoom * heightToCrop);
+
+                        //https://github.com/SixLabors/ImageSharp/issues/605
+
+                        //var rect = new Rectangle(offsetX, offsetY, widthToCrop, heightToCrop);
+                        //var rect = new Rectangle(zoomX, zoomY, widthToCrop, heightToCrop);
+                        var rect = new Rectangle(offsetX, offsetY, zoomCropWidth, zoomCropHeight);
+                       // var rect = new Rectangle(zoomX, zoomY, zoomCropWidth, zoomCropHeight);
 
                         fullsizeImage
-                                .Mutate(x =>
-                                    x.Crop(rect)
-                                   .Resize(finalWidth, finalWidth)
+                                .Mutate(x => x
+                                   //.Resize(zoomCropWidth, zoomCropHeight)
+                                   //.Resize(finalWidth, finalHeight)
+                                   .Crop(rect)
+                                   //.Resize(widthToCrop, heightToCrop)
+                                   .Resize(finalWidth, finalHeight)
                                 );
+
+                        //var newImage = new Image<Rgba32>(Configuration.Default, widthToCrop, widthToCrop, Rgba32.White);
+                        //int newPositionX = 0, newPositionY = 0;
+
+                        //if (offsetX < 0 && offsetY < 0)
+                        //{
+                        //    newPositionX = Math.Abs(offsetX);
+                        //    newPositionY = Math.Abs(offsetY);
+                        //}
+                        //else if (offsetX > 0 && offsetY > 0)
+                        //{
+                        //    newPositionX = 0;
+                        //    newPositionY = 0;
+                        //}
+                        //else if (offsetX < 0 && offsetY > 0)
+                        //{
+                        //    newPositionX = Math.Abs(offsetX);
+                        //    newPositionY = 0;
+                        //}
+                        //else
+                        //{
+                        //    newPositionX = 0;
+                        //    newPositionY = Math.Abs(offsetY);
+                        //}
+
+                        //newImage.Mutate(bg => bg
+                        //    // Need to make the opacity 100%
+                        //    .DrawImage(fullsizeImage, 1, new Point(newPositionX, newPositionY))
+                        //    .Resize(finalWidth, finalHeight)
+                        //);
+
+
+
+
 
                         var encoder = GetEncoder(sourceFilePath, quality);
 

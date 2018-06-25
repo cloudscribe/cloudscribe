@@ -31,6 +31,7 @@ namespace cloudscribe.FileManager.Web.Models
         bool CropExistingImage(
             string sourceFilePath,
             string targetFilePath,
+            decimal zoom,
             int offsetX,
             int offsetY,
             int widthToCrop,

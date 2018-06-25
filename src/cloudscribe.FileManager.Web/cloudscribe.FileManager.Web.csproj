@@ -35,6 +35,7 @@
     <PackageReference Include="Microsoft.Extensions.FileProviders.Embedded" Version="2.1.0" />
     <PackageReference Include="Microsoft.AspNetCore.Mvc.Razor" Version="2.1.0" />
     <PackageReference Include="SixLabors.ImageSharp" Version="1.0.0-beta0004" />
+    <PackageReference Include="SixLabors.ImageSharp.Drawing" Version="1.0.0-beta0004" />
    
   </ItemGroup>
 
