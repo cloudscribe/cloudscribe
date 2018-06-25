@@ -8,6 +8,7 @@ using SixLabors.ImageSharp.Formats.Png;
 using SixLabors.ImageSharp.PixelFormats;
 using SixLabors.ImageSharp.Processing;
 using SixLabors.ImageSharp.Processing.Transforms;
+using SixLabors.Primitives;
 using System;
 using System.IO;
 
@@ -46,6 +47,80 @@ namespace cloudscribe.FileManager.Web.Services
 
 
             return null;
+        }
+
+        public bool CropExistingImage(
+            string sourceFilePath,
+            string targetFilePath,
+            int offsetX,
+            int offsetY,
+            int widthToCrop,
+            int heightToCrop,
+            int finalWidth,
+            int finalHeight,
+            int quality = 90
+            )
+        {
+            if (string.IsNullOrEmpty(sourceFilePath))
+            {
+                throw new ArgumentException("imageFilePath must be provided");
+            }
+
+            if (string.IsNullOrEmpty(targetFilePath))
+            {
+                throw new ArgumentException("targetFilePath must be provided");
+            }
+
+            if (!File.Exists(sourceFilePath))
+            {
+                _log.LogError($"imageFilePath does not exist {sourceFilePath}");
+                return false;
+            }
+
+            if (File.Exists(targetFilePath))
+            {
+                _log.LogError($"{targetFilePath} already exists");
+                return false;
+            }
+
+            try
+            {
+                using (Stream tmpFileStream = File.OpenRead(sourceFilePath))
+                {
+                    using (Image<Rgba32> fullsizeImage = Image.Load(tmpFileStream))
+                    {
+                        var rect = new Rectangle(offsetX, offsetY, widthToCrop, heightToCrop);
+
+                        fullsizeImage
+                                .Mutate(x =>
+                                    x.Crop(rect)
+                                   .Resize(finalWidth, finalWidth)
+                                );
+
+                        var encoder = GetEncoder(sourceFilePath, quality);
+
+
+                        using (var fs = new FileStream(targetFilePath, FileMode.CreateNew, FileAccess.ReadWrite))
+                        {
+                            fullsizeImage.Save(fs, encoder);
+                        }
+
+                    }
+
+                }
+
+
+
+
+
+            }
+            catch(Exception ex)
+            {
+                _log.LogError($"{ex.Message}:{ex.StackTrace}");
+                return false;
+            }
+
+            return true;
         }
 
         public bool ResizeImage(

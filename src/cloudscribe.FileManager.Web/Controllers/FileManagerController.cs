@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. 
 // Author:                  Joe Audette
 // Created:                 2017-02-14
-// Last Modified:           2018-06-24
+// Last Modified:           2018-06-25
 // 
 
 using cloudscribe.FileManager.Web.Models;
@@ -36,32 +36,32 @@ namespace cloudscribe.FileManager.Web.Controllers
             ILogger<FileManagerController> logger
             )
         {
-            this.fileManagerService = fileManagerService;
-            this.authorizationService = authorizationService;
-            this.allowedFilesRegexBuilder = allowedFilesRegexBuilder;
-            autoUploadOptions = autoUploadOptionsAccessor.Value;
-            this.antiforgery = antiforgery;
-            this.resourceHelper = resourceHelper;
-            log = logger;
+            _fileManagerService = fileManagerService;
+            _authorizationService = authorizationService;
+            _allowedFilesRegexBuilder = allowedFilesRegexBuilder;
+            _autoUploadOptions = autoUploadOptionsAccessor.Value;
+            _antiforgery = antiforgery;
+            _resourceHelper = resourceHelper;
+            _log = logger;
         }
 
-        private FileManagerService fileManagerService;
-        private IAuthorizationService authorizationService;
-        private IFileExtensionValidationRegexBuilder allowedFilesRegexBuilder;
-        private AutomaticUploadOptions autoUploadOptions;
-        private readonly IAntiforgery antiforgery;
-        private IResourceHelper resourceHelper;
+        private FileManagerService _fileManagerService;
+        private IAuthorizationService _authorizationService;
+        private IFileExtensionValidationRegexBuilder _allowedFilesRegexBuilder;
+        private AutomaticUploadOptions _autoUploadOptions;
+        private readonly IAntiforgery _antiforgery;
+        private IResourceHelper _resourceHelper;
         // Get the default form options so that we can use them to set the default limits for
         // request body data
-        private static readonly FormOptions defaultFormOptions = new FormOptions();
-        private ILogger log;
+        private static readonly FormOptions _defaultFormOptions = new FormOptions();
+        private ILogger _log;
 
         [HttpGet]
         //[GenerateAntiforgeryTokenCookieForAjax]
         [Authorize(Policy = "FileManagerPolicy")]
         public async Task<IActionResult> FileDialog(BrowseModel model)
         {
-            model.InitialVirtualPath = await fileManagerService.GetRootVirtualPath().ConfigureAwait(false);
+            model.InitialVirtualPath = await _fileManagerService.GetRootVirtualPath().ConfigureAwait(false);
             model.FileTreeServiceUrl = Url.Action("GetFileTreeJson","FileManager", new { fileType = model.Type});
             model.UploadServiceUrl = Url.Action("Upload", "FileManager");
             model.CreateFolderServiceUrl = Url.Action("CreateFolder", "FileManager");
@@ -69,17 +69,17 @@ namespace cloudscribe.FileManager.Web.Controllers
             model.RenameFolderServiceUrl = Url.Action("RenameFolder", "FileManager");
             model.DeleteFileServiceUrl = Url.Action("DeleteFile", "FileManager");
             model.RenameFileServiceUrl = Url.Action("RenameFile", "FileManager");
-            var authResult = await authorizationService.AuthorizeAsync(User, "FileManagerDeletePolicy");
+            var authResult = await _authorizationService.AuthorizeAsync(User, "FileManagerDeletePolicy");
             model.CanDelete = authResult.Succeeded;
 
             //model.AllowedFileExtensionsRegex = @"/(\.|\/)(gif|GIF|jpg|JPG|jpeg|JPEG|png|PNG|flv|FLV|swf|SWF|wmv|WMV|mp3|MP3|mp4|MP4|m4a|M4A|m4v|M4V|oga|OGA|ogv|OGV|webma|WEBMA|webmv|WEBMV|webm|WEBM|wav|WAV|fla|FLA|tif|TIF|asf|ASF|asx|ASX|avi|AVI|mov|MOV|mpeg|MPEG|mpg|MPG|zip|ZIP|pdf|PDF|doc|DOC|docx|DOCX|xls|XLS|xlsx|XLSX|ppt|PPT|pptx|PPTX|pps|PPS|csv|CSV|txt|TXT|htm|HTM|html|HTML|css|CSS)$/i";
             if (model.Type == "image")
             {
-                model.AllowedFileExtensionsRegex = allowedFilesRegexBuilder.BuildRegex(autoUploadOptions.ImageFileExtensions);
+                model.AllowedFileExtensionsRegex = _allowedFilesRegexBuilder.BuildRegex(_autoUploadOptions.ImageFileExtensions);
             }
             else
             {
-                model.AllowedFileExtensionsRegex = allowedFilesRegexBuilder.BuildRegex(autoUploadOptions.AllowedFileExtensions);
+                model.AllowedFileExtensionsRegex = _allowedFilesRegexBuilder.BuildRegex(_autoUploadOptions.AllowedFileExtensions);
             }
 
             if(HttpContext.Request.IsAjaxRequest())
@@ -131,9 +131,9 @@ namespace cloudscribe.FileManager.Web.Controllers
                 {
                     if (formFile.Length > 0)
                     {
-                        var uploadResult = await fileManagerService.ProcessFile(
+                        var uploadResult = await _fileManagerService.ProcessFile(
                             formFile,
-                            autoUploadOptions,
+                            _autoUploadOptions,
                             resizeImages,
                             maxWidth,
                             maxHeight,
@@ -148,7 +148,7 @@ namespace cloudscribe.FileManager.Web.Controllers
                 }
                 catch (Exception ex)
                 {
-                    log.LogError(MediaLoggingEvents.FILE_PROCCESSING, ex, ex.StackTrace);
+                    _log.LogError(MediaLoggingEvents.FILE_PROCCESSING, ex, ex.StackTrace);
                 }
 
             }
@@ -194,9 +194,9 @@ namespace cloudscribe.FileManager.Web.Controllers
                 {
                     if (formFile.Length > 0)
                     {
-                        var uploadResult = await fileManagerService.ProcessFile(
+                        var uploadResult = await _fileManagerService.ProcessFile(
                             formFile,
-                            autoUploadOptions,
+                            _autoUploadOptions,
                             resizeImages,
                             maxWidth,
                             maxHeight,
@@ -212,12 +212,40 @@ namespace cloudscribe.FileManager.Web.Controllers
                 }
                 catch (Exception ex)
                 {
-                    log.LogError(MediaLoggingEvents.FILE_PROCCESSING, ex, ex.StackTrace);
+                    _log.LogError(MediaLoggingEvents.FILE_PROCCESSING, ex, ex.StackTrace);
                 }
 
             }
 
             return Json(imageList);
+        }
+
+        [HttpPost]
+        [Authorize(Policy = "FileManagerPolicy")]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> CropServerImage(
+            string sourceFilePath,
+            int offsetX,
+            int offsetY,
+            int widthToCrop,
+            int heightToCrop,
+            int finalWidth,
+            int finalHeight
+            )
+        {
+            var result = await _fileManagerService.CropFile(
+                _autoUploadOptions,
+                sourceFilePath,
+                offsetX,
+                offsetY,
+                widthToCrop,
+                heightToCrop,
+                finalWidth,
+                finalHeight
+                );
+
+            return Json(result);
+
         }
 
         // /filemanager/js/
@@ -228,13 +256,13 @@ namespace cloudscribe.FileManager.Web.Controllers
             var baseSegment = "cloudscribe.FileManager.Web.js.";
            
             var requestPath = HttpContext.Request.Path.Value;
-            log.LogDebug(requestPath + " requested");
+            _log.LogDebug(requestPath + " requested");
 
             if (requestPath.Length < "/filemanager/js/".Length) return NotFound();
 
             var seg = requestPath.Substring("/filemanager/js/".Length);
             var ext = Path.GetExtension(requestPath);
-            var mimeType = resourceHelper.GetMimeType(ext);
+            var mimeType = _resourceHelper.GetMimeType(ext);
 
             return GetResult(baseSegment + seg, mimeType);
         }
@@ -247,13 +275,13 @@ namespace cloudscribe.FileManager.Web.Controllers
             var baseSegment = "cloudscribe.FileManager.Web.css.";
            
             var requestPath = HttpContext.Request.Path.Value;
-            log.LogDebug(requestPath + " requested");
+            _log.LogDebug(requestPath + " requested");
 
             if (requestPath.Length < "/filemanager/css/".Length) return NotFound();
 
             var seg = requestPath.Substring("/filemanager/css/".Length);
             var ext = Path.GetExtension(requestPath);
-            var mimeType = resourceHelper.GetMimeType(ext);
+            var mimeType = _resourceHelper.GetMimeType(ext);
 
             return GetResult(baseSegment + seg, mimeType);
         }
@@ -261,15 +289,15 @@ namespace cloudscribe.FileManager.Web.Controllers
         private IActionResult GetResult(string resourceName, string contentType)
         {
             var assembly = typeof(FileManagerController).GetTypeInfo().Assembly;
-            resourceName = resourceHelper.ResolveResourceIdentifier(resourceName);
+            resourceName = _resourceHelper.ResolveResourceIdentifier(resourceName);
             var resourceStream = assembly.GetManifestResourceStream(resourceName);
             if (resourceStream == null)
             {
-                log.LogError("resource not found for " + resourceName);
+                _log.LogError("resource not found for " + resourceName);
                 return NotFound();
             }
 
-            log.LogDebug("resource found for " + resourceName);
+            _log.LogDebug("resource found for " + resourceName);
 
             return new FileStreamResult(resourceStream, contentType);
         }
@@ -336,7 +364,7 @@ namespace cloudscribe.FileManager.Web.Controllers
         [ValidateAntiForgeryToken] 
         public async Task<IActionResult> CreateFolder(string currentVirtualPath, string newFolderName)
         {
-            var result = await fileManagerService.CreateFolder(currentVirtualPath, newFolderName).ConfigureAwait(false);
+            var result = await _fileManagerService.CreateFolder(currentVirtualPath, newFolderName).ConfigureAwait(false);
             return Json(result);
 
         }
@@ -346,7 +374,7 @@ namespace cloudscribe.FileManager.Web.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteFolder(string folderToDelete)
         {
-            var result = await fileManagerService.DeleteFolder(folderToDelete).ConfigureAwait(false);
+            var result = await _fileManagerService.DeleteFolder(folderToDelete).ConfigureAwait(false);
             return Json(result);
 
         }
@@ -356,7 +384,7 @@ namespace cloudscribe.FileManager.Web.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> RenameFolder(string folderToRename, string newNameSegment)
         {
-            var result = await fileManagerService.RenameFolder(folderToRename, newNameSegment).ConfigureAwait(false);
+            var result = await _fileManagerService.RenameFolder(folderToRename, newNameSegment).ConfigureAwait(false);
             return Json(result);
 
         }
@@ -366,7 +394,7 @@ namespace cloudscribe.FileManager.Web.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteFile(string fileToDelete)
         {
-            var result = await fileManagerService.DeleteFile(fileToDelete).ConfigureAwait(false);
+            var result = await _fileManagerService.DeleteFile(fileToDelete).ConfigureAwait(false);
             return Json(result);
 
         }
@@ -376,7 +404,7 @@ namespace cloudscribe.FileManager.Web.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> RenameFile(string fileToRename, string newNameSegment)
         {
-            var result = await fileManagerService.RenameFile(fileToRename, newNameSegment).ConfigureAwait(false);
+            var result = await _fileManagerService.RenameFile(fileToRename, newNameSegment).ConfigureAwait(false);
             return Json(result);
 
         }
@@ -393,7 +421,7 @@ namespace cloudscribe.FileManager.Web.Controllers
         [Authorize(Policy = "FileManagerPolicy")]
         public async Task<IActionResult> GetFileTreeJson(string fileType = "", string virtualStartPath = "")
         {
-            var list = await fileManagerService.GetFileTree(fileType, virtualStartPath).ConfigureAwait(false);
+            var list = await _fileManagerService.GetFileTree(fileType, virtualStartPath).ConfigureAwait(false);
 
             return Json(list);
         }

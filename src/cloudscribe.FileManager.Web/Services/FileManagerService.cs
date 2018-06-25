@@ -92,6 +92,131 @@ namespace cloudscribe.FileManager.Web.Services
             return options.WebSizeImageMaxWidth;
         }
 
+        public async Task<UploadResult> CropFile(
+            ImageProcessingOptions options,
+            string sourceFilePath,
+            int offsetX,
+            int offsetY,
+            int widthToCrop,
+            int heightToCrop,
+            int finalWidth,
+            int finalHeight
+            )
+        {
+            if(string.IsNullOrWhiteSpace(sourceFilePath))
+            {
+                _log.LogError($"sourceFilePath not provided for crop");
+                return new UploadResult
+                {
+                    ErrorMessage = _sr["There was an error logged during file processing"]
+
+                };
+            }
+
+            await EnsureProjectSettings().ConfigureAwait(false);
+
+            string currentFsPath = _rootPath.RootFileSystemPath;
+            string currentVirtualPath = _rootPath.RootVirtualPath;
+            string[] virtualSegments = options.ImageDefaultVirtualSubPath.Split('/');
+
+            if (!sourceFilePath.StartsWith(_rootPath.RootVirtualPath))
+            {
+                _log.LogError($"{sourceFilePath} not a sub path of root path {_rootPath.RootVirtualPath}");
+                return new UploadResult
+                {
+                    ErrorMessage = _sr["There was an error logged during file processing"]
+
+                };
+            }
+
+            var fileToCropName = Path.GetFileName(sourceFilePath);
+            var fileToCropNameWithooutExtenstion = Path.GetFileNameWithoutExtension(sourceFilePath);
+            var ext = Path.GetExtension(sourceFilePath);
+            var mimeType = GetMimeType(ext);
+            var isImage = IsWebImageFile(ext);
+            if(!isImage)
+            {
+                _log.LogError($"{sourceFilePath} is not not an image file");
+                return new UploadResult
+                {
+                    ErrorMessage = _sr["There was an error logged during file processing"]
+
+                };
+            }
+
+            var fileToCropFolderVPath = sourceFilePath.Replace(fileToCropName, "");
+
+            var virtualSubPath = fileToCropFolderVPath.Substring(_rootPath.RootVirtualPath.Length);
+            var segments = virtualSubPath.Split('/');
+
+            if(segments.Length <= 0)
+            {
+                _log.LogError($"{sourceFilePath} not found");
+                return new UploadResult
+                {
+                    ErrorMessage = _sr["There was an error logged during file processing"]
+
+                };
+            }
+
+           
+            var requestedFsPath = Path.Combine(_rootPath.RootFileSystemPath, Path.Combine(segments));
+            if (!Directory.Exists(requestedFsPath))
+            {
+                _log.LogError("directory not found for currentPath " + requestedFsPath);
+                return new UploadResult
+                {
+                    ErrorMessage = _sr["There was an error logged during file processing"]
+
+                };
+            }
+            
+            currentVirtualPath = virtualSubPath;
+            virtualSegments = segments;
+            currentFsPath = Path.Combine(currentFsPath, Path.Combine(virtualSegments));
+            var sourceFsPath = Path.Combine(currentFsPath, fileToCropName);
+            var cropNameSegment = "-crop";
+            int previousCropCount = 0;
+            var targetFsPath = Path.Combine(currentFsPath, fileToCropNameWithooutExtenstion + cropNameSegment + ext);
+            while(File.Exists(targetFsPath))
+            {
+                previousCropCount += 1;
+                targetFsPath = Path.Combine(currentFsPath, fileToCropNameWithooutExtenstion + cropNameSegment + previousCropCount.ToString() + ext);
+            };
+
+
+            var didCrop = _imageResizer.CropExistingImage(
+                sourceFsPath,
+                targetFsPath,
+                offsetX,
+                offsetY,
+                widthToCrop,
+                heightToCrop,
+                finalWidth,
+                finalHeight
+                );
+
+            if(!didCrop)
+            {
+                _log.LogError($"failed to crop image {requestedFsPath}");
+                return new UploadResult
+                {
+                    ErrorMessage = _sr["There was an error logged during file processing"]
+
+                };
+            }
+
+
+            return new UploadResult
+            {
+                OriginalUrl = sourceFilePath,
+                ResizedUrl = currentVirtualPath + "/" + Path.GetFileName(targetFsPath)
+
+            };
+
+        }
+
+
         public async Task<UploadResult> ProcessFile(
             IFormFile formFile,
             ImageProcessingOptions options,
@@ -109,7 +234,7 @@ namespace cloudscribe.FileManager.Web.Services
             string currentFsPath = _rootPath.RootFileSystemPath;
             string currentVirtualPath = _rootPath.RootVirtualPath;
             string[] virtualSegments = options.ImageDefaultVirtualSubPath.Split('/');
-            bool doResize = resizeImages.HasValue ? resizeImages.Value : options.AutoResize;
+            bool doResize = resizeImages ?? options.AutoResize;
 
             if ((!string.IsNullOrEmpty(requestedVirtualPath)) && (requestedVirtualPath.StartsWith(_rootPath.RootVirtualPath)))
             {
