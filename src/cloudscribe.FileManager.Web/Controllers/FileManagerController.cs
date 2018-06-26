@@ -183,6 +183,17 @@ namespace cloudscribe.FileManager.Web.Controllers
                 }
                 catch{}
             }
+           
+            var sResize = Request.Form["resizeImage"];
+            if(!string.IsNullOrWhiteSpace(sResize))
+            {
+                var autoResize = true;
+                bool.TryParse(sResize, out autoResize);
+                if (!autoResize) { resizeImages = false; }
+            }
+           
+            
+
             if(!string.IsNullOrWhiteSpace(sCreateThumbnail))
             {
                 bool.TryParse(sCreateThumbnail, out createThumbnail);
@@ -225,21 +236,23 @@ namespace cloudscribe.FileManager.Web.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> CropServerImage(
             string sourceFilePath,
-            decimal zoom,
-            int offsetX,
-            int offsetY,
+            int x1,
+            int y1,
             int widthToCrop,
             int heightToCrop,
             int finalWidth,
             int finalHeight
             )
         {
+
+            //var widthToCrop = x2 - x1;
+            //var heightToCrop = y2 - y1;
+
             var result = await _fileManagerService.CropFile(
                 _autoUploadOptions,
                 sourceFilePath,
-                zoom,
-                offsetX,
-                offsetY,
+                x1,
+                y1,
                 widthToCrop,
                 heightToCrop,
                 finalWidth,

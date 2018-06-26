@@ -63,6 +63,7 @@
             fileManager.clearServerCropImage();
         },
         setCurrentDirectory: function (virtualPath) {
+            //console.log(virtualPath);
             $("#newFolderCurrentDir").val(virtualPath);
             $("#hdnCurrentVirtualPath").val(virtualPath);
             $("#uploadCurrentDir").val(virtualPath);
@@ -1020,6 +1021,7 @@
                 $.ajax({
                     method: "POST",
                     url: fileManager.uploadApiUrl,
+                    headers: fileManager.headers,
                     data: formData,
                     processData: false,
                     contentType:false

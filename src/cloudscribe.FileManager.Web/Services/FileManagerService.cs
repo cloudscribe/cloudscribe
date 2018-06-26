@@ -95,7 +95,6 @@ namespace cloudscribe.FileManager.Web.Services
         public async Task<UploadResult> CropFile(
             ImageProcessingOptions options,
             string sourceFilePath,
-            decimal zoom,
             int offsetX,
             int offsetY,
             int widthToCrop,
@@ -189,7 +188,6 @@ namespace cloudscribe.FileManager.Web.Services
             var didCrop = _imageResizer.CropExistingImage(
                 sourceFsPath,
                 targetFsPath,
-                zoom,
                 offsetX,
                 offsetY,
                 widthToCrop,
