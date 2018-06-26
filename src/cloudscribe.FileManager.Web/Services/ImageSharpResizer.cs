@@ -8,9 +8,9 @@ using SixLabors.ImageSharp.Formats.Png;
 using SixLabors.ImageSharp.PixelFormats;
 using SixLabors.ImageSharp.Processing;
 using SixLabors.ImageSharp.Processing.Transforms;
+using SixLabors.Primitives;
 using System;
 using System.IO;
-
 
 namespace cloudscribe.FileManager.Web.Services
 {
@@ -36,7 +36,6 @@ namespace cloudscribe.FileManager.Web.Services
                     {
                         return new ImageSize(image.Width, image.Height);
                     }
-
                 }
             }
             catch (Exception ex)
@@ -44,8 +43,74 @@ namespace cloudscribe.FileManager.Web.Services
                 _log.LogError(ex.Message + " " + ex.StackTrace);
             }
 
-
             return null;
+        }
+
+        public bool CropExistingImage(
+            string sourceFilePath,
+            string targetFilePath,
+            int offsetX,
+            int offsetY,
+            int widthToCrop,
+            int heightToCrop,
+            int finalWidth,
+            int finalHeight,
+            int quality = 90
+            )
+        {
+            if (string.IsNullOrEmpty(sourceFilePath))
+            {
+                throw new ArgumentException("imageFilePath must be provided");
+            }
+
+            if (string.IsNullOrEmpty(targetFilePath))
+            {
+                throw new ArgumentException("targetFilePath must be provided");
+            }
+
+            if (!File.Exists(sourceFilePath))
+            {
+                _log.LogError($"imageFilePath does not exist {sourceFilePath}");
+                return false;
+            }
+
+            if (File.Exists(targetFilePath))
+            {
+                _log.LogError($"{targetFilePath} already exists");
+                return false;
+            }
+
+            try
+            {
+                using (Stream tmpFileStream = File.OpenRead(sourceFilePath))
+                {
+                    using (Image<Rgba32> fullsizeImage = Image.Load(tmpFileStream))
+                    { 
+                        var rect = new Rectangle(offsetX, offsetY, widthToCrop, heightToCrop);
+                       
+                        fullsizeImage
+                                .Mutate(x => x
+                                   .Crop(rect)
+                                   .Resize(finalWidth, finalHeight)
+                                );
+
+                        var encoder = GetEncoder(sourceFilePath, quality);
+
+                        using (var fs = new FileStream(targetFilePath, FileMode.CreateNew, FileAccess.ReadWrite))
+                        {
+                            fullsizeImage.Save(fs, encoder);
+                        }
+
+                    }
+                }
+            }
+            catch(Exception ex)
+            {
+                _log.LogError($"{ex.Message}:{ex.StackTrace}");
+                return false;
+            }
+
+            return true;
         }
 
         public bool ResizeImage(
@@ -90,15 +155,18 @@ namespace cloudscribe.FileManager.Web.Services
             bool imageNeedsResizing = true;
             var targetFilePath = Path.Combine(targetDirectoryPath, newFileName);
 
+            if (File.Exists(targetFilePath))
+            {
+                _log.LogWarning($"resize requested but resized image target path {targetFilePath} already exists, so ignoring");
+                return true;
+            }
+
             try
             {
-
                 using (Stream tmpFileStream = File.OpenRead(sourceFilePath))
                 {
-
                     using (Image<Rgba32> fullsizeImage = Image.Load(tmpFileStream))
-                    {
-                        
+                    {         
                         scaleFactor = GetScaleFactor(fullsizeImage.Width, fullsizeImage.Height, maxWidth, maxHeight);
                         if (!allowEnlargement)
                         {
@@ -119,7 +187,6 @@ namespace cloudscribe.FileManager.Web.Services
 
                             var encoder = GetEncoder(sourceFilePath, quality);
                             
-
                             using (var fs = new FileStream(targetFilePath, FileMode.CreateNew, FileAccess.ReadWrite))
                             {
                                 fullsizeImage.Save(fs, encoder);
@@ -129,24 +196,22 @@ namespace cloudscribe.FileManager.Web.Services
                     }
 
                         
-
                 } //end using stream
 
 
             }
             catch (OutOfMemoryException ex)
             {
-                _log.LogError(MediaLoggingEvents.RESIZE_OPERATION, ex, ex.Message);
+                _log.LogError($"{ex.Message}:{ex.StackTrace}");
                 return false;
             }
             catch (ArgumentException ex)
             {
-                _log.LogError(MediaLoggingEvents.RESIZE_OPERATION, ex, ex.Message);
+                _log.LogError($"{ex.Message}:{ex.StackTrace}");
                 return false;
             }
 
             return imageNeedsResizing;
-
 
         }
 
@@ -164,8 +229,10 @@ namespace cloudscribe.FileManager.Web.Services
                 //    return SKEncodedImageFormat.Webp;
             }
 
-            var j =  new JpegEncoder();
-            j.Quality = quality;
+            var j = new JpegEncoder
+            {
+                Quality = quality
+            };
             return j;
         }
 

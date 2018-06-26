@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. 
 // Author:                  Joe Audette
 // Created:                 2017-02-15
-// Last Modified:           2018-06-23
+// Last Modified:           2018-06-24
 // 
 
 using cloudscribe.FileManager.Web.Models;
@@ -90,6 +90,273 @@ namespace cloudscribe.FileManager.Web.Services
             }
 
             return options.WebSizeImageMaxWidth;
+        }
+
+        public async Task<UploadResult> CropFile(
+            ImageProcessingOptions options,
+            string sourceFilePath,
+            int offsetX,
+            int offsetY,
+            int widthToCrop,
+            int heightToCrop,
+            int finalWidth,
+            int finalHeight
+            )
+        {
+            if(string.IsNullOrWhiteSpace(sourceFilePath))
+            {
+                _log.LogError($"sourceFilePath not provided for crop");
+                return new UploadResult
+                {
+                    ErrorMessage = _sr["There was an error logged during file processing"]
+
+                };
+            }
+
+            await EnsureProjectSettings().ConfigureAwait(false);
+
+            string currentFsPath = _rootPath.RootFileSystemPath;
+            string currentVirtualPath = _rootPath.RootVirtualPath;
+            string[] virtualSegments = options.ImageDefaultVirtualSubPath.Split('/');
+
+            if (!sourceFilePath.StartsWith(_rootPath.RootVirtualPath))
+            {
+                _log.LogError($"{sourceFilePath} not a sub path of root path {_rootPath.RootVirtualPath}");
+                return new UploadResult
+                {
+                    ErrorMessage = _sr["There was an error logged during file processing"]
+
+                };
+            }
+
+            var fileToCropName = Path.GetFileName(sourceFilePath);
+            var fileToCropNameWithooutExtenstion = Path.GetFileNameWithoutExtension(sourceFilePath);
+            var ext = Path.GetExtension(sourceFilePath);
+            var mimeType = GetMimeType(ext);
+            var isImage = IsWebImageFile(ext);
+            if(!isImage)
+            {
+                _log.LogError($"{sourceFilePath} is not not an image file");
+                return new UploadResult
+                {
+                    ErrorMessage = _sr["There was an error logged during file processing"]
+
+                };
+            }
+
+            var fileToCropFolderVPath = sourceFilePath.Replace(fileToCropName, "");
+
+            var virtualSubPath = fileToCropFolderVPath.Substring(_rootPath.RootVirtualPath.Length);
+            var segments = virtualSubPath.Split('/');
+
+            if(segments.Length <= 0)
+            {
+                _log.LogError($"{sourceFilePath} not found");
+                return new UploadResult
+                {
+                    ErrorMessage = _sr["There was an error logged during file processing"]
+
+                };
+            }
+
+           
+            var requestedFsPath = Path.Combine(_rootPath.RootFileSystemPath, Path.Combine(segments));
+            if (!Directory.Exists(requestedFsPath))
+            {
+                _log.LogError("directory not found for currentPath " + requestedFsPath);
+                return new UploadResult
+                {
+                    ErrorMessage = _sr["There was an error logged during file processing"]
+
+                };
+            }
+            
+            currentVirtualPath = virtualSubPath;
+            virtualSegments = segments;
+            currentFsPath = Path.Combine(currentFsPath, Path.Combine(virtualSegments));
+            var sourceFsPath = Path.Combine(currentFsPath, fileToCropName);
+            var cropNameSegment = "-crop";
+            int previousCropCount = 0;
+            var targetFsPath = Path.Combine(currentFsPath, fileToCropNameWithooutExtenstion + cropNameSegment + ext);
+            while(File.Exists(targetFsPath))
+            {
+                previousCropCount += 1;
+                targetFsPath = Path.Combine(currentFsPath, fileToCropNameWithooutExtenstion + cropNameSegment + previousCropCount.ToString() + ext);
+            };
+
+
+            var didCrop = _imageResizer.CropExistingImage(
+                sourceFsPath,
+                targetFsPath,
+                offsetX,
+                offsetY,
+                widthToCrop,
+                heightToCrop,
+                finalWidth,
+                finalHeight
+                );
+
+            if(!didCrop)
+            {
+                _log.LogError($"failed to crop image {requestedFsPath}");
+                return new UploadResult
+                {
+                    ErrorMessage = _sr["There was an error logged during file processing"]
+
+                };
+            }
+
+
+            return new UploadResult
+            {
+                OriginalUrl = sourceFilePath,
+                ResizedUrl = currentVirtualPath + Path.GetFileName(targetFsPath)
+
+            };
+
+        }
+
+
+        public async Task<UploadResult> ProcessFile(
+            IFormFile formFile,
+            ImageProcessingOptions options,
+            bool? resizeImages,
+            int? maxWidth,
+            int? maxHeight,
+            string requestedVirtualPath = "",
+            string newFileName = "",
+            bool allowRootPath = true,
+            bool createThumbnail = false
+            )
+        {
+            await EnsureProjectSettings().ConfigureAwait(false);
+
+            string currentFsPath = _rootPath.RootFileSystemPath;
+            string currentVirtualPath = _rootPath.RootVirtualPath;
+            string[] virtualSegments = options.ImageDefaultVirtualSubPath.Split('/');
+            bool doResize = resizeImages ?? options.AutoResize;
+
+            if ((!string.IsNullOrEmpty(requestedVirtualPath)) && (requestedVirtualPath.StartsWith(_rootPath.RootVirtualPath)))
+            {
+
+                var virtualSubPath = requestedVirtualPath.Substring(_rootPath.RootVirtualPath.Length);
+                var segments = virtualSubPath.Split('/');
+                if (segments.Length > 0)
+                {
+                    var requestedFsPath = Path.Combine(_rootPath.RootFileSystemPath, Path.Combine(segments));
+                    if (!Directory.Exists(requestedFsPath))
+                    {
+                        _log.LogError("directory not found for currentPath " + requestedFsPath);
+                    }
+                    else
+                    {
+                        currentVirtualPath = requestedVirtualPath;
+                        virtualSegments = segments;
+                        currentFsPath = Path.Combine(currentFsPath, Path.Combine(virtualSegments));
+                    }
+                }
+
+            }
+            else
+            {
+
+                // only ensure the folders if no currentDir provided,
+                // if it is provided it must be an existing path
+                // options.ImageDefaultVirtualSubPath might not exist on first upload so need to ensure it
+                if (!allowRootPath)
+                {
+                    currentVirtualPath = currentVirtualPath + options.ImageDefaultVirtualSubPath;
+                    currentFsPath = Path.Combine(currentFsPath, Path.Combine(virtualSegments));
+                    EnsureSubFolders(_rootPath.RootFileSystemPath, virtualSegments);
+                }
+
+            }
+            string newName;
+            if (!string.IsNullOrEmpty(newFileName))
+            {
+                newName = _nameRules.GetCleanFileName(newFileName);
+            }
+            else
+            {
+                newName = _nameRules.GetCleanFileName(Path.GetFileName(formFile.FileName));
+            }
+
+            var newUrl = currentVirtualPath + "/" + newName;
+            var fsPath = Path.Combine(currentFsPath, newName);
+
+            var ext = Path.GetExtension(newName);
+            var webSizeName = Path.GetFileNameWithoutExtension(newName) + "-ws" + ext;
+
+            string webUrl = currentVirtualPath + "/" + webSizeName;
+
+            var thumbSizeName = Path.GetFileNameWithoutExtension(newName) + "-thumb" + ext;
+            string thumbUrl = currentVirtualPath + "/" + thumbSizeName;
+
+            var didResize = false;
+            var didCreateThumb = false;
+
+            try
+            {
+                using (var stream = new FileStream(fsPath, FileMode.Create))
+                {
+                    await formFile.CopyToAsync(stream);
+                }
+                var mimeType = GetMimeType(ext);
+
+                if ((doResize) && IsWebImageFile(ext))
+                {
+
+
+                    int resizeWidth = GetMaxWidth(maxWidth, options);
+                    int resizeHeight = GetMaxWidth(maxHeight, options);
+
+                    didResize = _imageResizer.ResizeImage(
+                        fsPath,
+                        currentFsPath,
+                        webSizeName,
+                        mimeType,
+                        resizeWidth,
+                        resizeHeight,
+                        options.AllowEnlargement
+                        );
+                }
+
+                if (createThumbnail)
+                {
+                    didCreateThumb = _imageResizer.ResizeImage(
+                        fsPath,
+                        currentFsPath,
+                        thumbSizeName,
+                        mimeType,
+                        options.ThumbnailImageMaxWidth,
+                        options.ThumbnailImageMaxHeight,
+                        false
+                        );
+                }
+
+
+            }
+            catch (Exception ex)
+            {
+                _log.LogError($"{ex.Message}:{ex.StackTrace}");
+
+                return new UploadResult
+                {
+                    ErrorMessage = _sr["There was an error logged during file processing"]
+
+                };
+            }
+
+            return new UploadResult
+            {
+                OriginalUrl = newUrl,
+                ResizedUrl = didResize ? webUrl : string.Empty,
+                ThumbUrl = didCreateThumb ? thumbUrl : string.Empty,
+                Name = newName,
+                Length = formFile.Length,
+                Type = formFile.ContentType
+
+            };
         }
 
         public async Task<string> GetRootVirtualPath()
@@ -482,124 +749,7 @@ namespace cloudscribe.FileManager.Web.Services
 
         }
 
-        public async Task<UploadResult> ProcessFile(
-            IFormFile formFile,
-            ImageProcessingOptions options,
-            bool? resizeImages,
-            int? maxWidth,
-            int? maxHeight,
-            string requestedVirtualPath = "",
-            string newFileName = "",
-            bool allowRootPath = true
-            )
-        {
-            await EnsureProjectSettings().ConfigureAwait(false);
-
-            string currentFsPath = _rootPath.RootFileSystemPath;
-            string currentVirtualPath = _rootPath.RootVirtualPath;
-            string[] virtualSegments = options.ImageDefaultVirtualSubPath.Split('/');
-            bool doResize = resizeImages.HasValue ? resizeImages.Value : options.AutoResize;
-
-            if ((!string.IsNullOrEmpty(requestedVirtualPath)) && (requestedVirtualPath.StartsWith(_rootPath.RootVirtualPath)))
-            {
-
-                var virtualSubPath = requestedVirtualPath.Substring(_rootPath.RootVirtualPath.Length);
-                var segments = virtualSubPath.Split('/');
-                if(segments.Length > 0)
-                {
-                    var requestedFsPath = Path.Combine(_rootPath.RootFileSystemPath, Path.Combine(segments));
-                    if (!Directory.Exists(requestedFsPath))
-                    {
-                        _log.LogError("directory not found for currentPath " + requestedFsPath);
-                    }
-                    else
-                    {
-                        currentVirtualPath = requestedVirtualPath;
-                        virtualSegments = segments;
-                        currentFsPath = Path.Combine(currentFsPath, Path.Combine(virtualSegments));
-                    }
-                }    
-                
-            }
-            else
-            {
-
-                // only ensure the folders if no currentDir provided,
-                // if it is provided it must be an existing path
-                // options.ImageDefaultVirtualSubPath might not exist on first upload so need to ensure it
-                if(!allowRootPath)
-                {
-                    currentVirtualPath = currentVirtualPath + options.ImageDefaultVirtualSubPath;
-                    currentFsPath = Path.Combine(currentFsPath, Path.Combine(virtualSegments));
-                    EnsureSubFolders(_rootPath.RootFileSystemPath, virtualSegments);
-                }
-                
-            }
-            string newName;
-            if (!string.IsNullOrEmpty(newFileName))
-            {
-                newName = _nameRules.GetCleanFileName(newFileName);
-            }
-            else
-            {
-                newName = _nameRules.GetCleanFileName(Path.GetFileName(formFile.FileName));
-            }
-            
-            var newUrl = currentVirtualPath + "/" + newName;
-            var fsPath = Path.Combine(currentFsPath, newName);
-
-            var ext = Path.GetExtension(newName);
-            var webSizeName = Path.GetFileNameWithoutExtension(newName) + "-ws" + ext;
-            var webFsPath = Path.Combine(currentFsPath, webSizeName);
-            string webUrl = string.Empty;
-            var didResize = false;
-
-            try
-            {
-                using (var stream = new FileStream(fsPath, FileMode.Create))
-                {
-                    await formFile.CopyToAsync(stream);
-                }
-
-                if ((doResize) && IsWebImageFile(ext))
-                {
-                    var mimeType = GetMimeType(ext);
-                    webUrl = currentVirtualPath + "/" + webSizeName;
-                    int resizeWidth = GetMaxWidth(maxWidth, options);
-                    int resizeHeight = GetMaxWidth(maxHeight, options);
-
-                    didResize = _imageResizer.ResizeImage(
-                        fsPath,
-                        currentFsPath,
-                        webSizeName,
-                        mimeType,
-                        resizeWidth,
-                        resizeHeight,
-                        options.AllowEnlargement
-                        );
-                }
-
-                return new UploadResult
-                {
-                    OriginalUrl = newUrl,
-                    ResizedUrl = didResize? webUrl : string.Empty,
-                    Name = newName,
-                    Length = formFile.Length,
-                    Type = formFile.ContentType
-
-                };
-            }
-            catch (Exception ex)
-            {
-                _log.LogError(MediaLoggingEvents.FILE_PROCCESSING, ex, ex.StackTrace);
-
-                return new UploadResult
-                {
-                    ErrorMessage = _sr["There was an error logged during file processing"]
-
-                };
-            }
-        }
+        
 
 
         public async Task<List<Node>> GetFileTree(string fileType, string virtualStartPath)

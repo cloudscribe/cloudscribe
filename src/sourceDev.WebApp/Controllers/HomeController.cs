@@ -83,6 +83,13 @@ namespace sourceDev.WebApp.Controllers
             return View();
         }
 
+        public IActionResult Test2()
+        {
+
+
+            return View();
+        }
+
         [HttpGet]
         public IActionResult TestEmail()
         {

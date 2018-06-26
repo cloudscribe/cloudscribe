@@ -1,0 +1,12 @@
+.cs-crop-container {
+	display: inline-block;
+}
+.cs-crop-container .croppie-container .cr-boundary {
+	margin: 0;
+}
+div.cloudscribe-dropzone-standalone {
+	height: 130px;
+	width: 150px;
+	border: dashed thin black;
+	padding: 17px;
+}

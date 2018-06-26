@@ -1,0 +1,489 @@
+﻿@using Microsoft.AspNetCore.Antiforgery
+@inject IAntiforgery antiforgery
+@inject ICkeditorOptionsResolver editorOptionsResolver
+@{
+    ViewData["Title"] = "Test2";
+    var tokens = antiforgery.GetAndStoreTokens(Context);
+    var ckOptions = await editorOptionsResolver.GetCkeditorOptions();
+}
+@section Styles {
+    <link rel="stylesheet" href="/cr/css/dropzone.min.css" />
+    <link rel="stylesheet" href="/cr/css/croppie.min.css" />
+    <link rel="stylesheet" href="/cr/css/croppie-cloudscribe.css" />
+    @*<style>
+
+        .cs-crop-container {
+            display: inline-block;
+        }
+
+            .cs-crop-container .croppie-container .cr-boundary {
+                margin: 0;
+            }
+
+        div.cloudscribe-dropzone-standalone {
+            height: 130px;
+            width: 150px;
+            border: dashed thin black;
+            padding: 17px;
+        }
+    </style>*@
+}
+
+<h2>Test2</h2>
+
+
+@*<div id="dz1"
+         data-dropzone=""
+         data-upload-url="@Url.Action("DropFile", "FileManager")"
+         data-anti-forgery-token="@tokens.RequestToken"
+         data-target-path="/media/folder2"
+         data-target-fullsize-input-id="imgUrl1"
+         data-target-resized-input-id="imgUrl1Resized"
+         data-target-thumb-input-id="imgUrl1Thumb"
+         data-resize-width="250"
+         data-resize-height="180"
+         data-create-thumb="true"
+         data-accepted-files="image/*">
+        <img src="/cr/images/240x180.png" />
+    </div>
+    <input class="form-control" id="imgUrl1" type="text" />
+    <input class="form-control" id="imgUrl1Resized" type="text" />
+    <input class="form-control" id="imgUrl1Thumb" type="text" />
+    <p>Hey now</p>*@
+
+<div class="d-flex align-items-stretch">
+    <div class="cs-crop-container">
+        <img id="dz1Image" src="/cr/images/550x412.png" />
+    </div>
+    <div class="d-flex flex-column">
+        <div id="dz1" class="cloudscribe-dropzone-standalone"
+             data-dropzone=""
+             data-upload-url="@Url.Action("DropFile", "FileManager")"
+             data-anti-forgery-token="@tokens.RequestToken"
+             data-file-browse-url="@ckOptions.ImageBrowseUrl"
+             data-file-crop-url="@ckOptions.CropFileUrl"
+             data-target-path="/media/folder2"
+             data-target-fullsize-input-id="imgUrl1"
+             data-target-resized-input-id="imgUrl1Resized"
+             data-target-thumb-input-id="imgUrl1Thumb"
+             data-target-fullsize-image-id="dz1Image"
+             data-target-resized-image-idx="dz1ImageResized"
+             data-enable-browse-server="true"
+             data-enable-crop="true"
+             data-target-thumb-image-idx="dz1ImageThumb"
+             data-resize-width="550"
+             data-resize-height="412"
+             data-create-thumb="false"
+             data-resize-image="true"
+             data-accepted-files="image/*">
+            Drop file here or click to browse device for file.
+        </div>
+        <div class="pl-1 pt-1">
+            <div class="d-flex flex-column">
+                <button id="dz1-browse-server" class="mb-1 btn btn-primary collapse">Browse Server <i class="fas fa-search" aria-hidden="true"></i></button>
+                <button id="dz1-save-crop" class="mb-1 btn btn-primary collapse">Save Crop <i class="far fa-save" aria-hidden="true"></i></button>
+            </div>
+        </div>
+    </div>
+</div>
+<input class="form-control" id="imgUrl1" type="text" />
+<input class="form-control" id="imgUrl1Resized" type="text" />
+<input class="form-control" id="imgUrl1Thumb" type="text" />
+
+<p>Hey Now</p>
+
+
+<div class="d-flex align-items-stretch">
+    <div class="cs-crop-container">
+        <img id="dz2Image" src="/cr/images/250x180.png" />
+    </div>
+    <div class="d-flex flex-column">
+        <div id="dz2" class="cloudscribe-dropzone-standalone"
+             data-dropzone=""
+             data-upload-url="@Url.Action("DropFile", "FileManager")"
+             data-anti-forgery-token="@tokens.RequestToken"
+             data-file-browse-url="@ckOptions.ImageBrowseUrl"
+             data-file-crop-url="@ckOptions.CropFileUrl"
+             data-target-path="/media/folder2"
+             data-target-fullsize-input-id="imgUrl2"
+             data-target-resized-input-id="imgUrl2Resized"
+             data-target-thumb-input-id="imgUrl2Thumb"
+             data-target-fullsize-image-id="dz2Image"
+             data-target-resized-image-idx="dz2ImageResized"
+             data-enable-browse-server="true"
+             data-enable-crop="true"
+             data-target-thumb-image-idx="dz2ImageThumb"
+             data-resize-width="250"
+             data-resize-height="180"
+             data-create-thumb="true"
+             data-accepted-files="image/*">
+            Drop file here or click to browse device for file.
+        </div>
+        <div class="pl-1 pt-1">
+            <div class="d-flex flex-column">
+                <button id="dz2-browse-server" class="mb-1 btn btn-primary collapse">Browse Server <i class="fas fa-search" aria-hidden="true"></i></button>
+                <button id="dz2-save-crop" class="mb-1 btn btn-primary collapse">Save Crop <i class="far fa-save" aria-hidden="true"></i></button>
+            </div>
+        </div>
+    </div>
+</div>
+<input class="form-control" id="imgUrl2" type="text" />
+<input class="form-control" id="imgUrl2Resized" type="text" />
+<input class="form-control" id="imgUrl2Thumb" type="text" />
+
+
+
+<div id="fileBrowseDialog" class="modal fade" tabindex="-1" role="dialog">
+    <div class="modal-dialog modal-lg" style="height:99%;min-width:99%!important;">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true" title="Close"><span aria-hidden="true">&times;</span></button>
+            </div>
+            <iframe id="frFileDialog" frameborder="0" style="overflow:hidden;height:100%;width:100%;min-height: 650px;"></iframe>
+        </div>
+    </div>
+</div>
+
+
+
+
+
+
+
+
+
+@*<img id="dz2ImageResized" src="/cr/images/1x1.png" />
+    <img id="dz2ImageThumb" src="/cr/images/1x1.png" />*@
+
+
+@section Scripts {
+    <script src="/cr/js/dropzone.min.js"></script>
+    <script src="/cr/js/croppie.min.js"></script>
+    <script src="~/filemanager/js/cloudscribe-unobtrusive-file-drop.min.js"></script>
+    <script>
+
+                //(function () {
+                //    document.addEventListener("DOMContentLoaded", function () {
+                //        var dropElements = document.querySelectorAll('[data-dropzone]');
+                //        var previewTemplate = "<div class=\"dz-preview dz-file-preview\"><div class=\"dz-image\"><img data-dz-thumbnail /></div><div class=\"dz-details collapse\"><div class=\"dz-size collapse\"><span data-dz-size></span></div><div class=\"dz-filename collapse\"><span data-dz-name></span></div></div><div class=\"dz-progress collapse\"><span class=\"dz-upload\" data-dz-uploadprogress></span></div><div class=\"dz-error-message collapse\"><span data-dz-errormessage></span></div><div class=\"dz-success-mark collapse\"></div><div class=\"dz-error-mark collapse\"></div></div>";
+
+                //        var cloudscribeDropAndCrop = {
+
+                //            openServerBrowser: function (fileBrowseUrl) {
+                //                $('#fileBrowseDialog').find('iframe').attr('src', fileBrowseUrl);
+                //                $('#fileBrowseDialog').modal('show');
+                //            },
+                //            closeServerBrowser: function () {
+                //                $('#fileBrowseDialog').modal('hide');
+
+                //            },
+
+                //            buildImageEditor: function (div) {
+                //                var imageItem = {
+                //                    dropZoneDiv: div,
+
+                //                    setupCropper: function () {
+                //                        var resizeWidth = new Number(this.dropZoneDiv.dataset.resizeWidth);
+                //                        var resizeHeight = new Number(this.dropZoneDiv.dataset.resizeHeight);
+                //                        var opts = {
+                //                            viewport: {
+                //                                width: resizeWidth,
+                //                                height: resizeHeight
+                //                            },
+                //                            boundary: {
+                //                                width: resizeWidth,
+                //                                height: resizeHeight
+                //                            }
+                //                        };
+                //                        this.cropper = new Croppie(this.fullSizeImage, opts);
+
+                //                        var btnSave = document.getElementById(this.dropZoneDiv.id + "-save-crop");
+                //                        if (btnSave) {
+                //                            var that = this;
+                //                            btnSave.classList.remove("collapse");
+                //                            btnSave.onclick = function () {
+                //                                //console.log('save button clicked');
+                //                                if (that.cropper) {
+                //                                    var cropInfo = that.cropper.get();
+                //                                    //console.log(cropInfo);
+                //                                    var x1 = new Number(cropInfo.points[0]);
+                //                                    var y1 = new Number(cropInfo.points[1]);
+                //                                    var x2 = new Number(cropInfo.points[2]);
+                //                                    var y2 = new Number(cropInfo.points[3]);
+                //                                    var cropWidth = x2 - x1;
+                //                                    var cropHeight = y2 - y1;
+
+                //                                    var formData = new FormData();
+                //                                    formData.append("sourceFilePath", that.fullSizeInput.value);
+                //                                    formData.append("x1", x1);
+                //                                    formData.append("y1", y1);
+                //                                    formData.append("widthToCrop", cropWidth);
+                //                                    formData.append("heightToCrop", cropHeight);
+                //                                    formData.append("finalWidth", that.dropZoneDiv.dataset.resizeWidth);
+                //                                    formData.append("finalHeight", that.dropZoneDiv.dataset.resizeHeight);
+
+                //                                    $.ajax({
+                //                                        type: "POST",
+                //                                        processData: false,
+                //                                        contentType: false,
+                //                                        headers: {
+                //                                            'X-CSRFToken': that.dropZoneDiv.dataset.antiForgeryToken
+                //                                        },
+                //                                        dataType: "json",
+                //                                        url: that.dropZoneDiv.dataset.fileCropUrl,
+                //                                        data: formData
+
+                //                                    }).done(function (data, textStatus, jqXHR) {
+                //                                        that.handleCropResult(data);
+                //                                    })
+                //                                        .fail(function (jqXHR, textStatus, errorThrown) {
+                //                                            alert(textStatus);
+                //                                        })
+                //                                        ;
+
+
+                //                                }
+                //                                else {
+                //                                    //console.log('cropper not found');
+
+                //                                }
+
+                //                            };
+                //                        }
+                //                        else {
+                //                            //console.log('failed to find save button');
+
+                //                        }
+
+                //                    },
+                //                    destroyCropper: function () {
+                //                        if (this.cropper) {
+                //                            this.cropper.destroy();
+                //                            this.cropper = undefined;
+                //                            var btnSave = document.getElementById(this.dropZoneDiv.id + "-save-crop");
+                //                            if (btnSave) {
+                //                                btnSave.classList.add("collapse");
+                //                            }
+                //                        }
+                //                    },
+
+                //                    clearInputs: function () {
+                //                        if (this.dropZoneDiv.dataset.targetFullsizeInputId) {
+                //                            this.fullSizeInput = document.getElementById(this.dropZoneDiv.dataset.targetFullsizeInputId);
+                //                            this.fullSizeInput.value = '';
+
+                //                        }
+                //                        if (this.dropZoneDiv.dataset.targetResizedInputId) {
+                //                            this.resizedInput = document.getElementById(this.dropZoneDiv.dataset.targetResizedInputId);
+                //                            this.resizedInput.value = '';
+                //                        }
+                //                        if (this.dropZoneDiv.dataset.targetThumbInputId) {
+                //                            this.thumbInput = document.getElementById(this.dropZoneDiv.dataset.targetThumbInputId);
+                //                            this.thumbInput.value = '';
+                //                        }
+
+                //                    },
+
+                //                    handleCropResult: function (cropResult) {
+                //                        this.destroyCropper();
+                //                        this.fullSizeImage.src = cropResult.resizedUrl;
+                //                        this.resizedInput.value = cropResult.resizedUrl;
+                //                    },
+
+                //                    serverFileSelected: function (url) {
+                //                        this.destroyCropper();
+                //                        this.clearInputs();
+                //                        if (this.dropZoneDiv.dataset.targetFullsizeImageId) {
+                //                            this.fullSizeImage = document.getElementById(this.dropZoneDiv.dataset.targetFullsizeImageId);
+                //                            this.fullSizeImage.src = url;
+                //                        }
+                //                        if (this.dropZoneDiv.dataset.targetResizedImageId) {
+                //                            this.resizedImage = document.getElementById(this.dropZoneDiv.dataset.targetResizedImageId);
+                //                            this.resizedImage.src = url;
+                //                        }
+                //                        if (this.dropZoneDiv.dataset.targetFullsizeInputId) {
+                //                            this.fullSizeInput = document.getElementById(this.dropZoneDiv.dataset.targetFullsizeInputId);
+                //                            this.fullSizeInput.value = url;
+
+                //                        }
+                //                        if (this.dropZoneDiv.dataset.targetResizedInputId) {
+                //                            this.resizedInput = document.getElementById(this.dropZoneDiv.dataset.targetResizedInputId);
+                //                            this.resizedInput.value = url;
+                //                        }
+
+                //                        cloudscribeDropAndCrop.closeServerBrowser();
+
+                //                    },
+
+                //                    dropZoneAddedFile: function (file) {
+                //                        // if a new file is dropped destroy the old croppie
+                //                        if (this.cropper) {
+                //                            this.destroyCropper();
+                //                        }
+                //                    },
+                //                    dropZoneSending: function (file, xhr, formData) {
+
+                //                        if ((this.dropZoneDiv.dataset.resizeWidth) && (this.dropZoneDiv.dataset.resizeHeight)) {
+                //                            formData.append("maxWidth", this.dropZoneDiv.dataset.resizeWidth);
+                //                            formData.append("maxHeight", this.dropZoneDiv.dataset.resizeHeight);
+                //                        }
+
+                //                        if (this.dropZoneDiv.dataset.resizeImage == "false")
+                //                        {
+                //                            formData.append("resizeImage", false);
+
+                //                        }
+
+                //                        if (this.dropZoneDiv.dataset.targetPath) {
+                //                            formData.append("targetPath", this.dropZoneDiv.dataset.targetPath);
+                //                        }
+                //                        if (div.dataset.createThumb == 'true') {
+                //                            formData.append("createThumbnail", this.dropZoneDiv.dataset.createThumb);
+                //                        }
+                //                    },
+                //                    dropZoneSuccess: function (file, serverResponse) {
+                //                        if (this.dropZone) {
+                //                            this.dropZone.removeFile(file);
+                //                        }
+
+                //                        var fsImageUrl = serverResponse[0].originalUrl;
+                //                        var resizedUrl = serverResponse[0].resizedUrl;
+                //                        var thumbUrl = serverResponse[0].thumbUrl;
+                //                        this.resizedImage = this.dropZoneDiv.getElementsByTagName('img')[0];
+                //                        if (this.resizedImage) {
+                //                            this.resizedImage.src = resizedUrl;
+                //                        }
+                //                        else if (this.dropZoneDiv.dataset.targetResizedImageId) {
+                //                            this.resizedImage = document.getElementById(this.dropZoneDiv.dataset.targetResizedImageId);
+                //                            if (this.resizedImage) {
+                //                                this.resizedImage.src = resizedUrl;
+                //                            }
+                //                        }
+
+                //                        if (this.dropZoneDiv.dataset.targetThumbImageId) {
+                //                            this.thumbImage = document.getElementById(this.dropZoneDiv.dataset.targetThumbImageId);
+                //                            if (this.thumbImage) {
+                //                                this.thumbImage.src = thumbUrl;
+                //                            }
+                //                        }
+
+                //                        if (this.dropZoneDiv.dataset.targetFullsizeImageId) {
+                //                            this.fullSizeImage = document.getElementById(this.dropZoneDiv.dataset.targetFullsizeImageId);
+                //                            if (this.fullSizeImage) {
+                //                                this.fullSizeImage.src = fsImageUrl;
+                //                                if (this.dropZoneDiv.dataset.enableCrop == "true") {
+                //                                    this.setupCropper();
+                //                                }
+                //                            }
+                //                        }
+
+                //                        if (this.dropZoneDiv.dataset.targetFullsizeInputId) {
+                //                            this.fullSizeInput = document.getElementById(this.dropZoneDiv.dataset.targetFullsizeInputId);
+                //                            if (this.fullSizeInput) {
+                //                                this.fullSizeInput.value = fsImageUrl;
+                //                            }
+                //                        }
+                //                        if (this.dropZoneDiv.dataset.targetResizedInputId) {
+                //                            this.resizedInput = document.getElementById(this.dropZoneDiv.dataset.targetResizedInputId);
+                //                            if (this.resizedInput) {
+                //                                this.resizedInput.value = resizedUrl;
+                //                            }
+                //                        }
+                //                        if (this.dropZoneDiv.dataset.targetThumbInputId) {
+                //                            this.thumbInput = document.getElementById(this.dropZoneDiv.dataset.targetThumbInputId);
+                //                            if (this.thumbInput) {
+                //                                this.thumbInput.value = thumbUrl;
+                //                            }
+                //                        }
+                //                    },
+                //                    dropZoneError: function (file, errorMessage) {
+                //                        console.log(errorMessage);
+                //                    }
+
+                //                };
+
+                //                imageItem.dropZone = this._buildDropZone(imageItem, imageItem.dropZoneDiv);
+                //                if (div.dataset.fileBrowseUrl && (div.dataset.enableBrowseServer == 'true')) {
+                //                    var btnBrowseServer = document.getElementById(div.id + "-browse-server");
+                //                    if (btnBrowseServer) {
+                //                        btnBrowseServer.classList.remove("collapse");
+                //                        btnBrowseServer.onclick = function () {
+                //                            cloudscribeDropAndCrop.openServerBrowser(div.dataset.fileBrowseUrl);
+                //                            window.FileSelectCallback = function (url) {
+                //                                imageItem.serverFileSelected(url);
+                //                            }
+                //                        };
+                //                    }
+                //                }
+
+                //                return imageItem;
+                //            },
+
+                //            _buildDropZone: function (imageItem, div) {
+
+                //                var myDropzone = new Dropzone('#' + div.id, {
+                //                    url: div.dataset.uploadUrl,
+                //                    method: "post",
+                //                    headers: {
+                //                        'X-CSRFToken': div.dataset.antiForgeryToken
+                //                    },
+                //                    maxFiles: 1,
+                //                    acceptedFiles: div.dataset.acceptedFiles,
+                //                    previewTemplate: previewTemplate,
+                //                    createImageThumbnails: false,
+                //                    clickable: true
+
+                //                });
+                //                myDropzone.on("addedfile", function (file) {
+                //                    if (imageItem.dropZoneAddedFile) {
+                //                        imageItem.dropZoneAddedFile(file);
+                //                    }
+                //                    if (window.DropZoneAddedFileHandler) {
+                //                        window.DropZoneAddedFileHandler(file);
+                //                    }
+                //                });
+                //                myDropzone.on("sending", function (file, xhr, formData) {
+                //                    if (imageItem.dropZoneSending) {
+                //                        imageItem.dropZoneSending(file, xhr, formData);
+
+                //                    }
+
+                //                    if (window.DropZoneSendingHandler) {
+                //                        window.DropZoneSendingHandler(file, xhr, formData);
+                //                    }
+                //                });
+                //                myDropzone.on("success", function (file, serverResponse) {
+                //                    if (imageItem.dropZoneSuccess) {
+                //                        imageItem.dropZoneSuccess(file, serverResponse);
+                //                    }
+
+                //                    if (window.DropZoneSuccessHandler) {
+                //                        window.DropZoneSuccessHandler(file, serverResponse);
+                //                    }
+
+                //                });
+                //                myDropzone.on("error", function (file, errorMessage) {
+                //                    if (imageItem.dropZoneError) {
+                //                        imageItem.dropZoneError(file, errorMessage);
+                //                    }
+                //                    if (window.DropZoneErrorHandler) {
+                //                        window.DropZoneErrorHandler(file, errorMessage);
+                //                    }
+                //                });
+
+                //                return myDropzone;
+                //            },
+
+                //        };
+
+                //        for (var i = 0; i < dropElements.length; i++) {
+                //            var item = dropElements[i];
+                //            cloudscribeDropAndCrop.buildImageEditor(item);
+                //        }
+                //    });
+                //})();
+
+
+    </script>
+
+}
