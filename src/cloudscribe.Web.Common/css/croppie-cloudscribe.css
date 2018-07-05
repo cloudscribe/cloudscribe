@@ -9,4 +9,5 @@ div.cloudscribe-dropzone-standalone {
 	width: 150px;
 	border: dashed thin black;
 	padding: 17px;
+	cursor:pointer;
 }
