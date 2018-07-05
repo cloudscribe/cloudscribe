@@ -9,7 +9,7 @@
 {
     <form asp-controller="Account" asp-action="LogOff" method="post" id="logoutForm">
         <ul class="navbar-nav ml-auto my-2 my-lg-0">
-            <li class="nav-item">
+            <li class="d-none d-lg-block d-xl-block nav-item">
                 <div class="pull-right navbar-text navbar-gravatar">
                     <a asp-controller="Manage" asp-action="Index" title="Manage">
                         <img gravatar-email="@User.GetEmail()" gravatar-size="20" alt="gravatar" />
