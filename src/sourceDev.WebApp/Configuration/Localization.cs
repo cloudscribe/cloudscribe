@@ -27,7 +27,7 @@ namespace Microsoft.Extensions.DependencyInjection
                     new CultureInfo("cy-GB"),
                     new CultureInfo("cy"),
                     new CultureInfo("fr-FR"),
-                    new CultureInfo("fr"),
+                    new CultureInfo("fr")
                 };
 
                 // State what the default culture for your application is. This will be used if no specific culture

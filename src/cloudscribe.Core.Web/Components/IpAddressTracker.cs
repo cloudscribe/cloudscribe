@@ -8,12 +8,16 @@
 
 using cloudscribe.Core.Models;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Http.Features;
 using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Primitives;
 using System;
-using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+
+
+//https://docs.microsoft.com/en-us/aspnet/core/host-and-deploy/proxy-load-balancer?view=aspnetcore-2.1
+//https://docs.microsoft.com/en-us/aspnet/core/host-and-deploy/proxy-load-balancer?view=aspnetcore-2.1#forwarded-headers-middleware-options
+//https://docs.microsoft.com/en-us/aspnet/core/host-and-deploy/iis/?view=aspnetcore-2.1&tabs=aspnetcore2x
 
 namespace cloudscribe.Core.Web.Components
 {
@@ -47,27 +51,19 @@ namespace cloudscribe.Core.Web.Components
 
             try
             {
-                //var connection = context.Connection;
-                //if (connection == null) return;
-                //var ip = connection.RemoteIpAddress;
-                //if (ip == null) return;
-                //var ipv4 = ip.MapToIPv4();
+                if ((_contextAccessor == null) || (_contextAccessor.HttpContext == null)) { return; }
 
-                //string ipv4Address = ipv4.ToString();
-                ////Connection.RemoteIpAddress.MapToIPv4().ToLong()
-
-                //if (string.IsNullOrEmpty(ipv4Address)) { return; }
-                long ip4aslong = 0;
-                //if (ip4aslong == 0) { return; }
-                var ipAddress = GetIpAddress();
-
-                var ipvAddress = _contextAccessor.HttpContext.Connection.RemoteIpAddress;
-                if(ipvAddress != null)
-                {
-                    ip4aslong = ipvAddress.MapToIPv4().ToLong();
-                }
+                var connection = _contextAccessor.HttpContext.Features.Get<IHttpConnectionFeature>();
+                if(connection == null) { return; }
+                
+                var ip = connection.RemoteIpAddress;
+                if (ip == null) return;
+                var ipv4 = ip.MapToIPv4();
+                string ipv4Address = ipv4.ToString();
+                if (string.IsNullOrEmpty(ipv4Address)) { return; }
+                long ip4aslong = ipv4.ToLong();
                 if (ip4aslong == 0) { return; }
-
+                
                 var userLocation = await _queries.FetchLocationByUserAndIpv4Address(siteId, userGuid, ip4aslong, CancellationToken.None);
                 if (userLocation == null)
                 {
@@ -75,7 +71,7 @@ namespace cloudscribe.Core.Web.Components
                     {
                         SiteId = siteId,
                         UserId = userGuid,
-                        IpAddress = ipAddress,
+                        IpAddress = ipv4Address,
                         IpAddressLong = ip4aslong,
                         FirstCaptureUtc = DateTime.UtcNow
                     };
@@ -105,56 +101,6 @@ namespace cloudscribe.Core.Web.Components
             
         }
 
-        public string GetIpAddress(bool tryUseXForwardHeader = true)
-        {
-            string ip = null;
-
-            // todo support new "Forwarded" header (2014) https://en.wikipedia.org/wiki/X-Forwarded-For
-
-            // X-Forwarded-For (csv list):  Using the First entry in the list seems to work
-            // for 99% of cases however it has been suggested that a better (although tedious)
-            // approach might be to read each IP from right to left and use the first public IP.
-            // http://stackoverflow.com/a/43554000/538763
-            //
-            if (tryUseXForwardHeader)
-            {
-                ip = GetHeaderValueAs<string>("X-Forwarded-For").TrimEnd(',')
-                .Split(',')
-                .AsEnumerable<string>()
-                .Select(s => s.Trim())
-                .ToList().FirstOrDefault();
-            }
-
-            // RemoteIpAddress is always null in DNX RC1 Update1 (bug).
-            if (string.IsNullOrWhiteSpace(ip) && _contextAccessor.HttpContext?.Connection?.RemoteIpAddress != null)
-            {
-                var ipAddress = _contextAccessor.HttpContext.Connection.RemoteIpAddress;
-                ip = ipAddress.MapToIPv4().ToString();
-            }
-
-            if (string.IsNullOrWhiteSpace(ip))
-            {
-                ip = GetHeaderValueAs<string>("REMOTE_ADDR");
-            }
-
-            return ip;
-        }
-
-        public T GetHeaderValueAs<T>(string headerName)
-        {
-            StringValues values;
-
-            if (_contextAccessor.HttpContext?.Request?.Headers?.TryGetValue(headerName, out values) ?? false)
-            {
-                string rawValues = values.ToString();   // writes out as Csv when there are multiple.
-
-                if (!string.IsNullOrWhiteSpace(rawValues))
-                {
-                    return (T)Convert.ChangeType(values.ToString(), typeof(T));
-                }
-            }
-            return default(T);
-        }
-
+        
     }
 }

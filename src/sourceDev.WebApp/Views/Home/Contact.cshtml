@@ -5,13 +5,13 @@
     var contentId = "my-content" + DateTime.UtcNow.ToString("yyyy-MM-dd-hh");
 }
 @section Styles {
-@{ await Html.RenderPartialAsync("_DatePickerCssPartial"); }
-<link rel="stylesheet" href="~/cr/css/simplemde.min.css" />
-<style>
-    .editor-toolbar.fullscreen {
-        z-index: 1040;
-    }
-</style>
+    @{ await Html.RenderPartialAsync("DatePickerBs4Css"); }
+    <link rel="stylesheet" href="~/cr/css/simplemde.min.css" />
+    <style>
+        .editor-toolbar.fullscreen {
+            z-index: 1040;
+        }
+    </style>
 
 
 
@@ -28,7 +28,7 @@
 
 <address>
     <strong>Email:</strong> <a href="mailto:@Tenant.CompanyPublicEmail">@Tenant.CompanyPublicEmail</a><br />
-   
+
 </address>
 
 <div class="form-group">
@@ -57,36 +57,34 @@
 </div>
 
 
-    <div class="form-group">
-        <label for="Status">From date</label>
-        <div class='input-group date' id='fromDateDisplay'>
-            <input type="text"
-                   name="fromDateDisplay"
-                   class="form-control"
-                   data-bs-datepicker="true"
-                   data-bs-datepicker-format="DD/MM/YYYY"
-                   data-bs-datepicker-iso-target-id="fromDate"
-                   data-bs-datepicker-iso-format="YYYY-MM-DD"
-                   data-bs-datepicker-toggle-target-id="fromDateToggle"
-                   data-bs-datepicker-use-fontawesome="false"
-                   data-bs-datepicker-allowinputtoggle="true"
-                   data-bs-datepicker-locale="@System.Globalization.CultureInfo.CurrentCulture.Name" />
-            <span class="input-group-addon">
-                <span id="fromDateToggle" class="glyphicon glyphicon-calendar"></span>
-            </span>
-        </div>
+<div class="form-group">
+    <label for="Status">From date</label>
+    <div class='input-group date' id='fromDateDisplay'>
+        <input type="text"
+               name="fromDateDisplay"
+               class="form-control"
+               data-bs-datepicker="true"
+               data-bs-datepicker-format="DD/MM/YYYY"
+               data-bs-datepicker-iso-target-id="fromDate"
+               data-bs-datepicker-iso-format="YYYY-MM-DD"
+               data-bs-datepicker-toggle-target-id="fromDateToggle"
+               data-bs-datepicker-use-fontawesome="false"
+               data-bs-datepicker-allowinputtoggle="true"
+               data-bs-datepicker-locale="@System.Globalization.CultureInfo.CurrentCulture.Name" />
+        <span class="input-group-addon">
+            <span id="fromDateToggle" class="glyphicon glyphicon-calendar"></span>
+        </span>
     </div>
-    <input type="hidden" id="fromDate" name="fromDate" value="" />
+</div>
+<input type="hidden" id="fromDate" name="fromDate" value="" />
 
-    @section Scripts {
-        <script src="~/cr/js/moment-with-locales.js"></script>
-        <script src="~/cr/js/bootstrap-datetimepicker.js"></script>
-        <script src="~/cr/js/cloudscribe-datepicker-bootstrap-unobtrusive.js" asp-append-version="true"></script>
+@section Scripts {
+    @{ await Html.RenderPartialAsync("DatePickerBs4Scripts"); }
 
-<script src="~/cr/js/jquery.unobtrusive-ajax.min.js"></script>
-<script src="~/cr/js/cloudscribe-modaldialog-bootstrap.min.js"></script>
-<script src="~/cr/js/simplemde.min.js"></script>
-@*<script src="~/cr/js/simplemde-unobtrusive.min.js"></script>*@
-<script src="~/js/simplemde-unobtrusive.js" asp-append-version="true"></script>
+    <script src="~/cr/js/jquery.unobtrusive-ajax.min.js"></script>
+    <script src="~/cr/js/cloudscribe-modaldialog-bootstrap.min.js"></script>
+    <script src="~/cr/js/simplemde.min.js"></script>
+    @*<script src="~/cr/js/simplemde-unobtrusive.min.js"></script>*@
+    <script src="~/js/simplemde-unobtrusive.js" asp-append-version="true"></script>
 
-    }
+}
