@@ -17,7 +17,7 @@ namespace Microsoft.Extensions.DependencyInjection
     {
         public static IServiceCollection AddCloudscribeFileManager(
             this IServiceCollection services,
-            IConfiguration configuration = null
+            IConfiguration configuration
             )
         {
             services.TryAddScoped<FileManagerService>();
@@ -27,12 +27,15 @@ namespace Microsoft.Extensions.DependencyInjection
             services.TryAddScoped<IMediaPathResolver, DefaultMediaPathResolver>();
             services.AddScoped<IVersionProvider, FileManagerVersionProvider>();
 
+            
+
             // Angular's default header name for sending the XSRF token.
             services.AddAntiforgery(options => options.HeaderName = "X-XSRF-TOKEN");
 
             if(configuration != null)
             {
                 services.Configure<FileManagerIcons>(configuration.GetSection("FileManagerIcons"));
+                services.Configure<AutomaticUploadOptions>(configuration.GetSection("AutomaticUploadOptions"));
             }
 
             services.AddAntiforgery(options =>

@@ -19,15 +19,17 @@
 
         public int ThumbnailImageMaxHeight { get; set; } = 100;
 
+        public int ResizeQuality { get; set; } = 70; 
+
         /// <summary>
         /// since we allow passing in the resize options as url params
         /// we need to have limits on how large or small to allow
         /// if someone passes in values out of range we will ignore them and use
         /// the default configured resize options
         /// </summary>
-        public int ResizeMaxAllowedWidth { get; set; } = 1024;
+        public int ResizeMaxAllowedWidth { get; set; } = 2560;
 
-        public int ResizeMaxAllowedHeight { get; set; } = 1024;
+        public int ResizeMaxAllowedHeight { get; set; } = 2560;
 
         public int ResizeMinAllowedWidth { get; set; } = 50;
 

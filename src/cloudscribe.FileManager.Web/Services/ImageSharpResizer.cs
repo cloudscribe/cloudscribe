@@ -55,7 +55,7 @@ namespace cloudscribe.FileManager.Web.Services
             int heightToCrop,
             int finalWidth,
             int finalHeight,
-            int quality = 90
+            int quality = 70
             )
         {
             if (string.IsNullOrEmpty(sourceFilePath))
@@ -121,7 +121,7 @@ namespace cloudscribe.FileManager.Web.Services
             int maxWidth,
             int maxHeight,
             bool allowEnlargement = false,
-            int quality = 90
+            int quality = 70
             )
         {
             if (string.IsNullOrEmpty(sourceFilePath))
