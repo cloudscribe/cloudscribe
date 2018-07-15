@@ -317,7 +317,8 @@ namespace cloudscribe.FileManager.Web.Services
                         mimeType,
                         resizeWidth,
                         resizeHeight,
-                        options.AllowEnlargement
+                        options.AllowEnlargement,
+                        options.ResizeQuality
                         );
                 }
 
@@ -330,7 +331,8 @@ namespace cloudscribe.FileManager.Web.Services
                         mimeType,
                         options.ThumbnailImageMaxWidth,
                         options.ThumbnailImageMaxHeight,
-                        false
+                        false,
+                        options.ResizeQuality
                         );
                 }
 

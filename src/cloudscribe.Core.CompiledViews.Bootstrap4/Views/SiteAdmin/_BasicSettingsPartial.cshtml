@@ -114,7 +114,7 @@
         <span asp-validation-for="ClosedMessage" class="invalid-feedback"></span>
     </div>
     <div class="form-group">
-            <button name="submit" type="submit" class="btn btn-primary" data-disabled-text='@sr["Working..."]' data-enabled-text='@sr["Save"]'>@sr["Save"]</button>
+            <button id="btnSave" name="submit" type="submit" class="btn btn-primary" data-disabled-text='@sr["Working..."]' data-enabled-text='@sr["Save"]'>@sr["Save"]</button>
             @if ((Model.ShowDelete) && (Model.SiteId != Guid.Empty))
             {
                 <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#confirmDeleteModal">

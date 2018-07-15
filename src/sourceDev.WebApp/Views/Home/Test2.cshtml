@@ -53,7 +53,7 @@
 
 <div class="d-flex align-items-stretch">
     <div class="cs-crop-container">
-        <img id="dz1Image" src="/cr/images/550x412.png" />
+        <img id="dz1Image" style="max-width:690px" src="/cr/images/550x412.png" />
     </div>
     <div class="d-flex flex-column">
         <div id="dz1" class="cloudscribe-dropzone-standalone"
@@ -63,25 +63,40 @@
              data-file-browse-url="@ckOptions.ImageBrowseUrl"
              data-file-crop-url="@ckOptions.CropFileUrl"
              data-target-path="/media/folder2"
+             data-create-thumb="false"
+             data-resize-image="true"
+             data-accepted-files="image/*"
+
              data-target-fullsize-input-id="imgUrl1"
              data-target-resized-input-id="imgUrl1Resized"
              data-target-thumb-input-id="imgUrl1Thumb"
+
              data-target-fullsize-image-id="dz1Image"
              data-target-resized-image-idx="dz1ImageResized"
+             data-target-thumb-image-idx="dz1ImageThumb"
+
+             data-fullsize-placeholder-image="/cr/images/550x412.png"
+             data-resized-placeholder-image=""
+             data-thumb-placeholder-image=""
+
              data-enable-browse-server="true"
              data-enable-crop="true"
-             data-target-thumb-image-idx="dz1ImageThumb"
-             data-resize-width="550"
-             data-resize-height="412"
-             data-create-thumb="false"
-             data-resize-image="true"
-             data-accepted-files="image/*">
+             
+             data-resize-width="1500"
+             data-resize-height="1500"
+
+             data-crop-area-width="690"
+             data-crop-area-height="517"
+             data-crop-height-ratio="1.33378"
+             
+             >
             Drop file here or click to browse device for file.
         </div>
         <div class="pl-1 pt-1">
             <div class="d-flex flex-column">
                 <button id="dz1-browse-server" type="button" class="mb-1 btn btn-primary collapse">Browse Server <i class="fas fa-search" aria-hidden="true"></i></button>
                 <button id="dz1-save-crop" type="button" class="mb-1 btn btn-primary collapse">Save Crop <i class="far fa-save" aria-hidden="true"></i></button>
+                <button id="dz1-reset" type="button" class="mb-1 btn btn-primary">Reset</button>
             </div>
         </div>
     </div>
@@ -116,13 +131,16 @@
              data-resize-width="250"
              data-resize-height="180"
              data-create-thumb="true"
-             data-accepted-files="image/*">
+             data-accepted-files="image/*"
+             data-fullsize-placeholder-image="/cr/images/250x180.png"
+             >
             Drop file here or click to browse device for file.
         </div>
         <div class="pl-1 pt-1">
             <div class="d-flex flex-column">
                 <button id="dz2-browse-server" type="button" class="mb-1 btn btn-primary collapse">Browse Server <i class="fas fa-search" aria-hidden="true"></i></button>
                 <button id="dz2-save-crop" type="button" class="mb-1 btn btn-primary collapse">Save Crop <i class="far fa-save" aria-hidden="true"></i></button>
+                
             </div>
         </div>
     </div>
@@ -159,8 +177,19 @@
 @section Scripts {
     <script src="/cr/js/dropzone.min.js"></script>
     <script src="/cr/js/croppie.min.js"></script>
-    <script src="~/filemanager/js/cloudscribe-unobtrusive-file-drop.min.js"></script>
+    <script src="~/js/cloudscribe-unobtrusive-file-drop.js"></script>
     <script>
+
+        (function () {
+            document.addEventListener("DOMContentLoaded", function () {
+                var resetBtn = document.getElementById("dz1-reset");
+                resetBtn.onclick = function () {
+                    window.cloudscribeDropAndCrop.clearAllItems();   
+                };
+            });
+        })();
+
+        //dz1-reset
 
                 //(function () {
                 //    document.addEventListener("DOMContentLoaded", function () {

@@ -1,4 +1,7 @@
 
+
+https://www.cnet.com/news/companies-must-let-customers-cancel-subscriptions-online-california-law-says/
+
 Square does not yet support asp.net core
 https://github.com/square/connect-csharp-sdk
 

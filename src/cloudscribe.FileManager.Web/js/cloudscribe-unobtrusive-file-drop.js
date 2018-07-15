@@ -3,7 +3,7 @@
                 var dropElements = document.querySelectorAll('[data-dropzone]');
                 var previewTemplate = "<div class=\"dz-preview dz-file-preview\"><div class=\"dz-image\"><img data-dz-thumbnail /></div><div class=\"dz-details collapse\"><div class=\"dz-size collapse\"><span data-dz-size></span></div><div class=\"dz-filename collapse\"><span data-dz-name></span></div></div><div class=\"dz-progress collapse\"><span class=\"dz-upload\" data-dz-uploadprogress></span></div><div class=\"dz-error-message collapse\"><span data-dz-errormessage></span></div><div class=\"dz-success-mark collapse\"></div><div class=\"dz-error-mark collapse\"></div></div>";
 
-                var cloudscribeDropAndCrop = {
+                window.cloudscribeDropAndCrop = {
 
                     openServerBrowser: function (fileBrowseUrl) {
                         $('#fileBrowseDialog').find('iframe').attr('src', fileBrowseUrl);
@@ -14,6 +14,8 @@
 
                     },
 
+                    imageItems : [],
+
                     buildImageEditor: function (div) {
                         var imageItem = {
                             dropZoneDiv: div,
@@ -21,14 +23,16 @@
                             setupCropper: function () {
                                 var resizeWidth = new Number(this.dropZoneDiv.dataset.resizeWidth);
                                 var resizeHeight = new Number(this.dropZoneDiv.dataset.resizeHeight);
+                                var cropAreaWidth = new Number(this.dropZoneDiv.dataset.cropAreaWidth);
+                                var cropAreaHeight = new Number(this.dropZoneDiv.dataset.cropAreaHeight);
                                 var opts = {
                                     viewport: {
-                                        width: resizeWidth,
-                                        height: resizeHeight
+                                        width: cropAreaWidth,
+                                        height: cropAreaHeight
                                     },
                                     boundary: {
-                                        width: resizeWidth,
-                                        height: resizeHeight
+                                        width: cropAreaWidth,
+                                        height: cropAreaHeight
                                     }
                                 };
                                 this.cropper = new Croppie(this.fullSizeImage, opts);
@@ -48,7 +52,13 @@
                                             var y2 = new Number(cropInfo.points[3]);
                                             var cropWidth = x2 - x1;
                                             var cropHeight = y2 - y1;
-
+                                            var finalWidth = new Number(that.dropZoneDiv.dataset.resizeWidth);
+                                            var finalHeight = new Number(that.dropZoneDiv.dataset.resizeHeight);
+                                            if (that.dropZoneDiv.dataset.cropHeightRatio) {
+                                                var heightRatio = new Number(that.dropZoneDiv.dataset.cropHeightRatio)
+                                                finalHeight = Math.round(finalWidth / heightRatio);
+                                            }
+                                            
                                             var formData = new FormData();
                                             formData.append("sourceFilePath", that.fullSizeInput.value);
                                             formData.append("x1", x1);
@@ -56,7 +66,7 @@
                                             formData.append("widthToCrop", cropWidth);
                                             formData.append("heightToCrop", cropHeight);
                                             formData.append("finalWidth", that.dropZoneDiv.dataset.resizeWidth);
-                                            formData.append("finalHeight", that.dropZoneDiv.dataset.resizeHeight);
+                                            formData.append("finalHeight", finalHeight);
 
                                             $.ajax({
                                                 type: "POST",
@@ -103,6 +113,8 @@
                                 }
                             },
 
+                            
+
                             clearInputs: function () {
                                 if (this.dropZoneDiv.dataset.targetFullsizeInputId) {
                                     this.fullSizeInput = document.getElementById(this.dropZoneDiv.dataset.targetFullsizeInputId);
@@ -120,10 +132,38 @@
 
                             },
 
+                            clearImages: function () {
+                                
+                                if (this.dropZoneDiv.dataset.targetFullsizeImageId) {
+                                    if(this.dropZoneDiv.dataset.fullsizePlaceholderImage) {
+                                        var img = document.getElementById(this.dropZoneDiv.dataset.targetFullsizeImageId);
+                                        img.src = this.dropZoneDiv.dataset.fullsizePlaceholderImage;
+                                    }
+                                }
+
+                                if (this.dropZoneDiv.dataset.targetResizedImageId) {
+                                    if (this.dropZoneDiv.dataset.resizedPlaceholderImage) {
+                                        var img = document.getElementById(this.dropZoneDiv.dataset.targetResizedImageId);
+                                        img.src = this.dropZoneDiv.dataset.resizedPlaceholderImage;
+                                    }
+                                }
+
+                                if (this.dropZoneDiv.dataset.targetThumbImageId) {
+                                    if (this.dropZoneDiv.dataset.thumbPlaceholderImage) {
+                                        var img = document.getElementById(this.dropZoneDiv.dataset.targetThumbImageId);
+                                        img.src = this.dropZoneDiv.dataset.thumbPlaceholderImage;
+                                    }
+                                }
+
+                            },
+
                             handleCropResult: function (cropResult) {
                                 this.destroyCropper();
                                 this.fullSizeImage.src = cropResult.resizedUrl;
                                 this.resizedInput.value = cropResult.resizedUrl;
+                                if (window.HandleCropResult) {
+                                    window.HandleCropResult(cropResult.resizedUrl);
+                                }
                             },
 
                             serverFileSelected: function (url) {
@@ -145,6 +185,10 @@
                                 if (this.dropZoneDiv.dataset.targetResizedInputId) {
                                     this.resizedInput = document.getElementById(this.dropZoneDiv.dataset.targetResizedInputId);
                                     this.resizedInput.value = url;
+                                }
+
+                                if (window.ServerFileSelected) {
+                                    window.ServerFileSelected(url);
                                 }
 
                                 cloudscribeDropAndCrop.closeServerBrowser();
@@ -252,7 +296,15 @@
                             }
                         }
 
+                        cloudscribeDropAndCrop.imageItems.push(imageItem);
                         return imageItem;
+                    },
+
+                    clearAllItems: function () {
+                        for (i = 0; i < this.imageItems.length; i++) {
+                            this.imageItems[i].clearInputs();
+                            this.imageItems[i].clearImages();
+                        }
                     },
 
                     _buildDropZone: function (imageItem, div) {
