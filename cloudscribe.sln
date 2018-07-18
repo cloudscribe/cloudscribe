@@ -70,7 +70,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "cloudscribe.IdentityServerI
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "cloudscribe.IdentityServerIntegration.CompiledViews.Bootstrap3", "src\cloudscribe.IdentityServerIntegration.CompiledViews.Bootstrap3\cloudscribe.IdentityServerIntegration.CompiledViews.Bootstrap3.csproj", "{8201E4CE-FFB9-4F0D-A9A6-327565D50A27}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "cloudscribe.Web.StaticFiles", "src\cloudscribe.Web.StaticFiles\cloudscribe.Web.StaticFiles.csproj", "{7A3CD248-89E5-4FD4-AEA0-8E575968E876}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "cloudscribe.Web.StaticFiles", "src\cloudscribe.Web.StaticFiles\cloudscribe.Web.StaticFiles.csproj", "{7A3CD248-89E5-4FD4-AEA0-8E575968E876}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
