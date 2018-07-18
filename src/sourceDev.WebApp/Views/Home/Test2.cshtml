@@ -53,7 +53,7 @@
 
 <div class="d-flex align-items-stretch">
     <div class="cs-crop-container">
-        <img id="dz1Image" style="max-width:690px" src="/cr/images/550x412.png" />
+        <img id="dz1Image" style="max-width:690px" src="/cr/images/690x517-placeholder.png" />
     </div>
     <div class="d-flex flex-column">
         <div id="dz1" class="cloudscribe-dropzone-standalone"
@@ -62,10 +62,14 @@
              data-anti-forgery-token="@tokens.RequestToken"
              data-file-browse-url="@ckOptions.ImageBrowseUrl"
              data-file-crop-url="@ckOptions.CropFileUrl"
-             data-target-path="/media/folder2"
+             data-target-path="/media/gallery"
              data-create-thumb="false"
              data-resize-image="true"
+             data-keep-original="false"
              data-accepted-files="image/*"
+             data-enable-browse-server="true"
+             data-enable-crop="true"
+             
 
              data-target-fullsize-input-id="imgUrl1"
              data-target-resized-input-id="imgUrl1Resized"
@@ -75,19 +79,15 @@
              data-target-resized-image-idx="dz1ImageResized"
              data-target-thumb-image-idx="dz1ImageThumb"
 
-             data-fullsize-placeholder-image="/cr/images/550x412.png"
+             data-fullsize-placeholder-image="/cr/images/690x517-placeholder.png"
              data-resized-placeholder-image=""
              data-thumb-placeholder-image=""
 
-             data-enable-browse-server="true"
-             data-enable-crop="true"
-             
              data-resize-width="1500"
              data-resize-height="1500"
 
              data-crop-area-width="690"
              data-crop-area-height="517"
-             data-crop-height-ratio="1.33378"
              
              >
             Drop file here or click to browse device for file.

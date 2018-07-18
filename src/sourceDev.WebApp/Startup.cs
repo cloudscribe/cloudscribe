@@ -146,6 +146,9 @@ namespace sourceDev.WebApp
                     )
             });
 
+            app.UseCloudscribeCommonStaticFiles();
+
+
             // we don't need session
             //app.UseSession();
 
@@ -153,7 +156,9 @@ namespace sourceDev.WebApp
 
             // this uses the policy called "default"
             app.UseCors("default");
+
             
+
             var multiTenantOptions = multiTenantOptionsAccessor.Value;
             
             app.UseCloudscribeCore(

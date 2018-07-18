@@ -53,11 +53,8 @@
                                             var cropWidth = x2 - x1;
                                             var cropHeight = y2 - y1;
                                             var finalWidth = new Number(that.dropZoneDiv.dataset.resizeWidth);
-                                            var finalHeight = new Number(that.dropZoneDiv.dataset.resizeHeight);
-                                            if (that.dropZoneDiv.dataset.cropHeightRatio) {
-                                                var heightRatio = new Number(that.dropZoneDiv.dataset.cropHeightRatio)
-                                                finalHeight = Math.round(finalWidth / heightRatio);
-                                            }
+                                            var widthRatio = cropWidth / cropHeight; 
+                                            var finalHeight = Math.round(finalWidth / widthRatio);
                                             
                                             var formData = new FormData();
                                             formData.append("sourceFilePath", that.fullSizeInput.value);
@@ -67,7 +64,7 @@
                                             formData.append("heightToCrop", cropHeight);
                                             formData.append("finalWidth", that.dropZoneDiv.dataset.resizeWidth);
                                             formData.append("finalHeight", finalHeight);
-
+                                            
                                             $.ajax({
                                                 type: "POST",
                                                 processData: false,
@@ -220,13 +217,19 @@
                                 if (div.dataset.createThumb == 'true') {
                                     formData.append("createThumbnail", this.dropZoneDiv.dataset.createThumb);
                                 }
+                                if (this.dropZoneDiv.dataset.keepOriginal == 'true') {
+                                    formData.append("keepOriginal", true);
+                                }
+                                if (this.dropZoneDiv.dataset.keepOriginal == 'false') {
+                                    formData.append("keepOriginal", false);
+                                }
                             },
                             dropZoneSuccess: function (file, serverResponse) {
                                 if (this.dropZone) {
                                     this.dropZone.removeFile(file);
                                 }
 
-                                var fsImageUrl = serverResponse[0].originalUrl;
+                                var fsImageUrl = serverResponse[0].originalUrl || serverResponse[0].resizedUrl;
                                 var resizedUrl = serverResponse[0].resizedUrl;
                                 var thumbUrl = serverResponse[0].thumbUrl;
                                 this.resizedImage = this.dropZoneDiv.getElementsByTagName('img')[0];

@@ -1,6 +1,7 @@
 ﻿@using cloudscribe.FileManager.Web.Models
 @using Microsoft.Extensions.Localization
 @using Microsoft.Extensions.Options
+@addTagHelper "*, Microsoft.AspNetCore.Mvc.TagHelpers"
 @model BrowseModel
 @inject IStringLocalizer<FileManagerStringResources> sr
 @{
@@ -25,7 +26,7 @@
                 <img id="filePreview" src="~/cr/css/1x1.gif" alt='@sr["Preview selected image"]' />
             </div>
             <button id="btnSelectForCrop" class="btn btn-default collapse"><i class="fa fa-scissors" aria-hidden="true"></i> @sr["Crop"]</button>
-        } 
+        }
         <form id="frmNewFolder" asp-action="CreateFolder" asp-controller="FileManager" class="form-inline">
             <div class="form-group">
                 <input type="text" class="form-control" disabled id="newFolderCurrentDir" name="newFolderCurrentDir" value="@Model.InitialVirtualPath" />
@@ -50,7 +51,7 @@
                         </div>
                         <div class="modal-footer">
                             <button type="button" class="btn btn-default" data-dismiss="modal">@sr["Cancel"]</button>
-                            <button id="btnRenameFolder" type="button"  class="btn btn-danger btn-ok">@sr["Rename Folder"]</button>
+                            <button id="btnRenameFolder" type="button" class="btn btn-danger btn-ok">@sr["Rename Folder"]</button>
                         </div>
                     </div>
                 </div>
@@ -59,7 +60,7 @@
         <form id="frmDeleteFolder" asp-action="DeleteFolder" asp-controller="FileManager" class="form-inline collapse">
             <input type="hidden" id="folderToDelete" name="folderToDelete" />
             <button id="btnDeleteFolderPrompt" type="button" class="btn btn-danger btn-ok"><i class="fa fa-trash-o" aria-hidden="true"></i> @sr["Delete Folder"]</button>
-            <div id="mdlDeleteFolder" class="modal fade"  tabindex="-1" role="dialog" aria-labelledby="confirmDeleteFolderHeading">
+            <div id="mdlDeleteFolder" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="confirmDeleteFolderHeading">
                 <div class="modal-dialog modal-sm" role="document">
                     <div class="modal-content">
                         <div class="modal-header">
@@ -71,7 +72,7 @@
                         </div>
                         <div class="modal-footer">
                             <button type="button" class="btn btn-default" data-dismiss="modal">@sr["Cancel"]</button>
-                            <button id="btnDeleteFolder" type="button"  class="btn btn-danger btn-ok"><i class="fa fa-trash-o" aria-hidden="true"></i> @sr["Delete Folder"]</button>
+                            <button id="btnDeleteFolder" type="button" class="btn btn-danger btn-ok"><i class="fa fa-trash-o" aria-hidden="true"></i> @sr["Delete Folder"]</button>
                         </div>
                     </div>
                 </div>

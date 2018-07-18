@@ -191,10 +191,20 @@ namespace cloudscribe.FileManager.Web.Controllers
                 bool.TryParse(sResize, out autoResize);
                 if (!autoResize) { resizeImages = false; }
             }
-           
-            
 
-            if(!string.IsNullOrWhiteSpace(sCreateThumbnail))
+            bool? keepOriginal = null;
+            var sKeepOriginal = Request.Form["keepOriginal"];
+            if (!string.IsNullOrWhiteSpace(sKeepOriginal))
+            {
+                // if passed this will override the default
+                var tmpKeep = false;
+                if(bool.TryParse(sKeepOriginal, out tmpKeep))
+                {
+                    keepOriginal = tmpKeep;
+                }
+            }
+            
+            if (!string.IsNullOrWhiteSpace(sCreateThumbnail))
             {
                 bool.TryParse(sCreateThumbnail, out createThumbnail);
             }
@@ -214,7 +224,8 @@ namespace cloudscribe.FileManager.Web.Controllers
                             requestedFilePath,
                             newFileName,
                             allowRootPath,
-                            createThumbnail
+                            createThumbnail,
+                            keepOriginal
                             ).ConfigureAwait(false);
 
                         imageList.Add(uploadResult);
