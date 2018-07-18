@@ -1,6 +1,7 @@
 ﻿@using cloudscribe.FileManager.Web.Models
 @using Microsoft.Extensions.Localization
 @using Microsoft.Extensions.Options
+@addTagHelper "*, Microsoft.AspNetCore.Mvc.TagHelpers"
 @model BrowseModel
 @inject IOptions<AutomaticUploadOptions> autoUploadOptionsAccessor
 @inject IStringLocalizer<FileManagerStringResources> sr
@@ -16,7 +17,7 @@
     {
         <h2>@sr["Upload Files"]</h2>
     }
-    
+
     <span class="operationinstructions">
         @sr["First use the browse tab to select the folder where you would like the new files to be placed. Then drag and drop files onto the dropzone or browse to select the files on your computer, once files are selected an Upload button will appear.  Files will be uploaded to the current folder:"]"
     </span>

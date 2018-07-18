@@ -1,6 +1,7 @@
 ﻿@using cloudscribe.FileManager.Web.Models
 @using Microsoft.Extensions.Localization
 @using Microsoft.Extensions.Options
+@addTagHelper "*, Microsoft.AspNetCore.Mvc.TagHelpers"
 @model BrowseModel
 @inject IOptions<AutomaticUploadOptions> autoUploadOptionsAccessor
 @inject IStringLocalizer<FileManagerStringResources> sr

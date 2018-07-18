@@ -109,7 +109,6 @@ namespace cloudscribe.FileManager.Web.Services
                 return new UploadResult
                 {
                     ErrorMessage = _sr["There was an error logged during file processing"]
-
                 };
             }
 
@@ -125,7 +124,6 @@ namespace cloudscribe.FileManager.Web.Services
                 return new UploadResult
                 {
                     ErrorMessage = _sr["There was an error logged during file processing"]
-
                 };
             }
 
@@ -140,7 +138,6 @@ namespace cloudscribe.FileManager.Web.Services
                 return new UploadResult
                 {
                     ErrorMessage = _sr["There was an error logged during file processing"]
-
                 };
             }
 
@@ -158,8 +155,7 @@ namespace cloudscribe.FileManager.Web.Services
 
                 };
             }
-
-           
+            
             var requestedFsPath = Path.Combine(_rootPath.RootFileSystemPath, Path.Combine(segments));
             if (!Directory.Exists(requestedFsPath))
             {
@@ -183,8 +179,7 @@ namespace cloudscribe.FileManager.Web.Services
                 previousCropCount += 1;
                 targetFsPath = Path.Combine(currentFsPath, fileToCropNameWithooutExtenstion + cropNameSegment + previousCropCount.ToString() + ext);
             };
-
-
+            
             var didCrop = _imageResizer.CropExistingImage(
                 sourceFsPath,
                 targetFsPath,
@@ -205,17 +200,14 @@ namespace cloudscribe.FileManager.Web.Services
 
                 };
             }
-
-
+            
             return new UploadResult
             {
                 OriginalUrl = sourceFilePath,
                 ResizedUrl = currentVirtualPath + Path.GetFileName(targetFsPath)
-
             };
 
         }
-
 
         public async Task<UploadResult> ProcessFile(
             IFormFile formFile,
@@ -226,7 +218,8 @@ namespace cloudscribe.FileManager.Web.Services
             string requestedVirtualPath = "",
             string newFileName = "",
             bool allowRootPath = true,
-            bool createThumbnail = false
+            bool createThumbnail = false,
+            bool? keepOriginal = null
             )
         {
             await EnsureProjectSettings().ConfigureAwait(false);
@@ -238,7 +231,6 @@ namespace cloudscribe.FileManager.Web.Services
 
             if ((!string.IsNullOrEmpty(requestedVirtualPath)) && (requestedVirtualPath.StartsWith(_rootPath.RootVirtualPath)))
             {
-
                 var virtualSubPath = requestedVirtualPath.Substring(_rootPath.RootVirtualPath.Length);
                 var segments = virtualSubPath.Split('/');
                 if (segments.Length > 0)
@@ -254,10 +246,8 @@ namespace cloudscribe.FileManager.Web.Services
                     
                     currentVirtualPath = requestedVirtualPath;
                     virtualSegments = segments;
-                    currentFsPath = Path.Combine(currentFsPath, Path.Combine(virtualSegments));
-                    
+                    currentFsPath = Path.Combine(currentFsPath, Path.Combine(virtualSegments));   
                 }
-
             }
             else
             {
@@ -307,8 +297,6 @@ namespace cloudscribe.FileManager.Web.Services
 
                 if ((doResize) && IsWebImageFile(ext))
                 {
-
-
                     int resizeWidth = GetMaxWidth(maxWidth, options);
                     int resizeHeight = GetMaxWidth(maxHeight, options);
 
@@ -337,8 +325,23 @@ namespace cloudscribe.FileManager.Web.Services
                         options.ResizeQuality
                         );
                 }
-
-
+                if(didResize)
+                {
+                    if (keepOriginal.HasValue)
+                    {
+                        if (keepOriginal.Value == false)
+                        {
+                            File.Delete(fsPath);
+                            newUrl = string.Empty;
+                        }
+                    }
+                    else if (!options.KeepOriginalImages) // use default if not explcitely passed
+                    {
+                        File.Delete(fsPath);
+                        newUrl = string.Empty;
+                    }
+                }
+                
             }
             catch (Exception ex)
             {
