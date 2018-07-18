@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. 
 // Author:                  Joe Audette
 // Created:                 2017-02-15
-// Last Modified:           2018-06-24
+// Last Modified:           2018-07-18
 // 
 
 using cloudscribe.FileManager.Web.Models;
@@ -246,21 +246,23 @@ namespace cloudscribe.FileManager.Web.Services
                     var requestedFsPath = Path.Combine(_rootPath.RootFileSystemPath, Path.Combine(segments));
                     if (!Directory.Exists(requestedFsPath))
                     {
-                        _log.LogError("directory not found for currentPath " + requestedFsPath);
+                        //_log.LogError("directory not found for currentPath " + requestedFsPath);
+                        // user has file system permission and could manually create the needed folder so auto ensure
+                        // since it is a sub path of the root
+                        EnsureSubFolders(_rootPath.RootFileSystemPath, segments);
                     }
-                    else
-                    {
-                        currentVirtualPath = requestedVirtualPath;
-                        virtualSegments = segments;
-                        currentFsPath = Path.Combine(currentFsPath, Path.Combine(virtualSegments));
-                    }
+                    
+                    currentVirtualPath = requestedVirtualPath;
+                    virtualSegments = segments;
+                    currentFsPath = Path.Combine(currentFsPath, Path.Combine(virtualSegments));
+                    
                 }
 
             }
             else
             {
 
-                // only ensure the folders if no currentDir provided,
+                // ensure the folders if no currentDir provided,
                 // if it is provided it must be an existing path
                 // options.ImageDefaultVirtualSubPath might not exist on first upload so need to ensure it
                 if (!allowRootPath)

@@ -2,12 +2,7 @@
 <html>
 <head>
     <title>@ViewBag.Title</title>
-    <environment names="Development">
-        <link rel="stylesheet" href="~/cr/css/bootstrap.css" />
-    </environment>
-    <environment names="Staging,Production">
-        <link rel="stylesheet" href="~/cr/css/bootstrap.min.css" />
-    </environment>
+    <link rel="stylesheet" href="~/cr/css/bootstrap.min.css" />
     @RenderSection("style", required: false)
 </head>
 <body>

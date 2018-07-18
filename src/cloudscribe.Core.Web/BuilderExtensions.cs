@@ -21,7 +21,7 @@ namespace Microsoft.AspNetCore.Builder
            CookieSecurePolicy applicationCookieSecure = CookieSecurePolicy.SameAsRequest
            )
         {
-            app.UseCloudscribeCommonStaticFiles();
+            
 
             app.UseMultitenancy<cloudscribe.Core.Models.SiteContext>();
             

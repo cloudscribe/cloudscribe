@@ -71,16 +71,16 @@ namespace Microsoft.Extensions.DependencyInjection
         //    return options;
         //}
         
-        public static IApplicationBuilder UseCloudscribeCommonStaticFiles(this IApplicationBuilder builder)
-        {
+        //public static IApplicationBuilder UseCloudscribeCommonStaticFiles(this IApplicationBuilder builder)
+        //{
 
-            builder.UseStaticFiles(new StaticFileOptions()
-            {
-                FileProvider = new EmbeddedFileResolvingProvider(typeof(CloudscribeCommonResources).GetTypeInfo().Assembly,"cloudscribe.Web.Common")
-                , RequestPath = new PathString("/cr")
-            });
+        //    builder.UseStaticFiles(new StaticFileOptions()
+        //    {
+        //        FileProvider = new EmbeddedFileResolvingProvider(typeof(CloudscribeCommonResources).GetTypeInfo().Assembly,"cloudscribe.Web.Common")
+        //        , RequestPath = new PathString("/cr")
+        //    });
 
-            return builder;
-        }
+        //    return builder;
+        //}
     }
 }
