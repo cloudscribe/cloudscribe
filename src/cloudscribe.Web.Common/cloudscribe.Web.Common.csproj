@@ -34,10 +34,6 @@
     <PackageReference Include="cloudscribe.HtmlAgilityPack" Version="1.0.*" />
   </ItemGroup>
 
-  <ItemGroup>
-    <ProjectReference Include="..\cloudscribe.Web.StaticFiles\cloudscribe.Web.StaticFiles.csproj" />
-  </ItemGroup>
-
  
 
 </Project>

@@ -44,6 +44,7 @@
     <ProjectReference Include="..\cloudscribe.Core.IdentityServer.EFCore.pgsql\cloudscribe.Core.IdentityServer.EFCore.pgsql.csproj" />
     <ProjectReference Include="..\cloudscribe.Core.IdentityServer.NoDb\cloudscribe.Core.IdentityServer.NoDb.csproj" />
     <ProjectReference Include="..\cloudscribe.IdentityServerIntegration.CompiledViews.Bootstrap4\cloudscribe.IdentityServerIntegration.CompiledViews.Bootstrap4.csproj" />
+    <ProjectReference Include="..\cloudscribe.Web.StaticFiles\cloudscribe.Web.StaticFiles.csproj" />
   </ItemGroup>
   
   <ItemGroup>
