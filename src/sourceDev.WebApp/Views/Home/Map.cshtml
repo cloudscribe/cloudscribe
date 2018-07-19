@@ -1,0 +1,139 @@
+﻿@using Microsoft.Extensions.Configuration
+@inject IConfiguration  config
+@{
+    ViewData["Title"] = "Map Test";
+    var bingMapKey = config["DevOptions:BingMapApiKey"];
+    var googleApiKey = config["DevOptions:GoogleApiKey"];
+}
+@*
+    https://developers.google.com/maps/documentation/javascript/geocoding
+
+*@
+
+@section Styles {
+    @*<link rel="stylesheet" href="/cr/css/ol5.css" />*@
+    <style>
+        /*.map-ol {
+            height: 400px;
+            width: 50%;
+            float: left;
+        }*/
+
+        #gmap1 {
+            height: 600px;
+            
+        }
+    </style>
+}
+
+<div id="olmap1" class="map-ol"
+     ></div>
+
+<div id="gmap1"
+     data-address="1003 Allen Ave, Murfreesboro, TN"
+     ></div>
+<div>
+    <hr />
+</div>
+
+<div id="bingMap1" style='position:relative;width:600px;height:400px;'></div>
+
+
+
+
+
+
+@section Scripts {
+
+    <script>
+        var gMap, infoWindow;
+        function initGMap() {
+            gMap = new google.maps.Map(document.getElementById('gmap1'), {
+                center: { lat: -34.397, lng: 150.644 },
+                zoom: 8
+            });
+            infoWindow = new google.maps.InfoWindow;
+
+            // Try HTML5 geolocation.
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(function (position) {
+                    var pos = {
+                        lat: position.coords.latitude,
+                        lng: position.coords.longitude
+                    };
+
+                    //infoWindow.setPosition(pos);
+                    //infoWindow.setContent('Location found.');
+                    //infoWindow.open(gMap);
+                    gMap.setCenter(pos);
+                }, function () {
+                    handleLocationError(true, infoWindow, gMap.getCenter());
+                });
+            } else {
+                // Browser doesn't support Geolocation
+                handleLocationError(false, infoWindow, gMap.getCenter());
+            }
+
+
+        }
+
+        function handleLocationError(browserHasGeolocation, infoWindow, pos) {
+            infoWindow.setPosition(pos);
+            infoWindow.setContent(browserHasGeolocation ?
+                'Error: The Geolocation service failed.' :
+                'Error: Your browser doesn\'t support geolocation.');
+            infoWindow.open(map);
+        }
+
+    </script>
+    <script src="https://maps.googleapis.com/maps/api/js?key=@googleApiKey&callback=initGMap" async defer></script>
+
+
+    @*<script src="/cr/js/ol5.js"></script>*@
+    @*<script type='text/javascript' src='https://www.bing.com/api/maps/mapcontrol?callback=setupBingMap&key=@bingMapKey' async defer></script>
+        <script>
+
+            var bingMap1;
+            function setupBingMap() {
+                //var map = new Microsoft.Maps.Map('#bingMap1');
+                bingMap1 = new Microsoft.Maps.Map(document.getElementById('bingMap1'), {});
+
+
+            }
+
+            //(function () {
+            //    document.addEventListener("DOMContentLoaded", function () {
+            //        setupBingMap()
+
+            //    });
+            //})();
+        </script>*@
+
+    @*<script type="text/javascript">
+
+        function setupOlMap() {
+            var map = new ol.Map({
+                target: 'olmap1',
+                layers: [
+                    new ol.layer.Tile({
+                        source: new ol.source.OSM()
+                    })
+                ],
+                view: new ol.View({
+                    center: ol.proj.fromLonLat([37.41, 8.82]),
+                    zoom: 4
+                })
+            });
+
+        }
+
+
+        (function () {
+            document.addEventListener("DOMContentLoaded", function () {
+                setupOlMap()
+
+            });
+        })();
+    </script>*@
+
+}

@@ -1,4 +1,7 @@
 
+https://www.smashingmagazine.com/2017/07/designing-perfect-date-time-picker/
+
+
 https://stackoverflow.com/questions/31528204/bootstrap-date-time-picker-display-format-vs-value-format
 
 http://nodatime.org/
