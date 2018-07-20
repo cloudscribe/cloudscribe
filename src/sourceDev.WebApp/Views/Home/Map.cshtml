@@ -1,0 +1,224 @@
+﻿@using Microsoft.Extensions.Configuration
+@inject IConfiguration  config
+@{
+    ViewData["Title"] = "Map Test";
+    var bingMapKey = config["DevOptions:BingMapApiKey"];
+    var googleApiKey = config["DevOptions:GoogleApiKey"];
+}
+@*
+    https://developers.google.com/maps/documentation/javascript/geocoding
+
+*@
+
+@section Styles {
+    @*<link rel="stylesheet" href="/cr/css/ol5.css" />*@
+    <style>
+        /*.map-ol {
+            height: 400px;
+            width: 50%;
+            float: left;
+        }*/
+
+        #gmap1 {
+            height: 600px;
+        }
+        .map-wrapper {
+            /*width: 50%;
+            height: 400px;*/
+        }
+
+        .bingMap {
+            /*position: relative;*/
+            width: 100%;
+            height: 400px;
+            /*width: 100vw;
+            height: 100vh;*/
+        }
+        .map-directions {
+            /*position: relative;
+            width: 50%;*/
+            
+        }
+
+    </style>
+}
+
+    <div class="row">
+        <div class="col-md-8">
+            <div id="bingMap1" class='bingMap'
+                 data-bing-map=""
+                 data-location-title="My old house"
+                 data-address="1003 Allen Ave, Murfreesboro, TN"
+                 data-directions-element-id="bingMap1Directions"
+                 data-itinerary-element-id="bingMap1Itinerary"
+                 data-from-address-element-id="bingMap1FromAddress"
+                 data-get-directions-button-id="bingMap1GetDirectionsButton"
+                 ></div>
+        </div>
+        <div class="col-md-4">
+            <div id="bingMap1Directions" class="map-directions mt-2 mb-2">
+                <div class="form-group">
+                    <input id="bingMap1FromAddress" type="text" class="form-control" placeholder="From Address" />
+                </div>
+                <button id="bingMap1GetDirectionsButton" type="button" class="btn btn-primary">Get Directions</button>
+                <a href="@Context.Request.Path">Clear</a>
+            </div>
+            <div id='bingMap1Itinerary'></div>
+
+        </div>
+    </div>
+
+    
+
+
+
+@section Scripts {
+
+    <script type='text/javascript' src='https://www.bing.com/api/maps/mapcontrol?callback=loadMapScenario&key=@bingMapKey' async defer></script>
+    <script src="/cr/js/cloudscribe-unobtrusive-bing-location-map.min.js"></script>
+
+        @*<script>
+            window.cloudscribeUnotrusiveBingMap = {
+                mapItems: [],
+                buildMap: function (div) {
+                    var mapItem = { };
+                    mapItem.map = new Microsoft.Maps.Map(div, {});
+                    mapItem.fromAddressElement = document.getElementById(div.dataset.fromAddressElementId);
+                    mapItem.btnGetDirections = document.getElementById(div.dataset.getDirectionsButtonId);
+                    mapItem.btnGetDirections.onclick = function () {
+                        if (mapItem.fromAddressElement.value) {
+                            var requestOptions = {
+                                bounds: mapItem.map.getBounds(),
+                                where: mapItem.fromAddressElement.value,
+                                callback: mapItem.getDirectionsCallback
+                            };
+                            mapItem.searchManager.geocode(requestOptions);
+                        }
+                    };
+
+                    mapItem.getDirectionsCallback = function (answer, userData) {
+                        var fromResult = answer.results[0];
+                        var fromPoint = new Microsoft.Maps.Directions.Waypoint({ address: fromResult.name, location: fromResult.location });
+                        mapItem.directionsManager.addWaypoint(fromPoint);
+
+                        var destination = new Microsoft.Maps.Directions.Waypoint({ address: div.dataset.locationTitle, location: mapItem.geoResult.location });
+                        mapItem.directionsManager.addWaypoint(destination);
+
+                        mapItem.directionsManager.setRenderOptions({ itineraryContainer: document.getElementById(div.dataset.itineraryElementId) });
+                        //mapItem.directionsManager.showInputPanel(document.getElementById(div.directionsElementId));
+                        mapItem.directionsManager.calculateDirections();
+                    };
+                    
+                    mapItem.searchCallback = function (answer, userData) {
+                        mapItem.geoResult = answer.results[0];
+                        mapItem.map.setView({ bounds: mapItem.geoResult.bestView });
+                        mapItem.map.entities.push(new Microsoft.Maps.Pushpin(mapItem.geoResult.location));
+                        Microsoft.Maps.loadModule('Microsoft.Maps.Directions', function () {
+                            mapItem.directionsManager = new Microsoft.Maps.Directions.DirectionsManager(mapItem.map);
+                            mapItem.directionsManager.setRequestOptions({ routeMode: Microsoft.Maps.Directions.RouteMode.driving });     
+                        });
+                    };
+
+                    mapItem.initSearch = function () {
+                        var requestOptions = {
+                            bounds: mapItem.map.getBounds(),
+                            where: div.dataset.address,
+                            callback: mapItem.searchCallback
+                        };
+                        mapItem.searchManager.geocode(requestOptions);
+                    };
+                    
+                    Microsoft.Maps.loadModule('Microsoft.Maps.Search', function () {
+                        mapItem.searchManager = new Microsoft.Maps.Search.SearchManager(mapItem.map);
+                        mapItem.initSearch();
+                    });
+                    
+                    this.mapItems.push(mapItem);
+                }
+            };
+
+            function loadMapScenario() {
+                var mapElements = document.querySelectorAll('[data-bing-map]');
+                for (var i = 0; i < mapElements.length; i++) {
+                    var item = mapElements[i];
+                    window.cloudscribeUnotrusiveBingMap.buildMap(item);
+                }
+            }
+
+        </script>*@
+
+    @*<script>
+            var gMap, infoWindow;
+            function initGMap() {
+                gMap = new google.maps.Map(document.getElementById('gmap1'), {
+                    center: { lat: -34.397, lng: 150.644 },
+                    zoom: 8
+                });
+                infoWindow = new google.maps.InfoWindow;
+
+                // Try HTML5 geolocation.
+                if (navigator.geolocation) {
+                    navigator.geolocation.getCurrentPosition(function (position) {
+                        var pos = {
+                            lat: position.coords.latitude,
+                            lng: position.coords.longitude
+                        };
+
+                        //infoWindow.setPosition(pos);
+                        //infoWindow.setContent('Location found.');
+                        //infoWindow.open(gMap);
+                        gMap.setCenter(pos);
+                    }, function () {
+                        handleLocationError(true, infoWindow, gMap.getCenter());
+                    });
+                } else {
+                    // Browser doesn't support Geolocation
+                    handleLocationError(false, infoWindow, gMap.getCenter());
+                }
+
+
+            }
+
+            function handleLocationError(browserHasGeolocation, infoWindow, pos) {
+                infoWindow.setPosition(pos);
+                infoWindow.setContent(browserHasGeolocation ?
+                    'Error: The Geolocation service failed.' :
+                    'Error: Your browser doesn\'t support geolocation.');
+                infoWindow.open(map);
+            }
+
+        </script>
+        <script src="https://maps.googleapis.com/maps/api/js?key=@googleApiKey&callback=initGMap" async defer></script>*@
+
+
+    @*<script src="/cr/js/ol5.js"></script>*@
+
+
+    @*<script type="text/javascript">
+
+            function setupOlMap() {
+                var map = new ol.Map({
+                    target: 'olmap1',
+                    layers: [
+                        new ol.layer.Tile({
+                            source: new ol.source.OSM()
+                        })
+                    ],
+                    view: new ol.View({
+                        center: ol.proj.fromLonLat([37.41, 8.82]),
+                        zoom: 4
+                    })
+                });
+
+            }
+
+
+            (function () {
+                document.addEventListener("DOMContentLoaded", function () {
+                    setupOlMap()
+
+                });
+            })();
+        </script>*@
+
+}
