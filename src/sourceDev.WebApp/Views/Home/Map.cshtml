@@ -75,22 +75,17 @@
 @section Scripts {
 
     <script type='text/javascript' src='https://www.bing.com/api/maps/mapcontrol?callback=loadMapScenario&key=@bingMapKey' async defer></script>
-        <script>
+    <script src="/cr/js/cloudscribe-unobtrusive-bing-location-map.min.js"></script>
 
-            
-
+        @*<script>
             window.cloudscribeUnotrusiveBingMap = {
-
                 mapItems: [],
-
                 buildMap: function (div) {
                     var mapItem = { };
                     mapItem.map = new Microsoft.Maps.Map(div, {});
                     mapItem.fromAddressElement = document.getElementById(div.dataset.fromAddressElementId);
                     mapItem.btnGetDirections = document.getElementById(div.dataset.getDirectionsButtonId);
                     mapItem.btnGetDirections.onclick = function () {
-                        console.log(mapItem.fromAddressElement.value);
-
                         if (mapItem.fromAddressElement.value) {
                             var requestOptions = {
                                 bounds: mapItem.map.getBounds(),
@@ -102,10 +97,7 @@
                     };
 
                     mapItem.getDirectionsCallback = function (answer, userData) {
-                        console.log('getDirectionsCallback');
                         var fromResult = answer.results[0];
-                        console.log(fromResult);
-                        
                         var fromPoint = new Microsoft.Maps.Directions.Waypoint({ address: fromResult.name, location: fromResult.location });
                         mapItem.directionsManager.addWaypoint(fromPoint);
 
@@ -113,25 +105,18 @@
                         mapItem.directionsManager.addWaypoint(destination);
 
                         mapItem.directionsManager.setRenderOptions({ itineraryContainer: document.getElementById(div.dataset.itineraryElementId) });
-                        mapItem.directionsManager.showInputPanel(document.getElementById(div.directionsElementId));
+                        //mapItem.directionsManager.showInputPanel(document.getElementById(div.directionsElementId));
                         mapItem.directionsManager.calculateDirections();
-                        
                     };
                     
                     mapItem.searchCallback = function (answer, userData) {
                         mapItem.geoResult = answer.results[0];
-                        console.log(mapItem.geoResult);
                         mapItem.map.setView({ bounds: mapItem.geoResult.bestView });
-
                         mapItem.map.entities.push(new Microsoft.Maps.Pushpin(mapItem.geoResult.location));
-                        
                         Microsoft.Maps.loadModule('Microsoft.Maps.Directions', function () {
                             mapItem.directionsManager = new Microsoft.Maps.Directions.DirectionsManager(mapItem.map);
-                            mapItem.directionsManager.setRequestOptions({ routeMode: Microsoft.Maps.Directions.RouteMode.driving });
-                            
+                            mapItem.directionsManager.setRequestOptions({ routeMode: Microsoft.Maps.Directions.RouteMode.driving });     
                         });
-
-
                     };
 
                     mapItem.initSearch = function () {
@@ -141,7 +126,6 @@
                             callback: mapItem.searchCallback
                         };
                         mapItem.searchManager.geocode(requestOptions);
-
                     };
                     
                     Microsoft.Maps.loadModule('Microsoft.Maps.Search', function () {
@@ -151,7 +135,6 @@
                     
                     this.mapItems.push(mapItem);
                 }
-
             };
 
             function loadMapScenario() {
@@ -162,7 +145,7 @@
                 }
             }
 
-        </script>
+        </script>*@
 
     @*<script>
             var gMap, infoWindow;
