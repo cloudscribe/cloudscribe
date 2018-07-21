@@ -83,8 +83,14 @@ $(function () {
                 config.dropFileUploadUrl = dropFileUploadUrl;
                 config.dropFileXsrfToken = $('[name="__RequestVerificationToken"]:first').val();
             }
+
+            var editor = CKEDITOR.replace(ele, config);
             
-            $(ele).ckeditor(config);
+            editor.on('change', function() {
+                //console.log('ckeditor onchange');
+                window.thisPage = window.thisPage || {};
+                window.thisPage.hasUnsavedChanges = true;
+            });
             
         });
     }

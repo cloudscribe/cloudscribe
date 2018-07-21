@@ -130,11 +130,12 @@
                             },
 
                             clearImages: function () {
-                                
+                                this.destroyCropper();
                                 if (this.dropZoneDiv.dataset.targetFullsizeImageId) {
                                     if(this.dropZoneDiv.dataset.fullsizePlaceholderImage) {
                                         var img = document.getElementById(this.dropZoneDiv.dataset.targetFullsizeImageId);
                                         img.src = this.dropZoneDiv.dataset.fullsizePlaceholderImage;
+                                        console.log('set fullsize placeholder');
                                     }
                                 }
 
@@ -142,6 +143,7 @@
                                     if (this.dropZoneDiv.dataset.resizedPlaceholderImage) {
                                         var img = document.getElementById(this.dropZoneDiv.dataset.targetResizedImageId);
                                         img.src = this.dropZoneDiv.dataset.resizedPlaceholderImage;
+                                        console.log('set resized placeholder');
                                     }
                                 }
 
@@ -149,6 +151,7 @@
                                     if (this.dropZoneDiv.dataset.thumbPlaceholderImage) {
                                         var img = document.getElementById(this.dropZoneDiv.dataset.targetThumbImageId);
                                         img.src = this.dropZoneDiv.dataset.thumbPlaceholderImage;
+                                        console.log('set thumb placeholder');
                                     }
                                 }
 
@@ -157,7 +160,14 @@
                             handleCropResult: function (cropResult) {
                                 this.destroyCropper();
                                 this.fullSizeImage.src = cropResult.resizedUrl;
-                                this.resizedInput.value = cropResult.resizedUrl;
+                                if (this.resizedInput) {
+                                    this.resizedInput.value = cropResult.resizedUrl;
+                                } else {
+                                    if (this.fullSizeImage) {
+                                        this.fullSizeImage.value = cropResult.resizedUrl;
+                                    }
+                                }
+                                
                                 if (window.HandleCropResult) {
                                     window.HandleCropResult(cropResult.resizedUrl);
                                 }
@@ -189,6 +199,10 @@
                                 }
 
                                 cloudscribeDropAndCrop.closeServerBrowser();
+
+                                if (this.dropZoneDiv.dataset.enableCrop == "true") {
+                                    this.setupCropper();
+                                }
 
                             },
 
