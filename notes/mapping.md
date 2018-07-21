@@ -110,8 +110,19 @@ https://epsg.io/transform
 
 https://mygeodata.cloud/cs2cs/
 
+## Bing Maps
+
+Get basic key
+https://www.microsoft.com/en-us/maps/create-a-bing-maps-key
+https://www.bingmapsportal.com/Application
+
+
 ## Google Maps
 
 https://stackoverflow.com/questions/5688745/google-maps-v3-draggable-marker
+
+https://developers.google.com/maps/documentation/javascript/get-api-key
+
+
 
 
