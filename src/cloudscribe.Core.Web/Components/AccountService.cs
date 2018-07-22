@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2017-05-22
-// Last Modified:			2018-03-07
+// Last Modified:			2018-07-22
 // 
 
 using cloudscribe.Core.Identity;
@@ -94,13 +94,21 @@ namespace cloudscribe.Core.Web.Components
             return null;
         }
 
+        public virtual async Task<bool> IsExistingAccount(string email)
+        {
+            if(string.IsNullOrWhiteSpace(email)) { return false; }
+            var user = await _userManager.FindByNameAsync(email);
+            if(user != null) { return true; }
+            return false;
+        }
+
         
         public virtual async Task<UserLoginResult> TryExternalLogin(string providedEmail = "", bool? didAcceptTerms = null)
         {
             var template = new LoginResultTemplate();
             IUserContext userContext = null;
             var email = providedEmail;
-
+            
             template.ExternalLoginInfo = await _signInManager.GetExternalLoginInfoAsync();
             if (template.ExternalLoginInfo == null)
             {
