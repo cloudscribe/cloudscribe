@@ -59,7 +59,7 @@
                         if (disabledText) {
                             button.val(disabledText);
                             //console.log('set button disabled text');  
-                        }
+                        } 
                     });
                 });
             }
@@ -74,9 +74,13 @@
             //console.log('form was valid');
 			// don't enable buttons form is about to submit
             //buttonManager.enableButtons()
+            window.thisPage = window.thisPage || {};
+            window.thisPage.formSubmitting = true;
         }, function (invalid) {
             //console.log('form was invalid');
-            buttonManager.enableButtons()
+            buttonManager.enableButtons();
+            window.thisPage = window.thisPage || {};
+            window.thisPage.formSubmitting = false;
             });
     });
 })();

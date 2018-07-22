@@ -2,11 +2,12 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2014-10-26
-// Last Modified:			2018-04-05
+// Last Modified:			2018-07-22
 // 
 
 using cloudscribe.Core.Identity;
 using cloudscribe.Core.Models;
+using cloudscribe.Core.Web.Components;
 using cloudscribe.Core.Web.ExtensionPoints;
 using cloudscribe.Core.Web.ViewModels.SiteUser;
 using cloudscribe.Web.Common;
@@ -32,6 +33,7 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
             SiteContext currentSite,
             SiteUserManager<SiteUser> userManager,
             SignInManager<SiteUser> signInManager,
+            IAccountService accountService,
             //ISmsSender smsSender,
             IStringLocalizer<CloudscribeCore> localizer,
             ITimeZoneIdResolver timeZoneIdResolver,
@@ -44,6 +46,7 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
             CurrentSite = currentSite; 
             UserManager = userManager;
             SignInManager = signInManager;
+            AccountService = accountService;
             StringLocalizer = localizer;
             TimeZoneIdResolver = timeZoneIdResolver;
             TimeZoneHelper = timeZoneHelper;
@@ -52,6 +55,7 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
             UrlEncoder = urlEncoder;
         }
 
+        protected IAccountService AccountService { get; private set; }
         protected ILogger Log { get; private set; }
         protected ISiteContext CurrentSite { get; private set; }
         protected SiteUserManager<SiteUser> UserManager { get; private set; }
@@ -636,7 +640,8 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
                 return View("Error");
             }
             var userLogins = await UserManager.GetLoginsAsync(user);
-            var externalSchemes = await SignInManager.GetExternalAuthenticationSchemesAsync();
+            //var externalSchemes = await SignInManager.GetExternalAuthenticationSchemesAsync();
+            var externalSchemes = await AccountService.GetExternalAuthenticationSchemes();
             var otherLogins = externalSchemes.Where(auth => userLogins.All(ul => auth.Name != ul.LoginProvider)).ToList();
             
             var model = new ManageLoginsViewModel

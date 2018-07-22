@@ -756,7 +756,14 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
 
                     Analytics.HandleLoginFail("Social", "ExternalLoginInfo was null").Forget();
 
-                    return View("ExternalLoginFailure");
+                    string message = string.Empty;
+                    var isExistingAccount = await AccountService.IsExistingAccount(model.Email);
+                    if(isExistingAccount)
+                    {
+                        message = StringLocalizer["The provided email address is already in use."];
+                    }
+
+                    return View("ExternalLoginFailure", message);
                 }
 
             }
