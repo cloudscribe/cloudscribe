@@ -1,4 +1,6 @@
 
+http://blog.ploeh.dk/2018/07/24/dependency-injection-revisited/
+
 https://www.stevejgordon.co.uk/asp-net-core-dependency-injection-how-to-register-generic-types
 
 Some thingds such as Controllers, ViewComponents, and TagHelpers are not resolved by the container by default but instead by factories.

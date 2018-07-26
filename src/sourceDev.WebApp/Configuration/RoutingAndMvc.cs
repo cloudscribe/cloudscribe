@@ -66,12 +66,6 @@ namespace Microsoft.AspNetCore.Builder
             bool sslIsAvailable
             )
         {
-
-            services.Configure<ForwardedHeadersOptions>(options =>
-            {
-                options.ForwardedHeaders = Microsoft.AspNetCore.HttpOverrides.ForwardedHeaders.XForwardedProto;
-            });
-
             services.AddRouting(options =>
             {
                 options.LowercaseUrls = true;

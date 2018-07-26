@@ -51,6 +51,8 @@ https://finai.com/en/newsroom/there-is-no-such-thing-as-a-free-free-monad/
 
 https://blog.mavnn.co.uk/trying-dotnetcore-2-dot-0-with-f-number-today/
 
+http://blog.ploeh.dk/2018/07/24/dependency-injection-revisited/
+
 ## Language
 
 http://fsharp.org/
