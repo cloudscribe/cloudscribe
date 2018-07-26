@@ -33,7 +33,7 @@
     {
         <tr>
             <td>
-                <a class="btn btn-xs btn-primary" asp-action="EditClient" asp-controller="Clients"
+                <a class="btn btn-sm btn-primary" asp-action="EditClient" asp-controller="Clients"
                    asp-route-siteId="@Model.SiteId"
                    asp-route-clientid="@s.ClientId">@sr["Edit"]</a>
                 <button type="button" class="btn btn-danger btn-sm" data-toggle="modal" data-target="@("#confirmDeleteClientModal" + index)">

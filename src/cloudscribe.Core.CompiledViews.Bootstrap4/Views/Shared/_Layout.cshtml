@@ -100,12 +100,12 @@
     @RenderSection("Toolbar", required: false)
     <environment names="Development">
         <script src="~/js/jquery.js" cs-resolve-theme-resource="true" cs-shared-theme="true" cs-tenant="@Tenant"></script>
-        <script src="~/js/bootstrap4.bundle.js" cs-resolve-theme-resource="true" cs-shared-theme="true" cs-tenant="@Tenant"></script>
+        <script src="~/js/bootstrap.bundle.js" cs-resolve-theme-resource="true" cs-shared-theme="true" cs-tenant="@Tenant"></script>
         <script src="~/cr/js/bs4.smartmenus.min.js"></script>
     </environment>
     <environment names="Staging,Production">
         <script src="~/js/jquery.min.js" cs-resolve-theme-resource="true" cs-shared-theme="true" cs-tenant="@Tenant"></script>
-        <script src="~/js/bootstrap4.bundle.min.js" cs-resolve-theme-resource="true" cs-shared-theme="true" cs-tenant="@Tenant"></script>
+        <script src="~/js/bootstrap.bundle.min.js" cs-resolve-theme-resource="true" cs-shared-theme="true" cs-tenant="@Tenant"></script>
         <script src="~/cr/js/bs4.smartmenus.min.js"></script>
     </environment>
     @RenderSection("Bottom", required: false)

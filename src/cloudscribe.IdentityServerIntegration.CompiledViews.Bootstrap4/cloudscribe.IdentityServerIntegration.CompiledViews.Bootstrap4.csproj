@@ -2,8 +2,8 @@
 
   <PropertyGroup>
     <Description>Bootstrap 4 pre-compiled views for cloudscribe.Core.IdentityServerIntegration</Description>
-    <VersionPrefix>3.0.3</VersionPrefix>
-    <AssemblyVersion>3.0.3</AssemblyVersion>
+    <VersionPrefix>3.0.4</VersionPrefix>
+    <AssemblyVersion>3.0.4</AssemblyVersion>
     <Authors>Joe Audette</Authors>
     <TargetFrameworks>netstandard2.0</TargetFrameworks>
     <PackageTags>cloudscribe;IdentityServer4;Bootstrap4</PackageTags>

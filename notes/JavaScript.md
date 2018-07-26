@@ -10,8 +10,6 @@ https://medium.com/javascript-scene/elements-of-javascript-style-caa8821cb99f
 
 https://javascriptweblog.wordpress.com/2011/05/31/a-fresh-look-at-javascript-mixins/
 
-Why is bower still in use when they clearly state we should move to yarn/webpack?
-https://github.com/aspnet/Home/issues/2086
 
 Build Web Apps Without All That JavaScript
 https://visualstudiomagazine.com/articles/2017/05/01/build-web-apps.aspx

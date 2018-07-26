@@ -133,8 +133,6 @@ namespace sourceDev.WebApp
                 app.UseExceptionHandler("/oops/Error");
             }
             
-            app.UseForwardedHeaders();
-
             //app.UseStaticFiles();
             app.UseStaticFiles(new StaticFileOptions()
             {
