@@ -1,4 +1,8 @@
 
+
+https://www.smashingmagazine.com/2018/07/logging-activity-web-beacon-api/
+
+
 https://getbootstrap.com/docs/4.1/components/forms/#custom-forms
 
 All modern browsers support the constraint validation API, a series of JavaScript methods for validating form controls.

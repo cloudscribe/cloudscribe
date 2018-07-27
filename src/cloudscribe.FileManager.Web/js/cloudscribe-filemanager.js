@@ -16,6 +16,7 @@
         rootVirtualPath: $("#fmconfig").data("root-virtual-path"),
         rootButton: $('#btnRoot'),
         fileSelectorButton: $('#btnSelector'),
+        fileSelectorButtonAlt: $('#btnSelectorAlt'),
         deleteFolderPromptButton: $('#btnDeleteFolderPrompt'),
         deleteFolderButton: $('#btnDeleteFolder'),
         renameFolderPromptButton: $('#btnRenameFolderPrompt'),
@@ -624,6 +625,7 @@
             this.setupFileLoader();
             this.newFolderButton.on('click', fileManager.createFolder);
             this.fileSelectorButton.on('click', fileManager.selectfile);
+            this.fileSelectorButtonAlt.on('click', fileManager.selectfile);
             this.deleteFolderPromptButton.on('click', fileManager.deleteFolderPrompt);
             this.deleteFolderButton.on('click', fileManager.deleteFolder);
             this.renameFolderPromptButton.on('click', fileManager.renameFolderPrompt);
