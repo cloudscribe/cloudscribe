@@ -1,4 +1,4 @@
-﻿// Author: J Audette 2016-06-22, 2018-04-23
+﻿// Author: J Audette 2016-06-22, 2018-07-27
 $(function () {
     var $elems = $('input[data-bs-datepicker]');
     if ($elems) {
@@ -28,7 +28,7 @@ $(function () {
             var dshowTodayButton = ($(ele).data('bs-datepicker-showtodaybutton') || false);
             var dshowClear = ($(ele).data('bs-datepicker-showclear') || false);
             var dshowClose = ($(ele).data('bs-datepicker-showclose') || false);
-            //var dwidgetPositioning = $(ele).data('bs-datepicker-widgetpositioning');
+            
             var dkeepOpen = ($(ele).data('bs-datepicker-keepopen') || false);
             var dinline = ($(ele).data('bs-datepicker-inline') || false);
             var dkeepInvalid = ($(ele).data('bs-datepicker-keepinvalid') || false);
@@ -39,8 +39,8 @@ $(function () {
             var ddisabledHours = ($(ele).data('bs-datepicker-disabledhours') || false);
             var dviewDate = ($(ele).data('bs-datepicker-viewdate') || false);
             var dUseFontAwesome = ($(ele).data('bs-datepicker-use-fontawesome') || true);
-            var posit = { horizontal: 'left', vertical: 'bottom' };
-            //if(dwidgetPositioning) { posit = $.parseJSON(dwidgetPositioning); };
+            //var posit = { horizontal: 'left', vertical: 'bottom' };
+            
             var iconConfig = {
                 time: "fa fa-clock-o",
                     today: "fa fa-crosshairs",
@@ -69,7 +69,7 @@ $(function () {
 
             $(ele).datetimepicker({
                 debug: debugMode,
-                widgetPositioning: posit,
+                //widgetPositioning: posit,
                 keepOpen: dkeepOpen,
                 allowInputToggle: dallowInputToggle,
                 format: dFormat,

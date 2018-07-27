@@ -31,6 +31,7 @@
 
 </address>
 
+
 <div class="form-group">
     <textarea id="content" name="content" class="form-control" rows="10" cols="70"
               data-markdown-unobtrusive=""
@@ -44,6 +45,24 @@
               data-markdown-dropfileuploadurl="/filemanager/dropfile"></textarea>
 
 </div>
+<div class="form-group">
+    <label for="Status">From date</label>
+    <div class='input-group date' id='fromDateDisplay'>
+        <input type="text"
+               name="fromDateDisplay"
+               class="form-control"
+               data-bs-datepicker="true"
+               data-bs-datepicker-iso-target-id="fromDate"
+               data-bs-datepicker-iso-format="YYYY-MM-DDTHH:mm:ss.sss"
+               data-bs-datepicker-toggle-target-id="fromDateToggle"
+               data-bs-datepicker-allowinputtoggle="true"
+               data-bs-datepicker-locale="@System.Globalization.CultureInfo.CurrentCulture.Name" />
+        <span class="input-group-addon">
+            <span id="fromDateToggle" class="glyphicon glyphicon-calendar"></span>
+        </span>
+    </div>
+</div>
+<input type="hidden" id="fromDate" name="fromDate" value="" />
 
 <div id="fileBrowseDialog" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true">
     <div class="modal-dialog modal-lg" style="height:99%;width:99%;">
@@ -57,29 +76,12 @@
 </div>
 
 
-<div class="form-group">
-    <label for="Status">From date</label>
-    <div class='input-group date' id='fromDateDisplay'>
-        <input type="text"
-               name="fromDateDisplay"
-               class="form-control"
-               data-bs-datepicker="true"
-               data-bs-datepicker-format="DD/MM/YYYY"
-               data-bs-datepicker-iso-target-id="fromDate"
-               data-bs-datepicker-iso-format="YYYY-MM-DD"
-               data-bs-datepicker-toggle-target-id="fromDateToggle"
-               data-bs-datepicker-use-fontawesome="false"
-               data-bs-datepicker-allowinputtoggle="true"
-               data-bs-datepicker-locale="@System.Globalization.CultureInfo.CurrentCulture.Name" />
-        <span class="input-group-addon">
-            <span id="fromDateToggle" class="glyphicon glyphicon-calendar"></span>
-        </span>
-    </div>
-</div>
-<input type="hidden" id="fromDate" name="fromDate" value="" />
+
 
 @section Scripts {
-    @{ await Html.RenderPartialAsync("DatePickerBs4Scripts"); }
+    <script src="~/cr/js/moment-with-locales.min.js"></script>
+    <script src="~/cr/js/bootstrap4-datetimepicker.min.js"></script>
+    <script src="/js/cloudscribe-datepicker-bootstrap4-unobtrusive.js"></script>
 
     <script src="~/cr/js/jquery.unobtrusive-ajax.min.js"></script>
     <script src="~/cr/js/cloudscribe-modaldialog-bootstrap.min.js"></script>

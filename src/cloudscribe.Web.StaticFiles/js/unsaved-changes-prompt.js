@@ -19,4 +19,17 @@ document.addEventListener("DOMContentLoaded", function () {
             window.thisPage.hasUnsavedChanges = true;
         }, false);
     });
+    [].forEach.call(document.querySelectorAll("select"), function (input) {
+        input.addEventListener("change", function () {
+            window.thisPage = window.thisPage || {};
+            window.thisPage.hasUnsavedChanges = true;
+        }, false);
+    });
+    [].forEach.call(document.querySelectorAll("textarea"), function (input) {
+        input.addEventListener("input", function () {
+            window.thisPage = window.thisPage || {};
+            window.thisPage.hasUnsavedChanges = true;
+        }, false);
+    });
+
 });

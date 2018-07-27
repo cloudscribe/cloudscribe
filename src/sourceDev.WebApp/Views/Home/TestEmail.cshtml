@@ -83,11 +83,19 @@
                 <span asp-validation-for="ConfigLookupKey" class="text-danger"></span>
             </div>
             <div class="form-group">
+                <select name="option">
+                    <option value="">option 1</option>
+                    <option value="option2">option 2</option>
+                </select>
+            </div>
+            <div class="form-group">
                 <input type="submit" value="Send" class="btn btn-default" />
             </div>
         </form>
     </div>
 </div>
-
+@section Scripts {
+    <script src="/js/unsaved-changes-prompt.js"></script>
+}
 
 
