@@ -1,15 +1,6 @@
 
-Why use OpenStreetMap instead of Google Maps ?
-https://www.openstreetmap.org/user/jbelien/diary/44356
-
-https://switch2osm.org/
-
 https://www.mapbox.com/help/how-web-apps-work/
 
-
-https://blog.emacsen.net/blog/2018/02/16/osm-is-in-trouble/
-
-https://trackchanges.postlight.com/open-source-geo-is-really-something-right-now-f8e310c5f57a?gi=38bcde83fcf8#.wbks9g5ea
 
 https://mapzen.com/
 
@@ -101,6 +92,8 @@ http://geo.nls.uk/maps/api/openlayers.html
 bing to certain usage
 https://openlayers.org/en/latest/examples/bing-maps.html
 
+https://www.maptiler.com/
+
 
 ## Online Converters
 
@@ -109,6 +102,22 @@ http://spatialreference.org/
 https://epsg.io/transform
 
 https://mygeodata.cloud/cs2cs/
+
+
+## Open Stree Maps
+
+Why use OpenStreetMap instead of Google Maps ?
+https://www.openstreetmap.org/user/jbelien/diary/44356
+
+https://switch2osm.org/
+
+https://blog.emacsen.net/blog/2018/02/16/osm-is-in-trouble/
+
+https://trackchanges.postlight.com/open-source-geo-is-really-something-right-now-f8e310c5f57a?gi=38bcde83fcf8#.wbks9g5ea
+
+
+What OpenStreetMap can be
+http://blog.systemed.net/post/15
 
 ## Bing Maps
 

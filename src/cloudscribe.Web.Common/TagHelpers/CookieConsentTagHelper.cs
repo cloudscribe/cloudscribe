@@ -72,7 +72,7 @@ namespace cloudscribe.Web.Common.TagHelpers
         public string LocalCssUrl { get; set; } = "/cr/css/cookieconsent.min.css";
 
         [HtmlAttributeName("cdn-enable")]
-        public bool UseCdn { get; set; } = true;
+        public bool UseCdn { get; set; } = false;
 
         [HtmlAttributeName("local-disable")]
         public bool DisableLocalJsAndCss { get; set; } 
