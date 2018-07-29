@@ -24,6 +24,9 @@ http://fiyazhasan.me/graphql-with-asp-net-core-part-iii-dependency-injection/
 An in-browser IDE for exploring GraphQL.
 https://github.com/graphql/graphiql
 
+GraphQL with Cory House
+https://www.dotnetrocks.com/?show=1566
+
 ## .NET Implementation
 
 GraphQL is a query language for your API, and a server-side runtime for executing queries by using a type system you define for your data. GraphQL isn't tied to any specific database or storage engine and is instead backed by your existing code and data.
