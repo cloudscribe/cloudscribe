@@ -8,7 +8,6 @@
 
 using cloudscribe.Core.IdentityServer.NoDb.Models;
 using cloudscribe.Core.IdentityServerIntegration.Storage;
-using cloudscribe.Core.Models.Generic;
 using IdentityServer4.Models;
 using NoDb;
 using System;

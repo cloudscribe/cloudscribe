@@ -1,4 +1,6 @@
 
+https://rehansaeed.com/asp-net-core-hidden-gem-queryhelpers/
+
 Introducing .NET IL Linker
 https://github.com/dotnet/announcements/issues/30
 
