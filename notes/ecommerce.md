@@ -1,9 +1,25 @@
+# Ecommerce Notes
 
+## General
 
 https://www.cnet.com/news/companies-must-let-customers-cancel-subscriptions-online-california-law-says/
 
+https://blogs.dropbox.com/tech/2017/09/handling-system-failures-during-payment-communication/
+
+
+## Square aka squareup.com
+
+https://squareup.com/pos/payments
+https://squareup.com/help/us/en/article/3853-square-s-e-commerce-api-faqs
+2.75% PER SWIPE, DIP, OR TAP 
+3.5% + 15¢ PER KEYED-IN TRANSACTION
+2.9% + .30 per api tramsaction
+
 Square does not yet support asp.net core
 https://github.com/square/connect-csharp-sdk
+I ported it myself
+https://github.com/joeaudette/square.netstandard
+https://www.nuget.org/packages?q=Square.NetStandard
 
 javascript form
 https://docs.connect.squareup.com/payments/sqpaymentform/sqpaymentform-overview
@@ -21,7 +37,6 @@ https://github.com/square/connect-csharp-sdk/blob/master/docs/OrdersApi.md#batch
 Refunds
 https://squareup.com/help/us/en/article/5060
 
-
 https://github.com/square/connect-api-examples/tree/master/connect-examples/v2/csharp_payment
 
 https://connect.squareup.com/apps
@@ -30,30 +45,87 @@ https://docs.connect.squareup.com/
 https://docs.connect.squareup.com/api/connect/v2
 https://docs.connect.squareup.com/articles/processing-payment-rest
 
+Test Card
+Card Number 4532 7597 3454 5858
+Card CVV 111
+Card Expiration (Any time in the future)
+Card Postal Code (Any valid US postal code)
 
-Stripe does
+### Recurring Payments/Subscriptions
+
+https://squareup.com/townsquare/how-to-recurring-payments
+> I’m a developer and I want to bill my customers automatically in app - can I integrate Square’s recurring billing feature via API?
+Not yet - but we plan to! Stay in touch with new releases and updates to our payments APIs by following our Developers Portal.
+
+https://squareup.com/help/us/en/article/5096-process-recurring-or-subscription-payments
+
+
+## Stripe
+
+https://stripe.com
+
 https://github.com/stripe/stripe-dotnet
-
-https://blogs.dropbox.com/tech/2017/09/handling-system-failures-during-payment-communication/
-
-
-https://www.nuget.org/packages/Square.Connect/
-https://www.nuget.org/packages/RestSharp/
-
-https://squareup.com/pos/payments
-https://squareup.com/help/us/en/article/3853-square-s-e-commerce-api-faqs
-2.75% PER SWIPE, DIP, OR TAP 
-3.5% + 15¢ PER KEYED-IN TRANSACTION
-2.9% + .30 per api tramsaction
-
+https://www.nuget.org/packages/Stripe.net/
 
 https://stripe.com/us/pricing
 2.9%  + 30¢ per transaction
 per successful card charge
 fees icon No setup, monthly, or hidden fees
 
-Test Card
-Card Number 4532 7597 3454 5858
-Card CVV 111
-Card Expiration (Any time in the future)
-Card Postal Code (Any valid US postal code)
+https://stripe.com/docs/checkout
+
+https://stripe.com/docs/stripe-js/elements/quickstart
+
+https://stripe.com/docs/saving-cards
+
+https://stripe.com/docs/testing#cards
+
+The API supports idempotency for safely retrying requests without accidentally performing the same operation twice. 
+https://stripe.com/docs/api?lang=curl#idempotent_requests
+
+https://stripe.com/docs/disputes/prevention#make-use-of-verification-checks
+
+### Recurring Payments/Subscriptions
+
+Plans
+Plans define the base price, currency, and billing cycle for subscriptions. For example, you might have a $5/month plan that provides limited access to your products, and a $15/month plan that allows full access.
+https://stripe.com/docs/api#plans
+
+Subscriptions
+Subscriptions allow you to charge a customer on a recurring basis. A subscription ties a customer to a particular plan you’ve created.
+https://stripe.com/docs/api#subscriptions
+
+https://stripe.com/docs/billing/quickstart
+
+https://stripe.com/docs/billing/testing
+
+https://stripe.com/docs/webhooks
+
+## Stripe Webhooks 
+https://www.nuget.org/packages/Microsoft.AspNetCore.WebHooks.Receivers.Stripe/
+
+https://stripe.com/docs/webhooks
+
+Webhook endpoints can only be configured from the dashboard unfortunately.
+
+Stripe can send webhook events that notify your application any time an event happens on your account. This is especially useful for events—like disputed charges and many recurring billing events—that are not triggered by a direct API request. This mechanism is also useful for services that are not directly responsible for making an API request, but still need to know the response from that request.
+
+You can register webhook URLs that we will notify any time an event happens in your account. When the event occurs—a successful charge is made on a customer’s subscription, a transfer is paid, your account is updated, etc.—Stripe creates an Event object.
+
+This Event object contains all the relevant information about what just happened, including the type of event and the data associated with that event. Stripe then sends the Event object, via an HTTP POST request, to any endpoint URLs that you have defined in your account’s Webhooks settings. You can have Stripe send a single event to many webhook endpoints.
+
+You might also use webhooks as the basis to:
+
+Update a customer's membership record in your database when a subscription payment succeeds
+Email a customer when a subscription payment fails
+Examine the Dashboard if you see that a dispute was filed
+Make adjustments to an invoice when it's created (but before it's been paid)
+Log an accounting entry when a transfer is paid
+
+https://www.masteringmodernpayments.com/stripe-webhook-event-cheatsheet
+
+https://github.com/stripe/stripe-webhook-monitor
+
+An alternative to webhooks is to query events 
+https://stripe.com/docs/api#retrieve_event
+
