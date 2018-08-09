@@ -51,7 +51,7 @@ namespace cloudscribe.Core.Web.Components
         protected readonly IProcessAccountLoginRules _loginRulesProcessor;
         protected readonly INewUserDisplayNameResolver _displayNameResolver;
         
-        private async Task<SiteUser> CreateUserFromExternalLogin(
+        protected virtual async Task<SiteUser> CreateUserFromExternalLogin(
             ExternalLoginInfo externalLoginInfo, 
             string providedEmail = null,
             bool? didAcceptTerms = null
@@ -532,7 +532,7 @@ namespace cloudscribe.Core.Web.Components
                 );
         }
 
-        public async Task<ResetPasswordInfo> GetPasswordResetInfo(string email)
+        public virtual async Task<ResetPasswordInfo> GetPasswordResetInfo(string email)
         {
             IUserContext userContext = null;
             string token = null;
@@ -547,7 +547,7 @@ namespace cloudscribe.Core.Web.Components
             return new ResetPasswordInfo(userContext, token);
         }
 
-        public async Task<ResetPasswordResult> ResetPassword(string email, string password, string resetCode)
+        public virtual async Task<ResetPasswordResult> ResetPassword(string email, string password, string resetCode)
         {
             IUserContext userContext = null;
             IdentityResult result = IdentityResult.Failed(null);
@@ -562,7 +562,7 @@ namespace cloudscribe.Core.Web.Components
             return new ResetPasswordResult(userContext, result);
         }
 
-        public async Task<VerifyEmailInfo> GetEmailVerificationInfo(Guid userId)
+        public virtual async Task<VerifyEmailInfo> GetEmailVerificationInfo(Guid userId)
         {
             IUserContext userContext = null;
             string token = null;
@@ -591,7 +591,7 @@ namespace cloudscribe.Core.Web.Components
             return new VerifyEmailResult(userContext, result);
         }
 
-        public async Task<IUserContext> GetTwoFactorAuthenticationUserAsync()
+        public virtual async Task<IUserContext> GetTwoFactorAuthenticationUserAsync()
         {
             var user = await _signInManager.GetTwoFactorAuthenticationUserAsync();
             if(user != null)
@@ -602,7 +602,7 @@ namespace cloudscribe.Core.Web.Components
             return null;
         }
 
-        public async Task<TwoFactorInfo> GetTwoFactorInfo(string provider = null)
+        public virtual async Task<TwoFactorInfo> GetTwoFactorInfo(string provider = null)
         {
             IUserContext userContext = null;
             IList<string> userFactors = new List<string>();
@@ -621,7 +621,7 @@ namespace cloudscribe.Core.Web.Components
             return new TwoFactorInfo(userContext, userFactors, token);
         }
 
-        public async Task HandleUserRolesChanged(ClaimsPrincipal principal)
+        public virtual async Task HandleUserRolesChanged(ClaimsPrincipal principal)
         {
             if (principal == null) return;
             var userId = principal.GetUserId();
@@ -640,7 +640,7 @@ namespace cloudscribe.Core.Web.Components
             
         }
 
-        public async Task<bool> AcceptRegistrationAgreement(ClaimsPrincipal principal)
+        public virtual async Task<bool> AcceptRegistrationAgreement(ClaimsPrincipal principal)
         {
             if (principal == null) return false;
             var userId = principal.GetUserId();
@@ -664,27 +664,27 @@ namespace cloudscribe.Core.Web.Components
         //    return null;
         //}
 
-        public async Task<SignInResult> TwoFactorSignInAsync(string provider, string code, bool rememberMe, bool rememberBrowser)
+        public virtual async Task<SignInResult> TwoFactorSignInAsync(string provider, string code, bool rememberMe, bool rememberBrowser)
         {
             return await _signInManager.TwoFactorSignInAsync(provider, code, rememberMe, rememberBrowser);
         }
 
-        public async Task<SignInResult> TwoFactorAuthenticatorSignInAsync(string code, bool rememberMe, bool rememberBrowser)
+        public virtual async Task<SignInResult> TwoFactorAuthenticatorSignInAsync(string code, bool rememberMe, bool rememberBrowser)
         {
             return await _signInManager.TwoFactorAuthenticatorSignInAsync(code, rememberMe, rememberBrowser);
         }
 
-        public async Task<SignInResult> TwoFactorRecoveryCodeSignInAsync(string code)
+        public virtual async Task<SignInResult> TwoFactorRecoveryCodeSignInAsync(string code)
         {
             return await _signInManager.TwoFactorRecoveryCodeSignInAsync(code);
         }
 
-        public AuthenticationProperties ConfigureExternalAuthenticationProperties(string provider, string returnUrl = null)
+        public virtual AuthenticationProperties ConfigureExternalAuthenticationProperties(string provider, string returnUrl = null)
         {
             return _signInManager.ConfigureExternalAuthenticationProperties(provider, returnUrl);
         }
 
-        public async Task<List<Microsoft.AspNetCore.Authentication.AuthenticationScheme>> GetExternalAuthenticationSchemes()
+        public virtual async Task<List<Microsoft.AspNetCore.Authentication.AuthenticationScheme>> GetExternalAuthenticationSchemes()
         {
             var result = await _signInManager.GetExternalAuthenticationSchemesAsync();
             var allProviders = result.OrderBy(x => x.DisplayName).ToList();
@@ -700,7 +700,7 @@ namespace cloudscribe.Core.Web.Components
             return filteredProviders;
         }
 
-        private bool IsSocialAuthConfigured(Microsoft.AspNetCore.Authentication.AuthenticationScheme scheme)
+        protected virtual bool IsSocialAuthConfigured(Microsoft.AspNetCore.Authentication.AuthenticationScheme scheme)
         {
             switch(scheme.Name)
             {
@@ -730,12 +730,12 @@ namespace cloudscribe.Core.Web.Components
             return _signInManager.IsSignedIn(user);
         }
 
-        public async Task SignOutAsync()
+        public virtual async Task SignOutAsync()
         {
             await _signInManager.SignOutAsync();
         }
 
-        public async Task<bool> LoginNameIsAvailable(Guid userId, string loginName)
+        public virtual async Task<bool> LoginNameIsAvailable(Guid userId, string loginName)
         {
             return await _userManager.LoginIsAvailable(userId, loginName);
         }
