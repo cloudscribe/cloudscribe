@@ -78,6 +78,8 @@ https://stripe.com/docs/stripe-js/elements/quickstart
 
 https://stripe.com/docs/saving-cards
 
+https://stripe.com/docs/recipes/updating-customer-cards
+
 https://stripe.com/docs/testing#cards
 
 The API supports idempotency for safely retrying requests without accidentally performing the same operation twice. 
@@ -85,7 +87,18 @@ https://stripe.com/docs/api?lang=curl#idempotent_requests
 
 https://stripe.com/docs/disputes/prevention#make-use-of-verification-checks
 
+### Customer flow
+
+if the site user does not yet have a stripe customer id we show the credit card form, and use the token to create the customer.
+
+For future transactions we just use the customer id to charge the customer.
+We can have a form where the customer can change his payment method or add a new different card and make it the default.
+
 ### Recurring Payments/Subscriptions
+
+it is not possible for one Customer to have subscriptions with different payment sources. All invoices for subscriptions are always billed to the current default_source for the Customer. So if you change the default as Giles Bennett suggested, you'll be changing it for all subscriptions, regardless of what the default was at time of creation.
+
+If you need one user to have subscriptions with more than one source, you need to create multiple stripe Customer objects for that user, with a different default_source for each.
 
 Plans
 Plans define the base price, currency, and billing cycle for subscriptions. For example, you might have a $5/month plan that provides limited access to your products, and a $15/month plan that allows full access.
