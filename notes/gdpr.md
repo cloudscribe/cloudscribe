@@ -1,4 +1,5 @@
 
+https://kruschecompany.com/blog/post/gdpr-smart-practices
 
 https://docs.microsoft.com/en-us/aspnet/core/security/gdpr?view=aspnetcore-2.1
 
