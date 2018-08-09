@@ -50,7 +50,7 @@ if (!string.IsNullOrWhiteSpace(Tenant.SiteFolderName)) { siteRoot = "/" + Tenant
 
             <div class="collapse navbar-collapse" id="navbarNavDropdown">
                 @await Component.InvokeAsync("Navigation", new { viewName = "Bootstrap4TopNavWithDropdowns", filterName = NamedNavigationFilters.TopNav, startingNodeKey = "" })
-                @await Html.PartialAsync("_LoginPartial")
+                @await Html.PartialAsync("_LoginPartialWithDropdowns")
             </div>
         </nav>
     </header>
