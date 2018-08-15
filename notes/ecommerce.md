@@ -114,8 +114,17 @@ https://stripe.com/docs/billing/testing
 
 https://stripe.com/docs/webhooks
 
+## Linking to Stripe Dashboard
+
+Production:
+https://dashboard.stripe.com/customers/cus_DP7oxTdvsJSrr9
+Test:
+https://dashboard.stripe.com/test/customers/cus_DME5qmiPcAeicU
+
 ## Stripe Webhooks 
 https://www.nuget.org/packages/Microsoft.AspNetCore.WebHooks.Receivers.Stripe/
+https://github.com/aspnet/WebHooks
+https://github.com/aspnet/WebHooks/tree/master/samples/StripeCoreReceiver
 
 https://stripe.com/docs/webhooks
 

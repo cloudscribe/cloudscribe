@@ -1,7 +1,10 @@
 
 
+
 Blazor, a new framework for browser-based .NET apps - Steve Sanderson
 https://www.youtube.com/watch?v=JU-6pAxqAa4&feature=youtu.be
+
+https://weblog.west-wind.com/posts/2018/Jul/31/Web-Assembly-and-Blazor-Reassembling-the-Web
 
 https://blogs.msdn.microsoft.com/webdev/2018/07/25/blazor-0-5-0-experimental-release-now-available/
 
