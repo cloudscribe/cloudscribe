@@ -1,4 +1,7 @@
 
+https://docs.microsoft.com/en-us/nuget/hosting-packages/local-feeds
+
+
 https://blog.nuget.org/20180522/Introducing-signed-package-submissions.html
 
 

@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:				    2014-07-22
-// Last Modified:		    2018-03-14
+// Last Modified:		    2018-08-15
 // 
 //
 
@@ -522,6 +522,25 @@ namespace cloudscribe.Core.Identity
         //    }
         //    return results;
         //}
+
+        public override async Task<bool> VerifyUserTokenAsync(TUser user, string tokenProvider, string purpose, string token)
+        {
+            var result = await base.VerifyUserTokenAsync(user, tokenProvider, purpose, token);
+            if(!result && purpose == "ResetPassword")
+            {
+                // when migrating users from other systems we don't have a way to populate the security stamp
+                // so passowrd reset fails. We need migrated users to be able to reset their password which will in turn create 
+                // a hashed password and populate the security stamp
+                // cleartext||0 indicates a clear text password
+                // when migrating we use a random guid like guid||0 the user don't know the guid so can't login and needs recovery
+                if (string.IsNullOrEmpty(user.SecurityStamp) && user.PasswordHash.EndsWith("||0")) 
+                {
+                    return true;
+                }
+            }
+
+            return result;
+        }
 
 
 
