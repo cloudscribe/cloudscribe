@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2014-08-16
-// Last Modified:			2017-12-29
+// Last Modified:			2018-08-17
 // 
 
 using cloudscribe.Pagination.Models;
@@ -13,7 +13,7 @@ using System.Threading.Tasks;
 
 namespace cloudscribe.Core.Models
 {
-    public interface ISiteQueries : IDisposable
+    public interface ISiteQueries 
     {
         Task<ISiteSettings> Fetch(Guid siteId, CancellationToken cancellationToken = default(CancellationToken));
         Task<ISiteSettings> Fetch(string hostName, CancellationToken cancellationToken = default(CancellationToken));

@@ -19,38 +19,23 @@ namespace cloudscribe.Core.Storage.NoDb
     public class SiteQueries : ISiteQueries
     {
         public SiteQueries(
-           // IProjectResolver projectResolver,
             IBasicQueries<SiteSettings> queries,
             IBasicQueries<SiteHost> hostQueries
             )
         {
-            //this.projectResolver = new DefaultProjectResolver();
             this.queries = queries;
             this.hostQueries = hostQueries;
 
         }
 
-        //private IProjectResolver projectResolver;
         private IBasicQueries<SiteSettings> queries;
         private IBasicQueries<SiteHost> hostQueries;
-
-        //protected string projectId;
-
-        //private async Task EnsureProjectId()
-        //{
-        //    if (string.IsNullOrEmpty(projectId))
-        //    {
-        //        projectId = await projectResolver.ResolveProjectId().ConfigureAwait(false);
-        //    }
-
-        //}
-
+        
         // need custom NoDb logic for option to lookup across projects
         public async Task<ISiteSettings> Fetch(
             Guid siteId,
             CancellationToken cancellationToken = default(CancellationToken))
         {
-            ThrowIfDisposed();
             cancellationToken.ThrowIfCancellationRequested();
 
             //await EnsureProjectId().ConfigureAwait(false);
@@ -68,7 +53,7 @@ namespace cloudscribe.Core.Storage.NoDb
             string hostName,
             CancellationToken cancellationToken = default(CancellationToken))
         {
-            ThrowIfDisposed();
+
             cancellationToken.ThrowIfCancellationRequested();
 
             //await EnsureProjectId().ConfigureAwait(false);
@@ -104,7 +89,6 @@ namespace cloudscribe.Core.Storage.NoDb
             string folderName,
             CancellationToken cancellationToken = default(CancellationToken))
         {
-            ThrowIfDisposed();
             cancellationToken.ThrowIfCancellationRequested();
 
             //await EnsureProjectId().ConfigureAwait(false);
@@ -141,7 +125,6 @@ namespace cloudscribe.Core.Storage.NoDb
             CancellationToken cancellationToken = default(CancellationToken)
             )
         {
-            ThrowIfDisposed();
             cancellationToken.ThrowIfCancellationRequested();
 
             //await EnsureProjectId().ConfigureAwait(false);
@@ -164,7 +147,6 @@ namespace cloudscribe.Core.Storage.NoDb
             CancellationToken cancellationToken = default(CancellationToken)
             )
         {
-            ThrowIfDisposed();
             cancellationToken.ThrowIfCancellationRequested();
 
             //await EnsureProjectId().ConfigureAwait(false);
@@ -191,7 +173,6 @@ namespace cloudscribe.Core.Storage.NoDb
 
         public async Task<int> GetCount(CancellationToken cancellationToken = default(CancellationToken))
         {
-            ThrowIfDisposed();
             cancellationToken.ThrowIfCancellationRequested();
 
             //await EnsureProjectId().ConfigureAwait(false);
@@ -203,7 +184,6 @@ namespace cloudscribe.Core.Storage.NoDb
 
         public async Task<List<ISiteInfo>> GetList(CancellationToken cancellationToken = default(CancellationToken))
         {
-            ThrowIfDisposed();
             cancellationToken.ThrowIfCancellationRequested();
 
             //await EnsureProjectId().ConfigureAwait(false);
@@ -232,7 +212,7 @@ namespace cloudscribe.Core.Storage.NoDb
             Guid currentSiteId,
             CancellationToken cancellationToken = default(CancellationToken))
         {
-            ThrowIfDisposed();
+
             cancellationToken.ThrowIfCancellationRequested();
 
             //await EnsureProjectId().ConfigureAwait(false);
@@ -249,7 +229,6 @@ namespace cloudscribe.Core.Storage.NoDb
             int pageSize,
             CancellationToken cancellationToken = default(CancellationToken))
         {
-            ThrowIfDisposed();
             cancellationToken.ThrowIfCancellationRequested();
 
             //await EnsureProjectId().ConfigureAwait(false);
@@ -287,7 +266,6 @@ namespace cloudscribe.Core.Storage.NoDb
 
         public async Task<List<ISiteHost>> GetAllHosts(CancellationToken cancellationToken = default(CancellationToken))
         {
-            ThrowIfDisposed();
             cancellationToken.ThrowIfCancellationRequested();
 
             //await EnsureProjectId().ConfigureAwait(false);
@@ -305,7 +283,6 @@ namespace cloudscribe.Core.Storage.NoDb
 
         public async Task<int> GetHostCount(CancellationToken cancellationToken = default(CancellationToken))
         {
-            ThrowIfDisposed();
             cancellationToken.ThrowIfCancellationRequested();
 
             //await EnsureProjectId().ConfigureAwait(false);
@@ -320,7 +297,6 @@ namespace cloudscribe.Core.Storage.NoDb
             int pageSize,
             CancellationToken cancellationToken = default(CancellationToken))
         {
-            ThrowIfDisposed();
             cancellationToken.ThrowIfCancellationRequested();
 
             //await EnsureProjectId().ConfigureAwait(false);
@@ -352,7 +328,6 @@ namespace cloudscribe.Core.Storage.NoDb
             Guid siteId,
             CancellationToken cancellationToken = default(CancellationToken))
         {
-            ThrowIfDisposed();
             cancellationToken.ThrowIfCancellationRequested();
 
             //await EnsureProjectId().ConfigureAwait(false);
@@ -374,7 +349,6 @@ namespace cloudscribe.Core.Storage.NoDb
             string hostName,
             CancellationToken cancellationToken = default(CancellationToken))
         {
-            ThrowIfDisposed();
             cancellationToken.ThrowIfCancellationRequested();
 
             //await EnsureProjectId().ConfigureAwait(false);
@@ -395,7 +369,6 @@ namespace cloudscribe.Core.Storage.NoDb
         public async Task<List<string>> GetAllSiteFolders(
             CancellationToken cancellationToken = default(CancellationToken))
         {
-            ThrowIfDisposed();
             cancellationToken.ThrowIfCancellationRequested();
 
             //await EnsureProjectId().ConfigureAwait(false);
@@ -413,54 +386,6 @@ namespace cloudscribe.Core.Storage.NoDb
             return items;
 
         }
-
         
-
-
-        #region IDisposable Support
-
-        private void ThrowIfDisposed()
-        {
-            if (disposedValue)
-            {
-                throw new ObjectDisposedException(GetType().Name);
-            }
-        }
-
-        private bool disposedValue = false; // To detect redundant calls
-
-        void Dispose(bool disposing)
-        {
-            if (!disposedValue)
-            {
-                if (disposing)
-                {
-                    // TODO: dispose managed state (managed objects).
-                }
-
-                // TODO: free unmanaged resources (unmanaged objects) and override a finalizer below.
-                // TODO: set large fields to null.
-
-                disposedValue = true;
-            }
-        }
-
-        // TODO: override a finalizer only if Dispose(bool disposing) above has code to free unmanaged resources.
-        // ~SiteRoleStore() {
-        //   // Do not change this code. Put cleanup code in Dispose(bool disposing) above.
-        //   Dispose(false);
-        // }
-
-        // This code added to correctly implement the disposable pattern.
-        public void Dispose()
-        {
-            // Do not change this code. Put cleanup code in Dispose(bool disposing) above.
-            Dispose(true);
-            // TODO: uncomment the following line if the finalizer is overridden above.
-            // GC.SuppressFinalize(this);
-        }
-
-        #endregion
-
     }
 }

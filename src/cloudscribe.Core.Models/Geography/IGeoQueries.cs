@@ -13,7 +13,7 @@ using cloudscribe.Pagination.Models;
 
 namespace cloudscribe.Core.Models.Geography
 {
-    public interface IGeoQueries : IDisposable
+    public interface IGeoQueries 
     {
         Task<IGeoCountry> FetchCountry(Guid id, CancellationToken cancellationToken = default(CancellationToken));
         Task<IGeoCountry> FetchCountry(string isoCode2, CancellationToken cancellationToken = default(CancellationToken));

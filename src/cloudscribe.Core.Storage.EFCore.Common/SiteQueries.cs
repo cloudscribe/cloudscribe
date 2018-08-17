@@ -18,79 +18,67 @@ namespace cloudscribe.Core.Storage.EFCore.Common
 {
     public class SiteQueries : ISiteQueries
     {
-        public SiteQueries(ICoreDbContext dbContext)
+        public SiteQueries(ICoreDbContextFactory coreDbContextFactory)
         {
-            this.dbContext = dbContext;
+            _contextFactory = coreDbContextFactory;
         }
 
-        private ICoreDbContext dbContext;
-
+        private readonly ICoreDbContextFactory _contextFactory;
+        
         public async Task<ISiteSettings> Fetch(
             Guid siteId,
             CancellationToken cancellationToken = default(CancellationToken))
         {
-            ThrowIfDisposed();
             cancellationToken.ThrowIfCancellationRequested();
 
-            var item = await dbContext.Sites
-                .AsNoTracking()
-                .SingleOrDefaultAsync(
-                    x => x.Id.Equals(siteId)
-                    , cancellationToken)
-                    .ConfigureAwait(false);
+            using (var _db = _contextFactory.CreateContext())
+            {
+                var item = await _db.Sites
+               .AsNoTracking()
+               .SingleOrDefaultAsync(
+                   x => x.Id.Equals(siteId)
+                   , cancellationToken)
+                   .ConfigureAwait(false);
 
-            return item;
+                return item;
+            }
+
         }
-
-        //public ISiteSettings FetchNonAsync(Guid siteId)
-        //{
-        //    SiteSettings item
-        //        = dbContext.Sites.AsNoTracking().SingleOrDefault(x => x.Id.Equals(siteId));
-
-        //    return item;
-        //}
-
+        
         public async Task<ISiteSettings> Fetch(
             string hostName,
             CancellationToken cancellationToken = default(CancellationToken))
         {
-            ThrowIfDisposed();
             cancellationToken.ThrowIfCancellationRequested();
 
-            var host = await dbContext.SiteHosts
+            using (var _db = _contextFactory.CreateContext())
+            {
+                var host = await _db.SiteHosts
                 .AsNoTracking()
                 .FirstOrDefaultAsync(
                 x => x.HostName.Equals(hostName)
                 , cancellationToken)
                 .ConfigureAwait(false);
 
-            if (host == null)
-            {
-                //var query = from s in dbContext.Sites
-                //            .Take(1)
-                //            orderby s.CreatedUtc ascending
-                //            select s;
-                return await dbContext.Sites
+                if (host == null)
+                {
+                    
+                    return await _db.Sites
+                        .AsNoTracking()
+                        .OrderBy(s => s.CreatedUtc)
+                        .FirstOrDefaultAsync(cancellationToken)
+                        .ConfigureAwait(false)
+                        ;
+                }
+
+                return await _db.Sites
                     .AsNoTracking()
-                    .OrderBy(s => s.CreatedUtc)
-                    .FirstOrDefaultAsync(cancellationToken)
-                    .ConfigureAwait(false)
-                    ;
-
-                //return await query
-                //    .AsNoTracking()
-                //    .SingleOrDefaultAsync<SiteSettings>(cancellationToken)
-                //    .ConfigureAwait(false);
+                    .SingleOrDefaultAsync(
+                    x => x.Id.Equals(host.SiteId)
+                    , cancellationToken)
+                    .ConfigureAwait(false);
             }
-
-            return await dbContext.Sites
-                .AsNoTracking()
-                .SingleOrDefaultAsync(
-                x => x.Id.Equals(host.SiteId)
-                , cancellationToken)
-                .ConfigureAwait(false);
-
-
+            
         }
 
         /// <summary>
@@ -103,92 +91,55 @@ namespace cloudscribe.Core.Storage.EFCore.Common
             string folderName,
             CancellationToken cancellationToken = default(CancellationToken))
         {
-            ThrowIfDisposed();
             cancellationToken.ThrowIfCancellationRequested();
 
             ISiteSettings site = null;
-            if (!string.IsNullOrEmpty(folderName) && folderName != "root")
-            {
-                site = await dbContext.Sites
-                    .AsNoTracking()
-                    .FirstOrDefaultAsync(x => x.SiteFolderName == folderName
-                , cancellationToken)
-                .ConfigureAwait(false);
-            }
 
-            if (site == null)
+            using (var _db = _contextFactory.CreateContext())
             {
-                //var query = from s in dbContext.Sites
-                //            where string.IsNullOrEmpty(s.SiteFolderName)
-                //            orderby s.CreatedUtc ascending
-                //            select s;
-
-                site = await dbContext.Sites
-                    .AsNoTracking()
-                    .Where(x => string.IsNullOrEmpty(x.SiteFolderName))
-                    .OrderBy(x => x.CreatedUtc)
-                    .FirstOrDefaultAsync(cancellationToken)
+                if (!string.IsNullOrEmpty(folderName) && folderName != "root")
+                {
+                    site = await _db.Sites
+                        .AsNoTracking()
+                        .FirstOrDefaultAsync(x => x.SiteFolderName == folderName
+                    , cancellationToken)
                     .ConfigureAwait(false);
+                }
+
+                if (site == null)
+                {
+                    site = await _db.Sites
+                        .AsNoTracking()
+                        .Where(x => string.IsNullOrEmpty(x.SiteFolderName))
+                        .OrderBy(x => x.CreatedUtc)
+                        .FirstOrDefaultAsync(cancellationToken)
+                        .ConfigureAwait(false);
+                }
+
+                return site;
             }
-
-            return site;
-
-
+            
         }
-
-        //public ISiteSettings FetchNonAsync(string hostName)
-        //{
-        //    var host = dbContext.SiteHosts.FirstOrDefault(x => x.HostName == hostName);
-        //    if (host == null)
-        //    {
-        //        var query = from s in dbContext.Sites
-        //                    .Take(1)
-        //                    orderby s.CreatedUtc ascending
-        //                    select s;
-
-        //        return query.AsNoTracking().SingleOrDefault<SiteSettings>();
-        //    }
-
-        //    return dbContext.Sites.AsNoTracking().SingleOrDefault(x => x.Id == host.SiteGuid);
-
-        //}
-
-        //public ISiteSettings FetchByFolderNameNonAsync(string folderName)
-        //{
-        //    var site = dbContext.Sites
-        //        .AsNoTracking()
-        //        .FirstOrDefault(x => x.SiteFolderName == folderName);
-
-        //    if (site == null)
-        //    {
-        //        var query = from s in dbContext.Sites
-        //                    .Take(1)
-        //                    orderby s.CreatedUtc ascending
-        //                    select s;
-
-        //        site = query.AsNoTracking().FirstOrDefault<SiteSettings>();
-        //    }
-
-        //    return site;
-
-        //}
-
+        
         public async Task<bool> AliasIdIsAvailable(
             Guid requestingSiteId,
             string aliasId,
             CancellationToken cancellationToken = default(CancellationToken)
             )
         {
-            ThrowIfDisposed();
             cancellationToken.ThrowIfCancellationRequested();
 
-            var item = await dbContext.Sites.FirstOrDefaultAsync(
+            using (var _db = _contextFactory.CreateContext())
+            {
+                var item = await _db.Sites.FirstOrDefaultAsync(
                     x => x.Id != requestingSiteId
                     && x.AliasId == aliasId
                     ).ConfigureAwait(false);
-            // if no site exists that has that alias with a different siteid then it is available
-            if (item == null) { return true; }
-            return false;
+                // if no site exists that has that alias with a different siteid then it is available
+                if (item == null) { return true; }
+                return false;
+            }
+            
         }
 
         public async Task<bool> HostNameIsAvailable(
@@ -197,69 +148,82 @@ namespace cloudscribe.Core.Storage.EFCore.Common
             CancellationToken cancellationToken = default(CancellationToken)
             )
         {
-            ThrowIfDisposed();
             cancellationToken.ThrowIfCancellationRequested();
 
-            var item = await dbContext.Sites.FirstOrDefaultAsync(
+            using (var _db = _contextFactory.CreateContext())
+            {
+                var item = await _db.Sites.FirstOrDefaultAsync(
                     x => x.Id != requestingSiteId
                     && x.PreferredHostName == hostName
                     ).ConfigureAwait(false);
-            // if no site exists that has that host with a different siteid then it is available
-            if (item == null)
-            {
-                var host = await GetSiteHost(hostName, cancellationToken).ConfigureAwait(false);
-                if(host != null)
+                // if no site exists that has that host with a different siteid then it is available
+                if (item == null)
                 {
-                    if (host.SiteId != requestingSiteId) return false;
+                    var host = await GetSiteHost(hostName, cancellationToken).ConfigureAwait(false);
+                    if (host != null)
+                    {
+                        if (host.SiteId != requestingSiteId) return false;
+                    }
+                    return true;
                 }
-                return true;
             }
+
+            
             return false;
         }
 
         public async Task<int> GetCount(CancellationToken cancellationToken = default(CancellationToken))
         {
-            ThrowIfDisposed();
             cancellationToken.ThrowIfCancellationRequested();
-            return await dbContext.Sites.CountAsync<SiteSettings>(cancellationToken).ConfigureAwait(false);
+            using (var _db = _contextFactory.CreateContext())
+            {
+                return await _db.Sites.CountAsync<SiteSettings>(cancellationToken).ConfigureAwait(false);
+            }
+           
         }
 
         public async Task<List<ISiteInfo>> GetList(CancellationToken cancellationToken = default(CancellationToken))
         {
-            ThrowIfDisposed();
             cancellationToken.ThrowIfCancellationRequested();
 
-            var query = from x in dbContext.Sites
-                        orderby x.SiteName ascending
-                        select new SiteInfo
-                        {
-                            Id = x.Id,
-                            AliasId = x.AliasId,
-                            IsServerAdminSite = x.IsServerAdminSite,
-                            PreferredHostName = x.PreferredHostName,
-                            SiteFolderName = x.SiteFolderName,
-                            SiteName = x.SiteName
-                        }
+            using (var _db = _contextFactory.CreateContext())
+            {
+                var query = from x in _db.Sites
+                            orderby x.SiteName ascending
+                            select new SiteInfo
+                            {
+                                Id = x.Id,
+                                AliasId = x.AliasId,
+                                IsServerAdminSite = x.IsServerAdminSite,
+                                PreferredHostName = x.PreferredHostName,
+                                SiteFolderName = x.SiteFolderName,
+                                SiteName = x.SiteName
+                            }
                         ;
 
-            var items = await query
-                .AsNoTracking()
-                .ToListAsync<ISiteInfo>(cancellationToken)
-                .ConfigureAwait(false);
+                var items = await query
+                    .AsNoTracking()
+                    .ToListAsync<ISiteInfo>(cancellationToken)
+                    .ConfigureAwait(false);
 
-            return items;
+                return items;
+            }
+
         }
 
         public async Task<int> CountOtherSites(
             Guid currentSiteId,
             CancellationToken cancellationToken = default(CancellationToken))
         {
-            ThrowIfDisposed();
             cancellationToken.ThrowIfCancellationRequested();
 
-            return await dbContext.Sites.CountAsync<SiteSettings>(
+            using (var _db = _contextFactory.CreateContext())
+            {
+                return await _db.Sites.CountAsync<SiteSettings>(
                 x => x.Id != currentSiteId
                 , cancellationToken);
+            }
+            
         }
 
         public async Task<PagedResult<ISiteInfo>> GetPageOtherSites(
@@ -268,76 +232,77 @@ namespace cloudscribe.Core.Storage.EFCore.Common
             int pageSize,
             CancellationToken cancellationToken = default(CancellationToken))
         {
-            ThrowIfDisposed();
             cancellationToken.ThrowIfCancellationRequested();
 
             int offset = (pageSize * pageNumber) - pageSize;
 
-            var query = from x in dbContext.Sites
+            using (var _db = _contextFactory.CreateContext())
+            {
+                var query = from x in _db.Sites
 
-                        where (x.Id != currentSiteId)
-                        orderby x.SiteName ascending
-                        select new SiteInfo
-                        {
-                            Id = x.Id,
-                            AliasId = x.AliasId,
-                            IsServerAdminSite = x.IsServerAdminSite,
-                            PreferredHostName = x.PreferredHostName,
-                            SiteFolderName = x.SiteFolderName,
-                            SiteName = x.SiteName
-                        };
+                            where (x.Id != currentSiteId)
+                            orderby x.SiteName ascending
+                            select new SiteInfo
+                            {
+                                Id = x.Id,
+                                AliasId = x.AliasId,
+                                IsServerAdminSite = x.IsServerAdminSite,
+                                PreferredHostName = x.PreferredHostName,
+                                SiteFolderName = x.SiteFolderName,
+                                SiteName = x.SiteName
+                            };
 
 
-            var data = await query
-                .AsNoTracking()
-                .Skip(offset)
-                .Take(pageSize)
-                .ToListAsync<ISiteInfo>(cancellationToken)
-                .ConfigureAwait(false);
+                var data = await query
+                    .AsNoTracking()
+                    .Skip(offset)
+                    .Take(pageSize)
+                    .ToListAsync<ISiteInfo>(cancellationToken)
+                    .ConfigureAwait(false);
 
-            var result = new PagedResult<ISiteInfo>();
-            result.Data = data;
-            result.PageNumber = pageNumber;
-            result.PageSize = pageSize;
-            result.TotalItems = await CountOtherSites(currentSiteId, cancellationToken).ConfigureAwait(false);
-            return result;
-
+                var result = new PagedResult<ISiteInfo>
+                {
+                    Data = data,
+                    PageNumber = pageNumber,
+                    PageSize = pageSize,
+                    TotalItems = await CountOtherSites(currentSiteId, cancellationToken).ConfigureAwait(false)
+                };
+                return result;
+            }
+            
         }
 
         public async Task<List<ISiteHost>> GetAllHosts(CancellationToken cancellationToken = default(CancellationToken))
         {
-            ThrowIfDisposed();
+
             cancellationToken.ThrowIfCancellationRequested();
 
-            var query = from x in dbContext.SiteHosts
-                        orderby x.HostName ascending
-                        select x;
+            using (var _db = _contextFactory.CreateContext())
+            {
+                var query = from x in _db.SiteHosts
+                            orderby x.HostName ascending
+                            select x;
 
-            var items = await query
-                .AsNoTracking()
-                .ToListAsync<ISiteHost>(cancellationToken)
-                .ConfigureAwait(false);
+                var items = await query
+                    .AsNoTracking()
+                    .ToListAsync<ISiteHost>(cancellationToken)
+                    .ConfigureAwait(false);
 
-            return items;
+                return items;
+            }
+            
         }
 
-        //public List<ISiteHost> GetAllHostsNonAsync()
-        //{
-        //    var query = from x in dbContext.SiteHosts
-        //                orderby x.HostName ascending
-        //                select x;
-
-        //    var items = query.AsNoTracking().ToList<ISiteHost>();
-
-        //    return items;
-        //}
-
+       
         public async Task<int> GetHostCount(CancellationToken cancellationToken = default(CancellationToken))
         {
-            ThrowIfDisposed();
             cancellationToken.ThrowIfCancellationRequested();
 
-            return await dbContext.SiteHosts.CountAsync<SiteHost>(cancellationToken);
+            using (var _db = _contextFactory.CreateContext())
+            {
+                return await _db.SiteHosts.CountAsync<SiteHost>(cancellationToken);
+            }
+            
         }
 
         public async Task<PagedResult<ISiteHost>> GetPageHosts(
@@ -345,30 +310,35 @@ namespace cloudscribe.Core.Storage.EFCore.Common
             int pageSize,
             CancellationToken cancellationToken = default(CancellationToken))
         {
-            ThrowIfDisposed();
             cancellationToken.ThrowIfCancellationRequested();
 
             int offset = (pageSize * pageNumber) - pageSize;
 
-            var query = from x in dbContext.SiteHosts
+            using (var _db = _contextFactory.CreateContext())
+            {
+                var query = from x in _db.SiteHosts
 
-                        orderby x.HostName ascending
-                        select x
+                            orderby x.HostName ascending
+                            select x
                         ;
 
-            var data = await query
-                .AsNoTracking()
-                .Skip(offset)
-                .Take(pageSize)
-                .ToListAsync<ISiteHost>(cancellationToken)
-                .ConfigureAwait(false);
+                var data = await query
+                    .AsNoTracking()
+                    .Skip(offset)
+                    .Take(pageSize)
+                    .ToListAsync<ISiteHost>(cancellationToken)
+                    .ConfigureAwait(false);
 
-            var result = new PagedResult<ISiteHost>();
-            result.Data = data;
-            result.PageNumber = pageNumber;
-            result.PageSize = pageSize;
-            result.TotalItems = await GetHostCount(cancellationToken).ConfigureAwait(false);
-            return result;
+                var result = new PagedResult<ISiteHost>();
+                result.Data = data;
+                result.PageNumber = pageNumber;
+                result.PageSize = pageSize;
+                result.TotalItems = await GetHostCount(cancellationToken).ConfigureAwait(false);
+                return result;
+
+            }
+
+            
 
         }
 
@@ -376,97 +346,71 @@ namespace cloudscribe.Core.Storage.EFCore.Common
             Guid siteId,
             CancellationToken cancellationToken = default(CancellationToken))
         {
-            ThrowIfDisposed();
             cancellationToken.ThrowIfCancellationRequested();
 
-            var query = from x in dbContext.SiteHosts
-                        where x.SiteId == siteId
-                        orderby x.HostName ascending
-                        select x
+            using (var _db = _contextFactory.CreateContext())
+            {
+                var query = from x in _db.SiteHosts
+                            where x.SiteId == siteId
+                            orderby x.HostName ascending
+                            select x
                         ;
 
-            var items = await query
-                .AsNoTracking()
-                .ToListAsync<ISiteHost>(cancellationToken)
-                .ConfigureAwait(false);
+                var items = await query
+                    .AsNoTracking()
+                    .ToListAsync<ISiteHost>(cancellationToken)
+                    .ConfigureAwait(false);
 
-            return items;
+                return items;
+
+            }
+            
         }
 
         public async Task<ISiteHost> GetSiteHost(
             string hostName,
             CancellationToken cancellationToken = default(CancellationToken))
         {
-            ThrowIfDisposed();
             cancellationToken.ThrowIfCancellationRequested();
 
-            var query = from x in dbContext.SiteHosts
-                        where x.HostName == hostName
-                        orderby x.HostName ascending
-                        select x
+            using (var _db = _contextFactory.CreateContext())
+            {
+                var query = from x in _db.SiteHosts
+                            where x.HostName == hostName
+                            orderby x.HostName ascending
+                            select x
                         ;
 
-            return await query.SingleOrDefaultAsync<SiteHost>(cancellationToken)
-                .ConfigureAwait(false);
-
+                return await query.SingleOrDefaultAsync<SiteHost>(cancellationToken)
+                    .ConfigureAwait(false);
+            }
+            
         }
 
         public async Task<List<string>> GetAllSiteFolders(
             CancellationToken cancellationToken = default(CancellationToken))
         {
-            ThrowIfDisposed();
             cancellationToken.ThrowIfCancellationRequested();
 
-            var query = from x in dbContext.Sites
-                        where x.SiteFolderName != null && x.SiteFolderName != ""
-                        orderby x.SiteFolderName ascending
-                        select x.SiteFolderName;
-
-            var items = await query.ToListAsync<string>();
-
-            return items;
-
-        }
-
-
-        #region IDisposable Support
-
-        private void ThrowIfDisposed()
-        {
-            if (disposedValue)
+            using (var _db = _contextFactory.CreateContext())
             {
-                throw new ObjectDisposedException(GetType().Name);
+                var query = from x in _db.Sites
+                            where x.SiteFolderName != null && x.SiteFolderName != ""
+                            orderby x.SiteFolderName ascending
+                            select x.SiteFolderName;
+
+                var items = await query.ToListAsync<string>();
+
+                return items;
             }
-        }
 
-        private bool disposedValue = false; // To detect redundant calls
+           
 
-        void Dispose(bool disposing)
-        {
-            if (!disposedValue)
-            {
-                if (disposing)
-                {
-                    // TODO: dispose managed state (managed objects).
-                }
-
-                // TODO: free unmanaged resources (unmanaged objects) and override a finalizer below.
-                // TODO: set large fields to null.
-
-                disposedValue = true;
-            }
         }
 
 
-        // This code added to correctly implement the disposable pattern.
-        public void Dispose()
-        {
-            // Do not change this code. Put cleanup code in Dispose(bool disposing) above.
-            Dispose(true);
-            // TODO: uncomment the following line if the finalizer is overridden above.
-            // GC.SuppressFinalize(this);
-        }
+        
 
-        #endregion
+       
     }
 }

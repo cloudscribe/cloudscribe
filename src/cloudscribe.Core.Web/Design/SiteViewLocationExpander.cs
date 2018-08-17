@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 //  Author:                     Joe Audette
 //  Created:                    2016-03-03
-//	Last Modified:              2017-07-11
+//	Last Modified:              2018-08-17
 //
 
 using cloudscribe.Core.Models;
@@ -22,18 +22,26 @@ namespace cloudscribe.Core.Web.Components
 
         public void PopulateValues(ViewLocationExpanderContext context)
         {
-            context.Values[THEME_KEY]
-                = context.ActionContext.HttpContext.GetTenant<SiteContext>()?.Theme;
-
-            var tenantKey = context.ActionContext.HttpContext.GetTenant<SiteContext>()?.AliasId;
-            //if(string.IsNullOrWhiteSpace(tenantKey)) tenantKey = "tenant-" + context.ActionContext.HttpContext.GetTenant<SiteSettings>()?.SiteGuid.ToString();
-
-            context.Values[TENANT_KEY] = tenantKey;
+            if(context.ActionContext != null && context.ActionContext.HttpContext != null)
+            {
+                var tenant = context.ActionContext.HttpContext.GetTenant<SiteContext>();
+                if(tenant != null)
+                {
+                    context.Values[THEME_KEY] = tenant.Theme;
+                    var tenantKey = tenant.AliasId;
+                    context.Values[TENANT_KEY] = tenantKey;
+                }
+            }
             
         }
 
         public IEnumerable<string> ExpandViewLocations(ViewLocationExpanderContext context, IEnumerable<string> viewLocations)
         {
+
+            if (context.ActionContext == null) { return viewLocations; }
+            if (context.ActionContext.HttpContext == null) { return viewLocations; }
+            if (context.ActionContext.HttpContext.RequestServices == null) { return viewLocations; }
+
             // could not avoid the servicelocator pattern here because of the way ViewLocationExpander is added in startup
             var optionsAccessor = context.ActionContext.HttpContext.RequestServices.GetService(typeof(IOptions<MultiTenantOptions>)) as IOptions<MultiTenantOptions>;
             var options = optionsAccessor.Value;
@@ -82,15 +90,6 @@ namespace cloudscribe.Core.Web.Components
 
             return viewLocations;
         }
-
-        //private IEnumerable<string> ExpandTenantLocations(string tenant, IEnumerable<string> defaultLocations)
-        //{
-        //    foreach (var location in defaultLocations)
-        //    {
-        //        yield return location.Replace("{0}", $"{{0}}_{tenant}");
-        //        yield return location;
-        //    }
-        //}
-
+        
     }
 }
