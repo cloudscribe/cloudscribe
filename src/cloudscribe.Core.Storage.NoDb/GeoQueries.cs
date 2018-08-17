@@ -19,37 +19,22 @@ namespace cloudscribe.Core.Storage.NoDb
     public class GeoQueries : IGeoQueries
     {
         public GeoQueries(
-            //IProjectResolver projectResolver,
             IBasicQueries<GeoCountry> countryQueries,
             IBasicQueries<GeoZone> stateQueries
             )
         {
-            //this.projectResolver = new DefaultProjectResolver();
             this.countryQueries = countryQueries;
             this.stateQueries = stateQueries;
            
         }
 
-        //private IProjectResolver projectResolver;
         private IBasicQueries<GeoCountry> countryQueries;
         private IBasicQueries<GeoZone> stateQueries;
         
-        //protected string projectId;
-
-        //private async Task EnsureProjectId()
-        //{
-        //    if (string.IsNullOrEmpty(projectId))
-        //    {
-        //        projectId = await projectResolver.ResolveProjectId().ConfigureAwait(false); 
-        //    }
-
-        //}
-
         public async Task<IGeoCountry> FetchCountry(
             Guid countryId,
             CancellationToken cancellationToken = default(CancellationToken))
         {
-            ThrowIfDisposed();
             cancellationToken.ThrowIfCancellationRequested();
 
             //await EnsureProjectId().ConfigureAwait(false);
@@ -66,7 +51,6 @@ namespace cloudscribe.Core.Storage.NoDb
             string isoCode2,
             CancellationToken cancellationToken = default(CancellationToken))
         {
-            ThrowIfDisposed();
             cancellationToken.ThrowIfCancellationRequested();
             //await EnsureProjectId().ConfigureAwait(false);
             var projectId = "default";
@@ -82,7 +66,6 @@ namespace cloudscribe.Core.Storage.NoDb
 
         public async Task<int> GetCountryCount(CancellationToken cancellationToken = default(CancellationToken))
         {
-            ThrowIfDisposed();
             cancellationToken.ThrowIfCancellationRequested();
             //await EnsureProjectId().ConfigureAwait(false);
             var projectId = "default";
@@ -93,7 +76,6 @@ namespace cloudscribe.Core.Storage.NoDb
 
         public async Task<List<IGeoCountry>> GetAllCountries(CancellationToken cancellationToken = default(CancellationToken))
         { 
-            ThrowIfDisposed();
             cancellationToken.ThrowIfCancellationRequested();
             //await EnsureProjectId().ConfigureAwait(false);
             var projectId = "default";
@@ -114,7 +96,6 @@ namespace cloudscribe.Core.Storage.NoDb
             int pageSize,
             CancellationToken cancellationToken = default(CancellationToken))
         {
-            ThrowIfDisposed();
             cancellationToken.ThrowIfCancellationRequested();
 
             //await EnsureProjectId().ConfigureAwait(false);
@@ -146,7 +127,6 @@ namespace cloudscribe.Core.Storage.NoDb
             Guid stateId,
             CancellationToken cancellationToken = default(CancellationToken))
         {
-            ThrowIfDisposed();
             cancellationToken.ThrowIfCancellationRequested();
             //await EnsureProjectId().ConfigureAwait(false);
             var projectId = "default";
@@ -162,7 +142,6 @@ namespace cloudscribe.Core.Storage.NoDb
             Guid countryId,
             CancellationToken cancellationToken = default(CancellationToken))
         {
-            ThrowIfDisposed();
             cancellationToken.ThrowIfCancellationRequested();
             //await EnsureProjectId().ConfigureAwait(false);
             var projectId = "default";
@@ -179,7 +158,6 @@ namespace cloudscribe.Core.Storage.NoDb
             Guid countryId,
             CancellationToken cancellationToken = default(CancellationToken))
         {
-            ThrowIfDisposed();
             cancellationToken.ThrowIfCancellationRequested();
 
             //await EnsureProjectId().ConfigureAwait(false);
@@ -202,7 +180,6 @@ namespace cloudscribe.Core.Storage.NoDb
             int maxRows,
             CancellationToken cancellationToken = default(CancellationToken))
         {
-            ThrowIfDisposed();
             cancellationToken.ThrowIfCancellationRequested();
 
             //await EnsureProjectId().ConfigureAwait(false);
@@ -230,7 +207,6 @@ namespace cloudscribe.Core.Storage.NoDb
             int maxRows,
             CancellationToken cancellationToken = default(CancellationToken))
         {
-            ThrowIfDisposed();
             cancellationToken.ThrowIfCancellationRequested();
 
             //await EnsureProjectId().ConfigureAwait(false);
@@ -258,7 +234,6 @@ namespace cloudscribe.Core.Storage.NoDb
             int pageSize,
             CancellationToken cancellationToken = default(CancellationToken))
         {
-            ThrowIfDisposed();
             cancellationToken.ThrowIfCancellationRequested();
 
             //await EnsureProjectId().ConfigureAwait(false);
@@ -287,52 +262,6 @@ namespace cloudscribe.Core.Storage.NoDb
             return result;
 
         }
-
         
-
-        #region IDisposable Support
-
-        private void ThrowIfDisposed()
-        {
-            if (disposedValue)
-            {
-                throw new ObjectDisposedException(GetType().Name);
-            }
-        }
-
-        private bool disposedValue = false; // To detect redundant calls
-
-        void Dispose(bool disposing)
-        {
-            if (!disposedValue)
-            {
-                if (disposing)
-                {
-                    // TODO: dispose managed state (managed objects).
-                }
-
-                // TODO: free unmanaged resources (unmanaged objects) and override a finalizer below.
-                // TODO: set large fields to null.
-
-                disposedValue = true;
-            }
-        }
-
-        // TODO: override a finalizer only if Dispose(bool disposing) above has code to free unmanaged resources.
-        // ~SiteRoleStore() {
-        //   // Do not change this code. Put cleanup code in Dispose(bool disposing) above.
-        //   Dispose(false);
-        // }
-
-        // This code added to correctly implement the disposable pattern.
-        public void Dispose()
-        {
-            // Do not change this code. Put cleanup code in Dispose(bool disposing) above.
-            Dispose(true);
-            // TODO: uncomment the following line if the finalizer is overridden above.
-            // GC.SuppressFinalize(this);
-        }
-
-        #endregion
     }
 }

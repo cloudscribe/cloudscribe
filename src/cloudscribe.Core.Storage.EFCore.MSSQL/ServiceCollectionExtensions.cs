@@ -51,7 +51,8 @@ namespace Microsoft.Extensions.DependencyInjection
 
             services.AddScoped<ICoreDbContext, CoreDbContext>(); 
             services.AddScoped<IDataPlatformInfo, DataPlatformInfo>();
-            
+            services.AddTransient<ICoreDbContextFactory, CoreDbContextFactory>();
+
             return services;
         }
 
