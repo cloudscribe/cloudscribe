@@ -12,6 +12,8 @@ https://docs.microsoft.com/en-us/aspnet/core/security/authentication/add-user-da
 
 https://docs.microsoft.com/en-us/sql/relational-databases/security/encryption/transparent-data-encryption?view=sql-server-2017
 
+https://www.usatoday.com/story/tech/columnist/saltzman/2018/04/04/amazon-and-alexa-know-whole-lot-you-heres-how-download-and-delete-info/482286002/
+
 
 
 https://github.com/blowdart/AspNetCoreIdentityEncryption
