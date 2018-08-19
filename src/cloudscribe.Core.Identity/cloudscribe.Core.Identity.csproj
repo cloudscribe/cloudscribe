@@ -2,8 +2,8 @@
 
   <PropertyGroup>
     <Description>asp.net identity implementation for cloudscribe web application foundation</Description>
-    <VersionPrefix>3.0.4</VersionPrefix>
-    <AssemblyVersion>3.0.4</AssemblyVersion>
+    <VersionPrefix>3.0.5</VersionPrefix>
+    <AssemblyVersion>3.0.5</AssemblyVersion>
     <Authors>Joe Audette</Authors>
     <TargetFrameworks>netstandard2.0</TargetFrameworks>
     <AssemblyName>cloudscribe.Core.Identity</AssemblyName>
@@ -34,8 +34,10 @@
     <PackageReference Include="Microsoft.AspNetCore.Antiforgery" Version="2.1.0" />
     
     <PackageReference Include="Microsoft.Extensions.Primitives" Version="2.1.0" />
-    <PackageReference Include="Microsoft.AspNetCore.Http.Abstractions" Version="2.1.0" />
+    <PackageReference Include="Microsoft.AspNetCore.Http" Version="2.1.0" />
+    <PackageReference Include="Microsoft.AspNetCore.Http.Extensions" Version="2.1.0" />
     <PackageReference Include="Microsoft.AspNetCore.Mvc.Abstractions" Version="2.1.0" />
+    <PackageReference Include="Microsoft.AspNetCore.CookiePolicy" Version="2.1.0" />
     
     <PackageReference Include="Microsoft.Extensions.Options" Version="2.1.0" />
     <PackageReference Include="Microsoft.Extensions.Options.ConfigurationExtensions" Version="2.1.0" />

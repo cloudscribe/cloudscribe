@@ -57,9 +57,7 @@ namespace cloudscribe.Core.Storage.EFCore.SQLite
                 entity.Property(p => p.LdapRootDN).HasMaxLength(255);
 
                 entity.Property(p => p.LdapUserDNKey).HasMaxLength(10);
-
-                entity.Property(p => p.ReallyDeleteUsers).IsRequired();
-
+                
                 entity.Property(p => p.UseEmailForLogin).IsRequired();
 
                 entity.Property(p => p.RequiresQuestionAndAnswer).IsRequired();
@@ -198,6 +196,8 @@ namespace cloudscribe.Core.Storage.EFCore.SQLite
                 .HasDefaultValue("SmtpMailSender")
                 ;
 
+                entity.Property(p => p.CookiePolicySummary).HasMaxLength(255);
+
             });
 
             modelBuilder.Entity<SiteHost>(entity =>
@@ -258,7 +258,7 @@ namespace cloudscribe.Core.Storage.EFCore.SQLite
 
                 entity.Property(p => p.EmailConfirmed).IsRequired();
 
-                entity.Property(p => p.IsDeleted).IsRequired();
+                //entity.Property(p => p.IsDeleted).IsRequired();
 
                 entity.Property(p => p.IsLockedOut).IsRequired();
 

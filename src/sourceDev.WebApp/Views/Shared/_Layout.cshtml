@@ -58,6 +58,7 @@
         <div class="row">
             <main id="content" role="main" class="col order-3">
                 @await Html.PartialAsync("AlertsPartial")
+                <partial name="_CookieConsentPartial" />
                 @RenderBody()
             </main>
             @if (sideNavVisible)

@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2015-11-16
-// Last Modified:			2018-03-02
+// Last Modified:			2018-08-19
 // 
 
 using cloudscribe.Core.Models;
@@ -104,13 +104,7 @@ namespace cloudscribe.Core.Storage.EFCore.MSSQL
                 entity.Property(p => p.LdapUserDNKey)
                 .HasMaxLength(10);
                 ;
-
-                entity.Property(p => p.ReallyDeleteUsers)
-                .IsRequired()
-                .HasColumnType("bit")
-                //.HasDefaultValue(true)
-                ;
-
+                
                 entity.Property(p => p.UseEmailForLogin)
                 .IsRequired()
                 .HasColumnType("bit")
@@ -420,6 +414,8 @@ namespace cloudscribe.Core.Storage.EFCore.MSSQL
                 .HasDefaultValue("SmtpMailSender")
                 ;
 
+                entity.Property(p => p.CookiePolicySummary).HasMaxLength(255);
+
             });
 
             modelBuilder.Entity<SiteHost>(entity =>
@@ -523,11 +519,11 @@ namespace cloudscribe.Core.Storage.EFCore.MSSQL
                 //.HasDefaultValue(false)
                 ;
 
-                entity.Property(p => p.IsDeleted)
-                .IsRequired()
-                .HasColumnType("bit")
-               // .HasDefaultValue(false)
-                ;
+               // entity.Property(p => p.IsDeleted)
+               // .IsRequired()
+               // .HasColumnType("bit")
+               //// .HasDefaultValue(false)
+               // ;
 
                 entity.Property(p => p.IsLockedOut)
                 .IsRequired()

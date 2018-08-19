@@ -33,3 +33,15 @@ Properties decorated with the PersonalData attribute are:
 https://github.com/aspnet/Identity/blob/master/src/Stores/IdentityUser.cs
 [ProtectedPersonalData]
 public virtual string Email { get; set; }
+
+## Third Party Cookies
+
+If there is no consent for 1st party cookie we should not let 3rd party cookies in.
+Google Analytics
+AddThis
+Gravatar
+Disqus
+
+any other embedded content, youtube etc
+
+https://www.mcbeev.com/Blog/May-2018/Analytics-Scripts-in-GDPR-With-Kentico-EMS

@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2015-11-16
-// Last Modified:			2017-12-29
+// Last Modified:			2018-08-19
 // 
 
 
@@ -142,7 +142,7 @@ namespace cloudscribe.Core.Storage.EFCore.Common
                 x =>
                 (
                     x.SiteId == siteId
-                    && x.IsDeleted == false
+                    //&& x.IsDeleted == false
                     && x.AccountApproved == true
                     && (
                     userNameBeginsWith == string.Empty
@@ -182,7 +182,7 @@ namespace cloudscribe.Core.Storage.EFCore.Common
                   where
                   (
                       x.SiteId == siteId
-                      && x.IsDeleted == false
+                     // && x.IsDeleted == false
                       && x.AccountApproved == true
                       && (
                       userNameBeginsWith == string.Empty
@@ -202,15 +202,13 @@ namespace cloudscribe.Core.Storage.EFCore.Common
                       Email = x.Email,
                       FirstName = x.FirstName,
                       Gender = x.Gender,
-                      IsDeleted = x.IsDeleted,
                       IsLockedOut = x.IsLockedOut,
                       LastLoginUtc = x.LastLoginUtc,
                       LastName = x.LastName,
                       PhoneNumber = x.PhoneNumber,
                       PhoneNumberConfirmed = x.PhoneNumberConfirmed,
                       SiteId = x.SiteId,
-                      TimeZoneId = x.TimeZoneId,
-                      Trusted = x.Trusted,
+                      TimeZoneId = x.TimeZoneId, 
                       UserName = x.UserName,
                       WebSiteUrl = x.WebSiteUrl
 
@@ -228,7 +226,7 @@ namespace cloudscribe.Core.Storage.EFCore.Common
                   where
                   (
                       x.SiteId == siteId
-                      && x.IsDeleted == false
+                      //&& x.IsDeleted == false
                       && x.AccountApproved == true
                       && (
                       userNameBeginsWith == string.Empty
@@ -248,7 +246,6 @@ namespace cloudscribe.Core.Storage.EFCore.Common
                       Email = x.Email,
                       FirstName = x.FirstName,
                       Gender = x.Gender,
-                      IsDeleted = x.IsDeleted,
                       IsLockedOut = x.IsLockedOut,
                       LastLoginUtc = x.LastLoginUtc,
                       LastName = x.LastName,
@@ -256,7 +253,6 @@ namespace cloudscribe.Core.Storage.EFCore.Common
                       PhoneNumberConfirmed = x.PhoneNumberConfirmed,
                       SiteId = x.SiteId,
                       TimeZoneId = x.TimeZoneId,
-                      Trusted = x.Trusted,
                       UserName = x.UserName,
                       WebSiteUrl = x.WebSiteUrl
 
@@ -275,7 +271,7 @@ namespace cloudscribe.Core.Storage.EFCore.Common
                   where
                   (
                       x.SiteId == siteId
-                      && x.IsDeleted == false
+                      //&& x.IsDeleted == false
                       && x.AccountApproved == true
                       && (
                       userNameBeginsWith == string.Empty
@@ -295,7 +291,6 @@ namespace cloudscribe.Core.Storage.EFCore.Common
                       Email = x.Email,
                       FirstName = x.FirstName,
                       Gender = x.Gender,
-                      IsDeleted = x.IsDeleted,
                       IsLockedOut = x.IsLockedOut,
                       LastLoginUtc = x.LastLoginUtc,
                       LastName = x.LastName,
@@ -303,7 +298,6 @@ namespace cloudscribe.Core.Storage.EFCore.Common
                       PhoneNumberConfirmed = x.PhoneNumberConfirmed,
                       SiteId = x.SiteId,
                       TimeZoneId = x.TimeZoneId,
-                      Trusted = x.Trusted,
                       UserName = x.UserName,
                       WebSiteUrl = x.WebSiteUrl
 
@@ -394,7 +388,6 @@ namespace cloudscribe.Core.Storage.EFCore.Common
                       Email = x.Email,
                       FirstName = x.FirstName,
                       Gender = x.Gender,
-                      IsDeleted = x.IsDeleted,
                       IsLockedOut = x.IsLockedOut,
                       LastLoginUtc = x.LastLoginUtc,
                       LastName = x.LastName,
@@ -402,7 +395,6 @@ namespace cloudscribe.Core.Storage.EFCore.Common
                       PhoneNumberConfirmed = x.PhoneNumberConfirmed,
                       SiteId = x.SiteId,
                       TimeZoneId = x.TimeZoneId,
-                      Trusted = x.Trusted,
                       UserName = x.UserName,
                       WebSiteUrl = x.WebSiteUrl
 
@@ -480,7 +472,6 @@ namespace cloudscribe.Core.Storage.EFCore.Common
                       Email = x.Email,
                       FirstName = x.FirstName,
                       Gender = x.Gender,
-                      IsDeleted = x.IsDeleted,
                       IsLockedOut = x.IsLockedOut,
                       LastLoginUtc = x.LastLoginUtc,
                       LastName = x.LastName,
@@ -488,7 +479,6 @@ namespace cloudscribe.Core.Storage.EFCore.Common
                       PhoneNumberConfirmed = x.PhoneNumberConfirmed,
                       SiteId = x.SiteId,
                       TimeZoneId = x.TimeZoneId,
-                      Trusted = x.Trusted,
                       UserName = x.UserName,
                       WebSiteUrl = x.WebSiteUrl
 
@@ -554,7 +544,6 @@ namespace cloudscribe.Core.Storage.EFCore.Common
                       Email = x.Email,
                       FirstName = x.FirstName,
                       Gender = x.Gender,
-                      IsDeleted = x.IsDeleted,
                       IsLockedOut = x.IsLockedOut,
                       LastLoginUtc = x.LastLoginUtc,
                       LastName = x.LastName,
@@ -562,7 +551,6 @@ namespace cloudscribe.Core.Storage.EFCore.Common
                       PhoneNumberConfirmed = x.PhoneNumberConfirmed,
                       SiteId = x.SiteId,
                       TimeZoneId = x.TimeZoneId,
-                      Trusted = x.Trusted,
                       UserName = x.UserName,
                       WebSiteUrl = x.WebSiteUrl
 
@@ -626,7 +614,6 @@ namespace cloudscribe.Core.Storage.EFCore.Common
                       Email = x.Email,
                       FirstName = x.FirstName,
                       Gender = x.Gender,
-                      IsDeleted = x.IsDeleted,
                       IsLockedOut = x.IsLockedOut,
                       LastLoginUtc = x.LastLoginUtc,
                       LastName = x.LastName,
@@ -634,7 +621,6 @@ namespace cloudscribe.Core.Storage.EFCore.Common
                       PhoneNumberConfirmed = x.PhoneNumberConfirmed,
                       SiteId = x.SiteId,
                       TimeZoneId = x.TimeZoneId,
-                      Trusted = x.Trusted,
                       UserName = x.UserName,
                       WebSiteUrl = x.WebSiteUrl
 
@@ -698,7 +684,6 @@ namespace cloudscribe.Core.Storage.EFCore.Common
                       Email = x.Email,
                       FirstName = x.FirstName,
                       Gender = x.Gender,
-                      IsDeleted = x.IsDeleted,
                       IsLockedOut = x.IsLockedOut,
                       LastLoginUtc = x.LastLoginUtc,
                       LastName = x.LastName,
@@ -706,7 +691,6 @@ namespace cloudscribe.Core.Storage.EFCore.Common
                       PhoneNumberConfirmed = x.PhoneNumberConfirmed,
                       SiteId = x.SiteId,
                       TimeZoneId = x.TimeZoneId,
-                      Trusted = x.Trusted,
                       UserName = x.UserName,
                       WebSiteUrl = x.WebSiteUrl
 
@@ -768,7 +752,6 @@ namespace cloudscribe.Core.Storage.EFCore.Common
                       Email = x.Email,
                       FirstName = x.FirstName,
                       Gender = x.Gender,
-                      IsDeleted = x.IsDeleted,
                       IsLockedOut = x.IsLockedOut,
                       LastLoginUtc = x.LastLoginUtc,
                       LastName = x.LastName,
@@ -776,7 +759,6 @@ namespace cloudscribe.Core.Storage.EFCore.Common
                       PhoneNumberConfirmed = x.PhoneNumberConfirmed,
                       SiteId = x.SiteId,
                       TimeZoneId = x.TimeZoneId,
-                      Trusted = x.Trusted,
                       UserName = x.UserName,
                       WebSiteUrl = x.WebSiteUrl
 

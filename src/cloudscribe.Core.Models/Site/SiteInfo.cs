@@ -31,8 +31,11 @@ namespace cloudscribe.Core.Models
         public string PreferredHostName { get; set; }
         
         public bool IsServerAdminSite { get; set; } = false;
-
         
+        public DateTime CreatedUtc { get; set; } = DateTime.UtcNow;
+        public DateTime LastModifiedUtc { get; set; } = DateTime.UtcNow;
+
+
 
     }
 }

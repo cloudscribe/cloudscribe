@@ -1,0 +1,64 @@
+﻿@model cloudscribe.Core.Web.ViewModels.SiteSettings.PrivacyPolicyViewModel
+@using cloudscribe.Core.Web
+@using cloudscribe.Web.Navigation
+@using Microsoft.Extensions.Localization
+@inject IStringLocalizer<CloudscribeCore> sr
+@inject ICkeditorOptionsResolver editorOptionsResolver
+@{
+    var ckOptions = await editorOptionsResolver.GetCkeditorOptions();
+}
+<div class="row">
+    <div class="col-md-10 col-md-push-2">
+        <h2>@ViewData["Title"]</h2>
+        <form method="post" class="form-horizontal" role="form" asp-antiforgery="true" data-submit-once="true">
+            <div asp-validation-summary="All" class="text-danger"></div>
+            <input asp-for="SiteId" type="hidden" />
+            <div class="form-group">
+                <div class="col-md-12">
+                    <div class="checkbox">
+                        <label>
+                            <input asp-for="RequireCookieConsent" /> @sr["Require cookie consent?"]
+                        </label>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <label asp-for="CookiePolicySummary" class="col-md-2 control-label">@sr["Cookie Policy Summary"]</label>
+                <div class="col-md-10">
+                    <input asp-for="CookiePolicySummary" class="form-control" />
+                    <span asp-validation-for="CookiePolicySummary" class="text-danger"></span>
+                </div>
+            </div>
+            <div class="form-group">
+                <label asp-for="PrivacyPolicy" class="col-md-2 control-label">@sr["Privacy Policy"]</label>
+                <div class="col-md-10">
+                    <textarea class="form-control" rows="5" asp-for="PrivacyPolicy"
+                              data-ckeditor-unobtrusive=""
+                              data-ckeditor-config-url="@ckOptions.CustomConfigPath"
+                              data-ckeditor-config-language="@ckOptions.LanguageCode"
+                              data-ckeditor-config-dropfileuploadurl="@ckOptions.DropFileUrl"
+                              data-ckeditor-config-filebrowserurl="@ckOptions.FileBrowseUrl"
+                              data-ckeditor-config-imagebrowseurl="@ckOptions.ImageBrowseUrl"></textarea>
+                    <span asp-validation-for="PrivacyPolicy" class="text-danger"></span>
+                </div>
+            </div>
+
+
+            <div class="form-group">
+                <div class="col-md-12">
+                    <button name="submit" type="submit" class="btn btn-default" data-disabled-text='@sr["Working..."]' data-enabled-text='@sr["Save"]'>@sr["Save"]</button>
+                </div>
+            </div>
+        </form>
+    </div>
+    <div class="col-md-2 col-md-pull-10 hidden-xs hidden-sm">
+        @await Component.InvokeAsync("Navigation", new { viewName = "SideNavAlt1", filterName = NamedNavigationFilters.ParentTree, startingNodeKey = "SiteAdmin" })
+    </div>
+</div>
+@section Scripts {
+    @{ await Html.RenderPartialAsync("_SideMenuScriptsPartial"); }
+    @{ await Html.RenderPartialAsync("_UnobtrusiveValidationScriptsPartial"); }
+    <script src="~/cr/js/jquery.validate.hooks.min.js"></script>
+    <script src="~/cr/js/jqueryvaildation.submitonce-unobtrusive.min.js"></script>
+    @{ await Html.RenderPartialAsync("_UnobtrusiveEditorScriptsPartial"); }
+}

@@ -2,14 +2,12 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:                  Joe Audette
 // Created:                 2016-05-13
-// Last Modified:           2016-05-13
+// Last Modified:           2018-08-19
 // 
 
 using cloudscribe.Core.Models;
 using NoDb;
 using System;
-using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -86,6 +84,7 @@ namespace cloudscribe.Core.Storage.NoDb
             //await EnsureProjectId().ConfigureAwait(false);
 
             var siteSettings = SiteSettings.FromISiteSettings(site);
+            siteSettings.LastModifiedUtc = DateTime.UtcNow;
             var projectId = siteSettings.Id.ToString();
 
             await commands.UpdateAsync(

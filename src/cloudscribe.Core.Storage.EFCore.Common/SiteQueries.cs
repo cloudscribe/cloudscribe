@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2015-11-16
-// Last Modified:			2018-01-29
+// Last Modified:			2018-08-19
 // 
 
 using cloudscribe.Core.Models;
@@ -197,7 +197,9 @@ namespace cloudscribe.Core.Storage.EFCore.Common
                                 IsServerAdminSite = x.IsServerAdminSite,
                                 PreferredHostName = x.PreferredHostName,
                                 SiteFolderName = x.SiteFolderName,
-                                SiteName = x.SiteName
+                                SiteName = x.SiteName,
+                                CreatedUtc = x.CreatedUtc,
+                                LastModifiedUtc = x.LastModifiedUtc
                             }
                         ;
 
@@ -249,7 +251,9 @@ namespace cloudscribe.Core.Storage.EFCore.Common
                                 IsServerAdminSite = x.IsServerAdminSite,
                                 PreferredHostName = x.PreferredHostName,
                                 SiteFolderName = x.SiteFolderName,
-                                SiteName = x.SiteName
+                                SiteName = x.SiteName,
+                                CreatedUtc = x.CreatedUtc,
+                                LastModifiedUtc = x.LastModifiedUtc
                             };
 
 

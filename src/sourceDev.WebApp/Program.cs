@@ -1,15 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore;
+﻿using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.Logging;
-using System.Reflection;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 using sourceDev.WebApp.Configuration;
+using System;
+using System.Linq;
 
 namespace sourceDev.WebApp
 {
@@ -40,7 +36,7 @@ namespace sourceDev.WebApp
 
             var env = host.Services.GetRequiredService<IHostingEnvironment>();
             var loggerFactory = host.Services.GetRequiredService<ILoggerFactory>();
-            ConfigureLogging(env, loggerFactory, host.Services);
+            ConfigureLogging(env, loggerFactory, host.Services, config);
 
             host.Run();
         }
@@ -113,43 +109,60 @@ namespace sourceDev.WebApp
         private static void ConfigureLogging(
             IHostingEnvironment env,
             ILoggerFactory loggerFactory,
-            IServiceProvider serviceProvider
+            IServiceProvider serviceProvider,
+            IConfiguration config
             )
         {
+            var dbLoggerConfig = config.GetSection("DbLoggerConfig").Get<cloudscribe.Logging.Models.DbLoggerConfig>();
             LogLevel minimumLevel;
+            string levelConfig;
             if (env.IsProduction())
             {
-                minimumLevel = LogLevel.Warning;
+                levelConfig = dbLoggerConfig.ProductionLogLevel;
             }
             else
             {
-                minimumLevel = LogLevel.Information;
+                levelConfig = dbLoggerConfig.DevLogLevel;
+            }
+            switch (levelConfig)
+            {
+                case "Debug":
+                    minimumLevel = LogLevel.Debug;
+                    break;
+
+                case "Information":
+                    minimumLevel = LogLevel.Information;
+                    break;
+
+                case "Trace":
+                    minimumLevel = LogLevel.Trace;
+                    break;
+
+                default:
+                    minimumLevel = LogLevel.Warning;
+                    break;
             }
 
-            //minimumLevel = LogLevel.Debug;
-
             // a customizable filter for logging
-            // add exclusions to remove noise in the logs
-            var excludedLoggers = new List<string>
+            // add exclusions in appsettings.json to remove noise in the logs
+            bool logFilter(string loggerName, LogLevel logLevel)
             {
-                "Microsoft.AspNetCore.StaticFiles.StaticFileMiddleware",
-                "Microsoft.AspNetCore.Hosting.Internal.WebHost",
-            };
+                if (dbLoggerConfig.ExcludedNamesSpaces.Any(f => loggerName.StartsWith(f)))
+                {
+                    return false;
+                }
 
-            Func<string, LogLevel, bool> logFilter = (string loggerName, LogLevel logLevel) =>
-            {
                 if (logLevel < minimumLevel)
                 {
                     return false;
                 }
 
-                if (excludedLoggers.Contains(loggerName))
+                if (dbLoggerConfig.BelowWarningExcludedNamesSpaces.Any(f => loggerName.StartsWith(f)) && logLevel < LogLevel.Warning)
                 {
                     return false;
                 }
-
                 return true;
-            };
+            }
 
             loggerFactory.AddDbLogger(serviceProvider, logFilter);
         }

@@ -2,17 +2,18 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2014-08-17
-// Last Modified:			2018-04-23
+// Last Modified:			2018-08-19
 // 
 
+using cloudscribe.Common.Gdpr;
 using System;
 
 namespace cloudscribe.Core.Models
 {
     public class SiteUser : UserInfo, ISiteUser
     {
-        
 
+        [ProtectedPersonalDataMarker]
         public string AuthorBio { get; set; }
 
         public string Comment { get; set; }
@@ -21,6 +22,7 @@ namespace cloudscribe.Core.Models
 
         public string NormalizedUserName { get; set; }
 
+        [PersonalDataMarker]
         public bool EmailConfirmed { get; set; } = false;
 
         public DateTime? EmailConfirmSentUtc { get; set; } = null;
@@ -50,8 +52,10 @@ namespace cloudscribe.Core.Models
     
         public string SecurityStamp { get; set; }
 
+        [ProtectedPersonalDataMarker]
         public string Signature { get; set; }
 
+        [PersonalDataMarker]
         public bool TwoFactorEnabled { get; set; } = false;
 
 
@@ -83,7 +87,7 @@ namespace cloudscribe.Core.Models
             u.EmailConfirmed = user.EmailConfirmed;
             u.FirstName = user.FirstName;
             u.Gender = user.Gender;
-            u.IsDeleted = user.IsDeleted;
+           
             u.IsLockedOut = user.IsLockedOut;
             
             if(user.LastLoginUtc.HasValue)
@@ -115,7 +119,7 @@ namespace cloudscribe.Core.Models
             
             //u.State = user.State;
             u.TimeZoneId = user.TimeZoneId;
-            u.Trusted = user.Trusted;
+            
             u.TwoFactorEnabled = user.TwoFactorEnabled;
             
             u.UserName = user.UserName;

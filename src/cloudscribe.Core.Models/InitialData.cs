@@ -22,7 +22,6 @@ namespace cloudscribe.Core.Models
             newSite.Theme = "";
             newSite.AllowNewRegistration = true;
             newSite.AutoCreateLdapUserOnFirstLogin = true;
-            newSite.ReallyDeleteUsers = true;
             newSite.LdapPort = 389;
             newSite.LdapRootDN = string.Empty;
             newSite.LdapServer = string.Empty;

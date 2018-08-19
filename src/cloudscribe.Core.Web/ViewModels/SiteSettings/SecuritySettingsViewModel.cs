@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2016-01-19
-// Last Modified:			2016-06-17
+// Last Modified:			2018-86-18
 // 
 
 using System;
@@ -43,10 +43,7 @@ namespace cloudscribe.Core.Web.ViewModels.SiteSettings
 
         [Display(Name = "Only Use Social Authentication")]
         public bool DisableDbAuth { get; set; }
-
-        [Display(Name = "Really Delete Users")]
-        public bool ReallyDeleteUsers { get; set; }
-
+        
         public bool HasAnySocialAuthEnabled { get; set; } = false;
 
     }

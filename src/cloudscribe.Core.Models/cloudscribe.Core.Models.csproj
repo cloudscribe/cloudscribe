@@ -2,8 +2,8 @@
 
   <PropertyGroup>
     <Description>model classes for cloudscribe core. you should not normally install this separately, it will be installed if you install cloudscribe.Core.Web</Description>
-    <VersionPrefix>3.0.4</VersionPrefix>
-    <AssemblyVersion>3.0.4</AssemblyVersion>
+    <VersionPrefix>3.0.5</VersionPrefix>
+    <AssemblyVersion>3.0.5</AssemblyVersion>
     <Authors>Joe Audette</Authors>
     <TargetFrameworks>netstandard2.0</TargetFrameworks>
     <AssemblyName>cloudscribe.Core.Models</AssemblyName>
@@ -19,6 +19,10 @@
     <PackageReference Include="System.Data.Common" Version="4.3.0" />
 
     <PackageReference Include="cloudscribe.Pagination.Models" Version="1.0.*" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\cloudscribe.Common.Gdpr\cloudscribe.Common.Gdpr.csproj" />
   </ItemGroup>
 
 

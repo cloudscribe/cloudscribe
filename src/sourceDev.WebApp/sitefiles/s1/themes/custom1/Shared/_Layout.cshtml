@@ -52,6 +52,7 @@ if (!string.IsNullOrWhiteSpace(Tenant.SiteFolderName)) { siteRoot = "/" + Tenant
                 @await Component.InvokeAsync("Navigation", new { viewName = "Bootstrap4TopNavWithDropdowns", filterName = NamedNavigationFilters.TopNav, startingNodeKey = "" })
                 @await Html.PartialAsync("_LoginPartialWithDropdowns")
             </div>
+
         </nav>
     </header>
     <div id="wrapper" class="container-fluid cs-container flex-fill">
@@ -59,6 +60,7 @@ if (!string.IsNullOrWhiteSpace(Tenant.SiteFolderName)) { siteRoot = "/" + Tenant
         <div class="row">
             <main id="content" role="main" class="col order-3">
                 @await Html.PartialAsync("AlertsPartial")
+                <partial name="_CookieConsentPartial" />
                 @RenderBody()
             </main>
             @if (sideNavVisible)
@@ -99,6 +101,7 @@ if (!string.IsNullOrWhiteSpace(Tenant.SiteFolderName)) { siteRoot = "/" + Tenant
         </div>
         <div class="p-2 text-nowrap">Copyright &copy; @DateTime.Now.Year - @(Tenant?.SiteName ?? "Sample")</div>
     </footer>
+
     @RenderSection("Toolbar", required: false)
     <environment names="Development">
         <script src="~/js/jquery.js" cs-resolve-theme-resource="true" cs-tenant="@Tenant"></script>

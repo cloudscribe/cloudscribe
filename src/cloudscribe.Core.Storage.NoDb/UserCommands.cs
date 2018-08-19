@@ -169,63 +169,63 @@ namespace cloudscribe.Core.Storage.NoDb
 
         }
 
-        public async Task FlagAsDeleted(
-            Guid siteId,
-            Guid userId,
-            CancellationToken cancellationToken = default(CancellationToken))
-        {
-            ThrowIfDisposed();
-            cancellationToken.ThrowIfCancellationRequested();
+        //public async Task FlagAsDeleted(
+        //    Guid siteId,
+        //    Guid userId,
+        //    CancellationToken cancellationToken = default(CancellationToken))
+        //{
+        //    ThrowIfDisposed();
+        //    cancellationToken.ThrowIfCancellationRequested();
 
-            //await EnsureProjectId().ConfigureAwait(false);
-            var projectId = siteId.ToString();
+        //    //await EnsureProjectId().ConfigureAwait(false);
+        //    var projectId = siteId.ToString();
 
-            var item
-                = await userQueries.FetchAsync(
-                    projectId,
-                    userId.ToString(),
-                    cancellationToken).ConfigureAwait(false);
+        //    var item
+        //        = await userQueries.FetchAsync(
+        //            projectId,
+        //            userId.ToString(),
+        //            cancellationToken).ConfigureAwait(false);
 
-            if (item == null) { throw new InvalidOperationException("user not found"); }
+        //    if (item == null) { throw new InvalidOperationException("user not found"); }
 
-            item.IsDeleted = true;
+        //    item.IsDeleted = true;
 
-            await userCommands.UpdateAsync(
-                    projectId,
-                    item.Id.ToString(),
-                    item,
-                    cancellationToken).ConfigureAwait(false);
+        //    await userCommands.UpdateAsync(
+        //            projectId,
+        //            item.Id.ToString(),
+        //            item,
+        //            cancellationToken).ConfigureAwait(false);
             
-        }
+        //}
 
-        public async Task FlagAsNotDeleted(
-            Guid siteId,
-            Guid userId,
-            CancellationToken cancellationToken = default(CancellationToken))
-        {
-            ThrowIfDisposed();
-            cancellationToken.ThrowIfCancellationRequested();
+        //public async Task FlagAsNotDeleted(
+        //    Guid siteId,
+        //    Guid userId,
+        //    CancellationToken cancellationToken = default(CancellationToken))
+        //{
+        //    ThrowIfDisposed();
+        //    cancellationToken.ThrowIfCancellationRequested();
 
-            //await EnsureProjectId().ConfigureAwait(false);
-            var projectId = siteId.ToString();
+        //    //await EnsureProjectId().ConfigureAwait(false);
+        //    var projectId = siteId.ToString();
 
-            var item
-                = await userQueries.FetchAsync(
-                    projectId,
-                    userId.ToString(),
-                    cancellationToken).ConfigureAwait(false);
+        //    var item
+        //        = await userQueries.FetchAsync(
+        //            projectId,
+        //            userId.ToString(),
+        //            cancellationToken).ConfigureAwait(false);
 
-            if (item == null) { throw new InvalidOperationException("user not found"); }
+        //    if (item == null) { throw new InvalidOperationException("user not found"); }
 
-            item.IsDeleted = false;
+        //    item.IsDeleted = false;
 
-            await userCommands.UpdateAsync(
-                    projectId,
-                    item.Id.ToString(),
-                    item,
-                    cancellationToken).ConfigureAwait(false);
+        //    await userCommands.UpdateAsync(
+        //            projectId,
+        //            item.Id.ToString(),
+        //            item,
+        //            cancellationToken).ConfigureAwait(false);
 
-        }
+        //}
 
         public async Task LockoutAccount(
             Guid siteId,
