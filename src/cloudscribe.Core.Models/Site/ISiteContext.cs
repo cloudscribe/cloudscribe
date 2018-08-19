@@ -40,7 +40,7 @@ namespace cloudscribe.Core.Models
 
         bool UseEmailForLogin { get; }
         bool RequiresQuestionAndAnswer { get; }
-        bool ReallyDeleteUsers { get; }
+        //bool ReallyDeleteUsers { get; }
         bool AllowNewRegistration { get; }
         bool AllowPersistentLogin { get; }
         bool CaptchaOnLogin { get; }
@@ -114,6 +114,10 @@ namespace cloudscribe.Core.Models
         string ForcedCulture { get; }
 
         string ForcedUICulture { get; }
+
+        DateTime LastModifiedUtc { get;  }
+        string CookiePolicySummary { get; }
+        bool RequireCookieConsent { get;  }
 
     }
 }

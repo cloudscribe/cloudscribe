@@ -103,14 +103,14 @@ namespace cloudscribe.Core.Identity
 
             }
 
-            if (template.User.IsDeleted)
-            {
-                var reason = $"login not allowed for {template.User.Email} because account is flagged as deleted";
-                template.RejectReasons.Add(reason);
-                template.User = null;
+            //if (template.User.IsDeleted)
+            //{
+            //    var reason = $"login not allowed for {template.User.Email} because account is flagged as deleted";
+            //    template.RejectReasons.Add(reason);
+            //    template.User = null;
 
 
-            }
+            //}
         }
     }
 }

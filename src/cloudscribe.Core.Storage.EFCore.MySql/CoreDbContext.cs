@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2016-11-10
-// Last Modified:			2018-03-02
+// Last Modified:			2018-08-19
 // 
 
 using cloudscribe.Core.Models;
@@ -91,11 +91,7 @@ namespace cloudscribe.Core.Storage.EFCore.MySql
                 entity.Property(p => p.LdapUserDNKey)
                 .HasMaxLength(10);
                 ;
-
-                entity.Property(p => p.ReallyDeleteUsers)
-                .IsRequired()
-                ;
-
+                
                 entity.Property(p => p.UseEmailForLogin)
                 .IsRequired()
                 ;
@@ -368,6 +364,8 @@ namespace cloudscribe.Core.Storage.EFCore.MySql
                 .HasDefaultValue("SmtpMailSender")
                 ;
 
+                entity.Property(p => p.CookiePolicySummary).HasMaxLength(255);
+
             });
 
             modelBuilder.Entity<SiteHost>(entity =>
@@ -459,9 +457,9 @@ namespace cloudscribe.Core.Storage.EFCore.MySql
                 .IsRequired()
                 ;
 
-                entity.Property(p => p.IsDeleted)
-                .IsRequired()
-                ;
+                //entity.Property(p => p.IsDeleted)
+                //.IsRequired()
+                //;
 
                 entity.Property(p => p.IsLockedOut)
                 .IsRequired()

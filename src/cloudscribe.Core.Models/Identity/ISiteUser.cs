@@ -26,9 +26,9 @@ namespace cloudscribe.Core.Models
         DateTime LastModifiedUtc { get; set; }
         DateTime? DateOfBirth { get; set; }
         bool DisplayInMemberList { get; set; }
-        bool Trusted { get; set; }
+        
         string WebSiteUrl { get; set; }
-        bool IsDeleted { get; set; }
+        
 
         /// <summary>
         /// this property indicates if an account has been locked by an administrator

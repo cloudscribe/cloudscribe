@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2014-08-16
-// Last Modified:			2018-04-23
+// Last Modified:			2018-08-18
 // 
 
 using System;
@@ -18,9 +18,12 @@ namespace cloudscribe.Core.Models
             this.Id = Guid.NewGuid();
         }
 
-        //TODO: move this to SiteInfo and update queries
-        public DateTime CreatedUtc { get; set; } = DateTime.UtcNow;
+        
+        
+        public bool RequireCookieConsent { get; set; } = true;
+        public string CookiePolicySummary { get; set; } = "To ensure you get the best experience, this website uses cookies.";
 
+        
         public string ConcurrencyStamp { get; set; } = Guid.NewGuid().ToString();
         
         public string Theme { get; set; }
@@ -45,7 +48,7 @@ namespace cloudscribe.Core.Models
 
         public string LdapUserDNKey { get; set; } = "CN";
 
-        public bool ReallyDeleteUsers { get; set; } = true;
+        
         public bool UseEmailForLogin { get; set; } = true;
         public bool DisableDbAuth { get; set; } = false;
        
@@ -216,6 +219,7 @@ namespace cloudscribe.Core.Models
                 CompanyRegion = i.CompanyRegion,
                 CompanyStreetAddress = i.CompanyStreetAddress,
                 CompanyStreetAddress2 = i.CompanyStreetAddress2,
+                CookiePolicySummary = i.CookiePolicySummary,
                 CreatedUtc = i.CreatedUtc,
                 DefaultEmailFromAddress = i.DefaultEmailFromAddress,
                 DefaultEmailFromAlias = i.DefaultEmailFromAlias,
@@ -235,6 +239,7 @@ namespace cloudscribe.Core.Models
                 IsDataProtected = i.IsDataProtected,
                 IsServerAdminSite = i.IsServerAdminSite,
                 Theme = i.Theme,
+                LastModifiedUtc = i.LastModifiedUtc,
                 LdapDomain = i.LdapDomain,
                 LdapPort = i.LdapPort,
                 LdapRootDN = i.LdapRootDN,
@@ -257,8 +262,7 @@ namespace cloudscribe.Core.Models
                 PwdRequireLowercase = i.PwdRequireLowercase,
                 PwdRequireNonAlpha = i.PwdRequireNonAlpha,
                 PwdRequireUppercase = i.PwdRequireUppercase,
-
-                ReallyDeleteUsers = i.ReallyDeleteUsers,
+                
                 RecaptchaPrivateKey = i.RecaptchaPrivateKey,
                 RecaptchaPublicKey = i.RecaptchaPublicKey,
                 RegistrationAgreement = i.RegistrationAgreement,
@@ -267,6 +271,7 @@ namespace cloudscribe.Core.Models
                 RequireConfirmedEmail = i.RequireConfirmedEmail,
                 RequireConfirmedPhone = i.RequireConfirmedPhone,
                 RequiresQuestionAndAnswer = i.RequiresQuestionAndAnswer,
+                RequireCookieConsent = i.RequireCookieConsent,
                 SignEmailWithDkim = i.SignEmailWithDkim,
                 SiteFolderName = i.SiteFolderName,
                 Id = i.Id,

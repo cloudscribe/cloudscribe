@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2014-10-26
-// Last Modified:			2018-05-07
+// Last Modified:			2018-08-19
 // 
 
 using cloudscribe.Core.Models;
@@ -857,8 +857,7 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
                 SiteId = selectedSite.Id,
                 AllowNewRegistration = selectedSite.AllowNewRegistration,
                 AllowPersistentLogin = selectedSite.AllowPersistentLogin,
-                DisableDbAuth = selectedSite.DisableDbAuth,
-                ReallyDeleteUsers = selectedSite.ReallyDeleteUsers,
+                DisableDbAuth = selectedSite.DisableDbAuth, 
                 RequireApprovalBeforeLogin = selectedSite.RequireApprovalBeforeLogin,
                 RequireConfirmedEmail = selectedSite.RequireConfirmedEmail,
                 UseEmailForLogin = selectedSite.UseEmailForLogin,
@@ -912,7 +911,6 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
             selectedSite.AllowNewRegistration = model.AllowNewRegistration;
             selectedSite.AllowPersistentLogin = model.AllowPersistentLogin;
             selectedSite.DisableDbAuth = model.DisableDbAuth;
-            selectedSite.ReallyDeleteUsers = model.ReallyDeleteUsers;
             selectedSite.RequireApprovalBeforeLogin = model.RequireApprovalBeforeLogin;
             selectedSite.RequireConfirmedEmail = model.RequireConfirmedEmail;
             selectedSite.RequireConfirmedPhone = model.RequireConfirmedPhone;
@@ -932,6 +930,93 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
 
             return RedirectToAction("SecuritySettings");
         }
+
+        [HttpGet]
+        [Authorize(Policy = PolicyConstants.AdminPolicy)]
+        public async Task<IActionResult> PrivacySettings(
+            Guid? siteId,
+            int slp = 1)
+        {
+            var selectedSite = await _siteManager.GetSiteForEdit(siteId);
+            // only server admin site can edit other sites settings
+            if (selectedSite.Id != _siteManager.CurrentSite.Id)
+            {
+                ViewData["Title"] = string.Format(CultureInfo.CurrentUICulture, _sr["{0} - Privacy Settings"], selectedSite.SiteName);
+            }
+            else
+            {
+                ViewData["Title"] = _sr["Privacy Settings"];
+            }
+
+
+            var model = new PrivacyPolicyViewModel
+            {
+                SiteId = selectedSite.Id,
+                PrivacyPolicy = selectedSite.PrivacyPolicy,
+                RequireCookieConsent = selectedSite.RequireCookieConsent
+                
+            };
+            if(!string.IsNullOrWhiteSpace(selectedSite.CookiePolicySummary))
+            {
+                model.CookiePolicySummary = selectedSite.CookiePolicySummary;
+            }
+
+            return View(model);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        [Authorize(Policy = PolicyConstants.AdminPolicy)]
+        public async Task<ActionResult> PrivacySettings(PrivacyPolicyViewModel model)
+        {
+            var selectedSite = await _siteManager.GetSiteForEdit(model.SiteId);
+
+            if (selectedSite == null)
+            {
+                this.AlertDanger(_sr["oops something went wrong."], true);
+                return RedirectToAction("Index");
+            }
+
+            // only server admin site can edit other sites settings
+            if (selectedSite.Id == _siteManager.CurrentSite.Id)
+            {
+                ViewData["Title"] = "Privacy Settings";
+            }
+            else if (_siteManager.CurrentSite.IsServerAdminSite)
+            {
+                ViewData["Title"] = string.Format(CultureInfo.CurrentUICulture, "{0} - Privacy Settings", selectedSite.SiteName);
+            }
+            
+            if (model.SiteId == Guid.Empty)
+            {
+                this.AlertDanger(_sr["oops something went wrong, site was not found."], true);
+                return RedirectToAction("Index");
+            }
+
+            if (!ModelState.IsValid)
+            {
+                return View(model);
+            }
+
+            selectedSite.CookiePolicySummary = model.CookiePolicySummary;
+            selectedSite.PrivacyPolicy = model.PrivacyPolicy;
+            selectedSite.RequireCookieConsent = model.RequireCookieConsent;
+            
+            await _siteManager.Update(selectedSite);
+
+            this.AlertSuccess(string.Format(_sr["Privacy Settings for {0} was successfully updated."],
+                        selectedSite.SiteName), true);
+
+            if ((_siteManager.CurrentSite.IsServerAdminSite)
+                && (_siteManager.CurrentSite.Id != selectedSite.Id)
+                )
+            {
+                return RedirectToAction("PrivacySettings", new { siteId = model.SiteId });
+            }
+
+            return RedirectToAction("PrivacySettings");
+        }
+
 
         [HttpGet]
         [Authorize(Policy = PolicyConstants.AdminPolicy)]

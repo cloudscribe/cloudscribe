@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2015-11-16
-// Last Modified:			2016-08-03
+// Last Modified:			2018-08-19
 // 
 
 using cloudscribe.Core.Models;
@@ -45,6 +45,7 @@ namespace cloudscribe.Core.Storage.EFCore.Common
             if (site.Id == Guid.Empty) throw new ArgumentException("site must have a non-empty Id");
 
             var siteSettings = SiteSettings.FromISiteSettings(site);
+            siteSettings.LastModifiedUtc = DateTime.UtcNow;
             
             bool tracking = dbContext.ChangeTracker.Entries<SiteSettings>().Any(x => x.Entity.Id == siteSettings.Id);
             if (!tracking)

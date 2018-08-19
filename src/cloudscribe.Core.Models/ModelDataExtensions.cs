@@ -62,12 +62,7 @@ namespace cloudscribe.Core.Models.DataExtensions
             {
                 user.AccountApproved = Convert.ToBoolean(reader["AccountApproved"]);
             }
-
-           
-            if (reader["Trusted"] != DBNull.Value)
-            {
-                user.Trusted = Convert.ToBoolean(reader["Trusted"]);
-            }
+            
             if (reader["DisplayInMemberList"] != DBNull.Value)
             {
                 user.DisplayInMemberList = Convert.ToBoolean(reader["DisplayInMemberList"]);
@@ -83,10 +78,10 @@ namespace cloudscribe.Core.Models.DataExtensions
                 user.CreatedUtc = Convert.ToDateTime(reader["DateCreated"]);
             }
 
-            if (reader["IsDeleted"] != DBNull.Value)
-            {
-                user.IsDeleted = Convert.ToBoolean(reader["IsDeleted"]);
-            }
+            //if (reader["IsDeleted"] != DBNull.Value)
+            //{
+            //    user.IsDeleted = Convert.ToBoolean(reader["IsDeleted"]);
+            //}
             
             if (reader["LastLoginDate"] != DBNull.Value)
             {
@@ -130,10 +125,7 @@ namespace cloudscribe.Core.Models.DataExtensions
                 user.AccountApproved = Convert.ToBoolean(reader["AccountApproved"]);
             }
             
-            if (reader["Trusted"] != DBNull.Value)
-            {
-                user.Trusted = Convert.ToBoolean(reader["Trusted"]);
-            }
+            
             if (reader["DisplayInMemberList"] != DBNull.Value)
             {
                 user.DisplayInMemberList = Convert.ToBoolean(reader["DisplayInMemberList"]);
@@ -151,10 +143,10 @@ namespace cloudscribe.Core.Models.DataExtensions
             }
             
             
-            if (reader["IsDeleted"] != DBNull.Value)
-            {
-                user.IsDeleted = Convert.ToBoolean(reader["IsDeleted"]);
-            }
+            //if (reader["IsDeleted"] != DBNull.Value)
+            //{
+            //    user.IsDeleted = Convert.ToBoolean(reader["IsDeleted"]);
+            //}
             
             if (reader["LastLoginDate"] != DBNull.Value)
             {
@@ -255,7 +247,7 @@ namespace cloudscribe.Core.Models.DataExtensions
             site.LdapRootDN = reader["LdapRootDN"].ToString();
             site.LdapUserDNKey = reader["LdapUserDNKey"].ToString();
 
-            site.ReallyDeleteUsers = Convert.ToBoolean(reader["ReallyDeleteUsers"]);
+            //site.ReallyDeleteUsers = Convert.ToBoolean(reader["ReallyDeleteUsers"]);
             site.UseEmailForLogin = Convert.ToBoolean(reader["UseEmailForLogin"]);
             
             site.RequiresQuestionAndAnswer = Convert.ToBoolean(reader["RequiresQuestionAndAnswer"]);

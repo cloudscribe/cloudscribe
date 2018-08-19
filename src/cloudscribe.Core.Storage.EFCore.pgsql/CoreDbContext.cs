@@ -2,14 +2,13 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2015-11-16
-// Last Modified:			2018-03-02
+// Last Modified:			2018-08-19
 // 
 
 using cloudscribe.Core.Models;
 using cloudscribe.Core.Models.Geography;
 using cloudscribe.Core.Storage.EFCore.Common;
 using Microsoft.EntityFrameworkCore;
-using Npgsql.EntityFrameworkCore.PostgreSQL;
 
 
 namespace cloudscribe.Core.Storage.EFCore.pgsql
@@ -71,9 +70,7 @@ namespace cloudscribe.Core.Storage.EFCore.pgsql
                 entity.Property(p => p.LdapRootDN).HasMaxLength(255);
 
                 entity.Property(p => p.LdapUserDNKey).HasMaxLength(10);
-
-                entity.Property(p => p.ReallyDeleteUsers).IsRequired();
-
+                
                 entity.Property(p => p.UseEmailForLogin).IsRequired();
 
                 entity.Property(p => p.RequiresQuestionAndAnswer).IsRequired();
@@ -213,6 +210,8 @@ namespace cloudscribe.Core.Storage.EFCore.pgsql
                 .HasDefaultValue("SmtpMailSender")
                 ;
 
+                entity.Property(p => p.CookiePolicySummary).HasMaxLength(255);
+
             });
 
             modelBuilder.Entity<SiteHost>(entity =>
@@ -273,7 +272,7 @@ namespace cloudscribe.Core.Storage.EFCore.pgsql
 
                 entity.Property(p => p.EmailConfirmed).IsRequired();
 
-                entity.Property(p => p.IsDeleted).IsRequired();
+                //entity.Property(p => p.IsDeleted).IsRequired();
 
                 entity.Property(p => p.IsLockedOut).IsRequired();
 

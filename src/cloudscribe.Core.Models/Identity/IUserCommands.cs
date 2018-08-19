@@ -31,15 +31,15 @@ namespace cloudscribe.Core.Models
             CancellationToken cancellationToken = default(CancellationToken));
 
 
-        Task FlagAsDeleted(
-            Guid siteId,
-            Guid userId,
-            CancellationToken cancellationToken = default(CancellationToken));
+        //Task FlagAsDeleted(
+        //    Guid siteId,
+        //    Guid userId,
+        //    CancellationToken cancellationToken = default(CancellationToken));
 
-        Task FlagAsNotDeleted(
-            Guid siteId,
-            Guid userId,
-            CancellationToken cancellationToken = default(CancellationToken));
+        //Task FlagAsNotDeleted(
+        //    Guid siteId,
+        //    Guid userId,
+        //    CancellationToken cancellationToken = default(CancellationToken));
 
         Task LockoutAccount(
             Guid siteId,

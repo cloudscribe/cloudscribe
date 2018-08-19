@@ -19,6 +19,7 @@ using sourceDev.WebApp.Configuration;
 using cloudscribe.UserProperties.Services;
 using cloudscribe.UserProperties.Models;
 using IdentityServer4.AccessTokenValidation;
+using Microsoft.AspNetCore.Http;
 
 namespace sourceDev.WebApp
 {
@@ -102,12 +103,26 @@ namespace sourceDev.WebApp
             //*** Important ***
             // This is a custom extension method in Config/IdentityServerIntegration.cs
             services.SetupIdentityServerApiAuthentication();
-            
+
+            //services.AddSingleton<IOptions<CookiePolicyOptions>, cloudscribe.Core.Identity.SiteCookiePolicyOptions>();
 
             //var container = new Container();
             //container.Populate(services);
 
             //return container.GetInstance<IServiceProvider>();
+            services.Configure<CookiePolicyOptions>(options =>
+            {
+                // This lambda determines whether user consent for non-essential cookies is needed for a given request.
+                options.CheckConsentNeeded = cloudscribe.Core.Identity.SiteCookieConsent.NeedsConsent;
+                options.MinimumSameSitePolicy = SameSiteMode.None;
+                options.ConsentCookie.Name = "cookieconsent_status";
+            });
+
+            services.Configure<CookieTempDataProviderOptions>(options =>
+            {
+                options.Cookie.IsEssential = true;
+            });
+
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -131,6 +146,7 @@ namespace sourceDev.WebApp
             else
             {
                 app.UseExceptionHandler("/oops/Error");
+                app.UseHsts();
             }
             
             //app.UseStaticFiles();
@@ -145,6 +161,8 @@ namespace sourceDev.WebApp
             });
 
             app.UseCloudscribeCommonStaticFiles();
+
+            app.UseCookiePolicy();
 
 
             // we don't need session

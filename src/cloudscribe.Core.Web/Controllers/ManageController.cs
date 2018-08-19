@@ -2,9 +2,10 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2014-10-26
-// Last Modified:			2018-07-22
+// Last Modified:			2018-08-19
 // 
 
+using cloudscribe.Common.Gdpr;
 using cloudscribe.Core.Identity;
 using cloudscribe.Core.Models;
 using cloudscribe.Core.Web.Components;
@@ -18,7 +19,9 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.Extensions.Localization;
 using Microsoft.Extensions.Logging;
+using Newtonsoft.Json;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Text.Encodings.Web;
@@ -93,6 +96,121 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
             }
             
             return View(model);
+        }
+
+        [HttpGet]
+        public virtual IActionResult PersonalData()
+        {
+            string userId = User.GetUserId();
+            return View("PersonalData", userId);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public virtual async Task<IActionResult> DownloadPersonalData()
+        {
+            var user = await UserManager.FindByIdAsync(HttpContext.User.GetUserId());
+
+            if (user == null)
+            {
+                return NotFound($"Unable to load user with ID '{UserManager.GetUserId(User)}'.");
+            }
+
+            Log.LogInformation("User with ID '{UserId}' asked for their personal data.", UserManager.GetUserId(User));
+
+            var personalData = new Dictionary<string, string>();
+            var personalDataProps = typeof(SiteUser).GetProperties().Where(
+                            prop => Attribute.IsDefined(prop, typeof(PersonalDataMarkerAttribute)));
+
+            foreach (var p in personalDataProps)
+            {
+                personalData.Add(p.Name, p.GetValue(user)?.ToString() ?? "null");
+            }
+            
+            var logins = await UserManager.GetLoginsAsync(user);
+            foreach (var l in logins)
+            {
+                personalData.Add($"{l.LoginProvider} external login provider key", l.ProviderKey);
+            }
+
+            personalData.Add($"Authenticator Key", await UserManager.GetAuthenticatorKeyAsync(user));
+
+            var locations = await UserManager.GetUserLocations(user.SiteId, user.Id, 1, 100);
+            int i = 1;
+            foreach(var location in locations.Data)
+            {
+                personalData.Add($"IpAddress {i}", location.IpAddress);
+                i += 1;
+            }
+
+            var fileName = Request.Host.Host.Replace(":", "") + "-PersonalData.json";
+
+            Response.Headers.Add("Content-Disposition", $"attachment; filename={fileName}");
+            return new FileContentResult(Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(personalData)), "text/json");
+
+        }
+
+        [HttpGet]
+        public virtual async Task<IActionResult> DeletePersonalData()
+        {
+            var user = await UserManager.FindByIdAsync(HttpContext.User.GetUserId());
+
+            if (user == null)
+            {
+                return NotFound($"Unable to load user with ID '{UserManager.GetUserId(User)}'.");
+            }
+
+            var model = new DeletePersonalDataViewModel
+            {
+                HasPassword = await UserManager.HasPasswordAsync(user)
+            };
+            
+            return View(model);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public virtual async Task<IActionResult> DeletePersonalData(DeletePersonalDataViewModel model)
+        {
+            var user = await UserManager.FindByIdAsync(HttpContext.User.GetUserId());
+
+            if (user == null)
+            {
+                return NotFound($"Unable to load user with ID '{UserManager.GetUserId(User)}'.");
+            }
+
+            var requirePassword = await UserManager.HasPasswordAsync(user);
+            if (requirePassword)
+            {
+                if (string.IsNullOrWhiteSpace(model.Password))
+                {
+                    ModelState.AddModelError(string.Empty, "Password is required.");
+                    model.HasPassword = requirePassword;
+                    return View(model);
+                }
+
+                if (!await UserManager.CheckPasswordAsync(user, model.Password))
+                {
+                    ModelState.AddModelError(string.Empty, "Password not correct.");
+                    model.HasPassword = requirePassword;
+                    return View();
+                }
+            }
+
+            var result = await UserManager.DeleteAsync(user);
+            var userId = await UserManager.GetUserIdAsync(user);
+            if (!result.Succeeded)
+            {
+                throw new InvalidOperationException($"Unexpected error occurred deleting user with ID '{userId}'.");
+            }
+
+            await SignInManager.SignOutAsync();
+
+            Log.LogInformation($"User with ID {userId} deleted themselves.");
+
+
+            return this.RedirectToSiteRoot(CurrentSite);
+
         }
 
         [HttpGet]

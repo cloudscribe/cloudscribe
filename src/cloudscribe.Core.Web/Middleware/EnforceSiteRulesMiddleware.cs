@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2017-05-26
-// Last Modified:			2017-09-15
+// Last Modified:			2018-08-19
 // 
 
 using cloudscribe.Core.Models;
@@ -58,8 +58,8 @@ namespace cloudscribe.Core.Web.Middleware
                     await accountService.HandleUserRolesChanged(context.User);
                 }
 
-                // handle user still authenticated after lockout or delete
-                if(userContext.IsLockedOut || userContext.IsDeleted)
+                // handle user still authenticated after lockout 
+                if(userContext.IsLockedOut)
                 {
                     await accountService.SignOutAsync();
                 }

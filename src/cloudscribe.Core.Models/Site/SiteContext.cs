@@ -114,10 +114,10 @@ namespace cloudscribe.Core.Models
             get { return site.LdapUserDNKey; }
         }
 
-        public bool ReallyDeleteUsers
-        {
-            get { return site.ReallyDeleteUsers; }
-        }
+        //public bool ReallyDeleteUsers
+        //{
+        //    get { return site.ReallyDeleteUsers; }
+        //}
         public bool UseEmailForLogin
         {
             get { return site.UseEmailForLogin; }
@@ -484,6 +484,21 @@ namespace cloudscribe.Core.Models
             get { return site.ForcedUICulture; }
         }
 
-        
+        public DateTime LastModifiedUtc
+        {
+            get { return site.LastModifiedUtc; }
+        }
+
+        public string CookiePolicySummary
+        {
+            get { return site.CookiePolicySummary; }
+        }
+
+        public bool RequireCookieConsent
+        {
+            get { return site.RequireCookieConsent; }
+        }
+
+
     }
 }

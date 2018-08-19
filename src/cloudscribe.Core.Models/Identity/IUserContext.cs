@@ -18,9 +18,7 @@ namespace cloudscribe.Core.Models
         DateTime LastModifiedUtc { get; }
         DateTime? DateOfBirth { get; }
         bool DisplayInMemberList { get; }
-        bool Trusted { get; }
         string WebSiteUrl { get;  }
-        bool IsDeleted { get;  }
         
         bool IsLockedOut { get; }
 

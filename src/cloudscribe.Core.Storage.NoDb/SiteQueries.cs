@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:                  Joe Audette
 // Created:                 2016-05-13
-// Last Modified:           2017-12-29
+// Last Modified:           2018-08-19
 // 
 
 using cloudscribe.Core.Models;
@@ -200,7 +200,9 @@ namespace cloudscribe.Core.Storage.NoDb
                             IsServerAdminSite = x.IsServerAdminSite,
                             PreferredHostName = x.PreferredHostName,
                             SiteFolderName = x.SiteFolderName,
-                            SiteName = x.SiteName
+                            SiteName = x.SiteName,
+                            CreatedUtc = x.CreatedUtc,
+                            LastModifiedUtc = x.LastModifiedUtc
                         }
                         ;
 
@@ -248,7 +250,9 @@ namespace cloudscribe.Core.Storage.NoDb
                             IsServerAdminSite = x.IsServerAdminSite,
                             PreferredHostName = x.PreferredHostName,
                             SiteFolderName = x.SiteFolderName,
-                            SiteName = x.SiteName
+                            SiteName = x.SiteName,
+                            CreatedUtc = x.CreatedUtc,
+                            LastModifiedUtc = x.LastModifiedUtc
                         };
 
             var data = query

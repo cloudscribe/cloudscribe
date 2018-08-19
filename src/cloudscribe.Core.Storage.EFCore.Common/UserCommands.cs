@@ -167,49 +167,49 @@ namespace cloudscribe.Core.Storage.EFCore.Common
             
         }
 
-        public async Task FlagAsDeleted(
-            Guid siteId,
-            Guid userId,
-            CancellationToken cancellationToken = default(CancellationToken))
-        {
-            ThrowIfDisposed();
-            cancellationToken.ThrowIfCancellationRequested();
-            var item = await dbContext.Users.SingleOrDefaultAsync(
-                    x => x.Id == userId,
-                    cancellationToken)
-                .ConfigureAwait(false);
+        //public async Task FlagAsDeleted(
+        //    Guid siteId,
+        //    Guid userId,
+        //    CancellationToken cancellationToken = default(CancellationToken))
+        //{
+        //    ThrowIfDisposed();
+        //    cancellationToken.ThrowIfCancellationRequested();
+        //    var item = await dbContext.Users.SingleOrDefaultAsync(
+        //            x => x.Id == userId,
+        //            cancellationToken)
+        //        .ConfigureAwait(false);
 
-            if (item == null) { throw new InvalidOperationException("user not found"); }
+        //    if (item == null) { throw new InvalidOperationException("user not found"); }
 
-            item.IsDeleted = true;
+        //    item.IsDeleted = true;
 
-            int rowsAffected = await dbContext.SaveChangesAsync(cancellationToken)
-                .ConfigureAwait(false);
+        //    int rowsAffected = await dbContext.SaveChangesAsync(cancellationToken)
+        //        .ConfigureAwait(false);
 
             
-        }
+        //}
 
-        public async Task FlagAsNotDeleted(
-            Guid siteId,
-            Guid userId,
-            CancellationToken cancellationToken = default(CancellationToken))
-        {
-            ThrowIfDisposed();
-            cancellationToken.ThrowIfCancellationRequested();
+        //public async Task FlagAsNotDeleted(
+        //    Guid siteId,
+        //    Guid userId,
+        //    CancellationToken cancellationToken = default(CancellationToken))
+        //{
+        //    ThrowIfDisposed();
+        //    cancellationToken.ThrowIfCancellationRequested();
 
-            var item = await dbContext.Users.SingleOrDefaultAsync(
-                    x => x.Id == userId,
-                    cancellationToken)
-                    .ConfigureAwait(false);
+        //    var item = await dbContext.Users.SingleOrDefaultAsync(
+        //            x => x.Id == userId,
+        //            cancellationToken)
+        //            .ConfigureAwait(false);
 
-            if (item == null) { throw new InvalidOperationException("user not found"); }
+        //    if (item == null) { throw new InvalidOperationException("user not found"); }
 
-            item.IsDeleted = false;
+        //    item.IsDeleted = false;
 
-            int rowsAffected = await dbContext.SaveChangesAsync(cancellationToken)
-                .ConfigureAwait(false);
+        //    int rowsAffected = await dbContext.SaveChangesAsync(cancellationToken)
+        //        .ConfigureAwait(false);
 
-        }
+        //}
 
 
 

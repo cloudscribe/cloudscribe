@@ -1,0 +1,35 @@
+﻿@using Microsoft.AspNetCore.Http.Features
+@inject IStringLocalizer<CloudscribeCore> sr
+@inject ISiteContextResolver siteResolver
+@{
+    var consentFeature = Context.Features.Get<ITrackingConsentFeature>();
+    var showBanner = !consentFeature?.CanTrack ?? false;
+    var cookieString = consentFeature?.CreateConsentCookie();
+    var policySummary = sr["To ensure you get the best experience, this website uses cookies."];
+    var tenant = await siteResolver.ResolveSite(Context.Request.Host.Host, Context.Request.Path);
+    if(tenant != null && !string.IsNullOrWhiteSpace(tenant.CookiePolicySummary))
+    {
+        policySummary = sr[tenant.CookiePolicySummary];
+    }
+}
+@if (showBanner)
+{
+    <div id="cookieConsent" class="alert alert-dark mt-2" style="min-height:60px;" role="alert">
+        <p class="float-left">
+            <span class="float-left mr-2"><i class="glyphicon glyphicon-info-sign fas fa-info-circle fa-2x" aria-hidden="true"></i></span>
+            @policySummary
+        </p>
+        <div class="float-left">
+            <a asp-controller="Privacy" asp-action="Index" class="btn btn-info  ml-2 mb-1">@sr["Learn More"]</a>
+            <button type="button" class="btn btn-primary ml-2 mb-1" data-cookie-string="@cookieString">Accept</button>
+        </div>
+    </div>
+    <script>
+        (function () {
+            document.querySelector("#cookieConsent button[data-cookie-string]").addEventListener("click", function (el) {
+                document.cookie = el.target.dataset.cookieString;
+                document.querySelector("#cookieConsent").classList.add("collapse");
+            }, false);
+        })();
+    </script>
+}

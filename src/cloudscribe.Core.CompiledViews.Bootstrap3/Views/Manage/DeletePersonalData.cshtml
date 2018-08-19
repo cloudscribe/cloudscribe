@@ -1,0 +1,38 @@
+﻿@model cloudscribe.Core.Web.ViewModels.SiteUser.DeletePersonalDataViewModel
+@inject IStringLocalizer<CloudscribeCore> sr
+@{
+    ViewData["Title"] = sr["Delete Personal Data"];
+    ViewData["BodyClass"] = "manage-section delete-data";
+}
+<h4>@ViewData["Title"]</h4>
+
+<div class="alert alert-warning" role="alert">
+    <p>
+        <span class="glyphicon glyphicon-warning-sign fas fa-exclamation-triangle"></span>
+        <strong>@sr["Deleting this data will permanently remove your account, and this cannot be recovered."]</strong>
+    </p>
+</div>
+
+<div>
+    <form id="delete-user" method="post" class="form-group">
+        <div asp-validation-summary="All" class="text-danger"></div>
+        <input asp-for="HasPassword" type="hidden" />
+        @if (Model.HasPassword)
+        {
+            <div class="form-group">
+                <label asp-for="Password"></label>
+                <input asp-for="Password" class="form-control" />
+                <span asp-validation-for="Password" class="invalid-feedback"></span>
+            </div>
+        }
+        <button class="btn btn-danger" type="submit">@sr["Delete data and close my account"]</button>
+    </form>
+</div>
+
+@section Scripts {
+    <partial name="_UnobtrusiveValidationScriptsPartial" />
+    <script src="~/cr/js/cloudscribe-validation-requiredwhen.min.js"></script>
+    <script src="~/cr/js/unobtrusive-validation-bs4.min.js"></script>
+    <script src="~/cr/js/jquery.validate.hooks.min.js"></script>
+    <script src="~/cr/js/jqueryvaildation.submitonce-unobtrusive.min.js"></script>
+}

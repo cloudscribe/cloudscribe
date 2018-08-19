@@ -180,16 +180,9 @@ namespace cloudscribe.Core.Identity
             ThrowIfDisposed();
             cancellationToken.ThrowIfCancellationRequested();
             _log.LogDebug("UpdateAsync"); 
-
-            if (SiteSettings.ReallyDeleteUsers)
-            {
-                await _commands.Delete(user.SiteId, user.Id, cancellationToken);
-            }
-            else
-            {
-                await _commands.FlagAsDeleted(user.SiteId, user.Id, cancellationToken);
-            }
-
+            
+            await _commands.Delete(user.SiteId, user.Id, cancellationToken);
+            
             return IdentityResult.Success;
         }
 

@@ -104,8 +104,7 @@ namespace cloudscribe.Core.Models
         bool UseEmailForLogin { get; set; }
         
         bool RequiresQuestionAndAnswer { get; set; }
-        bool ReallyDeleteUsers { get; set; }
-        //TODO: implement
+        
         bool AllowNewRegistration { get; set; }
       
         bool AllowPersistentLogin { get; set; }
@@ -201,6 +200,10 @@ namespace cloudscribe.Core.Models
         string ForcedCulture { get; set; }
 
         string ForcedUICulture { get; set; }
+
+        DateTime LastModifiedUtc { get; set; }
+        string CookiePolicySummary { get; set; }
+        bool RequireCookieConsent { get; set; }
 
 
         // TODO: drop

@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0.
 // Author:                  Joe Audette
 // Created:                 2017-01-04
-// Last Modified:           2017-11-01
+// Last Modified:           2018-08-19
 // 
 
 using cloudscribe.Web.Common.Analytics;
@@ -91,6 +91,13 @@ namespace cloudscribe.Web.Common.TagHelpers
         [HtmlAttributeName("cookie-consent-accept-dismiss")]
         public bool AcceptDismissAsCookieConsent { get; set; } = true;
 
+        /// <summary>
+        /// this setting makes it use the newer cookie consent feature not the one with the cookie consent taghelper
+        /// This is the recommended setting now so it defaults to true.
+        /// </summary>
+        [HtmlAttributeName("use-standard-cookie-consent")]
+        public bool UseStandardCookieConsent { get; set; } = true;
+
         public override void Process(TagHelperContext context, TagHelperOutput output)
         {
             if(string.IsNullOrEmpty(ProfileId))
@@ -117,27 +124,44 @@ namespace cloudscribe.Web.Common.TagHelpers
                 sb.Append("}");
 
                 sb.Append("function defaultCookieConsentCheck() {");
-                //sb.Append("return window.CookieConsentStatus === undefined || window.CookieConsentStatus.DidConsent;");
                 sb.Append("var consentStatus = gaGetCookie(\"" + ConsentCookieName + "\");");
                 if(Debug)
                 {
                     sb.Append("console.log('cookie consent status:' + consentStatus);");
                 }
-                sb.Append("if (consentStatus == \"deny\") return false;");
-                if(AcceptDismissAsCookieConsent)
+#if DEBUG
+                sb.Append("console.log('cookie consent status:' + consentStatus);");
+#endif
+
+                if (UseStandardCookieConsent)
                 {
-                    sb.Append("if (consentStatus == \"dismiss\") return true;");
-                }
-                
-                sb.Append("if (consentStatus == \"allow\") return true;");
-                if (RequireExplicitCookieConsent)
-                {
-                    sb.Append("return false;");
+                    sb.Append("if (consentStatus == \"yes\") { return true; } else { return false; }");
+
                 }
                 else
                 {
-                    sb.Append("return true;");
+                    // use legacy cookie consent
+                    sb.Append("if (consentStatus == \"deny\") return false;");
+                    if (AcceptDismissAsCookieConsent)
+                    {
+                        sb.Append("if (consentStatus == \"dismiss\") return true;");
+                    }
+
+                    sb.Append("if (consentStatus == \"allow\") return true;");
+                    if (RequireExplicitCookieConsent)
+                    {
+                        sb.Append("return false;");
+                    }
+                    else
+                    {
+                        sb.Append("return true;");
+                    }
+
                 }
+
+                
+
+
                 sb.Append("}");
             }
             
@@ -155,9 +179,13 @@ namespace cloudscribe.Web.Common.TagHelpers
                 {
                     sb.Append("if(gacanUseCookies) { console.log('ga can use cookies'); } else { console.log('ga will not use cookies'); }");
                 }
+#if DEBUG
+                sb.Append("if(gacanUseCookies) { console.log('ga can use cookies'); } else { console.log('ga will not use cookies'); }");
+#endif
+
             }
-            
-            
+
+
 
             sb.Append("ga('create',");
             sb.Append("'" + ProfileId + "', 'auto'");
@@ -200,8 +228,11 @@ namespace cloudscribe.Web.Common.TagHelpers
             {
                 sb.Append("console.log('ga tracked with cookies'); ");
             }
+#if DEBUG
+            sb.Append("console.log('ga tracked with cookies'); ");
+#endif
 
-            if(CheckCookieConsent)
+            if (CheckCookieConsent)
             {
                 sb.Append("} else {"); //can't use cookies
 
@@ -212,6 +243,9 @@ namespace cloudscribe.Web.Common.TagHelpers
                 {
                     sb.Append("console.log('ga tracked without cookies'); ");
                 }
+#if DEBUG
+                sb.Append("console.log('ga tracked without cookies'); ");
+#endif
 
                 sb.Append("}");
             }
