@@ -25,6 +25,11 @@ https://www.tabsoverspaces.com/233708-using-value-converter-for-custom-encryptio
 
 https://docs.microsoft.com/en-us/dotnet/framework/data/adonet/ef/security-considerations
 
+## Personal Data
+
+https://eugdprcompliant.com/personal-data/
+
+
 Properties decorated with the PersonalData attribute are:
 
     Deleted when the Areas/Identity/Pages/Account/Manage/DeletePersonalData.cshtml Razor Page calls UserManager.Delete.
@@ -33,6 +38,7 @@ Properties decorated with the PersonalData attribute are:
 https://github.com/aspnet/Identity/blob/master/src/Stores/IdentityUser.cs
 [ProtectedPersonalData]
 public virtual string Email { get; set; }
+
 
 ## Third Party Cookies
 

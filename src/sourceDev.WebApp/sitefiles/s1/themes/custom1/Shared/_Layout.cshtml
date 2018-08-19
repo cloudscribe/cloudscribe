@@ -92,6 +92,12 @@ if (!string.IsNullOrWhiteSpace(Tenant.SiteFolderName)) { siteRoot = "/" + Tenant
                 <li class=" mr-2">
                     <a class="text-nowrap" href="@siteRoot/sitemap">Site Map</a>
                 </li>
+                @if (Tenant != null && !string.IsNullOrWhiteSpace(Tenant.PrivacyPolicy))
+                {
+                    <li class="border-left pl-2 mr-2">
+                        <a asp-controller="Policy" asp-action="Privacy">Privacy Policy</a>
+                    </li>
+                }
                 <li class="border-left pl-2 mr-2">
                     @* you are free to remove the powered by cloudscribe link but we appreciate it if you choose to keep it! *@
                     <a class="text-nowrap" target="_blank" href="https://www.cloudscribe.com/?utm_source=@Context.Request.Host.Value&amp;utm_medium=referral&amp;utm_campaign=poweredbycloudscribe">Powered by cloudscribe</a>

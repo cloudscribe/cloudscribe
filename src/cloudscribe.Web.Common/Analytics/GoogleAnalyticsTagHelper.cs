@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0.
 // Author:                  Joe Audette
 // Created:                 2017-01-04
-// Last Modified:           2017-11-01
+// Last Modified:           2018-08-19
 // 
 
 using cloudscribe.Web.Common.Analytics;
