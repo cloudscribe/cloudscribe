@@ -1,0 +1,33 @@
+﻿@model string
+@using cloudscribe.Core.Web.ExtensionPoints
+@inject IStringLocalizer<CloudscribeCore> sr
+@inject IEnumerable<IGdprDataLinkProvider> gdprLinkProviders
+@{
+    ViewData["Title"] = sr["Personal Data"];
+    var otherDataProviders = gdprLinkProviders.ToList();
+}
+<h2>@ViewData["Title"]</h2>
+<p>
+    @sr["Your account contains personal data that you have given us. This page allows you to download or delete that data."]
+</p>
+<p>
+    <b>@sr["Deleting this data will permanently remove your account, and this cannot be recovered."]</b>
+</p>
+<form id="download-data" asp-action="DownloadPersonalData" method="post" class="form-group">
+    <button class="btn btn-primary" type="submit">@sr["Download"]</button>
+</form>
+<p>
+    <a id="delete" asp-action="DeletePersonalData" class="btn btn-primary">@sr["Delete"]</a>
+</p>
+@if (otherDataProviders.Count > 0)
+{
+    <h3>@sr["Other Personal Data"]</h3>
+    <ul class="list-unstyled">
+        @foreach (var d in otherDataProviders)
+        {
+            var link = await d.GetLink(Url, Model);
+            <li><a href="@link.Url">@link.Title</a></li>
+        }
+    </ul>
+}
+

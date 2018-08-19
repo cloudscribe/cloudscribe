@@ -182,7 +182,7 @@ namespace cloudscribe.Core.Storage.EFCore.Common
                   where
                   (
                       x.SiteId == siteId
-                     // && x.IsDeleted == false
+                      // && x.IsDeleted == false
                       && x.AccountApproved == true
                       && (
                       userNameBeginsWith == string.Empty
@@ -190,29 +190,30 @@ namespace cloudscribe.Core.Storage.EFCore.Common
                       )
                   )
                   orderby x.LastName, x.FirstName
-                  select new UserInfo
-                  {
-                      Id = x.Id,
-                      AvatarUrl = x.AvatarUrl,
-                      AccountApproved = x.AccountApproved,
-                      CreatedUtc = x.CreatedUtc,
-                      DateOfBirth = x.DateOfBirth,
-                      DisplayInMemberList = x.DisplayInMemberList,
-                      DisplayName = x.DisplayName,
-                      Email = x.Email,
-                      FirstName = x.FirstName,
-                      Gender = x.Gender,
-                      IsLockedOut = x.IsLockedOut,
-                      LastLoginUtc = x.LastLoginUtc,
-                      LastName = x.LastName,
-                      PhoneNumber = x.PhoneNumber,
-                      PhoneNumberConfirmed = x.PhoneNumberConfirmed,
-                      SiteId = x.SiteId,
-                      TimeZoneId = x.TimeZoneId, 
-                      UserName = x.UserName,
-                      WebSiteUrl = x.WebSiteUrl
+                  select x;
+                  //select new UserInfo
+                  //{
+                  //    Id = x.Id,
+                  //    AvatarUrl = x.AvatarUrl,
+                  //    AccountApproved = x.AccountApproved,
+                  //    CreatedUtc = x.CreatedUtc,
+                  //    DateOfBirth = x.DateOfBirth,
+                  //    DisplayInMemberList = x.DisplayInMemberList,
+                  //    DisplayName = x.DisplayName,
+                  //    Email = x.Email,
+                  //    FirstName = x.FirstName,
+                  //    Gender = x.Gender,
+                  //    IsLockedOut = x.IsLockedOut,
+                  //    LastLoginUtc = x.LastLoginUtc,
+                  //    LastName = x.LastName,
+                  //    PhoneNumber = x.PhoneNumber,
+                  //    PhoneNumberConfirmed = x.PhoneNumberConfirmed,
+                  //    SiteId = x.SiteId,
+                  //    TimeZoneId = x.TimeZoneId, 
+                  //    UserName = x.UserName,
+                  //    WebSiteUrl = x.WebSiteUrl
 
-                  };
+                  //};
 
 
 
@@ -234,29 +235,30 @@ namespace cloudscribe.Core.Storage.EFCore.Common
                       )
                   )
                   orderby x.CreatedUtc descending
-                  select new UserInfo
-                  {
-                      Id = x.Id,
-                      AvatarUrl = x.AvatarUrl,
-                      AccountApproved = x.AccountApproved,
-                      CreatedUtc = x.CreatedUtc,
-                      DateOfBirth = x.DateOfBirth,
-                      DisplayInMemberList = x.DisplayInMemberList,
-                      DisplayName = x.DisplayName,
-                      Email = x.Email,
-                      FirstName = x.FirstName,
-                      Gender = x.Gender,
-                      IsLockedOut = x.IsLockedOut,
-                      LastLoginUtc = x.LastLoginUtc,
-                      LastName = x.LastName,
-                      PhoneNumber = x.PhoneNumber,
-                      PhoneNumberConfirmed = x.PhoneNumberConfirmed,
-                      SiteId = x.SiteId,
-                      TimeZoneId = x.TimeZoneId,
-                      UserName = x.UserName,
-                      WebSiteUrl = x.WebSiteUrl
+                  select x;
+                    //select new UserInfo
+                    //{
+                    //    Id = x.Id,
+                    //    AvatarUrl = x.AvatarUrl,
+                    //    AccountApproved = x.AccountApproved,
+                    //    CreatedUtc = x.CreatedUtc,
+                    //    DateOfBirth = x.DateOfBirth,
+                    //    DisplayInMemberList = x.DisplayInMemberList,
+                    //    DisplayName = x.DisplayName,
+                    //    Email = x.Email,
+                    //    FirstName = x.FirstName,
+                    //    Gender = x.Gender,
+                    //    IsLockedOut = x.IsLockedOut,
+                    //    LastLoginUtc = x.LastLoginUtc,
+                    //    LastName = x.LastName,
+                    //    PhoneNumber = x.PhoneNumber,
+                    //    PhoneNumberConfirmed = x.PhoneNumberConfirmed,
+                    //    SiteId = x.SiteId,
+                    //    TimeZoneId = x.TimeZoneId,
+                    //    UserName = x.UserName,
+                    //    WebSiteUrl = x.WebSiteUrl
 
-                  };
+                    //};
 
 
                     break;
@@ -279,29 +281,30 @@ namespace cloudscribe.Core.Storage.EFCore.Common
                       )
                   )
                   orderby x.DisplayName
-                  select new UserInfo
-                  {
-                      Id = x.Id,
-                      AvatarUrl = x.AvatarUrl,
-                      AccountApproved = x.AccountApproved,
-                      CreatedUtc = x.CreatedUtc,
-                      DateOfBirth = x.DateOfBirth,
-                      DisplayInMemberList = x.DisplayInMemberList,
-                      DisplayName = x.DisplayName,
-                      Email = x.Email,
-                      FirstName = x.FirstName,
-                      Gender = x.Gender,
-                      IsLockedOut = x.IsLockedOut,
-                      LastLoginUtc = x.LastLoginUtc,
-                      LastName = x.LastName,
-                      PhoneNumber = x.PhoneNumber,
-                      PhoneNumberConfirmed = x.PhoneNumberConfirmed,
-                      SiteId = x.SiteId,
-                      TimeZoneId = x.TimeZoneId,
-                      UserName = x.UserName,
-                      WebSiteUrl = x.WebSiteUrl
+                  select x;
+                    //select new UserInfo
+                    //{
+                    //    Id = x.Id,
+                    //    AvatarUrl = x.AvatarUrl,
+                    //    AccountApproved = x.AccountApproved,
+                    //    CreatedUtc = x.CreatedUtc,
+                    //    DateOfBirth = x.DateOfBirth,
+                    //    DisplayInMemberList = x.DisplayInMemberList,
+                    //    DisplayName = x.DisplayName,
+                    //    Email = x.Email,
+                    //    FirstName = x.FirstName,
+                    //    Gender = x.Gender,
+                    //    IsLockedOut = x.IsLockedOut,
+                    //    LastLoginUtc = x.LastLoginUtc,
+                    //    LastName = x.LastName,
+                    //    PhoneNumber = x.PhoneNumber,
+                    //    PhoneNumberConfirmed = x.PhoneNumberConfirmed,
+                    //    SiteId = x.SiteId,
+                    //    TimeZoneId = x.TimeZoneId,
+                    //    UserName = x.UserName,
+                    //    WebSiteUrl = x.WebSiteUrl
 
-                  };
+                    //};
 
 
 
@@ -376,29 +379,30 @@ namespace cloudscribe.Core.Storage.EFCore.Common
                         || x.DisplayName.Contains(searchInput)
                         )
                   )
-                  select new UserInfo
-                  {
-                      Id = x.Id,
-                      AvatarUrl = x.AvatarUrl,
-                      AccountApproved = x.AccountApproved,
-                      CreatedUtc = x.CreatedUtc,
-                      DateOfBirth = x.DateOfBirth,
-                      DisplayInMemberList = x.DisplayInMemberList,
-                      DisplayName = x.DisplayName,
-                      Email = x.Email,
-                      FirstName = x.FirstName,
-                      Gender = x.Gender,
-                      IsLockedOut = x.IsLockedOut,
-                      LastLoginUtc = x.LastLoginUtc,
-                      LastName = x.LastName,
-                      PhoneNumber = x.PhoneNumber,
-                      PhoneNumberConfirmed = x.PhoneNumberConfirmed,
-                      SiteId = x.SiteId,
-                      TimeZoneId = x.TimeZoneId,
-                      UserName = x.UserName,
-                      WebSiteUrl = x.WebSiteUrl
+                  select x;
+                  //select new UserInfo
+                  //{
+                  //    Id = x.Id,
+                  //    AvatarUrl = x.AvatarUrl,
+                  //    AccountApproved = x.AccountApproved,
+                  //    CreatedUtc = x.CreatedUtc,
+                  //    DateOfBirth = x.DateOfBirth,
+                  //    DisplayInMemberList = x.DisplayInMemberList,
+                  //    DisplayName = x.DisplayName,
+                  //    Email = x.Email,
+                  //    FirstName = x.FirstName,
+                  //    Gender = x.Gender,
+                  //    IsLockedOut = x.IsLockedOut,
+                  //    LastLoginUtc = x.LastLoginUtc,
+                  //    LastName = x.LastName,
+                  //    PhoneNumber = x.PhoneNumber,
+                  //    PhoneNumberConfirmed = x.PhoneNumberConfirmed,
+                  //    SiteId = x.SiteId,
+                  //    TimeZoneId = x.TimeZoneId,
+                  //    UserName = x.UserName,
+                  //    WebSiteUrl = x.WebSiteUrl
 
-                  };
+                  //};
 
 
             switch (sortMode)
@@ -460,29 +464,30 @@ namespace cloudscribe.Core.Storage.EFCore.Common
                       && x.IsLockedOut == true
                   )
                   orderby x.DisplayName
-                  select new UserInfo
-                  {
-                      Id = x.Id,
-                      AvatarUrl = x.AvatarUrl,
-                      AccountApproved = x.AccountApproved,
-                      CreatedUtc = x.CreatedUtc,
-                      DateOfBirth = x.DateOfBirth,
-                      DisplayInMemberList = x.DisplayInMemberList,
-                      DisplayName = x.DisplayName,
-                      Email = x.Email,
-                      FirstName = x.FirstName,
-                      Gender = x.Gender,
-                      IsLockedOut = x.IsLockedOut,
-                      LastLoginUtc = x.LastLoginUtc,
-                      LastName = x.LastName,
-                      PhoneNumber = x.PhoneNumber,
-                      PhoneNumberConfirmed = x.PhoneNumberConfirmed,
-                      SiteId = x.SiteId,
-                      TimeZoneId = x.TimeZoneId,
-                      UserName = x.UserName,
-                      WebSiteUrl = x.WebSiteUrl
+                  select x;
+                  //select new UserInfo
+                  //{
+                  //    Id = x.Id,
+                  //    AvatarUrl = x.AvatarUrl,
+                  //    AccountApproved = x.AccountApproved,
+                  //    CreatedUtc = x.CreatedUtc,
+                  //    DateOfBirth = x.DateOfBirth,
+                  //    DisplayInMemberList = x.DisplayInMemberList,
+                  //    DisplayName = x.DisplayName,
+                  //    Email = x.Email,
+                  //    FirstName = x.FirstName,
+                  //    Gender = x.Gender,
+                  //    IsLockedOut = x.IsLockedOut,
+                  //    LastLoginUtc = x.LastLoginUtc,
+                  //    LastName = x.LastName,
+                  //    PhoneNumber = x.PhoneNumber,
+                  //    PhoneNumberConfirmed = x.PhoneNumberConfirmed,
+                  //    SiteId = x.SiteId,
+                  //    TimeZoneId = x.TimeZoneId,
+                  //    UserName = x.UserName,
+                  //    WebSiteUrl = x.WebSiteUrl
 
-                  };
+                  //};
 
 
             var data = await query
@@ -532,29 +537,30 @@ namespace cloudscribe.Core.Storage.EFCore.Common
                         && x.LockoutEndDateUtc.Value > DateTime.UtcNow
                   )
                   orderby x.DisplayName
-                  select new UserInfo
-                  {
-                      Id = x.Id,
-                      AvatarUrl = x.AvatarUrl,
-                      AccountApproved = x.AccountApproved,
-                      CreatedUtc = x.CreatedUtc,
-                      DateOfBirth = x.DateOfBirth,
-                      DisplayInMemberList = x.DisplayInMemberList,
-                      DisplayName = x.DisplayName,
-                      Email = x.Email,
-                      FirstName = x.FirstName,
-                      Gender = x.Gender,
-                      IsLockedOut = x.IsLockedOut,
-                      LastLoginUtc = x.LastLoginUtc,
-                      LastName = x.LastName,
-                      PhoneNumber = x.PhoneNumber,
-                      PhoneNumberConfirmed = x.PhoneNumberConfirmed,
-                      SiteId = x.SiteId,
-                      TimeZoneId = x.TimeZoneId,
-                      UserName = x.UserName,
-                      WebSiteUrl = x.WebSiteUrl
+                  select x;
+                  //select new UserInfo
+                  //{
+                  //    Id = x.Id,
+                  //    AvatarUrl = x.AvatarUrl,
+                  //    AccountApproved = x.AccountApproved,
+                  //    CreatedUtc = x.CreatedUtc,
+                  //    DateOfBirth = x.DateOfBirth,
+                  //    DisplayInMemberList = x.DisplayInMemberList,
+                  //    DisplayName = x.DisplayName,
+                  //    Email = x.Email,
+                  //    FirstName = x.FirstName,
+                  //    Gender = x.Gender,
+                  //    IsLockedOut = x.IsLockedOut,
+                  //    LastLoginUtc = x.LastLoginUtc,
+                  //    LastName = x.LastName,
+                  //    PhoneNumber = x.PhoneNumber,
+                  //    PhoneNumberConfirmed = x.PhoneNumberConfirmed,
+                  //    SiteId = x.SiteId,
+                  //    TimeZoneId = x.TimeZoneId,
+                  //    UserName = x.UserName,
+                  //    WebSiteUrl = x.WebSiteUrl
 
-                  };
+                  //};
 
 
             var data = await query
@@ -602,29 +608,30 @@ namespace cloudscribe.Core.Storage.EFCore.Common
                       && x.EmailConfirmed == false
                   )
                   orderby x.DisplayName
-                  select new UserInfo
-                  {
-                      Id = x.Id,
-                      AvatarUrl = x.AvatarUrl,
-                      AccountApproved = x.AccountApproved,
-                      CreatedUtc = x.CreatedUtc,
-                      DateOfBirth = x.DateOfBirth,
-                      DisplayInMemberList = x.DisplayInMemberList,
-                      DisplayName = x.DisplayName,
-                      Email = x.Email,
-                      FirstName = x.FirstName,
-                      Gender = x.Gender,
-                      IsLockedOut = x.IsLockedOut,
-                      LastLoginUtc = x.LastLoginUtc,
-                      LastName = x.LastName,
-                      PhoneNumber = x.PhoneNumber,
-                      PhoneNumberConfirmed = x.PhoneNumberConfirmed,
-                      SiteId = x.SiteId,
-                      TimeZoneId = x.TimeZoneId,
-                      UserName = x.UserName,
-                      WebSiteUrl = x.WebSiteUrl
+                  select x;
+                  //select new UserInfo
+                  //{
+                  //    Id = x.Id,
+                  //    AvatarUrl = x.AvatarUrl,
+                  //    AccountApproved = x.AccountApproved,
+                  //    CreatedUtc = x.CreatedUtc,
+                  //    DateOfBirth = x.DateOfBirth,
+                  //    DisplayInMemberList = x.DisplayInMemberList,
+                  //    DisplayName = x.DisplayName,
+                  //    Email = x.Email,
+                  //    FirstName = x.FirstName,
+                  //    Gender = x.Gender,
+                  //    IsLockedOut = x.IsLockedOut,
+                  //    LastLoginUtc = x.LastLoginUtc,
+                  //    LastName = x.LastName,
+                  //    PhoneNumber = x.PhoneNumber,
+                  //    PhoneNumberConfirmed = x.PhoneNumberConfirmed,
+                  //    SiteId = x.SiteId,
+                  //    TimeZoneId = x.TimeZoneId,
+                  //    UserName = x.UserName,
+                  //    WebSiteUrl = x.WebSiteUrl
 
-                  };
+                  //};
 
 
             var data = await query
@@ -672,29 +679,30 @@ namespace cloudscribe.Core.Storage.EFCore.Common
                       && x.PhoneNumberConfirmed == false
                   )
                   orderby x.DisplayName
-                  select new UserInfo
-                  {
-                      Id = x.Id,
-                      AvatarUrl = x.AvatarUrl,
-                      AccountApproved = x.AccountApproved,
-                      CreatedUtc = x.CreatedUtc,
-                      DateOfBirth = x.DateOfBirth,
-                      DisplayInMemberList = x.DisplayInMemberList,
-                      DisplayName = x.DisplayName,
-                      Email = x.Email,
-                      FirstName = x.FirstName,
-                      Gender = x.Gender,
-                      IsLockedOut = x.IsLockedOut,
-                      LastLoginUtc = x.LastLoginUtc,
-                      LastName = x.LastName,
-                      PhoneNumber = x.PhoneNumber,
-                      PhoneNumberConfirmed = x.PhoneNumberConfirmed,
-                      SiteId = x.SiteId,
-                      TimeZoneId = x.TimeZoneId,
-                      UserName = x.UserName,
-                      WebSiteUrl = x.WebSiteUrl
+                  select x;
+                  //select new UserInfo
+                  //{
+                  //    Id = x.Id,
+                  //    AvatarUrl = x.AvatarUrl,
+                  //    AccountApproved = x.AccountApproved,
+                  //    CreatedUtc = x.CreatedUtc,
+                  //    DateOfBirth = x.DateOfBirth,
+                  //    DisplayInMemberList = x.DisplayInMemberList,
+                  //    DisplayName = x.DisplayName,
+                  //    Email = x.Email,
+                  //    FirstName = x.FirstName,
+                  //    Gender = x.Gender,
+                  //    IsLockedOut = x.IsLockedOut,
+                  //    LastLoginUtc = x.LastLoginUtc,
+                  //    LastName = x.LastName,
+                  //    PhoneNumber = x.PhoneNumber,
+                  //    PhoneNumberConfirmed = x.PhoneNumberConfirmed,
+                  //    SiteId = x.SiteId,
+                  //    TimeZoneId = x.TimeZoneId,
+                  //    UserName = x.UserName,
+                  //    WebSiteUrl = x.WebSiteUrl
 
-                  };
+                  //};
 
 
             var data = await query
@@ -740,29 +748,30 @@ namespace cloudscribe.Core.Storage.EFCore.Common
                       && x.AccountApproved == false
                   )
                   orderby x.DisplayName
-                  select new UserInfo
-                  {
-                      Id = x.Id,
-                      AvatarUrl = x.AvatarUrl,
-                      AccountApproved = x.AccountApproved,
-                      CreatedUtc = x.CreatedUtc,
-                      DateOfBirth = x.DateOfBirth,
-                      DisplayInMemberList = x.DisplayInMemberList,
-                      DisplayName = x.DisplayName,
-                      Email = x.Email,
-                      FirstName = x.FirstName,
-                      Gender = x.Gender,
-                      IsLockedOut = x.IsLockedOut,
-                      LastLoginUtc = x.LastLoginUtc,
-                      LastName = x.LastName,
-                      PhoneNumber = x.PhoneNumber,
-                      PhoneNumberConfirmed = x.PhoneNumberConfirmed,
-                      SiteId = x.SiteId,
-                      TimeZoneId = x.TimeZoneId,
-                      UserName = x.UserName,
-                      WebSiteUrl = x.WebSiteUrl
+                  select x;
+                  //select new UserInfo
+                  //{
+                  //    Id = x.Id,
+                  //    AvatarUrl = x.AvatarUrl,
+                  //    AccountApproved = x.AccountApproved,
+                  //    CreatedUtc = x.CreatedUtc,
+                  //    DateOfBirth = x.DateOfBirth,
+                  //    DisplayInMemberList = x.DisplayInMemberList,
+                  //    DisplayName = x.DisplayName,
+                  //    Email = x.Email,
+                  //    FirstName = x.FirstName,
+                  //    Gender = x.Gender,
+                  //    IsLockedOut = x.IsLockedOut,
+                  //    LastLoginUtc = x.LastLoginUtc,
+                  //    LastName = x.LastName,
+                  //    PhoneNumber = x.PhoneNumber,
+                  //    PhoneNumberConfirmed = x.PhoneNumberConfirmed,
+                  //    SiteId = x.SiteId,
+                  //    TimeZoneId = x.TimeZoneId,
+                  //    UserName = x.UserName,
+                  //    WebSiteUrl = x.WebSiteUrl
 
-                  };
+                  //};
 
 
             var data = await query

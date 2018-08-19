@@ -3,16 +3,16 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace cloudscribe.Core.Web.Controllers
 {
-    public class PolicyController : Controller
+    public class PrivacyController : Controller
     {
-        public PolicyController(SiteContext currentSite)
+        public PrivacyController(SiteContext currentSite)
         {
             _currentSite = currentSite;
         }
 
         private readonly SiteContext _currentSite;
 
-        public IActionResult Privacy()
+        public IActionResult Index()
         {
             return View(_currentSite);
         }
