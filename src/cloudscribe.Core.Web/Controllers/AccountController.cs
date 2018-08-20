@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2014-10-26
-// Last Modified:			2018-05-07
+// Last Modified:			2018-08-20
 // 
 
 using cloudscribe.Core.Identity;
@@ -606,7 +606,7 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
                 Analytics.HandleRegisterFail("Onsite", te).Forget();
 
                 Log.LogInformation($"registration did not succeed for {model.Email}");
-               // ModelState.AddModelError(string.Empty, sr["Invalid registration attempt."]);
+                ModelState.AddModelError("registrationError", StringLocalizer["Invalid registration attempt."]);
                 return View(viewName, model);           
             }
 

@@ -101,17 +101,18 @@
         </div>
     }
 
-    <div class="form-group">
-        @if (!string.IsNullOrWhiteSpace(Model.RecaptchaSiteKey) && Model.UseInvisibleCaptcha)
-        {
-            <button class="btn btn-primary g-recaptcha" data-sitekey="@Model.RecaptchaSiteKey" data-callback='onCaptchaSubmit' data-enabled-text='@sr["Register"]' data-disabled-text='@sr["Working..."]'>@sr["Register"]</button>
-        }
-        else
-        {
-            <button name="submit" type="submit" class="btn btn-primary" data-enabled-text='@sr["Register"]' data-disabled-text='@sr["Working..."]'>@sr["Register"]</button>
-        }
-        <input type="hidden" asp-for="UseEmailForLogin" />
-    </div>
+        <div class="form-group">
+            @if (!string.IsNullOrWhiteSpace(Model.RecaptchaSiteKey) && Model.UseInvisibleCaptcha)
+            {
+                <button class="btn btn-primary g-recaptcha" data-sitekey="@Model.RecaptchaSiteKey" data-callback='onCaptchaSubmit' data-enabled-text='@sr["Register"]' data-disabled-text='@sr["Working..."]'>@sr["Register"]</button>
+            }
+            else
+            {
+                <button name="submit" type="submit" class="btn btn-primary" data-enabled-text='@sr["Register"]' data-disabled-text='@sr["Working..."]'>@sr["Register"]</button>
+            }
+            @Html.ValidationMessage("registrationError", new { @class = "text-danger" })
+            <input type="hidden" asp-for="UseEmailForLogin" />
+        </div>
 </form>
 @{
     var LoginProviders = Model.ExternalAuthenticationList.ToList();

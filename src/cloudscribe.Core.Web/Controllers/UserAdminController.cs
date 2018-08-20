@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2014-12-08
-// Last Modified:			2018-03-14
+// Last Modified:			2018-08-20
 // 
 
 using cloudscribe.Core.Identity;
@@ -735,7 +735,7 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
             }
 
 
-            return RedirectToAction("Index", "UserAdmin", new { siteId = selectedSite.Id });
+            return RedirectToAction("UserEdit", "UserAdmin", new { siteId = selectedSite.Id, userId = user.Id });
         }
 
         [Authorize(Policy = PolicyConstants.UserManagementPolicy)]
