@@ -44,9 +44,17 @@ public virtual string Email { get; set; }
 
 If there is no consent for 1st party cookie we should not let 3rd party cookies in.
 Google Analytics
+Recaptcha
 AddThis
 Gravatar
 Disqus
+
+https://law.stackexchange.com/questions/27908/gdpr-recaptcha-with-users-consent
+https://www.google.com/about/company/user-consent-policy.html
+
+https://brianclifton.com/blog/2018/04/16/google-analytics-gdpr-and-consent/
+Summary of Google’s Advice:
+If you use these Advertising features in GA, you must request explicit consent. If you do not, then you don’t.
 
 any other embedded content, youtube etc
 

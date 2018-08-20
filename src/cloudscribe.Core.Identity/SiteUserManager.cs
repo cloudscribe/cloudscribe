@@ -418,6 +418,10 @@ namespace cloudscribe.Core.Identity
         public override async Task<IdentityResult> UpdateAsync(TUser user)
         {
             await _eventHandlers.HandleUserPreUpdate(user.SiteId, user.Id).ConfigureAwait(false);
+            if(string.IsNullOrWhiteSpace(user.SecurityStamp))
+            {
+               await UpdateSecurityStampAsync(user);
+            }
 
             var result = await base.UpdateAsync(user);
             if (result.Succeeded)
