@@ -9,6 +9,7 @@ using cloudscribe.Core.Web.Components.Messaging;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 
 namespace cloudscribe.Core.Web.ViewModels.SiteSettings
@@ -41,7 +42,10 @@ namespace cloudscribe.Core.Web.ViewModels.SiteSettings
         [StringLength(200, ErrorMessage = "Smtp Server has a maximum length of 200 characters")]
         public string SmtpServer { get; set; } = string.Empty;
 
-        public int SmtpPort { get; set; } = 25;
+        [Required(ErrorMessage = "Smtp Port cannot be left blank, if you are not using smtp just leave the default value of 25.")]
+        [DisplayName("Smtp port")]
+        [Range(0, int.MaxValue, ErrorMessage = "Smtp port is required to be an integer.")]
+        public int? SmtpPort { get; set; } = 25;
         
         public bool SmtpRequiresAuth { get; set; } = false;
         

@@ -704,6 +704,8 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
                                   Selected = model.EmailSenderName == x.Name
                               }).ToList();
 
+                model.TestMessage.Tenant = selectedSite as ISiteContext;
+
                 return View(model);
             }
 
@@ -716,7 +718,7 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
             selectedSite.DefaultEmailFromAddress = model.DefaultEmailFromAddress;
             selectedSite.DefaultEmailFromAlias = model.DefaultEmailFromAlias;
             selectedSite.SmtpPassword = model.SmtpPassword;
-            selectedSite.SmtpPort = model.SmtpPort;
+            selectedSite.SmtpPort = model.SmtpPort.Value;
             selectedSite.SmtpPreferredEncoding = model.SmtpPreferredEncoding;
             selectedSite.SmtpRequiresAuth = model.SmtpRequiresAuth;
             selectedSite.SmtpServer = model.SmtpServer;
