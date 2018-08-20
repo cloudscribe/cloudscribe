@@ -7,18 +7,19 @@ namespace cloudscribe.Core.Storage.EFCore.SQLite.Migrations
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.DropColumn(
-                name: "IsDeleted",
-                table: "cs_User");
+            //migrationBuilder.DropColumn(
+            //    name: "IsDeleted",
+            //    table: "cs_User");
 
-            migrationBuilder.DropColumn(
-                name: "Trusted",
-                table: "cs_User");
+            //migrationBuilder.DropColumn(
+            //    name: "Trusted",
+            //    table: "cs_User");
 
-            migrationBuilder.RenameColumn(
-                name: "ReallyDeleteUsers",
+            migrationBuilder.AddColumn<bool>(
+                name: "RequireCookieConsent",
                 table: "cs_Site",
-                newName: "RequireCookieConsent");
+                nullable: false,
+                defaultValue: false);
 
             migrationBuilder.AddColumn<string>(
                 name: "CookiePolicySummary",
@@ -35,18 +36,18 @@ namespace cloudscribe.Core.Storage.EFCore.SQLite.Migrations
 
         protected override void Down(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.DropColumn(
-                name: "CookiePolicySummary",
-                table: "cs_Site");
+            //migrationBuilder.DropColumn(
+            //    name: "CookiePolicySummary",
+            //    table: "cs_Site");
 
-            migrationBuilder.DropColumn(
-                name: "LastModifiedUtc",
-                table: "cs_Site");
+            //migrationBuilder.DropColumn(
+            //    name: "LastModifiedUtc",
+            //    table: "cs_Site");
 
-            migrationBuilder.RenameColumn(
-                name: "RequireCookieConsent",
-                table: "cs_Site",
-                newName: "ReallyDeleteUsers");
+            //migrationBuilder.RenameColumn(
+            //    name: "RequireCookieConsent",
+            //    table: "cs_Site",
+            //    newName: "ReallyDeleteUsers");
 
             migrationBuilder.AddColumn<bool>(
                 name: "IsDeleted",

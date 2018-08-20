@@ -74,11 +74,14 @@ namespace sourceDev.WebApp
 
                 case "ef":
                 default:
-                    // this creates ensures the database is created and initial data
-                    CoreEFStartup.InitializeDatabaseAsync(services).Wait();
 
                     // this one is only needed if using cloudscribe Logging with EF as the logging storage
                     LoggingEFStartup.InitializeDatabaseAsync(services).Wait();
+
+                    // this creates ensures the database is created and initial data
+                    CoreEFStartup.InitializeDatabaseAsync(services).Wait();
+
+                    
 
                     KvpEFCoreStartup.InitializeDatabaseAsync(services).Wait();
 

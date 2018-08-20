@@ -271,9 +271,7 @@ namespace cloudscribe.Core.Storage.EFCore.SQLite.Migrations
                     b.Property<bool>("PwdRequireNonAlpha");
 
                     b.Property<bool>("PwdRequireUppercase");
-
-                    b.Property<bool>("ReallyDeleteUsers");
-
+                    
                     b.Property<string>("RecaptchaPrivateKey")
                         .HasMaxLength(255);
 
@@ -400,9 +398,7 @@ namespace cloudscribe.Core.Storage.EFCore.SQLite.Migrations
                         .HasMaxLength(100);
 
                     b.Property<string>("Gender");
-
-                    b.Property<bool>("IsDeleted");
-
+                    
                     b.Property<bool>("IsLockedOut");
 
                     b.Property<DateTime?>("LastLoginUtc");
@@ -449,8 +445,6 @@ namespace cloudscribe.Core.Storage.EFCore.SQLite.Migrations
 
                     b.Property<string>("TimeZoneId")
                         .HasMaxLength(50);
-
-                    b.Property<bool>("Trusted");
 
                     b.Property<bool>("TwoFactorEnabled");
 
