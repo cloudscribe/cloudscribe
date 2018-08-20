@@ -115,7 +115,6 @@ namespace cloudscribe.Core.Storage.EFCore.SQLite.Migrations
                     PwdRequireLowercase = table.Column<bool>(nullable: false),
                     PwdRequireNonAlpha = table.Column<bool>(nullable: false),
                     PwdRequireUppercase = table.Column<bool>(nullable: false),
-                    ReallyDeleteUsers = table.Column<bool>(nullable: false),
                     RecaptchaPrivateKey = table.Column<string>(maxLength: 255, nullable: true),
                     RecaptchaPublicKey = table.Column<string>(maxLength: 255, nullable: true),
                     RegistrationAgreement = table.Column<string>(nullable: true),
@@ -187,7 +186,6 @@ namespace cloudscribe.Core.Storage.EFCore.SQLite.Migrations
                     EmailConfirmed = table.Column<bool>(nullable: false),
                     FirstName = table.Column<string>(maxLength: 100, nullable: true),
                     Gender = table.Column<string>(nullable: true),
-                    IsDeleted = table.Column<bool>(nullable: false),
                     IsLockedOut = table.Column<bool>(nullable: false),
                     LastLoginUtc = table.Column<DateTime>(nullable: true),
                     LastModifiedUtc = table.Column<DateTime>(nullable: false),
@@ -207,7 +205,6 @@ namespace cloudscribe.Core.Storage.EFCore.SQLite.Migrations
                     Signature = table.Column<string>(nullable: true),
                     SiteId = table.Column<Guid>(nullable: false),
                     TimeZoneId = table.Column<string>(maxLength: 50, nullable: true),
-                    Trusted = table.Column<bool>(nullable: false),
                     TwoFactorEnabled = table.Column<bool>(nullable: false),
                     UserName = table.Column<string>(maxLength: 50, nullable: false),
                     WebSiteUrl = table.Column<string>(maxLength: 100, nullable: true)
