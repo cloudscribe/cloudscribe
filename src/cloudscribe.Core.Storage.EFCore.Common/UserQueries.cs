@@ -342,8 +342,8 @@ namespace cloudscribe.Core.Storage.EFCore.Common
                     searchInput == string.Empty
                     || x.Email.Contains(searchInput)
                     || x.UserName.Contains(searchInput)
-                    || x.FirstName.Contains(searchInput)
-                    || x.LastName.Contains(searchInput)
+                    || (x.FirstName != null && x.FirstName.Contains(searchInput))
+                    || (x.LastName != null && x.LastName.Contains(searchInput))
                     || x.DisplayName.Contains(searchInput)
                     )
                 )
@@ -374,8 +374,8 @@ namespace cloudscribe.Core.Storage.EFCore.Common
                         searchInput == string.Empty
                         || x.Email.Contains(searchInput)
                         || x.UserName.Contains(searchInput)
-                        || x.FirstName.Contains(searchInput)
-                        || x.LastName.Contains(searchInput)
+                        || (x.FirstName != null && x.FirstName.Contains(searchInput))
+                        || (x.LastName != null && x.LastName.Contains(searchInput))
                         || x.DisplayName.Contains(searchInput)
                         )
                   )
@@ -1034,8 +1034,8 @@ namespace cloudscribe.Core.Storage.EFCore.Common
                                 || x.Email.Contains(searchInput)
                                 || x.DisplayName.Contains(searchInput)
                                 || x.UserName.Contains(searchInput)
-                                || x.FirstName.Contains(searchInput)
-                                || x.LastName.Contains(searchInput)
+                                || (x.FirstName != null && x.FirstName.Contains(searchInput))
+                                || (x.LastName != null && x.LastName.Contains(searchInput))
                             )
                             )
                         //select x.UserGuid
@@ -1068,8 +1068,8 @@ namespace cloudscribe.Core.Storage.EFCore.Common
                                 || x.Email.Contains(searchInput)
                                 || x.DisplayName.Contains(searchInput)
                                 || x.UserName.Contains(searchInput)
-                                || x.FirstName.Contains(searchInput)
-                                || x.LastName.Contains(searchInput)
+                                || (x.FirstName != null && x.FirstName.Contains(searchInput))
+                                || (x.LastName != null && x.LastName.Contains(searchInput))
                             )
                             )
                         select x
@@ -1138,8 +1138,8 @@ namespace cloudscribe.Core.Storage.EFCore.Common
                                 || u.Email.Contains(searchInput)
                                 || u.DisplayName.Contains(searchInput)
                                 || u.UserName.Contains(searchInput)
-                                || u.FirstName.Contains(searchInput)
-                                || u.LastName.Contains(searchInput)
+                                || (u.FirstName != null && u.FirstName.Contains(searchInput))
+                                || (u.LastName != null && u.LastName.Contains(searchInput))
                             )
 
                         && t2 == null
@@ -1178,8 +1178,8 @@ namespace cloudscribe.Core.Storage.EFCore.Common
                                 || u.Email.Contains(searchInput)
                                 || u.DisplayName.Contains(searchInput)
                                 || u.UserName.Contains(searchInput)
-                                || u.FirstName.Contains(searchInput)
-                                || u.LastName.Contains(searchInput)
+                                || (u.FirstName != null && u.FirstName.Contains(searchInput))
+                                || (u.LastName != null && u.LastName.Contains(searchInput))
                             )
 
                         && t2 == null

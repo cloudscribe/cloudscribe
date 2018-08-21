@@ -2,8 +2,8 @@
 
   <PropertyGroup>
     <Description>Entity Framework Core implementation of cloudscribe core commands and queries - typically you do not use this directly, use cloudscribe.Core.Storage.EFCore.MSSQL</Description>
-    <VersionPrefix>3.0.4</VersionPrefix>
-    <AssemblyVersion>3.0.4</AssemblyVersion>
+    <VersionPrefix>3.0.5</VersionPrefix>
+    <AssemblyVersion>3.0.5</AssemblyVersion>
     <Authors>Joe Audette</Authors>
     <TargetFrameworks>netstandard2.0</TargetFrameworks>
     <AssemblyName>cloudscribe.Core.Storage.EFCore.Common</AssemblyName>
