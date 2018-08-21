@@ -201,6 +201,7 @@ namespace cloudscribe.Core.Web.Components
                 if(_context != null && !string.IsNullOrEmpty(_context.Request.Host.Value))
                 _cacheHelper.ClearCache(_context.Request.Host.Value);
             }
+            _cacheHelper.ClearCache("site-" + site.Id.ToString());
 
             await _eventHandlers.HandleSiteUpdated(site).ConfigureAwait(false);
         }
