@@ -9,13 +9,6 @@
 }
 
 <h2>@ViewData["Title"]</h2>
-@if (!string.IsNullOrWhiteSpace(Model.RegistrationPreamble))
-{
-
-    <div class="registration-preamble">
-        @Html.Raw(Model.RegistrationPreamble)
-    </div>
-}
 <form id="register-form" asp-controller="Account" asp-action="TermsOfUse" method="post" role="form">
     @*<div asp-validation-summary="All" class="text-danger"></div>*@
     <div class="">
