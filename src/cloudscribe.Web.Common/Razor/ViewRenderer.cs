@@ -7,7 +7,9 @@
 
 //https://github.com/aspnet/Entropy/blob/master/samples/Mvc.RenderViewToString/RazorViewToStringRenderer.cs
 
+using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Http.Features;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Abstractions;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
@@ -32,18 +34,24 @@ namespace cloudscribe.Web.Common.Razor
         public ViewRenderer(
             IRazorViewEngine viewEngine,
             ITempDataProvider tempDataProvider,
+            IHttpContextAccessor httpContextAccessor,
             IServiceProvider serviceProvider
             )
         {
             _viewEngine = viewEngine;
             _tempDataProvider = tempDataProvider;
+            _httpContextAccessor = httpContextAccessor;
             _serviceProvider = serviceProvider;
+
+           
         }
 
-        private IRazorViewEngine _viewEngine;
-        private ITempDataProvider _tempDataProvider;
-        private IServiceProvider _serviceProvider;
+        private readonly IRazorViewEngine _viewEngine;
+        private readonly ITempDataProvider _tempDataProvider;
+        private readonly IServiceProvider _serviceProvider;
+        private readonly IHttpContextAccessor _httpContextAccessor;
         
+
         public async Task<string> RenderViewAsString<TModel>(string viewName, TModel model)
         {
             var actionContext = GetActionContext();
@@ -96,8 +104,16 @@ namespace cloudscribe.Web.Common.Razor
 
         private ActionContext GetActionContext()
         {
-            var httpContext = new DefaultHttpContext();
-            httpContext.RequestServices = _serviceProvider;
+            if (_httpContextAccessor.HttpContext != null)
+            {
+                return new ActionContext(_httpContextAccessor.HttpContext, new RouteData(), new ActionDescriptor());
+            }
+
+            var httpContext = new DefaultHttpContext
+            {
+                RequestServices = _serviceProvider
+            };
+
             return new ActionContext(httpContext, new RouteData(), new ActionDescriptor());
         }
 
