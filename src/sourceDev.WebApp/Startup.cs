@@ -133,7 +133,7 @@ namespace sourceDev.WebApp
             IHostingEnvironment env,
             ILoggerFactory loggerFactory,
             IOptions<cloudscribe.Core.Models.MultiTenantOptions> multiTenantOptionsAccessor,
-            IServiceProvider serviceProvider,
+           // IServiceProvider serviceProvider,
             IOptions<RequestLocalizationOptions> localizationOptionsAccessor
             )
         {   

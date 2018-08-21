@@ -122,7 +122,9 @@ namespace Microsoft.Extensions.DependencyInjection
             services.Configure<SmtpOptions>(configuration.GetSection("SmtpOptions"));
             services.TryAddScoped<ISmtpOptionsProvider, SiteSmtpOptionsResolver>();
             services.TryAddScoped<IEmailSenderResolver, SiteEmailSenderResolver>();
-            services.AddTransient<ISiteMessageEmailSender, SiteEmailMessageSender>();
+
+            services.AddScoped<ISiteMessageEmailSender, SiteEmailMessageSender>();
+
             //services.AddTransient<ISiteMessageEmailSender, FakeSiteEmailSender>();
             services.TryAddScoped<ISendGridOptionsProvider, SiteSendGridOptionsProvider>();
             services.TryAddScoped<IMailgunOptionsProvider, SiteMailgunOptionsProvider>();
@@ -131,7 +133,7 @@ namespace Microsoft.Extensions.DependencyInjection
             
             services.TryAddSingleton<IThemeListBuilder, SiteThemeListBuilder>();
             //services.AddSingleton<IRazorViewEngine, CoreViewEngine>();
-            services.TryAddScoped<ViewRenderer, ViewRenderer>();
+            services.TryAddScoped<ViewRenderer>();
 
             services.AddSingleton<IOptions<NavigationOptions>, SiteNavigationOptionsResolver>();
             services.AddScoped<ITreeCacheKeyResolver, SiteNavigationCacheKeyResolver>();

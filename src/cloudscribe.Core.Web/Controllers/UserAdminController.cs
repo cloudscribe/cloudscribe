@@ -879,11 +879,11 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
                             null,
                             protocol: HttpContext.Request.Scheme);
 
-                        _emailSender.SendAccountApprovalNotificationAsync(
-                        selectedSite,
-                        user.Email,
-                        _sr["Account Approved"],
-                        loginUrl).Forget();
+                        await _emailSender.SendAccountApprovalNotificationAsync(
+                            selectedSite,
+                            user.Email,
+                            _sr["Account Approved"],
+                            loginUrl);
                     }
                 }   
             }
