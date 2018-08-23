@@ -16,7 +16,8 @@
     "gulp-sourcemaps": "^2.6.4",
     "gulp-concat": "^2.6.1",
     "gulp-connect": "^5.5.0",
-    "merge-stream": "^1.0.1"
+    "merge-stream": "^1.0.1",
+    "exif-js": "2.3.0"
 
   }
 
