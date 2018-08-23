@@ -2,14 +2,12 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:                  Joe Audette
 // Created:                 2016-04-22
-// Last Modified:           2018-08-18
+// Last Modified:           2018-08-23
 // 
 
 //https://github.com/aspnet/Entropy/blob/master/samples/Mvc.RenderViewToString/RazorViewToStringRenderer.cs
 
-using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Http.Features;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Abstractions;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
@@ -34,13 +32,13 @@ namespace cloudscribe.Web.Common.Razor
         public ViewRenderer(
             IRazorViewEngine viewEngine,
             ITempDataProvider tempDataProvider,
-            IHttpContextAccessor httpContextAccessor,
+            //IHttpContextAccessor httpContextAccessor,
             IServiceProvider serviceProvider
             )
         {
             _viewEngine = viewEngine;
             _tempDataProvider = tempDataProvider;
-            _httpContextAccessor = httpContextAccessor;
+           // _httpContextAccessor = httpContextAccessor;
             _serviceProvider = serviceProvider;
 
            
@@ -49,7 +47,7 @@ namespace cloudscribe.Web.Common.Razor
         private readonly IRazorViewEngine _viewEngine;
         private readonly ITempDataProvider _tempDataProvider;
         private readonly IServiceProvider _serviceProvider;
-        private readonly IHttpContextAccessor _httpContextAccessor;
+       // private readonly IHttpContextAccessor _httpContextAccessor;
         
 
         public async Task<string> RenderViewAsString<TModel>(string viewName, TModel model)
@@ -104,10 +102,10 @@ namespace cloudscribe.Web.Common.Razor
 
         private ActionContext GetActionContext()
         {
-            if (_httpContextAccessor.HttpContext != null)
-            {
-                return new ActionContext(_httpContextAccessor.HttpContext, new RouteData(), new ActionDescriptor());
-            }
+            //if (_httpContextAccessor.HttpContext != null)
+            //{
+            //    return new ActionContext(_httpContextAccessor.HttpContext, new RouteData(), new ActionDescriptor());
+            //}
 
             var httpContext = new DefaultHttpContext
             {

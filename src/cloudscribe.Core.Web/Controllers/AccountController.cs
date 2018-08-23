@@ -154,7 +154,8 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
                         await EmailSender.AccountPendingApprovalAdminNotification(CurrentSite, result.User);
                     }
 
-                    return RedirectToAction("PendingApproval", new { userId = result.User.Id, didSend = true });
+                    return RedirectToAction("PendingApproval", "Account", new { userId = result.User.Id, didSend = true });
+                    
                 }
             }
 
