@@ -1,4 +1,8 @@
 
+
+https://developer.okta.com/blog/2018/08/02/aspnet-core-angular-crud
+
+
 ## IdentityServer4 2.0
 
 https://leastprivilege.com/2017/10/06/identityserver4-v2/
