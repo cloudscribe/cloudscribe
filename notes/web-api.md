@@ -1,4 +1,17 @@
 
+## OpenApi 
+
+https://www.openapis.org/
+https://github.com/OAI/OpenAPI-Specification
+
+https://docs.microsoft.com/en-us/aspnet/core/tutorials/web-api-help-pages-using-swagger?view=aspnetcore-2.1
+
+https://blogs.msdn.microsoft.com/webdev/2018/08/23/asp-net-core-2-20-preview1-open-api-analyzers-conventions/
+
+
+https://github.com/RSuter/NSwag
+
+
 
 http://buildingbettersoftware.blogspot.com/2018/04/implementing-hateos-functionality-in.html
 https://github.com/DavidCBerry13/FoodTruckNationApi/

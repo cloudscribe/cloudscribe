@@ -9,7 +9,7 @@
             "type": "coreclr",
             "request": "launch",
             "preLaunchTask": "build",
-            "program": "${workspaceRoot}/src/sourceDev.WebApp/bin/Debug/netcoreapp2.0/sourceDev.WebApp.dll",
+            "program": "${workspaceRoot}/src/sourceDev.WebApp/bin/Debug/netcoreapp2.1/sourceDev.WebApp.dll",
             "args": [],
             "cwd": "${workspaceRoot}/src/sourceDev.WebApp",
             "stopAtEntry": false,
@@ -30,10 +30,7 @@
             },
             "env": {
                 "ASPNETCORE_ENVIRONMENT": "Development",
-                "ASPNETCORE_URLS": "http://localhost:56853"
-            },
-            "sourceFileMap": {
-                "/Views": "${workspaceRoot}/src/sourceDev.WebApp/Views"
+                "ASPNETCORE_URLS": "https://localhost:44399"
             }
         },
 
@@ -42,7 +39,7 @@
             "type": "coreclr",
             "request": "launch",
             "preLaunchTask": "build",
-            "program": "${workspaceRoot}/src/sourceDev.WebApp/bin/Debug/netcoreapp2.0/sourceDev.WebApp.dll",
+            "program": "${workspaceRoot}/src/sourceDev.WebApp/bin/Debug/netcoreapp2.1/sourceDev.WebApp.dll",
             "args": [],
             "cwd": "${workspaceRoot}/src/sourceDev.WebApp",
             "stopAtEntry": false,
@@ -63,10 +60,7 @@
             },
             "env": {
                 "ASPNETCORE_ENVIRONMENT": "Production",
-                "ASPNETCORE_URLS": "http://localhost:56853"
-            },
-            "sourceFileMap": {
-                "/Views": "${workspaceRoot}/src/sourceDev.WebApp/Views"
+                "ASPNETCORE_URLS": "https://localhost:44399"
             }
         },
 
