@@ -31,9 +31,6 @@
             "env": {
                 "ASPNETCORE_ENVIRONMENT": "Development",
                 "ASPNETCORE_URLS": "https://localhost:44399"
-            },
-            "sourceFileMap": {
-                "/Views": "${workspaceRoot}/src/sourceDev.WebApp/Views"
             }
         },
 
@@ -64,9 +61,6 @@
             "env": {
                 "ASPNETCORE_ENVIRONMENT": "Production",
                 "ASPNETCORE_URLS": "https://localhost:44399"
-            },
-            "sourceFileMap": {
-                "/Views": "${workspaceRoot}/src/sourceDev.WebApp/Views"
             }
         },
 
