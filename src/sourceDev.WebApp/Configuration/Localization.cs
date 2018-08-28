@@ -26,6 +26,7 @@ namespace Microsoft.Extensions.DependencyInjection
                     new CultureInfo("en-GB"),
                     new CultureInfo("cy-GB"),
                     new CultureInfo("cy"),
+                    new CultureInfo("sv"),
                     new CultureInfo("fr-FR"),
                     new CultureInfo("fr")
                 };

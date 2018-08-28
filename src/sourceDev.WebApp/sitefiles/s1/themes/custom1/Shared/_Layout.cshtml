@@ -98,6 +98,7 @@ if (!string.IsNullOrWhiteSpace(Tenant.SiteFolderName)) { siteRoot = "/" + Tenant
                         <a asp-controller="Privacy" asp-action="Index">Privacy Policy</a>
                     </li>
                 }
+
                 <li class="border-left pl-2 mr-2">
                     @* you are free to remove the powered by cloudscribe link but we appreciate it if you choose to keep it! *@
                     <a class="text-nowrap" target="_blank" href="https://www.cloudscribe.com/?utm_source=@Context.Request.Host.Value&amp;utm_medium=referral&amp;utm_campaign=poweredbycloudscribe">Powered by cloudscribe</a>
@@ -106,6 +107,7 @@ if (!string.IsNullOrWhiteSpace(Tenant.SiteFolderName)) { siteRoot = "/" + Tenant
             </ul>
         </div>
         <div class="p-2 text-nowrap">Copyright &copy; @DateTime.Now.Year - @(Tenant?.SiteName ?? "Sample")</div>
+        <partial name="_CookieConsentRevokePartial" />
     </footer>
 
     @RenderSection("Toolbar", required: false)
