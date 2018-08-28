@@ -1,8 +1,31 @@
 
+## REST
+
+https://stackoverflow.com/questions/630453/put-vs-post-in-rest
+Both PUT and POST can be used for creating.
+
+You have to ask "what are you performing the action to?" to distinguish what you should be using. Let's assume you're designing an API for asking questions. If you want to use POST then you would do that to a list of questions. If you want to use PUT then you would do that to a particular question.
+
+Great both can be used, so which one should I use in my RESTful design:
+
+You do not need to support both PUT and POST.
+
+Which is used is left up to you. But just remember to use the right one depending on what object you are referencing in the request.
+
+Some considerations:
+
+    Do you name your URL objects you create explicitly, or let the server decide? If you name them then use PUT. If you let the server decide then use POST.
+    PUT is idempotent, so if you PUT an object twice, it has no effect. This is a nice property, so I would use PUT when possible.
+    You can update or create a resource with PUT with the same object URL
+    With POST you can have 2 requests coming in at the same time making modifications to a URL, and they may update different parts of the object.
+
+
+
 ## OpenApi 
 
 https://www.openapis.org/
 https://github.com/OAI/OpenAPI-Specification
+https://github.com/OAI/OpenAPI-Specification/blob/master/versions/3.0.1.md
 
 https://docs.microsoft.com/en-us/aspnet/core/tutorials/web-api-help-pages-using-swagger?view=aspnetcore-2.1
 

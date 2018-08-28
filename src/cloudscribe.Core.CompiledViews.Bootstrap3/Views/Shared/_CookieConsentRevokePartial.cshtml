@@ -1,0 +1,17 @@
+﻿@using Microsoft.AspNetCore.Http.Features
+@inject IStringLocalizer<CloudscribeCore> sr
+@{
+    bool showRevoke = false;
+    var consentFeature = Context.Features.Get<ITrackingConsentFeature>();
+    if (consentFeature != null && consentFeature.IsConsentNeeded)
+    {
+        showRevoke = consentFeature.CanTrack;
+    }
+
+}
+@if (showRevoke)
+{
+    <form style="display:inline" asp-controller="Privacy" asp-action="WithdrawCookieConsent" method="post">
+        <button type="submit" class="btn btn-link">@sr["Revoke Cookie Consent"]</button>
+    </form>
+}
