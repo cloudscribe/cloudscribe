@@ -37,7 +37,7 @@
     <input asp-for="UserId" type="hidden" />
     <h4>@sr["Create a new account."]</h4>
     <hr />
-    @*<div asp-validation-summary="All" class="text-danger"></div>*@
+    <div asp-validation-summary="All" class="text-danger"></div>
     @if (!Model.UseEmailForLogin)
     {
         <div class="form-group">

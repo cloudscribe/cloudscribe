@@ -9,7 +9,7 @@
 }
 <h2>@ViewData["Title"]</h2>
 <form asp-controller="Manage" asp-action="UserInfo" method="post" role="form">
-    @*<div asp-validation-summary="All" class="text-danger"></div>*@
+    <div asp-validation-summary="All" class="text-danger"></div>
     @if (string.IsNullOrWhiteSpace(Model.FirstName))
     {
         <div class="form-group">

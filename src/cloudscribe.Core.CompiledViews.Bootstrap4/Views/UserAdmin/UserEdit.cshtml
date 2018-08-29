@@ -135,7 +135,7 @@
             <a asp-controller="UserAdmin" asp-action="ChangeUserPassword" asp-route-siteid="@Model.SiteId" asp-route-userid="@Model.UserId">@sr["Change Password"]</a>
         }
     </div>
-    @*<div asp-validation-summary="All" class="text-danger"></div>*@
+    <div asp-validation-summary="All" class="text-danger"></div>
 </form>
 @if (Model.UserId != Guid.Empty)
 {
