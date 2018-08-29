@@ -9,7 +9,7 @@
     @sr["You have requested to login with a recovery code. This login will not be remembered until you provide an authenticator app code at login or disable 2FA and login again."]
 </p>
 <form method="post">
-    @*<div asp-validation-summary="All" class="text-danger"></div>*@
+    <div asp-validation-summary="All" class="text-danger"></div>
     <div class="form-group">
         <label asp-for="RecoveryCode"></label>
         <input asp-for="RecoveryCode" class="form-control" autocomplete="off" />

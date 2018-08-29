@@ -13,7 +13,7 @@
     var baseUrl = this.Context.Request.GetCurrentBaseUrl() + "/";
 }
 <form method="post" class="form-horizontal" role="form" asp-antiforgery="true" data-submit-once="true">
-    @*<div asp-validation-summary="All" class="text-danger"></div>*@
+    <div asp-validation-summary="All" class="text-danger"></div>
     <input asp-for="SiteId" type="hidden" />
     <input asp-for="ReturnPageNumber" type="hidden" />
     <div class="form-group">

@@ -35,7 +35,7 @@
     {
         <div class="col-md">
             <form id="login-form" asp-controller="Account" asp-action="Login" asp-route-returnurl='@ViewData["ReturnUrl"]' data-submit-once="true">
-                @*<div asp-validation-summary="All" class="text-danger"></div>*@
+                <div asp-validation-summary="All" class="text-danger"></div>
                 @if (Model.UseEmailForLogin)
                 {
                     <div class="form-group">

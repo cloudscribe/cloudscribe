@@ -10,7 +10,7 @@
 
 <h2>@ViewData["Title"]</h2>
 <form id="register-form" asp-controller="Account" asp-action="TermsOfUse" method="post" role="form">
-    @*<div asp-validation-summary="All" class="text-danger"></div>*@
+    <div asp-validation-summary="All" class="text-danger"></div>
     <div class="">
         @sr["Agreement  Terms as of:"] @Model.TermsUpdatedDate
     </div>
