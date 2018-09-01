@@ -5,6 +5,15 @@
 @{
     ViewData["Title"] = sr["Personal Data"];
     var otherDataProviders = gdprLinkProviders.ToList();
+    var list = new List<cloudscribe.Common.Gdpr.GdprDataLink>();
+    foreach (var d in otherDataProviders)
+    {
+        var link = await d.GetLink(Url, Model);
+        if(link != null)
+        {
+            list.Add(link);
+        }
+    }
 }
 <h2>@ViewData["Title"]</h2>
 <p>
@@ -19,13 +28,12 @@
 <p>
     <a id="delete" asp-action="DeletePersonalData" class="btn btn-primary">@sr["Delete"]</a>
 </p>
-@if (otherDataProviders.Count > 0)
+@if (list.Count > 0)
 {
     <h3>@sr["Other Personal Data"]</h3>
     <ul class="list-unstyled">
-        @foreach (var d in otherDataProviders)
-        {
-            var link = await d.GetLink(Url, Model);
+        @foreach (var link in list)
+        { 
             <li>
                 @if (string.IsNullOrEmpty(link.Url))
                 {
