@@ -39,6 +39,6 @@ Task("Test")
     });
 
 Task("Default")
-    .IsDependentOn("Test");
+    .IsDependentOn("Build");
 
 RunTarget(target);
