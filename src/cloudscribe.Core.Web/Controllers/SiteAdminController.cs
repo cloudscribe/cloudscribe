@@ -27,7 +27,7 @@ using System.Threading.Tasks;
 
 namespace cloudscribe.Core.Web.Controllers.Mvc
 {
-    [Authorize(Policy = PolicyConstants.AdminPolicy)]
+    
     public class SiteAdminController : Controller
     {
         public SiteAdminController(
@@ -74,6 +74,7 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
         private RequestLocalizationOptions _localization;
 
         // GET: /SiteAdmin
+        [Authorize(Policy = PolicyConstants.AdminPolicy)]
         [HttpGet]
         public IActionResult Index()
         {
@@ -83,6 +84,7 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
         }
 
         // GET: /SiteAdmin
+        [Authorize(Policy = PolicyConstants.AdminPolicy)]
         [HttpGet]
         public IActionResult Security()
         {
@@ -467,6 +469,7 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
 
         }
 
+        [Authorize(Policy = PolicyConstants.AdminPolicy)]
         [HttpPost]
         public async Task<JsonResult> AliasIdAvailable(Guid? siteId, string aliasId)
         {
@@ -476,6 +479,7 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
             return Json(available);
         }
 
+        [Authorize(Policy = PolicyConstants.AdminPolicy)]
         [HttpPost]
         public async Task<JsonResult> FolderNameAvailable(Guid? siteId, string siteFolderName)
         {           
@@ -489,6 +493,7 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
             return Json(available);
         }
 
+        [Authorize(Policy = PolicyConstants.AdminPolicy)]
         [HttpPost]
         public async Task<JsonResult> HostNameAvailable(Guid? siteId, string hostName)
         {
@@ -498,6 +503,7 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
             return Json(available);
         }
 
+        
         [HttpGet]
         [Authorize(Policy = PolicyConstants.AdminPolicy)]
         public async Task<IActionResult> CompanyInfo(

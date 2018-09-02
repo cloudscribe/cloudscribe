@@ -29,7 +29,7 @@ using System.Threading.Tasks;
 
 namespace cloudscribe.Core.Web.Controllers.Mvc
 {
-    [Authorize]
+    
     public class AccountController : Controller
     {
         public AccountController(

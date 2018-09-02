@@ -29,7 +29,7 @@ using System.Threading.Tasks;
 
 namespace cloudscribe.Core.Web.Controllers.Mvc
 {
-    [Authorize]
+   
     public class ManageController : Controller
     {
         public ManageController(
@@ -75,6 +75,7 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
 
 
         // GET: /Manage/Index
+        [Authorize]
         [HttpGet]
         public virtual async Task<IActionResult> Index()
         {
@@ -98,6 +99,7 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
             return View(model);
         }
 
+        [Authorize]
         [HttpGet]
         public virtual IActionResult PersonalData()
         {
@@ -105,6 +107,7 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
             return View("PersonalData", userId);
         }
 
+        [Authorize]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public virtual async Task<IActionResult> DownloadPersonalData()
@@ -150,6 +153,7 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
 
         }
 
+        [Authorize]
         [HttpGet]
         public virtual async Task<IActionResult> DeletePersonalData()
         {
@@ -168,6 +172,7 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
             return View(model);
         }
 
+        [Authorize]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public virtual async Task<IActionResult> DeletePersonalData(DeletePersonalDataViewModel model)
@@ -213,6 +218,7 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
 
         }
 
+        [Authorize]
         [HttpGet]
         public virtual async Task<IActionResult> TimeZone()
         {
@@ -237,6 +243,7 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
             return View(model);
         }
 
+        [Authorize]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public virtual async Task<IActionResult> TimeZone(string timeZoneId)
@@ -252,6 +259,7 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
             return RedirectToAction("Index");
         }
 
+        [Authorize]
         [HttpGet]
         public virtual async Task<IActionResult> UserInfo()
         {
@@ -276,6 +284,7 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
             return View(viewName, model);
         }
 
+        [Authorize]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public virtual async Task<IActionResult> UserInfo(UserInfoViewModel model)
@@ -329,6 +338,7 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
 
         //
         // GET: /Manage/RemoveLogin
+        [Authorize]
         [HttpGet]
         public virtual async Task<IActionResult> RemoveLogin()
         {
@@ -340,6 +350,7 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
 
 
         // POST: /Manage/RemoveLogin
+        [Authorize]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public virtual async Task<IActionResult> RemoveLogin(string loginProvider, string providerKey)
@@ -394,6 +405,7 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
 
         //}
 
+        [Authorize]
         [HttpGet]
         public virtual async Task<IActionResult> TwoFactorAuthentication()
         {
@@ -415,6 +427,7 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
             return View(model);
         }
 
+        [Authorize]
         [HttpGet]
         public virtual async Task<IActionResult> Disable2faWarning()
         {
@@ -434,6 +447,7 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
             return View(nameof(Disable2fa));
         }
 
+        [Authorize]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public virtual async Task<IActionResult> Disable2fa()
@@ -456,6 +470,7 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
             return RedirectToAction(nameof(TwoFactorAuthentication));
         }
 
+        [Authorize]
         [HttpGet]
         public virtual async Task<IActionResult> EnableAuthenticator()
         {
@@ -483,6 +498,7 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
             return View(model);
         }
 
+        [Authorize]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public virtual async Task<IActionResult> EnableAuthenticator(EnableAuthenticatorViewModel model)
@@ -517,6 +533,7 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
             return RedirectToAction(nameof(GenerateRecoveryCodes));
         }
 
+        [Authorize]
         [HttpGet]
         public virtual IActionResult ResetAuthenticatorWarning()
         {
@@ -525,6 +542,7 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
             return View(nameof(ResetAuthenticator));
         }
 
+        [Authorize]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public virtual async Task<IActionResult> ResetAuthenticator()
@@ -544,6 +562,7 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
             return RedirectToAction(nameof(EnableAuthenticator));
         }
 
+        [Authorize]
         [HttpGet]
         public virtual async Task<IActionResult> GenerateRecoveryCodes()
         {
@@ -570,6 +589,7 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
 
 
         // POST: /Manage/EnableTwoFactorAuthentication
+        [Authorize]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public virtual async Task<IActionResult> EnableTwoFactorAuthentication()
@@ -585,6 +605,7 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
 
 
         // POST: /Manage/DisableTwoFactorAuthentication
+        [Authorize]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public virtual async Task<IActionResult> DisableTwoFactorAuthentication()
@@ -640,6 +661,7 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
 
         //
         // GET: /Manage/RemovePhoneNumber
+        [Authorize]
         [HttpGet]
         public virtual async Task<IActionResult> RemovePhoneNumber()
         {
@@ -662,6 +684,7 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
 
 
         // GET: /Manage/ChangePassword
+        [Authorize]
         [HttpGet]
         public virtual IActionResult ChangePassword()
         {
@@ -670,6 +693,7 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
 
 
         // POST: /Manage/ChangePassword
+        [Authorize]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public virtual async Task<IActionResult> ChangePassword(ChangePasswordViewModel model)
@@ -702,6 +726,7 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
 
 
         // GET: /Manage/SetPassword
+        [Authorize]
         [HttpGet]
         public virtual IActionResult SetPassword()
         {
@@ -710,6 +735,7 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
 
 
         // POST: /Manage/SetPassword
+        [Authorize]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public virtual async Task<IActionResult> SetPassword(SetPasswordViewModel model)
@@ -744,6 +770,7 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
 
 
         // GET: /Manage/ManageLogins
+        [Authorize]
         [HttpGet]
         public virtual async Task<IActionResult> ManageLogins()
         {
@@ -775,6 +802,7 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
 
 
         // POST: /Manage/LinkLogin
+        [Authorize]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public virtual IActionResult LinkLogin(string provider)
@@ -787,6 +815,7 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
 
 
         // GET: /Manage/LinkLoginCallback
+        [Authorize]
         [HttpGet]
         public virtual async Task<IActionResult> LinkLoginCallback()
         {
