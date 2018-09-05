@@ -99,10 +99,15 @@ namespace sourceDev.WebApp
             //*** Important ***
             // This is a custom extension method in Config/RoutingAndMvc.cs
             services.SetupMvc(_configuration, _sslIsAvailable);
-            
+
             //*** Important ***
             // This is a custom extension method in Config/IdentityServerIntegration.cs
-            services.SetupIdentityServerApiAuthentication();
+            var setupApiAuthentication = _configuration.GetValue<bool>("AppSettings:SetupApiAuthentication");
+            if(setupApiAuthentication)
+            {
+                services.SetupIdentityServerApiAuthentication();
+            }
+            
 
             //services.AddSingleton<IOptions<CookiePolicyOptions>, cloudscribe.Core.Identity.SiteCookiePolicyOptions>();
 

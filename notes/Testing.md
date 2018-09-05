@@ -4,6 +4,8 @@ https://github.com/aspnet/Announcements/issues/275
 
 https://docs.microsoft.com/en-us/aspnet/core/testing/integration-testing
 
+https://geeklearning.io/how-to-deal-with-identity-when-testing-an-asp-net-core-application/
+
 Selenium stand alone server
 https://www.seleniumhq.org/download/
 
