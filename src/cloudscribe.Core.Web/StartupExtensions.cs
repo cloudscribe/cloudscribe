@@ -212,6 +212,13 @@ namespace Microsoft.Extensions.DependencyInjection
                 });
 
             options.AddPolicy(
+                "AdminMenuPolicy",
+                authBuilder =>
+                {
+                    authBuilder.RequireRole("ServerAdmins", "Administrators", "Role Administrators", "Content Administrators");
+                });
+
+            options.AddPolicy(
                 "AdminPolicy",
                 authBuilder =>
                 {
