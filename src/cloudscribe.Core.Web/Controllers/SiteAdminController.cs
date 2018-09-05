@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2014-10-26
-// Last Modified:			2018-08-19
+// Last Modified:			2018-09-05
 // 
 
 using cloudscribe.Core.Models;
@@ -74,7 +74,7 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
         private RequestLocalizationOptions _localization;
 
         // GET: /SiteAdmin
-        [Authorize(Policy = PolicyConstants.AdminPolicy)]
+        [Authorize(Policy = PolicyConstants.AdminMenuPolicy)]
         [HttpGet]
         public IActionResult Index()
         {
