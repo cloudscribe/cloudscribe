@@ -13,6 +13,11 @@ using System.Threading.Tasks;
 
 namespace cloudscribe.Core.Models
 {
+    // a marker interface so we can inject as singleton
+    public interface ISiteQueriesSingleton : ISiteQueries
+    {
+
+    }
     public interface ISiteQueries 
     {
         Task<ISiteSettings> Fetch(Guid siteId, CancellationToken cancellationToken = default(CancellationToken));

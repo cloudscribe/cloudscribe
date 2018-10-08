@@ -2,8 +2,8 @@
 
   <PropertyGroup>
     <Description>cloudscribe multi-tenant identity integration for IdentityServer4</Description>
-    <VersionPrefix>3.0.1</VersionPrefix>
-    <AssemblyVersion>3.0.1</AssemblyVersion>
+    <VersionPrefix>3.0.2</VersionPrefix>
+    <AssemblyVersion>3.0.2</AssemblyVersion>
     
 	
     <Authors>Joe Audette</Authors>

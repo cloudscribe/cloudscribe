@@ -15,11 +15,14 @@ namespace Microsoft.Extensions.DependencyInjection
             services.AddCloudscribeCoreEFCommon();
 
             services.AddDbContext<CoreDbContext>(options =>
-                    options.UseSqlite(connectionString));
+                    options.UseSqlite(connectionString),
+                    optionsLifetime: ServiceLifetime.Singleton
+                    );
 
             services.AddScoped<ICoreDbContext, CoreDbContext>();
             services.AddScoped<IDataPlatformInfo, DataPlatformInfo>();
-            services.AddTransient<ICoreDbContextFactory, CoreDbContextFactory>();
+
+            services.AddSingleton<ICoreDbContextFactory, CoreDbContextFactory>();
 
             return services;
         }

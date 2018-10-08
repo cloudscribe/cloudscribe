@@ -1,4 +1,7 @@
 
+https://andrewlock.net/how-to-register-a-service-with-multiple-interfaces-for-in-asp-net-core-di/
+
+
 http://blog.ploeh.dk/2018/07/24/dependency-injection-revisited/
 
 https://www.stevejgordon.co.uk/asp-net-core-dependency-injection-how-to-register-generic-types

@@ -49,7 +49,9 @@ namespace Microsoft.Extensions.DependencyInjection
         {
             services
                 .AddDbContext<ConfigurationDbContext>(options =>
-                    options.UseSqlite(connectionString));
+                    options.UseSqlite(connectionString),
+                    optionsLifetime: ServiceLifetime.Singleton
+                    );
 
             services.AddCloudscribeCoreIdentityServerStores();
 
@@ -57,9 +59,14 @@ namespace Microsoft.Extensions.DependencyInjection
 
             services
                 .AddDbContext<PersistedGrantDbContext>(options =>
-                    options.UseSqlite(connectionString));
+                    options.UseSqlite(connectionString),
+                    optionsLifetime: ServiceLifetime.Singleton
+                    );
 
             services.AddScoped<IPersistedGrantDbContext, PersistedGrantDbContext>();
+
+            services.AddSingleton<IConfigurationDbContextFactory, ConfigurationDbContextFactory>();
+            services.AddSingleton<IPersistedGrantDbContextFactory, PersistedGrantDbContextFactory>();
 
             return services;
         }

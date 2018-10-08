@@ -1,6 +1,8 @@
 
 https://docs.microsoft.com/en-us/nuget/hosting-packages/local-feeds
 
+https://blog.nuget.org/20180827/Introducing-Source-Code-Link-for-NuGet-packages.html
+
 
 https://blog.nuget.org/20180522/Introducing-signed-package-submissions.html
 

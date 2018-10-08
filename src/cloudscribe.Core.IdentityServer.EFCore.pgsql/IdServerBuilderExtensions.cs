@@ -23,32 +23,14 @@ namespace Microsoft.Extensions.DependencyInjection
             ICollection<string> transientErrorCodesToAdd = null
             )
         {
-            //builder.AddConfigurationStoreMSSQL(connectionString);    
-            //builder.AddOperationalStoreMSSQL(connectionString);
+            
             builder.Services.AddCloudscribeCoreIdentityServerEFStoragePostgreSql(connectionString, maxConnectionRetryCount, maxConnectionRetryDelaySeconds, transientErrorCodesToAdd);
             builder.Services.AddScoped<IStorageInfo, StorageInfo>();
 
             return builder;
         }
 
-        //public static IIdentityServerBuilder AddConfigurationStoreMSSQL(
-        //    this IIdentityServerBuilder builder, 
-        //    string connectionString,
-        //    Action<DbContextOptionsBuilder> optionsAction = null)
-        //{
-            
-        //    builder.Services.AddEntityFrameworkNpgsql()
-        //        .AddDbContext<ConfigurationDbContext>((serviceProvider, options) =>
-        //        options.UseNpgsql(connectionString)
-        //               .UseInternalServiceProvider(serviceProvider)
-        //               );
-
-        //    builder.Services.AddCloudscribeCoreIdentityServerStores();
-
-        //    builder.Services.AddScoped<IConfigurationDbContext, ConfigurationDbContext>();
-            
-        //    return builder;
-        //}
+        
 
         public static IIdentityServerBuilder AddConfigurationStoreCache(
             this IIdentityServerBuilder builder)
@@ -67,24 +49,7 @@ namespace Microsoft.Extensions.DependencyInjection
 
             return builder;
         }
-
-        //public static IIdentityServerBuilder AddOperationalStoreMSSQL(
-        //    this IIdentityServerBuilder builder,
-        //    string connectionString,
-        //    Action<DbContextOptionsBuilder> optionsAction = null)
-        //{
-            
-        //    builder.Services.AddEntityFrameworkNpgsql()
-        //        .AddDbContext<PersistedGrantDbContext>((serviceProvider, options) =>
-        //        options.UseNpgsql(connectionString)
-        //               .UseInternalServiceProvider(serviceProvider)
-        //               );
-
-        //    builder.Services.AddScoped<IPersistedGrantDbContext, PersistedGrantDbContext>();
-            
-        //    return builder;
-        //}
-
+        
         public static IServiceCollection AddCloudscribeCoreIdentityServerEFStoragePostgreSql(
             this IServiceCollection services,
             string connectionString,
@@ -93,18 +58,30 @@ namespace Microsoft.Extensions.DependencyInjection
             ICollection<string> transientErrorCodesToAdd = null
             )
         {
-            services.AddEntityFrameworkNpgsql()
-                .AddDbContext<ConfigurationDbContext>(options =>
-                    options.UseNpgsql(connectionString));
+            //services.AddEntityFrameworkNpgsql()
+            //    .AddDbContext<ConfigurationDbContext>(options =>
+            //        options.UseNpgsql(connectionString));
 
             services.AddCloudscribeCoreIdentityServerStores();
 
-            services.AddScoped<IConfigurationDbContext, ConfigurationDbContext>();
 
-            //services.AddEntityFrameworkNpgsql()
-            //    .AddDbContext<PersistedGrantDbContext>(options =>
-            //        options.UseNpgsql(connectionString));
-
+            services.AddEntityFrameworkNpgsql()
+                .AddDbContext<ConfigurationDbContext>(options =>
+                    options.UseNpgsql(connectionString,
+                    npgsqlOptionsAction: sqlOptions =>
+                    {
+                        if (maxConnectionRetryCount > 0)
+                        {
+                            //Configuring Connection Resiliency: https://docs.microsoft.com/en-us/ef/core/miscellaneous/connection-resiliency 
+                            sqlOptions.EnableRetryOnFailure(
+                                maxRetryCount: maxConnectionRetryCount,
+                                maxRetryDelay: TimeSpan.FromSeconds(maxConnectionRetryDelaySeconds),
+                                errorCodesToAdd: transientErrorCodesToAdd);
+                        }
+                    }),
+                    optionsLifetime: ServiceLifetime.Singleton
+                    );
+            
             services.AddEntityFrameworkNpgsql()
                 .AddDbContext<PersistedGrantDbContext>(options =>
                     options.UseNpgsql(connectionString,
@@ -118,11 +95,15 @@ namespace Microsoft.Extensions.DependencyInjection
                                 maxRetryDelay: TimeSpan.FromSeconds(maxConnectionRetryDelaySeconds),
                                 errorCodesToAdd: transientErrorCodesToAdd);
                         }
+                    }),
+                    optionsLifetime: ServiceLifetime.Singleton
+                    );
 
-
-                    }));
-
+            services.AddScoped<IConfigurationDbContext, ConfigurationDbContext>();
             services.AddScoped<IPersistedGrantDbContext, PersistedGrantDbContext>();
+
+            services.AddSingleton<IConfigurationDbContextFactory, ConfigurationDbContextFactory>();
+            services.AddSingleton<IPersistedGrantDbContextFactory, PersistedGrantDbContextFactory>();
 
             return services;
         }

@@ -17,7 +17,7 @@ using System.Threading.Tasks;
 
 namespace cloudscribe.Core.Storage.EFCore.Common
 {
-    public class UserQueries : IUserQueries
+    public class UserQueries : IUserQueries, IUserQueriesSingleton
     {
         public UserQueries(ICoreDbContext dbContext)
         {

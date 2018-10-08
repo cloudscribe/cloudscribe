@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0
 // Author:					Joe Audette
 // Created:					2016-12-05
-// Last Modified:			2016-12-05
+// Last Modified:			2018-10-08
 // 
 
 using cloudscribe.Pagination.Models;
@@ -12,6 +12,11 @@ using System.Threading.Tasks;
 
 namespace cloudscribe.Core.IdentityServerIntegration.Storage
 {
+    public interface IIdentityResourceQueriesSingleton : IIdentityResourceQueries
+    {
+
+    }
+
     public interface IIdentityResourceQueries
     {
         Task<bool> IdentityResourceExists(string siteId, string name, CancellationToken cancellationToken = default(CancellationToken));

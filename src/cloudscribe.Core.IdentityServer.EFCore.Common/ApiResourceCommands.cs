@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0
 // Author:					Joe Audette
 // Created:					2016-10-16
-// Last Modified:			2017-03-24
+// Last Modified:			2018-10-08
 // 
 
 using cloudscribe.Core.IdentityServer.EFCore.Interfaces;
@@ -16,18 +16,16 @@ using System.Threading.Tasks;
 
 namespace cloudscribe.Core.IdentityServer.EFCore
 {
-    public class ApiResourceCommands : IApiResourceCommands
+    public class ApiResourceCommands : IApiResourceCommands, IApiResourceCommandsSingleton
     {
         public ApiResourceCommands(
-            IConfigurationDbContext context
+            IConfigurationDbContextFactory contextFactory
             )
         {
-            if (context == null) throw new ArgumentNullException(nameof(context));
-            this.context = context;
-
+            _contextFactory = contextFactory;
         }
 
-        private readonly IConfigurationDbContext context;
+        private readonly IConfigurationDbContextFactory _contextFactory;
 
 
         public async Task CreateApiResource(string siteId, ApiResource apiResource, CancellationToken cancellationToken = default(CancellationToken))
@@ -38,8 +36,13 @@ namespace cloudscribe.Core.IdentityServer.EFCore
             {
                 s.SiteId = siteId;
             }
-            context.ApiResources.Add(ent);
-            await context.SaveChangesAsync();
+
+            using (var context = _contextFactory.CreateContext())
+            {
+                context.ApiResources.Add(ent);
+                await context.SaveChangesAsync();
+            }
+      
         }
 
         public async Task UpdateApiResource(string siteId, ApiResource apiResource, CancellationToken cancellationToken = default(CancellationToken))
@@ -56,12 +59,16 @@ namespace cloudscribe.Core.IdentityServer.EFCore
 
         public async Task DeleteApiResource(string siteId, string name, CancellationToken cancellationToken = default(CancellationToken))
         {
-            var resource = await context.ApiResources.FirstOrDefaultAsync(x => x.SiteId == siteId && x.Name == name);
-            if (resource != null)
+            using (var context = _contextFactory.CreateContext())
             {
-                context.ApiResources.Remove(resource);
-                await context.SaveChangesAsync();
+                var resource = await context.ApiResources.FirstOrDefaultAsync(x => x.SiteId == siteId && x.Name == name);
+                if (resource != null)
+                {
+                    context.ApiResources.Remove(resource);
+                    await context.SaveChangesAsync();
+                }
             }
+
         }
     }
 }

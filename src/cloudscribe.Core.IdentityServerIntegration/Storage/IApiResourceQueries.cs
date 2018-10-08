@@ -12,6 +12,11 @@ using System.Threading.Tasks;
 
 namespace cloudscribe.Core.IdentityServerIntegration.Storage
 {
+    public interface IApiResourceQueriesSingleton : IApiResourceQueries
+    {
+
+    }
+
     public interface IApiResourceQueries
     {
         Task<bool> ApiResourceExists(string siteId, string name, CancellationToken cancellationToken = default(CancellationToken));

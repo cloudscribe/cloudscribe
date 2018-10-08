@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2016-10-19
-// Last Modified:			2016-10-21
+// Last Modified:			2018-10-08
 // 
 
 using cloudscribe.Core.IdentityServer.EFCore.Interfaces;
@@ -11,24 +11,22 @@ using cloudscribe.Core.IdentityServerIntegration.Storage;
 using cloudscribe.Pagination.Models;
 using IdentityServer4.Models;
 using Microsoft.EntityFrameworkCore;
-using System;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
 namespace cloudscribe.Core.IdentityServer.EFCore
 {
-    public class ClientQueries : IClientQueries
+    public class ClientQueries : IClientQueries, IClientQueriesSingleton
     {
         public ClientQueries(
-            IConfigurationDbContext context
+            IConfigurationDbContextFactory contextFactory
             )
         {
-            if (context == null) throw new ArgumentNullException(nameof(context));
-            this.context = context;
+            _contextFactory = contextFactory;
         }
 
-        private readonly IConfigurationDbContext context;
+        private readonly IConfigurationDbContextFactory _contextFactory;
 
         public async Task<bool> ClientExists(string siteId, string clientId, CancellationToken cancellationToken = default(CancellationToken))
         {
@@ -41,7 +39,9 @@ namespace cloudscribe.Core.IdentityServer.EFCore
         {
             cancellationToken.ThrowIfCancellationRequested();
 
-            var client = await context.Clients
+            using (var context = _contextFactory.CreateContext())
+            {
+                var client = await context.Clients
                 .AsNoTracking()
                 .Include(x => x.AllowedGrantTypes)
                 .Include(x => x.RedirectUris)
@@ -54,14 +54,23 @@ namespace cloudscribe.Core.IdentityServer.EFCore
                 .Include(x => x.AllowedCorsOrigins)
                 .FirstOrDefaultAsync(x => x.SiteId == siteId && x.ClientId == clientId);
 
-            var model = client.ToModel();
+                var model = client.ToModel();
 
-            return model;
+                return model;
+            }
+
+                
         }
 
         public async Task<int> CountClients(string siteId, CancellationToken cancellationToken = default(CancellationToken))
         {
-            return await context.Clients.AsNoTracking().Where(x => x.SiteId == siteId).CountAsync(cancellationToken).ConfigureAwait(false);
+            cancellationToken.ThrowIfCancellationRequested();
+
+            using (var context = _contextFactory.CreateContext())
+            {
+                return await context.Clients.AsNoTracking().Where(x => x.SiteId == siteId).CountAsync(cancellationToken).ConfigureAwait(false);
+            }
+            
         }
 
         public async Task<PagedResult<Client>> GetClients(
@@ -70,9 +79,13 @@ namespace cloudscribe.Core.IdentityServer.EFCore
             int pageSize,
             CancellationToken cancellationToken = default(CancellationToken))
         {
+            cancellationToken.ThrowIfCancellationRequested();
+
             int offset = (pageSize * pageNumber) - pageSize;
 
-            var data = await context.Clients
+            using (var context = _contextFactory.CreateContext())
+            {
+                var data = await context.Clients
                 .AsNoTracking()
                 .Include(x => x.AllowedGrantTypes)
                 .Include(x => x.RedirectUris)
@@ -87,13 +100,16 @@ namespace cloudscribe.Core.IdentityServer.EFCore
                 .Skip(offset)
                 .Take(pageSize).ToListAsync().ConfigureAwait(false);
 
-            var result = new PagedResult<Client>();
-            result.Data = data.Select(x => x.ToModel()).ToList();
-            result.TotalItems = await CountClients(siteId, cancellationToken).ConfigureAwait(false);
-            result.PageNumber = pageNumber;
-            result.PageSize = pageSize;
+                var result = new PagedResult<Client>();
+                result.Data = data.Select(x => x.ToModel()).ToList();
+                result.TotalItems = await CountClients(siteId, cancellationToken).ConfigureAwait(false);
+                result.PageNumber = pageNumber;
+                result.PageSize = pageSize;
 
-            return result;
+                return result;
+            }
+
+            
         }
 
     }
