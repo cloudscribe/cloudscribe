@@ -2,14 +2,16 @@
 
   <PropertyGroup>
     <Description>common static resources for web applications including ckeditor dtatepickers, and other js and css</Description>
-    <VersionPrefix>1.0.5</VersionPrefix>
-    <AssemblyVersion>1.0.5</AssemblyVersion>
+    <VersionPrefix>1.0.6</VersionPrefix>
+    <AssemblyVersion>1.0.6</AssemblyVersion>
     <Authors>Joe Audette</Authors>
     <TargetFrameworks>netstandard2.0</TargetFrameworks>
     <PackageTags>cloudscribe</PackageTags>
     <PackageIconUrl>https://raw.githubusercontent.com/joeaudette/cloudscribe/master/cloudscribe-icon-32.png</PackageIconUrl>
     <PackageProjectUrl>https://github.com/joeaudette/cloudscribe</PackageProjectUrl>
     <PackageLicenseUrl>http://www.apache.org/licenses/LICENSE-2.0</PackageLicenseUrl>
+    <RepositoryUrl>https://github.com/cloudscribe/cloudscribe.git</RepositoryUrl>
+    <RepositoryType>git</RepositoryType>
   </PropertyGroup>
   
 <ItemGroup>
@@ -17,12 +19,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <!--
-    <PackageReference Include="Microsoft.AspNetCore.Mvc" Version="2.1.0" />
-    
-    <PackageReference Include="Microsoft.Extensions.Localization" Version="2.1.0" />
-    <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="2.1.0" />-->
-    
+   
     <PackageReference Include="Microsoft.AspNetCore.Http" Version="2.1.0" />
     <PackageReference Include="Microsoft.AspNetCore.StaticFiles" Version="2.1.0" />
     <PackageReference Include="Microsoft.Extensions.FileProviders.Embedded" Version="2.1.0" />

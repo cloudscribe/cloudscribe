@@ -7,12 +7,14 @@
 
     <Authors>Joe Audette</Authors>
     <TargetFramework>netstandard2.0</TargetFramework>
-    <AssemblyName>cloudscribe.Core.IdentityServer.EFCore.pgsql</AssemblyName>
-    <PackageId>cloudscribe.Core.IdentityServer.EFCore.pgsql</PackageId>
+    
     <PackageTags>cloudscribe;identity</PackageTags>
     <PackageIconUrl>https://raw.githubusercontent.com/joeaudette/cloudscribe/master/cloudscribe-icon-32.png</PackageIconUrl>
     <PackageProjectUrl>https://github.com/joeaudette/cloudscribe</PackageProjectUrl>
     <PackageLicenseUrl>http://www.apache.org/licenses/LICENSE-2.0</PackageLicenseUrl>
+
+    <RepositoryUrl>https://github.com/cloudscribe/cloudscribe.git</RepositoryUrl>
+    <RepositoryType>git</RepositoryType>
     
   </PropertyGroup>
 

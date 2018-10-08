@@ -47,6 +47,15 @@ namespace Microsoft.Extensions.DependencyInjection
 
                             break;
 
+                        case "pgsql-snake":
+                            var pgsConnection = config.GetConnectionString("PostgreSqlConnectionString");
+                            services.AddCloudscribeCorePostgreSqlStorage(pgsConnection);
+                            services.AddCloudscribeLoggingPostgreSqlStorage(pgsConnection);
+                            services.AddCloudscribeKvpPostgreSqlStorage(pgsConnection);
+
+                            break;
+
+
                         case "MySql":
                             var mysqlConnection = config.GetConnectionString("MySqlEntityFrameworkConnectionString");
                             services.AddCloudscribeCoreEFStorageMySql(mysqlConnection);
