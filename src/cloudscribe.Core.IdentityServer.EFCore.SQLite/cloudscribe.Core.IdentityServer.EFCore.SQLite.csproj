@@ -2,8 +2,8 @@
 
   <PropertyGroup>
     <Description>SQLite Entity Framework configuration and operational stores for IdentityServer4 cloudscribe multi-tenant identity integration</Description>
-    <VersionPrefix>3.0.2</VersionPrefix>
-    <AssemblyVersion>3.0.2</AssemblyVersion>
+    <VersionPrefix>3.0.3</VersionPrefix>
+    <AssemblyVersion>3.0.3</AssemblyVersion>
     <Authors>Joe Audette</Authors>
     <TargetFramework>netstandard2.0</TargetFramework>
     <PackageTags>cloudscribe;identity</PackageTags>

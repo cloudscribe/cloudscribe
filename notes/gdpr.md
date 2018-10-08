@@ -1,4 +1,10 @@
 
+
+https://stratechery.com/2018/the-european-union-versus-the-internet/
+
+https://blog.acolyer.org/2018/09/05/who-left-open-the-cookie-jar-a-comprehensive-evaluation-of-third-party-cookie-policies/
+
+
 https://www.gdpreu.org/the-regulation/key-concepts/consent/
 
 Hanselminutes

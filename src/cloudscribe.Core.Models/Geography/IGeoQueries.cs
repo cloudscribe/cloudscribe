@@ -30,4 +30,11 @@ namespace cloudscribe.Core.Models.Geography
         Task<List<IGeoZone>> StateAutoComplete(Guid countryId, string query, int maxRows, CancellationToken cancellationToken = default(CancellationToken));
 
     }
+
+    // a marker interface so we can inject as singleton
+    public interface IGeoQueriesSingleton : IGeoQueries
+    {
+
+    }
+
 }

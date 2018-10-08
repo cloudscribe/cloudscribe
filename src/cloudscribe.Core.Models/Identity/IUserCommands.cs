@@ -11,6 +11,12 @@ using System.Threading.Tasks;
 
 namespace cloudscribe.Core.Models
 {
+    // a marker interface so we can inject as singleton
+    public interface IUserCommandsSingleton : IUserCommands
+    {
+
+    }
+
     public interface IUserCommands
     {
         Task Create(

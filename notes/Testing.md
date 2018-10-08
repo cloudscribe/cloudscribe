@@ -1,4 +1,10 @@
 
+In browser testing
+https://www.cypress.io/
+
+https://github.com/devdigital/IdentityServer4TestServer
+
+
 Improved end to end testing support for MVC applications
 https://github.com/aspnet/Announcements/issues/275
 

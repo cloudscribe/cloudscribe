@@ -25,8 +25,8 @@ namespace cloudscribe.Core.Storage.EFCore.MySql
         {
             base.OnModelCreating(modelBuilder);
 
-            ICoreTableNames tableNames = new CoreTableNames();
-            
+            var tableNames = new CoreTableNames();
+
             modelBuilder.Entity<SiteSettings>(entity =>
             {
                 

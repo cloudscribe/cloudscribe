@@ -29,6 +29,7 @@
   
   <ItemGroup>
     <ProjectReference Include="..\cloudscribe.Core.CompiledViews.Bootstrap4\cloudscribe.Core.CompiledViews.Bootstrap4.csproj" />
+    <ProjectReference Include="..\cloudscribe.Core.IdentityServer.EFCore.PostgreSql\cloudscribe.Core.IdentityServer.EFCore.PostgreSql.csproj" />
     <ProjectReference Include="..\cloudscribe.Core.IdentityServer.EFCore.SQLite\cloudscribe.Core.IdentityServer.EFCore.SQLite.csproj" />
     <ProjectReference Include="..\cloudscribe.Core.IdentityServerIntegration\cloudscribe.Core.IdentityServerIntegration.csproj" />
     <ProjectReference Include="..\cloudscribe.Core.Identity\cloudscribe.Core.Identity.csproj" />
@@ -36,6 +37,7 @@
     <ProjectReference Include="..\cloudscribe.Core.Storage.EFCore.MSSQL\cloudscribe.Core.Storage.EFCore.MSSQL.csproj" />
     <ProjectReference Include="..\cloudscribe.Core.Storage.EFCore.MySql\cloudscribe.Core.Storage.EFCore.MySql.csproj" />
     <ProjectReference Include="..\cloudscribe.Core.Storage.EFCore.pgsql\cloudscribe.Core.Storage.EFCore.pgsql.csproj" />
+    <ProjectReference Include="..\cloudscribe.Core.Storage.EFCore.PostgreSql\cloudscribe.Core.Storage.EFCore.PostgreSql.csproj" />
     <ProjectReference Include="..\cloudscribe.Core.Storage.EFCore.SQLite\cloudscribe.Core.Storage.EFCore.SQLite.csproj" />
     <ProjectReference Include="..\cloudscribe.Core.Storage.NoDb\cloudscribe.Core.Storage.NoDb.csproj" />
     <ProjectReference Include="..\cloudscribe.Core.Web\cloudscribe.Core.Web.csproj" />

@@ -1,11 +1,6 @@
 ﻿using cloudscribe.Core.Models;
 using cloudscribe.Core.Models.Geography;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.DependencyInjection.Extensions;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace cloudscribe.Core.Storage.EFCore.Common
 {
@@ -25,7 +20,19 @@ namespace cloudscribe.Core.Storage.EFCore.Common
             services.AddScoped<IGeoCommands, GeoCommands>();
             services.AddScoped<IGeoQueries, GeoQueries>();
 
-            services.TryAddScoped<ICoreTableNames, CoreTableNames>();
+
+            //graphql likes singletons so these are alternate singleton versions
+            // the services can work as any lifetime
+
+            services.AddSingleton<IGeoCommandsSingleton, GeoCommands>();
+            services.AddSingleton<IGeoQueriesSingleton, GeoQueries>();
+
+            services.AddSingleton<IUserCommandsSingleton, UserCommands>();
+            services.AddSingleton<IUserQueriesSingleton, UserQueries>();
+
+            services.AddSingleton<ISiteCommandsSingleton, SiteCommands>();
+            services.AddSingleton<ISiteQueriesSingleton, SiteQueries>();
+
 
             return services;
         }

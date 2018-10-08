@@ -1,4 +1,7 @@
 
+https://www.tenforums.com/general-support/114003-cant-define-monthly-trigger-task-scheduler.html
+
+
 https://stackoverflow.com/questions/41829993/hangfire-dependency-injection-with-net-core
 
 

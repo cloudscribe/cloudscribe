@@ -1,5 +1,9 @@
 #Event Sourcing
 
+https://github.com/jamesmh/coravel
+
+Marten: Using Postgresql as a Document DB and Event Store
+https://www.youtube.com/watch?v=N_nuAqpif20
 
 https://kickstarter.engineering/event-sourcing-made-simple-4a2625113224?gi=4d7759d7e0ad
 

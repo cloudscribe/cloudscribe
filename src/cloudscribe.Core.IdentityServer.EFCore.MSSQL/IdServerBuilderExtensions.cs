@@ -31,24 +31,7 @@ namespace Microsoft.Extensions.DependencyInjection
             return builder;
         }
 
-        //public static IIdentityServerBuilder AddConfigurationStoreMSSQL(
-        //    this IIdentityServerBuilder builder, 
-        //    string connectionString,
-        //    Action<DbContextOptionsBuilder> optionsAction = null)
-        //{
-            
-        //    builder.Services.AddEntityFrameworkSqlServer()
-        //        .AddDbContext<ConfigurationDbContext>((serviceProvider, options) =>
-        //        options.UseSqlServer(connectionString)
-        //               .UseInternalServiceProvider(serviceProvider)
-        //               );
-
-        //    builder.Services.AddCloudscribeCoreIdentityServerStores();
-
-        //    builder.Services.AddScoped<IConfigurationDbContext, ConfigurationDbContext>();
-            
-        //    return builder;
-        //}
+        
 
         public static IIdentityServerBuilder AddConfigurationStoreCache(
             this IIdentityServerBuilder builder)
@@ -68,22 +51,7 @@ namespace Microsoft.Extensions.DependencyInjection
             return builder;
         }
 
-        //public static IIdentityServerBuilder AddOperationalStoreMSSQL(
-        //    this IIdentityServerBuilder builder,
-        //    string connectionString,
-        //    Action<DbContextOptionsBuilder> optionsAction = null)
-        //{
-            
-        //    builder.Services.AddEntityFrameworkSqlServer()
-        //        .AddDbContext<PersistedGrantDbContext>((serviceProvider, options) =>
-        //        options.UseSqlServer(connectionString)
-        //               .UseInternalServiceProvider(serviceProvider)
-        //               );
-
-        //    builder.Services.AddScoped<IPersistedGrantDbContext, PersistedGrantDbContext>();
-            
-        //    return builder;
-        //}
+        
 
         public static IServiceCollection AddCloudscribeCoreIdentityServerEFStorageMSSQL(
             this IServiceCollection services,
@@ -94,10 +62,7 @@ namespace Microsoft.Extensions.DependencyInjection
             bool useSql2008Compatibility = false
             )
         {
-            //services.AddEntityFrameworkSqlServer()
-            //    .AddDbContext<ConfigurationDbContext>(options =>
-            //        options.UseSqlServer(connectionString));
-
+           
             services.AddEntityFrameworkSqlServer()
                 .AddDbContext<ConfigurationDbContext>(options =>
                     options.UseSqlServer(connectionString,
@@ -117,16 +82,14 @@ namespace Microsoft.Extensions.DependencyInjection
                             }
 
 
-                        }));
+                        }),
+                        optionsLifetime: ServiceLifetime.Singleton
+                        );
 
             services.AddCloudscribeCoreIdentityServerStores();
 
             services.AddScoped<IConfigurationDbContext, ConfigurationDbContext>();
-
-            //services.AddEntityFrameworkSqlServer()
-            //    .AddDbContext<PersistedGrantDbContext>(options =>
-            //        options.UseSqlServer(connectionString));
-
+            
             services.AddEntityFrameworkSqlServer()
                 .AddDbContext<PersistedGrantDbContext>(options =>
                     options.UseSqlServer(connectionString,
@@ -147,9 +110,14 @@ namespace Microsoft.Extensions.DependencyInjection
                             }
                             
 
-                        }));
+                        }),
+                        optionsLifetime: ServiceLifetime.Singleton
+                        );
 
             services.AddScoped<IPersistedGrantDbContext, PersistedGrantDbContext>();
+
+            services.AddSingleton<IConfigurationDbContextFactory, ConfigurationDbContextFactory>();
+            services.AddSingleton<IPersistedGrantDbContextFactory, PersistedGrantDbContextFactory>();
 
             return services;
         }

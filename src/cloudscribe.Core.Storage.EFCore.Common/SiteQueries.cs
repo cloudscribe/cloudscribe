@@ -16,7 +16,7 @@ using System.Threading.Tasks;
 
 namespace cloudscribe.Core.Storage.EFCore.Common
 {
-    public class SiteQueries : ISiteQueries
+    public class SiteQueries : ISiteQueries, ISiteQueriesSingleton
     {
         public SiteQueries(ICoreDbContextFactory coreDbContextFactory)
         {

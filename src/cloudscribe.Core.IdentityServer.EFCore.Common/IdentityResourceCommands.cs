@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0
 // Author:					Joe Audette
 // Created:					2016-10-16
-// Last Modified:			2016-10-21
+// Last Modified:			2018-10-08
 // 
 
 using cloudscribe.Core.IdentityServer.EFCore.Interfaces;
@@ -10,32 +10,35 @@ using cloudscribe.Core.IdentityServer.EFCore.Mappers;
 using cloudscribe.Core.IdentityServerIntegration.Storage;
 using IdentityServer4.Models;
 using Microsoft.EntityFrameworkCore;
-using System;
 using System.Threading;
 using System.Threading.Tasks;
 
 namespace cloudscribe.Core.IdentityServer.EFCore
 {
-    public class IdentityResourceCommands : IIdentityResourceCommands
+    public class IdentityResourceCommands : IIdentityResourceCommands, IIdentityResourceCommandsSingleton
     {
         public IdentityResourceCommands(
-            IConfigurationDbContext context
+            IConfigurationDbContextFactory contextFactory
             )
         {
-            if (context == null) throw new ArgumentNullException(nameof(context));
-            this.context = context;
+            _contextFactory = contextFactory;
 
         }
 
-        private readonly IConfigurationDbContext context;
+        private readonly IConfigurationDbContextFactory _contextFactory;
 
 
         public async Task CreateIdentityResource(string siteId, IdentityResource identityResource, CancellationToken cancellationToken = default(CancellationToken))
         {
             var ent = identityResource.ToEntity();
             ent.SiteId = siteId;
-            context.IdentityResources.Add(ent);
-            await context.SaveChangesAsync();
+
+            using (var context = _contextFactory.CreateContext())
+            {
+                context.IdentityResources.Add(ent);
+                await context.SaveChangesAsync();
+            }
+    
         }
 
         public async Task UpdateIdentityResource(string siteId, IdentityResource identityResource, CancellationToken cancellationToken = default(CancellationToken))
@@ -52,12 +55,17 @@ namespace cloudscribe.Core.IdentityServer.EFCore
 
         public async Task DeleteIdentityResource(string siteId, string name, CancellationToken cancellationToken = default(CancellationToken))
         {
-            var resource = await context.IdentityResources.FirstOrDefaultAsync(x => x.SiteId == siteId && x.Name == name);
-            if (resource != null)
+
+            using (var context = _contextFactory.CreateContext())
             {
-                context.IdentityResources.Remove(resource);
-                await context.SaveChangesAsync();
+                var resource = await context.IdentityResources.FirstOrDefaultAsync(x => x.SiteId == siteId && x.Name == name);
+                if (resource != null)
+                {
+                    context.IdentityResources.Remove(resource);
+                    await context.SaveChangesAsync();
+                }
             }
+            
         }
     }
 }

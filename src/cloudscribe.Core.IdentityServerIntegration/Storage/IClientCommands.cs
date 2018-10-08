@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0
 // Author:					Joe Audette
 // Created:					2016-10-13
-// Last Modified:			2016-10-17
+// Last Modified:			2018-10-08
 // 
 
 using IdentityServer4.Models;
@@ -11,6 +11,11 @@ using System.Threading.Tasks;
 
 namespace cloudscribe.Core.IdentityServerIntegration.Storage
 {
+    public interface IClientCommandsSingleton : IClientCommands
+    {
+
+    }
+
     public interface IClientCommands
     {
         Task CreateClient(string siteId, Client client, CancellationToken cancellationToken = default(CancellationToken));

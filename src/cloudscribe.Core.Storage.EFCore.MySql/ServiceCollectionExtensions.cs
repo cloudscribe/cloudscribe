@@ -38,11 +38,14 @@ namespace Microsoft.Extensions.DependencyInjection
                         }
 
 
-                    }));
+                    }),
+                    optionsLifetime: ServiceLifetime.Singleton
+                    );
 
             services.AddScoped<ICoreDbContext, CoreDbContext>(); 
             services.AddScoped<IDataPlatformInfo, DataPlatformInfo>();
-            services.AddTransient<ICoreDbContextFactory, CoreDbContextFactory>();
+
+            services.AddSingleton<ICoreDbContextFactory, CoreDbContextFactory>();
 
             return services;
         }

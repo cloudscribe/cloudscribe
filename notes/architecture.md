@@ -1,4 +1,6 @@
 
+http://blog.ploeh.dk/2018/09/17/typing-is-not-a-programming-bottleneck/
+
 
 Utilize Server Sent Events (SSE) In ASP.NET Core
 http://www.binaryintellect.net/articles/1b6d874a-3535-4af2-8e74-de9019d5607d.aspx

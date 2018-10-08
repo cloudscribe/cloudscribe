@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0
 // Author:					Joe Audette
 // Created:					2016-10-13
-// Last Modified:			2017-12-28
+// Last Modified:			2018-10-08
 // 
 
 using cloudscribe.Pagination.Models;
@@ -12,6 +12,10 @@ using System.Threading.Tasks;
 
 namespace cloudscribe.Core.IdentityServerIntegration.Storage
 {
+    public interface IClientQueriesSingleton : IClientQueries
+    {
+
+    }
     public interface IClientQueries
     {
         Task<bool> ClientExists(string siteId, string clientId, CancellationToken cancellationToken = default(CancellationToken));

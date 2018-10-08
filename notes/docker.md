@@ -23,3 +23,11 @@ https://jvns.ca/blog/2017/10/05/reasons-kubernetes-is-cool/
 https://www.hanselman.com/blog/SettingUpAManagedContainerClusterWithAKSAndKubernetesInTheAzureCloudRunningNETCoreInMinutes.aspx
 
 https://docs.microsoft.com/en-us/azure/aks/kubernetes-walkthrough
+
+## Docker and windows sub system for linux
+
+https://nickjanetakis.com/blog/using-wsl-and-mobaxterm-to-create-a-linux-dev-environment-on-windows
+
+https://nickjanetakis.com/blog/should-you-use-the-docker-toolbox-or-docker-for-mac-windows
+
+https://nickjanetakis.com/blog/setting-up-docker-for-windows-and-wsl-to-work-flawlessly

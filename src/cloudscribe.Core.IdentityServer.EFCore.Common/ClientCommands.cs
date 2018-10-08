@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2016-10-19
-// Last Modified:			2016-10-21
+// Last Modified:			2018-10-08
 // 
 
 using cloudscribe.Core.IdentityServer.EFCore.Interfaces;
@@ -10,32 +10,36 @@ using cloudscribe.Core.IdentityServer.EFCore.Mappers;
 using cloudscribe.Core.IdentityServerIntegration.Storage;
 using IdentityServer4.Models;
 using Microsoft.EntityFrameworkCore;
-using System;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
 namespace cloudscribe.Core.IdentityServer.EFCore
 {
-    public class ClientCommands : IClientCommands
+    public class ClientCommands : IClientCommands, IClientCommandsSingleton
     {
         public ClientCommands(
-            IConfigurationDbContext context
+            IConfigurationDbContextFactory contextFactory
             )
         {
-            if (context == null) throw new ArgumentNullException(nameof(context));
-            this.context = context;
+            _contextFactory = contextFactory;
         }
 
-        private readonly IConfigurationDbContext context;
+        private readonly IConfigurationDbContextFactory _contextFactory;
 
         public async Task CreateClient(string siteId, Client client, CancellationToken cancellationToken = default(CancellationToken))
         {
             cancellationToken.ThrowIfCancellationRequested();
             var ent = client.ToEntity();
             ent.SiteId = siteId;
-            context.Clients.Add(ent);
-            await context.SaveChangesAsync().ConfigureAwait(false);
+
+            using (var context = _contextFactory.CreateContext())
+            {
+                context.Clients.Add(ent);
+                await context.SaveChangesAsync().ConfigureAwait(false);
+            }
+
+                
         }
 
         public async Task UpdateClient(string siteId, Client client, CancellationToken cancellationToken = default(CancellationToken))
@@ -56,7 +60,10 @@ namespace cloudscribe.Core.IdentityServer.EFCore
         public async Task DeleteClient(string siteId, string clientId, CancellationToken cancellationToken = default(CancellationToken))
         {
             cancellationToken.ThrowIfCancellationRequested();
-            var client = context.Clients
+
+            using (var context = _contextFactory.CreateContext())
+            {
+                var client = context.Clients
                 .Include(x => x.AllowedGrantTypes)
                 .Include(x => x.RedirectUris)
                 .Include(x => x.PostLogoutRedirectUris)
@@ -67,8 +74,11 @@ namespace cloudscribe.Core.IdentityServer.EFCore
                 .Include(x => x.AllowedCorsOrigins)
                 .FirstOrDefault(x => x.SiteId == siteId && x.ClientId == clientId);
 
-            context.Clients.Remove(client);
-            await context.SaveChangesAsync().ConfigureAwait(false);
+                context.Clients.Remove(client);
+                await context.SaveChangesAsync().ConfigureAwait(false);
+            }
+
+            
         }
 
     }

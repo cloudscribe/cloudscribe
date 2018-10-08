@@ -28,8 +28,8 @@ namespace cloudscribe.Core.Storage.EFCore.MSSQL
         {
             base.OnModelCreating(modelBuilder);
 
-            ICoreTableNames tableNames = new CoreTableNames();
-           
+            var tableNames = new CoreTableNames();
+
 
             modelBuilder.Entity<SiteSettings>(entity =>
             {
