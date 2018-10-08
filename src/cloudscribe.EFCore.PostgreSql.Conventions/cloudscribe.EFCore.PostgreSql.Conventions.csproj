@@ -3,10 +3,14 @@
   <PropertyGroup>
     <Description>PostgreSql Entity Framework Core conventions for snake case object names</Description>
     <Authors>Joe Audette</Authors>
+    <VersionPrefix>1.0.0</VersionPrefix>
     <TargetFramework>netstandard2.0</TargetFramework>
     <PackageIconUrl>https://raw.githubusercontent.com/joeaudette/cloudscribe/master/cloudscribe-icon-32.png</PackageIconUrl>
     <PackageProjectUrl>https://github.com/joeaudette/cloudscribe</PackageProjectUrl>
     <PackageLicenseUrl>http://www.apache.org/licenses/LICENSE-2.0</PackageLicenseUrl>
+
+    <RepositoryUrl>https://github.com/cloudscribe/cloudscribe.git</RepositoryUrl>
+    <RepositoryType>git</RepositoryType>
   </PropertyGroup>
 
   <ItemGroup>

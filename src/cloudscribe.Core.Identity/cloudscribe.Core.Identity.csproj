@@ -2,16 +2,17 @@
 
   <PropertyGroup>
     <Description>asp.net identity implementation for cloudscribe web application foundation</Description>
-    <VersionPrefix>3.0.6</VersionPrefix>
-    <AssemblyVersion>3.0.6</AssemblyVersion>
+    <VersionPrefix>3.0.7</VersionPrefix>
+    <AssemblyVersion>3.0.7</AssemblyVersion>
     <Authors>Joe Audette</Authors>
     <TargetFrameworks>netstandard2.0</TargetFrameworks>
-    <AssemblyName>cloudscribe.Core.Identity</AssemblyName>
-    <PackageId>cloudscribe.Core.Identity</PackageId>
+    
     <PackageTags>cloudscribe;identity</PackageTags>
     <PackageIconUrl>https://raw.githubusercontent.com/joeaudette/cloudscribe/master/cloudscribe-icon-32.png</PackageIconUrl>
     <PackageProjectUrl>https://github.com/joeaudette/cloudscribe</PackageProjectUrl>
     <PackageLicenseUrl>http://www.apache.org/licenses/LICENSE-2.0</PackageLicenseUrl>
+    <RepositoryUrl>https://github.com/cloudscribe/cloudscribe.git</RepositoryUrl>
+    <RepositoryType>git</RepositoryType>
     
   </PropertyGroup>
 
