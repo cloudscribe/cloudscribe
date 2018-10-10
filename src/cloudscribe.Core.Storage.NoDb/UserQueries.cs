@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:                  Joe Audette
 // Created:                 2016-04-26
-// Last Modified:           2018-08-19
+// Last Modified:           2018-10-10
 // 
 
 using cloudscribe.Core.Models;
@@ -17,7 +17,7 @@ using System.Threading.Tasks;
 
 namespace cloudscribe.Core.Storage.NoDb
 {
-    public class UserQueries : IUserQueries
+    public class UserQueries : IUserQueries, IUserQueriesSingleton
     {
         public UserQueries(
             //IProjectResolver projectResolver,

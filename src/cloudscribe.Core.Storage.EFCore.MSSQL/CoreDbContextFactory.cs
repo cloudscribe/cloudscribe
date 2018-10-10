@@ -10,7 +10,7 @@ namespace cloudscribe.Core.Storage.EFCore.MSSQL
             _options = options;
         }
 
-        private DbContextOptions<CoreDbContext> _options;
+        private readonly DbContextOptions<CoreDbContext> _options;
 
         public ICoreDbContext CreateContext()
         {

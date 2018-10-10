@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:                  Joe Audette
 // Created:                 2016-05-14
-// Last Modified:           2017-12-28
+// Last Modified:           2018-10-10
 // 
 
 using cloudscribe.Core.Models.Geography;
@@ -16,7 +16,7 @@ using System.Threading.Tasks;
 
 namespace cloudscribe.Core.Storage.NoDb
 {
-    public class GeoQueries : IGeoQueries
+    public class GeoQueries : IGeoQueries, IGeoQueriesSingleton
     {
         public GeoQueries(
             IBasicQueries<GeoCountry> countryQueries,
