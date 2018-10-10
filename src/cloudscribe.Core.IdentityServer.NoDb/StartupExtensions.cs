@@ -19,11 +19,12 @@ namespace Microsoft.Extensions.DependencyInjection
     public static class StartupExtensions
     {
         public static IIdentityServerBuilder AddCloudscribeCoreNoDbIdentityServerStorage(
-            this IIdentityServerBuilder builder
+            this IIdentityServerBuilder builder,
+            bool useSingletons = false
             )
         {
-            builder.AddConfigurationStore();
-            builder.AddOperationalStore();
+            builder.AddConfigurationStore(useSingletons);
+            builder.AddOperationalStore(useSingletons);
 
             builder.Services.AddScoped<IStorageInfo, StorageInfo>();
 
@@ -31,13 +32,26 @@ namespace Microsoft.Extensions.DependencyInjection
         }
 
         public static IIdentityServerBuilder AddConfigurationStore(
-            this IIdentityServerBuilder builder)
+            this IIdentityServerBuilder builder,
+            bool useSingletons = false
+            )
         {
+            if(useSingletons)
+            {
+                builder.Services.AddNoDbSingleton<Client>();
+                builder.Services.AddNoDbSingleton<ClientClaim>();
+                builder.Services.AddNoDbSingleton<ApiResource>();
+                builder.Services.AddNoDbSingleton<IdentityResource>();
+            }
+            else
+            {
+                builder.Services.AddNoDb<Client>();
+                builder.Services.AddNoDb<ClientClaim>();
+                builder.Services.AddNoDb<ApiResource>();
+                builder.Services.AddNoDb<IdentityResource>();
+            }
 
-            builder.Services.AddNoDb<Client>();
-            builder.Services.AddNoDb<ClientClaim>();
-            builder.Services.AddNoDb<ApiResource>();
-            builder.Services.AddNoDb<IdentityResource>();
+           
 
             builder.Services.AddTransient<IClientStore, ClientStore>();
             builder.Services.AddTransient<IResourceStore, ResourceStore>();
@@ -56,7 +70,9 @@ namespace Microsoft.Extensions.DependencyInjection
         }
 
         public static IIdentityServerBuilder AddConfigurationStoreCache(
-            this IIdentityServerBuilder builder)
+            this IIdentityServerBuilder builder
+           
+            )
         {
             builder.Services.AddMemoryCache(); // TODO: remove once update idsvr since it does this
             builder.AddInMemoryCaching();
@@ -74,10 +90,19 @@ namespace Microsoft.Extensions.DependencyInjection
         }
 
         public static IIdentityServerBuilder AddOperationalStore(
-            this IIdentityServerBuilder builder)
+            this IIdentityServerBuilder builder,
+             bool useSingletons = false
+            )
         {
-
-            builder.Services.AddNoDb<GrantItem>();
+            if(useSingletons)
+            {
+                builder.Services.AddNoDbSingleton<GrantItem>();
+            }
+            else
+            {
+                builder.Services.AddNoDb<GrantItem>();
+            }
+            
             builder.Services.AddTransient<IPersistedGrantStore, PersistedGrantStore>();
 
             return builder;

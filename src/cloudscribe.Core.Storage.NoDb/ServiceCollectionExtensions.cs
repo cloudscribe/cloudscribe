@@ -15,39 +15,72 @@ namespace Microsoft.Extensions.DependencyInjection
     public static class ServiceCollectionExtensions
     {
         public static IServiceCollection AddCloudscribeCoreNoDbStorage(
-            this IServiceCollection services
+            this IServiceCollection services,
+            bool useSingletons = false
             )
         {
+            if(useSingletons)
+            {
+                //graphql likes singletons so these are alternate singleton versions
+                // the services can work as any lifetime
 
-            services.AddScoped<IBasicQueries<SiteSettings>, CrossProjectQueries<SiteSettings>>();
-            services.AddScoped<IBasicQueries<SiteHost>, CrossProjectQueries<SiteHost>>();
+                services.AddSingleton<IBasicQueries<SiteSettings>, CrossProjectQueries<SiteSettings>>();
+                services.AddSingleton<IBasicQueries<SiteHost>, CrossProjectQueries<SiteHost>>();
 
-            services.AddNoDb<SiteSettings>();
-            services.AddNoDb<SiteHost>();
+                services.AddNoDbSingleton<SiteSettings>();
+                services.AddNoDbSingleton<SiteHost>();
 
-            services.AddNoDb<SiteUser>();
-            services.AddNoDb<SiteRole>();
-            services.AddNoDb<UserRole>();
-            services.AddNoDb<UserClaim>();
-            services.AddNoDb<UserLogin>();
-            services.AddNoDb<UserLocation>();
-            services.AddNoDb<UserToken>();
+                services.AddNoDbSingleton<SiteUser>();
+                services.AddNoDbSingleton<SiteRole>();
+                services.AddNoDbSingleton<UserRole>();
+                services.AddNoDbSingleton<UserClaim>();
+                services.AddNoDbSingleton<UserLogin>();
+                services.AddNoDbSingleton<UserLocation>();
+                services.AddNoDbSingleton<UserToken>();
 
-            services.AddNoDb<GeoCountry>();
-            services.AddNoDb<GeoZone>();
-            
+                services.AddNoDbSingleton<GeoCountry>();
+                services.AddNoDbSingleton<GeoZone>();
+                
+                services.AddSingleton<ISiteCommands, SiteCommands>();
+                services.AddSingleton<ISiteQueries, SiteQueries>();
+
+                services.AddSingleton<IUserCommands, UserCommands>();
+                services.AddSingleton<IUserQueries, UserQueries>();
+
+                services.AddSingleton<IGeoCommands, GeoCommands>();
+                services.AddSingleton<IGeoQueries, GeoQueries>();
+            }
+            else
+            {
+                services.AddScoped<IBasicQueries<SiteSettings>, CrossProjectQueries<SiteSettings>>();
+                services.AddScoped<IBasicQueries<SiteHost>, CrossProjectQueries<SiteHost>>();
+
+                services.AddNoDb<SiteSettings>();
+                services.AddNoDb<SiteHost>();
+
+                services.AddNoDb<SiteUser>();
+                services.AddNoDb<SiteRole>();
+                services.AddNoDb<UserRole>();
+                services.AddNoDb<UserClaim>();
+                services.AddNoDb<UserLogin>();
+                services.AddNoDb<UserLocation>();
+                services.AddNoDb<UserToken>();
+
+                services.AddNoDb<GeoCountry>();
+                services.AddNoDb<GeoZone>();
+                
+                services.AddScoped<ISiteCommands, SiteCommands>();
+                services.AddScoped<ISiteQueries, SiteQueries>();
+
+                services.AddScoped<IUserCommands, UserCommands>();
+                services.AddScoped<IUserQueries, UserQueries>();
+
+                services.AddScoped<IGeoCommands, GeoCommands>();
+                services.AddScoped<IGeoQueries, GeoQueries>();
+            }
+
             services.AddScoped<IDataPlatformInfo, DataPlatformInfo>();
             
-            //services.AddScoped<IProjectResolver, DefaultProjectResolver>();
-            services.AddScoped<ISiteCommands, SiteCommands>();
-            services.AddScoped<ISiteQueries, SiteQueries>();
-
-            services.AddScoped<IUserCommands, UserCommands>();
-            services.AddScoped<IUserQueries, UserQueries>();
-
-            services.AddScoped<IGeoCommands, GeoCommands>();
-            services.AddScoped<IGeoQueries, GeoQueries>();
-
             return services;
         }
     }
