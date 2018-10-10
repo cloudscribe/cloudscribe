@@ -54,7 +54,7 @@ namespace Microsoft.Extensions.DependencyInjection
                             
                             break;
 
-                        case "pgsql":
+                        case "pgsql-old":
                             var pgConnection = config.GetConnectionString("PostgreSqlEntityFrameworkConnectionString");
                             
                             services.AddIdentityServerConfiguredForCloudscribe()
@@ -65,7 +65,7 @@ namespace Microsoft.Extensions.DependencyInjection
                             
                             break;
 
-                        case "pgsql-snake":
+                        case "pgsql":
                             var pgsConnection = config.GetConnectionString("PostgreSqlConnectionString");
 
                             services.AddIdentityServerConfiguredForCloudscribe()
