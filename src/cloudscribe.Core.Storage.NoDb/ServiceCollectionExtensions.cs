@@ -41,14 +41,14 @@ namespace Microsoft.Extensions.DependencyInjection
                 services.AddNoDbSingleton<GeoCountry>();
                 services.AddNoDbSingleton<GeoZone>();
                 
-                services.AddSingleton<ISiteCommands, SiteCommands>();
-                services.AddSingleton<ISiteQueries, SiteQueries>();
+                services.AddSingleton<ISiteCommandsSingleton, SiteCommands>();
+                services.AddSingleton<ISiteQueriesSingleton, SiteQueries>();
 
-                services.AddSingleton<IUserCommands, UserCommands>();
-                services.AddSingleton<IUserQueries, UserQueries>();
+                services.AddSingleton<IUserCommandsSingleton, UserCommands>();
+                services.AddSingleton<IUserQueriesSingleton, UserQueries>();
 
-                services.AddSingleton<IGeoCommands, GeoCommands>();
-                services.AddSingleton<IGeoQueries, GeoQueries>();
+                services.AddSingleton<IGeoCommandsSingleton, GeoCommands>();
+                services.AddSingleton<IGeoQueriesSingleton, GeoQueries>();
             }
             else
             {
@@ -69,15 +69,17 @@ namespace Microsoft.Extensions.DependencyInjection
                 services.AddNoDb<GeoCountry>();
                 services.AddNoDb<GeoZone>();
                 
-                services.AddScoped<ISiteCommands, SiteCommands>();
-                services.AddScoped<ISiteQueries, SiteQueries>();
-
-                services.AddScoped<IUserCommands, UserCommands>();
-                services.AddScoped<IUserQueries, UserQueries>();
-
-                services.AddScoped<IGeoCommands, GeoCommands>();
-                services.AddScoped<IGeoQueries, GeoQueries>();
+                
             }
+
+            services.AddScoped<ISiteCommands, SiteCommands>();
+            services.AddScoped<ISiteQueries, SiteQueries>();
+
+            services.AddScoped<IUserCommands, UserCommands>();
+            services.AddScoped<IUserQueries, UserQueries>();
+
+            services.AddScoped<IGeoCommands, GeoCommands>();
+            services.AddScoped<IGeoQueries, GeoQueries>();
 
             services.AddScoped<IDataPlatformInfo, DataPlatformInfo>();
             
