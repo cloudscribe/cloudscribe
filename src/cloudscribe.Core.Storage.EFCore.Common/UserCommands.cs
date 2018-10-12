@@ -115,12 +115,11 @@ namespace cloudscribe.Core.Storage.EFCore.Common
 
                 if (itemToRemove != null)
                 {
-                    await DeleteLoginsByUser(itemToRemove.SiteId, itemToRemove.Id, false);
-                    await DeleteClaimsByUser(itemToRemove.SiteId, itemToRemove.Id, false);
-                    await DeleteUserRoles(siteId, itemToRemove.Id, false);
-                    await DeleteTokensByUser(itemToRemove.SiteId, itemToRemove.Id, false);
-
-
+                    DeleteLoginsByUser(itemToRemove.SiteId, itemToRemove.Id, dbContext);
+                    DeleteClaimsByUser(itemToRemove.SiteId, itemToRemove.Id, dbContext);
+                    DeleteUserRoles(siteId, itemToRemove.Id, dbContext);
+                    DeleteTokensByUser(itemToRemove.SiteId, itemToRemove.Id, dbContext);
+                    
                     dbContext.Users.Remove(itemToRemove);
                     int rowsAffected = await dbContext.SaveChangesAsync(cancellationToken)
                         .ConfigureAwait(false);
@@ -416,34 +415,52 @@ namespace cloudscribe.Core.Storage.EFCore.Common
             CancellationToken cancellationToken = default(CancellationToken))
         {
             cancellationToken.ThrowIfCancellationRequested();
-            await DeleteUserRoles(siteId, userId, true, cancellationToken).ConfigureAwait(false) ;
+            using (var db = _contextFactory.CreateContext())
+            {
+                DeleteUserRoles(siteId, userId, db);
+                await db.SaveChangesAsync().ConfigureAwait(false);
+            }
+                
         }
 
-        private async Task DeleteUserRoles(
+        private void DeleteUserRoles(
             Guid siteId,
             Guid userId,
-            bool saveChanges,
-            CancellationToken cancellationToken = default(CancellationToken))
+            ICoreDbContext dbContext)
         {
-            cancellationToken.ThrowIfCancellationRequested();
+            var query = from x in dbContext.UserRoles
+                        where x.UserId == userId
+                        select x;
 
-            using (var dbContext = _contextFactory.CreateContext())
-            {
-                var query = from x in dbContext.UserRoles
-                            where x.UserId == userId
-                            select x;
-
-                dbContext.UserRoles.RemoveRange(query);
-                if (saveChanges)
-                {
-                    int rowsAffected = await dbContext.SaveChangesAsync(cancellationToken)
-                        .ConfigureAwait(false);
-
-
-                }
-            }
-            
+            dbContext.UserRoles.RemoveRange(query);
+               
         }
+
+        //private async Task DeleteUserRoles(
+        //    Guid siteId,
+        //    Guid userId,
+        //    bool saveChanges,
+        //    CancellationToken cancellationToken = default(CancellationToken))
+        //{
+        //    cancellationToken.ThrowIfCancellationRequested();
+
+        //    using (var dbContext = _contextFactory.CreateContext())
+        //    {
+        //        var query = from x in dbContext.UserRoles
+        //                    where x.UserId == userId
+        //                    select x;
+
+        //        dbContext.UserRoles.RemoveRange(query);
+        //        if (saveChanges)
+        //        {
+        //            int rowsAffected = await dbContext.SaveChangesAsync(cancellationToken)
+        //                .ConfigureAwait(false);
+
+
+        //        }
+        //    }
+
+        //}
 
         public async Task DeleteUserRolesByRole(
             Guid siteId,
@@ -561,36 +578,29 @@ namespace cloudscribe.Core.Storage.EFCore.Common
             CancellationToken cancellationToken = default(CancellationToken))
         {
             cancellationToken.ThrowIfCancellationRequested();
-            await DeleteClaimsByUser(siteId, userId, true, cancellationToken);
-
-        }
-
-        private async Task DeleteClaimsByUser(
-            Guid siteId,
-            Guid userId,
-            bool saveChanges,
-            CancellationToken cancellationToken = default(CancellationToken))
-        {
-            cancellationToken.ThrowIfCancellationRequested();
-
-            using (var dbContext = _contextFactory.CreateContext())
+            using (var db = _contextFactory.CreateContext())
             {
-                var query = from x in dbContext.UserClaims
-                            where (
-                            (siteId == Guid.Empty || x.SiteId == siteId)
-                            && x.UserId == userId
-                            )
-                            select x;
-
-                dbContext.UserClaims.RemoveRange(query);
-                if (saveChanges)
-                {
-                    int rowsAffected = await dbContext.SaveChangesAsync(cancellationToken)
-                        .ConfigureAwait(false);
-
-                }
+                DeleteClaimsByUser(siteId, userId, db);
+                await db.SaveChangesAsync().ConfigureAwait(false);
             }
             
+        }
+
+        private void DeleteClaimsByUser(
+            Guid siteId,
+            Guid userId,
+            ICoreDbContext dbContext)
+        {
+            
+            var query = from x in dbContext.UserClaims
+                        where (
+                        (siteId == Guid.Empty || x.SiteId == siteId)
+                        && x.UserId == userId
+                        )
+                        select x;
+
+            dbContext.UserClaims.RemoveRange(query);
+               
         }
 
         public async Task DeleteClaimByUser(
@@ -696,36 +706,29 @@ namespace cloudscribe.Core.Storage.EFCore.Common
             CancellationToken cancellationToken = default(CancellationToken))
         {
             cancellationToken.ThrowIfCancellationRequested();
-            await DeleteLoginsByUser(siteId, userId, true, cancellationToken);
-
-        }
-
-        private async Task DeleteLoginsByUser(
-            Guid siteId,
-            Guid userId,
-            bool saveChanges,
-            CancellationToken cancellationToken = default(CancellationToken))
-        {
-            cancellationToken.ThrowIfCancellationRequested();
-
-            using (var dbContext = _contextFactory.CreateContext())
+            using (var db = _contextFactory.CreateContext())
             {
-                var query = from l in dbContext.UserLogins
-                            where (
-                            l.SiteId == siteId
-                            && l.UserId == userId
-                            )
-                            select l;
-
-                dbContext.UserLogins.RemoveRange(query);
-                if (saveChanges)
-                {
-                    int rowsAffected = await dbContext.SaveChangesAsync(cancellationToken)
-                        .ConfigureAwait(false);
-
-                }
+                DeleteLoginsByUser(siteId, userId, db);
+                await db.SaveChangesAsync().ConfigureAwait(false);
             }
             
+        }
+
+        private void DeleteLoginsByUser(
+            Guid siteId,
+            Guid userId,
+            ICoreDbContext dbContext)
+        {
+            
+            var query = from l in dbContext.UserLogins
+                        where (
+                        l.SiteId == siteId
+                        && l.UserId == userId
+                        )
+                        select l;
+
+            dbContext.UserLogins.RemoveRange(query);
+                
         }
 
         public async Task DeleteLoginsBySite(
@@ -858,35 +861,30 @@ namespace cloudscribe.Core.Storage.EFCore.Common
             CancellationToken cancellationToken = default(CancellationToken))
         {
             cancellationToken.ThrowIfCancellationRequested();
-            await DeleteTokensByUser(siteId, userId, true, cancellationToken);
 
+            using (var db = _contextFactory.CreateContext())
+            {
+                DeleteTokensByUser(siteId, userId, db);
+                await db.SaveChangesAsync().ConfigureAwait(false);
+            }
+            
         }
 
-        private async Task DeleteTokensByUser(
+        private void DeleteTokensByUser(
             Guid siteId,
             Guid userId,
-            bool saveChanges,
-            CancellationToken cancellationToken = default(CancellationToken))
+           ICoreDbContext dbContext)
         {
-            cancellationToken.ThrowIfCancellationRequested();
+            
+            var query = from l in dbContext.UserTokens
+                        where (
+                        l.SiteId == siteId
+                        && l.UserId == userId
+                        )
+                        select l;
 
-            using (var dbContext = _contextFactory.CreateContext())
-            {
-                var query = from l in dbContext.UserTokens
-                            where (
-                            l.SiteId == siteId
-                            && l.UserId == userId
-                            )
-                            select l;
-
-                dbContext.UserTokens.RemoveRange(query);
-                if (saveChanges)
-                {
-                    int rowsAffected = await dbContext.SaveChangesAsync(cancellationToken)
-                        .ConfigureAwait(false);
-
-                }
-            }
+            dbContext.UserTokens.RemoveRange(query);
+               
         }
 
         #endregion
