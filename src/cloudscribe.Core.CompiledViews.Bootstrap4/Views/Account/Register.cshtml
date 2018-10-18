@@ -33,7 +33,7 @@
     await Html.RenderPartialAsync("RegisterPreamblePartial", Model);
 }
 <form id="register-form" asp-controller="Account" asp-action="Register" asp-route-returnurl='@ViewData["ReturnUrl"]'
-      data-submit-once="true" >
+      data-submit-once="true">
     <input asp-for="UserId" type="hidden" />
     <h4>@sr["Create a new account."]</h4>
     <hr />
@@ -85,6 +85,8 @@
             <span asp-validation-for="ConfirmPassword" class="invalid-feedback"></span>
         </div>
     </div>
+    @{await Html.RenderPartialAsync("RegisterBottom", Model); }
+
     @if (!string.IsNullOrWhiteSpace(Model.RegistrationAgreement))
     {
         await Html.RenderPartialAsync("RegisterAgreementPartial", Model);
@@ -101,18 +103,18 @@
         </div>
     }
 
-        <div class="form-group">
-            @if (!string.IsNullOrWhiteSpace(Model.RecaptchaSiteKey) && Model.UseInvisibleCaptcha)
-            {
-                <button class="btn btn-primary g-recaptcha" data-sitekey="@Model.RecaptchaSiteKey" data-callback='onCaptchaSubmit' data-enabled-text='@sr["Register"]' data-disabled-text='@sr["Working..."]'>@sr["Register"]</button>
-            }
-            else
-            {
-                <button name="submit" type="submit" class="btn btn-primary" data-enabled-text='@sr["Register"]' data-disabled-text='@sr["Working..."]'>@sr["Register"]</button>
-            }
-            @Html.ValidationMessage("registrationError", new { @class = "text-danger" })
-            <input type="hidden" asp-for="UseEmailForLogin" />
-        </div>
+    <div class="form-group">
+        @if (!string.IsNullOrWhiteSpace(Model.RecaptchaSiteKey) && Model.UseInvisibleCaptcha)
+        {
+            <button class="btn btn-primary g-recaptcha" data-sitekey="@Model.RecaptchaSiteKey" data-callback='onCaptchaSubmit' data-enabled-text='@sr["Register"]' data-disabled-text='@sr["Working..."]'>@sr["Register"]</button>
+        }
+        else
+        {
+            <button name="submit" type="submit" class="btn btn-primary" data-enabled-text='@sr["Register"]' data-disabled-text='@sr["Working..."]'>@sr["Register"]</button>
+        }
+        @Html.ValidationMessage("registrationError", new { @class = "text-danger" })
+        <input type="hidden" asp-for="UseEmailForLogin" />
+    </div>
 </form>
 @{
     var LoginProviders = Model.ExternalAuthenticationList.ToList();
