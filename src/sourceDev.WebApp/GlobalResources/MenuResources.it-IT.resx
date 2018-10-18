@@ -246,4 +246,28 @@
   <data name="About" xml:space="preserve">
     <value>Info</value>
   </data>
+  <data name="Change Password" xml:space="preserve">
+    <value>Cambia password</value>
+  </data>
+  <data name="Personal Data" xml:space="preserve">
+    <value>Dati personali</value>
+  </data>
+  <data name="Two Factor Authentication" xml:space="preserve">
+    <value>Autenticazione a due fattori</value>
+  </data>
+  <data name="User Info" xml:space="preserve">
+    <value>Info utente</value>
+  </data>
+  <data name="Content History" xml:space="preserve">
+    <value>Cronologia contenuti</value>
+  </data>
+  <data name="Content Settings" xml:space="preserve">
+    <value>Impostazioni contenuti</value>
+  </data>
+  <data name="Page Management" xml:space="preserve">
+    <value>Gestione pagine</value>
+  </data>
+  <data name="Privacy Settings" xml:space="preserve">
+    <value>Impostazioni privacy</value>
+  </data>
 </root>
