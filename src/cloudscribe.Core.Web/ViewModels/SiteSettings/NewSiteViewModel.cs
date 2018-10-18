@@ -36,7 +36,7 @@ namespace cloudscribe.Core.Web.ViewModels.SiteSettings
         [Remote("AliasIdAvailable", "SiteAdmin", AdditionalFields = "SiteId",
            ErrorMessage = "AliasId not available, please try another value",
            HttpMethod = "Post")]
-        [RegularExpression(@"^[a-zA-Z0-9_-]+$", ErrorMessage = "only digits, numbers, - and _ allowed, no spaces allowed")]
+        [RegularExpression(@"^[a-zA-Z0-9_\-]+$", ErrorMessage = "only digits, numbers, - and _ allowed, no spaces allowed")]
         [StringLength(36, ErrorMessage = "AliasId has a maximum length of 36 characters")]
         public string AliasId { get; set; } = string.Empty;
 
@@ -48,14 +48,14 @@ namespace cloudscribe.Core.Web.ViewModels.SiteSettings
         [Remote("FolderNameAvailable", "SiteAdmin", AdditionalFields = "SiteId",
            ErrorMessage = "Requested Site Folder Name is not available, please try another value",
            HttpMethod = "Post")]
-        [RegularExpression(@"^[a-zA-Z0-9_-]+$", ErrorMessage = "For Site Folder Name, only digits, numbers, - and _ allowed, no spaces allowed")]
+        [RegularExpression(@"^[a-zA-Z0-9_\-]+$", ErrorMessage = "For Site Folder Name, only digits, numbers, - and _ allowed, no spaces allowed")]
         [StringLength(50, ErrorMessage = "Site Folder name has a maximum length of 50 characters")]
         public string SiteFolderName { get; set; } = string.Empty;
 
         [Remote("HostNameAvailable", "SiteAdmin", AdditionalFields = "SiteId",
            ErrorMessage = "Requested Host name is not available",
            HttpMethod = "Post")]
-        [RegularExpression(@"^[a-zA-Z0-9_-]+$", ErrorMessage = "For Host name, only digits, numbers, - and _ allowed, no spaces allowed")]
+        [RegularExpression(@"^[a-zA-Z0-9_\-.]+$", ErrorMessage = "For Host name, only digits, numbers, periods(.), - and _ allowed, no spaces allowed")]
         [StringLength(255, ErrorMessage = "Host name has a maximum length of 255 characters")]
         public string HostName { get; set; } = string.Empty;
         
