@@ -54,9 +54,9 @@ namespace cloudscribe.Core.Web.ViewModels.SiteSettings
         [StringLength(50, ErrorMessage = "Site Folder name has a maximum length of 50 characters")]
         public string SiteFolderName { get; set; } = string.Empty;
 
-        [Remote("HostNameAvailable", "SiteAdmin", AdditionalFields = "SiteId",
-           ErrorMessage = "Requested Host name is not available",
-           HttpMethod = "Post")]
+        //[Remote("HostNameAvailable", "SiteAdmin", AdditionalFields = "SiteId",
+        //   ErrorMessage = "Requested Host name is not available",
+        //   HttpMethod = "Post")]
         [RegularExpression(@"^(([a-zA-Z0-9]|[a-zA-Z0-9][a-zA-Z0-9\-]*[a-zA-Z0-9])\.)*([A-Za-z0-9]|[A-Za-z0-9][A-Za-z0-9\-]*[A-Za-z0-9])$", ErrorMessage = "Host name is not valid.")]
         [StringLength(255, ErrorMessage = "Host name has a maximum length of 255 characters")]
         public string HostName { get; set; } = string.Empty;
