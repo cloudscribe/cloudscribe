@@ -18,5 +18,8 @@
     "gulp-connect": "^5.5.0",
     "merge-stream": "^1.0.1",
     "exif-js": "2.3.0"
+
   }
+
+
 }
