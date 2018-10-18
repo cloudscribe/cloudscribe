@@ -1,4 +1,7 @@
 
+https://docs.microsoft.com/en-us/dotnet/standard/library-guidance/?WT.mc_id=-blog-scottha
+
+
 https://docs.microsoft.com/en-us/nuget/hosting-packages/local-feeds
 
 https://blog.nuget.org/20180827/Introducing-Source-Code-Link-for-NuGet-packages.html
