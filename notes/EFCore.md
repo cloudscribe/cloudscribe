@@ -1,4 +1,10 @@
 
+Xml
+https://stackoverflow.com/questions/12631290/xml-columns-in-a-code-first-application
+http://www.eidias.com/blog/2014/10/29/mapping-xml-column-with-xsd-schema-validation-in-ef-code-first
+https://stackoverflow.com/questions/25219515/does-entity-framework-6-1-support-an-xml-data-type-natively
+
+
 Spatial features
 https://blogs.msdn.microsoft.com/dotnet/2018/10/17/announcing-entity-framework-core-2-2-preview-3/
 
