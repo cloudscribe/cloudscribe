@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2014-10-26
-// Last Modified:			2018-08-20
+// Last Modified:			2018-10-24
 // 
 
 using cloudscribe.Core.Identity;
@@ -1126,6 +1126,7 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
             {
                 return RedirectToAction("ResetPasswordConfirmation", "Account");
             }
+            
             AddErrors(result.IdentityResult);
             return View();
         }
@@ -1262,7 +1263,15 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
         {
             foreach (var error in result.Errors)
             {
-                ModelState.AddModelError(string.Empty, error.Description);
+                if(error.Description == "Invalid token.")
+                {
+                    ModelState.AddModelError(string.Empty, StringLocalizer["The password reset token is invalid. Password reset tokens have a short lifespan for security reasons. You will need to use the forgot password link on the login page to get a new reset token sent to your email address."]);
+                }
+                else
+                {
+                    ModelState.AddModelError(string.Empty, error.Description);
+                }
+                
             }
         }
 
