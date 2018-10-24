@@ -1,7 +1,9 @@
 ﻿using cloudscribe.Core.Models;
 using cloudscribe.UserProperties.Models;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Configuration;
 using sourceDev.WebApp.Components;
+using System;
 
 namespace Microsoft.Extensions.DependencyInjection
 {
@@ -121,6 +123,11 @@ namespace Microsoft.Extensions.DependencyInjection
             services.AddCloudscribeCoreMvc(config);
 
             services.AddScoped<IGuardNeededRoles, DemoRoleGuard>();
+
+            // this was just for testing expired password reset token
+            //services.Configure<DataProtectionTokenProviderOptions>(options =>
+            //         options.TokenLifespan = TimeSpan.FromMinutes(3));
+
 
             return services;
         }

@@ -1,4 +1,12 @@
 
+## Create User with all permissions on a single db 
+1. In pgamin create the role/group with a password and allow login, optionally allow backup/replication if user will be used to automate that.
+2. Create the db and run CREATE EXTENSION "uuid-ossp"; and any other extensions you may need since only super user can do this 
+3. grant all privileges on database <dbname> to <username> ;
+
+the above makes a user with sufficient permissions to run migrations
+
+
 include all 3 of these in backup and restore operations:
 pre data = table structures, functions etc without constraints or indexes
 data = the data
@@ -53,3 +61,8 @@ DROP PROCEDURE IF EXISTS do_db_maintenance();
 could not open extension control file "C:/Program Files/PostgreSQL/9.6/share/extension/pointcloud.control": No such file or directory
 
 CREATE EXTENSION postgis;
+
+CREATE EXTENSION dblink;
+DROP EXTENSION dblink;
+
+https://www.google.com/search?q=postgresql+use+dblink
