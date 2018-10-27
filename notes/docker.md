@@ -24,6 +24,13 @@ https://www.hanselman.com/blog/SettingUpAManagedContainerClusterWithAKSAndKubern
 
 https://docs.microsoft.com/en-us/azure/aks/kubernetes-walkthrough
 
+
+
+docker run --rm -it -v ${pwd}:/data -p 8080:80 klokantech/openmaptiles-server
+
+docker run --rm -it -v ${pwd}:/data -P klokantech/openmaptiles-server
+
+
 ## Docker and windows sub system for linux
 
 https://nickjanetakis.com/blog/using-wsl-and-mobaxterm-to-create-a-linux-dev-environment-on-windows
@@ -31,3 +38,5 @@ https://nickjanetakis.com/blog/using-wsl-and-mobaxterm-to-create-a-linux-dev-env
 https://nickjanetakis.com/blog/should-you-use-the-docker-toolbox-or-docker-for-mac-windows
 
 https://nickjanetakis.com/blog/setting-up-docker-for-windows-and-wsl-to-work-flawlessly
+
+
