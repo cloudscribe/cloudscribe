@@ -104,7 +104,7 @@ https://epsg.io/transform
 https://mygeodata.cloud/cs2cs/
 
 
-## Open Stree Maps
+## Open Street Maps
 
 Why use OpenStreetMap instead of Google Maps ?
 https://www.openstreetmap.org/user/jbelien/diary/44356
@@ -114,6 +114,10 @@ https://switch2osm.org/
 https://blog.emacsen.net/blog/2018/02/16/osm-is-in-trouble/
 
 https://trackchanges.postlight.com/open-source-geo-is-really-something-right-now-f8e310c5f57a?gi=38bcde83fcf8#.wbks9g5ea
+
+## Powershell import osm data
+$env:Path = "C:\Program Files\PostgreSQL\9.6\bin";
+osm2pgrouting --f map.osm  --conf 'C:\Program Files\PostgreSQL\9.6\bin\mapconfig.xml' --dbname concord_gis --username postgres --password 'yourpassword' --clean
 
 
 What OpenStreetMap can be
@@ -131,6 +135,30 @@ https://www.bingmapsportal.com/Application
 https://stackoverflow.com/questions/5688745/google-maps-v3-draggable-marker
 
 https://developers.google.com/maps/documentation/javascript/get-api-key
+
+## Tools
+
+OpenJump http://www.openjump.org/ java 
+
+QGIS https://qgis.org/en/site/
+
+http://geoserver.org/
+
+https://mapserver.org/
+https://www.ms4w.com/
+
+The easiest way how to deploy world basemap
+powered by OpenStreetMap and Docker
+https://openmaptiles.com/server/
+
+https://wiki.osgeo.org/wiki/DockerImages
+
+https://github.com/geo-data/mapserver-docker
+
+
+## Learning
+
+http://www.postgis.us/
 
 
 
