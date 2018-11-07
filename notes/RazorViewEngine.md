@@ -3,6 +3,7 @@
 
 http://developer.telerik.com/topics/net/building-reusable-ui-components-in-asp-net-core/
 
+https://daveaglick.com/posts/the-bleeding-edge-of-razor
 
 http://www.jeffreyfritz.com/2015/05/where-did-my-asp-net-bundles-go-in-asp-net-5/
 

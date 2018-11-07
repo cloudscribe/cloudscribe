@@ -1,4 +1,9 @@
 
+
+https://webmasters.googleblog.com/2018/10/introducing-recaptcha-v3-new-way-to.html
+
+
+
 I implemented a controller extension method for validating the captcha server side.
 
 var captchaResponse = await this.ValidateRecaptcha(Request, recpatchaSecretKey);
