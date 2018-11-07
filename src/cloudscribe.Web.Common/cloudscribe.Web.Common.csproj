@@ -2,8 +2,8 @@
 
   <PropertyGroup>
     <Description>cloudscribe common helpers for web applications</Description>
-    <VersionPrefix>3.0.14</VersionPrefix>
-    <AssemblyVersion>3.0.14</AssemblyVersion>
+    <VersionPrefix>3.0.15</VersionPrefix>
+    <AssemblyVersion>3.0.15</AssemblyVersion>
     <Authors>Joe Audette</Authors>
     <TargetFrameworks>netstandard2.0</TargetFrameworks>
     
@@ -21,18 +21,18 @@
   </ItemGroup>-->
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.AspNetCore.Http" Version="2.1.0" />
-    <PackageReference Include="Microsoft.AspNetCore.Mvc" Version="2.1.0" />
-    <PackageReference Include="Microsoft.AspNetCore.StaticFiles" Version="2.1.0" />
-    <PackageReference Include="Microsoft.Extensions.Localization" Version="2.1.0" />
-    <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="2.1.0" />
-    <PackageReference Include="Microsoft.Extensions.FileProviders.Embedded" Version="2.1.0" />
-    <PackageReference Include="Microsoft.Extensions.Options" Version="2.1.0" />
-    <PackageReference Include="Microsoft.Extensions.Options.ConfigurationExtensions" Version="2.1.0" />
-    <PackageReference Include="Microsoft.Extensions.FileProviders.Physical" Version="2.1.0" />
+    <PackageReference Include="Microsoft.AspNetCore.Http" Version="2.1.1" />
+    <PackageReference Include="Microsoft.AspNetCore.Mvc" Version="2.1.3" />
+    <PackageReference Include="Microsoft.AspNetCore.StaticFiles" Version="2.1.1" />
+    <PackageReference Include="Microsoft.Extensions.Localization" Version="2.1.1" />
+    <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="2.1.1" />
+    <PackageReference Include="Microsoft.Extensions.FileProviders.Embedded" Version="2.1.1" />
+    <PackageReference Include="Microsoft.Extensions.Options" Version="2.1.1" />
+    <PackageReference Include="Microsoft.Extensions.Options.ConfigurationExtensions" Version="2.1.1" />
+    <PackageReference Include="Microsoft.Extensions.FileProviders.Physical" Version="2.1.1" />
     <PackageReference Include="System.Text.Encodings.Web" Version="4.5.0" />
-    <PackageReference Include="NodaTime" Version="2.2.*" />
-    <PackageReference Include="cloudscribe.HtmlAgilityPack" Version="1.0.*" />
+    <PackageReference Include="NodaTime" Version="2.4.2" />
+    <PackageReference Include="cloudscribe.HtmlAgilityPack" Version="1.0.1" />
   </ItemGroup>
 
  

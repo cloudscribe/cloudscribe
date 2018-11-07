@@ -51,6 +51,8 @@ http://stackoverflow.com/questions/20208388/integrating-angularjs-1-2-into-exist
 
 https://medium.freecodecamp.org/why-i-hate-your-single-page-app-f08bb4ff9134
 
+https://tinnedfruit.com/articles/create-your-own-dysfunctional-single-page-app.html
+
 
 
 

@@ -20,6 +20,18 @@ role name postgres
 PostgreSQL & PostGIS Cheatsheet
 https://gist.github.com/clhenrick/ebc8dc779fb6f5ee6a88
 
+https://www.npgsql.org/efcore/mapping/nts.html
+
+https://experimentalcraft.wordpress.com/2017/11/01/how-to-make-a-postgis-tiger-geocoder-in-less-than-5-days/
+
+https://postgis.net/docs/Loader_Generate_Nation_Script.html
+
+['WV', 'FL', 'IL', 'MN', 'MD', 'RI', 'ID', 'NH', 'NC', 'VT', 'CT', 'DE', 'NM', 'CA', 'NJ', 'WI', 'OR', 'NE', 'PA', 'WA', 'LA', 'GA', 'AL', 'UT', 'OH', 'TX', 'CO', 'SC', 'OK', 'TN', 'WY', 'HI', 'ND', 'KY', 'MP', 'GU', 'ME', 'NY', 'NV', 'AK', 'AS', 'MI', 'AR', 'MS', 'MO', 'MT', 'KS', 'IN', 'PR', 'SD', 'MA', 'VA', 'DC', 'IA', 'AZ', 'VI']
+
+SELECT Loader_Generate_Script(ARRAY['WV', 'FL', 'IL', 'MN', 'MD', 'RI', 'ID', 'NH', 'NC', 'VT', 'CT', 'DE', 'NM', 'CA', 'NJ', 'WI', 'OR', 'NE', 'PA', 'WA', 'LA', 'GA', 'AL', 'UT', 'OH', 'TX', 'CO', 'SC', 'OK', 'TN', 'WY', 'HI', 'ND', 'KY', 'MP', 'GU', 'ME', 'NY', 'NV', 'AK', 'AS', 'MI', 'AR', 'MS', 'MO', 'MT', 'KS', 'IN', 'PR', 'SD', 'MA', 'VA', 'DC', 'IA', 'AZ', 'VI'], 'sh');
+
+SELECT Loader_Generate_Script(ARRAY['NC', 'MA', 'DC'], 'sh');
+
 
 https://www.pg-versus-ms.com/
 
