@@ -39,8 +39,8 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
             IAccountService accountService,
             //ISmsSender smsSender,
             IStringLocalizer<CloudscribeCore> localizer,
-            ITimeZoneIdResolver timeZoneIdResolver,
-            ITimeZoneHelper timeZoneHelper,
+            cloudscribe.DateTimeUtils.ITimeZoneIdResolver timeZoneIdResolver,
+            cloudscribe.DateTimeUtils.ITimeZoneHelper timeZoneHelper,
             IHandleCustomUserInfo customUserInfo,
             ILogger<ManageController> logger,
             UrlEncoder urlEncoder
@@ -64,8 +64,8 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
         protected SiteUserManager<SiteUser> UserManager { get; private set; }
         protected SignInManager<SiteUser> SignInManager { get; private set; }
         protected IStringLocalizer StringLocalizer { get; private set; }
-        protected ITimeZoneIdResolver TimeZoneIdResolver { get; private set; }
-        protected ITimeZoneHelper TimeZoneHelper { get; private set; }
+        protected cloudscribe.DateTimeUtils.ITimeZoneIdResolver TimeZoneIdResolver { get; private set; }
+        protected cloudscribe.DateTimeUtils.ITimeZoneHelper TimeZoneHelper { get; private set; }
         protected IHandleCustomUserInfo CustomUserInfo { get; private set; }
         protected const string AuthenicatorUriFormat = "otpauth://totp/{0}:{1}?secret={2}&issuer={0}&digits=6";
         protected UrlEncoder UrlEncoder { get; private set; }

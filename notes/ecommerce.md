@@ -129,6 +129,8 @@ https://github.com/aspnet/WebHooks/tree/master/samples/StripeCoreReceiver
 https://stripe.com/docs/webhooks
 
 Webhook endpoints can only be configured from the dashboard unfortunately.
+UPDATE: now it is possible to create web hooks via the api 
+https://stackoverflow.com/questions/41820731/create-stripe-webhooks-using-api/41824203?noredirect=1#comment93351643_41824203
 
 Stripe can send webhook events that notify your application any time an event happens on your account. This is especially useful for events—like disputed charges and many recurring billing events—that are not triggered by a direct API request. This mechanism is also useful for services that are not directly responsible for making an API request, but still need to know the response from that request.
 

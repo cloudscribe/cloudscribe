@@ -61,6 +61,13 @@ namespace cloudscribe.Core.Models
 
         public string SiteFilesFolderName { get; set; } = "sitefiles";
 
+        //this is a new property, we set the default the same as SiteFilesFolderName in order to not break older sites
+        // that were using sitefiles as the root for both theme and user upload files.
+        //in newer project template we override this in appsettings to siteuploadfiles
+        // by separating uploads files from theme files which are part of the project
+        // it is more docker friendly, we can mount a volume in the container at /siteuploadfiles
+        public string SiteUploadFilesRootFolderName { get; set; } = "sitefiles"; 
+
         public string SiteThemesFolderName { get; set; } = "themes";
 
         public string SiteContentFolderName { get; set; } = "wwwroot";
