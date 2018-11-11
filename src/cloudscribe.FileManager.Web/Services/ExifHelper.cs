@@ -1,5 +1,4 @@
-﻿using cloudscribe.Web.Common.Gps;
-using SixLabors.ImageSharp;
+﻿using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.PixelFormats;
 using SixLabors.ImageSharp.Primitives;
 using System;
@@ -97,11 +96,13 @@ namespace cloudscribe.FileManager.Web.Services
             var dms = ExtractDmsLocation(exifInfo);
             if(dms != null)
             {
-                return dms.ToLocation();
+                return new Location(dms.Latitude.ToDouble(), dms.Longitude.ToDouble());
             }
 
             return null;
         }
+
+        
 
         private string ExtractRats(Rational[] rat)
         {
@@ -114,6 +115,121 @@ namespace cloudscribe.FileManager.Web.Services
             }
             return sb.ToString();
         }
+    
+       
+    }
+
+    public class Location
+    {
+        public Location(double latitude, double longitude)
+        {
+            Latitude = latitude;
+            Longitude = longitude;
+        }
+
+        public double Latitude { get; private set; }
+        public double Longitude { get; private set; }
+
+        public override string ToString()
+        {
+            return string.Format("{0:G17}, {1:G17}",
+                Latitude, Longitude);
+        }
+    }
+
+    public class DmsPoint
+    {
+        public DmsPoint(int degrees, int minutes, double seconds, PointType type)
+        {
+            Degrees = degrees;
+            Minutes = minutes;
+            Seconds = seconds;
+            Type = type;
+
+        }
+        public int Degrees { get; private set; }
+        public int Minutes { get; private set; }
+        public double Seconds { get; private set; }
+        public PointType Type { get; private set; }
+
+        public override string ToString()
+        {
+            return string.Format("{0} {1} {2:G17} {3}",
+                Math.Abs(Degrees),
+                Minutes,
+                Seconds,
+                Type == PointType.Lat
+                    ? Degrees < 0 ? "S" : "N"
+                    : Degrees < 0 ? "W" : "E");
+        }
+
+        //42;56;42.960000000000001
+        public static DmsPoint ParseFromGps(string gps, PointType type, string directionRef, char separator = ';')
+        {
+            if (!string.IsNullOrWhiteSpace(gps) && !string.IsNullOrWhiteSpace(directionRef))
+            {
+                var arr = gps.Split(separator);
+                if (arr.Length == 3)
+                {
+                    try
+                    {
+                        var degrees = Convert.ToInt32(arr[0].Trim());
+                        var minutes = Convert.ToInt32(arr[1].Trim());
+                        var seconds = Convert.ToDouble(arr[2].Trim());
+                        //var seconds = double.Parse(arr[2]);
+                        if (directionRef == "S" || directionRef == "W")
+                        {
+                            degrees = degrees * -1;
+                        }
+                        return new DmsPoint(degrees, minutes, seconds, type);
+
+                    }
+                    catch (FormatException) { }
+                    catch (OverflowException) { }
+                }
+            }
+
+            return null;
+        }
+
+    }
+    public class DmsLocation
+    {
+        public DmsLocation(DmsPoint latitude, DmsPoint longitude)
+        {
+            Latitude = latitude;
+            Longitude = longitude;
+        }
+        public DmsPoint Latitude { get; private set; }
+        public DmsPoint Longitude { get; private set; }
+
+        public override string ToString()
+        {
+            return string.Format("{0}, {1}",
+                Latitude.ToString(), Longitude.ToString());
+        }
+    }
+
+    public enum PointType
+    {
+        Lat,
+        Lon
+    }
+
+    public static class DmsExtensions
+    {
+        public static double ToDouble(this DmsPoint point)
+        {
+            if (point == null)
+            {
+                return default(double);
+            }
+            var result = (double)Math.Abs(point.Degrees) + (double)point.Minutes / (double)60 + (double)point.Seconds / (double)3600;
+            if (point.Degrees < 0) return result * (double)-1;
+            return result;
+        }
+
+        
     }
 
     public static class ExifTagNames

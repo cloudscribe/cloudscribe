@@ -40,8 +40,8 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
             ISiteMessageEmailSender emailSender,
             IOptions<UIOptions> uiOptionsAccessor,
             IStringLocalizer<CloudscribeCore> localizer,
-            ITimeZoneIdResolver timeZoneIdResolver,
-            ITimeZoneHelper timeZoneHelper,
+            cloudscribe.DateTimeUtils.ITimeZoneIdResolver timeZoneIdResolver,
+            cloudscribe.DateTimeUtils.ITimeZoneHelper timeZoneHelper,
             IHandleCustomUserInfoAdmin customUserEdit
             )
         {
@@ -60,8 +60,8 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
         private ISiteMessageEmailSender _emailSender;
         private UIOptions _uiOptions;
         private IStringLocalizer _sr; // string resources
-        private ITimeZoneIdResolver _timeZoneIdResolver;
-        private ITimeZoneHelper _tzHelper;
+        private cloudscribe.DateTimeUtils.ITimeZoneIdResolver _timeZoneIdResolver;
+        private cloudscribe.DateTimeUtils.ITimeZoneHelper _tzHelper;
         private IHandleCustomUserInfoAdmin _customUserInfo;
 
         [Authorize(Policy = PolicyConstants.UserManagementPolicy)]

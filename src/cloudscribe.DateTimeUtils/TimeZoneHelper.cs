@@ -15,9 +15,8 @@ using NodaTime.TimeZones;
 using System;
 using System.Collections.Generic;
 
-namespace cloudscribe.Web.Common
+namespace cloudscribe.DateTimeUtils
 {
-    [Obsolete("Please use the cloudscribe.DateTimeUtils version of this class")]
     public class TimeZoneHelper : ITimeZoneHelper
     {
         public TimeZoneHelper(

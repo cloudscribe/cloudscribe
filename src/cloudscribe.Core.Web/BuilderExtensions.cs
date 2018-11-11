@@ -140,7 +140,7 @@ namespace Microsoft.AspNetCore.Builder
                 if (folderExists)
                 {
                     var siteFilesPath = Path.Combine(Directory.GetCurrentDirectory(),
-                        multiTenantOptions.SiteFilesFolderName,
+                        multiTenantOptions.SiteUploadFilesRootFolderName,
                         tenant.AliasId,
                         multiTenantOptions.SiteContentFolderName);
 
@@ -171,7 +171,7 @@ namespace Microsoft.AspNetCore.Builder
         private static bool TryEnsureTenantWwwRoot(ISiteContext tenant, MultiTenantOptions options)
         {
           
-            var siteFilesPath = Path.Combine(Directory.GetCurrentDirectory(), options.SiteFilesFolderName);
+            var siteFilesPath = Path.Combine(Directory.GetCurrentDirectory(), options.SiteUploadFilesRootFolderName);
             if (!Directory.Exists(siteFilesPath))
             {
                 try

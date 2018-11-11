@@ -1,4 +1,7 @@
 
+https://miniprofiler.com/dotnet/AspDotNetCore
+https://www.nuget.org/packages/MiniProfiler.AspNetCore.Mvc/
+
 
 https://blogs.msdn.microsoft.com/dotnet/2018/08/02/tiered-compilation-preview-in-net-core-2-1/
 

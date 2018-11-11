@@ -21,7 +21,6 @@ using cloudscribe.Email.ElasticEmail;
 using cloudscribe.Email.Mailgun;
 using cloudscribe.Email.SendGrid;
 using cloudscribe.Email.Smtp;
-using cloudscribe.Web.Common;
 using cloudscribe.Web.Common.Components;
 using cloudscribe.Web.Common.Models;
 using cloudscribe.Web.Common.Razor;
@@ -102,7 +101,11 @@ namespace Microsoft.Extensions.DependencyInjection
             services.AddScoped<SiteDataProtector>();
 
             services.TryAddScoped<ICkeditorOptionsResolver, SiteCkeditorOptionsResolver>();
-            services.AddScoped<ITimeZoneIdResolver, RequestTimeZoneIdResolver>();
+            //TODO: remove in a future version
+            services.AddScoped<cloudscribe.Web.Common.ITimeZoneIdResolver, RequestTimeZoneIdResolver>();
+
+            services.AddScoped<cloudscribe.DateTimeUtils.ITimeZoneIdResolver, SiteTimeZoneIdResolver>();
+            services.TryAddScoped<cloudscribe.DateTimeUtils.ITimeZoneHelper, cloudscribe.DateTimeUtils.TimeZoneHelper>();
 
             services.TryAddScoped<IHandleCustomRegistration, NoRegistrationCustomization>();
             services.TryAddScoped<IHandleCustomUserInfo, NoUserInfoCustomization>();

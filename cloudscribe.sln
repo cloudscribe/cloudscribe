@@ -76,11 +76,13 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "cloudscribe.Common.Gdpr", "
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "app.IntegrationTests", "test\app.IntegrationTests\app.IntegrationTests.csproj", "{525CCB49-117D-437F-B049-15D26186A321}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "cloudscribe.Core.Storage.EFCore.PostgreSql", "src\cloudscribe.Core.Storage.EFCore.PostgreSql\cloudscribe.Core.Storage.EFCore.PostgreSql.csproj", "{0B1FE93D-46F2-4C0A-A5EE-38C9AD85A368}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "cloudscribe.Core.Storage.EFCore.PostgreSql", "src\cloudscribe.Core.Storage.EFCore.PostgreSql\cloudscribe.Core.Storage.EFCore.PostgreSql.csproj", "{0B1FE93D-46F2-4C0A-A5EE-38C9AD85A368}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "cloudscribe.Core.IdentityServer.EFCore.PostgreSql", "src\cloudscribe.Core.IdentityServer.EFCore.PostgreSql\cloudscribe.Core.IdentityServer.EFCore.PostgreSql.csproj", "{769E46F1-55E9-4FAF-8A13-EFB1CA3EE59C}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "cloudscribe.Core.IdentityServer.EFCore.PostgreSql", "src\cloudscribe.Core.IdentityServer.EFCore.PostgreSql\cloudscribe.Core.IdentityServer.EFCore.PostgreSql.csproj", "{769E46F1-55E9-4FAF-8A13-EFB1CA3EE59C}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "cloudscribe.EFCore.PostgreSql.Conventions", "src\cloudscribe.EFCore.PostgreSql.Conventions\cloudscribe.EFCore.PostgreSql.Conventions.csproj", "{12D82ABB-B599-4D5C-8ACB-52F6E0E40863}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "cloudscribe.EFCore.PostgreSql.Conventions", "src\cloudscribe.EFCore.PostgreSql.Conventions\cloudscribe.EFCore.PostgreSql.Conventions.csproj", "{12D82ABB-B599-4D5C-8ACB-52F6E0E40863}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "cloudscribe.DateTimeUtils", "src\cloudscribe.DateTimeUtils\cloudscribe.DateTimeUtils.csproj", "{014777B8-1935-4BEF-9B9A-595ED7420D76}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -228,6 +230,10 @@ Global
 		{12D82ABB-B599-4D5C-8ACB-52F6E0E40863}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{12D82ABB-B599-4D5C-8ACB-52F6E0E40863}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{12D82ABB-B599-4D5C-8ACB-52F6E0E40863}.Release|Any CPU.Build.0 = Release|Any CPU
+		{014777B8-1935-4BEF-9B9A-595ED7420D76}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{014777B8-1935-4BEF-9B9A-595ED7420D76}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{014777B8-1935-4BEF-9B9A-595ED7420D76}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{014777B8-1935-4BEF-9B9A-595ED7420D76}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -268,6 +274,7 @@ Global
 		{0B1FE93D-46F2-4C0A-A5EE-38C9AD85A368} = {9C16B47A-B712-4237-B62F-B4403ACF1CD5}
 		{769E46F1-55E9-4FAF-8A13-EFB1CA3EE59C} = {9C16B47A-B712-4237-B62F-B4403ACF1CD5}
 		{12D82ABB-B599-4D5C-8ACB-52F6E0E40863} = {9C16B47A-B712-4237-B62F-B4403ACF1CD5}
+		{014777B8-1935-4BEF-9B9A-595ED7420D76} = {9C16B47A-B712-4237-B62F-B4403ACF1CD5}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {3FDA23E8-B945-4001-92C5-F6A70186E3B0}
