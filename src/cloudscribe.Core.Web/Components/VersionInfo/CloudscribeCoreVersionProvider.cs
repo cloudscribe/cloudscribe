@@ -2,10 +2,10 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 //  Author:                     Joe Audette
 //  Created:                    2017-09-23
-//	Last Modified:              2017-09-23
+//	Last Modified:              2018-11-11
 // 
 
-using cloudscribe.Web.Common.Setup;
+using cloudscribe.Versioning;
 using System;
 using System.Reflection;
 

@@ -2,8 +2,8 @@
 
   <PropertyGroup>
     <Description>cloudscribe multi-tenant identity integration for IdentityServer4</Description>
-    <VersionPrefix>3.0.3</VersionPrefix>
-    <AssemblyVersion>3.0.3</AssemblyVersion>
+    <VersionPrefix>3.0.4</VersionPrefix>
+    <AssemblyVersion>3.0.4</AssemblyVersion>
     
 	
     <Authors>Joe Audette</Authors>
@@ -24,6 +24,8 @@
     <ProjectReference Include="..\cloudscribe.Core.Identity\cloudscribe.Core.Identity.csproj" />
     
     <ProjectReference Include="..\cloudscribe.Core.Web\cloudscribe.Core.Web.csproj" />
+    
+    <ProjectReference Include="..\cloudscribe.Versioning\cloudscribe.Versioning.csproj" />
     <ProjectReference Include="..\cloudscribe.Web.Common\cloudscribe.Web.Common.csproj" />
  
   </ItemGroup>

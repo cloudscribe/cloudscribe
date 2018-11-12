@@ -117,10 +117,10 @@ namespace Microsoft.Extensions.DependencyInjection
             
             services.AddCloudscribePagination();
 
-            services.AddScoped<IVersionProviderFactory, VersionProviderFactory>();
-            services.AddScoped<IVersionProvider, CloudscribeCoreVersionProvider>();
-            services.AddScoped<IVersionProvider, DataStorageVersionInfo>();
-            services.AddScoped<IVersionProvider, IdentityVersionInfo>();
+            services.AddScoped<cloudscribe.Versioning.IVersionProviderFactory, cloudscribe.Versioning.VersionProviderFactory>();
+            services.AddScoped<cloudscribe.Versioning.IVersionProvider, CloudscribeCoreVersionProvider>();
+            services.AddScoped<cloudscribe.Versioning.IVersionProvider, DataStorageVersionInfo>();
+            services.AddScoped<cloudscribe.Versioning.IVersionProvider, IdentityVersionInfo>();
 
             services.Configure<SmtpOptions>(configuration.GetSection("SmtpOptions"));
             services.TryAddScoped<ISmtpOptionsProvider, SiteSmtpOptionsResolver>();

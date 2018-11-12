@@ -5,8 +5,7 @@
 //	Last Modified:              2017-10-04
 // 
 
-
-using cloudscribe.Web.Common.Setup;
+using cloudscribe.Versioning;
 using System;
 using System.Reflection;
 

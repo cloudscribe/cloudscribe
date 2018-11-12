@@ -11,7 +11,7 @@ using System.Reflection;
 
 namespace cloudscribe.Web.Common.Setup
 {
-    public class CommonVersionProvider : IVersionProvider
+    public class CommonVersionProvider : cloudscribe.Versioning.IVersionProvider
     {
         public string Name { get { return "cloudscribe.Web.Common"; } }
 
@@ -24,7 +24,7 @@ namespace cloudscribe.Web.Common.Setup
             {
 
                 var version = new Version(2, 0, 0, 0);
-                var versionString = typeof(VersionProviderFactory).Assembly.GetCustomAttribute<AssemblyFileVersionAttribute>().Version;
+                var versionString = typeof(CloudscribeCommonResources).Assembly.GetCustomAttribute<AssemblyFileVersionAttribute>().Version;
                 if (!string.IsNullOrWhiteSpace(versionString))
                 {
                     Version.TryParse(versionString, out version);

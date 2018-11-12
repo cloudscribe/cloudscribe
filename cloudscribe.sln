@@ -82,7 +82,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "cloudscribe.Core.IdentitySe
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "cloudscribe.EFCore.PostgreSql.Conventions", "src\cloudscribe.EFCore.PostgreSql.Conventions\cloudscribe.EFCore.PostgreSql.Conventions.csproj", "{12D82ABB-B599-4D5C-8ACB-52F6E0E40863}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "cloudscribe.DateTimeUtils", "src\cloudscribe.DateTimeUtils\cloudscribe.DateTimeUtils.csproj", "{014777B8-1935-4BEF-9B9A-595ED7420D76}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "cloudscribe.DateTimeUtils", "src\cloudscribe.DateTimeUtils\cloudscribe.DateTimeUtils.csproj", "{014777B8-1935-4BEF-9B9A-595ED7420D76}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "cloudscribe.Versioning", "src\cloudscribe.Versioning\cloudscribe.Versioning.csproj", "{47F7EA37-C079-48F2-B46B-E90B33A1C8CE}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -234,6 +236,10 @@ Global
 		{014777B8-1935-4BEF-9B9A-595ED7420D76}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{014777B8-1935-4BEF-9B9A-595ED7420D76}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{014777B8-1935-4BEF-9B9A-595ED7420D76}.Release|Any CPU.Build.0 = Release|Any CPU
+		{47F7EA37-C079-48F2-B46B-E90B33A1C8CE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{47F7EA37-C079-48F2-B46B-E90B33A1C8CE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{47F7EA37-C079-48F2-B46B-E90B33A1C8CE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{47F7EA37-C079-48F2-B46B-E90B33A1C8CE}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -275,6 +281,7 @@ Global
 		{769E46F1-55E9-4FAF-8A13-EFB1CA3EE59C} = {9C16B47A-B712-4237-B62F-B4403ACF1CD5}
 		{12D82ABB-B599-4D5C-8ACB-52F6E0E40863} = {9C16B47A-B712-4237-B62F-B4403ACF1CD5}
 		{014777B8-1935-4BEF-9B9A-595ED7420D76} = {9C16B47A-B712-4237-B62F-B4403ACF1CD5}
+		{47F7EA37-C079-48F2-B46B-E90B33A1C8CE} = {9C16B47A-B712-4237-B62F-B4403ACF1CD5}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {3FDA23E8-B945-4001-92C5-F6A70186E3B0}
