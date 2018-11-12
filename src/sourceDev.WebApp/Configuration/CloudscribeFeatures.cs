@@ -103,6 +103,7 @@ namespace Microsoft.Extensions.DependencyInjection
             IConfiguration config
             )
         {
+            services.AddScoped<cloudscribe.Versioning.IVersionProvider, cloudscribe.Web.StaticFiles.VersionProvider>();
             /* optional and only needed if you are using cloudscribe Logging  */
             services.AddCloudscribeLogging();
 

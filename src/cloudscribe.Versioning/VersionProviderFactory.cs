@@ -9,9 +9,8 @@ using System;
 using System.Collections.Generic;
 using Microsoft.Extensions.Logging;
 
-namespace cloudscribe.Web.Common.Setup
+namespace cloudscribe.Versioning
 {
-    [Obsolete("this will be removed from cloiudscribe.Web.Common in a future release, please use the version in the new package cloudscribe.Versioning")]
     public class VersionProviderFactory : IVersionProviderFactory
     {
         public VersionProviderFactory(

@@ -141,8 +141,8 @@ namespace Microsoft.Extensions.DependencyInjection
             
             //builder.Services.AddTransient<ICorsPathValidator, CorsPathValidator>();
 
-            builder.Services.AddScoped<IVersionProvider, IntegrationVersionProvider>();
-            builder.Services.AddScoped<IVersionProvider, StorageVersionProvider>();
+            builder.Services.AddScoped<cloudscribe.Versioning.IVersionProvider, IntegrationVersionProvider>();
+            builder.Services.AddScoped<cloudscribe.Versioning.IVersionProvider, StorageVersionProvider>();
 
             return builder;
         }

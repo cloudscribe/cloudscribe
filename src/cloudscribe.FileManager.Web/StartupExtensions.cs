@@ -1,7 +1,7 @@
 ﻿using cloudscribe.FileManager.Web.Controllers;
 using cloudscribe.FileManager.Web.Models;
 using cloudscribe.FileManager.Web.Services;
-using cloudscribe.Web.Common.Setup;
+using cloudscribe.Versioning;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Mvc.Razor;
 using Microsoft.AspNetCore.Routing;
