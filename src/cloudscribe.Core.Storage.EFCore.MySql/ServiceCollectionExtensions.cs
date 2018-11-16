@@ -12,12 +12,13 @@ namespace Microsoft.Extensions.DependencyInjection
         public static IServiceCollection AddCloudscribeCoreEFStorageMySql(
             this IServiceCollection services,
             string connectionString,
+            bool useSingletonLifetime = false,
             int maxConnectionRetryCount = 0,
             int maxConnectionRetryDelaySeconds = 30,
             ICollection<int> transientSqlErrorNumbersToAdd = null
             )
         {
-            services.AddCloudscribeCoreEFCommon();
+            services.AddCloudscribeCoreEFCommon(useSingletonLifetime);
 
             //services.AddEntityFrameworkMySql()
             //    .AddDbContext<CoreDbContext>(options =>

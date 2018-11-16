@@ -12,12 +12,13 @@ namespace Microsoft.Extensions.DependencyInjection
         public static IServiceCollection AddCloudscribeCorePostgreSqlStorage(
             this IServiceCollection services,
             string connectionString,
+            bool useSingletonLifetime = false,
             int maxConnectionRetryCount = 0,
             int maxConnectionRetryDelaySeconds = 30,
             ICollection<string> transientErrorCodesToAdd = null
             )
         {
-            services.AddCloudscribeCoreEFCommon();
+            services.AddCloudscribeCoreEFCommon(useSingletonLifetime);
 
             services.AddEntityFrameworkNpgsql()
                 .AddDbContext<CoreDbContext>(options =>

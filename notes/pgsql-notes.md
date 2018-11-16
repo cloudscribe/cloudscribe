@@ -6,6 +6,7 @@
 
 the above makes a user with sufficient permissions to run migrations
 
+## Backup
 
 include all 3 of these in backup and restore operations:
 pre data = table structures, functions etc without constraints or indexes
@@ -15,6 +16,10 @@ post data = constraints primary keys indexes etc
 format Custom  .backup
 encoding utf-8
 role name postgres
+
+## Perf
+
+https://confluence.atlassian.com/kb/optimize-and-improve-postgresql-performance-with-vacuum-analyze-and-reindex-885239781.html
 
 
 PostgreSQL & PostGIS Cheatsheet
