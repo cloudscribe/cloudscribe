@@ -14,13 +14,14 @@ namespace Microsoft.Extensions.DependencyInjection
         public static IServiceCollection AddCloudscribeCoreEFStorageMSSQL(
             this IServiceCollection services,
             string connectionString,
+            bool useSingletonLifetime = false,
             int maxConnectionRetryCount = 0,
             int maxConnectionRetryDelaySeconds = 30,
             ICollection<int> transientSqlErrorNumbersToAdd = null,
             bool useSql2008Compatibility = false
             )
         {
-            services.AddCloudscribeCoreEFCommon();
+            services.AddCloudscribeCoreEFCommon(useSingletonLifetime);
 
             //services.AddEntityFrameworkSqlServer()
             //    .AddDbContext<CoreDbContext>(options =>

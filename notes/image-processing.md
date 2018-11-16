@@ -1,4 +1,7 @@
 
+https://squoosh.app/
+
+
 https://blogs.msdn.microsoft.com/dotnet/2017/01/19/net-core-image-processing/
 
 
