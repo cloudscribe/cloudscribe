@@ -1,4 +1,7 @@
 
+https://www.tbray.org/ongoing/When/201x/2018/11/18/Post-REST
+
+
 https://zalando.github.io/restful-api-guidelines/
 
 http://restful-api-design.readthedocs.io/en/latest/methods.html

@@ -150,6 +150,11 @@ https://blogs.msdn.microsoft.com/webdev/2017/01/23/asp-net-core-authentication-w
 
 http://amilspage.com/signing-certificates-idsv4/
 
+
+.\makecert -n "CN=ProjectIdentityServerCN" -a sha256 -len 2048 -sv ProjectIdentityServer4Auth.pvk -r ProjectIdentityServer4Auth.cer
+
+.\pvk2pfx -pvk ProjectIdentityServer4Auth.pvk -pi certpassword -spc ProjectIdentityServer4Auth.cer -pfx ProjectIdentityServer4Auth.pfx
+
 services.AddTransient<ICorsPolicyService, IdServerCorsPolicy>();
 services.AddTransient<IRedirectUriValidator, IdServerRedirectValidator>();
 
