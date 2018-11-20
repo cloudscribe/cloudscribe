@@ -14,6 +14,7 @@ https://www.nuget.org/packages/cloudscribe.templates/1.0.0
 
 ## Commands to install and unintsall local project tempaltes
 
+dotnet new --install C:\_c\cloudscribe.templates\Content\Solution\WebApp
 dotnet new --install C:\_c\cloudscribe.templates\Content\WebApp
 dotnet new --debug:reinit
 

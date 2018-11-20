@@ -20,3 +20,13 @@
 *.PDF	 diff=astextplain
 *.rtf	 diff=astextplain
 *.RTF	 diff=astextplain
+
+**/wwwroot/css/* linguist-vendored
+**/wwwroot/js/* linguist-vendored
+
+**/jquery.js linguist-vendored
+**/bootstrap4.bundle.js linguist-vendore
+**/jquery.min.js linguist-vendoredd
+**/bootstrap4.bundle.min.js linguist-vendored
+**/bootstrap4.css linguist-vendored
+**/bootstrap4.min.css linguist-vendored
