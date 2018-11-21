@@ -198,7 +198,13 @@ namespace cloudscribe.Core.Web.Components
             }
             else
             {
-                if(!string.IsNullOrWhiteSpace(site.PreferredHostName))
+                if (_context != null && !string.IsNullOrEmpty(_context.Request.Host.Value))
+                {
+                    _cacheHelper.ClearCache(_context.Request.Host.Value);
+                }
+                    
+
+                if (!string.IsNullOrWhiteSpace(site.PreferredHostName))
                 {
                     _cacheHelper.ClearCache(site.PreferredHostName);
                 }
