@@ -50,3 +50,6 @@ https://gist.github.com/SteveSandersonMS/6ac9458e3fc5b49c199777627fff3fc8
 
 https://social.technet.microsoft.com/wiki/contents/articles/51831.understanding-server-side-blazor.aspx
 
+## Localization
+
+https://www.c-sharpcorner.com/article/localization-in-blazor-app-using-microsoft-jsinterop/
