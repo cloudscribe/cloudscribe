@@ -9,7 +9,7 @@
 
         public int UserIdDimensionIndex { get; set; } = 1;
         public int RegisteredUserDimensionIndex { get; set; } = 2;
-        public int LoginRegisterSourceDimenstionIndex { get; set; } = 3;
+        public int LoginRegisterSourceDimensionIndex { get; set; } = 3;
 
         public int RegisterSuccessMetricIndex { get; set; } = 1;
         public int RegisterFailMetricIndex { get; set; } = 2;

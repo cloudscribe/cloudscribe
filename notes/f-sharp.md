@@ -1,5 +1,8 @@
 # F# 
 
+
+https://dpc.pw/the-faster-you-unlearn-oop-the-better-for-you-and-your-software
+
 https://blogs.msdn.microsoft.com/dotnet/2017/11/15/announcing-f-support-for-net-core-and-net-standard-projects-in-visual-studio/
 
 see also fable.md
