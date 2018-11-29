@@ -190,7 +190,7 @@ namespace cloudscribe.Core.Identity
         {
             ThrowIfDisposed();
             cancellationToken.ThrowIfCancellationRequested();
-            _log.LogDebug("FindByIdAsync"); 
+            _log.LogTrace("FindByIdAsync"); 
             
             var userGuid = new Guid(userId);
             var siteGuid = SiteSettings.Id;

@@ -1,5 +1,7 @@
 
 
+https://www.smashingmagazine.com/2018/11/guide-pwa-progressive-web-applications/
+
 https://kruschecompany.com/blog/post/the-web-apps-that-will-eat-mobile
 
 https://blog.elmah.io/turning-an-aspnet-core-website-into-a-progressive-web-app-pwa/
