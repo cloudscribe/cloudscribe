@@ -37,7 +37,7 @@ namespace cloudscribe.Core.Web.Components
             var listCacheKey = "folderList";
             if (_cache.Get(listCacheKey) is List<string> result)
             {
-                _log.LogDebug("Folder List retrieved from cache with key \"{cacheKey}\".", listCacheKey);
+                _log.LogTrace("Folder List retrieved from cache with key \"{cacheKey}\".", listCacheKey);
                 return result;
             }
 
@@ -45,7 +45,7 @@ namespace cloudscribe.Core.Web.Components
             var cacheEntryOptions = new MemoryCacheEntryOptions()
                 .SetAbsoluteExpiration(_cachingOptions.FolderListCacheDuration);
 
-            _log.LogDebug("Caching folder list with keys \"{cacheKey}\".", listCacheKey);
+            _log.LogTrace("Caching folder list with keys \"{cacheKey}\".", listCacheKey);
             _cache.Set(listCacheKey, result, cacheEntryOptions);
 
             return result;
@@ -77,12 +77,12 @@ namespace cloudscribe.Core.Web.Components
             var result = (SiteContext)_cache.Get(cacheKey);
             if(result == null)
             {
-                _log.LogDebug($"Site not found in cache with key {cacheKey}");
+                _log.LogTrace($"Site not found in cache with key {cacheKey}");
 
                 result = await base.ResolveSite(hostName, path, cancellationToken);
                 if(result != null)
                 {
-                    _log.LogDebug($"Caching site with key {cacheKey}");
+                    _log.LogTrace($"Caching site with key {cacheKey}");
 
                     _cache.Set(
                         cacheKey,
@@ -94,7 +94,7 @@ namespace cloudscribe.Core.Web.Components
             }
             else
             {
-                _log.LogDebug($"Site was found in cache with key {cacheKey}");
+                _log.LogTrace($"Site was found in cache with key {cacheKey}");
             }
 
 
