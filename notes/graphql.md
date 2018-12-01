@@ -2,6 +2,8 @@
 
 https://honest.engineering/posts/why-use-graphql-good-and-bad-reasons
 
+https://verve.co/engineering/graphql-a-retrospective/
+
 https://hackernoon.com/goodbye-redux-26e6a27b3a0b
 
 https://blog.graphql.guide/introducing-the-graphql-guide-11a5ae48628a?source=search_post---------0&gi=a364ca7e24de

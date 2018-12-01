@@ -39,7 +39,7 @@
     </tr>
     @foreach (var item in Model.UserList.Data)
     {
-        <tr>
+        <tr class="@((item.IsLockedOut) ? "table-danger" : null)">
             <td>
                 <a class="btn btn-xs btn-primary"  href="#" onclick="userSelected(this)"
                    data-user-email="@item.Email"
@@ -85,5 +85,11 @@
               cs-first-page-title='@sr["First Page"]'
               cs-last-page-title='@sr["Last Page"]'
               cs-previous-page-title='@sr["Previous page"]'
-              cs-next-page-title='@sr["Next page"]'></cs-pager>
+              cs-next-page-title='@sr["Next page"]'
+              cs-pager-ul-class="pagination d-flex flex-wrap"
+              cs-pager-li-current-class="page-item active"
+              cs-pager-li-other-class="page-item"
+              cs-pager-li-non-active-class="page-item disabled"
+              cs-pager-link-current-class="page-link"
+              cs-pager-link-other-class="page-link"></cs-pager>
 </div>
