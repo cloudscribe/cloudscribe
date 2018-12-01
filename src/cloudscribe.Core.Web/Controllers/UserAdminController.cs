@@ -191,7 +191,7 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
         public async Task<IActionResult> SearchModal(
             Guid? siteId,
             string query = "",
-            int sortMode = 2,
+            int sortMode = 0, //sortMode: 0 = DisplayName asc, 1 = JoinDate desc, 2 = Last, First
             int pageNumber = 1,
             int pageSize = -1,
             bool ajaxGrid = false

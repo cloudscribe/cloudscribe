@@ -41,7 +41,7 @@
     </tr>
     @foreach (var item in Model.UserList.Data)
     {
-        <tr>
+        <tr class="@((item.IsLockedOut) ? "table-danger" : null)">
             <td>
                 <a class="btn btn-xs btn-primary" asp-action="UserEdit"
                    asp-controller="UserAdmin"
