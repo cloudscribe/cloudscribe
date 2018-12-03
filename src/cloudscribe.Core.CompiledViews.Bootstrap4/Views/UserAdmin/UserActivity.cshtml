@@ -1,7 +1,7 @@
 ﻿@model cloudscribe.Core.Web.ViewModels.UserAdmin.UserActivityViewModel
 @inject ICoreThemeHelper themeHelper
 @inject IStringLocalizer<CloudscribeCore> sr
-@inject ITimeZoneHelper tzHelper
+@inject cloudscribe.DateTimeUtils.ITimeZoneHelper tzHelper
 @{
     var lastLogin = "";
     var lastPasswordChange = "";
