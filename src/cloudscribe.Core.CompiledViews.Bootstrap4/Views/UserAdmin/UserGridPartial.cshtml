@@ -1,6 +1,6 @@
 ﻿@model cloudscribe.Core.Web.ViewModels.UserAdmin.UserListViewModel
 @inject IStringLocalizer<CloudscribeCore> sr
-@inject ITimeZoneHelper tzHelper
+@inject cloudscribe.DateTimeUtils.ITimeZoneHelper tzHelper
 @{ 
     var totalUsersMessage = string.Format(sr["{0} - Users"], Model.UserList.TotalItems);
 }

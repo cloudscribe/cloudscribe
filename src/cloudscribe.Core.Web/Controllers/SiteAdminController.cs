@@ -40,7 +40,7 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
             IOptions<UIOptions> uiOptionsAccessor,
             IThemeListBuilder layoutListBuilder,
             IStringLocalizer<CloudscribeCore> localizer,
-            ITimeZoneHelper timeZoneHelper,
+            cloudscribe.DateTimeUtils.ITimeZoneHelper timeZoneHelper,
             IOptions<RequestLocalizationOptions> localizationOptions
             )
         {
@@ -70,7 +70,7 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
         private IStringLocalizer _sr;
         private IThemeListBuilder _layoutListBuilder;
         private UIOptions _uiOptions;
-        private ITimeZoneHelper _tzHelper;
+        private cloudscribe.DateTimeUtils.ITimeZoneHelper _tzHelper;
         private RequestLocalizationOptions _localization;
 
         // GET: /SiteAdmin
