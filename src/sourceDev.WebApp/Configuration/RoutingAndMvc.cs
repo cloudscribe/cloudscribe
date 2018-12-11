@@ -51,9 +51,22 @@ namespace Microsoft.AspNetCore.Builder
                );
 
             routes.MapRoute(
+                name: "systlog",
+                template: "systemlog/{action=Index}"
+                //, defaults: new { action = "Index" }
+                );
+
+            routes.MapRoute(
+                name: "predefault",
+                template: "{controller}/{action}"
+                , defaults: new { action = "Index" }
+                );
+
+
+            routes.MapRoute(
                 name: "default",
-                template: "{controller=Home}/{action=Index}/{id?}"
-                //,defaults: new { controller = "Home", action = "Index" }
+                template: "{controller}/{action}"
+                ,defaults: new { controller = "Home", action = "Index" }
                 );
 
 
@@ -70,8 +83,8 @@ namespace Microsoft.AspNetCore.Builder
             {
                 options.LowercaseUrls = true;
             });
-            
-            
+
+
             services.Configure<MvcOptions>(options =>
             {
                 if (sslIsAvailable)
@@ -96,44 +109,10 @@ namespace Microsoft.AspNetCore.Builder
                     .AddRazorOptions(options =>
                     {
                         options.AddCloudscribeViewLocationFormats();
-                        
-                        // this no longer works because with embedded views we could reference both projects
-                        // with compiled views we can only reference one version at a time with a project reference
-                        // otherwise no telling which one will be used
-                        switch (boostrapVersion)
-                        {
-                            case 4:
-
-                                //options.AddCloudscribeCommonEmbeddedViews();
-                                //options.AddCloudscribeNavigationBootstrap4Views();
-                                //options.AddCloudscribeFileManagerBootstrap4Views();
-
-                                //options.AddCloudscribeCoreBootstrap4Views();
-                                //options.AddCloudscribeLoggingBootstrap4Views();
-                                //options.AddCloudscribeCoreIdentityServerIntegrationBootstrap4Views();
-
-                                break;
-
-                            case 3:
-                            default:
-
-                                //options.AddCloudscribeCommonEmbeddedViews();
-                                //options.AddCloudscribeNavigationBootstrap3Views();
-                                //options.AddCloudscribeFileManagerBootstrap3Views();
-
-                                //options.AddCloudscribeCoreBootstrap3Views();
-                                //options.AddCloudscribeLoggingBootstrap3Views();
-                                //options.AddCloudscribeCoreIdentityServerIntegrationBootstrap3Views();
-
-                                break;
-                        }
-
-                        
-
                         options.ViewLocationExpanders.Add(new cloudscribe.Core.Web.Components.SiteViewLocationExpander());
 
                     })
-                    .SetCompatibilityVersion(CompatibilityVersion.Version_2_1)
+                    .SetCompatibilityVersion(CompatibilityVersion.Version_2_2)
                     ;
 
             return services;

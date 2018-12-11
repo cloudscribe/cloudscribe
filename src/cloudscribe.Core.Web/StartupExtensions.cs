@@ -62,7 +62,7 @@ namespace Microsoft.Extensions.DependencyInjection
                 options.ConstraintMap.Add("sitefolder", typeof(SiteFolderRouteConstraint));
             });
 
-            
+
 
             services.TryAddSingleton<IHttpContextAccessor, HttpContextAccessor>();
             services.AddOptions();

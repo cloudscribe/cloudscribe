@@ -179,7 +179,11 @@ namespace sourceDev.WebApp
             {
                 config.AddJsonFile("app-userproperties.json", optional: true, reloadOnChange: true);
             })
-                .UseStartup<Startup>()
+            .UseStartup<Startup>()
+            //.ConfigureKestrel((context, options) =>
+            //{
+            //    // Set properties and call methods on options
+            //})
                 ;
 
 
