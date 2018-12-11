@@ -1,4 +1,5 @@
 ﻿using cloudscribe.Core.Models;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Localization;
 using Microsoft.Extensions.DependencyInjection;
@@ -22,7 +23,6 @@ namespace Microsoft.AspNetCore.Builder
            )
         {
             
-
             app.UseMultitenancy<cloudscribe.Core.Models.SiteContext>();
             
             app.UsePerTenant<cloudscribe.Core.Models.SiteContext>((ctx, builder) =>
@@ -71,6 +71,8 @@ namespace Microsoft.AspNetCore.Builder
            SiteContext tenant
            )
         {
+            var env = builder.ApplicationServices.GetRequiredService<IHostingEnvironment>();
+
             var tenantSegment = "";
             if (multiTenantOptions.Mode == MultiTenantMode.FolderName && !string.IsNullOrEmpty(tenant.SiteFolderName))
             {
@@ -88,7 +90,7 @@ namespace Microsoft.AspNetCore.Builder
                 // but probably would want a config setting to make that optional
                 if (!string.IsNullOrEmpty(themeName))
                 {
-                    var themePath = Path.Combine(Directory.GetCurrentDirectory(),
+                    var themePath = Path.Combine(env.ContentRootPath,
                         multiTenantOptions.SiteFilesFolderName,
                         tenant.AliasId,
                         multiTenantOptions.SiteThemesFolderName,
@@ -112,7 +114,7 @@ namespace Microsoft.AspNetCore.Builder
             {
                 if (!string.IsNullOrEmpty(themeName))
                 {
-                    var themePath = Path.Combine(Directory.GetCurrentDirectory(),
+                    var themePath = Path.Combine(env.ContentRootPath,
                         multiTenantOptions.SharedThemesFolderName,
                         themeName,
                         multiTenantOptions.ThemeStaticFilesFolderName);
@@ -135,11 +137,11 @@ namespace Microsoft.AspNetCore.Builder
                 // this allows serving static files from /sitefiles/[aliasid]/wwwroot
                 // so that files can be isolated per tenant
                 
-                var folderExists = TryEnsureTenantWwwRoot(tenant, multiTenantOptions);
+                var folderExists = TryEnsureTenantWwwRoot(env, tenant, multiTenantOptions);
 
                 if (folderExists)
                 {
-                    var siteFilesPath = Path.Combine(Directory.GetCurrentDirectory(),
+                    var siteFilesPath = Path.Combine(env.ContentRootPath,
                         multiTenantOptions.SiteUploadFilesRootFolderName,
                         tenant.AliasId,
                         multiTenantOptions.SiteContentFolderName);
@@ -168,10 +170,13 @@ namespace Microsoft.AspNetCore.Builder
             return builder;
         }
 
-        private static bool TryEnsureTenantWwwRoot(ISiteContext tenant, MultiTenantOptions options)
+        private static bool TryEnsureTenantWwwRoot(
+            IHostingEnvironment env,
+            ISiteContext tenant, 
+            MultiTenantOptions options)
         {
           
-            var siteFilesPath = Path.Combine(Directory.GetCurrentDirectory(), options.SiteUploadFilesRootFolderName);
+            var siteFilesPath = Path.Combine(env.ContentRootPath, options.SiteUploadFilesRootFolderName);
             if (!Directory.Exists(siteFilesPath))
             {
                 try

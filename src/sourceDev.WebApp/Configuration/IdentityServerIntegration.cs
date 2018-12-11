@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
+using System.IO;
 
 namespace Microsoft.Extensions.DependencyInjection
 {
@@ -27,13 +28,15 @@ namespace Microsoft.Extensions.DependencyInjection
             var storage = config["DevOptions:DbPlatform"];
             var efProvider = config["DevOptions:EFProvider"];
 
+            var tmpKeyPath = Path.Combine(environment.ContentRootPath, "tempkey.rsa");
+
             switch (storage)
             {
                 case "NoDb":
                     services.AddIdentityServerConfiguredForCloudscribe()
                         .AddCloudscribeCoreNoDbIdentityServerStorage()
                         .AddCloudscribeIdentityServerIntegrationMvc()
-                        .AddDeveloperSigningCredential()
+                        .AddDeveloperSigningCredential(true, tmpKeyPath)
                         ;
                    
                     break;
@@ -49,7 +52,7 @@ namespace Microsoft.Extensions.DependencyInjection
                             services.AddIdentityServerConfiguredForCloudscribe()
                                 .AddCloudscribeCoreEFIdentityServerStorageSQLite(slConnection)
                                 .AddCloudscribeIdentityServerIntegrationMvc()
-                                .AddDeveloperSigningCredential()
+                                .AddDeveloperSigningCredential(true, tmpKeyPath)
                             ;
                             
                             break;
@@ -60,7 +63,7 @@ namespace Microsoft.Extensions.DependencyInjection
                             services.AddIdentityServerConfiguredForCloudscribe()
                                 .AddCloudscribeCoreEFIdentityServerStoragePostgreSql(pgConnection)
                                 .AddCloudscribeIdentityServerIntegrationMvc()
-                                .AddDeveloperSigningCredential()
+                                .AddDeveloperSigningCredential(true, tmpKeyPath)
                             ;
                             
                             break;
@@ -71,7 +74,7 @@ namespace Microsoft.Extensions.DependencyInjection
                             services.AddIdentityServerConfiguredForCloudscribe()
                                 .AddCloudscribeCoredentityServerPostgreSqlStorage(pgsConnection)
                                 .AddCloudscribeIdentityServerIntegrationMvc()
-                                .AddDeveloperSigningCredential()
+                                .AddDeveloperSigningCredential(true, tmpKeyPath)
                             ;
 
                             break;
@@ -82,7 +85,7 @@ namespace Microsoft.Extensions.DependencyInjection
                             services.AddIdentityServerConfiguredForCloudscribe()
                                 .AddCloudscribeCoreEFIdentityServerStorageMySql(mysqlConnection)
                                 .AddCloudscribeIdentityServerIntegrationMvc()
-                                .AddDeveloperSigningCredential()
+                                .AddDeveloperSigningCredential(true, tmpKeyPath)
                                 ;
                            
                             break;
@@ -94,7 +97,7 @@ namespace Microsoft.Extensions.DependencyInjection
                             services.AddIdentityServerConfiguredForCloudscribe()
                                 .AddCloudscribeCoreEFIdentityServerStorageMSSQL(connectionString)
                                 .AddCloudscribeIdentityServerIntegrationMvc()
-                                .AddDeveloperSigningCredential()
+                                .AddDeveloperSigningCredential(true, tmpKeyPath)
                                 ;
                             
                             break;
