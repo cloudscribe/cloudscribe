@@ -31,18 +31,13 @@ namespace cloudscribe.Core.Web.Components
             RouteDirection routeDirection)
         {
             string requestFolder = httpContext.Request.Path.ToString().StartingSegment();
-
             var tenant = httpContext.GetTenant<SiteContext>();
-
             if (tenant != null)
             {
                 if (tenant.SiteFolderName == requestFolder) { return true; }
 
             }
-
             return false;
         }
-        
-        
     }
 }
