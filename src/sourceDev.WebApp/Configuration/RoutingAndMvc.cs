@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using cloudscribe.Core.Web.Components;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Razor;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.Configuration;
@@ -50,17 +51,17 @@ namespace Microsoft.AspNetCore.Builder
                defaults: new { controller = "Oops", action = "Error" }
                );
 
-            routes.MapRoute(
-                name: "systlog",
-                template: "systemlog/{action=Index}"
-                //, defaults: new { action = "Index" }
-                );
+            //routes.MapRoute(
+            //    name: "systlog",
+            //    template: "systemlog/{action=Index}"
+            //    //, defaults: new { action = "Index" }
+            //    );
 
-            routes.MapRoute(
-                name: "predefault",
-                template: "{controller}/{action}"
-                , defaults: new { action = "Index" }
-                );
+            //routes.MapRoute(
+            //    name: "predefault",
+            //    template: "{controller}/{action}"
+            //    , defaults: new { action = "Index" }
+            //    );
 
 
             routes.MapRoute(
@@ -82,6 +83,7 @@ namespace Microsoft.AspNetCore.Builder
             services.AddRouting(options =>
             {
                 options.LowercaseUrls = true;
+               // options.ConstraintMap.Add("sitefolder", typeof(SiteFolderRouteConstraint));
             });
 
 
@@ -103,7 +105,10 @@ namespace Microsoft.AspNetCore.Builder
 
             var boostrapVersion = config.GetValue<int>("DevOptions:BootstrapVersion");
 
-            services.AddMvc()
+            services.AddMvc(options => {
+                options.EnableEndpointRouting = false;
+               
+            })
                     .AddViewLocalization(LanguageViewLocationExpanderFormat.Suffix)
                     .AddDataAnnotationsLocalization()
                     .AddRazorOptions(options =>
