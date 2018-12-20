@@ -15,7 +15,7 @@ namespace cloudscribe.Core.Identity
     {
         public DefaultAccountLoginRulesProcessor(
             SiteUserManager<SiteUser> userManager,
-            ISiteAcountCapabilitiesProvider capabilitiesProvider
+            ISiteAccountCapabilitiesProvider capabilitiesProvider
             )
         {
             _userManager = userManager;
@@ -23,7 +23,7 @@ namespace cloudscribe.Core.Identity
         }
 
         private readonly SiteUserManager<SiteUser> _userManager;
-        private readonly ISiteAcountCapabilitiesProvider _capabilitiesProvider;
+        private readonly ISiteAccountCapabilitiesProvider _capabilitiesProvider;
         
 
         private async Task<bool> RequireConfirmedEmail()

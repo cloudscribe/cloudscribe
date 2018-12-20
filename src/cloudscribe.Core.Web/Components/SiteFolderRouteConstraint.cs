@@ -30,6 +30,8 @@ namespace cloudscribe.Core.Web.Components
             RouteValueDictionary values, 
             RouteDirection routeDirection)
         {
+            if(httpContext == null) { return false; }
+
             string requestFolder = httpContext.Request.Path.ToString().StartingSegment();
             var tenant = httpContext.GetTenant<SiteContext>();
             if (tenant != null)

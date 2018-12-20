@@ -49,7 +49,7 @@ namespace cloudscribe.Email
             // last ditch return the first one in the list configured or not
             foreach (var sender in _allSenders)
             {
-                var configured = await sender.IsConfigured(lookupKey);
+                //var configured = await sender.IsConfigured(lookupKey);
                 return sender;
             }
 

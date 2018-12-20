@@ -33,7 +33,7 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
         public SiteAdminController(
             SiteManager siteManager,
             GeoDataManager geoDataManager,
-            ISiteAcountCapabilitiesProvider siteCapabilities,
+            ISiteAccountCapabilitiesProvider siteCapabilities,
             IEnumerable<IEmailSender> allEmailSenders,
             ISiteMessageEmailSender messageSender,
             IOptions<MultiTenantOptions> multiTenantOptions,
@@ -62,7 +62,7 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
         private SiteManager _siteManager;
         private GeoDataManager _geoDataManager;
         private MultiTenantOptions _multiTenantOptions;
-        private ISiteAcountCapabilitiesProvider _siteCapabilities;
+        private ISiteAccountCapabilitiesProvider _siteCapabilities;
         private IEnumerable<IEmailSender> _emailSenders;
         private ISiteMessageEmailSender _messageSender;
 

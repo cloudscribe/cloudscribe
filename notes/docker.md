@@ -1,5 +1,8 @@
 
 
+Azure Kubernetes Service 
+https://docs.microsoft.com/en-us/azure/aks/best-practices
+
 ## Alpine Linux and Nginx
 https://wiki.alpinelinux.org/wiki/Nginx
 

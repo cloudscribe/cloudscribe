@@ -112,7 +112,9 @@ namespace Microsoft.Extensions.DependencyInjection
             services.TryAddScoped<IHandleCustomUserInfoAdmin, NoUserEditCustomization>();
 
             services.TryAddScoped<IHandleAccountAnalytics, GoogleAccountAnalytics>();
-            
+
+
+            //services.TryAddScoped<IViewRendererRouteProvider, SiteViewRendererRouteProvider>();
             services.AddCloudscribeCommmon(configuration);
             
             services.AddCloudscribePagination();
@@ -146,7 +148,7 @@ namespace Microsoft.Extensions.DependencyInjection
             services.AddScoped<ISiteMapNodeService, NavigationTreeSiteMapNodeService>();
 
             // Identity ***
-            services.TryAddScoped<ISiteAcountCapabilitiesProvider, SiteAcountCapabilitiesProvider>();
+            services.TryAddScoped<ISiteAccountCapabilitiesProvider, SiteAccountCapabilitiesProvider>();
             services.AddCloudscribeIdentity();
 
             services.AddScoped<IUserContextResolver, UserContextResolver>();
