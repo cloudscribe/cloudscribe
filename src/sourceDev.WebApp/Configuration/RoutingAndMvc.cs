@@ -34,7 +34,7 @@ namespace Microsoft.AspNetCore.Builder
                     name: "folderdefault",
                     template: "{sitefolder}/{controller}/{action}/{id?}",
                     defaults: new { controller = "Home", action = "Index" },
-                    constraints: new { name = new cloudscribe.Core.Web.Components.SiteFolderRouteConstraint() });
+                    constraints: new { sitefolder = new cloudscribe.Core.Web.Components.SiteFolderRouteConstraint() });
 
 
             }
@@ -106,7 +106,7 @@ namespace Microsoft.AspNetCore.Builder
             var boostrapVersion = config.GetValue<int>("DevOptions:BootstrapVersion");
 
             services.AddMvc(options => {
-                options.EnableEndpointRouting = false;
+                //options.EnableEndpointRouting = false;
                
             })
                     .AddViewLocalization(LanguageViewLocationExpanderFormat.Suffix)

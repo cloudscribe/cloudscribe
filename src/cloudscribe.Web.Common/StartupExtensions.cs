@@ -4,6 +4,7 @@ using cloudscribe.Web.Common.Components;
 using cloudscribe.Web.Common.Helpers;
 using cloudscribe.Web.Common.Http;
 using cloudscribe.Web.Common.Models;
+using cloudscribe.Web.Common.Razor;
 using cloudscribe.Web.Common.Recaptcha;
 using cloudscribe.Web.Common.Setup;
 using Microsoft.AspNetCore.Builder;
@@ -57,6 +58,9 @@ namespace Microsoft.Extensions.DependencyInjection
             services.AddScoped<GoogleAnalyticsHelper>();
 
             services.AddScoped<cloudscribe.Versioning.IVersionProvider, CommonVersionProvider>();
+
+            services.TryAddScoped<IViewRendererRouteProvider, DefaultViewRendererRouteProvider>();
+            services.TryAddScoped<ViewRenderer>();
 
             return services;
         }

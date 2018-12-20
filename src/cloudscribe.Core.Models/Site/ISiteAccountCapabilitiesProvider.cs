@@ -3,14 +3,14 @@ using System.Threading.Tasks;
 
 namespace cloudscribe.Core.Models
 {
-    public interface ISiteAcountCapabilitiesProvider
+    public interface ISiteAccountCapabilitiesProvider
     {
         Task<bool> SupportsEmailNotification(ISiteContext site);
         
         Task<bool> SupportsSmsNotification(ISiteContext site);
     }
 
-    public class DefaultSiteAcountCapabilitiesProvider : ISiteAcountCapabilitiesProvider
+    public class DefaultSiteAcountCapabilitiesProvider : ISiteAccountCapabilitiesProvider
     {
         public Task<bool> SupportsEmailNotification(ISiteContext site)
         {

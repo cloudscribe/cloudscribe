@@ -2,14 +2,17 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:                  Joe Audette
 // Created:                 2016-04-22
-// Last Modified:           2018-08-23
+// Last Modified:           2018-12-17
 // 
 
 //https://github.com/aspnet/Entropy/blob/master/samples/Mvc.RenderViewToString/RazorViewToStringRenderer.cs
 
+using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Builder.Internal;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Abstractions;
+using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.AspNetCore.Mvc.Razor;
 using Microsoft.AspNetCore.Mvc.Rendering;
@@ -32,23 +35,31 @@ namespace cloudscribe.Web.Common.Razor
         public ViewRenderer(
             IRazorViewEngine viewEngine,
             ITempDataProvider tempDataProvider,
-            //IHttpContextAccessor httpContextAccessor,
-            IServiceProvider serviceProvider
+            IHttpContextAccessor httpContextAccessor,
+            IActionContextAccessor actionContextAccesor,
+            IServiceProvider serviceProvider,
+            IViewRendererRouteProvider viewRendererRouteProvider
             )
         {
             _viewEngine = viewEngine;
             _tempDataProvider = tempDataProvider;
-           // _httpContextAccessor = httpContextAccessor;
+            _httpContextAccessor = httpContextAccessor;
+            _actionContextAccesor = actionContextAccesor;
             _serviceProvider = serviceProvider;
+            _viewRendererRouteProvider = viewRendererRouteProvider;
 
-           
+
+
         }
 
         private readonly IRazorViewEngine _viewEngine;
         private readonly ITempDataProvider _tempDataProvider;
         private readonly IServiceProvider _serviceProvider;
-       // private readonly IHttpContextAccessor _httpContextAccessor;
-        
+        private readonly IHttpContextAccessor _httpContextAccessor;
+        private IActionContextAccessor _actionContextAccesor;
+        private readonly IViewRendererRouteProvider _viewRendererRouteProvider;
+
+
 
         public async Task<string> RenderViewAsString<TModel>(string viewName, TModel model)
         {
@@ -102,6 +113,12 @@ namespace cloudscribe.Web.Common.Razor
 
         private ActionContext GetActionContext()
         {
+            if(_actionContextAccesor.ActionContext != null)
+            {
+                return _actionContextAccesor.ActionContext;
+            }
+
+            // this breaks redirects in controller after execution
             //if (_httpContextAccessor.HttpContext != null)
             //{
             //    return new ActionContext(_httpContextAccessor.HttpContext, new RouteData(), new ActionDescriptor());
@@ -112,7 +129,38 @@ namespace cloudscribe.Web.Common.Razor
                 RequestServices = _serviceProvider
             };
 
-            return new ActionContext(httpContext, new RouteData(), new ActionDescriptor());
+            var actionContext = new ActionContext(httpContext, new RouteData(), new ActionDescriptor());
+            MapRoutes(actionContext);
+
+            return actionContext;
+        }
+
+        //https://stackoverflow.com/questions/39776009/render-a-razor-view-containing-a-url-to-a-string-in-asp-net-core/39791267
+        //https://github.com/waf/RazorToStringExample/blob/master/RazorToStringExample/Services/RazorViewToStringRenderer.cs
+
+        private void MapRoutes(ActionContext actionContext)
+        {
+            var routes = new RouteBuilder(new ApplicationBuilder(_serviceProvider))
+            {
+                DefaultHandler = new DefaultHandler()
+            };
+
+            _viewRendererRouteProvider.AddRoutes(routes);
+
+            //routes.MapRoute(
+            //    name: "default",
+            //    template: "{controller=Home}/{action=Index}/{id?}"
+            //);
+            actionContext.RouteData.Routers.Add(routes.Build());
+        }
+
+        /// <summary>
+        /// Not actually used, but needed to get past the validation checks in routes.MapRoute
+        /// </summary>
+        private class DefaultHandler : IRouter
+        {
+            public VirtualPathData GetVirtualPath(VirtualPathContext context) => null;
+            public Task RouteAsync(RouteContext context) => Task.CompletedTask;
         }
 
 

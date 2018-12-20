@@ -5,9 +5,9 @@ using System.Threading.Tasks;
 
 namespace cloudscribe.Core.Web.Components
 {
-    public class SiteAcountCapabilitiesProvider : ISiteAcountCapabilitiesProvider
+    public class SiteAccountCapabilitiesProvider : ISiteAccountCapabilitiesProvider
     {
-        public SiteAcountCapabilitiesProvider(
+        public SiteAccountCapabilitiesProvider(
             IEmailSenderResolver emailSenderResolver
             )
         {
