@@ -12,6 +12,7 @@ If you have questions or just want to be social, say hello in our gitter chat ro
 | ------------- | ------------- |
 | [![Build status](https://ci.appveyor.com/api/projects/status/jt9c0022x3odacar/branch/master?svg=true)](https://ci.appveyor.com/project/joeaudette/cloudscribe/branch/master)  | [![Build Status](https://travis-ci.org/cloudscribe/cloudscribe.svg?branch=master)](https://travis-ci.org/cloudscribe/cloudscribe)  |
 
+[![Twitter URL](https://img.shields.io/twitter/url/http/shields.io.svg?style=social)](https://twitter.com/cloudscribeweb) [![Twitter Follow](https://img.shields.io/twitter/follow/cloudscribeweb.svg?style=social&label=Follow)](https://twitter.com/cloudscribeweb)
 [![Join the chat at https://gitter.im/joeaudette/cloudscribe](https://badges.gitter.im/joeaudette/cloudscribe.svg)](https://gitter.im/joeaudette/cloudscribe?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 
 #### Why Start From Scratch?
