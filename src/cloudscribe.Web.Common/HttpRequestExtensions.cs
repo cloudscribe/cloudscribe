@@ -76,7 +76,7 @@ namespace cloudscribe.Web.Common.Extensions
         public static string GetIpV4Address(this HttpContext context)
         {
             var connection = context.Connection;
-            if (connection == null) return string.Empty; ;
+            if (connection == null) return string.Empty; 
             var ip = connection.RemoteIpAddress;
             if (ip == null) return string.Empty;
             var ipv4 = ip.MapToIPv4();
