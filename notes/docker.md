@@ -39,6 +39,8 @@ https://www.hanselman.com/blog/SettingUpAManagedContainerClusterWithAKSAndKubern
 
 https://docs.microsoft.com/en-us/azure/aks/kubernetes-walkthrough
 
+http://tech.paulcz.net/blog/future-of-kubernetes-is-virtual-machines/
+
 
 
 docker run --rm -it -v ${pwd}:/data -p 8080:80 klokantech/openmaptiles-server

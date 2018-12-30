@@ -16,6 +16,7 @@ using Microsoft.AspNetCore.Http.Features;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
+using Microsoft.Net.Http.Headers;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -322,8 +323,11 @@ namespace cloudscribe.FileManager.Web.Controllers
                 _log.LogError("resource not found for " + resourceName);
                 return NotFound();
             }
-
+            
             _log.LogDebug("resource found for " + resourceName);
+            
+            var status = ETagGenerator.AddEtagForStream(HttpContext, resourceStream);
+            if(status != null) { return status; } //304
 
             return new FileStreamResult(resourceStream, contentType);
         }
