@@ -15,6 +15,8 @@ namespace cloudscribe.Web.Common.Helpers
 
         public static StatusCodeResult AddEtagForStream(HttpContext context, Stream stream)
         {
+            if(!stream.CanSeek) { return null; }
+
             var checksum = CalculateChecksum(stream);
             context.Response.Headers[HeaderNames.ETag] = checksum;
 
@@ -22,6 +24,8 @@ namespace cloudscribe.Web.Common.Helpers
             {
                 return new StatusCodeResult(304);
             }
+
+            stream.Seek(0, SeekOrigin.Begin);
 
             return null;
         }
