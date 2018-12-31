@@ -328,7 +328,7 @@ namespace cloudscribe.FileManager.Web.Controllers
             
             var status = ETagGenerator.AddEtagForStream(HttpContext, resourceStream);
             if(status != null) { return status; } //304
-
+            
             return new FileStreamResult(resourceStream, contentType);
         }
 
