@@ -1,6 +1,7 @@
 ﻿// Copyright (c) Brock Allen & Dominick Baier. All rights reserved.
 // Licensed under the Apache License, Version 2.0. See LICENSE in the project root for license information.
 
+using System;
 using System.Collections.Generic;
 
 namespace cloudscribe.Core.IdentityServer.EFCore.Entities
@@ -17,5 +18,10 @@ namespace cloudscribe.Core.IdentityServer.EFCore.Entities
         public bool Emphasize { get; set; }
         public bool ShowInDiscoveryDocument { get; set; } = true;
         public List<IdentityClaim> UserClaims { get; set; }
+
+        public List<IdentityResourceProperty> Properties { get; set; }
+        public DateTime Created { get; set; } = DateTime.UtcNow;
+        public DateTime? Updated { get; set; }
+        public bool NonEditable { get; set; }
     }
 }

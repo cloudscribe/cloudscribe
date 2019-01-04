@@ -169,10 +169,11 @@ namespace cloudscribe.Core.IdentityServerIntegration.Hosting
         }
     }
 
-    internal class EndSession
-    {
-        public string SubjectId { get; set; }
-        public string SessionId { get; set; }
-        public IEnumerable<string> ClientIds { get; set; }
-    }
+    //commented out 2019-02-04 previously this was internal in idserver, now in 2.3.x it is public
+    //internal class EndSession
+    //{
+    //    public string SubjectId { get; set; }
+    //    public string SessionId { get; set; }
+    //    public IEnumerable<string> ClientIds { get; set; }
+    //}
 }

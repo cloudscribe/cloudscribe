@@ -17,19 +17,34 @@ namespace cloudscribe.Core.IdentityServer.EFCore.Mappers
 
         internal static IMapper Mapper { get; }
 
-        public static PersistedGrant ToModel(this Entities.PersistedGrant token)
+        /// <summary>
+        /// Maps an entity to a model.
+        /// </summary>
+        /// <param name="entity">The entity.</param>
+        /// <returns></returns>
+        public static PersistedGrant ToModel(this Entities.PersistedGrant entity)
         {
-            return token == null ? null : Mapper.Map<PersistedGrant>(token);
+            return entity == null ? null : Mapper.Map<PersistedGrant>(entity);
         }
 
-        public static Entities.PersistedGrant ToEntity(this PersistedGrant token)
+        /// <summary>
+        /// Maps a model to an entity.
+        /// </summary>
+        /// <param name="model">The model.</param>
+        /// <returns></returns>
+        public static Entities.PersistedGrant ToEntity(this PersistedGrant model)
         {
-            return token == null ? null : Mapper.Map<Entities.PersistedGrant>(token);
+            return model == null ? null : Mapper.Map<Entities.PersistedGrant>(model);
         }
 
-        public static void UpdateEntity(this PersistedGrant token, Entities.PersistedGrant target)
+        /// <summary>
+        /// Updates an entity from a model.
+        /// </summary>
+        /// <param name="model">The model.</param>
+        /// <param name="entity">The entity.</param>
+        public static void UpdateEntity(this PersistedGrant model, Entities.PersistedGrant entity)
         {
-            Mapper.Map(token, target);
+            Mapper.Map(model, entity);
         }
     }
 }

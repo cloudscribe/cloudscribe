@@ -21,11 +21,18 @@ namespace cloudscribe.Core.IdentityServer.EFCore.Mappers
         /// </summary>
         public PersistedGrantMapperProfile()
         {
-            // entity to model
-            CreateMap<PersistedGrant, IdentityServer4.Models.PersistedGrant>(MemberList.Destination);
-
-            // model to entity
-            CreateMap<IdentityServer4.Models.PersistedGrant, PersistedGrant>(MemberList.Source);
+            CreateMap<Entities.PersistedGrant, IdentityServer4.Models.PersistedGrant>(MemberList.Destination)
+                .ReverseMap();
         }
+
+
+        //public PersistedGrantMapperProfile()
+        //{
+        //    // entity to model
+        //    CreateMap<PersistedGrant, IdentityServer4.Models.PersistedGrant>(MemberList.Destination);
+
+        //    // model to entity
+        //    CreateMap<IdentityServer4.Models.PersistedGrant, PersistedGrant>(MemberList.Source);
+        //}
     }
 }

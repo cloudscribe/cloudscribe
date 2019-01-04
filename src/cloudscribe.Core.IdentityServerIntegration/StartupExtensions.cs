@@ -101,6 +101,11 @@ namespace Microsoft.Extensions.DependencyInjection
                 //TODO: are the options set here actually used?
                 // how to make this handle folder tenants?
                 options.UserInteraction.ErrorUrl = "/oops/error";
+                options.UserInteraction.LogoutUrl = "/account/logout";
+                options.UserInteraction.LoginUrl = "/account/login";
+                options.UserInteraction.LoginReturnUrlParameter = "returnUrl";
+
+
 
             });
 

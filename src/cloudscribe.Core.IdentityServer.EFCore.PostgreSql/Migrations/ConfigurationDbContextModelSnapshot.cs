@@ -16,7 +16,7 @@ namespace cloudscribe.Core.IdentityServer.EFCore.PostgreSql.Migrations
 #pragma warning disable 612, 618
             modelBuilder
                 .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.SerialColumn)
-                .HasAnnotation("ProductVersion", "2.1.3-rtm-32065")
+                .HasAnnotation("ProductVersion", "2.2.0-rtm-35687")
                 .HasAnnotation("Relational:MaxIdentifierLength", 63);
 
             modelBuilder.Entity("cloudscribe.Core.IdentityServer.EFCore.Entities.ApiResource", b =>
@@ -24,6 +24,9 @@ namespace cloudscribe.Core.IdentityServer.EFCore.PostgreSql.Migrations
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnName("id");
+
+                    b.Property<DateTime>("Created")
+                        .HasColumnName("created");
 
                     b.Property<string>("Description")
                         .HasColumnName("description")
@@ -36,15 +39,24 @@ namespace cloudscribe.Core.IdentityServer.EFCore.PostgreSql.Migrations
                     b.Property<bool>("Enabled")
                         .HasColumnName("enabled");
 
+                    b.Property<DateTime?>("LastAccessed")
+                        .HasColumnName("last_accessed");
+
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnName("name")
                         .HasMaxLength(200);
 
+                    b.Property<bool>("NonEditable")
+                        .HasColumnName("non_editable");
+
                     b.Property<string>("SiteId")
                         .IsRequired()
                         .HasColumnName("site_id")
                         .HasMaxLength(36);
+
+                    b.Property<DateTime?>("Updated")
+                        .HasColumnName("updated");
 
                     b.HasKey("Id")
                         .HasName("pk_csids_api_resources");
@@ -65,8 +77,7 @@ namespace cloudscribe.Core.IdentityServer.EFCore.PostgreSql.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnName("id");
 
-                    b.Property<int?>("ApiResourceId")
-                        .IsRequired()
+                    b.Property<int>("ApiResourceId")
                         .HasColumnName("api_resource_id");
 
                     b.Property<string>("Type")
@@ -83,14 +94,41 @@ namespace cloudscribe.Core.IdentityServer.EFCore.PostgreSql.Migrations
                     b.ToTable("csids_api_claims");
                 });
 
+            modelBuilder.Entity("cloudscribe.Core.IdentityServer.EFCore.Entities.ApiResourceProperty", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnName("id");
+
+                    b.Property<int>("ApiResourceId")
+                        .HasColumnName("api_resource_id");
+
+                    b.Property<string>("Key")
+                        .IsRequired()
+                        .HasColumnName("key")
+                        .HasMaxLength(250);
+
+                    b.Property<string>("Value")
+                        .IsRequired()
+                        .HasColumnName("value")
+                        .HasMaxLength(2000);
+
+                    b.HasKey("Id")
+                        .HasName("pk_csids_api_resource_property");
+
+                    b.HasIndex("ApiResourceId")
+                        .HasName("ix_csids_api_resource_property_api_resource_id");
+
+                    b.ToTable("csids_api_resource_property");
+                });
+
             modelBuilder.Entity("cloudscribe.Core.IdentityServer.EFCore.Entities.ApiScope", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnName("id");
 
-                    b.Property<int?>("ApiResourceId")
-                        .IsRequired()
+                    b.Property<int>("ApiResourceId")
                         .HasColumnName("api_resource_id");
 
                     b.Property<string>("Description")
@@ -137,8 +175,7 @@ namespace cloudscribe.Core.IdentityServer.EFCore.PostgreSql.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnName("id");
 
-                    b.Property<int?>("ApiScopeId")
-                        .IsRequired()
+                    b.Property<int>("ApiScopeId")
                         .HasColumnName("api_scope_id");
 
                     b.Property<string>("Type")
@@ -161,8 +198,7 @@ namespace cloudscribe.Core.IdentityServer.EFCore.PostgreSql.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnName("id");
 
-                    b.Property<int?>("ApiResourceId")
-                        .IsRequired()
+                    b.Property<int>("ApiResourceId")
                         .HasColumnName("api_resource_id");
 
                     b.Property<string>("Description")
@@ -252,9 +288,15 @@ namespace cloudscribe.Core.IdentityServer.EFCore.PostgreSql.Migrations
                     b.Property<int?>("ConsentLifetime")
                         .HasColumnName("consent_lifetime");
 
+                    b.Property<DateTime>("Created")
+                        .HasColumnName("created");
+
                     b.Property<string>("Description")
                         .HasColumnName("description")
                         .HasMaxLength(1000);
+
+                    b.Property<int>("DeviceCodeLifetime")
+                        .HasColumnName("device_code_lifetime");
 
                     b.Property<bool>("EnableLocalLogin")
                         .HasColumnName("enable_local_login");
@@ -275,8 +317,15 @@ namespace cloudscribe.Core.IdentityServer.EFCore.PostgreSql.Migrations
                     b.Property<bool>("IncludeJwtId")
                         .HasColumnName("include_jwt_id");
 
+                    b.Property<DateTime?>("LastAccessed")
+                        .HasColumnName("last_accessed");
+
                     b.Property<string>("LogoUri")
-                        .HasColumnName("logo_uri");
+                        .HasColumnName("logo_uri")
+                        .HasMaxLength(2000);
+
+                    b.Property<bool>("NonEditable")
+                        .HasColumnName("non_editable");
 
                     b.Property<string>("PairWiseSubjectSalt")
                         .HasColumnName("pair_wise_subject_salt")
@@ -313,6 +362,16 @@ namespace cloudscribe.Core.IdentityServer.EFCore.PostgreSql.Migrations
                     b.Property<bool>("UpdateAccessTokenClaimsOnRefresh")
                         .HasColumnName("update_access_token_claims_on_refresh");
 
+                    b.Property<DateTime?>("Updated")
+                        .HasColumnName("updated");
+
+                    b.Property<string>("UserCodeType")
+                        .HasColumnName("user_code_type")
+                        .HasMaxLength(100);
+
+                    b.Property<int?>("UserSsoLifetime")
+                        .HasColumnName("user_sso_lifetime");
+
                     b.HasKey("Id")
                         .HasName("pk_csids_clients");
 
@@ -332,8 +391,7 @@ namespace cloudscribe.Core.IdentityServer.EFCore.PostgreSql.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnName("id");
 
-                    b.Property<int?>("ClientId")
-                        .IsRequired()
+                    b.Property<int>("ClientId")
                         .HasColumnName("client_id");
 
                     b.Property<string>("Type")
@@ -361,8 +419,7 @@ namespace cloudscribe.Core.IdentityServer.EFCore.PostgreSql.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnName("id");
 
-                    b.Property<int?>("ClientId")
-                        .IsRequired()
+                    b.Property<int>("ClientId")
                         .HasColumnName("client_id");
 
                     b.Property<string>("Origin")
@@ -385,8 +442,7 @@ namespace cloudscribe.Core.IdentityServer.EFCore.PostgreSql.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnName("id");
 
-                    b.Property<int?>("ClientId")
-                        .IsRequired()
+                    b.Property<int>("ClientId")
                         .HasColumnName("client_id");
 
                     b.Property<string>("GrantType")
@@ -409,8 +465,7 @@ namespace cloudscribe.Core.IdentityServer.EFCore.PostgreSql.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnName("id");
 
-                    b.Property<int?>("ClientId")
-                        .IsRequired()
+                    b.Property<int>("ClientId")
                         .HasColumnName("client_id");
 
                     b.Property<string>("Provider")
@@ -433,8 +488,7 @@ namespace cloudscribe.Core.IdentityServer.EFCore.PostgreSql.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnName("id");
 
-                    b.Property<int?>("ClientId")
-                        .IsRequired()
+                    b.Property<int>("ClientId")
                         .HasColumnName("client_id");
 
                     b.Property<string>("PostLogoutRedirectUri")
@@ -457,8 +511,7 @@ namespace cloudscribe.Core.IdentityServer.EFCore.PostgreSql.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnName("id");
 
-                    b.Property<int?>("ClientId")
-                        .IsRequired()
+                    b.Property<int>("ClientId")
                         .HasColumnName("client_id");
 
                     b.Property<string>("Key")
@@ -486,8 +539,7 @@ namespace cloudscribe.Core.IdentityServer.EFCore.PostgreSql.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnName("id");
 
-                    b.Property<int?>("ClientId")
-                        .IsRequired()
+                    b.Property<int>("ClientId")
                         .HasColumnName("client_id");
 
                     b.Property<string>("RedirectUri")
@@ -510,8 +562,7 @@ namespace cloudscribe.Core.IdentityServer.EFCore.PostgreSql.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnName("id");
 
-                    b.Property<int?>("ClientId")
-                        .IsRequired()
+                    b.Property<int>("ClientId")
                         .HasColumnName("client_id");
 
                     b.Property<string>("Scope")
@@ -534,8 +585,7 @@ namespace cloudscribe.Core.IdentityServer.EFCore.PostgreSql.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnName("id");
 
-                    b.Property<int?>("ClientId")
-                        .IsRequired()
+                    b.Property<int>("ClientId")
                         .HasColumnName("client_id");
 
                     b.Property<string>("Description")
@@ -569,8 +619,7 @@ namespace cloudscribe.Core.IdentityServer.EFCore.PostgreSql.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnName("id");
 
-                    b.Property<int?>("IdentityResourceId")
-                        .IsRequired()
+                    b.Property<int>("IdentityResourceId")
                         .HasColumnName("identity_resource_id");
 
                     b.Property<string>("Type")
@@ -593,6 +642,9 @@ namespace cloudscribe.Core.IdentityServer.EFCore.PostgreSql.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnName("id");
 
+                    b.Property<DateTime>("Created")
+                        .HasColumnName("created");
+
                     b.Property<string>("Description")
                         .HasColumnName("description")
                         .HasMaxLength(1000);
@@ -612,6 +664,9 @@ namespace cloudscribe.Core.IdentityServer.EFCore.PostgreSql.Migrations
                         .HasColumnName("name")
                         .HasMaxLength(200);
 
+                    b.Property<bool>("NonEditable")
+                        .HasColumnName("non_editable");
+
                     b.Property<bool>("Required")
                         .HasColumnName("required");
 
@@ -622,6 +677,9 @@ namespace cloudscribe.Core.IdentityServer.EFCore.PostgreSql.Migrations
                         .IsRequired()
                         .HasColumnName("site_id")
                         .HasMaxLength(36);
+
+                    b.Property<DateTime?>("Updated")
+                        .HasColumnName("updated");
 
                     b.HasKey("Id")
                         .HasName("pk_csids_identity_resources");
@@ -636,12 +694,49 @@ namespace cloudscribe.Core.IdentityServer.EFCore.PostgreSql.Migrations
                     b.ToTable("csids_identity_resources");
                 });
 
+            modelBuilder.Entity("cloudscribe.Core.IdentityServer.EFCore.Entities.IdentityResourceProperty", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnName("id");
+
+                    b.Property<int>("IdentityResourceId")
+                        .HasColumnName("identity_resource_id");
+
+                    b.Property<string>("Key")
+                        .IsRequired()
+                        .HasColumnName("key")
+                        .HasMaxLength(250);
+
+                    b.Property<string>("Value")
+                        .IsRequired()
+                        .HasColumnName("value")
+                        .HasMaxLength(2000);
+
+                    b.HasKey("Id")
+                        .HasName("pk_csids_identity_resource_property");
+
+                    b.HasIndex("IdentityResourceId")
+                        .HasName("ix_csids_identity_resource_property_identity_resource_id");
+
+                    b.ToTable("csids_identity_resource_property");
+                });
+
             modelBuilder.Entity("cloudscribe.Core.IdentityServer.EFCore.Entities.ApiResourceClaim", b =>
                 {
                     b.HasOne("cloudscribe.Core.IdentityServer.EFCore.Entities.ApiResource", "ApiResource")
                         .WithMany("UserClaims")
                         .HasForeignKey("ApiResourceId")
                         .HasConstraintName("fk_csids_api_claims_csids_api_resources_api_resource_id")
+                        .OnDelete(DeleteBehavior.Cascade);
+                });
+
+            modelBuilder.Entity("cloudscribe.Core.IdentityServer.EFCore.Entities.ApiResourceProperty", b =>
+                {
+                    b.HasOne("cloudscribe.Core.IdentityServer.EFCore.Entities.ApiResource", "ApiResource")
+                        .WithMany("Properties")
+                        .HasForeignKey("ApiResourceId")
+                        .HasConstraintName("fk_csids_api_resource_property_csids_api_resources_api_resourc~")
                         .OnDelete(DeleteBehavior.Cascade);
                 });
 
@@ -759,6 +854,15 @@ namespace cloudscribe.Core.IdentityServer.EFCore.PostgreSql.Migrations
                         .WithMany("UserClaims")
                         .HasForeignKey("IdentityResourceId")
                         .HasConstraintName("fk_csids_identity_claims_csids_identity_resources_identity_reso~")
+                        .OnDelete(DeleteBehavior.Cascade);
+                });
+
+            modelBuilder.Entity("cloudscribe.Core.IdentityServer.EFCore.Entities.IdentityResourceProperty", b =>
+                {
+                    b.HasOne("cloudscribe.Core.IdentityServer.EFCore.Entities.IdentityResource", "IdentityResource")
+                        .WithMany("Properties")
+                        .HasForeignKey("IdentityResourceId")
+                        .HasConstraintName("fk_csids_identity_resource_property_csids_identity_resources_i~")
                         .OnDelete(DeleteBehavior.Cascade);
                 });
 #pragma warning restore 612, 618
