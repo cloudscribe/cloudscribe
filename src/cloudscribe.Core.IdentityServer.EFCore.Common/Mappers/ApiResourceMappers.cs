@@ -17,14 +17,24 @@ namespace cloudscribe.Core.IdentityServer.EFCore.Mappers
 
         internal static IMapper Mapper { get; }
 
-        public static IdentityServer4.Models.ApiResource ToModel(this ApiResource resource)
+        /// <summary>
+        /// Maps an entity to a model.
+        /// </summary>
+        /// <param name="entity">The entity.</param>
+        /// <returns></returns>
+        public static IdentityServer4.Models.ApiResource ToModel(this ApiResource entity)
         {
-            return resource == null ? null : Mapper.Map<IdentityServer4.Models.ApiResource>(resource);
+            return entity == null ? null : Mapper.Map<IdentityServer4.Models.ApiResource>(entity);
         }
 
-        public static ApiResource ToEntity(this IdentityServer4.Models.ApiResource resource)
+        /// <summary>
+        /// Maps a model to an entity.
+        /// </summary>
+        /// <param name="model">The model.</param>
+        /// <returns></returns>
+        public static ApiResource ToEntity(this IdentityServer4.Models.ApiResource model)
         {
-            return resource == null ? null : Mapper.Map<ApiResource>(resource);
+            return model == null ? null : Mapper.Map<ApiResource>(model);
         }
     }
 }

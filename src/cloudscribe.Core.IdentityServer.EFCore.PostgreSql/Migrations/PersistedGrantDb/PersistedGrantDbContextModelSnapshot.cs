@@ -16,8 +16,51 @@ namespace cloudscribe.Core.IdentityServer.EFCore.PostgreSql.Migrations.Persisted
 #pragma warning disable 612, 618
             modelBuilder
                 .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.SerialColumn)
-                .HasAnnotation("ProductVersion", "2.1.3-rtm-32065")
+                .HasAnnotation("ProductVersion", "2.2.0-rtm-35687")
                 .HasAnnotation("Relational:MaxIdentifierLength", 63);
+
+            modelBuilder.Entity("cloudscribe.Core.IdentityServer.EFCore.Entities.DeviceFlowCodes", b =>
+                {
+                    b.Property<string>("UserCode")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnName("user_code")
+                        .HasMaxLength(200);
+
+                    b.Property<string>("ClientId")
+                        .IsRequired()
+                        .HasColumnName("client_id")
+                        .HasMaxLength(200);
+
+                    b.Property<DateTime>("CreationTime")
+                        .HasColumnName("creation_time");
+
+                    b.Property<string>("Data")
+                        .IsRequired()
+                        .HasColumnName("data")
+                        .HasMaxLength(50000);
+
+                    b.Property<string>("DeviceCode")
+                        .IsRequired()
+                        .HasColumnName("device_code")
+                        .HasMaxLength(200);
+
+                    b.Property<DateTime?>("Expiration")
+                        .IsRequired()
+                        .HasColumnName("expiration");
+
+                    b.Property<string>("SubjectId")
+                        .HasColumnName("subject_id")
+                        .HasMaxLength(200);
+
+                    b.HasKey("UserCode")
+                        .HasName("pk_csids_device_flow_codes");
+
+                    b.HasIndex("DeviceCode")
+                        .IsUnique()
+                        .HasName("ix_csids_device_flow_codes_device_code");
+
+                    b.ToTable("csids_device_flow_codes");
+                });
 
             modelBuilder.Entity("cloudscribe.Core.IdentityServer.EFCore.Entities.PersistedGrant", b =>
                 {
@@ -41,7 +84,7 @@ namespace cloudscribe.Core.IdentityServer.EFCore.PostgreSql.Migrations.Persisted
                         .IsRequired()
                         .HasColumnName("data");
 
-                    b.Property<DateTime>("Expiration")
+                    b.Property<DateTime?>("Expiration")
                         .HasColumnName("expiration");
 
                     b.Property<string>("SiteId")

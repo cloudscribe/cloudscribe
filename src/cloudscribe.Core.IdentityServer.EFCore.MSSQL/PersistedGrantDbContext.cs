@@ -21,7 +21,13 @@ namespace cloudscribe.Core.IdentityServer.EFCore.MSSQL
             modelBuilder.Entity<PersistedGrant>(entity =>
             {
                 entity.ToTable(EfConstants.TableNames.PersistedGrant);
+
+
                 entity.HasKey(x => new { x.Key, x.Type });
+
+                //2.3 changed to this but not sure I really need to change it
+                // and it seems dangerous to do so
+                //grant.HasKey(x => x.Key);
 
                 entity.Property(x => x.SiteId).HasMaxLength(36).IsRequired();
                 entity.HasIndex(x => x.SiteId);
@@ -31,7 +37,8 @@ namespace cloudscribe.Core.IdentityServer.EFCore.MSSQL
                 entity.Property(x => x.SubjectId).HasMaxLength(200);
                 entity.Property(x => x.ClientId).HasMaxLength(200).IsRequired();
                 entity.Property(x => x.CreationTime).IsRequired();
-                entity.Property(x => x.Expiration).IsRequired();
+                //changed to nullable in 2.3
+                //entity.Property(x => x.Expiration).IsRequired();
                 entity.Property(x => x.Data).IsRequired();
 
                 entity.HasIndex(x => x.SubjectId);
@@ -40,7 +47,26 @@ namespace cloudscribe.Core.IdentityServer.EFCore.MSSQL
 
             });
 
-            
+            modelBuilder.Entity<DeviceFlowCodes>(codes =>
+            {
+                codes.ToTable("csids_DeviceFlowCodes");
+
+                codes.Property(x => x.DeviceCode).HasMaxLength(200).IsRequired();
+                codes.Property(x => x.UserCode).HasMaxLength(200).IsRequired();
+                codes.Property(x => x.SubjectId).HasMaxLength(200);
+                codes.Property(x => x.ClientId).HasMaxLength(200).IsRequired();
+                codes.Property(x => x.CreationTime).IsRequired();
+                codes.Property(x => x.Expiration).IsRequired();
+                // 50000 chosen to be explicit to allow enough size to avoid truncation, yet stay beneath the MySql row size limit of ~65K
+                // apparently anything over 4K converts to nvarchar(max) on SqlServer
+                codes.Property(x => x.Data).HasMaxLength(50000).IsRequired();
+
+                codes.HasKey(x => new { x.UserCode });
+
+                codes.HasIndex(x => x.DeviceCode).IsUnique();
+            });
+
+
         }
     }
 }

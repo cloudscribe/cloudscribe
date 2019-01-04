@@ -106,7 +106,7 @@ namespace Microsoft.AspNetCore.Builder
             var boostrapVersion = config.GetValue<int>("DevOptions:BootstrapVersion");
 
             services.AddMvc(options => {
-                //options.EnableEndpointRouting = false;
+                options.EnableEndpointRouting = false;
                
             })
                     .AddViewLocalization(LanguageViewLocationExpanderFormat.Suffix)

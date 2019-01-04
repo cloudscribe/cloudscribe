@@ -3,6 +3,7 @@
 
 
 using IdentityServer4.Models;
+using System;
 using System.Collections.Generic;
 using static IdentityServer4.IdentityServerConstants;
 
@@ -56,5 +57,14 @@ namespace cloudscribe.Core.IdentityServer.EFCore.Entities
         public string PairWiseSubjectSalt { get; set; }
         public List<ClientCorsOrigin> AllowedCorsOrigins { get; set; }
         public List<ClientProperty> Properties { get; set; }
+
+        //new in 2.3
+        public DateTime Created { get; set; } = DateTime.UtcNow;
+        public DateTime? Updated { get; set; }
+        public DateTime? LastAccessed { get; set; }
+        public int? UserSsoLifetime { get; set; }
+        public string UserCodeType { get; set; }
+        public int DeviceCodeLifetime { get; set; } = 300;
+        public bool NonEditable { get; set; }
     }
 }

@@ -34,12 +34,19 @@ namespace cloudscribe.Core.IdentityServer.EFCore.MySql
                 entity.Property(x => x.ProtocolType).HasMaxLength(200).IsRequired();
                 entity.Property(x => x.ClientName).HasMaxLength(200);
                 entity.Property(x => x.ClientUri).HasMaxLength(2000);
+
                 //new in 2.0
                 entity.Property(x => x.ClientClaimsPrefix).HasMaxLength(200);
                 entity.Property(x => x.BackChannelLogoutUri).HasMaxLength(2000);
                 entity.Property(x => x.Description).HasMaxLength(1000);
                 entity.Property(x => x.FrontChannelLogoutUri).HasMaxLength(2000);
                 entity.Property(x => x.PairWiseSubjectSalt).HasMaxLength(200);
+
+                //new in 2.3
+                entity.Property(x => x.LogoUri).HasMaxLength(2000);
+                entity.Property(x => x.Description).HasMaxLength(1000);
+                entity.Property(x => x.UserCodeType).HasMaxLength(100);
+                entity.HasMany(x => x.Properties).WithOne(x => x.Client).HasForeignKey(x => x.ClientId).IsRequired().OnDelete(DeleteBehavior.Cascade);
 
                 entity.HasIndex(x => new { x.SiteId, x.ClientId })
                 .IsUnique();
@@ -82,7 +89,7 @@ namespace cloudscribe.Core.IdentityServer.EFCore.MySql
                 b.Property<int>("Id")
                         .ValueGeneratedOnAdd();
 
-                b.Property<int?>("ClientId")
+                b.Property<int>("ClientId")
                     .IsRequired();
 
                 b.Property<string>("Key")
@@ -153,6 +160,15 @@ namespace cloudscribe.Core.IdentityServer.EFCore.MySql
                 .IsUnique();
 
                 entity.HasMany(x => x.UserClaims).WithOne(x => x.IdentityResource).IsRequired().OnDelete(DeleteBehavior.Cascade);
+                entity.HasMany(x => x.Properties).WithOne(x => x.IdentityResource).HasForeignKey(x => x.IdentityResourceId).IsRequired().OnDelete(DeleteBehavior.Cascade);
+
+            });
+
+            modelBuilder.Entity<IdentityResourceProperty>(property =>
+            {
+                property.ToTable("csids_IdentityResourceProperty");
+                property.Property(x => x.Key).HasMaxLength(250).IsRequired();
+                property.Property(x => x.Value).HasMaxLength(2000).IsRequired();
             });
 
             modelBuilder.Entity<IdentityClaim>(entity =>
@@ -182,6 +198,15 @@ namespace cloudscribe.Core.IdentityServer.EFCore.MySql
                 entity.HasMany(x => x.Secrets).WithOne(x => x.ApiResource).IsRequired().OnDelete(DeleteBehavior.Cascade);
                 entity.HasMany(x => x.Scopes).WithOne(x => x.ApiResource).IsRequired().OnDelete(DeleteBehavior.Cascade);
                 entity.HasMany(x => x.UserClaims).WithOne(x => x.ApiResource).IsRequired().OnDelete(DeleteBehavior.Cascade);
+                entity.HasMany(x => x.Properties).WithOne(x => x.ApiResource).HasForeignKey(x => x.ApiResourceId).IsRequired().OnDelete(DeleteBehavior.Cascade);
+
+            });
+
+            modelBuilder.Entity<ApiResourceProperty>(property =>
+            {
+                property.ToTable("csids_ApiResourceProperty");
+                property.Property(x => x.Key).HasMaxLength(250).IsRequired();
+                property.Property(x => x.Value).HasMaxLength(2000).IsRequired();
             });
 
             modelBuilder.Entity<ApiSecret>(entity =>
