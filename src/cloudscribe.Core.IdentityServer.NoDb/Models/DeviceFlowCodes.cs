@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace cloudscribe.Core.IdentityServer.EFCore.Entities
+namespace cloudscribe.Core.IdentityServer.NoDb.Models
 {
     public class DeviceFlowCodes
     {
@@ -64,4 +64,5 @@ namespace cloudscribe.Core.IdentityServer.EFCore.Entities
         /// </value>
         public string Data { get; set; }
     }
+
 }

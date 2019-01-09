@@ -2,22 +2,22 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
-using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
-using cloudscribe.Core.IdentityServer.EFCore.pgsql;
+using cloudscribe.Core.IdentityServer.EFCore.MySql;
 
-namespace cloudscribe.Core.IdentityServer.EFCore.pgsql.Migrations.PersistedGrantDb
+namespace cloudscribe.Core.IdentityServer.EFCore.MySql.Migrations.PersistedGrantDb
 {
     [DbContext(typeof(PersistedGrantDbContext))]
-    partial class PersistedGrantDbContextModelSnapshot : ModelSnapshot
+    [Migration("20190109170548_csids-grants-20190109")]
+    partial class csidsgrants20190109
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.SerialColumn)
                 .HasAnnotation("ProductVersion", "2.2.0-rtm-35687")
-                .HasAnnotation("Relational:MaxIdentifierLength", 63);
+                .HasAnnotation("Relational:MaxIdentifierLength", 64);
 
             modelBuilder.Entity("cloudscribe.Core.IdentityServer.EFCore.Entities.DeviceFlowCodes", b =>
                 {

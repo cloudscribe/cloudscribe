@@ -14,6 +14,8 @@ namespace cloudscribe.Core.IdentityServer.EFCore.DbContexts
 
         public DbSet<PersistedGrant> PersistedGrants { get; set; }
 
+        public DbSet<DeviceFlowCodes> DeviceFlowCodes { get; set; }
+
         public Task<int> SaveChangesAsync()
         {
             return base.SaveChangesAsync();

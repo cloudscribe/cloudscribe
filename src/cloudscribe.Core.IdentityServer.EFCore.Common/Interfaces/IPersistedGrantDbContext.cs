@@ -14,6 +14,7 @@ namespace cloudscribe.Core.IdentityServer.EFCore.Interfaces
     public interface IPersistedGrantDbContext : IDisposable
     {
         DbSet<PersistedGrant> PersistedGrants { get; set; }
+        DbSet<DeviceFlowCodes> DeviceFlowCodes { get; set; }
 
         DatabaseFacade Database { get; }
 

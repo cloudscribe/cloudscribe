@@ -40,6 +40,10 @@ namespace cloudscribe.Core.IdentityServer.EFCore.MySql.Migrations.PersistedGrant
                     b.Property<DateTime?>("Expiration")
                         .IsRequired();
 
+                    b.Property<string>("SiteId")
+                        .IsRequired()
+                        .HasMaxLength(36);
+
                     b.Property<string>("SubjectId")
                         .HasMaxLength(200);
 
@@ -47,6 +51,8 @@ namespace cloudscribe.Core.IdentityServer.EFCore.MySql.Migrations.PersistedGrant
 
                     b.HasIndex("DeviceCode")
                         .IsUnique();
+
+                    b.HasIndex("SiteId");
 
                     b.ToTable("csids_DeviceFlowCodes");
                 });
