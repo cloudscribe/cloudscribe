@@ -25,6 +25,7 @@ namespace cloudscribe.Core.IdentityServer.EFCore.Extensions
             services.AddTransient<IClientCommands, ClientCommands>();
 
             services.AddTransient<IPersistedGrantStore, PersistedGrantStore>();
+            services.AddTransient<IDeviceFlowStore, DeviceFlowStore>();
 
             services.AddSingleton<IApiResourceCommandsSingleton, ApiResourceCommands>();
             services.AddSingleton<IApiResourceQueriesSingleton, ApiResourceQueries>();

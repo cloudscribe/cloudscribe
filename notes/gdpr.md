@@ -1,4 +1,7 @@
 
+## Complete Guide to GDPR
+https://gdpr.eu/
+
 
 https://stratechery.com/2018/the-european-union-versus-the-internet/
 
