@@ -153,3 +153,9 @@ https://github.com/stripe/stripe-webhook-monitor
 An alternative to webhooks is to query events 
 https://stripe.com/docs/api#retrieve_event
 
+## Tax
+
+https://www.taxjar.com/
+
+https://www.taxjar.com/stripe-sales-tax/
+

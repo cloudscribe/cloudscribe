@@ -1,4 +1,7 @@
 
+https://github.com/abomadi/cloudscribe/wiki
+
+
 
 Azure Kubernetes Service 
 https://docs.microsoft.com/en-us/azure/aks/best-practices
