@@ -8,9 +8,9 @@ namespace cloudscribe.Core.IdentityServer.EFCore.MySql.Migrations
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.DropForeignKey(
-                name: "FK_csids_IdentityClaims_csids_IdentityResources_IdentityResourceId",
-                table: "csids_IdentityClaims");
+            //migrationBuilder.DropForeignKey(
+            //    name: "FK_csids_IdentityClaims_csids_IdentityResources_IdentityResourceId",
+            //    table: "csids_IdentityClaims");
 
             migrationBuilder.AddColumn<DateTime>(
                 name: "Created",
@@ -150,19 +150,20 @@ namespace cloudscribe.Core.IdentityServer.EFCore.MySql.Migrations
                 table: "csids_IdentityResourceProperty",
                 column: "IdentityResourceId");
 
-            migrationBuilder.AddForeignKey(
-                name: "FK_csids_IdentityClaims_csids_IdentityResources_IdentityResourc~",
-                table: "csids_IdentityClaims",
-                column: "IdentityResourceId",
-                principalTable: "csids_IdentityResources",
-                principalColumn: "Id",
-                onDelete: ReferentialAction.Cascade);
+            //migrationBuilder.AddForeignKey(
+            //    //name: "FK_csids_IdentityClaims_csids_IdentityResources_IdentityResourc~",
+            //    name: "FK_csids_IdentityClaims_csids_IdentityResources_IdentityResourceId",
+            //    table: "csids_IdentityClaims",
+            //    column: "IdentityResourceId",
+            //    principalTable: "csids_IdentityResources",
+            //    principalColumn: "Id",
+            //    onDelete: ReferentialAction.Cascade);
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropForeignKey(
-                name: "FK_csids_IdentityClaims_csids_IdentityResources_IdentityResourc~",
+                name: "FK_csids_IdentityClaims_csids_IdentityResources_IdentityResourceId",
                 table: "csids_IdentityClaims");
 
             migrationBuilder.DropTable(
@@ -235,13 +236,13 @@ namespace cloudscribe.Core.IdentityServer.EFCore.MySql.Migrations
                 oldMaxLength: 2000,
                 oldNullable: true);
 
-            migrationBuilder.AddForeignKey(
-                name: "FK_csids_IdentityClaims_csids_IdentityResources_IdentityResourceId",
-                table: "csids_IdentityClaims",
-                column: "IdentityResourceId",
-                principalTable: "csids_IdentityResources",
-                principalColumn: "Id",
-                onDelete: ReferentialAction.Cascade);
+            //migrationBuilder.AddForeignKey(
+            //    name: "FK_csids_IdentityClaims_csids_IdentityResources_IdentityResourceId",
+            //    table: "csids_IdentityClaims",
+            //    column: "IdentityResourceId",
+            //    principalTable: "csids_IdentityResources",
+            //    principalColumn: "Id",
+            //    onDelete: ReferentialAction.Cascade);
         }
     }
 }
