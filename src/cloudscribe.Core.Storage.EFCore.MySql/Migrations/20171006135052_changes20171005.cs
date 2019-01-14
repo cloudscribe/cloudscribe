@@ -14,7 +14,7 @@ namespace cloudscribe.Core.Storage.EFCore.MySql.Migrations
                 {
                     UserId = table.Column<Guid>(type: "char(36)", nullable: false),
                     SiteId = table.Column<Guid>(type: "char(36)", nullable: false),
-                    LoginProvider = table.Column<string>(type: "varchar(450)", maxLength: 450, nullable: false),
+                    LoginProvider = table.Column<string>(type: "varchar(128)", maxLength: 128, nullable: false),
                     Name = table.Column<string>(type: "varchar(450)", maxLength: 450, nullable: false),
                     Value = table.Column<string>(type: "longtext", nullable: true)
                 },

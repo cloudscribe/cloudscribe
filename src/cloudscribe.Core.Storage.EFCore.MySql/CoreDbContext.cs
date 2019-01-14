@@ -620,7 +620,7 @@ namespace cloudscribe.Core.Storage.EFCore.MySql
 
                 entity.HasKey(p => new { p.UserId, p.SiteId, p.LoginProvider, p.Name });
 
-                entity.Property(p => p.LoginProvider).HasMaxLength(450);
+                entity.Property(p => p.LoginProvider).HasMaxLength(128);
 
                 entity.Property(p => p.Name).HasMaxLength(450);
 

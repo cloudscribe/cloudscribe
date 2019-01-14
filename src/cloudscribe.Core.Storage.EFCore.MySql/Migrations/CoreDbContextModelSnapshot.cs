@@ -609,7 +609,7 @@ namespace cloudscribe.Core.Storage.EFCore.MySql.Migrations
                     b.Property<Guid>("SiteId");
 
                     b.Property<string>("LoginProvider")
-                        .HasMaxLength(450);
+                        .HasMaxLength(128);
 
                     b.Property<string>("Name")
                         .HasMaxLength(450);
