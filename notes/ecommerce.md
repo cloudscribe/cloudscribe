@@ -153,6 +153,22 @@ https://github.com/stripe/stripe-webhook-monitor
 An alternative to webhooks is to query events 
 https://stripe.com/docs/api#retrieve_event
 
+## Stripe Connect
+
+https://stripe.com/docs/recipes/store-builder
+
+At the end of the OAuth workflow, you’ll be provided with authorization credentials for the connected account:
+
+{
+  ...
+  "stripe_publishable_key": "pk_live_h9xguYGf2GcfytemKs5tHrtg",
+  "access_token": "sk_live_AxSI9q6ieYWjGIeRbURf6EG0",
+  "stripe_user_id": "acct_Z3pHiNex3M2Fz2",
+  ...
+}
+You’ll want to store the stripe_user_id, as this is used to identify the account when making API requests. The stripe_publishable_key will be necessary for requesting tokens
+
+
 ## Tax
 
 https://www.taxjar.com/

@@ -20,12 +20,19 @@ namespace Microsoft.Extensions.DependencyInjection
             string connectionString,
             int maxConnectionRetryCount = 0,
             int maxConnectionRetryDelaySeconds = 30,
-            ICollection<int> transientSqlErrorNumbersToAdd = null
+            ICollection<int> transientSqlErrorNumbersToAdd = null,
+            bool useSql2008Compatibility = false
             )
         {
             //builder.AddConfigurationStoreMSSQL(connectionString);    
             //builder.AddOperationalStoreMSSQL(connectionString);
-            builder.Services.AddCloudscribeCoreIdentityServerEFStorageMSSQL(connectionString, maxConnectionRetryCount, maxConnectionRetryDelaySeconds, transientSqlErrorNumbersToAdd);
+            builder.Services.AddCloudscribeCoreIdentityServerEFStorageMSSQL(
+                connectionString, 
+                maxConnectionRetryCount, 
+                maxConnectionRetryDelaySeconds, 
+                transientSqlErrorNumbersToAdd,
+                useSql2008Compatibility
+                );
             builder.Services.AddScoped<IStorageInfo, StorageInfo>();
 
             return builder;
