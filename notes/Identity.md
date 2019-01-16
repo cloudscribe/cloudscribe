@@ -1,4 +1,5 @@
 
+https://brockallen.com/2019/01/11/same-site-cookies-asp-net-core-and-external-authentication-providers/
 
 https://developer.okta.com/blog/2018/08/02/aspnet-core-angular-crud
 
