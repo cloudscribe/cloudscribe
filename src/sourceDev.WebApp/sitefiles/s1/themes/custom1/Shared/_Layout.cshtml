@@ -124,5 +124,6 @@ if (!string.IsNullOrWhiteSpace(Tenant.SiteFolderName)) { siteRoot = "/" + Tenant
     @RenderSection("Bottom", required: false)
     @RenderSection("Scripts", required: false)
     <add-this profile-id="@Tenant.AddThisDotComUsername" async></add-this>
+    <mini-profiler />
 </body>
 </html>
