@@ -5,7 +5,7 @@
     ViewData["BodyClass"] = "manage-section user-info";
 }
 @section Styles {
-    @{await Html.RenderPartialAsync("UserInfoStylePartial"); }
+    <partial name="UserInfoStylePartial" />
 }
 <h2>@ViewData["Title"]</h2>
 <form asp-controller="Manage" asp-action="UserInfo" method="post" role="form">
@@ -45,18 +45,18 @@
         <input asp-for="PhoneNumber" class="form-control" />
         <span asp-validation-for="PhoneNumber" class="invalid-feedback"></span>
     </div>
-    @{await Html.RenderPartialAsync("UserInfoDobPartial", Model); }
+    <partial name="UserInfoDobPartial" model="Model" />
 
     <div class="form-group">
         <label asp-for="WebSiteUrl">@sr["Website Url"]</label>
         <input asp-for="WebSiteUrl" class="form-control" />
     </div>
-    @{await Html.RenderPartialAsync("UserInfoMiddlePartial", Model); }
+    <partial name="UserInfoMiddlePartial" model="Model" />
     <div class="form-group">
         <button name="submit" type="submit" class="btn btn-primary">@sr["Update"]</button>
     </div>
 </form>
 @section Scripts {
-    @{await Html.RenderPartialAsync("UserInfoScriptsPartial"); }
+    <partial name="UserInfoScriptsPartial" />
     <script src="~/cr/js/unobtrusive-validation-bs4.min.js"></script>
 }
