@@ -53,6 +53,30 @@
           },
 
           {
+            "Key": "DateOfBirth",
+            "Label": "Date of Birth",
+            "EditPartialViewName": "FormItemDOBPartial",
+            "ReadOnlyPartialViewName": "FormItemLabelPartial",
+            "Tooltip": "",
+            "DefaultValue": "",
+            "CssClass": "dp",
+            "IconCssClass": "fa fa-calendar",
+            "IconOnLeft": "true",
+            "VisibleOnRegistration": "true",
+            "VisibleToUserOnProfile": "false",
+            "EditableByUserOnProfile": "false",
+            "VisibleOnAdminUserEdit": "false",
+            "EditableOnAdminUserEdit": "false",
+            "MaxLength": "30",
+            "MaxLengthErrorMessage": "Date of Birth has a max length of 30 characters",
+            "Required": "true",
+            "RequiredErrorMessage": "Date of Birth is required!",
+            "RegexValidationExpression": "",
+            "RegexErrorMessage": "",
+            "Options": []
+          },
+
+          {
             "Key": "MembershipNo",
             "Label": "Membership Number",
             "EditPartialViewName": "FormItemInputPartial",

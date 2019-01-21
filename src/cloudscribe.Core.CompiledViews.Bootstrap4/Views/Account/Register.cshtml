@@ -15,7 +15,7 @@
     <meta name="robots" content="noindex" />
 }
 @section Styles {
-    @{await Html.RenderPartialAsync("RegistrationStylePartial"); }
+    <partial name="RegistrationStylePartial" />
 }
 @if (!string.IsNullOrWhiteSpace(Model.RecaptchaSiteKey))
 {
@@ -30,7 +30,7 @@
 <h2>@ViewData["Title"]</h2>
 @if (!string.IsNullOrWhiteSpace(Model.RegistrationPreamble))
 {
-    await Html.RenderPartialAsync("RegisterPreamblePartial", Model);
+    <partial name="RegisterPreamblePartial" model="Model" />
 }
 <form id="register-form" asp-controller="Account" asp-action="Register" asp-route-returnurl='@ViewData["ReturnUrl"]'
       data-submit-once="true">
@@ -63,7 +63,7 @@
             <span asp-validation-for="Email" class="invalid-feedback"></span>
         </div>
     </div>
-    @{await Html.RenderPartialAsync("RegisterMiddle", Model); }
+    <partial name="RegisterMiddle" model="Model" />
     <div class="form-group">
         <label asp-for="Password">@sr["Password"]</label>
         <div class="input-group">
@@ -85,11 +85,11 @@
             <span asp-validation-for="ConfirmPassword" class="invalid-feedback"></span>
         </div>
     </div>
-    @{await Html.RenderPartialAsync("RegisterBottom", Model); }
+    <partial name="RegisterBottom" model="Model" />
 
     @if (!string.IsNullOrWhiteSpace(Model.RegistrationAgreement))
     {
-        await Html.RenderPartialAsync("RegisterAgreementPartial", Model);
+        <partial name="RegisterAgreementPartial" model="Model" />
     }
     else
     {
@@ -120,12 +120,12 @@
     var LoginProviders = Model.ExternalAuthenticationList.ToList();
     if (LoginProviders.Count > 0)
     {
-        await Html.RenderPartialAsync("SocialLoginPartial", LoginProviders);
+        <partial name="SocialLoginPartial" model="LoginProviders" />
     }
 }
 @section Scripts {
-    @{await Html.RenderPartialAsync("RegistrationScriptsPartial"); }
+    <partial name="RegistrationScriptsPartial" />
     <script src="~/cr/js/jquery.validate.hooks.min.js"></script>
     <script src="~/cr/js/jqueryvaildation.submitonce-unobtrusive.min.js"></script>
-    
+
 }

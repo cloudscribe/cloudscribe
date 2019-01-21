@@ -7,8 +7,7 @@
     ViewData["SideNavVisible"] = true;
 }
 @section Styles {
-
-    @{ await Html.RenderPartialAsync("NewUserStylePartial"); }
+    <partial name="NewUserStylePartial" />
 }
 
 <h2>@ViewBag.Title</h2>
@@ -70,8 +69,8 @@
             </div>
         </div>
     }
-    
-    @{await Html.RenderPartialAsync("NewUserMiddlePartial", Model); }
+
+    <partial name="NewUserMiddlePartial" model="Model" />
     <div class="form-group">
         <button type="submit" class="btn btn-primary" data-disabled-text='@sr["Working..."]' data-enabled-text='@sr["Save"]'>@sr["Save"]</button>
     </div>
@@ -79,14 +78,14 @@
 </form>
 
 @section SideNav {
-    @{ await Html.RenderPartialAsync("AdminSideNav"); }
+    <partial name="AdminSideNav" />
 }
 @section Toolbar{
-    @{ await Html.RenderPartialAsync("AdminSideNavToggle"); }
+    <partial name="AdminSideNavToggle" />
 }
 @section Scripts {
-    @{ await Html.RenderPartialAsync("AdminSideNavScripts"); }
-    @{ await Html.RenderPartialAsync("NewUserScriptsPartial"); }
+    <partial name="AdminSideNavScripts" />
+    <partial name="NewUserScriptsPartial" />
     <script src="~/cr/js/unobtrusive-validation-bs4.min.js"></script>
     <script src="~/cr/js/remote-validation-onblur-unobtrusive.min.js"></script>
     <script src="~/cr/js/jquery.validate.hooks.min.js"></script>

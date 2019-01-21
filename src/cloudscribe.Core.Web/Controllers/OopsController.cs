@@ -32,11 +32,12 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
             if (statusFeature != null)
             {
                 var originalPath = statusFeature.OriginalPath;
+                
 
                 if (statusCode == 404)
                 {
                     var ipAddress = HttpContext.Connection.RemoteIpAddress.ToString();
-                    _log.LogWarning($"handled 404 for url: {originalPath} from ipaddress {ipAddress}");
+                    _log.LogWarning($"handled 404 for url: {originalPath} {HttpContext.Request.Method} from ipaddress {ipAddress}");
 
                 }
 
