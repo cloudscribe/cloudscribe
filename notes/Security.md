@@ -1,4 +1,7 @@
 
+https://www.templarbit.com/blog/2018/03/20/tracking-users-with-css/
+
+
 // web standards authentication without passwords
 https://www.engadget.com/2018/04/10/fido-w3c-web-authentication/
 

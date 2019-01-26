@@ -27,10 +27,16 @@ namespace Microsoft.Extensions.DependencyInjection
             services.TryAddScoped<IMediaPathResolver, DefaultMediaPathResolver>();
             services.AddScoped<IVersionProvider, FileManagerVersionProvider>();
 
-            
+
 
             // Angular's default header name for sending the XSRF token.
-            services.AddAntiforgery(options => options.HeaderName = "X-XSRF-TOKEN");
+            //services.AddAntiforgery(options =>
+            //{
+            //    options.HeaderName = "X-XSRF-TOKEN";
+            //    options.Cookie.
+            //}
+                  
+            //);
 
             if(configuration != null)
             {

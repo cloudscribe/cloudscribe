@@ -2,11 +2,15 @@
 <html>
 <head>
     <title>@ViewBag.Title</title>
-    <link rel="stylesheet" href="~/cr/css/bootstrap.min.css" />
-    @RenderSection("style", required: false)
+    <link rel="stylesheet" href="~/cr/css/bootstrap4.min.css" />
+    <link rel="stylesheet" href="~/cr/css/font-awesome563.min.css" />
+    @RenderSection("styles", required: false)
 </head>
 <body>
- @RenderBody()
- @RenderSection("scripts", required: false)
+    @RenderBody()
+   <script src="~/cr/js/jquery.min.js"></script>
+   <script src="~/cr/js/tether.min.js"></script>
+   <script src="~/cr/js/bootstrap4.bundle.min.js"></script>
+    @RenderSection("scripts", required: false)
 </body>
 </html>

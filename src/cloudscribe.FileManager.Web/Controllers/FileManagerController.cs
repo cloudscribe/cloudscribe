@@ -60,6 +60,41 @@ namespace cloudscribe.FileManager.Web.Controllers
         [HttpGet]
         //[GenerateAntiforgeryTokenCookieForAjax]
         [Authorize(Policy = "FileManagerPolicy")]
+        public async Task<IActionResult> Index(BrowseModel model)
+        {
+            model.InitialVirtualPath = await _fileManagerService.GetRootVirtualPath().ConfigureAwait(false);
+            model.FileTreeServiceUrl = Url.Action("GetFileTreeJson", "FileManager", new { fileType = model.Type });
+            model.UploadServiceUrl = Url.Action("Upload", "FileManager");
+            model.CreateFolderServiceUrl = Url.Action("CreateFolder", "FileManager");
+            model.DeleteFolderServiceUrl = Url.Action("DeleteFolder", "FileManager");
+            model.RenameFolderServiceUrl = Url.Action("RenameFolder", "FileManager");
+            model.DeleteFileServiceUrl = Url.Action("DeleteFile", "FileManager");
+            model.RenameFileServiceUrl = Url.Action("RenameFile", "FileManager");
+            var authResult = await _authorizationService.AuthorizeAsync(User, "FileManagerDeletePolicy");
+            model.CanDelete = authResult.Succeeded;
+
+            //model.AllowedFileExtensionsRegex = @"/(\.|\/)(gif|GIF|jpg|JPG|jpeg|JPEG|png|PNG|flv|FLV|swf|SWF|wmv|WMV|mp3|MP3|mp4|MP4|m4a|M4A|m4v|M4V|oga|OGA|ogv|OGV|webma|WEBMA|webmv|WEBMV|webm|WEBM|wav|WAV|fla|FLA|tif|TIF|asf|ASF|asx|ASX|avi|AVI|mov|MOV|mpeg|MPEG|mpg|MPG|zip|ZIP|pdf|PDF|doc|DOC|docx|DOCX|xls|XLS|xlsx|XLSX|ppt|PPT|pptx|PPTX|pps|PPS|csv|CSV|txt|TXT|htm|HTM|html|HTML|css|CSS)$/i";
+            if (model.Type == "image")
+            {
+                model.AllowedFileExtensionsRegex = _allowedFilesRegexBuilder.BuildRegex(_autoUploadOptions.ImageFileExtensions);
+            }
+            else
+            {
+                model.AllowedFileExtensionsRegex = _allowedFilesRegexBuilder.BuildRegex(_autoUploadOptions.AllowedFileExtensions);
+            }
+
+            if (HttpContext.Request.IsAjaxRequest())
+            {
+                return PartialView(model);
+            }
+
+            return View(model);
+        }
+
+
+        [HttpGet]
+        //[GenerateAntiforgeryTokenCookieForAjax]
+        [Authorize(Policy = "FileManagerPolicy")]
         public async Task<IActionResult> FileDialog(BrowseModel model)
         {
             model.InitialVirtualPath = await _fileManagerService.GetRootVirtualPath().ConfigureAwait(false);
