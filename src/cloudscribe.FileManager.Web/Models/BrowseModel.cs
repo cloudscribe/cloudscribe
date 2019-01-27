@@ -5,7 +5,7 @@
         /// <summary>
         /// the type of files to browse
         /// </summary>
-        public string Type { get; set; } = "image";
+        public string Type { get; set; } = "file";
 
         /// <summary>
         /// the client side id of the editor
@@ -23,6 +23,7 @@
         public string FileTreeServiceUrl { get; set; }
 
         public string UploadServiceUrl { get; set; }
+        public string FileDownloadServiceUrl { get; set; }
 
         public string CreateFolderServiceUrl { get; set; }
 

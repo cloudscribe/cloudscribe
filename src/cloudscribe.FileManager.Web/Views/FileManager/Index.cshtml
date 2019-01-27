@@ -4,12 +4,12 @@
 @addTagHelper "*, Microsoft.AspNetCore.Mvc.TagHelpers"
 @model BrowseModel
 @inject IOptions<AutomaticUploadOptions> autoUploadOptionsAccessor
+@inject IOptions<FileManagerIcons> iconsAccessor
 @inject IStringLocalizer<FileManagerStringResources> sr
 @using Microsoft.AspNetCore.Antiforgery
 @inject IAntiforgery antiforgery
-@inject IOptions<FileManagerIcons> iconsAccessor
 @{
-    Layout = "_LayoutDialog";
+    ViewData["Title"] = sr["File Manager"];
     var tokens = antiforgery.GetAndStoreTokens(Context);
     var upoadOptions = autoUploadOptionsAccessor.Value;
     //https://github.com/patternfly/patternfly-bootstrap-treeview
@@ -22,11 +22,12 @@
       data-filetree-url="@Model.FileTreeServiceUrl"
       data-anti-forgery-token="@tokens.RequestToken"
       data-upload-url="@Model.UploadServiceUrl"
+      data-file-download-url="@Model.FileDownloadServiceUrl"
       data-ckfunc="@Model.CKEditorFuncNum"
       data-create-folder-url="@Model.CreateFolderServiceUrl"
       data-can-delete="@Model.CanDelete"
-      data-can-select="true"
-      data-can-download="false"
+      data-can-select="false"
+      data-can-download="true"
       data-delete-folder-url="@Model.DeleteFolderServiceUrl"
       data-rename-folder-url="@Model.RenameFolderServiceUrl"
       data-delete-file-url="@Model.DeleteFileServiceUrl"
@@ -42,13 +43,9 @@
         <li id="tab2" class="nav-item" role="tab">
             <a href="#tabUpload" class="nav-link" data-toggle="tab"><i class="@icons.Upload" aria-hidden="true"></i>&nbsp;@sr["Upload"]</a>
         </li>
-        @if (Model.Type == "image")
-        {
-            <li id="tab3" class="nav-item" role="tab">
-                <a id="lnkCrop" class="nav-link" href="#tabCrop" data-toggle="tab"><i class="@icons.Cut" aria-hidden="true"></i>&nbsp;@sr["Crop"]</a>
-            </li>
-        }
-
+        <li id="liCrop" class="nav-item" role="tab">
+            <a id="lnkCrop" class="nav-link" href="#tabCrop" data-toggle="tab"><i class="@icons.Cut" aria-hidden="true"></i>&nbsp;@sr["Crop"]</a>
+        </li>
     </ul>
     <div class="tab-content ">
         <div class="tab-pane active" id="tabBrowse" role="tabpanel" aria-labelledby="tab1">
@@ -57,12 +54,11 @@
         <div class="tab-pane" id="tabUpload" role="tabpanel" aria-labelledby="tab2">
             <partial name="UploadPartial" model="Model" />
         </div>
-        @if (Model.Type == "image")
-        {
-            <div class="tab-pane" id="tabCrop" role="tabpanel" aria-labelledby="tab3">
-                <partial name="CropPartial" model="Model" />
-            </div>
-        }
+        
+        <div class="tab-pane" id="tabCrop" role="tabpanel" aria-labelledby="tab3">
+            <partial name="CropPartial" model="Model" />
+        </div>
+        
     </div>
 </div>
 @section scripts {

@@ -2,6 +2,7 @@
 https://github.com/abomadi/cloudscribe/wiki
 
 
+https://srcco.de/posts/kubernetes-failure-stories.html
 
 Azure Kubernetes Service 
 https://docs.microsoft.com/en-us/azure/aks/best-practices

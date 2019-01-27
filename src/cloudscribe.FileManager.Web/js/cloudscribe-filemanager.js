@@ -2,16 +2,20 @@
     var fileManager = {
         headers: {
             'X-CSRFToken': $("#fmconfig").data("anti-forgery-token")
+           
         },
         treeDataApiUrl: $("#fmconfig").data("filetree-url"),
-        fileType: $("#fmconfig").data("filet-type"),
+        //fileType: $("#fmconfig").data("file-type"),
         uploadApiUrl: $("#fmconfig").data("upload-url"),
+        downloadFileApiUrl: $("#fmconfig").data("file-download-url"),
         createFolderApiUrl: $("#fmconfig").data("create-folder-url"),
         deleteFolderApiUrl: $("#fmconfig").data("delete-folder-url"),
         renameFolderApiUrl: $("#fmconfig").data("rename-folder-url"),
         deleteFileApiUrl: $("#fmconfig").data("delete-file-url"),
         renameFileApiUrl: $("#fmconfig").data("rename-file-url"),
         canDelete: $("#fmconfig").data("can-delete"),
+        canSelect: $("#fmconfig").data("can-select"),
+        canDownload: $("#fmconfig").data("can-download"),
         emptyPreviewUrl:$("#fmconfig").data("empty-preview-url"),
         rootVirtualPath: $("#fmconfig").data("root-virtual-path"),
         rootButton: $('#btnRoot'),
@@ -35,6 +39,7 @@
         selectedFileList: [],
         setCropImageFromServer: function () {
             var url = fileManager.selectedFileInput.val();
+            //console.log(url);
             $("#image").attr("src", url);
             $("#cropCurrentDirLabel").html(url.substring(0, url.lastIndexOf("/")));
             $("#cropCurrentDir").val(url.substring(0, url.lastIndexOf("/")));
@@ -50,6 +55,7 @@
             $('#origFileName').val('');
         },
         setPreview: function (url, name) {
+            $("#divPreview").show();
             $("#filePreview").attr("src", url);
             fileManager.uploadTab.hide();
             fileManager.selectForCropButton.show();
@@ -95,6 +101,9 @@
             $("#fileToDelete").val(virtualPath);
             if (fileName) {
                 $("#newFileNameSegment").val(fileName);
+                if (fileManager.downloadFileApiUrl.length > 0) {
+                    $("#lnkDownloadFile").attr("href", fileManager.downloadFileApiUrl + "?fileToDownload=" + virtualPath);
+                }
             }
             
             fileManager.showFileTools();
@@ -140,18 +149,23 @@
             if (fileManager.canDelete) {
                 $('#frmDeleteFile').show();
                 $("#frmRenameFile").show();
+                if (fileManager.downloadFileApiUrl) {
+                    $("#lnkDownloadFile").show();
+                }
+                
             }
         },
         hideFileTools: function () {
             $('#frmDeleteFile').hide();
             $("#frmRenameFile").hide();
+            $("#lnkDownloadFile").hide();
 
         },
         notify: function (message, cssClass) {
             $('#alert_placeholder').html('<div class="alert ' + cssClass + '"><a class="close" data-dismiss="alert">×</a><span>' + message + '</span></div>')
         },
         addFileToList: function (data, fileList, index, file) {
-            var d = $("<span class='fa fa-trash-o' aria-role='button' title='Remove'></span>").click(function () {
+            var d = $("<span class='far fa-trash-alt' aria-role='button' title='Remove'></span>").click(function () {
                 data.files.splice(index, 1);
                 fileList = data.files;
                 $('#fileList li').eq(index).remove();
@@ -170,6 +184,7 @@
         createFolder: function () {
             var formData = $('#frmNewFolder').serializeArray();
             //alert(JSON.stringify(formData));
+            //console.log(fileManager.headers);
             $.ajax({
                 method: "POST",
                 url: fileManager.createFolderApiUrl,
@@ -468,11 +483,11 @@
                     url: fileManager.treeDataApiUrl,
                     cache: false
                 },
-                nodeIcon: 'fa fa-folder',
-                collapseIcon: 'fa fa-minus',
+                nodeIcon: 'far fa-folder mr-1',
+                collapseIcon: 'fas fa-minus',
                 emptyIcon: 'fa',
-                expandIcon: 'fa fa-plus',
-                loadingIcon: 'fa fa-hourglass-o',
+                expandIcon: 'fas fa-plus',
+                loadingIcon: 'far fa-hourglass',
                 levels: 2,
                 onhoverColor: '#F5F5F5',
                 highlightSelected: true,
@@ -497,6 +512,8 @@
                 },
                 onNodeSelected: function (event, node) {
                     //alert(node.virtualPath + ' selected');
+                    //console.log(node);
+                    $("#divPreview").hide();
                     if (node.canPreview) {
                         fileManager.setPreview(node.virtualPath, node.text);   
                     }
@@ -571,7 +588,7 @@
                     }
                     data.files = fileManager.selectedFileList;
                     if (data.files.length > 0) {
-                        var btnSend = $("<button id='btnSend' class='btn btn-success'><i class='fa fa-cloud-upload' aria-hidden='true'></i> Upload</button>");
+                        var btnSend = $("<button id='btnSend' class='btn btn-success'><i class='fas fa-cloud-upload-alt' aria-hidden='true'></i> Upload</button>");
                         btnSend.appendTo($('#fileList'));
                     }
                     $.each(data.files, function (index, file) { fileManager.addFileToList(data, fileManager.selectedFileList, index, file); });
@@ -637,6 +654,10 @@
             this.selectForCropButton.on('click', fileManager.setCropImageFromServer);
             this.setCurrentDirectory(this.rootVirtualPath);
             this.rootButton.on('click', fileManager.backToRoot);
+            if (fileManager.canSelect === "false" || fileManager.canSelect === false) {
+                this.fileSelectorButton.hide();
+                this.fileSelectorButtonAlt.hide();
+            }
 
             //alert('init');
         }
@@ -721,22 +742,22 @@
             // Cropper
             cropManager.image.on({
                 ready: function (e) {
-                    console.log(e.type);
+                    //console.log(e.type);
                 },
                 cropstart: function (e) {
-                    console.log(e.type, e.action);
+                    //console.log(e.type, e.action);
                 },
                 cropmove: function (e) {
-                    console.log(e.type, e.action);
+                   // console.log(e.type, e.action);
                 },
                 cropend: function (e) {
-                    console.log(e.type, e.action);
+                    //console.log(e.type, e.action);
                 },
                 crop: function (e) {
-                    console.log(e.type, e.x, e.y, e.width, e.height, e.rotate, e.scaleX, e.scaleY);
+                    //console.log(e.type, e.x, e.y, e.width, e.height, e.rotate, e.scaleX, e.scaleY);
                 },
                 zoom: function (e) {
-                    console.log(e.type, e.ratio);
+                   // console.log(e.type, e.ratio);
                 }
             }).cropper(options);
 
@@ -1061,7 +1082,7 @@
     };
 
     $('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
-        var target = $(e.target).attr("href") // activated tab
+        var target = $(e.target).attr("href"); // activated tab
 
         if (target === "#tabCrop") {
             cropManager.setup();

@@ -215,3 +215,5 @@ src/sourceDev.WebApp/cloudscribe.dev.db
 # Cake
 tools/**
 !tools/packages.config
+
+**/siteuploadfiles/**

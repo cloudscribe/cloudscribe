@@ -656,6 +656,51 @@ namespace cloudscribe.FileManager.Web.Services
 
         }
 
+        public async Task<FileDownloadInfo> GetInfoForDownload(string requestedVirtualPath)
+        {
+            if (string.IsNullOrEmpty(requestedVirtualPath))
+            {
+                return null;
+            }
+
+            await EnsureProjectSettings().ConfigureAwait(false);
+
+            if (!requestedVirtualPath.StartsWith(_rootPath.RootVirtualPath))
+            {
+                _log.LogWarning($"GetInfoForDownload: {requestedVirtualPath} was not valid for root path {_rootPath.RootVirtualPath}");
+                return null;
+            }
+
+            var virtualSubPath = requestedVirtualPath.Substring(_rootPath.RootVirtualPath.Length);
+            var segments = virtualSubPath.Split('/');
+
+            if (segments.Length == 0)
+            {
+                _log.LogWarning($"GetInfoForDownload: {requestedVirtualPath} was not valid for root path {_rootPath.RootVirtualPath}");
+                return null;
+            }
+
+            var currentFsPath = Path.Combine(_rootPath.RootFileSystemPath, Path.Combine(segments));
+            var ext = Path.GetExtension(currentFsPath);
+
+            if (!File.Exists(currentFsPath))
+            {
+                _log.LogWarning($"GetInfoForDownload: {requestedVirtualPath} does not exist");
+                return null;
+            }
+
+            var result = new FileDownloadInfo()
+            {
+                FileName = Path.GetFileName(currentFsPath),
+                FileSystemPath = currentFsPath,
+                MimeType = GetMimeType(ext)
+            };
+
+            return result;
+
+
+        }
+
         public async Task<OperationResult> RenameFile(string requestedVirtualPath, string newNameSegment)
         {
             OperationResult result;

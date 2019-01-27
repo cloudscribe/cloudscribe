@@ -5,8 +5,10 @@
 @model BrowseModel
 @inject IOptions<AutomaticUploadOptions> autoUploadOptionsAccessor
 @inject IStringLocalizer<FileManagerStringResources> sr
+@inject IOptions<FileManagerIcons> iconsAccessor
 @{
     var upoadOptions = autoUploadOptionsAccessor.Value;
+    var icons = iconsAccessor.Value;
 }
 <div class="col-md-12 fileupload">
     @if (Model.Type == "image")
@@ -28,20 +30,21 @@
         <input type="hidden" id="uploadCurrentDir" name="currentDir" />
 
         <div class="form-inline">
-            <div class="form-group">
-                <label for="maxWidth">@sr["Max Width"]</label>
+            <div class="input-group">
+                <div class="input-group-prepend">
+                    <label class="input-group-text" for="maxWidth">@sr["Max Width"]</label>
+                </div>
                 <input type="text" class="form-control" id="maxWidth" name="maxWidth" value="@upoadOptions.WebSizeImageMaxWidth" />
             </div>
-            <div class="form-group">
-                <label for="maxHeight">@sr["Max Height"]</label>
-                <input type="text" class="form-control" id="maxHeight" name="maxHeight" value="@upoadOptions.WebSizeImageMaxHeight" />
-            </div>
-            <div class="form-group">
-                <div class="checkbox">
-                    <label>
-                        <input asp-for="ResizeImages" /> @sr["Reduce Image Size For Web"]
-                    </label>
-                </div>
+            <div class="input-group ml-1">
+                <div class="input-group-prepend">
+                    <label class="input-group-text" for="maxHeight">@sr["Max Height"]</label>
+                </div>          
+                  <input type="text" class="form-control" id="maxHeight" name="maxHeight" value="@upoadOptions.WebSizeImageMaxHeight" />
+             </div>
+            <div class="form-group form-check ml-1">
+                <input asp-for="ResizeImages" class="form-check-input" />
+                <label class="form-check-label" asp-for="ResizeImages"> @sr["Reduce Image Size For Web"]</label>
             </div>
         </div>
         <div class="form-group">
@@ -52,14 +55,14 @@
                 </div>
                 <div id="pnlFiles" class="uploadcontainer">
                     <div id="browseButton" class="btn btn-success fileinput-button">
-                        <i class="fa fa-plus"></i>
+                        <i class="@icons.ChooseFiles"></i>
                         <span>@sr["Choose Files"]</span>
                         <input id="fileupload" type="file" name="fileupload" multiple />
                     </div>
                 </div>
             </div>
-            <div id="progress" class="progress">
-                <div class="progress-bar progress-bar-success"></div>
+            <div id="progress" class="progress" style="height:20px;">
+                <div class="progress-bar progress-bar-striped bg-success" role="progressbar"></div>
             </div>
             <div id="fileList" class='uploadfilelist'></div>
             <div id="ui" class='uploadfilesui'></div>
