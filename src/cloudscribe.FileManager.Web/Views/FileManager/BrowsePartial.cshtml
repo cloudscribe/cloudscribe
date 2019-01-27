@@ -107,6 +107,7 @@
             <form id="frmDeleteFile" asp-action="DeleteFile" asp-controller="FileManager" class="form-inline collapse">
                 <input type="hidden" id="fileToDelete" name="fileToDelete" />
                 <button id="btnDeleteFilePrompt" type="button" class="btn btn-danger btn-ok"><i class="@icons.Delete" aria-hidden="true"></i> @sr["Delete File"]</button>
+                <a id="lnkDownloadFile" href="#" target="_blank" class="btn btn-outline-primary collapse" style="display:inline-block;"><i class="@icons.Download" aria-hidden="true"></i> @sr["Download"]</a>
                 <div id="mdlDeleteFile" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="confirmDeleteFileHeading">
                     <div class="modal-dialog modal-sm" role="document">
                         <div class="modal-content">

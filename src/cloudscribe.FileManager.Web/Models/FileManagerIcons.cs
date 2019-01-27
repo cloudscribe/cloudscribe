@@ -60,6 +60,8 @@ namespace cloudscribe.FileManager.Web.Models
         public string Browse { get; set; } = "fas fa-sitemap";
         public string ChooseFiles { get; set; } = "fas fa-plus";
 
+        public string Download { get; set; } = "fas fa-download";
+
     }
 
 }

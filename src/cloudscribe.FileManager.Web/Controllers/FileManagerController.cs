@@ -20,6 +20,8 @@ using Microsoft.Net.Http.Headers;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.IO.Compression;
+using System.Net.Mime;
 using System.Reflection;
 using System.Threading.Tasks;
 
@@ -65,6 +67,7 @@ namespace cloudscribe.FileManager.Web.Controllers
             model.InitialVirtualPath = await _fileManagerService.GetRootVirtualPath().ConfigureAwait(false);
             model.FileTreeServiceUrl = Url.Action("GetFileTreeJson", "FileManager", new { fileType = model.Type });
             model.UploadServiceUrl = Url.Action("Upload", "FileManager");
+            model.FileDownloadServiceUrl = Url.Action("DownloadFile", "FileManager");
             model.CreateFolderServiceUrl = Url.Action("CreateFolder", "FileManager");
             model.DeleteFolderServiceUrl = Url.Action("DeleteFolder", "FileManager");
             model.RenameFolderServiceUrl = Url.Action("RenameFolder", "FileManager");
@@ -100,6 +103,7 @@ namespace cloudscribe.FileManager.Web.Controllers
             model.InitialVirtualPath = await _fileManagerService.GetRootVirtualPath().ConfigureAwait(false);
             model.FileTreeServiceUrl = Url.Action("GetFileTreeJson","FileManager", new { fileType = model.Type});
             model.UploadServiceUrl = Url.Action("Upload", "FileManager");
+            //model.FileDownloadServiceUrl = Url.Action("DownloadFile", "FileManager");
             model.CreateFolderServiceUrl = Url.Action("CreateFolder", "FileManager");
             model.DeleteFolderServiceUrl = Url.Action("DeleteFolder", "FileManager");
             model.RenameFolderServiceUrl = Url.Action("RenameFolder", "FileManager");
@@ -368,7 +372,7 @@ namespace cloudscribe.FileManager.Web.Controllers
         }
 
 
-        
+
 
         //[HttpPost]
         //[Authorize(Policy = "FileManagerPolicy")]
@@ -424,6 +428,32 @@ namespace cloudscribe.FileManager.Web.Controllers
         //    return Json(imageList);
         //}
 
+        //[HttpGet]
+        //[Authorize(Policy = "FileManagerDeletePolicy")]
+        //public async Task<IActionResult> DownloadFolder(string folderToDownload)
+        //{
+        //    var result = await _fileManagerService.GetInfoForDownload(folderToDownload);
+        //    if (result == null || string.IsNullOrEmpty(result.FileSystemPath))
+        //    {
+        //        return NotFound();
+        //    }
+
+        //    var zip = ZipFile.CreateFromDirectory()
+
+        //    if (result.MimeType == "application/pdf")
+        //    {
+        //        return File(new FileStream(result.FileSystemPath, FileMode.Open), result.MimeType); //inline
+        //    }
+
+        //    //Response.Headers.Add("Content-Disposition", "attachment; filename=" + result.FileName);
+        //    //Response.Headers.Add("X-Content-Type-Options", "nosniff");
+
+        //    return File(new FileStream(result.FileSystemPath, FileMode.Open), result.MimeType, result.FileName);
+
+        //}
+
+
+
         [HttpPost]
         [Authorize(Policy = "FileManagerPolicy")]
         [ValidateAntiForgeryToken] 
@@ -453,6 +483,31 @@ namespace cloudscribe.FileManager.Web.Controllers
             return Json(result);
 
         }
+
+
+        [HttpGet]
+        [Authorize(Policy = "FileManagerDeletePolicy")]
+        public async Task<IActionResult> DownloadFile(string fileToDownload)
+        {
+            var result = await _fileManagerService.GetInfoForDownload(fileToDownload);
+            if(result == null || string.IsNullOrEmpty(result.FileSystemPath))
+            {
+                return NotFound();
+            }
+
+            
+            if(result.MimeType == "application/pdf")
+            {
+                return File(new FileStream(result.FileSystemPath, FileMode.Open), result.MimeType); //inline
+            }
+
+            //Response.Headers.Add("Content-Disposition", "attachment; filename=" + result.FileName);
+            //Response.Headers.Add("X-Content-Type-Options", "nosniff");
+
+            return File(new FileStream(result.FileSystemPath, FileMode.Open), result.MimeType, result.FileName);
+
+        }
+
 
         [HttpPost]
         [Authorize(Policy = "FileManagerDeletePolicy")]

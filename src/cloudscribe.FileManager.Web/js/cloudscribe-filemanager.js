@@ -7,6 +7,7 @@
         treeDataApiUrl: $("#fmconfig").data("filetree-url"),
         //fileType: $("#fmconfig").data("file-type"),
         uploadApiUrl: $("#fmconfig").data("upload-url"),
+        downloadFileApiUrl: $("#fmconfig").data("file-download-url"),
         createFolderApiUrl: $("#fmconfig").data("create-folder-url"),
         deleteFolderApiUrl: $("#fmconfig").data("delete-folder-url"),
         renameFolderApiUrl: $("#fmconfig").data("rename-folder-url"),
@@ -14,6 +15,7 @@
         renameFileApiUrl: $("#fmconfig").data("rename-file-url"),
         canDelete: $("#fmconfig").data("can-delete"),
         canSelect: $("#fmconfig").data("can-select"),
+        canDownload: $("#fmconfig").data("can-download"),
         emptyPreviewUrl:$("#fmconfig").data("empty-preview-url"),
         rootVirtualPath: $("#fmconfig").data("root-virtual-path"),
         rootButton: $('#btnRoot'),
@@ -99,6 +101,9 @@
             $("#fileToDelete").val(virtualPath);
             if (fileName) {
                 $("#newFileNameSegment").val(fileName);
+                if (fileManager.downloadFileApiUrl.length > 0) {
+                    $("#lnkDownloadFile").attr("href", fileManager.downloadFileApiUrl + "?fileToDownload=" + virtualPath);
+                }
             }
             
             fileManager.showFileTools();
@@ -144,11 +149,16 @@
             if (fileManager.canDelete) {
                 $('#frmDeleteFile').show();
                 $("#frmRenameFile").show();
+                if (fileManager.downloadFileApiUrl) {
+                    $("#lnkDownloadFile").show();
+                }
+                
             }
         },
         hideFileTools: function () {
             $('#frmDeleteFile').hide();
             $("#frmRenameFile").hide();
+            $("#lnkDownloadFile").hide();
 
         },
         notify: function (message, cssClass) {

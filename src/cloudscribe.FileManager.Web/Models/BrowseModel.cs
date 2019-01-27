@@ -23,6 +23,7 @@
         public string FileTreeServiceUrl { get; set; }
 
         public string UploadServiceUrl { get; set; }
+        public string FileDownloadServiceUrl { get; set; }
 
         public string CreateFolderServiceUrl { get; set; }
 
