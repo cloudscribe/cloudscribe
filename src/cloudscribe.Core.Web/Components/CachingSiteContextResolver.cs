@@ -1,6 +1,7 @@
 ﻿using cloudscribe.Core.DataProtection;
 using cloudscribe.Core.Models;
 using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.Caching.Distributed;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
@@ -15,7 +16,9 @@ namespace cloudscribe.Core.Web.Components
     public class CachingSiteContextResolver : SiteContextResolver
     {
         public CachingSiteContextResolver(
+            CacheHelper cacheHelper,
             IMemoryCache cache,
+            IDistributedCache distributedCache,
             ISiteQueries siteRepository,
             SiteDataProtector dataProtector,
             IOptions<MultiTenantOptions> multiTenantOptions,
@@ -23,14 +26,18 @@ namespace cloudscribe.Core.Web.Components
             IOptions<CachingSiteResolverOptions> cachingOptionsAccessor
             ) :base(siteRepository, dataProtector, multiTenantOptions)
         {
+            _cacheHelper = cacheHelper;
             _cache = cache;
             _cachingOptions = cachingOptionsAccessor.Value;
             _log = logger;
         }
 
-        private IMemoryCache _cache;
-        private CachingSiteResolverOptions _cachingOptions;
-        private ILogger _log;
+        private readonly IMemoryCache _cache;
+        private readonly CacheHelper _cacheHelper;
+
+
+        private readonly CachingSiteResolverOptions _cachingOptions;
+        private readonly ILogger _log;
 
         private async Task<List<string>> GetAllSiteFoldersFolders()
         {
@@ -75,6 +82,29 @@ namespace cloudscribe.Core.Web.Components
 
             var cacheKey = await GetCacheKey(hostName, pathStartingSegment);
             var result = (SiteContext)_cache.Get(cacheKey);
+            if(result != null)
+            {
+                // we just got site from cache but check last modified from distributed cache in case site was updated on another node
+                var lastMod = await _cacheHelper.GetDistributedCacheTimestamp(result.Id);
+                if(lastMod.HasValue)
+                {
+                    if(result.LastModifiedUtc > lastMod.Value)
+                    {
+                        await _cacheHelper.SetDistributedCacheTimestamp(result.Id, result.LastModifiedUtc);
+                    }
+
+                    if(result.LastModifiedUtc < lastMod.Value)
+                    {
+                        result = null; // reload below since the one we got is stale
+                    }
+                }
+                else
+                {
+                    await _cacheHelper.SetDistributedCacheTimestamp(result.Id, result.LastModifiedUtc);
+                }
+
+            }
+
             if(result == null)
             {
                 _log.LogTrace($"Site not found in cache with key {cacheKey}");
@@ -83,6 +113,8 @@ namespace cloudscribe.Core.Web.Components
                 if(result != null)
                 {
                     _log.LogTrace($"Caching site with key {cacheKey}");
+
+                    await _cacheHelper.SetDistributedCacheTimestamp(result.Id, result.LastModifiedUtc);
 
                     _cache.Set(
                         cacheKey,
@@ -107,11 +139,37 @@ namespace cloudscribe.Core.Web.Components
             var cacheKey = "site-" + siteId.ToString();
 
             var result = (SiteContext)_cache.Get(cacheKey);
+
+            if (result != null)
+            {
+                // we just got site from cache but check last modified from distributed cache in case site was updated on another node
+                var lastMod = await _cacheHelper.GetDistributedCacheTimestamp(result.Id);
+                if (lastMod.HasValue)
+                {
+                    if (result.LastModifiedUtc > lastMod.Value)
+                    {
+                        await _cacheHelper.SetDistributedCacheTimestamp(result.Id, result.LastModifiedUtc);
+                    }
+
+                    if (result.LastModifiedUtc < lastMod.Value)
+                    {
+                        result = null; // reload below since the one we got is stale
+                    }
+                }
+                else
+                {
+                    await _cacheHelper.SetDistributedCacheTimestamp(result.Id, result.LastModifiedUtc);
+                }
+
+            }
+
             if (result == null)
             {
                 result = await base.GetById(siteId, cancellationToken);
                 if (result != null)
                 {
+                    await _cacheHelper.SetDistributedCacheTimestamp(result.Id, result.LastModifiedUtc);
+
                     _cache.Set(
                         cacheKey,
                         result,

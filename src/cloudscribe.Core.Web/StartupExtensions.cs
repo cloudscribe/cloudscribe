@@ -62,6 +62,9 @@ namespace Microsoft.Extensions.DependencyInjection
                 options.ConstraintMap.Add("sitefolder", typeof(SiteFolderRouteConstraint));
             });
 
+            services.AddMemoryCache();
+            // this uses memorycache with try add so a different implementation of IDistributedCache can be added beofre or after this and override it
+            services.AddDistributedMemoryCache();
 
 
             services.TryAddSingleton<IHttpContextAccessor, HttpContextAccessor>();

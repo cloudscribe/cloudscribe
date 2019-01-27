@@ -185,7 +185,10 @@ namespace cloudscribe.Core.Web.Components
             {
                 await _commands.Update(site, CancellationToken.None);
             }
-            if(_multiTenantOptions.Mode == MultiTenantMode.FolderName)
+
+            await _cacheHelper.SetDistributedCacheTimestamp(site.Id, site.LastModifiedUtc).ConfigureAwait(false);
+
+            if (_multiTenantOptions.Mode == MultiTenantMode.FolderName)
             {
                 if(string.IsNullOrEmpty(site.SiteFolderName))
                 {
@@ -229,27 +232,12 @@ namespace cloudscribe.Core.Web.Components
 
             // delete users
             await _userCommands.DeleteUsersBySite(site.Id, CancellationToken.None); // this also deletes userroles claims logins
-
             await _userCommands.DeleteRolesBySite(site.Id, CancellationToken.None);
             await _commands.DeleteHostsBySite(site.Id, CancellationToken.None);
-            //resultStep = await siteRepo.DeleteFoldersBySite(site.SiteGuid, CancellationToken.None);
-
-
-            // the below method deletes a lot of things by siteid including the following tables
-            // Exec mp_Sites_Delete
-            // mp_UserRoles
-            // mp_UserProperties
-            // mp_UserLocation
-            // mp_Users
-            // mp_Roles
-            // mp_SiteHosts
-            // mp_SiteFolders
-            // mp_SiteSettingsEx
-            // mp_Sites
-
+            
             await _commands.Delete(site.Id, CancellationToken.None);
 
-            _cacheHelper.ClearCache("folderList");
+            _cacheHelper.ClearSiteFolderListCache();
         }
 
         public async Task<SiteSettings> CreateNewSite(bool isServerAdminSite)
@@ -276,8 +264,11 @@ namespace cloudscribe.Core.Web.Components
            
             await _commands.Create(newSite, CancellationToken.None);
 
-            if(_multiTenantOptions.Mode == MultiTenantMode.FolderName)
-            _cacheHelper.ClearCache("folderList");
+            if (_multiTenantOptions.Mode == MultiTenantMode.FolderName)
+            {
+                _cacheHelper.ClearSiteFolderListCache();
+            }
+                
 
             await _eventHandlers.HandleSiteCreated(newSite).ConfigureAwait(false);
 
