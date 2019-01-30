@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2014-10-26
-// Last Modified:			2018-10-24
+// Last Modified:			2019-01-30
 // 
 
 using cloudscribe.Core.Identity;
@@ -74,7 +74,7 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
         protected IHandleCustomRegistration CustomRegistration { get; private set; }
         protected IHandleAccountAnalytics Analytics { get; private set; }
 
-        protected async Task<IActionResult> HandleLoginSuccess(UserLoginResult result, string returnUrl)
+        protected virtual async Task<IActionResult> HandleLoginSuccess(UserLoginResult result, string returnUrl)
         {
             await Analytics.HandleLoginSuccess(result);
 
@@ -101,7 +101,7 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
             return this.RedirectToSiteRoot(CurrentSite);
         }
 
-        protected bool ShouldSendConfirmation(IUserContext user)
+        protected virtual bool ShouldSendConfirmation(IUserContext user)
         {
             if (user.EmailConfirmSentUtc == null) return true; //never sent yet
             var timeSpan = DateTime.UtcNow - user.EmailConfirmSentUtc;
@@ -110,7 +110,7 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
             return false;
         }
 
-        protected async Task<IActionResult> HandleLoginNotAllowed(UserLoginResult result, string returnUrl)
+        protected virtual async Task<IActionResult> HandleLoginNotAllowed(UserLoginResult result, string returnUrl)
         {
             await Analytics.HandleLoginNotAllowed(result);
 
@@ -162,7 +162,7 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
             return this.RedirectToSiteRoot(CurrentSite);
         }
 
-        protected async Task<IActionResult> HandleRequiresTwoFactor(UserLoginResult result, string returnUrl, bool rememberMe)
+        protected virtual async Task<IActionResult> HandleRequiresTwoFactor(UserLoginResult result, string returnUrl, bool rememberMe)
         {
             await Analytics.HandleRequiresTwoFactor(result);
 
@@ -178,7 +178,7 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
             //return RedirectToAction(nameof(SendCode), new { ReturnUrl = returnUrl, RememberMe = rememberMe });
         }
 
-        protected async Task<IActionResult> HandleLockout(UserLoginResult result = null)
+        protected virtual async Task<IActionResult> HandleLockout(UserLoginResult result = null)
         {
             await Analytics.HandleLockout(result);
 
