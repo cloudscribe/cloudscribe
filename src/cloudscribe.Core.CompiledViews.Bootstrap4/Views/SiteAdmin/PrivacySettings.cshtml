@@ -40,16 +40,18 @@
     </div>
 </form>
 @section SideNav {
-    @{ await Html.RenderPartialAsync("AdminSideNav"); }
+    <partial name="AdminSideNav" />
 }
 @section Toolbar{
-    @{ await Html.RenderPartialAsync("AdminSideNavToggle"); }
+    <partial name="AdminSideNavToggle" />
 }
 @section Scripts {
-    @{ await Html.RenderPartialAsync("AdminSideNavScripts"); }
-    @{ await Html.RenderPartialAsync("_UnobtrusiveValidationScriptsPartial"); }
+    <partial name="AdminSideNavScripts" />
+    <script src="~/cr/js/jquery.validate.min.js"></script>
+    <script src="~/cr/js/jquery.validate.unobtrusive.min.js"></script>
     <script src="~/cr/js/unobtrusive-validation-bs4.min.js"></script>
     <script src="~/cr/js/jquery.validate.hooks.min.js"></script>
     <script src="~/cr/js/jqueryvaildation.submitonce-unobtrusive.min.js"></script>
-    @{ await Html.RenderPartialAsync("_UnobtrusiveEditorScriptsPartial"); }
+    <script src="~/cr/js/ckeditor461/ckeditor.js"></script>
+    <script src="~/cr/js/cloudscribe-ckeditor-unobtrusive.min.js"></script>
 }

@@ -45,11 +45,11 @@
     <p>@ViewData["Description"]</p>
     @try
     {
-        @await Html.PartialAsync("TenantHomeLinkPartial")
+        <partial name="TenantHomeLinkPartial" />
 
     }
     catch
     {
-        @await Html.PartialAsync("FailSafeHomeLinkPartial")
+        <partial name="FailSafeHomeLinkPartial" />
     }
 </div>

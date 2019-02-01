@@ -8,7 +8,7 @@
         </div>
         <div class="modal-body">
             <div id="usergridcontainer">
-                @{await Html.RenderPartialAsync("UserModalGridPartial", Model); }
+                <partial name="UserModalGridPartial" model="Model" />
             </div>
         </div>
         <div class="modal-footer">

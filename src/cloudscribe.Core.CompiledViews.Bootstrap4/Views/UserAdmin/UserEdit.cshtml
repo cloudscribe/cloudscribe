@@ -10,7 +10,7 @@
 
 }
 @section Styles {
-    @{await Html.RenderPartialAsync("UserEditStylePartial"); }
+    <partial name="UserEditStylePartial" />
 }
 <h2>@ViewData["Title"]</h2>
 @if (Model.UserId != Guid.Empty && !Model.AccountApproved)
@@ -111,7 +111,7 @@
         <label asp-for="WebSiteUrl">@sr["Website Url"]</label>
         <input asp-for="WebSiteUrl" class="form-control" />
     </div>
-    @{await Html.RenderPartialAsync("UserEditMiddlePartial", Model); }
+    <partial name="UserEditMiddlePartial" model="Model" />
     <div class="form-group">
         <label asp-for="Comment"></label>
         <textarea class="form-control" rows="5" asp-for="Comment"
@@ -161,23 +161,17 @@
         </div>
     </form>
 }
-@{ await Html.RenderPartialAsync("UserRoles", Model); }
-@{ await Html.RenderPartialAsync("UserClaims", Model); }
+<partial name="UserRoles" model="Model" />
+<partial name="UserClaims" model="Model" />
 
 @section SideNav {
-    @{ await Html.RenderPartialAsync("AdminSideNav"); }
+    <partial name="AdminSideNav" />
 }
 @section Toolbar{
-    @{ await Html.RenderPartialAsync("AdminSideNavToggle"); }
+    <partial name="AdminSideNavToggle" />
 }
 @section Scripts {
-    @{ await Html.RenderPartialAsync("AdminSideNavScripts"); }
-    @{await Html.RenderPartialAsync("UserEditScriptsPartial"); }
-    <script src="~/cr/js/unobtrusive-validation-bs4.min.js"></script>
-    <script src="~/cr/js/jquery.validate.hooks.min.js"></script>
-    <script src="~/cr/js/jqueryvaildation.submitonce-unobtrusive.min.js"></script>
-    <script src="~/cr/js/remote-validation-onblur-unobtrusive.min.js"></script>
-
-
+    <partial name="AdminSideNavScripts" />
+    <partial name="UserEditScriptsPartial" />
 
 }

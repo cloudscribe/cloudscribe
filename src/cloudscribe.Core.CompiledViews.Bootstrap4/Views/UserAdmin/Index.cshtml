@@ -32,14 +32,13 @@
         </form>
     </div>
 </div>
- @{await Html.RenderPartialAsync("UserListPartial", Model); }
-
+<partial name="UserListPartial" model="Model" />
 @section SideNav {
-    @{ await Html.RenderPartialAsync("AdminSideNav"); }
+    <partial name="AdminSideNav" />
 }
 @section Toolbar{
-    @{ await Html.RenderPartialAsync("AdminSideNavToggle"); }
+    <partial name="AdminSideNavToggle" />
 }
 @section scripts {
-    @{ await Html.RenderPartialAsync("AdminSideNavScripts"); }
+    <partial name="AdminSideNavScripts" />
 }

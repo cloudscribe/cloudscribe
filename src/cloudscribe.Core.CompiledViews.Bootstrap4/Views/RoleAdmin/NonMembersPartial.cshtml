@@ -9,9 +9,8 @@
         </div>
         <div class="modal-body">
             <h5>@Model.Heading2</h5>
-
             <div id="nonmembersgridcontainer">
-                @{await Html.RenderPartialAsync("NonMembersGridPartial", Model); }
+                <partial name="NonMembersGridPartial" model="Model" />
             </div>
         </div>
         <div class="modal-footer">

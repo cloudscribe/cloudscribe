@@ -8,7 +8,7 @@
         </div>
         <div class="modal-body">
             <div id="gridcontainer">
-                @{await Html.RenderPartialAsync("ModalListPartial", Model); }
+                <partial name="ModalListPartial" model="Model" />
             </div>
         </div>
         <div class="modal-footer">
