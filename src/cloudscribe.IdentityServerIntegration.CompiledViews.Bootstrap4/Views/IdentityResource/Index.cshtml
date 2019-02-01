@@ -12,12 +12,12 @@
 <h2>@ViewData["Title"]</h2>
 <p>@sr["Identity resources are data like user ID, name, or email address of a user. An identity resource has a unique name, and you can assign arbitrary claim types to it. These claims will then be included in the identity token for the user. The client will use the scope parameter to request access to an identity resource."]</p>
 <p>To learn more about Identity Resources see the <a href="https://identityserver4.readthedocs.io/en/release/topics/resources.html">IdentityServer Documentation</a></p>
-       
+
 <table class="table table-striped">
     <tr>
         <th>
             <a class="btn btn-xs btn-primary" asp-action="EditResource" asp-controller="IdentityResource"
-                asp-route-siteId="@Model.SiteId">@sr["New Identity Resource"]</a>
+               asp-route-siteId="@Model.SiteId">@sr["New Identity Resource"]</a>
         </th>
         <th>
             @sr["Name"]
@@ -37,8 +37,8 @@
         <tr>
             <td>
                 <a class="btn btn-sm btn-primary" asp-action="EditResource" asp-controller="IdentityResource"
-                    asp-route-siteId="@Model.SiteId"
-                    asp-route-resourcename="@s.Name">@sr["Edit"]</a>
+                   asp-route-siteId="@Model.SiteId"
+                   asp-route-resourcename="@s.Name">@sr["Edit"]</a>
                 <button type="button" class="btn btn-danger btn-sm" data-toggle="modal" data-target="@("#confirmDeleteModal" + i)">
                     @sr["Delete"]
                 </button>
@@ -83,31 +83,30 @@
         }
     }
 </table>
-            
+
 <cs-pager asp-action="Index" asp-controller="IdentityResource"
-            asp-route-siteId="@Model.SiteId"
-            asp-route-pagesize="@Model.IdentityResources.PageSize"
-            cs-paging-pagenumber="@Model.IdentityResources.PageNumber"
-            cs-paging-totalitems="@Model.IdentityResources.TotalItems"
-            cs-first-page-title='@sr["First Page"]'
-            cs-last-page-title='@sr["Last Page"]'
-            cs-previous-page-title='@sr["Previous page"]'
-            cs-next-page-title='@sr["Next page"]'
+          asp-route-siteId="@Model.SiteId"
+          asp-route-pagesize="@Model.IdentityResources.PageSize"
+          cs-paging-pagenumber="@Model.IdentityResources.PageNumber"
+          cs-paging-totalitems="@Model.IdentityResources.TotalItems"
+          cs-first-page-title='@sr["First Page"]'
+          cs-last-page-title='@sr["Last Page"]'
+          cs-previous-page-title='@sr["Previous page"]'
+          cs-next-page-title='@sr["Next page"]'
           cs-pager-ul-class="pagination d-flex flex-wrap"
           cs-pager-li-current-class="page-item active"
           cs-pager-li-other-class="page-item"
           cs-pager-li-non-active-class="page-item disabled"
           cs-pager-link-current-class="page-link"
-          cs-pager-link-other-class="page-link"
-          ></cs-pager>
-           
+          cs-pager-link-other-class="page-link"></cs-pager>
+
 @section SideNav {
-    @{ await Html.RenderPartialAsync("AdminSideNav"); }
+    <partial name="AdminSideNav" />
 }
 @section Toolbar{
-    @{ await Html.RenderPartialAsync("AdminSideNavToggle"); }
+    <partial name="AdminSideNavToggle" />
 }
 @section scripts {
-    @{ await Html.RenderPartialAsync("AdminSideNavScripts"); }
+    <partial name="AdminSideNavScripts" />
 
 }

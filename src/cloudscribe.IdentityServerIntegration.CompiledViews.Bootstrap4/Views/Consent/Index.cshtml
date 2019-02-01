@@ -39,7 +39,7 @@
                         <ul class="list-group">
                             @foreach (var scope in Model.IdentityScopes)
                             {
-                                @Html.Partial("_ScopeListItem", scope)
+                                <partial name="_ScopeListItem" model="@scope" />
                             }
                         </ul>
                     </div>
@@ -55,7 +55,7 @@
                         <ul class="list-group">
                             @foreach (var scope in Model.ResourceScopes)
                             {
-                                @Html.Partial("_ScopeListItem", scope)
+                                <partial name="_ScopeListItem" model="@scope" />
                             }
                         </ul>
                     </div>
@@ -87,7 +87,8 @@
     </div>
 </div>
 @section Scripts {
-    @{await Html.RenderPartialAsync("_UnobtrusiveValidationScriptsPartial"); }
+    <script src="~/cr/js/jquery.validate.min.js"></script>
+    <script src="~/cr/js/jquery.validate.unobtrusive.min.js"></script>
     <script src="~/cr/js/cloudscribe-validation-requiredwhen.min.js"></script>
     <script src="~/cr/js/jquery.validate.hooks.min.js"></script>
     <script src="~/cr/js/jqueryvaildation.submitonce-unobtrusive.min.js"></script>

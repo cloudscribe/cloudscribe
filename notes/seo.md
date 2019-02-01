@@ -1,4 +1,6 @@
 
+https://www.thinkwithgoogle.com/advertising-channels/search/google-website-seo/
+
 Search Engine Optimization (SEO) Starter Guide
 https://support.google.com/webmasters/answer/7451184
 SEO Snippets

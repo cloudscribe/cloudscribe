@@ -57,21 +57,25 @@
             </div>
         </div>
     }
-    
+
     <div class="form-group">
         <button name="submit" type="submit" class="btn btn-primary" data-disabled-text='@sr["Working..."]' data-enabled-text='@sr["Save"]'>@sr["Save"]</button>
     </div>
 </form>
 @section SideNav {
-    @{ await Html.RenderPartialAsync("AdminSideNav"); }
+    <partial name="AdminSideNav" />
+}
 }
 @section Toolbar{
-    @{ await Html.RenderPartialAsync("AdminSideNavToggle"); }
+    <partial name="AdminSideNavToggle" />
+}
 }
 @section Scripts {
-    @{ await Html.RenderPartialAsync("AdminSideNavScripts"); }
-    @{ await Html.RenderPartialAsync("_UnobtrusiveValidationScriptsPartial"); }
-    <script src="~/cr/js/unobtrusive-validation-bs4.min.js"></script>
-    <script src="~/cr/js/jquery.validate.hooks.min.js"></script>
-    <script src="~/cr/js/jqueryvaildation.submitonce-unobtrusive.min.js"></script>
+    <partial name="AdminSideNavScripts" />
+}
+<script src="~/cr/js/jquery.validate.min.js"></script>
+<script src="~/cr/js/jquery.validate.unobtrusive.min.js"></script>
+<script src="~/cr/js/unobtrusive-validation-bs4.min.js"></script>
+<script src="~/cr/js/jquery.validate.hooks.min.js"></script>
+<script src="~/cr/js/jqueryvaildation.submitonce-unobtrusive.min.js"></script>
 }

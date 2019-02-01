@@ -12,12 +12,12 @@
 <h2>@ViewData["Title"]</h2>
 <p>@sr["API Resources identify web APIs (also called resource servers). To get access tokens for APIs, you need to register them."]</p>
 <p>To learn more about scopes see the <a href="https://identityserver4.readthedocs.io/en/release/topics/resources.html#defining-api-resources">IdentityServer Documentation</a></p>
-  
+
 <table class="table table-striped table-hover">
     <tr>
         <th>
             <a class="btn btn-xs btn-primary" asp-action="EditApiResource" asp-controller="ApiResource"
-                asp-route-siteId="@Model.SiteId">@sr["New Api Resource"]</a>
+               asp-route-siteId="@Model.SiteId">@sr["New Api Resource"]</a>
         </th>
         <th>
             @sr["Name"]
@@ -37,8 +37,8 @@
         <tr>
             <td>
                 <a class="btn btn-sm btn-primary" asp-action="EditApiResource" asp-controller="ApiResource"
-                    asp-route-siteId="@Model.SiteId"
-                    asp-route-apiname="@s.Name">@sr["Edit"]</a>
+                   asp-route-siteId="@Model.SiteId"
+                   asp-route-apiname="@s.Name">@sr["Edit"]</a>
                 <button type="button" class="btn btn-danger btn-sm" data-toggle="modal" data-target="@("#confirmDeleteResourceModal" + rIndex)">
                     @sr["Delete"]
                 </button>
@@ -82,7 +82,7 @@
             rIndex += 1;
         }
     }
-</table>     
+</table>
 <cs-pager asp-action="Index" asp-controller="ApiResource"
           asp-route-siteId="@Model.SiteId"
           asp-route-pagesize="@Model.Apis.PageSize"
@@ -97,16 +97,15 @@
           cs-pager-li-other-class="page-item"
           cs-pager-li-non-active-class="page-item disabled"
           cs-pager-link-current-class="page-link"
-          cs-pager-link-other-class="page-link"
-          ></cs-pager>
-            
+          cs-pager-link-other-class="page-link"></cs-pager>
+
 @section SideNav {
-    @{ await Html.RenderPartialAsync("AdminSideNav"); }
+    <partial name="AdminSideNav" />
 }
 @section Toolbar{
-    @{ await Html.RenderPartialAsync("AdminSideNavToggle"); }
+    <partial name="AdminSideNavToggle" />
 }
 @section scripts {
-    @{ await Html.RenderPartialAsync("AdminSideNavScripts"); }
+    <partial name="AdminSideNavScripts" />
 
 }
