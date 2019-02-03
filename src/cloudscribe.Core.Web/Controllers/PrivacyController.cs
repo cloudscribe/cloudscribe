@@ -9,18 +9,18 @@ namespace cloudscribe.Core.Web.Controllers
     {
         public PrivacyController(SiteContext currentSite)
         {
-            _currentSite = currentSite;
+            CurrentSite = currentSite;
         }
 
-        private readonly SiteContext _currentSite;
+        protected SiteContext CurrentSite { get; private set; }
 
-        public IActionResult Index()
+        public virtual IActionResult Index()
         {
-            return View(_currentSite);
+            return View(CurrentSite);
         }
 
         [HttpPost]
-        public IActionResult WithdrawCookieConsent()
+        public virtual IActionResult WithdrawCookieConsent()
         {
             var consentFeature = HttpContext.Features.Get<ITrackingConsentFeature>();
             if(consentFeature != null)
@@ -28,7 +28,7 @@ namespace cloudscribe.Core.Web.Controllers
                 consentFeature.WithdrawConsent();
             }
 
-            return this.RedirectToSiteRoot(_currentSite);
+            return this.RedirectToSiteRoot(CurrentSite);
         }
 
     }

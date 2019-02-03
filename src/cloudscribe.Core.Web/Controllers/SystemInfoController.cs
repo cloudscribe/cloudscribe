@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 //	Author:                 Joe Audette
 //  Created:			    2011-08-19
-//	Last Modified:		    2016-06-06
+//	Last Modified:		    2019-02-03
 // 
 
 using cloudscribe.Core.Web.Components;
@@ -22,20 +22,20 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
             IStringLocalizer<CloudscribeCore> localizer
             )
         {
-            _systemInfo = systemInfoManager;
-            _uiOptions = uiOptionsAccessor.Value;
-            _sr = localizer;
+            SystemInfo = systemInfoManager;
+            UIOptions = uiOptionsAccessor.Value;
+            StringLocalizer = localizer;
 
         }
 
-        private SystemInfoManager _systemInfo;
-        private UIOptions _uiOptions;
-        private IStringLocalizer _sr;
+        protected SystemInfoManager SystemInfo { get; private set; }
+        protected UIOptions UIOptions { get; private set; }
+        protected IStringLocalizer StringLocalizer { get; private set; }
 
         [Authorize(Policy = PolicyConstants.AdminPolicy)]
-        public IActionResult Index()
+        public virtual IActionResult Index()
         {
-            ViewData["Title"] = _sr["System Information"];
+            ViewData["Title"] = StringLocalizer["System Information"];
 
             var serverInfo = new SystemInfoViewModel
             {
@@ -47,12 +47,12 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
                 
             }
             
-            serverInfo.OperatingSystem = _systemInfo.OperatingSystem;
-            serverInfo.Runtime = _systemInfo.Runtime;
-            serverInfo.EnvironmentName = _systemInfo.EnvironmentName;
-            serverInfo.DatabasePlatform = _systemInfo.DatabasePlatform;
-            serverInfo.CloudscribeCoreVersion = _systemInfo.CloudscribeCoreVersion;
-            serverInfo.OtherVersions = _systemInfo.GetOtherVersions();
+            serverInfo.OperatingSystem = SystemInfo.OperatingSystem;
+            serverInfo.Runtime = SystemInfo.Runtime;
+            serverInfo.EnvironmentName = SystemInfo.EnvironmentName;
+            serverInfo.DatabasePlatform = SystemInfo.DatabasePlatform;
+            serverInfo.CloudscribeCoreVersion = SystemInfo.CloudscribeCoreVersion;
+            serverInfo.OtherVersions = SystemInfo.GetOtherVersions();
             
             return View(serverInfo);
         }

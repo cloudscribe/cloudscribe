@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2014-11-15
-// Last Modified:			2018-03-14
+// Last Modified:			2019-02-03
 // 
 
 using cloudscribe.Core.Models;
@@ -32,32 +32,32 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
             IOptions<UIOptions> uiOptionsAccessor
             )
         {
-            _currentSite = currentSite; 
-            _dataManager = geoDataManager;
-            _uiOptions = uiOptionsAccessor.Value;
-            _sr = localizer;
+            CurrentSite = currentSite; 
+            DataManager = geoDataManager;
+            UIOptions = uiOptionsAccessor.Value;
+            StringLocalizer = localizer;
         }
 
-        private ISiteContext _currentSite;
-        private GeoDataManager _dataManager;
-        private UIOptions _uiOptions;
-        private IStringLocalizer _sr;
+        protected ISiteContext CurrentSite { get; private set; }
+        protected GeoDataManager DataManager { get; private set; }
+        protected UIOptions UIOptions { get; private set; }
+        protected IStringLocalizer StringLocalizer { get; private set; }
 
         // GET: /CoreData/
         [Authorize(Policy = PolicyConstants.CoreDataPolicy)]
         [HttpGet]
-        public IActionResult Index()
+        public virtual IActionResult Index()
         {
             return View();
         }
 
         [Authorize(Policy = "CoreDataPolicy")]
         [HttpGet]
-        public async Task<IActionResult> CountryListPage(
+        public virtual async Task<IActionResult> CountryListPage(
             int pageNumber = 1,
             int pageSize = -1)
         {
-            var itemsPerPage = _uiOptions.DefaultPageSize_CountryList;
+            var itemsPerPage = UIOptions.DefaultPageSize_CountryList;
             if (pageSize > 0)
             {
                 itemsPerPage = pageSize;
@@ -65,7 +65,7 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
 
             var model = new CountryListPageViewModel
             {
-                Countries = await _dataManager.GetCountriesPage(pageNumber, itemsPerPage)
+                Countries = await DataManager.GetCountriesPage(pageNumber, itemsPerPage)
             };
 
             return View(model);
@@ -73,7 +73,7 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
 
         [Authorize(Policy = PolicyConstants.CoreDataPolicy)]
         [HttpGet]
-        public async Task<IActionResult> CountryEdit(
+        public virtual async Task<IActionResult> CountryEdit(
             Guid? countryId,
             int returnPageNumber = 1
             )
@@ -81,21 +81,21 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
             GeoCountryViewModel model;
             if ((countryId != null) && (countryId.Value != Guid.Empty))
             {
-                ViewData["Title"] = _sr["Edit Country"];
-                var country = await _dataManager.FetchCountry(countryId.Value);
+                ViewData["Title"] = StringLocalizer["Edit Country"];
+                var country = await DataManager.FetchCountry(countryId.Value);
                 model = GeoCountryViewModel.FromIGeoCountry(country);
 
                 var currentCrumbAdjuster = new NavigationNodeAdjuster(Request.HttpContext)
                 {
                     KeyToAdjust = "CountryEdit",
-                    AdjustedText = _sr["Edit Country"],
+                    AdjustedText = StringLocalizer["Edit Country"],
                     ViewFilterName = NamedNavigationFilters.Breadcrumbs // this is default but showing here for readers of code 
                 };
                 currentCrumbAdjuster.AddToContext();
             }
             else
             {
-                ViewData["Title"] = _sr["New Country"];
+                ViewData["Title"] = StringLocalizer["New Country"];
                 model = new GeoCountryViewModel();
             }
 
@@ -107,11 +107,11 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
         [Authorize(Policy = PolicyConstants.CoreDataPolicy)]
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> CountryEdit(
+        public virtual async Task<IActionResult> CountryEdit(
             GeoCountryViewModel model,
             int returnPageNumber = 1)
         {
-            ViewData["Title"] = _sr["Edit Country"];
+            ViewData["Title"] = StringLocalizer["Edit Country"];
 
             if (!ModelState.IsValid)
             {
@@ -121,13 +121,13 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
             string successFormat;
             if (model.Id == Guid.Empty)
             {
-                successFormat = _sr["The country {0} was successfully created."];
-                await _dataManager.Add(model);
+                successFormat = StringLocalizer["The country {0} was successfully created."];
+                await DataManager.Add(model);
             }
             else
             {
-                successFormat = _sr["The country {0} was successfully updated."];
-                await _dataManager.Update(model);
+                successFormat = StringLocalizer["The country {0} was successfully updated."];
+                await DataManager.Update(model);
             }
             
             this.AlertSuccess(string.Format(successFormat,
@@ -143,16 +143,16 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
         [Authorize(Policy = PolicyConstants.CoreDataPolicy)]
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> CountryDelete(Guid countryId, int returnPageNumber = 1)
+        public virtual async Task<IActionResult> CountryDelete(Guid countryId, int returnPageNumber = 1)
         {
-            var country = await _dataManager.FetchCountry(countryId);
+            var country = await DataManager.FetchCountry(countryId);
             
             if (country != null)
             {
-                await _dataManager.DeleteCountry(country);
+                await DataManager.DeleteCountry(country);
                 
                 this.AlertWarning(string.Format(
-                        _sr["The country {0} was successfully deleted."],
+                        StringLocalizer["The country {0} was successfully deleted."],
                         country.Name)
                         , true);     
             }
@@ -162,7 +162,7 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
 
         [Authorize(Policy = PolicyConstants.CoreDataPolicy)]
         [HttpGet]
-        public async Task<IActionResult> StateListPage(
+        public virtual async Task<IActionResult> StateListPage(
             Guid? countryId,
             int pageNumber = 1,
             int pageSize = -1,
@@ -174,7 +174,7 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
                 return RedirectToAction("CountryListPage");
             }
             
-            var itemsPerPage = _uiOptions.DefaultPageSize_StateList;
+            var itemsPerPage = UIOptions.DefaultPageSize_StateList;
             if (pageSize > 0)
             {
                 itemsPerPage = pageSize;
@@ -182,16 +182,16 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
 
             var model = new StateListPageViewModel();
 
-            var country = await _dataManager.FetchCountry(countryId.Value);
+            var country = await DataManager.FetchCountry(countryId.Value);
             model.Country = GeoCountryViewModel.FromIGeoCountry(country);
-            model.States = await _dataManager.GetGeoZonePage(countryId.Value, pageNumber, itemsPerPage);
+            model.States = await DataManager.GetGeoZonePage(countryId.Value, pageNumber, itemsPerPage);
             model.CountryListReturnPageNumber = crp;
 
             // below we are just manipiulating the bread crumbs
             var currentCrumbAdjuster = new NavigationNodeAdjuster(Request.HttpContext)
             {
                 KeyToAdjust = "StateListPage",
-                AdjustedText = string.Format(_sr["{0} States"], model.Country.Name),
+                AdjustedText = string.Format(StringLocalizer["{0} States"], model.Country.Name),
                 AdjustedUrl = Request.Path.ToString()
                 + "?countryId=" + country.Id.ToString()
                 + "&crp=" + crp.ToInvariantString(),
@@ -213,23 +213,23 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
 
         [HttpGet]
         [AllowAnonymous]
-        public async Task<IActionResult> CountryAutoSuggestJson(string query)
+        public virtual async Task<IActionResult> CountryAutoSuggestJson(string query)
         {
-            var matches = await _dataManager.CountryAutoComplete(query, 10);
+            var matches = await DataManager.CountryAutoComplete(query, 10);
             return Json(matches);
         }
 
         [HttpPost]
         [AllowAnonymous]
-        public async Task<IActionResult> StateAutoSuggestJson(
+        public virtual async Task<IActionResult> StateAutoSuggestJson(
            string countryCode,
            string query)
         {
-            var country = await _dataManager.FetchCountry(countryCode);
+            var country = await DataManager.FetchCountry(countryCode);
             List<IGeoZone> states;
             if (country != null)
             {
-                states = await _dataManager.StateAutoComplete(country.Id, query, 10);
+                states = await DataManager.StateAutoComplete(country.Id, query, 10);
             }
             else
             {
@@ -244,14 +244,14 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
 
         [HttpGet]
         [AllowAnonymous]
-        public async Task<IActionResult> GetStatesJson(
+        public virtual async Task<IActionResult> GetStatesJson(
            string countryCode)
         {
-            var country = await _dataManager.FetchCountry(countryCode);
+            var country = await DataManager.FetchCountry(countryCode);
             List<IGeoZone> states;
             if (country != null)
             {
-                states = await _dataManager.GetGeoZonesByCountry(country.Id);
+                states = await DataManager.GetGeoZonesByCountry(country.Id);
             }
             else
             {
@@ -266,7 +266,7 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
 
         [Authorize(Policy = PolicyConstants.CoreDataPolicy)]
         [HttpGet]
-        public async Task<IActionResult> StateEdit(
+        public virtual async Task<IActionResult> StateEdit(
             Guid countryId,
             Guid? stateId,
             int crp = 1,
@@ -282,7 +282,7 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
 
             if ((stateId.HasValue) && (stateId.Value != Guid.Empty))
             {
-                var state = await _dataManager.FetchGeoZone(stateId.Value);
+                var state = await DataManager.FetchGeoZone(stateId.Value);
                 if ((state != null) && (state.CountryId == countryId))
                 {
                     model = GeoZoneViewModel.FromIGeoZone(state);
@@ -313,13 +313,13 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
             model.ReturnPageNumber = returnPageNumber;
             model.CountryListReturnPageNumber = crp;
 
-            var country = await _dataManager.FetchCountry(countryId);
+            var country = await DataManager.FetchCountry(countryId);
             model.CountryName = country.Name;
 
             var stateListCrumbAdjuster = new NavigationNodeAdjuster(Request.HttpContext)
             {
                 KeyToAdjust = "StateListPage",
-                AdjustedText = string.Format(_sr["{0} States"], model.CountryName),
+                AdjustedText = string.Format(StringLocalizer["{0} States"], model.CountryName),
                 ViewFilterName = NamedNavigationFilters.Breadcrumbs // this is default but showing here for readers of code 
             };
             stateListCrumbAdjuster.AddToContext();
@@ -331,7 +331,7 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
         [Authorize(Policy = PolicyConstants.CoreDataPolicy)]
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> StateEdit(GeoZoneViewModel model)
+        public virtual async Task<IActionResult> StateEdit(GeoZoneViewModel model)
         {  
             if (!ModelState.IsValid)
             {
@@ -341,13 +341,13 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
             string successFormat;
             if (model.Id == Guid.Empty)
             {
-                successFormat = _sr["The state {0} was successfully created."];
-                await _dataManager.Add(model);
+                successFormat = StringLocalizer["The state {0} was successfully created."];
+                await DataManager.Add(model);
             }
             else
             {
-                successFormat = _sr["The state {0} was successfully updated."];
-                await _dataManager.Update(model);
+                successFormat = StringLocalizer["The state {0} was successfully updated."];
+                await DataManager.Update(model);
             }
             
             this.AlertSuccess(string.Format(successFormat, model.Name), true);
@@ -365,20 +365,20 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
         [Authorize(Policy = PolicyConstants.CoreDataPolicy)]
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> StateDelete(
+        public virtual async Task<IActionResult> StateDelete(
             Guid countryId,
             Guid stateId,
             int crp = 1,
             int returnPageNumber = 1)
         {
-            var state = await _dataManager.FetchGeoZone(stateId);
+            var state = await DataManager.FetchGeoZone(stateId);
             
             if (state != null)
             {
-                await _dataManager.DeleteGeoZone(state);
+                await DataManager.DeleteGeoZone(state);
                 
                 this.AlertWarning(string.Format(
-                        _sr["The state {0} was successfully deleted."],
+                        StringLocalizer["The state {0} was successfully deleted."],
                         state.Name)
                         , true);
             }
