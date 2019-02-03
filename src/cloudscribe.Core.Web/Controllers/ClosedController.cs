@@ -11,23 +11,23 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
             IStringLocalizer<CloudscribeCore> localizer
             )
         {
-            _currentSite = currentSite;
-            _sr = localizer;
+            CurrentSite = currentSite;
+            StringLocalizer = localizer;
         }
 
-        private readonly SiteContext _currentSite;
-        private IStringLocalizer _sr;
+        protected SiteContext CurrentSite { get; private set; }
+        protected IStringLocalizer StringLocalizer { get; private set; }
 
-        public IActionResult Index()
+        public virtual IActionResult Index()
         {
-            if(!_currentSite.SiteIsClosed)
+            if(!CurrentSite.SiteIsClosed)
             {
-                return this.RedirectToSiteRoot(_currentSite);
+                return this.RedirectToSiteRoot(CurrentSite);
             }
 
-            ViewData["Title"] = _sr["Site Closed To Public Temporarily"];
+            ViewData["Title"] = StringLocalizer["Site Closed To Public Temporarily"];
 
-            return View("Index", _currentSite.SiteIsClosedMessage);
+            return View("Index", CurrentSite.SiteIsClosedMessage);
         }
 
     }

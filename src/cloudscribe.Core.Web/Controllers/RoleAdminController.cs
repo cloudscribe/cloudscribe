@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2014-12-06
-// Last Modified:			2018-06-16
+// Last Modified:			2019-02-03
 // 
 
 using cloudscribe.Core.Identity;
@@ -35,41 +35,41 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
             IEnumerable<IGuardNeededRoles> roleGuards
             )
         {
-            _userManager = userManager;
-            _roleManager = roleManager;
-            _siteManager = siteManager;
-            _uiOptions = uiOptionsAccessor.Value;
-            _setupOptions = setupOptionsAccessor.Value;
-            _sr = localizer;
-            _roleGuards = roleGuards;
+            UserManager = userManager;
+            RoleManager = roleManager;
+            SiteManager = siteManager;
+            UIOptions = uiOptionsAccessor.Value;
+            SetupOptions = setupOptionsAccessor.Value;
+            StringLocalizer = localizer;
+            RoleGuards = roleGuards;
         }
 
-        private SiteManager _siteManager;
-        private UIOptions _uiOptions;
-        private IStringLocalizer _sr;
-        private SiteConfigOptions _setupOptions;
-        private SiteUserManager<SiteUser> _userManager;
-        private SiteRoleManager<SiteRole> _roleManager;
-        private readonly IEnumerable<IGuardNeededRoles> _roleGuards;
+        protected SiteManager SiteManager { get; private set; }
+        protected UIOptions UIOptions { get; private set; }
+        protected IStringLocalizer StringLocalizer { get; private set; }
+        protected SiteConfigOptions SetupOptions { get; private set; }
+        protected SiteUserManager<SiteUser> UserManager { get; private set; }
+        protected SiteRoleManager<SiteRole> RoleManager { get; private set; }
+        protected IEnumerable<IGuardNeededRoles> RoleGuards { get; private set; }
 
 
         [HttpGet]
         [Authorize(Policy = PolicyConstants.RoleAdminPolicy)]
-        public async Task<IActionResult> Index(
+        public virtual async Task<IActionResult> Index(
             Guid? siteId,
             string searchInput = "", 
             int pageNumber = 1, 
             int pageSize = -1)
         {
-            var selectedSite = await _siteManager.GetSiteForDataOperations(siteId);
+            var selectedSite = await SiteManager.GetSiteForDataOperations(siteId);
             // only server admin site can edit other sites settings
-            if (selectedSite.Id != _siteManager.CurrentSite.Id)
+            if (selectedSite.Id != SiteManager.CurrentSite.Id)
             {
-                ViewData["Title"] = string.Format(CultureInfo.CurrentUICulture, _sr["{0} - Role Management"], selectedSite.SiteName);
+                ViewData["Title"] = string.Format(CultureInfo.CurrentUICulture, StringLocalizer["{0} - Role Management"], selectedSite.SiteName);
             }
             else
             {
-                ViewData["Title"] = _sr["Role Management"];
+                ViewData["Title"] = StringLocalizer["Role Management"];
             }
 
             var model = new RoleListViewModel
@@ -77,13 +77,13 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
                 SiteId = selectedSite.Id
             };
 
-            int itemsPerPage = _uiOptions.DefaultPageSize_RoleList;
+            int itemsPerPage = UIOptions.DefaultPageSize_RoleList;
             if (pageSize > 0)
             {
                 itemsPerPage = pageSize;
             }
             
-            model.SiteRoles = await _roleManager.GetRolesBySite(
+            model.SiteRoles = await RoleManager.GetRolesBySite(
                 selectedSite.Id,
                 searchInput,
                 pageNumber,
@@ -100,22 +100,22 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
 
         [HttpGet]
         [Authorize(Policy = PolicyConstants.RoleLookupPolicy)]
-        public async Task<IActionResult> Modal(
+        public virtual async Task<IActionResult> Modal(
             Guid? siteId,
             string searchInput = "",
             bool ajaxGrid = false,
             int pageNumber = 1,
             int pageSize = -1)
         {
-            var selectedSite = await _siteManager.GetSiteForDataOperations(siteId, true);
+            var selectedSite = await SiteManager.GetSiteForDataOperations(siteId, true);
             // only server admin site can edit other sites settings
-            if (selectedSite.Id != _siteManager.CurrentSite.Id)
+            if (selectedSite.Id != SiteManager.CurrentSite.Id)
             { 
-                ViewData["Title"] = string.Format(CultureInfo.CurrentUICulture, _sr["{0} - Role Management"], selectedSite.SiteName);
+                ViewData["Title"] = string.Format(CultureInfo.CurrentUICulture, StringLocalizer["{0} - Role Management"], selectedSite.SiteName);
             }
             else
             {
-                ViewData["Title"] = _sr["Role Management"];
+                ViewData["Title"] = StringLocalizer["Role Management"];
             }
 
             var model = new RoleListViewModel
@@ -123,7 +123,7 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
                 SiteId = selectedSite.Id
             };
 
-            int itemsPerPage = _uiOptions.DefaultPageSize_RoleList;
+            int itemsPerPage = UIOptions.DefaultPageSize_RoleList;
             if (pageSize > 0)
             {
                 itemsPerPage = pageSize;
@@ -131,7 +131,7 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
 
             if (searchInput == null) searchInput = string.Empty;
             
-            model.SiteRoles = await _roleManager.GetRolesBySite(
+            model.SiteRoles = await RoleManager.GetRolesBySite(
                 selectedSite.Id,
                 searchInput,
                 pageNumber,
@@ -148,19 +148,19 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
 
         [HttpGet]
         [Authorize(Policy = PolicyConstants.RoleAdminPolicy)]
-        public async Task<IActionResult> RoleEdit(
+        public virtual async Task<IActionResult> RoleEdit(
             Guid? siteId,
             Guid? roleId)
         {
-            var selectedSite = await _siteManager.GetSiteForDataOperations(siteId, true);
+            var selectedSite = await SiteManager.GetSiteForDataOperations(siteId, true);
             // only server admin site can edit other sites settings
-            if (selectedSite.Id != _siteManager.CurrentSite.Id)
+            if (selectedSite.Id != SiteManager.CurrentSite.Id)
             {
-                ViewData["Title"] = string.Format(CultureInfo.CurrentUICulture, _sr["{0} - New Role"], selectedSite.SiteName);  
+                ViewData["Title"] = string.Format(CultureInfo.CurrentUICulture, StringLocalizer["{0} - New Role"], selectedSite.SiteName);  
             }
             else
             {
-                ViewData["Title"] = _sr["New Role"];
+                ViewData["Title"] = StringLocalizer["New Role"];
             }
 
             var model = new RoleViewModel
@@ -170,12 +170,12 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
 
             if (roleId.HasValue)
             {
-                var role = await _roleManager.FindByIdAsync(roleId.Value.ToString());
+                var role = await RoleManager.FindByIdAsync(roleId.Value.ToString());
                 if ((role != null) && (role.SiteId == selectedSite.Id))
                 {
 
                     var rejectReasons = new List<string>();
-                    foreach(var guard in _roleGuards)
+                    foreach(var guard in RoleGuards)
                     {
                         var rejectReason = await guard.GetEditRejectReason(selectedSite.Id, role.RoleName);
                         if(!string.IsNullOrWhiteSpace(rejectReason))
@@ -194,11 +194,11 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
 
 
                     model = RoleViewModel.FromISiteRole(role);
-                    ViewData["Title"] = _sr["Edit Role"];
+                    ViewData["Title"] = StringLocalizer["Edit Role"];
                     var currentCrumbAdjuster = new NavigationNodeAdjuster(Request.HttpContext)
                     {
                         KeyToAdjust = "RoleEdit",
-                        AdjustedText = _sr["Edit Role"],
+                        AdjustedText = StringLocalizer["Edit Role"],
                         ViewFilterName = NamedNavigationFilters.Breadcrumbs // this is default but showing here for readers of code 
                     };
                     currentCrumbAdjuster.AddToContext();
@@ -213,17 +213,17 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize(Policy = PolicyConstants.RoleAdminPolicy)]
-        public async Task<IActionResult> RoleEdit(RoleViewModel model, int returnPageNumber = 1)
+        public virtual async Task<IActionResult> RoleEdit(RoleViewModel model, int returnPageNumber = 1)
         {
-            var selectedSite = await _siteManager.GetSiteForDataOperations(model.SiteId, true);
+            var selectedSite = await SiteManager.GetSiteForDataOperations(model.SiteId, true);
             // only server admin site can edit other sites settings
-            if (selectedSite.Id != _siteManager.CurrentSite.Id)
+            if (selectedSite.Id != SiteManager.CurrentSite.Id)
             {
-                ViewData["Title"] = string.Format(CultureInfo.CurrentUICulture, _sr["{0} - Edit Role"], selectedSite.SiteName);
+                ViewData["Title"] = string.Format(CultureInfo.CurrentUICulture, StringLocalizer["{0} - Edit Role"], selectedSite.SiteName);
             }
             else
             {
-                ViewData["Title"] = _sr["Edit Role"];
+                ViewData["Title"] = StringLocalizer["Edit Role"];
             }
             
             if (!ModelState.IsValid)
@@ -235,22 +235,22 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
             var role = SiteRole.FromISiteRole(model);
             if (model.Id == Guid.Empty)
             {
-                var exists = await _roleManager.RoleExistsAsync(model.RoleName);
+                var exists = await RoleManager.RoleExistsAsync(model.RoleName);
 
                 if(exists)
                 {
-                    ModelState.AddModelError("roleerror", _sr["The role name is already in use."]);
+                    ModelState.AddModelError("roleerror", StringLocalizer["The role name is already in use."]);
                     return View(model);
                 }
 
                 role.SiteId = selectedSite.Id;
-                successFormat = _sr["The role <b>{0}</b> was successfully created."];
-                await _roleManager.CreateAsync(role);
+                successFormat = StringLocalizer["The role <b>{0}</b> was successfully created."];
+                await RoleManager.CreateAsync(role);
             }
             else
             {
-                successFormat = _sr["The role <b>{0}</b> was successfully updated."];
-                await _roleManager.UpdateAsync(role);
+                successFormat = StringLocalizer["The role <b>{0}</b> was successfully updated."];
+                await RoleManager.UpdateAsync(role);
             }
             
             this.AlertSuccess(string.Format(successFormat, role.RoleName), true);
@@ -262,18 +262,18 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize(Policy = PolicyConstants.RoleAdminPolicy)]
-        public async Task<IActionResult> RoleDelete(
+        public virtual async Task<IActionResult> RoleDelete(
             Guid? siteId,
             Guid roleId, 
             int returnPageNumber = 1)
         {
-            var selectedSite = await _siteManager.GetSiteForDataOperations(siteId, true);
+            var selectedSite = await SiteManager.GetSiteForDataOperations(siteId, true);
             
-            var role = await _roleManager.FindByIdAsync(roleId.ToString());
-            if (role != null && role.SiteId == selectedSite.Id && role.IsDeletable(_setupOptions.RolesThatCannotBeDeleted))
+            var role = await RoleManager.FindByIdAsync(roleId.ToString());
+            if (role != null && role.SiteId == selectedSite.Id && role.IsDeletable(SetupOptions.RolesThatCannotBeDeleted))
             {
                 var rejectReasons = new List<string>();
-                foreach (var guard in _roleGuards)
+                foreach (var guard in RoleGuards)
                 {
                     var rejectReason = await guard.GetEditRejectReason(selectedSite.Id, role.RoleName);
                     if (!string.IsNullOrWhiteSpace(rejectReason))
@@ -291,10 +291,10 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
                 }
 
 
-                await _roleManager.DeleteUserRolesByRole(roleId);
-                await _roleManager.DeleteRole(roleId);
+                await RoleManager.DeleteUserRolesByRole(roleId);
+                await RoleManager.DeleteRole(roleId);
                 
-                string successFormat = _sr["The role <b>{0}</b> was successfully deleted."];
+                string successFormat = StringLocalizer["The role <b>{0}</b> was successfully deleted."];
 
                 this.AlertWarning(string.Format(successFormat,role.RoleName), true);
                 
@@ -306,31 +306,31 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
 
         [HttpGet]
         [Authorize(Policy = PolicyConstants.RoleAdminPolicy)]
-        public async Task<IActionResult> RoleMembers(
+        public virtual async Task<IActionResult> RoleMembers(
             Guid? siteId,
             Guid roleId,
             string searchInput = "",
             int pageNumber = 1,
             int pageSize = -1)
         {
-            var selectedSite = await _siteManager.GetSiteForDataOperations(siteId, true);
+            var selectedSite = await SiteManager.GetSiteForDataOperations(siteId, true);
             // only server admin site can edit other sites settings
-            if (selectedSite.Id != _siteManager.CurrentSite.Id)
+            if (selectedSite.Id != SiteManager.CurrentSite.Id)
             {
-                ViewData["Title"] = string.Format(CultureInfo.CurrentUICulture, _sr["{0} - Role Members"], selectedSite.SiteName);
+                ViewData["Title"] = string.Format(CultureInfo.CurrentUICulture, StringLocalizer["{0} - Role Members"], selectedSite.SiteName);
             }
             else
             {
-                ViewData["Title"] = _sr["Role Members"];
+                ViewData["Title"] = StringLocalizer["Role Members"];
             }
             
-            var role = await _roleManager.FindByIdAsync(roleId.ToString());
+            var role = await RoleManager.FindByIdAsync(roleId.ToString());
             if ((role == null) || (role.SiteId != selectedSite.Id ))
             {
                 return RedirectToAction("Index");
             }
 
-            int itemsPerPage = _uiOptions.DefaultPageSize_RoleMemberList;
+            int itemsPerPage = UIOptions.DefaultPageSize_RoleMemberList;
             if (pageSize > 0)
             {
                 itemsPerPage = pageSize;
@@ -342,19 +342,19 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
                 UseEmailForLogin = selectedSite.UseEmailForLogin,
                 Role = RoleViewModel.FromISiteRole(role)
             };
-            if (selectedSite.Id != _siteManager.CurrentSite.Id)
+            if (selectedSite.Id != SiteManager.CurrentSite.Id)
             {
-                model.Heading1 = string.Format(CultureInfo.CurrentUICulture, _sr["{0} - {1}"], selectedSite.SiteName, role.RoleName);
+                model.Heading1 = string.Format(CultureInfo.CurrentUICulture, StringLocalizer["{0} - {1}"], selectedSite.SiteName, role.RoleName);
             }
             else
             {
                 model.Heading1 = role.RoleName;
             }
             
-            model.Heading2 = _sr["Role Members"];
+            model.Heading2 = StringLocalizer["Role Members"];
             model.SearchQuery = searchInput;
 
-            model.Members = await _roleManager.GetUsersInRole(
+            model.Members = await RoleManager.GetUsersInRole(
                 role.SiteId,
                 role.Id,
                 searchInput,
@@ -367,7 +367,7 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
 
         [HttpGet]
         [Authorize(Policy = PolicyConstants.RoleAdminPolicy)]
-        public async Task<IActionResult> RoleNonMembers(
+        public virtual async Task<IActionResult> RoleNonMembers(
             Guid? siteId,
             Guid roleId,
             string searchInput = "",
@@ -375,24 +375,24 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
             int pageSize = 0,
             bool ajaxGrid = false)
         {
-            var selectedSite = await _siteManager.GetSiteForDataOperations(siteId, true);
+            var selectedSite = await SiteManager.GetSiteForDataOperations(siteId, true);
             // only server admin site can edit other sites settings
-            if (selectedSite.Id != _siteManager.CurrentSite.Id)
+            if (selectedSite.Id != SiteManager.CurrentSite.Id)
             {
-                ViewData["Title"] = string.Format(CultureInfo.CurrentUICulture, _sr["{0} - Non Role Members"], selectedSite.SiteName);
+                ViewData["Title"] = string.Format(CultureInfo.CurrentUICulture, StringLocalizer["{0} - Non Role Members"], selectedSite.SiteName);
             }
             else
             {
-                ViewData["Title"] = _sr["Non Role Members"];
+                ViewData["Title"] = StringLocalizer["Non Role Members"];
             }
             
-            var role = await _roleManager.FindByIdAsync(roleId.ToString());
+            var role = await RoleManager.FindByIdAsync(roleId.ToString());
             if ((role == null) || (role.SiteId != selectedSite.Id))
             {
                 return RedirectToAction("Index");
             }
 
-            var itemsPerPage = _uiOptions.DefaultPageSize_RoleMemberList;
+            var itemsPerPage = UIOptions.DefaultPageSize_RoleMemberList;
             if (pageSize > 0)
             {
                 itemsPerPage = pageSize;
@@ -402,7 +402,7 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
             {
                 Role = RoleViewModel.FromISiteRole(role)
             };
-            if (selectedSite.Id != _siteManager.CurrentSite.Id)
+            if (selectedSite.Id != SiteManager.CurrentSite.Id)
             {
                 model.Heading1 = string.Format(CultureInfo.CurrentUICulture, "{0} - {1}", selectedSite.SiteName, role.RoleName);
             }
@@ -411,10 +411,10 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
                 model.Heading1 = role.RoleName;
             }
 
-            model.Heading2 = _sr["Non Role Members"];
+            model.Heading2 = StringLocalizer["Non Role Members"];
             model.SearchQuery = searchInput; // unsafe input
 
-            model.Members = await _roleManager.GetUsersNotInRole(
+            model.Members = await RoleManager.GetUsersNotInRole(
                 role.SiteId,
                 role.Id,
                 searchInput,
@@ -432,23 +432,23 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
 
         [HttpPost]
         [Authorize(Policy = PolicyConstants.RoleAdminPolicy)]
-        public async Task<IActionResult> AddUser(
+        public virtual async Task<IActionResult> AddUser(
             Guid? siteId, 
             Guid roleId, 
             Guid userId)
         {
-            var selectedSite = await _siteManager.GetSiteForDataOperations(siteId, true);
+            var selectedSite = await SiteManager.GetSiteForDataOperations(siteId, true);
             
-            var user = await _userManager.Fetch(selectedSite.Id, userId);
+            var user = await UserManager.Fetch(selectedSite.Id, userId);
 
             if (user != null)
             {
-                var role = await _roleManager.FindByIdAsync(roleId.ToString());
+                var role = await RoleManager.FindByIdAsync(roleId.ToString());
                 if ((role != null) && (role.SiteId == selectedSite.Id))
                 {
-                    await _roleManager.AddUserToRole(user, role);
+                    await RoleManager.AddUserToRole(user, role);
                     
-                    this.AlertSuccess(string.Format(_sr["{0} was successfully added to the role {1}."],
+                    this.AlertSuccess(string.Format(StringLocalizer["{0} was successfully added to the role {1}."],
                         user.DisplayName, 
                         role.RoleName), true);
                 }
@@ -460,22 +460,22 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
 
         [HttpPost]
         [Authorize(Policy = PolicyConstants.RoleAdminPolicy)]
-        public async Task<IActionResult> RemoveUser(
+        public virtual async Task<IActionResult> RemoveUser(
             Guid? siteId,
             Guid roleId, 
             Guid userId)
         {
-            var selectedSite = await _siteManager.GetSiteForDataOperations(siteId, true);
+            var selectedSite = await SiteManager.GetSiteForDataOperations(siteId, true);
             
-            var user = await _userManager.Fetch(selectedSite.Id, userId);
+            var user = await UserManager.Fetch(selectedSite.Id, userId);
             if (user != null)
             {
-                var role = await _roleManager.FindByIdAsync(roleId.ToString());
+                var role = await RoleManager.FindByIdAsync(roleId.ToString());
                 if ((role != null) && (role.SiteId == selectedSite.Id))
                 {
-                    await _roleManager.RemoveUserFromRole(user, role);
+                    await RoleManager.RemoveUserFromRole(user, role);
                     this.AlertWarning(string.Format(
-                        _sr["{0} was successfully removed from the role {1}."],
+                        StringLocalizer["{0} was successfully removed from the role {1}."],
                         user.DisplayName, role.RoleName)
                         , true);   
                 }

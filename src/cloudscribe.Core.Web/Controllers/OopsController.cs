@@ -14,18 +14,18 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
             ILogger<OopsController> logger
             )
         {
-            _sr = localizer;
-            _log = logger;
-            _responseTypeDecider = responseTypeDecider;
+            StringLocalizer = localizer;
+            Log = logger;
+            ResponseTypeDecider = responseTypeDecider;
         }
 
-        private IStringLocalizer _sr;
-        private ILogger _log;
-        private IDecideErrorResponseType _responseTypeDecider;
+        protected IStringLocalizer StringLocalizer { get; private set; }
+        protected ILogger Log { get; private set; }
+        protected IDecideErrorResponseType ResponseTypeDecider { get; private set; }
 
-        public IActionResult Error(int statusCode = 500)
+        public virtual IActionResult Error(int statusCode = 500)
         {
-            ViewData["Title"] = _sr["Oops!"];
+            ViewData["Title"] = StringLocalizer["Oops!"];
 
 
             var statusFeature = HttpContext.Features.Get<IStatusCodeReExecuteFeature>();
@@ -37,11 +37,11 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
                 if (statusCode == 404)
                 {
                     var ipAddress = HttpContext.Connection.RemoteIpAddress.ToString();
-                    _log.LogWarning($"handled 404 for url: {originalPath} {HttpContext.Request.Method} from ipaddress {ipAddress}");
+                    Log.LogWarning($"handled 404 for url: {originalPath} {HttpContext.Request.Method} from ipaddress {ipAddress}");
 
                 }
 
-                var shouldReturnJson = _responseTypeDecider.ShouldReturnJson(originalPath, statusCode);
+                var shouldReturnJson = ResponseTypeDecider.ShouldReturnJson(originalPath, statusCode);
 
                 if (shouldReturnJson)
                 {
