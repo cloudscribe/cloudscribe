@@ -7,6 +7,7 @@
 
 
 using cloudscribe.Core.DataProtection;
+using cloudscribe.Core.Identity;
 using cloudscribe.Core.Models;
 using cloudscribe.Core.Models.Identity;
 using cloudscribe.Core.Web.Analytics;
@@ -76,6 +77,8 @@ namespace Microsoft.Extensions.DependencyInjection
             services.Configure<RecaptchaKeys>(configuration.GetSection("RecaptchaKeys"));
             services.Configure<SiteConfigOptions>(configuration.GetSection("SiteConfigOptions"));
             services.Configure<UIOptions>(configuration.GetSection("UIOptions"));
+
+            services.Configure<CustomSocialAuthSchemes>(configuration.GetSection("CustomSocialAuthSchemes"));
 
             services.Configure<CoreIconConfig>(configuration.GetSection("CoreIconConfig"));
             services.Configure<CoreThemeConfig>(configuration.GetSection("CoreThemeConfig"));

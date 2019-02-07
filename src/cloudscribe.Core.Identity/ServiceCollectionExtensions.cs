@@ -23,6 +23,11 @@ using Microsoft.AspNetCore.Authentication.Google;
 using Microsoft.AspNetCore.Authentication.Facebook;
 using Microsoft.AspNetCore.Authentication.Twitter;
 using Microsoft.AspNetCore.Authentication.OpenIdConnect;
+using System.Security.Claims;
+using Microsoft.AspNetCore.Authentication.OAuth;
+using System.Net.Http;
+using System.Net.Http.Headers;
+using Newtonsoft.Json.Linq;
 
 namespace Microsoft.Extensions.DependencyInjection
 {
@@ -114,9 +119,11 @@ namespace Microsoft.Extensions.DependencyInjection
                 o.ClientSecret = "placeholder";
                 o.Authority = "https://placeholder.com";
                
-            });
-
+            })
             
+            ;
+
+
 
 
 
