@@ -20,6 +20,7 @@ using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using cloudscribe.Core.Models.Identity;
+using Microsoft.Extensions.Options;
 
 namespace cloudscribe.Core.Web.Components
 {
@@ -31,7 +32,8 @@ namespace cloudscribe.Core.Web.Components
             IIdentityServerIntegration identityServerIntegration,
             ISocialAuthEmailVerfificationPolicy socialAuthEmailVerificationPolicy,
             IProcessAccountLoginRules loginRulesProcessor,
-            INewUserDisplayNameResolver displayNameResolver
+            INewUserDisplayNameResolver displayNameResolver,
+            IOptions<CustomSocialAuthSchemes> customSchemesAccessor
             //,ILogger<AccountService> logger
             )
         {
@@ -41,7 +43,9 @@ namespace cloudscribe.Core.Web.Components
             _socialAuthEmailVerificationPolicy = socialAuthEmailVerificationPolicy;
             _loginRulesProcessor = loginRulesProcessor;
             _displayNameResolver = displayNameResolver;
-            
+            CustomSocialAuthSchemes = customSchemesAccessor.Value;
+
+
         }
 
         protected readonly SiteUserManager<SiteUser> _userManager;
@@ -50,7 +54,8 @@ namespace cloudscribe.Core.Web.Components
         protected readonly ISocialAuthEmailVerfificationPolicy _socialAuthEmailVerificationPolicy;
         protected readonly IProcessAccountLoginRules _loginRulesProcessor;
         protected readonly INewUserDisplayNameResolver _displayNameResolver;
-        
+        protected readonly CustomSocialAuthSchemes CustomSocialAuthSchemes;
+
         protected virtual async Task<SiteUser> CreateUserFromExternalLogin(
             ExternalLoginInfo externalLoginInfo, 
             string providedEmail = null,
@@ -61,6 +66,10 @@ namespace cloudscribe.Core.Web.Components
             if (string.IsNullOrWhiteSpace(email))
             {
                 email = externalLoginInfo.Principal.FindFirstValue(ClaimTypes.Email);
+                if(string.IsNullOrWhiteSpace(email))
+                {
+                    email = externalLoginInfo.Principal.FindFirstValue("email");
+                }
             }
 
             DateTime? termsAcceptedDate = null;
@@ -702,6 +711,11 @@ namespace cloudscribe.Core.Web.Components
 
         protected virtual bool IsSocialAuthConfigured(Microsoft.AspNetCore.Authentication.AuthenticationScheme scheme)
         {
+            if(CustomSocialAuthSchemes.Schemes.Contains(scheme.Name))
+            {
+                return true;
+            }
+
             switch(scheme.Name)
             {
                 case "Microsoft":
@@ -720,6 +734,8 @@ namespace cloudscribe.Core.Web.Components
                 case "OpenIdConnect":
                     if (!string.IsNullOrWhiteSpace(_userManager.Site.OidConnectAppId)) { return true; }
                     break;
+               
+                    
             }
 
             return false;

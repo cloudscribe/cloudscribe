@@ -20,6 +20,12 @@ using cloudscribe.UserProperties.Services;
 using cloudscribe.UserProperties.Models;
 using IdentityServer4.AccessTokenValidation;
 using Microsoft.AspNetCore.Http;
+using System.Security.Claims;
+using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authentication.OAuth;
+using System.Net.Http;
+using System.Net.Http.Headers;
+using Newtonsoft.Json.Linq;
 
 namespace sourceDev.WebApp
 {
@@ -91,6 +97,73 @@ namespace sourceDev.WebApp
             //*** Important ***
             // This is a custom extension method in Config/CloudscribeFeatures.cs
             services.SetupCloudscribeFeatures(_configuration);
+
+            if(!string.IsNullOrWhiteSpace(_configuration["GituHubAuthSettings:ClientId"]))
+            {
+                services.AddAuthentication()
+                .AddOAuth("GitHub", options =>
+                {
+
+                    options.ClientId = _configuration["GituHubAuthSettings:ClientId"];
+                    options.ClientSecret = _configuration["GituHubAuthSettings:ClientSecret"];
+                    options.CallbackPath = new Microsoft.AspNetCore.Http.PathString("/signin-github");
+                    options.Scope.Add("user:email");
+                    //options.SignInScheme = "GitHub";
+
+                    options.AuthorizationEndpoint = "https://github.com/login/oauth/authorize";
+                    options.TokenEndpoint = "https://github.com/login/oauth/access_token";
+                    options.UserInformationEndpoint = "https://api.github.com/user";
+
+                    options.ClaimActions.MapJsonKey(ClaimTypes.NameIdentifier, "id");
+                    options.ClaimActions.MapJsonKey(ClaimTypes.Name, "name");
+                    options.ClaimActions.MapJsonKey(ClaimTypes.Email, "email");
+                    options.ClaimActions.MapJsonKey("urn:github:login", "login");
+                    options.ClaimActions.MapJsonKey("urn:github:url", "html_url");
+                    options.ClaimActions.MapJsonKey("urn:github:avatar", "avatar_url");
+
+                    options.Events = new OAuthEvents
+                    {
+                        OnCreatingTicket = async context =>
+                        {
+                            var request = new HttpRequestMessage(HttpMethod.Get, context.Options.UserInformationEndpoint);
+                            request.Headers.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+                            request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", context.AccessToken);
+
+                            var response = await context.Backchannel.SendAsync(request, HttpCompletionOption.ResponseHeadersRead, context.HttpContext.RequestAborted);
+                            response.EnsureSuccessStatusCode();
+
+                            var user = JObject.Parse(await response.Content.ReadAsStringAsync());
+                            var email = user.Value<string>("email");
+                            
+
+                            if(string.IsNullOrWhiteSpace(email))
+                            {
+                                request = new HttpRequestMessage(HttpMethod.Get, context.Options.UserInformationEndpoint + "/emails");
+                                request.Headers.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+                                request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", context.AccessToken);
+
+                                response = await context.Backchannel.SendAsync(request, HttpCompletionOption.ResponseHeadersRead, context.HttpContext.RequestAborted);
+                                response.EnsureSuccessStatusCode();
+
+                                var emails = JArray.Parse(await response.Content.ReadAsStringAsync());
+                                var primaryEmail = emails.FirstOrDefault(x => x.Value<bool>("primary") == true)
+                                .Value<string>("email");
+                                if(!string.IsNullOrEmpty(primaryEmail))
+                                {
+                                    user["email"] = primaryEmail;
+                                }
+                            }
+                            
+                            
+
+
+                            context.RunClaimActions(user);
+                        }
+                    };
+                });
+            }
+
+            
 
             //*** Important ***
             // This is a custom extension method in Config/Localization.cs
