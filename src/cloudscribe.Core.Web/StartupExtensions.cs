@@ -25,7 +25,6 @@ using cloudscribe.Email.Smtp;
 using cloudscribe.Web.Common.Components;
 using cloudscribe.Web.Common.Models;
 using cloudscribe.Web.Common.Razor;
-using cloudscribe.Web.Common.Setup;
 using cloudscribe.Web.Navigation;
 using cloudscribe.Web.Navigation.Caching;
 using cloudscribe.Web.SiteMap;
