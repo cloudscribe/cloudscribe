@@ -83,6 +83,10 @@
         <span asp-validation-for="ClosedMessage" class="invalid-feedback"></span>
     </div>
     <h2>@sr["New Site Administrator"]</h2>
+    @if(multiTenantOptions.UseRelatedSitesMode && multiTenantOptions.RelatedSiteId != Guid.Empty)
+    {
+        <p>@sr["Note that this installation is using related sites mode, so any new sites will use the same users and roles as the master site. Therefore the administrative user you are creating here will not really be able to login. The purpose of this user is just as a fail safe measure in case you later change the configuration to not use related sites mode, then you would be able to login with this account."]</p>
+    }
     <div class="form-group">
         <label asp-for="Email">@sr["Email"]</label>
         <input asp-for="Email" class="form-control" />
