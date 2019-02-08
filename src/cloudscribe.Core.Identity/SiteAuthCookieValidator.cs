@@ -11,6 +11,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
 using System.Security.Claims;
 using System.Threading.Tasks;
 
@@ -31,6 +32,14 @@ namespace cloudscribe.Core.Identity
 
             if (!context.Principal.HasClaim(siteGuidClaim.Type, siteGuidClaim.Value))
             {
+                var optionsAccessor = context.HttpContext.RequestServices.GetRequiredService<IOptions<MultiTenantOptions>>();
+                var options = optionsAccessor.Value;
+                if(options.UseRelatedSitesMode == true)
+                {
+                    await SecurityStampValidator.ValidatePrincipalAsync(context);
+                    return;
+                }
+
                 var logger = context.HttpContext.RequestServices.GetRequiredService<ILogger<SiteAuthCookieValidator>>();
                 logger.LogInformation("rejecting principal because it does not have siteguid");
                 context.RejectPrincipal();
