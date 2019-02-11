@@ -60,6 +60,11 @@ namespace cloudscribe.FileManager.CoreIntegration
 
         private string GetTenantRootVirtualPath()
         {
+            if(options.UseRelatedSitesMode && !string.IsNullOrWhiteSpace(options.RelatedSiteAliasId))
+            {
+                return ""; // sharing media across sites
+            }
+
             if(options.Mode == MultiTenantMode.FolderName)
             {
                 if(!string.IsNullOrEmpty(currentSite.SiteFolderName))
@@ -91,7 +96,17 @@ namespace cloudscribe.FileManager.CoreIntegration
                 }
             }
 
-            var tenantFolder = Path.Combine(siteFilesPath, currentSite.AliasId);
+            string tenantFolder;
+
+            if (options.UseRelatedSitesMode && !string.IsNullOrWhiteSpace(options.RelatedSiteAliasId))
+            {
+                tenantFolder = Path.Combine(siteFilesPath, options.RelatedSiteAliasId);
+            }
+            else
+            {
+                tenantFolder = Path.Combine(siteFilesPath, currentSite.AliasId);
+            }
+
             if (!Directory.Exists(tenantFolder))
             {
                 try

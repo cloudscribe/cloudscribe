@@ -51,6 +51,18 @@ http://www.codingdrama.com/bootstrap-markdown/
 
 https://github.com/evilstreak/markdown-js
 
+## Cleint side editors
+
+https://stackoverflow.com/questions/13013315/how-to-use-pagedown-markdown-editor
+https://jsfiddle.net/hansvonn/4qkoth4f/
+
+https://github.com/pandao/editor.md
+
+https://github.com/markdown-it/markdown-it
+
+https://github.com/lepture/editor
+https://github.com/bevacqua/woofmark
+
 ## Markdown with metadata
 
 If we were to support makrdown in simplecontent we would need to be able to store additional metadata that is not neccessarily rendered.

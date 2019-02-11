@@ -136,14 +136,22 @@ namespace Microsoft.AspNetCore.Builder
             {
                 // this allows serving static files from /sitefiles/[aliasid]/wwwroot
                 // so that files can be isolated per tenant
+                // but if using related sites mode and RelatedAliasId is specified then all sites use the same 
                 
                 var folderExists = TryEnsureTenantWwwRoot(env, tenant, multiTenantOptions);
+                string aliasId = tenant.AliasId;
+                var usingAlias = false;
+                if(multiTenantOptions.UseRelatedSitesMode && !string.IsNullOrWhiteSpace(multiTenantOptions.RelatedSiteAliasId))
+                {
+                    aliasId = multiTenantOptions.RelatedSiteAliasId;
+                    usingAlias = true;
+                }
 
                 if (folderExists)
                 {
                     var siteFilesPath = Path.Combine(env.ContentRootPath,
                         multiTenantOptions.SiteUploadFilesRootFolderName,
-                        tenant.AliasId,
+                        aliasId,
                         multiTenantOptions.SiteContentFolderName);
 
                     if (string.IsNullOrEmpty(tenantSegment)) // root tenant or hostname tenant
@@ -154,7 +162,7 @@ namespace Microsoft.AspNetCore.Builder
                             //,RequestPath = new PathString("/files")
                         });
                     }
-                    else
+                    else if(!usingAlias)
                     {
                         builder.UseStaticFiles(new StaticFileOptions()
                         {
@@ -189,7 +197,17 @@ namespace Microsoft.AspNetCore.Builder
                 }
             }
 
-            var tenantFolder = Path.Combine(siteFilesPath, tenant.AliasId);
+            string tenantFolder;
+
+            if(options.UseRelatedSitesMode && !string.IsNullOrWhiteSpace(options.RelatedSiteAliasId))
+            {
+                tenantFolder = Path.Combine(siteFilesPath, options.RelatedSiteAliasId);
+            }
+            else
+            {
+                tenantFolder = Path.Combine(siteFilesPath, tenant.AliasId);
+            }
+            
             if (!Directory.Exists(tenantFolder))
             {
                 try
