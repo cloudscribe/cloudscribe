@@ -36,7 +36,6 @@ namespace cloudscribe.Core.Models
         /// <summary>
         /// the siteId of the site whose users and roles are shared when UseRelatedSitesMode is true
         /// </summary>
-        //public int RelatedSiteId { get; set; } = 1;
         private Guid relatedSiteId = Guid.Empty;
         public Guid RelatedSiteId
         {
@@ -44,6 +43,8 @@ namespace cloudscribe.Core.Models
             }
             set { relatedSiteId = value; }
         }
+
+        public string RelatedSiteAliasId { get; set; }
 
         /// <summary>
         /// AliasId is a string used as an alternative (to the guid siteid) to identify a site for use in the file system
