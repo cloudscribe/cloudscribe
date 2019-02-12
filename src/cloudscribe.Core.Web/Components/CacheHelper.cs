@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2016-06-11
-// Last Modified:			2016-06-11
+// Last Modified:			2019-02-12
 // 
 
 using cloudscribe.Core.Models;
@@ -33,14 +33,53 @@ namespace cloudscribe.Core.Web.Components
         private readonly IDistributedCache _distributedCache;
         private readonly MultiTenantOptions _multiTenantOptions;
 
-        public void ClearCache(string cacheKey)
+        private const string listCacheKey = "folderList";
+
+        public void ClearLocalCache(string cacheKey)
         {
             _cache.Remove(cacheKey);
         }
 
-        public void ClearSiteFolderListCache()
+        public object GetItemFromLocalCache(string key)
         {
-            ClearCache("folderList");
+            return _cache.Get(key);
+        }
+
+        public void AddToCache(string key, SiteContext site, TimeSpan expiration)
+        {
+            _cache.Set(
+                        key,
+                        site,
+                        new MemoryCacheEntryOptions()
+                         .SetAbsoluteExpiration(expiration)
+                         );
+
+        }
+
+        public async Task ClearSiteFolderListCache()
+        {
+            //ClearLocalCache("folderList");
+            await _distributedCache.RemoveAsync(listCacheKey);
+        }
+
+        public async Task<List<string>> GetSiteFoldersFromCache()
+        {
+            var listCsv = await _distributedCache.GetStringAsync(listCacheKey);
+
+            if(!string.IsNullOrWhiteSpace(listCsv))
+            {
+                return listCsv.Split(',').ToList();
+            }
+            
+            return null;
+        }
+
+        public async Task AddSiteFoldersToCache(List<string> siteFolders, TimeSpan expiration)
+        {
+            var csv = string.Join(",", siteFolders);
+            var options = new DistributedCacheEntryOptions();
+            options.SetAbsoluteExpiration(expiration);
+            await _distributedCache.SetStringAsync(listCacheKey, csv, options);
         }
 
         public async Task SetDistributedCacheTimestamp(Guid siteId, DateTime lastModifiedUtc)
