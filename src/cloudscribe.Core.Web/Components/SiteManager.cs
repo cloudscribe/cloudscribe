@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2015-07-22
-// Last Modified:			2018-03-07
+// Last Modified:			2019-02-12
 // 
 
 using cloudscribe.Core.DataProtection;
@@ -171,7 +171,7 @@ namespace cloudscribe.Core.Web.Components
             
         }
 
-        public async Task Update(ISiteSettings site)
+        public async Task Update(ISiteSettings site, string oldFolderName = null)
         {
             await _eventHandlers.HandleSitePreUpdate(site.Id).ConfigureAwait(false);
 
@@ -190,26 +190,32 @@ namespace cloudscribe.Core.Web.Components
 
             if (_multiTenantOptions.Mode == MultiTenantMode.FolderName)
             {
+                if(!string.IsNullOrEmpty(oldFolderName))
+                {
+                    _cacheHelper.ClearLocalCache(oldFolderName);
+                    await _cacheHelper.ClearSiteFolderListCache();
+                }
+
                 if(string.IsNullOrEmpty(site.SiteFolderName))
                 {
-                    _cacheHelper.ClearCache("root");
+                    _cacheHelper.ClearLocalCache("root");
                 }
                 else
                 {
-                    _cacheHelper.ClearCache(site.SiteFolderName);
+                    _cacheHelper.ClearLocalCache(site.SiteFolderName);
                 }
             }
             else
             {
                 if (_context != null && !string.IsNullOrEmpty(_context.Request.Host.Value))
                 {
-                    _cacheHelper.ClearCache(_context.Request.Host.Value);
+                    _cacheHelper.ClearLocalCache(_context.Request.Host.Value);
                 }
                     
 
                 if (!string.IsNullOrWhiteSpace(site.PreferredHostName))
                 {
-                    _cacheHelper.ClearCache(site.PreferredHostName);
+                    _cacheHelper.ClearLocalCache(site.PreferredHostName);
                 }
                 
                 var siteHosts = await GetSiteHosts(site.Id);
@@ -217,11 +223,11 @@ namespace cloudscribe.Core.Web.Components
                 {
                     foreach(ISiteHost siteHostName in siteHosts)
                     {
-                        _cacheHelper.ClearCache(siteHostName.HostName);
+                        _cacheHelper.ClearLocalCache(siteHostName.HostName);
                     }
                 }
             }
-            _cacheHelper.ClearCache("site-" + site.Id.ToString());
+            _cacheHelper.ClearLocalCache("site-" + site.Id.ToString());
 
             await _eventHandlers.HandleSiteUpdated(site).ConfigureAwait(false);
         }
@@ -237,7 +243,7 @@ namespace cloudscribe.Core.Web.Components
             
             await _commands.Delete(site.Id, CancellationToken.None);
 
-            _cacheHelper.ClearSiteFolderListCache();
+            await _cacheHelper.ClearSiteFolderListCache();
         }
 
         public async Task<SiteSettings> CreateNewSite(bool isServerAdminSite)
@@ -266,7 +272,7 @@ namespace cloudscribe.Core.Web.Components
 
             if (_multiTenantOptions.Mode == MultiTenantMode.FolderName)
             {
-                _cacheHelper.ClearSiteFolderListCache();
+                await _cacheHelper.ClearSiteFolderListCache();
             }
                 
 

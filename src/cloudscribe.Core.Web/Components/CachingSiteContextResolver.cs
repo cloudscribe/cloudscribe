@@ -1,8 +1,5 @@
 ﻿using cloudscribe.Core.DataProtection;
 using cloudscribe.Core.Models;
-using Microsoft.AspNetCore.Http;
-using Microsoft.Extensions.Caching.Distributed;
-using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using System;
@@ -12,13 +9,11 @@ using System.Threading.Tasks;
 
 namespace cloudscribe.Core.Web.Components
 {
-    
+
     public class CachingSiteContextResolver : SiteContextResolver
     {
         public CachingSiteContextResolver(
             CacheHelper cacheHelper,
-            IMemoryCache cache,
-            IDistributedCache distributedCache,
             ISiteQueries siteRepository,
             SiteDataProtector dataProtector,
             IOptions<MultiTenantOptions> multiTenantOptions,
@@ -27,34 +22,25 @@ namespace cloudscribe.Core.Web.Components
             ) :base(siteRepository, dataProtector, multiTenantOptions)
         {
             _cacheHelper = cacheHelper;
-            _cache = cache;
             _cachingOptions = cachingOptionsAccessor.Value;
             _log = logger;
         }
 
-        private readonly IMemoryCache _cache;
         private readonly CacheHelper _cacheHelper;
-
-
         private readonly CachingSiteResolverOptions _cachingOptions;
         private readonly ILogger _log;
 
         private async Task<List<string>> GetAllSiteFoldersFolders()
         {
-            var listCacheKey = "folderList";
-            if (_cache.Get(listCacheKey) is List<string> result)
+            var result = await _cacheHelper.GetSiteFoldersFromCache();
+            if(result != null)
             {
-                _log.LogTrace("Folder List retrieved from cache with key \"{cacheKey}\".", listCacheKey);
                 return result;
             }
-
+            
             result = await SiteQueries.GetAllSiteFolders();
-            var cacheEntryOptions = new MemoryCacheEntryOptions()
-                .SetAbsoluteExpiration(_cachingOptions.FolderListCacheDuration);
-
-            _log.LogTrace("Caching folder list with keys \"{cacheKey}\".", listCacheKey);
-            _cache.Set(listCacheKey, result, cacheEntryOptions);
-
+            await _cacheHelper.AddSiteFoldersToCache(result, _cachingOptions.FolderListCacheDuration);
+           
             return result;
 
         }
@@ -81,7 +67,7 @@ namespace cloudscribe.Core.Web.Components
             var pathStartingSegment = path.StartingSegment();
 
             var cacheKey = await GetCacheKey(hostName, pathStartingSegment);
-            var result = (SiteContext)_cache.Get(cacheKey);
+            var result = (SiteContext)_cacheHelper.GetItemFromLocalCache(cacheKey);
             if(result != null)
             {
                 // we just got site from cache but check last modified from distributed cache in case site was updated on another node
@@ -102,7 +88,6 @@ namespace cloudscribe.Core.Web.Components
                 {
                     await _cacheHelper.SetDistributedCacheTimestamp(result.Id, result.LastModifiedUtc);
                 }
-
             }
 
             if(result == null)
@@ -115,13 +100,7 @@ namespace cloudscribe.Core.Web.Components
                     _log.LogTrace($"Caching site with key {cacheKey}");
 
                     await _cacheHelper.SetDistributedCacheTimestamp(result.Id, result.LastModifiedUtc);
-
-                    _cache.Set(
-                        cacheKey,
-                        result,
-                        new MemoryCacheEntryOptions()
-                         .SetAbsoluteExpiration(_cachingOptions.SiteCacheDuration)
-                         );
+                    _cacheHelper.AddToCache(cacheKey, result, _cachingOptions.SiteCacheDuration);   
                 }
             }
             else
@@ -138,7 +117,7 @@ namespace cloudscribe.Core.Web.Components
         {
             var cacheKey = "site-" + siteId.ToString();
 
-            var result = (SiteContext)_cache.Get(cacheKey);
+            var result = (SiteContext)_cacheHelper.GetItemFromLocalCache(cacheKey);
 
             if (result != null)
             {
@@ -169,13 +148,8 @@ namespace cloudscribe.Core.Web.Components
                 if (result != null)
                 {
                     await _cacheHelper.SetDistributedCacheTimestamp(result.Id, result.LastModifiedUtc);
-
-                    _cache.Set(
-                        cacheKey,
-                        result,
-                        new MemoryCacheEntryOptions()
-                         .SetAbsoluteExpiration(_cachingOptions.SiteCacheDuration)
-                         );
+                    _cacheHelper.AddToCache(cacheKey, result, _cachingOptions.SiteCacheDuration);
+                    
                 }
             }
 
