@@ -310,6 +310,11 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
             
             selectedSite.SiteName = model.SiteName;
             selectedSite.TimeZoneId = model.TimeZoneId;
+            string oldFolderName = null;
+            if(selectedSite.SiteFolderName != model.SiteFolderName)
+            {
+                oldFolderName = selectedSite.SiteFolderName;
+            }
             selectedSite.SiteFolderName = model.SiteFolderName;
             selectedSite.SiteIsClosed = model.IsClosed;
             selectedSite.SiteIsClosedMessage = model.ClosedMessage;
@@ -320,7 +325,7 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
             selectedSite.ForcedCulture = model.ForcedCulture;
             selectedSite.ForcedUICulture = model.ForcedUICulture;
             
-            await SiteManager.Update(selectedSite);
+            await SiteManager.Update(selectedSite, oldFolderName);
             
             this.AlertSuccess(string.Format(StringLocalizer["Basic site settings for {0} were successfully updated."],
                         selectedSite.SiteName), true);

@@ -171,7 +171,7 @@ namespace cloudscribe.Core.Web.Components
             
         }
 
-        public async Task Update(ISiteSettings site)
+        public async Task Update(ISiteSettings site, string oldFolderName = null)
         {
             await _eventHandlers.HandleSitePreUpdate(site.Id).ConfigureAwait(false);
 
@@ -190,6 +190,12 @@ namespace cloudscribe.Core.Web.Components
 
             if (_multiTenantOptions.Mode == MultiTenantMode.FolderName)
             {
+                if(!string.IsNullOrEmpty(oldFolderName))
+                {
+                    _cacheHelper.ClearCache(oldFolderName);
+                    _cacheHelper.ClearSiteFolderListCache();
+                }
+
                 if(string.IsNullOrEmpty(site.SiteFolderName))
                 {
                     _cacheHelper.ClearCache("root");
