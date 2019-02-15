@@ -1,5 +1,7 @@
 # GraphQL
 
+https://principledgraphql.com/
+
 https://honest.engineering/posts/why-use-graphql-good-and-bad-reasons
 
 https://verve.co/engineering/graphql-a-retrospective/
