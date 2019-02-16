@@ -2,6 +2,7 @@
 @inject IStringLocalizer<CloudscribeCore> sr
 @inject ICkeditorOptionsResolver editorOptionsResolver
 @inject IOptions<MultiTenantOptions> multiTenantOptionsAccessor
+@inject ICoreThemeHelper themeHelper
 
 @{
     MultiTenantOptions multiTenantOptions = multiTenantOptionsAccessor.Value;
@@ -11,6 +12,7 @@
     if (multiTenantOptions.Mode != MultiTenantMode.HostName) { useHostTenants = false; }
     var ckOptions = await editorOptionsResolver.GetCkeditorOptions();
     var baseUrl = this.Context.Request.GetCurrentBaseUrl() + "/";
+    var themeSettings = themeHelper.GetThemeSettings();
 }
 <form method="post" class="form-horizontal" role="form" asp-antiforgery="true" data-submit-once="true">
     <div asp-validation-summary="All" class="text-danger"></div>
@@ -70,37 +72,41 @@
             <span asp-validation-for="Theme" class="invalid-feedback"></span>
         </div>
     }
-    <div class="form-group">
-        <div class="form-check">
-            <input asp-for="ShowSiteNameLink" class="form-check-input" />
-            <label asp-for="ShowSiteNameLink" class="form-check-label">@sr["Show Site Name Link in Header"]</label>
+    @if (themeSettings.EnableHeaderFooterEditingInSiteSettings)
+    {
+        <div class="form-group">
+            <div class="form-check">
+                <input asp-for="ShowSiteNameLink" class="form-check-input" />
+                <label asp-for="ShowSiteNameLink" class="form-check-label">@sr["Show Site Name Link in Header"]</label>
+            </div>
         </div>
-    </div>
-    <p>@sr["Please note that adding header or footer content can mess up the layout of your page and may require CSS changes to accomodate your content."]</p>
-    <div class="form-group">
-        <label asp-for="HeaderContent">@sr["Header Content"]</label>
-        <textarea class="form-control" rows="5" asp-for="HeaderContent"
-                  data-ckeditor-unobtrusive=""
-                  data-ckeditor-config-url="@ckOptions.CustomConfigPath"
-                  data-ckeditor-config-language="@ckOptions.LanguageCode"
-                  data-ckeditor-config-dropfileuploadurl="@ckOptions.DropFileUrl"
-                  data-ckeditor-config-filebrowserurl="@ckOptions.FileBrowseUrl"
-                  data-ckeditor-config-imagebrowseurl="@ckOptions.ImageBrowseUrl"
-                  data-ckeditor-config-height="100"></textarea>
-        <span asp-validation-for="ClosedMessage" class="invalid-feedback"></span>
-    </div>
-    <div class="form-group">
-        <label asp-for="FooterContent">@sr["Footer Content"]</label>
-        <textarea class="form-control" rows="5" asp-for="FooterContent"
-                  data-ckeditor-unobtrusive=""
-                  data-ckeditor-config-url="@ckOptions.CustomConfigPath"
-                  data-ckeditor-config-language="@ckOptions.LanguageCode"
-                  data-ckeditor-config-dropfileuploadurl="@ckOptions.DropFileUrl"
-                  data-ckeditor-config-filebrowserurl="@ckOptions.FileBrowseUrl"
-                  data-ckeditor-config-imagebrowseurl="@ckOptions.ImageBrowseUrl"
-                  data-ckeditor-config-height="100"></textarea>
-        <span asp-validation-for="ClosedMessage" class="invalid-feedback"></span>
-    </div>
+        <p>@sr["Please note that adding header or footer content can mess up the layout of your page and may require CSS changes to accomodate your content."]</p>
+        <div class="form-group">
+            <label asp-for="HeaderContent">@sr["Header Content"]</label>
+            <textarea class="form-control" rows="5" asp-for="HeaderContent"
+                      data-ckeditor-unobtrusive=""
+                      data-ckeditor-config-url="@ckOptions.CustomConfigPath"
+                      data-ckeditor-config-language="@ckOptions.LanguageCode"
+                      data-ckeditor-config-dropfileuploadurl="@ckOptions.DropFileUrl"
+                      data-ckeditor-config-filebrowserurl="@ckOptions.FileBrowseUrl"
+                      data-ckeditor-config-imagebrowseurl="@ckOptions.ImageBrowseUrl"
+                      data-ckeditor-config-height="100"></textarea>
+            <span asp-validation-for="ClosedMessage" class="invalid-feedback"></span>
+        </div>
+        <div class="form-group">
+            <label asp-for="FooterContent">@sr["Footer Content"]</label>
+            <textarea class="form-control" rows="5" asp-for="FooterContent"
+                      data-ckeditor-unobtrusive=""
+                      data-ckeditor-config-url="@ckOptions.CustomConfigPath"
+                      data-ckeditor-config-language="@ckOptions.LanguageCode"
+                      data-ckeditor-config-dropfileuploadurl="@ckOptions.DropFileUrl"
+                      data-ckeditor-config-filebrowserurl="@ckOptions.FileBrowseUrl"
+                      data-ckeditor-config-imagebrowseurl="@ckOptions.ImageBrowseUrl"
+                      data-ckeditor-config-height="100"></textarea>
+            <span asp-validation-for="ClosedMessage" class="invalid-feedback"></span>
+        </div>
+    }
+
 
     @if (Model.AvailableCultures.Count > 0)
     {

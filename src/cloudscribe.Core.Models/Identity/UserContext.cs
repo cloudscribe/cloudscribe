@@ -189,5 +189,10 @@ namespace cloudscribe.Core.Models
         {
             get { return user.MustChangePwd; }
         }
+
+        public bool TwoFactorEnabled
+        {
+            get { return user.TwoFactorEnabled; }
+        }
     }
 }

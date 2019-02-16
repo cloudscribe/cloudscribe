@@ -12,5 +12,7 @@
         public bool AdminSideNavExpanded{ get; set; }
 
         public CoreIconSet Icons { get; set; }
+
+        public bool EnableHeaderFooterEditingInSiteSettings { get; set; }
     }
 }

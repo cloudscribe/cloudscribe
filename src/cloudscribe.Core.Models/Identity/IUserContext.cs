@@ -33,5 +33,7 @@ namespace cloudscribe.Core.Models
         bool RolesChanged { get; }
 
         bool MustChangePwd { get; }
+
+        bool TwoFactorEnabled { get; }
     }
 }
