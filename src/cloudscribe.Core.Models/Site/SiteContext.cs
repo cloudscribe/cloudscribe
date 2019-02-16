@@ -499,6 +499,26 @@ namespace cloudscribe.Core.Models
             get { return site.RequireCookieConsent; }
         }
 
+        public bool Require2FA
+        {
+            get { return site.Require2FA; }
+        }
+
+        public bool ShowSiteNameLink
+        {
+            get { return site.ShowSiteNameLink; }
+        }
+
+        public string HeaderContent
+        {
+            get { return site.HeaderContent; }
+        }
+
+        public string FooterContent
+        {
+            get { return site.FooterContent; }
+        }
+
 
     }
 }

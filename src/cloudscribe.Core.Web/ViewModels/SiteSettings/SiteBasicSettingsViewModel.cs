@@ -2,14 +2,13 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2014-10-26
-// Last Modified:			2017-06-29
+// Last Modified:			2019-02-16
 // 
 
+using Microsoft.AspNetCore.Mvc.Rendering;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using Microsoft.AspNetCore.Mvc.Rendering;
-using Microsoft.AspNetCore.Mvc;
 
 namespace cloudscribe.Core.Web.ViewModels.SiteSettings
 {
@@ -89,7 +88,11 @@ namespace cloudscribe.Core.Web.ViewModels.SiteSettings
         public string ClosedMessage { get; set; } = string.Empty;
         public bool IsClosed { get; set; } = false;
 
-        
+        public bool ShowSiteNameLink { get; set; } = true;
+        public string HeaderContent { get; set; }
+        public string FooterContent { get; set; }
+
+
 
     }
 }

@@ -119,5 +119,11 @@ namespace cloudscribe.Core.Models
         string CookiePolicySummary { get; }
         bool RequireCookieConsent { get;  }
 
+        bool Require2FA { get; }
+
+        bool ShowSiteNameLink { get; }
+        string HeaderContent { get; }
+        string FooterContent { get; }
+
     }
 }

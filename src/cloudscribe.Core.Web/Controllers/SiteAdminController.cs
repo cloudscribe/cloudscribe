@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2014-10-26
-// Last Modified:			2019-02-03
+// Last Modified:			2019-02-16
 // 
 
 using cloudscribe.Core.Models;
@@ -157,7 +157,10 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
                 GoogleAnalyticsProfileId = selectedSite.GoogleAnalyticsProfileId,
                 AddThisProfileId = selectedSite.AddThisDotComUsername,
                 IsClosed = selectedSite.SiteIsClosed,
-                ClosedMessage = selectedSite.SiteIsClosedMessage
+                ClosedMessage = selectedSite.SiteIsClosedMessage,
+                ShowSiteNameLink = selectedSite.ShowSiteNameLink,
+                HeaderContent = selectedSite.HeaderContent,
+                FooterContent = selectedSite.FooterContent
             };
 
             if (MultiTenantOptions.Mode == MultiTenantMode.FolderName)
@@ -324,6 +327,10 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
 
             selectedSite.ForcedCulture = model.ForcedCulture;
             selectedSite.ForcedUICulture = model.ForcedUICulture;
+
+            selectedSite.ShowSiteNameLink = model.ShowSiteNameLink;
+            selectedSite.HeaderContent = model.HeaderContent;
+            selectedSite.FooterContent = model.FooterContent;
             
             await SiteManager.Update(selectedSite, oldFolderName);
             
@@ -877,7 +884,8 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
                 AccountApprovalEmailCsv = selectedSite.AccountApprovalEmailCsv,
                 EmailIsConfigured = await SiteCapabilities.SupportsEmailNotification(new SiteContext(selectedSite)),
                 SmsIsConfigured = selectedSite.SmsIsConfigured(),
-                HasAnySocialAuthEnabled = selectedSite.HasAnySocialAuthEnabled()
+                HasAnySocialAuthEnabled = selectedSite.HasAnySocialAuthEnabled(),
+                Require2FA = selectedSite.Require2FA
             };
 
             return View(model);
@@ -927,6 +935,7 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
             selectedSite.RequireConfirmedEmail = model.RequireConfirmedEmail;
             selectedSite.RequireConfirmedPhone = model.RequireConfirmedPhone;
             selectedSite.UseEmailForLogin = model.UseEmailForLogin;
+            selectedSite.Require2FA = model.Require2FA;
             
             await SiteManager.Update(selectedSite);
             

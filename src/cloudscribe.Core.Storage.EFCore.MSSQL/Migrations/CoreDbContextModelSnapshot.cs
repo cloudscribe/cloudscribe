@@ -15,7 +15,7 @@ namespace cloudscribe.Core.Storage.EFCore.MSSQL.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "2.1.1-rtm-30846")
+                .HasAnnotation("ProductVersion", "2.2.1-servicing-10028")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128)
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
@@ -236,6 +236,8 @@ namespace cloudscribe.Core.Storage.EFCore.MSSQL.Migrations
 
                     b.Property<string>("FacebookAppSecret");
 
+                    b.Property<string>("FooterContent");
+
                     b.Property<string>("ForcedCulture")
                         .HasMaxLength(10);
 
@@ -249,6 +251,8 @@ namespace cloudscribe.Core.Storage.EFCore.MSSQL.Migrations
                         .HasMaxLength(100);
 
                     b.Property<string>("GoogleClientSecret");
+
+                    b.Property<string>("HeaderContent");
 
                     b.Property<bool>("IsDataProtected")
                         .HasColumnType("bit");
@@ -324,6 +328,8 @@ namespace cloudscribe.Core.Storage.EFCore.MSSQL.Migrations
 
                     b.Property<string>("RegistrationPreamble");
 
+                    b.Property<bool>("Require2FA");
+
                     b.Property<bool>("RequireApprovalBeforeLogin")
                         .HasColumnType("bit");
 
@@ -337,6 +343,8 @@ namespace cloudscribe.Core.Storage.EFCore.MSSQL.Migrations
 
                     b.Property<bool>("RequiresQuestionAndAnswer")
                         .HasColumnType("bit");
+
+                    b.Property<bool>("ShowSiteNameLink");
 
                     b.Property<bool>("SignEmailWithDkim")
                         .HasColumnType("bit");

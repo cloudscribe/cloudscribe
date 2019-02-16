@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using cloudscribe.Core.Storage.EFCore.PostgreSql;
@@ -9,9 +10,10 @@ using cloudscribe.Core.Storage.EFCore.PostgreSql;
 namespace cloudscribe.Core.Storage.EFCore.PostgreSql.Migrations
 {
     [DbContext(typeof(CoreDbContext))]
-    partial class CoreDbContextModelSnapshot : ModelSnapshot
+    [Migration("20190216132653_cs-core-20190215")]
+    partial class cscore20190215
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -419,7 +421,9 @@ namespace cloudscribe.Core.Storage.EFCore.PostgreSql.Migrations
                         .HasColumnName("requires_question_and_answer");
 
                     b.Property<bool>("ShowSiteNameLink")
-                        .HasColumnName("show_site_name_link");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnName("show_site_name_link")
+                        .HasDefaultValue(true);
 
                     b.Property<bool>("SignEmailWithDkim")
                         .HasColumnName("sign_email_with_dkim");

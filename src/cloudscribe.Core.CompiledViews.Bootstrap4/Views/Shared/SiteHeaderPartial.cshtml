@@ -1,0 +1,9 @@
+﻿@inject ISiteContextResolver siteResolver
+@{
+    var Tenant = await siteResolver.ResolveSite(Context.Request.Host.Host, Context.Request.Path);
+}
+@if (Tenant != null)
+{
+    
+    @Html.Raw(Tenant.HeaderContent)
+}

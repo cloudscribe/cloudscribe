@@ -17,7 +17,7 @@ namespace cloudscribe.Core.Storage.EFCore.pgsql.Migrations
             modelBuilder
                 .HasAnnotation("Npgsql:PostgresExtension:uuid-ossp", "'uuid-ossp', '', ''")
                 .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.SerialColumn)
-                .HasAnnotation("ProductVersion", "2.1.1-rtm-30846")
+                .HasAnnotation("ProductVersion", "2.2.1-servicing-10028")
                 .HasAnnotation("Relational:MaxIdentifierLength", 63);
 
             modelBuilder.Entity("cloudscribe.Core.Models.Geography.GeoCountry", b =>
@@ -215,6 +215,8 @@ namespace cloudscribe.Core.Storage.EFCore.pgsql.Migrations
 
                     b.Property<string>("FacebookAppSecret");
 
+                    b.Property<string>("FooterContent");
+
                     b.Property<string>("ForcedCulture")
                         .HasMaxLength(10);
 
@@ -228,6 +230,8 @@ namespace cloudscribe.Core.Storage.EFCore.pgsql.Migrations
                         .HasMaxLength(100);
 
                     b.Property<string>("GoogleClientSecret");
+
+                    b.Property<string>("HeaderContent");
 
                     b.Property<bool>("IsDataProtected");
 
@@ -297,6 +301,8 @@ namespace cloudscribe.Core.Storage.EFCore.pgsql.Migrations
 
                     b.Property<string>("RegistrationPreamble");
 
+                    b.Property<bool>("Require2FA");
+
                     b.Property<bool>("RequireApprovalBeforeLogin");
 
                     b.Property<bool>("RequireConfirmedEmail");
@@ -306,6 +312,8 @@ namespace cloudscribe.Core.Storage.EFCore.pgsql.Migrations
                     b.Property<bool>("RequireCookieConsent");
 
                     b.Property<bool>("RequiresQuestionAndAnswer");
+
+                    b.Property<bool>("ShowSiteNameLink");
 
                     b.Property<bool>("SignEmailWithDkim");
 

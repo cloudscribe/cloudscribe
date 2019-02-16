@@ -42,7 +42,7 @@
                 <span asp-validation-for="SiteFolderName" class="text-danger"></span>
                 @Html.ValidationMessage("foldererror", new { @class = "text-danger" })
             </div>
-        </div> 
+        </div>
     }
     else if (useHostTenants)
     {
@@ -52,9 +52,9 @@
             <span asp-validation-for="HostName" class="invalid-feedback"></span>
             @Html.ValidationMessage("hosterror", new { @class = "text-danger" })
             <a class="hostmap" asp-action="SiteHostMappings"
-                asp-controller="SiteAdmin"
-                asp-route-siteGuid="SiteGuid"
-                asp-route-slp="ReturnPageNumber">@sr["Domain Mappings"]</a>
+               asp-controller="SiteAdmin"
+               asp-route-siteGuid="SiteGuid"
+               asp-route-slp="ReturnPageNumber">@sr["Domain Mappings"]</a>
         </div>
     }
     <div class="form-group">
@@ -70,6 +70,38 @@
             <span asp-validation-for="Theme" class="invalid-feedback"></span>
         </div>
     }
+    <div class="form-group">
+        <div class="form-check">
+            <input asp-for="ShowSiteNameLink" class="form-check-input" />
+            <label asp-for="ShowSiteNameLink" class="form-check-label">@sr["Show Site Name Link in Header"]</label>
+        </div>
+    </div>
+    <p>@sr["Please note that adding header or footer content can mess up the layout of your page and may require CSS changes to accomodate your content."]</p>
+    <div class="form-group">
+        <label asp-for="HeaderContent">@sr["Header Content"]</label>
+        <textarea class="form-control" rows="5" asp-for="HeaderContent"
+                  data-ckeditor-unobtrusive=""
+                  data-ckeditor-config-url="@ckOptions.CustomConfigPath"
+                  data-ckeditor-config-language="@ckOptions.LanguageCode"
+                  data-ckeditor-config-dropfileuploadurl="@ckOptions.DropFileUrl"
+                  data-ckeditor-config-filebrowserurl="@ckOptions.FileBrowseUrl"
+                  data-ckeditor-config-imagebrowseurl="@ckOptions.ImageBrowseUrl"
+                  data-ckeditor-config-height="100"></textarea>
+        <span asp-validation-for="ClosedMessage" class="invalid-feedback"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="FooterContent">@sr["Footer Content"]</label>
+        <textarea class="form-control" rows="5" asp-for="FooterContent"
+                  data-ckeditor-unobtrusive=""
+                  data-ckeditor-config-url="@ckOptions.CustomConfigPath"
+                  data-ckeditor-config-language="@ckOptions.LanguageCode"
+                  data-ckeditor-config-dropfileuploadurl="@ckOptions.DropFileUrl"
+                  data-ckeditor-config-filebrowserurl="@ckOptions.FileBrowseUrl"
+                  data-ckeditor-config-imagebrowseurl="@ckOptions.ImageBrowseUrl"
+                  data-ckeditor-config-height="100"></textarea>
+        <span asp-validation-for="ClosedMessage" class="invalid-feedback"></span>
+    </div>
+
     @if (Model.AvailableCultures.Count > 0)
     {
         <div class="form-group">
@@ -105,23 +137,23 @@
     <div class="form-group">
         <label asp-for="ClosedMessage">@sr["Closed Message"]</label>
         <textarea class="form-control" rows="5" asp-for="ClosedMessage"
-                    data-ckeditor-unobtrusive=""
-                    data-ckeditor-config-url="@ckOptions.CustomConfigPath"
-                    data-ckeditor-config-language="@ckOptions.LanguageCode"
-                    data-ckeditor-config-dropfileuploadurl="@ckOptions.DropFileUrl"
-                    data-ckeditor-config-filebrowserurl="@ckOptions.FileBrowseUrl"
-                    data-ckeditor-config-imagebrowseurl="@ckOptions.ImageBrowseUrl"></textarea>
+                  data-ckeditor-unobtrusive=""
+                  data-ckeditor-config-url="@ckOptions.CustomConfigPath"
+                  data-ckeditor-config-language="@ckOptions.LanguageCode"
+                  data-ckeditor-config-dropfileuploadurl="@ckOptions.DropFileUrl"
+                  data-ckeditor-config-filebrowserurl="@ckOptions.FileBrowseUrl"
+                  data-ckeditor-config-imagebrowseurl="@ckOptions.ImageBrowseUrl"></textarea>
         <span asp-validation-for="ClosedMessage" class="invalid-feedback"></span>
     </div>
     <div class="form-group">
-            <button id="btnSave" name="submit" type="submit" class="btn btn-primary" data-disabled-text='@sr["Working..."]' data-enabled-text='@sr["Save"]'>@sr["Save"]</button>
-            @if ((Model.ShowDelete) && (Model.SiteId != Guid.Empty))
-            {
-                <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#confirmDeleteModal">
-                    @sr["Delete"]
-                </button>
-                @Html.ValidationMessage("deleteerror", new { @class = "text-danger" })
-            }
+        <button id="btnSave" name="submit" type="submit" class="btn btn-primary" data-disabled-text='@sr["Working..."]' data-enabled-text='@sr["Save"]'>@sr["Save"]</button>
+        @if ((Model.ShowDelete) && (Model.SiteId != Guid.Empty))
+        {
+            <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#confirmDeleteModal">
+                @sr["Delete"]
+            </button>
+            @Html.ValidationMessage("deleteerror", new { @class = "text-danger" })
+        }
     </div>
 </form>
 @if ((Model.ShowDelete) && (Model.SiteId != Guid.Empty))

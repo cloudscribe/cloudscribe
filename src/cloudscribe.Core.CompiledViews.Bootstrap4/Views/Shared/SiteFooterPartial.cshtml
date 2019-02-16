@@ -1,0 +1,11 @@
+﻿@inject ISiteContextResolver siteResolver
+@{
+    var Tenant = await siteResolver.ResolveSite(Context.Request.Host.Host, Context.Request.Path);
+}
+@if (Tenant != null)
+{
+<div>
+    @Html.Raw(Tenant.FooterContent)
+</div>
+    
+}
