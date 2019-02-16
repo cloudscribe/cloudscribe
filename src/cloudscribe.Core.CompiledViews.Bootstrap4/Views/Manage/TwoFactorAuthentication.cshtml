@@ -29,11 +29,21 @@
         </div>
     }
 
-    <a asp-action="Disable2faWarning" class="btn btn-primary">@sr["Disable 2FA"]</a>
+    @if (!Model.Is2faRequiredByAdmin)
+    {
+        <a asp-action="Disable2faWarning" class="btn btn-primary">@sr["Disable 2FA"]</a>
+    }
+
     <a asp-action="GenerateRecoveryCodes" class="btn btn-primary">@sr["Reset recovery codes"]</a>
 }
 
 <h5>@sr["Authenticator app"]</h5>
+@if(Model.Is2faRequiredByAdmin)
+{
+    <p>
+        @sr["The administrators of this site require all users to enable 2 factor authentication to meet the security requirements of this site."]
+    </p>
+}
 @if (!Model.HasAuthenticator)
 {
     <a asp-action="EnableAuthenticator" class="btn btn-primary">@sr["Add authenticator app"]</a>

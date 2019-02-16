@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2014-10-26
-// Last Modified:			2018-08-19
+// Last Modified:			2019-02-16
 // 
 
 using cloudscribe.Common.Gdpr;
@@ -11,7 +11,6 @@ using cloudscribe.Core.Models;
 using cloudscribe.Core.Web.Components;
 using cloudscribe.Core.Web.ExtensionPoints;
 using cloudscribe.Core.Web.ViewModels.SiteUser;
-using cloudscribe.Web.Common;
 using cloudscribe.Web.Common.Extensions;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
@@ -29,7 +28,7 @@ using System.Threading.Tasks;
 
 namespace cloudscribe.Core.Web.Controllers.Mvc
 {
-   
+
     public class ManageController : Controller
     {
         public ManageController(
@@ -422,6 +421,7 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
                 HasAuthenticator = await UserManager.GetAuthenticatorKeyAsync(user) != null,
                 Is2faEnabled = user.TwoFactorEnabled,
                 RecoveryCodesLeft = await UserManager.CountRecoveryCodesAsync(user),
+                Is2faRequiredByAdmin = UserManager.Site.Require2FA
             };
 
             return View(model);

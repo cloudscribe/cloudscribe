@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2014-08-16
-// Last Modified:			2018-08-18
+// Last Modified:			2019-02-16
 // 
 
 using System;
@@ -191,7 +191,13 @@ namespace cloudscribe.Core.Models
 
         public string ForcedUICulture { get; set; }
 
-        
+        public bool Require2FA { get; set; }
+
+        public bool ShowSiteNameLink { get; set; } = true;
+        public string HeaderContent { get; set; }
+        public string FooterContent { get; set; }
+
+
 
         public static SiteSettings FromISiteSettings(ISiteSettings i)
         {
@@ -229,6 +235,7 @@ namespace cloudscribe.Core.Models
                 DkimDomain = i.DkimDomain,
                 DkimSelector = i.DkimSelector,
                 EmailLdapDbFallback = i.EmailLdapDbFallback,
+                FooterContent = i.FooterContent,
                 ForcedCulture = i.ForcedCulture,
                 ForcedUICulture = i.ForcedUICulture,
                 FacebookAppId = i.FacebookAppId,
@@ -236,6 +243,7 @@ namespace cloudscribe.Core.Models
                 GoogleAnalyticsProfileId = i.GoogleAnalyticsProfileId,
                 GoogleClientId = i.GoogleClientId,
                 GoogleClientSecret = i.GoogleClientSecret,
+                HeaderContent = i.HeaderContent,
                 IsDataProtected = i.IsDataProtected,
                 IsServerAdminSite = i.IsServerAdminSite,
                 Theme = i.Theme,
@@ -267,6 +275,7 @@ namespace cloudscribe.Core.Models
                 RecaptchaPublicKey = i.RecaptchaPublicKey,
                 RegistrationAgreement = i.RegistrationAgreement,
                 RegistrationPreamble = i.RegistrationPreamble,
+                Require2FA = i.Require2FA,
                 RequireApprovalBeforeLogin = i.RequireApprovalBeforeLogin,
                 RequireConfirmedEmail = i.RequireConfirmedEmail,
                 RequireConfirmedPhone = i.RequireConfirmedPhone,
@@ -276,6 +285,7 @@ namespace cloudscribe.Core.Models
                 SiteFolderName = i.SiteFolderName,
                 Id = i.Id,
                 AliasId = i.AliasId,
+                ShowSiteNameLink = i.ShowSiteNameLink,
                 SiteIsClosed = i.SiteIsClosed,
                 SiteIsClosedMessage = i.SiteIsClosedMessage,
                 SiteName = i.SiteName,

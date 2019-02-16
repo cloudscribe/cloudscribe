@@ -11,5 +11,7 @@ namespace cloudscribe.Core.Web.ViewModels.SiteUser
         public int RecoveryCodesLeft { get; set; }
 
         public bool Is2faEnabled { get; set; }
+
+        public bool Is2faRequiredByAdmin { get; set; }
     }
 }

@@ -38,6 +38,12 @@
         </div>
     </div>
     <div class="form-group">
+        <div class="form-check">
+            <input asp-for="Require2FA" class="form-check-input" />
+            <label asp-for="Require2FA" class="form-check-label">@sr["Require Users to Configure 2 Factor Authentication. Recommended ONLY for extreme security needs not for most sites, because a user must install an authenticator app on their phone and take a picture of the QR code using the authenticator app to get an access code. Note this will only be enforced when using https and it won't be enforced for users in Administrators role. Presumably administrators can and will voluntarily enable 2 factor authentication, but we don't want administrators to get locked out."]</label>
+        </div>
+    </div>
+    <div class="form-group">
         <label asp-for="AccountApprovalEmailCsv">@sr["Email addresses (csv) to notify of new unapproved users"]</label>
         <input asp-for="AccountApprovalEmailCsv" class="form-control" />
         <span asp-validation-for="AccountApprovalEmailCsv" class="invalid-feedback"></span>

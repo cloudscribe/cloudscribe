@@ -77,6 +77,25 @@ namespace cloudscribe.Core.Web.Middleware
                     }
                 }
 
+                if(currentSite.Require2FA)
+                {
+                    var isAdmin = context.User.IsInRole("Administrators");
+                    var has2fa = userContext.TwoFactorEnabled;
+                    if(!isAdmin && !has2fa)
+                    {
+                        var twoFactorUrl1 = folderSegment + "/manage/twofactorauthentication";
+                        var twoFactorUrl2 = folderSegment + "/manage/enableauthenticator";
+
+                        if (!context.Request.Path.StartsWithSegments(twoFactorUrl1) && !context.Request.Path.StartsWithSegments(twoFactorUrl2))
+                        {
+                            var logMessage = $"user {userContext.Email} has must setup 2fa so redirecting to 2fa path from requested path {context.Request.Path}";
+                            _logger.LogWarning(logMessage);
+                            context.Response.Redirect(twoFactorUrl1);
+                        }
+
+                    }
+                }
+
 
             }
             else

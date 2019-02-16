@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2015-11-16
-// Last Modified:			2018-10-03
+// Last Modified:			2019-02-16
 // 
 
 using cloudscribe.Core.Models;
@@ -209,6 +209,8 @@ namespace cloudscribe.Core.Storage.EFCore.PostgreSql
                 ;
 
                 entity.Property(p => p.CookiePolicySummary).HasMaxLength(255);
+
+                entity.Property(p => p.ShowSiteNameLink);
 
             });
 
