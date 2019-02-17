@@ -198,6 +198,10 @@ namespace cloudscribe.Core.Storage.EFCore.SQLite
 
                 entity.Property(p => p.CookiePolicySummary).HasMaxLength(255);
 
+                entity.Property(p => p.LogoUrl)
+               .HasMaxLength(250);
+                ;
+
             });
 
             modelBuilder.Entity<SiteHost>(entity =>

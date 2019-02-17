@@ -124,6 +124,7 @@ namespace cloudscribe.Core.Models
         bool ShowSiteNameLink { get; }
         string HeaderContent { get; }
         string FooterContent { get; }
+        string LogoUrl { get; }
 
     }
 }

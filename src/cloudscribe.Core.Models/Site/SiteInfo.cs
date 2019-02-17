@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2014-08-16
-// Last Modified:			2018-04-23
+// Last Modified:			2019-02-17
 // 
 
 using System;
@@ -34,6 +34,7 @@ namespace cloudscribe.Core.Models
         
         public DateTime CreatedUtc { get; set; } = DateTime.UtcNow;
         public DateTime LastModifiedUtc { get; set; } = DateTime.UtcNow;
+        public string LogoUrl { get; set; }
 
 
 

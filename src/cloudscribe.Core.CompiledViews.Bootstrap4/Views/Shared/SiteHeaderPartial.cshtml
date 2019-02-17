@@ -6,6 +6,7 @@
 }
 @if (Tenant != null && themeSettings.EnableHeaderFooterEditingInSiteSettings)
 {
-
-    @Html.Raw(Tenant.HeaderContent)
+    <div class="navbar-text w-100">
+        @Html.Raw(Tenant.HeaderContent)
+    </div>
 }

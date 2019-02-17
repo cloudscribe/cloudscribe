@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2014-08-16
-// Last Modified:			2019-02-16
+// Last Modified:			2019-02-17
 // 
 
 using System;
@@ -19,6 +19,7 @@ namespace cloudscribe.Core.Models
         string PreferredHostName { get; set; }
         string SiteFolderName { get; set; }
         bool IsServerAdminSite { get; set; }
+        string LogoUrl { get; set; }
 
     }
 

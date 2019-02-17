@@ -1,4 +1,6 @@
-﻿namespace cloudscribe.Core.Web.Design
+﻿using System.Globalization;
+
+namespace cloudscribe.Core.Web.Design
 {
     public class CoreThemeSettings
     {
@@ -14,5 +16,19 @@
         public CoreIconSet Icons { get; set; }
 
         public bool EnableHeaderFooterEditingInSiteSettings { get; set; }
+
+        public int NavbarHeightInPixels { get; set; } = 60;
+
+        public string GetNavbarStyle()
+        {
+            return "height:" + NavbarHeightInPixels.ToString(CultureInfo.InvariantCulture) + "px;";
+        }
+
+        public string GetBodyStyle()
+        {
+            return "padding-top:" + NavbarHeightInPixels.ToString(CultureInfo.InvariantCulture) + "px;";
+        }
+
+
     }
 }

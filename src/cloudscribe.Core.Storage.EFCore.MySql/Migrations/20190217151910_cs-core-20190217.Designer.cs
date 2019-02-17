@@ -2,23 +2,22 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
-using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
-using cloudscribe.Core.Storage.EFCore.pgsql;
+using cloudscribe.Core.Storage.EFCore.MySql;
 
-namespace cloudscribe.Core.Storage.EFCore.pgsql.Migrations
+namespace cloudscribe.Core.Storage.EFCore.MySql.Migrations
 {
     [DbContext(typeof(CoreDbContext))]
-    partial class CoreDbContextModelSnapshot : ModelSnapshot
+    [Migration("20190217151910_cs-core-20190217")]
+    partial class cscore20190217
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("Npgsql:PostgresExtension:uuid-ossp", "'uuid-ossp', '', ''")
-                .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.SerialColumn)
                 .HasAnnotation("ProductVersion", "2.2.1-servicing-10028")
-                .HasAnnotation("Relational:MaxIdentifierLength", 63);
+                .HasAnnotation("Relational:MaxIdentifierLength", 64);
 
             modelBuilder.Entity("cloudscribe.Core.Models.Geography.GeoCountry", b =>
                 {
@@ -321,7 +320,9 @@ namespace cloudscribe.Core.Storage.EFCore.pgsql.Migrations
                     b.Property<bool>("SignEmailWithDkim");
 
                     b.Property<string>("SiteFolderName")
-                        .HasMaxLength(50);
+                        .ValueGeneratedOnAdd()
+                        .HasMaxLength(50)
+                        .HasDefaultValue("");
 
                     b.Property<bool>("SiteIsClosed");
 
@@ -621,7 +622,7 @@ namespace cloudscribe.Core.Storage.EFCore.pgsql.Migrations
                     b.Property<Guid>("SiteId");
 
                     b.Property<string>("LoginProvider")
-                        .HasMaxLength(450);
+                        .HasMaxLength(128);
 
                     b.Property<string>("Name")
                         .HasMaxLength(450);

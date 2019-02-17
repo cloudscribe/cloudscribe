@@ -2,28 +2,31 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
-using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
-using cloudscribe.Core.Storage.EFCore.pgsql;
+using cloudscribe.Core.Storage.EFCore.MSSQL;
 
-namespace cloudscribe.Core.Storage.EFCore.pgsql.Migrations
+namespace cloudscribe.Core.Storage.EFCore.MSSQL.Migrations
 {
     [DbContext(typeof(CoreDbContext))]
-    partial class CoreDbContextModelSnapshot : ModelSnapshot
+    [Migration("20190217151807_cs-core-20190217")]
+    partial class cscore20190217
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("Npgsql:PostgresExtension:uuid-ossp", "'uuid-ossp', '', ''")
-                .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.SerialColumn)
                 .HasAnnotation("ProductVersion", "2.2.1-servicing-10028")
-                .HasAnnotation("Relational:MaxIdentifierLength", 63);
+                .HasAnnotation("Relational:MaxIdentifierLength", 128)
+                .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
             modelBuilder.Entity("cloudscribe.Core.Models.Geography.GeoCountry", b =>
                 {
                     b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd();
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier")
+                        .HasDefaultValueSql("newid()");
 
                     b.Property<string>("ISOCode2")
                         .IsRequired()
@@ -47,13 +50,16 @@ namespace cloudscribe.Core.Storage.EFCore.pgsql.Migrations
             modelBuilder.Entity("cloudscribe.Core.Models.Geography.GeoZone", b =>
                 {
                     b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd();
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier")
+                        .HasDefaultValueSql("newid()");
 
                     b.Property<string>("Code")
                         .IsRequired()
                         .HasMaxLength(255);
 
-                    b.Property<Guid>("CountryId");
+                    b.Property<Guid>("CountryId")
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("Name")
                         .IsRequired()
@@ -71,13 +77,16 @@ namespace cloudscribe.Core.Storage.EFCore.pgsql.Migrations
             modelBuilder.Entity("cloudscribe.Core.Models.SiteHost", b =>
                 {
                     b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd();
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier")
+                        .HasDefaultValueSql("newid()");
 
                     b.Property<string>("HostName")
                         .IsRequired()
                         .HasMaxLength(255);
 
-                    b.Property<Guid>("SiteId");
+                    b.Property<Guid>("SiteId")
+                        .HasColumnType("uniqueidentifier");
 
                     b.HasKey("Id");
 
@@ -91,7 +100,9 @@ namespace cloudscribe.Core.Storage.EFCore.pgsql.Migrations
             modelBuilder.Entity("cloudscribe.Core.Models.SiteRole", b =>
                 {
                     b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd();
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier")
+                        .HasDefaultValueSql("newid()");
 
                     b.Property<string>("NormalizedRoleName")
                         .IsRequired()
@@ -101,7 +112,8 @@ namespace cloudscribe.Core.Storage.EFCore.pgsql.Migrations
                         .IsRequired()
                         .HasMaxLength(50);
 
-                    b.Property<Guid>("SiteId");
+                    b.Property<Guid>("SiteId")
+                        .HasColumnType("uniqueidentifier");
 
                     b.HasKey("Id");
 
@@ -128,17 +140,23 @@ namespace cloudscribe.Core.Storage.EFCore.pgsql.Migrations
                     b.Property<string>("AliasId")
                         .HasMaxLength(36);
 
-                    b.Property<bool>("AllowDbFallbackWithLdap");
+                    b.Property<bool>("AllowDbFallbackWithLdap")
+                        .HasColumnType("bit");
 
-                    b.Property<bool>("AllowNewRegistration");
+                    b.Property<bool>("AllowNewRegistration")
+                        .HasColumnType("bit");
 
-                    b.Property<bool>("AllowPersistentLogin");
+                    b.Property<bool>("AllowPersistentLogin")
+                        .HasColumnType("bit");
 
-                    b.Property<bool>("AutoCreateLdapUserOnFirstLogin");
+                    b.Property<bool>("AutoCreateLdapUserOnFirstLogin")
+                        .HasColumnType("bit");
 
-                    b.Property<bool>("CaptchaOnLogin");
+                    b.Property<bool>("CaptchaOnLogin")
+                        .HasColumnType("bit");
 
-                    b.Property<bool>("CaptchaOnRegistration");
+                    b.Property<bool>("CaptchaOnRegistration")
+                        .HasColumnType("bit");
 
                     b.Property<string>("CompanyCountry")
                         .HasMaxLength(10);
@@ -178,7 +196,10 @@ namespace cloudscribe.Core.Storage.EFCore.pgsql.Migrations
                     b.Property<string>("CookiePolicySummary")
                         .HasMaxLength(255);
 
-                    b.Property<DateTime>("CreatedUtc");
+                    b.Property<DateTime>("CreatedUtc")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("datetime")
+                        .HasDefaultValueSql("getutcdate()");
 
                     b.Property<string>("DefaultEmailFromAddress")
                         .HasMaxLength(100);
@@ -186,7 +207,8 @@ namespace cloudscribe.Core.Storage.EFCore.pgsql.Migrations
                     b.Property<string>("DefaultEmailFromAlias")
                         .HasMaxLength(100);
 
-                    b.Property<bool>("DisableDbAuth");
+                    b.Property<bool>("DisableDbAuth")
+                        .HasColumnType("bit");
 
                     b.Property<string>("DkimDomain")
                         .HasMaxLength(255);
@@ -202,7 +224,8 @@ namespace cloudscribe.Core.Storage.EFCore.pgsql.Migrations
 
                     b.Property<string>("EmailApiKey");
 
-                    b.Property<bool>("EmailLdapDbFallback");
+                    b.Property<bool>("EmailLdapDbFallback")
+                        .HasColumnType("bit");
 
                     b.Property<string>("EmailSenderName")
                         .IsRequired()
@@ -233,9 +256,11 @@ namespace cloudscribe.Core.Storage.EFCore.pgsql.Migrations
 
                     b.Property<string>("HeaderContent");
 
-                    b.Property<bool>("IsDataProtected");
+                    b.Property<bool>("IsDataProtected")
+                        .HasColumnType("bit");
 
-                    b.Property<bool>("IsServerAdminSite");
+                    b.Property<bool>("IsServerAdminSite")
+                        .HasColumnType("bit");
 
                     b.Property<DateTime>("LastModifiedUtc");
 
@@ -286,13 +311,17 @@ namespace cloudscribe.Core.Storage.EFCore.pgsql.Migrations
 
                     b.Property<string>("PrivacyPolicy");
 
-                    b.Property<bool>("PwdRequireDigit");
+                    b.Property<bool>("PwdRequireDigit")
+                        .HasColumnType("bit");
 
-                    b.Property<bool>("PwdRequireLowercase");
+                    b.Property<bool>("PwdRequireLowercase")
+                        .HasColumnType("bit");
 
-                    b.Property<bool>("PwdRequireNonAlpha");
+                    b.Property<bool>("PwdRequireNonAlpha")
+                        .HasColumnType("bit");
 
-                    b.Property<bool>("PwdRequireUppercase");
+                    b.Property<bool>("PwdRequireUppercase")
+                        .HasColumnType("bit");
 
                     b.Property<string>("RecaptchaPrivateKey")
                         .HasMaxLength(255);
@@ -306,24 +335,30 @@ namespace cloudscribe.Core.Storage.EFCore.pgsql.Migrations
 
                     b.Property<bool>("Require2FA");
 
-                    b.Property<bool>("RequireApprovalBeforeLogin");
+                    b.Property<bool>("RequireApprovalBeforeLogin")
+                        .HasColumnType("bit");
 
-                    b.Property<bool>("RequireConfirmedEmail");
+                    b.Property<bool>("RequireConfirmedEmail")
+                        .HasColumnType("bit");
 
-                    b.Property<bool>("RequireConfirmedPhone");
+                    b.Property<bool>("RequireConfirmedPhone")
+                        .HasColumnType("bit");
 
                     b.Property<bool>("RequireCookieConsent");
 
-                    b.Property<bool>("RequiresQuestionAndAnswer");
+                    b.Property<bool>("RequiresQuestionAndAnswer")
+                        .HasColumnType("bit");
 
                     b.Property<bool>("ShowSiteNameLink");
 
-                    b.Property<bool>("SignEmailWithDkim");
+                    b.Property<bool>("SignEmailWithDkim")
+                        .HasColumnType("bit");
 
                     b.Property<string>("SiteFolderName")
                         .HasMaxLength(50);
 
-                    b.Property<bool>("SiteIsClosed");
+                    b.Property<bool>("SiteIsClosed")
+                        .HasColumnType("bit");
 
                     b.Property<string>("SiteIsClosedMessage");
 
@@ -346,12 +381,14 @@ namespace cloudscribe.Core.Storage.EFCore.pgsql.Migrations
                     b.Property<string>("SmtpPreferredEncoding")
                         .HasMaxLength(20);
 
-                    b.Property<bool>("SmtpRequiresAuth");
+                    b.Property<bool>("SmtpRequiresAuth")
+                        .HasColumnType("bit");
 
                     b.Property<string>("SmtpServer")
                         .HasMaxLength(200);
 
-                    b.Property<bool>("SmtpUseSsl");
+                    b.Property<bool>("SmtpUseSsl")
+                        .HasColumnType("bit");
 
                     b.Property<string>("SmtpUser")
                         .HasMaxLength(500);
@@ -369,11 +406,14 @@ namespace cloudscribe.Core.Storage.EFCore.pgsql.Migrations
 
                     b.Property<string>("TwitterConsumerSecret");
 
-                    b.Property<bool>("UseEmailForLogin");
+                    b.Property<bool>("UseEmailForLogin")
+                        .HasColumnType("bit");
 
-                    b.Property<bool>("UseInvisibleRecaptcha");
+                    b.Property<bool>("UseInvisibleRecaptcha")
+                        .HasColumnType("bit");
 
-                    b.Property<bool>("UseLdapAuth");
+                    b.Property<bool>("UseLdapAuth")
+                        .HasColumnType("bit");
 
                     b.HasKey("Id");
 
@@ -387,11 +427,14 @@ namespace cloudscribe.Core.Storage.EFCore.pgsql.Migrations
             modelBuilder.Entity("cloudscribe.Core.Models.SiteUser", b =>
                 {
                     b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd();
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier")
+                        .HasDefaultValueSql("newid()");
 
                     b.Property<int>("AccessFailedCount");
 
-                    b.Property<bool>("AccountApproved");
+                    b.Property<bool>("AccountApproved")
+                        .HasColumnType("bit");
 
                     b.Property<DateTime?>("AgreementAcceptedUtc");
 
@@ -400,7 +443,8 @@ namespace cloudscribe.Core.Storage.EFCore.pgsql.Migrations
                     b.Property<string>("AvatarUrl")
                         .HasMaxLength(255);
 
-                    b.Property<bool>("CanAutoLockout");
+                    b.Property<bool>("CanAutoLockout")
+                        .HasColumnType("bit");
 
                     b.Property<string>("Comment");
 
@@ -408,7 +452,8 @@ namespace cloudscribe.Core.Storage.EFCore.pgsql.Migrations
 
                     b.Property<DateTime?>("DateOfBirth");
 
-                    b.Property<bool>("DisplayInMemberList");
+                    b.Property<bool>("DisplayInMemberList")
+                        .HasColumnType("bit");
 
                     b.Property<string>("DisplayName")
                         .IsRequired()
@@ -420,14 +465,16 @@ namespace cloudscribe.Core.Storage.EFCore.pgsql.Migrations
 
                     b.Property<DateTime?>("EmailConfirmSentUtc");
 
-                    b.Property<bool>("EmailConfirmed");
+                    b.Property<bool>("EmailConfirmed")
+                        .HasColumnType("bit");
 
                     b.Property<string>("FirstName")
                         .HasMaxLength(100);
 
                     b.Property<string>("Gender");
 
-                    b.Property<bool>("IsLockedOut");
+                    b.Property<bool>("IsLockedOut")
+                        .HasColumnType("bit");
 
                     b.Property<DateTime?>("LastLoginUtc");
 
@@ -440,12 +487,14 @@ namespace cloudscribe.Core.Storage.EFCore.pgsql.Migrations
 
                     b.Property<DateTime?>("LockoutEndDateUtc");
 
-                    b.Property<bool>("MustChangePwd");
+                    b.Property<bool>("MustChangePwd")
+                        .HasColumnType("bit");
 
                     b.Property<string>("NewEmail")
                         .HasMaxLength(100);
 
-                    b.Property<bool>("NewEmailApproved");
+                    b.Property<bool>("NewEmailApproved")
+                        .HasColumnType("bit");
 
                     b.Property<string>("NormalizedEmail")
                         .IsRequired()
@@ -460,21 +509,25 @@ namespace cloudscribe.Core.Storage.EFCore.pgsql.Migrations
                     b.Property<string>("PhoneNumber")
                         .HasMaxLength(50);
 
-                    b.Property<bool>("PhoneNumberConfirmed");
+                    b.Property<bool>("PhoneNumberConfirmed")
+                        .HasColumnType("bit");
 
-                    b.Property<bool>("RolesChanged");
+                    b.Property<bool>("RolesChanged")
+                        .HasColumnType("bit");
 
                     b.Property<string>("SecurityStamp")
                         .HasMaxLength(50);
 
                     b.Property<string>("Signature");
 
-                    b.Property<Guid>("SiteId");
+                    b.Property<Guid>("SiteId")
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("TimeZoneId")
                         .HasMaxLength(50);
 
-                    b.Property<bool>("TwoFactorEnabled");
+                    b.Property<bool>("TwoFactorEnabled")
+                        .HasColumnType("bit");
 
                     b.Property<string>("UserName")
                         .IsRequired()
@@ -499,16 +552,20 @@ namespace cloudscribe.Core.Storage.EFCore.pgsql.Migrations
             modelBuilder.Entity("cloudscribe.Core.Models.UserClaim", b =>
                 {
                     b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd();
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier")
+                        .HasDefaultValueSql("newid()");
 
                     b.Property<string>("ClaimType")
                         .HasMaxLength(255);
 
                     b.Property<string>("ClaimValue");
 
-                    b.Property<Guid>("SiteId");
+                    b.Property<Guid>("SiteId")
+                        .HasColumnType("uniqueidentifier");
 
-                    b.Property<Guid>("UserId");
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("uniqueidentifier");
 
                     b.HasKey("Id");
 
@@ -524,7 +581,9 @@ namespace cloudscribe.Core.Storage.EFCore.pgsql.Migrations
             modelBuilder.Entity("cloudscribe.Core.Models.UserLocation", b =>
                 {
                     b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd();
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier")
+                        .HasDefaultValueSql("newid()");
 
                     b.Property<int>("CaptureCount");
 
@@ -552,19 +611,23 @@ namespace cloudscribe.Core.Storage.EFCore.pgsql.Migrations
 
                     b.Property<DateTime>("LastCaptureUtc");
 
-                    b.Property<double>("Latitude");
+                    b.Property<double>("Latitude")
+                        .HasColumnType("float");
 
-                    b.Property<double>("Longitude");
+                    b.Property<double>("Longitude")
+                        .HasColumnType("float");
 
                     b.Property<string>("Region")
                         .HasMaxLength(255);
 
-                    b.Property<Guid>("SiteId");
+                    b.Property<Guid>("SiteId")
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("TimeZone")
                         .HasMaxLength(255);
 
-                    b.Property<Guid>("UserId");
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("uniqueidentifier");
 
                     b.HasKey("Id");
 
@@ -577,9 +640,11 @@ namespace cloudscribe.Core.Storage.EFCore.pgsql.Migrations
 
             modelBuilder.Entity("cloudscribe.Core.Models.UserLogin", b =>
                 {
-                    b.Property<Guid>("UserId");
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("uniqueidentifier");
 
-                    b.Property<Guid>("SiteId");
+                    b.Property<Guid>("SiteId")
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("LoginProvider")
                         .HasMaxLength(128);
@@ -601,9 +666,11 @@ namespace cloudscribe.Core.Storage.EFCore.pgsql.Migrations
 
             modelBuilder.Entity("cloudscribe.Core.Models.UserRole", b =>
                 {
-                    b.Property<Guid>("UserId");
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("uniqueidentifier");
 
-                    b.Property<Guid>("RoleId");
+                    b.Property<Guid>("RoleId")
+                        .HasColumnType("uniqueidentifier");
 
                     b.HasKey("UserId", "RoleId");
 
