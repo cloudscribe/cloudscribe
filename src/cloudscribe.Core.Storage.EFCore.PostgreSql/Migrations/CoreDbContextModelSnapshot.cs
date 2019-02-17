@@ -338,6 +338,10 @@ namespace cloudscribe.Core.Storage.EFCore.PostgreSql.Migrations
                     b.Property<string>("LoginInfoTop")
                         .HasColumnName("login_info_top");
 
+                    b.Property<string>("LogoUrl")
+                        .HasColumnName("logo_url")
+                        .HasMaxLength(250);
+
                     b.Property<int>("MaxInvalidPasswordAttempts")
                         .HasColumnName("max_invalid_password_attempts");
 

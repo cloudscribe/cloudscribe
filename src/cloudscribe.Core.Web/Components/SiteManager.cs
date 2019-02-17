@@ -2,12 +2,14 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2015-07-22
-// Last Modified:			2019-02-12
+// Last Modified:			2019-02-17
 // 
 
 using cloudscribe.Core.DataProtection;
 using cloudscribe.Core.Models;
 using cloudscribe.Pagination.Models;
+using cloudscribe.Web.Navigation;
+using cloudscribe.Web.Navigation.Caching;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
@@ -33,7 +35,9 @@ namespace cloudscribe.Core.Web.Components
             ILogger<SiteManager> logger,
             IOptions<MultiTenantOptions> multiTenantOptionsAccessor,
             IOptions<SiteConfigOptions> setupOptionsAccessor,
-            CacheHelper cacheHelper
+            CacheHelper cacheHelper,
+            ITreeCache treeCache
+            
             )
         {
 
@@ -51,6 +55,8 @@ namespace cloudscribe.Core.Web.Components
             _currentSite = currentSite;
             _cacheHelper = cacheHelper;
             _eventHandlers = siteEventHandlers;
+            _navigationCache = treeCache;
+            //_navigationTreeBuilderService = navigationTreeBuilderService;
         }
 
         private readonly HttpContext _context;
@@ -66,7 +72,10 @@ namespace cloudscribe.Core.Web.Components
         private IUserCommands _userCommands;
         private ISiteContext _currentSite = null;
         private SiteEvents _eventHandlers;
-        
+        private readonly ITreeCache _navigationCache;
+        //private readonly NavigationTreeBuilderService _navigationTreeBuilderService;
+
+
 
         public ISiteContext CurrentSite
         {
@@ -194,6 +203,7 @@ namespace cloudscribe.Core.Web.Components
                 {
                     _cacheHelper.ClearLocalCache(oldFolderName);
                     await _cacheHelper.ClearSiteFolderListCache();
+                    await _navigationCache.ClearTreeCache();
                 }
 
                 if(string.IsNullOrEmpty(site.SiteFolderName))

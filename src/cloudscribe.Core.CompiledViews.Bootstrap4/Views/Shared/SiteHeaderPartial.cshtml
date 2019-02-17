@@ -6,6 +6,10 @@
 }
 @if (Tenant != null && themeSettings.EnableHeaderFooterEditingInSiteSettings)
 {
-
-    @Html.Raw(Tenant.HeaderContent)
+    @if (!string.IsNullOrWhiteSpace(Tenant.HeaderContent))
+    {
+        <div class="navbar-text w-100 siteheader-content">
+            @Html.Raw(Tenant.HeaderContent)
+        </div>
+    }
 }

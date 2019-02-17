@@ -1,21 +1,29 @@
 ﻿@inject ISiteContextResolver siteResolver
+@inject ICoreThemeHelper themHelper
 @{
+    var themeSetings = themHelper.GetThemeSettings();
     @*
-        These viewstate settings can be set by a main view to show additional columns.
+        These settings can be set by a main view to show additional columns.
         Views that push content into the optional sections SideNav, AsidePrimary, and AsideSecondary
         are obligated to set the needed viewtate property to true to show the section,
         otherwise an error will occur.
         The sideNav column also supports a toggle so it can be hidden and toggled visible even though it renders.
     *@
-    bool sideNavVisible = true.Equals(ViewData["SideNavVisible"]);
-    string sideNavToggleClass = ViewData["SideNavToggle"]?.ToString() ?? "collapse";
-    bool asidePrimaryVisible = true.Equals(ViewData["AsidePrimaryVisible"]);
-    bool asideSecondaryVisible = true.Equals(ViewData["AsideSecondaryVisible"]);
-
-    var Tenant = await siteResolver.ResolveSite(Context.Request.Host.Host, Context.Request.Path);
+bool sideNavVisible = true.Equals(ViewData["SideNavVisible"]);
+string sideNavToggleClass = ViewData["SideNavToggle"]?.ToString() ?? "collapse";
+bool asidePrimaryVisible = true.Equals(ViewData["AsidePrimaryVisible"]);
+bool asideSecondaryVisible = true.Equals(ViewData["AsideSecondaryVisible"]);
+var Tenant = await siteResolver.ResolveSite(Context.Request.Host.Host, Context.Request.Path);
+var siteRoot = "";
+if (!string.IsNullOrWhiteSpace(Tenant.SiteFolderName)) { siteRoot = "/" + Tenant.SiteFolderName; }
+var lang = "en";
+if (!string.IsNullOrWhiteSpace(Tenant.ForcedUICulture))
+{
+    lang = Tenant.ForcedUICulture;
+}
 }
 <!DOCTYPE html>
-<html>
+<html lang="@lang">
 <head>
     <meta charset="utf-8" />
     <title>@ViewData["Title"] - @(Tenant?.SiteName ?? "Sample")</title>
@@ -34,30 +42,39 @@
     @RenderSection("Styles", required: false)
     <google-analytics profile-id="@Tenant.GoogleAnalyticsProfileId" user-id="@User.GetUserId()"></google-analytics>
 </head>
-<body class="d-flex flex-column @ViewData["BodyClass"]">
+<body class="d-flex flex-column @ViewData["BodyClass"]" style="@themeSetings.GetBodyStyle()">
     <header>
         <a id="skippy" class="sr-only sr-only-focusable" href="#content">
             <div class="container">
                 <span class="skiplink-text">Skip to main content</span>
             </div>
         </a>
-        <nav class="navbar navbar-expand-lg navbar-dark fixed-top bg-dark">
-            <a href="~/@(Tenant?.SiteFolderName ?? "")" class="navbar-brand">@(Tenant?.SiteName ?? "Sample")</a>
+        <nav class="navbar navbar-expand-lg navbar-dark fixed-top bg-dark" style="@themeSetings.GetNavbarStyle()">
+            @if (!string.IsNullOrWhiteSpace(Tenant.LogoUrl))
+            {
+                <a style="@themeSetings.GetNavbarStyle()" href="~/@(Tenant?.SiteFolderName ?? "")" ><img src="@Tenant.LogoUrl" style="height:100%;" class="mr-1" /></a>  
+            }
+            @if (Tenant.ShowSiteNameLink)
+            {
+                <a href="~/@(Tenant?.SiteFolderName ?? "")" class="navbar-brand">@Tenant.SiteName </a>
+            }
+            <partial name="SiteHeaderPartial" />
             <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
 
             <div class="collapse navbar-collapse" id="navbarNavDropdown">
                 @await Component.InvokeAsync("Navigation", new { viewName = "Bootstrap4TopNavWithDropdowns", filterName = NamedNavigationFilters.TopNav, startingNodeKey = "" })
-                @await Html.PartialAsync("_LoginPartial")
+                <partial name="_LoginPartialWithDropdowns" />
             </div>
         </nav>
     </header>
     <div id="wrapper" class="container cs-container flex-fill">
         @await Component.InvokeAsync("Navigation", new { viewName = "Bootstrap4Breadcrumbs", filterName = NamedNavigationFilters.Breadcrumbs, startingNodeKey = "" })
         <div class="row">
-            <main id="content" role="main" class="col order-3">
-                @await Html.PartialAsync("AlertsPartial")
+            <main id="content" class="col order-3">
+                <partial name="AlertsPartial" />
+                <partial name="_CookieConsentPartial" />
                 @RenderBody()
             </main>
             @if (sideNavVisible)
@@ -84,11 +101,18 @@
         </div>
     </div>
     <footer class="sticky-bottom border pt-2 d-flex h-100 flex-wrap flex-grow justify-content-center">
+        <partial name="SiteFooterPartial" />
         <div class="p-2">
             <ul class="list-unstyled d-flex flex-wrap">
                 <li class=" mr-2">
-                    <a class="text-nowrap" href="/sitemap">Site Map</a>
+                    <a class="text-nowrap" href="@siteRoot/sitemap">Site Map</a>
                 </li>
+                @if (Tenant != null && !string.IsNullOrWhiteSpace(Tenant.PrivacyPolicy))
+                {
+                    <li class="border-left pl-2 mr-2">
+                        <a asp-controller="Privacy" asp-action="Index">Privacy Policy</a>
+                    </li>
+                }
                 <li class="border-left pl-2 mr-2">
                     @* you are free to remove the powered by cloudscribe link but we appreciate it if you choose to keep it! *@
                     <a class="text-nowrap" target="_blank" href="https://www.cloudscribe.com/?utm_source=@Context.Request.Host.Value&amp;utm_medium=referral&amp;utm_campaign=poweredbycloudscribe">Powered by cloudscribe</a>
@@ -96,6 +120,7 @@
             </ul>
         </div>
         <div class="p-2 text-nowrap">Copyright &copy; @DateTime.Now.Year - @(Tenant?.SiteName ?? "Sample")</div>
+        <partial name="_CookieConsentRevokePartial" />
     </footer>
     @RenderSection("Toolbar", required: false)
     <environment names="Development">

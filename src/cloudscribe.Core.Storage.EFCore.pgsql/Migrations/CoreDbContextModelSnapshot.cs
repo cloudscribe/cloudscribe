@@ -257,6 +257,9 @@ namespace cloudscribe.Core.Storage.EFCore.pgsql.Migrations
 
                     b.Property<string>("LoginInfoTop");
 
+                    b.Property<string>("LogoUrl")
+                        .HasMaxLength(250);
+
                     b.Property<int>("MaxInvalidPasswordAttempts");
 
                     b.Property<string>("MicrosoftClientId")

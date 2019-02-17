@@ -1,4 +1,5 @@
 ﻿@inject ISiteContextResolver siteResolver
+@inject ICoreThemeHelper themHelper
 @{
     @*
         These settings can be set by a main view to show additional columns.
@@ -7,6 +8,7 @@
         otherwise an error will occur.
         The sideNav column also supports a toggle so it can be hidden and toggled visible even though it renders.
     *@
+var themeSetings = themHelper.GetThemeSettings();
 bool sideNavVisible = true.Equals(ViewData["SideNavVisible"]);
 string sideNavToggleClass = ViewData["SideNavToggle"]?.ToString() ?? "collapse";
 bool asidePrimaryVisible = true.Equals(ViewData["AsidePrimaryVisible"]);
@@ -34,8 +36,17 @@ if (!string.IsNullOrWhiteSpace(Tenant.SiteFolderName)) { siteRoot = "/" + Tenant
     @RenderSection("Styles", required: false)
     <google-analytics profile-id="@Tenant.GoogleAnalyticsProfileId" user-id="@User.GetUserId()"></google-analytics>
     <base href="@Context.Request.Path" />
+    <style>
+        .siteheader {
+            /*position: fixed;
+            top: 10px;
+            left: 20%;*/
+            /*flex-direction:row;
+            flex-flow:row nowrap;*/
+        }
+    </style>
 </head>
-<body class="d-flex flex-column @ViewData["BodyClass"]">
+<body class="d-flex flex-column @ViewData["BodyClass"]" style="@themeSetings.GetBodyStyle()">
     <header>
         <a id="skippy" class="sr-only sr-only-focusable" href="#content">
             <div class="container">
@@ -43,17 +54,32 @@ if (!string.IsNullOrWhiteSpace(Tenant.SiteFolderName)) { siteRoot = "/" + Tenant
             </div>
         </a>
         
-        <nav class="navbar navbar-expand-lg navbar-dark fixed-top bg-dark">
+        <nav class="navbar navbar-expand-lg navbar-dark fixed-top bg-dark" style="@themeSetings.GetNavbarStyle()">
+            @if (!string.IsNullOrWhiteSpace(Tenant.LogoUrl))
+            {
+                <a style="@themeSetings.GetNavbarStyle()" href="~/@(Tenant?.SiteFolderName ?? "")"><img src="@Tenant.LogoUrl" style="height:100%;" class="mr-1" /></a>
+            }
             @if (Tenant.ShowSiteNameLink)
             {
                 <a href="~/@(Tenant?.SiteFolderName ?? "")" class="navbar-brand">@Tenant.SiteName </a>
             }
-            <partial name="SiteHeaderPartial" />
+
+            @*<partial name="SiteHeaderPartial" />*@
             <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
 
-            <div class="collapse navbar-collapse" id="navbarNavDropdown">
+            <div class="collapse navbar-collapse " id="navbarNavDropdown">
+                @if (!string.IsNullOrWhiteSpace(Tenant.HeaderContent))
+                {
+                    <div class="navbar-nav  w-100 border siteheader">
+                        <div class="navbar-text">
+                            @Html.Raw(Tenant.HeaderContent)
+                        </div>
+
+                    </div>
+                }
+
                 @await Component.InvokeAsync("Navigation", new { viewName = "Bootstrap4TopNavWithDropdowns", filterName = NamedNavigationFilters.TopNav, startingNodeKey = "" })
                 <partial name="_LoginPartialWithDropdowns" />
             </div>
@@ -130,6 +156,6 @@ if (!string.IsNullOrWhiteSpace(Tenant.SiteFolderName)) { siteRoot = "/" + Tenant
     @RenderSection("Bottom", required: false)
     @RenderSection("Scripts", required: false)
     <add-this profile-id="@Tenant.AddThisDotComUsername" async></add-this>
-    <mini-profiler />
+    <mini-profiler position="RenderPosition.BottomLeft" />
 </body>
 </html>

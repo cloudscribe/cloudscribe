@@ -214,6 +214,10 @@ namespace cloudscribe.Core.Storage.EFCore.pgsql
 
                 entity.Property(p => p.ShowSiteNameLink);
 
+                entity.Property(p => p.LogoUrl)
+               .HasMaxLength(250);
+                ;
+
             });
 
             modelBuilder.Entity<SiteHost>(entity =>

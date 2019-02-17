@@ -519,6 +519,11 @@ namespace cloudscribe.Core.Models
             get { return site.FooterContent; }
         }
 
+        public string LogoUrl
+        {
+            get { return site.LogoUrl; }
+        }
+
 
     }
 }

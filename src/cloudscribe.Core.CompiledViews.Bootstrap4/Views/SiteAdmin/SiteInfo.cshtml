@@ -6,6 +6,12 @@
     if (themeSettings.AdminSideNavExpanded) { ViewData["SideNavToggle"] = "show"; }
     ViewData["SideNavVisible"] = true;
 }
+@section Styles {
+    <link rel="stylesheet" href="/cr/css/dropzone.min.css" />
+    <link rel="stylesheet" href="/cr/css/croppie.min.css" />
+    <link rel="stylesheet" href="/cr/css/croppie-cloudscribe.css" />
+}
+
 <h2>@ViewBag.Title</h2>
 <partial name="_BasicSettingsPartial" model="Model" />
 @section SideNav {
@@ -24,4 +30,29 @@
     <script src="~/cr/js/remote-validation-onblur-unobtrusive.min.js"></script>
     <script src="~/cr/js/ckeditor461/ckeditor.js"></script>
     <script src="~/cr/js/cloudscribe-ckeditor-unobtrusive.min.js"></script>
+
+    <script src="/cr/js/dropzone.min.js"></script>
+    <script src="/cr/js/croppie.min.js"></script>
+    <script src="/filemanager/js/cloudscribe-unobtrusive-file-drop.min.js"></script>
+    <script>
+
+        document.addEventListener("DOMContentLoaded", function () {
+            var btnClear = document.getElementById("dz1-clear-image");
+            if (btnClear) {
+                btnClear.onclick = function ClearLogo() {
+                    var hidden = document.getElementById("imgUrlFull");
+                    if (hidden) {
+                        hidden.value = '';
+                    }
+                    var img = document.getElementById("dz1Image");
+                    if (img) {
+                        img.src = "/cr/images/690x517-placeholder.png";
+                    }
+                };
+            }
+
+        });
+
+        
+    </script>
 }

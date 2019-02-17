@@ -3,8 +3,10 @@
 @inject ICkeditorOptionsResolver editorOptionsResolver
 @inject IOptions<MultiTenantOptions> multiTenantOptionsAccessor
 @inject ICoreThemeHelper themeHelper
-
+@using Microsoft.AspNetCore.Antiforgery
+@inject IAntiforgery antiforgery
 @{
+    var tokens = antiforgery.GetAndStoreTokens(Context);
     MultiTenantOptions multiTenantOptions = multiTenantOptionsAccessor.Value;
     bool useFolderTenants = true;
     if (multiTenantOptions.Mode != MultiTenantMode.FolderName) { useFolderTenants = false; }
@@ -13,6 +15,13 @@
     var ckOptions = await editorOptionsResolver.GetCkeditorOptions();
     var baseUrl = this.Context.Request.GetCurrentBaseUrl() + "/";
     var themeSettings = themeHelper.GetThemeSettings();
+}
+@functions{
+    public string GetImageUrl(string imageUrl)
+    {
+        if (!string.IsNullOrWhiteSpace(imageUrl)) { return imageUrl; }
+        return "/cr/images/690x517-placeholder.png";
+    }
 }
 <form method="post" class="form-horizontal" role="form" asp-antiforgery="true" data-submit-once="true">
     <div asp-validation-summary="All" class="text-danger"></div>
@@ -72,14 +81,63 @@
             <span asp-validation-for="Theme" class="invalid-feedback"></span>
         </div>
     }
-    @if (themeSettings.EnableHeaderFooterEditingInSiteSettings)
-    {
-        <div class="form-group">
-            <div class="form-check">
-                <input asp-for="ShowSiteNameLink" class="form-check-input" />
-                <label asp-for="ShowSiteNameLink" class="form-check-label">@sr["Show Site Name Link in Header"]</label>
+    <div class="form-group" style="height:300px">
+        <label>@sr["Site Logo"]</label>
+        <div class="d-flex align-items-stretch mb-2">
+            <div class="cs-crop-container" style="@themeSettings.GetNavbarStyle()">
+                <img id="dz1Image" style="max-width:350px;" src="@GetImageUrl(Model.LogoUrl)" />
+            </div>
+            <div class="d-flex flex-column">
+                <div id="dz1" class="cloudscribe-dropzone-standalone" style="cursor:pointer;"
+                     data-dropzone=""
+                     data-upload-url="@Url.Action("DropFile", "FileManager")"
+                     data-anti-forgery-token="@tokens.RequestToken"
+                     data-file-browse-url="@ckOptions.ImageBrowseUrl"
+                     data-file-crop-url="@ckOptions.CropFileUrl"
+                     data-target-path="/media/logos"
+                     data-create-thumb="false"
+                     data-resize-image="@themeSettings.ResizeLogoOnUpload.ToString().ToLowerInvariant()"
+                     data-keep-original="true"
+                     data-enable-browse-server="true"
+                     data-enable-crop="false"
+                     data-accepted-files="image/*"
+                     data-target-fullsize-input-id="imgUrlFull"
+                     data-target-resized-input-id=""
+                     data-target-thumb-input-id=""
+                     data-target-fullsize-image-id="dz1Image"
+                     data-target-resized-image-id=""
+                     data-target-thumb-image-id=""
+                     data-fullsize-placeholder-image="/cr/images/690x517-placeholder.png"
+                     data-resized-placeholder-image=""
+                     data-thumb-placeholder-image=""
+                     data-resize-width=""
+                     data-resize-height=""
+                     data-crop-area-width=""
+                     data-crop-area-height="">
+                    @sr["Drop file here or click to browse device for file."]
+                </div>
+                <div class="pl-1 pt-1">
+                    <div class="d-flex flex-column">
+                        <button id="dz1-browse-server" type="button" class="mb-1 btn btn-primary collapse">@sr["Browse Server"] <i class="fas fa-search" aria-hidden="true"></i></button>
+                        <button id="dz1-clear-image" type="button" onclick="ClearLogo()" class="mb-1 btn btn-secondary">@sr["Clear Logo"] </button>
+                        @*<button id="dz1-save-crop" type="button" class="mb-1 btn btn-primary collapse">@sr["Save Crop"] <i class="far fa-save" aria-hidden="true"></i></button>*@
+
+                    </div>
+                </div>
             </div>
         </div>
+        <input id="imgUrlFull" asp-for="LogoUrl" type="hidden" />
+    </div>
+    <div class="form-group">
+        <div class="form-check">
+            <input asp-for="ShowSiteNameLink" class="form-check-input" />
+            <label asp-for="ShowSiteNameLink" class="form-check-label">@sr["Show Site Name Link in Header"]</label>
+        </div>
+    </div>
+
+    @if (themeSettings.EnableHeaderFooterEditingInSiteSettings)
+    {
+
         <p>@sr["Please note that adding header or footer content can mess up the layout of your page and may require CSS changes to accomodate your content."]</p>
         <div class="form-group">
             <label asp-for="HeaderContent">@sr["Header Content"]</label>
@@ -187,3 +245,13 @@
         </div>
     </form>
 }
+<div id="fileBrowseDialog" class="modal fade" tabindex="-1" role="dialog">
+    <div class="modal-dialog modal-lg" style="height:99%;min-width:99%!important;">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true" title="Close"><span aria-hidden="true">&times;</span></button>
+            </div>
+            <iframe id="frFileDialog" frameborder="0" style="overflow:hidden;height:100%;width:100%;min-height: 650px;"></iframe>
+        </div>
+    </div>
+</div>
