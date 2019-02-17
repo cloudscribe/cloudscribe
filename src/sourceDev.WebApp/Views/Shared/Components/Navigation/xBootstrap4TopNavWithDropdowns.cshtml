@@ -1,0 +1,27 @@
+﻿@using cloudscribe.Web.Navigation
+@using System.Text
+@model NavigationViewModel
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+@addTagHelper *, cloudscribe.Web.Navigation
+
+<ul class="navbar-nav mr-auto" role="menubar">
+    <li cwn-data-attributes="@Model.RootNode.Value.DataAttributes" class='@Model.GetClass(Model.RootNode.Value, "nav-item")'><a class="nav-link" href="@Url.Content(Model.AdjustUrl(Model.RootNode))">@Html.Raw(Model.GetIcon(Model.RootNode.Value))@Model.AdjustText(Model.RootNode)</a></li>
+    @if (Model.HasVisibleChildren(Model.RootNode))
+    {
+        @foreach (var node in Model.RootNode.Children)
+        {
+            if (!Model.ShouldAllowView(node)) { continue; }
+            if (!Model.HasVisibleChildren(node))
+            {
+                <li class='@Model.GetClass(node.Value, "nav-item")' cwn-data-attributes="@node.Value.DataAttributes"><a class="nav-link" href="@Url.Content(Model.AdjustUrl(node))">@Html.Raw(Model.GetIcon(node.Value))@Model.AdjustText(node)</a></li>
+            }
+            else
+            {
+                <li class='@Model.GetClass(node.Value, "nav-item dropdown",  "active", true)' cwn-data-attributes="@node.Value.DataAttributes">
+                    <a class="nav-link dropdown-toggle" id="dropdown-@node.Value.Key" aria-haspopup="true" aria-expanded="false" href="@Url.Content(Model.AdjustUrl(node))">@Html.Raw(Model.GetIcon(node.Value))@Model.AdjustText(node) </a>
+                    @Model.UpdateTempNode(node) <partial name="Bootstrap4NavigationNodeChildDropdownPartial" model="@Model" />
+                </li>
+            }
+        }
+    }
+</ul>

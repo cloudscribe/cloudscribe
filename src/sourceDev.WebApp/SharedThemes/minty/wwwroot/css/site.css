@@ -6,11 +6,6 @@
 body {
     min-height: 100vh;
     padding-top: 3.7rem;
-  
-}
-
-.flex-fill {
-    flex: 1 1 auto !important;
 }
 
 #newPostLink {
@@ -53,6 +48,8 @@ body {
     right: 5px;
     color: black;
 }
+
+
 @media screen and (max-width: 812px) {
     #sidenavtoggle,
     #sidenavmenu {
@@ -60,9 +57,11 @@ body {
     }
 }
 
+.flex-fill {
+    flex: 1 1 auto !important;
+}
 
 
-/* Carousel */
 .carousel-caption p {
     font-size: 20px;
     line-height: 1.4;

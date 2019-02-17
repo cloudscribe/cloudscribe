@@ -1,0 +1,39 @@
+﻿@using Microsoft.AspNetCore.Http.Features
+@inject IStringLocalizer<CloudscribeCore> sr
+@inject ISiteContextResolver siteResolver
+@inject SignInManager<SiteUser> SignInManager
+@{
+    var helloFormat = sr["Hello {0}!"];
+    var site = await siteResolver.ResolveSite(Context.Request.Host.Host, Context.Request.Path);
+    var consentFeature = Context.Features.Get<ITrackingConsentFeature>();
+    var allowGravatar = consentFeature?.CanTrack ?? true; // gravatar has cookies
+}
+@if (SignInManager.IsSignedIn(User))
+{
+    <ul class="navbar-nav ml-2 my-2 my-lg-0" role="menubar">
+        <li class="nav-item dropdown">
+            <a id="dropdown-Manage" class="nav-link dropdown-toggle" asp-controller="Manage" asp-action="Index" title='@sr["Manage"]'>
+                @if (allowGravatar)
+                {
+                    <img gravatar-email="@User.GetEmail()" gravatar-size="20" alt="gravatar" />
+                }
+                @string.Format(helloFormat, User.GetDisplayName())
+            </a>
+            @await Component.InvokeAsync("Navigation", new { viewName = "Bs4ChildDropdown", filterName = "child-dropdown", startingNodeKey = "Manage" })
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" href="javascript:document.getElementById('logoutForm').submit()">@sr["Log off"]</a>
+            <form asp-controller="Account" asp-action="LogOff" method="post" id="logoutForm"></form>
+        </li>
+    </ul>
+}
+else
+{
+    <ul class="navbar-nav ml-auto my-2 my-lg-0">
+        @if (site.AllowNewRegistration)
+        {
+            <li class="nav-item"><a class="nav-link" id="registerLink" asp-controller="Account" asp-action="Register">@sr["Register"]</a></li>
+        }
+        <li class="nav-item"><a class="nav-link" id="loginLink" asp-controller="Account" asp-action="Login" asp-route-returnurl="@Context.Request.PathAndQuery()">@sr["Log in"]</a></li>
+    </ul>
+}

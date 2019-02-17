@@ -36,6 +36,15 @@ if (!string.IsNullOrWhiteSpace(Tenant.SiteFolderName)) { siteRoot = "/" + Tenant
     @RenderSection("Styles", required: false)
     <google-analytics profile-id="@Tenant.GoogleAnalyticsProfileId" user-id="@User.GetUserId()"></google-analytics>
     <base href="@Context.Request.Path" />
+    <style>
+        .siteheader {
+            /*position: fixed;
+            top: 10px;
+            left: 20%;*/
+            /*flex-direction:row;
+            flex-flow:row nowrap;*/
+        }
+    </style>
 </head>
 <body class="d-flex flex-column @ViewData["BodyClass"]" style="@themeSetings.GetBodyStyle()">
     <header>
@@ -46,20 +55,31 @@ if (!string.IsNullOrWhiteSpace(Tenant.SiteFolderName)) { siteRoot = "/" + Tenant
         </a>
         
         <nav class="navbar navbar-expand-lg navbar-dark fixed-top bg-dark" style="@themeSetings.GetNavbarStyle()">
-            <div class="navbar-text w-100 border" style="position:absolute;top: 10px;left:20%;">
-                @Html.Raw(Tenant.HeaderContent)
-            </div>
-            <img src="/media/images/img_2335-ws.jpg" style="height:100%;" />
+            @if (!string.IsNullOrWhiteSpace(Tenant.LogoUrl))
+            {
+                <a style="@themeSetings.GetNavbarStyle()" href="~/@(Tenant?.SiteFolderName ?? "")"><img src="@Tenant.LogoUrl" style="height:100%;" class="mr-1" /></a>
+            }
             @if (Tenant.ShowSiteNameLink)
             {
                 <a href="~/@(Tenant?.SiteFolderName ?? "")" class="navbar-brand">@Tenant.SiteName </a>
             }
+
             @*<partial name="SiteHeaderPartial" />*@
             <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
 
-            <div class="collapse navbar-collapse" id="navbarNavDropdown">
+            <div class="collapse navbar-collapse " id="navbarNavDropdown">
+                @if (!string.IsNullOrWhiteSpace(Tenant.HeaderContent))
+                {
+                    <div class="navbar-nav  w-100 border siteheader">
+                        <div class="navbar-text">
+                            @Html.Raw(Tenant.HeaderContent)
+                        </div>
+
+                    </div>
+                }
+
                 @await Component.InvokeAsync("Navigation", new { viewName = "Bootstrap4TopNavWithDropdowns", filterName = NamedNavigationFilters.TopNav, startingNodeKey = "" })
                 <partial name="_LoginPartialWithDropdowns" />
             </div>

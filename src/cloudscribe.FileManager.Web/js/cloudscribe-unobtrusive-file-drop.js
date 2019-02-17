@@ -308,7 +308,7 @@
                                     cloudscribeDropAndCrop.openServerBrowser(div.dataset.fileBrowseUrl);
                                     window.FileSelectCallback = function (url) {
                                         imageItem.serverFileSelected(url);
-                                    }
+                                    };
                                 };
                             }
                         }
@@ -377,7 +377,7 @@
                         });
 
                         return myDropzone;
-                    },
+                    }
 
                 };
 
