@@ -40,6 +40,8 @@ Marketing and other content centric websites that are not applications per se, p
 
 ### Related links
 
+https://journal.plausible.io/you-probably-dont-need-a-single-page-app
+
 https://whatisjasongoldstein.com/writing/help-none-of-my-projects-want-to-be-spas/
 
 http://blog.bloomca.me/2018/02/04/spa-is-not-silver-bullet.html

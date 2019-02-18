@@ -902,6 +902,7 @@ namespace cloudscribe.FileManager.Web.Services
         {
             if (string.Equals(fileExtension, ".gif", StringComparison.OrdinalIgnoreCase)) { return true; }
             if (string.Equals(fileExtension, ".jpeg", StringComparison.OrdinalIgnoreCase)) { return true; }
+            if (string.Equals(fileExtension, ".svg", StringComparison.OrdinalIgnoreCase)) { return true; }
             if (string.Equals(fileExtension, ".jpg", StringComparison.OrdinalIgnoreCase)) { return true; }
             if (string.Equals(fileExtension, ".png", StringComparison.OrdinalIgnoreCase)) { return true; }
 
