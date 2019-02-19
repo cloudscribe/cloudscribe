@@ -197,7 +197,7 @@ namespace cloudscribe.FileManager.Web.Controllers
         }
 
         [HttpPost]
-        [Authorize(Policy = "FileManagerPolicy")]
+        [Authorize(Policy = "FileUploadPolicy")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DropFile()
         {

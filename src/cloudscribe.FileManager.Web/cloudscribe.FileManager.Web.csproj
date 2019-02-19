@@ -2,8 +2,8 @@
 
   <PropertyGroup>
     <Description>media file management</Description>
-    <VersionPrefix>3.0.15</VersionPrefix>
-    <AssemblyVersion>3.0.15</AssemblyVersion>
+    <VersionPrefix>3.0.16</VersionPrefix>
+    <AssemblyVersion>3.0.16</AssemblyVersion>
     <Authors>Joe Audette</Authors>
     <TargetFrameworks>netstandard2.0</TargetFrameworks>
     <PackageTags>cloudscribe;filemanager</PackageTags>
