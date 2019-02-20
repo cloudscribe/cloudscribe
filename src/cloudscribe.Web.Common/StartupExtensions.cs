@@ -7,15 +7,11 @@ using cloudscribe.Web.Common.Models;
 using cloudscribe.Web.Common.Razor;
 using cloudscribe.Web.Common.Recaptcha;
 using cloudscribe.Web.Common.Setup;
-using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc.Razor;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection.Extensions;
-using Microsoft.Extensions.FileProviders;
 using NodaTime;
 using NodaTime.TimeZones;
-using System.Reflection;
+using System;
 
 namespace Microsoft.Extensions.DependencyInjection
 {
@@ -27,6 +23,17 @@ namespace Microsoft.Extensions.DependencyInjection
         {
             services.TryAddSingleton<IDateTimeZoneProvider>(new DateTimeZoneCache(TzdbDateTimeZoneSource.Default));
             services.TryAddSingleton<IHttpClientProvider, DefaultHttpClientProvider>();
+
+            services.AddHttpClient();
+            services.AddHttpClient("google-analytics", c =>
+            {
+                c.BaseAddress = new Uri("https://www.google-analytics.com/");
+            });
+            services.AddHttpClient<IRecaptchaValidationService, RecaptchaValidationService>(client => 
+            {
+                client.BaseAddress = new Uri("https://www.google.com/");
+
+            });
 
             services.TryAddScoped<IRecaptchaServerSideValidator, RecaptchaServerSideValidator>();
 
