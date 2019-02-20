@@ -211,8 +211,29 @@ namespace cloudscribe.Core.Web.Components
             else
             {
                 template.User = await _userManager.FindByNameAsync(model.UserName);
+                // for mixed sign in scenarios like db plus AD/LDAP
+                // we need the login form to show username input
+                // but could allow email or username, therefore is user null here try again with FindByEmail but using username from model
+                if(template.User == null)
+                {
+                    template.User = await _userManager.FindByEmailAsync(model.UserName);
+                }
+                
             }
-            
+
+            //if(template.User == null)
+            //{
+            //    // could have an enumerable of some interface here
+            //    // to allow olugin code to validate credentials some other way from a remote system like ldap or ad
+            //    // or older membership systems like dnn or mojoportal
+            //    // and auto create the site user based on that
+            //    // then proceed below as usual
+
+
+            //}
+
+
+
             if (template.User != null)
             {
                 await _loginRulesProcessor.ProcessAccountLoginRules(template);

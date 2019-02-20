@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0.
 // Author:                  Joe Audette
 // Created:                 2017-09-21
-// Last Modified:           2018-05-06
+// Last Modified:           2019-02-20
 // 
 
 using cloudscribe.Web.Common.Http;
@@ -23,7 +23,7 @@ namespace cloudscribe.Web.Common.Analytics
     public class GoogleAnalyticsApiService
     {
         public GoogleAnalyticsApiService(
-            IHttpClientProvider httpClientFactory,
+            IHttpClientFactory httpClientFactory,
             ILogger<GoogleAnalyticsApiService> logger
             )
         {
@@ -31,10 +31,11 @@ namespace cloudscribe.Web.Common.Analytics
             _log = logger;
         }
 
-        private IHttpClientProvider _httpClientFactory;
+        private IHttpClientFactory _httpClientFactory;
         private ILogger _log;
         private const string version = "1";
         private const string gaUrl = "https://www.google-analytics.com/";
+        private const string httpClientName = "google-analytics";
 
         //https://stackoverflow.com/questions/14227331/what-is-the-client-id-when-sending-tracking-data-to-google-analytics-via-the-mea
 
@@ -170,7 +171,7 @@ namespace cloudscribe.Web.Common.Analytics
 
             var content = new FormUrlEncodedContent(keyValues);
 
-            var client = _httpClientFactory.GetOrCreateHttpClient(new Uri(gaUrl));
+            var client = _httpClientFactory.CreateClient(httpClientName);
 
             try
             {
@@ -287,7 +288,7 @@ namespace cloudscribe.Web.Common.Analytics
             }
             
             var content = new FormUrlEncodedContent(keyValues);
-            var client = _httpClientFactory.GetOrCreateHttpClient(new Uri(gaUrl));
+            var client = _httpClientFactory.CreateClient(httpClientName);
 
             try
             {
