@@ -1,5 +1,7 @@
 ﻿@inject ISiteContextResolver siteResolver
+@inject ICoreThemeHelper themeHelper
 @{
+    var themeSettings = themeHelper.GetThemeSettings();
     @*
         These settings can be set by a main view to show additional columns.
         Views that push content into the optional sections SideNav, AsidePrimary, and AsideSecondary
@@ -40,14 +42,18 @@
     @RenderSection("Styles", required: false)
     <google-analytics profile-id="@Tenant.GoogleAnalyticsProfileId" user-id="@User.GetUserId()"></google-analytics>
 </head>
-<body class="d-flex flex-column @ViewData["BodyClass"]">
+<body class="d-flex flex-column @ViewData["BodyClass"]" style="@themeSettings.GetBodyStyle()">
     <header>
         <a id="skippy" class="sr-only sr-only-focusable" href="#content">
             <div class="container">
                 <span class="skiplink-text">Skip to main content</span>
             </div>
         </a>
-        <nav class="navbar navbar-expand-lg navbar-dark fixed-top bg-dark">
+        <nav class="navbar navbar-expand-lg navbar-dark fixed-top bg-dark pt-0 pb-0" style="@themeSettings.GetNavbarStyle()">
+            @if (!string.IsNullOrWhiteSpace(Tenant.LogoUrl))
+            {
+                <a style="@themeSettings.GetNavbarStyle()" href="~/@(Tenant?.SiteFolderName ?? "")" ><img src="@Tenant.LogoUrl" alt="@Tenant.SiteName" style="height:100%;" class="mr-1" /></a>  
+            }
             @if (Tenant.ShowSiteNameLink)
             {
                 <a href="~/@(Tenant?.SiteFolderName ?? "")" class="navbar-brand">@Tenant.SiteName </a>
@@ -57,7 +63,7 @@
                 <span class="navbar-toggler-icon"></span>
             </button>
 
-            <div class="collapse navbar-collapse" id="navbarNavDropdown">
+            <div class="collapse navbar-collapse bg-dark pl-2" id="navbarNavDropdown">
                 @await Component.InvokeAsync("Navigation", new { viewName = "Bootstrap4TopNavWithDropdowns", filterName = NamedNavigationFilters.TopNav, startingNodeKey = "" })
                 <partial name="_LoginPartialWithDropdowns" />
             </div>
