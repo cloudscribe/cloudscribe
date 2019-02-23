@@ -101,7 +101,7 @@
             $("#fileToDelete").val(virtualPath);
             if (fileName) {
                 $("#newFileNameSegment").val(fileName);
-                if (fileManager.downloadFileApiUrl.length > 0) {
+                if (fileManager.downloadFileApiUrl && fileManager.downloadFileApiUrl.length > 0) {
                     $("#lnkDownloadFile").attr("href", fileManager.downloadFileApiUrl + "?fileToDownload=" + virtualPath);
                 }
             }
