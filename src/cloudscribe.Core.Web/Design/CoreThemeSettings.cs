@@ -19,23 +19,38 @@ namespace cloudscribe.Core.Web.Design
 
         public int NavbarHeightInPixels { get; set; } = 60;
 
+        public int BrandHeaderHeightInPixels { get; set; } = 0;
+
+  
+
         public bool DisableNavbarStyle { get; set; }
         public bool DisableBodyStyle { get; set; }
 
         public bool ResizeLogoOnUpload { get; set; } = true;
 
-        public string GetNavbarStyle()
+        public string GetBrandHeaderStyle()
         {
             if (DisableNavbarStyle) return null;
 
             return "height:" + NavbarHeightInPixels.ToString(CultureInfo.InvariantCulture) + "px;";
         }
+
+        public string GetNavbarStyle()
+        {
+            if (DisableNavbarStyle) return null;
+
+            var style = "height:" + NavbarHeightInPixels.ToString(CultureInfo.InvariantCulture) + "px;top:" + BrandHeaderHeightInPixels.ToString(CultureInfo.InvariantCulture) + "px;";
+            
+
+            return style;
+        }
         
         public string GetBodyStyle()
         {
             if (DisableBodyStyle) return null;
+            var bodyPadding = BrandHeaderHeightInPixels + NavbarHeightInPixels;
 
-            return "padding-top:" + NavbarHeightInPixels.ToString(CultureInfo.InvariantCulture) + "px;";
+            return "padding-top:" + bodyPadding.ToString(CultureInfo.InvariantCulture) + "px;";
         }
 
 

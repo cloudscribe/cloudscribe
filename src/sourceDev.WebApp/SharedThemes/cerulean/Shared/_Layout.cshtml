@@ -1,7 +1,7 @@
 ﻿@inject ISiteContextResolver siteResolver
-@inject ICoreThemeHelper themHelper
+@inject ICoreThemeHelper themeHelper
 @{
-    var themeSetings = themHelper.GetThemeSettings();
+    var themeSettings = themeHelper.GetThemeSettings();
     @*
         These settings can be set by a main view to show additional columns.
         Views that push content into the optional sections SideNav, AsidePrimary, and AsideSecondary
@@ -9,18 +9,18 @@
         otherwise an error will occur.
         The sideNav column also supports a toggle so it can be hidden and toggled visible even though it renders.
     *@
-bool sideNavVisible = true.Equals(ViewData["SideNavVisible"]);
-string sideNavToggleClass = ViewData["SideNavToggle"]?.ToString() ?? "collapse";
-bool asidePrimaryVisible = true.Equals(ViewData["AsidePrimaryVisible"]);
-bool asideSecondaryVisible = true.Equals(ViewData["AsideSecondaryVisible"]);
-var Tenant = await siteResolver.ResolveSite(Context.Request.Host.Host, Context.Request.Path);
-var siteRoot = "";
-if (!string.IsNullOrWhiteSpace(Tenant.SiteFolderName)) { siteRoot = "/" + Tenant.SiteFolderName; }
-var lang = "en";
-if (!string.IsNullOrWhiteSpace(Tenant.ForcedUICulture))
-{
-    lang = Tenant.ForcedUICulture;
-}
+    bool sideNavVisible = true.Equals(ViewData["SideNavVisible"]);
+    string sideNavToggleClass = ViewData["SideNavToggle"]?.ToString() ?? "collapse";
+    bool asidePrimaryVisible = true.Equals(ViewData["AsidePrimaryVisible"]);
+    bool asideSecondaryVisible = true.Equals(ViewData["AsideSecondaryVisible"]);
+    var Tenant = await siteResolver.ResolveSite(Context.Request.Host.Host, Context.Request.Path);
+    var siteRoot = "";
+    if (!string.IsNullOrWhiteSpace(Tenant.SiteFolderName)) { siteRoot = "/" + Tenant.SiteFolderName; }
+    var lang = "en";
+    if(!string.IsNullOrWhiteSpace(Tenant.ForcedUICulture))
+    {
+        lang = Tenant.ForcedUICulture;
+    }
 }
 <!DOCTYPE html>
 <html lang="@lang">
@@ -42,17 +42,17 @@ if (!string.IsNullOrWhiteSpace(Tenant.ForcedUICulture))
     @RenderSection("Styles", required: false)
     <google-analytics profile-id="@Tenant.GoogleAnalyticsProfileId" user-id="@User.GetUserId()"></google-analytics>
 </head>
-<body class="d-flex flex-column @ViewData["BodyClass"]" style="@themeSetings.GetBodyStyle()">
+<body class="d-flex flex-column @ViewData["BodyClass"]" style="@themeSettings.GetBodyStyle()">
     <header>
         <a id="skippy" class="sr-only sr-only-focusable" href="#content">
             <div class="container">
                 <span class="skiplink-text">Skip to main content</span>
             </div>
         </a>
-        <nav class="navbar navbar-expand-lg navbar-dark fixed-top bg-dark" style="@themeSetings.GetNavbarStyle()">
+        <nav class="navbar navbar-expand-lg navbar-dark fixed-top bg-dark pt-0 pb-0" style="@themeSettings.GetNavbarStyle()">
             @if (!string.IsNullOrWhiteSpace(Tenant.LogoUrl))
             {
-                <a style="@themeSetings.GetNavbarStyle()" href="~/@(Tenant?.SiteFolderName ?? "")" ><img src="@Tenant.LogoUrl" style="height:100%;" class="mr-1" /></a>  
+                <a style="@themeSettings.GetNavbarStyle()" href="~/@(Tenant?.SiteFolderName ?? "")" ><img src="@Tenant.LogoUrl" alt="@Tenant.SiteName" style="height:100%;" class="mr-3" /></a>  
             }
             @if (Tenant.ShowSiteNameLink)
             {
@@ -63,7 +63,7 @@ if (!string.IsNullOrWhiteSpace(Tenant.ForcedUICulture))
                 <span class="navbar-toggler-icon"></span>
             </button>
 
-            <div class="collapse navbar-collapse" id="navbarNavDropdown">
+            <div class="collapse navbar-collapse bg-dark" id="navbarNavDropdown">
                 @await Component.InvokeAsync("Navigation", new { viewName = "Bootstrap4TopNavWithDropdowns", filterName = NamedNavigationFilters.TopNav, startingNodeKey = "" })
                 <partial name="_LoginPartialWithDropdowns" />
             </div>
@@ -101,7 +101,7 @@ if (!string.IsNullOrWhiteSpace(Tenant.ForcedUICulture))
         </div>
     </div>
     <footer class="sticky-bottom border pt-2 d-flex h-100 flex-wrap flex-grow justify-content-center">
-        <partial name="SiteFooterPartial" />
+         <partial name="SiteFooterPartial" />
         <div class="p-2">
             <ul class="list-unstyled d-flex flex-wrap">
                 <li class=" mr-2">

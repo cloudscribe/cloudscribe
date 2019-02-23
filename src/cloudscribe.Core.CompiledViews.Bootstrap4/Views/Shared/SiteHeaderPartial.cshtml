@@ -8,8 +8,6 @@
 {
     @if (!string.IsNullOrWhiteSpace(Tenant.HeaderContent))
     {
-        <div class="navbar-text w-100 siteheader-content">
             @Html.Raw(Tenant.HeaderContent)
-        </div>
     }
 }
