@@ -135,7 +135,7 @@
                                     if(this.dropZoneDiv.dataset.fullsizePlaceholderImage) {
                                         var img = document.getElementById(this.dropZoneDiv.dataset.targetFullsizeImageId);
                                         img.src = this.dropZoneDiv.dataset.fullsizePlaceholderImage;
-                                        console.log('set fullsize placeholder');
+                                        //console.log('set fullsize placeholder');
                                     }
                                 }
 
@@ -143,7 +143,7 @@
                                     if (this.dropZoneDiv.dataset.resizedPlaceholderImage) {
                                         var img = document.getElementById(this.dropZoneDiv.dataset.targetResizedImageId);
                                         img.src = this.dropZoneDiv.dataset.resizedPlaceholderImage;
-                                        console.log('set resized placeholder');
+                                        //console.log('set resized placeholder');
                                     }
                                 }
 
@@ -151,7 +151,7 @@
                                     if (this.dropZoneDiv.dataset.thumbPlaceholderImage) {
                                         var img = document.getElementById(this.dropZoneDiv.dataset.targetThumbImageId);
                                         img.src = this.dropZoneDiv.dataset.thumbPlaceholderImage;
-                                        console.log('set thumb placeholder');
+                                        //console.log('set thumb placeholder');
                                     }
                                 }
 
@@ -242,9 +242,11 @@
                                 if (this.dropZone) {
                                     this.dropZone.removeFile(file);
                                 }
+                                //console.log('drop success');
+                                //console.log(serverResponse);
 
                                 var fsImageUrl = serverResponse[0].originalUrl || serverResponse[0].resizedUrl;
-                                var resizedUrl = serverResponse[0].resizedUrl;
+                                var resizedUrl = serverResponse[0].resizedUrl || serverResponse[0].originalUrl;
                                 var thumbUrl = serverResponse[0].thumbUrl;
                                 this.resizedImage = this.dropZoneDiv.getElementsByTagName('img')[0];
                                 if (this.resizedImage) {
