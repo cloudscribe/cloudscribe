@@ -2,8 +2,8 @@
 
   <PropertyGroup>
     <Description>Multi-tenant web application foundation with management for sites, users, roles, claims, and geographic data.</Description>
-    <VersionPrefix>3.1.62</VersionPrefix>
-    <AssemblyVersion>3.1.62</AssemblyVersion>
+    <VersionPrefix>3.1.63</VersionPrefix>
+    <AssemblyVersion>3.1.63</AssemblyVersion>
     <Authors>Joe Audette</Authors>
     <TargetFrameworks>netstandard2.0</TargetFrameworks>
     

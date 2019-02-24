@@ -11,6 +11,13 @@ namespace cloudscribe.Core.Web.Design
         public string ThemeName { get; set; } = "default";
         public string CoreIconSetId { get; set; } = "glyphicons";
 
+        public bool AllowGravatar { get; set; } = true;
+
+        /// <summary>
+        /// used if not using gravatar and user has no avatar
+        /// </summary>
+        public string DefaultAvatarUrl { get; set; } = "/cr/images/generic-user.png";
+
         public bool AdminSideNavExpanded{ get; set; }
 
         public CoreIconSet Icons { get; set; }

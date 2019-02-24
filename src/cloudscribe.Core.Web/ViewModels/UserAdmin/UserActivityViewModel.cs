@@ -38,6 +38,8 @@ namespace cloudscribe.Core.Web.ViewModels.UserAdmin
         
         public IList<UserLoginInfo> Logins { get; set; }
         public bool TwoFactor { get; set; }
+
+        public string AvatarUrl { get; set; }
         
     }
 }

@@ -71,6 +71,8 @@ namespace cloudscribe.Core.Web.ViewModels.Account
 
         public IList<string> UserRoles { get; set; }
         public IList<Claim> UserClaims { get; set; }
+
+        public string AvatarUrl { get; set; }
        
         
     }

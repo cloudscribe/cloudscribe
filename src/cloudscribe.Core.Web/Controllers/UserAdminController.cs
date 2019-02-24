@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2014-12-08
-// Last Modified:			2019-02-03
+// Last Modified:			2019-02-24
 // 
 
 using cloudscribe.Core.Identity;
@@ -511,6 +511,7 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
                 CreatedUtc = user.CreatedUtc,
                 DisplayName = user.DisplayName,
                 Email = user.Email,
+                AvatarUrl = user.AvatarUrl,
                 FirstName = user.FirstName,
                 LastLoginUtc = user.LastLoginUtc,
                 LastName = user.LastName,
@@ -594,6 +595,7 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
                 model.LastLoginDate = user.LastLoginUtc;
                 model.TimeZoneId = user.TimeZoneId;
                 model.WebSiteUrl = user.WebSiteUrl;
+                model.AvatarUrl = user.AvatarUrl;
 
                 if(string.IsNullOrEmpty(model.TimeZoneId))
                 {
@@ -692,6 +694,7 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
                 //user.AccountApproved = model.AccountApproved;
                 user.Comment = model.Comment;
                 user.EmailConfirmed = model.EmailConfirmed;
+
                 if((user.IsLockedOut)&&(!model.IsLockedOut))
                 {
                     // TODO: notify user
