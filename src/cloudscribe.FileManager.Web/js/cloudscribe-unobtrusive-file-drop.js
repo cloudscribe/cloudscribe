@@ -319,6 +319,15 @@
                         return imageItem;
                     },
 
+                    clearOneZoneItems: function (divId) {
+                        for (i = 0; i < this.imageItems.length; i++) {
+                            if (this.imageItems[i].dropZoneDiv.id == divId) {
+                                this.imageItems[i].clearInputs();
+                                this.imageItems[i].clearImages();
+                            } 
+                        }
+                    },
+
                     clearAllItems: function () {
                         for (i = 0; i < this.imageItems.length; i++) {
                             this.imageItems[i].clearInputs();
@@ -361,11 +370,11 @@
                         });
                         myDropzone.on("success", function (file, serverResponse) {
                             if (imageItem.dropZoneSuccess) {
-                                imageItem.dropZoneSuccess(file, serverResponse);
+                                imageItem.dropZoneSuccess(file, serverResponse, imageItem);
                             }
 
                             if (window.DropZoneSuccessHandler) {
-                                window.DropZoneSuccessHandler(file, serverResponse);
+                                window.DropZoneSuccessHandler(file, serverResponse, imageItem);
                             }
 
                         });
