@@ -73,7 +73,7 @@ namespace cloudscribe.Web.Common.TagHelpers
                 format = httpEndpointFormat;
             }
 
-            if (GravatarEnabled)
+            if (GravatarEnabled && string.IsNullOrWhiteSpace(OverrideUrl))
             {
                 using (var md5 = MD5.Create())
                 {
@@ -88,9 +88,7 @@ namespace cloudscribe.Web.Common.TagHelpers
 
                     emailHash = sb.ToString();
                 }
-
-
-
+                
                 url = string.Format(
                     CultureInfo.InvariantCulture,
                     format,

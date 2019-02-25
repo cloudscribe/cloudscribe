@@ -1,8 +1,24 @@
 ﻿@model cloudscribe.Core.Web.ViewModels.SiteUser.UserInfoViewModel
 @inject IStringLocalizer<CloudscribeCore> sr
+@using Microsoft.AspNetCore.Authorization
+@inject IAuthorizationService authorizationService
+@inject ICkeditorOptionsResolver editorOptionsResolver
+@using Microsoft.AspNetCore.Antiforgery
+@inject IAntiforgery antiforgery
 @{
     ViewData["Title"] = sr["Update User Info"];
     ViewData["BodyClass"] = "manage-section user-info";
+    var canUploadAuth = await authorizationService.AuthorizeAsync(User, "FileUploadPolicy");
+    var canUpload = canUploadAuth.Succeeded;
+    var ckOptions = await editorOptionsResolver.GetCkeditorOptions();
+    var tokens = antiforgery.GetAndStoreTokens(Context);
+}
+@functions{
+    public string GetImageUrl(string imageUrl)
+    {
+        if (!string.IsNullOrWhiteSpace(imageUrl)) { return imageUrl; }
+        return "/cr/images/650x650-placeholder.png";
+    }
 }
 @section Styles {
     <partial name="UserInfoStylePartial" />
@@ -10,6 +26,65 @@
 <h2>@ViewData["Title"]</h2>
 <form asp-controller="Manage" asp-action="UserInfo" method="post" role="form">
     <div asp-validation-summary="All" class="text-danger"></div>
+    @if (canUpload)
+    {
+        <div class="form-group" style="height:300px">
+            <label>@sr["Profile Image/Avatar"]</label>
+            <div class="d-flex align-items-stretch mb-2">
+                <div class="cs-crop-container" style="height:250px;">
+                    <img id="dz1Image" style="width:250px;height:250px;" src="@GetImageUrl(Model.AvatarUrl)" />
+                </div>
+                <div class="d-flex flex-column">
+                    <div id="dz1" class="cloudscribe-dropzone-standalone" style="cursor:pointer;"
+                         data-dropzone=""
+                         data-upload-url="@Url.Action("DropFile", "FileManager")"
+                         data-anti-forgery-token="@tokens.RequestToken"
+                         data-file-browse-url="@ckOptions.ImageBrowseUrl"
+                         data-file-crop-url="@ckOptions.CropFileUrl"
+                         data-target-path="/media/user-avatars"
+                         data-create-thumb="false"
+                         data-resize-image="true"
+                         data-keep-original="true"
+                         data-enable-browse-server="false"
+                         data-enable-crop="true"
+                         data-accepted-files="image/*"
+                         data-target-fullsize-input-id="imgUrlFull"
+                         data-target-resized-input-id="imgUrlResized"
+                         data-target-thumb-input-id=""
+                         data-target-fullsize-image-id="dz1Image"
+                         data-target-resized-image-id=""
+                         data-target-thumb-image-id=""
+                         data-fullsize-placeholder-image="/cr/images/650x650-placeholder.png"
+                         data-resized-placeholder-image=""
+                         data-thumb-placeholder-image=""
+                         data-resize-width="650"
+                         data-resize-height="650"
+                         data-crop-area-width="250"
+                         data-crop-area-height="250">
+                        @sr["Drop file here or click to browse device for file."]
+                    </div>
+                    <div class="pl-1 pt-1">
+                        <div class="d-flex flex-column">
+                            <button id="dz1-browse-server" type="button" class="mb-1 btn btn-primary collapse">@sr["Browse Server"] <i class="fas fa-search" aria-hidden="true"></i></button>
+                            <button id="dz1-clear-image" type="button" onclick="ClearLogo()" class="mb-1 btn btn-secondary">@sr["Clear Image"] </button>
+                            <button id="dz1-save-crop" type="button" class="mb-1 btn btn-primary collapse">@sr["Save Crop"] <i class="far fa-save" aria-hidden="true"></i></button>
+
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <input id="imgUrlFull" type="hidden" />
+            <input id="imgUrlResized" asp-for="AvatarUrl" type="hidden" />
+
+        </div>
+        <p>@sr["Don't forget to click the Update button below if you change your profile image."]</p>
+    }
+    else
+    {
+        <input asp-for="AvatarUrl" type="hidden" />
+    }
+
     @if (string.IsNullOrWhiteSpace(Model.FirstName))
     {
         <div class="form-group">
@@ -58,5 +133,5 @@
 </form>
 @section Scripts {
     <partial name="UserInfoScriptsPartial" />
-    
+
 }

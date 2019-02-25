@@ -19,5 +19,7 @@ namespace cloudscribe.Core.Web.ViewModels.SiteUser
         [Url(ErrorMessage ="You must provide a valid URL")]
         [StringLength(300, ErrorMessage = "Website Url has a maximum length of 300 characters")]
         public string WebSiteUrl { get; set; }
+
+        public string AvatarUrl { get; set; }
     }
 }
