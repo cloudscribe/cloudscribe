@@ -5,7 +5,6 @@ using Microsoft.AspNetCore.Localization;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.FileProviders;
 using Microsoft.Extensions.Logging;
-using System;
 using System.Globalization;
 using System.IO;
 
@@ -140,11 +139,11 @@ namespace Microsoft.AspNetCore.Builder
                 
                 var folderExists = TryEnsureTenantWwwRoot(env, tenant, multiTenantOptions);
                 string aliasId = tenant.AliasId;
-                var usingAlias = false;
+                var usingSharedAlias = false;
                 if(multiTenantOptions.UseRelatedSitesMode && !string.IsNullOrWhiteSpace(multiTenantOptions.RelatedSiteAliasId))
                 {
                     aliasId = multiTenantOptions.RelatedSiteAliasId;
-                    usingAlias = true;
+                    usingSharedAlias = true;
                 }
 
                 if (folderExists)
@@ -154,7 +153,7 @@ namespace Microsoft.AspNetCore.Builder
                         aliasId,
                         multiTenantOptions.SiteContentFolderName);
 
-                    if (string.IsNullOrEmpty(tenantSegment)) // root tenant or hostname tenant
+                    if (string.IsNullOrEmpty(tenantSegment) || usingSharedAlias) // root tenant or hostname tenant or shared alias
                     {
                         builder.UseStaticFiles(new StaticFileOptions()
                         {
@@ -162,7 +161,7 @@ namespace Microsoft.AspNetCore.Builder
                             //,RequestPath = new PathString("/files")
                         });
                     }
-                    else if(!usingAlias)
+                    else if(!usingSharedAlias) //separate folders per folder tenant
                     {
                         builder.UseStaticFiles(new StaticFileOptions()
                         {

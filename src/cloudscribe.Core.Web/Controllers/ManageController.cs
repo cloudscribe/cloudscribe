@@ -269,7 +269,8 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
                 LastName = user.LastName,
                 DateOfBirth = user.DateOfBirth,
                 WebSiteUrl = user.WebSiteUrl,
-                PhoneNumber = user.PhoneNumber
+                PhoneNumber = user.PhoneNumber,
+                AvatarUrl = user.AvatarUrl
             };
 
             var viewName = await CustomUserInfo.GetUserInfoViewName(CurrentSite, user, HttpContext);
@@ -314,9 +315,12 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
                 {
                     user.DateOfBirth = model.DateOfBirth;
                 }
+
+                user.RolesChanged = (user.AvatarUrl != model.AvatarUrl);
                 
                 
                 user.WebSiteUrl = model.WebSiteUrl;
+                user.AvatarUrl = model.AvatarUrl;
 
                 await CustomUserInfo.HandleUserInfoPostSuccess(
                         CurrentSite,

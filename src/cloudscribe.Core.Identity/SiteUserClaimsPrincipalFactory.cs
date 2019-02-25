@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2015-06-27
-// Last Modified:			2017-10-09
+// Last Modified:			2019-02-24
 // 
 
 
@@ -11,7 +11,6 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Options;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Security.Claims;
 using System.Threading;
 using System.Threading.Tasks;
@@ -69,6 +68,16 @@ namespace cloudscribe.Core.Identity
                 {
                     identity.AddClaim(displayNameClaim);
                 }
+
+                if (!string.IsNullOrWhiteSpace(user.AvatarUrl))
+                {
+                    var avatarUrlClaim = new Claim("AvatarUrl", user.AvatarUrl);
+                    if (!identity.HasClaim(avatarUrlClaim.Type, avatarUrlClaim.Value))
+                    {
+                        identity.AddClaim(avatarUrlClaim);
+                    }
+                }
+                
 
                 var emailClaim = new Claim(ClaimTypes.Email, user.Email);
                 if (!identity.HasClaim(emailClaim.Type, emailClaim.Value))

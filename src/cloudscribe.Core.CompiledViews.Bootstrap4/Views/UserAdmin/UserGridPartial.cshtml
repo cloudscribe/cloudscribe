@@ -1,8 +1,10 @@
 ﻿@model cloudscribe.Core.Web.ViewModels.UserAdmin.UserListViewModel
 @inject IStringLocalizer<CloudscribeCore> sr
 @inject cloudscribe.DateTimeUtils.ITimeZoneHelper tzHelper
-@{ 
+@inject ICoreThemeHelper themeHelper
+@{
     var totalUsersMessage = string.Format(sr["{0} - Users"], Model.UserList.TotalItems);
+    var themeSettings = themeHelper.GetThemeSettings();
 }
 
 <table class="table table-striped table-hover">
@@ -12,10 +14,10 @@
         </th>
         <th>
             <a asp-action="@Model.ActionName" asp-controller="UserAdmin"
-              asp-route-siteId="@Model.SiteId"
-              asp-route-query="@Model.AlphaQuery"
-              asp-route-pagesize="@Model.UserList.PageSize"
-              asp-route-sortmode="1">@sr["Created"]</a>
+               asp-route-siteId="@Model.SiteId"
+               asp-route-query="@Model.AlphaQuery"
+               asp-route-pagesize="@Model.UserList.PageSize"
+               asp-route-sortmode="1">@sr["Created"]</a>
         </th>
         <th></th>
         <th>
@@ -52,7 +54,7 @@
                 @tzHelper.ConvertToLocalTime(item.CreatedUtc, Model.TimeZoneId).ToString("g")
             </td>
             <td>
-                <img gravatar-email="@item.Email" gravatar-size="30" />
+                <img gravatar-email="@item.Email" gravatar-enabled="@themeSettings.AllowGravatar" override-url="@item.AvatarUrl" disabled-default-url="@themeSettings.DefaultAvatarUrl" gravatar-size="30" />
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.Email) /
@@ -75,24 +77,22 @@
 </table>
 <div>
     <div>@totalUsersMessage</div>
-    <cs-pager 
-        asp-action="@Model.ActionName" asp-controller="UserAdmin"
-        asp-route-siteId="@Model.SiteId"
-        asp-route-query="@Model.AlphaQuery"
-        asp-route-sortmode="@Model.SortMode"
-        asp-route-pagesize="@Model.UserList.PageSize"
-        cs-paging-pagesize="@Model.UserList.PageSize"
-        cs-paging-pagenumber="@Model.UserList.PageNumber"
-        cs-paging-totalitems="@Model.UserList.TotalItems"
-        cs-first-page-title='@sr["First Page"]'
-        cs-last-page-title='@sr["Last Page"]'
-        cs-previous-page-title='@sr["Previous page"]'
-        cs-next-page-title='@sr["Next page"]'
-        cs-pager-ul-class="pagination d-flex flex-wrap"
-        cs-pager-li-current-class="page-item active"
-        cs-pager-li-other-class="page-item"
-        cs-pager-li-non-active-class="page-item disabled"
-        cs-pager-link-current-class="page-link"
-        cs-pager-link-other-class="page-link"
-        ></cs-pager>
+    <cs-pager asp-action="@Model.ActionName" asp-controller="UserAdmin"
+              asp-route-siteId="@Model.SiteId"
+              asp-route-query="@Model.AlphaQuery"
+              asp-route-sortmode="@Model.SortMode"
+              asp-route-pagesize="@Model.UserList.PageSize"
+              cs-paging-pagesize="@Model.UserList.PageSize"
+              cs-paging-pagenumber="@Model.UserList.PageNumber"
+              cs-paging-totalitems="@Model.UserList.TotalItems"
+              cs-first-page-title='@sr["First Page"]'
+              cs-last-page-title='@sr["Last Page"]'
+              cs-previous-page-title='@sr["Previous page"]'
+              cs-next-page-title='@sr["Next page"]'
+              cs-pager-ul-class="pagination d-flex flex-wrap"
+              cs-pager-li-current-class="page-item active"
+              cs-pager-li-other-class="page-item"
+              cs-pager-li-non-active-class="page-item disabled"
+              cs-pager-link-current-class="page-link"
+              cs-pager-link-other-class="page-link"></cs-pager>
 </div>

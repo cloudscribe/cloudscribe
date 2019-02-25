@@ -31,7 +31,7 @@
     <div class="row">
         <div class="col-md-2">
             <a asp-controller="UserAdmin" asp-action="UserActivity" asp-route-siteid="@Model.SiteId" asp-route-userid="@Model.UserId" title="Activty">
-                <img class="pull-right" gravatar-email="@Model.Email" gravatar-size="60" />
+                <img class="pull-right" gravatar-email="@Model.Email" gravatar-size="60" gravatar-enabled="@themeSettings.AllowGravatar" override-url="@Model.AvatarUrl" disabled-default-url="@themeSettings.DefaultAvatarUrl" />
             </a>
         </div>
         <div class="col-md-10 ">
