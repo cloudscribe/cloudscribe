@@ -92,6 +92,11 @@ namespace cloudscribe.FileManager.Web.Services
             return options.WebSizeImageMaxWidth;
         }
 
+        public string GetSafeFolderSegment(string newNameSegment)
+        {
+            return _nameRules.GetCleanFolderName(newNameSegment);
+        }
+
         public async Task<UploadResult> CropFile(
             ImageProcessingOptions options,
             string sourceFilePath,

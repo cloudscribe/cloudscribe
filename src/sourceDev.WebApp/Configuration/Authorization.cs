@@ -34,7 +34,8 @@ namespace Microsoft.Extensions.DependencyInjection
                 "FileUploadPolicy",
                 authBuilder =>
                 {
-                    authBuilder.RequireRole("Administrators", "Content Administrators");
+                    //authBuilder.RequireRole("Administrators", "Content Administrators");
+                    authBuilder.RequireAuthenticatedUser();
                 });
 
             options.AddPolicy(

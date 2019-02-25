@@ -16,12 +16,10 @@ using Microsoft.AspNetCore.Http.Features;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
-using Microsoft.Net.Http.Headers;
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.IO.Compression;
-using System.Net.Mime;
+using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
 
@@ -207,6 +205,21 @@ namespace cloudscribe.FileManager.Web.Controllers
             var allowRootPath = false;
             var createThumbnail = false;
             var requestedFilePath = Request.Form["targetPath"].ToString();
+
+            //TODO: refactor, this is very cloudscribe core specific
+            if(requestedFilePath == "/media/user-avatars")
+            {
+                var userName = User.Identity.Name;
+                if(!string.IsNullOrWhiteSpace(userName))
+                {
+                    var safeSegment = _fileManagerService.GetSafeFolderSegment(userName);
+                    if(!string.IsNullOrWhiteSpace(safeSegment))
+                    {
+                        requestedFilePath += "/" + safeSegment;
+                    }
+                }
+            }
+            //_log.LogWarning($"requested upload path {requestedFilePath}");
             bool? resizeImages = null;
             int? maxWidth = null;
             int? maxHeight = null;
@@ -248,9 +261,21 @@ namespace cloudscribe.FileManager.Web.Controllers
             {
                 bool.TryParse(sCreateThumbnail, out createThumbnail);
             }
+
+            var manageAuthResult = await _authorizationService.AuthorizeAsync(User, "FileManagerPolicy");
+            var lessPermissionAllowedExtensions = _autoUploadOptions.AllowedLessPrivilegedFileExtensions.Split('|').ToList();
+
             
             foreach (var formFile in theFiles)
             {
+                var ext = Path.GetExtension(formFile.FileName);
+                var canSave = manageAuthResult.Succeeded || lessPermissionAllowedExtensions.Contains(ext);
+                if(!canSave)
+                {
+                    _log.LogWarning($"not allowing user {User.Identity.Name} to upload file {formFile.FileName} because the file extension is not allowed for less priviledged users");
+                    continue;
+                }
+
                 try
                 {
                     if (formFile.Length > 0)
