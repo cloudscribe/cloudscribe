@@ -39,7 +39,7 @@ namespace cloudscribe.Core.Web.Design
         {
             if (DisableNavbarStyle) return null;
 
-            return "height:" + NavbarHeightInPixels.ToString(CultureInfo.InvariantCulture) + "px;";
+            return "height:" + BrandHeaderHeightInPixels.ToString(CultureInfo.InvariantCulture) + "px;";
         }
 
         public string GetNavbarStyle()

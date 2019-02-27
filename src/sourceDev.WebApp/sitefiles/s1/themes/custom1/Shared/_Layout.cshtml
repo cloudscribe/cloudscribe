@@ -8,7 +8,7 @@
         otherwise an error will occur.
         The sideNav column also supports a toggle so it can be hidden and toggled visible even though it renders.
     *@
-var themeSetings = themHelper.GetThemeSettings();
+var themeSettings = themHelper.GetThemeSettings();
 bool sideNavVisible = true.Equals(ViewData["SideNavVisible"]);
 string sideNavToggleClass = ViewData["SideNavToggle"]?.ToString() ?? "collapse";
 bool asidePrimaryVisible = true.Equals(ViewData["AsidePrimaryVisible"]);
@@ -36,54 +36,45 @@ if (!string.IsNullOrWhiteSpace(Tenant.SiteFolderName)) { siteRoot = "/" + Tenant
     @RenderSection("Styles", required: false)
     <google-analytics profile-id="@Tenant.GoogleAnalyticsProfileId" user-id="@User.GetUserId()"></google-analytics>
     <base href="@Context.Request.Path" />
-    <style>
-        .siteheader {
-            /*position: fixed;
-            top: 10px;
-            left: 20%;*/
-            /*flex-direction:row;
-            flex-flow:row nowrap;*/
-        }
-    </style>
+   
+
 </head>
-<body class="d-flex flex-column @ViewData["BodyClass"]" style="@themeSetings.GetBodyStyle()">
-    <header>
+<body class="d-flex flex-column @ViewData["BodyClass"]" style="@themeSettings.GetBodyStyle()">
+    <header class="bg-dark">
         <a id="skippy" class="sr-only sr-only-focusable" href="#content">
             <div class="container">
                 <span class="skiplink-text">Skip to main content</span>
             </div>
         </a>
-        
-        <nav class="navbar navbar-expand-lg navbar-dark fixed-top bg-dark" style="@themeSetings.GetNavbarStyle()">
-            @if (!string.IsNullOrWhiteSpace(Tenant.LogoUrl))
-            {
-                <a style="@themeSetings.GetNavbarStyle()" href="~/@(Tenant?.SiteFolderName ?? "")"><img src="@Tenant.LogoUrl" style="height:100%;" class="mr-1" /></a>
-            }
-            @if (Tenant.ShowSiteNameLink)
-            {
-                <a href="~/@(Tenant?.SiteFolderName ?? "")" class="navbar-brand">@Tenant.SiteName </a>
-            }
+        <div class="fixed-top brand-header bg-dark" style="@themeSettings.GetBrandHeaderStyle()">
+            <div class="d-flex align-items-center bg-dark">
+                <div class="text-light ">
+                    @if (!string.IsNullOrWhiteSpace(Tenant.LogoUrl))
+                    {
+                        <a style="@themeSettings.GetNavbarStyle()" href="~/@(Tenant?.SiteFolderName ?? "")"><img src="@Tenant.LogoUrl" alt="@Tenant.SiteName" style="height:100px;" class="mr-3" /></a>
+                    }
+                    @if (Tenant.ShowSiteNameLink)
+                    {
+                        <a href="~/@(Tenant?.SiteFolderName ?? "")" class="navbar-brand text-light" aria-hidden="true">@Tenant.SiteName </a>
+                    }
 
-            @*<partial name="SiteHeaderPartial" />*@
+                </div>
+                <div class="flex-grow pt-3">
+                    <div class=" text-light ">
+                        <partial name="SiteHeaderPartial" />
+                    </div>
+
+                </div>
+            </div>
+        </div>
+        <nav class="navbar navbar-expand-md navbar-dark fixed-top bg-dark" style="@themeSettings.GetNavbarStyle()">
             <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
-
-            <div class="collapse navbar-collapse " id="navbarNavDropdown">
-                @if (!string.IsNullOrWhiteSpace(Tenant.HeaderContent))
-                {
-                    <div class="navbar-nav  w-100 border siteheader">
-                        <div class="navbar-text">
-                            @Html.Raw(Tenant.HeaderContent)
-                        </div>
-
-                    </div>
-                }
-
+            <div class="collapse navbar-collapse bg-dark pl-2" id="navbarNavDropdown"> 
                 @await Component.InvokeAsync("Navigation", new { viewName = "Bootstrap4TopNavWithDropdowns", filterName = NamedNavigationFilters.TopNav, startingNodeKey = "" })
                 <partial name="_LoginPartialWithDropdowns" />
             </div>
-
         </nav>
     </header>
     <div id="wrapper" class="container-fluid cs-container flex-fill">
@@ -117,31 +108,34 @@ if (!string.IsNullOrWhiteSpace(Tenant.SiteFolderName)) { siteRoot = "/" + Tenant
             }
         </div>
     </div>
-    <footer class="sticky-bottom border pt-2 d-flex h-100 flex-wrap flex-grow justify-content-center">
-        <partial name="SiteFooterPartial" />
-        <div class="p-2">
-            <ul class="list-unstyled d-flex flex-wrap">
-                <li class=" mr-2">
-                    <a class="text-nowrap" href="@siteRoot/sitemap">Site Map</a>
-                </li>
-                @if (Tenant != null && !string.IsNullOrWhiteSpace(Tenant.PrivacyPolicy))
-                {
-                    <li class="border-left pl-2 mr-2">
-                        <a asp-controller="Privacy" asp-action="Index">Privacy Policy</a>
-                    </li>
-                }
-
-                <li class="border-left pl-2 mr-2">
-                    @* you are free to remove the powered by cloudscribe link but we appreciate it if you choose to keep it! *@
-                    <a class="text-nowrap" target="_blank" href="https://www.cloudscribe.com/?utm_source=@Context.Request.Host.Value&amp;utm_medium=referral&amp;utm_campaign=poweredbycloudscribe">Powered by cloudscribe</a>
-                </li>
-
-            </ul>
+    <footer class="sticky-bottom border pt-2 h-100">
+        <div class="w-100 text-center">
+            <partial name="SiteFooterPartial" />
         </div>
-        <div class="p-2 text-nowrap">Copyright &copy; @DateTime.Now.Year - @(Tenant?.SiteName ?? "Sample")</div>
-        <partial name="_CookieConsentRevokePartial" />
-    </footer>
+        <div class="d-flex flex-wrap flex-grow justify-content-center">
+            <div class="p-2">
+                <ul class="list-unstyled d-md-flex flex-wrap">
+                    <li class="pl-sm-2 mr-sm-2">
+                        <a class="text-nowrap" href="@siteRoot/sitemap">Site Map</a>
+                    </li>
+                    @if (Tenant != null && !string.IsNullOrWhiteSpace(Tenant.PrivacyPolicy))
+                    {
+                        <li class="pl-sm-2 mr-sm-2">
+                            <a asp-controller="Privacy" asp-action="Index">Privacy Policy</a>
+                        </li>
+                    }
 
+                    <li class="pl-sm-2 mr-sm-2">
+                        @* you are free to remove the powered by cloudscribe link but we appreciate it if you choose to keep it! *@
+                        <a class="text-nowrap" target="_blank" href="https://www.cloudscribe.com/?utm_source=@Context.Request.Host.Value&amp;utm_medium=referral&amp;utm_campaign=poweredbycloudscribe">Powered by cloudscribe</a>
+                    </li>
+
+                </ul>
+            </div>
+            <div class="pl-sm-2  text-center w-100"><span class="text-nowrap">Copyright &copy; @DateTime.Now.Year</span><span class="d-none d-sm-inline"> - </span><span> @(Tenant?.SiteName ?? "Sample")</span></div>
+            <partial name="_CookieConsentRevokePartial" />
+        </div>
+    </footer>
     @RenderSection("Toolbar", required: false)
     <environment names="Development">
         <script src="~/js/jquery.js" cs-resolve-theme-resource="true" cs-tenant="@Tenant"></script>
