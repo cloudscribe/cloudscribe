@@ -50,7 +50,7 @@
             </div>
         </a>
         <div class="fixed-top container-fluid brand-header bg-white" style="@themeSettings.GetBrandHeaderStyle()">
-            <div class="d-flex align-items-center bg-white">
+            <div class="d-flex align-items-center ">
                 <div class="bg-white">
                     @if (!string.IsNullOrWhiteSpace(Tenant.LogoUrl))
                     {
@@ -62,17 +62,15 @@
                     }
                     
                 </div>
-                <div class="flex-grow  pt-3 bg-white   ">
+                <div class="flex-grow  pt-3    ">
                     <div class=" ">
                         <partial name="SiteHeaderPartial" />
                     </div>
                     
                 </div>
             </div>
-           
-           
         </div>
-        <nav class="navbar navbar-expand-lg navbar-dark fixed-top bg-dark pt-0 pb-0" style="@themeSettings.GetNavbarStyle()">
+        <nav class="navbar navbar-expand-md navbar-dark fixed-top bg-dark pt-0 pb-0" style="@themeSettings.GetNavbarStyle()">
             <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
@@ -136,7 +134,7 @@
                     </li>
                 </ul>
             </div>
-            <div class="p-2 text-nowrap">Copyright &copy; @DateTime.Now.Year - @(Tenant?.SiteName ?? "Sample")</div>
+            <div class="pl-sm-2  text-center w-100"><span class="text-nowrap">Copyright &copy; @DateTime.Now.Year</span><span class="d-none d-sm-inline"> - </span><span> @(Tenant?.SiteName ?? "Sample")</span></div>
             <partial name="_CookieConsentRevokePartial" />
         </div>
         
