@@ -415,7 +415,6 @@ namespace cloudscribe.Core.Storage.EFCore.pgsql.Migrations
                         .HasMaxLength(100);
 
                     b.Property<string>("Email")
-                        .IsRequired()
                         .HasMaxLength(100);
 
                     b.Property<DateTime?>("EmailConfirmSentUtc");
@@ -448,7 +447,6 @@ namespace cloudscribe.Core.Storage.EFCore.pgsql.Migrations
                     b.Property<bool>("NewEmailApproved");
 
                     b.Property<string>("NormalizedEmail")
-                        .IsRequired()
                         .HasMaxLength(100);
 
                     b.Property<string>("NormalizedUserName")

@@ -17,13 +17,14 @@ namespace cloudscribe.Core.Web.ViewModels.SiteUser
         public bool UseEmailForLogin { get; set; } = true;
         public bool DisableDbAuth { get; set; } = false;
 
-        [RequiredWhen("UseEmailForLogin", true, ErrorMessage = "Email is required")]
-        [EmailAddress(ErrorMessage = "The email address does not appear as valid")]
-        [StringLength(100, ErrorMessage = "Email has a maximum length of 100 characters")]
-        public string Email { get; set; }
+        //[RequiredWhen("UseEmailForLogin", true, ErrorMessage = "Email is required")]
+        //[EmailAddress(ErrorMessage = "The email address does not appear as valid")]
+        //[StringLength(100, ErrorMessage = "Email has a maximum length of 100 characters")]
+        //public string Email { get; set; }
 
-        [RequiredWhen("UseEmailForLogin", false, ErrorMessage = "Username is required")]
-        [StringLength(100, ErrorMessage = "Username has a maximum length of 100 characters")]
+        //[RequiredWhen("UseEmailForLogin", false, ErrorMessage = "Username is required")]
+        [Required(ErrorMessage = "Email or username is required")]
+        [StringLength(100, ErrorMessage = "Email or username has a maximum length of 100 characters")]
         public string UserName { get; set; }
 
         [Required(ErrorMessage = "Password is required")]

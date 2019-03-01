@@ -238,9 +238,15 @@ namespace cloudscribe.Core.Storage.EFCore.SQLite
 
                 entity.Property(p => p.DisplayInMemberList).IsRequired();
 
-                entity.Property(p => p.Email).IsRequired().HasMaxLength(100);
+                entity.Property(p => p.Email)
+                  //.IsRequired() 2019-03-01 need to allow initial null value for ldap auth and other scenarios, site rules middleware will force the user to provide an email
+                  .HasMaxLength(100)
+                  ;
 
-                entity.Property(p => p.NormalizedEmail).IsRequired().HasMaxLength(100);
+                entity.Property(p => p.NormalizedEmail)
+                // .IsRequired()
+                .HasMaxLength(100)
+                ;
 
                 entity.Property(p => p.NewEmail).HasMaxLength(100);
 

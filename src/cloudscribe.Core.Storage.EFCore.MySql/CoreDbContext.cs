@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2016-11-10
-// Last Modified:			2019-02-16
+// Last Modified:			2019-03-01
 // 
 
 using cloudscribe.Core.Models;
@@ -421,12 +421,12 @@ namespace cloudscribe.Core.Storage.EFCore.MySql
                 ;
 
                 entity.Property(p => p.Email)
-                .IsRequired()
-                .HasMaxLength(100)
-                ;
+                 //.IsRequired() 2019-03-01 need to allow initial null value for ldap auth and other scenarios, site rules middleware will force the user to provide an email
+                 .HasMaxLength(100)
+                 ;
 
                 entity.Property(p => p.NormalizedEmail)
-                .IsRequired()
+                // .IsRequired()
                 .HasMaxLength(100)
                 ;
 

@@ -2,8 +2,8 @@
 
   <PropertyGroup>
     <Description>model classes for cloudscribe core. you should not normally install this separately, it will be installed if you install cloudscribe.Core.Web</Description>
-    <VersionPrefix>3.0.13</VersionPrefix>
-    <AssemblyVersion>3.0.13</AssemblyVersion>
+    <VersionPrefix>3.0.14</VersionPrefix>
+    <AssemblyVersion>3.0.14</AssemblyVersion>
     <Authors>Joe Audette</Authors>
     <TargetFrameworks>netstandard2.0</TargetFrameworks>
     

@@ -38,21 +38,17 @@
     <h4>@sr["Create a new account."]</h4>
     <hr />
     <div asp-validation-summary="All" class="text-danger"></div>
-    @if (!Model.UseEmailForLogin)
-    {
-        <div class="form-group">
-            <label asp-for="Username">@sr["Username"]</label>
-            <div class="input-group">
-                <div class="input-group-prepend">
-                    <span class="input-group-text"><i class="@themeSettings.Icons.Username" aria-hidden="true"></i></span>
-                </div>
-                <input asp-for="Username" class="form-control" />
-                <span asp-validation-for="Username" class="invalid-feedback"></span>
-                @Html.ValidationMessage("usernameerror", new { @class = "text-danger" })
+    <div class="form-group">
+        <label asp-for="Username">@sr["Username"]</label>
+        <div class="input-group">
+            <div class="input-group-prepend">
+                <span class="input-group-text"><i class="@themeSettings.Icons.Username" aria-hidden="true"></i></span>
             </div>
+            <input asp-for="Username" class="form-control" />
+            <span asp-validation-for="Username" class="invalid-feedback"></span>
+            @Html.ValidationMessage("usernameerror", new { @class = "text-danger" })
         </div>
-
-    }
+    </div>
     <div class="form-group">
         <label asp-for="Email">@sr["Email"]</label>
         <div class="input-group">
@@ -113,7 +109,7 @@
             <button name="submit" type="submit" class="btn btn-primary" data-enabled-text='@sr["Register"]' data-disabled-text='@sr["Working..."]'>@sr["Register"]</button>
         }
         @Html.ValidationMessage("registrationError", new { @class = "text-danger" })
-        <input type="hidden" asp-for="UseEmailForLogin" />
+        
     </div>
 </form>
 @{

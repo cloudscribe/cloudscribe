@@ -22,7 +22,7 @@ namespace cloudscribe.Core.Web.ViewModels.RoleAdmin
         }
 
         public Guid SiteId { get; set; } = Guid.Empty;
-        public bool UseEmailForLogin { get; set; } = true;
+        //public bool UseEmailForLogin { get; set; } = true;
         public string Heading1 { get; set; }
         public string Heading2 { get; set; }
         public RoleViewModel Role { get; set; }

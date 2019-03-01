@@ -48,8 +48,14 @@ namespace cloudscribe.Core.Models
 
         public string LdapUserDNKey { get; set; } = "CN";
 
-        
+        /// <summary>
+        /// This property is now really Allow login with email
+        /// https://security.stackexchange.com/questions/57762/log-in-with-email-is-more-secure-than-a-username
+        /// https://ux.stackexchange.com/questions/13647/email-field-or-username-for-logging-in-an-application
+        /// </summary>
         public bool UseEmailForLogin { get; set; } = true;
+
+
         public bool DisableDbAuth { get; set; } = false;
        
         public bool RequiresQuestionAndAnswer { get; set; } = false;
