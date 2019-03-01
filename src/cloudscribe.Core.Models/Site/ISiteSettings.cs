@@ -102,6 +102,11 @@ namespace cloudscribe.Core.Models
         // but later changes to use email for login after accounts with duplicate emails exist
         // therefore I think in all cases we should require unique email
 
+        /// <summary>
+        /// This property is npw really "Allow Login With Email
+        /// https://security.stackexchange.com/questions/57762/log-in-with-email-is-more-secure-than-a-username
+        /// https://ux.stackexchange.com/questions/13647/email-field-or-username-for-logging-in-an-application
+        /// </summary>
         bool UseEmailForLogin { get; set; }
         
         bool RequiresQuestionAndAnswer { get; set; }

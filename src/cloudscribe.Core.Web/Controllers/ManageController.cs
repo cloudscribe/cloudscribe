@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2014-10-26
-// Last Modified:			2019-02-16
+// Last Modified:			2019-03-01
 // 
 
 using cloudscribe.Common.Gdpr;
@@ -842,6 +842,65 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
 
             return RedirectToAction("ManageLogins");
 
+        }
+
+        [HttpGet]
+        public virtual async Task<IActionResult> EmailRequired()
+        {
+            if (!AccountService.IsSignedIn(User))
+            {
+                return this.RedirectToSiteRoot(CurrentSite);
+            }
+
+            var user = await UserManager.FindByIdAsync(HttpContext.User.GetUserId());
+            if (user == null || !string.IsNullOrWhiteSpace(user.Email))
+            {
+                return this.RedirectToSiteRoot(CurrentSite);
+            }
+            
+            var model = new EmailRequiredViewModel
+            {
+
+            };
+
+            return View(model);
+        }
+
+        [Authorize]
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public virtual async Task<IActionResult> EmailRequired(EmailRequiredViewModel model)
+        {
+            var user = await UserManager.FindByIdAsync(HttpContext.User.GetUserId());
+            if (user == null || !string.IsNullOrWhiteSpace(user.Email))
+            {
+                return this.RedirectToSiteRoot(CurrentSite);
+            }
+
+            if (!ModelState.IsValid)
+            {
+                return View(model);
+            }
+
+            var emailUser = await UserManager.FindByEmailAsync(model.Email);
+            if(emailUser != null && emailUser.Id != user.Id)
+            {
+                //email already in use but don't disclose that
+                ModelState.AddModelError("invalidEmail", StringLocalizer["The provided email address was not accepted, please use a different email address."]);
+                return View(model);
+            }
+              
+            var result = await UserManager.SetEmailAsync(user, model.Email);
+
+            if (result.Succeeded)
+            {
+                user.RolesChanged = true; //needed to get the new email claim
+                await UserManager.UpdateAsync(user);
+
+                return this.RedirectToSiteRoot(CurrentSite);
+            }
+
+            return View(model);
         }
 
         #region Helpers

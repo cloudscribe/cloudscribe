@@ -78,12 +78,15 @@ namespace cloudscribe.Core.Identity
                     }
                 }
                 
-
-                var emailClaim = new Claim(ClaimTypes.Email, user.Email);
-                if (!identity.HasClaim(emailClaim.Type, emailClaim.Value))
+                if(!string.IsNullOrEmpty(user.Email))
                 {
-                    identity.AddClaim(emailClaim);
+                    var emailClaim = new Claim(ClaimTypes.Email, user.Email);
+                    if (!identity.HasClaim(emailClaim.Type, emailClaim.Value))
+                    {
+                        identity.AddClaim(emailClaim);
+                    }
                 }
+                
 
                 var site = await queries.Fetch(user.SiteId, CancellationToken.None);
 

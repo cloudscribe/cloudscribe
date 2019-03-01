@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2017-05-22
-// Last Modified:			2018-07-22
+// Last Modified:			2019-03-01
 // 
 
 using cloudscribe.Core.Identity;
@@ -203,23 +203,35 @@ namespace cloudscribe.Core.Web.Components
         {
             var template = new LoginResultTemplate();
             IUserContext userContext = null;
-           
-            if(_userManager.Site.UseEmailForLogin)
+
+            if(_userManager.Site.UseEmailForLogin && !string.IsNullOrWhiteSpace(model.UserName) && model.UserName.IndexOf("@") > -1)
             {
-                template.User = await _userManager.FindByNameAsync(model.Email);
+                template.User = await _userManager.FindByEmailAsync(model.UserName);
             }
-            else
+
+            if(template.User == null)
             {
                 template.User = await _userManager.FindByNameAsync(model.UserName);
-                // for mixed sign in scenarios like db plus AD/LDAP
-                // we need the login form to show username input
-                // but could allow email or username, therefore is user null here try again with FindByEmail but using username from model
-                if(template.User == null)
-                {
-                    template.User = await _userManager.FindByEmailAsync(model.UserName);
-                }
-                
             }
+           
+            //if(_userManager.Site.UseEmailForLogin)
+            //{
+            //    template.User = await _userManager.FindByNameAsync(model.Email);
+            //}
+            //else
+            //{
+            //    template.User = await _userManager.FindByNameAsync(model.UserName);
+            //    // for mixed sign in scenarios like db plus AD/LDAP
+            //    // we need the login form to show username input
+            //    // but could allow email or username, therefore is user null here try again with FindByEmail but using username from model
+            //    if(template.User == null)
+            //    {
+            //        template.User = await _userManager.FindByEmailAsync(model.UserName);
+            //    }
+                
+            //}
+
+
 
             //if(template.User == null)
             //{
@@ -254,24 +266,24 @@ namespace cloudscribe.Core.Web.Components
                     persistent = model.RememberMe;
                 }
 
-                if (_userManager.Site.UseEmailForLogin)
-                {
-                    template.SignInResult = await _signInManager.PasswordSignInAsync(
-                        model.Email,
-                        model.Password,
-                        persistent,
-                        lockoutOnFailure: false);
-                }
-                else
-                {
-                    template.SignInResult = await _signInManager.PasswordSignInAsync(
-                        model.UserName,
-                        model.Password,
-                        persistent,
-                        lockoutOnFailure: false);
-                }
+                //if (_userManager.Site.UseEmailForLogin)
+                //{
+                //    template.SignInResult = await _signInManager.PasswordSignInAsync(
+                //        model.Email,
+                //        model.Password,
+                //        persistent,
+                //        lockoutOnFailure: false);
+                //}
+                //else
+                //{
+                template.SignInResult = await _signInManager.PasswordSignInAsync(
+                    model.UserName,
+                    model.Password,
+                    persistent,
+                    lockoutOnFailure: false);
+                //}
 
-                if(template.SignInResult.Succeeded)
+                if (template.SignInResult.Succeeded)
                 {
                     //update last login time
                     template.User.LastLoginUtc = DateTime.UtcNow;
@@ -295,73 +307,27 @@ namespace cloudscribe.Core.Web.Components
 
                             await _signInManager.SignOutAsync();
                             // security stamp needs to be there before authentication to avoid the problem
-                            if (_userManager.Site.UseEmailForLogin)
-                            {
-                                template.SignInResult = await _signInManager.PasswordSignInAsync(
-                                    model.Email,
-                                    model.Password,
-                                    persistent,
-                                    lockoutOnFailure: false);
-                            }
-                            else
-                            {
-                                template.SignInResult = await _signInManager.PasswordSignInAsync(
-                                    model.UserName,
-                                    model.Password,
-                                    persistent,
-                                    lockoutOnFailure: false);
-                            }
-
+                            //if (_userManager.Site.UseEmailForLogin)
+                            //{
+                            //    template.SignInResult = await _signInManager.PasswordSignInAsync(
+                            //        model.Email,
+                            //        model.Password,
+                            //        persistent,
+                            //        lockoutOnFailure: false);
+                            //}
+                            //else
+                            //{
+                            template.SignInResult = await _signInManager.PasswordSignInAsync(
+                                model.UserName,
+                                model.Password,
+                                persistent,
+                                lockoutOnFailure: false);
+                            //}
 
                         }
 
-                        
-
                     }
-
-                    //if (template.User.PasswordHash == "admin||0")
-                    //{
-                    //    // initial admin user has not updated the password, need to hash it
-                    //    await _userManager.ChangeUserPassword(template.User, "admin", false);
-
-                    //    if (string.IsNullOrEmpty(template.User.SecurityStamp))
-                    //    {
-                    //        // if security stamp is empty then the securitystamp validation
-                    //        // fails when it checks after 30 minutes
-                    //        // users created via usermanager this gets populated but not
-                    //        // populated for the admin user created by seeding data
-                    //        // changes to the user such as password change also will populate it
-                    //        // but we can go ahead and check here and populate it if it is empty
-                    //        await _userManager.UpdateSecurityStampAsync(template.User);
-                    //        await _signInManager.SignOutAsync();
-                    //        // security stamp needs to be there before authentication to avoid the problem
-                    //        if (_userManager.Site.UseEmailForLogin)
-                    //        {
-                    //            template.SignInResult = await _signInManager.PasswordSignInAsync(
-                    //                model.Email,
-                    //                model.Password,
-                    //                persistent,
-                    //                lockoutOnFailure: false);
-                    //        }
-                    //        else
-                    //        {
-                    //            template.SignInResult = await _signInManager.PasswordSignInAsync(
-                    //                model.UserName,
-                    //                model.Password,
-                    //                persistent,
-                    //                lockoutOnFailure: false);
-                    //        }
-                    //    }
-
-                    //}
-                    //else
-                    //{
-                    //    // the above also updates
-                    //    await _userManager.UpdateAsync(template.User);
-                    //}
-                    
-                    
-                    
+  
                 }
             }
             
@@ -529,7 +495,18 @@ namespace cloudscribe.Core.Web.Components
             {
                 foreach (var error in result.Errors)
                 {
-                    modelState.AddModelError(string.Empty, error.Description);
+                    if(!string.IsNullOrWhiteSpace(error.Description) && error.Description.IndexOf("Email") > -1 && error.Description.IndexOf("is already taken") > -1 )
+                    {
+                        //asp identity is returning an error message like "Email someaddress@somedomain is alreaady taken"
+                        // this is account disclosure and we don't want that so return a more generic error message
+                        //modelState.AddModelError(string.Empty, "Provided email address not accepted, please try again with a different email address.");
+                        // even the above message would give a clue so don't add anything, the user still sees message "Invalid registration attempt."
+                    }
+                    else
+                    {
+                        modelState.AddModelError(string.Empty, error.Description);
+                    }
+                    
                 }
             }
            

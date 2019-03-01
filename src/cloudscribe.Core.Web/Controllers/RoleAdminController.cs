@@ -339,7 +339,7 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
             RoleMemberListViewModel model = new RoleMemberListViewModel
             {
                 SiteId = selectedSite.Id,
-                UseEmailForLogin = selectedSite.UseEmailForLogin,
+                //UseEmailForLogin = selectedSite.UseEmailForLogin,
                 Role = RoleViewModel.FromISiteRole(role)
             };
             if (selectedSite.Id != SiteManager.CurrentSite.Id)

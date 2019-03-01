@@ -33,12 +33,9 @@
                 <th>
                    @sr["Email"]
                 </th>
-                @if (!Model.UseEmailForLogin)
-            {
-                    <th>
-                        @sr["Login Name"]
-                    </th>
-                }
+                <th>
+                    @sr["Login Name"]
+                </th>
                 <th>
                     @sr["Display Name"]
                 </th>
@@ -89,12 +86,9 @@
                     <td>
                         @Html.DisplayFor(modelItem => item.Email)
                     </td>
-                    @if (!Model.UseEmailForLogin)
-                    {
-                        <td>
-                            @Html.DisplayFor(modelItem => item.UserName)
-                        </td>
-                    }
+                    <td>
+                        @Html.DisplayFor(modelItem => item.UserName)
+                    </td>
                     <td>
                         @Html.DisplayFor(modelItem => item.DisplayName)
                     </td>

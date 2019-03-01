@@ -312,7 +312,7 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
             {
                 await Analytics.HandleLoginFail("Onsite", StringLocalizer["Invalid login attempt."]);
 
-                Log.LogInformation($"login did not succeed for {model.Email}");
+                Log.LogInformation($"login did not succeed for {model.UserName}");
                 ModelState.AddModelError(string.Empty, StringLocalizer["Invalid login attempt."]);
                 return View(model);
             }
@@ -494,7 +494,7 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
                 model.RecaptchaSiteKey = CurrentSite.RecaptchaPublicKey;
                 model.UseInvisibleCaptcha = CurrentSite.UseInvisibleRecaptcha;
             }
-            model.UseEmailForLogin = CurrentSite.UseEmailForLogin;
+           // model.UseEmailForLogin = CurrentSite.UseEmailForLogin;
             model.RegistrationPreamble = CurrentSite.RegistrationPreamble;
             model.RegistrationAgreement = CurrentSite.RegistrationAgreement;
             model.AgreementRequired = !string.IsNullOrWhiteSpace(CurrentSite.RegistrationAgreement);
@@ -528,7 +528,7 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
                 model.RecaptchaSiteKey = CurrentSite.RecaptchaPublicKey;
                 model.UseInvisibleCaptcha = CurrentSite.UseInvisibleRecaptcha;
             }
-            model.UseEmailForLogin = CurrentSite.UseEmailForLogin;
+            //model.UseEmailForLogin = CurrentSite.UseEmailForLogin;
             model.RegistrationPreamble = CurrentSite.RegistrationPreamble;
             model.RegistrationAgreement = CurrentSite.RegistrationAgreement;
             model.AgreementRequired = !string.IsNullOrWhiteSpace(CurrentSite.RegistrationAgreement);
@@ -848,6 +848,7 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
 
             return View(model);
         }
+
 
         [HttpGet]
         [AllowAnonymous]

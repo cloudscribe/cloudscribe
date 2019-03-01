@@ -37,12 +37,13 @@ namespace cloudscribe.Core.Web.ViewModels.Account
         [Compare("Password", ErrorMessage = "Confirm password doesn't match password")]
         public string ConfirmPassword { get; set; }
 
-        public bool UseEmailForLogin { get; set; } = true;
+        //public bool UseEmailForLogin { get; set; } = true;
 
         [Remote("UsernameAvailable", "Account", AdditionalFields = "UserId",
            ErrorMessage = "Username not accepted, please try another value",
            HttpMethod = "Post")]
-        [RequiredWhen("UseEmailForLogin", false, ErrorMessage = "Username is required")]
+        [Required(ErrorMessage = "Username is required")]
+        //[RequiredWhen("UseEmailForLogin", false, ErrorMessage = "Username is required")]
         public string Username { get; set; } = string.Empty;
 
         // TODO do we want unique display names?

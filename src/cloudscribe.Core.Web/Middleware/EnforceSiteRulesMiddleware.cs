@@ -52,11 +52,18 @@ namespace cloudscribe.Core.Web.Middleware
             
             if(userContext != null)
             {
-                // handle roles changes - basically sets RolesChanged flag to false then sign out and in again to get new roles in cookie
-                if (userContext.RolesChanged)
+                if(string.IsNullOrWhiteSpace(userContext.Email))
                 {
-                    await accountService.HandleUserRolesChanged(context.User);
+                    var setEmailUrl = folderSegment + "/manage/emailrequired";
+
+                    if (!context.Request.Path.StartsWithSegments(setEmailUrl))
+                    {
+                        var logMessage = $"user {userContext.UserName} has must provide an email adddress so redirecting to email required page from requested path {context.Request.Path}";
+                        _logger.LogWarning(logMessage);
+                        context.Response.Redirect(setEmailUrl);
+                    }
                 }
+                
 
                 // handle user still authenticated after lockout 
                 if(userContext.IsLockedOut)
@@ -94,6 +101,12 @@ namespace cloudscribe.Core.Web.Middleware
                         }
 
                     }
+                }
+
+                // handle roles changes - basically sets RolesChanged flag to false then sign out and in again to get new roles in cookie
+                if (userContext.RolesChanged)
+                {
+                    await accountService.HandleUserRolesChanged(context.User);
                 }
 
 

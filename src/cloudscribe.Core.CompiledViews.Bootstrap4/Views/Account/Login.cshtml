@@ -36,32 +36,25 @@
         <div class="col-md">
             <form id="login-form" asp-controller="Account" asp-action="Login" asp-route-returnurl='@ViewData["ReturnUrl"]' data-submit-once="true">
                 <div asp-validation-summary="All" class="text-danger"></div>
-                @if (Model.UseEmailForLogin)
-                {
-                    <div class="form-group">
-                        <label asp-for="Email">@sr["Email"]</label>
-                        <div class="input-group">
-                            <div class="input-group-prepend">
-                                <span class="input-group-text"><i class="@themeSettings.Icons.Email" aria-hidden="true"></i></span>
-                            </div>
-                            <input asp-for="Email" class="form-control" />
-                            <span asp-validation-for="Email" class="invalid-feedback"></span>
-                        </div>
-                    </div>
-                }
-                else
-                {
-                    <div class="form-group">
+               
+                <div class="form-group">
+                    @if (Model.UseEmailForLogin)
+                    {
+                        <label asp-for="UserName">@sr["Email or Username"]</label>
+                    }
+                    else
+                    {
                         <label asp-for="UserName">@sr["Username"]</label>
-                        <div class="input-group">
-                            <div class="input-group-prepend">
-                                <span class="input-group-text"><i class="@themeSettings.Icons.Username" aria-hidden="true"></i></span>
-                            </div>
-                            <input asp-for="UserName" class="form-control" />
-                            <span asp-validation-for="UserName" class="invalid-feedback"></span>
+                    }
+                    <div class="input-group">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text"><i class="@themeSettings.Icons.Username" aria-hidden="true"></i></span>
                         </div>
+                        <input asp-for="UserName" class="form-control" />
+                        <span asp-validation-for="UserName" class="invalid-feedback"></span>
                     </div>
-                }
+                </div>
+                
                 <div class="form-group">
                     <label asp-for="Password">@sr["Password"]</label>
                     <div class="input-group">
@@ -100,7 +93,7 @@
                         <button name="submit" type="submit" class="btn btn-primary" data-enabled-text='@sr["Log in"]' data-disabled-text='@sr["Working..."]'>@sr["Log in"]</button>
                     }
 
-                    <input type="hidden" asp-for="UseEmailForLogin" />
+                    
                 </div>
             </form>
 
