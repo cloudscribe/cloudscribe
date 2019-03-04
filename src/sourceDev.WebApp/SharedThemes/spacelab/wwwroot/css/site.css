@@ -5,55 +5,55 @@
 
 body {
     min-height: 100vh;
-    padding-top: 3.5rem;
+    padding-top: 150px;
 }
 
 
 #newPostLink {
     position: absolute;
-    top: 110px;
+    top: 170px;
     right: 0px;
 }
 
 #editPostLink {
     position: absolute;
-    top: 145px;
+    top: 200px;
     right: 0px;
 }
 
 #unpublishPostLink {
     position: absolute;
-    top: 180px !important;
+    top: 230px !important;
     right: 0px !important;
 }
 
 #pageManagerLink {
     position: absolute;
-    top: 110px;
+    top: 170px;
     right: 0px;
 }
 
 #newPageLink {
     position: absolute;
-    top: 145px;
+    top: 200px;
     right: 0px;
 }
 
 #editPageLink {
     position: absolute;
-    top: 180px;
+    top: 230px;
     right: 0px
 }
 
 #unpublishPageLink {
     position: absolute;
-    top: 215px !important;
+    top: 260px !important;
     right: 0px !important
 }
 
 #sidenavtoggle {
     position: absolute;
-    top: 120px;
+    top: 220px;
     right: 5px;
 }
 
@@ -226,3 +226,11 @@ td img, video, iframe {
     white-space: nowrap;
 }
 /******** end jquery smart menu bootstrap-4 *****************/
+
+.brand-header {
+    height: 100px;
+}
+
+.navbar {
+    top: 100px;
+}

@@ -32,45 +32,46 @@
     <environment names="Development">
         <link rel="stylesheet" href="~/css/bootstrap.css" cs-resolve-theme-resource="true" cs-shared-theme="true" cs-tenant="@Tenant" />
         <link rel="stylesheet" href="~/css/fontawesome-all.min.css" cs-resolve-theme-resource="true" cs-shared-theme="true" cs-tenant="@Tenant" />
-        <link rel="stylesheet" href="~/css/site.css" cs-resolve-theme-resource="true" cs-shared-theme="true" cs-tenant="@Tenant" />
+        <link rel="stylesheet" href="~/css/site.css" cs-resolve-theme-resource="true" cs-shared-theme="true" cs-tenant="@Tenant" asp-append-version="true" />
     </environment>
     <environment names="Staging,Production">
         <link rel="stylesheet" href="~/css/bootstrap.min.css" cs-resolve-theme-resource="true" cs-shared-theme="true" cs-tenant="@Tenant" />
         <link rel="stylesheet" href="~/css/fontawesome-all.min.css" cs-resolve-theme-resource="true" cs-shared-theme="true" cs-tenant="@Tenant" />
-        <link rel="stylesheet" href="~/css/site.min.css" cs-resolve-theme-resource="true" cs-shared-theme="true" cs-tenant="@Tenant" />
+        <link rel="stylesheet" href="~/css/site.min.css" cs-resolve-theme-resource="true" cs-shared-theme="true" cs-tenant="@Tenant" asp-append-version="true" />
     </environment>
     @RenderSection("Styles", required: false)
     <google-analytics profile-id="@Tenant.GoogleAnalyticsProfileId" user-id="@User.GetUserId()"></google-analytics>
 </head>
-<body class="d-flex flex-column @ViewData["BodyClass"]" style="@themeSettings.GetBodyStyle()">
+<body class="d-flex flex-column @ViewData["BodyClass"]">
     <header>
         <a id="skippy" class="sr-only sr-only-focusable" href="#content">
             <div class="container">
                 <span class="skiplink-text">Skip to main content</span>
             </div>
         </a>
-        <div class="fixed-top container-fluid brand-header bg-white" style="@themeSettings.GetBrandHeaderStyle()">
+        <div class="fixed-top container-fluid brand-header bg-white">
             <div class="d-flex align-items-center bg-white">
-                <div class="bg-white">
-                    @if (!string.IsNullOrWhiteSpace(Tenant.LogoUrl))
-                    {
-                        <a style="@themeSettings.GetNavbarStyle()" href="~/@(Tenant?.SiteFolderName ?? "")"><img src="@Tenant.LogoUrl" alt="@Tenant.SiteName" style="height:100px;" class="mr-3" /></a>
-                    }
-                    @if (Tenant.ShowSiteNameLink)
-                    {
-                        <a href="~/@(Tenant?.SiteFolderName ?? "")" class="navbar-brand" aria-hidden="true">@Tenant.SiteName </a>
-                    }
-
-                </div>
-                <div class="flex-grow  pt-3 bg-white   ">
-                    <div class=" ">
+                @if (!string.IsNullOrWhiteSpace(Tenant.LogoUrl))
+                {
+                    <div class="d-none d-sm-block">
+                        <a href="~/@(Tenant?.SiteFolderName ?? "")"><img src="@Tenant.LogoUrl" alt="@Tenant.SiteName" style="height:100px;" class="mr-3" /></a>
+                    </div>
+                }
+                @if (Tenant.ShowSiteNameLink)
+                {
+                    <div class="align-self-center pt-4 pt-sm-0">
+                        <a href="~/@(Tenant?.SiteFolderName ?? "")" class="h2 mr-3" aria-hidden="true">@Tenant.SiteName </a>
+                    </div>
+                }
+                @if (!string.IsNullOrWhiteSpace(Tenant.HeaderContent))
+                {
+                    <div class="flex-fill align-self-center pt-3 d-none d-sm-block">
                         <partial name="SiteHeaderPartial" />
                     </div>
-
-                </div>
+                }
             </div>
         </div>
-        <nav class="navbar navbar-expand-md navbar-dark fixed-top bg-dark pt-0 pb-0" style="@themeSettings.GetNavbarStyle()">
+        <nav class="navbar navbar-expand-md navbar-dark fixed-top bg-dark pt-0 pb-0">
             <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
@@ -113,31 +114,30 @@
         </div>
     </div>
     <footer class="sticky-bottom border pt-2 h-100">
-        <div class="w-100 text-center">
+         <div class="w-100 text-center">
             <partial name="SiteFooterPartial" />
         </div>
         <div class="d-flex flex-wrap flex-grow justify-content-center">
             <div class="p-2">
-                <ul class="list-unstyled d-md-flex flex-wrap">
-                    <li class="mr-sm-2">
-                        <a class="text-nowrap" href="@siteRoot/sitemap">Site Map</a>
+            <ul class="list-unstyled d-flex flex-wrap">
+                <li class=" mr-sm-2">
+                    <a class="text-nowrap" href="@siteRoot/sitemap">Site Map</a>
+                </li>
+                @if (Tenant != null && !string.IsNullOrWhiteSpace(Tenant.PrivacyPolicy))
+                {
+                    <li class="pl-sm-2 mr-sm-2">
+                        <a asp-controller="Privacy" asp-action="Index">Privacy Policy</a>
                     </li>
-                    @if (Tenant != null && !string.IsNullOrWhiteSpace(Tenant.PrivacyPolicy))
-                    {
-                        <li class="pl-sm-2 mr-2">
-                            <a asp-controller="Privacy" asp-action="Index">Privacy Policy</a>
-                        </li>
-                    }
-                    <li class="pl-sm-2 mr-2">
-                        @* you are free to remove the powered by cloudscribe link but we appreciate it if you choose to keep it! *@
-                        <a class="text-nowrap" target="_blank" href="https://www.cloudscribe.com/?utm_source=@Context.Request.Host.Value&amp;utm_medium=referral&amp;utm_campaign=poweredbycloudscribe">Powered by cloudscribe</a>
-                    </li>
-                </ul>
-            </div>
-            <div class="pl-sm-2  text-center w-100"><span class="text-nowrap">Copyright &copy; @DateTime.Now.Year</span><span class="d-none d-sm-inline"> - </span><span> @(Tenant?.SiteName ?? "Sample")</span></div>
-            <partial name="_CookieConsentRevokePartial" />
+                }
+                <li class="pl-sm-2 mr-sm-2">
+                    @* you are free to remove the powered by cloudscribe link but we appreciate it if you choose to keep it! *@
+                    <a class="text-nowrap" target="_blank" href="https://www.cloudscribe.com/?utm_source=@Context.Request.Host.Value&amp;utm_medium=referral&amp;utm_campaign=poweredbycloudscribe">Powered by cloudscribe</a>
+                </li>
+            </ul>
         </div>
-        
+        <div class="pl-sm-2  text-center w-100"><span class="text-nowrap">Copyright &copy; @DateTime.Now.Year</span><span class="d-none d-sm-inline"> - </span><span> @(Tenant?.SiteName ?? "Sample")</span></div>
+        <partial name="_CookieConsentRevokePartial" />
+        </div>  
     </footer>
     @RenderSection("Toolbar", required: false)
     <environment names="Development">
