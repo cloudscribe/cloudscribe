@@ -1,4 +1,5 @@
 ﻿using cloudscribe.Core.Web.Components;
+using cloudscribe.Web.Localization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Razor;
 using Microsoft.AspNetCore.Routing;
@@ -29,6 +30,12 @@ namespace Microsoft.AspNetCore.Builder
                        , constraints: new { name = new cloudscribe.Core.Web.Components.SiteFolderRouteConstraint() }
                        );
 
+                routes.MapRoute(
+                    name: "folderdefault-localized",
+                    template: "{sitefolder}/{culture}/{controller}/{action}/{id?}",
+                    defaults: new { controller = "Home", action = "Index" },
+                    constraints: new { sitefolder = new cloudscribe.Core.Web.Components.SiteFolderRouteConstraint(), culture = new CultureSegmentRouteConstraint(true) });
+
 
                 routes.MapRoute(
                     name: "folderdefault",
@@ -39,11 +46,11 @@ namespace Microsoft.AspNetCore.Builder
 
             }
 
-            routes.MapRoute(
-               name: "stateautosuggest",
-               template: "coredata/stateautosuggestjson",
-               defaults: new { controller = "CoreDaata", action = "StateAutoSuggestJson" }
-               );
+            //routes.MapRoute(
+            //   name: "stateautosuggest",
+            //   template: "coredata/stateautosuggestjson",
+            //   defaults: new { controller = "CoreDaata", action = "StateAutoSuggestJson" }
+            //   );
 
             routes.MapRoute(
                name: "errorhandler",
@@ -62,6 +69,13 @@ namespace Microsoft.AspNetCore.Builder
             //    template: "{controller}/{action}"
             //    , defaults: new { action = "Index" }
             //    );
+
+            routes.MapRoute(
+                    name: "default-localized",
+                    template: "{culture}/{controller}/{action}/{id?}",
+                    defaults: new { controller = "Home", action = "Index" },
+                    constraints: new { culture = new CultureSegmentRouteConstraint() }
+                    );
 
 
             routes.MapRoute(
