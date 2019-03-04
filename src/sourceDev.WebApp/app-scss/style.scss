@@ -10,42 +10,54 @@ html {
 
 body {
     min-height: 100vh;
-    padding-top: 3.5rem;
+    padding-top: 142px;
 }
 
 #newPostLink {
     position: absolute;
-    top: 70px;
+    top: 170px;
     right: 0px;
 }
 
 #editPostLink {
     position: absolute;
-    top: 100px;
+    top: 200px;
     right: 0px;
+}
+
+#unpublishPostLink {
+    position: absolute;
+    top: 230px!important;
+    right: 0px!important;
 }
 
 #pageManagerLink {
     position: absolute;
-    top: 70px;
+    top: 170px;
     right: 0px;
 }
 
 #newPageLink {
     position: absolute;
-    top: 100px;
+    top: 200px;
     right: 0px;
 }
 
 #editPageLink {
     position: absolute;
-    top: 130px;
+    top: 230px;
     right: 0px
+}
+
+#unpublishPageLink {
+    position: absolute;
+    top: 260px!important;
+    right: 0px!important
 }
 
 #sidenavtoggle {
     position: absolute;
-    top: 120px;
+    top: 220px;
     right: 5px;
 }
 
@@ -72,13 +84,10 @@ td img, video, iframe {
     vertical-align: inherit;
 }
 
-div.cloudscribe-dropzone-standalone {
-    height: 130px;
-    width: 150px;
-    border: dashed thin $mybrand;
-    padding: 17px;
+.brand-header {
+    height:100px;
 }
 
-img {
-    image-orientation: from-image;
+.navbar {
+    top: 100px;
 }

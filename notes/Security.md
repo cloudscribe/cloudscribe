@@ -1,4 +1,8 @@
 
+https://www.engadget.com/2019/03/04/web-authentication-becomes-official-standard/
+
+https://www.w3.org/TR/webauthn/
+
 https://www.templarbit.com/blog/2018/03/20/tracking-users-with-css/
 
 
