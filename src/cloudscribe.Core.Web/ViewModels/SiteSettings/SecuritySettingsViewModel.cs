@@ -66,5 +66,11 @@ namespace cloudscribe.Core.Web.ViewModels.SiteSettings
 
         public string LdapUserDNKey { get; set; } = "CN";
 
+        public string LdapTestUsername { get; set; }
+
+        [DataType(DataType.Password)]
+        [Display(Name = "Password")]
+        public string LdapTestPassword { get; set; }
+
     }
 }

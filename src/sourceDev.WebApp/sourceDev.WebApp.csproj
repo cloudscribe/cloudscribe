@@ -37,6 +37,7 @@
     <ProjectReference Include="..\cloudscribe.Core.IdentityServer.EFCore.SQLite\cloudscribe.Core.IdentityServer.EFCore.SQLite.csproj" />
     <ProjectReference Include="..\cloudscribe.Core.IdentityServerIntegration\cloudscribe.Core.IdentityServerIntegration.csproj" />
     <ProjectReference Include="..\cloudscribe.Core.Identity\cloudscribe.Core.Identity.csproj" />
+    <ProjectReference Include="..\cloudscribe.Core.Ldap.Windows\cloudscribe.Core.Ldap.Windows.csproj" />
     <ProjectReference Include="..\cloudscribe.Core.Ldap\cloudscribe.Core.Ldap.csproj" />
     <ProjectReference Include="..\cloudscribe.Core.Models\cloudscribe.Core.Models.csproj" />
     <ProjectReference Include="..\cloudscribe.Core.Storage.EFCore.MSSQL\cloudscribe.Core.Storage.EFCore.MSSQL.csproj" />

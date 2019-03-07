@@ -1,8 +1,6 @@
 ﻿@model cloudscribe.Core.Web.ViewModels.SiteSettings.SecuritySettingsViewModel
 @inject IStringLocalizer<CloudscribeCore> sr
 @inject cloudscribe.Core.Models.Identity.ILdapHelper ldap
-@{
-}
 @if (ldap.IsImplemented)
 {
     <fieldset class="border p-2">

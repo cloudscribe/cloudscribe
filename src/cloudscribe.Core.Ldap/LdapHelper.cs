@@ -24,34 +24,23 @@ namespace cloudscribe.Core.Ldap
 
         public bool IsImplemented { get; } = true;
 
-        public bool ValidateUser(
-            ILdapSettings settings, 
-            string username, 
-            string password)
+        public LdapUser TryLdapLogin(ILdapSettings ldapSettings, string userName, string password)
         {
-            string userDn = $"{username}@{settings.LdapDomain}";
-            try
+            var user = LdapStandardLogin(ldapSettings, userName, password, useSsl: true);
+            if(user == null)
             {
-                using (var connection = new LdapConnection { SecureSocketLayer = false })
-                {
-                    connection.Connect(settings.LdapDomain, settings.LdapPort);
-                    connection.Bind(userDn, password);
+                //try without ssl
+                user = LdapStandardLogin(ldapSettings, userName, password, useSsl: false);
+            }
 
-                    if (connection.Bound)
-                        return true;
-                }
-            }
-            catch (LdapException ex)
-            {
-                _log.LogError($"{ex.Message}:{ex.StackTrace}");
-            }
-            return false;
+            return user;
         }
+
+
 
         private LdapConnection GetConnection(ILdapSettings ldapSettings, bool useSsl = false)
         {
             LdapConnection conn = new LdapConnection();
-
             
             if (useSsl)
             {
@@ -68,7 +57,7 @@ namespace cloudscribe.Core.Ldap
         }
 
 
-        private LdapUser LdapStandardLogin(ILdapSettings ldapSettings, string uid, string password, bool useSsl = false)
+        private LdapUser LdapStandardLogin(ILdapSettings ldapSettings, string userName, string password, bool useSsl)
         {
             bool success = false;
             LdapUser user = null;
@@ -85,19 +74,23 @@ namespace cloudscribe.Core.Ldap
 
                         try
                         {
-                            entry = GetOneUserEntry(conn, ldapSettings, uid);
+                            entry = GetOneUserEntry(conn, ldapSettings, userName);
                             if (entry != null)
                             {
-                                LdapConnection authConn = GetConnection(ldapSettings);
-                                authConn.Bind(entry.DN, password);
-                                authConn.Disconnect();
+                                //using (var authConn = GetConnection(ldapSettings, useSsl))
+                                //{
+                                    //authConn.Bind(entry.DN, password);
+                                    //authConn.Disconnect();
+                                conn.Bind(entry.DN, password);
                                 success = true;
+                                //}
+                                    
 
                             }
                         }
                         catch (LdapException ex)
                         {
-                            string msg = $"Login failure for user: {uid} Exception: {ex.Message}:{ex.StackTrace}";
+                            string msg = $"Login failure for user: {userName} Exception: {ex.Message}:{ex.StackTrace}";
                             _log.LogError(msg);
 
                             success = false;
@@ -117,12 +110,80 @@ namespace cloudscribe.Core.Ldap
             }
             catch (SocketException ex)
             {
-                string msg = $"Login failure for user: {uid} Exception: {ex.Message}:{ex.StackTrace}";
+                string msg = $"Login failure for user: {userName} Exception: {ex.Message}:{ex.StackTrace}";
                 _log.LogError(msg);
                 
             }
             
             return user;
+        }
+
+        private LdapEntry GetOneUserEntry(
+            LdapConnection conn,
+            ILdapSettings ldapSettings,
+            string search)
+        {
+
+            LdapSearchConstraints constraints = new LdapSearchConstraints();
+
+            LdapSearchQueue queue = null;
+            queue = conn.Search(
+                ldapSettings.LdapRootDN,
+                LdapConnection.SCOPE_SUB,
+                ldapSettings.LdapUserDNKey + "=" + search,
+                null,
+                false,
+                (LdapSearchQueue)null,
+                (LdapSearchConstraints)null);
+
+            LdapEntry entry = null;
+
+            if (queue != null)
+            {
+                LdapMessage message = queue.getResponse();
+                if (message != null)
+                {
+                    if (message is LdapSearchResult)
+                    {
+                        entry = ((LdapSearchResult)message).Entry;
+                    }
+                }
+            }
+
+            return entry;
+        }
+
+
+
+        private bool LdapSSLHandler(
+            object sender,
+            X509Certificate certificate,
+            X509Chain chain,
+            SslPolicyErrors sslPolicyErrors)
+        {
+
+            //#if !MONO
+            //            X509Store store = null;
+            //            X509Stores stores = X509StoreManager.LocalMachine;
+            //            store = stores.TrustedRoot;
+            //            X509Certificate x509 = null;
+
+            //            byte[] data = certificate.GetRawCertData();
+            //            if (data != null) { x509 = new X509Certificate(data); }
+
+            //            if (x509 != null)
+            //            {
+            //                //coll.Add(x509);
+            //                if (!store.Certificates.Contains(x509))
+            //                {
+
+            //                    store.Import(x509);
+            //                }
+
+            //            }
+            //#endif
+
+            return true;
         }
 
         private LdapUser BuildUserFromEntry(LdapEntry entry)
@@ -165,125 +226,82 @@ namespace cloudscribe.Core.Ldap
             return user;
         }
 
+        //private bool ValidateUser(
+        //   ILdapSettings settings,
+        //   string username,
+        //   string password)
+        //{
+        //    string userDn = $"{username}@{settings.LdapDomain}";
+        //    try
+        //    {
+        //        using (var connection = new LdapConnection { SecureSocketLayer = false })
+        //        {
+        //            connection.Connect(settings.LdapDomain, settings.LdapPort);
+        //            connection.Bind(userDn, password);
+
+        //            if (connection.Bound)
+        //                return true;
+        //        }
+        //    }
+        //    catch (LdapException ex)
+        //    {
+        //        _log.LogError($"{ex.Message}:{ex.StackTrace}");
+        //    }
+        //    return false;
+        //}
 
 
 
-        private bool ValidateUserWithSsl(
-            ILdapSettings settings,
-            string username,
-            string password)
-        {
-            string userDn = $"{username}@{settings.LdapDomain}";
-            try
-            {
-                using (var connection = GetConnection(settings, true))
-                {
-                    connection.UserDefinedServerCertValidationDelegate += LdapSSLHandler;
-                    connection.Connect(settings.LdapDomain, settings.LdapPort);
-                    connection.Bind(userDn, password);
+        //private bool ValidateUserWithSsl(
+        //    ILdapSettings settings,
+        //    string username,
+        //    string password)
+        //{
+        //    string userDn = $"{username}@{settings.LdapDomain}";
+        //    try
+        //    {
+        //        using (var connection = GetConnection(settings, true))
+        //        {
+        //            connection.UserDefinedServerCertValidationDelegate += LdapSSLHandler;
+        //            connection.Connect(settings.LdapDomain, settings.LdapPort);
+        //            connection.Bind(userDn, password);
 
-                    if (connection.Bound)
-                        return true;
-                }
-            }
-            catch (LdapException ex)
-            {
-                _log.LogError($"{ex.Message}:{ex.StackTrace}");
-            }
-            return false;
-        }
+        //            if (connection.Bound)
+        //                return true;
+        //        }
+        //    }
+        //    catch (LdapException ex)
+        //    {
+        //        _log.LogError($"{ex.Message}:{ex.StackTrace}");
+        //    }
+        //    return false;
+        //}
 
-        private bool ValidateUserNoSsl(
-            ILdapSettings settings,
-            string username,
-            string password)
-        {
-            string userDn = $"{username}@{settings.LdapDomain}";
-            try
-            {
-                using (var connection = GetConnection(settings, false))
-                {
-                    connection.Connect(settings.LdapDomain, settings.LdapPort);
-                    connection.Bind(userDn, password);
+        //private bool ValidateUserNoSsl(
+        //    ILdapSettings settings,
+        //    string username,
+        //    string password)
+        //{
+        //    string userDn = $"{username}@{settings.LdapDomain}";
+        //    try
+        //    {
+        //        using (var connection = GetConnection(settings, false))
+        //        {
+        //            connection.Connect(settings.LdapDomain, settings.LdapPort);
+        //            connection.Bind(userDn, password);
 
-                    if (connection.Bound)
-                        return true;
-                }
-            }
-            catch (LdapException ex)
-            {
-                _log.LogError($"{ex.Message}:{ex.StackTrace}");
-            }
-            return false;
-        }
+        //            if (connection.Bound)
+        //                return true;
+        //        }
+        //    }
+        //    catch (LdapException ex)
+        //    {
+        //        _log.LogError($"{ex.Message}:{ex.StackTrace}");
+        //    }
+        //    return false;
+        //}
 
-        private LdapEntry GetOneUserEntry(
-            LdapConnection conn,
-            ILdapSettings ldapSettings,
-            string search)
-        {
-
-            LdapSearchConstraints constraints = new LdapSearchConstraints();
-
-            LdapSearchQueue queue = null;
-            queue = conn.Search(
-                ldapSettings.LdapRootDN,
-                LdapConnection.SCOPE_SUB,
-                ldapSettings.LdapUserDNKey + "=" + search,
-                null,
-                false,
-                (LdapSearchQueue)null,
-                (LdapSearchConstraints)null);
-
-            LdapEntry entry = null;
-
-            if (queue != null)
-            {
-                LdapMessage message = queue.getResponse();
-                if (message != null)
-                {
-                    if (message is LdapSearchResult)
-                    {
-                        entry = ((LdapSearchResult)message).Entry;
-                    }
-                }
-            }
-
-            return entry;
-        }
-
-
-
-        private bool LdapSSLHandler(
-            object sender, 
-            X509Certificate certificate, 
-            X509Chain chain, 
-            SslPolicyErrors sslPolicyErrors)
-        {
-
-//#if !MONO
-//            X509Store store = null;
-//            X509Stores stores = X509StoreManager.LocalMachine;
-//            store = stores.TrustedRoot;
-//            X509Certificate x509 = null;
-
-//            byte[] data = certificate.GetRawCertData();
-//            if (data != null) { x509 = new X509Certificate(data); }
-
-//            if (x509 != null)
-//            {
-//                //coll.Add(x509);
-//                if (!store.Certificates.Contains(x509))
-//                {
-
-//                    store.Import(x509);
-//                }
-
-//            }
-//#endif
-
-            return true;
-        }
+        
 
     }
 }

@@ -138,7 +138,16 @@ namespace Microsoft.Extensions.DependencyInjection
 
             services.AddScoped<IGuardNeededRoles, DemoRoleGuard>();
 
-            services.AddCloudscribeLdapSupport(config);
+            var useWindowsCompatLdap = config.GetValue<bool>("DevOptions:UseWindowsCompatLdap");
+            if(useWindowsCompatLdap)
+            {
+                services.AddCloudscribeLdapWindowsSupport(config);
+            }
+            else
+            {
+                services.AddCloudscribeLdapSupport(config);
+            }
+            
 
             // this was just for testing expired password reset token
             //services.Configure<DataProtectionTokenProviderOptions>(options =>
