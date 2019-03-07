@@ -48,5 +48,23 @@ namespace cloudscribe.Core.Web.ViewModels.SiteSettings
 
         public bool Require2FA { get; set; }
 
+        //LDAP
+
+        //public bool UseLdapAuth { get; set; } = false;
+        //public bool AllowDbFallbackWithLdap { get; set; } = false;
+        //public bool EmailLdapDbFallback { get; set; } = false;
+        //public bool AutoCreateLdapUserOnFirstLogin { get; set; } = true;
+
+
+        public string LdapServer { get; set; }
+
+        public string LdapDomain { get; set; }
+
+        public int LdapPort { get; set; } = 389;
+
+        public string LdapRootDN { get; set; }
+
+        public string LdapUserDNKey { get; set; } = "CN";
+
     }
 }

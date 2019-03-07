@@ -5,7 +5,7 @@ namespace cloudscribe.Core.Models
     /// <summary>
     /// read only immutable version of ISiteSettings
     /// </summary>
-    public interface ISiteContext
+    public interface ISiteContext : ILdapSettings
     {
         // from ISiteInfo but without setters
         Guid Id { get; }
@@ -16,15 +16,7 @@ namespace cloudscribe.Core.Models
         bool IsServerAdminSite { get; }
 
         // from ISiteSettings but without setters
-        bool UseLdapAuth { get; }
-        bool AllowDbFallbackWithLdap { get; }
-        bool EmailLdapDbFallback { get; }
-        bool AutoCreateLdapUserOnFirstLogin { get; }
-        string LdapServer { get; }
-        string LdapDomain { get; }
-        int LdapPort { get; }
-        string LdapRootDN { get; }
-        string LdapUserDNKey { get; }
+       
         bool DisableDbAuth { get; }
         bool RequireConfirmedEmail { get; } 
         bool RequireConfirmedPhone { get; }

@@ -54,6 +54,8 @@
             <label asp-for="AllowPersistentLogin" class="form-check-label">@sr["Allow Persistent Login"]</label>
         </div>
     </div>
+    <partial name="LdapSettingsPartial" model="Model" />
+
     @if (Model.HasAnySocialAuthEnabled)
     {
         <div class="form-group">
@@ -81,6 +83,11 @@
     <script src="~/cr/js/unobtrusive-validation-bs4.min.js"></script>
     <script src="~/cr/js/jquery.validate.hooks.min.js"></script>
     <script src="~/cr/js/jqueryvaildation.submitonce-unobtrusive.min.js"></script>
+    <script>
+        $(function () {
+            $('[data-toggle="tooltip"]').tooltip()
+        });
+    </script>
 }
 
 

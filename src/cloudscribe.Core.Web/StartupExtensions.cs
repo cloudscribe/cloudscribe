@@ -168,6 +168,8 @@ namespace Microsoft.Extensions.DependencyInjection
 
             services.AddScoped<IGuardNeededRoles, AdministratorsRoleGuard>();
 
+            services.TryAddScoped<ILdapHelper, NotImplementedLdapHelper>();
+
             return services;
         }
 

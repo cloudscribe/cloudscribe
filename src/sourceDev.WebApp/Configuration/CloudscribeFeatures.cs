@@ -138,6 +138,8 @@ namespace Microsoft.Extensions.DependencyInjection
 
             services.AddScoped<IGuardNeededRoles, DemoRoleGuard>();
 
+            services.AddCloudscribeLdapSupport(config);
+
             // this was just for testing expired password reset token
             //services.Configure<DataProtectionTokenProviderOptions>(options =>
             //         options.TokenLifespan = TimeSpan.FromMinutes(3));

@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2014-10-26
-// Last Modified:			2019-02-16
+// Last Modified:			2019-03-07
 // 
 
 using cloudscribe.Core.Models;
@@ -887,7 +887,13 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
                 EmailIsConfigured = await SiteCapabilities.SupportsEmailNotification(new SiteContext(selectedSite)),
                 SmsIsConfigured = selectedSite.SmsIsConfigured(),
                 HasAnySocialAuthEnabled = selectedSite.HasAnySocialAuthEnabled(),
-                Require2FA = selectedSite.Require2FA
+                Require2FA = selectedSite.Require2FA,
+
+                LdapDomain = selectedSite.LdapDomain,
+                LdapPort = selectedSite.LdapPort,
+                LdapRootDN = selectedSite.LdapRootDN,
+                LdapServer = selectedSite.LdapServer,
+                LdapUserDNKey = selectedSite.LdapUserDNKey
             };
 
             return View(model);
@@ -938,6 +944,12 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
             selectedSite.RequireConfirmedPhone = model.RequireConfirmedPhone;
             selectedSite.UseEmailForLogin = model.UseEmailForLogin;
             selectedSite.Require2FA = model.Require2FA;
+
+            selectedSite.LdapDomain = model.LdapDomain;
+            selectedSite.LdapPort = model.LdapPort;
+            selectedSite.LdapRootDN = model.LdapRootDN;
+            selectedSite.LdapServer = model.LdapServer;
+            selectedSite.LdapUserDNKey = model.LdapUserDNKey;
             
             await SiteManager.Update(selectedSite);
             

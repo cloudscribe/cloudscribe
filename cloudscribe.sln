@@ -84,7 +84,11 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "cloudscribe.EFCore.PostgreS
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "cloudscribe.DateTimeUtils", "src\cloudscribe.DateTimeUtils\cloudscribe.DateTimeUtils.csproj", "{014777B8-1935-4BEF-9B9A-595ED7420D76}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "cloudscribe.Versioning", "src\cloudscribe.Versioning\cloudscribe.Versioning.csproj", "{47F7EA37-C079-48F2-B46B-E90B33A1C8CE}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "cloudscribe.Versioning", "src\cloudscribe.Versioning\cloudscribe.Versioning.csproj", "{47F7EA37-C079-48F2-B46B-E90B33A1C8CE}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "cloudscribe.Core.Ldap", "src\cloudscribe.Core.Ldap\cloudscribe.Core.Ldap.csproj", "{1532EC84-5739-4DAD-BB3C-3A3FB1393575}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "cloudscribe.Core.Ldap.Windows", "src\cloudscribe.Core.Ldap.Windows\cloudscribe.Core.Ldap.Windows.csproj", "{9D326409-4335-4929-A281-AC1E197D35B7}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -240,6 +244,14 @@ Global
 		{47F7EA37-C079-48F2-B46B-E90B33A1C8CE}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{47F7EA37-C079-48F2-B46B-E90B33A1C8CE}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{47F7EA37-C079-48F2-B46B-E90B33A1C8CE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1532EC84-5739-4DAD-BB3C-3A3FB1393575}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1532EC84-5739-4DAD-BB3C-3A3FB1393575}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1532EC84-5739-4DAD-BB3C-3A3FB1393575}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1532EC84-5739-4DAD-BB3C-3A3FB1393575}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9D326409-4335-4929-A281-AC1E197D35B7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9D326409-4335-4929-A281-AC1E197D35B7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9D326409-4335-4929-A281-AC1E197D35B7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9D326409-4335-4929-A281-AC1E197D35B7}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -282,6 +294,8 @@ Global
 		{12D82ABB-B599-4D5C-8ACB-52F6E0E40863} = {9C16B47A-B712-4237-B62F-B4403ACF1CD5}
 		{014777B8-1935-4BEF-9B9A-595ED7420D76} = {9C16B47A-B712-4237-B62F-B4403ACF1CD5}
 		{47F7EA37-C079-48F2-B46B-E90B33A1C8CE} = {9C16B47A-B712-4237-B62F-B4403ACF1CD5}
+		{1532EC84-5739-4DAD-BB3C-3A3FB1393575} = {9C16B47A-B712-4237-B62F-B4403ACF1CD5}
+		{9D326409-4335-4929-A281-AC1E197D35B7} = {9C16B47A-B712-4237-B62F-B4403ACF1CD5}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {3FDA23E8-B945-4001-92C5-F6A70186E3B0}
