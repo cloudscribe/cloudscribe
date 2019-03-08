@@ -7,7 +7,8 @@
 }
 @if (ldap.IsImplemented && !string.IsNullOrWhiteSpace(Model.LdapServer) && !string.IsNullOrWhiteSpace(Model.LdapDomain))
 {
-    <form class="mb-4" asp-action="TestLdap" data-submit-once="true">
+    <form class="mb-4" asp-action="TestLdap" asp-controller="SiteAdmin" asp-area="" data-submit-once="true">
+        <input asp-for="SiteId" type="hidden" />
         <fieldset>
             <legend>@sr["Test LDAP Authentication"]</legend>
         </fieldset>

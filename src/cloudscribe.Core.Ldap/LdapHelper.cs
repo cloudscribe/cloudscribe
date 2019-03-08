@@ -4,8 +4,8 @@ using Microsoft.Extensions.Logging;
 using Novell.Directory.Ldap;
 using System;
 using System.Net.Security;
-using System.Net.Sockets;
 using System.Security.Cryptography.X509Certificates;
+using System.Threading.Tasks;
 
 namespace cloudscribe.Core.Ldap
 {
@@ -24,8 +24,9 @@ namespace cloudscribe.Core.Ldap
 
         public bool IsImplemented { get; } = true;
 
-        public LdapUser TryLdapLogin(ILdapSettings ldapSettings, string userName, string password)
+        public Task<LdapUser> TryLdapLogin(ILdapSettings ldapSettings, string userName, string password)
         {
+
             var user = LdapStandardLogin(ldapSettings, userName, password, useSsl: true);
             if(user == null)
             {
@@ -33,7 +34,7 @@ namespace cloudscribe.Core.Ldap
                 user = LdapStandardLogin(ldapSettings, userName, password, useSsl: false);
             }
 
-            return user;
+            return Task.FromResult(user);
         }
 
 
@@ -88,7 +89,7 @@ namespace cloudscribe.Core.Ldap
 
                             }
                         }
-                        catch (LdapException ex)
+                        catch (Exception ex)
                         {
                             string msg = $"Login failure for user: {userName} Exception: {ex.Message}:{ex.StackTrace}";
                             _log.LogError(msg);
@@ -108,7 +109,7 @@ namespace cloudscribe.Core.Ldap
                     }
                 }
             }
-            catch (SocketException ex)
+            catch (Exception ex)
             {
                 string msg = $"Login failure for user: {userName} Exception: {ex.Message}:{ex.StackTrace}";
                 _log.LogError(msg);

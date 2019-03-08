@@ -1,8 +1,8 @@
 ﻿using cloudscribe.Core.Models;
 using cloudscribe.Core.Models.Identity;
 using Microsoft.Extensions.Logging;
-using System;
 using System.DirectoryServices;
+using System.Threading.Tasks;
 
 namespace cloudscribe.Core.Ldap.Windows
 {
@@ -22,7 +22,7 @@ namespace cloudscribe.Core.Ldap.Windows
         private bool useRootDn = false;
 
         
-        public LdapUser TryLdapLogin(ILdapSettings ldapSettings, string userName, string password)
+        public Task<LdapUser> TryLdapLogin(ILdapSettings ldapSettings, string userName, string password)
         {
             bool success = false;
             LdapUser user = null;
@@ -69,7 +69,7 @@ namespace cloudscribe.Core.Ldap.Windows
             }
 
 
-            return user;
+            return Task.FromResult(user);
         }
 
         private LdapUser GetLdapUser(DirectoryEntry directoryEntry, ILdapSettings ldapSettings, string userName)
@@ -101,10 +101,7 @@ namespace cloudscribe.Core.Ldap.Windows
                 {
                     user.Email = ent.Properties["mail"].Value.ToString();
                 }
-                else
-                {
-                    user.Email =  userName + "@" + ldapSettings.LdapDomain;
-                }
+
 
                 return user;
             }
