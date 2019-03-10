@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2017-05-22
-// Last Modified:			2019-03-01
+// Last Modified:			2019-03-08
 // 
 
 using cloudscribe.Core.Identity;
@@ -31,30 +31,35 @@ namespace cloudscribe.Core.Web.Components
             SignInManager<SiteUser> signInManager,
             IIdentityServerIntegration identityServerIntegration,
             ISocialAuthEmailVerfificationPolicy socialAuthEmailVerificationPolicy,
+            ILdapHelper ldapHelper,
+            IUserCommands userCommands,
             IProcessAccountLoginRules loginRulesProcessor,
             INewUserDisplayNameResolver displayNameResolver,
             IOptions<CustomSocialAuthSchemes> customSchemesAccessor
             //,ILogger<AccountService> logger
             )
         {
-            _userManager = userManager;
-            _signInManager = signInManager;
-            _identityServerIntegration = identityServerIntegration;
-            _socialAuthEmailVerificationPolicy = socialAuthEmailVerificationPolicy;
-            _loginRulesProcessor = loginRulesProcessor;
-            _displayNameResolver = displayNameResolver;
+            UserManager = userManager;
+            SignInManager = signInManager;
+            IdentityServerIntegration = identityServerIntegration;
+            SocialAuthEmailVerificationPolicy = socialAuthEmailVerificationPolicy;
+            LoginRulesProcessor = loginRulesProcessor;
+            DisplayNameResolver = displayNameResolver;
             CustomSocialAuthSchemes = customSchemesAccessor.Value;
-
+            LdapHelper = ldapHelper;
+            UserCommands = userCommands;
 
         }
 
-        protected readonly SiteUserManager<SiteUser> _userManager;
-        protected readonly SignInManager<SiteUser> _signInManager;
-        protected readonly IIdentityServerIntegration _identityServerIntegration;
-        protected readonly ISocialAuthEmailVerfificationPolicy _socialAuthEmailVerificationPolicy;
-        protected readonly IProcessAccountLoginRules _loginRulesProcessor;
-        protected readonly INewUserDisplayNameResolver _displayNameResolver;
-        protected readonly CustomSocialAuthSchemes CustomSocialAuthSchemes;
+        protected SiteUserManager<SiteUser> UserManager { get; private set; }
+        protected SignInManager<SiteUser> SignInManager { get; private set; }
+        protected IIdentityServerIntegration IdentityServerIntegration { get; private set; }
+        protected ISocialAuthEmailVerfificationPolicy SocialAuthEmailVerificationPolicy { get; private set; }
+        protected ILdapHelper LdapHelper { get; private set; }
+        protected IProcessAccountLoginRules LoginRulesProcessor { get; private set; }
+        protected INewUserDisplayNameResolver DisplayNameResolver { get; private set; }
+        protected CustomSocialAuthSchemes CustomSocialAuthSchemes { get; private set; }
+        protected IUserCommands UserCommands { get; private set; }
 
         protected virtual async Task<SiteUser> CreateUserFromExternalLogin(
             ExternalLoginInfo externalLoginInfo, 
@@ -73,30 +78,30 @@ namespace cloudscribe.Core.Web.Components
             }
 
             DateTime? termsAcceptedDate = null;
-            if (didAcceptTerms == true && !string.IsNullOrWhiteSpace(_userManager.Site.RegistrationAgreement)) { termsAcceptedDate = DateTime.UtcNow; }
+            if (didAcceptTerms == true && !string.IsNullOrWhiteSpace(UserManager.Site.RegistrationAgreement)) { termsAcceptedDate = DateTime.UtcNow; }
 
             if (!string.IsNullOrWhiteSpace(email) && email.Contains("@"))
             {
-                var userName = await _userManager.SuggestLoginNameFromEmail(_userManager.Site.Id, email);
+                var userName = await UserManager.SuggestLoginNameFromEmail(UserManager.Site.Id, email);
                 var newUser = new SiteUser
                 {
-                    SiteId = _userManager.Site.Id,
+                    SiteId = UserManager.Site.Id,
                     UserName = userName,
                     Email = email,
                     FirstName = externalLoginInfo.Principal.FindFirstValue(ClaimTypes.GivenName),
                     LastName = externalLoginInfo.Principal.FindFirstValue(ClaimTypes.Surname),
-                    AccountApproved = _userManager.Site.RequireApprovalBeforeLogin ? false : true,
-                    EmailConfirmed = _socialAuthEmailVerificationPolicy.HasVerifiedEmail(externalLoginInfo),
+                    AccountApproved = UserManager.Site.RequireApprovalBeforeLogin ? false : true,
+                    EmailConfirmed = SocialAuthEmailVerificationPolicy.HasVerifiedEmail(externalLoginInfo),
                     AgreementAcceptedUtc = termsAcceptedDate,
                     LastLoginUtc = DateTime.UtcNow
                 };
                 //https://github.com/joeaudette/cloudscribe/issues/346
-                newUser.DisplayName = _displayNameResolver.ResolveDisplayName(newUser);
+                newUser.DisplayName = DisplayNameResolver.ResolveDisplayName(newUser);
 
-                var identityResult = await _userManager.CreateAsync(newUser);
+                var identityResult = await UserManager.CreateAsync(newUser);
                 if (identityResult.Succeeded)
                 {
-                    identityResult = await _userManager.AddLoginAsync(newUser, externalLoginInfo);
+                    identityResult = await UserManager.AddLoginAsync(newUser, externalLoginInfo);
                     return newUser;
                 }
             }
@@ -106,7 +111,7 @@ namespace cloudscribe.Core.Web.Components
         public virtual async Task<bool> IsExistingAccount(string email)
         {
             if(string.IsNullOrWhiteSpace(email)) { return false; }
-            var user = await _userManager.FindByNameAsync(email);
+            var user = await UserManager.FindByNameAsync(email);
             if(user != null) { return true; }
             return false;
         }
@@ -118,14 +123,14 @@ namespace cloudscribe.Core.Web.Components
             IUserContext userContext = null;
             var email = providedEmail;
             
-            template.ExternalLoginInfo = await _signInManager.GetExternalLoginInfoAsync();
+            template.ExternalLoginInfo = await SignInManager.GetExternalLoginInfoAsync();
             if (template.ExternalLoginInfo == null)
             {
                 template.RejectReasons.Add("signInManager.GetExternalLoginInfoAsync returned null");
             }
             else
             {
-                template.User = await _userManager.FindByLoginAsync(template.ExternalLoginInfo.LoginProvider, template.ExternalLoginInfo.ProviderKey);
+                template.User = await UserManager.FindByLoginAsync(template.ExternalLoginInfo.LoginProvider, template.ExternalLoginInfo.ProviderKey);
                 
                 if(template.User == null)
                 {
@@ -136,7 +141,7 @@ namespace cloudscribe.Core.Web.Components
 
                     if (!string.IsNullOrWhiteSpace(email) && email.Contains("@"))
                     {
-                        template.User = await _userManager.FindByNameAsync(email);
+                        template.User = await UserManager.FindByNameAsync(email);
                     }
                 }
                 
@@ -149,12 +154,12 @@ namespace cloudscribe.Core.Web.Components
  
             if (template.User != null)
             {
-                await _loginRulesProcessor.ProcessAccountLoginRules(template);
+                await LoginRulesProcessor.ProcessAccountLoginRules(template);
             }
             
             if (template.SignInResult == SignInResult.Failed && template.User != null && template.RejectReasons.Count == 0)
             {
-                template.SignInResult = await _signInManager.ExternalLoginSignInAsync(template.ExternalLoginInfo.LoginProvider, template.ExternalLoginInfo.ProviderKey, isPersistent: false);
+                template.SignInResult = await SignInManager.ExternalLoginSignInAsync(template.ExternalLoginInfo.LoginProvider, template.ExternalLoginInfo.ProviderKey, isPersistent: false);
                 if(template.SignInResult.Succeeded)
                 {
                   
@@ -163,7 +168,7 @@ namespace cloudscribe.Core.Web.Components
                     {
                         //already tracked if user was just created
                         template.User.LastLoginUtc = DateTime.UtcNow;
-                        await _userManager.UpdateAsync(template.User);
+                        await UserManager.UpdateAsync(template.User);
                     }
                     
                 }      
@@ -174,7 +179,7 @@ namespace cloudscribe.Core.Web.Components
                 && template.SignInResult != SignInResult.TwoFactorRequired)
             {
                 //clear the external login 
-                await _signInManager.SignOutAsync();
+                await SignInManager.SignOutAsync();
             }
 
             if(template.User != null) { userContext = new UserContext(template.User); }
@@ -193,62 +198,80 @@ namespace cloudscribe.Core.Web.Components
                 );
 
         }
-
-        //public bool IsValidPassowrd(string password)
-        //{
-        //    return passwordValidator.
-        //}
         
         public virtual async Task<UserLoginResult> TryLogin(LoginViewModel model)
         {
             var template = new LoginResultTemplate();
             IUserContext userContext = null;
-
-            if(_userManager.Site.UseEmailForLogin && !string.IsNullOrWhiteSpace(model.UserName) && model.UserName.IndexOf("@") > -1)
+            LdapUser ldapUser = null;
+            var isFakeLdapEmail = false;
+            
+            if(UserManager.Site.UseEmailForLogin && !string.IsNullOrWhiteSpace(model.UserName) && model.UserName.IndexOf("@") > -1)
             {
-                template.User = await _userManager.FindByEmailAsync(model.UserName);
+                template.User = await UserManager.FindByEmailAsync(model.UserName);
             }
 
             if(template.User == null)
             {
-                template.User = await _userManager.FindByNameAsync(model.UserName);
+                template.User = await UserManager.FindByNameAsync(model.UserName);  
+            }
+
+            if (template.User == null)
+            {
+                if (LdapHelper.IsImplemented && !string.IsNullOrWhiteSpace(UserManager.Site.LdapServer) && !string.IsNullOrWhiteSpace(UserManager.Site.LdapDomain))
+                {
+                    ldapUser = await LdapHelper.TryLdapLogin(UserManager.Site as ILdapSettings, model.UserName, model.Password);
+                }
+            }
+
+            if (template.User == null && ldapUser != null)
+            {
+                //ldap auth success but no siteuser exists so create one and sign in
+                var cloudscribeUser = new SiteUser()
+                {
+                    SiteId = UserManager.Site.Id,
+                    UserName = model.UserName,
+                    Email = ldapUser.Email,
+                    DisplayName = ldapUser.CommonName,
+                    FirstName = ldapUser.FirstName,
+                    LastName = ldapUser.LastName,
+                    LastLoginUtc = DateTime.UtcNow,
+                    AccountApproved = true
+                };
+
+                if (string.IsNullOrWhiteSpace(cloudscribeUser.DisplayName))
+                {
+                    cloudscribeUser.DisplayName = model.UserName;
+                }
+
+                if (string.IsNullOrWhiteSpace(cloudscribeUser.Email))
+                {
+                    // identity doesn't allow create user with no email so fake it here then null it out below after sign in. 
+                    // the cloudscribe site rules middleware will then force the user to provide an email
+                    cloudscribeUser.Email = model.UserName + "@fake-email.com";
+                    isFakeLdapEmail = true;
+                }
+
+                var createdResult = await UserManager.CreateAsync(cloudscribeUser);
+                if (createdResult.Succeeded)
+                {
+                    template.User = cloudscribeUser;
+                    await SignInManager.SignInAsync(cloudscribeUser, model.RememberMe);
+                    template.SignInResult = SignInResult.Success;
+                    if (isFakeLdapEmail)
+                    {
+                        // clear the fake email, the user should then be forced to provide an email by site rules middleware
+                        cloudscribeUser.Email = null;
+                        cloudscribeUser.NormalizedEmail = null;
+                        await UserCommands.Update(cloudscribeUser);
+                    }
+
+                }
             }
            
-            //if(_userManager.Site.UseEmailForLogin)
-            //{
-            //    template.User = await _userManager.FindByNameAsync(model.Email);
-            //}
-            //else
-            //{
-            //    template.User = await _userManager.FindByNameAsync(model.UserName);
-            //    // for mixed sign in scenarios like db plus AD/LDAP
-            //    // we need the login form to show username input
-            //    // but could allow email or username, therefore is user null here try again with FindByEmail but using username from model
-            //    if(template.User == null)
-            //    {
-            //        template.User = await _userManager.FindByEmailAsync(model.UserName);
-            //    }
-                
-            //}
-
-
-
-            //if(template.User == null)
-            //{
-            //    // could have an enumerable of some interface here
-            //    // to allow olugin code to validate credentials some other way from a remote system like ldap or ad
-            //    // or older membership systems like dnn or mojoportal
-            //    // and auto create the site user based on that
-            //    // then proceed below as usual
-
-
-            //}
-
-
-
-            if (template.User != null)
+            if (template.User != null && ldapUser == null) //these rules don't apply for ldap users
             {
-                await _loginRulesProcessor.ProcessAccountLoginRules(template);
+                await LoginRulesProcessor.ProcessAccountLoginRules(template);
             }
 
             if(template.User != null)
@@ -261,27 +284,17 @@ namespace cloudscribe.Core.Web.Components
                 &&  template.RejectReasons.Count == 0)
             {
                 var persistent = false;
-                if (_userManager.Site.AllowPersistentLogin)
+                if (UserManager.Site.AllowPersistentLogin)
                 {
                     persistent = model.RememberMe;
                 }
-
-                //if (_userManager.Site.UseEmailForLogin)
-                //{
-                //    template.SignInResult = await _signInManager.PasswordSignInAsync(
-                //        model.Email,
-                //        model.Password,
-                //        persistent,
-                //        lockoutOnFailure: false);
-                //}
-                //else
-                //{
-                template.SignInResult = await _signInManager.PasswordSignInAsync(
+                
+                template.SignInResult = await SignInManager.PasswordSignInAsync(
                     model.UserName,
                     model.Password,
                     persistent,
                     lockoutOnFailure: false);
-                //}
+                
 
                 if (template.SignInResult.Succeeded)
                 {
@@ -290,40 +303,28 @@ namespace cloudscribe.Core.Web.Components
 
                     if (string.IsNullOrEmpty(template.User.SecurityStamp))
                     {
-                        
-
                         // if security stamp is empty then the securitystamp validation
                         // fails when it checks after 30 minutes
                         // users created via usermanager this gets populated but not
                         // populated for the admin user created by seeding data
                         // changes to the user such as password change also will populate it
                         // but we can go ahead and check here and populate it if it is empty
-                        await _userManager.UpdateSecurityStampAsync(template.User);
+                        await UserManager.UpdateSecurityStampAsync(template.User);
 
                         if (template.User.PasswordHash == "admin||0")
                         {
                             // initial admin user has not updated the password, need to hash it
-                            await _userManager.ChangeUserPassword(template.User, "admin", false);
+                            await UserManager.ChangeUserPassword(template.User, "admin", validatePassword: false);
 
-                            await _signInManager.SignOutAsync();
+                            await SignInManager.SignOutAsync();
                             // security stamp needs to be there before authentication to avoid the problem
-                            //if (_userManager.Site.UseEmailForLogin)
-                            //{
-                            //    template.SignInResult = await _signInManager.PasswordSignInAsync(
-                            //        model.Email,
-                            //        model.Password,
-                            //        persistent,
-                            //        lockoutOnFailure: false);
-                            //}
-                            //else
-                            //{
-                            template.SignInResult = await _signInManager.PasswordSignInAsync(
+                            
+                            template.SignInResult = await SignInManager.PasswordSignInAsync(
                                 model.UserName,
                                 model.Password,
                                 persistent,
                                 lockoutOnFailure: false);
-                            //}
-
+                            
                         }
 
                     }
@@ -348,11 +349,11 @@ namespace cloudscribe.Core.Web.Components
         {
             var template = new LoginResultTemplate();
             IUserContext userContext = null;
-            template.User = await _signInManager.GetTwoFactorAuthenticationUserAsync();
+            template.User = await SignInManager.GetTwoFactorAuthenticationUserAsync();
 
             if (template.User != null)
             {
-                await _loginRulesProcessor.ProcessAccountLoginRules(template);
+                await LoginRulesProcessor.ProcessAccountLoginRules(template);
             }
 
             if (template.User != null)
@@ -366,14 +367,14 @@ namespace cloudscribe.Core.Web.Components
                 )
             {
                 var authenticatorCode = model.TwoFactorCode.Replace(" ", string.Empty).Replace("-", string.Empty);
-                template.SignInResult = await _signInManager.TwoFactorAuthenticatorSignInAsync(authenticatorCode, rememberMe, model.RememberMachine);
+                template.SignInResult = await SignInManager.TwoFactorAuthenticatorSignInAsync(authenticatorCode, rememberMe, model.RememberMachine);
             }
             
             if (template.SignInResult.Succeeded)
             {
                 //update last login time
                 template.User.LastLoginUtc = DateTime.UtcNow;
-                await _userManager.UpdateAsync(template.User);
+                await UserManager.UpdateAsync(template.User);
             }
 
             return new UserLoginResult(
@@ -394,11 +395,11 @@ namespace cloudscribe.Core.Web.Components
         {
             var template = new LoginResultTemplate();
             IUserContext userContext = null;
-            template.User = await _signInManager.GetTwoFactorAuthenticationUserAsync();
+            template.User = await SignInManager.GetTwoFactorAuthenticationUserAsync();
 
             if (template.User != null)
             {
-                await _loginRulesProcessor.ProcessAccountLoginRules(template);
+                await LoginRulesProcessor.ProcessAccountLoginRules(template);
             }
 
             if (template.User != null)
@@ -412,14 +413,14 @@ namespace cloudscribe.Core.Web.Components
                 )
             {
                 var recoveryCode = model.RecoveryCode.Replace(" ", string.Empty);
-                template.SignInResult = await _signInManager.TwoFactorRecoveryCodeSignInAsync(recoveryCode);
+                template.SignInResult = await SignInManager.TwoFactorRecoveryCodeSignInAsync(recoveryCode);
             }
 
             if(template.SignInResult.Succeeded)
             {
                 //update last login time
                 template.User.LastLoginUtc = DateTime.UtcNow;
-                await _userManager.UpdateAsync(template.User);
+                await UserManager.UpdateAsync(template.User);
             }
 
             return new UserLoginResult(
@@ -448,23 +449,23 @@ namespace cloudscribe.Core.Web.Components
             var template = new LoginResultTemplate();
             IUserContext userContext = null;
 
-            var userName = !string.IsNullOrWhiteSpace(model.Username) ? model.Username : await _userManager.SuggestLoginNameFromEmail(_userManager.Site.Id, model.Email);
-            var userNameAvailable = await _userManager.LoginIsAvailable(Guid.Empty, userName);
+            var userName = !string.IsNullOrWhiteSpace(model.Username) ? model.Username : await UserManager.SuggestLoginNameFromEmail(UserManager.Site.Id, model.Email);
+            var userNameAvailable = await UserManager.LoginIsAvailable(Guid.Empty, userName);
             if (!userNameAvailable)
             {
-                userName = await _userManager.SuggestLoginNameFromEmail(_userManager.Site.Id, model.Email);
+                userName = await UserManager.SuggestLoginNameFromEmail(UserManager.Site.Id, model.Email);
             }
             
             var user = new SiteUser
             {
-                SiteId = _userManager.Site.Id,
+                SiteId = UserManager.Site.Id,
                 UserName = userName,
                 Email = model.Email,
                 FirstName = model.FirstName,
                 LastName = model.LastName,
                 DisplayName = model.DisplayName,
                 LastLoginUtc = DateTime.UtcNow,
-                AccountApproved = _userManager.Site.RequireApprovalBeforeLogin ? false : true
+                AccountApproved = UserManager.Site.RequireApprovalBeforeLogin ? false : true
             };
 
             await customRegistration.ProcessUserBeforeCreate(user, httpContext);
@@ -475,7 +476,7 @@ namespace cloudscribe.Core.Web.Components
                 user.DateOfBirth = model.DateOfBirth.Value;
             }
 
-            if (!string.IsNullOrWhiteSpace(_userManager.Site.RegistrationAgreement))
+            if (!string.IsNullOrWhiteSpace(UserManager.Site.RegistrationAgreement))
             {
                 if (model.AgreeToTerms)
                 {
@@ -483,13 +484,13 @@ namespace cloudscribe.Core.Web.Components
                 }
             }
 
-            var result = await _userManager.CreateAsync(user, model.Password);
+            var result = await UserManager.CreateAsync(user, model.Password);
             
             if (result.Succeeded)
             {
                 template.User = user;
                 template.IsNewUserRegistration = true;
-                await _loginRulesProcessor.ProcessAccountLoginRules(template);
+                await LoginRulesProcessor.ProcessAccountLoginRules(template);
             }
             else
             {
@@ -517,7 +518,7 @@ namespace cloudscribe.Core.Web.Components
                 && result.Errors.Count<IdentityError>() == 0
                 ) 
             {
-                await _signInManager.SignInAsync(user, isPersistent: false);
+                await SignInManager.SignInAsync(user, isPersistent: false);
                 template.SignInResult = SignInResult.Success;
             }
 
@@ -544,10 +545,10 @@ namespace cloudscribe.Core.Web.Components
             IUserContext userContext = null;
             string token = null;
 
-            var user = await _userManager.FindByNameAsync(email);
+            var user = await UserManager.FindByNameAsync(email);
             if(user != null)
             {
-                token = await _userManager.GeneratePasswordResetTokenAsync(user);
+                token = await UserManager.GeneratePasswordResetTokenAsync(user);
                 userContext = new UserContext(user);
             }
 
@@ -559,11 +560,11 @@ namespace cloudscribe.Core.Web.Components
             IUserContext userContext = null;
             IdentityResult result = IdentityResult.Failed(null);
 
-            var user = await _userManager.FindByNameAsync(email);
+            var user = await UserManager.FindByNameAsync(email);
             if (user != null)
             {
                 userContext = new UserContext(user);
-                result = await _userManager.ResetPasswordAsync(user, resetCode, password);
+                result = await UserManager.ResetPasswordAsync(user, resetCode, password);
             }
 
             return new ResetPasswordResult(userContext, result);
@@ -573,10 +574,10 @@ namespace cloudscribe.Core.Web.Components
         {
             IUserContext userContext = null;
             string token = null;
-            var user = await _userManager.Fetch(_userManager.Site.Id, userId);
+            var user = await UserManager.Fetch(UserManager.Site.Id, userId);
             if(user != null)
             {
-                token = await _userManager.GenerateEmailConfirmationTokenAsync((SiteUser)user);
+                token = await UserManager.GenerateEmailConfirmationTokenAsync((SiteUser)user);
                 userContext = new UserContext(user);
             }
 
@@ -588,11 +589,11 @@ namespace cloudscribe.Core.Web.Components
             IUserContext userContext = null;
             IdentityResult result = IdentityResult.Failed(null);
 
-            var user = await _userManager.FindByIdAsync(userId);
+            var user = await UserManager.FindByIdAsync(userId);
             if(user != null)
             {
                 userContext = new UserContext(user);
-                result = await _userManager.ConfirmEmailAsync(user, code);
+                result = await UserManager.ConfirmEmailAsync(user, code);
             }
 
             return new VerifyEmailResult(userContext, result);
@@ -600,7 +601,7 @@ namespace cloudscribe.Core.Web.Components
 
         public virtual async Task<IUserContext> GetTwoFactorAuthenticationUserAsync()
         {
-            var user = await _signInManager.GetTwoFactorAuthenticationUserAsync();
+            var user = await SignInManager.GetTwoFactorAuthenticationUserAsync();
             if(user != null)
             {
                 return new UserContext(user);
@@ -614,15 +615,15 @@ namespace cloudscribe.Core.Web.Components
             IUserContext userContext = null;
             IList<string> userFactors = new List<string>();
             string token = null;
-            var user = await _signInManager.GetTwoFactorAuthenticationUserAsync();
+            var user = await SignInManager.GetTwoFactorAuthenticationUserAsync();
             if(user != null)
             {
                 if (!string.IsNullOrWhiteSpace(provider))
                 {
-                    token = await _userManager.GenerateTwoFactorTokenAsync(user, provider);
+                    token = await UserManager.GenerateTwoFactorTokenAsync(user, provider);
                 }
                 userContext = new UserContext(user);
-                userFactors = await _userManager.GetValidTwoFactorProvidersAsync(user);
+                userFactors = await UserManager.GetValidTwoFactorProvidersAsync(user);
             }
 
             return new TwoFactorInfo(userContext, userFactors, token);
@@ -633,15 +634,15 @@ namespace cloudscribe.Core.Web.Components
             if (principal == null) return;
             var userId = principal.GetUserId();
             if (string.IsNullOrEmpty(userId)) return;
-            var user = await _userManager.FindByIdAsync(userId);
-            await _signInManager.SignOutAsync();
+            var user = await UserManager.FindByIdAsync(userId);
+            await SignInManager.SignOutAsync();
             if (user != null)
             {
                 user.RolesChanged = false;
-                var result = await _userManager.UpdateAsync(user);
+                var result = await UserManager.UpdateAsync(user);
                 if(result.Succeeded)
                 {
-                    await _signInManager.SignInAsync(user, isPersistent: false);
+                    await SignInManager.SignInAsync(user, isPersistent: false);
                 }
             }
             
@@ -652,9 +653,9 @@ namespace cloudscribe.Core.Web.Components
             if (principal == null) return false;
             var userId = principal.GetUserId();
             if (string.IsNullOrEmpty(userId)) return false;
-            var user = await _userManager.FindByIdAsync(userId);
+            var user = await UserManager.FindByIdAsync(userId);
             user.AgreementAcceptedUtc = DateTime.UtcNow;
-            var result = await _userManager.UpdateAsync(user);
+            var result = await UserManager.UpdateAsync(user);
             if (result.Succeeded) return true;
 
             return false;
@@ -673,27 +674,27 @@ namespace cloudscribe.Core.Web.Components
 
         public virtual async Task<SignInResult> TwoFactorSignInAsync(string provider, string code, bool rememberMe, bool rememberBrowser)
         {
-            return await _signInManager.TwoFactorSignInAsync(provider, code, rememberMe, rememberBrowser);
+            return await SignInManager.TwoFactorSignInAsync(provider, code, rememberMe, rememberBrowser);
         }
 
         public virtual async Task<SignInResult> TwoFactorAuthenticatorSignInAsync(string code, bool rememberMe, bool rememberBrowser)
         {
-            return await _signInManager.TwoFactorAuthenticatorSignInAsync(code, rememberMe, rememberBrowser);
+            return await SignInManager.TwoFactorAuthenticatorSignInAsync(code, rememberMe, rememberBrowser);
         }
 
         public virtual async Task<SignInResult> TwoFactorRecoveryCodeSignInAsync(string code)
         {
-            return await _signInManager.TwoFactorRecoveryCodeSignInAsync(code);
+            return await SignInManager.TwoFactorRecoveryCodeSignInAsync(code);
         }
 
         public virtual AuthenticationProperties ConfigureExternalAuthenticationProperties(string provider, string returnUrl = null)
         {
-            return _signInManager.ConfigureExternalAuthenticationProperties(provider, returnUrl);
+            return SignInManager.ConfigureExternalAuthenticationProperties(provider, returnUrl);
         }
 
         public virtual async Task<List<Microsoft.AspNetCore.Authentication.AuthenticationScheme>> GetExternalAuthenticationSchemes()
         {
-            var result = await _signInManager.GetExternalAuthenticationSchemesAsync();
+            var result = await SignInManager.GetExternalAuthenticationSchemesAsync();
             var allProviders = result.OrderBy(x => x.DisplayName).ToList();
             var filteredProviders = new List<Microsoft.AspNetCore.Authentication.AuthenticationScheme>();
             foreach(var provider in allProviders)
@@ -717,20 +718,20 @@ namespace cloudscribe.Core.Web.Components
             switch(scheme.Name)
             {
                 case "Microsoft":
-                    if(!string.IsNullOrWhiteSpace(_userManager.Site.MicrosoftClientId)) { return true; }
+                    if(!string.IsNullOrWhiteSpace(UserManager.Site.MicrosoftClientId)) { return true; }
                     break;
 
                 case "Google":
-                    if (!string.IsNullOrWhiteSpace(_userManager.Site.GoogleClientId)) { return true; }
+                    if (!string.IsNullOrWhiteSpace(UserManager.Site.GoogleClientId)) { return true; }
                     break;
                 case "Facebook":
-                    if (!string.IsNullOrWhiteSpace(_userManager.Site.FacebookAppId)) { return true; }
+                    if (!string.IsNullOrWhiteSpace(UserManager.Site.FacebookAppId)) { return true; }
                     break;
                 case "Twitter":
-                    if (!string.IsNullOrWhiteSpace(_userManager.Site.TwitterConsumerKey)) { return true; }
+                    if (!string.IsNullOrWhiteSpace(UserManager.Site.TwitterConsumerKey)) { return true; }
                     break;
                 case "OpenIdConnect":
-                    if (!string.IsNullOrWhiteSpace(_userManager.Site.OidConnectAppId)) { return true; }
+                    if (!string.IsNullOrWhiteSpace(UserManager.Site.OidConnectAppId)) { return true; }
                     break;
                
                     
@@ -741,17 +742,17 @@ namespace cloudscribe.Core.Web.Components
 
         public bool IsSignedIn(ClaimsPrincipal user)
         {
-            return _signInManager.IsSignedIn(user);
+            return SignInManager.IsSignedIn(user);
         }
 
         public virtual async Task SignOutAsync()
         {
-            await _signInManager.SignOutAsync();
+            await SignInManager.SignOutAsync();
         }
 
         public virtual async Task<bool> LoginNameIsAvailable(Guid userId, string loginName)
         {
-            return await _userManager.LoginIsAvailable(userId, loginName);
+            return await UserManager.LoginIsAvailable(userId, loginName);
         }
 
     }
