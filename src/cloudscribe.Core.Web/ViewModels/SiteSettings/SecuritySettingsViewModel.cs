@@ -66,6 +66,11 @@ namespace cloudscribe.Core.Web.ViewModels.SiteSettings
 
         public string LdapUserDNKey { get; set; } = "CN";
 
+        public string LdapUserDNFormat { get; set; } = "username@LDAPDOMAIN"; // or LDAPDOMAIN\username
+
+        public bool LdapUseSsl { get; set; }
+
+
         public string LdapTestUsername { get; set; }
 
         [DataType(DataType.Password)]

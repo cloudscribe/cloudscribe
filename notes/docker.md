@@ -1,4 +1,7 @@
 
+https://technodrone.blogspot.com/2019/02/goodbye-docker-and-thanks-for-all-fish.html
+
+
 https://github.com/abomadi/cloudscribe/wiki
 
 

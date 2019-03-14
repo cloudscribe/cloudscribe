@@ -2,8 +2,8 @@
 
   <PropertyGroup>
     <Description>Microsoft Sql Server Entity Framework Core implementation of cloudscribe core storage</Description>
-    <VersionPrefix>3.0.12</VersionPrefix>
-    <AssemblyVersion>3.0.12</AssemblyVersion>
+    <VersionPrefix>3.0.13</VersionPrefix>
+    <AssemblyVersion>3.0.13</AssemblyVersion>
     <Authors>Joe Audette</Authors>
     <TargetFramework>netstandard2.0</TargetFramework>
     <PackageTags>cloudscribe;commands;queries;ef</PackageTags>

@@ -27,8 +27,7 @@ namespace cloudscribe.Core.Ldap.Windows
             bool success = false;
             LdapUser user = null;
             DirectoryEntry directoryEntry = null;
-
-            //Note: Not necessary to check SSL. Default authentication type for .NET 2.0+ is "Secure"
+            
             try
             {
                 if (useRootDn)

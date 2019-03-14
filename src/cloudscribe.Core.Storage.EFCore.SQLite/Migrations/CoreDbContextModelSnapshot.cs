@@ -124,13 +124,9 @@ namespace cloudscribe.Core.Storage.EFCore.SQLite.Migrations
                     b.Property<string>("AliasId")
                         .HasMaxLength(36);
 
-                    b.Property<bool>("AllowDbFallbackWithLdap");
-
                     b.Property<bool>("AllowNewRegistration");
 
                     b.Property<bool>("AllowPersistentLogin");
-
-                    b.Property<bool>("AutoCreateLdapUserOnFirstLogin");
 
                     b.Property<bool>("CaptchaOnLogin");
 
@@ -198,8 +194,6 @@ namespace cloudscribe.Core.Storage.EFCore.SQLite.Migrations
 
                     b.Property<string>("EmailApiKey");
 
-                    b.Property<bool>("EmailLdapDbFallback");
-
                     b.Property<string>("EmailSenderName")
                         .IsRequired()
                         .ValueGeneratedOnAdd()
@@ -245,6 +239,11 @@ namespace cloudscribe.Core.Storage.EFCore.SQLite.Migrations
 
                     b.Property<string>("LdapServer")
                         .HasMaxLength(255);
+
+                    b.Property<bool>("LdapUseSsl");
+
+                    b.Property<string>("LdapUserDNFormat")
+                        .HasMaxLength(100);
 
                     b.Property<string>("LdapUserDNKey")
                         .HasMaxLength(10);
@@ -368,8 +367,6 @@ namespace cloudscribe.Core.Storage.EFCore.SQLite.Migrations
                     b.Property<bool>("UseEmailForLogin");
 
                     b.Property<bool>("UseInvisibleRecaptcha");
-
-                    b.Property<bool>("UseLdapAuth");
 
                     b.HasKey("Id");
 

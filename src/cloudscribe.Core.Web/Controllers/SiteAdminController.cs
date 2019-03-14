@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2014-10-26
-// Last Modified:			2019-03-08
+// Last Modified:			2019-03-14
 // 
 
 using cloudscribe.Core.Models;
@@ -897,7 +897,9 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
                 LdapPort = selectedSite.LdapPort,
                 LdapRootDN = selectedSite.LdapRootDN,
                 LdapServer = selectedSite.LdapServer,
-                LdapUserDNKey = selectedSite.LdapUserDNKey
+                LdapUserDNKey = selectedSite.LdapUserDNKey,
+                LdapUserDNFormat = selectedSite.LdapUserDNFormat,
+                LdapUseSsl = selectedSite.LdapUseSsl
             };
 
             return View(model);
@@ -954,6 +956,8 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
             selectedSite.LdapRootDN = model.LdapRootDN;
             selectedSite.LdapServer = model.LdapServer;
             selectedSite.LdapUserDNKey = model.LdapUserDNKey;
+            selectedSite.LdapUserDNFormat = model.LdapUserDNFormat;
+            selectedSite.LdapUseSsl = model.LdapUseSsl;
             
             await SiteManager.Update(selectedSite);
             
