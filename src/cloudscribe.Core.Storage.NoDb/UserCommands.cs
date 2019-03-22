@@ -135,10 +135,34 @@ namespace cloudscribe.Core.Storage.NoDb
             var projectId = siteId.ToString();
 
             await userCommands.DeleteAsync(projectId, userId.ToString(), cancellationToken).ConfigureAwait(false);
-            await DeleteLoginsByUser(siteId, userId);
-            await DeleteClaimsByUser(siteId, userId);
-            await DeleteUserRoles(siteId, userId);
-            await DeleteTokensByUser(siteId, userId);
+            
+            // try catch here is because NoDb throws an error if the folder doesn't exist and it may not exist 
+            // for these if there are no social logins for any user, or claims, or tokens
+            try
+            {
+                await DeleteUserRoles(siteId, userId);
+            }
+            catch { }
+
+
+            try
+            {
+                await DeleteClaimsByUser(siteId, userId);
+            }
+            catch { }
+            try
+            {
+                await DeleteLoginsByUser(siteId, userId);
+            }
+            catch { }
+            try
+            {
+                await DeleteTokensByUser(siteId, userId);
+            }
+            catch { }
+           
+            
+            
 
         }
 
