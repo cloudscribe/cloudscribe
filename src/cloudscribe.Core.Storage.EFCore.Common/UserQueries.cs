@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2015-11-16
-// Last Modified:			2018-08-19
+// Last Modified:			2019-03-22
 // 
 
 
@@ -1235,12 +1235,15 @@ namespace cloudscribe.Core.Storage.EFCore.Common
                         join y in dbContext.UserClaims
                         on x.Id equals y.UserId
                         where x.SiteId == siteId
+                        && y.ClaimType == claimType
+                        && y.ClaimValue == claimValue
                         orderby x.DisplayName
                         select x
                         ;
 
             var items = await query
                 .AsNoTracking()
+                .Distinct()
                 .ToListAsync<ISiteUser>(cancellationToken)
                 .ConfigureAwait(false);
 

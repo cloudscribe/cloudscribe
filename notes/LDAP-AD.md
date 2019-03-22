@@ -12,3 +12,4 @@ https://github.com/WinLwinOoNet/AspNetCoreActiveDirectoryStarterKit/blob/master/
 models
 web
 views
+data

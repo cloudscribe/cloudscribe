@@ -1,6 +1,7 @@
 ﻿using cloudscribe.Core.Models;
 using cloudscribe.Core.Models.Identity;
 using Microsoft.Extensions.Logging;
+using System;
 using System.DirectoryServices;
 using System.Threading.Tasks;
 
@@ -19,7 +20,7 @@ namespace cloudscribe.Core.Ldap.Windows
 
         public bool IsImplemented { get; } = true;
 
-        private bool useRootDn = false;
+        //private bool useRootDn = false;
 
         
         public Task<LdapUser> TryLdapLogin(ILdapSettings ldapSettings, string userName, string password)
@@ -30,16 +31,27 @@ namespace cloudscribe.Core.Ldap.Windows
             
             try
             {
-                if (useRootDn)
+
+                //if (useRootDn)
+                //{
+                //    directoryEntry = new DirectoryEntry("LDAP://" + ldapSettings.LdapServer + "/" + ldapSettings.LdapRootDN, ldapSettings.LdapDomain + "\\" + userName, password);
+                //}
+                //else
+                //{
+                //directoryEntry = new DirectoryEntry("LDAP://" + ldapSettings.LdapServer, ldapSettings.LdapDomain + "\\" + userName, password);
+                //}
+
+                if(ldapSettings.LdapUseSsl)
                 {
-                    directoryEntry = new DirectoryEntry("LDAP://" + ldapSettings.LdapServer + "/" + ldapSettings.LdapRootDN, ldapSettings.LdapDomain + "\\" + userName, password);
+                    directoryEntry = new DirectoryEntry("LDAP://" + ldapSettings.LdapServer, ldapSettings.LdapDomain + "\\" + userName, password, AuthenticationTypes.SecureSocketsLayer);
                 }
                 else
                 {
                     directoryEntry = new DirectoryEntry("LDAP://" + ldapSettings.LdapServer, ldapSettings.LdapDomain + "\\" + userName, password);
                 }
+                
             }
-            catch (System.Runtime.InteropServices.COMException ex)
+            catch (Exception ex)
             {
                 string msg = $"Login failure for user: {userName} Exception: {ex.Message}:{ex.StackTrace}";
                 _log.LogError(msg);
@@ -53,7 +65,7 @@ namespace cloudscribe.Core.Ldap.Windows
                     object testobj = directoryEntry.NativeObject;
                     success = true;
                 }
-                catch (System.Runtime.InteropServices.COMException ex)
+                catch (Exception ex)
                 {
                     string msg = $"Login failure for user: {userName} Exception: {ex.Message}:{ex.StackTrace}";
                     _log.LogError(msg);
