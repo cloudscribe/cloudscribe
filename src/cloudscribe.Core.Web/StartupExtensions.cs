@@ -170,6 +170,8 @@ namespace Microsoft.Extensions.DependencyInjection
 
             services.TryAddScoped<ILdapHelper, NotImplementedLdapHelper>();
 
+            services.TryAddScoped<ILdapSslCertificateValidator, AlwaysValidLdapSslCertificateValidator>();
+
             return services;
         }
 

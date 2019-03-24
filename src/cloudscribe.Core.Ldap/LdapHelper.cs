@@ -14,12 +14,15 @@ namespace cloudscribe.Core.Ldap
     public class LdapHelper : ILdapHelper
     {
         public LdapHelper(
+            ILdapSslCertificateValidator ldapSslCertificateValidator,
             ILogger<LdapHelper> logger
             )
         {
+            _ldapSslCertificateValidator = ldapSslCertificateValidator;
             _log = logger;
         }
 
+        private readonly ILdapSslCertificateValidator _ldapSslCertificateValidator;
         private readonly ILogger _log;
 
         public bool IsImplemented { get; } = true;
@@ -89,7 +92,7 @@ namespace cloudscribe.Core.Ldap
                 // make this support ssl/tls
                 //http://stackoverflow.com/questions/386982/novell-ldap-c-novell-directory-ldap-has-anybody-made-it-work
                 conn.SecureSocketLayer = true;
-                conn.UserDefinedServerCertValidationDelegate += LdapSSLHandler;
+                conn.UserDefinedServerCertValidationDelegate += LdapSSLCertificateValidator;
 
             }
            
@@ -99,35 +102,19 @@ namespace cloudscribe.Core.Ldap
         }
         
 
-        private bool LdapSSLHandler(
+        private bool LdapSSLCertificateValidator(
            object sender,
            X509Certificate certificate,
            X509Chain chain,
            SslPolicyErrors sslPolicyErrors)
         {
-
-            //#if !MONO
-            //            X509Store store = null;
-            //            X509Stores stores = X509StoreManager.LocalMachine;
-            //            store = stores.TrustedRoot;
-            //            X509Certificate x509 = null;
-
-            //            byte[] data = certificate.GetRawCertData();
-            //            if (data != null) { x509 = new X509Certificate(data); }
-
-            //            if (x509 != null)
-            //            {
-            //                //coll.Add(x509);
-            //                if (!store.Certificates.Contains(x509))
-            //                {
-
-            //                    store.Import(x509);
-            //                }
-
-            //            }
-            //#endif
-
-            return true;
+            return _ldapSslCertificateValidator.ValidateCertificate(
+                sender,
+                certificate,
+                chain,
+                sslPolicyErrors
+                );
+            
         }
 
 
