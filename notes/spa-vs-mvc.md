@@ -57,6 +57,8 @@ https://medium.freecodecamp.org/why-i-hate-your-single-page-app-f08bb4ff9134
 
 https://tinnedfruit.com/articles/create-your-own-dysfunctional-single-page-app.html
 
+https://dev.to/winduptoy/a-javascript-free-frontend-2d3e
+
 
 
 

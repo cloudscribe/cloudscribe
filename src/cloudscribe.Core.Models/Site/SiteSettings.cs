@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2014-08-16
-// Last Modified:			2019-02-17
+// Last Modified:			2019-03-14
 // 
 
 using System;
@@ -32,10 +32,10 @@ namespace cloudscribe.Core.Models
         public bool RequireConfirmedEmail { get; set; } = false;
         public bool RequireConfirmedPhone { get; set; } = false;
 
-        public bool UseLdapAuth { get; set; } = false;
-        public bool AllowDbFallbackWithLdap { get; set; } = false;
-        public bool EmailLdapDbFallback { get; set; } = false;
-        public bool AutoCreateLdapUserOnFirstLogin { get; set; } = true;
+        //public bool UseLdapAuth { get; set; } = false;
+        //public bool AllowDbFallbackWithLdap { get; set; } = false;
+        //public bool EmailLdapDbFallback { get; set; } = false;
+        //public bool AutoCreateLdapUserOnFirstLogin { get; set; } = true;
         
  
         public string LdapServer { get; set; }
@@ -47,6 +47,9 @@ namespace cloudscribe.Core.Models
         public string LdapRootDN { get; set; }
 
         public string LdapUserDNKey { get; set; } = "CN";
+        public string LdapUserDNFormat { get; set; } = "username@LDAPDOMAIN"; // or LDAPDOMAIN\username
+
+        public bool LdapUseSsl { get; set; }
 
         /// <summary>
         /// This property is now really Allow login with email
@@ -214,10 +217,10 @@ namespace cloudscribe.Core.Models
                 ConcurrencyStamp = i.ConcurrencyStamp,
                 AccountApprovalEmailCsv = i.AccountApprovalEmailCsv,
                 AddThisDotComUsername = i.AddThisDotComUsername,
-                AllowDbFallbackWithLdap = i.AllowDbFallbackWithLdap,
+               // AllowDbFallbackWithLdap = i.AllowDbFallbackWithLdap,
                 AllowNewRegistration = i.AllowNewRegistration,
                 AllowPersistentLogin = i.AllowPersistentLogin,
-                AutoCreateLdapUserOnFirstLogin = i.AutoCreateLdapUserOnFirstLogin,
+                //AutoCreateLdapUserOnFirstLogin = i.AutoCreateLdapUserOnFirstLogin,
                 CaptchaOnLogin = i.CaptchaOnLogin,
                 CaptchaOnRegistration = i.CaptchaOnRegistration,
                 CompanyCountry = i.CompanyCountry,
@@ -240,7 +243,7 @@ namespace cloudscribe.Core.Models
                 DkimPrivateKey = i.DkimPrivateKey,
                 DkimDomain = i.DkimDomain,
                 DkimSelector = i.DkimSelector,
-                EmailLdapDbFallback = i.EmailLdapDbFallback,
+                //EmailLdapDbFallback = i.EmailLdapDbFallback,
                 FooterContent = i.FooterContent,
                 ForcedCulture = i.ForcedCulture,
                 ForcedUICulture = i.ForcedUICulture,
@@ -259,6 +262,8 @@ namespace cloudscribe.Core.Models
                 LdapRootDN = i.LdapRootDN,
                 LdapServer = i.LdapServer,
                 LdapUserDNKey = i.LdapUserDNKey,
+                LdapUserDNFormat = i.LdapUserDNFormat,
+                LdapUseSsl = i.LdapUseSsl,
                 LoginInfoBottom = i.LoginInfoBottom,
                 LoginInfoTop = i.LoginInfoTop,
                 LogoUrl = i.LogoUrl,
@@ -311,7 +316,7 @@ namespace cloudscribe.Core.Models
                 TwitterConsumerSecret = i.TwitterConsumerSecret,
                 UseInvisibleRecaptcha = i.UseInvisibleRecaptcha,
                 UseEmailForLogin = i.UseEmailForLogin,
-                UseLdapAuth = i.UseLdapAuth,
+                //UseLdapAuth = i.UseLdapAuth,
                 TermsUpdatedUtc = i.TermsUpdatedUtc,
                 EmailApiEndpoint = i.EmailApiEndpoint,
                 EmailApiKey = i.EmailApiKey,

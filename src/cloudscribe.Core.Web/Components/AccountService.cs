@@ -216,7 +216,7 @@ namespace cloudscribe.Core.Web.Components
                 template.User = await UserManager.FindByNameAsync(model.UserName);  
             }
 
-            if (template.User == null)
+            if (template.User == null || string.IsNullOrWhiteSpace(template.User.PasswordHash)) //no password on cloudscribe user so could be ldap
             {
                 if (LdapHelper.IsImplemented && !string.IsNullOrWhiteSpace(UserManager.Site.LdapServer) && !string.IsNullOrWhiteSpace(UserManager.Site.LdapDomain))
                 {
@@ -224,49 +224,61 @@ namespace cloudscribe.Core.Web.Components
                 }
             }
 
-            if (template.User == null && ldapUser != null)
+            if (ldapUser != null) //ldap auth success
             {
-                //ldap auth success but no siteuser exists so create one and sign in
-                var cloudscribeUser = new SiteUser()
+                if(template.User == null)
                 {
-                    SiteId = UserManager.Site.Id,
-                    UserName = model.UserName,
-                    Email = ldapUser.Email,
-                    DisplayName = ldapUser.CommonName,
-                    FirstName = ldapUser.FirstName,
-                    LastName = ldapUser.LastName,
-                    LastLoginUtc = DateTime.UtcNow,
-                    AccountApproved = true
-                };
-
-                if (string.IsNullOrWhiteSpace(cloudscribeUser.DisplayName))
-                {
-                    cloudscribeUser.DisplayName = model.UserName;
-                }
-
-                if (string.IsNullOrWhiteSpace(cloudscribeUser.Email))
-                {
-                    // identity doesn't allow create user with no email so fake it here then null it out below after sign in. 
-                    // the cloudscribe site rules middleware will then force the user to provide an email
-                    cloudscribeUser.Email = model.UserName + "@fake-email.com";
-                    isFakeLdapEmail = true;
-                }
-
-                var createdResult = await UserManager.CreateAsync(cloudscribeUser);
-                if (createdResult.Succeeded)
-                {
-                    template.User = cloudscribeUser;
-                    await SignInManager.SignInAsync(cloudscribeUser, model.RememberMe);
-                    template.SignInResult = SignInResult.Success;
-                    if (isFakeLdapEmail)
+                    //ldap auth success but no siteuser exists so create one and sign in
+                    var cloudscribeUser = new SiteUser()
                     {
-                        // clear the fake email, the user should then be forced to provide an email by site rules middleware
-                        cloudscribeUser.Email = null;
-                        cloudscribeUser.NormalizedEmail = null;
-                        await UserCommands.Update(cloudscribeUser);
+                        SiteId = UserManager.Site.Id,
+                        UserName = model.UserName,
+                        Email = ldapUser.Email,
+                        DisplayName = ldapUser.CommonName,
+                        FirstName = ldapUser.FirstName,
+                        LastName = ldapUser.LastName,
+                        LastLoginUtc = DateTime.UtcNow,
+                        AccountApproved = true
+                    };
+
+                    if (string.IsNullOrWhiteSpace(cloudscribeUser.DisplayName))
+                    {
+                        cloudscribeUser.DisplayName = model.UserName;
+                    }
+
+                    if (string.IsNullOrWhiteSpace(cloudscribeUser.Email))
+                    {
+                        // identity doesn't allow create user with no email so fake it here then null it out below after sign in. 
+                        // the cloudscribe site rules middleware will then force the user to provide an email
+                        cloudscribeUser.Email = model.UserName + "@fake-email.com";
+                        isFakeLdapEmail = true;
+                    }
+
+                    var createdResult = await UserManager.CreateAsync(cloudscribeUser);
+                    if (createdResult.Succeeded)
+                    {
+                        template.User = cloudscribeUser;
+                        await SignInManager.SignInAsync(cloudscribeUser, model.RememberMe);
+                        template.SignInResult = SignInResult.Success;
+                        if (isFakeLdapEmail)
+                        {
+                            // clear the fake email, the user should then be forced to provide an email by site rules middleware
+                            cloudscribeUser.Email = null;
+                            cloudscribeUser.NormalizedEmail = null;
+                            await UserCommands.Update(cloudscribeUser);
+                        }
+
                     }
 
                 }
+                else
+                {
+                    //siteuser already created for ldap user so just sign in
+                    await SignInManager.SignInAsync(template.User, model.RememberMe);
+                    template.SignInResult = SignInResult.Success;
+
+                }
+                
             }
            
             if (template.User != null && ldapUser == null) //these rules don't apply for ldap users

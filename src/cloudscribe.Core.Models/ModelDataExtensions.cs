@@ -238,14 +238,14 @@ namespace cloudscribe.Core.Models.DataExtensions
             site.RequireConfirmedEmail = Convert.ToBoolean(reader["UseSecureRegistration"]);
             
             site.IsServerAdminSite = Convert.ToBoolean(reader["IsServerAdminSite"]);
-            site.UseLdapAuth = Convert.ToBoolean(reader["UseLdapAuth"]);
-            site.AutoCreateLdapUserOnFirstLogin = Convert.ToBoolean(reader["AutoCreateLdapUserOnFirstLogin"]);
+            
             
             site.LdapServer = reader["LdapServer"].ToString();
             site.LdapPort = Convert.ToInt32(reader["LdapPort"]);
             site.LdapDomain = reader["LdapDomain"].ToString();
             site.LdapRootDN = reader["LdapRootDN"].ToString();
             site.LdapUserDNKey = reader["LdapUserDNKey"].ToString();
+            site.LdapUserDNFormat = reader["LdapUserDNFormat"].ToString();
 
             //site.ReallyDeleteUsers = Convert.ToBoolean(reader["ReallyDeleteUsers"]);
             site.UseEmailForLogin = Convert.ToBoolean(reader["UseEmailForLogin"]);
@@ -264,8 +264,7 @@ namespace cloudscribe.Core.Models.DataExtensions
             site.DisableDbAuth = Convert.ToBoolean(reader["DisableDbAuth"]);
             
             site.RequireApprovalBeforeLogin = Convert.ToBoolean(reader["RequireApprovalBeforeLogin"]);
-            site.AllowDbFallbackWithLdap = Convert.ToBoolean(reader["AllowDbFallbackWithLdap"]);
-            site.EmailLdapDbFallback = Convert.ToBoolean(reader["EmailLdapDbFallback"]);
+            
             site.AllowPersistentLogin = Convert.ToBoolean(reader["AllowPersistentLogin"]);
             site.CaptchaOnLogin = Convert.ToBoolean(reader["CaptchaOnLogin"]);
             site.CaptchaOnRegistration = Convert.ToBoolean(reader["CaptchaOnRegistration"]);

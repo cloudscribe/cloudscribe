@@ -21,12 +21,11 @@ namespace cloudscribe.Core.Models
             newSite.IsServerAdminSite = true;
             newSite.Theme = "";
             newSite.AllowNewRegistration = true;
-            newSite.AutoCreateLdapUserOnFirstLogin = true;
+            
             newSite.LdapPort = 389;
-            newSite.LdapRootDN = string.Empty;
-            newSite.LdapServer = string.Empty;
+            
             newSite.UseEmailForLogin = true;
-            newSite.UseLdapAuth = false;
+           
             newSite.RequireConfirmedEmail = false;
             newSite.RequiresQuestionAndAnswer = false;
             newSite.MaxInvalidPasswordAttempts = 10;

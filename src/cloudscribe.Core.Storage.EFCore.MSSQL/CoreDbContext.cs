@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2015-11-16
-// Last Modified:			2019-03-01
+// Last Modified:			2019-03-14
 // 
 
 using cloudscribe.Core.Models;
@@ -74,17 +74,7 @@ namespace cloudscribe.Core.Storage.EFCore.MSSQL
                 //.HasDefaultValue(false)
                 ;
 
-                entity.Property(p => p.UseLdapAuth)
-                .IsRequired()
-                .HasColumnType("bit")
-               // .HasDefaultValue(false)
-                ;
-
-                entity.Property(p => p.AutoCreateLdapUserOnFirstLogin)
-                .IsRequired()
-                .HasColumnType("bit")
-               // .HasDefaultValue(true)
-                ;
+                
 
                 entity.Property(p => p.LdapServer)
                 .HasMaxLength(255);
@@ -100,6 +90,10 @@ namespace cloudscribe.Core.Storage.EFCore.MSSQL
                 entity.Property(p => p.LdapRootDN)
                 .HasMaxLength(255);
                 ;
+
+                entity.Property(p => p.LdapUserDNFormat)
+                .HasMaxLength(100);
+                
 
                 entity.Property(p => p.LdapUserDNKey)
                 .HasMaxLength(10);
@@ -158,17 +152,7 @@ namespace cloudscribe.Core.Storage.EFCore.MSSQL
                // .HasDefaultValue(false)
                 ;
 
-                entity.Property(p => p.AllowDbFallbackWithLdap)
-                .IsRequired()
-                .HasColumnType("bit")
-               // .HasDefaultValue(false)
-                ;
-
-                entity.Property(p => p.EmailLdapDbFallback)
-                .IsRequired()
-                .HasColumnType("bit")
-               // .HasDefaultValue(false)
-                ;
+                
 
                 entity.Property(p => p.AllowPersistentLogin)
                 .IsRequired()

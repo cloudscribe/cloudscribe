@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2016-11-10
-// Last Modified:			2019-03-01
+// Last Modified:			2019-03-14
 // 
 
 using cloudscribe.Core.Models;
@@ -65,14 +65,7 @@ namespace cloudscribe.Core.Storage.EFCore.MySql
                 .IsRequired()
                 ;
 
-                entity.Property(p => p.UseLdapAuth)
-                .IsRequired()
-                ;
-
-                entity.Property(p => p.AutoCreateLdapUserOnFirstLogin)
-                .IsRequired()
-                ;
-
+                
                 entity.Property(p => p.LdapServer)
                 .HasMaxLength(255);
                 ;
@@ -87,6 +80,10 @@ namespace cloudscribe.Core.Storage.EFCore.MySql
                 entity.Property(p => p.LdapRootDN)
                 .HasMaxLength(255);
                 ;
+
+                entity.Property(p => p.LdapUserDNFormat)
+               .HasMaxLength(100);
+                
 
                 entity.Property(p => p.LdapUserDNKey)
                 .HasMaxLength(10);
@@ -134,15 +131,7 @@ namespace cloudscribe.Core.Storage.EFCore.MySql
                 entity.Property(p => p.RequireApprovalBeforeLogin)
                 .IsRequired()
                 ;
-
-                entity.Property(p => p.AllowDbFallbackWithLdap)
-                .IsRequired()
-                ;
-
-                entity.Property(p => p.EmailLdapDbFallback)
-                .IsRequired()
-                ;
-
+                
                 entity.Property(p => p.AllowPersistentLogin)
                 .IsRequired()
                 ;

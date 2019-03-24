@@ -56,12 +56,23 @@
     </div>
     <partial name="LdapSettingsPartial" model="Model" />
 
-    @if (Model.HasAnySocialAuthEnabled)
+    @if (Model.HasAnySocialAuthEnabled || (!string.IsNullOrWhiteSpace(Model.LdapDomain) && !string.IsNullOrWhiteSpace(Model.LdapServer)))
     {
+    <p class="text-danger">
+        @if (!string.IsNullOrWhiteSpace(Model.LdapDomain) && !string.IsNullOrWhiteSpace(Model.LdapServer))
+        {
+            @sr["Danger, be very cautious about the setting below. If you check this box you may not be able to login again. Verify that you have LDAP Authentication working and that at least one Administrator can login using LDAP before disabling database authentication. If you do get locked out the only way to fix it is to change this setting directly in the database."]
+        }
+        else
+        {
+            @sr["Danger, be very cautious about the setting below. If want to only use Social Authentication, you can disable database authentication. But make sure that you as administrator can login with a social account before disabling database authentication. You can easily get yourself locked out with this setting, and th eonly wat to fix it is change the setting directly in the database."]
+        }
+
+    </p>
         <div class="form-group">
             <div class="form-check">
                 <input asp-for="DisableDbAuth" class="form-check-input" />
-                <label asp-for="DisableDbAuth" class="form-check-label">@sr["Only Use Social Authentication"]</label>
+                <label asp-for="DisableDbAuth" class="form-check-label">@sr["Disable Database Authentiction"]</label>
             </div>
         </div>
     }

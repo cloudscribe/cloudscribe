@@ -72,22 +72,22 @@ namespace cloudscribe.Core.Models
             get { return site.RequireConfirmedPhone; }
         }
 
-        public bool UseLdapAuth
-        {
-            get { return site.UseLdapAuth; }
-        }
-        public bool AllowDbFallbackWithLdap
-        {
-            get { return site.AllowDbFallbackWithLdap; }
-        }
-        public bool EmailLdapDbFallback
-        {
-            get { return site.EmailLdapDbFallback; }
-        }
-        public bool AutoCreateLdapUserOnFirstLogin
-        {
-            get { return site.AutoCreateLdapUserOnFirstLogin; }
-        }
+        //public bool UseLdapAuth
+        //{
+        //    get { return site.UseLdapAuth; }
+        //}
+        //public bool AllowDbFallbackWithLdap
+        //{
+        //    get { return site.AllowDbFallbackWithLdap; }
+        //}
+        //public bool EmailLdapDbFallback
+        //{
+        //    get { return site.EmailLdapDbFallback; }
+        //}
+        //public bool AutoCreateLdapUserOnFirstLogin
+        //{
+        //    get { return site.AutoCreateLdapUserOnFirstLogin; }
+        //}
         
         public string LdapServer
         {
@@ -112,6 +112,16 @@ namespace cloudscribe.Core.Models
         public string LdapUserDNKey
         {
             get { return site.LdapUserDNKey; }
+        }
+
+        public string LdapUserDNFormat
+        {
+            get { return site.LdapUserDNFormat;  }
+        }
+
+        public bool LdapUseSsl
+        {
+            get { return site.LdapUseSsl; }
         }
 
         //public bool ReallyDeleteUsers

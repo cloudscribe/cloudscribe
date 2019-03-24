@@ -27,15 +27,19 @@ namespace cloudscribe.Core.Models
     public interface ISiteSettings : ISiteInfo
     {
         //TODO: implement ldap auth middleware or helper for accountcontroller
-        bool UseLdapAuth { get; set; }
-        bool AllowDbFallbackWithLdap { get; set; }
-        bool EmailLdapDbFallback { get; set; }
-        bool AutoCreateLdapUserOnFirstLogin { get; set; }
+        //bool UseLdapAuth { get; set; }
+        //bool AllowDbFallbackWithLdap { get; set; }
+        //bool EmailLdapDbFallback { get; set; }
+        //bool AutoCreateLdapUserOnFirstLogin { get; set; }
         string LdapServer { get; set; }
         string LdapDomain { get; set; }
         int LdapPort { get; set; }
         string LdapRootDN { get; set; }
         string LdapUserDNKey { get; set; }
+
+        string LdapUserDNFormat { get; set; }
+
+        bool LdapUseSsl { get; set; }
 
         string ConcurrencyStamp { get; set; }
 
