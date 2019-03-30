@@ -6,6 +6,10 @@ https://stackoverflow.com/questions/31528204/bootstrap-date-time-picker-display-
 
 http://nodatime.org/
 
+https://codeblog.jonskeet.uk/2019/03/27/storing-utc-is-not-a-silver-bullet/
+
+http://www.creativedeletion.com/2015/03/19/persisting_future_datetimes.html
+
 https://github.com/exceptionless/Exceptionless.DateTimeExtensions
 
 http://jeremybytes.blogspot.com/2015/05/fun-with-datetime-datetimekindunspecifi.html

@@ -1,0 +1,105 @@
+﻿@inject ICkeditorOptionsResolver editorOptionsResolver
+@{
+    ViewData["Title"] = "Test3";
+    var ckOptions = await editorOptionsResolver.GetCkeditorOptions();
+}
+
+<h2>Test3</h2>
+
+<input class="form-control" id="altinput" type="text" placeholder="File path" />
+
+<div class="input-group mb-3">
+
+    <input class="form-control" id="input1" type="text" placeholder="File path" />
+    <div class="input-group-append">
+        <button class="btn btn-outline-primary" id="btnFile" type="button"
+                data-file-selector="true"
+                data-target-input-id="input1"
+                data-alt-target-input-id="altinput"
+                data-file-browse-url="@ckOptions.VideoBrowseUrl">
+            Browse Files
+        </button>
+    </div>
+    
+</div>
+
+<div class="input-group mb-3">
+    <input class="form-control" id="input2" type="text" placeholder="File path" />
+    <div class="input-group-append">
+        <button class="btn btn-outline-primary" id="btnFile2" type="button"
+                data-file-selector="true"
+                data-target-input-id="input2"
+                data-file-browse-url="@ckOptions.AudioBrowseUrl">
+            Browse Files
+        </button>
+    </div>
+        
+ </div>
+
+    <div id="fileBrowseDialog" class="modal fade" tabindex="-1" role="dialog">
+        <div class="modal-dialog modal-lg" style="height:99%;min-width:99%!important;">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true" title="Close"><span aria-hidden="true">&times;</span></button>
+                </div>
+                <iframe id="frFileDialog" frameborder="0" style="overflow:hidden;height:100%;width:100%;min-height: 650px;"></iframe>
+            </div>
+        </div>
+    </div>
+
+    @section Scripts {
+        <script src="/filemanager/js/cloudscribe-unobtrusive-file-selector.min.js"></script>
+        @*<script>
+
+            (function () {
+
+                document.addEventListener("DOMContentLoaded", function () {
+                    var fileSelectorElements = document.querySelectorAll('[data-file-selector]');
+                    window.cloudscribeFileSelector = {
+                        openServerBrowser: function (fileBrowseUrl) {
+                            $('#fileBrowseDialog').find('iframe').attr('src', fileBrowseUrl);
+                            $('#fileBrowseDialog').modal('show');
+                        },
+                        closeServerBrowser: function () {
+                            $('#fileBrowseDialog').modal('hide');
+                        },
+
+                        buildFileSelector: function (btn) {
+
+                            var fileSelector = {
+                                selectorButton: btn,
+                                serverFileSelected: function (url) {
+                                    //console.log(url);
+                                    if (btn.dataset.targetInputId) {
+                                        document.getElementById(btn.dataset.targetInputId).value = url;
+                                    }
+                                    if (btn.dataset.altTargetInputId) {
+                                        document.getElementById(btn.dataset.altTargetInputId).value = url;
+                                    }
+                                    cloudscribeFileSelector.closeServerBrowser();
+                                }
+
+                            };
+
+                            fileSelector.selectorButton.onclick = function () {
+                                window.FileSelectCallback = function (url) {
+                                    fileSelector.serverFileSelected(url);
+                                };
+                                cloudscribeFileSelector.openServerBrowser(btn.dataset.fileBrowseUrl);
+                            }; 
+                        }   
+                    };
+
+                    for (var i = 0; i < fileSelectorElements.length; i++) {
+                        var item = fileSelectorElements[i];
+                        cloudscribeFileSelector.buildFileSelector(item);
+                    }
+                    
+                });
+                
+            })();
+
+        </script>*@
+
+
+    }

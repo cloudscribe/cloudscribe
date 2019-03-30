@@ -30,6 +30,16 @@
             <button class="btn btn-primary" id="btnSelectorAlt">@sr["Select"]</button>
             <button id="btnSelectForCrop" class="btn btn-primary collapse"><i class="@icons.Cut" aria-hidden="true"></i> @sr["Crop"]</button>
         </div>
+        <div id="divVideoPreview" class="collapse">
+            <video id="video-player" playsinline controls>
+                <source id="video-source" src="" type="video/mp4" />
+            </video>
+        </div>
+        <div id="divAudioPreview" class="collapse">
+            <audio id="audio-player" controls>
+                <source id="audio-source" src="" type="audio/mp3" />
+            </audio>
+        </div>
         <div>
             <form id="frmNewFolder" asp-action="CreateFolder" asp-controller="FileManager" class="form-inline">
                 <div class="form-group">

@@ -21,6 +21,13 @@
 
     config.linkWebSizeToOriginal = true;
 	
+	//config.protectedSource.push(/<i[^>]></i>/g);
+    //config.protectedSource.push(/<span[^>]></span>/g);
+	//config.protectedSource.push(/<div[^>]></div>/g);
+	config.allowedContent = true;
+    config.extraAllowedContent = 'p(*)[*]{*};div(*)[*]{*};li(*)[*]{*};ul(*)[*]{*};span(*)[*]{*}';
+    CKEDITOR.dtd.$removeEmpty.i = 0;
+	
 	config.fontSize_defaultLabel = 'Normal';
     config.fontSize_sizes = 'X-Small/font-xsmall;Small/font-small;Normal/font-normal;Large/font-large;X-Large/font-xlarge';
     config.fontSize_style =
