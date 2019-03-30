@@ -40,6 +40,8 @@ namespace cloudscribe.Core.Web.Components
             _options.CustomConfigPath = urlHelper.Content(_options.CustomConfigPath);
             _options.FileBrowseUrl = urlHelper.Action("FileDialog", "FileManager", new { type = "file" });
             _options.ImageBrowseUrl = urlHelper.Action("FileDialog", "FileManager", new { type = "image" });
+            _options.VideoBrowseUrl = urlHelper.Action("FileDialog", "FileManager", new { type = "video" });
+            _options.AudioBrowseUrl = urlHelper.Action("FileDialog", "FileManager", new { type = "audio" });
             _options.DropFileUrl = urlHelper.Action("DropFile", "FileManager");
             _options.CropFileUrl = urlHelper.Action("CropServerImage", "FileManager");
 

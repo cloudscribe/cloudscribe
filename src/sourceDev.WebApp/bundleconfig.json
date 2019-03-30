@@ -1,0 +1,8 @@
+[
+  {
+    "outputFileName": "wwwroot/js/cloudscribe-ckeditor-config.min.js",
+    "inputFiles": [
+      "wwwroot/js/cloudscribe-ckeditor-config.js"
+    ]
+  }
+]

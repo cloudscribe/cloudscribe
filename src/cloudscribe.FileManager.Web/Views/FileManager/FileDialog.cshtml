@@ -14,7 +14,31 @@
     var upoadOptions = autoUploadOptionsAccessor.Value;
     //https://github.com/patternfly/patternfly-bootstrap-treeview
     var icons = iconsAccessor.Value;
+    string heading;
+    switch (Model.Type)
+    {
+        case "image":
+            heading = sr["Image Files"];
+            break;
+
+        case "video":
+            heading = sr["Video Files"];
+            break;
+
+
+        case "audio":
+            heading = sr["Audio Files"];
+            break;
+
+        default:
+            heading = sr["Files"];
+            break;
+
+
+
+    }
 }
+
 @section styles {
     <partial name="FileManagerStylePartial" />
 }
@@ -35,6 +59,7 @@
       data-empty-preview-url='@Url.Content("~/cr/css/1x1.gif")'></span>
 <div id="alert_placeholder"></div>
 <div class="container-fluid">
+    <h3>@heading</h3>
     <ul class="nav nav-tabs" role="tablist">
         <li id="tab1" class="nav-item" role="tab">
             <a href="#tabBrowse" data-toggle="tab" class="nav-link active"><i class="@icons.Browse" aria-hidden="true"></i>&nbsp;@sr["Browse"]</a>

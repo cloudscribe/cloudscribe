@@ -62,6 +62,9 @@ namespace cloudscribe.FileManager.Web.Models.TreeView
 
         public string Type { get; set; }
 
+        public string MediaType { get; set; }
+        public string MimeType { get; set; }
+
         public bool CanPreview { get; set; }
 
         public string VirtualPath { get; set; }

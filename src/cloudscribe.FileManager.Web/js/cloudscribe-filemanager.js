@@ -54,11 +54,42 @@
             $("#croppedFileName").val('');
             $('#origFileName').val('');
         },
-        setPreview: function (url, name) {
-            $("#divPreview").show();
-            $("#filePreview").attr("src", url);
+        setPreview: function (url, name, mediaType, mimeType) {
+            fileManager.clearPreview();
+            switch (mediaType) {
+
+                case "audio":
+                    $("#divAudioPreview").show();
+                    $("#audio-source").attr("src", url);
+                    $("#audio-source").attr("type", mimeType);
+                    fileManager.audioPlayer = new Plyr('#audio-player', {
+                        /* options */
+                    });
+
+                    break;
+
+                case "video":
+                    $("#divVideoPreview").show();
+                    $("#video-source").attr("src", url);
+                    $("#video-source").attr("type", mimeType);
+                    fileManager.videoPlayer = new Plyr('#video-player', {
+                        /* options */
+                    });
+
+                    break;
+                case "image":
+                    $("#divPreview").show();
+                    $("#filePreview").attr("src", url);
+
+                    break;
+
+            }
+            
             fileManager.uploadTab.hide();
             fileManager.selectForCropButton.show();
+
+            //console.log(mediaType);
+            //console.log(mimeType);
 
         },
         clearPreview: function () {
@@ -68,6 +99,23 @@
             fileManager.uploadTab.show();
             fileManager.selectForCropButton.hide();
             fileManager.clearServerCropImage();
+
+            if (fileManager.videoPlayer) {
+                fileManager.videoPlayer.destroy();
+            }
+            if (fileManager.audioPlayer) {
+                fileManager.audioPlayer.destroy();
+            }
+
+            $("#divVideoPreview").hide();
+            $("#video-source").attr("src", "");
+            $("#video-source").attr("type", "");
+
+            $("#divAudioPreview").hide();
+            $("#audio-source").attr("src", "");
+            $("#audio-source").attr("type", "");
+
+
         },
         setCurrentDirectory: function (virtualPath) {
             //console.log(virtualPath);
@@ -515,7 +563,7 @@
                     //console.log(node);
                     $("#divPreview").hide();
                     if (node.canPreview) {
-                        fileManager.setPreview(node.virtualPath, node.text);   
+                        fileManager.setPreview(node.virtualPath, node.text, node.mediaType, node.mimeType);   
                     }
                     else {
                         fileManager.clearPreview();    

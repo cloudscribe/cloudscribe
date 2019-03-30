@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. 
 // Author:                  Joe Audette
 // Created:                 2017-02-15
-// Last Modified:           2018-07-18
+// Last Modified:           2019-03-30
 // 
 
 using cloudscribe.FileManager.Web.Models;
@@ -877,23 +877,69 @@ namespace cloudscribe.FileManager.Web.Services
                 node.Text = file.Name;
                 node.Type = "f";
                 node.VirtualPath = currentVirtualPath + "/" + file.Name;
-                node.Id = node.VirtualPath;  // TODO: maybe just use id
+                node.Id = node.VirtualPath;  
                 node.Size = file.Length;
-                // TODO: timezome adjustment
+                
                 node.Created = file.CreationTimeUtc;
                 node.Modified = file.LastWriteTimeUtc;
-                node.CanPreview = IsWebImageFile(file.Extension);
                 node.Icon = GetIconCssClass(file.Extension);
-                //node.ExpandedIcon = node.Icon;
-                //file.
-                if(fileType == "image")
+                node.MimeType = GetMimeType(file.Extension);
+
+
+                switch (fileType)
                 {
-                    if(node.CanPreview) list.Add(node);
+                    case "image":
+                        if (IsWebImageFile(file.Extension))
+                        {
+                            node.MediaType = "image";
+                            node.CanPreview = true;
+                            list.Add(node);
+                        }
+                        break;
+
+                    case "video":
+                        
+                        if (IsVideo(file.Extension))
+                        {
+                            node.MediaType = "video";
+                            node.CanPreview = true;
+                            list.Add(node);
+                        }
+                        break;
+
+                    case "audio":
+                        if (IsAudio(file.Extension))
+                        {
+                            node.MediaType = "audio";
+                            node.CanPreview = true;
+                            list.Add(node);
+                        }
+                        break;
+
+                    default:
+
+                        if (IsWebImageFile(file.Extension))
+                        {
+                            node.MediaType = "image";
+                            node.CanPreview = true;
+                        }
+                        if (IsVideo(file.Extension))
+                        {
+                            node.MediaType = "video";
+                            node.CanPreview = true;
+                        }
+
+                        if (IsAudio(file.Extension))
+                        {
+                            node.MediaType = "audio";
+                            node.CanPreview = true;
+                        }
+
+                        list.Add(node);
+                        break;
                 }
-                else
-                {
-                    list.Add(node);
-                }
+                
+                
                 
             }
 
@@ -910,6 +956,26 @@ namespace cloudscribe.FileManager.Web.Services
             if (string.Equals(fileExtension, ".svg", StringComparison.OrdinalIgnoreCase)) { return true; }
             if (string.Equals(fileExtension, ".jpg", StringComparison.OrdinalIgnoreCase)) { return true; }
             if (string.Equals(fileExtension, ".png", StringComparison.OrdinalIgnoreCase)) { return true; }
+
+            return false;
+        }
+
+        public static bool IsVideo(string fileExtension)
+        {
+            if (string.Equals(fileExtension, ".mp4", StringComparison.OrdinalIgnoreCase)) { return true; }
+            if (string.Equals(fileExtension, ".webm", StringComparison.OrdinalIgnoreCase)) { return true; }
+            if (string.Equals(fileExtension, ".ogv", StringComparison.OrdinalIgnoreCase)) { return true; }
+            
+            return false;
+        }
+
+        public static bool IsAudio(string fileExtension)
+        {
+            if (string.Equals(fileExtension, ".mp3", StringComparison.OrdinalIgnoreCase)) { return true; }
+            if (string.Equals(fileExtension, ".ogg", StringComparison.OrdinalIgnoreCase)) { return true; }
+            if (string.Equals(fileExtension, ".oga", StringComparison.OrdinalIgnoreCase)) { return true; }
+            if (string.Equals(fileExtension, ".aac", StringComparison.OrdinalIgnoreCase)) { return true; }
+            
 
             return false;
         }
@@ -1032,6 +1098,9 @@ namespace cloudscribe.FileManager.Web.Services
                 case "mp4":
                     return "video/mp4";
 
+                case "webm":
+                    return "video/webm";
+
                 case "mp3":
                     return "audio/mp3";
 
@@ -1048,9 +1117,7 @@ namespace cloudscribe.FileManager.Web.Services
                 case "spx":
                     return "audio/ogg";
 
-                case "webm":
-                    return "video/webm";
-
+               
                 case "mov":
                     return "video/quicktime";
 
