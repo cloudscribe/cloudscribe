@@ -987,6 +987,10 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
 
             // get context information (client name, post logout redirect URI and iframe for federated signout)
             var logoutModel = await IdentityServerIntegration.GetLogoutContextModelAsync(model.LogoutId);
+            if(!string.IsNullOrWhiteSpace(logoutModel.PostLogoutRedirectUri))
+            {
+                return Redirect(logoutModel.PostLogoutRedirectUri);
+            }
             
             return View("LoggedOut", logoutModel);
         }
