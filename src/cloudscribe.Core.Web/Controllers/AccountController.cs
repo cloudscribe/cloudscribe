@@ -1020,6 +1020,11 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
         [AllowAnonymous]
         public virtual IActionResult ForgotPassword()
         {
+            if (AccountService.IsSignedIn(User))
+            {
+                return this.RedirectToSiteRoot(CurrentSite);
+            }
+
             return View();
         }
 
@@ -1089,7 +1094,12 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
         [HttpGet]
         [AllowAnonymous]
         public virtual IActionResult ForgotPasswordConfirmation()
-        { 
+        {
+            if (AccountService.IsSignedIn(User))
+            {
+                return this.RedirectToSiteRoot(CurrentSite);
+            }
+
             return View();
         }
 

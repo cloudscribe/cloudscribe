@@ -1,4 +1,10 @@
 
+https://docs.microsoft.com/en-us/nuget/reference/id-prefix-reservation
+
+https://haacked.com/archive/2019/04/03/nuget-package-signing/
+
+
+
 https://docs.microsoft.com/en-us/dotnet/standard/library-guidance/?WT.mc_id=-blog-scottha
 
 

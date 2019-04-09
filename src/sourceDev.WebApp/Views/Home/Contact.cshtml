@@ -1,8 +1,10 @@
 ﻿@using cloudscribe.Core.Models
 @inject SiteContext Tenant
+@using Microsoft.AspNetCore.Authentication
 @{
     ViewData["Title"] = "Contact";
     var contentId = "my-content" + DateTime.UtcNow.ToString("yyyy-MM-dd-hh");
+    var accessToken = await Context.GetTokenAsync("access_token");
 }
 @section Styles {
     @{ await Html.RenderPartialAsync("DatePickerBs4Css"); }
@@ -25,7 +27,7 @@
     @Tenant.CompanyLocality, @Tenant.CompanyRegion @Tenant.CompanyPostalCode<br />
     @Tenant.CompanyPhone
 </address>
-
+@accessToken
 <address>
     <strong>Email:</strong> <a href="mailto:@Tenant.CompanyPublicEmail">@Tenant.CompanyPublicEmail</a><br />
 

@@ -840,12 +840,23 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
             {
                
 
-                this.AlertSuccess(StringLocalizer["The user password has been changed."]);
+                this.AlertSuccess(StringLocalizer["The user password has been changed."], true);
                 return RedirectToAction("Index");
             }
             else
             {
-                this.AlertDanger(StringLocalizer["oops something went wrong please try again"]);
+                var message = result.Errors.FirstOrDefault().Description;
+                if(!string.IsNullOrWhiteSpace(message))
+                {
+                    this.AlertDanger(StringLocalizer[message], true);
+                }
+                else
+                {
+                    this.AlertDanger(StringLocalizer["oops something went wrong please try again"], true);
+                }
+
+                return RedirectToAction("ChangeUserPassword", new { userId = model.UserId });
+                
             }
             AddErrors(result);
 

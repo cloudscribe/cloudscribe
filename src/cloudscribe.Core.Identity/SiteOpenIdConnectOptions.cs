@@ -68,6 +68,9 @@ namespace cloudscribe.Core.Identity
             options.ClientSecret = "placeholder";
             options.Authority = "https://placeholder.com";
             options.SignInScheme = IdentityConstants.ExternalScheme;
+
+            //this is so we can get a jwt token if needed to call an api
+            options.SaveTokens = true;
             
 
             if (_environment.IsDevelopment())
