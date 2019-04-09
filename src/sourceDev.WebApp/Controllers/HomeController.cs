@@ -12,6 +12,7 @@ using cloudscribe.Email;
 using cloudscribe.Core.Models;
 using cloudscribe.Web.Common.Extensions;
 using cloudscribe.Web.Common.Razor;
+using Microsoft.AspNetCore.Authentication;
 
 namespace sourceDev.WebApp.Controllers
 {
@@ -69,9 +70,11 @@ namespace sourceDev.WebApp.Controllers
             _analyticsHelper.AddTransaction(transaction);
         }
 
-        public IActionResult Contact()
+        public async Task<IActionResult> Contact()
         {
             ViewData["Message"] = "Your contact page.";
+
+            var accessToken = await HttpContext.GetTokenAsync("access_token");
 
             return View();
         }

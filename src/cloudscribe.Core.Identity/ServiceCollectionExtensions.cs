@@ -76,6 +76,7 @@ namespace Microsoft.Extensions.DependencyInjection
                 {
                     OnValidatePrincipal = SiteAuthCookieValidator.ValidatePrincipalAsync
                 };
+                
 
             })
             .AddCookie(IdentityConstants.ExternalScheme, o =>
@@ -118,6 +119,7 @@ namespace Microsoft.Extensions.DependencyInjection
                 o.ClientId = "placeholder";
                 o.ClientSecret = "placeholder";
                 o.Authority = "https://placeholder.com";
+                o.SaveTokens = true;
                
             })
             

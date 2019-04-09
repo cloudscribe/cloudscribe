@@ -2,8 +2,8 @@
 
   <PropertyGroup>
     <Description>Classes that provide a common interface for sending email with smtp or popular email apis including SendGrid, Mailgun, and ElasticEmail</Description>
-    <VersionPrefix>2.0.2</VersionPrefix>
-    <AssemblyVersion>2.0.2</AssemblyVersion>
+    <VersionPrefix>2.0.3</VersionPrefix>
+    <AssemblyVersion>2.0.3</AssemblyVersion>
     <Authors>Joe Audette</Authors>
     <TargetFramework>netstandard2.0</TargetFramework>
     <PackageTags>smtp;email;SendGrid,Mailgun,ElasticEmail</PackageTags>
