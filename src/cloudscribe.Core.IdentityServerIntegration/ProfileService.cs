@@ -33,9 +33,13 @@ namespace cloudscribe.Core.IdentityServerIntegration
             var user = await _userManager.FindByIdAsync(sub);
             var principal = await _claimsFactory.CreateAsync(user);
 
+            var issued = context.IssuedClaims;
+            
+
             context.AddRequestedClaims(principal.Claims);
 
             var requestedClaims = context.RequestedClaimTypes.ToList();
+            var allClaims = principal.Claims.ToList();
             var foundClaims = principal.Claims.Where(x => context.RequestedClaimTypes.Contains(x.Type)).Select(x => x.Type).ToList();
             var neededClaims = requestedClaims.Except(foundClaims);
             var claimsToAdd = new List<Claim>();

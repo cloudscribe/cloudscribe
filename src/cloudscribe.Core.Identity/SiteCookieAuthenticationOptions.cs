@@ -13,6 +13,7 @@ using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using System.Collections.Generic;
 using System.Net;
+using System.Threading.Tasks;
 
 namespace cloudscribe.Core.Identity
 {
@@ -21,6 +22,7 @@ namespace cloudscribe.Core.Identity
     public class SiteCookieAuthenticationOptions : OptionsMonitor<CookieAuthenticationOptions>
     {
         public SiteCookieAuthenticationOptions(
+            ICookieAuthTicketStoreProvider cookieAuthTicketStoreProvider,
             IOptionsFactory<CookieAuthenticationOptions> factory,
             IEnumerable<IOptionsChangeTokenSource<CookieAuthenticationOptions>> sources,
             IOptionsMonitorCache<CookieAuthenticationOptions> cache,
@@ -33,6 +35,7 @@ namespace cloudscribe.Core.Identity
             _multiTenantOptions = multiTenantOptionsAccessor.Value;
             _httpContextAccessor = httpContextAccessor;
             _cookieAuthRedirector = cookieAuthRedirector;
+            _cookieAuthTicketStoreProvider = cookieAuthTicketStoreProvider;
             _factory = factory;
             _cache = cache;
             _log = logger;
@@ -44,6 +47,7 @@ namespace cloudscribe.Core.Identity
         private readonly ICookieAuthRedirector _cookieAuthRedirector;
         private readonly IOptionsMonitorCache<CookieAuthenticationOptions> _cache;
         private readonly IOptionsFactory<CookieAuthenticationOptions> _factory;
+        private readonly ICookieAuthTicketStoreProvider _cookieAuthTicketStoreProvider;
         private readonly ILogger _log;
         
         public override CookieAuthenticationOptions Get(string name)
@@ -54,6 +58,8 @@ namespace cloudscribe.Core.Identity
             var resolvedName = ResolveName(tenant, name);
             return _cache.GetOrAdd(resolvedName, () => CreateOptions(resolvedName, tenant, isAppCookie));
         }
+
+        
 
 
         private CookieAuthenticationOptions CreateOptions(string name, SiteContext tenant, bool isAppCookie)
@@ -71,6 +77,12 @@ namespace cloudscribe.Core.Identity
 
             return options;
         }
+
+        //private Task HandleOnSigningIn(CookieSigningInContext context)
+        //{
+            
+        //    return Task.CompletedTask;
+        //}
 
 
         private void ConfigureApplicationCookie(SiteContext tenant, CookieAuthenticationOptions options, string name)
@@ -101,6 +113,16 @@ namespace cloudscribe.Core.Identity
             options.LoginPath = tenantPathBase + "/account/login";
             options.LogoutPath = tenantPathBase + "/account/logoff";
             options.AccessDeniedPath = tenantPathBase + "/account/accessdenied";
+
+            var ticketStore = _cookieAuthTicketStoreProvider.GetTicketStore();
+            if(ticketStore != null)
+            {
+                options.SessionStore = ticketStore;
+            }
+
+            //options.Events.OnSigningIn += HandleOnSigningIn;
+
+
 
             //https://github.com/IdentityServer/IdentityServer4.AspNetIdentity/blob/dev/src/IdentityServer4.AspNetIdentity/IdentityServerBuilderExtensions.cs
             // we need to disable to allow iframe for authorize requests

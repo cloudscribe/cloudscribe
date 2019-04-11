@@ -1,6 +1,8 @@
 ﻿
 
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Http.Features;
+using Newtonsoft.Json;
 using System;
 using System.Text.RegularExpressions;
 
@@ -71,6 +73,35 @@ namespace cloudscribe.Web.Common.Extensions
                 + request.Path.Value
                 + request.QueryString
                 ;
+        }
+
+        public static bool SessionIsAvailable(this HttpContext context)
+        {
+            var feature = context.Features.Get<ISessionFeature>();
+            return (feature != null);
+        }
+
+        public static T GetFromSession<T>(this HttpContext context, string key)
+        {
+            if(!context.SessionIsAvailable())
+            {
+                return default(T);
+            }
+
+            var value = context.Session.GetString(key);
+
+            return value == null ? default(T) : JsonConvert.DeserializeObject<T>(value);
+        }
+
+        public static string GetFromSession(this HttpContext context, string key)
+        {
+            if (!context.SessionIsAvailable())
+            {
+                return null;
+            }
+
+            return context.Session.GetString(key);
+
         }
 
         public static string GetIpV4Address(this HttpContext context)

@@ -2,11 +2,12 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2015-06-27
-// Last Modified:			2019-02-24
+// Last Modified:			2019-04-11
 // 
 
 
 using cloudscribe.Core.Models;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Options;
 using System;
@@ -22,6 +23,7 @@ namespace cloudscribe.Core.Identity
         where TRole : SiteRole
     {
         public SiteUserClaimsPrincipalFactory(
+            IOidcHybridFlowHelper oidcHybridFlowHelper,
             ISiteQueries siteQueries,
             SiteUserManager<TUser> userManager,
             SiteRoleManager<TRole> roleManager,
@@ -35,14 +37,16 @@ namespace cloudscribe.Core.Identity
                 throw new ArgumentNullException(nameof(siteQueries));
             }
 
-            queries = siteQueries;
-            options = optionsAccessor.Value;
-            this.customClaimProviders = customClaimProviders;
+            _queries = siteQueries;
+            _options = optionsAccessor.Value;
+            _customClaimProviders = customClaimProviders;
+            _oidcHybridFlowHelper = oidcHybridFlowHelper;
         }
         
-        private ISiteQueries queries;
-        private IdentityOptions options;
-        private IEnumerable<ICustomClaimProvider> customClaimProviders;
+        private readonly ISiteQueries _queries;
+        private IdentityOptions _options;
+        private readonly IEnumerable<ICustomClaimProvider> _customClaimProviders;
+        private readonly IOidcHybridFlowHelper _oidcHybridFlowHelper;
 
         public override async Task<ClaimsPrincipal> CreateAsync(TUser user)
         {
@@ -58,7 +62,7 @@ namespace cloudscribe.Core.Identity
             {
                 var identity = (ClaimsIdentity)principal.Identity;
 
-                foreach (var provider in customClaimProviders)
+                foreach (var provider in _customClaimProviders)
                 {
                     await provider.AddClaims(user, identity);
                 }
@@ -88,7 +92,7 @@ namespace cloudscribe.Core.Identity
                 }
                 
 
-                var site = await queries.Fetch(user.SiteId, CancellationToken.None);
+                var site = await _queries.Fetch(user.SiteId, CancellationToken.None);
 
                 if (site != null)
                 {
@@ -108,6 +112,21 @@ namespace cloudscribe.Core.Identity
                         identity.AddClaim(serverAdminRoleClaim);
                     }
                 }
+
+                var jwt = await _oidcHybridFlowHelper.GetCurrentJwt(principal);
+
+                if (!string.IsNullOrEmpty(jwt))
+                {
+                    var accessTokenClaim = new Claim("access_token", jwt);
+                    if (!identity.HasClaim(accessTokenClaim.Type, accessTokenClaim.Value))
+                    {
+                        identity.AddClaim(accessTokenClaim);
+                    }
+                }
+
+
+               
+
             }
             
             return principal;

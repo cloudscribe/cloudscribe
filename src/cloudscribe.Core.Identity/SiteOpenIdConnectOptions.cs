@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2017-07-28
-// Last Modified:			2018-06-06
+// Last Modified:			2019-04-11
 // 
 
 using cloudscribe.Core.Models;
@@ -16,27 +16,28 @@ using Microsoft.IdentityModel.Protocols;
 using Microsoft.IdentityModel.Protocols.OpenIdConnect;
 using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace cloudscribe.Core.Identity
 {
     public class SiteOpenIdConnectOptions : OptionsMonitor<OpenIdConnectOptions>
     {
         public SiteOpenIdConnectOptions(
+            IOidcHybridFlowHelper oidcHybridFlowHelper,
             IOptionsFactory<OpenIdConnectOptions> factory,
             IEnumerable<IOptionsChangeTokenSource<OpenIdConnectOptions>> sources,
             IOptionsMonitorCache<OpenIdConnectOptions> cache,
             IOptions<MultiTenantOptions> multiTenantOptionsAccessor,
-            //IDataProtectionProvider dataProtection,
             IHttpContextAccessor httpContextAccessor,
             IHostingEnvironment environment,
             ILogger<SiteOpenIdConnectOptions> logger
             ) : base(factory, sources, cache)
         {
+            _oidcHybridFlowHelper = oidcHybridFlowHelper;
             _multiTenantOptions = multiTenantOptionsAccessor.Value;
             _httpContextAccessor = httpContextAccessor;
             _factory = factory;
             _cache = cache;
-            //_dp = dataProtection;
             _environment = environment;
             _log = logger;
             
@@ -46,7 +47,9 @@ namespace cloudscribe.Core.Identity
         private readonly IOptionsFactory<OpenIdConnectOptions> _factory;
         private readonly MultiTenantOptions _multiTenantOptions;
         private readonly IHttpContextAccessor _httpContextAccessor;
-        
+        private readonly IOidcHybridFlowHelper _oidcHybridFlowHelper;
+
+
         private readonly IHostingEnvironment _environment;
         private readonly ILogger _log;
 
@@ -69,17 +72,12 @@ namespace cloudscribe.Core.Identity
             options.Authority = "https://placeholder.com";
             options.SignInScheme = IdentityConstants.ExternalScheme;
 
-            //this is so we can get a jwt token if needed to call an api
-            options.SaveTokens = true;
-            
 
             if (_environment.IsDevelopment())
             {
                 options.RequireHttpsMetadata = false;
             }
             
-            //options.DataProtectionProvider = options.DataProtectionProvider ?? _dp;
-
             ConfigureTenantOptions(tenant, options);
 
             if (string.IsNullOrWhiteSpace(options.SignInScheme))
@@ -92,36 +90,10 @@ namespace cloudscribe.Core.Identity
                 options.SignOutScheme = options.SignInScheme;
             }
 
-            //if (options.StateDataFormat == null)
-            //{
-            //    var dataProtector = options.DataProtectionProvider.CreateProtector(
-            //        typeof(OpenIdConnectHandler).FullName, name, "v1");
-            //    options.StateDataFormat = new PropertiesDataFormat(dataProtector);
-            //}
-
-            //if (options.StringDataFormat == null)
-            //{
-            //    var dataProtector = options.DataProtectionProvider.CreateProtector(
-            //        typeof(OpenIdConnectHandler).FullName,
-            //        typeof(string).FullName,
-            //        name,
-            //        "v1");
-
-            //    options.StringDataFormat = new SecureDataFormat<string>(new StringSerializer(), dataProtector);
-            //}
-
             if (string.IsNullOrEmpty(options.TokenValidationParameters.ValidAudience) && !string.IsNullOrEmpty(options.ClientId))
             {
                 options.TokenValidationParameters.ValidAudience = options.ClientId;
             }
-
-            //if (options.Backchannel == null)
-            //{
-            //    options.Backchannel = new HttpClient(options.BackchannelHttpHandler ?? new HttpClientHandler());
-            //    options.Backchannel.DefaultRequestHeaders.UserAgent.ParseAdd("Microsoft ASP.NET Core OpenIdConnect handler");
-            //    options.Backchannel.Timeout = options.BackchannelTimeout;
-            //    options.Backchannel.MaxResponseContentBufferSize = 1024 * 1024 * 10; // 10 MB
-            //}
 
             if (options.ConfigurationManager == null)
             {
@@ -156,6 +128,42 @@ namespace cloudscribe.Core.Identity
 
         }
 
+        //private Task HandleTicketRecieved(TicketReceivedContext context)
+        //{
+        //    _log.LogWarning($"ticket received");
+
+        //    return Task.CompletedTask;
+        //}
+
+        //private Task HandleTokenResponseRecieved(TokenResponseReceivedContext context)
+        //{
+        //    _log.LogWarning($"token response received");
+
+
+        //    return Task.CompletedTask;
+        //}
+
+        //private Task HandleUserInformationResponseRecieved(UserInformationReceivedContext context)
+        //{
+        //    _log.LogWarning($"user info received");
+
+            
+        //    return Task.CompletedTask;
+        //}
+
+        private async Task HandleAuthorizationCodeRecieved(AuthorizationCodeReceivedContext context)
+        {
+            _log.LogWarning($"authorization code received {context.JwtSecurityToken}");
+
+            if(!string.IsNullOrWhiteSpace(context.JwtSecurityToken.RawPayload))
+            {
+                await _oidcHybridFlowHelper.CaptureJwt(context.Principal, context.JwtSecurityToken.RawPayload);
+            }
+ 
+        }
+
+        
+
         private void ConfigureTenantOptions(SiteContext tenant, OpenIdConnectOptions options)
         {
             if (tenant == null)
@@ -172,11 +180,14 @@ namespace cloudscribe.Core.Identity
                 options.Authority = tenant.OidConnectAuthority;
                 options.ClientId = tenant.OidConnectAppId;
                 options.ClientSecret = tenant.OidConnectAppSecret;
-
-                options.GetClaimsFromUserInfoEndpoint = true;
                 options.ResponseType = OpenIdConnectResponseType.CodeIdToken;
                 options.SaveTokens = true;
-
+                options.GetClaimsFromUserInfoEndpoint = true;
+                
+                //options.Events.OnTokenResponseReceived += HandleTokenResponseRecieved;
+                options.Events.OnAuthorizationCodeReceived += HandleAuthorizationCodeRecieved;
+                //options.Events.OnUserInformationReceived += HandleUserInformationResponseRecieved;
+                //options.Events.OnTicketReceived += HandleTicketRecieved;
 
                 if (useFolder)
                 {

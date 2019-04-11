@@ -13,6 +13,7 @@ using cloudscribe.Core.Models;
 using cloudscribe.Web.Common.Extensions;
 using cloudscribe.Web.Common.Razor;
 using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Identity;
 
 namespace sourceDev.WebApp.Controllers
 {
@@ -74,7 +75,10 @@ namespace sourceDev.WebApp.Controllers
         {
             ViewData["Message"] = "Your contact page.";
 
-            var accessToken = await HttpContext.GetTokenAsync("access_token");
+            var claims = User.Claims.ToList();
+
+            var accessToken = await HttpContext.GetTokenAsync(IdentityConstants.ExternalScheme, "access_token");
+            
 
             return View();
         }

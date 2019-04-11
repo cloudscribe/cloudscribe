@@ -159,10 +159,12 @@ namespace cloudscribe.Core.Web.Components
             
             if (template.SignInResult == SignInResult.Failed && template.User != null && template.RejectReasons.Count == 0)
             {
+                //var updatTokenResult = await SignInManager.UpdateExternalAuthenticationTokensAsync(template.ExternalLoginInfo);
+
                 template.SignInResult = await SignInManager.ExternalLoginSignInAsync(template.ExternalLoginInfo.LoginProvider, template.ExternalLoginInfo.ProviderKey, isPersistent: false);
-                if(template.SignInResult.Succeeded)
+
+                if (template.SignInResult.Succeeded)
                 {
-                  
                     //update last login time
                     if(!template.IsNewUserRegistration)
                     {

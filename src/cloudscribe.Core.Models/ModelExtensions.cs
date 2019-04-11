@@ -102,7 +102,8 @@ namespace cloudscribe.Core.Models
             if ((!string.IsNullOrWhiteSpace(site.FacebookAppId)) && (!string.IsNullOrWhiteSpace(site.FacebookAppSecret))) return true;
             if ((!string.IsNullOrWhiteSpace(site.GoogleClientId)) && (!string.IsNullOrWhiteSpace(site.GoogleClientSecret))) return true;
             if ((!string.IsNullOrWhiteSpace(site.TwitterConsumerKey)) && (!string.IsNullOrWhiteSpace(site.TwitterConsumerSecret))) return true;
-            
+            if ((!string.IsNullOrWhiteSpace(site.OidConnectAppId)) && (!string.IsNullOrWhiteSpace(site.OidConnectAppSecret)) && (!string.IsNullOrWhiteSpace(site.OidConnectAuthority))) return true;
+
             return false;
         }
 

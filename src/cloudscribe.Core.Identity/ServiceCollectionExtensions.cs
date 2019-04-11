@@ -119,14 +119,24 @@ namespace Microsoft.Extensions.DependencyInjection
                 o.ClientId = "placeholder";
                 o.ClientSecret = "placeholder";
                 o.Authority = "https://placeholder.com";
+                
+                //o.GetClaimsFromUserInfoEndpoint = true;
+
+
+                o.ResponseType = "code id_token";
+
+                //o.Scope.Add("idserverapi");
+                //o.Scope.Add("profile");
+                o.GetClaimsFromUserInfoEndpoint = true;
                 o.SaveTokens = true;
-               
+
             })
             
             ;
 
 
-
+            services.TryAddSingleton<IOidcHybridFlowHelper, NoopOidcHybridFlowHelper>();
+            services.TryAddSingleton<ICookieAuthTicketStoreProvider, NoopCookieAuthTicketStoreProvider>();
 
 
             // Services used by identity
