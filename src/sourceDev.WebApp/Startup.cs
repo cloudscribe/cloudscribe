@@ -201,6 +201,11 @@ namespace sourceDev.WebApp
                 options.Cookie.IsEssential = true;
             });
 
+            services.AddSession(options =>
+            {
+                options.Cookie.IsEssential = true;
+            });
+
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -249,8 +254,8 @@ namespace sourceDev.WebApp
             app.UseCookiePolicy();
 
 
-            // we don't need session
-            //app.UseSession();
+
+            app.UseSession();
 
             app.UseRequestLocalization(localizationOptionsAccessor.Value);
 

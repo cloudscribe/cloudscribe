@@ -1,0 +1,60 @@
+﻿@model List<Microsoft.AspNetCore.Authentication.AuthenticationScheme>
+@inject ICoreThemeHelper themeHelper
+@inject ISiteContextResolver siteResolver
+@inject IStringLocalizer<CloudscribeCore> sr
+@{
+    var socFormat = ViewData["SocialFormat"].ToString();
+    var themeSettings = themeHelper.GetThemeSettings();
+    var Tenant = await siteResolver.ResolveSite(Context.Request.Host.Host, Context.Request.Path);
+
+}
+@functions {
+public string GetIconForLogin(string displayName, CoreThemeSettings themeSettings)
+{
+    switch (displayName)
+    {
+        case "Facebook":
+            return $"<i class='{themeSettings.Icons.Facebook}' aria-hidden='true'></i>";
+        case "Google":
+            return $"<i class='{themeSettings.Icons.Google}' aria-hidden='true'></i>";
+        case "Twitter":
+            return $"<i class='{themeSettings.Icons.Twitter}' aria-hidden='true'></i>";
+        case "Microsoft":
+            return $"<i class='{themeSettings.Icons.Microsoft}' aria-hidden='true'></i>";
+
+
+    }
+
+    return $"<i class='{themeSettings.Icons.OpenIDConnect}' aria-hidden='true'></i>";
+}
+public string GetDisplayName(string displayName, ISiteContext tenant)
+{
+    if (displayName == "OpenIdConnect")
+    {
+        return tenant.OidConnectDisplayName;
+
+    }
+
+    return displayName;
+}
+}
+
+
+<section id="socialLoginForm">
+    <h4>@ViewData["SocialHeading"]</h4>
+    <form asp-controller="Account" asp-action="ExternalLogin" asp-route-returnurl='@ViewData["ReturnUrl"]' method="post" class="form-horizontal" role="form">
+        <div id="socialLoginList">
+            <p>
+                @foreach (Microsoft.AspNetCore.Authentication.AuthenticationScheme p in Model)
+                {
+                    if(p.Name == "OpenIdConnect") { continue; }
+                    <button type="submit" class="btn btn-primary" id="@p.Name" name="provider" value="@p.Name"
+                            title="@string.Format(socFormat,p.DisplayName)">
+                        @Html.Raw(GetIconForLogin(p.DisplayName, themeSettings))
+                        @GetDisplayName(p.DisplayName, Tenant)
+                    </button>
+                }
+            </p>
+        </div>
+    </form>
+</section>

@@ -1,10 +1,19 @@
 ﻿@using cloudscribe.Core.Models
 @inject SiteContext Tenant
 @using Microsoft.AspNetCore.Authentication
+@using Microsoft.AspNetCore.Identity
 @{
     ViewData["Title"] = "Contact";
     var contentId = "my-content" + DateTime.UtcNow.ToString("yyyy-MM-dd-hh");
-    var accessToken = await Context.GetTokenAsync("access_token");
+    //var accessToken = Context.GetFromSession("jwt_token");
+    //var accessToken = await Context.GetTokenAsync("access_token");
+    string accessToken = null;
+    var accessTokenClaim = User.Claims.FirstOrDefault(x => x.Type == "access_token");
+    if (accessTokenClaim != null)
+    {
+        accessToken = accessTokenClaim.Value;
+    }
+
 }
 @section Styles {
     @{ await Html.RenderPartialAsync("DatePickerBs4Css"); }

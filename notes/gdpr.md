@@ -2,6 +2,8 @@
 ## Complete Guide to GDPR
 https://gdpr.eu/
 
+https://www.smashingmagazine.com/2019/04/privacy-ux-better-cookie-consent-experiences/
+
 
 https://stratechery.com/2018/the-european-union-versus-the-internet/
 

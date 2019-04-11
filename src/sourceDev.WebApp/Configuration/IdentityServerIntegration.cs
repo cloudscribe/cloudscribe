@@ -134,6 +134,7 @@ namespace Microsoft.Extensions.DependencyInjection
 
                     options.ApiName = "idserverapi";
                     options.ApiSecret = "secret";
+                    options.RequireHttpsMetadata = false;
                 });
 
             return services;

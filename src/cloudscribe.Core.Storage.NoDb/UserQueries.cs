@@ -1496,28 +1496,31 @@ namespace cloudscribe.Core.Storage.NoDb
             //    + "~" + login.LoginProvider
             //    + "~" + login.ProviderKey;
 
-            var matchPattern = "*~" + siteId.ToString()
-                + "~" + loginProvider
-                + "~" + providerKey;
+            var all = await loginQueries.GetAllAsync(projectId, cancellationToken);
+            return all.Where(x => x.LoginProvider == loginProvider && x.ProviderKey == providerKey).FirstOrDefault();
 
-            var dir = new DirectoryInfo(folderPath);
-            var matches = dir.GetFiles(matchPattern);
-            var foundFileKey = string.Empty;
-            foreach (var match in matches)
-            {
-                foundFileKey = Path.GetFileNameWithoutExtension(match.Name);
-                break; // should only be one so we won't keep interating
-            }
+            //var matchPattern = "*~" + siteId.ToString()
+            //    + "~" + loginProvider
+            //    + "~" + providerKey;
 
-            if (!string.IsNullOrEmpty(foundFileKey))
-            {
-                return await loginQueries.FetchAsync(
-                    projectId,
-                    foundFileKey,
-                    cancellationToken).ConfigureAwait(false);
-            }
+            //var dir = new DirectoryInfo(folderPath);
+            //var matches = dir.GetFiles(matchPattern);
+            //var foundFileKey = string.Empty;
+            //foreach (var match in matches)
+            //{
+            //    foundFileKey = Path.GetFileNameWithoutExtension(match.Name);
+            //    break; // should only be one so we won't keep interating
+            //}
 
-            return null;
+            //if (!string.IsNullOrEmpty(foundFileKey))
+            //{
+            //    return await loginQueries.FetchAsync(
+            //        projectId,
+            //        foundFileKey,
+            //        cancellationToken).ConfigureAwait(false);
+            //}
+
+            //return null;
         }
         
         public async Task<IList<IUserLogin>> GetLoginsByUser(
@@ -1576,6 +1579,7 @@ namespace cloudscribe.Core.Storage.NoDb
             CancellationToken cancellationToken = default(CancellationToken))
         {
             var projectId = siteId.ToString();
+
 
             //var folderPath = await tokenPathResolver.ResolvePath(projectId).ConfigureAwait(false);
 

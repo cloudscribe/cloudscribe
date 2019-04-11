@@ -11,35 +11,92 @@ namespace sourceDev.WebApp
 {
     public class Program
     {
-        public static void Main(string[] args)
+        public static int Main(string[] args) => StartWebServer(args);
+
+        //public static void Main(string[] args)
+        //{
+        //    var hostBuilder = CreateWebHostBuilder(args);
+        //    var host = hostBuilder.Build();
+
+        //    var config = host.Services.GetRequiredService<IConfiguration>();
+
+        //    using (var scope = host.Services.CreateScope())
+        //    {
+        //        var services = scope.ServiceProvider;
+
+        //        try
+        //        {
+        //            EnsureDataStorageIsReady(config, services);
+
+        //        }
+        //        catch (Exception ex)
+        //        {
+        //            var logger = services.GetRequiredService<ILogger<Program>>();
+        //            logger.LogError(ex, "An error occurred while migrating the database.");
+        //        }
+        //    }
+
+        //    var env = host.Services.GetRequiredService<IHostingEnvironment>();
+        //    var loggerFactory = host.Services.GetRequiredService<ILoggerFactory>();
+        //    ConfigureLogging(env, loggerFactory, host.Services, config);
+
+        //    host.Run();
+        //}
+
+        public static int StartWebServer(string[] args)
         {
-            var hostBuilder = CreateWebHostBuilder(args);
-            var host = hostBuilder.Build();
 
-            var config = host.Services.GetRequiredService<IConfiguration>();
-            
-            using (var scope = host.Services.CreateScope())
+            //Log.Logger =
+            //new LoggerConfiguration()
+            //    .MinimumLevel.Warning()
+            //    .Enrich.WithProperty("Application", "MyApplicationName")
+            //    .WriteTo.Console()
+            //    .CreateLogger();
+            try
             {
-                var services = scope.ServiceProvider;
-                
-                try
-                {
-                    EnsureDataStorageIsReady(config, services);
+                var hostBuilder = CreateWebHostBuilder(args);
+                var host = hostBuilder.Build();
 
-                }
-                catch (Exception ex)
+                var config = host.Services.GetRequiredService<IConfiguration>();
+
+                using (var scope = host.Services.CreateScope())
                 {
-                    var logger = services.GetRequiredService<ILogger<Program>>();
-                    logger.LogError(ex, "An error occurred while migrating the database.");
+                    var services = scope.ServiceProvider;
+
+                    try
+                    {
+                        EnsureDataStorageIsReady(config, services);
+
+                    }
+                    catch (Exception ex)
+                    {
+                        var logger = services.GetRequiredService<ILogger<Program>>();
+                        logger.LogError(ex, "An error occurred while migrating the database.");
+                    }
                 }
+
+                var env = host.Services.GetRequiredService<IHostingEnvironment>();
+                var loggerFactory = host.Services.GetRequiredService<ILoggerFactory>();
+                ConfigureLogging(env, loggerFactory, host.Services, config);
+
+                host.Run();
+
+                return 0;
             }
+            catch(Exception ex)
+            {
+                //Log.Fatal(ex, "Host terminated unexpectedly.");
+                return -1;
+            }
+            //finally
+            //{
+            //    Log.CloseAndFlush();
+            //}
 
-            var env = host.Services.GetRequiredService<IHostingEnvironment>();
-            var loggerFactory = host.Services.GetRequiredService<ILoggerFactory>();
-            ConfigureLogging(env, loggerFactory, host.Services, config);
 
-            host.Run();
+
         }
+
 
         private static void EnsureDataStorageIsReady(IConfiguration config, IServiceProvider services)
         {
