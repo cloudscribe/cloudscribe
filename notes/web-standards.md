@@ -1,4 +1,9 @@
 
+https://www.dannymoerkerke.com/blog/web-components-will-replace-your-frontend-framework
+
+https://dannymoerkerke.github.io/material-webcomponents
+
+https://lit-html.polymer-project.org/
 
 https://drewdevault.com/2018/09/04/Conservative-web-development.html
 

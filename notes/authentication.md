@@ -9,3 +9,5 @@ https://damienbod.com/2018/10/18/using-an-odata-client-with-an-asp-net-core-api/
 
 https://www.c-sharpcorner.com/article/asp-net-core-working-with-cookie/
 https://github.com/nemi-chand/CookieManager
+
+https://www.red-gate.com/simple-talk/dotnet/net-development/using-auth-cookies-in-asp-net-core/

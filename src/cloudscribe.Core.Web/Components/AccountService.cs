@@ -136,12 +136,17 @@ namespace cloudscribe.Core.Web.Components
                 {
                     if (string.IsNullOrWhiteSpace(email))
                     {
-                        email = template.ExternalLoginInfo.Principal.FindFirstValue(ClaimTypes.Email);
+                        var emailClaim = template.ExternalLoginInfo.Principal.Claims.Where(x => x.Type == ClaimTypes.Email || x.Type == "email").FirstOrDefault();
+                        if(emailClaim != null)
+                        {
+                            email = emailClaim.Value;
+                        }
                     }
 
                     if (!string.IsNullOrWhiteSpace(email) && email.Contains("@"))
                     {
                         template.User = await UserManager.FindByNameAsync(email);
+                        var identityResult = await UserManager.AddLoginAsync(template.User, template.ExternalLoginInfo);
                     }
                 }
                 
