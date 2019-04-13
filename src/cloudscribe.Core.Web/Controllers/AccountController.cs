@@ -653,7 +653,7 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
             }
 
             var result = await AccountService.TryExternalLogin();
-
+            
             if (result.SignInResult.Succeeded)
             {
                 if (result.User != null)
