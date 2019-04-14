@@ -1,3 +1,5 @@
+https://blog.acolyer.org/2019/04/12/master-of-web-puppets-abusing-web-browsers-for-persistent-and-stealthy-computation/
+
 
 https://www.engadget.com/2019/03/04/web-authentication-becomes-official-standard/
 

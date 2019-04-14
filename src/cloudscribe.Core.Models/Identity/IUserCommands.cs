@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2014-08-18
-// Last Modified:			2016-08-03
+// Last Modified:			2019-04-14
 // 
 
 using System;
@@ -132,6 +132,7 @@ namespace cloudscribe.Core.Models
             Guid siteId,
             Guid userId,
             string claimType,
+            string claimValue,
             CancellationToken cancellationToken = default(CancellationToken));
 
         Task CreateClaim(

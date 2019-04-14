@@ -858,7 +858,7 @@ namespace cloudscribe.Core.Identity
             foreach (Claim claim in claims)
             {
                 cancellationToken.ThrowIfCancellationRequested();
-                await _commands.DeleteClaimByUser(siteGuid, user.Id, claim.Type, cancellationToken);
+                await _commands.DeleteClaimByUser(siteGuid, user.Id, claim.Type, claim.Value, cancellationToken);
             }
 
             // this is so the middleware will sign the user out and in again to get current claims
@@ -881,7 +881,7 @@ namespace cloudscribe.Core.Identity
             Guid siteGuid = SiteSettings.Id;
             if (_multiTenantOptions.UseRelatedSitesMode) { siteGuid = _multiTenantOptions.RelatedSiteId; }
 
-            await _commands.DeleteClaimByUser(siteGuid, user.Id, claim.Type, cancellationToken);
+            await _commands.DeleteClaimByUser(siteGuid, user.Id, claim.Type, claim.Value, cancellationToken);
 
             UserClaim userClaim = new UserClaim
             {

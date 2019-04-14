@@ -2,8 +2,8 @@
 
   <PropertyGroup>
     <Description>asp.net identity implementation for cloudscribe web application foundation</Description>
-    <VersionPrefix>3.0.16</VersionPrefix>
-    <AssemblyVersion>3.0.16</AssemblyVersion>
+    <VersionPrefix>3.0.17</VersionPrefix>
+    <AssemblyVersion>3.0.17</AssemblyVersion>
     <Authors>Joe Audette</Authors>
     <TargetFrameworks>netstandard2.0</TargetFrameworks>
     

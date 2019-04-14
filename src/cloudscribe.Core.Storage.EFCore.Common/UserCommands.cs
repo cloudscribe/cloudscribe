@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2015-11-16
-// Last Modified:			2018-10-08
+// Last Modified:			2019-04-14
 // 
 
 
@@ -607,6 +607,7 @@ namespace cloudscribe.Core.Storage.EFCore.Common
             Guid siteId,
             Guid userId,
             string claimType,
+            string claimValue,
             CancellationToken cancellationToken = default(CancellationToken))
         {
             cancellationToken.ThrowIfCancellationRequested();
@@ -616,7 +617,7 @@ namespace cloudscribe.Core.Storage.EFCore.Common
                 var query = from x in dbContext.UserClaims
                             where (
                             (siteId == Guid.Empty || x.SiteId == siteId)
-                            && (x.UserId == userId && x.ClaimType == claimType)
+                            && (x.UserId == userId && x.ClaimType == claimType && x.ClaimValue == claimValue)
                             )
                             select x;
 

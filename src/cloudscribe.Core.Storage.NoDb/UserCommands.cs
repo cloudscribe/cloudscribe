@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:                  Joe Audette
 // Created:                 2016-04-26
-// Last Modified:           2018-10-10
+// Last Modified:           2019-04-14
 // 
 
 using cloudscribe.Core.Models;
@@ -736,6 +736,7 @@ namespace cloudscribe.Core.Storage.NoDb
             Guid siteId,
             Guid userId,
             string claimType,
+            string claimValue,
             CancellationToken cancellationToken = default(CancellationToken))
         {
             ThrowIfDisposed();
@@ -753,6 +754,7 @@ namespace cloudscribe.Core.Storage.NoDb
                 x => x.UserId == userId
                 && x.SiteId == siteId
                 && x.ClaimType == claimType
+                && x.ClaimValue == claimValue
             );
 
             foreach (var item in filtered)
