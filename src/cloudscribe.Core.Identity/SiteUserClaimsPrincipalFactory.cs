@@ -84,7 +84,7 @@ namespace cloudscribe.Core.Identity
                 
                 if(!string.IsNullOrEmpty(user.Email))
                 {
-                    var emailClaim = new Claim(ClaimTypes.Email, user.Email);
+                    var emailClaim = new Claim("email", user.Email);
                     if (!identity.HasClaim(emailClaim.Type, emailClaim.Value))
                     {
                         identity.AddClaim(emailClaim);
