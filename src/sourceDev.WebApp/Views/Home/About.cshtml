@@ -1,8 +1,14 @@
-﻿@{
+﻿@inject IdentityServer4.IdentityServerTools idserver
+
+@{
     ViewData["Title"] = "About";
+
+    var token = await idserver.IssueJwtAsync(60000, User.Claims);
+
 }
 <h2>@ViewData["Title"].</h2>
 <h3>@ViewData["Message"]</h3>
+@token
 
 <a class="btn btn-xs btn-default" asp-action="SearchModal" asp-controller="UserAdmin" bs-modal-link="true">Lookup User</a>
 

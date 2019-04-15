@@ -129,6 +129,7 @@ namespace Microsoft.Extensions.DependencyInjection
                 options.ClaimsIdentity.UserIdClaimType = JwtClaimTypes.Subject;
                 options.ClaimsIdentity.UserNameClaimType = JwtClaimTypes.Name;
                 options.ClaimsIdentity.RoleClaimType = JwtClaimTypes.Role;
+               
             });
 
             builder.AddResourceOwnerValidator<ResourceOwnerPasswordValidator<SiteUser>>();
