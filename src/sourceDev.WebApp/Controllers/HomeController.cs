@@ -14,12 +14,15 @@ using cloudscribe.Web.Common.Extensions;
 using cloudscribe.Web.Common.Razor;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Identity;
+using System.Net.Http;
 
 namespace sourceDev.WebApp.Controllers
 {
     public class HomeController : Controller
     {
         public HomeController(
+            IHttpClientFactory httpClientFactory,
+            IdentityServer4.IdentityServerTools idserver,
             SiteContext currentSite,
             IEmailSenderResolver emailSenderResolver,
             ViewRenderer viewRenderer,
@@ -30,22 +33,45 @@ namespace sourceDev.WebApp.Controllers
             _emailSenderResolver = emailSenderResolver;
             _viewRenderer = viewRenderer;
             _analyticsHelper = analyticsHelper;
+            _httpClientFactory = httpClientFactory;
+            _idserver = idserver;
         }
 
         private SiteContext _currentSite;
         private IEmailSenderResolver _emailSenderResolver;
         private ViewRenderer _viewRenderer;
         private GoogleAnalyticsHelper _analyticsHelper;
+        private readonly IHttpClientFactory _httpClientFactory;
+        private readonly IdentityServer4.IdentityServerTools _idserver;
 
         public IActionResult Index()
         {
             return View();
         }
 
-        public IActionResult About()
+        public async Task<IActionResult> About()
         {
             ViewData["Message"] = "Your application description page.";
             //AddAnayticsTransaction();
+            var client = _httpClientFactory.CreateClient();
+            HttpRequestMessage message = new HttpRequestMessage();
+            message.RequestUri = new Uri("https://localhost:44399/api/identity");
+
+            var token = await _idserver.IssueJwtAsync(6000, User.Claims);
+
+
+            var response = await client.SendAsync(message);
+            if(response.IsSuccessStatusCode)
+            {
+                var content = await response.Content.ReadAsStringAsync();
+                if(!string.IsNullOrEmpty(content))
+                {
+
+                }
+            }
+
+            
+
 
             return View();
         }
