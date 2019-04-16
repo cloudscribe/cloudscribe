@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2014-10-26
-// Last Modified:			2019-03-14
+// Last Modified:			2019-04-16
 // 
 
 using cloudscribe.Core.Models;
@@ -1221,7 +1221,8 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
                 OidConnectDisplayName = selectedSite.OidConnectDisplayName,
                 OidConnectAppId = selectedSite.OidConnectAppId,
                 OidConnectAppSecret = selectedSite.OidConnectAppSecret,
-                OidConnectAuthority = selectedSite.OidConnectAuthority
+                OidConnectAuthority = selectedSite.OidConnectAuthority,
+                OidConnectScopes = selectedSite.OidConnectScopesCsv
             };
 
             return View(model);
@@ -1274,6 +1275,7 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
             selectedSite.OidConnectAppId = model.OidConnectAppId;
             selectedSite.OidConnectAppSecret = model.OidConnectAppSecret;
             selectedSite.OidConnectAuthority = model.OidConnectAuthority;
+            selectedSite.OidConnectScopesCsv = model.OidConnectScopes;
 
             await SiteManager.Update(selectedSite);
             //TODO: need to wrap ICache into something more abstract and/or move it into sitemanager

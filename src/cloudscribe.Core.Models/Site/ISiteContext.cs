@@ -98,6 +98,8 @@ namespace cloudscribe.Core.Models
         string OidConnectAppId { get;  }
         string OidConnectAppSecret { get; }
         string OidConnectAuthority { get; }
+
+        string OidConnectScopesCsv { get; }
         string AddThisDotComUsername { get; }
         //bool IsDataProtected { get; }
         DateTime CreatedUtc { get; }

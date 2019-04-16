@@ -37,5 +37,7 @@ namespace cloudscribe.Core.Web.ViewModels.SiteSettings
         [StringLength(100, ErrorMessage = "Open ID Connect authority url has a maximum length of 255 characters")]
         public string OidConnectAuthority { get; set; } = string.Empty;
 
+        public string OidConnectScopes { get; set; } = string.Empty;
+
     }
 }

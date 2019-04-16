@@ -206,6 +206,8 @@ namespace sourceDev.WebApp
                 options.Cookie.IsEssential = true;
             });
 
+            services.AddHttpClient();
+
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

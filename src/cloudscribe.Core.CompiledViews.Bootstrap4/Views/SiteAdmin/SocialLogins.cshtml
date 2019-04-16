@@ -71,6 +71,11 @@
         <span asp-validation-for="OidConnectAppSecret" class="invalid-feedback"></span>
     </div>
     <div class="form-group">
+        <label asp-for="OidConnectScopes">@sr["OpenIdConnect Scopes (comma separated)"]</label>
+        <input asp-for="OidConnectScopes" class="form-control" />
+        <span asp-validation-for="OidConnectScopes" class="invalid-feedback"></span>
+    </div>
+    <div class="form-group">
         <button name="submit" type="submit" class="btn btn-primary" data-disabled-text='@sr["Working..."]' data-enabled-text='@sr["Save"]'>@sr["Save"]</button>
     </div>
 </form>

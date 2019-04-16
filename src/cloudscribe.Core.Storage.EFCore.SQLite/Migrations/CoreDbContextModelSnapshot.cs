@@ -276,6 +276,8 @@ namespace cloudscribe.Core.Storage.EFCore.SQLite.Migrations
                     b.Property<string>("OidConnectDisplayName")
                         .HasMaxLength(150);
 
+                    b.Property<string>("OidConnectScopesCsv");
+
                     b.Property<string>("PreferredHostName")
                         .HasMaxLength(250);
 

@@ -106,6 +106,7 @@ namespace cloudscribe.Core.Models
         public string OidConnectAuthority { get; set; }
 
         public string OidConnectDisplayName { get; set; }
+        public string OidConnectScopesCsv { get; set; }
 
         public string AddThisDotComUsername { get; set; }
         
@@ -275,6 +276,7 @@ namespace cloudscribe.Core.Models
                 OidConnectAppSecret = i.OidConnectAppSecret,
                 OidConnectAuthority = i.OidConnectAuthority,
                 OidConnectDisplayName = i.OidConnectDisplayName,
+                OidConnectScopesCsv = i.OidConnectScopesCsv,
                 PreferredHostName = i.PreferredHostName,
                 PrivacyPolicy = i.PrivacyPolicy,
 
