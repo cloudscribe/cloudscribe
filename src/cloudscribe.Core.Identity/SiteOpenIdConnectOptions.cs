@@ -16,6 +16,7 @@ using Microsoft.IdentityModel.Protocols;
 using Microsoft.IdentityModel.Protocols.OpenIdConnect;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace cloudscribe.Core.Identity
@@ -135,32 +136,38 @@ namespace cloudscribe.Core.Identity
         //    return Task.CompletedTask;
         //}
 
-        //private Task HandleTokenResponseRecieved(TokenResponseReceivedContext context)
-        //{
-        //    _log.LogWarning($"token response received");
+        private async Task HandleTokenResponseRecieved(TokenResponseReceivedContext context)
+        {
+            _log.LogDebug($"token response received");
 
+            var token = context.TokenEndpointResponse.AccessToken;
 
-        //    return Task.CompletedTask;
-        //}
+            if (!string.IsNullOrWhiteSpace(token))
+            {
+                await _oidcHybridFlowHelper.CaptureJwt(context.Principal, token);
+            }
+
+            //return Task.CompletedTask;
+        }
 
         //private Task HandleUserInformationResponseRecieved(UserInformationReceivedContext context)
         //{
         //    _log.LogWarning($"user info received");
 
-            
+
         //    return Task.CompletedTask;
         //}
 
-        private async Task HandleAuthorizationCodeRecieved(AuthorizationCodeReceivedContext context)
-        {
-            _log.LogWarning($"authorization code received {context.JwtSecurityToken}");
+        //private async Task HandleAuthorizationCodeRecieved(AuthorizationCodeReceivedContext context)
+        //{
+        //    _log.LogWarning($"authorization code received {context.JwtSecurityToken}");
 
-            if(!string.IsNullOrWhiteSpace(context.JwtSecurityToken.RawPayload))
-            {
-                await _oidcHybridFlowHelper.CaptureJwt(context.Principal, context.JwtSecurityToken.RawPayload);
-            }
+        //    if(!string.IsNullOrWhiteSpace(context.JwtSecurityToken.RawPayload))
+        //    {
+        //        await _oidcHybridFlowHelper.CaptureJwt(context.Principal, context.JwtSecurityToken.RawPayload);
+        //    }
  
-        }
+        //}
 
         
 
@@ -183,9 +190,22 @@ namespace cloudscribe.Core.Identity
                 options.ResponseType = OpenIdConnectResponseType.CodeIdToken;
                 options.SaveTokens = true;
                 options.GetClaimsFromUserInfoEndpoint = true;
-                
-                //options.Events.OnTokenResponseReceived += HandleTokenResponseRecieved;
-                options.Events.OnAuthorizationCodeReceived += HandleAuthorizationCodeRecieved;
+
+                if(!string.IsNullOrWhiteSpace(tenant.OidConnectScopesCsv))
+                {
+                    string[] scopes = tenant.OidConnectScopesCsv.Split(',').Select(x => x.Trim()).ToArray();
+                    foreach(var s in scopes)
+                    {
+                        options.Scope.Add(s);
+                    }
+                }
+
+                //options.Scope.Add("openid");
+                //options.Scope.Add("profile");
+                //options.Scope.Add("idserverapi");
+               
+                options.Events.OnTokenResponseReceived += HandleTokenResponseRecieved;
+                //options.Events.OnAuthorizationCodeReceived += HandleAuthorizationCodeRecieved;
                 //options.Events.OnUserInformationReceived += HandleUserInformationResponseRecieved;
                 //options.Events.OnTicketReceived += HandleTicketRecieved;
 

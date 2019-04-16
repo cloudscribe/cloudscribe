@@ -271,7 +271,12 @@ namespace cloudscribe.Core.Models
             get { return site.OidConnectDisplayName; }
         }
 
-      
+        public string OidConnectScopesCsv
+        {
+            get { return site.OidConnectScopesCsv; }
+        }
+
+
         public string AddThisDotComUsername
         {
             get { return site.AddThisDotComUsername; }

@@ -165,6 +165,8 @@ namespace cloudscribe.Core.Web.Components
             if (template.SignInResult == SignInResult.Failed && template.User != null && template.RejectReasons.Count == 0)
             {
                 //var updatTokenResult = await SignInManager.UpdateExternalAuthenticationTokensAsync(template.ExternalLoginInfo);
+                //var accessToken = template.ExternalLoginInfo.AuthenticationTokens.Where(x => x.Name == "access_token").FirstOrDefault();
+
 
                 template.SignInResult = await SignInManager.ExternalLoginSignInAsync(template.ExternalLoginInfo.LoginProvider, template.ExternalLoginInfo.ProviderKey, isPersistent: false);
 

@@ -57,18 +57,34 @@ namespace sourceDev.WebApp.Controllers
             HttpRequestMessage message = new HttpRequestMessage();
             message.RequestUri = new Uri("https://localhost:44399/api/identity");
 
-            var token = await _idserver.IssueJwtAsync(6000, User.Claims);
 
-
-            var response = await client.SendAsync(message);
-            if(response.IsSuccessStatusCode)
+            //var token = await _idserver.IssueJwtAsync(6000, User.Claims);
+            var accessTokenClaim = User.Claims.FirstOrDefault(x => x.Type == "access_token");
+            if(accessTokenClaim != null)
             {
-                var content = await response.Content.ReadAsStringAsync();
-                if(!string.IsNullOrEmpty(content))
-                {
+                var token = accessTokenClaim.Value;
 
+                if (!string.IsNullOrEmpty(token))
+                {
+                    message.Headers.Add("Authorization", "Bearer " + token);
                 }
+
+
+
+                var response = await client.SendAsync(message);
+                if (response.IsSuccessStatusCode)
+                {
+                    var content = await response.Content.ReadAsStringAsync();
+                    if (!string.IsNullOrEmpty(content))
+                    {
+
+                    }
+                }
+
             }
+
+
+            
 
             
 
