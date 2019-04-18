@@ -12,3 +12,10 @@ https://github.com/simple-odata-client/Simple.OData.Client
 https://www.nuget.org/packages/Simple.OData.V4.Client/
 
 https://www.nuget.org/packages/Microsoft.OData.Client/
+
+
+https://localhost:44371/odata/sitemodel(%27402%27)
+
+https://localhost:44371/odata/SitesModel(%27402%27)
+
+https://localhost:44371/api/planning/site/402

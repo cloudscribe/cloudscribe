@@ -139,7 +139,7 @@ namespace Microsoft.Extensions.DependencyInjection
             // this stores the auth ticket in distributed cache and only the sessionid is kept in the auth cookie making it very small
             // however the default IDistributedCache is really a memory cache and rebuilding the app or recycle app pool loses the data
             // so user is not logged in. That can be solved by injecting a real distributed cache such as Redis
-            services.AddSingleton<cloudscribe.Core.Identity.ICookieAuthTicketStoreProvider, cloudscribe.Core.Identity.CookieAuthDistributedCacheTicketStoreProvider>();
+            //services.AddSingleton<cloudscribe.Core.Identity.ICookieAuthTicketStoreProvider, cloudscribe.Core.Identity.CookieAuthDistributedCacheTicketStoreProvider>();
 
 
             //services.AddCloudscribeCore(Configuration);
