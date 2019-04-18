@@ -20,7 +20,7 @@
         <th>
             <a asp-action="@Model.ActionName" asp-controller="UserAdmin"
                asp-route-siteId="@Model.SiteId"
-               asp-route-query="@Model.AlphaQuery"
+               asp-route-query="@query"
                asp-route-pagesize="@Model.UserList.PageSize"
                asp-route-sortmode="1">@sr["Created"]</a>
         </th>
@@ -31,7 +31,7 @@
         <th>
             <a asp-action="@Model.ActionName" asp-controller="UserAdmin"
                asp-route-siteId="@Model.SiteId"
-               asp-route-query="@Model.AlphaQuery"
+               asp-route-query="@query"
                asp-route-pagesize="@Model.UserList.PageSize"
                asp-route-sortmode="0">@sr["Display Name"]</a>
         </th>
@@ -41,7 +41,7 @@
         <th>
             <a asp-action="@Model.ActionName" asp-controller="UserAdmin"
                asp-route-siteId="@Model.SiteId"
-               asp-route-query="@Model.AlphaQuery"
+               asp-route-query="@query"
                asp-route-pagesize="@Model.UserList.PageSize"
                asp-route-sortmode="2">@sr["Last Name"]</a>
         </th>
