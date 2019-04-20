@@ -120,5 +120,7 @@ namespace cloudscribe.Core.Models
         string FooterContent { get; }
         string LogoUrl { get; }
 
+        bool SingleBrowserSessions { get; }
+
     }
 }

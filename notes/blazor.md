@@ -1,4 +1,9 @@
 
+
+https://devblogs.microsoft.com/aspnet/blazor-now-in-official-preview/
+
+
+
 https://www.linkedin.com/learning/blazor-first-look?trk=insiders_blazorFL_learning
 
 Blazor, a new framework for browser-based .NET apps - Steve Sanderson

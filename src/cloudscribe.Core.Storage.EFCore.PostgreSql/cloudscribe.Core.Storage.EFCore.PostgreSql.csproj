@@ -2,8 +2,8 @@
 
   <PropertyGroup>
     <Description>PostgreSql Entity Framework Core implementation of cloudscribe core storage using snake case tables and fields</Description>
-    <VersionPrefix>3.0.16</VersionPrefix>
-    <AssemblyVersion>3.0.16</AssemblyVersion>
+    <VersionPrefix>3.0.17</VersionPrefix>
+    <AssemblyVersion>3.0.17</AssemblyVersion>
     <Authors>Joe Audette</Authors>
     <TargetFramework>netstandard2.0</TargetFramework>
     <PackageTags>cloudscribe;commands;queries;ef</PackageTags>

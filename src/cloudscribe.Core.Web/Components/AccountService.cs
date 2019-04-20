@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2017-05-22
-// Last Modified:			2019-03-08
+// Last Modified:			2019-04-20
 // 
 
 using cloudscribe.Core.Identity;
@@ -159,6 +159,16 @@ namespace cloudscribe.Core.Web.Components
  
             if (template.User != null)
             {
+                //this will get persisted if login succeeds
+                template.User.BrowserKey = Guid.NewGuid().ToString();
+                if(UserManager.Site.SingleBrowserSessions)
+                {
+                    // need to save here because the signin code below looks up the user again using provider info
+                    // and creates the claims principal
+                    // and we need it to see the updated browserkey to set the claim
+                    await UserManager.UpdateAsync(template.User);
+                }
+                
                 await LoginRulesProcessor.ProcessAccountLoginRules(template);
             }
             
@@ -170,16 +180,14 @@ namespace cloudscribe.Core.Web.Components
 
                 template.SignInResult = await SignInManager.ExternalLoginSignInAsync(template.ExternalLoginInfo.LoginProvider, template.ExternalLoginInfo.ProviderKey, isPersistent: false);
 
+                
+
                 if (template.SignInResult.Succeeded)
                 {
-                    //update last login time
-                    if(!template.IsNewUserRegistration)
-                    {
-                        //already tracked if user was just created
-                        template.User.LastLoginUtc = DateTime.UtcNow;
-                        await UserManager.UpdateAsync(template.User);
-                    }
-                    
+                    //update last login time and browser key set above
+                    template.User.LastLoginUtc = DateTime.UtcNow;
+                    await UserManager.UpdateAsync(template.User);
+
                 }      
             }
 
@@ -297,6 +305,9 @@ namespace cloudscribe.Core.Web.Components
 
             if(template.User != null)
             {
+                //this will get persisted if login succeeds
+                template.User.BrowserKey = Guid.NewGuid().ToString();
+
                 userContext = new UserContext(template.User);
             }
            
@@ -309,13 +320,19 @@ namespace cloudscribe.Core.Web.Components
                 {
                     persistent = model.RememberMe;
                 }
-                
+
+                //template.SignInResult = await SignInManager.PasswordSignInAsync(
+                //    model.UserName,
+                //    model.Password,
+                //    persistent,
+                //    lockoutOnFailure: false);
+
                 template.SignInResult = await SignInManager.PasswordSignInAsync(
-                    model.UserName,
+                    template.User,
                     model.Password,
                     persistent,
                     lockoutOnFailure: false);
-                
+
 
                 if (template.SignInResult.Succeeded)
                 {
@@ -349,6 +366,10 @@ namespace cloudscribe.Core.Web.Components
                         }
 
                     }
+                    else
+                    {
+                        await UserManager.UpdateAsync(template.User);
+                    }
   
                 }
             }
@@ -379,6 +400,8 @@ namespace cloudscribe.Core.Web.Components
 
             if (template.User != null)
             {
+                //this will get persisted if login succeeds
+                template.User.BrowserKey = Guid.NewGuid().ToString();
                 userContext = new UserContext(template.User);
             }
             
@@ -393,9 +416,16 @@ namespace cloudscribe.Core.Web.Components
             
             if (template.SignInResult.Succeeded)
             {
-                //update last login time
+                //update last login time and browser key
                 template.User.LastLoginUtc = DateTime.UtcNow;
                 await UserManager.UpdateAsync(template.User);
+
+                if(UserManager.Site.SingleBrowserSessions)
+                {
+                    //the sign in we just did won't have the new browserkey claim so sign out and sign in again to ensure it gets the claim
+                    await SignInManager.SignOutAsync();
+                    await SignInManager.SignInAsync(template.User, isPersistent: rememberMe);
+                }
             }
 
             return new UserLoginResult(
@@ -425,6 +455,8 @@ namespace cloudscribe.Core.Web.Components
 
             if (template.User != null)
             {
+                //this will get persisted if login succeeds
+                template.User.BrowserKey = Guid.NewGuid().ToString();
                 userContext = new UserContext(template.User);
             }
 
@@ -439,9 +471,17 @@ namespace cloudscribe.Core.Web.Components
 
             if(template.SignInResult.Succeeded)
             {
-                //update last login time
+                //update last login time and browser key
                 template.User.LastLoginUtc = DateTime.UtcNow;
                 await UserManager.UpdateAsync(template.User);
+
+                if (UserManager.Site.SingleBrowserSessions)
+                {
+                    //the sign in we just did won't have the new browserkey claim so sign out and sign in again to ensure it gets the claim
+                    await SignInManager.SignOutAsync();
+                    await SignInManager.SignInAsync(template.User, isPersistent: false);
+                }
+
             }
 
             return new UserLoginResult(
@@ -486,6 +526,7 @@ namespace cloudscribe.Core.Web.Components
                 LastName = model.LastName,
                 DisplayName = model.DisplayName,
                 LastLoginUtc = DateTime.UtcNow,
+                BrowserKey = Guid.NewGuid().ToString(),
                 AccountApproved = UserManager.Site.RequireApprovalBeforeLogin ? false : true
             };
 
@@ -504,7 +545,7 @@ namespace cloudscribe.Core.Web.Components
                     user.AgreementAcceptedUtc = DateTime.UtcNow;
                 }
             }
-
+            
             var result = await UserManager.CreateAsync(user, model.Password);
             
             if (result.Succeeded)

@@ -350,6 +350,8 @@ namespace cloudscribe.Core.Storage.EFCore.MSSQL.Migrations
                     b.Property<bool>("SignEmailWithDkim")
                         .HasColumnType("bit");
 
+                    b.Property<bool>("SingleBrowserSessions");
+
                     b.Property<string>("SiteFolderName")
                         .HasMaxLength(50);
 
@@ -435,6 +437,9 @@ namespace cloudscribe.Core.Storage.EFCore.MSSQL.Migrations
 
                     b.Property<string>("AvatarUrl")
                         .HasMaxLength(255);
+
+                    b.Property<string>("BrowserKey")
+                        .HasMaxLength(50);
 
                     b.Property<bool>("CanAutoLockout")
                         .HasColumnType("bit");

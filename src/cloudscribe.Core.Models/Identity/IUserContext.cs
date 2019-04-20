@@ -35,5 +35,7 @@ namespace cloudscribe.Core.Models
         bool MustChangePwd { get; }
 
         bool TwoFactorEnabled { get; }
+
+        string BrowserKey { get; }
     }
 }

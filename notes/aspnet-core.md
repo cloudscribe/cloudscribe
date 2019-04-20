@@ -1,4 +1,7 @@
 
+https://dusted.codes/advanced-tips-and-tricks-for-aspnet-core-applications
+
+
 https://rehansaeed.com/asp-net-core-hidden-gem-queryhelpers/
 
 Introducing .NET IL Linker

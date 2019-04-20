@@ -14,7 +14,7 @@
                 <div class="col-md-12">
                     <div class="checkbox">
                         <label>
-                            <input asp-for="UseEmailForLogin" /> @sr["Allow Email For Login in Addition to Username"]
+                            <input asp-for="UseEmailForLogin" /> @sr["Allow email for login in addition to username"]
                         </label>
                     </div>
                 </div>
@@ -23,7 +23,7 @@
                 <div class="col-md-12">
                     <div class="checkbox">
                         <label>
-                            <input asp-for="AllowNewRegistration" /> @sr["Allow New Registrations"]
+                            <input asp-for="AllowNewRegistration" /> @sr["Allow new registrations"]
                         </label>
                     </div>
                 </div>
@@ -34,7 +34,7 @@
                     <div class="col-md-12">
                         <div class="checkbox">
                             <label>
-                                <input asp-for="RequireConfirmedEmail" /> @sr["Require Confirmed Email"]
+                                <input asp-for="RequireConfirmedEmail" /> @sr["Require confirmed email"]
                             </label>
                         </div>
                     </div>
@@ -44,7 +44,16 @@
                 <div class="col-md-12">
                     <div class="checkbox">
                         <label>
-                            <input asp-for="RequireApprovalBeforeLogin" /> @sr["Require Approval Before Login"]
+                            <input asp-for="RequireApprovalBeforeLogin" /> @sr["Require approval before login"]
+                        </label>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-md-12">
+                    <div class="checkbox">
+                        <label>
+                            <input asp-for="SingleBrowserSessions" /> @sr["Enforce one active browser session per user"]
                         </label>
                     </div>
                 </div>
@@ -61,7 +70,7 @@
                 <div class="col-md-12">
                     <div class="checkbox">
                         <label>
-                            <input asp-for="AllowPersistentLogin" /> @sr["Allow Persistent Login"]
+                            <input asp-for="AllowPersistentLogin" /> @sr["Allow persistent login"]
                         </label>
                     </div>
                 </div>
@@ -72,7 +81,7 @@
                     <div class="col-md-12">
                         <div class="checkbox">
                             <label>
-                                <input asp-for="DisableDbAuth" /> @sr["Only Use Social Authentication"]
+                                <input asp-for="DisableDbAuth" /> @sr["Only use social authentication"]
                             </label>
                         </div>
                     </div>

@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2016-01-19
-// Last Modified:			2019-02-16
+// Last Modified:			2019-04-20
 // 
 
 using System;
@@ -47,6 +47,8 @@ namespace cloudscribe.Core.Web.ViewModels.SiteSettings
         public bool HasAnySocialAuthEnabled { get; set; } = false;
 
         public bool Require2FA { get; set; }
+
+        public bool SingleBrowserSessions { get; set; }
 
         //LDAP
 

@@ -2,16 +2,16 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2015-06-27
-// Last Modified:			2019-04-11
+// Last Modified:			2019-04-20
 // 
 
 
 using cloudscribe.Core.Models;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Options;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Security.Claims;
 using System.Threading;
 using System.Threading.Tasks;
@@ -66,7 +66,17 @@ namespace cloudscribe.Core.Identity
                 {
                     await provider.AddClaims(user, identity);
                 }
+
+                if(!string.IsNullOrWhiteSpace(user.BrowserKey))
+                {
+                    var browserKeyClaim = new Claim("browser-key", user.BrowserKey);
+                    if (!identity.Claims.Any(x => x.Type == "browser-key"))
+                    {
+                        identity.AddClaim(browserKeyClaim);
+                    }
+                }
                 
+
                 var displayNameClaim = new Claim("DisplayName", user.DisplayName);
                 if (!identity.HasClaim(displayNameClaim.Type, displayNameClaim.Value))
                 {
