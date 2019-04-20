@@ -10,6 +10,7 @@ using cloudscribe.Core.Web.Components;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace cloudscribe.Core.Web.Middleware
@@ -100,6 +101,17 @@ namespace cloudscribe.Core.Web.Middleware
                             context.Response.Redirect(twoFactorUrl1);
                         }
 
+                    }
+                }
+
+                if(currentSite.SingleBrowserSessions && !string.IsNullOrWhiteSpace(userContext.BrowserKey))
+                {
+                    var browserKeyClaim = context.User.Claims.Where(x => x.Type == "browser-key").FirstOrDefault();
+                    if (browserKeyClaim == null || browserKeyClaim.Value != userContext.BrowserKey)
+                    {
+                        var logMessage = $"user {userContext.Email} BrowserKey doesn't match claim so signing user out";
+                        _logger.LogWarning(logMessage);
+                        await accountService.SignOutAsync();
                     }
                 }
 

@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2014-08-17
-// Last Modified:			2016-06-17
+// Last Modified:			2019-04-20
 // 
 
 using System;
@@ -45,6 +45,8 @@ namespace cloudscribe.Core.Models
         string Gender { get; set; }
         //string Country { get; set; }
         //string State { get; set; }
+
+        
 
     }
 
@@ -123,9 +125,16 @@ namespace cloudscribe.Core.Models
         string Signature { get; set; }
         string AuthorBio { get; set; }
         string Comment { get; set; }
-       // string ConcurrencyStamp { get; set; }
+        // string ConcurrencyStamp { get; set; }
 
-       
+        /// <summary>
+        /// a random guid string generated upon successful login, also stored as a claim.
+        /// if siteSettings.SingleBrowserSessions is true then middleware will sign out an authenticated user whose claim doesn't match the current value of this property
+        /// to prevent account sharing and simulatenous use from multiple devices or web browsers.
+        /// </summary>
+        string BrowserKey { get; set; }
+
+
 
     }
 }

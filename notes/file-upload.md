@@ -40,3 +40,9 @@ this fork has lazyload and node loading methods
 https://github.com/patternfly/patternfly-bootstrap-treeview
 
 http://stackoverflow.com/questions/14473597/include-antiforgerytoken-in-ajax-post-asp-net-mvc
+
+
+recipe for epic fail
+https://blog.yourlabs.org/post/184290880553/storing-hd-photos-in-a-relational-database-recipe#_=_
+
+https://softwareengineering.stackexchange.com/questions/150669/is-it-a-bad-practice-to-store-large-files-10-mb-in-a-database

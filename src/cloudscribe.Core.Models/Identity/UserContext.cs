@@ -194,5 +194,13 @@ namespace cloudscribe.Core.Models
         {
             get { return user.TwoFactorEnabled; }
         }
+
+        public string BrowserKey
+        {
+            get
+            {
+                return user.BrowserKey;
+            }
+        }
     }
 }

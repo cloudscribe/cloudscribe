@@ -321,6 +321,8 @@ namespace cloudscribe.Core.Storage.EFCore.pgsql.Migrations
 
                     b.Property<bool>("SignEmailWithDkim");
 
+                    b.Property<bool>("SingleBrowserSessions");
+
                     b.Property<string>("SiteFolderName")
                         .HasMaxLength(50);
 
@@ -398,6 +400,9 @@ namespace cloudscribe.Core.Storage.EFCore.pgsql.Migrations
 
                     b.Property<string>("AvatarUrl")
                         .HasMaxLength(255);
+
+                    b.Property<string>("BrowserKey")
+                        .HasMaxLength(50);
 
                     b.Property<bool>("CanAutoLockout");
 

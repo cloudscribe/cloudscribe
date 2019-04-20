@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2014-08-16
-// Last Modified:			2019-03-14
+// Last Modified:			2019-04-20
 // 
 
 using System;
@@ -207,6 +207,8 @@ namespace cloudscribe.Core.Models
         public string HeaderContent { get; set; }
         public string FooterContent { get; set; }
 
+        public bool SingleBrowserSessions { get; set; }
+
 
 
         public static SiteSettings FromISiteSettings(ISiteSettings i)
@@ -296,6 +298,7 @@ namespace cloudscribe.Core.Models
                 RequiresQuestionAndAnswer = i.RequiresQuestionAndAnswer,
                 RequireCookieConsent = i.RequireCookieConsent,
                 SignEmailWithDkim = i.SignEmailWithDkim,
+                SingleBrowserSessions = i.SingleBrowserSessions,
                 SiteFolderName = i.SiteFolderName,
                 Id = i.Id,
                 AliasId = i.AliasId,

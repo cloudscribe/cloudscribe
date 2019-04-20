@@ -288,6 +288,8 @@ namespace cloudscribe.Core.Storage.EFCore.SQLite
 
                 entity.Property(p => p.TimeZoneId).HasMaxLength(50);
 
+                entity.Property(p => p.BrowserKey).HasMaxLength(50);
+
             });
 
             modelBuilder.Entity<SiteRole>(entity =>

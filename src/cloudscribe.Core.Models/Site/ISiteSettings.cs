@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2014-08-16
-// Last Modified:			2019-02-17
+// Last Modified:			2019-04-20
 // 
 
 using System;
@@ -222,6 +222,14 @@ namespace cloudscribe.Core.Models
         bool ShowSiteNameLink { get; set; }
         string HeaderContent { get; set; }
         string FooterContent { get; set; }
+
+        /// <summary>
+        /// false by default, if true a random guid will be generated upon login, saved in SiteUser.BrowserKey and in BrowserKey claim on claimsprincipal.
+        /// Site Rules middleware will signout any user whose current BrowserKey claim doesn't match SiteUser.BrowserKey
+        /// This way if a user logs in using a new browser, any lingering authenticated session in the previous browser will be signed out.
+        /// Newest login wins. This option is for preventing sharing of user accounts.
+        /// </summary>
+        bool SingleBrowserSessions { get; set; }
 
 
         // TODO: drop

@@ -539,6 +539,11 @@ namespace cloudscribe.Core.Models
             get { return site.LogoUrl; }
         }
 
+        public bool SingleBrowserSessions
+        {
+            get { return site.SingleBrowserSessions; }
+        }
+
 
     }
 }

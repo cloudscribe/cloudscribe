@@ -2,20 +2,25 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
-using cloudscribe.Core.Storage.EFCore.MySql;
+using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
+using cloudscribe.Core.Storage.EFCore.pgsql;
 
-namespace cloudscribe.Core.Storage.EFCore.MySql.Migrations
+namespace cloudscribe.Core.Storage.EFCore.pgsql.Migrations
 {
     [DbContext(typeof(CoreDbContext))]
-    partial class CoreDbContextModelSnapshot : ModelSnapshot
+    [Migration("20190420184856_cs-core-20190420")]
+    partial class cscore20190420
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
+                .HasAnnotation("Npgsql:PostgresExtension:uuid-ossp", "'uuid-ossp', '', ''")
+                .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.SerialColumn)
                 .HasAnnotation("ProductVersion", "2.2.1-servicing-10028")
-                .HasAnnotation("Relational:MaxIdentifierLength", 64);
+                .HasAnnotation("Relational:MaxIdentifierLength", 63);
 
             modelBuilder.Entity("cloudscribe.Core.Models.Geography.GeoCountry", b =>
                 {
@@ -321,9 +326,7 @@ namespace cloudscribe.Core.Storage.EFCore.MySql.Migrations
                     b.Property<bool>("SingleBrowserSessions");
 
                     b.Property<string>("SiteFolderName")
-                        .ValueGeneratedOnAdd()
-                        .HasMaxLength(50)
-                        .HasDefaultValue("");
+                        .HasMaxLength(50);
 
                     b.Property<bool>("SiteIsClosed");
 
@@ -622,7 +625,7 @@ namespace cloudscribe.Core.Storage.EFCore.MySql.Migrations
                     b.Property<Guid>("SiteId");
 
                     b.Property<string>("LoginProvider")
-                        .HasMaxLength(128);
+                        .HasMaxLength(450);
 
                     b.Property<string>("Name")
                         .HasMaxLength(450);

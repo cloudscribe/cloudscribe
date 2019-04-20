@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2014-08-17
-// Last Modified:			2018-08-19
+// Last Modified:			2019-04-20
 // 
 
 using cloudscribe.Common.Gdpr;
@@ -58,6 +58,8 @@ namespace cloudscribe.Core.Models
         [PersonalDataMarker]
         public bool TwoFactorEnabled { get; set; } = false;
 
+        public string BrowserKey { get; set; }
+
 
 
         public static SiteUser FromISiteUser(ISiteUser user)
@@ -70,6 +72,7 @@ namespace cloudscribe.Core.Models
             u.AccountApproved = user.AccountApproved;
             u.AuthorBio = user.AuthorBio;
             u.AvatarUrl = user.AvatarUrl;
+            u.BrowserKey = user.BrowserKey;
             u.CanAutoLockout = user.CanAutoLockout;
             u.Comment = user.Comment;
       

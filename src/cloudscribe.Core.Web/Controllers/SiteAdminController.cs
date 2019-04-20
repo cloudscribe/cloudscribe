@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2014-10-26
-// Last Modified:			2019-04-16
+// Last Modified:			2019-04-20
 // 
 
 using cloudscribe.Core.Models;
@@ -892,6 +892,7 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
                 SmsIsConfigured = selectedSite.SmsIsConfigured(),
                 HasAnySocialAuthEnabled = selectedSite.HasAnySocialAuthEnabled(),
                 Require2FA = selectedSite.Require2FA,
+                SingleBrowserSessions = selectedSite.SingleBrowserSessions,
 
                 LdapDomain = selectedSite.LdapDomain,
                 LdapPort = selectedSite.LdapPort,
@@ -950,6 +951,7 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
             selectedSite.RequireConfirmedPhone = model.RequireConfirmedPhone;
             selectedSite.UseEmailForLogin = model.UseEmailForLogin;
             selectedSite.Require2FA = model.Require2FA;
+            selectedSite.SingleBrowserSessions = model.SingleBrowserSessions;
 
             selectedSite.LdapDomain = model.LdapDomain;
             selectedSite.LdapPort = model.LdapPort;
