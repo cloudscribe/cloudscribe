@@ -4,6 +4,10 @@
     ViewData["Title"] = "About";
 
     var token = await idserver.IssueJwtAsync(60000, User.Claims);
+    //var token = await idserver.IssueClientJwtAsync(
+    //    clientId: "self",
+    //    lifetime: 3600,
+    //    audiences: new[] { "idserverapi" });
 
 }
 <h2>@ViewData["Title"].</h2>
