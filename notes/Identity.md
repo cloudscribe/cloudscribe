@@ -10,6 +10,9 @@ https://www.strathweb.com/2017/10/self-issuing-an-identityserver4-token-in-an-id
 Generating Access Tokens (& refresh tokens) manually
 https://github.com/IdentityServer/IdentityServer4/issues/356
 
+AccessToken Lifetime Management
+https://github.com/IdentityServer/IdentityServer4/issues/962
+
 https://github.com/skoruba/IdentityServer4.Admin
 
 https://leastprivilege.com/2017/10/06/identityserver4-v2/
