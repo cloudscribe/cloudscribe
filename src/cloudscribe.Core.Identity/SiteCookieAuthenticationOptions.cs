@@ -103,7 +103,7 @@ namespace cloudscribe.Core.Identity
             {
                 options.Cookie.Path = "/" + tenant.SiteFolderName;
                 options.Events.OnValidatePrincipal = SiteAuthCookieValidator.ValidatePrincipalAsync;
-
+                //options.EventsType
             }
 
             var tenantPathBase = string.IsNullOrEmpty(tenant.SiteFolderName)
