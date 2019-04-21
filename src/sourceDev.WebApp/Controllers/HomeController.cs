@@ -59,34 +59,36 @@ namespace sourceDev.WebApp.Controllers
 
 
             //var token = await _idserver.IssueJwtAsync(6000, User.Claims);
-            var accessTokenClaim = User.Claims.FirstOrDefault(x => x.Type == "access_token");
-            if(accessTokenClaim != null)
+            //var accessTokenClaim = User.Claims.FirstOrDefault(x => x.Type == "access_token");
+            //if(accessTokenClaim != null)
+            //{
+            //    var token = accessTokenClaim.Value;
+
+            var token = await HttpContext.GetTokenAsync("access_token");
+
+            if (!string.IsNullOrEmpty(token))
             {
-                var token = accessTokenClaim.Value;
-
-                if (!string.IsNullOrEmpty(token))
-                {
-                    message.Headers.Add("Authorization", "Bearer " + token);
-                }
-
-
-
-                var response = await client.SendAsync(message);
-                if (response.IsSuccessStatusCode)
-                {
-                    var content = await response.Content.ReadAsStringAsync();
-                    if (!string.IsNullOrEmpty(content))
-                    {
-
-                    }
-                }
-
+                message.Headers.Add("Authorization", "Bearer " + token);
             }
 
 
-            
 
-            
+            var response = await client.SendAsync(message);
+            if (response.IsSuccessStatusCode)
+            {
+                var content = await response.Content.ReadAsStringAsync();
+                if (!string.IsNullOrEmpty(content))
+                {
+
+                }
+            }
+
+            //}
+
+
+
+
+
 
 
             return View();

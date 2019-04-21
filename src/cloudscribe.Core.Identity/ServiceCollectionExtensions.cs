@@ -72,10 +72,10 @@ namespace Microsoft.Extensions.DependencyInjection
            .AddCookie(IdentityConstants.ApplicationScheme, o =>
             {
                 o.LoginPath = new PathString("/Account/Login");
-                o.Events = new CookieAuthenticationEvents
-                {
-                    OnValidatePrincipal = SiteAuthCookieValidator.ValidatePrincipalAsync
-                };
+                //o.Events = new CookieAuthenticationEvents
+                //{
+                //    OnValidatePrincipal = SiteAuthCookieValidator.ValidatePrincipalAsync
+                //};
                 
 
             })
@@ -148,7 +148,7 @@ namespace Microsoft.Extensions.DependencyInjection
 
             services.TryAddScoped<SignInManager<SiteUser>, SignInManager<SiteUser>>();
 
-            services.TryAddSingleton<SiteAuthCookieValidator, SiteAuthCookieValidator>();
+            //services.TryAddSingleton<SiteAuthCookieValidator, SiteAuthCookieValidator>();
             services.TryAddSingleton<ICookieAuthRedirector, ApiAwareCookieAuthRedirector>();
             //services.TryAddScoped<SiteCookieAuthenticationEvents, SiteCookieAuthenticationEvents>();
             services.TryAddScoped<ISocialAuthEmailVerfificationPolicy, DefaultSocialAuthEmailVerfificationPolicy>();
@@ -215,6 +215,9 @@ namespace Microsoft.Extensions.DependencyInjection
 
 
             services.TryAddScoped<IIdentityServerIntegration, NotIntegratedIdentityServerIntegration>();
+
+            services.AddTransient<SiteAuthCookieEvents>();
+            services.TryAddTransient<ISiteAuthCookieEvents, SiteAuthCookieEvents>();
 
             return builder;
 
