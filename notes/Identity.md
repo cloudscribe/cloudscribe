@@ -20,6 +20,8 @@ https://www.scottbrady91.com/OpenID-Connect/OpenID-Connect-Flows
 
 https://auth0.com/docs/api-auth/why-use-access-tokens-to-secure-apis
 
+https://stackoverflow.com/questions/50363450/identityserver4-access-token-lifetime
+
 
 https://github.com/skoruba/IdentityServer4.Admin
 

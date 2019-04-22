@@ -1578,6 +1578,8 @@ namespace cloudscribe.Core.Storage.NoDb
             string name,
             CancellationToken cancellationToken = default(CancellationToken))
         {
+            cancellationToken.ThrowIfCancellationRequested();
+
             var projectId = siteId.ToString();
 
 
@@ -1590,17 +1592,30 @@ namespace cloudscribe.Core.Storage.NoDb
             //    + "~" + login.SiteGuid.ToString()
             //    + "~" + login.LoginProvider
             //    + "~" + login.Name;
+            var all = await tokenQueries.GetAllAsync(projectId);
 
-            var key =
-                userId.ToString()
-                + "~" + siteId.ToString()
-                + "~" + loginProvider
-                + "~" + name;
+            return all.Where(x => x.UserId == userId 
+                        && x.LoginProvider == loginProvider 
+                        && x.Name == name).FirstOrDefault();
 
-            return await tokenQueries.FetchAsync(
-                    projectId,
-                    key,
-                    cancellationToken).ConfigureAwait(false);
+
+
+
+            //var key =
+            //    userId.ToString()
+            //    + "~" + siteId.ToString()
+            //    + "~" + loginProvider
+            //    + "~" + name;
+
+            //return await tokenQueries.FetchAsync(
+            //        projectId,
+            //        key,
+            //        cancellationToken).ConfigureAwait(false);
+
+
+
+
+
 
             //var dir = new DirectoryInfo(folderPath);
             //var matches = dir.GetFiles(matchPattern);
@@ -1620,6 +1635,22 @@ namespace cloudscribe.Core.Storage.NoDb
             //}
 
             //return null;
+        }
+
+        public async Task<List<IUserToken>> GetUserTokensByProvider(
+           Guid siteId,
+           Guid userId,
+           string loginProvider,
+           CancellationToken cancellationToken = default(CancellationToken))
+        {
+            cancellationToken.ThrowIfCancellationRequested();
+
+            var projectId = siteId.ToString();
+            var all = await tokenQueries.GetAllAsync(projectId);
+
+            return all.Where(x => x.UserId == userId
+                        && x.LoginProvider == loginProvider
+                        ).ToList<IUserToken>();
         }
 
 

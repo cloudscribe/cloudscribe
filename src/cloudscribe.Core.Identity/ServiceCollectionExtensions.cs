@@ -135,7 +135,7 @@ namespace Microsoft.Extensions.DependencyInjection
             ;
 
 
-            services.TryAddSingleton<IOidcHybridFlowHelper, NoopOidcHybridFlowHelper>();
+            services.TryAddSingleton<ICaptureOidcTokens, NoopOidcTokenCapture>();
             services.TryAddSingleton<ICookieAuthTicketStoreProvider, NoopCookieAuthTicketStoreProvider>();
 
 
@@ -218,6 +218,7 @@ namespace Microsoft.Extensions.DependencyInjection
 
             services.AddTransient<SiteAuthCookieEvents>();
             services.TryAddTransient<ISiteAuthCookieEvents, SiteAuthCookieEvents>();
+            services.AddTransient<OidcTokenEndpointService>();
 
             return builder;
 

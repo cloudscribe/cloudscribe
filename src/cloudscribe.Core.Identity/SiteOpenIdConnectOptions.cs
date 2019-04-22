@@ -25,7 +25,7 @@ namespace cloudscribe.Core.Identity
     public class SiteOpenIdConnectOptions : OptionsMonitor<OpenIdConnectOptions>
     {
         public SiteOpenIdConnectOptions(
-            IOidcHybridFlowHelper oidcHybridFlowHelper,
+            ICaptureOidcTokens oidcHybridFlowHelper,
             IOptionsFactory<OpenIdConnectOptions> factory,
             IEnumerable<IOptionsChangeTokenSource<OpenIdConnectOptions>> sources,
             IOptionsMonitorCache<OpenIdConnectOptions> cache,
@@ -49,7 +49,7 @@ namespace cloudscribe.Core.Identity
         private readonly IOptionsFactory<OpenIdConnectOptions> _factory;
         private readonly MultiTenantOptions _multiTenantOptions;
         private readonly IHttpContextAccessor _httpContextAccessor;
-        private readonly IOidcHybridFlowHelper _oidcHybridFlowHelper;
+        private readonly ICaptureOidcTokens _oidcHybridFlowHelper;
 
 
         private readonly IHostingEnvironment _environment;
@@ -132,7 +132,7 @@ namespace cloudscribe.Core.Identity
 
         private async Task HandleTicketRecieved(TicketReceivedContext context)
         {
-            _log.LogWarning($"ticket received");
+            _log.LogDebug($"ticket received");
 
             var tokens = context.Properties.GetTokens().ToList();
             if(tokens.Count > 0)

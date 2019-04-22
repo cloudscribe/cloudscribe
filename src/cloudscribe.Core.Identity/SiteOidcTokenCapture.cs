@@ -10,9 +10,9 @@ using System.Threading.Tasks;
 
 namespace cloudscribe.Core.Identity
 {
-    public class SiteOidcHybridFlowHelper : IOidcHybridFlowHelper
+    public class SiteOidcTokenCapture : ICaptureOidcTokens
     {
-        public SiteOidcHybridFlowHelper(
+        public SiteOidcTokenCapture(
             IDistributedCache distributedCache
             )
         {

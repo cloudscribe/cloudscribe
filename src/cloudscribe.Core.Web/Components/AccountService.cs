@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2017-05-22
-// Last Modified:			2019-04-20
+// Last Modified:			2019-04-22
 // 
 
 using cloudscribe.Core.Identity;
@@ -174,7 +174,7 @@ namespace cloudscribe.Core.Web.Components
             
             if (template.SignInResult == SignInResult.Failed && template.User != null && template.RejectReasons.Count == 0)
             {
-                //var updatTokenResult = await SignInManager.UpdateExternalAuthenticationTokensAsync(template.ExternalLoginInfo);
+                var updatTokenResult = await SignInManager.UpdateExternalAuthenticationTokensAsync(template.ExternalLoginInfo);
                 //var accessToken = template.ExternalLoginInfo.AuthenticationTokens.Where(x => x.Name == "access_token").FirstOrDefault();
 
 

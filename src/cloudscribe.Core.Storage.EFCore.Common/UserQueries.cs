@@ -1309,6 +1309,8 @@ namespace cloudscribe.Core.Storage.EFCore.Common
             string name,
             CancellationToken cancellationToken = default(CancellationToken))
         {
+            cancellationToken.ThrowIfCancellationRequested();
+
             var query = from l in dbContext.UserTokens
                         where (
                         l.SiteId == siteId
@@ -1321,6 +1323,30 @@ namespace cloudscribe.Core.Storage.EFCore.Common
             var items = await query
                 .AsNoTracking()
                 .SingleOrDefaultAsync<IUserToken>(cancellationToken)
+                .ConfigureAwait(false);
+
+            return items;
+        }
+
+        public async Task<List<IUserToken>> GetUserTokensByProvider(
+            Guid siteId,
+            Guid userId,
+            string loginProvider,
+            CancellationToken cancellationToken = default(CancellationToken))
+        {
+            cancellationToken.ThrowIfCancellationRequested();
+
+            var query = from l in dbContext.UserTokens
+                        where (
+                        l.SiteId == siteId
+                        && l.UserId == userId
+                        && l.LoginProvider == loginProvider
+                        )
+                        select l;
+
+            var items = await query
+                .AsNoTracking()
+                .ToListAsync<IUserToken>(cancellationToken)
                 .ConfigureAwait(false);
 
             return items;
