@@ -35,7 +35,7 @@
         <select id="CompanyCountry" asp-for="CompanyCountry" asp-items="Model.AvailableCountries" class="form-control"></select>
         <span asp-validation-for="CompanyCountry" class="invalid-feedback"></span>
     </div>
-    <div class="form-group">
+    <div id="divState" class="form-group">
         <label asp-for="CompanyRegion">@sr["State"]</label>
         <select id="CompanyRegion" class="form-control"
                 asp-for="CompanyRegion"
