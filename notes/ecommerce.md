@@ -74,6 +74,9 @@ fees icon No setup, monthly, or hidden fees
 
 https://stripe.com/docs/checkout
 
+Learn how to migrate from the legacy version of Checkout to the new version.
+https://stripe.com/docs/payments/checkout/migration
+
 https://stripe.com/docs/stripe-js/elements/quickstart
 
 https://stripe.com/docs/saving-cards

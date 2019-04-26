@@ -9,19 +9,14 @@ namespace cloudscribe.Core.Identity
 {
     public interface ICaptureOidcTokens
     {
-        //Task CaptureJwt(ClaimsPrincipal principal, string jwt);
-        //Task<string> GetCurrentJwt(ClaimsPrincipal principal);
-
         Task CaptureOidcTokens(ClaimsPrincipal principal, List<AuthenticationToken> tokens);
 
         Task<List<AuthenticationToken>> GetOidcTokens(ClaimsPrincipal principal);
-
 
     }
 
     public class NoopOidcTokenCapture : ICaptureOidcTokens
     {
-
         public Task CaptureOidcTokens(ClaimsPrincipal principal, List<AuthenticationToken> tokens)
         {
             return Task.CompletedTask;
@@ -34,17 +29,5 @@ namespace cloudscribe.Core.Identity
             return Task.FromResult(result);
         }
 
-
-
-        //public Task CaptureJwt(ClaimsPrincipal principal, string jwt)
-        //{
-        //    return Task.CompletedTask;
-        //}
-
-        //public Task<string> GetCurrentJwt(ClaimsPrincipal principal)
-        //{
-        //    string result = null;
-        //    return Task.FromResult(result);
-        //}
     }
 }

@@ -12,13 +12,12 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Security.Claims;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
 namespace cloudscribe.Core.Identity
 {
-    public class HybridFlowHelper
+    public class HybridFlowHelper : IOidcHybridFlowHelper
     {
         public HybridFlowHelper(
             IUserQueries userQueries,
@@ -46,65 +45,64 @@ namespace cloudscribe.Core.Identity
         private readonly OidcTokenManagementOptions _tokenOptions;
         private readonly ISystemClock _clock;
         private readonly ILogger _log;
-
+        
         private static readonly ConcurrentDictionary<string, bool> _pendingRefreshTokenRequests =
             new ConcurrentDictionary<string, bool>();
 
 
-        private async Task<TokenResponse> RefreshOidcTokenIfNeeded(IEnumerable<AuthenticationToken> tokens)
-        {
-            var refreshToken = tokens.SingleOrDefault(t => t.Name == OpenIdConnectParameterNames.RefreshToken);
-            if (refreshToken == null)
-            {
-                _log.LogWarning("No refresh token found in cookie properties. A refresh token must be requested and SaveTokens must be enabled.");
-                return null;
-            }
+        //private async Task<TokenResponse> RefreshOidcTokenIfNeeded(IEnumerable<AuthenticationToken> tokens)
+        //{
+        //    var refreshToken = tokens.SingleOrDefault(t => t.Name == OpenIdConnectParameterNames.RefreshToken);
+        //    if (refreshToken == null)
+        //    {
+        //        _log.LogWarning("No refresh token found in cookie properties. A refresh token must be requested and SaveTokens must be enabled.");
+        //        return null;
+        //    }
 
-            var expiresAt = tokens.SingleOrDefault(t => t.Name == "expires_at");
-            if (expiresAt == null)
-            {
-                _log.LogWarning("No expires_at value found in cookie properties.");
-                return null;
-            }
+        //    var expiresAt = tokens.SingleOrDefault(t => t.Name == "expires_at");
+        //    if (expiresAt == null)
+        //    {
+        //        _log.LogWarning("No expires_at value found in cookie properties.");
+        //        return null;
+        //    }
 
-            var dtExpires = DateTimeOffset.Parse(expiresAt.Value, CultureInfo.InvariantCulture);
-            var dtRefresh = dtExpires.Subtract(_tokenOptions.RefreshBeforeExpiration);
+        //    var dtExpires = DateTimeOffset.Parse(expiresAt.Value, CultureInfo.InvariantCulture);
+        //    var dtRefresh = dtExpires.Subtract(_tokenOptions.RefreshBeforeExpiration);
 
-            if (dtRefresh < _clock.UtcNow)
-            {
-                var shouldRefresh = _pendingRefreshTokenRequests.TryAdd(refreshToken.Value, true);
-                if (shouldRefresh)
-                {
-                    try
-                    {
-                        var response = await _oidcTokenEndpointService.RefreshTokenAsync(refreshToken.Value);
+        //    if (dtRefresh < _clock.UtcNow)
+        //    {
+        //        var shouldRefresh = _pendingRefreshTokenRequests.TryAdd(refreshToken.Value, true);
+        //        if (shouldRefresh)
+        //        {
+        //            try
+        //            {
+        //                var response = await _oidcTokenEndpointService.RefreshTokenAsync(refreshToken.Value);
 
-                        if (response.IsError)
-                        {
-                            _log.LogWarning("Error refreshing token: {error}", response.Error);
-                            _pendingRefreshTokenRequests.TryRemove(refreshToken.Value, out _);
+        //                if (response.IsError)
+        //                {
+        //                    _log.LogWarning("Error refreshing token: {error}", response.Error);
+        //                    _pendingRefreshTokenRequests.TryRemove(refreshToken.Value, out _);
 
-                            return null;
-                        }
+        //                    return null;
+        //                }
 
-                        _pendingRefreshTokenRequests.TryRemove(refreshToken.Value, out _);
+        //                _pendingRefreshTokenRequests.TryRemove(refreshToken.Value, out _);
 
-                        return response;
-                    }
-                    catch (Exception ex)
-                    {
-                        _log.LogError($"{ex.Message}:{ex.StackTrace}");
-                    }
-                    finally
-                    {
-                        _pendingRefreshTokenRequests.TryRemove(refreshToken.Value, out _);
-                    }
-                }
-            }
+        //                return response;
+        //            }
+        //            catch (Exception ex)
+        //            {
+        //                _log.LogError($"{ex.Message}:{ex.StackTrace}");
+        //            }
+        //            finally
+        //            {
+        //                _pendingRefreshTokenRequests.TryRemove(refreshToken.Value, out _);
+        //            }
+        //        }
+        //    }
 
-            return null;
-
-        }
+        //    return null;
+        //}
 
         private async Task<Dictionary<string,string>> GetOidcTokens(ClaimsPrincipal user, CancellationToken cancellationToken = default(CancellationToken))
         {
@@ -113,8 +111,7 @@ namespace cloudscribe.Core.Identity
             if (userIdClaim == null) return null;
 
             var cacheKey = "oidc-tokens-" + userIdClaim.Value;
-
-            //var result = await _distributedCache.GetAsync<List<AuthenticationToken>>(cacheKey);
+            
             var json = await _cache.GetStringAsync(cacheKey, cancellationToken);
 
             if (!string.IsNullOrEmpty(json))
@@ -150,6 +147,108 @@ namespace cloudscribe.Core.Identity
             }
             
             return null;
+        }
+
+        private async Task ClearCache(ClaimsPrincipal user)
+        {
+            if (user == null) return;
+            var userIdClaim = user.Claims.Where(x => x.Type == ClaimTypes.NameIdentifier || x.Type == "sub").FirstOrDefault();
+            if (userIdClaim == null) return;
+
+            var cacheKey = "oidc-tokens-" + userIdClaim.Value;
+            await _cache.RemoveAsync(cacheKey);
+        }
+
+        public async Task<string> GetAccessToken(ClaimsPrincipal user, CancellationToken cancellationToken = default(CancellationToken))
+        {
+            var tokens = await GetOidcTokens(user, cancellationToken);
+            if(tokens == null)
+            {
+                _log.LogWarning($"Failed to get OIDC auth tokens for: {user.Identity.Name}, returning null access token");
+                return null;
+            }
+
+            var accessToken = tokens["access_token"];
+            var refreshToken = tokens["refresh_token"];
+            var exp = tokens["expires_at"];
+
+            if (string.IsNullOrEmpty(exp) || string.IsNullOrEmpty(accessToken) || string.IsNullOrEmpty(refreshToken))
+            {
+                _log.LogWarning($"Cache was not null but still failed to get OIDC auth tokens for: {user.Identity.Name}, returning null access token");
+                return null;
+            }
+
+            var dtExpires = DateTimeOffset.Parse(exp, CultureInfo.InvariantCulture);
+            var dtRefresh = dtExpires.Subtract(_tokenOptions.RefreshBeforeExpiration);
+
+            if (dtRefresh < _clock.UtcNow)
+            {
+                var shouldRefresh = _pendingRefreshTokenRequests.TryAdd(refreshToken, true);
+                if (shouldRefresh)
+                {
+                    try
+                    {
+                        var response = await _oidcTokenEndpointService.RefreshTokenAsync(refreshToken);
+
+                        if (response.IsError)
+                        {
+                            _log.LogWarning("Error refreshing token: {error}", response.Error);
+                            return null;
+                        }
+
+                        //set the token to return
+                        accessToken = response.AccessToken;
+
+                        var newAccessToken = new UserToken()
+                        {
+                            Name = "access_token",
+                            Value = response.AccessToken,
+                            UserId = user.GetUserIdAsGuid(),
+                            SiteId = user.GetUserSiteIdAsGuid(),
+                            LoginProvider = "OpenIdConnect"
+                        };
+
+                        await _userCommands.UpdateToken(newAccessToken);
+
+                        var newRefreshToken = new UserToken()
+                        {
+                            Name = "refresh_token",
+                            Value = response.RefreshToken,
+                            UserId = user.GetUserIdAsGuid(),
+                            SiteId = user.GetUserSiteIdAsGuid(),
+                            LoginProvider = "OpenIdConnect"
+                        };
+
+                        await _userCommands.UpdateToken(newRefreshToken);
+
+                        var newExpiresAt = DateTime.UtcNow + TimeSpan.FromSeconds(response.ExpiresIn);
+                        var newExpiresAtToken = new UserToken()
+                        {
+                            Name = "expires_at",
+                            Value = newExpiresAt.ToString("o", CultureInfo.InvariantCulture),
+                            UserId = user.GetUserIdAsGuid(),
+                            SiteId = user.GetUserSiteIdAsGuid(),
+                            LoginProvider = "OpenIdConnect"
+                        };
+
+
+                        await _userCommands.UpdateToken(newExpiresAtToken);
+
+                        await ClearCache(user);
+
+
+                    }
+                    finally
+                    {
+                        _pendingRefreshTokenRequests.TryRemove(refreshToken, out _);
+                    }
+                }
+            }
+
+
+            return accessToken;
+
+
         }
 
 

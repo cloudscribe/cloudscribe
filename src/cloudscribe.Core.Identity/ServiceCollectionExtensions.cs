@@ -219,6 +219,7 @@ namespace Microsoft.Extensions.DependencyInjection
             services.AddTransient<SiteAuthCookieEvents>();
             services.TryAddTransient<ISiteAuthCookieEvents, SiteAuthCookieEvents>();
             services.AddTransient<OidcTokenEndpointService>();
+            services.AddScoped<cloudscribe.Core.Identity.IOidcHybridFlowHelper, cloudscribe.Core.Identity.HybridFlowHelper>();
 
             return builder;
 

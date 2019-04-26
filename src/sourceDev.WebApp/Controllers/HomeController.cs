@@ -15,12 +15,14 @@ using cloudscribe.Web.Common.Razor;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Identity;
 using System.Net.Http;
+using cloudscribe.Core.Identity;
 
 namespace sourceDev.WebApp.Controllers
 {
     public class HomeController : Controller
     {
         public HomeController(
+            IOidcHybridFlowHelper oidcHybridFlowHelper,
             IHttpClientFactory httpClientFactory,
             IdentityServer4.IdentityServerTools idserver,
             SiteContext currentSite,
@@ -29,6 +31,7 @@ namespace sourceDev.WebApp.Controllers
             GoogleAnalyticsHelper analyticsHelper
             )
         {
+            _oidcHybridFlowHelper = oidcHybridFlowHelper;
             _currentSite = currentSite;
             _emailSenderResolver = emailSenderResolver;
             _viewRenderer = viewRenderer;
@@ -37,6 +40,7 @@ namespace sourceDev.WebApp.Controllers
             _idserver = idserver;
         }
 
+        private readonly IOidcHybridFlowHelper _oidcHybridFlowHelper;
         private SiteContext _currentSite;
         private IEmailSenderResolver _emailSenderResolver;
         private ViewRenderer _viewRenderer;
@@ -56,15 +60,8 @@ namespace sourceDev.WebApp.Controllers
             var client = _httpClientFactory.CreateClient();
             HttpRequestMessage message = new HttpRequestMessage();
             message.RequestUri = new Uri("https://localhost:44399/api/identity");
-
-
-            //var token = await _idserver.IssueJwtAsync(6000, User.Claims);
-            //var accessTokenClaim = User.Claims.FirstOrDefault(x => x.Type == "access_token");
-            //if(accessTokenClaim != null)
-            //{
-            //    var token = accessTokenClaim.Value;
-
-            var token = await HttpContext.GetTokenAsync("access_token");
+            
+            var token = await _oidcHybridFlowHelper.GetAccessToken(User);
 
             if (!string.IsNullOrEmpty(token))
             {
@@ -83,7 +80,7 @@ namespace sourceDev.WebApp.Controllers
                 }
             }
 
-            //}
+           
 
 
 
