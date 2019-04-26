@@ -6,6 +6,7 @@
 // 
 
 using cloudscribe.Core.Models;
+using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.OpenIdConnect;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
@@ -24,7 +25,7 @@ namespace cloudscribe.Core.Identity
     public class SiteOpenIdConnectOptions : OptionsMonitor<OpenIdConnectOptions>
     {
         public SiteOpenIdConnectOptions(
-            IOidcHybridFlowHelper oidcHybridFlowHelper,
+            ICaptureOidcTokens oidcHybridFlowHelper,
             IOptionsFactory<OpenIdConnectOptions> factory,
             IEnumerable<IOptionsChangeTokenSource<OpenIdConnectOptions>> sources,
             IOptionsMonitorCache<OpenIdConnectOptions> cache,
@@ -48,7 +49,7 @@ namespace cloudscribe.Core.Identity
         private readonly IOptionsFactory<OpenIdConnectOptions> _factory;
         private readonly MultiTenantOptions _multiTenantOptions;
         private readonly IHttpContextAccessor _httpContextAccessor;
-        private readonly IOidcHybridFlowHelper _oidcHybridFlowHelper;
+        private readonly ICaptureOidcTokens _oidcHybridFlowHelper;
 
 
         private readonly IHostingEnvironment _environment;
@@ -129,47 +130,62 @@ namespace cloudscribe.Core.Identity
 
         }
 
-        //private Task HandleTicketRecieved(TicketReceivedContext context)
-        //{
-        //    _log.LogWarning($"ticket received");
-
-        //    return Task.CompletedTask;
-        //}
-
-        private async Task HandleTokenResponseRecieved(TokenResponseReceivedContext context)
+        private async Task HandleTicketRecieved(TicketReceivedContext context)
         {
-            _log.LogDebug($"token response received");
+            _log.LogDebug($"ticket received");
 
-            var token = context.TokenEndpointResponse.AccessToken;
-
-            if (!string.IsNullOrWhiteSpace(token))
+            var tokens = context.Properties.GetTokens().ToList();
+            if(tokens.Count > 0)
             {
-                await _oidcHybridFlowHelper.CaptureJwt(context.Principal, token);
+                await _oidcHybridFlowHelper.CaptureOidcTokens(context.Principal, tokens);
             }
 
             //return Task.CompletedTask;
         }
 
+        //private async Task HandleTokenResponseRecieved(TokenResponseReceivedContext context)
+        //{
+        //    _log.LogDebug($"token response received");
+
+        //    var token = context.TokenEndpointResponse.AccessToken;
+
+        //    var tokens = context.Properties.GetTokens();
+
+        //    if (!string.IsNullOrWhiteSpace(token))
+        //    {
+        //        await _oidcHybridFlowHelper.CaptureJwt(context.Principal, token);
+        //    }
+
+        //    //return Task.CompletedTask;
+        //}
+
         //private Task HandleUserInformationResponseRecieved(UserInformationReceivedContext context)
         //{
         //    _log.LogWarning($"user info received");
+
+        //    var tokens = context.Properties.GetTokens();
 
 
         //    return Task.CompletedTask;
         //}
 
-        //private async Task HandleAuthorizationCodeRecieved(AuthorizationCodeReceivedContext context)
+        //private Task HandleAuthorizationCodeRecieved(AuthorizationCodeReceivedContext context)
         //{
         //    _log.LogWarning($"authorization code received {context.JwtSecurityToken}");
 
-        //    if(!string.IsNullOrWhiteSpace(context.JwtSecurityToken.RawPayload))
-        //    {
-        //        await _oidcHybridFlowHelper.CaptureJwt(context.Principal, context.JwtSecurityToken.RawPayload);
-        //    }
- 
+        //    //if (!string.IsNullOrWhiteSpace(context.JwtSecurityToken.RawPayload))
+        //    //{
+        //    //    await _oidcHybridFlowHelper.CaptureJwt(context.Principal, context.JwtSecurityToken.RawPayload);
+        //    //}
+
+        //    var tokens = context.Properties.GetTokens();
+
+
+        //    return Task.CompletedTask;
+
         //}
 
-        
+
 
         private void ConfigureTenantOptions(SiteContext tenant, OpenIdConnectOptions options)
         {
@@ -204,10 +220,10 @@ namespace cloudscribe.Core.Identity
                 //options.Scope.Add("profile");
                 //options.Scope.Add("idserverapi");
                
-                options.Events.OnTokenResponseReceived += HandleTokenResponseRecieved;
+                //options.Events.OnTokenResponseReceived += HandleTokenResponseRecieved;
                 //options.Events.OnAuthorizationCodeReceived += HandleAuthorizationCodeRecieved;
                 //options.Events.OnUserInformationReceived += HandleUserInformationResponseRecieved;
-                //options.Events.OnTicketReceived += HandleTicketRecieved;
+                options.Events.OnTicketReceived += HandleTicketRecieved;
 
                 if (useFolder)
                 {

@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2017-07-26
-// Last Modified:			2018-06-06
+// Last Modified:			2019-04-21
 // 
 
 using cloudscribe.Core.Models;
@@ -22,6 +22,7 @@ namespace cloudscribe.Core.Identity
     public class SiteCookieAuthenticationOptions : OptionsMonitor<CookieAuthenticationOptions>
     {
         public SiteCookieAuthenticationOptions(
+            ISiteAuthCookieEvents siteAuthCookieEvents,
             ICookieAuthTicketStoreProvider cookieAuthTicketStoreProvider,
             IOptionsFactory<CookieAuthenticationOptions> factory,
             IEnumerable<IOptionsChangeTokenSource<CookieAuthenticationOptions>> sources,
@@ -36,6 +37,7 @@ namespace cloudscribe.Core.Identity
             _httpContextAccessor = httpContextAccessor;
             _cookieAuthRedirector = cookieAuthRedirector;
             _cookieAuthTicketStoreProvider = cookieAuthTicketStoreProvider;
+            _siteAuthCookieEvents = siteAuthCookieEvents;
             _factory = factory;
             _cache = cache;
             _log = logger;
@@ -48,6 +50,7 @@ namespace cloudscribe.Core.Identity
         private readonly IOptionsMonitorCache<CookieAuthenticationOptions> _cache;
         private readonly IOptionsFactory<CookieAuthenticationOptions> _factory;
         private readonly ICookieAuthTicketStoreProvider _cookieAuthTicketStoreProvider;
+        private readonly ISiteAuthCookieEvents _siteAuthCookieEvents;
         private readonly ILogger _log;
         
         public override CookieAuthenticationOptions Get(string name)
@@ -102,8 +105,8 @@ namespace cloudscribe.Core.Identity
             else
             {
                 options.Cookie.Path = "/" + tenant.SiteFolderName;
-                options.Events.OnValidatePrincipal = SiteAuthCookieValidator.ValidatePrincipalAsync;
-                //options.EventsType
+                //options.Events.OnValidatePrincipal = SiteAuthCookieValidator.ValidatePrincipalAsync;
+                options.EventsType = _siteAuthCookieEvents.GetCookieAuthenticationEventsType();
             }
 
             var tenantPathBase = string.IsNullOrEmpty(tenant.SiteFolderName)

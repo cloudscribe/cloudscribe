@@ -102,5 +102,16 @@ namespace cloudscribe.Core.Identity
             return new Guid(s);
         }
 
+        public static Guid GetUserSiteIdAsGuid(this ClaimsPrincipal principal)
+        {
+            var s = principal.FindFirstValue("SiteGuid");
+            if (string.IsNullOrWhiteSpace(s) || s.Length != 36)
+            {
+                return Guid.Empty;
+            }
+
+            return new Guid(s);
+        }
+
     }
 }

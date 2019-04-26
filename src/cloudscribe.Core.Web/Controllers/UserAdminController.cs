@@ -858,9 +858,9 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
                 return RedirectToAction("ChangeUserPassword", new { userId = model.UserId });
                 
             }
-            AddErrors(result);
+            //AddErrors(result);
 
-            return View(model);
+            //return View(model);
 
         }
 

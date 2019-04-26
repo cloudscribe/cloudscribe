@@ -134,13 +134,17 @@ namespace Microsoft.Extensions.DependencyInjection
 
             // this will capture the jwt from oidc and add it as an access_token claim
             // however that doubles the cookie size https://hajekj.net/2017/03/20/cookie-size-and-cookie-authentication-in-asp-net-core/
-            services.AddSingleton<cloudscribe.Core.Identity.IOidcHybridFlowHelper, cloudscribe.Core.Identity.SiteOidcHybridFlowHelper>();
+            //services.AddSingleton<cloudscribe.Core.Identity.ICaptureOidcTokens, cloudscribe.Core.Identity.SiteOidcTokenCapture>();
+
+            //services.AddTransient<cloudscribe.Core.Identity.SiteOidcHybridFlowHelperAuthCookieEvents>();
+            //services.AddTransient<cloudscribe.Core.Identity.ISiteAuthCookieEvents, cloudscribe.Core.Identity.SiteOidcHybridFlowHelperAuthCookieEvents>();
 
             // this stores the auth ticket in distributed cache and only the sessionid is kept in the auth cookie making it very small
             // however the default IDistributedCache is really a memory cache and rebuilding the app or recycle app pool loses the data
             // so user is not logged in. That can be solved by injecting a real distributed cache such as Redis
             //services.AddSingleton<cloudscribe.Core.Identity.ICookieAuthTicketStoreProvider, cloudscribe.Core.Identity.CookieAuthDistributedCacheTicketStoreProvider>();
 
+            
 
             //services.AddCloudscribeCore(Configuration);
             services.AddCloudscribeCoreMvc(config);

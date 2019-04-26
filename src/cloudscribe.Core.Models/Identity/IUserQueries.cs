@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2014-08-18
-// Last Modified:			2017-12-29
+// Last Modified:			2019-04-22
 // 
 
 using cloudscribe.Pagination.Models;
@@ -270,6 +270,12 @@ namespace cloudscribe.Core.Models
             Guid userId,
             string loginProvider,
             string name,
+            CancellationToken cancellationToken = default(CancellationToken));
+
+        Task<List<IUserToken>> GetUserTokensByProvider(
+            Guid siteId,
+            Guid userId,
+            string loginProvider,
             CancellationToken cancellationToken = default(CancellationToken));
 
     }

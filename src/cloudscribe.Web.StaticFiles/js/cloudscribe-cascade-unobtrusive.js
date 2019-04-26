@@ -4,6 +4,7 @@ $(function () {
     if ($elems) {
         //console.log("found cascade child");
         $elems.each(function (index, ele) {
+            var sel = ele;
             var $parent = $('#' + $(ele).data('cascade-childof'));
             var serviceUrl = $(ele).data('cascade-serviceurl');
             var origVal = $(ele).data('cascade-orig-val');
@@ -11,6 +12,15 @@ $(function () {
             var disableOnEmptyParent = $(ele).data('cascade-disableonemptyparent');
             var emptyParentValue = $(ele).data('cascade-parent-emptyvalue');
             var triggerChangeOnDataLoad = $(ele).data('cascade-trigger-change-after-load');
+            var hideWhenEmptyId = $(ele).data('cascade-hide-when-empty-id');
+            var container = null;
+            if (hideWhenEmptyId) {
+                container = document.getElementById(hideWhenEmptyId);
+                if ($(ele).has('option').length === 0) {
+                    container.style.display = 'none';
+                    //alert('hide');
+                }
+            }
             $parent.change(function () {
                 //console.log("cascade parent changed to " + $parent.val());
                 $.getJSON(serviceUrl + $parent.val(), function (data) {
@@ -29,8 +39,25 @@ $(function () {
                     if (triggerChangeOnDataLoad) {
                         $(ele).change();
                     }
+                    //first option is empty with label
+                    var secondOption = sel.options[1];
+
+                    if (secondOption) {
+                        //console.log('has options');
+                        if (container) {
+                            container.style.display = 'block';
+                        }
+                    } else {
+                        //console.log('no options');
+                        if (container) {
+                            container.style.display = 'none';
+                        }
+                    }
                    
                 });
+
+                
+
                 if (disableOnEmptyParent) {
                     var emptyParent = ($parent.val() === emptyParentValue);
                     if (emptyParent) {

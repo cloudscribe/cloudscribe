@@ -23,7 +23,7 @@ namespace cloudscribe.Core.Identity
         where TRole : SiteRole
     {
         public SiteUserClaimsPrincipalFactory(
-            IOidcHybridFlowHelper oidcHybridFlowHelper,
+            //IOidcHybridFlowHelper oidcHybridFlowHelper,
             ISiteQueries siteQueries,
             SiteUserManager<TUser> userManager,
             SiteRoleManager<TRole> roleManager,
@@ -40,13 +40,13 @@ namespace cloudscribe.Core.Identity
             _queries = siteQueries;
             _options = optionsAccessor.Value;
             _customClaimProviders = customClaimProviders;
-            _oidcHybridFlowHelper = oidcHybridFlowHelper;
+           // _oidcHybridFlowHelper = oidcHybridFlowHelper;
         }
         
         private readonly ISiteQueries _queries;
         private IdentityOptions _options;
         private readonly IEnumerable<ICustomClaimProvider> _customClaimProviders;
-        private readonly IOidcHybridFlowHelper _oidcHybridFlowHelper;
+        //private readonly IOidcHybridFlowHelper _oidcHybridFlowHelper;
 
         public override async Task<ClaimsPrincipal> CreateAsync(TUser user)
         {
@@ -123,16 +123,16 @@ namespace cloudscribe.Core.Identity
                     }
                 }
 
-                var jwt = await _oidcHybridFlowHelper.GetCurrentJwt(principal);
+                //var jwt = await _oidcHybridFlowHelper.GetCurrentJwt(principal);
 
-                if (!string.IsNullOrEmpty(jwt))
-                {
-                    var accessTokenClaim = new Claim("access_token", jwt);
-                    if (!identity.HasClaim(accessTokenClaim.Type, accessTokenClaim.Value))
-                    {
-                        identity.AddClaim(accessTokenClaim);
-                    }
-                }
+                //if (!string.IsNullOrEmpty(jwt))
+                //{
+                //    var accessTokenClaim = new Claim("access_token", jwt);
+                //    if (!identity.HasClaim(accessTokenClaim.Type, accessTokenClaim.Value))
+                //    {
+                //        identity.AddClaim(accessTokenClaim);
+                //    }
+                //}
 
 
                

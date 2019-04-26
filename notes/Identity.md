@@ -13,6 +13,16 @@ https://github.com/IdentityServer/IdentityServer4/issues/356
 AccessToken Lifetime Management
 https://github.com/IdentityServer/IdentityServer4/issues/962
 
+
+https://medium.com/@hasiniwitharana/openid-connect-hybrid-flow-1123bc9461fe
+
+https://www.scottbrady91.com/OpenID-Connect/OpenID-Connect-Flows
+
+https://auth0.com/docs/api-auth/why-use-access-tokens-to-secure-apis
+
+https://stackoverflow.com/questions/50363450/identityserver4-access-token-lifetime
+
+
 https://github.com/skoruba/IdentityServer4.Admin
 
 https://leastprivilege.com/2017/10/06/identityserver4-v2/
