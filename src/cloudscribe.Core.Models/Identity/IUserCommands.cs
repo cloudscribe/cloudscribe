@@ -201,6 +201,12 @@ namespace cloudscribe.Core.Models
             string name,
             CancellationToken cancellationToken = default(CancellationToken));
 
+        Task DeleteTokensByProvider(
+            Guid siteId,
+            Guid userId,
+            string loginProvider,
+            CancellationToken cancellationToken = default(CancellationToken));
+
         Task DeleteTokensBySite(
             Guid siteId,
             CancellationToken cancellationToken = default(CancellationToken));

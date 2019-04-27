@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2015-11-16
-// Last Modified:			2019-04-14
+// Last Modified:			2019-04-27
 // 
 
 
@@ -808,6 +808,31 @@ namespace cloudscribe.Core.Storage.EFCore.Common
                         .ConfigureAwait(false);
             }
  
+        }
+
+        public async Task DeleteTokensByProvider(
+            Guid siteId,
+            Guid userId,
+            string loginProvider,
+            CancellationToken cancellationToken = default(CancellationToken))
+        {
+            cancellationToken.ThrowIfCancellationRequested();
+
+            using (var dbContext = _contextFactory.CreateContext())
+            {
+                var query = from l in dbContext.UserTokens
+                            where (
+                            l.SiteId == siteId
+                            && l.UserId == userId
+                            && l.LoginProvider == loginProvider
+                            )
+                            select l;
+
+                dbContext.UserTokens.RemoveRange(query);
+                int rowsAffected = await dbContext.SaveChangesAsync(cancellationToken)
+                    .ConfigureAwait(false);
+            }
+
         }
 
         public async Task DeleteToken(
