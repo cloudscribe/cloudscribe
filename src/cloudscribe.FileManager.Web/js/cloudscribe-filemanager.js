@@ -54,14 +54,15 @@
             $("#croppedFileName").val('');
             $('#origFileName').val('');
         },
-        setPreview: function (url, name, mediaType, mimeType) {
+        //fileManager.setPreview(node.virtualPath, node.text, node.mediaType, node.mimeType); 
+        setPreview: function (node) {
             fileManager.clearPreview();
-            switch (mediaType) {
+            switch (node.mediaType) {
 
                 case "audio":
                     $("#divAudioPreview").show();
-                    $("#audio-source").attr("src", url);
-                    $("#audio-source").attr("type", mimeType);
+                    $("#audio-source").attr("src", node.virtualPath);
+                    $("#audio-source").attr("type", node.mimeType);
                     fileManager.audioPlayer = new Plyr('#audio-player', {
                         /* options */
                     });
@@ -70,8 +71,8 @@
 
                 case "video":
                     $("#divVideoPreview").show();
-                    $("#video-source").attr("src", url);
-                    $("#video-source").attr("type", mimeType);
+                    $("#video-source").attr("src", node.virtualPath);
+                    $("#video-source").attr("type", node.mimeType);
                     fileManager.videoPlayer = new Plyr('#video-player', {
                         /* options */
                     });
@@ -79,7 +80,7 @@
                     break;
                 case "image":
                     $("#divPreview").show();
-                    $("#filePreview").attr("src", url);
+                    $("#filePreview").attr("src", node.virtualPath);
 
                     break;
 
@@ -87,6 +88,31 @@
             
             fileManager.uploadTab.hide();
             fileManager.selectForCropButton.show();
+
+            var sizeWarning = document.getElementById("divFileSizeWarning");
+            sizeWarning.style.display = 'none';
+
+            $('#divFileSize').removeClass('alert-danger');
+
+            var sizeTest;
+            if (Number.isInteger(node.size)) {
+                var sizeInBytes = new Number(node.size);
+                if (sizeInBytes > 1000000) {
+                    var sizeMb = sizeInBytes / 1000000;
+                    sizeTest = sizeMb + " MB";
+                    $('#divFileSize').addClass('alert-danger');
+                    if (node.mediaType == "image") {
+                        sizeWarning.style.display = 'block';
+                    }
+
+                } else {
+                    var sizeKb = sizeInBytes / 1000;
+                    sizeTest = sizeKb + " KB";
+                }
+            }
+
+
+            $('#divFileSize').text(sizeTest);
 
             //console.log(mediaType);
             //console.log(mimeType);
@@ -114,6 +140,10 @@
             $("#divAudioPreview").hide();
             $("#audio-source").attr("src", "");
             $("#audio-source").attr("type", "");
+            $('#divFileSize').text('');
+
+            var sizeWarning = document.getElementById("divFileSizeWarning");
+            sizeWarning.style.display = 'none';
 
 
         },
@@ -563,7 +593,8 @@
                     //console.log(node);
                     $("#divPreview").hide();
                     if (node.canPreview) {
-                        fileManager.setPreview(node.virtualPath, node.text, node.mediaType, node.mimeType);   
+                        //fileManager.setPreview(node.virtualPath, node.text, node.mediaType, node.mimeType);   
+                        fileManager.setPreview(node); 
                     }
                     else {
                         fileManager.clearPreview();    
@@ -614,7 +645,8 @@
                 dropZone: $('#dropZone'),
                 pasteZone: $('#dropZone'),
                 add: function (e, data) {
-                    $('#fileList').html('');
+                    //$('#fileList').html('');
+                    $('#fileList').empty();
                     $('#fileList').append($("<ul class='filelist'></ul>"));
                     var regx = allowedFilesRegex;
                     var j = 0;
@@ -646,8 +678,14 @@
                     });
                 },
                 done: function (e, data) {
+                    console.log('done');
+                    data.files = [];
+                    fileManager.selectedFileList = [];
+                    console.log(data);
+                    $('#fileupload').val(null);
                     $('#progress').hide();
-                    $('#fileList').html('');
+                    //$('#fileList').html('');
+                    $('#fileList').empty();
                     fileListuploader = [];
                     $('#fileList').append($("<ul class='filelist file-errors'></ul>"));
                     var j = 0;

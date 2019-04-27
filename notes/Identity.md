@@ -6,6 +6,12 @@ https://developer.okta.com/blog/2018/08/02/aspnet-core-angular-crud
 
 ## IdentityServer4 2.0
 
+For Oidc Hybrid Flow Helper to work you need a refresh token.
+To get a refresh token, the client must be configured with Allow Offline Access checked and allowed scope offline_access
+OpenIdConnectScopes openid,profile,idserverapi,offline_access
+
+
+
 https://www.strathweb.com/2017/10/self-issuing-an-identityserver4-token-in-an-identityserver4-service/
 Generating Access Tokens (& refresh tokens) manually
 https://github.com/IdentityServer/IdentityServer4/issues/356
