@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using System;
@@ -49,6 +50,23 @@ namespace cloudscribe.Core.Identity
             
 
         }
+
+        public override async Task SigningOut(CookieSigningOutContext context)
+        {
+            //any persisted oidc tokens should be cleared when signing out
+            try
+            {
+                var userId = context.HttpContext.User.GetUserIdAsGuid();
+                var siteId = context.HttpContext.User.GetUserSiteIdAsGuid();
+                var commands = context.HttpContext.RequestServices.GetRequiredService<IUserCommands>();
+                await commands.DeleteTokensByProvider(siteId, userId, "OpenIdConnect");
+            }
+            catch { }
+            
+
+            await base.SigningOut(context);
+        }
+
 
 
         public Type GetCookieAuthenticationEventsType()

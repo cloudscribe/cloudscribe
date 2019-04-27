@@ -23,8 +23,8 @@
     </div>
     <div class="col-md-7">
         <div id="divPreview" class="collapse">
-            <div style="border:solid thin black; max-width:570px; height:390px;overflow:auto;margin-bottom:5px;">
-                <img id="filePreview" src="~/cr/css/1x1.gif" alt='@sr["Preview selected image"]' />
+            <div style="margin-bottom:5px;">
+                <img id="filePreview" src="~/cr/css/1x1.gif" height="400" alt='@sr["Preview selected image"]' />
             </div>
 
             <button class="btn btn-primary" id="btnSelectorAlt">@sr["Select"]</button>
@@ -39,6 +39,10 @@
             <audio id="audio-player" controls>
                 <source id="audio-source" src="" type="audio/mp3" />
             </audio>
+        </div>
+        <div id="divFileSize" style="max-width:550px;"></div>
+        <div id="divFileSizeWarning" class="text-danger" style="display:none;">
+            @sr["This image file is large and should not be used directly in content, consider creating a resized version."]
         </div>
         <div>
             <form id="frmNewFolder" asp-action="CreateFolder" asp-controller="FileManager" class="form-inline">
