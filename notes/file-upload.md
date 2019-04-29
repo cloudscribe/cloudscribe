@@ -1,4 +1,12 @@
 
+https://uppy.io/blog/2019/04/1.0/
+https://github.com/transloadit/uppy
+
+https://uppy.io/docs/tus/
+
+
+
+
 https://github.com/blueimp/jQuery-File-Upload
 
 https://blogs.msdn.microsoft.com/dotnet/2017/01/19/net-core-image-processing/
