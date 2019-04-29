@@ -1,10 +1,8 @@
 ﻿using cloudscribe.Core.Models;
-using IdentityModel.Client;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.Extensions.Caching.Distributed;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
-using Microsoft.IdentityModel.Protocols.OpenIdConnect;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Concurrent;
@@ -48,65 +46,12 @@ namespace cloudscribe.Core.Identity
         
         private static readonly ConcurrentDictionary<string, bool> _pendingRefreshTokenRequests =
             new ConcurrentDictionary<string, bool>();
-
-
-        //private async Task<TokenResponse> RefreshOidcTokenIfNeeded(IEnumerable<AuthenticationToken> tokens)
-        //{
-        //    var refreshToken = tokens.SingleOrDefault(t => t.Name == OpenIdConnectParameterNames.RefreshToken);
-        //    if (refreshToken == null)
-        //    {
-        //        _log.LogWarning("No refresh token found in cookie properties. A refresh token must be requested and SaveTokens must be enabled.");
-        //        return null;
-        //    }
-
-        //    var expiresAt = tokens.SingleOrDefault(t => t.Name == "expires_at");
-        //    if (expiresAt == null)
-        //    {
-        //        _log.LogWarning("No expires_at value found in cookie properties.");
-        //        return null;
-        //    }
-
-        //    var dtExpires = DateTimeOffset.Parse(expiresAt.Value, CultureInfo.InvariantCulture);
-        //    var dtRefresh = dtExpires.Subtract(_tokenOptions.RefreshBeforeExpiration);
-
-        //    if (dtRefresh < _clock.UtcNow)
-        //    {
-        //        var shouldRefresh = _pendingRefreshTokenRequests.TryAdd(refreshToken.Value, true);
-        //        if (shouldRefresh)
-        //        {
-        //            try
-        //            {
-        //                var response = await _oidcTokenEndpointService.RefreshTokenAsync(refreshToken.Value);
-
-        //                if (response.IsError)
-        //                {
-        //                    _log.LogWarning("Error refreshing token: {error}", response.Error);
-        //                    _pendingRefreshTokenRequests.TryRemove(refreshToken.Value, out _);
-
-        //                    return null;
-        //                }
-
-        //                _pendingRefreshTokenRequests.TryRemove(refreshToken.Value, out _);
-
-        //                return response;
-        //            }
-        //            catch (Exception ex)
-        //            {
-        //                _log.LogError($"{ex.Message}:{ex.StackTrace}");
-        //            }
-        //            finally
-        //            {
-        //                _pendingRefreshTokenRequests.TryRemove(refreshToken.Value, out _);
-        //            }
-        //        }
-        //    }
-
-        //    return null;
-        //}
+        
 
         private async Task<Dictionary<string,string>> GetOidcTokens(ClaimsPrincipal user, CancellationToken cancellationToken = default(CancellationToken))
         {
             if (user == null) return null;
+            if (!user.Identity.IsAuthenticated) return null;
             var userIdClaim = user.Claims.Where(x => x.Type == ClaimTypes.NameIdentifier || x.Type == "sub").FirstOrDefault();
             if (userIdClaim == null) return null;
 
@@ -120,6 +65,8 @@ namespace cloudscribe.Core.Identity
             }
 
             var siteIdClaim = user.Claims.Where(x => x.Type == "SiteGuid").FirstOrDefault();
+
+            if (siteIdClaim == null) return null;
 
             if(userIdClaim.Value.Length == 36 && siteIdClaim.Value.Length == 36)
             {

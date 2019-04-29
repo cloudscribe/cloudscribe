@@ -17,6 +17,7 @@
         public string LangCode { get; set; } = "en";
 
         public bool ResizeImages { get; set; } = true;
+        public bool KeepOriginal { get; set; } 
 
         public string InitialVirtualPath { get; set; }
 

@@ -240,7 +240,7 @@
 
         },
         notify: function (message, cssClass) {
-            $('#alert_placeholder').html('<div class="alert ' + cssClass + '"><a class="close" data-dismiss="alert">×</a><span>' + message + '</span></div>')
+            $('#alert_placeholder').html('<div class="alert ' + cssClass + '"><a class="close" data-dismiss="alert">×</a><span>' + message + '</span></div>');
         },
         addFileToList: function (data, fileList, index, file) {
             var d = $("<span class='far fa-trash-alt' aria-role='button' title='Remove'></span>").click(function () {
@@ -524,7 +524,14 @@
             }
             var matchingNodes = tree.findNodes(currentFolderId, 'id');
             if (matchingNodes.length > 0) {
-                tree.collapseNode(matchingNodes, { silent: true, ignoreChildren: false });
+
+                try {
+                    tree.collapseNode(matchingNodes, { silent: true, ignoreChildren: false });
+                } catch (err) {
+
+                }
+
+                
                 var theNode = matchingNodes[0];
                 //alert(JSON.stringify(theNode));
                 //alert(theNode.id)
@@ -538,9 +545,10 @@
                     nodes: [],
                     lazyLoad: true //this makes it load child nodes on expand
                 };
-                tree.updateNode(theNode, newNode, { silent: true });
-                matchingNodes = tree.findNodes(currentFolderId, 'id');
+                
                 try {
+                    tree.updateNode(theNode, newNode, { silent: true });
+                    matchingNodes = tree.findNodes(currentFolderId, 'id');
                     tree.expandNode(matchingNodes, { silent: true, ignoreChildren: false });
                 }
                 catch (err) {
@@ -638,13 +646,15 @@
                 url: fileManager.uploadApiUrl,
                 headers: fileManager.headers,
                 dataType: 'json',
-                autoUpload: false,
-                singleFileUploads: false,
-                limitMultiFileUploads: 10,
-                limitConcurrentUploads: 10,
+                autoUpload: true,
+                singleFileUploads: true,
+                //limitMultiFileUploads: 2,
+                //limitConcurrentUploads: 3,
                 dropZone: $('#dropZone'),
                 pasteZone: $('#dropZone'),
                 add: function (e, data) {
+                    //console.log('add called with data ');
+                    //console.log(data);
                     //$('#fileList').html('');
                     $('#fileList').empty();
                     $('#fileList').append($("<ul class='filelist'></ul>"));
@@ -662,26 +672,36 @@
                         j++;
                     }
                     fileManager.selectedFileList = fileManager.selectedFileList.concat(data.files);
-                    var maxAllowed = 10;
-                    while (fileManager.selectedFileList.length > maxAllowed) {
-                        fileManager.selectedFileList.pop();
-                    }
-                    data.files = fileManager.selectedFileList;
+                    //var maxAllowed = 10;
+                    //while (fileManager.selectedFileList.length > maxAllowed) {
+                    //    fileManager.selectedFileList.pop();
+                    //}
+                    //fileManager.notify('An error occured', 'alert-danger');
+                    //data.files = fileManager.selectedFileList;
+                    //if (data.files.length > 0) {
+                    //    var btnSend = $("<button id='btnSend' class='btn btn-success'><i class='fas fa-cloud-upload-alt' aria-hidden='true'></i> Upload</button>");
+                    //    btnSend.appendTo($('#fileList'));
+                    //}
+                    //$.each(data.files, function (index, file) { fileManager.addFileToList(data, fileManager.selectedFileList, index, file); });
+                    //$('#btnSend').click(function () {
+                    //    data.context = $('<p/>').text('Uploading...').replaceAll($(this));
+                    //    data.submit();
+
+
+                    //});
+                    //data.submit();
                     if (data.files.length > 0) {
-                        var btnSend = $("<button id='btnSend' class='btn btn-success'><i class='fas fa-cloud-upload-alt' aria-hidden='true'></i> Upload</button>");
-                        btnSend.appendTo($('#fileList'));
+                        data.process().done(function () {
+                            data.submit();
+                        });
                     }
-                    $.each(data.files, function (index, file) { fileManager.addFileToList(data, fileManager.selectedFileList, index, file); });
-                    $('#btnSend').click(function () {
-                        data.context = $('<p/>').text('Uploading...').replaceAll($(this));
-                        data.submit();
-                    });
+
                 },
                 done: function (e, data) {
-                    console.log('done');
+                    //console.log('done');
                     data.files = [];
                     fileManager.selectedFileList = [];
-                    console.log(data);
+                    //console.log(data);
                     $('#fileupload').val(null);
                     $('#progress').hide();
                     //$('#fileList').html('');
@@ -698,7 +718,10 @@
                         j++;
                     }
 
-                    fileManager.reloadSubTree();
+                    //try {
+                    //    fileManager.reloadSubTree();
+                    //} catch (err) {}
+                    
                 },
                 progressall: function (e, data) {
                     var progress = parseInt(data.loaded / data.total * 100, 10);
@@ -707,6 +730,17 @@
                         'width',
                         progress + '%'
                     );
+                    //console.log(progress);
+                    if (progress === 100) {
+                        fileManager.reloadSubTree();
+                    }
+                },
+                fail: function (e, data) {
+                    //console.log(data);
+                    $('#progress .progress-bar').css('width','0%');
+
+                    fileManager.progressUI.hide();
+                    fileManager.notify('Something went wrong, possibly the file is larger than allowed by server configuration.', 'alert-danger');
                 }
 
             }).prop('disabled', !$.support.fileInput)
