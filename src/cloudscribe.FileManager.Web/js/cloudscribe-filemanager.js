@@ -732,7 +732,12 @@
                     );
                     //console.log(progress);
                     if (progress === 100) {
-                        fileManager.reloadSubTree();
+                        fileManager.notify('File upload success.', 'alert-success');
+                        setTimeout(function () {
+                            fileManager.reloadSubTree();
+                            
+                        }, 3000);
+                       
                     }
                 },
                 fail: function (e, data) {
