@@ -1,4 +1,10 @@
 
+
+https://devblogs.microsoft.com/odata/supercharging-asp-net-core-api-with-odata/
+
+https://github.com/hassanhabib/ODataWithoutEF
+
+
 https://damienbod.com/2018/10/18/using-an-odata-client-with-an-asp-net-core-api/
 
 https://damienbod.com/2018/10/12/odata-with-asp-net-core/

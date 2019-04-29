@@ -170,7 +170,8 @@ namespace cloudscribe.FileManager.Web.Controllers
             int? maxWidth,
             int? maxHeight,
             string currentDir = "",
-            string croppedFileName = ""
+            string croppedFileName = "",
+            bool keepOriginal = false
             )
         {
             var theFiles = HttpContext.Request.Form.Files;
@@ -190,6 +191,9 @@ namespace cloudscribe.FileManager.Web.Controllers
             {
                 newFileName = croppedFileName;
             }
+
+            var allowRootPath = true;
+            var createThumb = false;
             
             foreach (var formFile in theFiles)
             {
@@ -205,7 +209,9 @@ namespace cloudscribe.FileManager.Web.Controllers
                             maxHeight,
                             currentDir,
                             newFileName,
-                            true
+                            allowRootPath,
+                            createThumb,
+                            keepOriginal
                             ).ConfigureAwait(false);
                         
                         imageList.Add(uploadResult);
