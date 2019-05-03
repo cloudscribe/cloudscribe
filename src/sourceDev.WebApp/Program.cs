@@ -234,7 +234,7 @@ namespace sourceDev.WebApp
             WebHost.CreateDefaultBuilder(args)
             .ConfigureAppConfiguration((builderContext, config) =>
             {
-                config.AddJsonFile("app-userproperties.json", optional: true, reloadOnChange: true);
+                //config.AddJsonFile("app-userproperties.json", optional: true, reloadOnChange: true);
             })
             .UseStartup<Startup>()
             //.ConfigureKestrel((context, options) =>

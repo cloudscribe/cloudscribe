@@ -46,116 +46,102 @@ namespace cloudscribe.Core.Web.Middleware
                     folderSegment = "/" + currentSite.SiteFolderName;
                 }
             }
+
             var userContext = await userResolver.GetCurrentUser();
 
-            // enforce SiteRules
-
-            
-            if(userContext != null)
+            //userContext is null, make sure user is not signed in, ie if account was deleted but user was currently logged in we need to catch that
+            if (userContext == null && context.User.Identity.IsAuthenticated)
             {
-                if(string.IsNullOrWhiteSpace(userContext.Email))
-                {
-                    var setEmailUrl = folderSegment + "/manage/emailrequired";
-
-                    if (!context.Request.Path.StartsWithSegments(setEmailUrl))
-                    {
-                        var logMessage = $"user {userContext.UserName} has must provide an email adddress so redirecting to email required page from requested path {context.Request.Path}";
-                        _logger.LogWarning(logMessage);
-                        context.Response.Redirect(setEmailUrl);
-                    }
-                }
-                
-
-                // handle user still authenticated after lockout 
-                if(userContext.IsLockedOut)
-                {
-                    await accountService.SignOutAsync();
-                }
-
-                //handle must change password
-                if (userContext.MustChangePwd)
-                {
-                    var changePasswordUrl = folderSegment + "/manage/changepassword";
-
-                    if (!context.Request.Path.StartsWithSegments(changePasswordUrl))
-                    {
-                        var logMessage = $"user {userContext.Email} has must change password so redirecting to change password page from requested path {context.Request.Path}";
-                        _logger.LogWarning(logMessage);
-                        context.Response.Redirect(changePasswordUrl);
-                    }
-                }
-
-                if(currentSite.Require2FA)
-                {
-                    var isAdmin = context.User.IsInRole("Administrators");
-                    var has2fa = userContext.TwoFactorEnabled;
-                    if(!isAdmin && !has2fa)
-                    {
-                        var twoFactorUrl1 = folderSegment + "/manage/twofactorauthentication";
-                        var twoFactorUrl2 = folderSegment + "/manage/enableauthenticator";
-
-                        if (!context.Request.Path.StartsWithSegments(twoFactorUrl1) && !context.Request.Path.StartsWithSegments(twoFactorUrl2))
-                        {
-                            var logMessage = $"user {userContext.Email} has must setup 2fa so redirecting to 2fa path from requested path {context.Request.Path}";
-                            _logger.LogWarning(logMessage);
-                            context.Response.Redirect(twoFactorUrl1);
-                        }
-
-                    }
-                }
-
-                if(currentSite.SingleBrowserSessions && !string.IsNullOrWhiteSpace(userContext.BrowserKey))
-                {
-                    var browserKeyClaim = context.User.Claims.Where(x => x.Type == "browser-key").FirstOrDefault();
-                    if (browserKeyClaim == null || browserKeyClaim.Value != userContext.BrowserKey)
-                    {
-                        var logMessage = $"user {userContext.Email} BrowserKey doesn't match claim so signing user out";
-                        _logger.LogWarning(logMessage);
-                        await accountService.SignOutAsync();
-                    }
-                }
-
-                // handle roles changes - basically sets RolesChanged flag to false then sign out and in again to get new roles in cookie
-                if (userContext.RolesChanged)
-                {
-                    await accountService.HandleUserRolesChanged(context.User);
-                }
-
-
+                await accountService.SignOutAsync();
             }
-            else
+
+            // handle roles changes - basically sets RolesChanged flag to false then sign out and in again to get new roles in cookie
+            if (userContext != null && userContext.RolesChanged)
             {
-                //userContext is null, make sure user is not signed in, ie if account was deleted but user was currently logged in we need to catch that
-                if(context.User.Identity.IsAuthenticated)
+                await accountService.HandleUserRolesChanged(context.User);
+            }
+
+            // handle user still authenticated after lockout 
+            if (userContext != null && userContext.IsLockedOut)
+            {
+                await accountService.SignOutAsync();
+            }
+
+            if (userContext != null && currentSite.SingleBrowserSessions && !string.IsNullOrWhiteSpace(userContext.BrowserKey))
+            {
+                var browserKeyClaim = context.User.Claims.Where(x => x.Type == "browser-key").FirstOrDefault();
+                if (browserKeyClaim == null || browserKeyClaim.Value != userContext.BrowserKey)
                 {
+                    var logMessage = $"user {userContext.Email} BrowserKey doesn't match claim so signing user out";
+                    _logger.LogWarning(logMessage);
                     await accountService.SignOutAsync();
                 }
             }
+
 
             // handle site closed
-            if (currentSite.SiteIsClosed 
-                && !context.User.IsInRole("Administrators") 
+            if (currentSite.SiteIsClosed
+                && !context.User.IsInRole("Administrators")
                 && !context.User.IsInRole("Content Administrators")
                 )
-            {           
+            {
                 var closedUrl = folderSegment + "/closed";
                 // not redirecting for account urls because admin needs to be able to login to unclose the site
-                if(
+                if (
                     (!context.Request.Path.StartsWithSegments(closedUrl))
-                    && (!context.Request.Path.StartsWithSegments(folderSegment + "/account")) 
+                    && (!context.Request.Path.StartsWithSegments(folderSegment + "/account"))
                     )
                 {
                     var logMessage = $"site closed so redirecting to closed for requested path {context.Request.Path}";
                     _logger.LogWarning(logMessage);
                     context.Response.Redirect(closedUrl);
 
-                } 
+                }
+            }
+
+            else if (userContext != null && string.IsNullOrWhiteSpace(userContext.Email))
+            {
+                var setEmailUrl = folderSegment + "/manage/emailrequired";
+
+                if (!context.Request.Path.StartsWithSegments(setEmailUrl))
+                {
+                    var logMessage = $"user {userContext.UserName} has must provide an email adddress so redirecting to email required page from requested path {context.Request.Path}";
+                    _logger.LogWarning(logMessage);
+                    context.Response.Redirect(setEmailUrl);
+                }
+            }
+                
+            //handle must change password
+            else if (userContext != null && userContext.MustChangePwd)
+            {
+                var changePasswordUrl = folderSegment + "/manage/changepassword";
+
+                if (!context.Request.Path.StartsWithSegments(changePasswordUrl))
+                {
+                    var logMessage = $"user {userContext.Email} has must change password so redirecting to change password page from requested path {context.Request.Path}";
+                    _logger.LogWarning(logMessage);
+                    context.Response.Redirect(changePasswordUrl);
+                }
+            }
+
+            else if(userContext != null && currentSite.Require2FA && !userContext.TwoFactorEnabled && !context.User.IsInRole("Administrators"))
+            {
+                var twoFactorUrl1 = folderSegment + "/manage/twofactorauthentication";
+                var twoFactorUrl2 = folderSegment + "/manage/enableauthenticator";
+
+                if (!context.Request.Path.StartsWithSegments(twoFactorUrl1) && !context.Request.Path.StartsWithSegments(twoFactorUrl2))
+                {
+                    var logMessage = $"user {userContext.Email} has must setup 2fa so redirecting to 2fa path from requested path {context.Request.Path}";
+                    _logger.LogWarning(logMessage);
+                    context.Response.Redirect(twoFactorUrl1);
+                }
+
             }
 
             // handle must agree to terms
-            if(userContext != null
-               && (!string.IsNullOrWhiteSpace(currentSite.RegistrationAgreement))
-               && (userContext.AgreementAcceptedUtc == null || userContext.AgreementAcceptedUtc < currentSite.TermsUpdatedUtc)
+            else if (userContext != null
+                && (!string.IsNullOrWhiteSpace(currentSite.RegistrationAgreement))
+                && (userContext.AgreementAcceptedUtc == null || userContext.AgreementAcceptedUtc < currentSite.TermsUpdatedUtc)
                 && !context.User.IsInRole("Administrators")
                 && !context.User.IsInRole("Content Administrators")
                 )
@@ -173,8 +159,15 @@ namespace cloudscribe.Core.Web.Middleware
                     _logger.LogWarning(logMessage);
                     context.Response.Redirect(agreementUrl);
                 }
-                
+
             }
+
+           
+            
+
+            
+
+            
 
 
             await _next(context);
