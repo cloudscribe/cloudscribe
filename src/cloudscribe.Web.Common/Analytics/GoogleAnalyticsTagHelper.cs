@@ -10,6 +10,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using Microsoft.AspNetCore.Razor.TagHelpers;
 using Microsoft.Extensions.Options;
+using System;
 using System.Globalization;
 using System.Text;
 
@@ -370,8 +371,13 @@ namespace cloudscribe.Web.Common.TagHelpers
                 sb.Append("});"); //end add event listener
             }
 
+            //we need to generate a hash of the script and add it to CSP Header
+            var rawScript = sb.ToString();
 
-            output.Content.SetHtmlContent(sb.ToString());
+            //byte[] contentHashBytes = SHA256.Create().ComputeHash(Encoding.UTF8.GetBytes(rawScript));
+            //string contentHash = Convert.ToBase64String(contentHashBytes);
+
+            output.Content.SetHtmlContent(rawScript);
 
 
         }

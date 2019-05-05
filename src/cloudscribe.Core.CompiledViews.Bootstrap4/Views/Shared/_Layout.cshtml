@@ -22,12 +22,12 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     @RenderSection("Meta", required: false)
     <environment names="Development">
-        <link rel="stylesheet" href="@Url.Content("~/css/bootstrap4.css")"  />
+        <link rel="stylesheet" href="@Url.Content("~/css/bootstrap.css")"  />
         <link rel="stylesheet" href="@Url.Content("~/css/fontawesome-all.min.css")"  />
         <link rel="stylesheet" href="@Url.Content("~/css/site.css")"  />
     </environment>
     <environment names="Staging,Production">
-        <link rel="stylesheet" href="@Url.Content("~/css/bootstrap4.min.css")"  />
+        <link rel="stylesheet" href="@Url.Content("~/css/bootstrap.min.css")"  />
         <link rel="stylesheet" href="@Url.Content("~/css/fontawesome-all.min.css")"  />
         <link rel="stylesheet" href="@Url.Content("~/css/site.min.css")"  />
     </environment>
@@ -108,12 +108,12 @@
     @RenderSection("Toolbar", required: false)
     <environment names="Development">
         <script src="@Url.Content("~/js/jquery.js")"></script>
-        <script src="@Url.Content("~/js/bootstrap4.bundle.js")"></script>
+        <script src="@Url.Content("~/js/bootstrap.bundle.js")"></script>
         <script src="@Url.Content("~/cr/js/bs4.smartmenus.min.js")"></script>
     </environment>
     <environment names="Staging,Production">
         <script src="@Url.Content("~/js/jquery.min.js")"></script>
-        <script src="@Url.Content("~/js/bootstrap4.bundle.min.js")"></script>
+        <script src="@Url.Content("~/js/bootstrap.bundle.min.js")"></script>
         <script src="@Url.Content("~/cr/js/bs4.smartmenus.min.js")"></script>
     </environment>
     @RenderSection("Bottom", required: false)

@@ -26,6 +26,7 @@ using Microsoft.AspNetCore.Authentication.OAuth;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using Newtonsoft.Json.Linq;
+using cloudscribe.Core.Models;
 
 namespace sourceDev.WebApp
 {
@@ -208,6 +209,8 @@ namespace sourceDev.WebApp
 
             services.AddHttpClient();
 
+            services.Configure<ContentSecurityPolicyConfiguration>(_configuration.GetSection("ContentSecurityPolicyConfiguration"));
+
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -217,6 +220,7 @@ namespace sourceDev.WebApp
             IApplicationBuilder app,
             IHostingEnvironment env,
             ILoggerFactory loggerFactory,
+            IOptions<ContentSecurityPolicyConfiguration> cspOptionsAccessor,
             IOptions<cloudscribe.Core.Models.MultiTenantOptions> multiTenantOptionsAccessor,
            // IServiceProvider serviceProvider,
             IOptions<RequestLocalizationOptions> localizationOptionsAccessor
@@ -228,6 +232,9 @@ namespace sourceDev.WebApp
                 app.UseMiniProfiler();
             }
 
+            // NWebSec https://docs.nwebsec.com/en/latest/nwebsec/getting-started.html
+            var cspConfig = cspOptionsAccessor.Value;
+
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
@@ -237,9 +244,41 @@ namespace sourceDev.WebApp
             else
             {
                 app.UseExceptionHandler("/oops/Error");
-                app.UseHsts();
+                //NWebSec
+                app.UseHsts(hsts => hsts.MaxAge(cspConfig.HstsDays));
             }
-            
+
+            // NWebSec
+            //app.UseRedirectValidation(options => options.AllowSameHostRedirectsToHttps());
+            //app.UseXContentTypeOptions();
+            //app.UseReferrerPolicy(opts => opts.NoReferrer());
+            //app.UseXXssProtection(options => options.EnabledWithBlockMode());
+            //app.UseXfo(xfo => xfo.SameOrigin());
+            //app.UseCsp(opts => opts
+            //    .BlockAllMixedContent()
+            //    .StyleSources(s => s.Self()
+            //       .UnsafeInline()
+            //   // .CustomSources(cspConfig.WhitelistStyles.ToArray())
+            //    )
+            //    .FontSources(s => s.Self()
+            //     // .CustomSources(cspConfig.WhitelistFonts.ToArray())
+            //      )
+            //     .FormActions(s => s.Self())
+            //     .FrameAncestors(s => s.Self())
+            //     .ImageSources(s => s.Self()
+            //         .CustomSources(cspConfig.WhitelistImages.ToArray())
+            //      )
+            //     .ScriptSources(s => s.Self()
+            //     //.UnsafeInline()
+            //    // .UnsafeEval()
+            //       .CustomSources(cspConfig.WhitelistScripts.ToArray())
+            //      )
+            //    );
+            // end NWebSec
+
+
+
+
             //app.UseStaticFiles();
             app.UseStaticFiles(new StaticFileOptions()
             {
