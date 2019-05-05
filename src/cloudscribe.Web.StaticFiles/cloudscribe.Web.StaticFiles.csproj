@@ -2,8 +2,8 @@
 
   <PropertyGroup>
     <Description>common static resources for web applications including ckeditor dtatepickers, and other js and css</Description>
-    <VersionPrefix>1.0.12</VersionPrefix>
-    <AssemblyVersion>1.0.12</AssemblyVersion>
+    <VersionPrefix>1.0.13</VersionPrefix>
+    <AssemblyVersion>1.0.13</AssemblyVersion>
     <Authors>Joe Audette</Authors>
     <TargetFrameworks>netstandard2.0</TargetFrameworks>
     <PackageTags>cloudscribe</PackageTags>
@@ -17,6 +17,16 @@
 <ItemGroup>
     <EmbeddedResource Include="js\**;css\**;fonts\**;webfonts\**;images\**" Exclude="bin\**;obj\**;**\*.xproj;packages\**;@(EmbeddedResource)" />
   </ItemGroup>
+  
+<ItemGroup>
+  <None Remove="js\bootstrap-tooltip-toggle.js" />
+  <None Remove="js\cloudscribe-cookie-consent-click-handler.js" />
+  <None Remove="js\cloudscribe-login-page.js" />
+  <None Remove="js\cloudscribe-register-page.js" />
+  <None Remove="js\cloudscribe-rolemember-page.js" />
+  <None Remove="js\syntax-highlight-init.js" />
+  <None Remove="js\user-lookup-modal-callback.js" />
+</ItemGroup>
 
   <ItemGroup>
    

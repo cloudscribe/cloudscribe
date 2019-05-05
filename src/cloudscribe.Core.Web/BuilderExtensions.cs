@@ -2,9 +2,11 @@
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Localization;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.FileProviders;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
 using System.Globalization;
 using System.IO;
 
@@ -12,10 +14,48 @@ namespace Microsoft.AspNetCore.Builder
 {
     public static class BuilderExtensions
     {
-        
+        /// <summary>
+        /// this overload is deprecated, the ILoggerFactory is not used or needed here
+        /// </summary>
+        /// <param name="app"></param>
+        /// <param name="loggerFactory"></param>
+        /// <param name="multiTenantOptions"></param>
+        /// <param name="sslIsAvailable"></param>
+        /// <param name="applicationCookieSecure"></param>
+        /// <returns></returns>
         public static IApplicationBuilder UseCloudscribeCore(
            this IApplicationBuilder app,
            ILoggerFactory loggerFactory,
+           MultiTenantOptions multiTenantOptions,
+           bool sslIsAvailable = false,
+           CookieSecurePolicy applicationCookieSecure = CookieSecurePolicy.SameAsRequest
+           )
+        {
+            app.UseCloudscribeCore(multiTenantOptions, sslIsAvailable, applicationCookieSecure);
+
+            return app;
+        }
+
+        public static IApplicationBuilder UseCloudscribeCore(
+           this IApplicationBuilder app,
+           CookieSecurePolicy applicationCookieSecure = CookieSecurePolicy.SameAsRequest
+           )
+        {
+            var multiTenantOptionsAccessor = app.ApplicationServices.GetRequiredService<IOptions<cloudscribe.Core.Models.MultiTenantOptions>>();
+            var config = app.ApplicationServices.GetRequiredService<IConfiguration>();
+
+            var sslIsAvailable = config.GetValue<bool>("AppSettings:UseSsl");
+            var multiTenantOptions = multiTenantOptionsAccessor.Value;
+
+            app.UseCloudscribeCore(multiTenantOptions, sslIsAvailable, applicationCookieSecure);
+
+            return app;
+        }
+
+
+
+        public static IApplicationBuilder UseCloudscribeCore(
+           this IApplicationBuilder app,
            MultiTenantOptions multiTenantOptions,
            bool sslIsAvailable = false,
            CookieSecurePolicy applicationCookieSecure = CookieSecurePolicy.SameAsRequest
@@ -48,7 +88,7 @@ namespace Microsoft.AspNetCore.Builder
                 }
 
                 // resolve static files from wwwroot folders within themes and within sitefiles
-                builder.UseSiteAndThemeStaticFiles(loggerFactory, multiTenantOptions, ctx.Tenant);
+                builder.UseSiteAndThemeStaticFiles(multiTenantOptions, ctx.Tenant);
 
                 
                 //builder.UseAuthentication();
@@ -65,7 +105,6 @@ namespace Microsoft.AspNetCore.Builder
 
         public static IApplicationBuilder UseSiteAndThemeStaticFiles(
            this IApplicationBuilder builder,
-           ILoggerFactory loggerFactory,
            MultiTenantOptions multiTenantOptions,
            SiteContext tenant
            )

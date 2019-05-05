@@ -23,9 +23,7 @@
 }
 @if (Model.UseInvisibleCaptcha)
 {
-    <script>
-        function onCaptchaSubmit(token) { document.getElementById("register-form").submit(); }
-    </script>
+    <script src="~/cr/js/cloudscribe-register-page.js"></script> 
 }
 <h2>@ViewData["Title"]</h2>
 @if (!string.IsNullOrWhiteSpace(Model.RegistrationPreamble))
@@ -109,7 +107,7 @@
             <button name="submit" type="submit" class="btn btn-primary" data-enabled-text='@sr["Register"]' data-disabled-text='@sr["Working..."]'>@sr["Register"]</button>
         }
         @Html.ValidationMessage("registrationError", new { @class = "text-danger" })
-        
+
     </div>
 </form>
 @{

@@ -28,9 +28,7 @@
 }
 @if (Model.UseInvisibleCaptcha)
 {
-    <script>
-        function onCaptchaSubmit(token) { document.getElementById("login-form").submit(); }
-    </script>
+    <script src="~/cr/js/cloudscribe-login-page.js"></script>
 }
 <h2>@ViewData["Title"]</h2>
 @if (!string.IsNullOrWhiteSpace(Model.LoginInfoTop))
