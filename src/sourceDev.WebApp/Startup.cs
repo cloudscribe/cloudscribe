@@ -255,8 +255,6 @@ namespace sourceDev.WebApp
 
             app.UseCookiePolicy();
 
-
-
             app.UseSession();
 
             app.UseRequestLocalization(localizationOptionsAccessor.Value);
@@ -264,15 +262,15 @@ namespace sourceDev.WebApp
             // this uses the policy called "default"
             app.UseCors("default");
 
-            
-
             var multiTenantOptions = multiTenantOptionsAccessor.Value;
-            
-            app.UseCloudscribeCore(
-                    loggerFactory,
-                    multiTenantOptions,
-                    _sslIsAvailable
-                    );
+
+            //app.UseCloudscribeCore(
+            //        loggerFactory,
+            //        multiTenantOptions,
+            //        _sslIsAvailable
+            //        );
+
+            app.UseCloudscribeCore();
 
             if (!_disableIdentityServer)
             {

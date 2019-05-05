@@ -19,9 +19,7 @@
 }
 @if (Model.UseInvisibleCaptcha)
 {
-    <script>
-        function onCaptchaSubmit(token) { document.getElementById("login-form").submit(); }
-    </script>
+    <script src="~/cr/js/cloudscribe-login-page.js"></script>
 }
 <h2>@ViewData["Title"]</h2>
 @if (!string.IsNullOrWhiteSpace(Model.LoginInfoTop))
@@ -36,7 +34,7 @@
         <div class="col-md">
             <form id="login-form" asp-controller="Account" asp-action="Login" asp-route-returnurl='@ViewData["ReturnUrl"]' data-submit-once="true">
                 <div asp-validation-summary="All" class="text-danger"></div>
-               
+
                 <div class="form-group">
                     @if (Model.UseEmailForLogin)
                     {
@@ -54,7 +52,7 @@
                         <span asp-validation-for="UserName" class="invalid-feedback"></span>
                     </div>
                 </div>
-                
+
                 <div class="form-group">
                     <label asp-for="Password">@sr["Password"]</label>
                     <div class="input-group">
@@ -93,7 +91,7 @@
                         <button name="submit" type="submit" class="btn btn-primary" data-enabled-text='@sr["Log in"]' data-disabled-text='@sr["Working..."]'>@sr["Log in"]</button>
                     }
 
-                    
+
                 </div>
             </form>
 

@@ -142,16 +142,7 @@
     <script src="~/cr/js/jquery.validate.unobtrusive.min.js"></script>
     <script src="~/cr/js/jquery.unobtrusive-ajax.min.js"></script>
     <script src="~/cr/js/cloudscribe-modaldialog-bootstrap4.min.js"></script>
-    <script>
-        $('#confirmAddRoleModal').on('show.bs.modal', function (e) {
-            var message = $(e.relatedTarget).data('message');
-            var formId = $(e.relatedTarget).data('form-id');
-            $(e.currentTarget).find('span[id="spnMessage"]').html(message);
-            $("#btnAddUser").click(function () {
-                //alert(formId);
-                $("#" + formId).submit();
-            });
-        });
-    </script>
+    <script src="~/cr/js/cloudscribe-rolemember-page.js"></script>
+   
 
 }

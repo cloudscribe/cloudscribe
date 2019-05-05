@@ -15,21 +15,21 @@
     var Tenant = await siteResolver.ResolveSite(Context.Request.Host.Host, Context.Request.Path);
 }
 <!DOCTYPE html>
-<html>
+<html lang="@CultureInfo.CurrentUICulture.Name">
 <head>
     <meta charset="utf-8" />
     <title>@ViewData["Title"] - @(Tenant?.SiteName ?? "Sample")</title>
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     @RenderSection("Meta", required: false)
     <environment names="Development">
-        <link rel="stylesheet" href="~/css/bootstrap4.css" cs-resolve-theme-resource="true" cs-shared-theme="true" cs-tenant="@Tenant" />
-        <link rel="stylesheet" href="~/css/fontawesome-all.min.css" cs-resolve-theme-resource="true" cs-shared-theme="true" cs-tenant="@Tenant" />
-        <link rel="stylesheet" href="~/css/site.css" cs-resolve-theme-resource="true" cs-shared-theme="true" cs-tenant="@Tenant" />
+        <link rel="stylesheet" href="@Url.Content("~/css/bootstrap4.css")"  />
+        <link rel="stylesheet" href="@Url.Content("~/css/fontawesome-all.min.css")"  />
+        <link rel="stylesheet" href="@Url.Content("~/css/site.css")"  />
     </environment>
     <environment names="Staging,Production">
-        <link rel="stylesheet" href="~/css/bootstrap4.min.css" cs-resolve-theme-resource="true" cs-shared-theme="true" cs-tenant="@Tenant" />
-        <link rel="stylesheet" href="~/css/fontawesome-all.min.css" cs-resolve-theme-resource="true" cs-shared-theme="true" cs-tenant="@Tenant" />
-        <link rel="stylesheet" href="~/css/site.min.css" cs-resolve-theme-resource="true" cs-shared-theme="true" cs-tenant="@Tenant" />
+        <link rel="stylesheet" href="@Url.Content("~/css/bootstrap4.min.css")"  />
+        <link rel="stylesheet" href="@Url.Content("~/css/fontawesome-all.min.css")"  />
+        <link rel="stylesheet" href="@Url.Content("~/css/site.min.css")"  />
     </environment>
     @RenderSection("Styles", required: false)
     <google-analytics profile-id="@Tenant.GoogleAnalyticsProfileId" user-id="@User.GetUserId()"></google-analytics>
@@ -41,15 +41,15 @@
                 <span class="skiplink-text">Skip to main content</span>
             </div>
         </a>
-        <nav class="navbar navbar-expand-lg navbar-dark fixed-top bg-dark">
+        <nav class="navbar navbar-expand-lg navbar-light fixed-top bg-white ">
             <a href="~/@(Tenant?.SiteFolderName ?? "")" class="navbar-brand">@(Tenant?.SiteName ?? "Sample")</a>
             <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
 
-            <div class="collapse navbar-collapse" id="navbarNavDropdown">
+            <div class="collapse navbar-collapse bg-white pl-2" id="navbarNavDropdown">
                 @await Component.InvokeAsync("Navigation", new { viewName = "Bootstrap4TopNavWithDropdowns", filterName = NamedNavigationFilters.TopNav, startingNodeKey = "" })
-                @await Html.PartialAsync("_LoginPartial")
+                <partial name="_LoginPartialWithDropdowns" />
             </div>
         </nav>
     </header>
@@ -57,7 +57,8 @@
         @await Component.InvokeAsync("Navigation", new { viewName = "Bootstrap4Breadcrumbs", filterName = NamedNavigationFilters.Breadcrumbs, startingNodeKey = "" })
         <div class="row">
             <main id="content" role="main" class="col order-3">
-                @await Html.PartialAsync("AlertsPartial")
+                <partial name="AlertsPartial" />
+                <partial name="_CookieConsentPartial" />
                 @RenderBody()
             </main>
             @if (sideNavVisible)
@@ -89,6 +90,12 @@
                 <li class=" mr-2">
                     <a class="text-nowrap" href="/sitemap">Site Map</a>
                 </li>
+                @if (Tenant != null && !string.IsNullOrWhiteSpace(Tenant.PrivacyPolicy))
+                {
+                    <li class="border-left pl-2 mr-2">
+                        <a asp-controller="Privacy" asp-action="Index">Privacy Policy</a>
+                    </li>
+                }
                 <li class="border-left pl-2 mr-2">
                     @* you are free to remove the powered by cloudscribe link but we appreciate it if you choose to keep it! *@
                     <a class="text-nowrap" target="_blank" href="https://www.cloudscribe.com/?utm_source=@Context.Request.Host.Value&amp;utm_medium=referral&amp;utm_campaign=poweredbycloudscribe">Powered by cloudscribe</a>
@@ -96,17 +103,18 @@
             </ul>
         </div>
         <div class="p-2 text-nowrap">Copyright &copy; @DateTime.Now.Year - @(Tenant?.SiteName ?? "Sample")</div>
+        
     </footer>
     @RenderSection("Toolbar", required: false)
     <environment names="Development">
-        <script src="~/js/jquery.js" cs-resolve-theme-resource="true" cs-shared-theme="true" cs-tenant="@Tenant"></script>
-        <script src="~/js/bootstrap.bundle.js" cs-resolve-theme-resource="true" cs-shared-theme="true" cs-tenant="@Tenant"></script>
-        <script src="~/cr/js/bs4.smartmenus.min.js"></script>
+        <script src="@Url.Content("~/js/jquery.js")"></script>
+        <script src="@Url.Content("~/js/bootstrap4.bundle.js")"></script>
+        <script src="@Url.Content("~/cr/js/bs4.smartmenus.min.js")"></script>
     </environment>
     <environment names="Staging,Production">
-        <script src="~/js/jquery.min.js" cs-resolve-theme-resource="true" cs-shared-theme="true" cs-tenant="@Tenant"></script>
-        <script src="~/js/bootstrap.bundle.min.js" cs-resolve-theme-resource="true" cs-shared-theme="true" cs-tenant="@Tenant"></script>
-        <script src="~/cr/js/bs4.smartmenus.min.js"></script>
+        <script src="@Url.Content("~/js/jquery.min.js")"></script>
+        <script src="@Url.Content("~/js/bootstrap4.bundle.min.js")"></script>
+        <script src="@Url.Content("~/cr/js/bs4.smartmenus.min.js")"></script>
     </environment>
     @RenderSection("Bottom", required: false)
     @RenderSection("Scripts", required: false)

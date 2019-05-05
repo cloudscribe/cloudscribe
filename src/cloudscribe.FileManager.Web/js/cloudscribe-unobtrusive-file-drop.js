@@ -396,6 +396,24 @@
                     var item = dropElements[i];
                     cloudscribeDropAndCrop.buildImageEditor(item);
                 }
+
+
+                var btnClear = document.getElementById("dz1-clear-image");
+                if (btnClear) {
+                    btnClear.onclick = function ClearLogo() {
+                        var hidden = document.getElementById("imgUrlFull");
+                        if (hidden) {
+                            hidden.value = '';
+                        }
+                        var img = document.getElementById("dz1Image");
+                        if (img) {
+                            img.src = "/cr/images/690x517-placeholder.png";
+                        }
+                    };
+                }
+
             });
+
+
         })();
 		

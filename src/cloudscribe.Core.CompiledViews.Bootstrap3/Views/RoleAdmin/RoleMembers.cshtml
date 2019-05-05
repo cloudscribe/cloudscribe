@@ -76,11 +76,6 @@
                             </div>
 
 
-                            @*<button type="submit"
-                                    class="btn btn-danger btn-xs"
-                                    onclick="javascript: return confirm('@Html.FormatValue(item.DisplayName, sr["Are you sure you want to remove {0}?"])');">
-                                @sr["Remove"]
-                            </button>*@
                         </form>
                     </td>
                     <td>
@@ -137,37 +132,10 @@
         </div>
     </div>
 
-@*
-       <div>
-        <label id="selectedRolesDisplay"></label>
-        <input type="text" id="mycsv" class="form-control" />
-        <a id="mymodal" class="btn btn-xs btn-default" title="Select Roles"
-           asp-action="Modal" asp-controller="RoleAdmin"
-           asp-route-siteId="@Model.Role.SiteId"
-           data-ajax="true"
-           data-ajax-begin="roleSelector.prepareModal('mycsv','selectedRolesDisplay')"
-           data-ajax-failure="roleSelector.clearModal()"
-           data-ajax-method="GET" data-ajax-mode="replace"
-           data-ajax-success="roleSelector.openModal()"
-           data-ajax-update="#roledialog"
-           >@sr["Select Roles"]</a>
-    </div>
-    <script src="~/jsdev/cloudscribe-role-selector.js"></script>
-*@
  @section Scripts {
 @{await Html.RenderPartialAsync("_UnobtrusiveValidationScriptsPartial"); }
 <script src="~/cr/js/jquery.unobtrusive-ajax.min.js"></script>
 <script src="~/cr/js/cloudscribe-modaldialog-bootstrap.min.js"></script>
-<script>
-    $('#confirmAddRoleModal').on('show.bs.modal', function (e) {
-        var message = $(e.relatedTarget).data('message');
-        var formId = $(e.relatedTarget).data('form-id');
-        $(e.currentTarget).find('span[id="spnMessage"]').html(message);
-        $("#btnAddUser").click(function () {
-            //alert(formId);
-            $("#" + formId).submit();
-        });
-    });
-</script>
+<script src="~/cr/js/cloudscribe-rolemember-page.js"></script>
      
  }
