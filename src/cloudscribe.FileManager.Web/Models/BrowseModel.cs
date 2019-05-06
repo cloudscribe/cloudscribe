@@ -36,7 +36,7 @@
 
         public string RenameFileServiceUrl { get; set; }
 
-        public string AllowedFileExtensionsRegex { get; set; }
+        public string AllowedFileExtensions { get; set; }
 
         public bool CanDelete { get; set; }
 

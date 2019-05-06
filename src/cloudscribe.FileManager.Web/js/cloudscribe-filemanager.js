@@ -6,6 +6,7 @@
         },
         treeDataApiUrl: $("#fmconfig").data("filetree-url"),
         //fileType: $("#fmconfig").data("file-type"),
+        allowedFiles: $("#fmconfig").data("allowed-file-extensions"),
         uploadApiUrl: $("#fmconfig").data("upload-url"),
         downloadFileApiUrl: $("#fmconfig").data("file-download-url"),
         createFolderApiUrl: $("#fmconfig").data("create-folder-url"),
@@ -658,12 +659,16 @@
                     //$('#fileList').html('');
                     $('#fileList').empty();
                     $('#fileList').append($("<ul class='filelist'></ul>"));
-                    var regx = allowedFilesRegex;
+                   
+                    var allowedFiles = fileManager.allowedFiles.split('|');
+                    var regx = new RegExp("([a-zA-Z0-9\s_\\.\-:])+(" + allowedFiles.join('|') + ")$");
                     var j = 0;
                     var k = data.files.length;
                     //alert(k);
                     while (j < k) {
-                        if ((regx.test(data.files[j].name)) === false) {
+                        if ((regx.test(data.files[j].name.toLowerCase())) === false) {
+                            fileManager.notify(data.files[j].name + ' not allowed', 'alert-danger');
+                            //console.log(data.files[j].name + " rejected by regex");
                             //alert('false');
                             data.files.splice(j, 1);
                             k = data.files.length;

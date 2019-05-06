@@ -2,8 +2,8 @@
 
   <PropertyGroup>
     <Description>common static resources for web applications including ckeditor dtatepickers, and other js and css</Description>
-    <VersionPrefix>1.1.0</VersionPrefix>
-    <AssemblyVersion>1.1.0</AssemblyVersion>
+    <VersionPrefix>1.1.1</VersionPrefix>
+    <AssemblyVersion>1.1.1</AssemblyVersion>
     <Authors>Joe Audette</Authors>
     <TargetFrameworks>netstandard2.0</TargetFrameworks>
     <PackageTags>cloudscribe</PackageTags>
@@ -17,6 +17,10 @@
 <ItemGroup>
     <EmbeddedResource Include="js\**;css\**;fonts\**;webfonts\**;images\**" Exclude="bin\**;obj\**;**\*.xproj;packages\**;@(EmbeddedResource)" />
   </ItemGroup>
+  
+<ItemGroup>
+  <None Remove="js\cloudscribe-logout-link.js" />
+</ItemGroup>
   
 
   <ItemGroup>

@@ -30,7 +30,7 @@ namespace cloudscribe.FileManager.Web.Controllers
         public FileManagerController(
             FileManagerService fileManagerService,
             IAuthorizationService authorizationService,
-            IFileExtensionValidationRegexBuilder allowedFilesRegexBuilder,
+            //IFileExtensionValidationRegexBuilder allowedFilesRegexBuilder,
             IOptions<AutomaticUploadOptions> autoUploadOptionsAccessor,
             IAntiforgery antiforgery,
             IResourceHelper resourceHelper,
@@ -39,7 +39,7 @@ namespace cloudscribe.FileManager.Web.Controllers
         {
             _fileManagerService = fileManagerService;
             _authorizationService = authorizationService;
-            _allowedFilesRegexBuilder = allowedFilesRegexBuilder;
+           // _allowedFilesRegexBuilder = allowedFilesRegexBuilder;
             _autoUploadOptions = autoUploadOptionsAccessor.Value;
             _antiforgery = antiforgery;
             _resourceHelper = resourceHelper;
@@ -48,7 +48,7 @@ namespace cloudscribe.FileManager.Web.Controllers
 
         private FileManagerService _fileManagerService;
         private IAuthorizationService _authorizationService;
-        private IFileExtensionValidationRegexBuilder _allowedFilesRegexBuilder;
+        //private IFileExtensionValidationRegexBuilder _allowedFilesRegexBuilder;
         private AutomaticUploadOptions _autoUploadOptions;
         private readonly IAntiforgery _antiforgery;
         private IResourceHelper _resourceHelper;
@@ -78,22 +78,25 @@ namespace cloudscribe.FileManager.Web.Controllers
             switch (model.Type)
             {
                 case "image":
-                    model.AllowedFileExtensionsRegex = _allowedFilesRegexBuilder.BuildRegex(_autoUploadOptions.ImageFileExtensions);
+                    //model.AllowedFileExtensionsRegex = _allowedFilesRegexBuilder.BuildRegex(_autoUploadOptions.ImageFileExtensions);
+                    model.AllowedFileExtensions = _autoUploadOptions.ImageFileExtensions;
                     break;
 
                 case "video":
-                    model.AllowedFileExtensionsRegex = _allowedFilesRegexBuilder.BuildRegex(_autoUploadOptions.VideoFileExtensions);
+                    //model.AllowedFileExtensionsRegex = _allowedFilesRegexBuilder.BuildRegex(_autoUploadOptions.VideoFileExtensions);
+                    model.AllowedFileExtensions = _autoUploadOptions.VideoFileExtensions;
                     break;
 
                 case "audio":
-                    model.AllowedFileExtensionsRegex = _allowedFilesRegexBuilder.BuildRegex(_autoUploadOptions.AudioFileExtensions);
+                    // model.AllowedFileExtensionsRegex = _allowedFilesRegexBuilder.BuildRegex(_autoUploadOptions.AudioFileExtensions);
+                    model.AllowedFileExtensions = _autoUploadOptions.AudioFileExtensions;
                     break;
 
 
 
                 default:
-                    model.AllowedFileExtensionsRegex = _allowedFilesRegexBuilder.BuildRegex(_autoUploadOptions.AllowedFileExtensions);
-
+                    //model.AllowedFileExtensionsRegex = _allowedFilesRegexBuilder.BuildRegex(_autoUploadOptions.AllowedFileExtensions);
+                    model.AllowedFileExtensions = _autoUploadOptions.AllowedFileExtensions;
                     break;
             }
 
@@ -129,21 +132,21 @@ namespace cloudscribe.FileManager.Web.Controllers
             switch(model.Type)
             {
                 case "image":
-                    model.AllowedFileExtensionsRegex = _allowedFilesRegexBuilder.BuildRegex(_autoUploadOptions.ImageFileExtensions);
+                    model.AllowedFileExtensions = _autoUploadOptions.ImageFileExtensions;
                     break;
 
                 case "video":
-                    model.AllowedFileExtensionsRegex = _allowedFilesRegexBuilder.BuildRegex(_autoUploadOptions.VideoFileExtensions);
+                    model.AllowedFileExtensions = _autoUploadOptions.VideoFileExtensions;
                     break;
 
                 case "audio":
-                    model.AllowedFileExtensionsRegex = _allowedFilesRegexBuilder.BuildRegex(_autoUploadOptions.AudioFileExtensions);
+                    model.AllowedFileExtensions = _autoUploadOptions.AudioFileExtensions;
                     break;
 
 
 
                 default:
-                    model.AllowedFileExtensionsRegex = _allowedFilesRegexBuilder.BuildRegex(_autoUploadOptions.AllowedFileExtensions);
+                    model.AllowedFileExtensions = _autoUploadOptions.AllowedFileExtensions;
 
                     break;
             }
