@@ -23,8 +23,8 @@ namespace cloudscribe.Web.StaticFiles
     /// modified from https://github.com/aspnet/FileSystem/blob/dev/src/Microsoft.Extensions.FileProviders.Embedded/EmbeddedFileProvider.cs
     /// with changes by Joe Audette to handle embedded resources with - in the folder name
     /// - in folder names must be converted to _ but - in filename must be left as is
-    /// for example /cr/js/ckeditor461/skins/moono-lisa/editor.css?t=GB8C
-    /// must be changed to /cr/js/ckeditor461/skins/moono_lisa/editor.css?t=GB8C
+    /// for example /cr/js/ckeditor4114/skins/moono-lisa/editor.css?t=GB8C
+    /// must be changed to /cr/js/ckeditor4114/skins/moono_lisa/editor.css?t=GB8C
     /// this is used in conjunction with StaticFileMiddleware to serve embedded static resources
     /// I reported the problem here: https://github.com/aspnet/FileSystem/issues/277
     /// turns out it is a duplicsate of this issue https://github.com/aspnet/FileSystem/issues/184
@@ -127,8 +127,8 @@ namespace cloudscribe.Web.StaticFiles
 
             //JA fix for folders with - which must be converted to _
             // but file names with - should not be changed
-            // /cr/js/ckeditor461/skins/moono-lisa/editor.css?t=GB8C
-            // /cr/js/ckeditor461/plugins/cloudscribe-filedrop/plugin.js?t=GB8C
+            // /cr/js/ckeditor4114/skins/moono-lisa/editor.css?t=GB8C
+            // /cr/js/ckeditor4114/plugins/cloudscribe-filedrop/plugin.js?t=GB8C
 
             subpath = ResolveResourceIdentifier(subpath);
 
