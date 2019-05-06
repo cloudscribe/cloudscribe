@@ -21,8 +21,9 @@
             @await Component.InvokeAsync("Navigation", new { viewName = "Bs4ChildDropdown", filterName = "child-dropdown", startingNodeKey = "Manage" })
         </li>
         <li class="nav-item">
-            <a class="nav-link" href="javascript:document.getElementById('logoutForm').submit()">@sr["Log off"]</a>
+            <a id="lnkLogout" href="#" class="nav-link">@sr["Log off"]</a>
             <form asp-controller="Account" asp-action="LogOff" method="post" id="logoutForm"></form>
+            <script src="/cr/js/cloudscribe-logout-link.js" asp-append-version="true"></script>
         </li>
     </ul>
 }

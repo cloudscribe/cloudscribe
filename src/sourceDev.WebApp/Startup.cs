@@ -245,35 +245,36 @@ namespace sourceDev.WebApp
             {
                 app.UseExceptionHandler("/oops/Error");
                 //NWebSec
+                //https://github.com/OWASP/CheatSheetSeries/blob/master/cheatsheets/HTTP_Strict_Transport_Security_Cheat_Sheet.md
                 app.UseHsts(hsts => hsts.MaxAge(cspConfig.HstsDays));
             }
 
             // NWebSec
-            //app.UseRedirectValidation(options => options.AllowSameHostRedirectsToHttps());
-            //app.UseXContentTypeOptions();
-            //app.UseReferrerPolicy(opts => opts.NoReferrer());
-            //app.UseXXssProtection(options => options.EnabledWithBlockMode());
-            //app.UseXfo(xfo => xfo.SameOrigin());
-            //app.UseCsp(opts => opts
-            //    .BlockAllMixedContent()
-            //    .StyleSources(s => s.Self()
-            //       .UnsafeInline()
-            //   // .CustomSources(cspConfig.WhitelistStyles.ToArray())
-            //    )
-            //    .FontSources(s => s.Self()
-            //     // .CustomSources(cspConfig.WhitelistFonts.ToArray())
-            //      )
-            //     .FormActions(s => s.Self())
-            //     .FrameAncestors(s => s.Self())
-            //     .ImageSources(s => s.Self()
-            //         .CustomSources(cspConfig.WhitelistImages.ToArray())
-            //      )
-            //     .ScriptSources(s => s.Self()
-            //     //.UnsafeInline()
-            //    // .UnsafeEval()
-            //       .CustomSources(cspConfig.WhitelistScripts.ToArray())
-            //      )
-            //    );
+            app.UseRedirectValidation(options => options.AllowSameHostRedirectsToHttps());
+            app.UseXContentTypeOptions();
+            app.UseReferrerPolicy(opts => opts.NoReferrer());
+            app.UseXXssProtection(options => options.EnabledWithBlockMode());
+            app.UseXfo(xfo => xfo.SameOrigin());
+            app.UseCsp(opts => opts
+                .BlockAllMixedContent()
+                .StyleSources(s => s.Self()
+                   .UnsafeInline()
+                // .CustomSources(cspConfig.WhitelistStyles.ToArray()) //throws an error if empty array
+                )
+                .FontSources(s => s.Self()
+                  // .CustomSources(cspConfig.WhitelistFonts.ToArray())   //throws an error if empty array
+                  )
+                 .FormActions(s => s.Self())
+                 .FrameAncestors(s => s.Self())
+                 .ImageSources(s => s.Self()
+                     .CustomSources(cspConfig.WhitelistImages.ToArray())
+                  )
+                 .ScriptSources(s => s.Self()
+                    .UnsafeInline() //ckeditor toolbars buttons don't work without this unfortunately
+                    .UnsafeEval() //without this jquery.unobtrusiveajax doesn't work
+                   .CustomSources(cspConfig.WhitelistScripts.ToArray())  //throws an error if empty array
+                  )
+                );
             // end NWebSec
 
 

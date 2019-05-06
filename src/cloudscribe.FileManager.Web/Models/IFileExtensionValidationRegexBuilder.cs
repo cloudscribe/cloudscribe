@@ -1,7 +1,7 @@
-﻿namespace cloudscribe.FileManager.Web.Models
-{
-    public interface IFileExtensionValidationRegexBuilder
-    {
-        string BuildRegex(string pipeSeparatedExtensions);
-    }
-}
+﻿//namespace cloudscribe.FileManager.Web.Models
+//{
+//    public interface IFileExtensionValidationRegexBuilder
+//    {
+//        string BuildRegex(string pipeSeparatedExtensions);
+//    }
+//}

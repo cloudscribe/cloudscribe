@@ -33,7 +33,8 @@
       data-delete-file-url="@Model.DeleteFileServiceUrl"
       data-rename-file-url="@Model.RenameFileServiceUrl"
       data-root-virtual-path="@Model.InitialVirtualPath"
-      data-empty-preview-url='@Url.Content("~/cr/css/1x1.gif")'></span>
+      data-empty-preview-url='@Url.Content("~/cr/css/1x1.gif")'
+      data-allowed-file-extensions="@Model.AllowedFileExtensions"></span>
 <div id="alert_placeholder"></div>
 <div class="container-fluid">
     <ul class="nav nav-tabs" role="tablist">
@@ -62,9 +63,6 @@
     </div>
 </div>
 @section scripts {
-    <partial name="FileManagerScriptsPartial" />
-    <script type="text/javascript">
-        var allowedFilesRegex = @Html.Raw(Model.AllowedFileExtensionsRegex);
-    </script>
+    <partial name="FileManagerScriptsPartial" /> 
 
 }
