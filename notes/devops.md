@@ -1,4 +1,5 @@
 
+https://medium.com/faun/the-missing-introduction-to-containerization-de1fbb73efc5
 
 https://channel9.msdn.com/Shows/Code-Conversations/Introduction-to-MSBuild-in-NET-Core-with-Nate-McMaster
 

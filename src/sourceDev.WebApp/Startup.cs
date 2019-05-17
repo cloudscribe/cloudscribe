@@ -250,31 +250,31 @@ namespace sourceDev.WebApp
             }
 
             // NWebSec
-            app.UseRedirectValidation(options => options.AllowSameHostRedirectsToHttps());
-            app.UseXContentTypeOptions();
-            app.UseReferrerPolicy(opts => opts.NoReferrer());
-            app.UseXXssProtection(options => options.EnabledWithBlockMode());
-            app.UseXfo(xfo => xfo.SameOrigin());
-            app.UseCsp(opts => opts
-                .BlockAllMixedContent()
-                .StyleSources(s => s.Self()
-                   .UnsafeInline()
-                // .CustomSources(cspConfig.WhitelistStyles.ToArray()) //throws an error if empty array
-                )
-                .FontSources(s => s.Self()
-                  // .CustomSources(cspConfig.WhitelistFonts.ToArray())   //throws an error if empty array
-                  )
-                 .FormActions(s => s.Self())
-                 .FrameAncestors(s => s.Self())
-                 .ImageSources(s => s.Self()
-                     .CustomSources(cspConfig.WhitelistImages.ToArray())
-                  )
-                 .ScriptSources(s => s.Self()
-                    .UnsafeInline() //ckeditor toolbars buttons don't work without this unfortunately
-                    .UnsafeEval() //without this jquery.unobtrusiveajax doesn't work
-                   .CustomSources(cspConfig.WhitelistScripts.ToArray())  //throws an error if empty array
-                  )
-                );
+            //app.UseRedirectValidation(options => options.AllowSameHostRedirectsToHttps());
+            //app.UseXContentTypeOptions();
+            //app.UseReferrerPolicy(opts => opts.NoReferrer());
+            //app.UseXXssProtection(options => options.EnabledWithBlockMode());
+            //app.UseXfo(xfo => xfo.SameOrigin());
+            //app.UseCsp(opts => opts
+            //    .BlockAllMixedContent()
+            //    .StyleSources(s => s.Self()
+            //       .UnsafeInline()
+            //    // .CustomSources(cspConfig.WhitelistStyles.ToArray()) //throws an error if empty array
+            //    )
+            //    .FontSources(s => s.Self()
+            //      // .CustomSources(cspConfig.WhitelistFonts.ToArray())   //throws an error if empty array
+            //      )
+            //     .FormActions(s => s.Self())
+            //     .FrameAncestors(s => s.Self())
+            //     .ImageSources(s => s.Self()
+            //         .CustomSources(cspConfig.WhitelistImages.ToArray())
+            //      )
+            //     .ScriptSources(s => s.Self()
+            //        //.UnsafeInline() //ckeditor toolbars buttons don't work without this unfortunately
+            //        .UnsafeEval() //without this jquery.unobtrusiveajax doesn't work
+            //       .CustomSources(cspConfig.WhitelistScripts.ToArray())  //throws an error if empty array
+            //      )
+            //    );
             // end NWebSec
 
 

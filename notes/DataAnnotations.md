@@ -65,3 +65,12 @@ $.validator.unobtrusive.adapters.add(
         };
         options.messages['requiredif'] = options.message;
     });
+	
+https://stackoverflow.com/questions/36033507/asp-net-mvc-conditional-validation-end-date-must-be-greater-than-or-equal-to-st
+	
+https://thewayofcode.wordpress.com/tag/custom-unobtrusive-validation/
+	
+https://stackoverflow.com/questions/36033507/asp-net-mvc-conditional-validation-end-date-must-be-greater-than-or-equal-to-st
+	
+	
+	

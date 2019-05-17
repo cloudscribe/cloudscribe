@@ -1,0 +1,43 @@
+﻿@model sourceDev.WebApp.ViewModels.DateValidationTestViewModel
+@{
+    ViewData["Title"] = "Date Validation Work";
+}
+
+<form asp-action="DateTest">
+
+    <input asp-for="MinDateValue" type="hidden" />
+    <input asp-for="MaxDateValue" type="hidden" />
+
+    <div class="form-row">
+        <div class="form-group col-md">
+            <label asp-for="StartDate">Start Date</label>
+            <input asp-for="StartDate" type="date" class="form-control" />
+            <span asp-validation-for="StartDate" class="invalid-feedback"></span>
+        </div>
+        <div class="form-group col-md">
+            <label asp-for="EndDate">End Date</label>
+            <input asp-for="EndDate" type="date" class="form-control" />
+            <span asp-validation-for="EndDate" class="invalid-feedback"></span>
+        </div>
+    </div>
+
+    <div asp-validation-summary="All" class="text-danger"></div>
+    <button type="submit" class="btn btn-primary" data-disabled-text="Working..." data-enabled-text="Save">Save</button>
+
+</form>
+
+
+@section Scripts {
+    @*<partial name="DatePickerBs4Scripts" />*@
+    <script src="~/cr/js/jquery.validate.min.js"></script>
+    <script src="~/cr/js/jquery.validate.unobtrusive.min.js"></script>
+    <script src="~/cr/js/unobtrusive-validation-bs4.min.js"></script>
+    <script src="~/cr/js/jquery.validate.hooks.min.js"></script>
+    <script src="~/cr/js/jqueryvaildation.submitonce-unobtrusive.min.js"></script>
+
+    <script src="~/js/cloudscribe-validation-dategreaterorequal.js" asp-append-version="true"></script>
+    <script src="~/js/cloudscribe-validation-date-minval.js" asp-append-version="true"></script>
+    <script src="~/js/cloudscribe-validation-date-maxval.js" asp-append-version="true"></script>
+
+
+}
