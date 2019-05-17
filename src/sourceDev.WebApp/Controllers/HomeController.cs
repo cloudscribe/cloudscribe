@@ -79,16 +79,27 @@ namespace sourceDev.WebApp.Controllers
 
                 }
             }
-
-           
-
-
-
-
-
-
+            
 
             return View();
+        }
+
+        [HttpGet]
+        public IActionResult DateTest()
+        {
+            var model = new DateValidationTestViewModel();
+
+
+            return View(model);
+        }
+
+        [HttpPost]
+        public IActionResult DateTest(DateValidationTestViewModel model)
+        {
+
+            this.AlertSuccess("Success", true);
+
+            return View(model);
         }
 
         private void AddAnayticsTransaction()

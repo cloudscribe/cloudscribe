@@ -12,6 +12,7 @@ using Microsoft.AspNetCore.Razor.TagHelpers;
 using Microsoft.Extensions.Options;
 using System;
 using System.Globalization;
+using System.Security.Cryptography;
 using System.Text;
 
 namespace cloudscribe.Web.Common.TagHelpers
@@ -374,10 +375,26 @@ namespace cloudscribe.Web.Common.TagHelpers
             //we need to generate a hash of the script and add it to CSP Header
             var rawScript = sb.ToString();
 
-            //byte[] contentHashBytes = SHA256.Create().ComputeHash(Encoding.UTF8.GetBytes(rawScript));
-            //string contentHash = Convert.ToBase64String(contentHashBytes);
+            
 
             output.Content.SetHtmlContent(rawScript);
+
+            //var content = output.Content.GetContent();
+            //content = content.Replace("\r\n", "\n");
+
+            //byte[] contentHashBytes = SHA256.Create().ComputeHash(Encoding.UTF8.GetBytes(content));
+            //string contentHash = "sha256-" +  Convert.ToBase64String(contentHashBytes);
+            ////stash the hash in items collection
+            //ViewContext.HttpContext.Items["ga-csp-hash"] = contentHash;
+            //if(!ViewContext.HttpContext.Response.HasStarted)
+            //{
+            //    var cspHeader = ViewContext.HttpContext.Response.Headers["content-security-policy"];
+
+            //    var foo = false;
+            //}
+
+          
+
 
 
         }
