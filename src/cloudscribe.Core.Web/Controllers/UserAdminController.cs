@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2014-12-08
-// Last Modified:			2019-04-09
+// Last Modified:			2019-05-17
 // 
 
 using cloudscribe.Core.Identity;
@@ -37,6 +37,7 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
             SiteManager siteManager,
             SiteUserManager<SiteUser> userManager,
             ISiteMessageEmailSender emailSender,
+            IAuthorizationService authorizationService,
             IOptions<UIOptions> uiOptionsAccessor,
             IStringLocalizer<CloudscribeCore> localizer,
             cloudscribe.DateTimeUtils.ITimeZoneIdResolver timeZoneIdResolver,
@@ -49,6 +50,7 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
             EmailSender = emailSender;
             UIOptions = uiOptionsAccessor.Value;
             StringLocalizer = localizer;
+            AuthorizationService = authorizationService;
             TimeZoneIdResolver = timeZoneIdResolver;
             TimeZoneHelper = timeZoneHelper;
             CustomUserInfo = customUserEdit;
@@ -57,6 +59,7 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
         protected SiteManager SiteManager { get; private set; }
         protected SiteUserManager<SiteUser> UserManager { get; private set; }
         protected ISiteMessageEmailSender EmailSender { get; private set; }
+        protected IAuthorizationService AuthorizationService { get; private set; }
         protected UIOptions UIOptions { get; private set; }
         protected IStringLocalizer StringLocalizer { get; private set; } // string resources
         protected cloudscribe.DateTimeUtils.ITimeZoneIdResolver TimeZoneIdResolver { get; private set; }
@@ -994,12 +997,28 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
             
             var selectedSite = SiteManager.CurrentSite;
 
-            var result = await UserManager.RemoveUserFromRole(selectedSite.Id, userId, roleName);
-            
-            if (result.Succeeded)
+            var canRemove = true;
+            if (roleName == "Administrators")
             {
-                this.AlertSuccess(string.Format(StringLocalizer["The role {0} was successfully removed."], roleName), true);
+                var adminAuthResult = await AuthorizationService.AuthorizeAsync(User, "AdminPolicy");
+                canRemove = adminAuthResult.Succeeded;
             }
+
+            if(canRemove)
+            {
+                var result = await UserManager.RemoveUserFromRole(selectedSite.Id, userId, roleName);
+
+                if (result.Succeeded)
+                {
+                    this.AlertSuccess(string.Format(StringLocalizer["The role {0} was successfully removed."], roleName), true);
+                }
+            }
+            else
+            {
+                this.AlertDanger(StringLocalizer["Sorry, but only other Administrators can remove users from the Administrators role."], true);
+            }
+
+           
            
             return RedirectToAction("UserEdit", "UserAdmin", new { siteId = selectedSite.Id, userId });
         }
