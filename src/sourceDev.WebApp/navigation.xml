@@ -134,7 +134,7 @@
       controller="SiteAdmin" 
       action="Index" 
       text="Administration"
-      authorizationPolicy="AdminPolicy">
+      authorizationPolicy="AdminMenuPolicy">
       <Children>
         <NavNode key="SiteList"  
                  controller="SiteAdmin" 

@@ -29,6 +29,7 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
             SiteManager siteManager,
             SiteUserManager<SiteUser> userManager,
             SiteRoleManager<SiteRole> roleManager,
+            IAuthorizationService authorizationService,
             IStringLocalizer<CloudscribeCore> localizer,
             IOptions<UIOptions> uiOptionsAccessor,
             IOptions<SiteConfigOptions> setupOptionsAccessor,
@@ -40,12 +41,14 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
             SiteManager = siteManager;
             UIOptions = uiOptionsAccessor.Value;
             SetupOptions = setupOptionsAccessor.Value;
+            AuthorizationService = authorizationService;
             StringLocalizer = localizer;
             RoleGuards = roleGuards;
         }
 
         protected SiteManager SiteManager { get; private set; }
         protected UIOptions UIOptions { get; private set; }
+        protected IAuthorizationService AuthorizationService { get; private set; }
         protected IStringLocalizer StringLocalizer { get; private set; }
         protected SiteConfigOptions SetupOptions { get; private set; }
         protected SiteUserManager<SiteUser> UserManager { get; private set; }
@@ -444,14 +447,30 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
             if (user != null)
             {
                 var role = await RoleManager.FindByIdAsync(roleId.ToString());
-                if ((role != null) && (role.SiteId == selectedSite.Id))
+
+                var canAdd = true;
+                if(role.NormalizedRoleName == "ADMINISTRATORS")
                 {
-                    await RoleManager.AddUserToRole(user, role);
-                    
-                    this.AlertSuccess(string.Format(StringLocalizer["{0} was successfully added to the role {1}."],
-                        user.DisplayName, 
-                        role.RoleName), true);
+                    var adminAuthResult = await AuthorizationService.AuthorizeAsync(User, "AdminPolicy");
+                    canAdd = adminAuthResult.Succeeded;
                 }
+
+                if(canAdd)
+                {
+                    if ((role != null) && (role.SiteId == selectedSite.Id))
+                    {
+                        await RoleManager.AddUserToRole(user, role);
+
+                        this.AlertSuccess(string.Format(StringLocalizer["{0} was successfully added to the role {1}."],
+                            user.DisplayName,
+                            role.RoleName), true);
+                    }
+                }
+                else
+                {
+                    this.AlertDanger("Sorry, but only other Administrators can add users to the Administrators role.", true);
+                }
+                
 
             }
 
@@ -471,14 +490,30 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
             if (user != null)
             {
                 var role = await RoleManager.FindByIdAsync(roleId.ToString());
-                if ((role != null) && (role.SiteId == selectedSite.Id))
+
+                var canRemove = true;
+                if (role.NormalizedRoleName == "ADMINISTRATORS")
                 {
-                    await RoleManager.RemoveUserFromRole(user, role);
-                    this.AlertWarning(string.Format(
-                        StringLocalizer["{0} was successfully removed from the role {1}."],
-                        user.DisplayName, role.RoleName)
-                        , true);   
+                    var adminAuthResult = await AuthorizationService.AuthorizeAsync(User, "AdminPolicy");
+                    canRemove = adminAuthResult.Succeeded;
                 }
+
+                if(canRemove)
+                {
+                    if ((role != null) && (role.SiteId == selectedSite.Id))
+                    {
+                        await RoleManager.RemoveUserFromRole(user, role);
+                        this.AlertWarning(string.Format(
+                            StringLocalizer["{0} was successfully removed from the role {1}."],
+                            user.DisplayName, role.RoleName)
+                            , true);
+                    }
+                }
+                else
+                {
+                    this.AlertDanger("Sorry, but only other Administrators can remove users from the Administrators role.", true);
+                }
+                
 
             }
 
