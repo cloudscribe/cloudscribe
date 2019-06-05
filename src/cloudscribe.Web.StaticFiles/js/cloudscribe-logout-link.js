@@ -6,6 +6,7 @@
             if (logoutForm) {
                 logoutForm.submit();
             }
+            event.preventDefault();
         }, false);
     }
 });

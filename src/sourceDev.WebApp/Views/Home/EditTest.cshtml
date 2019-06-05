@@ -1,0 +1,23 @@
+﻿@inject ICkeditorOptionsResolver editorOptionsResolver
+
+@{
+
+    ViewData["Title"] = "Editor Test";
+    var ckOptions = await editorOptionsResolver.GetCkeditorOptions();
+}
+
+
+
+<textarea class="form-control" rows="5" id="comment" name="comment"
+          data-ckeditor-unobtrusive=""
+          data-ckeditor-config-url="@ckOptions.CustomConfigPath"
+          data-ckeditor-config-language="@ckOptions.LanguageCode"
+          data-ckeditor-config-toolbar="None"></textarea>
+
+@section Scripts {
+
+    <script src="~/cr/js/ckeditor4114/ckeditor.js"></script>
+    <script src="~/js/cloudscribe-ckeditor-unobtrusive.js" asp-append-version="true"></script>
+}
+
+
