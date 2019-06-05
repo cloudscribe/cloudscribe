@@ -84,6 +84,11 @@ $(function () {
                 config.dropFileXsrfToken = $('[name="__RequestVerificationToken"]:first').val();
             }
 
+            if (config.toolbar === "None") {
+                config.removePlugins = 'toolbar,elementspath,resize,clipboard,pastetext,pastefromword,tableselection,widget,uploadwidget,uploadimage,oembed,codesnippet,scayt,wsc';
+            }
+            
+
             var editor = CKEDITOR.replace(ele, config);
             
             editor.on('change', function() {

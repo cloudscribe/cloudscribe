@@ -4,5 +4,11 @@
     "inputFiles": [
       "wwwroot/js/cloudscribe-ckeditor-config.js"
     ]
+  },
+  {
+    "outputFileName": "wwwroot/js/cloudscribe-ckeditor-unobtrusive.min.js",
+    "inputFiles": [
+      "wwwroot/js/cloudscribe-ckeditor-unobtrusive.js"
+    ]
   }
 ]

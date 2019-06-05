@@ -1,4 +1,4 @@
-﻿// Author: J Audette 2015-05-07,2017-12-14
+﻿// Author: J Audette 2015-05-07,2019-05-25
 $(function () {
     var $elems = $('select[data-cascade-childof]');
     if ($elems) {
@@ -24,7 +24,11 @@ $(function () {
             $parent.change(function () {
                 //console.log("cascade parent changed to " + $parent.val());
                 $.getJSON(serviceUrl + $parent.val(), function (data) {
-                    var items = "<option value=''>" + selectLabel + "</option>";
+					var items = "";
+					if(selectLabel) {
+						items = "<option value=''>" + selectLabel + "</option>";
+					}
+                   
                     $.each(data, function (i, item) {
                         items += "<option value='" + item.value + "'>" + item.text + "</option>";
                     });

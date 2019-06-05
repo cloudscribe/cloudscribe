@@ -1,4 +1,6 @@
 
+https://svelte.dev/blog/virtual-dom-is-pure-overhead
+
 https://stackoverflow.com/questions/436411/where-should-i-put-script-tags-in-html-markup/24070373#24070373
 https://teamtreehouse.com/community/best-practice-where-to-include-your-script-tags
 

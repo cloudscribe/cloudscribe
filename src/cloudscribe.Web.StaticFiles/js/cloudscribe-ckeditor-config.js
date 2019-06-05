@@ -141,6 +141,8 @@
 		['Cut','Copy','PasteText'],
 		['Blockquote', 'Bold', 'Italic', '-', 'NumberedList', 'BulletedList', '-', 'Link', 'Unlink', 'Smiley']
 	];
+	
+	config.toolbar_None = [];
 
 	
 	

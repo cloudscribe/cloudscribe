@@ -11,6 +11,8 @@ To get a refresh token, the client must be configured with Allow Offline Access 
 OpenIdConnectScopes openid,profile,idserverapi,offline_access
 
 
+https://stackoverflow.com/questions/56274215/allow-supporter-to-sign-in-as-another-user
+
 
 https://www.strathweb.com/2017/10/self-issuing-an-identityserver4-token-in-an-identityserver4-service/
 Generating Access Tokens (& refresh tokens) manually

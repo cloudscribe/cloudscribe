@@ -1,5 +1,6 @@
 # F# 
 
+https://fsharpforfunandprofit.com/posts/completeness-anything-csharp-can-do/
 
 https://dpc.pw/the-faster-you-unlearn-oop-the-better-for-you-and-your-software
 
