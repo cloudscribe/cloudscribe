@@ -147,7 +147,7 @@ namespace Microsoft.Extensions.DependencyInjection
 
             services.AddSingleton<IOptions<NavigationOptions>, SiteNavigationOptionsResolver>();
             services.AddScoped<ITreeCacheKeyResolver, SiteNavigationCacheKeyResolver>();
-            services.AddScoped<INodeUrlPrefixProvider, FolderTenantNodeUrlPrefixProvider>();
+            //services.AddScoped<INodeUrlPrefixProvider, FolderTenantNodeUrlPrefixProvider>();
             services.AddCloudscribeNavigation(configuration);
 
             services.AddScoped<ISiteMapNodeService, NavigationTreeSiteMapNodeService>();
