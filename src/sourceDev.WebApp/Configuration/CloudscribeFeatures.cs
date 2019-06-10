@@ -144,7 +144,8 @@ namespace Microsoft.Extensions.DependencyInjection
             // so user is not logged in. That can be solved by injecting a real distributed cache such as Redis
             //services.AddSingleton<cloudscribe.Core.Identity.ICookieAuthTicketStoreProvider, cloudscribe.Core.Identity.CookieAuthDistributedCacheTicketStoreProvider>();
 
-            
+           
+            //services.AddMojoPortalPasswordMigration();
 
             //services.AddCloudscribeCore(Configuration);
             services.AddCloudscribeCoreMvc(config);
