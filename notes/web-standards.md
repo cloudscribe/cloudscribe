@@ -1,4 +1,15 @@
 
+#Web Workers
+
+When should you be using Web Workers?
+https://dassur.ma/things/when-workers/
+
+https://github.com/GoogleChromeLabs/comlink
+
+
+
+
+
 https://www.dannymoerkerke.com/blog/web-components-will-replace-your-frontend-framework
 
 https://dannymoerkerke.github.io/material-webcomponents
