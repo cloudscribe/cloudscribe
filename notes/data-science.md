@@ -1,4 +1,12 @@
 
+
+https://jupyter.readthedocs.io/en/latest/install.html
+
+https://www.anaconda.com/distribution/
+
+https://scoutapm.com/blog/visualizing-rails-logs-with-jupyter-notebook
+
+
 Principles and Techniques of Data Science - UC Berkely
 https://www.textbook.ds100.org/
 

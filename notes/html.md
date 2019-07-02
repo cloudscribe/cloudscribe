@@ -1,4 +1,7 @@
 
+https://www.petelambert.com/journal/html-is-the-web
+
+
 https://web.dev/hands-on-portals/
 
 

@@ -2,9 +2,10 @@
 // Licensed under the Apache License, Version 2.0. 
 // Author:                  Joe Audette
 // Created:                 2017-02-15
-// Last Modified:           2019-03-30
+// Last Modified:           2019-07-01
 // 
 
+using cloudscribe.FileManager.Web.Events;
 using cloudscribe.FileManager.Web.Models;
 using cloudscribe.FileManager.Web.Models.TreeView;
 using Microsoft.AspNetCore.Http;
@@ -26,6 +27,7 @@ namespace cloudscribe.FileManager.Web.Services
             IImageResizer imageResizer,
             IFileManagerNameRules fileManagerNameRules,
             IStringLocalizer<FileManagerStringResources> stringLocalizer,
+            //IEnumerable<IHandleFilesUploaded> uploadHandlers,
             IOptions<FileManagerIcons> iconsAccessor,
             ILogger<FileManagerService> logger
             )
@@ -33,6 +35,7 @@ namespace cloudscribe.FileManager.Web.Services
             _mediaPathResolver = mediaPathResolver;
             _imageResizer = imageResizer;
             _nameRules = fileManagerNameRules;
+            //_uploadHandlers = uploadHandlers;
             _icons = iconsAccessor.Value;
             _sr = stringLocalizer;
             _log = logger;
@@ -43,6 +46,7 @@ namespace cloudscribe.FileManager.Web.Services
         private MediaRootPathInfo _rootPath;
         private FileManagerIcons _icons;
         private IFileManagerNameRules _nameRules;
+       // private readonly IEnumerable<IHandleFilesUploaded> _uploadHandlers;
         private IStringLocalizer<FileManagerStringResources> _sr;
         private ILogger _log;
 
@@ -206,12 +210,31 @@ namespace cloudscribe.FileManager.Web.Services
                 };
             }
             
-            return new UploadResult
+            var result = new UploadResult
             {
                 OriginalUrl = sourceFilePath,
                 ResizedUrl = currentVirtualPath + Path.GetFileName(targetFsPath)
             };
 
+            //var list = new List<UploadResult>()
+            //{
+            //    result
+            //};
+
+            //foreach(var handler in _uploadHandlers)
+            //{
+            //    try
+            //    {
+            //        await handler.Handle(list);
+            //    }
+            //    catch(Exception ex)
+            //    {
+            //        _log.LogError($"{ex.Message}-{ex.StackTrace}");
+            //    }
+            //}
+
+
+            return result;
         }
 
         public async Task<UploadResult> ProcessFile(

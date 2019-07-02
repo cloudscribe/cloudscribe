@@ -2,9 +2,10 @@
 // Licensed under the Apache License, Version 2.0. 
 // Author:                  Joe Audette
 // Created:                 2017-02-14
-// Last Modified:           2018-06-25
+// Last Modified:           2019-07-01
 // 
 
+using cloudscribe.FileManager.Web.Events;
 using cloudscribe.FileManager.Web.Models;
 using cloudscribe.FileManager.Web.Services;
 using cloudscribe.Web.Common.Extensions;
@@ -30,6 +31,7 @@ namespace cloudscribe.FileManager.Web.Controllers
         public FileManagerController(
             FileManagerService fileManagerService,
             IAuthorizationService authorizationService,
+            IEnumerable<IHandleFilesUploaded> uploadHandlers,
             //IFileExtensionValidationRegexBuilder allowedFilesRegexBuilder,
             IOptions<AutomaticUploadOptions> autoUploadOptionsAccessor,
             IAntiforgery antiforgery,
@@ -38,6 +40,7 @@ namespace cloudscribe.FileManager.Web.Controllers
             )
         {
             _fileManagerService = fileManagerService;
+            _uploadHandlers = uploadHandlers;
             _authorizationService = authorizationService;
            // _allowedFilesRegexBuilder = allowedFilesRegexBuilder;
             _autoUploadOptions = autoUploadOptionsAccessor.Value;
@@ -47,6 +50,7 @@ namespace cloudscribe.FileManager.Web.Controllers
         }
 
         private FileManagerService _fileManagerService;
+        private readonly IEnumerable<IHandleFilesUploaded> _uploadHandlers;
         private IAuthorizationService _authorizationService;
         //private IFileExtensionValidationRegexBuilder _allowedFilesRegexBuilder;
         private AutomaticUploadOptions _autoUploadOptions;
@@ -178,7 +182,7 @@ namespace cloudscribe.FileManager.Web.Controllers
             )
         {
             var theFiles = HttpContext.Request.Form.Files;
-            var imageList = new List<UploadResult>();
+            var uploadList = new List<UploadResult>();
             if(resizeImages.HasValue)
             {
                 if(resizeImages.Value == false)
@@ -217,7 +221,7 @@ namespace cloudscribe.FileManager.Web.Controllers
                             keepOriginal
                             ).ConfigureAwait(false);
                         
-                        imageList.Add(uploadResult);
+                        uploadList.Add(uploadResult);
 
                     }
                 }
@@ -227,8 +231,20 @@ namespace cloudscribe.FileManager.Web.Controllers
                 }
 
             }
-            
-            return Json(imageList);
+
+            foreach (var handler in _uploadHandlers)
+            {
+                try
+                {
+                    await handler.Handle(uploadList);
+                }
+                catch (Exception ex)
+                {
+                    _log.LogError($"{ex.Message}-{ex.StackTrace}");
+                }
+            }
+
+            return Json(uploadList);
         }
 
         [HttpPost]
@@ -237,7 +253,7 @@ namespace cloudscribe.FileManager.Web.Controllers
         public async Task<IActionResult> DropFile()
         {
             var theFiles = HttpContext.Request.Form.Files;
-            var imageList = new List<UploadResult>();
+            var uploadList = new List<UploadResult>();
             string newFileName = string.Empty;
             var allowRootPath = false;
             var createThumbnail = false;
@@ -330,7 +346,7 @@ namespace cloudscribe.FileManager.Web.Controllers
                             keepOriginal
                             ).ConfigureAwait(false);
 
-                        imageList.Add(uploadResult);
+                        uploadList.Add(uploadResult);
 
                     }
                 }
@@ -341,7 +357,19 @@ namespace cloudscribe.FileManager.Web.Controllers
 
             }
 
-            return Json(imageList);
+            foreach (var handler in _uploadHandlers)
+            {
+                try
+                {
+                    await handler.Handle(uploadList);
+                }
+                catch (Exception ex)
+                {
+                    _log.LogError($"{ex.Message}-{ex.StackTrace}");
+                }
+            }
+
+            return Json(uploadList);
         }
 
         [HttpPost]
@@ -371,6 +399,23 @@ namespace cloudscribe.FileManager.Web.Controllers
                 finalWidth,
                 finalHeight
                 );
+
+            var list = new List<UploadResult>()
+            {
+                result
+            };
+
+            foreach (var handler in _uploadHandlers)
+            {
+                try
+                {
+                    await handler.Handle(list);
+                }
+                catch (Exception ex)
+                {
+                    _log.LogError($"{ex.Message}-{ex.StackTrace}");
+                }
+            }
 
             return Json(result);
 

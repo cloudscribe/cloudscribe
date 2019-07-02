@@ -2,8 +2,8 @@
 
   <PropertyGroup>
     <Description>Multi-tenant web application foundation with management for sites, users, roles, claims, and geographic data.</Description>
-    <VersionPrefix>3.1.91</VersionPrefix>
-    <AssemblyVersion>3.1.91</AssemblyVersion>
+    <VersionPrefix>3.1.92</VersionPrefix>
+    <AssemblyVersion>3.1.92</AssemblyVersion>
     <Authors>Joe Audette</Authors>
     <TargetFrameworks>netstandard2.0</TargetFrameworks>
     
@@ -30,7 +30,7 @@
   <ItemGroup>
     <PackageReference Include="cloudscribe.Pagination.Models" Version="1.0.5" />
     <PackageReference Include="cloudscribe.Web.Pagination" Version="2.1.9" />
-    <PackageReference Include="cloudscribe.Web.Navigation" Version="2.1.21" />
+    <PackageReference Include="cloudscribe.Web.Navigation" Version="2.1.22" />
     <PackageReference Include="cloudscribe.Web.SiteMap.FromNavigation" Version="2.1.4" />
   
     <PackageReference Include="Microsoft.AspNetCore.Antiforgery" Version="2.1.1" />

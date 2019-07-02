@@ -1,5 +1,6 @@
 https://blog.acolyer.org/2019/04/12/master-of-web-puppets-abusing-web-browsers-for-persistent-and-stealthy-computation/
 
+https://www.zdnet.com/article/a-quarter-of-major-cmss-use-outdated-md5-as-the-default-password-hashing-scheme/
 
 https://www.engadget.com/2019/03/04/web-authentication-becomes-official-standard/
 
