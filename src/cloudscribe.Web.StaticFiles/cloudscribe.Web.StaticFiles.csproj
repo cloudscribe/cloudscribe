@@ -2,8 +2,8 @@
 
   <PropertyGroup>
     <Description>common static resources for web applications including ckeditor dtatepickers, and other js and css</Description>
-    <VersionPrefix>1.1.6</VersionPrefix>
-    <AssemblyVersion>1.1.6</AssemblyVersion>
+    <VersionPrefix>1.1.7</VersionPrefix>
+    <AssemblyVersion>1.1.7</AssemblyVersion>
     <Authors>Joe Audette</Authors>
     <TargetFrameworks>netstandard2.0</TargetFrameworks>
     <PackageTags>cloudscribe</PackageTags>
