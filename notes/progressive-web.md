@@ -109,6 +109,8 @@ https://medium.com/commencis/web-push-notifications-with-service-workers-cf6ec80
 
 https://developers.google.com/web/ilt/pwa/live-data-in-the-service-worker
 
+https://itnext.io/indexeddb-your-second-step-towards-progressive-web-apps-pwa-dcbcd6cc2076
+
 
 It's important to understand that there is a third party in web push protocol flow: push service. Push service acts as intermediary which ensures reliable and efficient delivery of push messages to the client.
 
