@@ -56,6 +56,8 @@ https://blog.johnnyreilly.com/2017/11/the-typescript-webpack-pwa.html
 
 https://developers.google.com/web/tools/workbox/
 
+https://developers.google.com/web/tools/workbox/modules/workbox-window
+
 https://developers.google.com/web/tools/workbox/modules/workbox-google-analytics
 
 
@@ -79,6 +81,12 @@ Since serviceworker is only updated if the sw file changes why not make the sw f
 The service worker is immediately downloaded when a user first accesses a service worker–controlled site/page.
 After that, it is downloaded every 24 hours or so. It may be downloaded more frequently, but it must be downloaded every 24 hours to prevent bad scripts from being annoying for too long.
 
+## Broadcast channel
+
+https://developers.google.com/web/updates/2016/09/broadcastchannel
+
+The Broadcast Channel API is a simple API that makes communicating between browsing contexts easier. That is, communicating between windows/tabs, iframes, web workers, and service workers. Messages which are posted to a given channel are delivered to all listeners of that channel.
+
 
 ## Push Notification
 
@@ -98,6 +106,8 @@ https://developer.mozilla.org/en-US/docs/Web/API/Push_API
 https://web-push-book.gauntface.com/demos/notification-examples/
 
 https://medium.com/commencis/web-push-notifications-with-service-workers-cf6ec8005a6c
+
+https://developers.google.com/web/ilt/pwa/live-data-in-the-service-worker
 
 
 It's important to understand that there is a third party in web push protocol flow: push service. Push service acts as intermediary which ensures reliable and efficient delivery of push messages to the client.
@@ -203,3 +213,8 @@ https://github.com/tpeczek/Demo.AspNetCore.PushNotifications
 https://github.com/tpeczek/Lib.Net.Http.WebPush
 
 
+## Background sync
+
+https://developers.google.com/web/updates/2015/12/background-sync
+
+Background sync is a new web API that lets you defer actions until the user has stable connectivity. This is useful for ensuring that whatever the user wants to send, is actually sent.
