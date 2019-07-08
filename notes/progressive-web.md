@@ -42,6 +42,8 @@ https://developers.google.com/web/fundamentals/app-install-banners/promoting-ins
 not working on FF desktop
 https://bugzilla.mozilla.org/show_bug.cgi?id=1407202
 
+https://github.com/docluv/add-to-homescreen
+
 
 
 # ServiceWorker

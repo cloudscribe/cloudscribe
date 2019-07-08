@@ -10,5 +10,11 @@
     "inputFiles": [
       "wwwroot/js/cloudscribe-ckeditor-unobtrusive.js"
     ]
+  },
+  {
+    "outputFileName": "wwwroot/js/toast-alerts.min.js",
+    "inputFiles": [
+      "wwwroot/js/toast-alerts.js"
+    ]
   }
 ]

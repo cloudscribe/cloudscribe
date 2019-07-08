@@ -89,7 +89,7 @@
         @await Component.InvokeAsync("Navigation", new { viewName = "Bootstrap4Breadcrumbs", filterName = NamedNavigationFilters.Breadcrumbs, startingNodeKey = "" })
         <div class="row">
             <main id="content" class="col order-3">
-                <partial name="AlertsPartial" />
+                @*<partial name="AlertsPartial" />*@
                 <partial name="_CookieConsentPartial" />
                 @RenderBody()
             </main>
@@ -122,27 +122,27 @@
         </div>
         <div class="d-flex flex-wrap flex-grow justify-content-center">
             <div class="p-2">
-            <ul class="list-unstyled d-flex flex-wrap">
-                <li class=" mr-2">
-                    <a class="text-nowrap" href="@siteRoot/sitemap">Site Map</a>
-                </li>
-                @if (Tenant != null && !string.IsNullOrWhiteSpace(Tenant.PrivacyPolicy))
-                {
-                    <li class="border-left pl-2 mr-2">
-                        <a asp-controller="Privacy" asp-action="Index">Privacy Policy</a>
+                <ul class="list-unstyled d-flex flex-wrap">
+                    <li class=" mr-2">
+                        <a class="text-nowrap" href="@siteRoot/sitemap">Site Map</a>
                     </li>
-                }
-                <li class="border-left pl-2 mr-2">
-                    @* you are free to remove the powered by cloudscribe link but we appreciate it if you choose to keep it! *@
-                    <a class="text-nowrap" target="_blank" href="https://www.cloudscribe.com/?utm_source=@Context.Request.Host.Value&amp;utm_medium=referral&amp;utm_campaign=poweredbycloudscribe">Powered by cloudscribe</a>
-                </li>
-            </ul>
-        </div>
-        <div class="pl-sm-2  text-center w-100"><span class="text-nowrap">Copyright &copy; @DateTime.Now.Year</span><span class="d-none d-sm-inline"> - </span><span> @(Tenant?.SiteName ?? "Sample")</span></div>
-        <partial name="_CookieConsentRevokePartial" />
+                    @if (Tenant != null && !string.IsNullOrWhiteSpace(Tenant.PrivacyPolicy))
+                    {
+                        <li class="border-left pl-2 mr-2">
+                            <a asp-controller="Privacy" asp-action="Index">Privacy Policy</a>
+                        </li>
+                    }
+                    <li class="border-left pl-2 mr-2">
+                        @* you are free to remove the powered by cloudscribe link but we appreciate it if you choose to keep it! *@
+                        <a class="text-nowrap" target="_blank" href="https://www.cloudscribe.com/?utm_source=@Context.Request.Host.Value&amp;utm_medium=referral&amp;utm_campaign=poweredbycloudscribe">Powered by cloudscribe</a>
+                    </li>
+                </ul>
+            </div>
+            <div class="pl-sm-2  text-center w-100"><span class="text-nowrap">Copyright &copy; @DateTime.Now.Year</span><span class="d-none d-sm-inline"> - </span><span> @(Tenant?.SiteName ?? "Sample")</span></div>
+            <partial name="_CookieConsentRevokePartial" />
 
         </div>
-        
+        <span data-toast-config data-toasts-url="@Url.Action("GetAlerts","ToastAlerts")"></span>
     </footer>
     @RenderSection("Toolbar", required: false)
     <environment names="Development">
@@ -155,6 +155,9 @@
         <script src="~/js/bootstrap.bundle.min.js" cs-resolve-theme-resource="true" cs-tenant="@Tenant"></script>
         <script src="~/cr/js/bs4.smartmenus.min.js"></script>
     </environment>
+    <script src="~/cr/js/bs-toast.min.js" asp-append-version="true"></script>
+    <script src="~/cr/js/toast-alerts.min.js" asp-append-version="true"></script>
+
     @RenderSection("Bottom", required: false)
     @RenderSection("Scripts", required: false)
     <add-this profile-id="@Tenant.AddThisDotComUsername" async></add-this>

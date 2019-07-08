@@ -84,6 +84,16 @@ namespace sourceDev.WebApp.Controllers
             return View();
         }
 
+        //[HttpGet]
+        //public IActionResult GetAlerts()
+        //{
+        //    var alerts = TempData.GetAlerts();
+
+
+        //    return Ok(alerts);
+        //}
+
+
         [HttpGet]
         public IActionResult DateTest()
         {
