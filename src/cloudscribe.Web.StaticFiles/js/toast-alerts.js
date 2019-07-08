@@ -1,6 +1,6 @@
 ﻿document.addEventListener("DOMContentLoaded", function () {
 
-    var myajax = function (method, url, contentType) {
+    var toastAjax = function (method, url, contentType) {
         return new Promise(function (resolve, reject) {
             var xhr = new XMLHttpRequest();
             xhr.onreadystatechange = function () {
@@ -25,20 +25,21 @@
         });
     };
 
-    var elements = document.querySelectorAll('[data-show-if-url-check]');
-    for (i = 0; i < elements.length; ++i) {
-        var ele = elements[i];
-        var urlToCheck = ele.dataset.urlCheckUrl;
-        if (urlToCheck) {
+    var toastConfig = document.querySelectorAll('[data-toast-config]')[0];
+    if (toastConfig && toastConfig.dataset.toastsUrl) {
+        toastAjax("GET", toastConfig.dataset.toastsUrl)
+            .then(function (text) {
+                //console.log(text);
+                var j = JSON.parse(text);
+                for (i = 0; i < j.length; ++i) {
+                    $.toast({
+                        title: j[i].message,
+                        type: j[i].alertStyle,
+                        delay: 3000
+                    });
+                }
 
-            myajax("GET", urlToCheck)
-                .then(function (text) {
-                    if (text === "true") {
-                        ele.style.display = 'block';
-                    }
-                });
-        }
-
+            });
     }
-
+    
 });
