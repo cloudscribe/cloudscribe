@@ -97,7 +97,7 @@ namespace cloudscribe.Core.Identity
                 return name;
             }
 
-            return $"{name}-{tenant.SiteFolderName}";
+            return $"{name}-{tenant.Id}";
         }
 
     }
