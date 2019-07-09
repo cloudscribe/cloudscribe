@@ -131,8 +131,10 @@ namespace cloudscribe.Core.Web.Components
             else
             {
                 template.User = await UserManager.FindByLoginAsync(template.ExternalLoginInfo.LoginProvider, template.ExternalLoginInfo.ProviderKey);
+
                 
-                if(template.User == null)
+
+                if (template.User == null)
                 {
                     if (string.IsNullOrWhiteSpace(email))
                     {
@@ -142,19 +144,26 @@ namespace cloudscribe.Core.Web.Components
                             email = emailClaim.Value;
                         }
                     }
-
+                    
                     if (!string.IsNullOrWhiteSpace(email) && email.Contains("@"))
                     {
                         template.User = await UserManager.FindByNameAsync(email);
-                        var identityResult = await UserManager.AddLoginAsync(template.User, template.ExternalLoginInfo);
+                        
                     }
+
+                    if (template.User == null)
+                    {
+                        template.User = await CreateUserFromExternalLogin(template.ExternalLoginInfo, email, didAcceptTerms);
+                        if (template.User != null)
+                        {
+                            template.IsNewUserRegistration = true;
+                            var identityResult = await UserManager.AddLoginAsync(template.User, template.ExternalLoginInfo);
+                        }
+                    }
+
                 }
                 
-                if (template.User == null)
-                {
-                    template.User = await CreateUserFromExternalLogin(template.ExternalLoginInfo, email, didAcceptTerms);
-                    if(template.User != null) { template.IsNewUserRegistration = true; }
-                }
+               
             }
  
             if (template.User != null)
