@@ -322,7 +322,7 @@ namespace cloudscribe.FileManager.Web.Controllers
             foreach (var formFile in theFiles)
             {
                 var ext = Path.GetExtension(formFile.FileName);
-                var canSave = manageAuthResult.Succeeded || lessPermissionAllowedExtensions.Contains(ext);
+                var canSave = manageAuthResult.Succeeded || lessPermissionAllowedExtensions.Contains(ext, StringComparer.CurrentCultureIgnoreCase);
                 if(!canSave)
                 {
                     _log.LogWarning($"not allowing user {User.Identity.Name} to upload file {formFile.FileName} because the file extension is not allowed for less priviledged users");
