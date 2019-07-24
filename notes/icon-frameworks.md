@@ -1,5 +1,7 @@
 ## Icon frameworks
 
+https://github.com/edent/SuperTinyIcons
+
 https://useiconic.com/open#icons
 
 https://shkspr.mobi/blog/2017/11/super-tiny-website-logos-in-svg/

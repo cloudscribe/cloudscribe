@@ -92,6 +92,7 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
                     && (!returnUrl.Contains("/oops/error"))
                     && (!returnUrl.Contains("/offline"))
                     && (!returnUrl.Contains("/account/logout"))
+                    && (!returnUrl.Contains("/manage/changepassword"))
                     )
                 {
                     return LocalRedirect(returnUrl);

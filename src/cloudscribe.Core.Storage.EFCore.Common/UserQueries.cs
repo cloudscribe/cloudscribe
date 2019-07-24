@@ -68,6 +68,21 @@ namespace cloudscribe.Core.Storage.EFCore.Common
             return item;
         }
 
+        public async Task<List<ISiteUser>> GetUsers(
+            Guid siteId,
+            List<Guid> userIds,
+            CancellationToken cancellationToken = default(CancellationToken))
+        {
+            cancellationToken.ThrowIfCancellationRequested();
+            var list
+                = await dbContext.Users
+                .AsNoTracking()
+                .Where(x => x.SiteId == siteId && userIds.Contains(x.Id))
+                .ToListAsync<ISiteUser>(cancellationToken).ConfigureAwait(false);
+
+            return list;
+        }
+
         public async Task<ISiteUser> FetchByLoginName(
             Guid siteId,
             string userName,

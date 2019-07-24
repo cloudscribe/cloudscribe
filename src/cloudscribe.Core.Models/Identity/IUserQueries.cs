@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2014-08-18
-// Last Modified:			2019-04-22
+// Last Modified:			2019-07-24
 // 
 
 using cloudscribe.Pagination.Models;
@@ -45,6 +45,11 @@ namespace cloudscribe.Core.Models
         Task<ISiteUser> Fetch(
             Guid siteId,
             string email,
+            CancellationToken cancellationToken = default(CancellationToken));
+
+        Task<List<ISiteUser>> GetUsers(
+            Guid siteId,
+            List<Guid> userIds,
             CancellationToken cancellationToken = default(CancellationToken));
 
         Task<ISiteUser> FetchByLoginName(
