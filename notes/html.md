@@ -1,6 +1,8 @@
 
 https://www.petelambert.com/journal/html-is-the-web
 
+https://internetingishard.com/html-and-css/
+
 
 https://web.dev/hands-on-portals/
 
