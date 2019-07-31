@@ -128,13 +128,13 @@ namespace cloudscribe.Core.Storage.EFCore.SQLite.Migrations
                     b.Property<string>("AliasId")
                         .HasMaxLength(36);
 
-                    b.Property<bool>("AllowDbFallbackWithLdap");
+                    //b.Property<bool>("AllowDbFallbackWithLdap");
 
                     b.Property<bool>("AllowNewRegistration");
 
                     b.Property<bool>("AllowPersistentLogin");
 
-                    b.Property<bool>("AutoCreateLdapUserOnFirstLogin");
+                    //b.Property<bool>("AutoCreateLdapUserOnFirstLogin");
 
                     b.Property<bool>("CaptchaOnLogin");
 
@@ -195,7 +195,7 @@ namespace cloudscribe.Core.Storage.EFCore.SQLite.Migrations
                     b.Property<string>("DkimSelector")
                         .HasMaxLength(128);
 
-                    b.Property<bool>("EmailLdapDbFallback");
+                    //b.Property<bool>("EmailLdapDbFallback");
 
                     b.Property<string>("FacebookAppId")
                         .HasMaxLength(100);
@@ -345,7 +345,7 @@ namespace cloudscribe.Core.Storage.EFCore.SQLite.Migrations
 
                     b.Property<bool>("UseInvisibleRecaptcha");
 
-                    b.Property<bool>("UseLdapAuth");
+                   // b.Property<bool>("UseLdapAuth");
 
                     b.HasKey("Id");
 

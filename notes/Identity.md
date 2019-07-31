@@ -218,4 +218,46 @@ services.AddIdentityServerConfiguredForCloudscribe()
 	.AddSigningCredential(cert);
 
 
+# Idserver recipe
+
+### Client spa-local
+
+Always Include User Claims In Id Token
+Allow Access Tokens Via Browser
+Logout Session Required
+
+Redirect urls
+http://localhost:5012/index.html?action=popupcallback
+http://localhost:5012/silent-renew.html
+
+post logout
+http://localhost:5012/
+
+implicit
+
  
+allowede scopes
+
+ idserverapi
+ tenant1spa
+ profile
+ openid
+ 
+ ### api idserverapi
+ 
+ scopes
+ idserverapi
+ 
+ claims role
+ 
+ secret secret hashed
+ 
+ ### Identity resources
+ 
+ openid with subject claim
+ 
+ profile with
+ name 
+profile 
+email 
+role

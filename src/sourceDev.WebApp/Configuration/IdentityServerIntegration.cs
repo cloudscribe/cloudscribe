@@ -47,8 +47,11 @@ namespace Microsoft.Extensions.DependencyInjection
                     switch (efProvider)
                     {
                         case "sqlite":
-                            var slConnection = config.GetConnectionString("SQLiteEntityFrameworkConnectionString");
-                            
+                            //var slConnection = config.GetConnectionString("SQLiteEntityFrameworkConnectionString");
+                            var dbName = config.GetConnectionString("SQLiteDbName");
+                            var dbPath = Path.Combine(environment.ContentRootPath, dbName);
+                            var slConnection = $"Data Source={dbPath}";
+
                             services.AddIdentityServerConfiguredForCloudscribe()
                                 .AddCloudscribeCoreEFIdentityServerStorageSQLite(slConnection)
                                 .AddCloudscribeIdentityServerIntegrationMvc()

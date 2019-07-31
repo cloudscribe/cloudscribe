@@ -355,7 +355,7 @@ namespace cloudscribe.Core.Storage.EFCore.SQLite.Migrations
 
                     b.Property<bool>("UseInvisibleRecaptcha");
 
-                    b.Property<bool>("UseLdapAuth");
+                    //b.Property<bool>("UseLdapAuth");
 
                     b.HasKey("Id");
 
