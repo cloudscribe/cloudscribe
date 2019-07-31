@@ -11,15 +11,15 @@
 // Last Modified: 2015-09-16
 }
 
-@if (Model.HasVisibleChildren(Model.StartingNode))
+@if (await Model.HasVisibleChildren(Model.StartingNode))
 {
     @:<div class="navbar-default sidebar" role="navigation">
         @:<div class="sidebar-nav navbar-collapse">
             @:<ul class="nav" id="side-menu">
                 foreach (var node in Model.StartingNode.Children)
     {
-        if (!Model.ShouldAllowView(node)) { continue; }
-        if (!Model.HasVisibleChildren(node))
+        if (! await Model.ShouldAllowView(node)) { continue; }
+        if (! await Model.HasVisibleChildren(node))
         {
             if (node.EqualsNode(Model.CurrentNode))
             {
