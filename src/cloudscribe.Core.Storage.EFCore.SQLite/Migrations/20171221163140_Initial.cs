@@ -58,10 +58,10 @@ namespace cloudscribe.Core.Storage.EFCore.SQLite.Migrations
                     AccountApprovalEmailCsv = table.Column<string>(nullable: true),
                     AddThisDotComUsername = table.Column<string>(maxLength: 50, nullable: true),
                     AliasId = table.Column<string>(maxLength: 36, nullable: true),
-                    AllowDbFallbackWithLdap = table.Column<bool>(nullable: false),
+                    //AllowDbFallbackWithLdap = table.Column<bool>(nullable: false),
                     AllowNewRegistration = table.Column<bool>(nullable: false),
                     AllowPersistentLogin = table.Column<bool>(nullable: false),
-                    AutoCreateLdapUserOnFirstLogin = table.Column<bool>(nullable: false),
+                   // AutoCreateLdapUserOnFirstLogin = table.Column<bool>(nullable: false),
                     CaptchaOnLogin = table.Column<bool>(nullable: false),
                     CaptchaOnRegistration = table.Column<bool>(nullable: false),
                     CompanyCountry = table.Column<string>(maxLength: 10, nullable: true),
@@ -84,7 +84,7 @@ namespace cloudscribe.Core.Storage.EFCore.SQLite.Migrations
                     DkimPrivateKey = table.Column<string>(nullable: true),
                     DkimPublicKey = table.Column<string>(nullable: true),
                     DkimSelector = table.Column<string>(maxLength: 128, nullable: true),
-                    EmailLdapDbFallback = table.Column<bool>(nullable: false),
+                    //EmailLdapDbFallback = table.Column<bool>(nullable: false),
                     FacebookAppId = table.Column<string>(maxLength: 100, nullable: true),
                     FacebookAppSecret = table.Column<string>(nullable: true),
                     ForcedCulture = table.Column<string>(maxLength: 10, nullable: true),
@@ -144,8 +144,8 @@ namespace cloudscribe.Core.Storage.EFCore.SQLite.Migrations
                     TwitterConsumerKey = table.Column<string>(maxLength: 100, nullable: true),
                     TwitterConsumerSecret = table.Column<string>(nullable: true),
                     UseEmailForLogin = table.Column<bool>(nullable: false),
-                    UseInvisibleRecaptcha = table.Column<bool>(nullable: false),
-                    UseLdapAuth = table.Column<bool>(nullable: false)
+                    UseInvisibleRecaptcha = table.Column<bool>(nullable: false) //,
+                   // UseLdapAuth = table.Column<bool>(nullable: false)
                 },
                 constraints: table =>
                 {

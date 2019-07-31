@@ -81,7 +81,7 @@ namespace sourceDev.WebApp
             
             //// **** IMPORTANT *****
             // This is a custom extension method in Config/CloudscribeFeatures.cs
-            services.SetupDataStorage(_configuration);
+            services.SetupDataStorage(_configuration, _environment);
 
             //*** Important ***
             // This is a custom extension method in Config/IdentityServerIntegration.cs

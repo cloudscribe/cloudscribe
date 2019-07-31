@@ -1,9 +1,11 @@
 ﻿using cloudscribe.Core.Models;
 using cloudscribe.UserProperties.Models;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Configuration;
 using sourceDev.WebApp.Components;
 using System;
+using System.IO;
 
 namespace Microsoft.Extensions.DependencyInjection
 {
@@ -11,7 +13,8 @@ namespace Microsoft.Extensions.DependencyInjection
     {
         public static IServiceCollection SetupDataStorage(
             this IServiceCollection services,
-            IConfiguration config
+            IConfiguration config,
+            IHostingEnvironment env
             )
         {
             services.AddScoped<cloudscribe.Core.Models.Setup.ISetupTask, cloudscribe.Core.Web.Components.EnsureInitialDataSetupTask>();
@@ -48,7 +51,15 @@ namespace Microsoft.Extensions.DependencyInjection
                     switch (efProvider)
                     {
                         case "sqlite":
-                            var slConnection = config.GetConnectionString("SQLiteEntityFrameworkConnectionString");
+
+                            var dbName = config.GetConnectionString("SQLiteDbName");
+                            var dbPath = Path.Combine(env.ContentRootPath, dbName);
+                            var slConnection = $"Data Source={dbPath}";
+
+                            //var slConnection = config.GetConnectionString("SQLiteEntityFrameworkConnectionString");
+                            //Data Source=cloudscribe.dev2.db
+
+
                             services.AddCloudscribeCoreEFStorageSQLite(slConnection);
                             services.AddCloudscribeLoggingEFStorageSQLite(slConnection);
                             services.AddCloudscribeKvpEFStorageSQLite(slConnection);

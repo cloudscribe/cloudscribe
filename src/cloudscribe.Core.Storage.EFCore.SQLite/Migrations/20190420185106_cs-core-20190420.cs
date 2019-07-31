@@ -17,6 +17,18 @@ namespace cloudscribe.Core.Storage.EFCore.SQLite.Migrations
                 table: "cs_Site",
                 nullable: false,
                 defaultValue: false);
+
+            migrationBuilder.AddColumn<bool>(
+               name: "LdapUseSsl",
+               table: "cs_Site",
+               nullable: false,
+               defaultValue: false);
+
+            //migrationBuilder.RenameColumn(
+            //    name: "UseLdapAuth",
+            //    table: "cs_Site",
+            //    newName: "LdapUseSsl");
+
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
