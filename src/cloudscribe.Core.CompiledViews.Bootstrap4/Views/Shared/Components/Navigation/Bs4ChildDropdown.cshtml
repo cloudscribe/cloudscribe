@@ -2,14 +2,14 @@
 @using System.Text
 @model NavigationViewModel
 @addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
-@if (Model.StartingNode != null && Model.HasVisibleChildren(Model.StartingNode))
+@if (Model.StartingNode != null && await Model.HasVisibleChildren(Model.StartingNode))
 {
     <ul class="dropdown-menu" aria-labelledby="dropdown-@Model.StartingNode.Value.Key">
         @foreach (var childNode in Model.StartingNode.Children)
         {
-            if (!Model.ShouldAllowView(childNode)) { continue; }
+            if (! await Model.ShouldAllowView(childNode)) { continue; }
 
-            if (!Model.HasVisibleChildren(childNode))
+            if (! await Model.HasVisibleChildren(childNode))
             {
                 <li class='@Model.GetClass(childNode.Value, "")'><a class="dropdown-item" href="@Url.Content(Model.AdjustUrl(childNode))">@Html.Raw(Model.GetIcon(childNode.Value))@Model.AdjustText(childNode)</a></li>
             }
