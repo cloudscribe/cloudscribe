@@ -4,7 +4,7 @@ cloudscribe is a related set of projects and components for building cross platf
 
 The foundational set of projects in this repository, known as cloudscibe Core, provides support for single tenant or multi tenant management of sites, users, and roles. The other main cloudscribe project is [cloudscribe SimpleContent](https://www.cloudscribe.com/docs/cloudscribe-simplecontent). There are a lot of smaller useful libraries as well, you can find the [full list of projects here](https://www.cloudscribe.com/docs/complete-list-of-cloudscribe-libraries).
 
-If you have questions or just want to be social, say hello in our gitter chat room. I try to monitor that room on a regular basis while I'm working, but if I'm not around you can leave a message.
+If you have questions please visit our community forums https://www.cloudscribe.com/forum.
 
 ### Build Status
 
@@ -13,7 +13,7 @@ If you have questions or just want to be social, say hello in our gitter chat ro
 | [![Build status](https://ci.appveyor.com/api/projects/status/jt9c0022x3odacar/branch/master?svg=true)](https://ci.appveyor.com/project/joeaudette/cloudscribe/branch/master)  | [![Build Status](https://travis-ci.org/cloudscribe/cloudscribe.svg?branch=master)](https://travis-ci.org/cloudscribe/cloudscribe)  |
 
 [![Twitter URL](https://img.shields.io/twitter/url/http/shields.io.svg?style=social)](https://twitter.com/cloudscribeweb) [![Twitter Follow](https://img.shields.io/twitter/follow/cloudscribeweb.svg?style=social&label=Follow)](https://twitter.com/cloudscribeweb)
-[![Join the chat at https://gitter.im/joeaudette/cloudscribe](https://badges.gitter.im/joeaudette/cloudscribe.svg)](https://gitter.im/joeaudette/cloudscribe?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+
 
 #### Why Start From Scratch?
 
@@ -58,7 +58,6 @@ Take a look at [cloudscribe.SimpleContent](https://github.com/joeaudette/cloudsc
 ##### Planned Features:
 * Implement options for Security Questions and Answers [per OWASP guidelines](https://www.owasp.org/index.php/Forgot_Password_Cheat_Sheet)
 * Implement tracking of password hash history to support scenarios where re-using old passwords is not allowed
-* Implement a more traditional ADO.NET data layer with MSSQL and stored procedures
 * MongoDB Support - I am interested in trying to implement the data repositories with MongoDB and would welcome help with that. 
 * Lots of miscellaneous smaller stuff
 
