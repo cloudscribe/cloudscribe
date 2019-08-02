@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2016-10-13
-// Last Modified:			2017-12-28
+// Last Modified:			2019-08-02
 // 
 
 using cloudscribe.Core.IdentityServerIntegration.Models;
@@ -27,15 +27,18 @@ namespace cloudscribe.Core.IdentityServerIntegration.Controllers.Mvc
         public ApiResourceController(
             SiteManager siteManager,
             ApiResourceManager apiManager,
+            IdentityResourceManager idManager,
             IStringLocalizer<CloudscribeIds4Resources> localizer)
         {
-            this.siteManager = siteManager;
-            this.apiManager = apiManager;
+            _siteManager = siteManager;
+            _apiManager = apiManager;
+            _idManager = idManager;
             sr = localizer;
         }
 
-        private SiteManager siteManager;
-        private ApiResourceManager apiManager;
+        private SiteManager _siteManager;
+        private ApiResourceManager _apiManager;
+        private IdentityResourceManager _idManager;
         private IStringLocalizer sr;
 
         [HttpGet]
@@ -45,9 +48,9 @@ namespace cloudscribe.Core.IdentityServerIntegration.Controllers.Mvc
             int pageSize = -1
             )
         {
-            var selectedSite = await siteManager.GetSiteForDataOperations(siteId);
+            var selectedSite = await _siteManager.GetSiteForDataOperations(siteId);
             // only server admin site can edit other sites settings
-            if (selectedSite.Id != siteManager.CurrentSite.Id)
+            if (selectedSite.Id != _siteManager.CurrentSite.Id)
             {
                 ViewData["Title"] = string.Format(CultureInfo.CurrentUICulture, sr["{0} - API Resource Management"], selectedSite.SiteName);
             }
@@ -63,7 +66,7 @@ namespace cloudscribe.Core.IdentityServerIntegration.Controllers.Mvc
             }
             var model = new ApiListViewModel();
             model.SiteId = selectedSite.Id.ToString();
-            var result = await apiManager.GetApiResources(selectedSite.Id.ToString(), pageNumber, itemsPerPage);
+            var result = await _apiManager.GetApiResources(selectedSite.Id.ToString(), pageNumber, itemsPerPage);
             model.Apis = result;
 
             //model.Paging.CurrentPage = pageNumber;
@@ -80,7 +83,7 @@ namespace cloudscribe.Core.IdentityServerIntegration.Controllers.Mvc
             string apiName = null)
         {
 
-            var selectedSite = await siteManager.GetSiteForDataOperations(siteId);
+            var selectedSite = await _siteManager.GetSiteForDataOperations(siteId);
 
             if (!string.IsNullOrEmpty(apiName))
             {
@@ -92,7 +95,7 @@ namespace cloudscribe.Core.IdentityServerIntegration.Controllers.Mvc
             model.NewApi.SiteId = model.SiteId;
             if (!string.IsNullOrEmpty(apiName))
             {
-                var apiResource = await apiManager.FetchApiResource(model.SiteId, apiName);
+                var apiResource = await _apiManager.FetchApiResource(model.SiteId, apiName);
                 model.CurrentApi = apiResource;
             }
 
@@ -126,14 +129,14 @@ namespace cloudscribe.Core.IdentityServerIntegration.Controllers.Mvc
                 return RedirectToAction("EditApiResource", new { siteId = model.SiteId, name = model.Name });
             }
 
-            Guid siteId = siteManager.CurrentSite.Id;
+            Guid siteId = _siteManager.CurrentSite.Id;
             if (!string.IsNullOrEmpty(model.SiteId) && model.SiteId.Length == 36)
             {
                 siteId = new Guid(model.SiteId);
             }
-            var selectedSite = await siteManager.GetSiteForDataOperations(siteId);
+            var selectedSite = await _siteManager.GetSiteForDataOperations(siteId);
 
-            var apiResource = await apiManager.FetchApiResource(selectedSite.Id.ToString(), model.Name);
+            var apiResource = await _apiManager.FetchApiResource(selectedSite.Id.ToString(), model.Name);
 
             if (apiResource == null)
             {
@@ -150,7 +153,7 @@ namespace cloudscribe.Core.IdentityServerIntegration.Controllers.Mvc
             //apiResource.IncludeAllClaimsForUser = model.IncludeAllClaimsForUser;
             //apiResource.Required = model.Required;
             //apiResource.ShowInDiscoveryDocument = model.ShowInDiscoveryDocument;
-            await apiManager.UpdateApiResource(selectedSite.Id.ToString(), apiResource);
+            await _apiManager.UpdateApiResource(selectedSite.Id.ToString(), apiResource);
 
             var successFormat = sr["The API Resource <b>{0}</b> was successfully updated."];
 
@@ -168,16 +171,16 @@ namespace cloudscribe.Core.IdentityServerIntegration.Controllers.Mvc
                 return RedirectToAction("EditApiResource", new { siteId = apiModel.SiteId, ame = apiModel.Name });
             }
 
-            Guid siteId = siteManager.CurrentSite.Id;
+            Guid siteId = _siteManager.CurrentSite.Id;
             if (!string.IsNullOrEmpty(apiModel.SiteId) && apiModel.SiteId.Length == 36)
             {
                 siteId = new Guid(apiModel.SiteId);
             }
-            var selectedSite = await siteManager.GetSiteForDataOperations(siteId);
+            var selectedSite = await _siteManager.GetSiteForDataOperations(siteId);
 
             ViewData["Title"] = string.Format(CultureInfo.CurrentUICulture, sr["{0} - New API Resource"], selectedSite.SiteName);
 
-            var exists = await apiManager.ApiResourceExists(selectedSite.Id.ToString(), apiModel.Name);
+            var exists = await _apiManager.ApiResourceExists(selectedSite.Id.ToString(), apiModel.Name);
             
             if (exists)
             {
@@ -192,6 +195,21 @@ namespace cloudscribe.Core.IdentityServerIntegration.Controllers.Mvc
                 return View("EditApiResource", model);
             }
 
+            exists = await _idManager.IdentityResourceExists(selectedSite.Id.ToString(), apiModel.Name);
+
+            if (exists)
+            {
+                var model = new ApiEditViewModel();
+                model.SiteId = selectedSite.Id.ToString();
+                model.NewApi = apiModel;
+                model.NewApi.SiteId = model.SiteId;
+
+                if (exists) ModelState.AddModelError("apinameinuseerror", sr["Sorry, there already exists an Identity resource with this name, it is not allowed to have API resources with the same names as Identity resources"]);
+
+
+                return View("EditApiResource", model);
+            }
+
             var api = new ApiResource
             {
                 Name = apiModel.Name,
@@ -199,7 +217,7 @@ namespace cloudscribe.Core.IdentityServerIntegration.Controllers.Mvc
                 Description = apiModel.Description
             };
 
-            await apiManager.CreateApiResource(selectedSite.Id.ToString(), api);
+            await _apiManager.CreateApiResource(selectedSite.Id.ToString(), api);
 
             var successFormat = sr["The API Resource <b>{0}</b> was successfully created."];
 
@@ -211,7 +229,7 @@ namespace cloudscribe.Core.IdentityServerIntegration.Controllers.Mvc
         [HttpPost]
         public async Task<IActionResult> DeleteApiResource(Guid siteId, string apiName)
         {
-            await apiManager.DeleteApiResource(siteId.ToString(), apiName);
+            await _apiManager.DeleteApiResource(siteId.ToString(), apiName);
             return RedirectToAction("Index");
         }
 
@@ -226,14 +244,14 @@ namespace cloudscribe.Core.IdentityServerIntegration.Controllers.Mvc
                 return RedirectToAction("EditApiResource", new { siteId = model.SiteId, apiName = model.ApiName });
             }
 
-            Guid siteId = siteManager.CurrentSite.Id;
+            Guid siteId = _siteManager.CurrentSite.Id;
             if (!string.IsNullOrEmpty(model.SiteId) && model.SiteId.Length == 36)
             {
                 siteId = new Guid(model.SiteId);
             }
-            var selectedSite = await siteManager.GetSiteForDataOperations(siteId);
+            var selectedSite = await _siteManager.GetSiteForDataOperations(siteId);
 
-            var apiResource = await apiManager.FetchApiResource(selectedSite.Id.ToString(), model.ApiName);
+            var apiResource = await _apiManager.FetchApiResource(selectedSite.Id.ToString(), model.ApiName);
             if (apiResource == null)
             {
                 this.AlertDanger(sr["Invalid request, API Resource not found."], true);
@@ -250,7 +268,7 @@ namespace cloudscribe.Core.IdentityServerIntegration.Controllers.Mvc
             }
             apiResource.UserClaims.Add(model.Name);
 
-            await apiManager.UpdateApiResource(selectedSite.Id.ToString(), apiResource);
+            await _apiManager.UpdateApiResource(selectedSite.Id.ToString(), apiResource);
 
             var successFormat = sr["The Claim <b>{0}</b> was successfully added."];
 
@@ -262,8 +280,8 @@ namespace cloudscribe.Core.IdentityServerIntegration.Controllers.Mvc
         [HttpPost]
         public async Task<IActionResult> DeleteApiClaim(Guid siteId, string apiName, string claimName)
         {
-            var selectedSite = await siteManager.GetSiteForDataOperations(siteId);
-            var apiResource = await apiManager.FetchApiResource(selectedSite.Id.ToString(), apiName);
+            var selectedSite = await _siteManager.GetSiteForDataOperations(siteId);
+            var apiResource = await _apiManager.FetchApiResource(selectedSite.Id.ToString(), apiName);
             if (apiResource == null)
             {
                 this.AlertDanger(sr["Invalid request, API Resource not found."], true);
@@ -282,7 +300,7 @@ namespace cloudscribe.Core.IdentityServerIntegration.Controllers.Mvc
             if (found != null)
             {
                 apiResource.UserClaims.Remove(found);
-                await apiManager.UpdateApiResource(siteId.ToString(), apiResource);
+                await _apiManager.UpdateApiResource(siteId.ToString(), apiResource);
                 var successFormat = sr["The Claim <b>{0}</b> was successfully removed."];
                 this.AlertSuccess(string.Format(successFormat, claimName), true);
             }
@@ -311,14 +329,14 @@ namespace cloudscribe.Core.IdentityServerIntegration.Controllers.Mvc
                 return RedirectToAction("EditApiResource", new { siteId = apiModel.SiteId, apiName = apiModel.ApiName });
             }
 
-            Guid siteId = siteManager.CurrentSite.Id;
+            Guid siteId = _siteManager.CurrentSite.Id;
             if (!string.IsNullOrEmpty(apiModel.SiteId) && apiModel.SiteId.Length == 36)
             {
                 siteId = new Guid(apiModel.SiteId);
             }
-            var selectedSite = await siteManager.GetSiteForDataOperations(siteId);
+            var selectedSite = await _siteManager.GetSiteForDataOperations(siteId);
 
-            var apiResource = await apiManager.FetchApiResource(selectedSite.Id.ToString(), apiModel.ApiName);
+            var apiResource = await _apiManager.FetchApiResource(selectedSite.Id.ToString(), apiModel.ApiName);
             if (apiResource == null)
             {
                 this.AlertDanger(sr["Invalid request, API Resource not found."], true);
@@ -349,7 +367,7 @@ namespace cloudscribe.Core.IdentityServerIntegration.Controllers.Mvc
             }
             apiResource.ApiSecrets.Add(secret);
 
-            await apiManager.UpdateApiResource(selectedSite.Id.ToString(), apiResource);
+            await _apiManager.UpdateApiResource(selectedSite.Id.ToString(), apiResource);
 
             this.AlertSuccess(sr["The Secret was successfully added."], true);
 
@@ -359,9 +377,9 @@ namespace cloudscribe.Core.IdentityServerIntegration.Controllers.Mvc
         [HttpPost]
         public async Task<IActionResult> DeleteApiSecret(Guid siteId, string apiName, string secretValue)
         {
-            var selectedSite = await siteManager.GetSiteForDataOperations(siteId);
+            var selectedSite = await _siteManager.GetSiteForDataOperations(siteId);
 
-            var apiResource = await apiManager.FetchApiResource(selectedSite.Id.ToString(), apiName);
+            var apiResource = await _apiManager.FetchApiResource(selectedSite.Id.ToString(), apiName);
             if (apiResource == null)
             {
                 this.AlertDanger(sr["Invalid request, API Resource not found."], true);
@@ -380,7 +398,7 @@ namespace cloudscribe.Core.IdentityServerIntegration.Controllers.Mvc
             if (found != null)
             {
                 apiResource.ApiSecrets.Remove(found);
-                await apiManager.UpdateApiResource(siteId.ToString(), apiResource);
+                await _apiManager.UpdateApiResource(siteId.ToString(), apiResource);
                 this.AlertSuccess(sr["The Secret was successfully removed."], true);
             }
             else
@@ -400,14 +418,14 @@ namespace cloudscribe.Core.IdentityServerIntegration.Controllers.Mvc
                 return RedirectToAction("EditApiResource", new { siteId = apiModel.SiteId, apiName = apiModel.ApiName });
             }
 
-            Guid siteId = siteManager.CurrentSite.Id;
+            Guid siteId = _siteManager.CurrentSite.Id;
             if (!string.IsNullOrEmpty(apiModel.SiteId) && apiModel.SiteId.Length == 36)
             {
                 siteId = new Guid(apiModel.SiteId);
             }
-            var selectedSite = await siteManager.GetSiteForDataOperations(siteId);
+            var selectedSite = await _siteManager.GetSiteForDataOperations(siteId);
 
-            var apiResource = await apiManager.FetchApiResource(selectedSite.Id.ToString(), apiModel.ApiName);
+            var apiResource = await _apiManager.FetchApiResource(selectedSite.Id.ToString(), apiModel.ApiName);
             if (apiResource == null)
             {
                 this.AlertDanger(sr["Invalid request, API Resource not found."], true);
@@ -437,7 +455,7 @@ namespace cloudscribe.Core.IdentityServerIntegration.Controllers.Mvc
             }
             apiResource.Scopes.Add(scope);
 
-            await apiManager.UpdateApiResource(selectedSite.Id.ToString(), apiResource);
+            await _apiManager.UpdateApiResource(selectedSite.Id.ToString(), apiResource);
 
             this.AlertSuccess(sr["The Scope was successfully added."], true);
 
@@ -447,9 +465,9 @@ namespace cloudscribe.Core.IdentityServerIntegration.Controllers.Mvc
         [HttpPost]
         public async Task<IActionResult> DeleteApiScope(Guid siteId, string apiName, string scopeName)
         {
-            var selectedSite = await siteManager.GetSiteForDataOperations(siteId);
+            var selectedSite = await _siteManager.GetSiteForDataOperations(siteId);
 
-            var apiResource = await apiManager.FetchApiResource(selectedSite.Id.ToString(), apiName);
+            var apiResource = await _apiManager.FetchApiResource(selectedSite.Id.ToString(), apiName);
             if (apiResource == null)
             {
                 this.AlertDanger(sr["Invalid request, API Resource not found."], true);
@@ -468,7 +486,7 @@ namespace cloudscribe.Core.IdentityServerIntegration.Controllers.Mvc
             if (found != null)
             {
                 apiResource.Scopes.Remove(found);
-                await apiManager.UpdateApiResource(siteId.ToString(), apiResource);
+                await _apiManager.UpdateApiResource(siteId.ToString(), apiResource);
                 this.AlertSuccess(sr["The Scope was successfully removed."], true);
             }
             else
@@ -487,14 +505,14 @@ namespace cloudscribe.Core.IdentityServerIntegration.Controllers.Mvc
                 return RedirectToAction("EditApiResource", new { siteId = model.SiteId, apiName = model.ApiName });
             }
 
-            Guid siteId = siteManager.CurrentSite.Id;
+            Guid siteId = _siteManager.CurrentSite.Id;
             if (!string.IsNullOrEmpty(model.SiteId) && model.SiteId.Length == 36)
             {
                 siteId = new Guid(model.SiteId);
             }
-            var selectedSite = await siteManager.GetSiteForDataOperations(siteId);
+            var selectedSite = await _siteManager.GetSiteForDataOperations(siteId);
 
-            var apiResource = await apiManager.FetchApiResource(selectedSite.Id.ToString(), model.ApiName);
+            var apiResource = await _apiManager.FetchApiResource(selectedSite.Id.ToString(), model.ApiName);
             if (apiResource == null)
             {
                 this.AlertDanger(sr["Invalid request, API Resource not found."], true);
@@ -523,7 +541,7 @@ namespace cloudscribe.Core.IdentityServerIntegration.Controllers.Mvc
             }
             found.UserClaims.Add(model.ClaimName);
 
-            await apiManager.UpdateApiResource(selectedSite.Id.ToString(), apiResource);
+            await _apiManager.UpdateApiResource(selectedSite.Id.ToString(), apiResource);
 
             var successFormat = sr["The Scope Claim <b>{0}</b> was successfully added."];
 
@@ -535,9 +553,9 @@ namespace cloudscribe.Core.IdentityServerIntegration.Controllers.Mvc
         [HttpPost]
         public async Task<IActionResult> DeleteApiScopeClaim(Guid siteId, string apiName, string scopeName, string claimName)
         {
-            var selectedSite = await siteManager.GetSiteForDataOperations(siteId);
+            var selectedSite = await _siteManager.GetSiteForDataOperations(siteId);
 
-            var apiResource = await apiManager.FetchApiResource(selectedSite.Id.ToString(), apiName);
+            var apiResource = await _apiManager.FetchApiResource(selectedSite.Id.ToString(), apiName);
             if (apiResource == null)
             {
                 this.AlertDanger(sr["Invalid request, API Resource not found."], true);
@@ -563,7 +581,7 @@ namespace cloudscribe.Core.IdentityServerIntegration.Controllers.Mvc
             if (found.UserClaims.Contains(claimName))
             {
                 found.UserClaims.Remove(claimName);
-                await apiManager.UpdateApiResource(siteId.ToString(), apiResource);
+                await _apiManager.UpdateApiResource(siteId.ToString(), apiResource);
                 var successFormat = sr["The Scope Claim <b>{0}</b> was successfully removed."];
                 this.AlertSuccess(string.Format(successFormat, claimName), true);
             }

@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2016-12-15
-// Last Modified:			2018-01-01
+// Last Modified:			2019-08-02
 // 
 
 using cloudscribe.Core.IdentityServerIntegration.Models;
@@ -25,16 +25,19 @@ namespace cloudscribe.Core.IdentityServerIntegration.Controllers.Mvc
     {
         public IdentityResourceController(
             SiteManager siteManager,
+            ApiResourceManager apiManager,
             IdentityResourceManager idManager,
             IStringLocalizer<CloudscribeIds4Resources> localizer)
         {
-            this.siteManager = siteManager;
-            this.idManager = idManager;
+            _apiManager = apiManager;
+            _siteManager = siteManager;
+            _idManager = idManager;
             sr = localizer;
         }
 
-        private SiteManager siteManager;
-        private IdentityResourceManager idManager;
+        private SiteManager _siteManager;
+        private IdentityResourceManager _idManager;
+        private ApiResourceManager _apiManager;
         private IStringLocalizer sr;
 
         [HttpGet]
@@ -44,9 +47,9 @@ namespace cloudscribe.Core.IdentityServerIntegration.Controllers.Mvc
             int pageSize = -1
             )
         {
-            var selectedSite = await siteManager.GetSiteForDataOperations(siteId);
+            var selectedSite = await _siteManager.GetSiteForDataOperations(siteId);
             // only server admin site can edit other sites settings
-            if (selectedSite.Id != siteManager.CurrentSite.Id)
+            if (selectedSite.Id != _siteManager.CurrentSite.Id)
             {
                 ViewData["Title"] = string.Format(CultureInfo.CurrentUICulture, sr["{0} - Identity Resource Management"], selectedSite.SiteName);
             }
@@ -62,7 +65,7 @@ namespace cloudscribe.Core.IdentityServerIntegration.Controllers.Mvc
             }
             var model = new IdentityListViewModel();
             model.SiteId = selectedSite.Id.ToString();
-            var result = await idManager.GetIdentityResources(selectedSite.Id.ToString(), pageNumber, itemsPerPage);
+            var result = await _idManager.GetIdentityResources(selectedSite.Id.ToString(), pageNumber, itemsPerPage);
             model.IdentityResources = result;
 
             //model.Paging.CurrentPage = pageNumber;
@@ -78,7 +81,7 @@ namespace cloudscribe.Core.IdentityServerIntegration.Controllers.Mvc
             string resourceName = null)
         {
 
-            var selectedSite = await siteManager.GetSiteForDataOperations(siteId);
+            var selectedSite = await _siteManager.GetSiteForDataOperations(siteId);
 
             if (!string.IsNullOrEmpty(resourceName))
             {
@@ -91,7 +94,7 @@ namespace cloudscribe.Core.IdentityServerIntegration.Controllers.Mvc
             model.NewClaim.SiteId = model.SiteId;
             if (!string.IsNullOrEmpty(resourceName))
             {
-                var resource = await idManager.FetchIdentityResource(model.SiteId, resourceName);
+                var resource = await _idManager.FetchIdentityResource(model.SiteId, resourceName);
                 model.CurrentResource = resource;
             }
 
@@ -122,17 +125,17 @@ namespace cloudscribe.Core.IdentityServerIntegration.Controllers.Mvc
                 return RedirectToAction("EditResource", new { siteId = resourceModel.SiteId, resourceName = resourceModel.Name });
             }
 
-            Guid siteId = siteManager.CurrentSite.Id;
+            Guid siteId = _siteManager.CurrentSite.Id;
             if (!string.IsNullOrEmpty(resourceModel.SiteId) && resourceModel.SiteId.Length == 36)
             {
                 siteId = new Guid(resourceModel.SiteId);
             }
-            var selectedSite = await siteManager.GetSiteForDataOperations(siteId);
+            var selectedSite = await _siteManager.GetSiteForDataOperations(siteId);
 
             ViewData["Title"] = string.Format(CultureInfo.CurrentUICulture, sr["{0} - New Identity Resource"], selectedSite.SiteName);
 
-            var exists = await idManager.IdentityResourceExists(selectedSite.Id.ToString(), resourceModel.Name);
-
+            var exists = await _idManager.IdentityResourceExists(selectedSite.Id.ToString(), resourceModel.Name);
+            
             if (exists)
             {
                 var model = new IdentityEditViewModel();
@@ -146,6 +149,22 @@ namespace cloudscribe.Core.IdentityServerIntegration.Controllers.Mvc
                 return View("EditResource", model);
             }
 
+            exists = await _apiManager.ApiResourceExists(selectedSite.Id.ToString(), resourceModel.Name);
+
+            if (exists)
+            {
+                var model = new IdentityEditViewModel();
+                model.SiteId = selectedSite.Id.ToString();
+                model.NewResource = resourceModel;
+                model.NewResource.SiteId = model.SiteId;
+
+                if (exists) ModelState.AddModelError("resourcenameinuseerror", sr["Sorry, there already exists an API resource with this name, it is not allowed to have Identity resources with the same names as API resources"]);
+
+
+                return View("EditResource", model);
+            }
+
+
             var identityResource = new IdentityResource
             {
                 Name = resourceModel.Name,
@@ -156,7 +175,7 @@ namespace cloudscribe.Core.IdentityServerIntegration.Controllers.Mvc
                 ShowInDiscoveryDocument = resourceModel.ShowInDiscoveryDocument
             };
 
-            await idManager.CreateIdentityResource(selectedSite.Id.ToString(), identityResource);
+            await _idManager.CreateIdentityResource(selectedSite.Id.ToString(), identityResource);
 
             var successFormat = sr["The Identity Resource <b>{0}</b> was successfully Created."];
 
@@ -173,14 +192,14 @@ namespace cloudscribe.Core.IdentityServerIntegration.Controllers.Mvc
                 return RedirectToAction("EditResource", new { siteId = model.SiteId, resourceName = model.Name });
             }
 
-            Guid siteId = siteManager.CurrentSite.Id;
+            Guid siteId = _siteManager.CurrentSite.Id;
             if (!string.IsNullOrEmpty(model.SiteId) && model.SiteId.Length == 36)
             {
                 siteId = new Guid(model.SiteId);
             }
-            var selectedSite = await siteManager.GetSiteForDataOperations(siteId);
+            var selectedSite = await _siteManager.GetSiteForDataOperations(siteId);
 
-            var resource = await idManager.FetchIdentityResource(selectedSite.Id.ToString(), model.Name);
+            var resource = await _idManager.FetchIdentityResource(selectedSite.Id.ToString(), model.Name);
 
             if (resource == null)
             {
@@ -194,7 +213,7 @@ namespace cloudscribe.Core.IdentityServerIntegration.Controllers.Mvc
             resource.Enabled = model.Enabled;
             resource.Required = model.Required;
             resource.ShowInDiscoveryDocument = model.ShowInDiscoveryDocument;
-            await idManager.UpdateIdentityResource(selectedSite.Id.ToString(), resource);
+            await _idManager.UpdateIdentityResource(selectedSite.Id.ToString(), resource);
 
             var successFormat = sr["The Identity Resource <b>{0}</b> was successfully updated."];
 
@@ -207,7 +226,7 @@ namespace cloudscribe.Core.IdentityServerIntegration.Controllers.Mvc
         [HttpPost]
         public async Task<IActionResult> DeleteResource(Guid siteId, string resourceName)
         {
-            await idManager.DeleteIdentityResource(siteId.ToString(), resourceName);
+            await _idManager.DeleteIdentityResource(siteId.ToString(), resourceName);
             return RedirectToAction("Index");
         }
 
@@ -219,14 +238,14 @@ namespace cloudscribe.Core.IdentityServerIntegration.Controllers.Mvc
                 return RedirectToAction("EditResource", new { siteId = model.SiteId, resourceName = model.ResourceName });
             }
 
-            Guid siteId = siteManager.CurrentSite.Id;
+            Guid siteId = _siteManager.CurrentSite.Id;
             if (!string.IsNullOrEmpty(model.SiteId) && model.SiteId.Length == 36)
             {
                 siteId = new Guid(model.SiteId);
             }
-            var selectedSite = await siteManager.GetSiteForDataOperations(siteId);
+            var selectedSite = await _siteManager.GetSiteForDataOperations(siteId);
 
-            var resource = await idManager.FetchIdentityResource(selectedSite.Id.ToString(), model.ResourceName);
+            var resource = await _idManager.FetchIdentityResource(selectedSite.Id.ToString(), model.ResourceName);
             if (resource == null)
             {
                 this.AlertDanger(sr["Invalid request, Identity Resource not found."], true);
@@ -243,7 +262,7 @@ namespace cloudscribe.Core.IdentityServerIntegration.Controllers.Mvc
             }
             resource.UserClaims.Add(model.ClaimName);
 
-            await idManager.UpdateIdentityResource(selectedSite.Id.ToString(), resource);
+            await _idManager.UpdateIdentityResource(selectedSite.Id.ToString(), resource);
 
             var successFormat = sr["The Claim <b>{0}</b> was successfully added."];
 
@@ -255,8 +274,8 @@ namespace cloudscribe.Core.IdentityServerIntegration.Controllers.Mvc
         [HttpPost]
         public async Task<IActionResult> DeleteClaim(Guid siteId, string resourceName, string claimName)
         {
-            var selectedSite = await siteManager.GetSiteForDataOperations(siteId);
-            var resource = await idManager.FetchIdentityResource(selectedSite.Id.ToString(), resourceName);
+            var selectedSite = await _siteManager.GetSiteForDataOperations(siteId);
+            var resource = await _idManager.FetchIdentityResource(selectedSite.Id.ToString(), resourceName);
             if (resource == null)
             {
                 this.AlertDanger(sr["Invalid request, API Resource not found."], true);
@@ -275,7 +294,7 @@ namespace cloudscribe.Core.IdentityServerIntegration.Controllers.Mvc
             if (found != null)
             {
                 resource.UserClaims.Remove(found);
-                await idManager.UpdateIdentityResource(siteId.ToString(), resource);
+                await _idManager.UpdateIdentityResource(siteId.ToString(), resource);
                 var successFormat = sr["The Claim <b>{0}</b> was successfully removed."];
                 this.AlertSuccess(string.Format(successFormat, claimName), true);
             }
