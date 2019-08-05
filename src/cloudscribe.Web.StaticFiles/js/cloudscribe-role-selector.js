@@ -11,7 +11,7 @@
         var $wrapper = $("<div/>", { id: this.modalId, class: "modal fade", tabindex: "-1" });
         $(document.body).append($wrapper);
 
-        $(this.modalSelector).on('show.bs.modal', function (e) {
+        $(this.modalSelector).on('shown.bs.modal', function (e) {
             roleSelector.syncChanges();
         });
     },
@@ -32,11 +32,13 @@
 
     bindClose: function () {
         $(".closeModal").click(function () {
-            $(this).closest(".modal").modal("hide")
+            $(this).closest(".modal").modal("hide");
         });
     },
     syncChanges: function () {
         //alert('sync it');
+        //console.log('sync it');
+        //console.log(roleSelector.modalSelector);
         var csvValue = $(roleSelector.targetSelector).val();
         var roles;
         if (csvValue) {
@@ -52,6 +54,7 @@
         }
 
         $(roleSelector.modalSelector + " input:checkbox").change(function () {
+           // console.log('check changed');
             var unchecked = $(":checkbox:not(checked)").map(function () {
                 return $(this).data("rolename");
             }).get();
