@@ -5,6 +5,9 @@ https://github.com/transloadit/uppy
 https://uppy.io/docs/tus/
 
 
+https://github.com/danialfarid/ng-file-upload
+https://blogs.msdn.microsoft.com/azureossds/2016/06/29/uploading-images-to-azure-storage-from-angularjs-app/
+
 
 
 https://github.com/blueimp/jQuery-File-Upload
@@ -54,3 +57,17 @@ recipe for epic fail
 https://blog.yourlabs.org/post/184290880553/storing-hd-photos-in-a-relational-database-recipe#_=_
 
 https://softwareengineering.stackexchange.com/questions/150669/is-it-a-bad-practice-to-store-large-files-10-mb-in-a-database
+
+
+## Azure blob storage
+
+https://docs.microsoft.com/en-us/azure/storage/blobs/storage-upload-process-images?tabs=dotnet
+
+https://docs.microsoft.com/en-us/azure/event-grid/resize-images-on-storage-blob-upload-event?tabs=dotnet
+
+https://github.com/Azure-Samples/storage-blob-upload-from-webapp
+
+https://docs.microsoft.com/en-us/azure/vs-azure-tools-storage-manage-with-storage-explorer?tabs=windows
+
+
+
