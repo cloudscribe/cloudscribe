@@ -1,7 +1,7 @@
 language: csharp
 solution: cloudscribe.sln
 sudo: false
-dist: trusty
+dist: xenial
 mono: none
 dotnet: 2.2.401
 env:
