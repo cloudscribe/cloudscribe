@@ -2,7 +2,7 @@ dist: trusty
 language: csharp
 install: true
 mono: latest
-dotnet: 2.1.200
+dotnet: 2.2.401
 sudo: required
 addons:
   apt:
