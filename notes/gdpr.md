@@ -89,3 +89,6 @@ any other embedded content, youtube etc
 https://www.mcbeev.com/Blog/May-2018/Analytics-Scripts-in-GDPR-With-Kentico-EMS
 
 https://techcrunch.com/2019/07/29/europes-top-court-sharpens-guidance-for-sites-using-leaky-social-plug-ins/
+
+https://github.com/panzi/SocialSharePrivacy
+
