@@ -1,8 +1,7 @@
-﻿// Copyright (c) Source Tree Solutions, LLC. All rights reserved.
-// Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
+﻿// Licensed under the Apache License, Version 2.0
 // Author:					Joe Audette/Derek Gray
 // Created:				    2016-08-24
-// Last Modified:		    2016-10-08
+// Last Modified:		    2019-09-01
 // 
 
 using cloudscribe.Core.Models;
@@ -21,14 +20,14 @@ namespace cloudscribe.Core.Web.Navigation
     public class SiteNavigationOptionsResolver : IOptions<NavigationOptions>
     {
         public SiteNavigationOptionsResolver(
-            IHostingEnvironment environment,
+            IWebHostEnvironment environment,
             IHttpContextAccessor httpContextAccessor)
         {
             this.httpContextAccessor = httpContextAccessor;
             this.environment = environment;
         }
 
-        private IHostingEnvironment environment;
+        private IWebHostEnvironment environment;
         private IHttpContextAccessor httpContextAccessor;
 
         public NavigationOptions Value

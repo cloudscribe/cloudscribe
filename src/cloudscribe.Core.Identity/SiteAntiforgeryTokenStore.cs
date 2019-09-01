@@ -1,148 +1,150 @@
-﻿// Copyright (c) Source Tree Solutions, LLC. All rights reserved.
-// Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
-// Author:					Joe Audette
-// Created:					2016-05-03
-// Last Modified:			2017-08-18
-// 
+﻿//// Copyright (c) Source Tree Solutions, LLC. All rights reserved.
+//// Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
+//// Author:					Joe Audette
+//// Created:					2016-05-03
+//// Last Modified:			2017-08-18
+//// 
 
-using cloudscribe.Core.Models;
-using Microsoft.AspNetCore.Antiforgery;
-using Microsoft.AspNetCore.Antiforgery.Internal;
-using Microsoft.AspNetCore.Http;
-using Microsoft.Extensions.Options;
-using System;
-using System.Diagnostics;
-using System.Threading.Tasks;
-using Microsoft.Extensions.Primitives;
+//using cloudscribe.Core.Models;
+//using Microsoft.AspNetCore.Antiforgery;
+//using Microsoft.AspNetCore.Antiforgery.Internal;
+//using Microsoft.AspNetCore.Http;
+//using Microsoft.Extensions.Options;
+//using System;
+//using System.Diagnostics;
+//using System.Threading.Tasks;
+//using Microsoft.Extensions.Primitives;
 
-//https://github.com/aspnet/Antiforgery/blob/dev/src/Microsoft.AspNetCore.Antiforgery/Internal/DefaultAntiforgeryTokenStore.cs
+////https://github.com/aspnet/Antiforgery/blob/dev/src/Microsoft.AspNetCore.Antiforgery/Internal/DefaultAntiforgeryTokenStore.cs
 
-namespace cloudscribe.Core.Identity
-{
-    public class SiteAntiforgeryTokenStore : IAntiforgeryTokenStore
-    {
-        private readonly AntiforgeryOptions _options;
-        private MultiTenantOptions _multiTenantOptions;
+////https://github.com/aspnet/AspNetCore/blob/master/src/Antiforgery/src/Internal/IAntiforgeryTokenStore.cs
 
-        public SiteAntiforgeryTokenStore(
-            IOptions<MultiTenantOptions> multiTenantOptionsAccessor,
-            IOptions<AntiforgeryOptions> optionsAccessor
-            )
-        {
-            if (optionsAccessor == null)
-            {
-                throw new ArgumentNullException(nameof(optionsAccessor));
-            }
+//namespace cloudscribe.Core.Identity
+//{
+//    public class SiteAntiforgeryTokenStore : IAntiforgeryTokenStore
+//    {
+//        private readonly AntiforgeryOptions _options;
+//        private MultiTenantOptions _multiTenantOptions;
 
-            _options = optionsAccessor.Value;
-            _multiTenantOptions = multiTenantOptionsAccessor.Value;
-        }
+//        public SiteAntiforgeryTokenStore(
+//            IOptions<MultiTenantOptions> multiTenantOptionsAccessor,
+//            IOptions<AntiforgeryOptions> optionsAccessor
+//            )
+//        {
+//            if (optionsAccessor == null)
+//            {
+//                throw new ArgumentNullException(nameof(optionsAccessor));
+//            }
 
-        private string GetCookieName(SiteContext tenant)
-        {
-            if(_multiTenantOptions.Mode == MultiTenantMode.FolderName)
-            {
-                if(!string.IsNullOrEmpty(tenant.SiteFolderName))
-                {
-                    return _options.Cookie.Name + tenant.SiteFolderName;
-                }
-            }
+//            _options = optionsAccessor.Value;
+//            _multiTenantOptions = multiTenantOptionsAccessor.Value;
+//        }
 
-            return _options.Cookie.Name;
-        }
+//        private string GetCookieName(SiteContext tenant)
+//        {
+//            if(_multiTenantOptions.Mode == MultiTenantMode.FolderName)
+//            {
+//                if(!string.IsNullOrEmpty(tenant.SiteFolderName))
+//                {
+//                    return _options.Cookie.Name + tenant.SiteFolderName;
+//                }
+//            }
 
-        private string GetCookiePath(SiteContext tenant)
-        {
-            if (_multiTenantOptions.Mode == MultiTenantMode.FolderName)
-            {
-                if (!string.IsNullOrEmpty(tenant.SiteFolderName))
-                {
-                    return "/" + tenant.SiteFolderName;
-                }
-            }
+//            return _options.Cookie.Name;
+//        }
 
-            return "/";
-        }
+//        private string GetCookiePath(SiteContext tenant)
+//        {
+//            if (_multiTenantOptions.Mode == MultiTenantMode.FolderName)
+//            {
+//                if (!string.IsNullOrEmpty(tenant.SiteFolderName))
+//                {
+//                    return "/" + tenant.SiteFolderName;
+//                }
+//            }
 
-        public string GetCookieToken(HttpContext httpContext)
-        {
-            Debug.Assert(httpContext != null);
+//            return "/";
+//        }
 
-            //var requestCookie = httpContext.Request.Cookies[_options.CookieName];
+//        public string GetCookieToken(HttpContext httpContext)
+//        {
+//            Debug.Assert(httpContext != null);
 
-            var tenant = httpContext.GetTenant<SiteContext>();
+//            //var requestCookie = httpContext.Request.Cookies[_options.CookieName];
 
-            var requestCookie = httpContext.Request.Cookies[GetCookieName(tenant)];
+//            var tenant = httpContext.GetTenant<SiteContext>();
 
-            if (string.IsNullOrEmpty(requestCookie))
-            {
-                // unable to find the cookie.
-                return null;
-            }
+//            var requestCookie = httpContext.Request.Cookies[GetCookieName(tenant)];
 
-            return requestCookie;
-        }
+//            if (string.IsNullOrEmpty(requestCookie))
+//            {
+//                // unable to find the cookie.
+//                return null;
+//            }
 
-        public async Task<AntiforgeryTokenSet> GetRequestTokensAsync(HttpContext httpContext)
-        {
-            Debug.Assert(httpContext != null);
+//            return requestCookie;
+//        }
 
-            //var cookieToken = httpContext.Request.Cookies[_options.CookieName];
+//        public async Task<AntiforgeryTokenSet> GetRequestTokensAsync(HttpContext httpContext)
+//        {
+//            Debug.Assert(httpContext != null);
 
-            var tenant = httpContext.GetTenant<SiteContext>();
-            var cookieToken = httpContext.Request.Cookies[GetCookieName(tenant)];
+//            //var cookieToken = httpContext.Request.Cookies[_options.CookieName];
 
-            StringValues requestToken;
-            if (httpContext.Request.HasFormContentType)
-            {
-                // Check the content-type before accessing the form collection to make sure
-                // we report errors gracefully.
-                var form = await httpContext.Request.ReadFormAsync();
-                requestToken = form[_options.FormFieldName];
-            }
+//            var tenant = httpContext.GetTenant<SiteContext>();
+//            var cookieToken = httpContext.Request.Cookies[GetCookieName(tenant)];
 
-            // Fall back to header if the form value was not provided.
-            if (requestToken.Count == 0 && _options.HeaderName != null)
-            {
-                requestToken = httpContext.Request.Headers[_options.HeaderName];
-            }
+//            StringValues requestToken;
+//            if (httpContext.Request.HasFormContentType)
+//            {
+//                // Check the content-type before accessing the form collection to make sure
+//                // we report errors gracefully.
+//                var form = await httpContext.Request.ReadFormAsync();
+//                requestToken = form[_options.FormFieldName];
+//            }
 
-            return new AntiforgeryTokenSet(requestToken, cookieToken, _options.FormFieldName, _options.HeaderName);
-        }
+//            // Fall back to header if the form value was not provided.
+//            if (requestToken.Count == 0 && _options.HeaderName != null)
+//            {
+//                requestToken = httpContext.Request.Headers[_options.HeaderName];
+//            }
 
-        public void SaveCookieToken(HttpContext httpContext, string token)
-        {
-            Debug.Assert(httpContext != null);
-            Debug.Assert(token != null);
+//            return new AntiforgeryTokenSet(requestToken, cookieToken, _options.FormFieldName, _options.HeaderName);
+//        }
 
-            //var options = new CookieOptions() { HttpOnly = true };
-            var options = _options.Cookie.Build(httpContext);
+//        public void SaveCookieToken(HttpContext httpContext, string token)
+//        {
+//            Debug.Assert(httpContext != null);
+//            Debug.Assert(token != null);
 
-
-            //if (_options.RequireSsl)
-            //{
-            //    options.Secure = true;
-            //}
-
-            if (_options.Cookie.Path != null)
-            {
-                options.Path = _options.Cookie.Path.ToString();
-            }
-            else
-            {
-                var pathBase = httpContext.Request.PathBase.ToString();
-                if (!string.IsNullOrEmpty(pathBase))
-                {
-                    options.Path = pathBase;
-                }
-            }
+//            //var options = new CookieOptions() { HttpOnly = true };
+//            var options = _options.Cookie.Build(httpContext);
 
 
-            var tenant = httpContext.GetTenant<SiteContext>();
-            options.Path = new PathString(GetCookiePath(tenant));
+//            //if (_options.RequireSsl)
+//            //{
+//            //    options.Secure = true;
+//            //}
+
+//            if (_options.Cookie.Path != null)
+//            {
+//                options.Path = _options.Cookie.Path.ToString();
+//            }
+//            else
+//            {
+//                var pathBase = httpContext.Request.PathBase.ToString();
+//                if (!string.IsNullOrEmpty(pathBase))
+//                {
+//                    options.Path = pathBase;
+//                }
+//            }
+
+
+//            var tenant = httpContext.GetTenant<SiteContext>();
+//            options.Path = new PathString(GetCookiePath(tenant));
             
-            httpContext.Response.Cookies.Append(GetCookieName(tenant), token, options);
-        }
-    }
+//            httpContext.Response.Cookies.Append(GetCookieName(tenant), token, options);
+//        }
+//    }
 
-}
+//}

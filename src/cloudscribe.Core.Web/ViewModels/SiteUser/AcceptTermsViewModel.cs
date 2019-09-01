@@ -1,9 +1,5 @@
-﻿using System;
-using System.ComponentModel.DataAnnotations;
-using cloudscribe.Web.Common.DataAnnotations;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Http.Authentication;
-using System.Collections.Generic;
+﻿using cloudscribe.Web.Common.DataAnnotations;
+using System;
 
 namespace cloudscribe.Core.Web.ViewModels.Account
 {

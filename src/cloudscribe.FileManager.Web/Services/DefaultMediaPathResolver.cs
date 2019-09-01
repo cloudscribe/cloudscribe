@@ -8,12 +8,12 @@ namespace cloudscribe.FileManager.Web.Services
     public class DefaultMediaPathResolver : IMediaPathResolver
     {
         public DefaultMediaPathResolver(
-            IHostingEnvironment environment)
+            IWebHostEnvironment environment)
         {
             hosting = environment;
         }
 
-        private IHostingEnvironment hosting;
+        private IWebHostEnvironment hosting;
 
         public Task<MediaRootPathInfo> Resolve(CancellationToken cancellationToken = default(CancellationToken))
         {

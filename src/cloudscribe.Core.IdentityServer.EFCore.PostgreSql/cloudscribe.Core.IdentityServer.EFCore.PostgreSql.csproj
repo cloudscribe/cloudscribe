@@ -2,11 +2,11 @@
 
   <PropertyGroup>
     <Description>PostgreSql (pgsql) Entity Framework configuration and operational stores for IdentityServer4 cloudscribe multi-tenant identity integration</Description>
-    <VersionPrefix>3.0.8</VersionPrefix>
-    <AssemblyVersion>3.0.8</AssemblyVersion>
+    <Version>4.0.0-preview20190901</Version>
+    
 
     <Authors>Joe Audette</Authors>
-    <TargetFramework>netstandard2.0</TargetFramework>
+    <TargetFramework>netcoreapp3.0</TargetFramework>
     
     <PackageTags>cloudscribe;identity</PackageTags>
     <PackageIconUrl>https://raw.githubusercontent.com/joeaudette/cloudscribe/master/cloudscribe-icon-32.png</PackageIconUrl>
@@ -30,12 +30,12 @@
 
   <ItemGroup>
 
-    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="2.1.4" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="2.1.4" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.Relational" Version="2.1.4" />
-    <PackageReference Include="Microsoft.Extensions.Configuration.FileExtensions" Version="2.1.1" />
-    <PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="2.1.1" />
-    <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="2.1.2" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="3.0.0-*" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="3.0.0-*" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Relational" Version="3.0.0-*" />
+    <PackageReference Include="Microsoft.Extensions.Configuration.FileExtensions" Version="3.0.0-*" />
+    <PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="3.0.0-*" />
+    <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="3.0.0-*" />
     
 
   </ItemGroup>

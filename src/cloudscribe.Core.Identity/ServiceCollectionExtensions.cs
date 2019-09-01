@@ -8,7 +8,7 @@
 using cloudscribe.Core.Identity;
 using cloudscribe.Core.Models;
 using Microsoft.AspNetCore.Authentication.Cookies;
-using Microsoft.AspNetCore.Antiforgery.Internal;
+//using Microsoft.AspNetCore.Antiforgery.Internal;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
@@ -159,7 +159,8 @@ namespace Microsoft.Extensions.DependencyInjection
             services.TryAddScoped<ISiteAccountCapabilitiesProvider, DefaultSiteAcountCapabilitiesProvider>();
             services.TryAddScoped<IProcessAccountLoginRules, DefaultAccountLoginRulesProcessor>();
 
-            services.AddSingleton<IAntiforgeryTokenStore, SiteAntiforgeryTokenStore>();
+            //internal as of 3.0
+            //services.AddSingleton<IAntiforgeryTokenStore, SiteAntiforgeryTokenStore>();
 
             services.AddAuthentication(options =>
             {

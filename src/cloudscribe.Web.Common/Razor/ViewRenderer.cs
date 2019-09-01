@@ -8,7 +8,7 @@
 //https://github.com/aspnet/Entropy/blob/master/samples/Mvc.RenderViewToString/RazorViewToStringRenderer.cs
 
 using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Builder.Internal;
+//using Microsoft.AspNetCore.Builder.Internal;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Abstractions;

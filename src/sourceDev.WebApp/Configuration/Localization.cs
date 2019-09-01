@@ -15,8 +15,8 @@ namespace Microsoft.Extensions.DependencyInjection
             IConfiguration config
             )
         {
-            services.Configure<GlobalResourceOptions>(config.GetSection("GlobalResourceOptions"));
-            services.AddSingleton<IStringLocalizerFactory, GlobalResourceManagerStringLocalizerFactory>();
+            //services.Configure<GlobalResourceOptions>(config.GetSection("GlobalResourceOptions"));
+            //services.AddSingleton<IStringLocalizerFactory, GlobalResourceManagerStringLocalizerFactory>();
 
             services.AddLocalization(options => options.ResourcesPath = "GlobalResources");
 
@@ -31,7 +31,7 @@ namespace Microsoft.Extensions.DependencyInjection
                     //new CultureInfo("fr")
                 };
 
-            var routeSegmentLocalizationProvider = new UrlSegmentRequestCultureProvider(supportedCultures.ToList());
+            //var routeSegmentLocalizationProvider = new UrlSegmentRequestCultureProvider(supportedCultures.ToList());
 
             services.Configure<RequestLocalizationOptions>(options =>
             {
@@ -61,7 +61,7 @@ namespace Microsoft.Extensions.DependencyInjection
                 //  return new ProviderCultureResult("en");
                 //}));
 
-                options.RequestCultureProviders.Insert(0, routeSegmentLocalizationProvider);
+                //options.RequestCultureProviders.Insert(0, routeSegmentLocalizationProvider);
 
             });
 

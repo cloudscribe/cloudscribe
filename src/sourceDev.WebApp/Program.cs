@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using sourceDev.WebApp.Configuration;
 using System;
@@ -54,7 +55,7 @@ namespace sourceDev.WebApp
             //    .CreateLogger();
             try
             {
-                var hostBuilder = CreateWebHostBuilder(args);
+                var hostBuilder = CreateHostBuilder(args);
                 var host = hostBuilder.Build();
 
                 var config = host.Services.GetRequiredService<IConfiguration>();
@@ -75,7 +76,7 @@ namespace sourceDev.WebApp
                     }
                 }
 
-                var env = host.Services.GetRequiredService<IHostingEnvironment>();
+                var env = host.Services.GetRequiredService<IWebHostEnvironment>();
                 var loggerFactory = host.Services.GetRequiredService<ILoggerFactory>();
                 ConfigureLogging(env, loggerFactory, host.Services, config);
 
@@ -140,7 +141,7 @@ namespace sourceDev.WebApp
 
                     
 
-                    KvpEFCoreStartup.InitializeDatabaseAsync(services).Wait();
+                    //KvpEFCoreStartup.InitializeDatabaseAsync(services).Wait();
 
                     // you can use this hack to add clients and scopes into the db during startup if needed
                     // I used this before we implemented the UI for adding them
@@ -167,7 +168,7 @@ namespace sourceDev.WebApp
         }
 
         private static void ConfigureLogging(
-            IHostingEnvironment env,
+            IWebHostEnvironment env,
             ILoggerFactory loggerFactory,
             IServiceProvider serviceProvider,
             IConfiguration config
@@ -227,21 +228,28 @@ namespace sourceDev.WebApp
             loggerFactory.AddDbLogger(serviceProvider, logFilter);
         }
 
+        public static IHostBuilder CreateHostBuilder(string[] args) =>
+            Host.CreateDefaultBuilder(args)
+                .ConfigureWebHostDefaults(webBuilder =>
+                {
+                    webBuilder.UseStartup<Startup>();
+                });
+
 
         //https://joonasw.net/view/aspnet-core-2-configuration-changes
 
-        public static IWebHostBuilder CreateWebHostBuilder(string[] args) =>
-            WebHost.CreateDefaultBuilder(args)
-            .ConfigureAppConfiguration((builderContext, config) =>
-            {
-                //config.AddJsonFile("app-userproperties.json", optional: true, reloadOnChange: true);
-            })
-            .UseStartup<Startup>()
-            //.ConfigureKestrel((context, options) =>
-            //{
-            //    // Set properties and call methods on options
-            //})
-                ;
+        //public static IWebHostBuilder CreateWebHostBuilder(string[] args) =>
+        //    WebHost.CreateDefaultBuilder(args)
+        //    .ConfigureAppConfiguration((builderContext, config) =>
+        //    {
+        //        //config.AddJsonFile("app-userproperties.json", optional: true, reloadOnChange: true);
+        //    })
+        //    .UseStartup<Startup>()
+        //    //.ConfigureKestrel((context, options) =>
+        //    //{
+        //    //    // Set properties and call methods on options
+        //    //})
+        //        ;
 
 
         //public static IWebHostBuilder CreateWebHostBuilder(string[] args) =>

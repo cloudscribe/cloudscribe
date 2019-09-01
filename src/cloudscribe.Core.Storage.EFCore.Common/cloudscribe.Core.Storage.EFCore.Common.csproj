@@ -2,10 +2,9 @@
 
   <PropertyGroup>
     <Description>Entity Framework Core implementation of cloudscribe core commands and queries - typically you do not use this directly, use cloudscribe.Core.Storage.EFCore.MSSQL</Description>
-    <VersionPrefix>3.0.18</VersionPrefix>
-    <AssemblyVersion>3.0.18</AssemblyVersion>
+    <Version>4.0.0-preview20190901</Version>
     <Authors>Joe Audette</Authors>
-    <TargetFrameworks>netstandard2.0</TargetFrameworks>
+    <TargetFrameworks>netcoreapp3.0</TargetFrameworks>
     <PackageTags>cloudscribe;commands;queries;ef</PackageTags>
     <PackageIconUrl>https://raw.githubusercontent.com/joeaudette/cloudscribe/master/cloudscribe-icon-32.png</PackageIconUrl>
     <PackageProjectUrl>https://github.com/joeaudette/cloudscribe</PackageProjectUrl>
@@ -21,10 +20,10 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="2.1.4" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.Relational" Version="2.1.4" />
-    <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="2.1.1" />
-    <PackageReference Include="cloudscribe.Pagination.Models" Version="1.0.4" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="3.0.0-*" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Relational" Version="3.0.0-*" />
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="3.0.0-*" />
+    <PackageReference Include="cloudscribe.Pagination.Models" Version="1.0.5" />
   </ItemGroup>
 
   

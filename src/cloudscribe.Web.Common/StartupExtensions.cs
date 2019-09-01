@@ -2,7 +2,7 @@
 using cloudscribe.Web.Common.Analytics;
 using cloudscribe.Web.Common.Components;
 using cloudscribe.Web.Common.Helpers;
-using cloudscribe.Web.Common.Http;
+//using cloudscribe.Web.Common.Http;
 using cloudscribe.Web.Common.Models;
 using cloudscribe.Web.Common.Razor;
 using cloudscribe.Web.Common.Recaptcha;
@@ -22,7 +22,7 @@ namespace Microsoft.Extensions.DependencyInjection
             IConfiguration configuration = null)
         {
             services.TryAddSingleton<IDateTimeZoneProvider>(new DateTimeZoneCache(TzdbDateTimeZoneSource.Default));
-            services.TryAddSingleton<IHttpClientProvider, DefaultHttpClientProvider>();
+            //services.TryAddSingleton<IHttpClientProvider, DefaultHttpClientProvider>();
 
             services.AddHttpClient();
             services.AddHttpClient("google-analytics", c =>
@@ -37,10 +37,10 @@ namespace Microsoft.Extensions.DependencyInjection
 
             services.TryAddScoped<IRecaptchaServerSideValidator, RecaptchaServerSideValidator>();
 
-            services.TryAddScoped<ITimeZoneHelper, TimeZoneHelper>();
+            //services.TryAddScoped<ITimeZoneHelper, TimeZoneHelper>();
             services.TryAddScoped<IResourceHelper, ResourceHelper>();
 
-            services.TryAddScoped<ITimeZoneIdResolver, GmtTimeZoneIdResolver>();
+            //services.TryAddScoped<ITimeZoneIdResolver, GmtTimeZoneIdResolver>();
             services.TryAddScoped<ICkeditorOptionsResolver, DefaultCkeditorOptionsResolver>();
             
             if (configuration != null)

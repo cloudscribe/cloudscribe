@@ -12,8 +12,8 @@ namespace Microsoft.Extensions.DependencyInjection
         public static IServiceCollection SetupIdentityServerIntegrationAndCORSPolicy(
             this IServiceCollection services,
             IConfiguration config,
-            IHostingEnvironment environment,
-            ILogger log,
+            IWebHostEnvironment environment,
+            //ILogger log,
             bool sslIsAvailable,
             bool disableIdentityServer,
             out bool didSetupIdServer

@@ -5,7 +5,7 @@
     <VersionPrefix>1.0.0</VersionPrefix>
     <AssemblyVersion>1.0.0</AssemblyVersion>
     <Authors>Joe Audette</Authors>
-    <TargetFrameworks>netstandard2.0</TargetFrameworks>
+    <TargetFrameworks>netcoreapp3.0</TargetFrameworks>
     <PackageTags>cloudscribe;mojoportal;migration</PackageTags>
     <PackageIconUrl>https://raw.githubusercontent.com/joeaudette/cloudscribe/master/cloudscribe-icon-32.png</PackageIconUrl>
     <PackageProjectUrl>https://github.com/joeaudette/cloudscribe</PackageProjectUrl>
@@ -20,7 +20,7 @@
     <ProjectReference Include="..\cloudscribe.Core.Models\cloudscribe.Core.Models.csproj" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="2.1.1" />
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="3.0.0-*" />
   </ItemGroup>
 
 </Project>

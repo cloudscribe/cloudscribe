@@ -16,8 +16,8 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Razor;
 using Microsoft.Extensions.Options;
 using sourceDev.WebApp.Configuration;
-using cloudscribe.UserProperties.Services;
-using cloudscribe.UserProperties.Models;
+//using cloudscribe.UserProperties.Services;
+//using cloudscribe.UserProperties.Models;
 using IdentityServer4.AccessTokenValidation;
 using Microsoft.AspNetCore.Http;
 using System.Security.Claims;
@@ -27,31 +27,32 @@ using System.Net.Http;
 using System.Net.Http.Headers;
 using Newtonsoft.Json.Linq;
 using cloudscribe.Core.Models;
+using Microsoft.Extensions.Hosting;
 
 namespace sourceDev.WebApp
 {
     public class Startup
     {
         public Startup(
-            IConfiguration configuration, 
-            IHostingEnvironment env,
-            ILogger<Startup> logger
+            IConfiguration configuration,
+            IWebHostEnvironment env//,
+            //ILogger<Startup> logger
             )
         {
             _configuration = configuration;
             _environment = env;
-            _log = logger;
+           // _log = logger;
             _sslIsAvailable =  _configuration.GetValue<bool>("AppSettings:UseSsl");
             _disableIdentityServer = _configuration.GetValue<bool>("AppSettings:DisableIdentityServer");
             
         }
 
-        private readonly IHostingEnvironment _environment;
+        private readonly IWebHostEnvironment _environment;
         private readonly IConfiguration _configuration;
         private readonly bool _sslIsAvailable;
         private readonly bool _disableIdentityServer;
         private bool _didSetupIdServer = false;
-        private readonly ILogger _log;
+       //private readonly ILogger _log;
 
         
         public void ConfigureServices(IServiceCollection services)
@@ -89,7 +90,6 @@ namespace sourceDev.WebApp
             services.SetupIdentityServerIntegrationAndCORSPolicy(
                 _configuration,
                 _environment,
-                _log,
                 _sslIsAvailable,
                 _disableIdentityServer,
                 out _didSetupIdServer
@@ -99,70 +99,70 @@ namespace sourceDev.WebApp
             // This is a custom extension method in Config/CloudscribeFeatures.cs
             services.SetupCloudscribeFeatures(_configuration);
 
-            if(!string.IsNullOrWhiteSpace(_configuration["GituHubAuthSettings:ClientId"]))
-            {
-                services.AddAuthentication()
-                .AddOAuth("GitHub", options =>
-                {
+            //if(!string.IsNullOrWhiteSpace(_configuration["GituHubAuthSettings:ClientId"]))
+            //{
+            //    services.AddAuthentication()
+            //    .AddOAuth("GitHub", options =>
+            //    {
 
-                    options.ClientId = _configuration["GituHubAuthSettings:ClientId"];
-                    options.ClientSecret = _configuration["GituHubAuthSettings:ClientSecret"];
-                    options.CallbackPath = new Microsoft.AspNetCore.Http.PathString("/signin-github");
-                    options.Scope.Add("user:email");
-                    //options.SignInScheme = "GitHub";
+            //        options.ClientId = _configuration["GituHubAuthSettings:ClientId"];
+            //        options.ClientSecret = _configuration["GituHubAuthSettings:ClientSecret"];
+            //        options.CallbackPath = new Microsoft.AspNetCore.Http.PathString("/signin-github");
+            //        options.Scope.Add("user:email");
+            //        //options.SignInScheme = "GitHub";
 
-                    options.AuthorizationEndpoint = "https://github.com/login/oauth/authorize";
-                    options.TokenEndpoint = "https://github.com/login/oauth/access_token";
-                    options.UserInformationEndpoint = "https://api.github.com/user";
+            //        options.AuthorizationEndpoint = "https://github.com/login/oauth/authorize";
+            //        options.TokenEndpoint = "https://github.com/login/oauth/access_token";
+            //        options.UserInformationEndpoint = "https://api.github.com/user";
 
-                    options.ClaimActions.MapJsonKey(ClaimTypes.NameIdentifier, "id");
-                    options.ClaimActions.MapJsonKey(ClaimTypes.Name, "name");
-                    options.ClaimActions.MapJsonKey(ClaimTypes.Email, "email");
-                    options.ClaimActions.MapJsonKey("urn:github:login", "login");
-                    options.ClaimActions.MapJsonKey("urn:github:url", "html_url");
-                    options.ClaimActions.MapJsonKey("urn:github:avatar", "avatar_url");
+            //        options.ClaimActions.MapJsonKey(ClaimTypes.NameIdentifier, "id");
+            //        options.ClaimActions.MapJsonKey(ClaimTypes.Name, "name");
+            //        options.ClaimActions.MapJsonKey(ClaimTypes.Email, "email");
+            //        options.ClaimActions.MapJsonKey("urn:github:login", "login");
+            //        options.ClaimActions.MapJsonKey("urn:github:url", "html_url");
+            //        options.ClaimActions.MapJsonKey("urn:github:avatar", "avatar_url");
 
-                    options.Events = new OAuthEvents
-                    {
-                        OnCreatingTicket = async context =>
-                        {
-                            var request = new HttpRequestMessage(HttpMethod.Get, context.Options.UserInformationEndpoint);
-                            request.Headers.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
-                            request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", context.AccessToken);
+            //        options.Events = new OAuthEvents
+            //        {
+            //            OnCreatingTicket = async context =>
+            //            {
+            //                var request = new HttpRequestMessage(HttpMethod.Get, context.Options.UserInformationEndpoint);
+            //                request.Headers.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+            //                request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", context.AccessToken);
 
-                            var response = await context.Backchannel.SendAsync(request, HttpCompletionOption.ResponseHeadersRead, context.HttpContext.RequestAborted);
-                            response.EnsureSuccessStatusCode();
+            //                var response = await context.Backchannel.SendAsync(request, HttpCompletionOption.ResponseHeadersRead, context.HttpContext.RequestAborted);
+            //                response.EnsureSuccessStatusCode();
 
-                            var user = JObject.Parse(await response.Content.ReadAsStringAsync());
-                            var email = user.Value<string>("email");
+            //                var user = JObject.Parse(await response.Content.ReadAsStringAsync());
+            //                var email = user.Value<string>("email");
                             
 
-                            if(string.IsNullOrWhiteSpace(email))
-                            {
-                                request = new HttpRequestMessage(HttpMethod.Get, context.Options.UserInformationEndpoint + "/emails");
-                                request.Headers.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
-                                request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", context.AccessToken);
+            //                if(string.IsNullOrWhiteSpace(email))
+            //                {
+            //                    request = new HttpRequestMessage(HttpMethod.Get, context.Options.UserInformationEndpoint + "/emails");
+            //                    request.Headers.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+            //                    request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", context.AccessToken);
 
-                                response = await context.Backchannel.SendAsync(request, HttpCompletionOption.ResponseHeadersRead, context.HttpContext.RequestAborted);
-                                response.EnsureSuccessStatusCode();
+            //                    response = await context.Backchannel.SendAsync(request, HttpCompletionOption.ResponseHeadersRead, context.HttpContext.RequestAborted);
+            //                    response.EnsureSuccessStatusCode();
 
-                                var emails = JArray.Parse(await response.Content.ReadAsStringAsync());
-                                var primaryEmail = emails.FirstOrDefault(x => x.Value<bool>("primary") == true)
-                                .Value<string>("email");
-                                if(!string.IsNullOrEmpty(primaryEmail))
-                                {
-                                    user["email"] = primaryEmail;
-                                }
-                            }
+            //                    var emails = JArray.Parse(await response.Content.ReadAsStringAsync());
+            //                    var primaryEmail = emails.FirstOrDefault(x => x.Value<bool>("primary") == true)
+            //                    .Value<string>("email");
+            //                    if(!string.IsNullOrEmpty(primaryEmail))
+            //                    {
+            //                        user["email"] = primaryEmail;
+            //                    }
+            //                }
                             
                             
 
 
-                            context.RunClaimActions(user);
-                        }
-                    };
-                });
-            }
+            //                context.RunClaimActions(user);
+            //            }
+            //        };
+            //    });
+            //}
 
             
 
@@ -218,7 +218,7 @@ namespace sourceDev.WebApp
         // ConfigureServices
         public void Configure(
             IApplicationBuilder app,
-            IHostingEnvironment env,
+            IWebHostEnvironment env,
             ILoggerFactory loggerFactory,
             IOptions<ContentSecurityPolicyConfiguration> cspOptionsAccessor,
             IOptions<cloudscribe.Core.Models.MultiTenantOptions> multiTenantOptionsAccessor,
@@ -229,7 +229,7 @@ namespace sourceDev.WebApp
             var useMiniProfiler = _configuration.GetValue<bool>("DevOptions:EnableMiniProfiler");
             if(useMiniProfiler)
             {
-                app.UseMiniProfiler();
+                //app.UseMiniProfiler();
             }
 
             // NWebSec https://docs.nwebsec.com/en/latest/nwebsec/getting-started.html
@@ -246,40 +246,11 @@ namespace sourceDev.WebApp
                 app.UseExceptionHandler("/oops/Error");
                 //NWebSec
                 //https://github.com/OWASP/CheatSheetSeries/blob/master/cheatsheets/HTTP_Strict_Transport_Security_Cheat_Sheet.md
-                app.UseHsts(hsts => hsts.MaxAge(cspConfig.HstsDays));
+                //app.UseHsts(hsts => hsts.MaxAge(cspConfig.HstsDays));
+                app.UseHsts();
             }
 
-            // NWebSec
-            //app.UseRedirectValidation(options => options.AllowSameHostRedirectsToHttps());
-            //app.UseXContentTypeOptions();
-            //app.UseReferrerPolicy(opts => opts.NoReferrer());
-            //app.UseXXssProtection(options => options.EnabledWithBlockMode());
-            //app.UseXfo(xfo => xfo.SameOrigin());
-            //app.UseCsp(opts => opts
-            //    .BlockAllMixedContent()
-            //    .StyleSources(s => s.Self()
-            //       .UnsafeInline()
-            //    // .CustomSources(cspConfig.WhitelistStyles.ToArray()) //throws an error if empty array
-            //    )
-            //    .FontSources(s => s.Self()
-            //      // .CustomSources(cspConfig.WhitelistFonts.ToArray())   //throws an error if empty array
-            //      )
-            //     .FormActions(s => s.Self())
-            //     .FrameAncestors(s => s.Self())
-            //     .ImageSources(s => s.Self()
-            //         .CustomSources(cspConfig.WhitelistImages.ToArray())
-            //      )
-            //     .ScriptSources(s => s.Self()
-            //        //.UnsafeInline() //ckeditor toolbars buttons don't work without this unfortunately
-            //        .UnsafeEval() //without this jquery.unobtrusiveajax doesn't work
-            //       .CustomSources(cspConfig.WhitelistScripts.ToArray())  //throws an error if empty array
-            //      )
-            //    );
-            // end NWebSec
-
-
-
-
+           
             //app.UseStaticFiles();
             app.UseStaticFiles(new StaticFileOptions()
             {
@@ -317,15 +288,34 @@ namespace sourceDev.WebApp
                 app.UseIdentityServer();
             }
 
-            app.UseMvc(routes =>
+            var useFolders = multiTenantOptions.Mode == cloudscribe.Core.Models.MultiTenantMode.FolderName;
+            app.UseEndpoints(endpoints =>
             {
-                var useFolders = multiTenantOptions.Mode == cloudscribe.Core.Models.MultiTenantMode.FolderName;
                 //*** IMPORTANT ***
                 // this is in Config/RoutingExtensions.cs
                 // you can change or add routes there
-                routes.UseCustomRoutes(useFolders);
+                endpoints.UseCustomRoutes(useFolders);
+
+
+                //endpoints.MapControllerRoute(
+                //    name: "default",
+                //    pattern: "{controller=Home}/{action=Index}/{id?}");
+                endpoints.MapRazorPages();
+
+
 
             });
+
+
+            //app.UseMvc(routes =>
+            //{
+            //    var useFolders = multiTenantOptions.Mode == cloudscribe.Core.Models.MultiTenantMode.FolderName;
+            //    //*** IMPORTANT ***
+            //    // this is in Config/RoutingExtensions.cs
+            //    // you can change or add routes there
+            //    routes.UseCustomRoutes(useFolders);
+
+            //});
             
 
         }

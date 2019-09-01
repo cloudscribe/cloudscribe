@@ -43,21 +43,25 @@ namespace cloudscribe.EFCore.PostgreSql.Conventions
             switch (entity)
             {
                 case IMutableEntityType table:
-                    var relationalTable = table.Relational();
-                    relationalTable.TableName = ConvertGeneralToSnake(mapper, relationalTable.TableName);
+
+                    table.SetTableName(ConvertGeneralToSnake(mapper, table.GetTableName()));
+
+           
+                    //var relationalTable = table.Relational();
+                    //relationalTable.TableName = ConvertGeneralToSnake(mapper, table.GetTableName());
 
                     break;
                 case IMutableProperty property:
-                    property.Relational().ColumnName = ConvertGeneralToSnake(mapper, property.Relational().ColumnName);
+                    property.SetColumnName(ConvertGeneralToSnake(mapper, property.GetColumnName()));
                     break;
                 case IMutableKey primaryKey:
-                    primaryKey.Relational().Name = ConvertKeyToSnake(mapper, primaryKey.Relational().Name);
+                    primaryKey.SetName(ConvertKeyToSnake(mapper, primaryKey.GetName()));
                     break;
                 case IMutableForeignKey foreignKey:
-                    foreignKey.Relational().Name = ConvertKeyToSnake(mapper, foreignKey.Relational().Name);
+                    foreignKey.SetConstraintName(ConvertKeyToSnake(mapper, foreignKey.GetConstraintName()));
                     break;
                 case IMutableIndex indexKey:
-                    indexKey.Relational().Name = ConvertKeyToSnake(mapper, indexKey.Relational().Name);
+                    indexKey.SetName(ConvertKeyToSnake(mapper, indexKey.GetName()));
                     break;
                 default:
                     throw new NotImplementedException("Unexpected type was provided to snake case converter");

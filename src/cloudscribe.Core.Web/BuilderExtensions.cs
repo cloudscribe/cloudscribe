@@ -109,7 +109,7 @@ namespace Microsoft.AspNetCore.Builder
            SiteContext tenant
            )
         {
-            var env = builder.ApplicationServices.GetRequiredService<IHostingEnvironment>();
+            var env = builder.ApplicationServices.GetRequiredService<IWebHostEnvironment>();
 
             var tenantSegment = "";
             if (multiTenantOptions.Mode == MultiTenantMode.FolderName && !string.IsNullOrEmpty(tenant.SiteFolderName))
@@ -217,7 +217,7 @@ namespace Microsoft.AspNetCore.Builder
         }
 
         private static bool TryEnsureTenantWwwRoot(
-            IHostingEnvironment env,
+            IWebHostEnvironment env,
             ISiteContext tenant, 
             MultiTenantOptions options)
         {

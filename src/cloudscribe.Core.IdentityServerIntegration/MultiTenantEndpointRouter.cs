@@ -17,13 +17,13 @@ namespace cloudscribe.Core.IdentityServerIntegration
         //private readonly Dictionary<string, EndpointName> _pathToNameMap;
         private readonly IdentityServerOptions _options;
         //private readonly IEnumerable<EndpointMapping> _mappings;
-        private readonly IEnumerable<Endpoint> _endpoints;
+        private readonly IEnumerable<IdentityServer4.Hosting.Endpoint> _endpoints;
         
         private readonly ILogger<MultiTenantEndpointRouter> _logger;
         private MultiTenantOptions _multiTenantOptions;
 
         public MultiTenantEndpointRouter(
-            IEnumerable<Endpoint> endpoints, 
+            IEnumerable<IdentityServer4.Hosting.Endpoint> endpoints, 
             IdentityServerOptions options,
             IOptions<MultiTenantOptions> multiTenantOptionsAccessor,
             ILogger<MultiTenantEndpointRouter> logger
@@ -105,7 +105,7 @@ namespace cloudscribe.Core.IdentityServerIntegration
             return false;
         }
 
-        private IEndpointHandler GetEndpointHandler(Endpoint endpoint, HttpContext context)
+        private IEndpointHandler GetEndpointHandler(IdentityServer4.Hosting.Endpoint endpoint, HttpContext context)
         {
             if (_options.Endpoints.IsEndpointEnabled(endpoint))
             {
@@ -153,7 +153,7 @@ namespace cloudscribe.Core.IdentityServerIntegration
             return url;
         }
 
-        public static bool IsEndpointEnabled(this EndpointsOptions options, Endpoint endpoint)
+        public static bool IsEndpointEnabled(this EndpointsOptions options, IdentityServer4.Hosting.Endpoint endpoint)
         {
             switch (endpoint?.Name)
             {
