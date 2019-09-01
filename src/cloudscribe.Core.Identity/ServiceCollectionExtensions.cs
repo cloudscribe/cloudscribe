@@ -151,6 +151,8 @@ namespace Microsoft.Extensions.DependencyInjection
 
             services.TryAddScoped<SignInManager<SiteUser>, SignInManager<SiteUser>>();
 
+            services.TryAddScoped<IUserConfirmation<SiteUser>, SiteUserConfirmation<SiteUser>>();
+
             //services.TryAddSingleton<SiteAuthCookieValidator, SiteAuthCookieValidator>();
             services.TryAddSingleton<ICookieAuthRedirector, ApiAwareCookieAuthRedirector>();
             //services.TryAddScoped<SiteCookieAuthenticationEvents, SiteCookieAuthenticationEvents>();

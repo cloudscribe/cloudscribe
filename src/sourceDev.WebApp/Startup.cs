@@ -250,7 +250,8 @@ namespace sourceDev.WebApp
                 app.UseHsts();
             }
 
-           
+            app.UseHttpsRedirection();
+
             //app.UseStaticFiles();
             app.UseStaticFiles(new StaticFileOptions()
             {
@@ -263,6 +264,8 @@ namespace sourceDev.WebApp
             });
 
             app.UseCloudscribeCommonStaticFiles();
+
+            app.UseRouting();
 
             app.UseCookiePolicy();
 
