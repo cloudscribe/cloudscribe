@@ -21,6 +21,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\cloudscribe.Core.Models\cloudscribe.Core.Models.csproj" />
+    <ProjectReference Include="..\cloudscribe.MultiTenancy\cloudscribe.MultiTenancy.csproj" />
   </ItemGroup>
 
   <ItemGroup>
@@ -60,7 +61,7 @@
     
     <PackageReference Include="Microsoft.Extensions.Options" Version="3.0.0-*" />
     <PackageReference Include="Microsoft.Extensions.Options.ConfigurationExtensions" Version="3.0.0-*" />
-    <PackageReference Include="SaasKit.Multitenancy" Version="1.1.4" />
+    
     <PackageReference Include="System.Security.Claims" Version="4.3.*" />
     <PackageReference Include="cloudscribe.Pagination.Models" Version="1.0.5" />
   </ItemGroup>

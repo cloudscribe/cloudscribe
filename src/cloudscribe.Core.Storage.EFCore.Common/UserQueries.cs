@@ -1,8 +1,7 @@
-﻿// Copyright (c) Source Tree Solutions, LLC. All rights reserved.
-// Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
+﻿// Licensed under the Apache License, Version 2.0
 // Author:					Joe Audette
 // Created:					2015-11-16
-// Last Modified:			2019-03-22
+// Last Modified:			2019-09-02
 // 
 
 
@@ -19,35 +18,44 @@ namespace cloudscribe.Core.Storage.EFCore.Common
 {
     public class UserQueries : IUserQueries, IUserQueriesSingleton
     {
-        public UserQueries(ICoreDbContext dbContext)
+        public UserQueries(ICoreDbContextFactory coreDbContextFactory)
         {
-            this.dbContext = dbContext;
+            _contextFactory = coreDbContextFactory;
         }
 
-        private ICoreDbContext dbContext;
+        //private ICoreDbContext dbContext;
+
+        private readonly ICoreDbContextFactory _contextFactory;
 
         #region User
-        
+
         //public int GetCount(Guid siteId)
         //{
         //    return dbContext.Users.Count<SiteUser>(x => x.SiteId == siteId);
         //}
-        
+
         public async Task<ISiteUser> Fetch(
             Guid siteId,
             Guid userId,
             CancellationToken cancellationToken = default(CancellationToken))
         {
             cancellationToken.ThrowIfCancellationRequested();
-            var item
-                = await dbContext.Users
-                .AsNoTracking()
-                .SingleOrDefaultAsync(
-                    x => x.SiteId == siteId && x.Id == userId
-                    , cancellationToken)
-                    .ConfigureAwait(false);
 
-            return item;
+            using (var dbContext = _contextFactory.CreateContext())
+            {
+                var item
+               = await dbContext.Users
+               .AsNoTracking()
+               .SingleOrDefaultAsync(
+                   x => x.SiteId == siteId && x.Id == userId
+                   , cancellationToken)
+                   .ConfigureAwait(false);
+
+                return item;
+
+            }
+
+               
         }
 
 
@@ -57,15 +65,21 @@ namespace cloudscribe.Core.Storage.EFCore.Common
             CancellationToken cancellationToken = default(CancellationToken))
         {
             cancellationToken.ThrowIfCancellationRequested();
-            //string loweredEmail = email.ToLowerInvariant();
-            var item = await dbContext.Users
+
+            using (var dbContext = _contextFactory.CreateContext())
+            {
+                var item = await dbContext.Users
                 .AsNoTracking()
                 .SingleOrDefaultAsync(
                     x => x.SiteId == siteId && x.NormalizedEmail == email
                     , cancellationToken)
                     .ConfigureAwait(false);
 
-            return item;
+                return item;
+            }
+
+
+            
         }
 
         public async Task<List<ISiteUser>> GetUsers(
@@ -74,13 +88,19 @@ namespace cloudscribe.Core.Storage.EFCore.Common
             CancellationToken cancellationToken = default(CancellationToken))
         {
             cancellationToken.ThrowIfCancellationRequested();
-            var list
+
+            using (var dbContext = _contextFactory.CreateContext())
+            {
+                var list
                 = await dbContext.Users
                 .AsNoTracking()
                 .Where(x => x.SiteId == siteId && userIds.Contains(x.Id))
                 .ToListAsync<ISiteUser>(cancellationToken).ConfigureAwait(false);
 
-            return list;
+                return list;
+            }
+
+            
         }
 
         public async Task<ISiteUser> FetchByLoginName(
@@ -90,9 +110,10 @@ namespace cloudscribe.Core.Storage.EFCore.Common
             CancellationToken cancellationToken = default(CancellationToken))
         {
             cancellationToken.ThrowIfCancellationRequested();
-            //string loweredUserName = userName.ToLowerInvariant();
 
-            var item = await dbContext.Users
+            using (var dbContext = _contextFactory.CreateContext())
+            {
+                var item = await dbContext.Users
                 .AsNoTracking()
                 .SingleOrDefaultAsync(
                     x => x.SiteId == siteId
@@ -104,7 +125,10 @@ namespace cloudscribe.Core.Storage.EFCore.Common
                     )
                     .ConfigureAwait(false);
 
-            return item;
+                return item;
+            }
+
+            
         }
 
         public async Task<List<IUserInfo>> GetByIPAddress(
@@ -112,19 +136,22 @@ namespace cloudscribe.Core.Storage.EFCore.Common
             string ipv4Address,
             CancellationToken cancellationToken = default(CancellationToken))
         {
-            var query = from x in dbContext.Users
-                        join y in dbContext.UserLocations
-                        on x.SiteId equals y.SiteId
-                        where x.Id == y.UserId && y.IpAddress == ipv4Address
-                        select x
+            using (var dbContext = _contextFactory.CreateContext())
+            {
+                var query = from x in dbContext.Users
+                            join y in dbContext.UserLocations
+                            on x.SiteId equals y.SiteId
+                            where x.Id == y.UserId && y.IpAddress == ipv4Address
+                            select x
                         ;
 
-            var items = await query
-                .AsNoTracking()
-                .ToListAsync<IUserInfo>(cancellationToken)
-                .ConfigureAwait(false);
+                var items = await query
+                    .AsNoTracking()
+                    .ToListAsync<IUserInfo>(cancellationToken)
+                    .ConfigureAwait(false);
 
-            return items;
+                return items;
+            }
 
         }
 
@@ -132,19 +159,24 @@ namespace cloudscribe.Core.Storage.EFCore.Common
             string email,
             CancellationToken cancellationToken = default(CancellationToken))
         {
-            //string loweredEmail = email.ToLowerInvariant();
 
-            var query = from c in dbContext.Users
-                        where c.NormalizedEmail == email
-                        orderby c.DisplayName ascending
-                        select c;
 
-            var items = await query
-                .AsNoTracking()
-                .ToListAsync<IUserInfo>(cancellationToken)
-                .ConfigureAwait(false);
+            using (var dbContext = _contextFactory.CreateContext())
+            {
+                var query = from c in dbContext.Users
+                            where c.NormalizedEmail == email
+                            orderby c.DisplayName ascending
+                            select c;
 
-            return items;
+                var items = await query
+                    .AsNoTracking()
+                    .ToListAsync<IUserInfo>(cancellationToken)
+                    .ConfigureAwait(false);
+
+                return items;
+            }
+
+            
 
         }
 
@@ -153,7 +185,10 @@ namespace cloudscribe.Core.Storage.EFCore.Common
             string userNameBeginsWith,
             CancellationToken cancellationToken = default(CancellationToken))
         {
-            return await dbContext.Users.CountAsync<SiteUser>(
+
+            using (var dbContext = _contextFactory.CreateContext())
+            {
+                return await dbContext.Users.CountAsync<SiteUser>(
                 x =>
                 (
                     x.SiteId == siteId
@@ -167,6 +202,7 @@ namespace cloudscribe.Core.Storage.EFCore.Common
                 , cancellationToken
                 )
                 .ConfigureAwait(false);
+            }
 
         }
 
@@ -182,165 +218,165 @@ namespace cloudscribe.Core.Storage.EFCore.Common
 
             int offset = (pageSize * pageNumber) - pageSize;
 
-            
-
-            //this is pretty ugly, surely there is a better way to dynamically set the order by
-
-            IQueryable<IUserInfo> query;
-            switch (sortMode)
+            using (var dbContext = _contextFactory.CreateContext())
             {
-                case 2:
-                    //query = query.OrderBy(sl => sl.LastName).ThenBy(s2 => s2.FirstName).AsQueryable();
-                    query
-                = from x in dbContext.Users
+                //this is pretty ugly, surely there is a better way to dynamically set the order by
 
-                  where
-                  (
-                      x.SiteId == siteId
-                      // && x.IsDeleted == false
-                      && x.AccountApproved == true
-                      && (
-                      userNameBeginsWith == string.Empty
-                      || x.DisplayName.StartsWith(userNameBeginsWith)
+                IQueryable<IUserInfo> query;
+                switch (sortMode)
+                {
+                    case 2:
+                        //query = query.OrderBy(sl => sl.LastName).ThenBy(s2 => s2.FirstName).AsQueryable();
+                        query
+                    = from x in dbContext.Users
+
+                      where
+                      (
+                          x.SiteId == siteId
+                          // && x.IsDeleted == false
+                          && x.AccountApproved == true
+                          && (
+                          userNameBeginsWith == string.Empty
+                          || x.DisplayName.StartsWith(userNameBeginsWith)
+                          )
                       )
-                  )
-                  orderby x.LastName, x.FirstName
-                  select x;
-                  //select new UserInfo
-                  //{
-                  //    Id = x.Id,
-                  //    AvatarUrl = x.AvatarUrl,
-                  //    AccountApproved = x.AccountApproved,
-                  //    CreatedUtc = x.CreatedUtc,
-                  //    DateOfBirth = x.DateOfBirth,
-                  //    DisplayInMemberList = x.DisplayInMemberList,
-                  //    DisplayName = x.DisplayName,
-                  //    Email = x.Email,
-                  //    FirstName = x.FirstName,
-                  //    Gender = x.Gender,
-                  //    IsLockedOut = x.IsLockedOut,
-                  //    LastLoginUtc = x.LastLoginUtc,
-                  //    LastName = x.LastName,
-                  //    PhoneNumber = x.PhoneNumber,
-                  //    PhoneNumberConfirmed = x.PhoneNumberConfirmed,
-                  //    SiteId = x.SiteId,
-                  //    TimeZoneId = x.TimeZoneId, 
-                  //    UserName = x.UserName,
-                  //    WebSiteUrl = x.WebSiteUrl
+                      orderby x.LastName, x.FirstName
+                      select x;
+                        //select new UserInfo
+                        //{
+                        //    Id = x.Id,
+                        //    AvatarUrl = x.AvatarUrl,
+                        //    AccountApproved = x.AccountApproved,
+                        //    CreatedUtc = x.CreatedUtc,
+                        //    DateOfBirth = x.DateOfBirth,
+                        //    DisplayInMemberList = x.DisplayInMemberList,
+                        //    DisplayName = x.DisplayName,
+                        //    Email = x.Email,
+                        //    FirstName = x.FirstName,
+                        //    Gender = x.Gender,
+                        //    IsLockedOut = x.IsLockedOut,
+                        //    LastLoginUtc = x.LastLoginUtc,
+                        //    LastName = x.LastName,
+                        //    PhoneNumber = x.PhoneNumber,
+                        //    PhoneNumberConfirmed = x.PhoneNumberConfirmed,
+                        //    SiteId = x.SiteId,
+                        //    TimeZoneId = x.TimeZoneId, 
+                        //    UserName = x.UserName,
+                        //    WebSiteUrl = x.WebSiteUrl
 
-                  //};
-
+                        //};
 
 
-                    break;
-                case 1:
-                    //query = query.OrderByDescending(sl => sl.CreatedUtc).AsQueryable();
 
-                    query
-                = from x in dbContext.Users
+                        break;
+                    case 1:
+                        //query = query.OrderByDescending(sl => sl.CreatedUtc).AsQueryable();
 
-                  where
-                  (
-                      x.SiteId == siteId
-                      //&& x.IsDeleted == false
-                      && x.AccountApproved == true
-                      && (
-                      userNameBeginsWith == string.Empty
-                      || x.DisplayName.StartsWith(userNameBeginsWith)
+                        query
+                    = from x in dbContext.Users
+
+                      where
+                      (
+                          x.SiteId == siteId
+                          //&& x.IsDeleted == false
+                          && x.AccountApproved == true
+                          && (
+                          userNameBeginsWith == string.Empty
+                          || x.DisplayName.StartsWith(userNameBeginsWith)
+                          )
                       )
-                  )
-                  orderby x.CreatedUtc descending
-                  select x;
-                    //select new UserInfo
-                    //{
-                    //    Id = x.Id,
-                    //    AvatarUrl = x.AvatarUrl,
-                    //    AccountApproved = x.AccountApproved,
-                    //    CreatedUtc = x.CreatedUtc,
-                    //    DateOfBirth = x.DateOfBirth,
-                    //    DisplayInMemberList = x.DisplayInMemberList,
-                    //    DisplayName = x.DisplayName,
-                    //    Email = x.Email,
-                    //    FirstName = x.FirstName,
-                    //    Gender = x.Gender,
-                    //    IsLockedOut = x.IsLockedOut,
-                    //    LastLoginUtc = x.LastLoginUtc,
-                    //    LastName = x.LastName,
-                    //    PhoneNumber = x.PhoneNumber,
-                    //    PhoneNumberConfirmed = x.PhoneNumberConfirmed,
-                    //    SiteId = x.SiteId,
-                    //    TimeZoneId = x.TimeZoneId,
-                    //    UserName = x.UserName,
-                    //    WebSiteUrl = x.WebSiteUrl
+                      orderby x.CreatedUtc descending
+                      select x;
+                        //select new UserInfo
+                        //{
+                        //    Id = x.Id,
+                        //    AvatarUrl = x.AvatarUrl,
+                        //    AccountApproved = x.AccountApproved,
+                        //    CreatedUtc = x.CreatedUtc,
+                        //    DateOfBirth = x.DateOfBirth,
+                        //    DisplayInMemberList = x.DisplayInMemberList,
+                        //    DisplayName = x.DisplayName,
+                        //    Email = x.Email,
+                        //    FirstName = x.FirstName,
+                        //    Gender = x.Gender,
+                        //    IsLockedOut = x.IsLockedOut,
+                        //    LastLoginUtc = x.LastLoginUtc,
+                        //    LastName = x.LastName,
+                        //    PhoneNumber = x.PhoneNumber,
+                        //    PhoneNumberConfirmed = x.PhoneNumberConfirmed,
+                        //    SiteId = x.SiteId,
+                        //    TimeZoneId = x.TimeZoneId,
+                        //    UserName = x.UserName,
+                        //    WebSiteUrl = x.WebSiteUrl
 
-                    //};
+                        //};
 
 
-                    break;
+                        break;
 
-                case 0:
-                default:
-                    //query = query.OrderBy(sl => sl.DisplayName).AsQueryable();
+                    case 0:
+                    default:
+                        //query = query.OrderBy(sl => sl.DisplayName).AsQueryable();
 
-                    query
-                = from x in dbContext.Users
+                        query
+                    = from x in dbContext.Users
 
-                  where
-                  (
-                      x.SiteId == siteId
-                      //&& x.IsDeleted == false
-                      && x.AccountApproved == true
-                      && (
-                      userNameBeginsWith == string.Empty
-                      || x.DisplayName.StartsWith(userNameBeginsWith)
+                      where
+                      (
+                          x.SiteId == siteId
+                          //&& x.IsDeleted == false
+                          && x.AccountApproved == true
+                          && (
+                          userNameBeginsWith == string.Empty
+                          || x.DisplayName.StartsWith(userNameBeginsWith)
+                          )
                       )
-                  )
-                  orderby x.DisplayName
-                  select x;
-                    //select new UserInfo
-                    //{
-                    //    Id = x.Id,
-                    //    AvatarUrl = x.AvatarUrl,
-                    //    AccountApproved = x.AccountApproved,
-                    //    CreatedUtc = x.CreatedUtc,
-                    //    DateOfBirth = x.DateOfBirth,
-                    //    DisplayInMemberList = x.DisplayInMemberList,
-                    //    DisplayName = x.DisplayName,
-                    //    Email = x.Email,
-                    //    FirstName = x.FirstName,
-                    //    Gender = x.Gender,
-                    //    IsLockedOut = x.IsLockedOut,
-                    //    LastLoginUtc = x.LastLoginUtc,
-                    //    LastName = x.LastName,
-                    //    PhoneNumber = x.PhoneNumber,
-                    //    PhoneNumberConfirmed = x.PhoneNumberConfirmed,
-                    //    SiteId = x.SiteId,
-                    //    TimeZoneId = x.TimeZoneId,
-                    //    UserName = x.UserName,
-                    //    WebSiteUrl = x.WebSiteUrl
+                      orderby x.DisplayName
+                      select x;
+                        //select new UserInfo
+                        //{
+                        //    Id = x.Id,
+                        //    AvatarUrl = x.AvatarUrl,
+                        //    AccountApproved = x.AccountApproved,
+                        //    CreatedUtc = x.CreatedUtc,
+                        //    DateOfBirth = x.DateOfBirth,
+                        //    DisplayInMemberList = x.DisplayInMemberList,
+                        //    DisplayName = x.DisplayName,
+                        //    Email = x.Email,
+                        //    FirstName = x.FirstName,
+                        //    Gender = x.Gender,
+                        //    IsLockedOut = x.IsLockedOut,
+                        //    LastLoginUtc = x.LastLoginUtc,
+                        //    LastName = x.LastName,
+                        //    PhoneNumber = x.PhoneNumber,
+                        //    PhoneNumberConfirmed = x.PhoneNumberConfirmed,
+                        //    SiteId = x.SiteId,
+                        //    TimeZoneId = x.TimeZoneId,
+                        //    UserName = x.UserName,
+                        //    WebSiteUrl = x.WebSiteUrl
 
-                    //};
-
+                        //};
 
 
-                    break;
+
+                        break;
+                }
+
+
+                var data = await query
+                    .AsNoTracking()
+                    .Skip(offset)
+                    .Take(pageSize)
+                    .ToListAsync<IUserInfo>(cancellationToken)
+                    .ConfigureAwait(false);
+
+                var result = new PagedResult<IUserInfo>();
+                result.Data = data;
+                result.PageNumber = pageNumber;
+                result.PageSize = pageSize;
+                result.TotalItems = await CountUsers(siteId, userNameBeginsWith, cancellationToken).ConfigureAwait(false);
+                return result;
             }
-
-
-            var data = await query
-                .AsNoTracking()
-                .Skip(offset)
-                .Take(pageSize)
-                .ToListAsync<IUserInfo>(cancellationToken)
-                .ConfigureAwait(false);
-
-            var result = new PagedResult<IUserInfo>();
-            result.Data = data;
-            result.PageNumber = pageNumber;
-            result.PageSize = pageSize;
-            result.TotalItems = await CountUsers(siteId, userNameBeginsWith, cancellationToken).ConfigureAwait(false);
-            return result;
-
 
         }
 
@@ -349,7 +385,10 @@ namespace cloudscribe.Core.Storage.EFCore.Common
             string searchInput,
             CancellationToken cancellationToken = default(CancellationToken))
         {
-            return await dbContext.Users.CountAsync<SiteUser>(
+
+            using (var dbContext = _contextFactory.CreateContext())
+            {
+                return await dbContext.Users.CountAsync<SiteUser>(
                 x =>
                 (
                     x.SiteId == siteId
@@ -365,6 +404,10 @@ namespace cloudscribe.Core.Storage.EFCore.Common
                 , cancellationToken
                 )
                 .ConfigureAwait(false);
+
+            }
+
+            
         }
 
         public async Task<PagedResult<IUserInfo>> GetUserAdminSearchPage(
@@ -379,7 +422,9 @@ namespace cloudscribe.Core.Storage.EFCore.Common
 
             int offset = (pageSize * pageNumber) - pageSize;
 
-            IQueryable<IUserInfo> query
+            using (var dbContext = _contextFactory.CreateContext())
+            {
+                IQueryable<IUserInfo> query
                 = from x in dbContext.Users
 
                   where
@@ -395,59 +440,62 @@ namespace cloudscribe.Core.Storage.EFCore.Common
                         )
                   )
                   select x;
-                  //select new UserInfo
-                  //{
-                  //    Id = x.Id,
-                  //    AvatarUrl = x.AvatarUrl,
-                  //    AccountApproved = x.AccountApproved,
-                  //    CreatedUtc = x.CreatedUtc,
-                  //    DateOfBirth = x.DateOfBirth,
-                  //    DisplayInMemberList = x.DisplayInMemberList,
-                  //    DisplayName = x.DisplayName,
-                  //    Email = x.Email,
-                  //    FirstName = x.FirstName,
-                  //    Gender = x.Gender,
-                  //    IsLockedOut = x.IsLockedOut,
-                  //    LastLoginUtc = x.LastLoginUtc,
-                  //    LastName = x.LastName,
-                  //    PhoneNumber = x.PhoneNumber,
-                  //    PhoneNumberConfirmed = x.PhoneNumberConfirmed,
-                  //    SiteId = x.SiteId,
-                  //    TimeZoneId = x.TimeZoneId,
-                  //    UserName = x.UserName,
-                  //    WebSiteUrl = x.WebSiteUrl
+                //select new UserInfo
+                //{
+                //    Id = x.Id,
+                //    AvatarUrl = x.AvatarUrl,
+                //    AccountApproved = x.AccountApproved,
+                //    CreatedUtc = x.CreatedUtc,
+                //    DateOfBirth = x.DateOfBirth,
+                //    DisplayInMemberList = x.DisplayInMemberList,
+                //    DisplayName = x.DisplayName,
+                //    Email = x.Email,
+                //    FirstName = x.FirstName,
+                //    Gender = x.Gender,
+                //    IsLockedOut = x.IsLockedOut,
+                //    LastLoginUtc = x.LastLoginUtc,
+                //    LastName = x.LastName,
+                //    PhoneNumber = x.PhoneNumber,
+                //    PhoneNumberConfirmed = x.PhoneNumberConfirmed,
+                //    SiteId = x.SiteId,
+                //    TimeZoneId = x.TimeZoneId,
+                //    UserName = x.UserName,
+                //    WebSiteUrl = x.WebSiteUrl
 
-                  //};
+                //};
 
 
-            switch (sortMode)
-            {
-                case 2:
-                    query = query.OrderBy(sl => sl.LastName).ThenBy(s2 => s2.FirstName).AsQueryable();
-                    break;
-                case 1:
-                    query = query.OrderByDescending(sl => sl.CreatedUtc).AsQueryable();
-                    break;
+                switch (sortMode)
+                {
+                    case 2:
+                        query = query.OrderBy(sl => sl.LastName).ThenBy(s2 => s2.FirstName).AsQueryable();
+                        break;
+                    case 1:
+                        query = query.OrderByDescending(sl => sl.CreatedUtc).AsQueryable();
+                        break;
 
-                case 0:
-                default:
-                    query = query.OrderBy(sl => sl.DisplayName).AsQueryable();
-                    break;
+                    case 0:
+                    default:
+                        query = query.OrderBy(sl => sl.DisplayName).AsQueryable();
+                        break;
+                }
+
+                var data = await query
+                    .AsNoTracking()
+                    .Skip(offset)
+                    .Take(pageSize)
+                    .ToListAsync<IUserInfo>(cancellationToken)
+                    .ConfigureAwait(false);
+
+                var result = new PagedResult<IUserInfo>();
+                result.Data = data;
+                result.PageNumber = pageNumber;
+                result.PageSize = pageSize;
+                result.TotalItems = await CountUsersForAdminSearch(siteId, searchInput, cancellationToken).ConfigureAwait(false);
+                return result;
             }
 
-            var data = await query
-                .AsNoTracking()
-                .Skip(offset)
-                .Take(pageSize)
-                .ToListAsync<IUserInfo>(cancellationToken)
-                .ConfigureAwait(false);
-
-            var result = new PagedResult<IUserInfo>();
-            result.Data = data;
-            result.PageNumber = pageNumber;
-            result.PageSize = pageSize;
-            result.TotalItems = await CountUsersForAdminSearch(siteId, searchInput, cancellationToken).ConfigureAwait(false);
-            return result;
+            
 
 
         }
@@ -456,10 +504,16 @@ namespace cloudscribe.Core.Storage.EFCore.Common
             Guid siteId,
             CancellationToken cancellationToken = default(CancellationToken))
         {
-            return await dbContext.Users.CountAsync<SiteUser>(
-                x => x.SiteId == siteId && x.IsLockedOut == true,
-                cancellationToken)
-                .ConfigureAwait(false);
+
+            using (var dbContext = _contextFactory.CreateContext())
+            {
+                return await dbContext.Users.CountAsync<SiteUser>(
+               x => x.SiteId == siteId && x.IsLockedOut == true,
+               cancellationToken)
+               .ConfigureAwait(false);
+            }
+
+           
         }
 
         public async Task<PagedResult<IUserInfo>> GetPageLockedByAdmin(
@@ -470,7 +524,9 @@ namespace cloudscribe.Core.Storage.EFCore.Common
         {
             int offset = (pageSize * pageNumber) - pageSize;
 
-            IQueryable<IUserInfo> query
+            using (var dbContext = _contextFactory.CreateContext())
+            {
+                IQueryable<IUserInfo> query
                 = from x in dbContext.Users
 
                   where
@@ -480,44 +536,47 @@ namespace cloudscribe.Core.Storage.EFCore.Common
                   )
                   orderby x.DisplayName
                   select x;
-                  //select new UserInfo
-                  //{
-                  //    Id = x.Id,
-                  //    AvatarUrl = x.AvatarUrl,
-                  //    AccountApproved = x.AccountApproved,
-                  //    CreatedUtc = x.CreatedUtc,
-                  //    DateOfBirth = x.DateOfBirth,
-                  //    DisplayInMemberList = x.DisplayInMemberList,
-                  //    DisplayName = x.DisplayName,
-                  //    Email = x.Email,
-                  //    FirstName = x.FirstName,
-                  //    Gender = x.Gender,
-                  //    IsLockedOut = x.IsLockedOut,
-                  //    LastLoginUtc = x.LastLoginUtc,
-                  //    LastName = x.LastName,
-                  //    PhoneNumber = x.PhoneNumber,
-                  //    PhoneNumberConfirmed = x.PhoneNumberConfirmed,
-                  //    SiteId = x.SiteId,
-                  //    TimeZoneId = x.TimeZoneId,
-                  //    UserName = x.UserName,
-                  //    WebSiteUrl = x.WebSiteUrl
+                //select new UserInfo
+                //{
+                //    Id = x.Id,
+                //    AvatarUrl = x.AvatarUrl,
+                //    AccountApproved = x.AccountApproved,
+                //    CreatedUtc = x.CreatedUtc,
+                //    DateOfBirth = x.DateOfBirth,
+                //    DisplayInMemberList = x.DisplayInMemberList,
+                //    DisplayName = x.DisplayName,
+                //    Email = x.Email,
+                //    FirstName = x.FirstName,
+                //    Gender = x.Gender,
+                //    IsLockedOut = x.IsLockedOut,
+                //    LastLoginUtc = x.LastLoginUtc,
+                //    LastName = x.LastName,
+                //    PhoneNumber = x.PhoneNumber,
+                //    PhoneNumberConfirmed = x.PhoneNumberConfirmed,
+                //    SiteId = x.SiteId,
+                //    TimeZoneId = x.TimeZoneId,
+                //    UserName = x.UserName,
+                //    WebSiteUrl = x.WebSiteUrl
 
-                  //};
+                //};
 
 
-            var data = await query
-                .AsNoTracking()
-                .Skip(offset)
-                .Take(pageSize)
-                .ToListAsync<IUserInfo>(cancellationToken)
-                .ConfigureAwait(false);
+                var data = await query
+                    .AsNoTracking()
+                    .Skip(offset)
+                    .Take(pageSize)
+                    .ToListAsync<IUserInfo>(cancellationToken)
+                    .ConfigureAwait(false);
 
-            var result = new PagedResult<IUserInfo>();
-            result.Data = data;
-            result.PageNumber = pageNumber;
-            result.PageSize = pageSize;
-            result.TotalItems = await CountLockedByAdmin(siteId, cancellationToken).ConfigureAwait(false);
-            return result;
+                var result = new PagedResult<IUserInfo>();
+                result.Data = data;
+                result.PageNumber = pageNumber;
+                result.PageSize = pageSize;
+                result.TotalItems = await CountLockedByAdmin(siteId, cancellationToken).ConfigureAwait(false);
+                return result;
+            }
+
+            
 
         }
 
@@ -525,13 +584,19 @@ namespace cloudscribe.Core.Storage.EFCore.Common
             Guid siteId,
             CancellationToken cancellationToken = default(CancellationToken))
         {
-            return await dbContext.Users.CountAsync<SiteUser>(
+
+            using (var dbContext = _contextFactory.CreateContext())
+            {
+                return await dbContext.Users.CountAsync<SiteUser>(
                 x => x.SiteId == siteId
                 && x.LockoutEndDateUtc.HasValue
                 && x.LockoutEndDateUtc.Value > DateTime.UtcNow
                 ,
                 cancellationToken)
                 .ConfigureAwait(false);
+            }
+
+            
         }
 
         public async Task<PagedResult<IUserInfo>> GetPageFutureLockoutEndDate(
@@ -542,7 +607,9 @@ namespace cloudscribe.Core.Storage.EFCore.Common
         {
             int offset = (pageSize * pageNumber) - pageSize;
 
-            IQueryable<IUserInfo> query
+            using (var dbContext = _contextFactory.CreateContext())
+            {
+                IQueryable<IUserInfo> query
                 = from x in dbContext.Users
 
                   where
@@ -553,44 +620,47 @@ namespace cloudscribe.Core.Storage.EFCore.Common
                   )
                   orderby x.DisplayName
                   select x;
-                  //select new UserInfo
-                  //{
-                  //    Id = x.Id,
-                  //    AvatarUrl = x.AvatarUrl,
-                  //    AccountApproved = x.AccountApproved,
-                  //    CreatedUtc = x.CreatedUtc,
-                  //    DateOfBirth = x.DateOfBirth,
-                  //    DisplayInMemberList = x.DisplayInMemberList,
-                  //    DisplayName = x.DisplayName,
-                  //    Email = x.Email,
-                  //    FirstName = x.FirstName,
-                  //    Gender = x.Gender,
-                  //    IsLockedOut = x.IsLockedOut,
-                  //    LastLoginUtc = x.LastLoginUtc,
-                  //    LastName = x.LastName,
-                  //    PhoneNumber = x.PhoneNumber,
-                  //    PhoneNumberConfirmed = x.PhoneNumberConfirmed,
-                  //    SiteId = x.SiteId,
-                  //    TimeZoneId = x.TimeZoneId,
-                  //    UserName = x.UserName,
-                  //    WebSiteUrl = x.WebSiteUrl
+                //select new UserInfo
+                //{
+                //    Id = x.Id,
+                //    AvatarUrl = x.AvatarUrl,
+                //    AccountApproved = x.AccountApproved,
+                //    CreatedUtc = x.CreatedUtc,
+                //    DateOfBirth = x.DateOfBirth,
+                //    DisplayInMemberList = x.DisplayInMemberList,
+                //    DisplayName = x.DisplayName,
+                //    Email = x.Email,
+                //    FirstName = x.FirstName,
+                //    Gender = x.Gender,
+                //    IsLockedOut = x.IsLockedOut,
+                //    LastLoginUtc = x.LastLoginUtc,
+                //    LastName = x.LastName,
+                //    PhoneNumber = x.PhoneNumber,
+                //    PhoneNumberConfirmed = x.PhoneNumberConfirmed,
+                //    SiteId = x.SiteId,
+                //    TimeZoneId = x.TimeZoneId,
+                //    UserName = x.UserName,
+                //    WebSiteUrl = x.WebSiteUrl
 
-                  //};
+                //};
 
 
-            var data = await query
-                .AsNoTracking()
-                .Skip(offset)
-                .Take(pageSize)
-                .ToListAsync<IUserInfo>(cancellationToken)
-                .ConfigureAwait(false);
+                var data = await query
+                    .AsNoTracking()
+                    .Skip(offset)
+                    .Take(pageSize)
+                    .ToListAsync<IUserInfo>(cancellationToken)
+                    .ConfigureAwait(false);
 
-            var result = new PagedResult<IUserInfo>();
-            result.Data = data;
-            result.PageNumber = pageNumber;
-            result.PageSize = pageSize;
-            result.TotalItems = await CountFutureLockoutEndDate(siteId, cancellationToken).ConfigureAwait(false);
-            return result;
+                var result = new PagedResult<IUserInfo>();
+                result.Data = data;
+                result.PageNumber = pageNumber;
+                result.PageSize = pageSize;
+                result.TotalItems = await CountFutureLockoutEndDate(siteId, cancellationToken).ConfigureAwait(false);
+                return result;
+            }
+
+            
 
         }
 
@@ -598,12 +668,18 @@ namespace cloudscribe.Core.Storage.EFCore.Common
             Guid siteId,
             CancellationToken cancellationToken = default(CancellationToken))
         {
-            return await dbContext.Users.CountAsync<SiteUser>(
+
+            using (var dbContext = _contextFactory.CreateContext())
+            {
+                return await dbContext.Users.CountAsync<SiteUser>(
                 x => x.SiteId == siteId
                 && x.EmailConfirmed == false
                 ,
                 cancellationToken)
                 .ConfigureAwait(false);
+            }
+
+            
         }
 
         public async Task<PagedResult<IUserInfo>> GetPageUnconfirmedEmailUsers(
@@ -614,7 +690,9 @@ namespace cloudscribe.Core.Storage.EFCore.Common
         {
             int offset = (pageSize * pageNumber) - pageSize;
 
-            IQueryable<IUserInfo> query
+            using (var dbContext = _contextFactory.CreateContext())
+            {
+                IQueryable<IUserInfo> query
                 = from x in dbContext.Users
 
                   where
@@ -624,44 +702,48 @@ namespace cloudscribe.Core.Storage.EFCore.Common
                   )
                   orderby x.DisplayName
                   select x;
-                  //select new UserInfo
-                  //{
-                  //    Id = x.Id,
-                  //    AvatarUrl = x.AvatarUrl,
-                  //    AccountApproved = x.AccountApproved,
-                  //    CreatedUtc = x.CreatedUtc,
-                  //    DateOfBirth = x.DateOfBirth,
-                  //    DisplayInMemberList = x.DisplayInMemberList,
-                  //    DisplayName = x.DisplayName,
-                  //    Email = x.Email,
-                  //    FirstName = x.FirstName,
-                  //    Gender = x.Gender,
-                  //    IsLockedOut = x.IsLockedOut,
-                  //    LastLoginUtc = x.LastLoginUtc,
-                  //    LastName = x.LastName,
-                  //    PhoneNumber = x.PhoneNumber,
-                  //    PhoneNumberConfirmed = x.PhoneNumberConfirmed,
-                  //    SiteId = x.SiteId,
-                  //    TimeZoneId = x.TimeZoneId,
-                  //    UserName = x.UserName,
-                  //    WebSiteUrl = x.WebSiteUrl
+                //select new UserInfo
+                //{
+                //    Id = x.Id,
+                //    AvatarUrl = x.AvatarUrl,
+                //    AccountApproved = x.AccountApproved,
+                //    CreatedUtc = x.CreatedUtc,
+                //    DateOfBirth = x.DateOfBirth,
+                //    DisplayInMemberList = x.DisplayInMemberList,
+                //    DisplayName = x.DisplayName,
+                //    Email = x.Email,
+                //    FirstName = x.FirstName,
+                //    Gender = x.Gender,
+                //    IsLockedOut = x.IsLockedOut,
+                //    LastLoginUtc = x.LastLoginUtc,
+                //    LastName = x.LastName,
+                //    PhoneNumber = x.PhoneNumber,
+                //    PhoneNumberConfirmed = x.PhoneNumberConfirmed,
+                //    SiteId = x.SiteId,
+                //    TimeZoneId = x.TimeZoneId,
+                //    UserName = x.UserName,
+                //    WebSiteUrl = x.WebSiteUrl
 
-                  //};
+                //};
 
 
-            var data = await query
-                .AsNoTracking()
-                .Skip(offset)
-                .Take(pageSize)
-                .ToListAsync<IUserInfo>(cancellationToken)
-                .ConfigureAwait(false);
+                var data = await query
+                    .AsNoTracking()
+                    .Skip(offset)
+                    .Take(pageSize)
+                    .ToListAsync<IUserInfo>(cancellationToken)
+                    .ConfigureAwait(false);
 
-            var result = new PagedResult<IUserInfo>();
-            result.Data = data;
-            result.PageNumber = pageNumber;
-            result.PageSize = pageSize;
-            result.TotalItems = await CountUnconfirmedEmail(siteId, cancellationToken).ConfigureAwait(false);
-            return result;
+                var result = new PagedResult<IUserInfo>();
+                result.Data = data;
+                result.PageNumber = pageNumber;
+                result.PageSize = pageSize;
+                result.TotalItems = await CountUnconfirmedEmail(siteId, cancellationToken).ConfigureAwait(false);
+                return result;
+
+            }
+
+            
 
         }
 
@@ -669,12 +751,17 @@ namespace cloudscribe.Core.Storage.EFCore.Common
             Guid siteId,
             CancellationToken cancellationToken = default(CancellationToken))
         {
-            return await dbContext.Users.CountAsync<SiteUser>(
+            using (var dbContext = _contextFactory.CreateContext())
+            {
+                return await dbContext.Users.CountAsync<SiteUser>(
                 x => x.SiteId == siteId
                 && x.PhoneNumberConfirmed == false
                 ,
                 cancellationToken)
                 .ConfigureAwait(false);
+            }
+
+            
         }
 
         public async Task<PagedResult<IUserInfo>> GetPageUnconfirmedPhoneUsers(
@@ -685,7 +772,9 @@ namespace cloudscribe.Core.Storage.EFCore.Common
         {
             int offset = (pageSize * pageNumber) - pageSize;
 
-            IQueryable<IUserInfo> query
+            using (var dbContext = _contextFactory.CreateContext())
+            {
+                IQueryable<IUserInfo> query
                 = from x in dbContext.Users
 
                   where
@@ -695,44 +784,48 @@ namespace cloudscribe.Core.Storage.EFCore.Common
                   )
                   orderby x.DisplayName
                   select x;
-                  //select new UserInfo
-                  //{
-                  //    Id = x.Id,
-                  //    AvatarUrl = x.AvatarUrl,
-                  //    AccountApproved = x.AccountApproved,
-                  //    CreatedUtc = x.CreatedUtc,
-                  //    DateOfBirth = x.DateOfBirth,
-                  //    DisplayInMemberList = x.DisplayInMemberList,
-                  //    DisplayName = x.DisplayName,
-                  //    Email = x.Email,
-                  //    FirstName = x.FirstName,
-                  //    Gender = x.Gender,
-                  //    IsLockedOut = x.IsLockedOut,
-                  //    LastLoginUtc = x.LastLoginUtc,
-                  //    LastName = x.LastName,
-                  //    PhoneNumber = x.PhoneNumber,
-                  //    PhoneNumberConfirmed = x.PhoneNumberConfirmed,
-                  //    SiteId = x.SiteId,
-                  //    TimeZoneId = x.TimeZoneId,
-                  //    UserName = x.UserName,
-                  //    WebSiteUrl = x.WebSiteUrl
+                //select new UserInfo
+                //{
+                //    Id = x.Id,
+                //    AvatarUrl = x.AvatarUrl,
+                //    AccountApproved = x.AccountApproved,
+                //    CreatedUtc = x.CreatedUtc,
+                //    DateOfBirth = x.DateOfBirth,
+                //    DisplayInMemberList = x.DisplayInMemberList,
+                //    DisplayName = x.DisplayName,
+                //    Email = x.Email,
+                //    FirstName = x.FirstName,
+                //    Gender = x.Gender,
+                //    IsLockedOut = x.IsLockedOut,
+                //    LastLoginUtc = x.LastLoginUtc,
+                //    LastName = x.LastName,
+                //    PhoneNumber = x.PhoneNumber,
+                //    PhoneNumberConfirmed = x.PhoneNumberConfirmed,
+                //    SiteId = x.SiteId,
+                //    TimeZoneId = x.TimeZoneId,
+                //    UserName = x.UserName,
+                //    WebSiteUrl = x.WebSiteUrl
 
-                  //};
+                //};
 
 
-            var data = await query
-                .AsNoTracking()
-                .Skip(offset)
-                .Take(pageSize)
-                .ToListAsync<IUserInfo>(cancellationToken)
-                .ConfigureAwait(false);
+                var data = await query
+                    .AsNoTracking()
+                    .Skip(offset)
+                    .Take(pageSize)
+                    .ToListAsync<IUserInfo>(cancellationToken)
+                    .ConfigureAwait(false);
 
-            var result = new PagedResult<IUserInfo>();
-            result.Data = data;
-            result.PageNumber = pageNumber;
-            result.PageSize = pageSize;
-            result.TotalItems = await CountUnconfirmedPhone(siteId, cancellationToken).ConfigureAwait(false);
-            return result;
+                var result = new PagedResult<IUserInfo>();
+                result.Data = data;
+                result.PageNumber = pageNumber;
+                result.PageSize = pageSize;
+                result.TotalItems = await CountUnconfirmedPhone(siteId, cancellationToken).ConfigureAwait(false);
+                return result;
+
+            }
+
+            
 
         }
 
@@ -740,10 +833,13 @@ namespace cloudscribe.Core.Storage.EFCore.Common
             Guid siteId,
             CancellationToken cancellationToken = default(CancellationToken))
         {
-            return await dbContext.Users.CountAsync<SiteUser>(
+            using (var dbContext = _contextFactory.CreateContext())
+            {
+                return await dbContext.Users.CountAsync<SiteUser>(
                 x => x.SiteId == siteId && x.AccountApproved == false,
                 cancellationToken)
                 .ConfigureAwait(false);
+            }
 
         }
 
@@ -755,7 +851,9 @@ namespace cloudscribe.Core.Storage.EFCore.Common
         {
             int offset = (pageSize * pageNumber) - pageSize;
 
-            IQueryable<IUserInfo> query
+            using (var dbContext = _contextFactory.CreateContext())
+            {
+                IQueryable<IUserInfo> query
                 = from x in dbContext.Users
                   where
                   (
@@ -764,44 +862,45 @@ namespace cloudscribe.Core.Storage.EFCore.Common
                   )
                   orderby x.DisplayName
                   select x;
-                  //select new UserInfo
-                  //{
-                  //    Id = x.Id,
-                  //    AvatarUrl = x.AvatarUrl,
-                  //    AccountApproved = x.AccountApproved,
-                  //    CreatedUtc = x.CreatedUtc,
-                  //    DateOfBirth = x.DateOfBirth,
-                  //    DisplayInMemberList = x.DisplayInMemberList,
-                  //    DisplayName = x.DisplayName,
-                  //    Email = x.Email,
-                  //    FirstName = x.FirstName,
-                  //    Gender = x.Gender,
-                  //    IsLockedOut = x.IsLockedOut,
-                  //    LastLoginUtc = x.LastLoginUtc,
-                  //    LastName = x.LastName,
-                  //    PhoneNumber = x.PhoneNumber,
-                  //    PhoneNumberConfirmed = x.PhoneNumberConfirmed,
-                  //    SiteId = x.SiteId,
-                  //    TimeZoneId = x.TimeZoneId,
-                  //    UserName = x.UserName,
-                  //    WebSiteUrl = x.WebSiteUrl
+                //select new UserInfo
+                //{
+                //    Id = x.Id,
+                //    AvatarUrl = x.AvatarUrl,
+                //    AccountApproved = x.AccountApproved,
+                //    CreatedUtc = x.CreatedUtc,
+                //    DateOfBirth = x.DateOfBirth,
+                //    DisplayInMemberList = x.DisplayInMemberList,
+                //    DisplayName = x.DisplayName,
+                //    Email = x.Email,
+                //    FirstName = x.FirstName,
+                //    Gender = x.Gender,
+                //    IsLockedOut = x.IsLockedOut,
+                //    LastLoginUtc = x.LastLoginUtc,
+                //    LastName = x.LastName,
+                //    PhoneNumber = x.PhoneNumber,
+                //    PhoneNumberConfirmed = x.PhoneNumberConfirmed,
+                //    SiteId = x.SiteId,
+                //    TimeZoneId = x.TimeZoneId,
+                //    UserName = x.UserName,
+                //    WebSiteUrl = x.WebSiteUrl
 
-                  //};
+                //};
 
 
-            var data = await query
-                .AsNoTracking()
-                .Skip(offset)
-                .Take(pageSize)
-                .ToListAsync<IUserInfo>(cancellationToken)
-                .ConfigureAwait(false);
+                var data = await query
+                    .AsNoTracking()
+                    .Skip(offset)
+                    .Take(pageSize)
+                    .ToListAsync<IUserInfo>(cancellationToken)
+                    .ConfigureAwait(false);
 
-            var result = new PagedResult<IUserInfo>();
-            result.Data = data;
-            result.PageNumber = pageNumber;
-            result.PageSize = pageSize;
-            result.TotalItems = await CountNotApprovedUsers(siteId, cancellationToken).ConfigureAwait(false);
-            return result;
+                var result = new PagedResult<IUserInfo>();
+                result.Data = data;
+                result.PageNumber = pageNumber;
+                result.PageSize = pageSize;
+                result.TotalItems = await CountNotApprovedUsers(siteId, cancellationToken).ConfigureAwait(false);
+                return result;
+            }
 
         }
 
@@ -839,13 +938,19 @@ namespace cloudscribe.Core.Storage.EFCore.Common
             CancellationToken cancellationToken = default(CancellationToken)
             )
         {
-            var item = await dbContext.Users.SingleOrDefaultAsync(
+
+            using (var dbContext = _contextFactory.CreateContext())
+            {
+                var item = await dbContext.Users.SingleOrDefaultAsync(
                     x => x.SiteId == siteId
                     && x.UserName == loginName
                     ).ConfigureAwait(false);
 
-            if (item == null) { return false; }
-            return true;
+                if (item == null) { return false; }
+                return true;
+
+            }
+
         }
 
 
@@ -891,12 +996,18 @@ namespace cloudscribe.Core.Storage.EFCore.Common
             string roleName,
             CancellationToken cancellationToken = default(CancellationToken))
         {
-            int count = await dbContext.Roles.CountAsync<SiteRole>(
+
+            using (var dbContext = _contextFactory.CreateContext())
+            {
+                int count = await dbContext.Roles.CountAsync<SiteRole>(
                 r => r.SiteId == siteId && r.NormalizedRoleName == roleName
                 , cancellationToken)
                 .ConfigureAwait(false);
 
-            return count > 0;
+                return count > 0;
+
+            }
+
         }
 
         public async Task<ISiteRole> FetchRole(
@@ -904,13 +1015,18 @@ namespace cloudscribe.Core.Storage.EFCore.Common
             Guid roleId,
             CancellationToken cancellationToken = default(CancellationToken))
         {
-            SiteRole item
+            using (var dbContext = _contextFactory.CreateContext())
+            {
+                SiteRole item
                 = await dbContext.Roles.SingleOrDefaultAsync(
                     x => x.Id == roleId
                     , cancellationToken)
                     .ConfigureAwait(false);
 
-            return item;
+                return item;
+
+            }
+
         }
 
         public async Task<ISiteRole> FetchRole(
@@ -918,13 +1034,17 @@ namespace cloudscribe.Core.Storage.EFCore.Common
             string roleName,
             CancellationToken cancellationToken = default(CancellationToken))
         {
-            SiteRole item
+
+            using (var dbContext = _contextFactory.CreateContext())
+            {
+                SiteRole item
                 = await dbContext.Roles.SingleOrDefaultAsync(
                     x => x.SiteId == siteId && (x.RoleName == roleName || x.NormalizedRoleName == roleName)
                     , cancellationToken)
                     .ConfigureAwait(false);
 
-            return item;
+                return item;
+            }
 
         }
 
@@ -933,17 +1053,21 @@ namespace cloudscribe.Core.Storage.EFCore.Common
             Guid userId,
             CancellationToken cancellationToken = default(CancellationToken))
         {
-            var query = from x in dbContext.Roles
-                        join y in dbContext.UserRoles
-                        on x.Id equals y.RoleId
-                        where y.UserId == userId
-                        orderby x.RoleName
-                        select x.RoleName
+            using (var dbContext = _contextFactory.CreateContext())
+            {
+                var query = from x in dbContext.Roles
+                            join y in dbContext.UserRoles
+                            on x.Id equals y.RoleId
+                            where y.UserId == userId
+                            orderby x.RoleName
+                            select x.RoleName
                         ;
-            return await query
-                .AsNoTracking()
-                .ToListAsync<string>(cancellationToken)
-                .ConfigureAwait(false);
+                return await query
+                    .AsNoTracking()
+                    .ToListAsync<string>(cancellationToken)
+                    .ConfigureAwait(false);
+
+            }
 
         }
 
@@ -952,7 +1076,10 @@ namespace cloudscribe.Core.Storage.EFCore.Common
             string searchInput,
             CancellationToken cancellationToken = default(CancellationToken))
         {
-            return await dbContext.Roles.CountAsync<SiteRole>(
+
+            using (var dbContext = _contextFactory.CreateContext())
+            {
+                return await dbContext.Roles.CountAsync<SiteRole>(
                 x => x.SiteId.Equals(siteId)
                 && (
                  (searchInput == "")
@@ -961,6 +1088,8 @@ namespace cloudscribe.Core.Storage.EFCore.Common
                 ),
                 cancellationToken
                 ).ConfigureAwait(false);
+
+            }
 
         }
 
@@ -973,62 +1102,65 @@ namespace cloudscribe.Core.Storage.EFCore.Common
         {
             int offset = (pageSize * pageNumber) - pageSize;
 
-            var listQuery = from x in dbContext.Roles
-                            where (
-                            x.SiteId.Equals(siteId) &&
-                            (searchInput == "" || x.RoleName.Contains(searchInput) || x.NormalizedRoleName.Contains(searchInput))
-                            )
-                            orderby x.NormalizedRoleName ascending
-                            //select new SiteRole
-                            //{
-                            //    Id = x.Id,
-                            //    SiteId = x.SiteId,
-                            //    NormalizedRoleName = x.NormalizedRoleName,
-                            //    RoleName = x.RoleName,
-                            //    // 2017-03-21 this line broke
-                            //    // https://github.com/aspnet/EntityFramework/issues/7714
-                            //    MemberCount = dbContext.UserRoles.Count<UserRole>(u => u.RoleId == x.Id)
-                            //};
-                            // workaround need to use anonymous type and then project back into SiteRole
-                            select new 
-                            {
-                                Id = x.Id,
-                                SiteId = x.SiteId,
-                                NormalizedRoleName = x.NormalizedRoleName,
-                                RoleName = x.RoleName,
-                                // 2017-03-21 this line broke
-                                // https://github.com/aspnet/EntityFramework/issues/7714
-                                MemberCount = dbContext.UserRoles.Count<UserRole>(u => u.RoleId == x.Id)
-                            };
+            using (var dbContext = _contextFactory.CreateContext())
+            {
+                var listQuery = from x in dbContext.Roles
+                                where (
+                                x.SiteId.Equals(siteId) &&
+                                (searchInput == "" || x.RoleName.Contains(searchInput) || x.NormalizedRoleName.Contains(searchInput))
+                                )
+                                orderby x.NormalizedRoleName ascending
+                                //select new SiteRole
+                                //{
+                                //    Id = x.Id,
+                                //    SiteId = x.SiteId,
+                                //    NormalizedRoleName = x.NormalizedRoleName,
+                                //    RoleName = x.RoleName,
+                                //    // 2017-03-21 this line broke
+                                //    // https://github.com/aspnet/EntityFramework/issues/7714
+                                //    MemberCount = dbContext.UserRoles.Count<UserRole>(u => u.RoleId == x.Id)
+                                //};
+                                // workaround need to use anonymous type and then project back into SiteRole
+                                select new
+                                {
+                                    Id = x.Id,
+                                    SiteId = x.SiteId,
+                                    NormalizedRoleName = x.NormalizedRoleName,
+                                    RoleName = x.RoleName,
+                                    // 2017-03-21 this line broke
+                                    // https://github.com/aspnet/EntityFramework/issues/7714
+                                    MemberCount = dbContext.UserRoles.Count<UserRole>(u => u.RoleId == x.Id)
+                                };
 
-            var anonList = await listQuery
-                .AsNoTracking()
-                .Skip(offset)
-                .Take(pageSize)
-                .ToListAsync(cancellationToken)
-                .ConfigureAwait(false);
+                var anonList = await listQuery
+                    .AsNoTracking()
+                    .Skip(offset)
+                    .Take(pageSize)
+                    .ToListAsync(cancellationToken)
+                    .ConfigureAwait(false);
 
-            var result = anonList.Select(x =>
-               new SiteRole
-               {
-                   Id = x.Id,
-                   SiteId = x.SiteId,
-                   NormalizedRoleName = x.NormalizedRoleName,
-                   RoleName = x.RoleName,
-                   MemberCount = x.MemberCount
-               }
+                var result = anonList.Select(x =>
+                   new SiteRole
+                   {
+                       Id = x.Id,
+                       SiteId = x.SiteId,
+                       NormalizedRoleName = x.NormalizedRoleName,
+                       RoleName = x.RoleName,
+                       MemberCount = x.MemberCount
+                   }
 
-            );
+                );
 
-            var data = result.ToList<ISiteRole>();
+                var data = result.ToList<ISiteRole>();
 
-            var page = new PagedResult<ISiteRole>();
-            page.Data = data;
-            page.PageNumber = pageNumber;
-            page.PageSize = pageSize;
-            page.TotalItems = await CountOfRoles(siteId, searchInput, cancellationToken).ConfigureAwait(false);
-            return page;
-            
+                var page = new PagedResult<ISiteRole>();
+                page.Data = data;
+                page.PageNumber = pageNumber;
+                page.PageSize = pageSize;
+                page.TotalItems = await CountOfRoles(siteId, searchInput, cancellationToken).ConfigureAwait(false);
+                return page;
+
+            }
 
         }
 
@@ -1039,25 +1171,28 @@ namespace cloudscribe.Core.Storage.EFCore.Common
             string searchInput,
             CancellationToken cancellationToken = default(CancellationToken))
         {
-            var query = from x in dbContext.Users
-                        join y in dbContext.UserRoles
-                        on x.Id equals y.UserId
-                        where (
-                            (x.SiteId.Equals(siteId) && y.RoleId.Equals(roleId))
-                            && (
-                                (searchInput == "")
-                                || x.Email.Contains(searchInput)
-                                || x.DisplayName.Contains(searchInput)
-                                || x.UserName.Contains(searchInput)
-                                || (x.FirstName != null && x.FirstName.Contains(searchInput))
-                                || (x.LastName != null && x.LastName.Contains(searchInput))
-                            )
-                            )
-                        //select x.UserGuid
-                        select 1
+            using (var dbContext = _contextFactory.CreateContext())
+            {
+                var query = from x in dbContext.Users
+                            join y in dbContext.UserRoles
+                            on x.Id equals y.UserId
+                            where (
+                                (x.SiteId.Equals(siteId) && y.RoleId.Equals(roleId))
+                                && (
+                                    (searchInput == "")
+                                    || x.Email.Contains(searchInput)
+                                    || x.DisplayName.Contains(searchInput)
+                                    || x.UserName.Contains(searchInput)
+                                    || (x.FirstName != null && x.FirstName.Contains(searchInput))
+                                    || (x.LastName != null && x.LastName.Contains(searchInput))
+                                )
+                                )
+                            //select x.UserGuid
+                            select 1
                         ;
 
-            return await query.CountAsync<int>(cancellationToken).ConfigureAwait(false);
+                return await query.CountAsync<int>(cancellationToken).ConfigureAwait(false);
+            }
 
         }
 
@@ -1072,39 +1207,41 @@ namespace cloudscribe.Core.Storage.EFCore.Common
         {
             int offset = (pageSize * pageNumber) - pageSize;
 
-            var query = from x in dbContext.Users
-                        join y in dbContext.UserRoles
-                        on x.Id equals y.UserId
-                        orderby x.DisplayName
-                        where (
-                            (x.SiteId.Equals(siteId) && y.RoleId.Equals(roleId))
-                            && (
-                                (searchInput == "")
-                                || x.Email.Contains(searchInput)
-                                || x.DisplayName.Contains(searchInput)
-                                || x.UserName.Contains(searchInput)
-                                || (x.FirstName != null && x.FirstName.Contains(searchInput))
-                                || (x.LastName != null && x.LastName.Contains(searchInput))
-                            )
-                            )
-                        select x
+            using (var dbContext = _contextFactory.CreateContext())
+            {
+                var query = from x in dbContext.Users
+                            join y in dbContext.UserRoles
+                            on x.Id equals y.UserId
+                            orderby x.DisplayName
+                            where (
+                                (x.SiteId.Equals(siteId) && y.RoleId.Equals(roleId))
+                                && (
+                                    (searchInput == "")
+                                    || x.Email.Contains(searchInput)
+                                    || x.DisplayName.Contains(searchInput)
+                                    || x.UserName.Contains(searchInput)
+                                    || (x.FirstName != null && x.FirstName.Contains(searchInput))
+                                    || (x.LastName != null && x.LastName.Contains(searchInput))
+                                )
+                                )
+                            select x
                         ;
 
 
-            var data = await query
-                .AsNoTracking()
-                .Skip(offset)
-                .Take(pageSize)
-                .ToListAsync<IUserInfo>(cancellationToken)
-                .ConfigureAwait(false);
+                var data = await query
+                    .AsNoTracking()
+                    .Skip(offset)
+                    .Take(pageSize)
+                    .ToListAsync<IUserInfo>(cancellationToken)
+                    .ConfigureAwait(false);
 
-            var result = new PagedResult<IUserInfo>();
-            result.Data = data;
-            result.PageNumber = pageNumber;
-            result.PageSize = pageSize;
-            result.TotalItems = await CountUsersInRole(siteId, roleId, searchInput, cancellationToken).ConfigureAwait(false);
-            return result;
-            
+                var result = new PagedResult<IUserInfo>();
+                result.Data = data;
+                result.PageNumber = pageNumber;
+                result.PageSize = pageSize;
+                result.TotalItems = await CountUsersInRole(siteId, roleId, searchInput, cancellationToken).ConfigureAwait(false);
+                return result;
+            }
 
         }
 
@@ -1113,24 +1250,31 @@ namespace cloudscribe.Core.Storage.EFCore.Common
             string roleName,
             CancellationToken cancellationToken = default(CancellationToken))
         {
-            var query = from x in dbContext.Users
-                        join y in dbContext.UserRoles
-                        on x.Id equals y.UserId
-                        join z in dbContext.Roles
-                        on y.RoleId equals z.Id
-                        orderby x.DisplayName
-                        where
-                            (x.SiteId.Equals(siteId) && z.NormalizedRoleName.Equals(roleName))
 
-                        select x
-                        ;
+            using (var dbContext = _contextFactory.CreateContext())
+            {
+                var query = from x in dbContext.Users
+                            join y in dbContext.UserRoles
+                            on x.Id equals y.UserId
+                            join z in dbContext.Roles
+                            on y.RoleId equals z.Id
+                            orderby x.DisplayName
+                            where
+                                (x.SiteId.Equals(siteId) && z.NormalizedRoleName.Equals(roleName))
 
-            var items = await query
-                .AsNoTracking()
-                .ToListAsync<ISiteUser>(cancellationToken)
-                .ConfigureAwait(false);
+                            select x
+                       ;
 
-            return items;
+                var items = await query
+                    .AsNoTracking()
+                    .ToListAsync<ISiteUser>(cancellationToken)
+                    .ConfigureAwait(false);
+
+                return items;
+
+            }
+
+           
         }
 
         public async Task<int> CountUsersNotInRole(
@@ -1139,31 +1283,34 @@ namespace cloudscribe.Core.Storage.EFCore.Common
             string searchInput,
             CancellationToken cancellationToken = default(CancellationToken))
         {
-            var query = from u in dbContext.Users
-                        from r in dbContext.Roles
-                        join ur in dbContext.UserRoles
-                        on new { RoleId = r.Id, UserId = u.Id } equals new { ur.RoleId, ur.UserId } into t
-                        from t2 in t.DefaultIfEmpty()
-                        where (
-                        u.SiteId == siteId
-                        && r.SiteId == siteId
-                        && r.Id == roleId
-                        && (
-                                (searchInput == "")
-                                || u.Email.Contains(searchInput)
-                                || u.DisplayName.Contains(searchInput)
-                                || u.UserName.Contains(searchInput)
-                                || (u.FirstName != null && u.FirstName.Contains(searchInput))
-                                || (u.LastName != null && u.LastName.Contains(searchInput))
+            using (var dbContext = _contextFactory.CreateContext())
+            {
+                var query = from u in dbContext.Users
+                            from r in dbContext.Roles
+                            join ur in dbContext.UserRoles
+                            on new { RoleId = r.Id, UserId = u.Id } equals new { ur.RoleId, ur.UserId } into t
+                            from t2 in t.DefaultIfEmpty()
+                            where (
+                            u.SiteId == siteId
+                            && r.SiteId == siteId
+                            && r.Id == roleId
+                            && (
+                                    (searchInput == "")
+                                    || u.Email.Contains(searchInput)
+                                    || u.DisplayName.Contains(searchInput)
+                                    || u.UserName.Contains(searchInput)
+                                    || (u.FirstName != null && u.FirstName.Contains(searchInput))
+                                    || (u.LastName != null && u.LastName.Contains(searchInput))
+                                )
+
+                            && t2 == null
                             )
 
-                        && t2 == null
-                        )
+                            //select u.UserId;
+                            select 1;
 
-                        //select u.UserId;
-                        select 1;
-
-            return await query.CountAsync<int>(cancellationToken).ConfigureAwait(false);
+                return await query.CountAsync<int>(cancellationToken).ConfigureAwait(false);
+            }
 
         }
 
@@ -1179,42 +1326,45 @@ namespace cloudscribe.Core.Storage.EFCore.Common
             // it took me a lot of tries and googling to figure out how to get this query to work as intended
             // it works but is still logging a warning DefaultIfEmpty() could not be translated and will be evaluated locally
 
-            var query = from u in dbContext.Users
-                        from r in dbContext.Roles
-                        join ur in dbContext.UserRoles
-                        on new { RoleId = r.Id, UserId = u.Id } equals new { ur.RoleId, ur.UserId } into t
-                        from t2 in t.DefaultIfEmpty()
-                        where (
-                        u.SiteId == siteId
-                        && r.SiteId == siteId
-                        && r.Id == roleId
-                        && (
-                                (searchInput == "")
-                                || u.Email.Contains(searchInput)
-                                || u.DisplayName.Contains(searchInput)
-                                || u.UserName.Contains(searchInput)
-                                || (u.FirstName != null && u.FirstName.Contains(searchInput))
-                                || (u.LastName != null && u.LastName.Contains(searchInput))
+            using (var dbContext = _contextFactory.CreateContext())
+            {
+                var query = from u in dbContext.Users
+                            from r in dbContext.Roles
+                            join ur in dbContext.UserRoles
+                            on new { RoleId = r.Id, UserId = u.Id } equals new { ur.RoleId, ur.UserId } into t
+                            from t2 in t.DefaultIfEmpty()
+                            where (
+                            u.SiteId == siteId
+                            && r.SiteId == siteId
+                            && r.Id == roleId
+                            && (
+                                    (searchInput == "")
+                                    || u.Email.Contains(searchInput)
+                                    || u.DisplayName.Contains(searchInput)
+                                    || u.UserName.Contains(searchInput)
+                                    || (u.FirstName != null && u.FirstName.Contains(searchInput))
+                                    || (u.LastName != null && u.LastName.Contains(searchInput))
+                                )
+
+                            && t2 == null
                             )
+                            orderby u.DisplayName
+                            select u;
 
-                        && t2 == null
-                        )
-                        orderby u.DisplayName
-                        select u;
+                var data = await query
+                    .AsNoTracking()
+                    .Skip(offset)
+                    .Take(pageSize)
+                    .ToListAsync<IUserInfo>(cancellationToken)
+                    .ConfigureAwait(false);
 
-            var data = await query
-                .AsNoTracking()
-                .Skip(offset)
-                .Take(pageSize)
-                .ToListAsync<IUserInfo>(cancellationToken)
-                .ConfigureAwait(false);
-
-            var result = new PagedResult<IUserInfo>();
-            result.Data = data;
-            result.PageNumber = pageNumber;
-            result.PageSize = pageSize;
-            result.TotalItems = await CountUsersNotInRole(siteId, roleId, searchInput, cancellationToken).ConfigureAwait(false);
-            return result;
+                var result = new PagedResult<IUserInfo>();
+                result.Data = data;
+                result.PageNumber = pageNumber;
+                result.PageSize = pageSize;
+                result.TotalItems = await CountUsersNotInRole(siteId, roleId, searchInput, cancellationToken).ConfigureAwait(false);
+                return result;
+            }
 
         }
 
@@ -1228,15 +1378,19 @@ namespace cloudscribe.Core.Storage.EFCore.Common
             Guid userId,
             CancellationToken cancellationToken = default(CancellationToken))
         {
-            var query = from l in dbContext.UserClaims
-                        where l.SiteId == siteId && l.UserId == userId
+            using (var dbContext = _contextFactory.CreateContext())
+            {
+                var query = from l in dbContext.UserClaims
+                            where l.SiteId == siteId && l.UserId == userId
 
-                        select l;
-            var items = await query
-                .AsNoTracking()
-                .ToListAsync<IUserClaim>(cancellationToken)
-                .ConfigureAwait(false);
-            return items;
+                            select l;
+                var items = await query
+                    .AsNoTracking()
+                    .ToListAsync<IUserClaim>(cancellationToken)
+                    .ConfigureAwait(false);
+                return items;
+
+            }
 
         }
 
@@ -1246,23 +1400,30 @@ namespace cloudscribe.Core.Storage.EFCore.Common
             string claimValue,
             CancellationToken cancellationToken = default(CancellationToken))
         {
-            var query = from x in dbContext.Users
-                        join y in dbContext.UserClaims
-                        on x.Id equals y.UserId
-                        where x.SiteId == siteId
-                        && y.ClaimType == claimType
-                        && y.ClaimValue == claimValue
-                        orderby x.DisplayName
-                        select x
+
+            using (var dbContext = _contextFactory.CreateContext())
+            {
+                var query = from x in dbContext.Users
+                            join y in dbContext.UserClaims
+                            on x.Id equals y.UserId
+                            where x.SiteId == siteId
+                            && y.ClaimType == claimType
+                            && y.ClaimValue == claimValue
+                            orderby x.DisplayName
+                            select x
                         ;
 
-            var items = await query
-                .AsNoTracking()
-                .Distinct()
-                .ToListAsync<ISiteUser>(cancellationToken)
-                .ConfigureAwait(false);
+                var items = await query
+                    .AsNoTracking()
+                    .Distinct()
+                    .ToListAsync<ISiteUser>(cancellationToken)
+                    .ConfigureAwait(false);
 
-            return items;
+                return items;
+
+            }
+
+            
         }
 
 
@@ -1276,20 +1437,24 @@ namespace cloudscribe.Core.Storage.EFCore.Common
             string providerKey,
             CancellationToken cancellationToken = default(CancellationToken))
         {
-            var query = from l in dbContext.UserLogins
-                        where (
-                        l.SiteId == siteId
-                        && l.LoginProvider == loginProvider
-                        && l.ProviderKey == providerKey
-                        )
-                        select l;
+            using (var dbContext = _contextFactory.CreateContext())
+            {
+                var query = from l in dbContext.UserLogins
+                            where (
+                            l.SiteId == siteId
+                            && l.LoginProvider == loginProvider
+                            && l.ProviderKey == providerKey
+                            )
+                            select l;
 
-            var items = await query
-                .AsNoTracking()
-                .SingleOrDefaultAsync<IUserLogin>(cancellationToken)
-                .ConfigureAwait(false);
+                var items = await query
+                    .AsNoTracking()
+                    .SingleOrDefaultAsync<IUserLogin>(cancellationToken)
+                    .ConfigureAwait(false);
 
-            return items;
+                return items;
+            }
+
         }
         
         public async Task<IList<IUserLogin>> GetLoginsByUser(
@@ -1297,19 +1462,23 @@ namespace cloudscribe.Core.Storage.EFCore.Common
             Guid userId,
             CancellationToken cancellationToken = default(CancellationToken))
         {
-            var query = from l in dbContext.UserLogins
-                        where (
-                        l.SiteId == siteId
-                        && l.UserId == userId
-                        )
-                        select l;
 
-            var items = await query
-                .AsNoTracking()
-                .ToListAsync<IUserLogin>(cancellationToken)
-                .ConfigureAwait(false);
+            using (var dbContext = _contextFactory.CreateContext())
+            {
+                var query = from l in dbContext.UserLogins
+                            where (
+                            l.SiteId == siteId
+                            && l.UserId == userId
+                            )
+                            select l;
 
-            return items;
+                var items = await query
+                    .AsNoTracking()
+                    .ToListAsync<IUserLogin>(cancellationToken)
+                    .ConfigureAwait(false);
+
+                return items;
+            }
 
         }
 
@@ -1326,21 +1495,25 @@ namespace cloudscribe.Core.Storage.EFCore.Common
         {
             cancellationToken.ThrowIfCancellationRequested();
 
-            var query = from l in dbContext.UserTokens
-                        where (
-                        l.SiteId == siteId
-                        && l.UserId == userId
-                        && l.LoginProvider == loginProvider
-                        && l.Name == name
-                        )
-                        select l;
+            using (var dbContext = _contextFactory.CreateContext())
+            {
+                var query = from l in dbContext.UserTokens
+                            where (
+                            l.SiteId == siteId
+                            && l.UserId == userId
+                            && l.LoginProvider == loginProvider
+                            && l.Name == name
+                            )
+                            select l;
 
-            var items = await query
-                .AsNoTracking()
-                .SingleOrDefaultAsync<IUserToken>(cancellationToken)
-                .ConfigureAwait(false);
+                var items = await query
+                    .AsNoTracking()
+                    .SingleOrDefaultAsync<IUserToken>(cancellationToken)
+                    .ConfigureAwait(false);
 
-            return items;
+                return items;
+            }
+
         }
 
         public async Task<List<IUserToken>> GetUserTokensByProvider(
@@ -1351,20 +1524,25 @@ namespace cloudscribe.Core.Storage.EFCore.Common
         {
             cancellationToken.ThrowIfCancellationRequested();
 
-            var query = from l in dbContext.UserTokens
-                        where (
-                        l.SiteId == siteId
-                        && l.UserId == userId
-                        && l.LoginProvider == loginProvider
-                        )
-                        select l;
+            using (var dbContext = _contextFactory.CreateContext())
+            {
+                var query = from l in dbContext.UserTokens
+                            where (
+                            l.SiteId == siteId
+                            && l.UserId == userId
+                            && l.LoginProvider == loginProvider
+                            )
+                            select l;
 
-            var items = await query
-                .AsNoTracking()
-                .ToListAsync<IUserToken>(cancellationToken)
-                .ConfigureAwait(false);
+                var items = await query
+                    .AsNoTracking()
+                    .ToListAsync<IUserToken>(cancellationToken)
+                    .ConfigureAwait(false);
 
-            return items;
+                return items;
+
+            }
+ 
         }
 
         #endregion
@@ -1379,16 +1557,19 @@ namespace cloudscribe.Core.Storage.EFCore.Common
         {
             cancellationToken.ThrowIfCancellationRequested();
 
-            var query = from x in dbContext.UserLocations
-                        where x.UserId == userId
-                        && x.IpAddressLong == ipv4AddressAsLong
-                        select x
+            using (var dbContext = _contextFactory.CreateContext())
+            {
+                var query = from x in dbContext.UserLocations
+                            where x.UserId == userId
+                            && x.IpAddressLong == ipv4AddressAsLong
+                            select x
                         ;
 
-            return await query
-                .AsNoTracking()
-                .FirstOrDefaultAsync<UserLocation>(cancellationToken)
-                .ConfigureAwait(false);
+                return await query
+                    .AsNoTracking()
+                    .FirstOrDefaultAsync<UserLocation>(cancellationToken)
+                    .ConfigureAwait(false);
+            }
 
         }
         
@@ -1400,10 +1581,12 @@ namespace cloudscribe.Core.Storage.EFCore.Common
         {
             cancellationToken.ThrowIfCancellationRequested();
 
-            return dbContext.UserLocations
+            using (var dbContext = _contextFactory.CreateContext())
+            {
+                return dbContext.UserLocations
                 .Where(x => x.UserId == userId)
                 .CountAsync<UserLocation>(cancellationToken);
-
+            }
 
         }
 
@@ -1419,75 +1602,37 @@ namespace cloudscribe.Core.Storage.EFCore.Common
 
             int offset = (pageSize * pageNumber) - pageSize;
 
-            var query = dbContext.UserLocations
+            using (var dbContext = _contextFactory.CreateContext())
+            {
+                var query = dbContext.UserLocations
                 .Where(x => x.UserId == userId)
                 .OrderByDescending(x => x.LastCaptureUtc)
                 //.Select(p => p)
                 .Skip(offset)
                 .Take(pageSize)
-                
+
                 ;
 
 
-            var data = await query
-                .AsNoTracking()
-                .ToListAsync<IUserLocation>(cancellationToken)
-                .ConfigureAwait(false);
+                var data = await query
+                    .AsNoTracking()
+                    .ToListAsync<IUserLocation>(cancellationToken)
+                    .ConfigureAwait(false);
 
-            var result = new PagedResult<IUserLocation>();
-            result.Data = data;
-            result.PageNumber = pageNumber;
-            result.PageSize = pageSize;
-            result.TotalItems = await CountUserLocationsByUser(siteId, userId, cancellationToken).ConfigureAwait(false);
-            return result;
+                var result = new PagedResult<IUserLocation>();
+                result.Data = data;
+                result.PageNumber = pageNumber;
+                result.PageSize = pageSize;
+                result.TotalItems = await CountUserLocationsByUser(siteId, userId, cancellationToken).ConfigureAwait(false);
+                return result;
+            }
+
+            
 
         }
 
         #endregion
 
-        #region IDisposable Support
-
-        private void ThrowIfDisposed()
-        {
-            if (disposedValue)
-            {
-                throw new ObjectDisposedException(GetType().Name);
-            }
-        }
-
-        private bool disposedValue = false; // To detect redundant calls
-
-        void Dispose(bool disposing)
-        {
-            if (!disposedValue)
-            {
-                if (disposing)
-                {
-                    // TODO: dispose managed state (managed objects).
-                }
-
-                // TODO: free unmanaged resources (unmanaged objects) and override a finalizer below.
-                // TODO: set large fields to null.
-
-                disposedValue = true;
-            }
-        }
-
-        // TODO: override a finalizer only if Dispose(bool disposing) above has code to free unmanaged resources.
-        // ~SiteRoleStore() {
-        //   // Do not change this code. Put cleanup code in Dispose(bool disposing) above.
-        //   Dispose(false);
-        // }
-
-        // This code added to correctly implement the disposable pattern.
-        public void Dispose()
-        {
-            // Do not change this code. Put cleanup code in Dispose(bool disposing) above.
-            Dispose(true);
-            // TODO: uncomment the following line if the finalizer is overridden above.
-            // GC.SuppressFinalize(this);
-        }
-
-        #endregion
+        
     }
 }

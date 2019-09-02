@@ -265,7 +265,7 @@ namespace sourceDev.WebApp
 
             app.UseCloudscribeCommonStaticFiles();
 
-            app.UseRouting();
+           
 
             app.UseCookiePolicy();
 
@@ -303,7 +303,7 @@ namespace sourceDev.WebApp
                 //endpoints.MapControllerRoute(
                 //    name: "default",
                 //    pattern: "{controller=Home}/{action=Index}/{id?}");
-                endpoints.MapRazorPages();
+                //endpoints.MapRazorPages();
 
 
 
