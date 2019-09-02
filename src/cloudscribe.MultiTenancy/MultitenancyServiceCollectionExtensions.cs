@@ -1,8 +1,7 @@
-﻿using Microsoft.AspNetCore.Http;
-using Microsoft.Extensions.DependencyInjection.Extensions;
-using cloudscribe.Multitenancy;
+﻿using cloudscribe.Multitenancy;
 using cloudscribe.Multitenancy.Internal;
-using System.Reflection;
+using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.DependencyInjection.Extensions;
 
 namespace Microsoft.Extensions.DependencyInjection
 {
@@ -27,11 +26,11 @@ namespace Microsoft.Extensions.DependencyInjection
 			services.AddScoped<ITenant<TTenant>>(prov => new TenantWrapper<TTenant>(prov.GetService<TTenant>()));
 
 			// Ensure caching is available for caching resolvers
-			var resolverType = typeof(TResolver);
-            if (typeof(MemoryCacheTenantResolver<TTenant>).IsAssignableFrom(resolverType))
-            {
-                services.AddMemoryCache();
-            }
+			//var resolverType = typeof(TResolver);
+   //         if (typeof(MemoryCacheTenantResolver<TTenant>).IsAssignableFrom(resolverType))
+   //         {
+   //             services.AddMemoryCache();
+   //         }
 
             return services;
         }
