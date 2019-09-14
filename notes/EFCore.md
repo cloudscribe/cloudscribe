@@ -1,4 +1,7 @@
 
+https://docs.microsoft.com/en-us/ef/core/what-is-new/ef-core-3.0/breaking-changes
+
+
 Xml
 https://stackoverflow.com/questions/12631290/xml-columns-in-a-code-first-application
 http://www.eidias.com/blog/2014/10/29/mapping-xml-column-with-xsd-schema-validation-in-ef-code-first
