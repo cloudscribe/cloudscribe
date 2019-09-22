@@ -2,9 +2,9 @@
 
   <PropertyGroup>
     <Description>Attributes and helpers that can be used as tools to help meet GDPR requirements</Description>
-    <Version>3.0.0-preview20190901</Version>
+    <Version>3.0.0-preview20190922</Version>
     <Authors>Joe Audette</Authors>
-    <TargetFrameworks>netcoreapp3.0</TargetFrameworks>
+    <TargetFrameworks>netstandard2.1</TargetFrameworks>
     <PackageTags>cloudscribe;gdpr</PackageTags>
     <PackageIconUrl>https://raw.githubusercontent.com/joeaudette/cloudscribe/master/cloudscribe-icon-32.png</PackageIconUrl>
     <PackageProjectUrl>https://github.com/joeaudette/cloudscribe</PackageProjectUrl>

@@ -13,7 +13,7 @@ namespace cloudscribe.FileManager.CoreIntegration
     public class MediaPathResolver : IMediaPathResolver
     {
         public MediaPathResolver(
-            IHostingEnvironment environment,
+            IWebHostEnvironment environment,
             ILogger<MediaPathResolver> logger,
             IOptions<MultiTenantOptions> multiTenantOptionsAccessor,
             SiteContext currentSite
@@ -25,7 +25,7 @@ namespace cloudscribe.FileManager.CoreIntegration
             log = logger;
         }
 
-        private IHostingEnvironment hosting;
+        private IWebHostEnvironment hosting;
         private SiteContext currentSite;
         private MultiTenantOptions options;
         private ILogger log;

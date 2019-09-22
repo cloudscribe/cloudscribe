@@ -3,8 +3,8 @@
   <PropertyGroup>
     <Description>PostgreSql Entity Framework Core conventions for snake case object names</Description>
     <Authors>Joe Audette</Authors>
-    <Version>3.0.0-preview20190901</Version>
-    <TargetFramework>netcoreapp3.0</TargetFramework>
+    <Version>3.0.0-preview20190922</Version>
+    <TargetFramework>netstandard2.1</TargetFramework>
     <PackageIconUrl>https://raw.githubusercontent.com/joeaudette/cloudscribe/master/cloudscribe-icon-32.png</PackageIconUrl>
     <PackageProjectUrl>https://github.com/joeaudette/cloudscribe</PackageProjectUrl>
     <PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>

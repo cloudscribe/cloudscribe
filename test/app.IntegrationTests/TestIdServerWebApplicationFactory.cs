@@ -50,8 +50,8 @@ namespace app.IntegrationTests
                     options.ApiSecret = "secret";
                     options.RequireHttpsMetadata = false;
                     options.SaveToken = true;
-                    options.IntrospectionBackChannelHandler = _testMessageHandler;
-                    options.IntrospectionDiscoveryHandler = _testMessageHandler;
+                    //options.IntrospectionBackChannelHandler = _testMessageHandler;
+                    //options.IntrospectionDiscoveryHandler = _testMessageHandler;
                     options.JwtBackChannelHandler = _testMessageHandler;
 
                 });
