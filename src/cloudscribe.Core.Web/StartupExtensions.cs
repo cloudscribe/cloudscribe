@@ -35,6 +35,8 @@ using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Options;
+using NodaTime;
+using NodaTime.TimeZones;
 using System;
 
 namespace Microsoft.Extensions.DependencyInjection
@@ -107,8 +109,9 @@ namespace Microsoft.Extensions.DependencyInjection
 
             services.TryAddScoped<ICkeditorOptionsResolver, SiteCkeditorOptionsResolver>();
             //TODO: remove in a future version
-           // services.AddScoped<cloudscribe.Web.Common.ITimeZoneIdResolver, RequestTimeZoneIdResolver>();
+            // services.AddScoped<cloudscribe.Web.Common.ITimeZoneIdResolver, RequestTimeZoneIdResolver>();
 
+            services.TryAddSingleton<IDateTimeZoneProvider>(new DateTimeZoneCache(TzdbDateTimeZoneSource.Default));
             services.AddScoped<cloudscribe.DateTimeUtils.ITimeZoneIdResolver, SiteTimeZoneIdResolver>();
             services.TryAddScoped<cloudscribe.DateTimeUtils.ITimeZoneHelper, cloudscribe.DateTimeUtils.TimeZoneHelper>();
 

@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <Description>common static resources for web applications including ckeditor dtatepickers, and other js and css</Description>
-    <Version>3.0.0-preview20190901</Version>
+    <Version>3.0.0</Version>
 
     
     <Authors>Joe Audette</Authors>
@@ -25,13 +25,12 @@
   
   <ItemGroup>
    
-    <!--<PackageReference Include="Microsoft.AspNetCore.Http" Version="2.1.1" />
-    <PackageReference Include="Microsoft.AspNetCore.StaticFiles" Version="2.1.1" />-->
+  
     
-    <PackageReference Include="Microsoft.Extensions.FileProviders.Embedded" Version="3.0.0-*" />
-    <PackageReference Include="Microsoft.Extensions.Options" Version="3.0.0-*" />
-    <PackageReference Include="Microsoft.Extensions.Options.ConfigurationExtensions" Version="3.0.0-*" />
-    <PackageReference Include="Microsoft.Extensions.FileProviders.Physical" Version="3.0.0-*" />
+    <PackageReference Include="Microsoft.Extensions.FileProviders.Embedded" Version="3.0.0" />
+    <PackageReference Include="Microsoft.Extensions.Options" Version="3.0.0" />
+    <PackageReference Include="Microsoft.Extensions.Options.ConfigurationExtensions" Version="3.0.0" />
+    <PackageReference Include="Microsoft.Extensions.FileProviders.Physical" Version="3.0.0" />
     
     <PackageReference Include="System.Text.Encodings.Web" Version="4.5.0" />
     

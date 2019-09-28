@@ -9,8 +9,6 @@ using cloudscribe.Web.Common.Recaptcha;
 using cloudscribe.Web.Common.Setup;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection.Extensions;
-using NodaTime;
-using NodaTime.TimeZones;
 using System;
 
 namespace Microsoft.Extensions.DependencyInjection
@@ -21,7 +19,7 @@ namespace Microsoft.Extensions.DependencyInjection
             this IServiceCollection services,
             IConfiguration configuration = null)
         {
-            services.TryAddSingleton<IDateTimeZoneProvider>(new DateTimeZoneCache(TzdbDateTimeZoneSource.Default));
+            //services.TryAddSingleton<IDateTimeZoneProvider>(new DateTimeZoneCache(TzdbDateTimeZoneSource.Default));
             //services.TryAddSingleton<IHttpClientProvider, DefaultHttpClientProvider>();
 
             services.AddHttpClient();

@@ -1,4 +1,8 @@
 
+https://devblogs.microsoft.com/dotnet/announcing-net-core-3-0/
+
+https://devblogs.microsoft.com/aspnet/asp-net-core-and-blazor-updates-in-net-core-3-0/
+
 https://dusted.codes/advanced-tips-and-tricks-for-aspnet-core-applications
 
 
