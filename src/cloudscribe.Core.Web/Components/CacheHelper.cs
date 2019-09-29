@@ -47,11 +47,17 @@ namespace cloudscribe.Core.Web.Components
 
         public void AddToCache(string key, SiteContext site, TimeSpan expiration)
         {
+            var cacheOptions = new MemoryCacheEntryOptions()
+            {
+                Size = 1024
+            }
+            ;
+            cacheOptions.SetAbsoluteExpiration(expiration);
+
             _cache.Set(
                         key,
                         site,
-                        new MemoryCacheEntryOptions()
-                         .SetAbsoluteExpiration(expiration)
+                        cacheOptions
                          );
 
         }

@@ -73,7 +73,10 @@ namespace cloudscribe.Core.Web.TagHelpers
             string value;
             if (!_cache.TryGetValue(path, out value))
             {
-                var cacheEntryOptions = new MemoryCacheEntryOptions();
+                var cacheEntryOptions = new MemoryCacheEntryOptions()
+                { 
+                    Size = 1024
+                };
                 cacheEntryOptions.AddExpirationToken(_fileProvider.Watch(resolvedPath));
                 var fileInfo = _fileProvider.GetFileInfo(resolvedPath);
 

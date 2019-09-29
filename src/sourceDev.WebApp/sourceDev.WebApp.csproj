@@ -74,7 +74,7 @@
     <PackageReference Include="cloudscribe.Logging.EFCore.MSSQL" Version="4.0.0" />
     <PackageReference Include="cloudscribe.Logging.EFCore.MySql" Version="4.0.0" />
     <PackageReference Include="cloudscribe.Logging.EFCore.pgsql" Version="4.0.0" />
-    <PackageReference Include="cloudscribe.Logging.EFCore.PostgreSql" Version="4.0.0" />
+    <PackageReference Include="cloudscribe.Logging.EFCore.PostgreSql" Version="4.0.1" />
     <PackageReference Include="cloudscribe.Logging.EFCore.SQLite" Version="4.0.0" />
     <PackageReference Include="cloudscribe.Logging.NoDb" Version="4.0.0" />
 
