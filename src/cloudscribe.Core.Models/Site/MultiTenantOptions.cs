@@ -1,8 +1,7 @@
-﻿// Copyright (c) Source Tree Solutions, LLC. All rights reserved.
-// Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
+﻿// Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2015-08-01
-// Last Modified:			2017-05-12
+// Last Modified:			2019-10-05
 // 
 
 using System;
@@ -87,6 +86,10 @@ namespace cloudscribe.Core.Models
         public bool UseSharedThemes { get; set; } = true;
 
         public string SharedThemesFolderName { get; set; } = "SharedThemes";
+
+        public long SiteSettingsCacheSize { get; set; } = 1;
+
+        public long ThemeFileCacheSize { get; set; } = 1;
 
 
     }

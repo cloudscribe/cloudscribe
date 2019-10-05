@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using cloudscribe.Core.Models;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.WebUtilities;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.FileProviders;
@@ -18,6 +19,7 @@ namespace cloudscribe.Core.Web.TagHelpers
         private readonly IFileProvider _fileProvider;
         private readonly IMemoryCache _cache;
         private readonly PathString _requestPathBase;
+        private readonly MultiTenantOptions _multiTenantOptions;
 
         /// <summary>
         /// Creates a new instance of <see cref="ThemeFileVersionProvider"/>.
@@ -26,10 +28,13 @@ namespace cloudscribe.Core.Web.TagHelpers
         /// <param name="cache"><see cref="IMemoryCache"/> where versioned urls of files are cached.</param>
         /// <param name="requestPathBase">The base path for the current HTTP request.</param>
         public ThemeFileVersionProvider(
+            MultiTenantOptions multiTenantOptions,
             IFileProvider fileProvider,
             IMemoryCache cache,
-            PathString requestPathBase)
+            PathString requestPathBase
+            )
         {
+            _multiTenantOptions = multiTenantOptions;
             _fileProvider = fileProvider ?? throw new ArgumentNullException(nameof(fileProvider));
             _cache = cache ?? throw new ArgumentNullException(nameof(cache));
             _requestPathBase = requestPathBase;
@@ -73,9 +78,17 @@ namespace cloudscribe.Core.Web.TagHelpers
             string value;
             if (!_cache.TryGetValue(path, out value))
             {
+
+                //this was a breaking change in 3.0, was getting an error here if not setting Size
+                //but according to docs this should not be needed unless setting SizeLimit on the MemoryCache
+                //and I can't find any place where we are doing that.
+                //It seems that EFCore may be doing that as the problem does not happen when using NoDb
+                //The memory size limit does not have a defined unit of measure because the cache has no mechanism to measure the size of entries.
+                //The app could specify the size of all entries as 1, and the size limit is the count of entries.
+                //https://docs.microsoft.com/en-us/aspnet/core/performance/caching/memory?view=aspnetcore-3.0
                 var cacheEntryOptions = new MemoryCacheEntryOptions()
                 { 
-                    Size = 1024
+                    Size = _multiTenantOptions.ThemeFileCacheSize
                 };
                 cacheEntryOptions.AddExpirationToken(_fileProvider.Watch(resolvedPath));
                 var fileInfo = _fileProvider.GetFileInfo(resolvedPath);
