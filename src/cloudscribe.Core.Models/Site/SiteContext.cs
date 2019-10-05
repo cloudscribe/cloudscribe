@@ -11,7 +11,7 @@ namespace cloudscribe.Core.Models
 
         private readonly ISiteSettings site;
 
-        //https://github.com/saaskit/saaskit/issues/76
+        //https://github.com/cloudscribe/cloudscribe/issues/76
 
         //public bool Equals(SiteContext other)
         //{

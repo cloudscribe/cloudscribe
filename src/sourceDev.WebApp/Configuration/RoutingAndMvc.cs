@@ -10,77 +10,77 @@ namespace Microsoft.AspNetCore.Builder
 {
     public static class RoutingAndMvc
     {
-        public static IRouteBuilder UseCustomRoutes(this IRouteBuilder routes, bool useFolders)
+        public static IEndpointRouteBuilder UseCustomRoutes(this IEndpointRouteBuilder routes, bool useFolders)
         {
             routes.AddCloudscribeFileManagerRoutes();
 
             if (useFolders)
             {
-                routes.MapRoute(
+                routes.MapControllerRoute(
                    name: "foldererrorhandler",
-                   template: "{sitefolder}/oops/error/{statusCode?}",
+                   pattern: "{sitefolder}/oops/error/{statusCode?}",
                    defaults: new { controller = "Oops", action = "Error" },
                    constraints: new { name = new cloudscribe.Core.Web.Components.SiteFolderRouteConstraint() }
                 );
 
-                routes.MapRoute(
+                routes.MapControllerRoute(
                        name: "apifoldersitemap",
-                       template: "{sitefolder}/api/sitemap"
+                       pattern: "{sitefolder}/api/sitemap"
                        , defaults: new { controller = "FolderSiteMap", action = "Index" }
                        , constraints: new { name = new cloudscribe.Core.Web.Components.SiteFolderRouteConstraint() }
                        );
 
-                routes.MapRoute(
+                routes.MapControllerRoute(
                     name: "folderdefault-localized",
-                    template: "{sitefolder}/{culture}/{controller}/{action}/{id?}",
+                    pattern: "{sitefolder}/{culture}/{controller}/{action}/{id?}",
                     defaults: new { controller = "Home", action = "Index" },
                     constraints: new { sitefolder = new cloudscribe.Core.Web.Components.SiteFolderRouteConstraint(), culture = new CultureSegmentRouteConstraint(true) });
 
 
-                routes.MapRoute(
+                routes.MapControllerRoute(
                     name: "folderdefault",
-                    template: "{sitefolder}/{controller}/{action}/{id?}",
+                    pattern: "{sitefolder}/{controller}/{action}/{id?}",
                     defaults: new { controller = "Home", action = "Index" },
                     constraints: new { sitefolder = new cloudscribe.Core.Web.Components.SiteFolderRouteConstraint() });
 
 
             }
 
-            //routes.MapRoute(
+            //routes.MapControllerRoute(
             //   name: "stateautosuggest",
-            //   template: "coredata/stateautosuggestjson",
+            //   pattern: "coredata/stateautosuggestjson",
             //   defaults: new { controller = "CoreDaata", action = "StateAutoSuggestJson" }
             //   );
 
-            routes.MapRoute(
+            routes.MapControllerRoute(
                name: "errorhandler",
-               template: "oops/error/{statusCode?}",
+               pattern: "oops/error/{statusCode?}",
                defaults: new { controller = "Oops", action = "Error" }
                );
 
-            //routes.MapRoute(
+            //routes.MapControllerRoute(
             //    name: "systlog",
-            //    template: "systemlog/{action=Index}"
+            //    pattern: "systemlog/{action=Index}"
             //    //, defaults: new { action = "Index" }
             //    );
 
-            //routes.MapRoute(
+            //routes.MapControllerRoute(
             //    name: "predefault",
-            //    template: "{controller}/{action}"
+            //    pattern: "{controller}/{action}"
             //    , defaults: new { action = "Index" }
             //    );
 
-            routes.MapRoute(
+            routes.MapControllerRoute(
                     name: "default-localized",
-                    template: "{culture}/{controller}/{action}/{id?}",
+                    pattern: "{culture}/{controller}/{action}/{id?}",
                     defaults: new { controller = "Home", action = "Index" },
                     constraints: new { culture = new CultureSegmentRouteConstraint() }
                     );
 
 
-            routes.MapRoute(
+            routes.MapControllerRoute(
                 name: "default",
-                template: "{controller}/{action}"
+                pattern: "{controller}/{action}"
                 ,defaults: new { controller = "Home", action = "Index" }
                 );
 
@@ -117,10 +117,10 @@ namespace Microsoft.AspNetCore.Builder
             });
             
 
-            var boostrapVersion = config.GetValue<int>("DevOptions:BootstrapVersion");
+           
 
             services.AddMvc(options => {
-                options.EnableEndpointRouting = false;
+                //options.EnableEndpointRouting = false;
                
             })
                     .AddViewLocalization(LanguageViewLocationExpanderFormat.Suffix)
@@ -131,7 +131,7 @@ namespace Microsoft.AspNetCore.Builder
                         options.ViewLocationExpanders.Add(new cloudscribe.Core.Web.Components.SiteViewLocationExpander());
 
                     })
-                    .SetCompatibilityVersion(CompatibilityVersion.Version_2_2)
+                    //.SetCompatibilityVersion(CompatibilityVersion.Version_2_2)
                     ;
 
             return services;

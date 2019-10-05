@@ -1,4 +1,5 @@
 
+https://channel9.msdn.com/Events/dotnetConf/NET-Conf-2019/B202
 
 https://devblogs.microsoft.com/aspnet/blazor-now-in-official-preview/
 

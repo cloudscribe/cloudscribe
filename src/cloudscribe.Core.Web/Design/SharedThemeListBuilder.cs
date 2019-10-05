@@ -1,8 +1,7 @@
-﻿// Copyright (c) Source Tree Solutions, LLC. All rights reserved.
-// Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
+﻿// Licensed under the Apache License, Version 2.0
 //  Author:                     Joe Audette
 //  Created:                    2015-11-14
-//	Last Modified:              2016-11-14
+//	Last Modified:              2019-09-01
 //
 
 using cloudscribe.Web.Common.Razor;
@@ -15,7 +14,7 @@ namespace cloudscribe.Core.Web.Components
 {
     public class SharedThemeListBuilder : IThemeListBuilder
     {
-        public SharedThemeListBuilder(IHostingEnvironment hostingEnvironment)
+        public SharedThemeListBuilder(IWebHostEnvironment hostingEnvironment)
         {
             appBasePath = hostingEnvironment.ContentRootPath;
         }

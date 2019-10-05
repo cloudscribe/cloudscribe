@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:				    2014-07-18
-// Last Modified:		    2016-05-18
+// Last Modified:		    2019-09-01
 // 
 
 using Microsoft.AspNetCore.Identity;
@@ -25,6 +25,16 @@ namespace cloudscribe.Core.Identity
         {
             return key;
         }
+
+        public string NormalizeEmail(string email)
+        {
+            return email;
+        }
+
+        public string NormalizeName(string name)
+        {
+            return name;
+        }
     }
 
     public class LowerInvariantLookupNormalizer : ILookupNormalizer
@@ -43,6 +53,20 @@ namespace cloudscribe.Core.Identity
             }
             //return key.Normalize().ToLowerInvariant();
             return key.ToLowerInvariant();
+        }
+
+        public string NormalizeEmail(string email)
+        {
+            if (email == null) return email;
+
+            return email.ToLowerInvariant();
+        }
+
+        public string NormalizeName(string name)
+        {
+            if (name == null) return name;
+
+            return name.ToLowerInvariant();
         }
     }
 }

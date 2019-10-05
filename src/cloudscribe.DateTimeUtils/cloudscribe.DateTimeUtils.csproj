@@ -2,14 +2,13 @@
 
   <PropertyGroup>
     <Description>Easy cross platform timezone conversion for .NET Core</Description>
-    <VersionPrefix>1.0.1</VersionPrefix>
-    <AssemblyVersion>1.0.1</AssemblyVersion>
+    <Version>3.0.0</Version>
     <Authors>Joe Audette</Authors>
     <TargetFrameworks>netstandard2.0</TargetFrameworks>
 
     <PackageTags>cloudscribe,NodaTime,timezone</PackageTags>
-    <PackageIconUrl>https://raw.githubusercontent.com/joeaudette/cloudscribe/master/cloudscribe-icon-32.png</PackageIconUrl>
-    <PackageProjectUrl>https://github.com/joeaudette/cloudscribe</PackageProjectUrl>
+    <PackageIcon>icon.png</PackageIcon>
+    <PackageProjectUrl>https://github.com/cloudscribe/cloudscribe</PackageProjectUrl>
     <PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
     <RepositoryUrl>https://github.com/cloudscribe/cloudscribe.git</RepositoryUrl>
     <RepositoryType>git</RepositoryType>
@@ -17,9 +16,13 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Include="icon.png" Pack="true" PackagePath="\"/>
+  </ItemGroup>
 
-    <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="2.1.1" />
-    <PackageReference Include="NodaTime" Version="2.4.2" />
+  <ItemGroup>
+
+    <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="3.0.0" />
+    <PackageReference Include="NodaTime" Version="2.4.7" />
    
   </ItemGroup>
 

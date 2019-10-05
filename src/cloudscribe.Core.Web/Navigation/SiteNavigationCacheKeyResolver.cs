@@ -1,14 +1,13 @@
-﻿
-// Copyright (c) Source Tree Solutions, LLC. All rights reserved.
-// Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
+﻿// Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette/Derek Gray
 // Created:				    2016-08-24
-// Last Modified:		    2016-10-08
+// Last Modified:		    2019-09-28
 // 
 
 using cloudscribe.Core.Models;
 using cloudscribe.Web.Navigation;
 using cloudscribe.Web.Navigation.Caching;
+using System.Threading.Tasks;
 
 namespace cloudscribe.Core.Web.Navigation
 {
@@ -24,9 +23,10 @@ namespace cloudscribe.Core.Web.Navigation
 
         private SiteContext currentSite;
 
-        public string GetCacheKey(INavigationTreeBuilder builder)
+        public Task<string> GetCacheKey(INavigationTreeBuilder builder)
         {
-            return builder.Name + currentSite.Id.ToString();
+            var result=  builder.Name + currentSite.Id.ToString();
+            return Task.FromResult(result);
         }
     }
 }

@@ -1,8 +1,7 @@
-﻿// Copyright (c) Source Tree Solutions, LLC. All rights reserved.
-// Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
+﻿// Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2015-11-16
-// Last Modified:			2019-04-20
+// Last Modified:			2019-09-29
 // 
 
 using cloudscribe.Core.Models;
@@ -32,21 +31,37 @@ namespace cloudscribe.Core.Storage.EFCore.PostgreSql
 
             modelBuilder.Entity<SiteSettings>(entity =>
             {
-                entity.ToTable(tableNames.TablePrefix + tableNames.SiteTableName);
+                entity.ToTable("csSite");
 
-                entity.HasKey(p => p.Id);
+                entity.HasKey(p => p.Id).HasName("pk_cs_site");
 
-                entity.Property(p => p.Id);
+                entity.Property(p => p.Id).HasColumnName("id");
 
-                entity.Property(p => p.AliasId).HasMaxLength(36);
+                entity.Property(p => p.AccountApprovalEmailCsv).HasColumnName("account_approval_email_csv");
+
+                entity.Property(p => p.AddThisDotComUsername)
+                .HasColumnName("add_this_dot_com_username")
+                .HasMaxLength(50);
+
+                entity.Property(p => p.AliasId)
+                .HasColumnName("alias_id")
+                .HasMaxLength(36);
 
                 entity.HasIndex(p => p.AliasId);
+
+                entity.Property(p => p.AllowNewRegistration)
+                .HasColumnName("allow_new_registration")
+                .IsRequired();
+
+                entity.Property(p => p.AllowPersistentLogin)
+               .HasColumnName("allow_persistent_login")
+               .IsRequired();
 
                 entity.Property(p => p.SiteName).HasMaxLength(255).IsRequired();
 
                 entity.Property(p => p.Theme).HasMaxLength(100);
 
-                entity.Property(p => p.AllowNewRegistration).IsRequired();
+                
 
                 entity.Property(p => p.RequireConfirmedEmail).IsRequired();
 
@@ -85,13 +100,17 @@ namespace cloudscribe.Core.Storage.EFCore.PostgreSql
 
                 entity.Property(p => p.RecaptchaPublicKey).HasMaxLength(255);
 
+                entity.Property(p => p.Require2FA).HasColumnName("require2_fa");
+
+
+
                 entity.Property(p => p.UseInvisibleRecaptcha).IsRequired();
 
                 entity.Property(p => p.DisableDbAuth).IsRequired();
 
                 entity.Property(p => p.RequireApprovalBeforeLogin).IsRequired();
                 
-                entity.Property(p => p.AllowPersistentLogin).IsRequired();
+               
 
                 entity.Property(p => p.CaptchaOnLogin).IsRequired();
 
@@ -155,7 +174,7 @@ namespace cloudscribe.Core.Storage.EFCore.PostgreSql
 
                 entity.HasIndex(p => p.SiteFolderName);
 
-                entity.Property(p => p.AddThisDotComUsername).HasMaxLength(50);
+                
 
                 entity.Property(p => p.SmtpServer).HasMaxLength(200);
 

@@ -5,10 +5,10 @@
 //using System.Collections.Generic;
 //using System.Threading.Tasks;
 
-//namespace SaasKit.Multitenancy
+//namespace cloudscribe.Multitenancy
 //{
 //    // modified from here:
-//    // https://github.com/saaskit/saaskit/blob/master/src/SaasKit.Multitenancy/MemoryCacheTenantResolver.cs
+//    // https://github.com/cloudscribe/cloudscribe/blob/master/src/cloudscribe.Multitenancy/MemoryCacheTenantResolver.cs
 //    // I needed to change the GetContextIdentifier to be async
 
 //    public abstract class MemoryCacheTenantResolverBase<TTenant> : ITenantResolver<TTenant>

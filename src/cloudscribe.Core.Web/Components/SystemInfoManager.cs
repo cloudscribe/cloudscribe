@@ -1,8 +1,7 @@
-﻿// Copyright (c) Source Tree Solutions, LLC. All rights reserved.
-// Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
+﻿// Licensed under the Apache License, Version 2.0
 //	Author:                 Joe Audette
 //  Created:			    2011-08-21
-//	Last Modified:		    2018-11-11
+//	Last Modified:		    2019-09-01
 // 
 
 using cloudscribe.Core.Models;
@@ -17,7 +16,7 @@ namespace cloudscribe.Core.Web.Components
     public class SystemInfoManager
     {
         public SystemInfoManager(
-            IHostingEnvironment hostingEnvironment,
+            IWebHostEnvironment hostingEnvironment,
             IVersionProviderFactory versionProviderFactory,
             IDataPlatformInfo databaseInfo)
         {
@@ -28,7 +27,7 @@ namespace cloudscribe.Core.Web.Components
 
         }
 
-        private IHostingEnvironment _hostingInfo;
+        private IWebHostEnvironment _hostingInfo;
         private IVersionProviderFactory _versionProviders;
         private IVersionProvider _cloudscribeVersionProvider = null;
         private IDataPlatformInfo _dbInfo;

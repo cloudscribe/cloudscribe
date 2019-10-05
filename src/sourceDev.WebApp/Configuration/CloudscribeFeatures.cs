@@ -1,5 +1,5 @@
 ﻿using cloudscribe.Core.Models;
-using cloudscribe.UserProperties.Models;
+//using cloudscribe.UserProperties.Models;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Configuration;
@@ -14,7 +14,7 @@ namespace Microsoft.Extensions.DependencyInjection
         public static IServiceCollection SetupDataStorage(
             this IServiceCollection services,
             IConfiguration config,
-            IHostingEnvironment env
+            IWebHostEnvironment env
             )
         {
             services.AddScoped<cloudscribe.Core.Models.Setup.ISetupTask, cloudscribe.Core.Web.Components.EnsureInitialDataSetupTask>();
@@ -29,12 +29,12 @@ namespace Microsoft.Extensions.DependencyInjection
                     var useSingletons = true;
                     services.AddCloudscribeCoreNoDbStorage(useSingletons);
                     services.AddCloudscribeLoggingNoDbStorage(config);
-                    services.AddCloudscribeKvpNoDbStorage();
+                    //services.AddCloudscribeKvpNoDbStorage();
 
-                    if(useMiniProfiler)
-                    {
-                        services.AddMiniProfiler();
-                    }
+                    //if(useMiniProfiler)
+                    //{
+                    //    services.AddMiniProfiler();
+                    //}
                     
                     
                     break;
@@ -42,11 +42,11 @@ namespace Microsoft.Extensions.DependencyInjection
                 case "ef":
                 default:
 
-                    if (useMiniProfiler)
-                    {
-                        services.AddMiniProfiler()
-                            .AddEntityFramework();
-                    }
+                    //if (useMiniProfiler)
+                    //{
+                    //    services.AddMiniProfiler()
+                    //        .AddEntityFramework();
+                    //}
 
                     switch (efProvider)
                     {
@@ -62,7 +62,7 @@ namespace Microsoft.Extensions.DependencyInjection
 
                             services.AddCloudscribeCoreEFStorageSQLite(slConnection);
                             services.AddCloudscribeLoggingEFStorageSQLite(slConnection);
-                            services.AddCloudscribeKvpEFStorageSQLite(slConnection);
+                            //services.AddCloudscribeKvpEFStorageSQLite(slConnection);
 
                             break;
 
@@ -70,7 +70,7 @@ namespace Microsoft.Extensions.DependencyInjection
                             var pgConnection = config.GetConnectionString("PostgreSqlEntityFrameworkConnectionString");
                             services.AddCloudscribeCoreEFStoragePostgreSql(pgConnection);
                             services.AddCloudscribeLoggingEFStoragePostgreSql(pgConnection);
-                            services.AddCloudscribeKvpEFStoragePostgreSql(pgConnection);
+                            //services.AddCloudscribeKvpEFStoragePostgreSql(pgConnection);
 
                             break;
 
@@ -78,7 +78,7 @@ namespace Microsoft.Extensions.DependencyInjection
                             var pgsConnection = config.GetConnectionString("PostgreSqlConnectionString");
                             services.AddCloudscribeCorePostgreSqlStorage(pgsConnection);
                             services.AddCloudscribeLoggingPostgreSqlStorage(pgsConnection);
-                            services.AddCloudscribeKvpPostgreSqlStorage(pgsConnection);
+                            //services.AddCloudscribeKvpPostgreSqlStorage(pgsConnection);
 
                             break;
 
@@ -87,7 +87,7 @@ namespace Microsoft.Extensions.DependencyInjection
                             var mysqlConnection = config.GetConnectionString("MySqlEntityFrameworkConnectionString");
                             services.AddCloudscribeCoreEFStorageMySql(mysqlConnection);
                             services.AddCloudscribeLoggingEFStorageMySQL(mysqlConnection);
-                            services.AddCloudscribeKvpEFStorageMySql(mysqlConnection);
+                           // services.AddCloudscribeKvpEFStorageMySql(mysqlConnection);
 
                             break;
 
@@ -110,7 +110,7 @@ namespace Microsoft.Extensions.DependencyInjection
 
 
                             services.AddCloudscribeLoggingEFStorageMSSQL(connectionString);
-                            services.AddCloudscribeKvpEFStorageMSSQL(connectionString);
+                            //services.AddCloudscribeKvpEFStorageMSSQL(connectionString);
                             
                             break;
                     }
@@ -131,8 +131,8 @@ namespace Microsoft.Extensions.DependencyInjection
             /* optional and only needed if you are using cloudscribe Logging  */
             services.AddCloudscribeLogging();
 
-            services.Configure<ProfilePropertySetContainer>(config.GetSection("ProfilePropertySetContainer"));
-            services.AddCloudscribeKvpUserProperties();
+            //services.Configure<ProfilePropertySetContainer>(config.GetSection("ProfilePropertySetContainer"));
+            //services.AddCloudscribeKvpUserProperties();
 
             /* these are optional and only needed if using cloudscribe Setup */
             //services.Configure<SetupOptions>(Configuration.GetSection("SetupOptions"));

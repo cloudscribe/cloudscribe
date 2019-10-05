@@ -1,8 +1,7 @@
-﻿// Copyright (c) Source Tree Solutions, LLC. All rights reserved.
-// Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
+﻿// Licensed under the Apache License, Version 2.0
 // Author:					Joe Audette
 // Created:					2017-05-12
-// Last Modified:			2017-05-13
+// Last Modified:			2019-09-01
 // 
 
 
@@ -31,7 +30,7 @@ namespace cloudscribe.Core.Web.TagHelpers
         
         public ThemeCssLinkTagHelper(
             IOptions<MultiTenantOptions> multiTenantOptionsAccessor,
-            IHostingEnvironment hostingEnvironment,
+            IWebHostEnvironment hostingEnvironment,
             IMemoryCache cache,
             IUrlHelperFactory urlHelperFactory,
             IActionContextAccessor actionContextAccessor

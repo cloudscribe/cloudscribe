@@ -52,59 +52,55 @@ namespace Microsoft.Extensions.DependencyInjection
             return services;
         }
 
-        public static IRouteBuilder AddCloudscribeFileManagerRoutes(this IRouteBuilder routes)
+        public static IEndpointRouteBuilder AddCloudscribeFileManagerRoutes(this IEndpointRouteBuilder routes)
         {
-            routes.MapRoute(
+            routes.MapControllerRoute(
                name: "filemanagerjs",
-               template: "filemanager/js/{*slug}"
+               pattern: "filemanager/js/{*slug}"
                , defaults: new { controller = "FileManager", action = "js" }
                );
 
-            routes.MapRoute(
+            routes.MapControllerRoute(
                name: "filemanagercss",
-               template: "filemanager/css/{*slug}"
+               pattern: "filemanager/css/{*slug}"
                , defaults: new { controller = "FileManager", action = "css" }
                );
 
-            //routes.MapRoute(
-            //   name: "filemanagerfonts",
-            //   template: "filemanager/fonts/{*slug}"
-            //   , defaults: new { controller = "FileManager", action = "fonts" }
-            //   );
+           
 
             return routes;
         }
 
-        [Obsolete("AddBootstrap3EmbeddedViewsForFileManager is deprecated, please use AddCloudscribeFileManagerBootstrap3Views instead.")]
-        public static RazorViewEngineOptions AddBootstrap3EmbeddedViewsForFileManager(this RazorViewEngineOptions options)
-        {
-            options.FileProviders.Add(new EmbeddedFileProvider(
-                    typeof(FileManagerController).GetTypeInfo().Assembly,
-                    "cloudscribe.FileManager.Web"
-                ));
+        //[Obsolete("AddBootstrap3EmbeddedViewsForFileManager is deprecated, please use AddCloudscribeFileManagerBootstrap3Views instead.")]
+        //public static RazorViewEngineOptions AddBootstrap3EmbeddedViewsForFileManager(this RazorViewEngineOptions options)
+        //{
+        //    options.FileProviders.Add(new EmbeddedFileProvider(
+        //            typeof(FileManagerController).GetTypeInfo().Assembly,
+        //            "cloudscribe.FileManager.Web"
+        //        ));
 
-            return options;
-        }
+        //    return options;
+        //}
 
-        public static RazorViewEngineOptions AddCloudscribeFileManagerBootstrap3Views(this RazorViewEngineOptions options)
-        {
-            options.FileProviders.Add(new EmbeddedFileProvider(
-                    typeof(FileManagerController).GetTypeInfo().Assembly,
-                    "cloudscribe.FileManager.Web"
-                ));
+        //public static RazorViewEngineOptions AddCloudscribeFileManagerBootstrap3Views(this RazorViewEngineOptions options)
+        //{
+        //    options.FileProviders.Add(new EmbeddedFileProvider(
+        //            typeof(FileManagerController).GetTypeInfo().Assembly,
+        //            "cloudscribe.FileManager.Web"
+        //        ));
 
-            return options;
-        }
+        //    return options;
+        //}
 
-        public static RazorViewEngineOptions AddCloudscribeFileManagerBootstrap4Views(this RazorViewEngineOptions options)
-        {
-            options.FileProviders.Add(new EmbeddedFileProvider(
-                    typeof(FileManagerController).GetTypeInfo().Assembly,
-                    "cloudscribe.FileManager.Web"
-                ));
+        //public static RazorViewEngineOptions AddCloudscribeFileManagerBootstrap4Views(this RazorViewEngineOptions options)
+        //{
+        //    options.FileProviders.Add(new EmbeddedFileProvider(
+        //            typeof(FileManagerController).GetTypeInfo().Assembly,
+        //            "cloudscribe.FileManager.Web"
+        //        ));
 
-            return options;
-        }
+        //    return options;
+        //}
 
     }
 }

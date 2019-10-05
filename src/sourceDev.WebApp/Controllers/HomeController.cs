@@ -24,7 +24,7 @@ namespace sourceDev.WebApp.Controllers
         public HomeController(
             IOidcHybridFlowHelper oidcHybridFlowHelper,
             IHttpClientFactory httpClientFactory,
-            IdentityServer4.IdentityServerTools idserver,
+            //IdentityServer4.IdentityServerTools idserver,
             SiteContext currentSite,
             IEmailSenderResolver emailSenderResolver,
             ViewRenderer viewRenderer,
@@ -37,7 +37,7 @@ namespace sourceDev.WebApp.Controllers
             _viewRenderer = viewRenderer;
             _analyticsHelper = analyticsHelper;
             _httpClientFactory = httpClientFactory;
-            _idserver = idserver;
+           // _idserver = idserver;
         }
 
         private readonly IOidcHybridFlowHelper _oidcHybridFlowHelper;
@@ -46,7 +46,7 @@ namespace sourceDev.WebApp.Controllers
         private ViewRenderer _viewRenderer;
         private GoogleAnalyticsHelper _analyticsHelper;
         private readonly IHttpClientFactory _httpClientFactory;
-        private readonly IdentityServer4.IdentityServerTools _idserver;
+        //private readonly IdentityServer4.IdentityServerTools _idserver;
 
         public IActionResult Index()
         {

@@ -10,7 +10,7 @@ namespace Microsoft.Extensions.DependencyInjection
         public static IServiceCollection SetupDataProtection(
             this IServiceCollection services,
             IConfiguration config,
-            IHostingEnvironment environment
+            IWebHostEnvironment environment
             )
         {
 

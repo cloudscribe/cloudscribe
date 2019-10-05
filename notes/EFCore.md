@@ -1,3 +1,8 @@
+https://devblogs.microsoft.com/dotnet/announcing-ef-core-3-0-and-ef-6-3-general-availability/
+
+
+https://docs.microsoft.com/en-us/ef/core/what-is-new/ef-core-3.0/breaking-changes
+
 
 Xml
 https://stackoverflow.com/questions/12631290/xml-columns-in-a-code-first-application

@@ -1,8 +1,7 @@
-﻿// Copyright (c) Source Tree Solutions, LLC. All rights reserved.
-// Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
+﻿// Licensed under the Apache License, Version 2.0
 //  Author:                     Joe Audette
 //  Created:                    2015-10-09
-//	Last Modified:              2018-03-07
+//	Last Modified:              2019-09-01
 //
 
 using cloudscribe.Core.Models;
@@ -20,7 +19,7 @@ namespace cloudscribe.Core.Web.Components
     public class SiteThemeListBuilder : IThemeListBuilder
     {
         public SiteThemeListBuilder(
-            IHostingEnvironment hostingEnvironment,
+            IWebHostEnvironment hostingEnvironment,
             IHttpContextAccessor contextAccessor,
             IOptions<MultiTenantOptions> multiTenantOptionsAccessor
             )

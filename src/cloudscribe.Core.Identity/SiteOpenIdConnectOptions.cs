@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2017-07-28
-// Last Modified:			2019-04-11
+// Last Modified:			2019-09-01
 // 
 
 using cloudscribe.Core.Models;
@@ -11,6 +11,7 @@ using Microsoft.AspNetCore.Authentication.OpenIdConnect;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Protocols;
@@ -31,7 +32,7 @@ namespace cloudscribe.Core.Identity
             IOptionsMonitorCache<OpenIdConnectOptions> cache,
             IOptions<MultiTenantOptions> multiTenantOptionsAccessor,
             IHttpContextAccessor httpContextAccessor,
-            IHostingEnvironment environment,
+            IWebHostEnvironment environment,
             ILogger<SiteOpenIdConnectOptions> logger
             ) : base(factory, sources, cache)
         {
@@ -52,7 +53,7 @@ namespace cloudscribe.Core.Identity
         private readonly ICaptureOidcTokens _oidcHybridFlowHelper;
 
 
-        private readonly IHostingEnvironment _environment;
+        private readonly IWebHostEnvironment _environment;
         private readonly ILogger _log;
 
         public override OpenIdConnectOptions Get(string name)

@@ -7,7 +7,7 @@
 
 ////  2016-02-04 found this blog post by Ben Foster
 ////  http://benfoster.io/blog/asp-net-5-multitenancy
-////  and the related project https://github.com/saaskit/saaskit
+////  and the related project https://github.com/cloudscribe/cloudscribe
 ////  I like his approach better than mine though they are similar
 ////  his seems a little cleaner so I'm adopting it here to replace my previous pattern
 ////  actual resolution process is the same as before
@@ -17,7 +17,7 @@
 //using Microsoft.Extensions.Caching.Memory;
 //using Microsoft.Extensions.Logging;
 //using Microsoft.Extensions.Options;
-//using SaasKit.Multitenancy;
+//using cloudscribe.Multitenancy;
 //using System;
 //using System.Collections.Generic;
 //using System.Linq;

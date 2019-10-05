@@ -1,8 +1,7 @@
-﻿// Copyright (c) Source Tree Solutions, LLC. All rights reserved.
-// Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
+﻿// Licensed under the Apache License, Version 2.0
 // Author:					Joe Audette
 // Created:					2017-05-12
-// Last Modified:			2017-05-13
+// Last Modified:			2019-10-05
 // 
 
 
@@ -30,7 +29,7 @@ namespace cloudscribe.Core.Web.TagHelpers
 
         public ThemeTagHelperBase(
             IOptions<MultiTenantOptions> multiTenantOptionsAccessor,
-            IHostingEnvironment hostingEnvironment,
+            IWebHostEnvironment hostingEnvironment,
             IMemoryCache cache,
             IUrlHelperFactory urlHelperFactory,
             IActionContextAccessor actionContextAccessor
@@ -47,7 +46,7 @@ namespace cloudscribe.Core.Web.TagHelpers
         protected MultiTenantOptions options;
         protected IUrlHelperFactory urlHelperFactory;
         protected IActionContextAccessor actionContextAccesor;
-        protected IHostingEnvironment HostingEnvironment { get; }
+        protected IWebHostEnvironment HostingEnvironment { get; }
         protected IMemoryCache Cache { get; }
 
 
@@ -90,6 +89,7 @@ namespace cloudscribe.Core.Web.TagHelpers
 
                 var fileProvider = new PhysicalFileProvider(themePath);
                 fileVersionProvider = new ThemeFileVersionProvider(
+                    options,
                     fileProvider,
                     Cache,
                     pathBase);

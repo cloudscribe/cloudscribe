@@ -1,16 +1,14 @@
-﻿// Copyright (c) Source Tree Solutions, LLC. All rights reserved.
-// Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
+﻿// Licensed under the Apache License, Version 2.0
 //	Author:                 Joe Audette
 //  Created:			    2016-06-06
-//	Last Modified:		    2018-11-11
+//	Last Modified:		    2019-09-01
 // 
 
 using cloudscribe.Core.Identity;
 using cloudscribe.Core.Models;
 
 using Microsoft.AspNetCore.Http;
-using SaasKit.Multitenancy;
-using System;
+using cloudscribe.Multitenancy;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -68,53 +66,53 @@ namespace cloudscribe.Core.Web.Components
 
     //TODO: deprecate
     //[Obsolete("Please use SiteTimeZoneIdResolver instead")]
-    public class RequestTimeZoneIdResolver : cloudscribe.Web.Common.ITimeZoneIdResolver
-    {
-        public RequestTimeZoneIdResolver(
-            IHttpContextAccessor contextAccessor,
-            ITenantResolver<SiteContext> siteResolver,
-            SiteUserManager<SiteUser> userManager
-            )
-        {
-            _contextAccessor = contextAccessor;
-            _siteResolver = siteResolver;
-            _userManager = userManager;
-        }
+    //public class RequestTimeZoneIdResolver : cloudscribe.Web.Common.ITimeZoneIdResolver
+    //{
+    //    public RequestTimeZoneIdResolver(
+    //        IHttpContextAccessor contextAccessor,
+    //        ITenantResolver<SiteContext> siteResolver,
+    //        SiteUserManager<SiteUser> userManager
+    //        )
+    //    {
+    //        _contextAccessor = contextAccessor;
+    //        _siteResolver = siteResolver;
+    //        _userManager = userManager;
+    //    }
 
-        private IHttpContextAccessor _contextAccessor;
-        private ITenantResolver<SiteContext> _siteResolver;
-        private SiteUserManager<SiteUser> _userManager;
+    //    private IHttpContextAccessor _contextAccessor;
+    //    private ITenantResolver<SiteContext> _siteResolver;
+    //    private SiteUserManager<SiteUser> _userManager;
 
-        public async Task<string> GetUserTimeZoneId(CancellationToken cancellationToken = default(CancellationToken))
-        {
-            cancellationToken.ThrowIfCancellationRequested();
+    //    public async Task<string> GetUserTimeZoneId(CancellationToken cancellationToken = default(CancellationToken))
+    //    {
+    //        cancellationToken.ThrowIfCancellationRequested();
 
-            var context = _contextAccessor.HttpContext;
-            if (context.User.Identity.IsAuthenticated)
-            {
-                var user = await _userManager.FindByIdAsync(context.User.GetUserId());
-                if ((user != null) && (!string.IsNullOrEmpty(user.TimeZoneId)))
-                {
-                    return user.TimeZoneId;
-                }
-            }
+    //        var context = _contextAccessor.HttpContext;
+    //        if (context.User.Identity.IsAuthenticated)
+    //        {
+    //            var user = await _userManager.FindByIdAsync(context.User.GetUserId());
+    //            if ((user != null) && (!string.IsNullOrEmpty(user.TimeZoneId)))
+    //            {
+    //                return user.TimeZoneId;
+    //            }
+    //        }
 
-            return await GetSiteTimeZoneId(cancellationToken);
-        }
+    //        return await GetSiteTimeZoneId(cancellationToken);
+    //    }
 
-        public Task<string> GetSiteTimeZoneId(CancellationToken cancellationToken = default(CancellationToken))
-        {
-            cancellationToken.ThrowIfCancellationRequested();
+    //    public Task<string> GetSiteTimeZoneId(CancellationToken cancellationToken = default(CancellationToken))
+    //    {
+    //        cancellationToken.ThrowIfCancellationRequested();
 
-            var tenant = _contextAccessor.HttpContext.GetTenant<SiteContext>();
-            if (tenant != null)
-            {
-                if (!string.IsNullOrEmpty(tenant.TimeZoneId))
-                    return Task.FromResult(tenant.TimeZoneId);
-            }
+    //        var tenant = _contextAccessor.HttpContext.GetTenant<SiteContext>();
+    //        if (tenant != null)
+    //        {
+    //            if (!string.IsNullOrEmpty(tenant.TimeZoneId))
+    //                return Task.FromResult(tenant.TimeZoneId);
+    //        }
 
-            return Task.FromResult("America/New_York"); //default
-        }
+    //        return Task.FromResult("America/New_York"); //default
+    //    }
 
-    }
+    //}
 }

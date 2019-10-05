@@ -1,8 +1,7 @@
-﻿// Copyright (c) Source Tree Solutions, LLC. All rights reserved.
-// Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
+﻿// Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2016-06-11
-// Last Modified:			2019-02-12
+// Last Modified:			2019-10-05
 // 
 
 using cloudscribe.Core.Models;
@@ -47,11 +46,25 @@ namespace cloudscribe.Core.Web.Components
 
         public void AddToCache(string key, SiteContext site, TimeSpan expiration)
         {
+            var cacheOptions = new MemoryCacheEntryOptions()
+            {
+                //this was a breaking change in 3.0, was getting an error here if not setting Size, never had to set it before
+                //but according to docs this should not be needed unless setting SizeLimit on the MemoryCache
+                //and I can't find any place where we are doing that.
+                //It seems that EFCore may be doing that as the problem does not happen when using NoDb
+                //The memory size limit does not have a defined unit of measure because the cache has no mechanism to measure the size of entries.
+                //The app could specify the size of all entries as 1, and the size limit is the count of entries.
+                //https://docs.microsoft.com/en-us/aspnet/core/performance/caching/memory?view=aspnetcore-3.0
+
+                Size = _multiTenantOptions.SiteSettingsCacheSize
+            }
+            ;
+            cacheOptions.SetAbsoluteExpiration(expiration);
+
             _cache.Set(
                         key,
                         site,
-                        new MemoryCacheEntryOptions()
-                         .SetAbsoluteExpiration(expiration)
+                        cacheOptions
                          );
 
         }
