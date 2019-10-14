@@ -15,10 +15,21 @@ namespace cloudscribe.Core.Storage.EFCore.MySql.Migrations
                 name: "Trusted",
                 table: "cs_User");
 
-            migrationBuilder.RenameColumn(
+            migrationBuilder.DropColumn(
                 name: "ReallyDeleteUsers",
+                table: "cs_Site");
+
+            migrationBuilder.AddColumn<bool>(
+                name: "RequireCookieConsent",
                 table: "cs_Site",
-                newName: "RequireCookieConsent");
+                type: "bit",
+                nullable: false,
+                defaultValue: true);
+
+            //migrationBuilder.RenameColumn(
+            //    name: "ReallyDeleteUsers",
+            //    table: "cs_Site",
+            //    newName: "RequireCookieConsent");
 
             migrationBuilder.AddColumn<string>(
                 name: "CookiePolicySummary",

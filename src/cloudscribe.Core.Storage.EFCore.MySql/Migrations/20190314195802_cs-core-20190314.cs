@@ -18,10 +18,18 @@ namespace cloudscribe.Core.Storage.EFCore.MySql.Migrations
                 name: "EmailLdapDbFallback",
                 table: "cs_Site");
 
-            migrationBuilder.RenameColumn(
-                name: "UseLdapAuth",
-                table: "cs_Site",
-                newName: "LdapUseSsl");
+            migrationBuilder.DropColumn(
+               name: "UseLdapAuth",
+               table: "cs_Site");
+
+            migrationBuilder.AddColumn<bool>(
+               name: "LdapUseSsl",
+               table: "cs_Site",
+               type: "bit",
+               nullable: false,
+               defaultValue: true);
+
+            
 
             migrationBuilder.AddColumn<string>(
                 name: "LdapUserDNFormat",
