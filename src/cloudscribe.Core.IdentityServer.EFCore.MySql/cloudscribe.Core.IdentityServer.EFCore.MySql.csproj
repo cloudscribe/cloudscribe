@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <Description>MySql Entity Framework configuration and operational stores for IdentityServer4 cloudscribe multi-tenant identity integration</Description>
-    <Version>4.0.0-preview20191005</Version>
+    <Version>4.0.0-rc20191014</Version>
 
 
     <Authors>Joe Audette</Authors>
@@ -37,7 +37,7 @@
     <PackageReference Include="Microsoft.EntityFrameworkCore.Relational" Version="3.0.0" />
     <PackageReference Include="Microsoft.Extensions.Configuration.FileExtensions" Version="3.0.0" />
     <PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="3.0.0" />
-    <PackageReference Include="Pomelo.EntityFrameworkCore.MySql" Version="2.2.1-*" />
+    <PackageReference Include="Pomelo.EntityFrameworkCore.MySql" Version="3.0.0-*" />
     
   </ItemGroup>
 
