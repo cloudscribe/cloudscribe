@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Localization;
+using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
@@ -31,20 +32,20 @@ namespace cloudscribe.Core.Web.Localization
             if (!string.IsNullOrWhiteSpace(segments.FirstSegment))
             {
                 var matchingUICulture = _supportedUICultures.Where(x => 
-                x.Name == segments.FirstSegment 
-                || x.TwoLetterISOLanguageName == segments.FirstSegment
-                || x.Name == segments.SecondSegment
-                || x.TwoLetterISOLanguageName == segments.SecondSegment
+                x.Name.Equals(segments.FirstSegment, StringComparison.InvariantCultureIgnoreCase) 
+                || x.TwoLetterISOLanguageName.Equals(segments.FirstSegment, StringComparison.InvariantCultureIgnoreCase)
+                || x.Name.Equals(segments.SecondSegment, StringComparison.InvariantCultureIgnoreCase)
+                || x.TwoLetterISOLanguageName.Equals(segments.SecondSegment, StringComparison.InvariantCultureIgnoreCase)
                 ).FirstOrDefault();
 
                 CultureInfo mainCulture = null;
                 if (_supportedCultures != null)
                 {
                     mainCulture = _supportedCultures.Where(x => 
-                    x.Name == segments.FirstSegment 
-                    || x.TwoLetterISOLanguageName == segments.FirstSegment
-                    || x.Name == segments.SecondSegment
-                    || x.TwoLetterISOLanguageName == segments.SecondSegment
+                    x.Name.Equals(segments.FirstSegment,StringComparison.InvariantCultureIgnoreCase)
+                    || x.TwoLetterISOLanguageName.Equals(segments.FirstSegment, StringComparison.InvariantCultureIgnoreCase)
+                    || x.Name.Equals(segments.SecondSegment, StringComparison.InvariantCultureIgnoreCase)
+                    || x.TwoLetterISOLanguageName.Equals(segments.SecondSegment, StringComparison.InvariantCultureIgnoreCase)
                     ).FirstOrDefault();
                 }
                 if (matchingUICulture != null)
