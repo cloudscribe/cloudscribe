@@ -1,7 +1,7 @@
 ﻿// Licensed under the Apache License, Version 2.0
 // Author:					Joe Audette
 // Created:					2015-11-16
-// Last Modified:			2019-09-02
+// Last Modified:			2019-10-19
 // 
 
 
@@ -1508,7 +1508,7 @@ namespace cloudscribe.Core.Storage.EFCore.Common
 
                 var items = await query
                     .AsNoTracking()
-                    .SingleOrDefaultAsync<IUserToken>(cancellationToken)
+                    .SingleOrDefaultAsync<UserToken>(cancellationToken)
                     .ConfigureAwait(false);
 
                 return items;
