@@ -52,6 +52,25 @@ namespace Microsoft.Extensions.DependencyInjection
             return services;
         }
 
+        public static IRouteBuilder AddCloudscribeFileManagerRoutes(this IRouteBuilder routes)
+        {
+            routes.MapRoute(
+               name: "filemanagerjs",
+               template: "filemanager/js/{*slug}"
+               , defaults: new { controller = "FileManager", action = "js" }
+               );
+
+            routes.MapRoute(
+               name: "filemanagercss",
+               template: "filemanager/css/{*slug}"
+               , defaults: new { controller = "FileManager", action = "css" }
+               );
+
+            
+
+            return routes;
+        }
+
         public static IEndpointRouteBuilder AddCloudscribeFileManagerRoutes(this IEndpointRouteBuilder routes)
         {
             routes.MapControllerRoute(
