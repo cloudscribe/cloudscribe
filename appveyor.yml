@@ -11,9 +11,9 @@ init:
 build_script:
   - dotnet restore
   - dotnet build -c Release
-test_script:
-  - dotnet test -c Release .\test\cloudscribe.Core.Web.Test\cloudscribe.Core.Web.Test.csproj
-clone_depth: 1
-test: on
+# test_script:
+#  - dotnet test -c Release .\test\cloudscribe.Core.Web.Test\cloudscribe.Core.Web.Test.csproj
+# clone_depth: 1
+# test: on
 
   
