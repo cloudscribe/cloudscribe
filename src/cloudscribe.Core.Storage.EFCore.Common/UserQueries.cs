@@ -1449,7 +1449,7 @@ namespace cloudscribe.Core.Storage.EFCore.Common
 
                 var items = await query
                     .AsNoTracking()
-                    .SingleOrDefaultAsync<IUserLogin>(cancellationToken)
+                    .SingleOrDefaultAsync<UserLogin>(cancellationToken)
                     .ConfigureAwait(false);
 
                 return items;
@@ -1474,10 +1474,10 @@ namespace cloudscribe.Core.Storage.EFCore.Common
 
                 var items = await query
                     .AsNoTracking()
-                    .ToListAsync<IUserLogin>(cancellationToken)
+                    .ToListAsync<UserLogin>(cancellationToken)
                     .ConfigureAwait(false);
 
-                return items;
+                return items.ToList<IUserLogin>();
             }
 
         }
@@ -1573,7 +1573,7 @@ namespace cloudscribe.Core.Storage.EFCore.Common
 
         }
         
-        public Task<int> CountUserLocationsByUser(
+        public async Task<int> CountUserLocationsByUser(
             Guid siteId,
             Guid userId,
             CancellationToken cancellationToken = default(CancellationToken)
@@ -1583,7 +1583,7 @@ namespace cloudscribe.Core.Storage.EFCore.Common
 
             using (var dbContext = _contextFactory.CreateContext())
             {
-                return dbContext.UserLocations
+                return await dbContext.UserLocations
                 .Where(x => x.UserId == userId)
                 .CountAsync<UserLocation>(cancellationToken);
             }
@@ -1602,6 +1602,11 @@ namespace cloudscribe.Core.Storage.EFCore.Common
 
             int offset = (pageSize * pageNumber) - pageSize;
 
+            var result = new PagedResult<IUserLocation>();
+            
+            result.PageNumber = pageNumber;
+            result.PageSize = pageSize;
+
             using (var dbContext = _contextFactory.CreateContext())
             {
                 var query = dbContext.UserLocations
@@ -1613,21 +1618,20 @@ namespace cloudscribe.Core.Storage.EFCore.Common
 
                 ;
 
-
                 var data = await query
                     .AsNoTracking()
-                    .ToListAsync<IUserLocation>(cancellationToken)
+                    .ToListAsync<UserLocation>(cancellationToken)
                     .ConfigureAwait(false);
 
-                var result = new PagedResult<IUserLocation>();
-                result.Data = data;
-                result.PageNumber = pageNumber;
-                result.PageSize = pageSize;
-                result.TotalItems = await CountUserLocationsByUser(siteId, userId, cancellationToken).ConfigureAwait(false);
-                return result;
+                result.Data = data.ToList<IUserLocation>();
+
+
             }
 
-            
+            result.TotalItems = await CountUserLocationsByUser(siteId, userId, cancellationToken).ConfigureAwait(false);
+            return result;
+
+
 
         }
 
