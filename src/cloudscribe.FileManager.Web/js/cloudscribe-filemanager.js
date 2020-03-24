@@ -661,7 +661,7 @@
                     $('#fileList').append($("<ul class='filelist'></ul>"));
                    
                     var allowedFiles = fileManager.allowedFiles.split('|');
-                    var regx = new RegExp("([a-zA-Z0-9\s_\\.\-:])+(" + allowedFiles.join('|') + ")$");
+                    var regx = new RegExp("([a-zA-Z0-9\u0600-\u06FF\s_\\.\-:])+(" + allowedFiles.join('|') + ")$");
                     var j = 0;
                     var k = data.files.length;
                     //alert(k);
