@@ -70,6 +70,9 @@ $(function () {
                                     if (data[0].resizedUrl) {
                                         var md = "[![](" + data[0].resizedUrl + ")](" + data[0].originalUrl + ")";
                                         instance.replaceSelection(md);
+                                    } else {
+                                        var md = "![](" + data[0].originalUrl + ")";
+                                        instance.replaceSelection(md);                                        
                                     }
                                 }
                             });
