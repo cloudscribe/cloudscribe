@@ -6,10 +6,14 @@
     ViewData["Site"] = Model.Tenant;
 }
 <p>
-    Please confirm your account by clicking this link: <a href="@Model.ConfirmationUrl">link</a>
+    Please confirm your account by clicking this <a href="@Model.ConfirmationUrl">link</a>.
 </p>
 <p>
-    Or submit this codeon the website form.
+    Or submit this code on the website form.
 </p>
-<textarea id="confirmcode" rows="5" cols="55">@Model.ConfirmationCode</textarea>
 
+<table border="0" cellspacing="0" cellpadding="5">
+<tr>
+    <td style="word-break:break-all; border:1px solid black; width:500px;">@Model.ConfirmationCode</td>
+</tr>
+</table>
