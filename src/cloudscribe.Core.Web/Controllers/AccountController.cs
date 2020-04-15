@@ -578,6 +578,12 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
 
                 if (result.SignInResult.Succeeded || (result.SignInResult.IsNotAllowed && result.User != null))
                 {
+                    //only send the new account notification email if we don't require account approval or email verification
+                    if (! (CurrentSite.RequireApprovalBeforeLogin || CurrentSite.RequireConfirmedEmail))
+                    {
+                        await EmailSender.NewAccountAdminNotification(CurrentSite, result.User).ConfigureAwait(false);
+                    }
+
                     await CustomRegistration.HandleRegisterPostSuccess(
                         CurrentSite,
                         model,
@@ -919,6 +925,8 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
             {
                 return this.RedirectToSiteRoot(CurrentSite);
             }
+
+            bool? isEmailAlreadyConfirmed = await AccountService.IsEmailConfirmedAsync(userId);
             
             var result = await AccountService.ConfirmEmailAsync(userId, code);
             
@@ -934,8 +942,15 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
                     await EmailSender.AccountPendingApprovalAdminNotification(CurrentSite, result.User).ConfigureAwait(false);
                     return RedirectToAction("PendingApproval", new { userId = result.User.Id, didSend = true });      
                 }
-                else if(!string.IsNullOrWhiteSpace(returnUrl))
+                
+                //only send the new account notification email if the user is confirming their email for the first time 
+                if(isEmailAlreadyConfirmed == false)
                 {
+                    await EmailSender.NewAccountAdminNotification(CurrentSite, result.User).ConfigureAwait(false);
+                }
+
+                if(!string.IsNullOrWhiteSpace(returnUrl))
+                {                    
                     // if we have a return url we should just go ahead and redirect to login
                     this.AlertSuccess(StringLocalizer["Thank you for confirming your email."], true);
                     return RedirectToAction("Login", new { returnUrl });

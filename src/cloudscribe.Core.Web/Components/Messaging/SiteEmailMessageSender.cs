@@ -227,6 +227,52 @@ namespace cloudscribe.Core.Web.Components.Messaging
 
         }
 
+        public async Task NewAccountAdminNotification(
+            ISiteContext siteSettings,
+            IUserContext user)
+        {
+            if (siteSettings.AccountApprovalEmailCsv.Length == 0) { return; }
+            
+            string subject = _sr["New Account"];
+
+            var sender = await _emailSenderResolver.GetEmailSender(siteSettings.Id.ToString());
+            if (sender == null)
+            {
+                var logMessage = $"failed to send new account notifications to admins because email settings are not populated for site {siteSettings.SiteName}";
+                _log.LogError(logMessage);
+                return;
+            }
+
+            var model = new NewAccountEmailViewModel
+            {
+                Tenant = siteSettings,
+                User = user
+            };
+
+            try
+            {
+                var plainTextMessage
+                   = await _viewRenderer.RenderViewAsString<NewAccountEmailViewModel>("EmailTemplates/NewAccountAdminNotificationTextEmail", model).ConfigureAwait(false);
+
+                var htmlMessage
+                    = await _viewRenderer.RenderViewAsString<NewAccountEmailViewModel>("EmailTemplates/NewAccountAdminNotificationHtmlEmail", model).ConfigureAwait(false);
+
+                await sender.SendEmailAsync(
+                    siteSettings.AccountApprovalEmailCsv,
+                    siteSettings.DefaultEmailFromAddress,
+                    subject,
+                    plainTextMessage,
+                    htmlMessage,
+                    configLookupKey: siteSettings.Id.ToString()
+                    ).ConfigureAwait(false);
+            }
+            catch (Exception ex)
+            {
+                _log.LogError("error sending new account notification to admins: " + ex.Message + " stacktrace: " + ex.StackTrace);
+            }
+
+        }
+
         public async Task SendAccountApprovalNotificationAsync(
             ISiteContext siteSettings,
             string toAddress,

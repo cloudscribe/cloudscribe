@@ -19,6 +19,7 @@ namespace cloudscribe.Core.Web.Components
         Task<bool> AcceptRegistrationAgreement(ClaimsPrincipal principal);
         AuthenticationProperties ConfigureExternalAuthenticationProperties(string provider, string returnUrl = null);
         Task<VerifyEmailResult> ConfirmEmailAsync(string userId, string code);
+        Task<bool?> IsEmailConfirmedAsync(string userId);
         Task<VerifyEmailInfo> GetEmailVerificationInfo(Guid userId);
         Task<List<AuthenticationScheme>> GetExternalAuthenticationSchemes();
         Task<ResetPasswordInfo> GetPasswordResetInfo(string email);

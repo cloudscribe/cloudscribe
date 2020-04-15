@@ -35,7 +35,7 @@ namespace cloudscribe.Core.Web.ViewModels.SiteSettings
         [Display(Name = "Require Admin Account Approval")]
         public bool RequireApprovalBeforeLogin { get; set; }
 
-        [Display(Name = "Email addresses (csv) to notify of new unapproved users")]
+        [Display(Name = "Email addresses (csv) to notify of new users")]
         public string AccountApprovalEmailCsv { get; set; } = string.Empty;
 
         [Display(Name = "Allow Persistent Login")]
