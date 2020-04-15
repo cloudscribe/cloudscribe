@@ -1,0 +1,8 @@
+@model cloudscribe.Core.Web.ViewModels.Email.NewAccountEmailViewModel
+
+@{
+    Layout = "_LayoutEmailNotification";
+    ViewData["Title"] = "New User Account";
+    ViewData["Site"] = Model.Tenant;
+}
+A new user just registered at @Model.Tenant.SiteName with email address @Model.User.Email
