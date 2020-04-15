@@ -926,7 +926,7 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
                 return this.RedirectToSiteRoot(CurrentSite);
             }
 
-            bool? isEmailAlreadyConfirmed = await AccountService.IsEmailConfirmedAsync(userId, code);
+            bool? isEmailAlreadyConfirmed = await AccountService.IsEmailConfirmedAsync(userId);
             
             var result = await AccountService.ConfirmEmailAsync(userId, code);
             

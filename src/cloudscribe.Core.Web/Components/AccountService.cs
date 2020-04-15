@@ -667,7 +667,7 @@ namespace cloudscribe.Core.Web.Components
             return new VerifyEmailResult(userContext, result);
         }
 
-        public virtual async Task<bool?> IsEmailConfirmedAsync(string userId, string code)
+        public virtual async Task<bool?> IsEmailConfirmedAsync(string userId)
         {
             IUserContext userContext = null;
             IdentityResult result = IdentityResult.Failed(null);
