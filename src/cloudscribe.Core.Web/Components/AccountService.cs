@@ -667,6 +667,21 @@ namespace cloudscribe.Core.Web.Components
             return new VerifyEmailResult(userContext, result);
         }
 
+        public virtual async Task<bool?> IsEmailConfirmedAsync(string userId, string code)
+        {
+            IUserContext userContext = null;
+            IdentityResult result = IdentityResult.Failed(null);
+
+            var user = await UserManager.FindByIdAsync(userId);
+            if(user != null)
+            {
+                userContext = new UserContext(user);
+                return userContext.EmailConfirmed;
+            }
+            //return bool? null if not a valid user
+            return null;
+        }
+
         public virtual async Task<IUserContext> GetTwoFactorAuthenticationUserAsync()
         {
             var user = await SignInManager.GetTwoFactorAuthenticationUserAsync();
