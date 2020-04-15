@@ -578,6 +578,11 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
 
                 if (result.SignInResult.Succeeded || (result.SignInResult.IsNotAllowed && result.User != null))
                 {
+                    if (! (CurrentSite.RequireApprovalBeforeLogin || CurrentSite.RequireConfirmedEmail))
+                    {
+                        await EmailSender.NewAccountAdminNotification(CurrentSite, result.User).ConfigureAwait(false);
+                    }
+
                     await CustomRegistration.HandleRegisterPostSuccess(
                         CurrentSite,
                         model,
@@ -934,8 +939,11 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
                     await EmailSender.AccountPendingApprovalAdminNotification(CurrentSite, result.User).ConfigureAwait(false);
                     return RedirectToAction("PendingApproval", new { userId = result.User.Id, didSend = true });      
                 }
-                else if(!string.IsNullOrWhiteSpace(returnUrl))
-                {
+                
+                await EmailSender.NewAccountAdminNotification(CurrentSite, result.User).ConfigureAwait(false);
+
+                if(!string.IsNullOrWhiteSpace(returnUrl))
+                {                    
                     // if we have a return url we should just go ahead and redirect to login
                     this.AlertSuccess(StringLocalizer["Thank you for confirming your email."], true);
                     return RedirectToAction("Login", new { returnUrl });

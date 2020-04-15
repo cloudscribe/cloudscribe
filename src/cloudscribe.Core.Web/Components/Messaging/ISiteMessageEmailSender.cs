@@ -35,6 +35,10 @@ namespace cloudscribe.Core.Web.Components.Messaging
             ISiteContext siteSettings,
             IUserContext user);
 
+        Task NewAccountAdminNotification(
+            ISiteContext siteSettings,
+            IUserContext user);
+
         Task SendAccountApprovalNotificationAsync(
             ISiteContext siteSettings,
             string toAddress,
