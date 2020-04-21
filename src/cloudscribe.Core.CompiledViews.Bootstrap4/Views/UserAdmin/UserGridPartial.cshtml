@@ -57,17 +57,17 @@
                         asp-route-userId="@item.Id">@sr["Manage"]</a>
                 </span>
             </td>
-            <td class="usergrid-column2">
+            <td class="text-break usergrid-column2">
                 <span>@tzHelper.ConvertToLocalTime(item.CreatedUtc, Model.TimeZoneId).ToString("g")</span>                
             </td>
             <td class="usergrid-column3">
                 <span><img gravatar-email="@item.Email" gravatar-enabled="@themeSettings.AllowGravatar" override-url="@item.AvatarUrl" disabled-default-url="@themeSettings.DefaultAvatarUrl" gravatar-size="30" /></span>
             </td>
-            <td class="usergrid-column4">
+            <td class="text-break usergrid-column4">
                 <span>@Html.DisplayFor(modelItem => item.Email) /
                 @Html.DisplayFor(modelItem => item.UserName)</span>
             </td>
-            <td class="usergrid-column5">
+            <td class="text-break usergrid-column5">
                 <span>
                     <a asp-action="UserActivity" asp-controller="UserAdmin"
                         asp-route-siteId="@Model.SiteId"
