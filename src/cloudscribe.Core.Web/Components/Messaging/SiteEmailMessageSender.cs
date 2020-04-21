@@ -185,7 +185,8 @@ namespace cloudscribe.Core.Web.Components.Messaging
             ISiteContext siteSettings,
             IUserContext user)
         {
-            if (siteSettings.AccountApprovalEmailCsv.Length == 0) { return; }
+            
+            if (siteSettings.AccountApprovalEmailCsv == null || siteSettings.AccountApprovalEmailCsv.Trim().Length == 0) { return; }
             
             string subject = _sr["New Account Pending Approval"];
 
@@ -231,7 +232,7 @@ namespace cloudscribe.Core.Web.Components.Messaging
             ISiteContext siteSettings,
             IUserContext user)
         {
-            if (siteSettings.AccountApprovalEmailCsv.Length == 0) { return; }
+            if (siteSettings.AccountApprovalEmailCsv == null || siteSettings.AccountApprovalEmailCsv.Trim().Length == 0) { return; }
             
             string subject = _sr["New Account"];
 
