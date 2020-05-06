@@ -437,6 +437,8 @@ namespace cloudscribe.Core.Storage.EFCore.Common
                         || (x.FirstName != null && x.FirstName.Contains(searchInput))
                         || (x.LastName != null && x.LastName.Contains(searchInput))
                         || x.DisplayName.Contains(searchInput)
+                        || x.NormalizedEmail.Contains(searchInput.ToUpperInvariant())
+                        || x.NormalizedUserName.Contains(searchInput.ToUpperInvariant())
                         )
                   )
                   select x;
