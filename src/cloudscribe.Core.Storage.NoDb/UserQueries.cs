@@ -470,13 +470,11 @@ namespace cloudscribe.Core.Storage.NoDb
                       x.SiteId == siteId
                         && (
                         searchInput == string.Empty
-                        || x.Email.Contains(searchInput)
-                        || x.UserName.Contains(searchInput)
-                        || (x.FirstName != null && x.FirstName.Contains(searchInput))
-                        || (x.LastName != null && x.LastName.Contains(searchInput))
-                        || x.DisplayName.Contains(searchInput)
-                        || x.NormalizedEmail.Contains(searchInput.ToUpperInvariant())
-                        || x.NormalizedUserName.Contains(searchInput.ToUpperInvariant())
+                        || x.Email.Contains(searchInput,System.StringComparison.OrdinalIgnoreCase)
+                        || x.UserName.Contains(searchInput,System.StringComparison.OrdinalIgnoreCase)
+                        || (x.FirstName != null && x.FirstName.Contains(searchInput,System.StringComparison.OrdinalIgnoreCase))
+                        || (x.LastName != null && x.LastName.Contains(searchInput,System.StringComparison.OrdinalIgnoreCase))
+                        || x.DisplayName.Contains(searchInput,System.StringComparison.OrdinalIgnoreCase)
                         )
                   )
                   select new UserInfo
