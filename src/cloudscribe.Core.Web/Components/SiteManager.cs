@@ -298,6 +298,13 @@ namespace cloudscribe.Core.Web.Components
             string adminPassword
             )
         {
+            // New admin user for a tenant site should belong to the parent site,
+            // if this related sites mode is used
+            if (_multiTenantOptions.UseRelatedSitesMode && _multiTenantOptions.RelatedSiteId != Guid.Empty)
+            {
+                site.Id = _multiTenantOptions.RelatedSiteId;
+            }
+
             await EnsureRequiredRoles(site);
             var adminRole = await _userQueries.FetchRole(site.Id, "Administrators", CancellationToken);
 
