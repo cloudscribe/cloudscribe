@@ -421,6 +421,8 @@ namespace cloudscribe.Core.Storage.EFCore.Common
             //sortMode: 0 = DisplayName asc, 1 = JoinDate desc, 2 = Last, First
 
             int offset = (pageSize * pageNumber) - pageSize;
+            
+            var searchInputUpper = searchInput.Trim().ToUpperInvariant();
 
             using (var dbContext = _contextFactory.CreateContext())
             {
@@ -432,11 +434,11 @@ namespace cloudscribe.Core.Storage.EFCore.Common
                       x.SiteId == siteId
                         && (
                         searchInput == string.Empty
-                        || x.Email.Contains(searchInput,System.StringComparison.OrdinalIgnoreCase)
-                        || x.UserName.Contains(searchInput,System.StringComparison.OrdinalIgnoreCase)
-                        || (x.FirstName != null && x.FirstName.Contains(searchInput,System.StringComparison.OrdinalIgnoreCase))
-                        || (x.LastName != null && x.LastName.Contains(searchInput,System.StringComparison.OrdinalIgnoreCase))
-                        || x.DisplayName.Contains(searchInput,System.StringComparison.OrdinalIgnoreCase)
+                        || x.NormalizedEmail.Contains(searchInputUpper)
+                        || x.NormalizedUserName.Contains(searchInputUpper)
+                        || (x.FirstName != null && x.FirstName.ToUpperInvariant().Contains(searchInputUpper))
+                        || (x.LastName != null && x.LastName.ToUpperInvariant().Contains(searchInputUpper))
+                        || x.DisplayName.ToUpperInvariant().Contains(searchInputUpper)
                         )
                   )
                   select x;
