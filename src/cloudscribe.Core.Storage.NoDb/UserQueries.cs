@@ -462,7 +462,7 @@ namespace cloudscribe.Core.Storage.NoDb
 
             int offset = (pageSize * pageNumber) - pageSize;
 
-            var searchInputUpper = searchInput.Trim().ToUpperInvariant();
+            var searchInputUpper = searchInput.Trim().ToUpper();
 
             IQueryable<IUserInfo> query
                 = from x in users
@@ -474,9 +474,9 @@ namespace cloudscribe.Core.Storage.NoDb
                         searchInput == string.Empty
                         || x.NormalizedEmail.Contains(searchInputUpper)
                         || x.NormalizedUserName.Contains(searchInputUpper)
-                        || (x.FirstName != null && x.FirstName.ToUpperInvariant().Contains(searchInputUpper))
-                        || (x.LastName != null && x.LastName.ToUpperInvariant().Contains(searchInputUpper))
-                        || x.DisplayName.ToUpperInvariant().Contains(searchInputUpper)
+                        || (x.FirstName != null && x.FirstName.ToUpper().Contains(searchInputUpper))
+                        || (x.LastName != null && x.LastName.ToUpper().Contains(searchInputUpper))
+                        || x.DisplayName.ToUpper().Contains(searchInputUpper)
                         )
                   )
                   select new UserInfo

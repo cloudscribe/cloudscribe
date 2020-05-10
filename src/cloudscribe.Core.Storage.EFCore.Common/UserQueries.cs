@@ -385,6 +385,7 @@ namespace cloudscribe.Core.Storage.EFCore.Common
             string searchInput,
             CancellationToken cancellationToken = default(CancellationToken))
         {
+            string searchInputUpper = searchInput.Trim().ToUpper();
 
             using (var dbContext = _contextFactory.CreateContext())
             {
@@ -394,11 +395,11 @@ namespace cloudscribe.Core.Storage.EFCore.Common
                     x.SiteId == siteId
                     && (
                     searchInput == string.Empty
-                    || x.Email.Contains(searchInput)
-                    || x.UserName.Contains(searchInput)
-                    || (x.FirstName != null && x.FirstName.Contains(searchInput))
-                    || (x.LastName != null && x.LastName.Contains(searchInput))
-                    || x.DisplayName.Contains(searchInput)
+                    || x.NormalizedEmail.Contains(searchInputUpper)
+                    || x.NormalizedUserName.Contains(searchInputUpper)
+                    || (x.FirstName != null && x.FirstName.ToUpper().Contains(searchInputUpper))
+                    || (x.LastName != null && x.LastName.ToUpper().Contains(searchInputUpper))
+                    || x.DisplayName.ToUpper().Contains(searchInputUpper) 
                     )
                 )
                 , cancellationToken
@@ -422,26 +423,27 @@ namespace cloudscribe.Core.Storage.EFCore.Common
 
             int offset = (pageSize * pageNumber) - pageSize;
             
-            var searchInputUpper = searchInput.Trim().ToUpperInvariant();
+            string searchInputUpper = searchInput.Trim().ToUpper();
 
             using (var dbContext = _contextFactory.CreateContext())
-            {
-                IQueryable<IUserInfo> query
-                = from x in dbContext.Users
+            {                
 
-                  where
-                  (
-                      x.SiteId == siteId
+                IQueryable<IUserInfo> query = from x in dbContext.Users
+
+                where
+                (
+                    x.SiteId == siteId
                         && (
                         searchInput == string.Empty
                         || x.NormalizedEmail.Contains(searchInputUpper)
                         || x.NormalizedUserName.Contains(searchInputUpper)
-                        || (x.FirstName != null && x.FirstName.ToUpperInvariant().Contains(searchInputUpper))
-                        || (x.LastName != null && x.LastName.ToUpperInvariant().Contains(searchInputUpper))
-                        || x.DisplayName.ToUpperInvariant().Contains(searchInputUpper)
+                        || (x.FirstName != null && x.FirstName.ToUpper().Contains(searchInputUpper))
+                        || (x.LastName != null && x.LastName.ToUpper().Contains(searchInputUpper))
+                        || x.DisplayName.ToUpper().Contains(searchInputUpper)                            
                         )
-                  )
-                  select x;
+                )
+                select x; 
+
                 //select new UserInfo
                 //{
                 //    Id = x.Id,

@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <Description>MySql Entity Framework Core implementation of cloudscribe core storage</Description>
-    <Version>4.0.4</Version>
+    <Version>4.0.5</Version>
     <Authors>Joe Audette</Authors>
     <TargetFramework>netstandard2.1</TargetFramework>
     
