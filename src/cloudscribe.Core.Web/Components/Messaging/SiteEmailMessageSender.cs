@@ -186,14 +186,19 @@ namespace cloudscribe.Core.Web.Components.Messaging
             IUserContext user)
         {
             
-            if (siteSettings.AccountApprovalEmailCsv == null || siteSettings.AccountApprovalEmailCsv.Trim().Length == 0) { return; }
+            if (siteSettings.AccountApprovalEmailCsv == null || siteSettings.AccountApprovalEmailCsv.Trim().Length == 0) 
+            { 
+                var logMessage = $"failed to send new account approval notifications to admins because email settings are not populated for site {siteSettings.SiteName}";
+                _log.LogError(logMessage);
+                return; 
+            }
             
             string subject = _sr["New Account Pending Approval"];
 
             var sender = await _emailSenderResolver.GetEmailSender(siteSettings.Id.ToString());
             if (sender == null)
             {
-                var logMessage = $"failed to send new account notifications to admins because email settings are not populated for site {siteSettings.SiteName}";
+                var logMessage = $"failed to send new account approval notifications to admins because email settings are not populated for site {siteSettings.SiteName}";
                 _log.LogError(logMessage);
                 return;
             }
