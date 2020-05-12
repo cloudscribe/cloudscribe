@@ -423,17 +423,19 @@ namespace cloudscribe.Core.Storage.NoDb
 
             var allUsers = await userQueries.GetAllAsync(projectId, cancellationToken).ConfigureAwait(false);
 
+            string searchInputUpper = searchInput.Trim().ToUpper();
+
             return allUsers.Where(
                 x =>
                 (
                     x.SiteId == siteId
                     && (
                     searchInput == string.Empty
-                    || x.Email.Contains(searchInput)
-                    || x.UserName.Contains(searchInput)
-                    || (x.FirstName != null && x.FirstName.Contains(searchInput))
-                    || (x.LastName != null &&  x.LastName.Contains(searchInput))
-                    || x.DisplayName.Contains(searchInput)
+                    || x.NormalizedEmail.Contains(searchInputUpper)
+                    || x.NormalizedUserName.Contains(searchInputUpper)
+                    || (x.FirstName != null && x.FirstName.ToUpper().Contains(searchInputUpper))
+                    || (x.LastName != null && x.LastName.ToUpper().Contains(searchInputUpper))
+                    || x.DisplayName.ToUpper().Contains(searchInputUpper)
                     )
                 )
 
@@ -462,7 +464,7 @@ namespace cloudscribe.Core.Storage.NoDb
 
             int offset = (pageSize * pageNumber) - pageSize;
 
-            var searchInputUpper = searchInput.Trim().ToUpper();
+            string searchInputUpper = searchInput.Trim().ToUpper();
 
             IQueryable<IUserInfo> query
                 = from x in users
