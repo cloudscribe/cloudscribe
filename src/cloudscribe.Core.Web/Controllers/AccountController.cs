@@ -573,6 +573,48 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
                 {
                     return View(viewName, model);
                 }
+
+                var isExistingAccount = await AccountService.IsExistingAccount(model.Email);
+                if(isExistingAccount) 
+                {                    
+                    Log.LogInformation($"registration did not succeed for {model.Email} due to the email already existing");       
+
+                    var existingUser = await AccountService.GetUserInfo(model.Email);
+
+                    bool needsConfirming = CurrentSite.RequireConfirmedEmail && ! existingUser.EmailConfirmed;
+                    bool needsApproval = CurrentSite.RequireApprovalBeforeLogin && ! existingUser.AccountApproved;
+
+                    string resetUrl = Url.Action("ForgotPassword", "Account", null, protocol: HttpContext.Request.Scheme);
+                    string loginUrl = Url.Action("Login", "Account", null, protocol: HttpContext.Request.Scheme);
+                    
+                    string confirmUrl = null;
+                    
+                    if(needsConfirming)
+                    {
+                        var verifyEmailInfo = await AccountService.GetEmailVerificationInfo(existingUser.Id);
+                        confirmUrl = Url.Action(
+                            "ConfirmEmail",
+                            "Account",
+                            new { UserId = existingUser.Id, Code = verifyEmailInfo.EmailVerificationToken },
+                            protocol: HttpContext.Request.Scheme
+                        );
+                    }
+
+                    await EmailSender.SendAccountExistsEmailAsync(
+                        CurrentSite,
+                        model.Email,
+                        StringLocalizer["A new user registration was attempted with your email address"],
+                        resetUrl,
+                        loginUrl,
+                        confirmUrl,
+                        needsApproval);
+
+                    this.AlertSuccess(StringLocalizer["Please check your email inbox, we just sent you a link that you need to click to confirm your account"], true);
+                    //var guid = Guid.NewGuid(); //use a random Guid
+                    var guid = existingUser.Id;
+                    return RedirectToAction("EmailConfirmationRequired", new { userId = guid, didSend = true, returnUrl });
+
+                }
                 
                 var result = await AccountService.TryRegister(model, ModelState, HttpContext, CustomRegistration);
 

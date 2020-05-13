@@ -19,6 +19,18 @@ namespace cloudscribe.Core.Web.Components.Messaging
             return Task.CompletedTask;
         }
 
+        public Task SendAccountExistsEmailAsync(
+            ISiteContext siteSettings,
+            string toAddress, 
+            string subject,
+            string resetUrl,
+            string loginUrl,
+            string confirmUrl,
+            bool stillNeedsApproval)
+        {
+            return Task.CompletedTask;
+        }
+
         public Task SendSecurityCodeEmailAsync(
             ISiteContext siteSettings,
             string toAddress,

@@ -1,0 +1,27 @@
+@model cloudscribe.Core.Web.ViewModels.Email.AccountExistsEmailViewModel 
+
+@{
+    Layout = "_LayoutEmailNotification";
+    ViewData["Title"] = "A new user registration was attempted with your email address";
+    ViewData["Site"] = Model.Tenant;
+}
+
+<p>An attempt was made to register a new account at @Model.Tenant.SiteName using the email address on your current
+@Model.Tenant.SiteName account.</p>
+
+<p>The registration attempt was blocked, but if this was you then you can access your
+existing account by logging in here: <a href="@Model.LoginUrl">link</a></p>
+
+<p>If you have forgotten your login details, then you can reset your password here: <a href="@Model.ResetUrl">link</a></p>
+
+@if (@Model.ConfirmUrl != null)
+{
+<p>You may still need to confirm your email address for your account to become active. Please check for any previous
+emails from this site that asked you to confirm your email address or use this <a href="@Model.ConfirmUrl">link</a> to
+confirm your email address now.</p>    
+}
+
+@if (@Model.StillNeedsApproval)
+{
+<p>An administrator still needs to approve the account associated with this email address. Please be patient.</p>    
+}
