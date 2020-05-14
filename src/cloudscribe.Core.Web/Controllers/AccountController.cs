@@ -588,7 +588,7 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
                     string loginUrl = Url.Action("Login", "Account", null, protocol: HttpContext.Request.Scheme);
                     
                     string confirmUrl = null;
-                    
+
                     if(needsConfirming)
                     {
                         var verifyEmailInfo = await AccountService.GetEmailVerificationInfo(existingUser.Id);
@@ -610,9 +610,8 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
                         needsApproval);
 
                     this.AlertSuccess(StringLocalizer["Please check your email inbox, we just sent you a link that you need to click to confirm your account"], true);
-                    //var guid = Guid.NewGuid(); //use a random Guid
-                    var guid = existingUser.Id;
-                    return RedirectToAction("EmailConfirmationRequired", new { userId = guid, didSend = true, returnUrl });
+
+                    return RedirectToAction("EmailConfirmationRequired", new { userId = existingUser.Id, didSend = true, returnUrl });
 
                 }
                 
