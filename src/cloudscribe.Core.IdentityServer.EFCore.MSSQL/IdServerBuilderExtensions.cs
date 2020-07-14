@@ -83,11 +83,10 @@ namespace Microsoft.Extensions.DependencyInjection
                                     maxRetryDelay: TimeSpan.FromSeconds(maxConnectionRetryDelaySeconds),
                                     errorNumbersToAdd: transientSqlErrorNumbersToAdd);
                             }
-                            if(useSql2008Compatibility)
-                            {
-                                sqlOptions.UseRowNumberForPaging();
-                            }
-
+                            //if(useSql2008Compatibility)
+                            //{
+                            //    sqlOptions.UseRowNumberForPaging();  // removed in Core3.1
+                            //}
 
                         }),
                         optionsLifetime: ServiceLifetime.Singleton
@@ -111,11 +110,11 @@ namespace Microsoft.Extensions.DependencyInjection
                                     errorNumbersToAdd: transientSqlErrorNumbersToAdd);
                             }
 
-                            if (useSql2008Compatibility)
-                            {
-                                sqlOptions.UseRowNumberForPaging();
-                            }
-                            
+                            //if (useSql2008Compatibility)
+                            //{
+                            //    sqlOptions.UseRowNumberForPaging();  // removed in Core3.1
+                            //}
+
 
                         }),
                         optionsLifetime: ServiceLifetime.Singleton

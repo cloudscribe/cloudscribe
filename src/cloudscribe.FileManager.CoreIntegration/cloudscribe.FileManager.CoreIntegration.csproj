@@ -2,9 +2,9 @@
 
   <PropertyGroup>
     <Description>integration for cloudscribe Core and cloudscribe FileManager</Description>
-    <Version>4.0.2</Version>
+    <Version>4.1.0</Version>
     <Authors>Joe Audette</Authors>
-    <TargetFrameworks>netcoreapp3.0</TargetFrameworks>
+    <TargetFrameworks>netcoreapp3.1</TargetFrameworks>
     <PackageTags>cloudscribe;filemanager</PackageTags>
     <PackageIcon>icon.png</PackageIcon>
     <PackageProjectUrl>https://github.com/joeaudette/cloudscribe.SimpleContent</PackageProjectUrl>

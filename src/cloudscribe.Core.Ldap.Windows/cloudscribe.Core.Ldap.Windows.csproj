@@ -4,7 +4,7 @@
     <Description>ILdapHelper implementation for cloudscribe Core LDAP authentication support using windows compatibility shim</Description>
     <Version>3.0.0-preview20190901</Version>
     <Authors>Joe Audette</Authors>
-    <TargetFramework>netcoreapp3.0</TargetFramework>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
     <PackageTags>cloudscribe;LDAP;Active Directory</PackageTags>
     <PackageIcon>icon.png</PackageIcon>
     <PackageProjectUrl>https://github.com/cloudscribe/cloudscribe</PackageProjectUrl>
