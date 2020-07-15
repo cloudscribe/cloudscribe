@@ -138,6 +138,57 @@ namespace cloudscribe.Core.Web.Components.Messaging
 
         }
 
+        public async Task SendAccountExistsEmailAsync(
+            ISiteContext siteSettings,
+            string toAddress,
+            string subject,
+            string resetUrl,
+            string loginUrl,
+            string confirmUrl,
+            bool stillNeedsApproval)
+        {
+            var sender = await _emailSenderResolver.GetEmailSender(siteSettings.Id.ToString());
+            if (sender == null)
+            {
+                var logMessage = $"failed to send account exists email because email settings are not populated for site {siteSettings.SiteName}";
+                _log.LogError(logMessage);
+                return;
+            }
+
+            var model = new AccountExistsEmailViewModel
+            {
+                Tenant = siteSettings,
+                ResetUrl = resetUrl,
+                LoginUrl = loginUrl,
+                ConfirmUrl = confirmUrl,
+                StillNeedsApproval = stillNeedsApproval
+            };
+
+            try
+            {
+                var plainTextMessage
+                   = await _viewRenderer.RenderViewAsString<AccountExistsEmailViewModel>("EmailTemplates/AccountExistsTextEmail", model);
+
+                var htmlMessage
+                    = await _viewRenderer.RenderViewAsString<AccountExistsEmailViewModel>("EmailTemplates/AccountExistsHtmlEmail", model);
+
+                await sender.SendEmailAsync(
+                    toAddress,
+                    siteSettings.DefaultEmailFromAddress,
+                    subject,
+                    plainTextMessage,
+                    htmlMessage,
+                    configLookupKey: siteSettings.Id.ToString()
+                    ).ConfigureAwait(false);
+            }
+            catch (Exception ex)
+            {
+                _log.LogError("error sending account exists email: " + ex.Message + " stacktrace: " + ex.StackTrace);
+            }
+
+        }
+
+
         public async Task SendSecurityCodeEmailAsync(
             ISiteContext siteSettings,
             string toAddress,
