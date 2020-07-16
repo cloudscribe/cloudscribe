@@ -16,7 +16,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <None Include="icon.png" Pack="true" PackagePath="\"/>
+    <None Include="icon.png" Pack="true" PackagePath="\" />
   </ItemGroup>
 
   <ItemGroup>
@@ -24,10 +24,10 @@
   </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="cloudscribe.Pagination.Models" Version="1.1.0" />
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="3.1.0" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Relational" Version="3.1.0" />
     <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="3.1.0" />
-    <PackageReference Include="cloudscribe.Pagination.Models" Version="1.0.5" />
   </ItemGroup>
 
 

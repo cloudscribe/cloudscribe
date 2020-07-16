@@ -17,7 +17,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <None Include="icon.png" Pack="true" PackagePath="\"/>
+    <None Include="icon.png" Pack="true" PackagePath="\" />
   </ItemGroup>
 
   <ItemGroup>
@@ -30,6 +30,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="cloudscribe.Pagination.Models" Version="1.1.0" />
     <PackageReference Include="IdentityModel" Version="4.0.0" />
     
     <!--<PackageReference Include="Microsoft.AspNetCore.Authentication.Cookies" Version="2.1.2" />
@@ -68,7 +69,6 @@
     <PackageReference Include="Microsoft.Extensions.Options.ConfigurationExtensions" Version="3.0.0" />
     
     <PackageReference Include="System.Security.Claims" Version="4.3.*" />
-    <PackageReference Include="cloudscribe.Pagination.Models" Version="1.0.5" />
   </ItemGroup>
 
   

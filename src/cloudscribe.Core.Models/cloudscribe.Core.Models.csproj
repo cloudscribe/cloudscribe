@@ -16,14 +16,13 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <None Include="icon.png" Pack="true" PackagePath="\"/>
+    <None Include="icon.png" Pack="true" PackagePath="\" />
   </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="cloudscribe.Pagination.Models" Version="1.1.0" />
     <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="3.0.0" />
     <PackageReference Include="System.Data.Common" Version="4.3.0" />
-
-    <PackageReference Include="cloudscribe.Pagination.Models" Version="1.0.5" />
   </ItemGroup>
 
   <ItemGroup>
