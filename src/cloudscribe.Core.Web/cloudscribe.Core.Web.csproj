@@ -38,8 +38,8 @@
 
   <ItemGroup>
     <PackageReference Include="cloudscribe.Web.Pagination" Version="3.1.0" />
-    <PackageReference Include="cloudscribe.Web.Navigation" Version="4.0.0" />
-    <PackageReference Include="cloudscribe.Web.SiteMap.FromNavigation" Version="4.0.1" />
+    <PackageReference Include="cloudscribe.Web.Navigation" Version="4.1.0" />
+    <PackageReference Include="cloudscribe.Web.SiteMap.FromNavigation" Version="4.1.0" />
   
     <PackageReference Include="Microsoft.Extensions.Caching.Abstractions" Version="3.0.0" />
     <PackageReference Include="Microsoft.Extensions.Configuration.Abstractions" Version="3.0.0" />
