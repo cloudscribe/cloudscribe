@@ -53,12 +53,12 @@ To get started building your own features and applications with cloudscribe, [pl
 
 ##### Need Content? 
 
-Take a look at [cloudscribe.SimpleContent](https://github.com/joeaudette/cloudscribe.SimpleContent), a simple yet flexible content and blogging engine that works with cloudscribe Core
+Take a look at [cloudscribe.SimpleContent](https://github.com/joeaudette/cloudscribe.SimpleContent), a simple yet flexible content and blogging engine that works with cloudscribe Core.
 
 ##### Planned Features:
 * Implement options for Security Questions and Answers [per OWASP guidelines](https://www.owasp.org/index.php/Forgot_Password_Cheat_Sheet)
 * Implement tracking of password hash history to support scenarios where re-using old passwords is not allowed
-* MongoDB Support - I am interested in trying to implement the data repositories with MongoDB and would welcome help with that. 
+* MongoDB Support - we are interested in trying to implement the data repositories with MongoDB and would welcome help with that. 
 * Lots of miscellaneous smaller stuff
 
 ##### Screenshots
@@ -71,4 +71,4 @@ We are collecting email addresses for a potential newsletter in the future, depe
 
 If you are interested in consulting or other support services related to cloudscribe, please send an email to info [at] cloudscribe.com.
 
-I'm also on twitter @cloudscribeweb and @joeaudette
+We're also on twitter at @cloudscribeweb
