@@ -69,8 +69,11 @@ namespace Microsoft.Extensions.DependencyInjection
             bool useSql2008Compatibility = false
             )
         {
-           
-            services.AddEntityFrameworkSqlServer()
+
+            //   deprecated call in EF Core3:  .AddEntityFrameworkSqlServer()
+            //   https://github.com/aspnet/EntityFrameworkCore/issues/12905
+
+            services // .AddEntityFrameworkSqlServer()
                 .AddDbContext<ConfigurationDbContext>(options =>
                     options.UseSqlServer(connectionString,
                         sqlServerOptionsAction: sqlOptions =>
@@ -95,8 +98,11 @@ namespace Microsoft.Extensions.DependencyInjection
             services.AddCloudscribeCoreIdentityServerStores();
 
             services.AddScoped<IConfigurationDbContext, ConfigurationDbContext>();
-            
-            services.AddEntityFrameworkSqlServer()
+
+            //   deprecated call in EF Core3:  .AddEntityFrameworkSqlServer()
+            //   https://github.com/aspnet/EntityFrameworkCore/issues/12905
+
+            services // .AddEntityFrameworkSqlServer()
                 .AddDbContext<PersistedGrantDbContext>(options =>
                     options.UseSqlServer(connectionString,
                         sqlServerOptionsAction: sqlOptions =>
