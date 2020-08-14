@@ -84,7 +84,7 @@ namespace sourceDev.WebApp
 
                 return 0;
             }
-            catch(Exception ex)
+            catch
             {
                 //Log.Fatal(ex, "Host terminated unexpectedly.");
                 return -1;

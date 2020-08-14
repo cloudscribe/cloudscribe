@@ -838,5 +838,10 @@ namespace cloudscribe.Core.Web.Components
             return await UserManager.LoginIsAvailable(userId, loginName);
         }
 
+        public virtual async Task<SiteUser> GetUserInfo(string email)
+        {
+            return await UserManager.FindByNameAsync(email);
+        }
+
     }
 }

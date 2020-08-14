@@ -39,5 +39,6 @@ namespace cloudscribe.Core.Web.Components
         Task<SignInResult> TwoFactorRecoveryCodeSignInAsync(string code);
         Task<SignInResult> TwoFactorSignInAsync(string provider, string code, bool rememberMe, bool rememberBrowser);
         Task<bool> IsExistingAccount(string email);
+        Task<SiteUser> GetUserInfo(string email);
     }
 }
