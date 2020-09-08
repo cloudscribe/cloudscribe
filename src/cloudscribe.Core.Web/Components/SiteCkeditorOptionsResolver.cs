@@ -38,13 +38,24 @@ namespace cloudscribe.Core.Web.Components
             var urlHelper = _urlHelperFactory.GetUrlHelper(_actionContextAccesor.ActionContext);
 
             _options.CustomConfigPath = urlHelper.Content(_options.CustomConfigPath);
-            _options.FileBrowseUrl = urlHelper.Action("FileDialog", "FileManager", new { type = "file" });
-            _options.ImageBrowseUrl = urlHelper.Action("FileDialog", "FileManager", new { type = "image" });
-            _options.VideoBrowseUrl = urlHelper.Action("FileDialog", "FileManager", new { type = "video" });
-            _options.AudioBrowseUrl = urlHelper.Action("FileDialog", "FileManager", new { type = "audio" });
-            _options.DropFileUrl = urlHelper.Action("DropFile", "FileManager");
-            _options.CropFileUrl = urlHelper.Action("CropServerImage", "FileManager");
 
+            if(_options.FileBrowseUrl.Length>0) _options.FileBrowseUrl = urlHelper.Content(_options.FileBrowseUrl);
+            else _options.FileBrowseUrl = urlHelper.Action("FileDialog", "FileManager", new { type = "file" });
+
+            if(_options.ImageBrowseUrl.Length>0) _options.ImageBrowseUrl= urlHelper.Content(_options.ImageBrowseUrl);
+            else _options.ImageBrowseUrl = urlHelper.Action("FileDialog", "FileManager", new { type = "image" });
+
+            if(_options.VideoBrowseUrl.Length>0) _options.VideoBrowseUrl = urlHelper.Content(_options.VideoBrowseUrl);
+            else _options.VideoBrowseUrl = urlHelper.Action("FileDialog", "FileManager", new { type = "video" });
+
+            if(_options.VideoBrowseUrl.Length>0) _options.AudioBrowseUrl = urlHelper.Content(_options.AudioBrowseUrl);
+            else _options.AudioBrowseUrl = urlHelper.Action("FileDialog", "FileManager", new { type = "audio" });
+
+            if(_options.DropFileUrl.Length>0) _options.DropFileUrl = urlHelper.Content(_options.DropFileUrl);
+            else _options.DropFileUrl = urlHelper.Action("DropFile", "FileManager");
+
+            if(_options.CropFileUrl.Length>0) _options.CropFileUrl = urlHelper.Content(_options.CropFileUrl);
+            else _options.CropFileUrl = urlHelper.Action("CropServerImage", "FileManager");
 
             return Task.FromResult(_options);
         }
