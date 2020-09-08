@@ -39,23 +39,23 @@ namespace cloudscribe.Core.Web.Components
 
             _options.CustomConfigPath = urlHelper.Content(_options.CustomConfigPath);
 
-            if(_options.FileBrowseUrl.Length>0) _options.FileBrowseUrl = urlHelper.Content(_options.FileBrowseUrl);
-            else _options.FileBrowseUrl = urlHelper.Action("FileDialog", "FileManager", new { type = "file" });
+            if(string.IsNullOrEmpty(_options.FileBrowseUrl)) _options.FileBrowseUrl = urlHelper.Action("FileDialog", "FileManager", new { type = "file" });
+            else _options.FileBrowseUrl = urlHelper.Content(_options.FileBrowseUrl);
 
-            if(_options.ImageBrowseUrl.Length>0) _options.ImageBrowseUrl= urlHelper.Content(_options.ImageBrowseUrl);
-            else _options.ImageBrowseUrl = urlHelper.Action("FileDialog", "FileManager", new { type = "image" });
+            if(string.IsNullOrEmpty( _options.ImageBrowseUrl)) _options.ImageBrowseUrl = urlHelper.Action("FileDialog", "FileManager", new { type = "image" });
+            else _options.ImageBrowseUrl= urlHelper.Content(_options.ImageBrowseUrl);
 
-            if(_options.VideoBrowseUrl.Length>0) _options.VideoBrowseUrl = urlHelper.Content(_options.VideoBrowseUrl);
-            else _options.VideoBrowseUrl = urlHelper.Action("FileDialog", "FileManager", new { type = "video" });
+            if(string.IsNullOrEmpty(_options.VideoBrowseUrl)) _options.VideoBrowseUrl  = urlHelper.Action("FileDialog", "FileManager", new { type = "video" });
+            else _options.VideoBrowseUrl = urlHelper.Content(_options.VideoBrowseUrl);
 
-            if(_options.VideoBrowseUrl.Length>0) _options.AudioBrowseUrl = urlHelper.Content(_options.AudioBrowseUrl);
-            else _options.AudioBrowseUrl = urlHelper.Action("FileDialog", "FileManager", new { type = "audio" });
+            if(string.IsNullOrEmpty(_options.AudioBrowseUrl)) _options.AudioBrowseUrl = urlHelper.Action("FileDialog", "FileManager", new { type = "audio" });
+            else _options.AudioBrowseUrl = urlHelper.Content(_options.AudioBrowseUrl);
 
-            if(_options.DropFileUrl.Length>0) _options.DropFileUrl = urlHelper.Content(_options.DropFileUrl);
-            else _options.DropFileUrl = urlHelper.Action("DropFile", "FileManager");
+            if(string.IsNullOrEmpty(_options.DropFileUrl)) _options.DropFileUrl = urlHelper.Action("DropFile", "FileManager");
+            else _options.DropFileUrl = urlHelper.Content(_options.DropFileUrl);
 
-            if(_options.CropFileUrl.Length>0) _options.CropFileUrl = urlHelper.Content(_options.CropFileUrl);
-            else _options.CropFileUrl = urlHelper.Action("CropServerImage", "FileManager");
+            if(string.IsNullOrEmpty(_options.CropFileUrl)) _options.CropFileUrl = urlHelper.Action("CropServerImage", "FileManager");
+            else _options.CropFileUrl = urlHelper.Content(_options.CropFileUrl);
 
             return Task.FromResult(_options);
         }
