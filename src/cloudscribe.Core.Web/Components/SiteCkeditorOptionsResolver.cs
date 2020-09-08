@@ -38,13 +38,24 @@ namespace cloudscribe.Core.Web.Components
             var urlHelper = _urlHelperFactory.GetUrlHelper(_actionContextAccesor.ActionContext);
 
             _options.CustomConfigPath = urlHelper.Content(_options.CustomConfigPath);
-            _options.FileBrowseUrl = urlHelper.Action("FileDialog", "FileManager", new { type = "file" });
-            _options.ImageBrowseUrl = urlHelper.Action("FileDialog", "FileManager", new { type = "image" });
-            _options.VideoBrowseUrl = urlHelper.Action("FileDialog", "FileManager", new { type = "video" });
-            _options.AudioBrowseUrl = urlHelper.Action("FileDialog", "FileManager", new { type = "audio" });
-            _options.DropFileUrl = urlHelper.Action("DropFile", "FileManager");
-            _options.CropFileUrl = urlHelper.Action("CropServerImage", "FileManager");
 
+            if(string.IsNullOrWhiteSpace(_options.FileBrowseUrl)) _options.FileBrowseUrl = urlHelper.Action("FileDialog", "FileManager", new { type = "file" });
+            else _options.FileBrowseUrl = urlHelper.Content(_options.FileBrowseUrl);
+
+            if(string.IsNullOrWhiteSpace( _options.ImageBrowseUrl)) _options.ImageBrowseUrl = urlHelper.Action("FileDialog", "FileManager", new { type = "image" });
+            else _options.ImageBrowseUrl= urlHelper.Content(_options.ImageBrowseUrl);
+
+            if(string.IsNullOrWhiteSpace(_options.VideoBrowseUrl)) _options.VideoBrowseUrl  = urlHelper.Action("FileDialog", "FileManager", new { type = "video" });
+            else _options.VideoBrowseUrl = urlHelper.Content(_options.VideoBrowseUrl);
+
+            if(string.IsNullOrWhiteSpace(_options.AudioBrowseUrl)) _options.AudioBrowseUrl = urlHelper.Action("FileDialog", "FileManager", new { type = "audio" });
+            else _options.AudioBrowseUrl = urlHelper.Content(_options.AudioBrowseUrl);
+
+            if(string.IsNullOrWhiteSpace(_options.DropFileUrl)) _options.DropFileUrl = urlHelper.Action("DropFile", "FileManager");
+            else _options.DropFileUrl = urlHelper.Content(_options.DropFileUrl);
+
+            if(string.IsNullOrWhiteSpace(_options.CropFileUrl)) _options.CropFileUrl = urlHelper.Action("CropServerImage", "FileManager");
+            else _options.CropFileUrl = urlHelper.Content(_options.CropFileUrl);
 
             return Task.FromResult(_options);
         }
