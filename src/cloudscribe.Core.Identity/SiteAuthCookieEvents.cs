@@ -1,4 +1,5 @@
 ﻿using cloudscribe.Core.Models;
+using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
@@ -6,6 +7,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using System;
+using System.Net;
 using System.Security.Claims;
 using System.Threading.Tasks;
 
@@ -24,6 +26,50 @@ namespace cloudscribe.Core.Identity
 
         private readonly MultiTenantOptions _multiTenantOptions;
         private readonly ILogger _log;
+
+        public override Task RedirectToAccessDenied(RedirectContext<CookieAuthenticationOptions> context)
+        {
+            if (IsApiCall(context))
+            {
+                context.Response.StatusCode = (int)HttpStatusCode.Forbidden;
+                return Task.CompletedTask;
+            }
+
+            return base.RedirectToAccessDenied(context);
+        }
+
+        public override Task RedirectToLogin(RedirectContext<CookieAuthenticationOptions> context)
+        {
+            if (IsApiCall(context))
+            {
+                context.Response.StatusCode = (int)HttpStatusCode.Unauthorized;
+                return Task.CompletedTask;
+            }
+
+            return base.RedirectToLogin(context);
+        }
+
+        private bool IsApiCall(RedirectContext<CookieAuthenticationOptions> context)
+        {
+            bool isApiCall = false;
+
+            if (context.Request.Path.StartsWithSegments("/api"))
+            {                
+                isApiCall = true;
+            }
+            else {
+                var tenant = context.HttpContext.GetTenant<SiteContext>();
+                if (tenant != null && !string.IsNullOrWhiteSpace(tenant.SiteFolderName))
+                {
+                    if (context.Request.Path.StartsWithSegments("/" + tenant.SiteFolderName + "/api"))
+                    {             
+                        isApiCall = true;
+                    }
+                }
+            }            
+
+            return isApiCall;
+        }
 
         public override async Task ValidatePrincipal(CookieValidatePrincipalContext context)
         {
@@ -66,9 +112,7 @@ namespace cloudscribe.Core.Identity
 
             await base.SigningOut(context);
         }
-
-
-
+               
         public Type GetCookieAuthenticationEventsType()
         {
             return typeof(SiteAuthCookieEvents);
