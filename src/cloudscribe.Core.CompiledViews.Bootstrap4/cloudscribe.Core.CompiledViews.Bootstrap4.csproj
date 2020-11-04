@@ -2,8 +2,8 @@
 
   <PropertyGroup>
     <Description>Bootstrap 4 pre-compiled views for cloudscribe.Core.Web</Description>
-    <Version>4.0.6</Version>
-    <TargetFramework>netcoreapp3.0</TargetFramework>
+    <Version>4.1.0</Version>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
     <RazorLangVersion>3.0</RazorLangVersion>
     <AddRazorSupportForMvc>true</AddRazorSupportForMvc>
    

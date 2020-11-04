@@ -64,8 +64,9 @@ namespace Microsoft.Extensions.DependencyInjection
 
             services.AddCloudscribeCoreIdentityServerStores();
 
-
-            services.AddEntityFrameworkNpgsql()
+            // AddEntityFrameworkNpgsql call should be deprecated:
+            // https://www.npgsql.org/efcore/api/Microsoft.Extensions.DependencyInjection.NpgsqlServiceCollectionExtensions.html
+            services // .AddEntityFrameworkNpgsql()
                 .AddDbContext<ConfigurationDbContext>(options =>
                     options.UseNpgsql(connectionString,
                     npgsqlOptionsAction: sqlOptions =>
@@ -81,8 +82,10 @@ namespace Microsoft.Extensions.DependencyInjection
                     }),
                     optionsLifetime: ServiceLifetime.Singleton
                     );
-            
-            services.AddEntityFrameworkNpgsql()
+
+            // AddEntityFrameworkNpgsql call should be deprecated:
+            // https://www.npgsql.org/efcore/api/Microsoft.Extensions.DependencyInjection.NpgsqlServiceCollectionExtensions.html
+            services // .AddEntityFrameworkNpgsql()
                 .AddDbContext<PersistedGrantDbContext>(options =>
                     options.UseNpgsql(connectionString,
                     npgsqlOptionsAction: sqlOptions =>

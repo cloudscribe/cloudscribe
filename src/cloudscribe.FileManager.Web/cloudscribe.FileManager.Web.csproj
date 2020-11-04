@@ -2,9 +2,9 @@
 
   <PropertyGroup>
     <Description>media file management</Description>
-    <Version>4.0.2</Version>
+    <Version>4.1.0</Version>
     <Authors>Joe Audette</Authors>
-    <TargetFrameworks>netcoreapp3.0</TargetFrameworks>
+    <TargetFrameworks>netcoreapp3.1</TargetFrameworks>
     <RazorLangVersion>3.0</RazorLangVersion>
     <AddRazorSupportForMvc>true</AddRazorSupportForMvc>
     <PackageTags>cloudscribe;filemanager</PackageTags>

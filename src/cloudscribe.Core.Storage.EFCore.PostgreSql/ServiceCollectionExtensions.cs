@@ -20,7 +20,10 @@ namespace Microsoft.Extensions.DependencyInjection
         {
             services.AddCloudscribeCoreEFCommon(useSingletonLifetime);
 
-            services.AddEntityFrameworkNpgsql()
+            // AddEntityFrameworkNpgsql call should be deprecated:
+            // https://www.npgsql.org/efcore/api/Microsoft.Extensions.DependencyInjection.NpgsqlServiceCollectionExtensions.html
+
+            services // .AddEntityFrameworkNpgsql()
                 .AddDbContext<CoreDbContext>(options =>
                     options.UseNpgsql(connectionString,
                     npgsqlOptionsAction: sqlOptions =>

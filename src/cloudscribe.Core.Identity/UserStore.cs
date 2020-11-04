@@ -93,11 +93,17 @@ namespace cloudscribe.Core.Identity
                 throw new ArgumentNullException("user");
             }
 
-            if (user.SiteId == Guid.Empty)
+            // New user created from a tenant site should belong to the parent site,
+            // if this related sites mode is used
+            if (_multiTenantOptions.UseRelatedSitesMode) 
+            { 
+                if (_multiTenantOptions.RelatedSiteId != Guid.Empty)
+                    user.SiteId = _multiTenantOptions.RelatedSiteId; 
+            }
+            else if (user.SiteId == Guid.Empty)
             {
                 user.SiteId = SiteSettings.Id;
             }
-            
 
             if (string.IsNullOrWhiteSpace(user.UserName))
             {
