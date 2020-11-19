@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <Description>Microsoft Sql Server Entity Framework configuration and operational stores for IdentityServer4 cloudscribe multi-tenant identity integration</Description>
-    <Version>4.1.0</Version>
+    <Version>4.1.1</Version>
    
 
     <Authors>Joe Audette</Authors>
