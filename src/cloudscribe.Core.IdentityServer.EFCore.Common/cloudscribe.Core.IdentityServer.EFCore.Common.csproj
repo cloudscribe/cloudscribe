@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <Description>Entity Framework configuration and operational stores for IdentityServer4 cloudscribe multi-tenant identity integration</Description>
-    <Version>4.1.0</Version>
+    <Version>4.1.1</Version>
    
 
     <Authors>Joe Audette</Authors>
@@ -38,7 +38,7 @@
     
     <PackageReference Include="Microsoft.Extensions.Configuration.FileExtensions" Version="3.1.0" />
     <PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="3.1.0" />
-    <PackageReference Include="AutoMapper" Version="8.1.1" />
+    <PackageReference Include="AutoMapper" Version="10.1.1" />
   </ItemGroup>
 
  
