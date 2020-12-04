@@ -25,6 +25,7 @@ namespace cloudscribe.Core.Models
             newSite.LdapPort = 389;
             
             newSite.UseEmailForLogin = true;
+            newSite.AllowUserToChangeEmail = true;
            
             newSite.RequireConfirmedEmail = false;
             newSite.RequiresQuestionAndAnswer = false;

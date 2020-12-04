@@ -72,6 +72,8 @@ namespace cloudscribe.Core.Storage.EFCore.pgsql
 
                 entity.Property(p => p.UseEmailForLogin).IsRequired();
 
+                entity.Property(p => p.AllowUserToChangeEmail).IsRequired();
+
                 entity.Property(p => p.RequiresQuestionAndAnswer).IsRequired();
 
                 entity.Property(p => p.MaxInvalidPasswordAttempts);

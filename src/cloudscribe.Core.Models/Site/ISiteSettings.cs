@@ -112,6 +112,8 @@ namespace cloudscribe.Core.Models
         /// https://ux.stackexchange.com/questions/13647/email-field-or-username-for-logging-in-an-application
         /// </summary>
         bool UseEmailForLogin { get; set; }
+
+        bool AllowUserToChangeEmail {  get; set; }
         
         bool RequiresQuestionAndAnswer { get; set; }
         

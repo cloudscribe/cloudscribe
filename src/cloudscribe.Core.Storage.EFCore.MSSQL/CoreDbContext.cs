@@ -105,6 +105,11 @@ namespace cloudscribe.Core.Storage.EFCore.MSSQL
                // .HasDefaultValue(true)
                 ;
 
+                entity.Property(p => p.AllowUserToChangeEmail)
+                .IsRequired()
+                .HasColumnType("bit")
+                ;
+
                 entity.Property(p => p.RequiresQuestionAndAnswer)
                 .IsRequired()
                 .HasColumnType("bit")

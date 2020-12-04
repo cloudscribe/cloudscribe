@@ -58,6 +58,8 @@ namespace cloudscribe.Core.Models
         /// </summary>
         public bool UseEmailForLogin { get; set; } = true;
 
+        public bool AllowUserToChangeEmail { get; set; } = true;
+
 
         public bool DisableDbAuth { get; set; } = false;
        
@@ -215,6 +217,8 @@ namespace cloudscribe.Core.Models
         {
             if(i == null) { return null; }
 
+            // can't we just return (SiteSettings)i here..?  - jimk
+
             SiteSettings s = new SiteSettings
             {
                 ConcurrencyStamp = i.ConcurrencyStamp,
@@ -321,6 +325,7 @@ namespace cloudscribe.Core.Models
                 TwitterConsumerSecret = i.TwitterConsumerSecret,
                 UseInvisibleRecaptcha = i.UseInvisibleRecaptcha,
                 UseEmailForLogin = i.UseEmailForLogin,
+                AllowUserToChangeEmail = i.AllowUserToChangeEmail,
                 //UseLdapAuth = i.UseLdapAuth,
                 TermsUpdatedUtc = i.TermsUpdatedUtc,
                 EmailApiEndpoint = i.EmailApiEndpoint,

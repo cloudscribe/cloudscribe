@@ -93,6 +93,10 @@ namespace cloudscribe.Core.Storage.EFCore.MySql
                 .IsRequired()
                 ;
 
+                entity.Property(p => p.AllowUserToChangeEmail)
+                .IsRequired()
+                ;
+
                 entity.Property(p => p.RequiresQuestionAndAnswer)
                 .IsRequired()
                 ;

@@ -19,6 +19,9 @@ namespace cloudscribe.Core.Web.ViewModels.SiteSettings
         [Display(Name = "Use Email For Login")]
         public bool UseEmailForLogin { get; set; }
 
+        [Display(Name = "Allow User To Change Email Address")]
+        public bool AllowUserToChangeEmail { get; set; }
+
         [Display(Name = "Allow New Registrations")]
         public bool AllowNewRegistration { get; set; }
 
