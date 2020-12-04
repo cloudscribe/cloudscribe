@@ -201,11 +201,9 @@ namespace cloudscribe.Core.Models
         string OidConnectAppId { get; set; }
         string OidConnectAppSecret { get; set; } // protected with data protection
         string OidConnectAuthority { get; set; }
-
         string OidConnectScopesCsv { get; set; }
 
         string AddThisDotComUsername { get; set; }
-
         
         bool IsDataProtected { get; set; }
         DateTime CreatedUtc { get; set; }

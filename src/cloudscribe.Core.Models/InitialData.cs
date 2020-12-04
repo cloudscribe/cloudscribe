@@ -15,37 +15,34 @@ namespace cloudscribe.Core.Models
     {
         public static SiteSettings BuildInitialSite()
         {
-            var newSite = new SiteSettings();
-            newSite.SiteName = "Sample Site";
-            newSite.AliasId = "s1";
-            newSite.IsServerAdminSite = true;
-            newSite.Theme = "";
-            newSite.AllowNewRegistration = true;
-            
-            newSite.LdapPort = 389;
-            
-            newSite.UseEmailForLogin = true;
-            newSite.AllowUserToChangeEmail = true;
-           
-            newSite.RequireConfirmedEmail = false;
-            newSite.RequiresQuestionAndAnswer = false;
+            var newSite                        = new SiteSettings();
+            newSite.SiteName                   = "Sample Site";
+            newSite.AliasId                    = "s1";
+            newSite.IsServerAdminSite          = true;
+            newSite.Theme                      = "";
+            newSite.AllowNewRegistration       = true;
+            newSite.LdapPort                   = 389;
+            newSite.UseEmailForLogin           = true;
+            newSite.AllowUserToChangeEmail     = true;
+            newSite.RequireConfirmedEmail      = false;
+            newSite.RequiresQuestionAndAnswer  = false;
             newSite.MaxInvalidPasswordAttempts = 10;
-            newSite.MinRequiredPasswordLength = 7;
+            newSite.MinRequiredPasswordLength  = 7;
 
             return newSite;
         }
 
         public static SiteUser BuildInitialAdmin()
         {
-            var adminUser = new SiteUser();
-            adminUser.Email = "admin@admin.com";
-            adminUser.NormalizedEmail = adminUser.Email.ToUpperInvariant();
-            adminUser.DisplayName = "Admin";
-            adminUser.UserName = "admin";
+            var adminUser                = new SiteUser();
+            adminUser.Email              = "admin@admin.com";
+            adminUser.NormalizedEmail    = adminUser.Email.ToUpperInvariant();
+            adminUser.DisplayName        = "Admin";
+            adminUser.UserName           = "admin";
             adminUser.NormalizedUserName = adminUser.UserName.ToUpperInvariant();
 
-            adminUser.EmailConfirmed = true;
-            adminUser.AccountApproved = true;
+            adminUser.EmailConfirmed     = true;
+            adminUser.AccountApproved    = true;
 
             // clear text password will be hashed upon login
             // this format allows migrating from mojoportal
@@ -342,7 +339,7 @@ namespace cloudscribe.Core.Models
         {
             List<GeoZone> list = new List<GeoZone>();
             
-            list.Add(new GeoZone { Id = new Guid("E314E827-9B3A-4282-954F-B3F46BA92F07"), CountryId = new Guid("844686BA-57C3-4C91-8B33-C1E1889A44C0"), Name = "Albywalbi Wacky Doo", Code = "AW" }); //Albania
+            list.Add(new GeoZone { Id = new Guid("E314E827-9B3A-4282-954F-B3F46BA92F07"), CountryId = new Guid("844686BA-57C3-4C91-8B33-C1E1889A44C0"), Name = "Tirana", Code = "ALTR" }); //Albania
             list.Add(new GeoZone { Id = new Guid("155DDC67-1E74-4791-995D-2EDDB0658293"), CountryId = new Guid("06BB7816-9AD4-47DC-B1CD-6E206AFDFCCA"), Name = "Burgenland", Code = "BL" }); //Austria
             list.Add(new GeoZone { Id = new Guid("A34DF017-1334-4F1F-AAB8-F650425F937D"), CountryId = new Guid("06BB7816-9AD4-47DC-B1CD-6E206AFDFCCA"), Name = "Kärnten", Code = "KN" }); //Austria
             list.Add(new GeoZone { Id = new Guid("BB607ECB-DF31-427B-88BB-4F53959B3E0C"), CountryId = new Guid("06BB7816-9AD4-47DC-B1CD-6E206AFDFCCA"), Name = "Niederösterreich", Code = "NO" }); //Austria
