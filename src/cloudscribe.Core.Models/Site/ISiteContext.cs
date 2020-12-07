@@ -31,6 +31,8 @@ namespace cloudscribe.Core.Models
         bool PwdRequireDigit { get; }
 
         bool UseEmailForLogin { get; }
+        bool AllowUserToChangeEmail { get; }
+
         bool RequiresQuestionAndAnswer { get; }
         //bool ReallyDeleteUsers { get; }
         bool AllowNewRegistration { get; }

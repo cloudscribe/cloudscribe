@@ -39,6 +39,14 @@
         </dd>
     }
 
+    @if (currentSite.AllowUserToChangeEmail)
+    {
+        <dt>@sr["Email address:"]</dt>
+        <dd>
+            [ <a asp-controller="Manage" asp-action="ChangeUserEmail">@sr["Change"]</a> ]
+        </dd>
+    }
+
     <dt>@sr["Two-Factor Authentication:"]</dt>
     <dd>
         <a asp-controller="Manage" asp-action="TwoFactorAuthentication">@sr["Two-factor authentication"]</a>

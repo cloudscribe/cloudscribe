@@ -1237,4 +1237,25 @@
   <data name="Reset Authenticator" xml:space="preserve">
     <value>Reset Authenticator</value>
   </data>
+  <data name="Allow user to change email address" xml:space="preserve">
+    <value>Allow user to change email address</value>
+  </data>
+  <data name="Change Email" xml:space="preserve">
+    <value>Change Email</value>
+  </data>
+  <data name="Email address" xml:space="preserve">
+    <value>Email address</value>
+  </data>
+  <data name="Email is not configured for this site." xml:space="preserve">
+    <value>Email is not configured for this site.</value>
+  </data>
+  <data name="The site is not configured to allow email changing." xml:space="preserve">
+    <value>The site is not configured to allow email changing.</value>
+  </data>
+  <data name="This user account is not currently approved." xml:space="preserve">
+    <value>This user account is not currently approved.</value>
+  </data>
+  <data name="You must re-enter your password to change your email address." xml:space="preserve">
+    <value>You must re-enter your password to change your email address.</value>
+  </data>
 </root>

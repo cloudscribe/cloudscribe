@@ -42,7 +42,8 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
             cloudscribe.DateTimeUtils.ITimeZoneHelper timeZoneHelper,
             IHandleCustomUserInfo customUserInfo,
             ILogger<ManageController> logger,
-            UrlEncoder urlEncoder
+            UrlEncoder urlEncoder,
+            ISiteAccountCapabilitiesProvider siteCapabilities
             )
         {
             CurrentSite = currentSite; 
@@ -55,6 +56,7 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
             CustomUserInfo = customUserInfo;
             Log = logger;
             UrlEncoder = urlEncoder;
+            SiteCapabilities = siteCapabilities;
         }
 
         protected IAccountService AccountService { get; private set; }
@@ -68,6 +70,7 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
         protected IHandleCustomUserInfo CustomUserInfo { get; private set; }
         protected const string AuthenicatorUriFormat = "otpauth://totp/{0}:{1}?secret={2}&issuer={0}&digits=6";
         protected UrlEncoder UrlEncoder { get; private set; }
+        protected ISiteAccountCapabilitiesProvider SiteCapabilities { get; private set; }
 
         [TempData]
         public string StatusMessage { get; set; }
@@ -154,6 +157,115 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
 
         [Authorize]
         [HttpGet]
+        public virtual async Task<IActionResult> ChangeUserEmail()
+        {
+            var user = await UserManager.FindByIdAsync(HttpContext.User.GetUserId());
+
+            if (user == null)
+            {
+                return NotFound($"Unable to load user with ID '{UserManager.GetUserId(User)}'.");
+            }
+
+            var model = new ChangeUserEmailViewModel
+            {
+                HasPassword            = await UserManager.HasPasswordAsync(user),
+                AccountApproved        = user.AccountApproved,
+                CurrentEmail           = user.Email,
+                AllowUserToChangeEmail = CurrentSite.AllowUserToChangeEmail,
+                EmailIsConfigured      = await SiteCapabilities.SupportsEmailNotification(CurrentSite),
+                RequireConfirmedEmail  = CurrentSite.RequireConfirmedEmail
+            };
+
+            return View(model);
+        }
+
+        [Authorize]
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public virtual async Task<IActionResult> ChangeUserEmail(ChangeUserEmailViewModel model)
+        {
+            ModelState.Clear();
+
+            var user = await UserManager.FindByIdAsync(HttpContext.User.GetUserId());
+
+            if (user == null)
+            {
+                return NotFound($"Unable to load user with ID '{UserManager.GetUserId(User)}'.");
+            }
+
+            var requirePassword          = await UserManager.HasPasswordAsync(user);
+            model.HasPassword            = requirePassword;
+            model.AccountApproved        = user.AccountApproved;
+            model.CurrentEmail           = user.Email;
+            model.AllowUserToChangeEmail = CurrentSite.AllowUserToChangeEmail;
+            model.EmailIsConfigured      = await SiteCapabilities.SupportsEmailNotification(CurrentSite);
+            model.RequireConfirmedEmail  = CurrentSite.RequireConfirmedEmail;
+
+
+            if (requirePassword)
+            {
+                if (string.IsNullOrWhiteSpace(model.Password))
+                {
+                    ModelState.AddModelError(string.Empty, "Password is required");
+                    return View(model);
+                }
+
+                if (!await UserManager.CheckPasswordAsync(user, model.Password))
+                {
+                    ModelState.AddModelError(string.Empty, "Password not correct.");
+                    model.Password     = "";
+                    return View(model);
+                }
+            }
+
+            if(!model.AccountApproved)
+            {
+                model.SuccessNotification = "This user account is not currently approved.";
+                return View(model);
+            }
+
+            if (!model.EmailIsConfigured)
+            {
+                model.SuccessNotification = "Email is not configured for this site.";
+                return View(model);
+            }
+
+            if(!model.AllowUserToChangeEmail)
+            {
+                model.SuccessNotification = "Site is not configured to allow email changing.";
+                return View(model);
+            }
+
+            try 
+            {
+                var token  = await UserManager.GenerateChangeEmailTokenAsync(user, model.NewEmail);
+                var result = await UserManager.ChangeEmailAsync(user, model.NewEmail, token);
+
+                if (result.Succeeded)
+                { 
+                    Log.LogInformation($"User with ID {user.Id} changed email address successfully.");
+                    model.CurrentEmail = model.NewEmail;
+                    model.NewEmail     = "";
+                    model.SuccessNotification = "Email address changed successfully.";
+                }
+                else
+                {
+                    Log.LogError($"Error occurred changing email address for user ID '{user.Id}':  {result.Errors.First().Description}.");
+                    model.SuccessNotification = "An error occurred changing email address - see logs for details.";
+                }
+            }
+            catch (Exception ex)
+            {
+                Log.LogError(ex, $"Unexpected error occurred changing email address for user ID '{user.Id}'.");
+                model.SuccessNotification = "An error occurred changing email address - see logs for details.";
+            }
+
+            return View(model);
+        }
+
+
+        [Authorize]
+        [HttpGet]
         public virtual async Task<IActionResult> DeletePersonalData()
         {
             var user = await UserManager.FindByIdAsync(HttpContext.User.GetUserId());
@@ -188,7 +300,7 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
             {
                 if (string.IsNullOrWhiteSpace(model.Password))
                 {
-                    ModelState.AddModelError(string.Empty, "Password is required.");
+                    ModelState.AddModelError(string.Empty, "Password is required");
                     model.HasPassword = requirePassword;
                     return View(model);
                 }
@@ -212,9 +324,7 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
 
             Log.LogInformation($"User with ID {userId} deleted themselves.");
 
-
             return this.RedirectToSiteRoot(CurrentSite);
-
         }
 
         [Authorize]
