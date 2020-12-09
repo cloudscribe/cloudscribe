@@ -48,7 +48,7 @@ else
     }
 
 <div>
-    <form id="change-user-email" method="post" class="form-group">
+    <form asp-controller="Manage" asp-action="ChangeUserEmail" id="change-user-email" method="post" class="form-group">
         <div asp-validation-summary="All" class="text-danger"></div>
 
         <input asp-for="HasPassword" type="hidden" />

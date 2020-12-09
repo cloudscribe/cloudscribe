@@ -30,7 +30,6 @@ using System.Threading.Tasks;
 
 namespace cloudscribe.Core.Web.Controllers.Mvc
 {
-
     public class ManageController : Controller
     {
         public ManageController(
@@ -46,7 +45,8 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
             ILogger<ManageController>         logger,
             UrlEncoder                        urlEncoder,
             ISiteAccountCapabilitiesProvider  siteCapabilities,
-            ISiteMessageEmailSender           emailSender
+            ISiteMessageEmailSender           emailSender,
+            IEmailChangeHandler               emailChangeHandler
             )
         {
             CurrentSite        = currentSite; 
@@ -61,21 +61,25 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
             UrlEncoder         = urlEncoder;
             SiteCapabilities   = siteCapabilities;
             EmailSender        = emailSender;
+            EmailChangeHandler = emailChangeHandler;
         }
 
-        protected IAccountService AccountService { get; private set; }
-        protected ILogger Log { get; private set; }
-        protected ISiteContext CurrentSite { get; private set; }
-        protected SiteUserManager<SiteUser> UserManager { get; private set; }
-        protected SignInManager<SiteUser> SignInManager { get; private set; }
-        protected IStringLocalizer StringLocalizer { get; private set; }
+        protected IAccountService                  AccountService     { get; private set; }
+        protected ILogger                          Log                { get; private set; }
+        protected ISiteContext                     CurrentSite        { get; private set; }
+        protected SiteUserManager<SiteUser>        UserManager        { get; private set; }
+        protected SignInManager<SiteUser>          SignInManager      { get; private set; }
+        protected IStringLocalizer                 StringLocalizer    { get; private set; }
+        protected IHandleCustomUserInfo            CustomUserInfo     { get; private set; }
+        protected UrlEncoder                       UrlEncoder         { get; private set; }
+        protected ISiteAccountCapabilitiesProvider SiteCapabilities   { get; private set; }
+        protected ISiteMessageEmailSender          EmailSender        { get; private set; }
+        protected IEmailChangeHandler              EmailChangeHandler { get; private set; }
+
         protected cloudscribe.DateTimeUtils.ITimeZoneIdResolver TimeZoneIdResolver { get; private set; }
-        protected cloudscribe.DateTimeUtils.ITimeZoneHelper TimeZoneHelper { get; private set; }
-        protected IHandleCustomUserInfo CustomUserInfo { get; private set; }
+        protected cloudscribe.DateTimeUtils.ITimeZoneHelper     TimeZoneHelper     { get; private set; }
+        
         protected const string AuthenicatorUriFormat = "otpauth://totp/{0}:{1}?secret={2}&issuer={0}&digits=6";
-        protected UrlEncoder UrlEncoder { get; private set; }
-        protected ISiteAccountCapabilitiesProvider SiteCapabilities { get; private set; }
-        protected ISiteMessageEmailSender EmailSender { get; private set; }
 
         [TempData]
         public string StatusMessage { get; set; }
@@ -235,51 +239,24 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
 
             var token = await UserManager.GenerateChangeEmailTokenAsync(user, model.NewEmail);
 
-            if (!model.RequireConfirmedEmail)
+            var siteUrl = Url.Action(new UrlActionContext
             {
+                Action     = "Index",
+                Controller = "Home",
+                Protocol   = HttpContext.Request.Scheme
+            });
+
+            if (!model.RequireConfirmedEmail)  
+            {
+                // no need for round-trip email confirmation
                 try
                 {
-                    // do it
-                    var result = await UserManager.ChangeEmailAsync(user, model.NewEmail, token);
+                    var success = await EmailChangeHandler.HandleEmailChangeWithoutUserConfirmation(model, user, token, siteUrl);
 
-                    if (result.Succeeded)
-                    {
-                        Log.LogInformation($"User with ID {user.Id} changed email address successfully.");
-                        var alertMessage   = "Email address changed successfully.";
-
-                        if(model.EmailIsConfigured)
-                        {
-                            var callbackUrl = Url.Action(new UrlActionContext
-                            {
-                                Action     = "Index",
-                                Controller = "Home",
-                                Protocol   = HttpContext.Request.Scheme
-                            });
-
-                            await EmailSender.SendEmailChangedConfirmationEmailsAsync(
-                                CurrentSite,
-                                model.NewEmail,
-                                model.CurrentEmail, 
-                                StringLocalizer["Email address successfully changed"],
-                                callbackUrl
-                                );
-
-                            alertMessage += " " + StringLocalizer["Confirmation emails will be sent to old and new addresses."];
-                        }
-
-                        model.CurrentEmail = model.NewEmail;
-                        model.NewEmail     = String.Empty;
-                        this.AlertSuccess(StringLocalizer[alertMessage], true);
-                    }
-                    else
-                    {
-                        this.AlertDanger(StringLocalizer["An error occurred changing email address - see logs for details."], true);
-
-                        var resultError = $"Error occurred changing email address for user ID '{user.Id}'";
-                        if(result?.Errors != null && result.Errors.Count() > 0)
-                            resultError += result.Errors.First().Description;
-                        Log.LogError(resultError);
-                    }
+                    if(success) 
+                        this.AlertSuccess(model.SuccessNotification, true);
+                    else 
+                        this.AlertDanger(model.SuccessNotification, true);
                 }
                 catch (Exception ex)
                 {
@@ -289,10 +266,86 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
             }
             else
             {
+                // send token in confirmation email
+                try
+                {
+                    var confirmationUrl = Url.Action(new UrlActionContext
+                    {
+                        Action     = "ConfirmEmailChange",
+                        Controller = "Manage",
+                        Values     = new { userId = user.Id.ToString(), newEmail = model.NewEmail, code = token },
+                        Protocol   = HttpContext.Request.Scheme
+                    });
 
+                    var success = await EmailChangeHandler.HandleEmailChangeWithUserConfirmation(model, user, token, confirmationUrl, siteUrl);
+
+                    if (success)
+                        this.AlertSuccess(model.SuccessNotification, true);
+                    else
+                        this.AlertDanger(model.SuccessNotification, true);
+                }
+                catch (Exception ex)
+                {
+                    this.AlertDanger(StringLocalizer["An error occurred sending email change confirmation - see logs for details."], true);
+                    Log.LogError(ex, $"Unexpected error occurred sending email change confirmation for user ID '{user.Id}'.");
+                }
             }
 
             return View(model);
+        }
+
+        [Authorize]
+        [HttpGet]
+        public virtual async Task<IActionResult> ConfirmEmailChange(string userId, string newEmail, string code)
+        {
+            ModelState.Clear();
+
+            if (userId == null || code == null)
+            {
+                return this.RedirectToSiteRoot(CurrentSite);
+            }
+
+            var user = await UserManager.FindByIdAsync(userId);
+
+            if (user == null)
+            {
+                return NotFound($"Unable to load user with ID '{UserManager.GetUserId(User)}'.");
+            }
+
+            var model = new ChangeUserEmailViewModel
+            {
+                HasPassword            = await UserManager.HasPasswordAsync(user),
+                AccountApproved        = user.AccountApproved,
+                CurrentEmail           = user.Email,
+                NewEmail               = newEmail,
+                AllowUserToChangeEmail = CurrentSite.AllowUserToChangeEmail,
+                EmailIsConfigured      = await SiteCapabilities.SupportsEmailNotification(CurrentSite),
+                RequireConfirmedEmail  = CurrentSite.RequireConfirmedEmail
+            };
+
+            try
+            {
+                var siteUrl = Url.Action(new UrlActionContext
+                {
+                    Action     = "Index",
+                    Controller = "Home",
+                    Protocol   = HttpContext.Request.Scheme
+                });
+
+                var success = await EmailChangeHandler.HandleEmailChangeConfirmation(model, user, newEmail, code, siteUrl);
+
+                if (success)
+                    this.AlertSuccess(model.SuccessNotification, true);
+                else
+                    this.AlertDanger(model.SuccessNotification, true);
+            }
+            catch (Exception ex)
+            {
+                this.AlertDanger(StringLocalizer["An error occurred changing email address - see logs for details."], true);
+                Log.LogError(ex, $"Unexpected error occurred changing email address for user ID '{user.Id}'.");
+            }
+
+            return View("ChangeUserEmail", model);
         }
 
 

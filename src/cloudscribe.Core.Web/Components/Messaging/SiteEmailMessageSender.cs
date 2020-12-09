@@ -92,15 +92,68 @@ namespace cloudscribe.Core.Web.Components.Messaging
 
 
         /// <summary>
+        /// Email address change request, but end user needs to reply to confirm
+        /// </summary>
+        public async Task SendEmailChangedConfirmationEmailAsync(ISiteContext siteSettings,
+                                                                  string newEmail,
+                                                                  string oldEmail,
+                                                                  string subject,
+                                                                  string siteUrl,
+                                                                  string confirmationUrl,
+                                                                  string confirmToken)
+        {
+            var sender = await _emailSenderResolver.GetEmailSender(siteSettings.Id.ToString());
+            if (sender == null)
+            {
+                var logMessage = $"failed to send email changed confirmation email because email settings are not populated for site {siteSettings.SiteName}";
+                _log.LogError(logMessage);
+                return;
+            }
+
+            var model = new EmailChangedConfirmationViewModel
+            {
+                NewEmail          = newEmail,
+                OldEmail          = oldEmail,
+                SiteUrl           = siteUrl,
+                Tenant            = siteSettings,
+                ConfirmationToken = confirmToken,
+                ConfirmationUrl   = confirmationUrl
+            };
+
+
+            // send confirmation request to new email address
+            try
+            {
+                var plainTextMessage
+                    = await _viewRenderer.RenderViewAsString<EmailChangedConfirmationViewModel>("EmailTemplates/EmailChangeConfirmationTextEmail", model).ConfigureAwait(false);
+
+                var htmlMessage
+                    = await _viewRenderer.RenderViewAsString<EmailChangedConfirmationViewModel>("EmailTemplates/EmailChangeConfirmationHtmlEmail", model).ConfigureAwait(false);
+
+                await sender.SendEmailAsync(newEmail,
+                                            siteSettings.DefaultEmailFromAddress,
+                                            subject,
+                                            plainTextMessage,
+                                            htmlMessage,
+                                            configLookupKey: siteSettings.Id.ToString()
+                                            ).ConfigureAwait(false);
+            }
+            catch (Exception ex)
+            {
+                _log.LogError($"error sending new email change confirmation email: {ex.Message} stacktrace: {ex.StackTrace}");
+            }
+        }
+
+
+        /// <summary>
         /// Email address changed, but no need for end user to reply to confirm
         /// </summary>
-        public async Task SendEmailChangedConfirmationEmailsAsync(ISiteContext siteSettings,
+        public async Task SendEmailChangedNotificationEmailsAsync(ISiteContext siteSettings,
                                                                   string       newEmail,
                                                                   string       oldEmail,
                                                                   string       subject,
                                                                   string       siteUrl)
         {
-
             var sender = await _emailSenderResolver.GetEmailSender(siteSettings.Id.ToString());
             if (sender == null)
             {
@@ -117,48 +170,54 @@ namespace cloudscribe.Core.Web.Components.Messaging
                 Tenant   = siteSettings
             };
 
-            // send confirmation to new email address
-            try
-            {
-                var plainTextMessage
-                    = await _viewRenderer.RenderViewAsString<EmailChangedNotificationViewModel>("EmailTemplates/EmailChangedToTextEmail", model).ConfigureAwait(false);
+            // send notification to new email address
+            if (!String.IsNullOrWhiteSpace(newEmail))
+            { 
+                try
+                {
+                    var plainTextMessage
+                        = await _viewRenderer.RenderViewAsString<EmailChangedNotificationViewModel>("EmailTemplates/EmailChangedToTextEmail", model).ConfigureAwait(false);
 
-                var htmlMessage
-                    = await _viewRenderer.RenderViewAsString<EmailChangedNotificationViewModel>("EmailTemplates/EmailChangedToHtmlEmail", model).ConfigureAwait(false);
+                    var htmlMessage
+                        = await _viewRenderer.RenderViewAsString<EmailChangedNotificationViewModel>("EmailTemplates/EmailChangedToHtmlEmail", model).ConfigureAwait(false);
 
-                await sender.SendEmailAsync(newEmail,
-                                            siteSettings.DefaultEmailFromAddress,
-                                            subject,
-                                            plainTextMessage,
-                                            htmlMessage,
-                                            configLookupKey: siteSettings.Id.ToString()
-                                            ).ConfigureAwait(false);
+                    await sender.SendEmailAsync(newEmail,
+                                                siteSettings.DefaultEmailFromAddress,
+                                                subject,
+                                                plainTextMessage,
+                                                htmlMessage,
+                                                configLookupKey: siteSettings.Id.ToString()
+                                                ).ConfigureAwait(false);
+                }
+                catch (Exception ex)
+                {
+                    _log.LogError($"error sending new email change confirmation email: {ex.Message} stacktrace: {ex.StackTrace}");
+                }
             }
-            catch (Exception ex)
-            {
-                _log.LogError($"error sending new email change confirmation email: {ex.Message} stacktrace: {ex.StackTrace}");
-            }
 
-            // send confirmation to old email address
-            try
-            {
-                var plainTextMessage
-                    = await _viewRenderer.RenderViewAsString<EmailChangedNotificationViewModel>("EmailTemplates/EmailChangedFromTextEmail", model).ConfigureAwait(false);
+            // send notification to old email address
+            if (!String.IsNullOrWhiteSpace(oldEmail)) 
+            { 
+                try
+                {
+                    var plainTextMessage
+                        = await _viewRenderer.RenderViewAsString<EmailChangedNotificationViewModel>("EmailTemplates/EmailChangedFromTextEmail", model).ConfigureAwait(false);
 
-                var htmlMessage
-                    = await _viewRenderer.RenderViewAsString<EmailChangedNotificationViewModel>("EmailTemplates/EmailChangedFromHtmlEmail", model).ConfigureAwait(false);
+                    var htmlMessage
+                        = await _viewRenderer.RenderViewAsString<EmailChangedNotificationViewModel>("EmailTemplates/EmailChangedFromHtmlEmail", model).ConfigureAwait(false);
 
-                await sender.SendEmailAsync(oldEmail,
-                                            siteSettings.DefaultEmailFromAddress,
-                                            subject,
-                                            plainTextMessage,
-                                            htmlMessage,
-                                            configLookupKey: siteSettings.Id.ToString()
-                                            ).ConfigureAwait(false);
-            }
-            catch (Exception ex)
-            {
-                _log.LogError($"error sending old email change confirmation email: {ex.Message} stacktrace: {ex.StackTrace}");
+                    await sender.SendEmailAsync(oldEmail,
+                                                siteSettings.DefaultEmailFromAddress,
+                                                subject,
+                                                plainTextMessage,
+                                                htmlMessage,
+                                                configLookupKey: siteSettings.Id.ToString()
+                                                ).ConfigureAwait(false);
+                }
+                catch (Exception ex)
+                {
+                    _log.LogError($"error sending old email change confirmation email: {ex.Message} stacktrace: {ex.StackTrace}");
+                }
             }
         }
 
