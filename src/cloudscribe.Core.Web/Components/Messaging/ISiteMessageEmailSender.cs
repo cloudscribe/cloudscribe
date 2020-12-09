@@ -19,9 +19,16 @@ namespace cloudscribe.Core.Web.Components.Messaging
             string confirmationUrl,
             string confirmCode);
 
+        Task SendEmailChangedConfirmationEmailsAsync(
+            ISiteContext siteSettings,
+            string newEmail,
+            string oldEmail,
+            string subject,
+            string siteUrl);
+
         Task SendAccountExistsEmailAsync(
             ISiteContext siteSettings,
-            string toAddress, 
+            string toAddress,
             string subject,
             string resetUrl,
             string loginUrl,

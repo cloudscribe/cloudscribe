@@ -16,15 +16,12 @@
             <label asp-for="UseEmailForLogin" class="form-check-label">@sr["Allow email for login in addition to username"]</label>
         </div>
     </div>
-    @if (Model.EmailIsConfigured)
-    {
-        <div class="form-group">
-            <div class="form-check">
-                <input asp-for="AllowUserToChangeEmail" class="form-check-input" />
-                <label asp-for="AllowUserToChangeEmail" class="form-check-label">@sr["Allow user to change email address"]</label>
-            </div>
+    <div class="form-group">
+        <div class="form-check">
+            <input asp-for="AllowUserToChangeEmail" class="form-check-input" />
+            <label asp-for="AllowUserToChangeEmail" class="form-check-label">@sr["Allow user to change email address"]</label>
         </div>
-    }
+    </div>
     <div class="form-group">
         <div class="form-check">
             <input asp-for="AllowNewRegistration" class="form-check-input" />
