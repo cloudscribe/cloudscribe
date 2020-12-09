@@ -29,23 +29,24 @@ namespace cloudscribe.Core.Identity
     public class SiteUserManager<TUser> : UserManager<TUser> where TUser : SiteUser
     {        
         public SiteUserManager(
-            SiteContext currentSite,
-            UserEvents userEventHandlers,
-            IEnumerable<IHandleUserEmailConfirmed> emailConfirmedHandlers,
-            IUserCommands userCommands,
-            IUserQueries userQueries,
-            IUserStore<TUser> store,
-            IOptions<IdentityOptions> optionsAccessor,
-            IOptions<MultiTenantOptions> multiTenantOptionsAccessor,
-            INewUserDisplayNameResolver displayNameResolver,
-            IPasswordHasher<TUser> passwordHasher,
-            IEnumerable<IUserValidator<TUser>> userValidators,
-            IEnumerable<IPasswordValidator<TUser>> passwordValidators,
-            ILookupNormalizer lookupNormalizer,
-            IdentityErrorDescriber errors,
-            IServiceProvider serviceProvider,
-            ILogger<UserManager<TUser>> logger,
-            IHttpContextAccessor contextAccessor,
+            SiteContext                             currentSite,
+            UserEvents                              userEventHandlers,
+            IEnumerable<IHandleUserEmailConfirmed>  emailConfirmedHandlers,
+            IEnumerable<IHandleUserEmailUpdated>    emailUpdatedHandlers,
+            IUserCommands                           userCommands,
+            IUserQueries                            userQueries,
+            IUserStore<TUser>                       store,
+            IOptions<IdentityOptions>               optionsAccessor,
+            IOptions<MultiTenantOptions>            multiTenantOptionsAccessor,
+            INewUserDisplayNameResolver             displayNameResolver,
+            IPasswordHasher<TUser>                  passwordHasher,
+            IEnumerable<IUserValidator<TUser>>      userValidators,
+            IEnumerable<IPasswordValidator<TUser>>  passwordValidators,
+            ILookupNormalizer                       lookupNormalizer,
+            IdentityErrorDescriber                  errors,
+            IServiceProvider                        serviceProvider,
+            ILogger<UserManager<TUser>>             logger,
+            IHttpContextAccessor                    contextAccessor,
             IEnumerable<IHandleUserRemovedFromRole> userRemovedFromRoleHandlers
             )
             : base(
@@ -59,36 +60,38 @@ namespace cloudscribe.Core.Identity
                   serviceProvider,
                   logger)
         {
-            _identityOptions = optionsAccessor.Value;
-            _userStore = store;
-            _commands = userCommands ?? throw new ArgumentNullException(nameof(userCommands));
-            _queries = userQueries ?? throw new ArgumentNullException(nameof(userQueries));
+            _identityOptions             = optionsAccessor.Value;
+            _userStore                   = store;
+            _commands                    = userCommands ?? throw new ArgumentNullException(nameof(userCommands));
+            _queries                     = userQueries ?? throw new ArgumentNullException(nameof(userQueries));
 
-            _siteSettings = currentSite;
-            _multiTenantOptions = multiTenantOptionsAccessor.Value;
-            _contextAccessor = contextAccessor;
-            _httpContext = contextAccessor?.HttpContext;
-            _eventHandlers = userEventHandlers;
-            _passwordHasher = passwordHasher;
-            _emailConfirmedHandlers = emailConfirmedHandlers;
-            _displayNameResolver = displayNameResolver;
+            _siteSettings                = currentSite;
+            _multiTenantOptions          = multiTenantOptionsAccessor.Value;
+            _contextAccessor             = contextAccessor;
+            _httpContext                 = contextAccessor?.HttpContext;
+            _eventHandlers               = userEventHandlers;
+            _passwordHasher              = passwordHasher;
+            _emailConfirmedHandlers      = emailConfirmedHandlers;
+            _emailUpdatedHandlers        = emailUpdatedHandlers;
+            _displayNameResolver         = displayNameResolver;
             _userRemovedFromRoleHandlers = userRemovedFromRoleHandlers;
-            _log = logger;
+            _log                         = logger;
         }
         
-        private IdentityOptions _identityOptions;
-        private IUserStore<TUser> _userStore;
-        private IUserCommands _commands;
-        private IUserQueries _queries;
-        private MultiTenantOptions _multiTenantOptions;
-        private IHttpContextAccessor _contextAccessor;
-        private HttpContext _httpContext;
-        private UserEvents _eventHandlers;
-        private IPasswordHasher<TUser> _passwordHasher;
+        private IdentityOptions                        _identityOptions;
+        private IUserStore<TUser>                      _userStore;
+        private IUserCommands                          _commands;
+        private IUserQueries                           _queries;
+        private MultiTenantOptions                     _multiTenantOptions;
+        private IHttpContextAccessor                   _contextAccessor;
+        private HttpContext                            _httpContext;
+        private UserEvents                             _eventHandlers;
+        private IPasswordHasher<TUser>                 _passwordHasher;
         private IEnumerable<IHandleUserEmailConfirmed> _emailConfirmedHandlers;
-        private INewUserDisplayNameResolver _displayNameResolver;
-        private readonly IEnumerable<IHandleUserRemovedFromRole> _userRemovedFromRoleHandlers;
-        private ILogger _log;
+        private IEnumerable<IHandleUserEmailUpdated>   _emailUpdatedHandlers;
+        private INewUserDisplayNameResolver            _displayNameResolver;
+        private readonly                               IEnumerable<IHandleUserRemovedFromRole> _userRemovedFromRoleHandlers;
+        private ILogger                                _log;
 
         //private CancellationToken CancellationToken => httpContext?.RequestAborted ?? CancellationToken.None;
 
@@ -392,9 +395,30 @@ namespace cloudscribe.Core.Identity
             }
 
             return result;
-
-            
         }
+
+        public override async Task<IdentityResult> ChangeEmailAsync(TUser user, string newEmail, string token) 
+        {
+            var result = await base.ChangeEmailAsync(user, newEmail, token);
+
+            if (result.Succeeded)
+            {
+                foreach (var handler in _emailUpdatedHandlers)
+                {
+                    try
+                    {
+                        await handler.HandleUserEmailUpdated(user);
+                    }
+                    catch (Exception ex)
+                    {
+                        Logger.LogError(ex.Message + " stack trace: " + ex.StackTrace);
+                    }
+                }
+            }
+
+            return result;
+        }
+
 
         public override async Task<IdentityResult> CreateAsync(TUser user)
         {
