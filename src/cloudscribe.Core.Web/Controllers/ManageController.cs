@@ -237,6 +237,12 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
                 return View(model);
             }
 
+            if(await UserManager.EmailExistsInDB(CurrentSite.Id, model.NewEmail))
+            {
+                this.AlertDanger(StringLocalizer["Error - the new email address is already in use."]);
+                return View(model);
+            }
+
             var token = await UserManager.GenerateChangeEmailTokenAsync(user, model.NewEmail);
 
             var siteUrl = Url.Action(new UrlActionContext

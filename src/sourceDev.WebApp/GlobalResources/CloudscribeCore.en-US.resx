@@ -1258,4 +1258,7 @@
   <data name="You must re-enter your password to change your email address." xml:space="preserve">
     <value>You must re-enter your password to change your email address.</value>
   </data>
+  <data name="Error - the new email address is already in use." xml:space="preserve">
+    <value>Error - the new email address is already in use.</value>
+  </data>
 </root>
