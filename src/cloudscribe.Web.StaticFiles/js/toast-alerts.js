@@ -35,7 +35,7 @@
                     $.toast({
                         title: j[i].message,
                         type: j[i].alertStyle,
-                        delay: 10000
+                        delay: 6000
                     });
                 }
 

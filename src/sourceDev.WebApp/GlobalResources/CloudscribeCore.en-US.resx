@@ -1258,7 +1258,16 @@
   <data name="You must re-enter your password to change your email address." xml:space="preserve">
     <value>You must re-enter your password to change your email address.</value>
   </data>
-  <data name="Error - the new email address is already in use." xml:space="preserve">
-    <value>Error - the new email address is already in use.</value>
+  <data name="Error - email could not be changed. Contact the site administrator for support." xml:space="preserve">
+    <value>Error - email could not be changed. Contact the site administrator for support.</value>
+  </data>
+  <data name="A notification email will be sent your old email address." xml:space="preserve">
+    <value>A notification email will be sent your old email address.</value>
+  </data>
+  <data name="Email address was changed successfully." xml:space="preserve">
+    <value>Email address was changed successfully.</value>
+  </data>
+  <data name="Notification emails will be sent to old and new addresses." xml:space="preserve">
+    <value>Notification emails will be sent to old and new addresses.</value>
   </data>
 </root>

@@ -98,7 +98,8 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
                 TwoFactor         = user.TwoFactorEnabled,
                 Logins            = await UserManager.GetLoginsAsync(user),
                 BrowserRemembered = await SignInManager.IsTwoFactorClientRememberedAsync(user),
-                TimeZone          = user.TimeZoneId
+                TimeZone          = user.TimeZoneId,
+                Email             = user.Email
             };
 
             if(string.IsNullOrEmpty(model.TimeZone))
@@ -106,7 +107,7 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
                 model.TimeZone = await TimeZoneIdResolver.GetSiteTimeZoneId();
             }
             
-            return View(model);
+            return View("Index", model);
         }
 
         [Authorize]
@@ -237,9 +238,10 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
                 return View(model);
             }
 
-            if(await UserManager.EmailExistsInDB(CurrentSite.Id, model.NewEmail))
+            // Note - need to check the behaviour of this in related sites mode
+            if (await UserManager.EmailExistsInDB(CurrentSite.Id, model.NewEmail))
             {
-                this.AlertDanger(StringLocalizer["Error - the new email address is already in use."]);
+                this.AlertDanger(StringLocalizer["Error - email could not be changed. Contact the site administrator for support."]);
                 return View(model);
             }
 
@@ -252,21 +254,21 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
                 Protocol   = HttpContext.Request.Scheme
             });
 
-            if (!model.RequireConfirmedEmail)  
+            if (!model.RequireConfirmedEmail)
             {
                 // no need for round-trip email confirmation
                 try
                 {
                     var success = await EmailChangeHandler.HandleEmailChangeWithoutUserConfirmation(model, user, token, siteUrl);
 
-                    if(success) 
+                    if (success)
                         this.AlertSuccess(model.SuccessNotification, true);
-                    else 
+                    else
                         this.AlertDanger(model.SuccessNotification, true);
                 }
                 catch (Exception ex)
                 {
-                    this.AlertDanger(StringLocalizer["An error occurred changing email address - see logs for details."], true);
+                    this.AlertDanger(StringLocalizer["Error - email could not be changed. Contact the site administrator for support."], true);
                     Log.LogError(ex, $"Unexpected error occurred changing email address for user ID '{user.Id}'.");
                 }
             }
@@ -286,19 +288,46 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
                     var success = await EmailChangeHandler.HandleEmailChangeWithUserConfirmation(model, user, token, confirmationUrl, siteUrl);
 
                     if (success)
+                    { 
                         this.AlertSuccess(model.SuccessNotification, true);
+                        return View("EmailChangeConfirmationSent", model);
+                    }
                     else
+                    { 
                         this.AlertDanger(model.SuccessNotification, true);
+                    }
                 }
                 catch (Exception ex)
                 {
-                    this.AlertDanger(StringLocalizer["An error occurred sending email change confirmation - see logs for details."], true);
+                    this.AlertDanger(StringLocalizer["Error - email could not be changed. Contact the site administrator for support."], true);
                     Log.LogError(ex, $"Unexpected error occurred sending email change confirmation for user ID '{user.Id}'.");
                 }
             }
 
-            return View(model);
+            return await Index();  // Route back to Index Page, taking toast alerts along
         }
+
+        private async Task<IActionResult> RouteToIndexPage(SiteUser user)
+        {
+            var model = new AccountIndexViewModel
+            {
+                HasPassword       = (!string.IsNullOrWhiteSpace(user.PasswordHash)),
+                PhoneNumber       = !string.IsNullOrWhiteSpace(user.PhoneNumber) ? user.PhoneNumber : null,
+                TwoFactor         = user.TwoFactorEnabled,
+                Logins            = await UserManager.GetLoginsAsync(user),
+                BrowserRemembered = await SignInManager.IsTwoFactorClientRememberedAsync(user),
+                TimeZone          = user.TimeZoneId,
+                Email             = user.Email
+            };
+
+            if (string.IsNullOrEmpty(model.TimeZone))
+            {
+                model.TimeZone = await TimeZoneIdResolver.GetSiteTimeZoneId();
+            }
+
+            return View("Index", model);
+        }
+
 
         [Authorize]
         [HttpGet]
@@ -347,11 +376,11 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
             }
             catch (Exception ex)
             {
-                this.AlertDanger(StringLocalizer["An error occurred changing email address - see logs for details."], true);
+                this.AlertDanger(StringLocalizer["Error - email could not be changed. Contact the site administrator for support."], true);
                 Log.LogError(ex, $"Unexpected error occurred changing email address for user ID '{user.Id}'.");
             }
 
-            return View("ChangeUserEmail", model);
+            return await Index(); // Route back to Index Page, taking toast alerts along
         }
 
 

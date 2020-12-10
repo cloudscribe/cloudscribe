@@ -45,7 +45,7 @@ namespace cloudscribe.Core.Web.Components
             if (result.Succeeded)
             {
                 Log.LogInformation($"User with ID {user.Id} changed email address successfully.");
-                model.SuccessNotification = "Email address changed successfully.";
+                model.SuccessNotification = "Email address was changed successfully.";
 
                 if (model.EmailIsConfigured)
                 {
@@ -65,7 +65,7 @@ namespace cloudscribe.Core.Web.Components
             }
             else
             {
-                model.SuccessNotification = StringLocalizer["An error occurred changing email address - see logs for details."];
+                model.SuccessNotification = StringLocalizer["Error - email could not be changed. Contact the site administrator for support."];
                 var resultError = $"Error occurred changing email address for user ID '{user.Id}'";
                 if (result?.Errors != null && result.Errors.Count() > 0)
                     resultError += result.Errors.First().Description;
@@ -99,7 +99,7 @@ namespace cloudscribe.Core.Web.Components
                         token
                         );
 
-            model.SuccessNotification = StringLocalizer["An email has been sent to your new address. Please click the link in that email to confirm this change."];
+            model.SuccessNotification = StringLocalizer["Please check your email inbox, we just sent you a link that you need to click to confirm your account."];
             return true;
         }
 
@@ -115,7 +115,7 @@ namespace cloudscribe.Core.Web.Components
             if (result.Succeeded)
             {
                 Log.LogInformation($"User with ID {user.Id} changed email address successfully.");
-                model.SuccessNotification = "Email address changed successfully.";
+                model.SuccessNotification = "Email address was changed successfully.";
 
                 if (model.EmailIsConfigured)
                 {
@@ -135,7 +135,7 @@ namespace cloudscribe.Core.Web.Components
             }
             else
             {
-                model.SuccessNotification = StringLocalizer["An error occurred changing email address - see logs for details."];
+                model.SuccessNotification = StringLocalizer["Error - email could not be changed. Contact the site administrator for support."];
                 var resultError = $"Error occurred changing email address for user ID '{user.Id}'";
                 if (result?.Errors != null && result.Errors.Count() > 0)
                     resultError += result.Errors.First().Description;
