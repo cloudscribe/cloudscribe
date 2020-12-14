@@ -1,0 +1,11 @@
+﻿@model cloudscribe.Core.Web.ViewModels.SiteUser.ChangeUserEmailViewModel
+@inject IStringLocalizer<CloudscribeCore> sr
+@{
+    ViewData["Title"] = sr["Please Confirm Email Address"];
+    ViewData["BodyClass"] = "manage-section change-user-email";
+}
+<h2>@ViewData["Title"]</h2>
+
+<p>Before you can Log in, we need to confirm that the email address you provided is valid. <br />
+    We sent an email to the address you provided with a link that you need to click in order to confirm your email address is valid.
+</p>

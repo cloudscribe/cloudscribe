@@ -110,7 +110,7 @@ namespace cloudscribe.Core.Models.DataExtensions
             //if (reader["UserGuid"] != DBNull.Value)
             //{
             //    user.Id = new Guid(reader["UserGuid"].ToString());
-            //}
+            //} 
 
             user.DisplayName = reader["Name"].ToString();
             user.UserName = reader["LoginName"].ToString();
@@ -249,6 +249,7 @@ namespace cloudscribe.Core.Models.DataExtensions
 
             //site.ReallyDeleteUsers = Convert.ToBoolean(reader["ReallyDeleteUsers"]);
             site.UseEmailForLogin = Convert.ToBoolean(reader["UseEmailForLogin"]);
+            site.AllowUserToChangeEmail = Convert.ToBoolean(reader["AllowUserToChangeEmail"]);
             
             site.RequiresQuestionAndAnswer = Convert.ToBoolean(reader["RequiresQuestionAndAnswer"]);
             site.MaxInvalidPasswordAttempts = Convert.ToInt32(reader["MaxInvalidPasswordAttempts"]);

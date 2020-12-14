@@ -15,26 +15,30 @@ namespace cloudscribe.Core.Storage.EFCore.pgsql.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("Npgsql:PostgresExtension:uuid-ossp", "'uuid-ossp', '', ''")
-                .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.SerialColumn)
-                .HasAnnotation("ProductVersion", "2.2.1-servicing-10028")
+                .HasAnnotation("Npgsql:PostgresExtension:uuid-ossp", ",,")
+                .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn)
+                .HasAnnotation("ProductVersion", "3.1.0")
                 .HasAnnotation("Relational:MaxIdentifierLength", 63);
 
             modelBuilder.Entity("cloudscribe.Core.Models.Geography.GeoCountry", b =>
                 {
                     b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd();
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
 
                     b.Property<string>("ISOCode2")
                         .IsRequired()
+                        .HasColumnType("character varying(2)")
                         .HasMaxLength(2);
 
                     b.Property<string>("ISOCode3")
                         .IsRequired()
+                        .HasColumnType("character varying(3)")
                         .HasMaxLength(3);
 
                     b.Property<string>("Name")
                         .IsRequired()
+                        .HasColumnType("character varying(255)")
                         .HasMaxLength(255);
 
                     b.HasKey("Id");
@@ -47,16 +51,20 @@ namespace cloudscribe.Core.Storage.EFCore.pgsql.Migrations
             modelBuilder.Entity("cloudscribe.Core.Models.Geography.GeoZone", b =>
                 {
                     b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd();
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
 
                     b.Property<string>("Code")
                         .IsRequired()
+                        .HasColumnType("character varying(255)")
                         .HasMaxLength(255);
 
-                    b.Property<Guid>("CountryId");
+                    b.Property<Guid>("CountryId")
+                        .HasColumnType("uuid");
 
                     b.Property<string>("Name")
                         .IsRequired()
+                        .HasColumnType("character varying(255)")
                         .HasMaxLength(255);
 
                     b.HasKey("Id");
@@ -71,13 +79,16 @@ namespace cloudscribe.Core.Storage.EFCore.pgsql.Migrations
             modelBuilder.Entity("cloudscribe.Core.Models.SiteHost", b =>
                 {
                     b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd();
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
 
                     b.Property<string>("HostName")
                         .IsRequired()
+                        .HasColumnType("character varying(255)")
                         .HasMaxLength(255);
 
-                    b.Property<Guid>("SiteId");
+                    b.Property<Guid>("SiteId")
+                        .HasColumnType("uuid");
 
                     b.HasKey("Id");
 
@@ -91,17 +102,21 @@ namespace cloudscribe.Core.Storage.EFCore.pgsql.Migrations
             modelBuilder.Entity("cloudscribe.Core.Models.SiteRole", b =>
                 {
                     b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd();
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
 
                     b.Property<string>("NormalizedRoleName")
                         .IsRequired()
+                        .HasColumnType("character varying(50)")
                         .HasMaxLength(50);
 
                     b.Property<string>("RoleName")
                         .IsRequired()
+                        .HasColumnType("character varying(50)")
                         .HasMaxLength(50);
 
-                    b.Property<Guid>("SiteId");
+                    b.Property<Guid>("SiteId")
+                        .HasColumnType("uuid");
 
                     b.HasKey("Id");
 
@@ -118,263 +133,369 @@ namespace cloudscribe.Core.Storage.EFCore.pgsql.Migrations
             modelBuilder.Entity("cloudscribe.Core.Models.SiteSettings", b =>
                 {
                     b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd();
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
 
-                    b.Property<string>("AccountApprovalEmailCsv");
+                    b.Property<string>("AccountApprovalEmailCsv")
+                        .HasColumnType("text");
 
                     b.Property<string>("AddThisDotComUsername")
+                        .HasColumnType("character varying(50)")
                         .HasMaxLength(50);
 
                     b.Property<string>("AliasId")
+                        .HasColumnType("character varying(36)")
                         .HasMaxLength(36);
 
-                    b.Property<bool>("AllowNewRegistration");
+                    b.Property<bool>("AllowNewRegistration")
+                        .HasColumnType("boolean");
 
-                    b.Property<bool>("AllowPersistentLogin");
+                    b.Property<bool>("AllowPersistentLogin")
+                        .HasColumnType("boolean");
 
-                    b.Property<bool>("CaptchaOnLogin");
+                    b.Property<bool>("AllowUserToChangeEmail")
+                        .HasColumnType("boolean");
 
-                    b.Property<bool>("CaptchaOnRegistration");
+                    b.Property<bool>("CaptchaOnLogin")
+                        .HasColumnType("boolean");
+
+                    b.Property<bool>("CaptchaOnRegistration")
+                        .HasColumnType("boolean");
 
                     b.Property<string>("CompanyCountry")
+                        .HasColumnType("character varying(10)")
                         .HasMaxLength(10);
 
                     b.Property<string>("CompanyFax")
+                        .HasColumnType("character varying(20)")
                         .HasMaxLength(20);
 
                     b.Property<string>("CompanyLocality")
+                        .HasColumnType("character varying(200)")
                         .HasMaxLength(200);
 
                     b.Property<string>("CompanyName")
+                        .HasColumnType("character varying(250)")
                         .HasMaxLength(250);
 
                     b.Property<string>("CompanyPhone")
+                        .HasColumnType("character varying(20)")
                         .HasMaxLength(20);
 
                     b.Property<string>("CompanyPostalCode")
+                        .HasColumnType("character varying(20)")
                         .HasMaxLength(20);
 
                     b.Property<string>("CompanyPublicEmail")
+                        .HasColumnType("character varying(100)")
                         .HasMaxLength(100);
 
                     b.Property<string>("CompanyRegion")
+                        .HasColumnType("character varying(200)")
                         .HasMaxLength(200);
 
                     b.Property<string>("CompanyStreetAddress")
+                        .HasColumnType("character varying(250)")
                         .HasMaxLength(250);
 
                     b.Property<string>("CompanyStreetAddress2")
+                        .HasColumnType("character varying(250)")
                         .HasMaxLength(250);
 
                     b.Property<string>("CompanyWebsite")
+                        .HasColumnType("character varying(255)")
                         .HasMaxLength(255);
 
-                    b.Property<string>("ConcurrencyStamp");
+                    b.Property<string>("ConcurrencyStamp")
+                        .HasColumnType("text");
 
                     b.Property<string>("CookiePolicySummary")
+                        .HasColumnType("character varying(255)")
                         .HasMaxLength(255);
 
-                    b.Property<DateTime>("CreatedUtc");
+                    b.Property<DateTime>("CreatedUtc")
+                        .HasColumnType("timestamp without time zone");
 
                     b.Property<string>("DefaultEmailFromAddress")
+                        .HasColumnType("character varying(100)")
                         .HasMaxLength(100);
 
                     b.Property<string>("DefaultEmailFromAlias")
+                        .HasColumnType("character varying(100)")
                         .HasMaxLength(100);
 
-                    b.Property<bool>("DisableDbAuth");
+                    b.Property<bool>("DisableDbAuth")
+                        .HasColumnType("boolean");
 
                     b.Property<string>("DkimDomain")
+                        .HasColumnType("character varying(255)")
                         .HasMaxLength(255);
 
-                    b.Property<string>("DkimPrivateKey");
+                    b.Property<string>("DkimPrivateKey")
+                        .HasColumnType("text");
 
-                    b.Property<string>("DkimPublicKey");
+                    b.Property<string>("DkimPublicKey")
+                        .HasColumnType("text");
 
                     b.Property<string>("DkimSelector")
+                        .HasColumnType("character varying(128)")
                         .HasMaxLength(128);
 
-                    b.Property<string>("EmailApiEndpoint");
+                    b.Property<string>("EmailApiEndpoint")
+                        .HasColumnType("text");
 
-                    b.Property<string>("EmailApiKey");
+                    b.Property<string>("EmailApiKey")
+                        .HasColumnType("text");
 
                     b.Property<string>("EmailSenderName")
                         .IsRequired()
                         .ValueGeneratedOnAdd()
+                        .HasColumnType("character varying(100)")
                         .HasMaxLength(100)
                         .HasDefaultValue("SmtpMailSender");
 
                     b.Property<string>("FacebookAppId")
+                        .HasColumnType("character varying(100)")
                         .HasMaxLength(100);
 
-                    b.Property<string>("FacebookAppSecret");
+                    b.Property<string>("FacebookAppSecret")
+                        .HasColumnType("text");
 
-                    b.Property<string>("FooterContent");
+                    b.Property<string>("FooterContent")
+                        .HasColumnType("text");
 
                     b.Property<string>("ForcedCulture")
+                        .HasColumnType("character varying(10)")
                         .HasMaxLength(10);
 
                     b.Property<string>("ForcedUICulture")
+                        .HasColumnType("character varying(10)")
                         .HasMaxLength(10);
 
                     b.Property<string>("GoogleAnalyticsProfileId")
+                        .HasColumnType("character varying(25)")
                         .HasMaxLength(25);
 
                     b.Property<string>("GoogleClientId")
+                        .HasColumnType("character varying(100)")
                         .HasMaxLength(100);
 
-                    b.Property<string>("GoogleClientSecret");
+                    b.Property<string>("GoogleClientSecret")
+                        .HasColumnType("text");
 
-                    b.Property<string>("HeaderContent");
+                    b.Property<string>("HeaderContent")
+                        .HasColumnType("text");
 
-                    b.Property<bool>("IsDataProtected");
+                    b.Property<bool>("IsDataProtected")
+                        .HasColumnType("boolean");
 
-                    b.Property<bool>("IsServerAdminSite");
+                    b.Property<bool>("IsServerAdminSite")
+                        .HasColumnType("boolean");
 
-                    b.Property<DateTime>("LastModifiedUtc");
+                    b.Property<DateTime>("LastModifiedUtc")
+                        .HasColumnType("timestamp without time zone");
 
                     b.Property<string>("LdapDomain")
+                        .HasColumnType("character varying(255)")
                         .HasMaxLength(255);
 
-                    b.Property<int>("LdapPort");
+                    b.Property<int>("LdapPort")
+                        .HasColumnType("integer");
 
                     b.Property<string>("LdapRootDN")
+                        .HasColumnType("character varying(255)")
                         .HasMaxLength(255);
 
                     b.Property<string>("LdapServer")
+                        .HasColumnType("character varying(255)")
                         .HasMaxLength(255);
 
-                    b.Property<bool>("LdapUseSsl");
+                    b.Property<bool>("LdapUseSsl")
+                        .HasColumnType("boolean");
 
                     b.Property<string>("LdapUserDNFormat")
+                        .HasColumnType("character varying(100)")
                         .HasMaxLength(100);
 
                     b.Property<string>("LdapUserDNKey")
+                        .HasColumnType("character varying(10)")
                         .HasMaxLength(10);
 
-                    b.Property<string>("LoginInfoBottom");
+                    b.Property<string>("LoginInfoBottom")
+                        .HasColumnType("text");
 
-                    b.Property<string>("LoginInfoTop");
+                    b.Property<string>("LoginInfoTop")
+                        .HasColumnType("text");
 
                     b.Property<string>("LogoUrl")
+                        .HasColumnType("character varying(250)")
                         .HasMaxLength(250);
 
-                    b.Property<int>("MaxInvalidPasswordAttempts");
+                    b.Property<int>("MaxInvalidPasswordAttempts")
+                        .HasColumnType("integer");
 
                     b.Property<string>("MicrosoftClientId")
+                        .HasColumnType("character varying(100)")
                         .HasMaxLength(100);
 
-                    b.Property<string>("MicrosoftClientSecret");
+                    b.Property<string>("MicrosoftClientSecret")
+                        .HasColumnType("text");
 
-                    b.Property<int>("MinRequiredPasswordLength");
+                    b.Property<int>("MinRequiredPasswordLength")
+                        .HasColumnType("integer");
 
                     b.Property<string>("OidConnectAppId")
+                        .HasColumnType("character varying(255)")
                         .HasMaxLength(255);
 
                     b.Property<string>("OidConnectAppSecret")
+                        .HasColumnType("character varying(255)")
                         .HasMaxLength(255);
 
                     b.Property<string>("OidConnectAuthority")
+                        .HasColumnType("character varying(255)")
                         .HasMaxLength(255);
 
                     b.Property<string>("OidConnectDisplayName")
+                        .HasColumnType("character varying(150)")
                         .HasMaxLength(150);
 
-                    b.Property<string>("OidConnectScopesCsv");
+                    b.Property<string>("OidConnectScopesCsv")
+                        .HasColumnType("text");
 
                     b.Property<string>("PreferredHostName")
+                        .HasColumnType("character varying(250)")
                         .HasMaxLength(250);
 
-                    b.Property<string>("PrivacyPolicy");
+                    b.Property<string>("PrivacyPolicy")
+                        .HasColumnType("text");
 
-                    b.Property<bool>("PwdRequireDigit");
+                    b.Property<bool>("PwdRequireDigit")
+                        .HasColumnType("boolean");
 
-                    b.Property<bool>("PwdRequireLowercase");
+                    b.Property<bool>("PwdRequireLowercase")
+                        .HasColumnType("boolean");
 
-                    b.Property<bool>("PwdRequireNonAlpha");
+                    b.Property<bool>("PwdRequireNonAlpha")
+                        .HasColumnType("boolean");
 
-                    b.Property<bool>("PwdRequireUppercase");
+                    b.Property<bool>("PwdRequireUppercase")
+                        .HasColumnType("boolean");
 
                     b.Property<string>("RecaptchaPrivateKey")
+                        .HasColumnType("character varying(255)")
                         .HasMaxLength(255);
 
                     b.Property<string>("RecaptchaPublicKey")
+                        .HasColumnType("character varying(255)")
                         .HasMaxLength(255);
 
-                    b.Property<string>("RegistrationAgreement");
+                    b.Property<string>("RegistrationAgreement")
+                        .HasColumnType("text");
 
-                    b.Property<string>("RegistrationPreamble");
+                    b.Property<string>("RegistrationPreamble")
+                        .HasColumnType("text");
 
-                    b.Property<bool>("Require2FA");
+                    b.Property<bool>("Require2FA")
+                        .HasColumnType("boolean");
 
-                    b.Property<bool>("RequireApprovalBeforeLogin");
+                    b.Property<bool>("RequireApprovalBeforeLogin")
+                        .HasColumnType("boolean");
 
-                    b.Property<bool>("RequireConfirmedEmail");
+                    b.Property<bool>("RequireConfirmedEmail")
+                        .HasColumnType("boolean");
 
-                    b.Property<bool>("RequireConfirmedPhone");
+                    b.Property<bool>("RequireConfirmedPhone")
+                        .HasColumnType("boolean");
 
-                    b.Property<bool>("RequireCookieConsent");
+                    b.Property<bool>("RequireCookieConsent")
+                        .HasColumnType("boolean");
 
-                    b.Property<bool>("RequiresQuestionAndAnswer");
+                    b.Property<bool>("RequiresQuestionAndAnswer")
+                        .HasColumnType("boolean");
 
-                    b.Property<bool>("ShowSiteNameLink");
+                    b.Property<bool>("ShowSiteNameLink")
+                        .HasColumnType("boolean");
 
-                    b.Property<bool>("SignEmailWithDkim");
+                    b.Property<bool>("SignEmailWithDkim")
+                        .HasColumnType("boolean");
 
-                    b.Property<bool>("SingleBrowserSessions");
+                    b.Property<bool>("SingleBrowserSessions")
+                        .HasColumnType("boolean");
 
                     b.Property<string>("SiteFolderName")
+                        .HasColumnType("character varying(50)")
                         .HasMaxLength(50);
 
-                    b.Property<bool>("SiteIsClosed");
+                    b.Property<bool>("SiteIsClosed")
+                        .HasColumnType("boolean");
 
-                    b.Property<string>("SiteIsClosedMessage");
+                    b.Property<string>("SiteIsClosedMessage")
+                        .HasColumnType("text");
 
                     b.Property<string>("SiteName")
                         .IsRequired()
+                        .HasColumnType("character varying(255)")
                         .HasMaxLength(255);
 
                     b.Property<string>("SmsClientId")
+                        .HasColumnType("character varying(255)")
                         .HasMaxLength(255);
 
                     b.Property<string>("SmsFrom")
+                        .HasColumnType("character varying(100)")
                         .HasMaxLength(100);
 
-                    b.Property<string>("SmsSecureToken");
+                    b.Property<string>("SmsSecureToken")
+                        .HasColumnType("text");
 
-                    b.Property<string>("SmtpPassword");
+                    b.Property<string>("SmtpPassword")
+                        .HasColumnType("text");
 
-                    b.Property<int>("SmtpPort");
+                    b.Property<int>("SmtpPort")
+                        .HasColumnType("integer");
 
                     b.Property<string>("SmtpPreferredEncoding")
+                        .HasColumnType("character varying(20)")
                         .HasMaxLength(20);
 
-                    b.Property<bool>("SmtpRequiresAuth");
+                    b.Property<bool>("SmtpRequiresAuth")
+                        .HasColumnType("boolean");
 
                     b.Property<string>("SmtpServer")
+                        .HasColumnType("character varying(200)")
                         .HasMaxLength(200);
 
-                    b.Property<bool>("SmtpUseSsl");
+                    b.Property<bool>("SmtpUseSsl")
+                        .HasColumnType("boolean");
 
                     b.Property<string>("SmtpUser")
+                        .HasColumnType("character varying(500)")
                         .HasMaxLength(500);
 
-                    b.Property<DateTime>("TermsUpdatedUtc");
+                    b.Property<DateTime>("TermsUpdatedUtc")
+                        .HasColumnType("timestamp without time zone");
 
                     b.Property<string>("Theme")
+                        .HasColumnType("character varying(100)")
                         .HasMaxLength(100);
 
                     b.Property<string>("TimeZoneId")
+                        .HasColumnType("character varying(50)")
                         .HasMaxLength(50);
 
                     b.Property<string>("TwitterConsumerKey")
+                        .HasColumnType("character varying(100)")
                         .HasMaxLength(100);
 
-                    b.Property<string>("TwitterConsumerSecret");
+                    b.Property<string>("TwitterConsumerSecret")
+                        .HasColumnType("text");
 
-                    b.Property<bool>("UseEmailForLogin");
+                    b.Property<bool>("UseEmailForLogin")
+                        .HasColumnType("boolean");
 
-                    b.Property<bool>("UseInvisibleRecaptcha");
+                    b.Property<bool>("UseInvisibleRecaptcha")
+                        .HasColumnType("boolean");
 
                     b.HasKey("Id");
 
@@ -388,101 +509,141 @@ namespace cloudscribe.Core.Storage.EFCore.pgsql.Migrations
             modelBuilder.Entity("cloudscribe.Core.Models.SiteUser", b =>
                 {
                     b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd();
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
 
-                    b.Property<int>("AccessFailedCount");
+                    b.Property<int>("AccessFailedCount")
+                        .HasColumnType("integer");
 
-                    b.Property<bool>("AccountApproved");
+                    b.Property<bool>("AccountApproved")
+                        .HasColumnType("boolean");
 
-                    b.Property<DateTime?>("AgreementAcceptedUtc");
+                    b.Property<DateTime?>("AgreementAcceptedUtc")
+                        .HasColumnType("timestamp without time zone");
 
-                    b.Property<string>("AuthorBio");
+                    b.Property<string>("AuthorBio")
+                        .HasColumnType("text");
 
                     b.Property<string>("AvatarUrl")
+                        .HasColumnType("character varying(255)")
                         .HasMaxLength(255);
 
                     b.Property<string>("BrowserKey")
+                        .HasColumnType("character varying(50)")
                         .HasMaxLength(50);
 
-                    b.Property<bool>("CanAutoLockout");
+                    b.Property<bool>("CanAutoLockout")
+                        .HasColumnType("boolean");
 
-                    b.Property<string>("Comment");
+                    b.Property<string>("Comment")
+                        .HasColumnType("text");
 
-                    b.Property<DateTime>("CreatedUtc");
+                    b.Property<DateTime>("CreatedUtc")
+                        .HasColumnType("timestamp without time zone");
 
-                    b.Property<DateTime?>("DateOfBirth");
+                    b.Property<DateTime?>("DateOfBirth")
+                        .HasColumnType("timestamp without time zone");
 
-                    b.Property<bool>("DisplayInMemberList");
+                    b.Property<bool>("DisplayInMemberList")
+                        .HasColumnType("boolean");
 
                     b.Property<string>("DisplayName")
                         .IsRequired()
+                        .HasColumnType("character varying(100)")
                         .HasMaxLength(100);
 
                     b.Property<string>("Email")
+                        .HasColumnType("character varying(100)")
                         .HasMaxLength(100);
 
-                    b.Property<DateTime?>("EmailConfirmSentUtc");
+                    b.Property<DateTime?>("EmailConfirmSentUtc")
+                        .HasColumnType("timestamp without time zone");
 
-                    b.Property<bool>("EmailConfirmed");
+                    b.Property<bool>("EmailConfirmed")
+                        .HasColumnType("boolean");
 
                     b.Property<string>("FirstName")
+                        .HasColumnType("character varying(100)")
                         .HasMaxLength(100);
 
-                    b.Property<string>("Gender");
+                    b.Property<string>("Gender")
+                        .HasColumnType("text");
 
-                    b.Property<bool>("IsLockedOut");
+                    b.Property<bool>("IsLockedOut")
+                        .HasColumnType("boolean");
 
-                    b.Property<DateTime?>("LastLoginUtc");
+                    b.Property<DateTime?>("LastLoginUtc")
+                        .HasColumnType("timestamp without time zone");
 
-                    b.Property<DateTime>("LastModifiedUtc");
+                    b.Property<DateTime>("LastModifiedUtc")
+                        .HasColumnType("timestamp without time zone");
 
                     b.Property<string>("LastName")
+                        .HasColumnType("character varying(100)")
                         .HasMaxLength(100);
 
-                    b.Property<DateTime?>("LastPasswordChangeUtc");
+                    b.Property<DateTime?>("LastPasswordChangeUtc")
+                        .HasColumnType("timestamp without time zone");
 
-                    b.Property<DateTime?>("LockoutEndDateUtc");
+                    b.Property<DateTime?>("LockoutEndDateUtc")
+                        .HasColumnType("timestamp without time zone");
 
-                    b.Property<bool>("MustChangePwd");
+                    b.Property<bool>("MustChangePwd")
+                        .HasColumnType("boolean");
 
                     b.Property<string>("NewEmail")
+                        .HasColumnType("character varying(100)")
                         .HasMaxLength(100);
 
-                    b.Property<bool>("NewEmailApproved");
+                    b.Property<bool>("NewEmailApproved")
+                        .HasColumnType("boolean");
 
                     b.Property<string>("NormalizedEmail")
+                        .HasColumnType("character varying(100)")
                         .HasMaxLength(100);
 
                     b.Property<string>("NormalizedUserName")
                         .IsRequired()
+                        .HasColumnType("character varying(50)")
                         .HasMaxLength(50);
 
-                    b.Property<string>("PasswordHash");
+                    b.Property<string>("PasswordHash")
+                        .HasColumnType("text");
 
                     b.Property<string>("PhoneNumber")
+                        .HasColumnType("character varying(50)")
                         .HasMaxLength(50);
 
-                    b.Property<bool>("PhoneNumberConfirmed");
+                    b.Property<bool>("PhoneNumberConfirmed")
+                        .HasColumnType("boolean");
 
-                    b.Property<bool>("RolesChanged");
+                    b.Property<bool>("RolesChanged")
+                        .HasColumnType("boolean");
 
                     b.Property<string>("SecurityStamp")
+                        .HasColumnType("character varying(50)")
                         .HasMaxLength(50);
 
-                    b.Property<string>("Signature");
+                    b.Property<string>("Signature")
+                        .HasColumnType("text");
 
-                    b.Property<Guid>("SiteId");
+                    b.Property<Guid>("SiteId")
+                        .HasColumnType("uuid");
 
                     b.Property<string>("TimeZoneId")
+                        .HasColumnType("character varying(50)")
                         .HasMaxLength(50);
 
-                    b.Property<bool>("TwoFactorEnabled");
+                    b.Property<bool>("TwoFactorEnabled")
+                        .HasColumnType("boolean");
 
                     b.Property<string>("UserName")
                         .IsRequired()
+                        .HasColumnType("character varying(50)")
                         .HasMaxLength(50);
 
                     b.Property<string>("WebSiteUrl")
+                        .HasColumnType("character varying(100)")
                         .HasMaxLength(100);
 
                     b.HasKey("Id");
@@ -501,16 +662,21 @@ namespace cloudscribe.Core.Storage.EFCore.pgsql.Migrations
             modelBuilder.Entity("cloudscribe.Core.Models.UserClaim", b =>
                 {
                     b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd();
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
 
                     b.Property<string>("ClaimType")
+                        .HasColumnType("character varying(255)")
                         .HasMaxLength(255);
 
-                    b.Property<string>("ClaimValue");
+                    b.Property<string>("ClaimValue")
+                        .HasColumnType("text");
 
-                    b.Property<Guid>("SiteId");
+                    b.Property<Guid>("SiteId")
+                        .HasColumnType("uuid");
 
-                    b.Property<Guid>("UserId");
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("uuid");
 
                     b.HasKey("Id");
 
@@ -526,47 +692,64 @@ namespace cloudscribe.Core.Storage.EFCore.pgsql.Migrations
             modelBuilder.Entity("cloudscribe.Core.Models.UserLocation", b =>
                 {
                     b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd();
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
 
-                    b.Property<int>("CaptureCount");
+                    b.Property<int>("CaptureCount")
+                        .HasColumnType("integer");
 
                     b.Property<string>("City")
+                        .HasColumnType("character varying(255)")
                         .HasMaxLength(255);
 
                     b.Property<string>("Continent")
+                        .HasColumnType("character varying(255)")
                         .HasMaxLength(255);
 
                     b.Property<string>("Country")
+                        .HasColumnType("character varying(255)")
                         .HasMaxLength(255);
 
-                    b.Property<DateTime>("FirstCaptureUtc");
+                    b.Property<DateTime>("FirstCaptureUtc")
+                        .HasColumnType("timestamp without time zone");
 
                     b.Property<string>("HostName")
+                        .HasColumnType("character varying(255)")
                         .HasMaxLength(255);
 
                     b.Property<string>("IpAddress")
+                        .HasColumnType("character varying(50)")
                         .HasMaxLength(50);
 
-                    b.Property<long>("IpAddressLong");
+                    b.Property<long>("IpAddressLong")
+                        .HasColumnType("bigint");
 
                     b.Property<string>("Isp")
+                        .HasColumnType("character varying(255)")
                         .HasMaxLength(255);
 
-                    b.Property<DateTime>("LastCaptureUtc");
+                    b.Property<DateTime>("LastCaptureUtc")
+                        .HasColumnType("timestamp without time zone");
 
-                    b.Property<double>("Latitude");
+                    b.Property<double>("Latitude")
+                        .HasColumnType("double precision");
 
-                    b.Property<double>("Longitude");
+                    b.Property<double>("Longitude")
+                        .HasColumnType("double precision");
 
                     b.Property<string>("Region")
+                        .HasColumnType("character varying(255)")
                         .HasMaxLength(255);
 
-                    b.Property<Guid>("SiteId");
+                    b.Property<Guid>("SiteId")
+                        .HasColumnType("uuid");
 
                     b.Property<string>("TimeZone")
+                        .HasColumnType("character varying(255)")
                         .HasMaxLength(255);
 
-                    b.Property<Guid>("UserId");
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("uuid");
 
                     b.HasKey("Id");
 
@@ -579,17 +762,22 @@ namespace cloudscribe.Core.Storage.EFCore.pgsql.Migrations
 
             modelBuilder.Entity("cloudscribe.Core.Models.UserLogin", b =>
                 {
-                    b.Property<Guid>("UserId");
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("uuid");
 
-                    b.Property<Guid>("SiteId");
+                    b.Property<Guid>("SiteId")
+                        .HasColumnType("uuid");
 
                     b.Property<string>("LoginProvider")
+                        .HasColumnType("character varying(128)")
                         .HasMaxLength(128);
 
                     b.Property<string>("ProviderKey")
+                        .HasColumnType("character varying(128)")
                         .HasMaxLength(128);
 
                     b.Property<string>("ProviderDisplayName")
+                        .HasColumnType("character varying(100)")
                         .HasMaxLength(100);
 
                     b.HasKey("UserId", "SiteId", "LoginProvider", "ProviderKey");
@@ -603,9 +791,11 @@ namespace cloudscribe.Core.Storage.EFCore.pgsql.Migrations
 
             modelBuilder.Entity("cloudscribe.Core.Models.UserRole", b =>
                 {
-                    b.Property<Guid>("UserId");
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("uuid");
 
-                    b.Property<Guid>("RoleId");
+                    b.Property<Guid>("RoleId")
+                        .HasColumnType("uuid");
 
                     b.HasKey("UserId", "RoleId");
 
@@ -618,17 +808,22 @@ namespace cloudscribe.Core.Storage.EFCore.pgsql.Migrations
 
             modelBuilder.Entity("cloudscribe.Core.Models.UserToken", b =>
                 {
-                    b.Property<Guid>("UserId");
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("uuid");
 
-                    b.Property<Guid>("SiteId");
+                    b.Property<Guid>("SiteId")
+                        .HasColumnType("uuid");
 
                     b.Property<string>("LoginProvider")
+                        .HasColumnType("character varying(450)")
                         .HasMaxLength(450);
 
                     b.Property<string>("Name")
+                        .HasColumnType("character varying(450)")
                         .HasMaxLength(450);
 
-                    b.Property<string>("Value");
+                    b.Property<string>("Value")
+                        .HasColumnType("text");
 
                     b.HasKey("UserId", "SiteId", "LoginProvider", "Name");
 

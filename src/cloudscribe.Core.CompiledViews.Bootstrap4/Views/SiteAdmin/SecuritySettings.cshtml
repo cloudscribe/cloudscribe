@@ -18,6 +18,12 @@
     </div>
     <div class="form-group">
         <div class="form-check">
+            <input asp-for="AllowUserToChangeEmail" class="form-check-input" />
+            <label asp-for="AllowUserToChangeEmail" class="form-check-label">@sr["Allow user to change email address"]</label>
+        </div>
+    </div>
+    <div class="form-group">
+        <div class="form-check">
             <input asp-for="AllowNewRegistration" class="form-check-input" />
             <label asp-for="AllowNewRegistration" class="form-check-label">@sr["Allow new registrations"]</label>
         </div>

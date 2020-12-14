@@ -31,34 +31,34 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
     public class SiteAdminController : Controller
     {
         public SiteAdminController(
-            SiteManager siteManager,
-            GeoDataManager geoDataManager,
-            ILdapHelper ldapHelper,
-            ISiteAccountCapabilitiesProvider siteCapabilities,
-            IEnumerable<IEmailSender> allEmailSenders,
-            ISiteMessageEmailSender messageSender,
-            IOptions<MultiTenantOptions> multiTenantOptions,
-            IOptions<UIOptions> uiOptionsAccessor,
-            IThemeListBuilder layoutListBuilder,
-            IStringLocalizer<CloudscribeCore> localizer,
+            SiteManager                               siteManager,
+            GeoDataManager                            geoDataManager,
+            ILdapHelper                               ldapHelper,
+            ISiteAccountCapabilitiesProvider          siteCapabilities,
+            IEnumerable<IEmailSender>                 allEmailSenders,
+            ISiteMessageEmailSender                   messageSender,
+            IOptions<MultiTenantOptions>              multiTenantOptions,
+            IOptions<UIOptions>                       uiOptionsAccessor,
+            IThemeListBuilder                         layoutListBuilder,
+            IStringLocalizer<CloudscribeCore>         localizer,
             cloudscribe.DateTimeUtils.ITimeZoneHelper timeZoneHelper,
-            IOptions<RequestLocalizationOptions> localizationOptions
+            IOptions<RequestLocalizationOptions>      localizationOptions
             )
         {
             if (multiTenantOptions == null) { throw new ArgumentNullException(nameof(multiTenantOptions)); }
 
-            MultiTenantOptions = multiTenantOptions.Value;
-            SiteManager = siteManager ?? throw new ArgumentNullException(nameof(siteManager));
-            GeoDataManager = geoDataManager ?? throw new ArgumentNullException(nameof(geoDataManager));
-            UIOptions = uiOptionsAccessor.Value;
-            LayoutListBuilder = layoutListBuilder;
-            StringLocalizer = localizer;
-            TimeZoneHelper = timeZoneHelper;
-            SiteCapabilities = siteCapabilities;
+            MultiTenantOptions  = multiTenantOptions.Value;
+            SiteManager         = siteManager ?? throw new ArgumentNullException(nameof(siteManager));
+            GeoDataManager      = geoDataManager ?? throw new ArgumentNullException(nameof(geoDataManager));
+            UIOptions           = uiOptionsAccessor.Value;
+            LayoutListBuilder   = layoutListBuilder;
+            StringLocalizer     = localizer;
+            TimeZoneHelper      = timeZoneHelper;
+            SiteCapabilities    = siteCapabilities;
             LocalizationOptions = localizationOptions.Value;
-            EmailSenders = allEmailSenders;
-            MessageSender = messageSender;
-            LdapHelper = ldapHelper;
+            EmailSenders        = allEmailSenders;
+            MessageSender       = messageSender;
+            LdapHelper          = ldapHelper;
         }
 
         protected SiteManager SiteManager { get; private set; }
@@ -879,28 +879,29 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
 
             var model = new SecuritySettingsViewModel
             {
-                SiteId = selectedSite.Id,
-                AllowNewRegistration = selectedSite.AllowNewRegistration,
-                AllowPersistentLogin = selectedSite.AllowPersistentLogin,
-                DisableDbAuth = selectedSite.DisableDbAuth, 
+                SiteId                     = selectedSite.Id,
+                AllowNewRegistration       = selectedSite.AllowNewRegistration,
+                AllowPersistentLogin       = selectedSite.AllowPersistentLogin,
+                DisableDbAuth              = selectedSite.DisableDbAuth, 
                 RequireApprovalBeforeLogin = selectedSite.RequireApprovalBeforeLogin,
-                RequireConfirmedEmail = selectedSite.RequireConfirmedEmail,
-                UseEmailForLogin = selectedSite.UseEmailForLogin,
-                RequireConfirmedPhone = selectedSite.RequireConfirmedPhone,
-                AccountApprovalEmailCsv = selectedSite.AccountApprovalEmailCsv,
-                EmailIsConfigured = await SiteCapabilities.SupportsEmailNotification(new SiteContext(selectedSite)),
-                SmsIsConfigured = selectedSite.SmsIsConfigured(),
-                HasAnySocialAuthEnabled = selectedSite.HasAnySocialAuthEnabled(),
-                Require2FA = selectedSite.Require2FA,
-                SingleBrowserSessions = selectedSite.SingleBrowserSessions,
+                RequireConfirmedEmail      = selectedSite.RequireConfirmedEmail,
+                UseEmailForLogin           = selectedSite.UseEmailForLogin,
+                AllowUserToChangeEmail     = selectedSite.AllowUserToChangeEmail,
+                RequireConfirmedPhone      = selectedSite.RequireConfirmedPhone,
+                AccountApprovalEmailCsv    = selectedSite.AccountApprovalEmailCsv,
+                EmailIsConfigured          = await SiteCapabilities.SupportsEmailNotification(new SiteContext(selectedSite)),
+                SmsIsConfigured            = selectedSite.SmsIsConfigured(),
+                HasAnySocialAuthEnabled    = selectedSite.HasAnySocialAuthEnabled(),
+                Require2FA                 = selectedSite.Require2FA,
+                SingleBrowserSessions      = selectedSite.SingleBrowserSessions,
 
-                LdapDomain = selectedSite.LdapDomain,
-                LdapPort = selectedSite.LdapPort,
-                LdapRootDN = selectedSite.LdapRootDN,
-                LdapServer = selectedSite.LdapServer,
-                LdapUserDNKey = selectedSite.LdapUserDNKey,
-                LdapUserDNFormat = selectedSite.LdapUserDNFormat,
-                LdapUseSsl = selectedSite.LdapUseSsl
+                LdapDomain                 = selectedSite.LdapDomain,
+                LdapPort                   = selectedSite.LdapPort,
+                LdapRootDN                 = selectedSite.LdapRootDN,
+                LdapServer                 = selectedSite.LdapServer,
+                LdapUserDNKey              = selectedSite.LdapUserDNKey,
+                LdapUserDNFormat           = selectedSite.LdapUserDNFormat,
+                LdapUseSsl                 = selectedSite.LdapUseSsl
             };
 
             return View(model);
@@ -942,24 +943,25 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
                 return View(model);
             }
             
-            selectedSite.AccountApprovalEmailCsv = model.AccountApprovalEmailCsv;
-            selectedSite.AllowNewRegistration = model.AllowNewRegistration;
-            selectedSite.AllowPersistentLogin = model.AllowPersistentLogin;
-            selectedSite.DisableDbAuth = model.DisableDbAuth;
+            selectedSite.AccountApprovalEmailCsv    = model.AccountApprovalEmailCsv;
+            selectedSite.AllowNewRegistration       = model.AllowNewRegistration;
+            selectedSite.AllowPersistentLogin       = model.AllowPersistentLogin;
+            selectedSite.DisableDbAuth              = model.DisableDbAuth;
             selectedSite.RequireApprovalBeforeLogin = model.RequireApprovalBeforeLogin;
-            selectedSite.RequireConfirmedEmail = model.RequireConfirmedEmail;
-            selectedSite.RequireConfirmedPhone = model.RequireConfirmedPhone;
-            selectedSite.UseEmailForLogin = model.UseEmailForLogin;
-            selectedSite.Require2FA = model.Require2FA;
-            selectedSite.SingleBrowserSessions = model.SingleBrowserSessions;
+            selectedSite.RequireConfirmedEmail      = model.RequireConfirmedEmail;
+            selectedSite.RequireConfirmedPhone      = model.RequireConfirmedPhone;
+            selectedSite.UseEmailForLogin           = model.UseEmailForLogin;
+            selectedSite.AllowUserToChangeEmail     = model.AllowUserToChangeEmail;
+            selectedSite.Require2FA                 = model.Require2FA;
+            selectedSite.SingleBrowserSessions      = model.SingleBrowserSessions;
 
-            selectedSite.LdapDomain = model.LdapDomain;
-            selectedSite.LdapPort = model.LdapPort;
-            selectedSite.LdapRootDN = model.LdapRootDN;
-            selectedSite.LdapServer = model.LdapServer;
-            selectedSite.LdapUserDNKey = model.LdapUserDNKey;
-            selectedSite.LdapUserDNFormat = model.LdapUserDNFormat;
-            selectedSite.LdapUseSsl = model.LdapUseSsl;
+            selectedSite.LdapDomain                 = model.LdapDomain;
+            selectedSite.LdapPort                   = model.LdapPort;
+            selectedSite.LdapRootDN                 = model.LdapRootDN;
+            selectedSite.LdapServer                 = model.LdapServer;
+            selectedSite.LdapUserDNKey              = model.LdapUserDNKey;
+            selectedSite.LdapUserDNFormat           = model.LdapUserDNFormat;
+            selectedSite.LdapUseSsl                 = model.LdapUseSsl;
             
             await SiteManager.Update(selectedSite);
             

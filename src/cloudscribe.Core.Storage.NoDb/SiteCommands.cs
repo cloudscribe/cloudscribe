@@ -187,8 +187,6 @@ namespace cloudscribe.Core.Storage.NoDb
                     h.Id.ToString(),
                     cancellationToken).ConfigureAwait(false);
             }
-
-            
         }
 
 
@@ -236,6 +234,5 @@ namespace cloudscribe.Core.Storage.NoDb
         }
 
         #endregion
-
     }
 }

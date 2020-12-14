@@ -39,12 +39,20 @@
         </dd>
     }
 
+    @if (currentSite.AllowUserToChangeEmail)
+    {
+        <dt>@sr["Email address:"]</dt>
+        <dd>
+            @Model.Email [ <a asp-controller="Manage" asp-action="ChangeUserEmail">@sr["Change"]</a> ]
+        </dd>
+    }
+
     <dt>@sr["Two-Factor Authentication:"]</dt>
     <dd>
-        <a asp-controller="Manage" asp-action="TwoFactorAuthentication">@sr["Two-factor authentication"]</a>
+        [ <a asp-controller="Manage" asp-action="TwoFactorAuthentication">@sr["Two-factor authentication"]</a> ]
     </dd>
     <dt>@sr["Time Zone:"]</dt>
     <dd>
-        @Model.TimeZone [<a asp-controller="Manage" asp-action="TimeZone">@sr["Change"]</a>]
+        @Model.TimeZone [ <a asp-controller="Manage" asp-action="TimeZone">@sr["Change"]</a> ]
     </dd>
 </dl>
