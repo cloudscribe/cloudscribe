@@ -7,16 +7,7 @@
 <h2>@ViewData["Title"]</h2>
 
 
-@if (!Model.EmailIsConfigured)
-{
-<div class="alert alert-warning" role="alert">
-    <p>
-        <span class="glyphicon glyphicon-warning-sign fas fa-exclamation-triangle"></span>
-        <strong>@sr["Email is not configured for this site."]</strong>
-    </p>
-</div>
-}
-else if (!Model.AllowUserToChangeEmail)
+@if (!Model.AllowUserToChangeEmail)
 {
 <div class="alert alert-warning" role="alert">
     <p>

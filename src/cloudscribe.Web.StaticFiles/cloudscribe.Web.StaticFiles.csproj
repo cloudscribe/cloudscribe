@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <Description>common static resources for web applications including ckeditor datepickers, and other js and css</Description>
-    <Version>4.1.0</Version>
+    <Version>4.1.5</Version>
 
     
     <Authors>Joe Audette</Authors>
