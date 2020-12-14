@@ -30,50 +30,49 @@ using System.Threading.Tasks;
 
 namespace cloudscribe.Core.Web.Controllers.Mvc
 {
-
     public class UserAdminController : Controller
     {
         public UserAdminController(
-            SiteManager siteManager,
-            SiteUserManager<SiteUser> userManager,
-            ISiteMessageEmailSender emailSender,
-            IAuthorizationService authorizationService,
-            IOptions<UIOptions> uiOptionsAccessor,
+            SiteManager                       siteManager,
+            SiteUserManager<SiteUser>         userManager,
+            ISiteMessageEmailSender           emailSender,
+            IAuthorizationService             authorizationService,
+            IOptions<UIOptions>               uiOptionsAccessor,
             IStringLocalizer<CloudscribeCore> localizer,
-            cloudscribe.DateTimeUtils.ITimeZoneIdResolver timeZoneIdResolver,
-            cloudscribe.DateTimeUtils.ITimeZoneHelper timeZoneHelper,
-            IHandleCustomUserInfoAdmin customUserEdit
+            DateTimeUtils.ITimeZoneIdResolver timeZoneIdResolver,
+            DateTimeUtils.ITimeZoneHelper     timeZoneHelper,
+            IHandleCustomUserInfoAdmin        customUserEdit
             )
         {
-            UserManager = userManager;
-            SiteManager = siteManager;
-            EmailSender = emailSender;
-            UIOptions = uiOptionsAccessor.Value;
-            StringLocalizer = localizer;
+            UserManager          = userManager;
+            SiteManager          = siteManager;
+            EmailSender          = emailSender;
+            UIOptions            = uiOptionsAccessor.Value;
+            StringLocalizer      = localizer;
             AuthorizationService = authorizationService;
-            TimeZoneIdResolver = timeZoneIdResolver;
-            TimeZoneHelper = timeZoneHelper;
-            CustomUserInfo = customUserEdit;
+            TimeZoneIdResolver   = timeZoneIdResolver;
+            TimeZoneHelper       = timeZoneHelper;
+            CustomUserInfo       = customUserEdit;
         }
 
-        protected SiteManager SiteManager { get; private set; }
-        protected SiteUserManager<SiteUser> UserManager { get; private set; }
-        protected ISiteMessageEmailSender EmailSender { get; private set; }
-        protected IAuthorizationService AuthorizationService { get; private set; }
-        protected UIOptions UIOptions { get; private set; }
-        protected IStringLocalizer StringLocalizer { get; private set; } // string resources
-        protected cloudscribe.DateTimeUtils.ITimeZoneIdResolver TimeZoneIdResolver { get; private set; }
-        protected cloudscribe.DateTimeUtils.ITimeZoneHelper TimeZoneHelper { get; private set; }
+        protected SiteManager                SiteManager { get; private set; }
+        protected SiteUserManager<SiteUser>  UserManager { get; private set; }
+        protected ISiteMessageEmailSender    EmailSender { get; private set; }
+        protected IAuthorizationService      AuthorizationService { get; private set; }
+        protected UIOptions                  UIOptions { get; private set; }
+        protected IStringLocalizer           StringLocalizer { get; private set; } // string resources
         protected IHandleCustomUserInfoAdmin CustomUserInfo { get; private set; }
+        protected cloudscribe.DateTimeUtils.ITimeZoneIdResolver TimeZoneIdResolver { get; private set; }
+        protected cloudscribe.DateTimeUtils.ITimeZoneHelper     TimeZoneHelper { get; private set; }
 
         [Authorize(Policy = PolicyConstants.UserManagementPolicy)]
         [HttpGet]
         public virtual async Task<IActionResult> Index(
             Guid? siteId,
-            string query = "",
-            int sortMode = 1,  //sortMode: 0 = DisplayName asc, 1 = JoinDate desc, 2 = Last, First
+            string query   = "",
+            int sortMode   = 1,  //sortMode: 0 = DisplayName asc, 1 = JoinDate desc, 2 = Last, First
             int pageNumber = 1,
-            int pageSize = -1
+            int pageSize   = -1
             )
         {
             var selectedSite = await SiteManager.GetSiteForDataOperations(siteId);
@@ -109,8 +108,8 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
                 TimeZoneId = await TimeZoneIdResolver.GetUserTimeZoneId()
             };
 
-            return View(model);
-
+            var viewName = await CustomUserInfo.GetUserListViewName(UserManager.Site, HttpContext);
+            return View(viewName, model);
         }
 
         [Authorize(Policy = PolicyConstants.UserManagementPolicy)]
@@ -142,13 +141,23 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
             }
 
             if(query == null) { query = string.Empty; }
-            
-            var siteMembers = await UserManager.GetUserAdminSearchPage(
-                selectedSite.Id,
-                pageNumber,
-                itemsPerPage,
-                query,
-                sortMode);
+
+            var siteMembers = await CustomUserInfo.GetCustomUserAdminSearchPage(
+                            selectedSite.Id,
+                            pageNumber,
+                            itemsPerPage,
+                            query,
+                            sortMode);
+
+            if (siteMembers?.Data == null)
+            {
+                siteMembers = await UserManager.GetUserAdminSearchPage(
+                    selectedSite.Id,
+                    pageNumber,
+                    itemsPerPage,
+                    query,
+                    sortMode);
+            }
 
             var model = new UserListViewModel
             {
@@ -172,7 +181,8 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
                 }
             }
 
-            return View("Index", model);
+            var viewName = await CustomUserInfo.GetUserListViewName(UserManager.Site, HttpContext);
+            return View(viewName, model);
         }
 
         /// <summary>
