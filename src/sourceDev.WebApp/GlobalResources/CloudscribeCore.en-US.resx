@@ -1237,4 +1237,37 @@
   <data name="Reset Authenticator" xml:space="preserve">
     <value>Reset Authenticator</value>
   </data>
+  <data name="Allow user to change email address" xml:space="preserve">
+    <value>Allow user to change email address</value>
+  </data>
+  <data name="Change Email" xml:space="preserve">
+    <value>Change Email</value>
+  </data>
+  <data name="Email address" xml:space="preserve">
+    <value>Email address</value>
+  </data>
+  <data name="Email is not configured for this site." xml:space="preserve">
+    <value>Email is not configured for this site.</value>
+  </data>
+  <data name="The site is not configured to allow email changing." xml:space="preserve">
+    <value>The site is not configured to allow email changing.</value>
+  </data>
+  <data name="This user account is not currently approved." xml:space="preserve">
+    <value>This user account is not currently approved.</value>
+  </data>
+  <data name="You must re-enter your password to change your email address." xml:space="preserve">
+    <value>You must re-enter your password to change your email address.</value>
+  </data>
+  <data name="Error - email could not be changed. Contact the site administrator for support." xml:space="preserve">
+    <value>Error - email could not be changed. Contact the site administrator for support.</value>
+  </data>
+  <data name="A notification email will be sent your old email address." xml:space="preserve">
+    <value>A notification email will be sent your old email address.</value>
+  </data>
+  <data name="Email address was changed successfully." xml:space="preserve">
+    <value>Email address was changed successfully.</value>
+  </data>
+  <data name="Notification emails will be sent to old and new addresses." xml:space="preserve">
+    <value>Notification emails will be sent to old and new addresses.</value>
+  </data>
 </root>

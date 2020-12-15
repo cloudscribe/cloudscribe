@@ -1,0 +1,15 @@
+﻿@model cloudscribe.Core.Web.ViewModels.Email.EmailChangedConfirmationViewModel
+
+@{
+    Layout = "_LayoutEmailNotification";
+    ViewData["Title"] = "Email Address Change Confirmation";
+    ViewData["Site"] = Model.Tenant;
+}
+<p>
+    Please confirm that you wish to change the Email address for your user account on the site @Model.Tenant.SiteName to @Model.NewEmail by clicking on the link below:
+</p>
+<p><strong><a href="@Model.ConfirmationUrl">Confirm this change</a></strong></p>
+
+<p>
+    If this was not the result of your own actions, then please contact the site administrator at @Model.SiteUrl
+</p>

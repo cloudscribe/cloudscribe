@@ -9,6 +9,7 @@ using cloudscribe.Common.Gdpr;
 using cloudscribe.Core.Identity;
 using cloudscribe.Core.Models;
 using cloudscribe.Core.Web.Components;
+using cloudscribe.Core.Web.Components.Messaging;
 using cloudscribe.Core.Web.ExtensionPoints;
 using cloudscribe.Core.Web.ViewModels.SiteUser;
 using cloudscribe.Web.Common.Extensions;
@@ -16,6 +17,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.AspNetCore.Mvc.Routing;
 using Microsoft.Extensions.Localization;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
@@ -28,46 +30,56 @@ using System.Threading.Tasks;
 
 namespace cloudscribe.Core.Web.Controllers.Mvc
 {
-
     public class ManageController : Controller
     {
         public ManageController(
-            SiteContext currentSite,
-            SiteUserManager<SiteUser> userManager,
-            SignInManager<SiteUser> signInManager,
-            IAccountService accountService,
-            //ISmsSender smsSender,
+            SiteContext                       currentSite,
+            SiteUserManager<SiteUser>         userManager,
+            SignInManager<SiteUser>           signInManager,
+            IAccountService                   accountService,
+            //ISmsSender                      smsSender,
             IStringLocalizer<CloudscribeCore> localizer,
-            cloudscribe.DateTimeUtils.ITimeZoneIdResolver timeZoneIdResolver,
-            cloudscribe.DateTimeUtils.ITimeZoneHelper timeZoneHelper,
-            IHandleCustomUserInfo customUserInfo,
-            ILogger<ManageController> logger,
-            UrlEncoder urlEncoder
+            DateTimeUtils.ITimeZoneIdResolver timeZoneIdResolver,
+            DateTimeUtils.ITimeZoneHelper     timeZoneHelper,
+            IHandleCustomUserInfo             customUserInfo,
+            ILogger<ManageController>         logger,
+            UrlEncoder                        urlEncoder,
+            ISiteAccountCapabilitiesProvider  siteCapabilities,
+            ISiteMessageEmailSender           emailSender,
+            IEmailChangeHandler               emailChangeHandler
             )
         {
-            CurrentSite = currentSite; 
-            UserManager = userManager;
-            SignInManager = signInManager;
-            AccountService = accountService;
-            StringLocalizer = localizer;
+            CurrentSite        = currentSite; 
+            UserManager        = userManager;
+            SignInManager      = signInManager;
+            AccountService     = accountService;
+            StringLocalizer    = localizer;
             TimeZoneIdResolver = timeZoneIdResolver;
-            TimeZoneHelper = timeZoneHelper;
-            CustomUserInfo = customUserInfo;
-            Log = logger;
-            UrlEncoder = urlEncoder;
+            TimeZoneHelper     = timeZoneHelper;
+            CustomUserInfo     = customUserInfo;
+            Log                = logger;
+            UrlEncoder         = urlEncoder;
+            SiteCapabilities   = siteCapabilities;
+            EmailSender        = emailSender;
+            EmailChangeHandler = emailChangeHandler;
         }
 
-        protected IAccountService AccountService { get; private set; }
-        protected ILogger Log { get; private set; }
-        protected ISiteContext CurrentSite { get; private set; }
-        protected SiteUserManager<SiteUser> UserManager { get; private set; }
-        protected SignInManager<SiteUser> SignInManager { get; private set; }
-        protected IStringLocalizer StringLocalizer { get; private set; }
+        protected IAccountService                  AccountService     { get; private set; }
+        protected ILogger                          Log                { get; private set; }
+        protected ISiteContext                     CurrentSite        { get; private set; }
+        protected SiteUserManager<SiteUser>        UserManager        { get; private set; }
+        protected SignInManager<SiteUser>          SignInManager      { get; private set; }
+        protected IStringLocalizer                 StringLocalizer    { get; private set; }
+        protected IHandleCustomUserInfo            CustomUserInfo     { get; private set; }
+        protected UrlEncoder                       UrlEncoder         { get; private set; }
+        protected ISiteAccountCapabilitiesProvider SiteCapabilities   { get; private set; }
+        protected ISiteMessageEmailSender          EmailSender        { get; private set; }
+        protected IEmailChangeHandler              EmailChangeHandler { get; private set; }
+
         protected cloudscribe.DateTimeUtils.ITimeZoneIdResolver TimeZoneIdResolver { get; private set; }
-        protected cloudscribe.DateTimeUtils.ITimeZoneHelper TimeZoneHelper { get; private set; }
-        protected IHandleCustomUserInfo CustomUserInfo { get; private set; }
+        protected cloudscribe.DateTimeUtils.ITimeZoneHelper     TimeZoneHelper     { get; private set; }
+        
         protected const string AuthenicatorUriFormat = "otpauth://totp/{0}:{1}?secret={2}&issuer={0}&digits=6";
-        protected UrlEncoder UrlEncoder { get; private set; }
 
         [TempData]
         public string StatusMessage { get; set; }
@@ -81,13 +93,13 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
             var user = await UserManager.FindByIdAsync(HttpContext.User.GetUserId());
             var model = new AccountIndexViewModel
             {
-                HasPassword = (!string.IsNullOrWhiteSpace(user.PasswordHash)),
-                PhoneNumber = !string.IsNullOrWhiteSpace(user.PhoneNumber) ? user.PhoneNumber : null,
-                TwoFactor = user.TwoFactorEnabled,
-                Logins = await UserManager.GetLoginsAsync(user),
+                HasPassword       = (!string.IsNullOrWhiteSpace(user.PasswordHash)),
+                PhoneNumber       = !string.IsNullOrWhiteSpace(user.PhoneNumber) ? user.PhoneNumber : null,
+                TwoFactor         = user.TwoFactorEnabled,
+                Logins            = await UserManager.GetLoginsAsync(user),
                 BrowserRemembered = await SignInManager.IsTwoFactorClientRememberedAsync(user),
-                TimeZone = user.TimeZoneId
-                
+                TimeZone          = user.TimeZoneId,
+                Email             = user.Email
             };
 
             if(string.IsNullOrEmpty(model.TimeZone))
@@ -95,7 +107,7 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
                 model.TimeZone = await TimeZoneIdResolver.GetSiteTimeZoneId();
             }
             
-            return View(model);
+            return View("Index", model);
         }
 
         [Authorize]
@@ -154,6 +166,226 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
 
         [Authorize]
         [HttpGet]
+        public virtual async Task<IActionResult> ChangeUserEmail()
+        {
+            var user = await UserManager.FindByIdAsync(HttpContext.User.GetUserId());
+
+            if (user == null)
+            {
+                return NotFound($"Unable to load user with ID '{UserManager.GetUserId(User)}'.");
+            }
+
+            var model = new ChangeUserEmailViewModel
+            {
+                HasPassword            = await UserManager.HasPasswordAsync(user),
+                AccountApproved        = user.AccountApproved,
+                CurrentEmail           = user.Email,
+                AllowUserToChangeEmail = CurrentSite.AllowUserToChangeEmail,
+                EmailIsConfigured      = await SiteCapabilities.SupportsEmailNotification(CurrentSite),
+                RequireConfirmedEmail  = CurrentSite.RequireConfirmedEmail
+            };
+
+            return View(model);
+        }
+
+        [Authorize]
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public virtual async Task<IActionResult> ChangeUserEmail(ChangeUserEmailViewModel model)
+        {
+            ModelState.Clear();
+
+            var user = await UserManager.FindByIdAsync(HttpContext.User.GetUserId());
+
+            if (user == null)
+            {
+                return NotFound($"Unable to load user with ID '{UserManager.GetUserId(User)}'.");
+            }
+
+            var requirePassword          = await UserManager.HasPasswordAsync(user);
+            model.HasPassword            = requirePassword;
+            model.AccountApproved        = user.AccountApproved;
+            model.CurrentEmail           = user.Email;
+            model.AllowUserToChangeEmail = CurrentSite.AllowUserToChangeEmail;
+            model.EmailIsConfigured      = await SiteCapabilities.SupportsEmailNotification(CurrentSite);
+            model.RequireConfirmedEmail  = CurrentSite.RequireConfirmedEmail;
+
+            if (requirePassword)
+            {
+                if (string.IsNullOrWhiteSpace(model.Password))
+                {
+                    ModelState.AddModelError(string.Empty, "Password is required");
+                    return View(model);
+                }
+
+                if (!await UserManager.CheckPasswordAsync(user, model.Password))
+                {
+                    ModelState.AddModelError(string.Empty, "Password not correct.");
+                    model.Password     = "";
+                    return View(model);
+                }
+            }
+
+            if(!model.AccountApproved)
+            {
+                this.AlertDanger(StringLocalizer["This user account is not currently approved."]);
+                return View(model);
+            }
+
+            if(!model.AllowUserToChangeEmail)
+            {
+                this.AlertDanger(StringLocalizer["Site is not configured to allow email changing."]);
+                return View(model);
+            }
+
+            // Note - need to check the behaviour of this in related sites mode
+            if (await UserManager.EmailExistsInDB(CurrentSite.Id, model.NewEmail))
+            {
+                this.AlertDanger(StringLocalizer["Error - email could not be changed. Contact the site administrator for support."]);
+                return View(model);
+            }
+
+            var token = await UserManager.GenerateChangeEmailTokenAsync(user, model.NewEmail);
+
+            var siteUrl = Url.Action(new UrlActionContext
+            {
+                Action     = "Index",
+                Controller = "Home",
+                Protocol   = HttpContext.Request.Scheme
+            });
+
+            if (!model.RequireConfirmedEmail)
+            {
+                // no need for round-trip email confirmation
+                try
+                {
+                    var success = await EmailChangeHandler.HandleEmailChangeWithoutUserConfirmation(model, user, token, siteUrl);
+
+                    if (success)
+                        this.AlertSuccess(model.SuccessNotification, true);
+                    else
+                        this.AlertDanger(model.SuccessNotification, true);
+                }
+                catch (Exception ex)
+                {
+                    this.AlertDanger(StringLocalizer["Error - email could not be changed. Contact the site administrator for support."], true);
+                    Log.LogError(ex, $"Unexpected error occurred changing email address for user ID '{user.Id}'.");
+                }
+            }
+            else
+            {
+                // send token in confirmation email
+                try
+                {
+                    var confirmationUrl = Url.Action(new UrlActionContext
+                    {
+                        Action     = "ConfirmEmailChange",
+                        Controller = "Manage",
+                        Values     = new { userId = user.Id.ToString(), newEmail = model.NewEmail, code = token },
+                        Protocol   = HttpContext.Request.Scheme
+                    });
+
+                    var success = await EmailChangeHandler.HandleEmailChangeWithUserConfirmation(model, user, token, confirmationUrl, siteUrl);
+
+                    if (success)
+                    { 
+                        this.AlertSuccess(model.SuccessNotification, true);
+                        return View("EmailChangeConfirmationSent", model);
+                    }
+                    else
+                    { 
+                        this.AlertDanger(model.SuccessNotification, true);
+                    }
+                }
+                catch (Exception ex)
+                {
+                    this.AlertDanger(StringLocalizer["Error - email could not be changed. Contact the site administrator for support."], true);
+                    Log.LogError(ex, $"Unexpected error occurred sending email change confirmation for user ID '{user.Id}'.");
+                }
+            }
+
+            return await Index();  // Route back to Index Page, taking toast alerts along
+        }
+
+        private async Task<IActionResult> RouteToIndexPage(SiteUser user)
+        {
+            var model = new AccountIndexViewModel
+            {
+                HasPassword       = (!string.IsNullOrWhiteSpace(user.PasswordHash)),
+                PhoneNumber       = !string.IsNullOrWhiteSpace(user.PhoneNumber) ? user.PhoneNumber : null,
+                TwoFactor         = user.TwoFactorEnabled,
+                Logins            = await UserManager.GetLoginsAsync(user),
+                BrowserRemembered = await SignInManager.IsTwoFactorClientRememberedAsync(user),
+                TimeZone          = user.TimeZoneId,
+                Email             = user.Email
+            };
+
+            if (string.IsNullOrEmpty(model.TimeZone))
+            {
+                model.TimeZone = await TimeZoneIdResolver.GetSiteTimeZoneId();
+            }
+
+            return View("Index", model);
+        }
+
+
+        [Authorize]
+        [HttpGet]
+        public virtual async Task<IActionResult> ConfirmEmailChange(string userId, string newEmail, string code)
+        {
+            ModelState.Clear();
+
+            if (userId == null || code == null)
+            {
+                return this.RedirectToSiteRoot(CurrentSite);
+            }
+
+            var user = await UserManager.FindByIdAsync(userId);
+
+            if (user == null)
+            {
+                return NotFound($"Unable to load user with ID '{UserManager.GetUserId(User)}'.");
+            }
+
+            var model = new ChangeUserEmailViewModel
+            {
+                HasPassword            = await UserManager.HasPasswordAsync(user),
+                AccountApproved        = user.AccountApproved,
+                CurrentEmail           = user.Email,
+                NewEmail               = newEmail,
+                AllowUserToChangeEmail = CurrentSite.AllowUserToChangeEmail,
+                EmailIsConfigured      = await SiteCapabilities.SupportsEmailNotification(CurrentSite),
+                RequireConfirmedEmail  = CurrentSite.RequireConfirmedEmail
+            };
+
+            try
+            {
+                var siteUrl = Url.Action(new UrlActionContext
+                {
+                    Action     = "Index",
+                    Controller = "Home",
+                    Protocol   = HttpContext.Request.Scheme
+                });
+
+                var success = await EmailChangeHandler.HandleEmailChangeConfirmation(model, user, newEmail, code, siteUrl);
+
+                if (success)
+                    this.AlertSuccess(model.SuccessNotification, true);
+                else
+                    this.AlertDanger(model.SuccessNotification, true);
+            }
+            catch (Exception ex)
+            {
+                this.AlertDanger(StringLocalizer["Error - email could not be changed. Contact the site administrator for support."], true);
+                Log.LogError(ex, $"Unexpected error occurred changing email address for user ID '{user.Id}'.");
+            }
+
+            return await Index(); // Route back to Index Page, taking toast alerts along
+        }
+
+
+        [Authorize]
+        [HttpGet]
         public virtual async Task<IActionResult> DeletePersonalData()
         {
             var user = await UserManager.FindByIdAsync(HttpContext.User.GetUserId());
@@ -188,7 +420,7 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
             {
                 if (string.IsNullOrWhiteSpace(model.Password))
                 {
-                    ModelState.AddModelError(string.Empty, "Password is required.");
+                    ModelState.AddModelError(string.Empty, "Password is required");
                     model.HasPassword = requirePassword;
                     return View(model);
                 }
@@ -212,9 +444,7 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
 
             Log.LogInformation($"User with ID {userId} deleted themselves.");
 
-
             return this.RedirectToSiteRoot(CurrentSite);
-
         }
 
         [Authorize]

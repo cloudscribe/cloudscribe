@@ -138,6 +138,9 @@ namespace Microsoft.Extensions.DependencyInjection
 
             services.AddScoped<ISiteMessageEmailSender, SiteEmailMessageSender>();
 
+            services.TryAddScoped<IEmailChangeHandler, EmailChangeHandler>();
+
+
             //services.AddTransient<ISiteMessageEmailSender, FakeSiteEmailSender>();
             services.TryAddScoped<ISendGridOptionsProvider, SiteSendGridOptionsProvider>();
             services.TryAddScoped<IMailgunOptionsProvider, SiteMailgunOptionsProvider>();
@@ -174,6 +177,7 @@ namespace Microsoft.Extensions.DependencyInjection
             services.TryAddScoped<ILdapHelper, NotImplementedLdapHelper>();
 
             services.TryAddScoped<ILdapSslCertificateValidator, AlwaysValidLdapSslCertificateValidator>();
+
 
             return services;
         }

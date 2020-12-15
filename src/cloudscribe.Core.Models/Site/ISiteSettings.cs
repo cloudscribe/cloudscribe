@@ -112,6 +112,8 @@ namespace cloudscribe.Core.Models
         /// https://ux.stackexchange.com/questions/13647/email-field-or-username-for-logging-in-an-application
         /// </summary>
         bool UseEmailForLogin { get; set; }
+
+        bool AllowUserToChangeEmail {  get; set; }
         
         bool RequiresQuestionAndAnswer { get; set; }
         
@@ -199,11 +201,9 @@ namespace cloudscribe.Core.Models
         string OidConnectAppId { get; set; }
         string OidConnectAppSecret { get; set; } // protected with data protection
         string OidConnectAuthority { get; set; }
-
         string OidConnectScopesCsv { get; set; }
 
         string AddThisDotComUsername { get; set; }
-
         
         bool IsDataProtected { get; set; }
         DateTime CreatedUtc { get; set; }

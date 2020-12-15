@@ -128,10 +128,17 @@ namespace cloudscribe.Core.Models
         //{
         //    get { return site.ReallyDeleteUsers; }
         //}
+        
         public bool UseEmailForLogin
         {
             get { return site.UseEmailForLogin; }
         }
+
+        public bool AllowUserToChangeEmail
+        {
+            get { return site.AllowUserToChangeEmail; }
+        }
+
         public bool DisableDbAuth
         {
             get { return site.DisableDbAuth; }

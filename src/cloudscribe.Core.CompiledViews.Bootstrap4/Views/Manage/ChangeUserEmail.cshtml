@@ -1,0 +1,78 @@
+﻿@model cloudscribe.Core.Web.ViewModels.SiteUser.ChangeUserEmailViewModel
+@inject IStringLocalizer<CloudscribeCore> sr
+@{
+    ViewData["Title"] = sr["Change Email Address"];
+    ViewData["BodyClass"] = "manage-section change-user-email";
+}
+<h2>@ViewData["Title"]</h2>
+
+
+@if (!Model.AllowUserToChangeEmail)
+{
+<div class="alert alert-warning" role="alert">
+    <p>
+        <span class="glyphicon glyphicon-warning-sign fas fa-exclamation-triangle"></span>
+        <strong>@sr["The site is not configured to allow email changing."]</strong>
+    </p>
+</div>
+}
+else if (!Model.AccountApproved)
+{
+<div class="alert alert-warning" role="alert">
+    <p>
+        <span class="glyphicon glyphicon-warning-sign fas fa-exclamation-triangle"></span>
+        <strong>@sr["This user account is not currently approved."]</strong>
+    </p>
+</div>
+}
+
+
+else
+{
+    if (Model.HasPassword)
+    {
+        <div class="alert alert-info" role="alert">
+            <p class="mb-0">
+                <strong>@sr["You must re-enter your password to change your email address."]</strong>
+            </p>
+        </div>
+    }
+
+<div>
+    <form asp-controller="Manage" asp-action="ChangeUserEmail" id="change-user-email" method="post" class="form-group">
+        <div asp-validation-summary="All" class="text-danger"></div>
+
+        <input asp-for="HasPassword" type="hidden" />
+
+        @if (Model.HasPassword)
+            {
+        <div class="form-group">
+            <label asp-for="Password"></label>
+            <input asp-for="Password" class="form-control" autocomplete="new-password" />
+            <span asp-validation-for="Password" class="invalid-feedback"></span>
+        </div>
+            }
+        <div class="form-group">
+            <label asp-for="CurrentEmail"></label>
+            <input asp-for="CurrentEmail" class="form-control" disabled="disabled" />
+        </div>
+
+        <div class="form-group">
+            <label asp-for="NewEmail"></label>
+            <input asp-for="NewEmail" class="form-control" />
+        </div>
+
+        <button class="btn btn-danger" type="submit">@sr["Change Email"]</button>
+    </form>
+</div>
+}
+
+
+@section Scripts {
+    <script src="~/cr/js/jquery.validate.min.js"></script>
+    <script src="~/cr/js/jquery.validate.unobtrusive.min.js"></script>
+    <script src="~/cr/js/cloudscribe-validation-requiredwhen.min.js"></script>
+    <script src="~/cr/js/unobtrusive-validation-bs4.min.js"></script>
+    <script src="~/cr/js/jquery.validate.hooks.min.js"></script>
+    <script src="~/cr/js/jqueryvaildation.submitonce-unobtrusive.min.js"></script>
+}

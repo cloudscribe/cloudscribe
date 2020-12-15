@@ -1,0 +1,11 @@
+﻿@model cloudscribe.Core.Web.ViewModels.Email.EmailChangedNotificationViewModel
+
+@{
+    Layout = "_LayoutEmailNotification";
+    ViewData["Title"] = "Email Address Changed";
+    ViewData["Site"] = Model.Tenant;
+}
+
+    This is to confirm that the Email address for your user account on the site @Model.Tenant.SiteName has been successfully changed to @Model.NewEmail.
+
+    If this is not the result of your own actions, then please contact the site administrator at @Model.SiteUrl

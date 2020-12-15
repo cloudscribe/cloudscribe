@@ -17,26 +17,25 @@ namespace cloudscribe.Core.Models
         {
             this.Id = Guid.NewGuid();
         }
-
-        
         
         public bool RequireCookieConsent { get; set; } = true;
+        
         public string CookiePolicySummary { get; set; } = "To ensure you get the best experience, this website uses cookies.";
-
         
         public string ConcurrencyStamp { get; set; } = Guid.NewGuid().ToString();
         
         public string Theme { get; set; }
 
         public bool AllowNewRegistration { get; set; } = true;
+        
         public bool RequireConfirmedEmail { get; set; } = false;
+        
         public bool RequireConfirmedPhone { get; set; } = false;
 
         //public bool UseLdapAuth { get; set; } = false;
         //public bool AllowDbFallbackWithLdap { get; set; } = false;
         //public bool EmailLdapDbFallback { get; set; } = false;
         //public bool AutoCreateLdapUserOnFirstLogin { get; set; } = true;
-        
  
         public string LdapServer { get; set; }
 
@@ -47,6 +46,7 @@ namespace cloudscribe.Core.Models
         public string LdapRootDN { get; set; }
 
         public string LdapUserDNKey { get; set; } = "CN";
+
         public string LdapUserDNFormat { get; set; } = "username@LDAPDOMAIN"; // or LDAPDOMAIN\username
 
         public bool LdapUseSsl { get; set; }
@@ -58,22 +58,32 @@ namespace cloudscribe.Core.Models
         /// </summary>
         public bool UseEmailForLogin { get; set; } = true;
 
+        public bool AllowUserToChangeEmail { get; set; } = true;
 
         public bool DisableDbAuth { get; set; } = false;
        
         public bool RequiresQuestionAndAnswer { get; set; } = false;
+
         public bool RequireApprovalBeforeLogin { get; set; } = false;
         
         public string AccountApprovalEmailCsv { get; set; }
+        
         public int MaxInvalidPasswordAttempts { get; set; } = 5;
+        
         public int MinRequiredPasswordLength { get; set; } = 7;
+        
         public bool PwdRequireNonAlpha { get; set; } = true;
+        
         public bool PwdRequireLowercase { get; set; } = true;
+        
         public bool PwdRequireUppercase { get; set; } = true;
+       
         public bool PwdRequireDigit { get; set; } = true;
         
         public bool AllowPersistentLogin { get; set; } = true;
+        
         public bool CaptchaOnRegistration { get; set; } = false;
+        
         public bool CaptchaOnLogin { get; set; } = false;
         
         public string RecaptchaPrivateKey { get; set; }
@@ -106,6 +116,7 @@ namespace cloudscribe.Core.Models
         public string OidConnectAuthority { get; set; }
 
         public string OidConnectDisplayName { get; set; }
+
         public string OidConnectScopesCsv { get; set; }
 
         public string AddThisDotComUsername { get; set; }
@@ -114,7 +125,6 @@ namespace cloudscribe.Core.Models
         
         public string CompanyName { get; set; }
         
-    
         public string CompanyStreetAddress { get; set; }
         
         public string CompanyStreetAddress2 { get; set; }
@@ -135,7 +145,6 @@ namespace cloudscribe.Core.Models
         
         public string CompanyWebsite { get; set; }
 
- 
         public string DefaultEmailFromAddress { get; set; }
         
         public string DefaultEmailFromAlias { get; set; }
@@ -151,6 +160,7 @@ namespace cloudscribe.Core.Models
         public string SmtpServer { get; set; }
         
         public bool SmtpRequiresAuth { get; set; } = false;
+
         public bool SmtpUseSsl { get; set; } = false;
 
         public string DkimPublicKey { get; set; }
@@ -165,7 +175,9 @@ namespace cloudscribe.Core.Models
         public bool SignEmailWithDkim { get; set; } = false;
 
         public string EmailSenderName { get; set; } = "SmtpMailSender";
+
         public string EmailApiKey { get; set; }
+
         public string EmailApiEndpoint { get; set; }
         
         public string SmsClientId { get; set; }
@@ -192,7 +204,6 @@ namespace cloudscribe.Core.Models
         public string PrivacyPolicy { get; set; }
        
         public bool IsDataProtected { get; set; } = false;
-
         
 
         public DateTime TermsUpdatedUtc { get; set; } = DateTime.UtcNow;
@@ -204,7 +215,9 @@ namespace cloudscribe.Core.Models
         public bool Require2FA { get; set; }
 
         public bool ShowSiteNameLink { get; set; } = true;
+
         public string HeaderContent { get; set; }
+
         public string FooterContent { get; set; }
 
         public bool SingleBrowserSessions { get; set; }
@@ -215,121 +228,123 @@ namespace cloudscribe.Core.Models
         {
             if(i == null) { return null; }
 
+            // can't we just   return (SiteSettings)i   here..??  - jimk
+
             SiteSettings s = new SiteSettings
             {
-                ConcurrencyStamp = i.ConcurrencyStamp,
-                AccountApprovalEmailCsv = i.AccountApprovalEmailCsv,
-                AddThisDotComUsername = i.AddThisDotComUsername,
-               // AllowDbFallbackWithLdap = i.AllowDbFallbackWithLdap,
-                AllowNewRegistration = i.AllowNewRegistration,
-                AllowPersistentLogin = i.AllowPersistentLogin,
+                ConcurrencyStamp           = i.ConcurrencyStamp,
+                AccountApprovalEmailCsv    = i.AccountApprovalEmailCsv,
+                AddThisDotComUsername      = i.AddThisDotComUsername,
+               // AllowDbFallbackWithLdap  = i.AllowDbFallbackWithLdap,
+                AllowNewRegistration       = i.AllowNewRegistration,
+                AllowPersistentLogin       = i.AllowPersistentLogin,
                 //AutoCreateLdapUserOnFirstLogin = i.AutoCreateLdapUserOnFirstLogin,
-                CaptchaOnLogin = i.CaptchaOnLogin,
-                CaptchaOnRegistration = i.CaptchaOnRegistration,
-                CompanyCountry = i.CompanyCountry,
-                CompanyFax = i.CompanyFax,
-                CompanyLocality = i.CompanyLocality,
-                CompanyName = i.CompanyName,
-                CompanyPhone = i.CompanyPhone,
-                CompanyPostalCode = i.CompanyPostalCode,
-                CompanyPublicEmail = i.CompanyPublicEmail,
-                CompanyWebsite = i.CompanyWebsite,
-                CompanyRegion = i.CompanyRegion,
-                CompanyStreetAddress = i.CompanyStreetAddress,
-                CompanyStreetAddress2 = i.CompanyStreetAddress2,
-                CookiePolicySummary = i.CookiePolicySummary,
-                CreatedUtc = i.CreatedUtc,
-                DefaultEmailFromAddress = i.DefaultEmailFromAddress,
-                DefaultEmailFromAlias = i.DefaultEmailFromAlias,
-                DisableDbAuth = i.DisableDbAuth,
-                DkimPublicKey = i.DkimPublicKey,
-                DkimPrivateKey = i.DkimPrivateKey,
-                DkimDomain = i.DkimDomain,
-                DkimSelector = i.DkimSelector,
-                //EmailLdapDbFallback = i.EmailLdapDbFallback,
-                FooterContent = i.FooterContent,
-                ForcedCulture = i.ForcedCulture,
-                ForcedUICulture = i.ForcedUICulture,
-                FacebookAppId = i.FacebookAppId,
-                FacebookAppSecret = i.FacebookAppSecret,
-                GoogleAnalyticsProfileId = i.GoogleAnalyticsProfileId,
-                GoogleClientId = i.GoogleClientId,
-                GoogleClientSecret = i.GoogleClientSecret,
-                HeaderContent = i.HeaderContent,
-                IsDataProtected = i.IsDataProtected,
-                IsServerAdminSite = i.IsServerAdminSite,
-                Theme = i.Theme,
-                LastModifiedUtc = i.LastModifiedUtc,
-                LdapDomain = i.LdapDomain,
-                LdapPort = i.LdapPort,
-                LdapRootDN = i.LdapRootDN,
-                LdapServer = i.LdapServer,
-                LdapUserDNKey = i.LdapUserDNKey,
-                LdapUserDNFormat = i.LdapUserDNFormat,
-                LdapUseSsl = i.LdapUseSsl,
-                LoginInfoBottom = i.LoginInfoBottom,
-                LoginInfoTop = i.LoginInfoTop,
-                LogoUrl = i.LogoUrl,
+                CaptchaOnLogin             = i.CaptchaOnLogin,
+                CaptchaOnRegistration      = i.CaptchaOnRegistration,
+                CompanyCountry             = i.CompanyCountry,
+                CompanyFax                 = i.CompanyFax,
+                CompanyLocality            = i.CompanyLocality,
+                CompanyName                = i.CompanyName,
+                CompanyPhone               = i.CompanyPhone,
+                CompanyPostalCode          = i.CompanyPostalCode,
+                CompanyPublicEmail         = i.CompanyPublicEmail,
+                CompanyWebsite             = i.CompanyWebsite,
+                CompanyRegion              = i.CompanyRegion,
+                CompanyStreetAddress       = i.CompanyStreetAddress,
+                CompanyStreetAddress2      = i.CompanyStreetAddress2,
+                CookiePolicySummary        = i.CookiePolicySummary,
+                CreatedUtc                 = i.CreatedUtc,
+                DefaultEmailFromAddress    = i.DefaultEmailFromAddress,
+                DefaultEmailFromAlias      = i.DefaultEmailFromAlias,
+                DisableDbAuth              = i.DisableDbAuth,
+                DkimPublicKey              = i.DkimPublicKey,
+                DkimPrivateKey             = i.DkimPrivateKey,
+                DkimDomain                 = i.DkimDomain,
+                DkimSelector               = i.DkimSelector,
+                //EmailLdapDbFallback      = i.EmailLdapDbFallback,
+                FooterContent              = i.FooterContent,
+                ForcedCulture              = i.ForcedCulture,
+                ForcedUICulture            = i.ForcedUICulture,
+                FacebookAppId              = i.FacebookAppId,
+                FacebookAppSecret          = i.FacebookAppSecret,
+                GoogleAnalyticsProfileId   = i.GoogleAnalyticsProfileId,
+                GoogleClientId             = i.GoogleClientId,
+                GoogleClientSecret         = i.GoogleClientSecret,
+                HeaderContent              = i.HeaderContent,
+                IsDataProtected            = i.IsDataProtected,
+                IsServerAdminSite          = i.IsServerAdminSite,
+                Theme                      = i.Theme,
+                LastModifiedUtc            = i.LastModifiedUtc,
+                LdapDomain                 = i.LdapDomain,
+                LdapPort                   = i.LdapPort,
+                LdapRootDN                 = i.LdapRootDN,
+                LdapServer                 = i.LdapServer,
+                LdapUserDNKey              = i.LdapUserDNKey,
+                LdapUserDNFormat           = i.LdapUserDNFormat,
+                LdapUseSsl                 = i.LdapUseSsl,
+                LoginInfoBottom            = i.LoginInfoBottom,
+                LoginInfoTop               = i.LoginInfoTop,
+                LogoUrl                    = i.LogoUrl,
                 MaxInvalidPasswordAttempts = i.MaxInvalidPasswordAttempts,
-                MicrosoftClientId = i.MicrosoftClientId,
-                MicrosoftClientSecret = i.MicrosoftClientSecret,
-                MinRequiredPasswordLength = i.MinRequiredPasswordLength,
-                OidConnectAppId = i.OidConnectAppId,
-                OidConnectAppSecret = i.OidConnectAppSecret,
-                OidConnectAuthority = i.OidConnectAuthority,
-                OidConnectDisplayName = i.OidConnectDisplayName,
-                OidConnectScopesCsv = i.OidConnectScopesCsv,
-                PreferredHostName = i.PreferredHostName,
-                PrivacyPolicy = i.PrivacyPolicy,
+                MicrosoftClientId          = i.MicrosoftClientId,
+                MicrosoftClientSecret      = i.MicrosoftClientSecret,
+                MinRequiredPasswordLength  = i.MinRequiredPasswordLength,
+                OidConnectAppId            = i.OidConnectAppId,
+                OidConnectAppSecret        = i.OidConnectAppSecret,
+                OidConnectAuthority        = i.OidConnectAuthority,
+                OidConnectDisplayName      = i.OidConnectDisplayName,
+                OidConnectScopesCsv        = i.OidConnectScopesCsv,
+                PreferredHostName          = i.PreferredHostName,
+                PrivacyPolicy              = i.PrivacyPolicy,
 
-                PwdRequireDigit = i.PwdRequireDigit,
-                PwdRequireLowercase = i.PwdRequireLowercase,
-                PwdRequireNonAlpha = i.PwdRequireNonAlpha,
-                PwdRequireUppercase = i.PwdRequireUppercase,
+                PwdRequireDigit            = i.PwdRequireDigit,
+                PwdRequireLowercase        = i.PwdRequireLowercase,
+                PwdRequireNonAlpha         = i.PwdRequireNonAlpha,
+                PwdRequireUppercase        = i.PwdRequireUppercase,
                 
-                RecaptchaPrivateKey = i.RecaptchaPrivateKey,
-                RecaptchaPublicKey = i.RecaptchaPublicKey,
-                RegistrationAgreement = i.RegistrationAgreement,
-                RegistrationPreamble = i.RegistrationPreamble,
-                Require2FA = i.Require2FA,
+                RecaptchaPrivateKey        = i.RecaptchaPrivateKey,
+                RecaptchaPublicKey         = i.RecaptchaPublicKey,
+                RegistrationAgreement      = i.RegistrationAgreement,
+                RegistrationPreamble       = i.RegistrationPreamble,
+                Require2FA                 = i.Require2FA,
                 RequireApprovalBeforeLogin = i.RequireApprovalBeforeLogin,
-                RequireConfirmedEmail = i.RequireConfirmedEmail,
-                RequireConfirmedPhone = i.RequireConfirmedPhone,
-                RequiresQuestionAndAnswer = i.RequiresQuestionAndAnswer,
-                RequireCookieConsent = i.RequireCookieConsent,
-                SignEmailWithDkim = i.SignEmailWithDkim,
-                SingleBrowserSessions = i.SingleBrowserSessions,
-                SiteFolderName = i.SiteFolderName,
-                Id = i.Id,
-                AliasId = i.AliasId,
-                ShowSiteNameLink = i.ShowSiteNameLink,
-                SiteIsClosed = i.SiteIsClosed,
-                SiteIsClosedMessage = i.SiteIsClosedMessage,
-                SiteName = i.SiteName,
-                SmsClientId = i.SmsClientId,
-                SmsSecureToken = i.SmsSecureToken,
-                SmsFrom = i.SmsFrom,
-                SmtpPassword = i.SmtpPassword,
-                SmtpPort = i.SmtpPort,
-                SmtpPreferredEncoding = i.SmtpPreferredEncoding,
-                SmtpRequiresAuth = i.SmtpRequiresAuth,
-                SmtpServer = i.SmtpServer,
-                SmtpUser = i.SmtpUser,
-                SmtpUseSsl = i.SmtpUseSsl,
-                TimeZoneId = i.TimeZoneId,
-                TwitterConsumerKey = i.TwitterConsumerKey,
-                TwitterConsumerSecret = i.TwitterConsumerSecret,
-                UseInvisibleRecaptcha = i.UseInvisibleRecaptcha,
-                UseEmailForLogin = i.UseEmailForLogin,
-                //UseLdapAuth = i.UseLdapAuth,
-                TermsUpdatedUtc = i.TermsUpdatedUtc,
-                EmailApiEndpoint = i.EmailApiEndpoint,
-                EmailApiKey = i.EmailApiKey,
-                EmailSenderName = i.EmailSenderName
+                RequireConfirmedEmail      = i.RequireConfirmedEmail,
+                RequireConfirmedPhone      = i.RequireConfirmedPhone,
+                RequiresQuestionAndAnswer  = i.RequiresQuestionAndAnswer,
+                RequireCookieConsent       = i.RequireCookieConsent,
+                SignEmailWithDkim          = i.SignEmailWithDkim,
+                SingleBrowserSessions      = i.SingleBrowserSessions,
+                SiteFolderName             = i.SiteFolderName,
+                Id                         = i.Id,
+                AliasId                    = i.AliasId,
+                ShowSiteNameLink           = i.ShowSiteNameLink,
+                SiteIsClosed               = i.SiteIsClosed,
+                SiteIsClosedMessage        = i.SiteIsClosedMessage,
+                SiteName                   = i.SiteName,
+                SmsClientId                = i.SmsClientId,
+                SmsSecureToken             = i.SmsSecureToken,
+                SmsFrom                    = i.SmsFrom,
+                SmtpPassword               = i.SmtpPassword,
+                SmtpPort                   = i.SmtpPort,
+                SmtpPreferredEncoding      = i.SmtpPreferredEncoding,
+                SmtpRequiresAuth           = i.SmtpRequiresAuth,
+                SmtpServer                 = i.SmtpServer,
+                SmtpUser                   = i.SmtpUser,
+                SmtpUseSsl                 = i.SmtpUseSsl,
+                TimeZoneId                 = i.TimeZoneId,
+                TwitterConsumerKey         = i.TwitterConsumerKey,
+                TwitterConsumerSecret      = i.TwitterConsumerSecret,
+                UseInvisibleRecaptcha      = i.UseInvisibleRecaptcha,
+                UseEmailForLogin           = i.UseEmailForLogin,
+                AllowUserToChangeEmail     = i.AllowUserToChangeEmail,
+                //UseLdapAuth              = i.UseLdapAuth,
+                TermsUpdatedUtc            = i.TermsUpdatedUtc,
+                EmailApiEndpoint           = i.EmailApiEndpoint,
+                EmailApiKey                = i.EmailApiKey,
+                EmailSenderName            = i.EmailSenderName
             };
 
             return s;
         }
-
     }
 }
