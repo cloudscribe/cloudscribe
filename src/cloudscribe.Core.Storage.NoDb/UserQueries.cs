@@ -225,7 +225,7 @@ namespace cloudscribe.Core.Storage.NoDb
                     && x.AccountApproved == true
                     && (
                     userNameBeginsWith == string.Empty
-                    || x.DisplayName.StartsWith(userNameBeginsWith)
+                    || x.DisplayName.ToUpper().StartsWith(userNameBeginsWith)
                     )
                 )
                 ).ToList().Count;
@@ -253,7 +253,7 @@ namespace cloudscribe.Core.Storage.NoDb
 
             int offset = (pageSize * pageNumber) - pageSize;
 
-           
+            userNameBeginsWith = userNameBeginsWith.ToUpper();
 
             IQueryable<IUserInfo> query;
             switch (sortMode)
@@ -270,7 +270,7 @@ namespace cloudscribe.Core.Storage.NoDb
                       && x.AccountApproved == true
                       && (
                       userNameBeginsWith == string.Empty
-                      || x.DisplayName.StartsWith(userNameBeginsWith)
+                      || x.DisplayName.ToUpper().StartsWith(userNameBeginsWith)
                       )
                   )
                   orderby x.LastName, x.FirstName
@@ -314,7 +314,7 @@ namespace cloudscribe.Core.Storage.NoDb
                       && x.AccountApproved == true
                       && (
                       userNameBeginsWith == string.Empty
-                      || x.DisplayName.StartsWith(userNameBeginsWith)
+                      || x.DisplayName.ToUpper().StartsWith(userNameBeginsWith)
                       )
                   )
                   orderby x.CreatedUtc descending
@@ -359,7 +359,7 @@ namespace cloudscribe.Core.Storage.NoDb
                       && x.AccountApproved == true
                       && (
                       userNameBeginsWith == string.Empty
-                      || x.DisplayName.StartsWith(userNameBeginsWith)
+                      || x.DisplayName.ToUpper().StartsWith(userNameBeginsWith)
                       )
                   )
                   orderby x.DisplayName

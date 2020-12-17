@@ -196,7 +196,7 @@ namespace cloudscribe.Core.Storage.EFCore.Common
                     && x.AccountApproved == true
                     && (
                     userNameBeginsWith == string.Empty
-                    || x.DisplayName.StartsWith(userNameBeginsWith)
+                    || x.DisplayName.ToUpper().StartsWith(userNameBeginsWith)
                     )
                 )
                 , cancellationToken
@@ -217,6 +217,8 @@ namespace cloudscribe.Core.Storage.EFCore.Common
             //sortMode: 0 = DisplayName asc, 1 = JoinDate desc, 2 = Last, First
 
             int offset = (pageSize * pageNumber) - pageSize;
+            
+            userNameBeginsWith = userNameBeginsWith.ToUpper();
 
             using (var dbContext = _contextFactory.CreateContext())
             {
@@ -237,7 +239,7 @@ namespace cloudscribe.Core.Storage.EFCore.Common
                           && x.AccountApproved == true
                           && (
                           userNameBeginsWith == string.Empty
-                          || x.DisplayName.StartsWith(userNameBeginsWith)
+                          || x.DisplayName.ToUpper().StartsWith(userNameBeginsWith)
                           )
                       )
                       orderby x.LastName, x.FirstName
@@ -282,7 +284,7 @@ namespace cloudscribe.Core.Storage.EFCore.Common
                           && x.AccountApproved == true
                           && (
                           userNameBeginsWith == string.Empty
-                          || x.DisplayName.StartsWith(userNameBeginsWith)
+                          || x.DisplayName.ToUpper().StartsWith(userNameBeginsWith)
                           )
                       )
                       orderby x.CreatedUtc descending
@@ -328,7 +330,7 @@ namespace cloudscribe.Core.Storage.EFCore.Common
                           && x.AccountApproved == true
                           && (
                           userNameBeginsWith == string.Empty
-                          || x.DisplayName.StartsWith(userNameBeginsWith)
+                          || x.DisplayName.ToUpper().StartsWith(userNameBeginsWith)
                           )
                       )
                       orderby x.DisplayName
