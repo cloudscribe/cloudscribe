@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:                  Joe Audette
 // Created:                 2016-04-26
-// Last Modified:           2018-10-10
+// Last Modified:           2020-12-17 - jk
 // 
 
 using cloudscribe.Core.Models;
@@ -419,28 +419,32 @@ namespace cloudscribe.Core.Storage.NoDb
             cancellationToken.ThrowIfCancellationRequested();
 
             //await EnsureProjectId().ConfigureAwait(false);
-            var projectId = siteId.ToString();
+            var projectId   = siteId.ToString();
+            var searchTerms = searchInput.Trim().ToUpper().Split(" ");
 
-            var allUsers = await userQueries.GetAllAsync(projectId, cancellationToken).ConfigureAwait(false);
+            var allUsers    = await userQueries.GetAllAsync(projectId, cancellationToken).ConfigureAwait(false);
+            var users       = allUsers.ToList().AsQueryable();
 
-            string searchInputUpper = searchInput.Trim().ToUpper();
+            IQueryable<IUserInfo> query = users.Where(x => x.SiteId == siteId);
 
-            return allUsers.Where(
-                x =>
-                (
-                    x.SiteId == siteId
-                    && (
-                    searchInput == string.Empty
-                    || x.NormalizedEmail.Contains(searchInputUpper)
-                    || x.NormalizedUserName.Contains(searchInputUpper)
-                    || (x.FirstName != null && x.FirstName.ToUpper().Contains(searchInputUpper))
-                    || (x.LastName != null && x.LastName.ToUpper().Contains(searchInputUpper))
-                    || x.DisplayName.ToUpper().Contains(searchInputUpper)
-                    )
-                )
+            foreach (var term in searchTerms)
+            {
+                if (!string.IsNullOrWhiteSpace(term))
+                {
+                    // Note each term is already in upper case
+                    query = query.Where(x =>
+                                               ((SiteUser)x).NormalizedEmail.Contains(term)
+                                            || ((SiteUser)x).NormalizedUserName.Contains(term)
+                                            || (x.FirstName != null && x.FirstName.ToUpper().Contains(term))
+                                            || (x.LastName  != null && x.LastName .ToUpper().Contains(term))
+                                            ||  x.DisplayName.ToUpper().Contains(term)
+                     );
+                }
+            }
 
-                )
-                .ToList().Count;
+            query = query.Distinct();
+
+            return query.ToList().Count();
         }
 
         public async Task<PagedResult<IUserInfo>> GetUserAdminSearchPage(
@@ -453,9 +457,13 @@ namespace cloudscribe.Core.Storage.NoDb
         {
             ThrowIfDisposed();
             cancellationToken.ThrowIfCancellationRequested();
+            if (searchInput == null) searchInput = string.Empty;
 
             //await EnsureProjectId().ConfigureAwait(false);
             var projectId = siteId.ToString();
+
+            //allows user to enter multiple words (e.g. to allow full name search)
+            var searchTerms = searchInput.Trim().ToUpper().Split(" ");
 
             var allUsers = await userQueries.GetAllAsync(projectId, cancellationToken).ConfigureAwait(false);
             var users = allUsers.ToList().AsQueryable();
@@ -464,47 +472,48 @@ namespace cloudscribe.Core.Storage.NoDb
 
             int offset = (pageSize * pageNumber) - pageSize;
 
-            string searchInputUpper = searchInput.Trim().ToUpper();
+            IQueryable<IUserInfo> query = users.Where(x => x.SiteId == siteId);
 
-            IQueryable<IUserInfo> query
-                = from x in users
+            foreach (var term in searchTerms)
+            {
+                if (!string.IsNullOrWhiteSpace(term))
+                {
+                    // Note each term is already in upper case
+                    query = query.Where(x =>
+                                               ((SiteUser)x).NormalizedEmail.Contains(term)
+                                            || ((SiteUser)x).NormalizedUserName.Contains(term)
+                                            || (x.FirstName != null && x.FirstName.ToUpper().Contains(term))
+                                            || (x.LastName  != null && x.LastName .ToUpper().Contains(term))
+                                            || x.DisplayName.ToUpper().Contains(term)
+                     );
+                }
+            }
 
-                  where
-                  (
-                      x.SiteId == siteId
-                        && (
-                        searchInput == string.Empty
-                        || x.NormalizedEmail.Contains(searchInputUpper)
-                        || x.NormalizedUserName.Contains(searchInputUpper)
-                        || (x.FirstName != null && x.FirstName.ToUpper().Contains(searchInputUpper))
-                        || (x.LastName != null && x.LastName.ToUpper().Contains(searchInputUpper))
-                        || x.DisplayName.ToUpper().Contains(searchInputUpper)
-                        )
-                  )
-                  select new UserInfo
-                  {
-                      Id = x.Id,
-                      AvatarUrl = x.AvatarUrl,
-                      AccountApproved = x.AccountApproved,
-                      CreatedUtc = x.CreatedUtc,
-                      DateOfBirth = x.DateOfBirth,
-                      DisplayInMemberList = x.DisplayInMemberList,
-                      DisplayName = x.DisplayName,
-                      Email = x.Email,
-                      FirstName = x.FirstName,
-                      Gender = x.Gender,
-                      IsLockedOut = x.IsLockedOut,
-                      LastLoginUtc = x.LastLoginUtc,
-                      LastName = x.LastName,
-                      PhoneNumber = x.PhoneNumber,
-                      PhoneNumberConfirmed = x.PhoneNumberConfirmed,
-                      SiteId = x.SiteId,
-                      TimeZoneId = x.TimeZoneId,
-                      UserName = x.UserName,
-                      WebSiteUrl = x.WebSiteUrl
+            query = query.Distinct();
 
-                  };
-
+            query = query.Select(x => new UserInfo
+                {
+                    Id                   = x.Id,
+                    AvatarUrl            = x.AvatarUrl,
+                    AccountApproved      = x.AccountApproved,
+                    CreatedUtc           = x.CreatedUtc,
+                    DateOfBirth          = x.DateOfBirth,
+                    DisplayInMemberList  = x.DisplayInMemberList,
+                    DisplayName          = x.DisplayName,
+                    Email                = x.Email,
+                    FirstName            = x.FirstName,
+                    Gender               = x.Gender,
+                    IsLockedOut          = x.IsLockedOut,
+                    LastLoginUtc         = x.LastLoginUtc,
+                    LastName             = x.LastName,
+                    PhoneNumber          = x.PhoneNumber,
+                    PhoneNumberConfirmed = x.PhoneNumberConfirmed,
+                    SiteId               = x.SiteId,
+                    TimeZoneId           = x.TimeZoneId,
+                    UserName             = x.UserName,
+                    WebSiteUrl           = x.WebSiteUrl
+                }
+            );
 
             switch (sortMode)
             {
@@ -514,7 +523,6 @@ namespace cloudscribe.Core.Storage.NoDb
                 case 1:
                     query = query.OrderByDescending(sl => sl.CreatedUtc).AsQueryable();
                     break;
-
                 case 0:
                 default:
                     query = query.OrderBy(sl => sl.DisplayName).AsQueryable();
@@ -526,13 +534,14 @@ namespace cloudscribe.Core.Storage.NoDb
                 .Take(pageSize)
                 .ToList<IUserInfo>()
                 ;
-            var result = new PagedResult<IUserInfo>();
-            result.Data = data;
-            result.PageNumber = pageNumber;
-            result.PageSize = pageSize;
-            result.TotalItems = await CountUsersForAdminSearch(siteId, searchInput, cancellationToken).ConfigureAwait(false);
-            return result;
 
+            return new PagedResult<IUserInfo>
+            {
+                Data       = data,
+                PageNumber = pageNumber,
+                PageSize   = pageSize,
+                TotalItems = await CountUsersForAdminSearch(siteId, searchInput, cancellationToken).ConfigureAwait(false)
+            };
         }
 
         public async Task<int> CountLockedByAdmin(

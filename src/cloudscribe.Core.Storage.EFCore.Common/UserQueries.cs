@@ -1,7 +1,7 @@
 ﻿// Licensed under the Apache License, Version 2.0
 // Author:					Joe Audette
 // Created:					2015-11-16
-// Last Modified:			2019-10-19
+// Last Modified:           2020-12-17 - jk
 // 
 
 
@@ -385,30 +385,31 @@ namespace cloudscribe.Core.Storage.EFCore.Common
             string searchInput,
             CancellationToken cancellationToken = default(CancellationToken))
         {
-            string searchInputUpper = searchInput.Trim().ToUpper();
+            if (searchInput == null) searchInput = string.Empty;
+
+            //allows user to enter multiple words (e.g. to allow full name search)
+            var searchTerms = searchInput.Trim().ToUpper().Split(" ");
 
             using (var dbContext = _contextFactory.CreateContext())
             {
-                return await dbContext.Users.CountAsync<SiteUser>(
-                x =>
-                (
-                    x.SiteId == siteId
-                    && (
-                    searchInput == string.Empty
-                    || x.NormalizedEmail.Contains(searchInputUpper)
-                    || x.NormalizedUserName.Contains(searchInputUpper)
-                    || (x.FirstName != null && x.FirstName.ToUpper().Contains(searchInputUpper))
-                    || (x.LastName != null && x.LastName.ToUpper().Contains(searchInputUpper))
-                    || x.DisplayName.ToUpper().Contains(searchInputUpper) 
-                    )
-                )
-                , cancellationToken
-                )
-                .ConfigureAwait(false);
+                var query = dbContext.Users.Where(x => x.SiteId == siteId);
+                foreach (var term in searchTerms)
+                {
+                    if (!string.IsNullOrWhiteSpace(term))
+                    {
+                        query = query.Where(x =>
+                                                x.NormalizedEmail.Contains(term)
+                                                || x.NormalizedUserName.Contains(term)
+                                                || (x.FirstName != null && x.FirstName.ToUpper().Contains(term))
+                                                || (x.LastName != null && x.LastName.ToUpper().Contains(term))
+                                                || x.DisplayName.ToUpper().Contains(term)
+                         );
+                    }
+                }
 
+                query = query.Distinct();
+                return await query.CountAsync<SiteUser>().ConfigureAwait(false);
             }
-
-            
         }
 
         public async Task<PagedResult<IUserInfo>> GetUserAdminSearchPage(
@@ -420,54 +421,33 @@ namespace cloudscribe.Core.Storage.EFCore.Common
             CancellationToken cancellationToken = default(CancellationToken))
         {
             //sortMode: 0 = DisplayName asc, 1 = JoinDate desc, 2 = Last, First
+            
+            if (searchInput == null) searchInput = string.Empty;
+
+            //allows user to enter multiple words (e.g. to allow full name search)
+            var searchTerms = searchInput.Trim().ToUpper().Split(" ");
 
             int offset = (pageSize * pageNumber) - pageSize;
             
-            string searchInputUpper = searchInput.Trim().ToUpper();
-
             using (var dbContext = _contextFactory.CreateContext())
-            {                
+            {
+                var query = dbContext.Users.Where(x => x.SiteId == siteId);
+                foreach (var term in searchTerms)
+                {
+                    if (!string.IsNullOrWhiteSpace(term))
+                    {
+                        // Note each term is already in upper case
+                        query = query.Where(x =>
+                                                    x.NormalizedEmail.Contains(term)
+                                                 || x.NormalizedUserName.Contains(term)
+                                                 || (x.FirstName != null && x.FirstName.ToUpper().Contains(term))
+                                                 || (x.LastName != null && x.LastName.ToUpper().Contains(term))
+                                                 || x.DisplayName.ToUpper().Contains(term)
+                         );
+                    }
+                }
 
-                IQueryable<IUserInfo> query = from x in dbContext.Users
-
-                where
-                (
-                    x.SiteId == siteId
-                        && (
-                        searchInput == string.Empty
-                        || x.NormalizedEmail.Contains(searchInputUpper)
-                        || x.NormalizedUserName.Contains(searchInputUpper)
-                        || (x.FirstName != null && x.FirstName.ToUpper().Contains(searchInputUpper))
-                        || (x.LastName != null && x.LastName.ToUpper().Contains(searchInputUpper))
-                        || x.DisplayName.ToUpper().Contains(searchInputUpper)                            
-                        )
-                )
-                select x; 
-
-                //select new UserInfo
-                //{
-                //    Id = x.Id,
-                //    AvatarUrl = x.AvatarUrl,
-                //    AccountApproved = x.AccountApproved,
-                //    CreatedUtc = x.CreatedUtc,
-                //    DateOfBirth = x.DateOfBirth,
-                //    DisplayInMemberList = x.DisplayInMemberList,
-                //    DisplayName = x.DisplayName,
-                //    Email = x.Email,
-                //    FirstName = x.FirstName,
-                //    Gender = x.Gender,
-                //    IsLockedOut = x.IsLockedOut,
-                //    LastLoginUtc = x.LastLoginUtc,
-                //    LastName = x.LastName,
-                //    PhoneNumber = x.PhoneNumber,
-                //    PhoneNumberConfirmed = x.PhoneNumberConfirmed,
-                //    SiteId = x.SiteId,
-                //    TimeZoneId = x.TimeZoneId,
-                //    UserName = x.UserName,
-                //    WebSiteUrl = x.WebSiteUrl
-
-                //};
-
+                query = query.Distinct();
 
                 switch (sortMode)
                 {
@@ -498,10 +478,6 @@ namespace cloudscribe.Core.Storage.EFCore.Common
                 result.TotalItems = await CountUsersForAdminSearch(siteId, searchInput, cancellationToken).ConfigureAwait(false);
                 return result;
             }
-
-            
-
-
         }
 
         public async Task<int> CountLockedByAdmin(

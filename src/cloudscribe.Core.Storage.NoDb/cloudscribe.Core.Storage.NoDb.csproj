@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <Description>NoDb implementation of cloudscribe core commands and queries</Description>
-    <Version>4.1.5</Version>
+    <Version>4.1.6</Version>
     <Authors>Joe Audette</Authors>
     <TargetFrameworks>netstandard2.1</TargetFrameworks>
     <PackageTags>cloudscribe;commands;queries;NoDb</PackageTags>
