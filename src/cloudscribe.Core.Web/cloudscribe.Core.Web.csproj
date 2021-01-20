@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <Description>Multi-tenant web application foundation with management for sites, users, roles, claims, and geographic data.</Description>
-    <Version>4.1.5</Version>
+    <Version>4.1.7</Version>
    
     <Authors>Joe Audette</Authors>
     <TargetFrameworks>netcoreapp3.1</TargetFrameworks>
@@ -38,7 +38,7 @@
 
   <ItemGroup>
     <PackageReference Include="cloudscribe.Web.Pagination" Version="3.1.0" />
-    <PackageReference Include="cloudscribe.Web.Navigation" Version="4.1.1" />
+    <PackageReference Include="cloudscribe.Web.Navigation" Version="4.1.2" />
     <PackageReference Include="cloudscribe.Web.SiteMap.FromNavigation" Version="4.1.0" />
   
     <PackageReference Include="Microsoft.Extensions.Caching.Abstractions" Version="3.0.0" />

@@ -8,9 +8,11 @@
 using cloudscribe.Core.Models;
 using cloudscribe.Core.Web.ViewModels.Account;
 using cloudscribe.Core.Web.ViewModels.UserAdmin;
+using cloudscribe.Pagination.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.AspNetCore.Mvc.ViewFeatures;
+using System;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -78,6 +80,18 @@ namespace cloudscribe.Core.Web.ExtensionPoints
             CancellationToken cancellationToken = default(CancellationToken)
             );
 
+
+        Task<PagedResult<IUserInfo>> GetCustomUserAdminSearchPage(
+            Guid siteId, 
+            int pageNumber, 
+            int pageSize, 
+            string searchInput, 
+            int sortMode,
+            CancellationToken cancellationToken = default(CancellationToken));
+
+        Task<string> GetUserListViewName(
+            ISiteContext site,
+            HttpContext httpContext);
     }
 
     public class NoUserEditCustomization : IHandleCustomUserInfoAdmin
@@ -170,6 +184,20 @@ namespace cloudscribe.Core.Web.ExtensionPoints
             return Task.CompletedTask;
         }
 
-    }
+        public Task<PagedResult<IUserInfo>> GetCustomUserAdminSearchPage(
+            Guid siteId, 
+            int pageNumber, 
+            int pageSize, 
+            string searchInput, 
+            int sortMode, 
+            CancellationToken cancellationToken = default)
+        {
+            return Task.FromResult(null as PagedResult<IUserInfo>);
+        }
 
+        public Task<string> GetUserListViewName(ISiteContext site, HttpContext httpContext)
+        {
+            return Task.FromResult("Index"); // this is just returning the default view name.
+        }
+    }
 }
