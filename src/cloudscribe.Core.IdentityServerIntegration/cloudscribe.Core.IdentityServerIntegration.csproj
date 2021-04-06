@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <Description>cloudscribe multi-tenant identity integration for IdentityServer4</Description>
-    <Version>4.1.1</Version>
+    <Version>4.1.2</Version>
     
     
 	
