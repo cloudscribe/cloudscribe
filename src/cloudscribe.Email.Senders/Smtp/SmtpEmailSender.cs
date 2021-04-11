@@ -294,9 +294,11 @@ namespace cloudscribe.Email.Smtp
             {
                 if(smtpOptions.UseSsl)
                 {
-                    if (smtpOptions.Server == "smtp.office365.com" && smtpOptions.Port == 587) {
-                        //See https://github.com/cloudscribe/cloudscribe/issues/755
-                        await client.ConnectAsync(
+
+                    if (smtpOptions.Port == 587)
+                        {
+                            //See https://github.com/cloudscribe/cloudscribe/issues/755
+                            await client.ConnectAsync(
                                 smtpOptions.Server,
                                 smtpOptions.Port,
                                 SecureSocketOptions.StartTls
