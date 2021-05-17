@@ -204,6 +204,12 @@ namespace cloudscribe.Core.Identity
 
             var siteUser = await _queries.Fetch(siteGuid, userGuid, cancellationToken);
 
+            // jk second chance - this may be a visitor from another tenant
+            if (siteUser == null && _multiTenantOptions.RootUserCanSignInToTenants)
+            {
+                siteUser = await _queries.Fetch(_multiTenantOptions.RootSiteId, userGuid, cancellationToken);
+            }
+
             return (TUser)siteUser;
         }
 
@@ -216,8 +222,16 @@ namespace cloudscribe.Core.Identity
             
             var siteGuid = SiteSettings.Id;
             if (_multiTenantOptions.UseRelatedSitesMode) { siteGuid = _multiTenantOptions.RelatedSiteId; }
+            
             var allowEmailFallback = SiteSettings.UseEmailForLogin;
             var siteUser = await _queries.FetchByLoginName(siteGuid, normailzedUserName, allowEmailFallback, cancellationToken);
+
+            // jk second chance - this may be a visitor from another tenant
+            if(siteUser==null && _multiTenantOptions.RootUserCanSignInToTenants)
+            {
+                siteUser = await _queries.FetchByLoginName(_multiTenantOptions.RootSiteId, normailzedUserName, allowEmailFallback, cancellationToken);
+            }
+
             return (TUser)siteUser;
 
         }
@@ -497,6 +511,12 @@ namespace cloudscribe.Core.Identity
             if (_multiTenantOptions.UseRelatedSitesMode) { siteGuid = _multiTenantOptions.RelatedSiteId; }
 
             ISiteUser siteUser = await _queries.Fetch(siteGuid, email, cancellationToken);
+
+            // jk second chance - this may be a visitor from another tenant
+            if (siteUser == null && _multiTenantOptions.RootUserCanSignInToTenants)
+            {
+                siteUser = await _queries.Fetch(_multiTenantOptions.RootSiteId, email, cancellationToken);
+            }
 
             return (TUser)siteUser;
         }
