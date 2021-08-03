@@ -42,7 +42,7 @@
             <div class="input-group-prepend">
                 <span class="input-group-text"><i class="@themeSettings.Icons.Username" aria-hidden="true"></i></span>
             </div>
-            <input asp-for="Username" class="form-control" />
+            <input asp-for="Username" class="form-control" data-val-regex-pattern="^[a-zA-Z0-9]*$" data-val-regex=@sr["Username can only contain letters or digits, with no spaces"] />
             <span asp-validation-for="Username" class="invalid-feedback"></span>
             @Html.ValidationMessage("usernameerror", new { @class = "text-danger" })
         </div>
@@ -104,7 +104,7 @@
         }
         else
         {
-            <button name="submit" type="submit" class="btn btn-primary" data-enabled-text='@sr["Register"]' data-disabled-text='@sr["Working..."]'>@sr["Register"]</button>
+            <button type="submit" class="btn btn-primary" data-enabled-text='@sr["Register"]' data-disabled-text='@sr["Working..."]'>@sr["Register"]</button>
         }
         @Html.ValidationMessage("registrationError", new { @class = "text-danger" })
 

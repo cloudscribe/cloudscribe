@@ -43,6 +43,7 @@ namespace cloudscribe.Core.Web.ViewModels.Account
            ErrorMessage = "Username not accepted, please try another value",
            HttpMethod = "Post")]
         [Required(ErrorMessage = "Username is required")]
+        //[RegularExpression(@"^[a-zA-Z0-9]*$", ErrorMessage = "Username can only contain letters or digits, with no spaces")]
         //[RequiredWhen("UseEmailForLogin", false, ErrorMessage = "Username is required")]
         public string Username { get; set; } = string.Empty;
 
