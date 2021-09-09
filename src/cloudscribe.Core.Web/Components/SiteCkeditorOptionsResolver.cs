@@ -34,30 +34,35 @@ namespace cloudscribe.Core.Web.Components
 
         public Task<CkeditorOptions> GetCkeditorOptions()
         {
-            
+            // jk - We need to construct a new instance here on each invocation, since the existing _options is a singleton
+            // and so persists across invocations - creating a multi-tenancy bug whereby the values are only ever correct 
+            // for the first accessed tenant. #766
+
+            var result = new CkeditorOptions();
+
             var urlHelper = _urlHelperFactory.GetUrlHelper(_actionContextAccesor.ActionContext);
 
-            _options.CustomConfigPath = urlHelper.Content(_options.CustomConfigPath);
+            result.CustomConfigPath = urlHelper.Content(_options.CustomConfigPath);
 
-            if(string.IsNullOrWhiteSpace(_options.FileBrowseUrl)) _options.FileBrowseUrl = urlHelper.Action("FileDialog", "FileManager", new { type = "file" });
-            else _options.FileBrowseUrl = urlHelper.Content(_options.FileBrowseUrl);
+            if (string.IsNullOrWhiteSpace(_options.FileBrowseUrl)) result.FileBrowseUrl = urlHelper.Action("FileDialog", "FileManager", new { type = "file" });
+            else result.FileBrowseUrl = urlHelper.Content(_options.FileBrowseUrl);
 
-            if(string.IsNullOrWhiteSpace( _options.ImageBrowseUrl)) _options.ImageBrowseUrl = urlHelper.Action("FileDialog", "FileManager", new { type = "image" });
-            else _options.ImageBrowseUrl= urlHelper.Content(_options.ImageBrowseUrl);
+            if (string.IsNullOrWhiteSpace(_options.ImageBrowseUrl)) result.ImageBrowseUrl = urlHelper.Action("FileDialog", "FileManager", new { type = "image" });
+            else result.ImageBrowseUrl = urlHelper.Content(_options.ImageBrowseUrl);
 
-            if(string.IsNullOrWhiteSpace(_options.VideoBrowseUrl)) _options.VideoBrowseUrl  = urlHelper.Action("FileDialog", "FileManager", new { type = "video" });
-            else _options.VideoBrowseUrl = urlHelper.Content(_options.VideoBrowseUrl);
+            if (string.IsNullOrWhiteSpace(_options.VideoBrowseUrl)) result.VideoBrowseUrl = urlHelper.Action("FileDialog", "FileManager", new { type = "video" });
+            else result.VideoBrowseUrl = urlHelper.Content(_options.VideoBrowseUrl);
 
-            if(string.IsNullOrWhiteSpace(_options.AudioBrowseUrl)) _options.AudioBrowseUrl = urlHelper.Action("FileDialog", "FileManager", new { type = "audio" });
-            else _options.AudioBrowseUrl = urlHelper.Content(_options.AudioBrowseUrl);
+            if (string.IsNullOrWhiteSpace(_options.AudioBrowseUrl)) result.AudioBrowseUrl = urlHelper.Action("FileDialog", "FileManager", new { type = "audio" });
+            else result.AudioBrowseUrl = urlHelper.Content(_options.AudioBrowseUrl);
 
-            if(string.IsNullOrWhiteSpace(_options.DropFileUrl)) _options.DropFileUrl = urlHelper.Action("DropFile", "FileManager");
-            else _options.DropFileUrl = urlHelper.Content(_options.DropFileUrl);
+            if (string.IsNullOrWhiteSpace(_options.DropFileUrl)) result.DropFileUrl = urlHelper.Action("DropFile", "FileManager");
+            else result.DropFileUrl = urlHelper.Content(_options.DropFileUrl);
 
-            if(string.IsNullOrWhiteSpace(_options.CropFileUrl)) _options.CropFileUrl = urlHelper.Action("CropServerImage", "FileManager");
-            else _options.CropFileUrl = urlHelper.Content(_options.CropFileUrl);
+            if (string.IsNullOrWhiteSpace(_options.CropFileUrl)) result.CropFileUrl = urlHelper.Action("CropServerImage", "FileManager");
+            else result.CropFileUrl = urlHelper.Content(_options.CropFileUrl);
 
-            return Task.FromResult(_options);
+            return Task.FromResult(result);
         }
     }
 }
