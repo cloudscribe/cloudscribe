@@ -1012,6 +1012,13 @@ namespace cloudscribe.Core.Identity
             if (_multiTenantOptions.UseRelatedSitesMode) { siteGuid = _multiTenantOptions.RelatedSiteId; }
 
             var userlogin = await _queries.FindLogin(siteGuid, loginProvider, providerKey, cancellationToken);
+
+            // jk second chance - this may be a visitor from another tenant
+            if (userlogin == null && _multiTenantOptions.RootUserCanSignInToTenants)
+            {
+                userlogin = await _queries.FindLogin(_multiTenantOptions.RootSiteId, loginProvider, providerKey, cancellationToken);
+            }
+
             if (userlogin != null && userlogin.UserId != Guid.Empty)
             {
                 _log.LogDebug("FindAsync userLogin found for " + loginProvider + " with providerKey " + providerKey);
