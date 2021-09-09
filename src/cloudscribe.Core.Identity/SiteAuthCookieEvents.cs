@@ -82,7 +82,7 @@ namespace cloudscribe.Core.Identity
 
             var siteGuidClaim = new Claim("SiteGuid", tenant.Id.ToString());
 
-            if (_multiTenantOptions.UseRelatedSitesMode || context.Principal.HasClaim(siteGuidClaim.Type, siteGuidClaim.Value))
+            if (_multiTenantOptions.UseRelatedSitesMode || _multiTenantOptions.RootUserCanSignInToTenants || context.Principal.HasClaim(siteGuidClaim.Type, siteGuidClaim.Value))
             {
                 
                 await SecurityStampValidator.ValidatePrincipalAsync(context);

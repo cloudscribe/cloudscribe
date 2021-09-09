@@ -16,6 +16,37 @@ namespace cloudscribe.Core.Models
         public MultiTenantMode Mode { get; set; } = MultiTenantMode.FolderName;
 
 
+        private bool rootUserCanSignInToTenants = false;
+        /// <summary>
+        /// if true then all users from the site rootSiteId
+        /// can login to all other tenants
+        /// </summary>
+        public bool RootUserCanSignInToTenants
+        {
+            get
+            {
+                if (Mode == MultiTenantMode.None) { return false; }
+                if (rootSiteId == Guid.Empty) { return false; }
+                if (UseRelatedSitesMode) { return false; }
+                return rootUserCanSignInToTenants;
+            }
+            set { rootUserCanSignInToTenants = value; }
+        }
+
+        /// <summary>
+        /// the siteId of the site whose users can access other tenants when RootUserCanSignInToTenants is true
+        /// </summary>
+        private Guid rootSiteId = Guid.Empty;
+        public Guid RootSiteId
+        {
+            get
+            {
+                return rootSiteId;
+            }
+            set { rootSiteId = value; }
+        }
+
+
         private bool useRelatedSitesMode = false;
         /// <summary>
         /// if true then all sites will share the same users and roles attached to the relatedSiteGuid
