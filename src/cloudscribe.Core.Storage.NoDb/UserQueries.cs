@@ -7,6 +7,7 @@
 
 using cloudscribe.Core.Models;
 using cloudscribe.Pagination.Models;
+using Microsoft.Extensions.Options;
 using NoDb;
 using System;
 using System.Collections.Generic;
@@ -29,7 +30,8 @@ namespace cloudscribe.Core.Storage.NoDb
             IBasicQueries<UserToken> tokenQueries,
             IBasicQueries<UserLocation> locationQueries,
             IStoragePathResolver<UserLogin> loginPathResolver,
-            IStoragePathResolver<UserToken> tokenPathResolver
+            IStoragePathResolver<UserToken> tokenPathResolver,
+            IOptions<MultiTenantOptions> multiTenantOptionsAccessor
             )
         {
             //this.projectResolver = projectResolver;
@@ -42,6 +44,7 @@ namespace cloudscribe.Core.Storage.NoDb
             this.loginQueries = loginQueries;
             this.tokenQueries = tokenQueries;
             this.tokenPathResolver = tokenPathResolver;
+            this.multiTenantOptions = multiTenantOptionsAccessor.Value;
         }
 
         //private IProjectResolver projectResolver;
@@ -54,6 +57,7 @@ namespace cloudscribe.Core.Storage.NoDb
         private IBasicQueries<UserLocation> locationQueries;
         private IStoragePathResolver<UserLogin> loginPathResolver;
         private IStoragePathResolver<UserToken> tokenPathResolver;
+        private MultiTenantOptions multiTenantOptions;
 
         //protected string projectId;
 
@@ -79,12 +83,25 @@ namespace cloudscribe.Core.Storage.NoDb
             //await EnsureProjectId().ConfigureAwait(false);
             var projectId = siteId.ToString();
 
-            var item = await userQueries.FetchAsync(
+            SiteUser item;
+            
+            item = await userQueries.FetchAsync(
                 projectId, 
                 userId.ToString(), 
                 cancellationToken).ConfigureAwait(false);
 
-            if (item.SiteId != siteId) return null;
+            // JK - don't have to make a check for RootUserCanSignInToTenants here - 
+            // we get a second chance from a higher level, calling back in with siteId - root site Id
+
+            //if(item==null && multiTenantOptions.RootUserCanSignInToTenants)
+            //{
+            //    item = await userQueries.FetchAsync(
+            //    multiTenantOptions.RootSiteId.ToString(),
+            //    userId.ToString(),
+            //    cancellationToken).ConfigureAwait(false);
+            //}
+
+            if (item == null || item.SiteId != siteId) return null;
 
             return item;
         }
@@ -1112,14 +1129,36 @@ namespace cloudscribe.Core.Storage.NoDb
             cancellationToken.ThrowIfCancellationRequested();
 
             //await EnsureProjectId().ConfigureAwait(false);
-            var projectId = siteId.ToString();
 
-            var allRoles = await roleQueries.GetAllAsync(projectId, cancellationToken).ConfigureAwait(false);
+            var result = new List<string>();
+
+            // JK - firstly the default lookup for a user of the current site
+            result = await GetUserRolesForTenant(siteId, userId, cancellationToken).ConfigureAwait(false);
+
+            // JK - OR - try to get the roles of a visiting root site user instead
+            if (multiTenantOptions.RootUserCanSignInToTenants && result.Count == 0)
+            { 
+                try
+                {
+                    result = await GetUserRolesForTenant(multiTenantOptions.RootSiteId, userId, cancellationToken).ConfigureAwait(false);
+                }
+                catch
+                {
+                    return result;
+                }
+            }
+
+            return result;
+        }
+
+        private async Task<List<string>> GetUserRolesForTenant(Guid siteId, Guid userId, CancellationToken cancellationToken)
+        {
+            var allRoles = await roleQueries.GetAllAsync(siteId.ToString(), cancellationToken).ConfigureAwait(false);
             var filteredRoles = allRoles.Where(
                 x => x.SiteId == siteId
             );
 
-            var allUserRoles = await userRoleQueries.GetAllAsync(projectId, cancellationToken).ConfigureAwait(false);
+            var allUserRoles = await userRoleQueries.GetAllAsync(siteId.ToString(), cancellationToken).ConfigureAwait(false);
 
             var query = from x in filteredRoles
                         join y in allUserRoles
@@ -1127,10 +1166,9 @@ namespace cloudscribe.Core.Storage.NoDb
                         where y.UserId == userId
                         orderby x.RoleName
                         select x.RoleName
-                        ;
+                       ;
 
             return query.ToList<string>();
-
         }
 
         public async Task<int> CountOfRoles(
