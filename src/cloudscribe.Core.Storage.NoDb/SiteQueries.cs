@@ -69,12 +69,16 @@ namespace cloudscribe.Core.Storage.NoDb
             if (host == null)
             {
                 var allSites = await queries.GetAllAsync(projectId, cancellationToken).ConfigureAwait(false);
-                var query = from s in allSites
-                            .Take(1)
-                            orderby s.CreatedUtc ascending
-                            select s;
+                var query = allSites.Where(x => x.IsServerAdminSite).OrderBy(s => s.CreatedUtc).Take(1);
+                var result = query.SingleOrDefault();
 
-                return query.SingleOrDefault();
+                if (result == null)
+                {
+                    query = allSites.OrderBy(s => s.CreatedUtc).Take(1);
+                    result = query.SingleOrDefault();
+                }
+
+                return result;
             }
 
             return await queries.FetchAsync(
