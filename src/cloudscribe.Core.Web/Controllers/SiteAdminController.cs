@@ -464,7 +464,8 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
 
             newSite.SiteIsClosed = model.IsClosed;
             newSite.SiteIsClosedMessage = model.ClosedMessage;
-            
+            newSite.TimeZoneId = model.TimeZoneId;
+
             await SiteManager.CreateNewSite(newSite);
             await SiteManager.CreateRequiredRolesAndAdminUser(
                 newSite,
