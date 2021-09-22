@@ -7,8 +7,6 @@ using SixLabors.ImageSharp.Formats.Jpeg;
 using SixLabors.ImageSharp.Formats.Png;
 using SixLabors.ImageSharp.PixelFormats;
 using SixLabors.ImageSharp.Processing;
-using SixLabors.ImageSharp.Processing.Transforms;
-using SixLabors.Primitives;
 using System;
 using System.IO;
 
@@ -32,7 +30,7 @@ namespace cloudscribe.FileManager.Web.Services
                 using (Stream tmpFileStream = File.OpenRead(pathToImage))
                 {
 
-                    using (Image<Rgba32> image = Image.Load(tmpFileStream))
+                    using (Image<Rgba32> image = (Image<Rgba32>)Image.Load(tmpFileStream))
                     {
                         return new ImageSize(image.Width, image.Height);
                     }
@@ -84,7 +82,7 @@ namespace cloudscribe.FileManager.Web.Services
             {
                 using (Stream tmpFileStream = File.OpenRead(sourceFilePath))
                 {
-                    using (Image<Rgba32> fullsizeImage = Image.Load(tmpFileStream))
+                    using (Image<Rgba32> fullsizeImage = (Image<Rgba32>)Image.Load(tmpFileStream))
                     { 
                         var rect = new Rectangle(offsetX, offsetY, widthToCrop, heightToCrop);
                        
@@ -165,7 +163,7 @@ namespace cloudscribe.FileManager.Web.Services
             {
                 using (Stream tmpFileStream = File.OpenRead(sourceFilePath))
                 {
-                    using (Image<Rgba32> fullsizeImage = Image.Load(tmpFileStream))
+                    using (Image<Rgba32> fullsizeImage = (Image<Rgba32>)Image.Load(tmpFileStream))
                     {         
                         scaleFactor = GetScaleFactor(fullsizeImage.Width, fullsizeImage.Height, maxWidth, maxHeight);
                         if (!allowEnlargement)

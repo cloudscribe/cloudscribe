@@ -1,6 +1,5 @@
 ﻿using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.PixelFormats;
-using SixLabors.ImageSharp.Primitives;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -19,13 +18,13 @@ namespace cloudscribe.FileManager.Web.Services
             {
                 using (Stream tmpFileStream = File.OpenRead(imageFilePath))
                 {
-                    using (Image<Rgba32> img = Image.Load(tmpFileStream))
+                    using (Image<Rgba32> img = (Image<Rgba32>)Image.Load(tmpFileStream))
                     {
 
-                        foreach (var p in img.MetaData.ExifProfile.Values)
+                        foreach (var p in img.Metadata.ExifProfile.Values)
                         {
 
-                            if (p.Value is Rational[] rat)
+                            if (p.GetValue() is Rational[] rat)
                             {
                                 if (rat.Length > 0)
                                 {
@@ -33,15 +32,14 @@ namespace cloudscribe.FileManager.Web.Services
                                 }
 
                             }
-                            else if (p.Value is byte[] b) //leave out byte array props
+                            else if (p.GetValue() is byte[] b) //leave out byte array props
                             {
                                 continue;
                             }
                             else
                             {
-                                result.Add(p.Tag.ToString(), p.Value.ToString());
+                                result.Add(p.Tag.ToString(), p.GetValue().ToString());
                             }
-
 
                         }
 

@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <Description>media file management</Description>
-    <Version>4.1.0</Version>
+    <Version>4.1.1</Version>
     <Authors>Joe Audette</Authors>
     <TargetFrameworks>netcoreapp3.1</TargetFrameworks>
     <RazorLangVersion>3.0</RazorLangVersion>
@@ -17,7 +17,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <None Include="icon.png" Pack="true" PackagePath="\"/>
+    <None Include="icon.png" Pack="true" PackagePath="\" />
   </ItemGroup>
 
   <ItemGroup>
@@ -40,8 +40,8 @@
     
     <PackageReference Include="Microsoft.Extensions.FileProviders.Embedded" Version="3.0.0" />
     
-    <PackageReference Include="SixLabors.ImageSharp" Version="1.0.0-beta0004" />
-    <PackageReference Include="SixLabors.ImageSharp.Drawing" Version="1.0.0-beta0004" />
+    <PackageReference Include="SixLabors.ImageSharp" Version="1.0.3" />
+    <PackageReference Include="SixLabors.ImageSharp.Drawing" Version="1.0.0-beta13" />
    
   </ItemGroup>
 
