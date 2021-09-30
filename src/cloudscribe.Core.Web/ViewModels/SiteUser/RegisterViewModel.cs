@@ -25,7 +25,7 @@ namespace cloudscribe.Core.Web.ViewModels.Account
         public Guid SiteId { get; set; } = Guid.Empty;
 
         [Required(ErrorMessage = "Email is required")]
-        [EmailAddress(ErrorMessage = "The email address does not appear as valid")]
+        [EmailAddress(ErrorMessage = "The email address does not appear to be valid")]
         [StringLength(100, ErrorMessage = "Email has a maximum length of 100 characters")]
         public string Email { get; set; }
         

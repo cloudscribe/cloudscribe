@@ -64,7 +64,7 @@
             <div class="input-group-prepend">
                 <span class="input-group-text"><i class="@themeSettings.Icons.Password" aria-hidden="true"></i></span>
             </div>
-            <input asp-for="Password" class="form-control" />
+            <input asp-for="Password" class="form-control" data-val="true" data-val-length=@sr["The password must be at least {0} characters long.", Tenant.MinRequiredPasswordLength] data-val-length-max="100" data-val-length-min="@Tenant.MinRequiredPasswordLength" data-val-required="Password is required" />
             <span asp-validation-for="Password" class="invalid-feedback"></span>
         </div>
 
