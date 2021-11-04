@@ -71,6 +71,7 @@ namespace Microsoft.Extensions.DependencyInjection
             services.AddEntityFrameworkMySql()
                 .AddDbContext<ConfigurationDbContext>(options =>
                     options.UseMySql(connectionString,
+                    ServerVersion.AutoDetect(connectionString),  // breaking change here in Net5.0
                     mySqlOptionsAction: sqlOptions =>
                     {
                         if (maxConnectionRetryCount > 0)
@@ -90,6 +91,7 @@ namespace Microsoft.Extensions.DependencyInjection
             services.AddEntityFrameworkMySql()
                 .AddDbContext<PersistedGrantDbContext>(options =>
                     options.UseMySql(connectionString,
+                    ServerVersion.AutoDetect(connectionString),  // breaking change here in Net5.0
                     mySqlOptionsAction: sqlOptions =>
                     {
                         if (maxConnectionRetryCount > 0)
