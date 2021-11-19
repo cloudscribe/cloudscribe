@@ -120,7 +120,7 @@ namespace Microsoft.AspNetCore.Builder
 
             var themeName = tenant.Theme;
             bool themeFound = false;
-            if (multiTenantOptions.UserPerSiteThemes)
+            if (multiTenantOptions.UsePerSiteThemes)
             {
                 // this allows serving static files from the "wwwroot" folder beneath the theme folder
                 // we don't want to serve the view files over http, but we can serve css and js etc from the static folder beneath the theme folder
@@ -171,7 +171,7 @@ namespace Microsoft.AspNetCore.Builder
 
             }
             
-            if(multiTenantOptions.UserPerSiteWwwRoot)
+            if(multiTenantOptions.UsePerSiteWwwRoot)
             {
                 // this allows serving static files from /sitefiles/[aliasid]/wwwroot
                 // so that files can be isolated per tenant
