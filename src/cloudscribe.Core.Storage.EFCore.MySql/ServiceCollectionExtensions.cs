@@ -26,7 +26,7 @@ namespace Microsoft.Extensions.DependencyInjection
             //    .AddDbContext<CoreDbContext>(options =>
             //        options.UseMySql(connectionString));
 
-            services.AddEntityFrameworkMySql()
+            services   // .AddEntityFrameworkMySql()
                 .AddDbContext<CoreDbContext>(options =>
                     options.UseMySql(connectionString,
                     ServerVersion.AutoDetect(connectionString),  // breaking change here in Net5.0
