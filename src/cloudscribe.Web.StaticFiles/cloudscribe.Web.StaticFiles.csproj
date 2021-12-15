@@ -32,7 +32,7 @@
     <PackageReference Include="Microsoft.Extensions.Options.ConfigurationExtensions" Version="5.0.0" />
     <PackageReference Include="Microsoft.Extensions.FileProviders.Physical" Version="5.0.0" />
     
-    <PackageReference Include="System.Text.Encodings.Web" Version="4.5.0" />
+    <PackageReference Include="System.Text.Encodings.Web" Version="4.5.1" />
     
   </ItemGroup>
 
