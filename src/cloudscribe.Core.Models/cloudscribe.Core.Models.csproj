@@ -20,8 +20,6 @@
   <ItemGroup>
     <PackageReference Include="cloudscribe.Pagination.Models" Version="1.1.0" />
     
-    <!--<PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="3.0.0" />-->
-
     <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="5.0.0" />
     
     <PackageReference Include="System.Data.Common" Version="4.3.0" />
@@ -30,6 +28,5 @@
   <ItemGroup>
     <ProjectReference Include="..\cloudscribe.Common.Gdpr\cloudscribe.Common.Gdpr.csproj" />
   </ItemGroup>
-
 
 </Project>

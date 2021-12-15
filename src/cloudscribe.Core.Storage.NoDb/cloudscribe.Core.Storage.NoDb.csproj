@@ -26,15 +26,10 @@
     <PackageReference Include="cloudscribe.Pagination.Models" Version="1.1.0" />
     <PackageReference Include="NoDb" Version="1.2.1" />
     
-    <!--<PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="3.0.0" />
-    <PackageReference Include="Microsoft.Extensions.Options" Version="3.0.0" />-->
     <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="5.0.0" />
     <PackageReference Include="Microsoft.Extensions.Options" Version="5.0.0" />
 
     <PackageReference Include="System.Linq.Queryable" Version="4.3.0" />
   </ItemGroup>
-
- 
-  
 
 </Project>

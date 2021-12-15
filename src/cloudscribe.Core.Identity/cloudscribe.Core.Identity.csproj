@@ -11,8 +11,6 @@
     <PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
     <RepositoryUrl>https://github.com/cloudscribe/cloudscribe.git</RepositoryUrl>
     <RepositoryType>git</RepositoryType>
-    
-    
   </PropertyGroup>
 
   <ItemGroup>
@@ -32,13 +30,6 @@
     <PackageReference Include="cloudscribe.Pagination.Models" Version="1.1.0" />
     <PackageReference Include="IdentityModel" Version="4.0.0" />
     
-   
-
-    <!--<PackageReference Include="Microsoft.AspNetCore.Authentication.Facebook" Version="3.0.0" />
-    <PackageReference Include="Microsoft.AspNetCore.Authentication.Google" Version="3.0.0" />
-    <PackageReference Include="Microsoft.AspNetCore.Authentication.MicrosoftAccount" Version="3.0.0" />
-    <PackageReference Include="Microsoft.AspNetCore.Authentication.Twitter" Version="3.0.0" />
-    <PackageReference Include="Microsoft.AspNetCore.Authentication.OpenIdConnect" Version="3.0.0" />-->
 
     <PackageReference Include="Microsoft.AspNetCore.Authentication.Facebook" Version="5.0.0" />
     <PackageReference Include="Microsoft.AspNetCore.Authentication.Google" Version="5.0.0" />
@@ -46,13 +37,6 @@
     <PackageReference Include="Microsoft.AspNetCore.Authentication.Twitter" Version="5.0.0" />
     <PackageReference Include="Microsoft.AspNetCore.Authentication.OpenIdConnect" Version="5.0.0" />
 
-    <!--<PackageReference Include="Microsoft.Extensions.Caching.Abstractions" Version="3.0.0" />
-    <PackageReference Include="Microsoft.Extensions.Http" Version="3.0.0" />
-    <PackageReference Include="Microsoft.Extensions.Primitives" Version="3.0.0" />
-    <PackageReference Include="Microsoft.Extensions.Identity.Core" Version="3.0.0" />
-    <PackageReference Include="Microsoft.Extensions.Identity.Stores" Version="3.0.0" />
-    <PackageReference Include="Microsoft.Extensions.Options" Version="3.0.0" />
-    <PackageReference Include="Microsoft.Extensions.Options.ConfigurationExtensions" Version="3.0.0" />-->
 
     <PackageReference Include="Microsoft.Extensions.Caching.Abstractions" Version="5.0.0" />
     <PackageReference Include="Microsoft.Extensions.Http" Version="5.0.0" />
@@ -65,8 +49,5 @@
     
     <PackageReference Include="System.Security.Claims" Version="4.3.*" />
   </ItemGroup>
-
-  
-
 
 </Project>

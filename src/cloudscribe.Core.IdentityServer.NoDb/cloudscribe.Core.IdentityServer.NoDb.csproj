@@ -12,7 +12,6 @@
     
     <RepositoryUrl>https://github.com/cloudscribe/cloudscribe.git</RepositoryUrl>
     <RepositoryType>git</RepositoryType>
-    
   </PropertyGroup>
 
   <ItemGroup>
@@ -28,11 +27,8 @@
   <ItemGroup>
     
     <PackageReference Include="NoDb" Version="1.2.1" />
-    <!--<PackageReference Include="Microsoft.Extensions.Caching.Memory" Version="3.0.0" />-->
     <PackageReference Include="Microsoft.Extensions.Caching.Memory" Version="5.0.0" />
    
   </ItemGroup>
-
-  
 
 </Project>

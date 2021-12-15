@@ -35,14 +35,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <!--<PackageReference Include="cloudscribe.Web.Pagination" Version="3.1.0" />-->
     <PackageReference Include="cloudscribe.Web.Pagination" Version="5.0.0" />
-    
-    
-    <!--<PackageReference Include="Microsoft.Extensions.Options" Version="3.0.0" />
-    <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="3.0.0" />
-    <PackageReference Include="Microsoft.Extensions.FileProviders.Embedded" Version="3.0.0" />
-    <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="3.0.0" />-->
     
     <PackageReference Include="Microsoft.Extensions.Options" Version="5.0.0" />
     <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="5.0.0" />
@@ -50,7 +43,6 @@
     <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="5.0.0" />    
     
     <PackageReference Include="IdentityServer4" Version="3.0.1" />
-    
     
   </ItemGroup>
 
