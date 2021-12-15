@@ -33,7 +33,7 @@ namespace cloudscribe.FileManager.CoreIntegration
         public Task<MediaRootPathInfo> Resolve(CancellationToken cancellationToken = default(CancellationToken))
         {
             MediaRootPathInfo result = null;
-            if (options.UserPerSiteWwwRoot)
+            if (options.UsePerSiteWwwRoot)
             {
                 var rootFolderStatus = TryEnsureTenantWwwRoot();
                 if(rootFolderStatus.Success)

@@ -2,9 +2,8 @@
 
   <PropertyGroup>
     <Description>Bootstrap 3 pre-compiled views for cloudscribe.Core.Web</Description>
-    <Version>4.1.0</Version>
-    <TargetFramework>netcoreapp3.1</TargetFramework>
-    <RazorLangVersion>3.0</RazorLangVersion>
+    <Version>5.0.0</Version>
+    <TargetFramework>net5.0</TargetFramework>
     <AddRazorSupportForMvc>true</AddRazorSupportForMvc>
     <Authors>Joe Audette</Authors>
     <PackageTags>cloudscribe.Core;Bootstrap3</PackageTags>
@@ -25,7 +24,7 @@
 
   <ItemGroup>
     
-    <PackageReference Include="Microsoft.Extensions.Localization.Abstractions" Version="3.0.0" />
+    <PackageReference Include="Microsoft.Extensions.Localization.Abstractions" Version="5.0.0" />
   </ItemGroup>
 
   <ItemGroup>

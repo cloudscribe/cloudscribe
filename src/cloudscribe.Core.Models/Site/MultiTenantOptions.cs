@@ -103,7 +103,7 @@ namespace cloudscribe.Core.Models
 
         public string SiteContentFolderName { get; set; } = "wwwroot";
 
-        public bool UserPerSiteWwwRoot { get; set; } = true;
+        public bool UsePerSiteWwwRoot { get; set; } = true;
 
         /// <summary>
         /// whether to try to auto create the tenant wwwroot folder if it does not exist
@@ -112,7 +112,7 @@ namespace cloudscribe.Core.Models
 
         public string ThemeStaticFilesFolderName { get; set; } = "wwwroot";
 
-        public bool UserPerSiteThemes { get; set; } = true;
+        public bool UsePerSiteThemes { get; set; } = true;
 
         public bool UseSharedThemes { get; set; } = true;
 

@@ -39,7 +39,7 @@ namespace cloudscribe.Core.Web.Components
         public List<SelectListItem> GetAvailableThemes(string aliasId = null)
         {
             List<SelectListItem> layouts = new List<SelectListItem>();
-            if(_options.UserPerSiteThemes)
+            if(_options.UsePerSiteThemes)
             {
                 string pathToViews = GetPathToViews(aliasId);
                 if (Directory.Exists(pathToViews))
