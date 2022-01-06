@@ -2,10 +2,10 @@
 
   <PropertyGroup>
     <Description>Classes that provide a common interface for sending email with smtp or popular email apis including SendGrid, Mailgun, and ElasticEmail</Description>
-    <VersionPrefix>2.0.4</VersionPrefix>
-    <AssemblyVersion>2.0.4</AssemblyVersion>
+    <Version>3.0.0</Version>
+    <AssemblyVersion>3.0.0</AssemblyVersion>
     <Authors>Joe Audette</Authors>
-    <TargetFramework>netstandard2.0</TargetFramework>
+    <TargetFramework>netstandard2.1</TargetFramework>
     <PackageTags>smtp;email;SendGrid,Mailgun,ElasticEmail</PackageTags>
     <PackageIcon>icon.png</PackageIcon>
     <PackageProjectUrl>https://github.com/joeaudette/cloudscribe</PackageProjectUrl>
@@ -24,9 +24,9 @@
     <PackageReference Include="Microsoft.Extensions.Options" Version="2.1.1" />
     <PackageReference Include="Microsoft.Extensions.Options.ConfigurationExtensions" Version="2.1.1" />
     <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="2.1.1" />
-    <PackageReference Include="MailKit" Version="2.0.7" />
-    <PackageReference Include="MimeKit" Version="2.0.7" />
-    <PackageReference Include="SendGrid" Version="9.10.0" />
+    <PackageReference Include="MailKit" Version="3.0.0" />
+    <PackageReference Include="MimeKit" Version="3.0.0" />
+    <PackageReference Include="SendGrid" Version="9.25.1" />
   </ItemGroup>
 
 </Project>
