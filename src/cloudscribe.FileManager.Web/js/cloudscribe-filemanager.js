@@ -241,7 +241,7 @@
 
         },
         notify: function (message, cssClass) {
-            $('#alert_placeholder').html('<div class="alert ' + cssClass + '"><a class="close" data-dismiss="alert">×</a><span>' + message + '</span></div>');
+            $('#alert_placeholder').html('<div class="alert ' + cssClass + '"><a class="close" data-bs-dismiss="alert">×</a><span>' + message + '</span></div>');
         },
         addFileToList: function (data, fileList, index, file) {
             var d = $("<span class='far fa-trash-alt' aria-role='button' title='Remove'></span>").click(function () {
@@ -866,7 +866,7 @@
 
 
             // Tooltip
-            $('[data-toggle="tooltip"]').tooltip();
+            $('[data-bs-toggle="tooltip"]').tooltip();
 
 
             // Cropper
@@ -1211,7 +1211,7 @@
         }
     };
 
-    $('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
+    $('a[data-bs-toggle="tab"]').on('shown.bs.tab', function (e) {
         var target = $(e.target).attr("href"); // activated tab
 
         if (target === "#tabCrop") {
