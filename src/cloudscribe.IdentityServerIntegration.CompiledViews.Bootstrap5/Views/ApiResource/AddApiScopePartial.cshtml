@@ -1,0 +1,40 @@
+﻿@model cloudscribe.Core.IdentityServerIntegration.Models.NewApiScopeViewModel
+@using cloudscribe.Core.IdentityServerIntegration
+@inject IStringLocalizer<CloudscribeIds4Resources> sr
+<form class="form-inline" asp-controller="ApiResource" asp-action="AddApiScope">
+    <div class="form-group">
+        <label asp-for="Name">@sr["Name"]</label>
+        <input class="form-control" asp-for="Name">
+        <span asp-validation-for="Name" class="invalid-feedback"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="DisplayName">@sr["Display Name"]</label>
+        <input class="form-control" asp-for="DisplayName" />
+    </div>
+    <div class="form-group">
+        <label asp-for="Description">@sr["Description"]</label>
+        <input class="form-control" asp-for="Description" />
+    </div>
+    <div class="form-group">
+        <div class="form-check">
+            <input asp-for="Emphasize" class="form-check-input" />
+            <label asp-for="Emphasize" class="form-check-label">@sr["Emphasize"]</label>
+        </div>
+    </div>
+    <div class="form-group">
+        <div class="form-check">
+            <input asp-for="Required" class="form-check-input" />
+            <label asp-for="Required" class="form-check-label">@sr["Required"]</label>
+        </div>
+    </div>
+    <div class="form-group">
+        <div class="form-check">
+            <input asp-for="ShowInDiscoveryDocument" class="form-check-input" />
+            <label asp-for="ShowInDiscoveryDocument" class="form-check-label">@sr["Show In Discovery Document"]</label>
+        </div>
+    </div>
+    <input asp-for="SiteId" type="hidden" />
+    <input asp-for="ApiName" type="hidden" />
+    <button type="submit" class="btn btn-primary">@sr["Add Scope"]</button>
+    @*<div asp-validation-summary="All" class="text-danger"></div>*@
+</form>

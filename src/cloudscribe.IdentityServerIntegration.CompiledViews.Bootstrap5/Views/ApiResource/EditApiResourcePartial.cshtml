@@ -1,0 +1,35 @@
+﻿@model cloudscribe.Core.IdentityServerIntegration.Models.ApiItemViewModel
+@using cloudscribe.Core.IdentityServerIntegration
+@inject IStringLocalizer<CloudscribeIds4Resources> sr
+<form asp-controller="ApiResource" asp-action="EditApiResource">
+    <input asp-for="SiteId" type="hidden" />
+    <input asp-for="Name" type="hidden" />  
+    @*<div asp-validation-summary="All" class="text-danger"></div>*@
+    <div class="form-group">
+        <label>@sr["Name"]</label>
+        <label class="form-control">@Model.Name</label>
+    </div>
+    <div class="form-group">
+        <label asp-for="DisplayName">@sr["Display Name"]</label>
+        <input class="form-control" asp-for="DisplayName" />
+        <span asp-validation-for="DisplayName" class="invalid-feedback"></span> 
+        @Html.ValidationMessage("apierror", new { @class = "text-danger" })
+    </div>
+    <div class="form-group">
+        <label asp-for="Description">@sr["Description"]</label>
+        <input class="form-control" asp-for="Description" />
+        <span asp-validation-for="Description" class="invalid-feedback"></span> 
+    </div>
+    <div class="form-group">
+        <div class="form-check">
+            <input asp-for="Enabled" class="form-check-input" />
+            <label asp-for="Enabled" class="form-check-label">@sr["Enabled"]</label>
+        </div> 
+    </div>
+    <div class="form-group">
+        <button name="submit" type="submit" class="btn btn-primary">@sr["Save"]</button>
+        <a class="btn btn-primary" asp-action="Index" asp-controller="Scopes"
+                asp-route-siteId="@Model.SiteId">@sr["Cancel"]</a>
+    </div>
+
+</form>

@@ -1,0 +1,42 @@
+﻿@model cloudscribe.Core.IdentityServerIntegration.Models.ClientEditViewModel
+@using cloudscribe.Core.IdentityServerIntegration
+@inject ICoreThemeHelper themeHelper
+@inject IStringLocalizer<CloudscribeIds4Resources> sr
+@{
+    var themeSettings = themeHelper.GetThemeSettings();
+    if (themeSettings.AdminSideNavExpanded) { ViewData["SideNavToggle"] = "show"; }
+    ViewData["SideNavVisible"] = true;
+}
+@if (Model.CurrentClient == null)
+{
+    <h2>@ViewData["Title"]</h2>
+    <partial name="NewClientPartial" model="Model.NewClient" />
+}
+else
+{
+    <h2>@ViewData["Title"]</h2>
+    <partial name="EditClientPartial" model="Model.CurrentClient" />
+    <partial name="ClientRedirectsPartial" model="Model.CurrentClient" />
+    <partial name="ClientLogoutRedirectsPartial" model="Model.CurrentClient" />
+    <partial name="ClientAllowedCorsOriginsPartial" model="Model.CurrentClient" />
+    <partial name="ClientSecretsPartial" model="Model.CurrentClient" />
+    <partial name="ClientClaimsPartial" model="Model.CurrentClient" />
+    <partial name="ClientAllowedGrantTypesPartial" model="Model.CurrentClient" />
+    <partial name="ClientAllowedScopesPartial" model="Model.CurrentClient" />
+    <partial name="ClientProviderRestrictionsPartial" model="Model.CurrentClient" />
+    <partial name="ClientPropertiesPartial" model="Model.CurrentClient" />
+
+}
+
+@section SideNav {
+    <partial name="AdminSideNav" />
+}
+@section Toolbar{
+    <partial name="AdminSideNavToggle" />
+}
+@section Scripts {
+    <partial name="AdminSideNavScripts" />
+    <script src="~/cr/js/jquery.validate.min.js"></script>
+    <script src="~/cr/js/jquery.validate.unobtrusive.min.js"></script>
+    <script src="~/cr/js/unobtrusive-validation-bs4.min.js"></script>
+}
