@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <Description>cloudscribe common helpers for web applications</Description>
-    <Version>5.0.0</Version>
+    <Version>5.0.1</Version>
     <TargetFramework>net5.0</TargetFramework>
     <Authors>Joe Audette</Authors>
     <AddRazorSupportForMvc>true</AddRazorSupportForMvc>

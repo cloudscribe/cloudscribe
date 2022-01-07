@@ -217,3 +217,4 @@ tools/**
 !tools/packages.config
 
 **/siteuploadfiles/**
+**/slnx.sqlite
