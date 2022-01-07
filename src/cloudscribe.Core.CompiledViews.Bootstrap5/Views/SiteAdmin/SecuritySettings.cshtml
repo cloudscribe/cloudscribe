@@ -1,0 +1,115 @@
+﻿@model cloudscribe.Core.Web.ViewModels.SiteSettings.SecuritySettingsViewModel
+@inject IStringLocalizer<CloudscribeCore> sr
+@inject ICoreThemeHelper themeHelper
+@{
+    var themeSettings = themeHelper.GetThemeSettings();
+    if (themeSettings.AdminSideNavExpanded) { ViewData["SideNavToggle"] = "show"; }
+    ViewData["SideNavVisible"] = true;
+}
+<h2>@ViewBag.Title</h2>
+<form method="post" class="form-horizontal" role="form" asp-antiforgery="true" data-submit-once="true">
+    <div asp-validation-summary="All" class="text-danger"></div>
+    <input asp-for="SiteId" type="hidden" />
+    <div class="form-group">
+        <div class="form-check">
+            <input asp-for="UseEmailForLogin" class="form-check-input" />
+            <label asp-for="UseEmailForLogin" class="form-check-label">@sr["Allow email for login in addition to username"]</label>
+        </div>
+    </div>
+    <div class="form-group">
+        <div class="form-check">
+            <input asp-for="AllowUserToChangeEmail" class="form-check-input" />
+            <label asp-for="AllowUserToChangeEmail" class="form-check-label">@sr["Allow user to change email address"]</label>
+        </div>
+    </div>
+    <div class="form-group">
+        <div class="form-check">
+            <input asp-for="AllowNewRegistration" class="form-check-input" />
+            <label asp-for="AllowNewRegistration" class="form-check-label">@sr["Allow new registrations"]</label>
+        </div>
+    </div>
+    @if (Model.EmailIsConfigured)
+    {
+        <div class="form-group">
+            <div class="form-check">
+                <input asp-for="RequireConfirmedEmail" class="form-check-input" />
+                <label asp-for="RequireConfirmedEmail" class="form-check-label">@sr["Require confirmed email"]</label>
+            </div>
+        </div>
+    }
+    <div class="form-group">
+        <div class="form-check">
+            <input asp-for="RequireApprovalBeforeLogin" class="form-check-input" />
+            <label asp-for="RequireApprovalBeforeLogin" class="form-check-label">@sr["Require approval before login"]</label>
+        </div>
+    </div>
+    <div class="form-group">
+        <div class="form-check">
+            <input asp-for="SingleBrowserSessions" class="form-check-input" />
+            <label asp-for="SingleBrowserSessions" class="form-check-label">@sr["Enforce one active browser session per user"]</label>
+        </div>
+    </div>
+    <div class="form-group">
+        <div class="form-check">
+            <input asp-for="Require2FA" class="form-check-input" />
+            <label asp-for="Require2FA" class="form-check-label">@sr["Require users to configure 2 factor authentication. Recommended ONLY for extreme security needs not for most sites, because a user must install an authenticator app on their phone and take a picture of the QR code using the authenticator app to get an access code. Note this will only be enforced when using https and it won't be enforced for users in Administrators role. Presumably administrators can and will voluntarily enable 2 factor authentication, but we don't want administrators to get locked out."]</label>
+        </div>
+    </div>
+    <div class="form-group">
+        <label asp-for="AccountApprovalEmailCsv">@sr["Email addresses (csv) to notify of new users"]</label>
+        <input asp-for="AccountApprovalEmailCsv" class="form-control" />
+        <span asp-validation-for="AccountApprovalEmailCsv" class="invalid-feedback"></span>
+    </div>
+    <div class="form-group">
+        <div class="form-check">
+            <input asp-for="AllowPersistentLogin" class="form-check-input" />
+            <label asp-for="AllowPersistentLogin" class="form-check-label">@sr["Allow persistent login"]</label>
+        </div>
+    </div>
+    <partial name="LdapSettingsPartial" model="Model" />
+
+    @if (Model.HasAnySocialAuthEnabled || (!string.IsNullOrWhiteSpace(Model.LdapDomain) && !string.IsNullOrWhiteSpace(Model.LdapServer)))
+    {
+        <p class="text-danger">
+            @if (!string.IsNullOrWhiteSpace(Model.LdapDomain) && !string.IsNullOrWhiteSpace(Model.LdapServer))
+            {
+                @sr["Danger, be very cautious about the setting below. If you check this box you may not be able to login again. Verify that you have LDAP Authentication working and that at least one Administrator can login using LDAP before disabling database authentication. If you do get locked out the only way to fix it is to change this setting directly in the database."]
+            }
+            else
+            {
+                @sr["Danger, be very cautious about the setting below. If you want to use Social Authentication only, then you can disable database authentication, but make sure that you as administrator can login with a social account before disabling database authentication. You can easily get yourself locked out with this setting, and the only way to fix it is to change the setting directly in the database."]
+            }
+
+        </p>
+        <div class="form-group">
+            <div class="form-check">
+                <input asp-for="DisableDbAuth" class="form-check-input" />
+                <label asp-for="DisableDbAuth" class="form-check-label">@sr["Disable database authentication"]</label>
+            </div>
+        </div>
+    }
+
+    <div class="form-group">
+        <button name="submit" type="submit" class="btn btn-primary" data-disabled-text='@sr["Working..."]' data-enabled-text='@sr["Save"]'>@sr["Save"]</button>
+    </div>
+</form>
+<partial name="LdapTestFormPartial" model="Model" />
+
+@section SideNav {
+    <partial name="AdminSideNav" />
+}
+@section Toolbar{
+    <partial name="AdminSideNavToggle" />
+}
+@section Scripts {
+    <partial name="AdminSideNavScripts" />
+    <script src="~/cr/js/jquery.validate.min.js"></script>
+    <script src="~/cr/js/jquery.validate.unobtrusive.min.js"></script>
+    <script src="~/cr/js/unobtrusive-validation-bs4.min.js"></script>
+    <script src="~/cr/js/jquery.validate.hooks.min.js"></script>
+    <script src="~/cr/js/jqueryvaildation.submitonce-unobtrusive.min.js"></script>
+    <script src="~/cr/js/bootstrap-tooltip-toggle.js"></script>
+    
+}
+
+

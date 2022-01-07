@@ -1,0 +1,96 @@
+﻿@model cloudscribe.Core.Web.ViewModels.SiteSettings.SiteListViewModel
+@inject IOptions<MultiTenantOptions> multiTenantOptions
+@inject IStringLocalizer<CloudscribeCore> sr
+@inject ICoreThemeHelper themeHelper
+@{
+    var themeSettings = themeHelper.GetThemeSettings();
+    ViewData["SideNavVisible"] = true;
+    if (themeSettings.AdminSideNavExpanded) { ViewData["SideNavToggle"] = "show"; }
+    var FolderHostLabel = sr["Preferred Host Name"];
+    var options = multiTenantOptions.Value;
+    if (options.Mode == MultiTenantMode.FolderName)
+    {
+        FolderHostLabel = sr["Folder"];
+    }
+}
+<h2>@ViewData["Title"]</h2>
+<table class="table table-striped table-bordered">
+    <thead>
+        <tr>
+            <th>
+                <a class="btn btn-xs btn-primary" asp-action="NewSite"
+                   asp-controller="SiteAdmin"
+                   asp-route-slp="@Model.Sites.PageNumber">@sr["New Site"]</a>
+            </th>
+            <th>
+                @sr["Site Name"]
+            </th>
+            <th>
+                @FolderHostLabel
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model.Sites.Data)
+        {
+            <tr class="@(item.IsServerAdminSite ? "adminsite danger" : "childsite")">
+                <td>
+                    <a class="btn btn-xs btn-primary" asp-action="SiteInfo"
+                       asp-controller="SiteAdmin"
+                       asp-route-siteid="@item.Id"
+                       asp-route-slp="@Model.Sites.PageNumber">@sr["Settings"]</a>
+
+                    @if (!(options.Mode == MultiTenantMode.FolderName))
+                    {
+                        <a class="btn btn-xs btn-primary hostmap" asp-action="SiteHostMappings"
+                           asp-controller="SiteAdmin"
+                           asp-route-siteid="@item.Id"
+                           asp-route-slp="@Model.Sites.PageNumber">@sr["Domain Mappings"]</a>
+                    }
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.SiteName) @sr["Id:"] @item.Id
+                    @sr["AliasId:"] @item.AliasId
+                </td>
+                <td>
+                    @if (options.Mode == MultiTenantMode.FolderName)
+                    {
+                        <a href="/@item.SiteFolderName" target="_blank">/@item.SiteFolderName</a>
+                    }
+                    else
+                    {
+                        if (!string.IsNullOrWhiteSpace(item.PreferredHostName))
+                        {
+                            <a href="http://@item.PreferredHostName" target="_blank">@item.PreferredHostName</a>
+                        }
+                    }
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+<cs-pager asp-action="SiteList" asp-controller="SiteAdmin"
+          asp-route-pagesize="@Model.Sites.PageSize"
+          cs-paging-pagesize="@Model.Sites.PageSize"
+          cs-paging-pagenumber="@Model.Sites.PageNumber"
+          cs-paging-totalitems="@Model.Sites.TotalItems"
+          cs-first-page-title='@sr["First Page"]'
+          cs-last-page-title='@sr["Last Page"]'
+          cs-previous-page-title='@sr["Previous page"]'
+          cs-next-page-title='@sr["Next page"]'
+          cs-pager-ul-class="pagination d-flex flex-wrap"
+          cs-pager-li-current-class="page-item active"
+          cs-pager-li-other-class="page-item"
+          cs-pager-li-non-active-class="page-item disabled"
+          cs-pager-link-current-class="page-link"
+          cs-pager-link-other-class="page-link"></cs-pager>
+
+@section SideNav {
+    <partial name="AdminSideNav" />
+}
+@section Toolbar{
+    <partial name="AdminSideNavToggle" />
+}
+@section scripts {
+    <partial name="AdminSideNavScripts" />
+}

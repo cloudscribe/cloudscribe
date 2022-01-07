@@ -1,0 +1,61 @@
+﻿@model cloudscribe.Core.Web.ViewModels.SiteUser.ExternalLoginConfirmationViewModel
+@inject IStringLocalizer<CloudscribeCore> sr
+@{
+    ViewData["Title"] = sr["Register"];
+    ViewData["BodyClass"] = "account-section external-confirm";
+    var loginProvider = ViewData["LoginProvider"];
+    var subHeadMessage = string.Format(CultureInfo.CurrentUICulture, sr["Associate your {0} account"], loginProvider);
+    var successMessage = string.Format(CultureInfo.CurrentUICulture, sr["You've successfully authenticated with <strong>{0}</strong>."], loginProvider);
+}
+<h2>@ViewData["Title"]</h2>
+<h3>@subHeadMessage</h3>
+
+<form asp-controller="Account" asp-action="ExternalLoginConfirmation" asp-route-returnurl='@ViewData["ReturnUrl"]' method="post" class="form-horizontal">
+    <div asp-validation-summary="All" class="text-danger"></div>
+    <p class="text-info">
+        @Html.Raw(successMessage)
+        @sr["Please enter a valid email for this site below and click the Register button to finish logging in."]
+    </p>
+    @if (!string.IsNullOrWhiteSpace(Model.RegistrationPreamble))
+    {
+
+        <div class="registration-preamble">
+            @Html.Raw(Model.RegistrationPreamble)
+        </div>
+
+    }
+    <div class="form-group">
+        <label asp-for="Email">@sr["Email"]</label>
+        <input asp-for="Email" class="form-control" />
+        <span asp-validation-for="Email" class="invalid-feedback"></span>
+    </div>
+    @if (!string.IsNullOrWhiteSpace(Model.RegistrationAgreement))
+    {
+        <div class="form-group">
+            <div class=" agreementcontainer">
+                @Html.Raw(Model.RegistrationAgreement)
+            </div>
+        </div>
+        <div class="form-group">
+            <input type="hidden" asp-for="AgreementRequired" />
+            <div class="form-check">
+                <input asp-for="AgreeToTerms" class="form-check-input" data-val-enforcetrue='@sr["You must agree to the terms"]' />
+                <label asp-for="AgreeToTerms" class="form-check-label">@sr["I Agree to these terms of use."]</label>
+                <span asp-validation-for="AgreeToTerms" class="invalid-feedback"></span>
+                @Html.ValidationMessage("agreementerror", new { @class = "text-danger" })
+            </div>
+        </div>
+    }
+    else
+    {
+        <input name="AgreeToTerms" value="true" type="hidden" />
+    }
+    <div class="form-group">
+        <button name="submit" type="submit" class="btn btn-primary">@sr["Register"]</button>
+    </div>
+</form>
+@section Scripts {
+    <script src="~/cr/js/jquery.validate.min.js"></script>
+    <script src="~/cr/js/jquery.validate.unobtrusive.min.js"></script>
+    <script src="~/cr/js/unobtrusive-validation-bs4.min.js"></script>
+}

@@ -1,0 +1,61 @@
+﻿@model cloudscribe.Core.Web.ViewModels.SiteSettings.RegisterInfoViewModel
+@inject ICkeditorOptionsResolver editorOptionsResolver
+@inject IStringLocalizer<CloudscribeCore> sr
+@inject ICoreThemeHelper themeHelper
+@{
+    var themeSettings = themeHelper.GetThemeSettings();
+    if (themeSettings.AdminSideNavExpanded) { ViewData["SideNavToggle"] = "show"; }
+    ViewData["SideNavVisible"] = true;
+    var ckOptions = await editorOptionsResolver.GetCkeditorOptions();
+}
+<h2>@ViewBag.Title</h2>
+<form method="post" role="form" asp-antiforgery="true" data-submit-once="true">
+    <div asp-validation-summary="All" class="text-danger"></div>
+    <input asp-for="SiteId" type="hidden" />
+    <div class="form-group">
+        <label asp-for="RegistrationPreamble">@sr["Registration Preamble"]</label>
+        <textarea class="form-control" rows="5" asp-for="RegistrationPreamble"
+                  data-ckeditor-unobtrusive=""
+                  data-ckeditor-config-url="@ckOptions.CustomConfigPath"
+                  data-ckeditor-config-language="@ckOptions.LanguageCode"
+                  data-ckeditor-config-dropfileuploadurl="@ckOptions.DropFileUrl"
+                  data-ckeditor-config-filebrowserurl="@ckOptions.FileBrowseUrl"
+                  data-ckeditor-config-imagebrowseurl="@ckOptions.ImageBrowseUrl"></textarea>
+        <span asp-validation-for="RegistrationPreamble" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="RegistrationAgreement">@sr["Registration Agreement/Terms of Use"]</label>
+        <textarea class="form-control" rows="5" asp-for="RegistrationAgreement"
+                  data-ckeditor-unobtrusive=""
+                  data-ckeditor-config-url="@ckOptions.CustomConfigPath"
+                  data-ckeditor-config-language="@ckOptions.LanguageCode"
+                  data-ckeditor-config-dropfileuploadurl="@ckOptions.DropFileUrl"
+                  data-ckeditor-config-filebrowserurl="@ckOptions.FileBrowseUrl"
+                  data-ckeditor-config-imagebrowseurl="@ckOptions.ImageBrowseUrl"></textarea>
+        <span asp-validation-for="RegistrationAgreement" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <div class="form-check">
+            <input asp-for="RequireUsersToAcceptChangedAgreement" class="form-check-input" />
+            <label asp-for="RequireUsersToAcceptChangedAgreement" class="form-check-label">@sr["Require Users To Accept Changed Agreement?"]</label>
+        </div>
+    </div>
+    <div class="form-group">
+        <button id="btnSave" name="submit" type="submit" class="btn btn-primary" data-disabled-text='@sr["Working..."]' data-enabled-text='@sr["Save"]'>@sr["Save"]</button>
+    </div>
+</form>
+@section SideNav {
+    <partial name="AdminSideNav" />
+}
+@section Toolbar{
+    <partial name="AdminSideNavToggle" />
+}
+@section Scripts {
+    <partial name="AdminSideNavScripts" />
+    <script src="~/cr/js/jquery.validate.min.js"></script>
+    <script src="~/cr/js/jquery.validate.unobtrusive.min.js"></script>
+    <script src="~/cr/js/jquery.validate.hooks.min.js"></script>
+    <script src="~/cr/js/jqueryvaildation.submitonce-unobtrusive.min.js"></script>
+    <script src="~/cr/js/ckeditor4114/ckeditor.js"></script>
+    <script src="~/cr/js/cloudscribe-ckeditor-unobtrusive.min.js"></script>
+}

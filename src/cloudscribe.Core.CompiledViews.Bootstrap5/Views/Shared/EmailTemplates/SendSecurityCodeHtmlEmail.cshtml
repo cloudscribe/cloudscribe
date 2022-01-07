@@ -1,0 +1,9 @@
+﻿@model cloudscribe.Core.Web.ViewModels.Email.SecurityCodeEmailViewModel
+
+@{
+    Layout = "_LayoutEmailNotification";
+    ViewData["Title"] = "Security Code";
+    ViewData["Site"] = Model.Tenant;
+}
+
+Your security code for @Model.Tenant.SiteName is: @Model.SecurityCode

@@ -1,0 +1,7 @@
+﻿@model cloudscribe.Core.Web.Components.Messaging.SiteMessageModel
+@{
+    Layout = "_LayoutEmailNotification";
+    ViewData["Site"] = Model.Tenant;
+    ViewData["Title"] = Model.Title;
+}
+@Html.Raw(Model.HtmlBody)

@@ -1,0 +1,134 @@
+﻿@model cloudscribe.Core.Web.ViewModels.UserAdmin.UserActivityViewModel
+@inject ICoreThemeHelper themeHelper
+@inject IStringLocalizer<CloudscribeCore> sr
+@inject cloudscribe.DateTimeUtils.ITimeZoneHelper tzHelper
+@{
+    var lastLogin = "";
+    var lastPasswordChange = "";
+    if (Model.LastLoginUtc != null)
+    {
+        lastLogin = tzHelper.ConvertToLocalTime(Model.LastLoginUtc.Value, Model.TimeZoneId).ToString("g");
+    }
+    if (Model.LastPassswordChangenUtc != null)
+    {
+        lastPasswordChange = tzHelper.ConvertToLocalTime(Model.LastPassswordChangenUtc.Value, Model.TimeZoneId).ToString("g");
+
+    }
+    var themeSettings = themeHelper.GetThemeSettings();
+    if (themeSettings.AdminSideNavExpanded) { ViewData["SideNavToggle"] = "show"; }
+    ViewData["SideNavVisible"] = true;
+}
+
+<h2>@ViewData["Title"]</h2>
+<a asp-controller="UserAdmin" asp-action="UserEdit" asp-route-siteid="@Model.SiteId" asp-route-userid="@Model.UserId" title="Manage">
+    <img gravatar-email="@Model.Email" gravatar-size="60" gravatar-enabled="@themeSettings.AllowGravatar" override-url="@Model.AvatarUrl" disabled-default-url="@themeSettings.DefaultAvatarUrl" />
+</a>
+<table class="mt-2 table table-striped">
+    <tr>
+        <th>@sr["Email"]</th>
+        <td>@Model.Email</td>
+    </tr>
+    <tr>
+        <th>@sr["Name"]</th>
+        <td>@Model.DisplayName @Model.FirstName @Model.LastName</td>
+    </tr>
+    <tr>
+        <th>@sr["Created"]</th>
+        <td>@Model.CreatedUtc</td>
+    </tr>
+    <tr>
+        <th>@sr["Last Login"]</th>
+        <td>
+            @lastLogin
+        </td>
+    </tr>
+    <tr>
+        <th>@sr["Last Password Change"]</th>
+        <td>
+            @lastPasswordChange
+        </td>
+    </tr>
+    <tr>
+        <th>@sr["2 Factor Enabled"]</th>
+        <td>@Model.TwoFactor</td>
+    </tr>
+    <tr>
+        <th>@sr["Time Zone"]</th>
+        <td>@Model.UserTimeZone</td>
+    </tr>
+    @if (Model.Logins.Count > 0)
+    {
+        <tr>
+            <th>
+                @sr["Social Logins"]
+            </th>
+            <td>
+                @foreach (var account in Model.Logins)
+                {
+                    @account.LoginProvider @:&nbsp;
+                }
+            </td>
+        </tr>
+    }
+
+</table>
+
+@if (Model.Locations.Data.Count > 0)
+{
+    <table class="table table-striped">
+        <tr>
+            <th>
+                @sr["Ip Address"]
+            </th>
+            <th>
+                @sr["Capture Count"]
+            </th>
+            <th>
+                @sr["First Capture"]
+            </th>
+            <th>
+                @sr["Last Capture"]
+            </th>
+        </tr>
+        @foreach (var loc in Model.Locations.Data)
+        {
+            <tr>
+                <td>
+                    @loc.IpAddress
+                </td>
+                <td>@loc.CaptureCount</td>
+                <td>
+                    @tzHelper.ConvertToLocalTime(loc.FirstCaptureUtc, Model.TimeZoneId).ToString("g")
+                </td>
+                <td>
+                    @tzHelper.ConvertToLocalTime(loc.LastCaptureUtc, Model.TimeZoneId).ToString("g")
+                </td>
+            </tr>
+
+        }
+    </table>
+    <div>
+        <cs-pager asp-action="UserActivity" asp-controller="UserAdmin"
+                  asp-route-siteId="@Model.SiteId"
+                  asp-route-userid="@Model.UserId"
+                  asp-route-pagesize="@Model.Locations.PageSize"
+                  cs-paging-pagesize="@Model.Locations.PageSize"
+                  cs-paging-pagenumber="@Model.Locations.PageNumber"
+                  cs-paging-totalitems="@Model.Locations.TotalItems"
+                  cs-paging-maxpageritems="@Model.Locations.PageSize"
+                  cs-first-page-title='@sr["First Page"]'
+                  cs-last-page-title='@sr["Last Page"]'
+                  cs-previous-page-title='@sr["Previous page"]'
+                  cs-next-page-title='@sr["Next page"]'></cs-pager>
+    </div>
+}
+
+@section SideNav {
+    @{ await Html.RenderPartialAsync("AdminSideNav"); }
+}
+@section Toolbar{
+    @{ await Html.RenderPartialAsync("AdminSideNavToggle"); }
+}
+@section scripts {
+    @{ await Html.RenderPartialAsync("AdminSideNavScripts"); }
+}

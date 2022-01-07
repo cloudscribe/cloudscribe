@@ -1,0 +1,58 @@
+﻿@model cloudscribe.Core.Web.ViewModels.SiteUser.AccountIndexViewModel
+@inject ISiteContextResolver siteResolver
+@inject IStringLocalizer<CloudscribeCore> sr
+@{
+    ViewData["Title"] = sr["Manage your account"];
+    ViewData["BodyClass"] = "manage-section manage-index";
+    var currentSite = await siteResolver.ResolveSite(Context.Request.Host.Host, Context.Request.Path);
+    var showExternal = currentSite.HasAnySocialAuthEnabled();
+}
+<h2>@ViewData["Title"]</h2>
+
+
+<h4>@sr["Change your account settings"]</h4>
+<hr />
+<dl class="dl-horizontal">
+    <dt>@sr["User Info:"]</dt>
+    <dd>
+        [ <a asp-controller="Manage" asp-action="UserInfo">@sr["Edit"]</a> ]
+        [ <a asp-controller="Manage" asp-action="PersonalData">@sr["Personal Data"]</a> ]
+    </dd>
+    <dt>@sr["Password:"]</dt>
+    <dd>
+        [
+        @if (Model.HasPassword)
+        {
+            <a asp-controller="Manage" asp-action="ChangePassword">@sr["Change"]</a>
+        }
+        else
+        {
+            <a asp-controller="Manage" asp-action="SetPassword">@sr["Create"]</a>
+        }
+        ]
+    </dd>
+    @if (showExternal)
+    {
+        <dt>@sr["External Logins:"]</dt>
+        <dd>
+            @Model.Logins.Count [<a asp-controller="Manage" asp-action="ManageLogins">@sr["Manage"]</a>]
+        </dd>
+    }
+
+    @if (currentSite.AllowUserToChangeEmail)
+    {
+        <dt>@sr["Email address:"]</dt>
+        <dd>
+            @Model.Email [ <a asp-controller="Manage" asp-action="ChangeUserEmail">@sr["Change"]</a> ]
+        </dd>
+    }
+
+    <dt>@sr["Two-Factor Authentication:"]</dt>
+    <dd>
+        [ <a asp-controller="Manage" asp-action="TwoFactorAuthentication">@sr["Two-factor authentication"]</a> ]
+    </dd>
+    <dt>@sr["Time Zone:"]</dt>
+    <dd>
+        @Model.TimeZone [ <a asp-controller="Manage" asp-action="TimeZone">@sr["Change"]</a> ]
+    </dd>
+</dl>

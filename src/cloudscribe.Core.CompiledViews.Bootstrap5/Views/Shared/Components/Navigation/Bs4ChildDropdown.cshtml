@@ -1,0 +1,27 @@
+﻿@using cloudscribe.Web.Navigation
+@using System.Text
+@model NavigationViewModel
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+@if (Model.StartingNode != null && await Model.HasVisibleChildren(Model.StartingNode))
+{
+    <ul class="dropdown-menu" aria-labelledby="dropdown-@Model.StartingNode.Value.Key">
+        @foreach (var childNode in Model.StartingNode.Children)
+        {
+            if (! await Model.ShouldAllowView(childNode)) { continue; }
+
+            if (! await Model.HasVisibleChildren(childNode))
+            {
+                <li class='@Model.GetClass(childNode.Value, "")'><a class="dropdown-item" href="@Url.Content(Model.AdjustUrl(childNode))">@Html.Raw(Model.GetIcon(childNode.Value))@Model.AdjustText(childNode)</a></li>
+            }
+            else
+            {
+
+                <li class='@Model.GetClass(childNode.Value, "dropdown ",  "active", true)'>
+                    <a class="dropdown-item dropdown-toggle" href="@Url.Content(Model.AdjustUrl(childNode))">@Html.Raw(Model.GetIcon(childNode.Value))@Model.AdjustText(childNode) </a>
+                    @Model.UpdateTempNode(childNode) <partial name="Bootstrap4NavigationNodeChildDropdownPartial" model="@Model" />   @* recursion *@
+                </li>
+
+            }
+        }
+    </ul>
+}

@@ -1,0 +1,65 @@
+﻿@model string
+@using cloudscribe.Core.Web.ExtensionPoints
+@inject IStringLocalizer<CloudscribeCore> sr
+@inject IEnumerable<IGdprDataLinkProvider> gdprLinkProviders
+@{
+    ViewData["Title"] = sr["Personal Data"];
+    var otherDataProviders = gdprLinkProviders.ToList();
+    var list = new List<cloudscribe.Common.Gdpr.GdprDataLink>();
+    foreach (var d in otherDataProviders)
+    {
+        var link = await d.GetLink(Url, Model);
+        if(link != null)
+        {
+            list.Add(link);
+        }
+    }
+}
+<h2>@ViewData["Title"]</h2>
+<p>
+    @sr["Your account contains personal data that you have given us. This page allows you to download or delete that data."]
+</p>
+<p>
+    <b>@sr["Deleting this data will permanently remove your account, and this cannot be recovered."]</b>
+</p>
+<form id="download-data" asp-action="DownloadPersonalData" method="post" class="form-group">
+    <button class="btn btn-primary" type="submit">@sr["Download"]</button>
+</form>
+<p>
+    <a id="delete" asp-action="DeletePersonalData" class="btn btn-primary">@sr["Delete"]</a>
+</p>
+@if (list.Count > 0)
+{
+    <h3>@sr["Other Personal Data"]</h3>
+    <ul class="list-unstyled">
+        @foreach (var link in list)
+        { 
+            <li>
+                @if (string.IsNullOrEmpty(link.Url))
+                {
+                    <h5>@link.Title</h5>
+                }
+                else
+                {
+                    <h5><a href="@link.Url">@link.Title</a></h5>
+                }
+                @if (!string.IsNullOrWhiteSpace(link.DownloadController) && !string.IsNullOrWhiteSpace(link.DownloadAction))
+                {
+                    <form asp-controller="@link.DownloadController" asp-action="@link.DownloadAction" method="post" class="form-group">
+                        <button class="btn btn-primary" type="submit">@sr["Download"]</button>
+                    </form>
+
+                }
+                @if (!string.IsNullOrWhiteSpace(link.DeleteController) && !string.IsNullOrWhiteSpace(link.DeleteAction))
+                {
+                    <form asp-controller="@link.DeleteController" asp-action="@link.DeleteAction" method="post" class="form-group">
+                        <input type="hidden" name="returnUrl" value="@Context.Request.PathAndQuery()" />
+                        <button class="btn btn-danger" type="submit">@sr["Delete"]</button>
+                    </form>
+                }
+
+            </li>
+        }
+    </ul>
+}
+

@@ -1,0 +1,19 @@
+﻿@model cloudscribe.Core.Web.ViewModels.UserAdmin.UserListViewModel
+@inject IStringLocalizer<CloudscribeCore> sr
+@if (Model.ShowAlphaPager)
+{
+    <cs-alphapager cs-alphabet="ABCDEFGHIJKLMNOPQRSTUVWXYZ"
+        cs-selected-letter="@Model.AlphaQuery"
+        cs-all-label='@sr["All"]'
+        asp-controller="UserAdmin"
+        asp-action="Index"
+        asp-route-siteid="@Model.SiteId"
+        cs-selected-letter-param="query"
+        cs-alphapager-ul-class="mt-2 pagination d-flex flex-wrap"
+        cs-pager-li-current-class="page-item active"
+        cs-pager-li-non-active-class="page-item disabled"
+        cs-pager-link-current-class="page-link"
+        cs-pager-link-other-class="page-link">
+            ></cs-alphapager>
+}
+<partial name="UserGridPartial" model="Model" />

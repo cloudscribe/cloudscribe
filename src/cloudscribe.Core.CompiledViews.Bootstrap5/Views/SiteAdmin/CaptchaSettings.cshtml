@@ -1,0 +1,58 @@
+﻿@model cloudscribe.Core.Web.ViewModels.SiteSettings.CaptchaSettingsViewModel
+@inject IStringLocalizer<CloudscribeCore> sr
+@inject ICoreThemeHelper themeHelper
+@{
+    var themeSettings = themeHelper.GetThemeSettings();
+    if (themeSettings.AdminSideNavExpanded) { ViewData["SideNavToggle"] = "show"; }
+    ViewData["SideNavVisible"] = true;
+}
+<h2>@ViewData["Title"]</h2>
+<form method="post" class="form-horizontal" role="form" asp-antiforgery="true" data-submit-once="true">
+    <div asp-validation-summary="All" class="text-danger"></div>
+    <input asp-for="SiteId" type="hidden" />
+    <div class="form-group">
+        <label asp-for="RecaptchaPublicKey">@sr["Recaptcha Public Key"]</label>
+        <input asp-for="RecaptchaPublicKey" class="form-control" />
+        <span asp-validation-for="RecaptchaPublicKey" class="invalid-feedback"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="RecaptchaPrivateKey">@sr["Recaptcha Private Key"]</label>
+        <input asp-for="RecaptchaPrivateKey" class="form-control" />
+        <span asp-validation-for="RecaptchaPrivateKey" class="invalid-feedback"></span>
+    </div>
+    <div class="form-group">
+        <div class="form-check">
+            <input asp-for="UseInvisibleCaptcha" class="form-check-input" />
+            <label class="form-check-label">@sr["Use Invisible reCaptcha?"]</label>
+        </div>
+    </div>
+    <div class="form-group">
+        <div class="form-check">
+            <input asp-for="RequireCaptchaOnRegistration" class="form-check-input" />
+            <label class="form-check-label">@sr["Require Captcha On Registration?"]</label>
+        </div>
+    </div>
+    <div class="form-group">
+        <div class="form-check">
+            <input asp-for="RequireCaptchaOnLogin" class="form-check-input" />
+            <label class="form-check-label">@sr["Require Captcha On Login?"]</label>
+        </div>
+    </div>
+    <div class="form-group">
+        <button name="submit" type="submit" class="btn btn-primary" data-disabled-text='@sr["Working..."]' data-enabled-text='@sr["Save"]'>@sr["Save"]</button>
+    </div>
+</form>
+@section SideNav {
+    <partial name="AdminSideNav" />
+}
+@section Toolbar{
+    <partial name="AdminSideNavToggle" />
+}
+@section Scripts {
+    <partial name="AdminSideNavScripts" />
+    <script src="~/cr/js/jquery.validate.min.js"></script>
+    <script src="~/cr/js/jquery.validate.unobtrusive.min.js"></script>
+    <script src="~/cr/js/unobtrusive-validation-bs4.min.js"></script>
+    <script src="~/cr/js/jquery.validate.hooks.min.js"></script>
+    <script src="~/cr/js/jqueryvaildation.submitonce-unobtrusive.min.js"></script>
+}

@@ -1,0 +1,44 @@
+﻿@model cloudscribe.Core.Web.ViewModels.UserAdmin.UserListViewModel
+@inject ICoreThemeHelper themeHelper
+@inject IStringLocalizer<CloudscribeCore> sr
+@{
+    var themeSettings = themeHelper.GetThemeSettings();
+    if (themeSettings.AdminSideNavExpanded) { ViewData["SideNavToggle"] = "show"; }
+    ViewData["SideNavVisible"] = true;
+}
+
+<h2>@ViewData["Title"]</h2>
+<div class="row">
+    <div class="col">
+        <form class="form-inline" role="form" asp-controller="UserAdmin" asp-action="Search" method="get" asp-antiforgery="false">
+            <input asp-for="SiteId" type="hidden" />
+            <div class="input-group">
+                <input asp-for="SearchQuery" name="query" class="form-control" />
+                <span class="input-group-btn">
+                    <button type="submit" value='@sr["Search"]' class="btn btn-primary">@sr["Search"]</button>
+                </span>
+            </div>
+        </form>
+    </div>
+    <div class="col">
+        <form class="form-inline" role="form" asp-controller="UserAdmin" asp-action="IpSearch" method="get" asp-antiforgery="false">
+            <input asp-for="SiteId" type="hidden" />
+            <div class="input-group">
+                <input asp-for="IpQuery" name="ipquery" class="form-control" />
+                <span class="input-group-btn">
+                    <button type="submit" class="btn btn-primary">@sr["Search By IP Address"]</button>
+                </span>
+            </div>
+        </form>
+    </div>
+</div>
+<partial name="UserListPartial" model="Model" />
+@section SideNav {
+    <partial name="AdminSideNav" />
+}
+@section Toolbar{
+    <partial name="AdminSideNavToggle" />
+}
+@section scripts {
+    <partial name="AdminSideNavScripts" />
+}

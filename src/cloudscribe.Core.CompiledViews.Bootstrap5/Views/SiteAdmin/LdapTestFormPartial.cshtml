@@ -1,0 +1,42 @@
+﻿@model cloudscribe.Core.Web.ViewModels.SiteSettings.SecuritySettingsViewModel
+@inject IStringLocalizer<CloudscribeCore> sr
+@inject cloudscribe.Core.Models.Identity.ILdapHelper ldap
+@inject ICoreThemeHelper themeHelper
+@{
+    var themeSettings = themeHelper.GetThemeSettings();
+}
+@if (ldap.IsImplemented && !string.IsNullOrWhiteSpace(Model.LdapServer) && !string.IsNullOrWhiteSpace(Model.LdapDomain))
+{
+    <form class="mb-4" asp-action="TestLdap" asp-controller="SiteAdmin" asp-area="" data-submit-once="true">
+        <input id="ldap-siteid" asp-for="SiteId" type="hidden" />
+        <fieldset>
+            <legend>@sr["Test LDAP Authentication"]</legend>
+        </fieldset>
+        <p>@sr["You should verify that the LDAP settings are valid and working by testing with a valid LDAP username and password."]</p>
+        <div class="form-group">
+
+            <label asp-for="LdapTestUsername">@sr["LDAP Username"]</label>
+            <div class="input-group">
+                <div class="input-group-prepend">
+                    <span class="input-group-text"><i class="@themeSettings.Icons.Username" aria-hidden="true"></i></span>
+                </div>
+                <input asp-for="LdapTestUsername" class="form-control" />
+                <span asp-validation-for="LdapTestUsername" class="invalid-feedback"></span>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label asp-for="LdapTestPassword">@sr["LDAP Password"]</label>
+            <div class="input-group">
+                <div class="input-group-prepend">
+                    <span class="input-group-text"><i class="@themeSettings.Icons.Password" aria-hidden="true"></i></span>
+                </div>
+                <input asp-for="LdapTestPassword" class="form-control" />
+                <span asp-validation-for="LdapTestPassword" class="invalid-feedback"></span>
+            </div>
+
+        </div>
+        <button name="submit" type="submit" class="btn btn-primary" data-enabled-text='@sr["Test"]' data-disabled-text='@sr["Working..."]'>@sr["Test"]</button>
+    </form>
+
+}

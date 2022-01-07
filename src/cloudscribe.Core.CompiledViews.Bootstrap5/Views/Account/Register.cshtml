@@ -1,0 +1,125 @@
+﻿@model cloudscribe.Core.Web.ViewModels.Account.RegisterViewModel
+@inject ISiteContextResolver siteResolver
+@inject ICoreThemeHelper themeHelper
+@inject SiteContext Tenant
+@inject IStringLocalizer<CloudscribeCore> sr
+@{
+    var themeSettings = themeHelper.GetThemeSettings();
+    ViewData["BodyClass"] = "account-section registration-page";
+    ViewData["SocialFormat"] = sr["Register using your {0} account"];
+    ViewData["SocialHeading"] = sr["Use an existing account"];
+    var Tenant = await siteResolver.ResolveSite(Context.Request.Host.Host, Context.Request.Path);
+
+}
+@section Meta {
+    <meta name="robots" content="noindex" />
+}
+@section Styles {
+    <partial name="RegistrationStylePartial" />
+}
+@if (!string.IsNullOrWhiteSpace(Model.RecaptchaSiteKey))
+{
+    <script src='https://www.google.com/recaptcha/api.js'></script>
+}
+@if (Model.UseInvisibleCaptcha)
+{
+    <script src="~/cr/js/cloudscribe-register-page.js"></script> 
+}
+<h2>@ViewData["Title"]</h2>
+@if (!string.IsNullOrWhiteSpace(Model.RegistrationPreamble))
+{
+    <partial name="RegisterPreamblePartial" model="Model" />
+}
+<form id="register-form" asp-controller="Account" asp-action="Register" asp-route-returnurl='@ViewData["ReturnUrl"]'
+      data-submit-once="true">
+    <input asp-for="UserId" type="hidden" />
+    <h4>@sr["Create a new account."]</h4>
+    <hr />
+    <div asp-validation-summary="All" class="text-danger"></div>
+    <div class="form-group">
+        <label asp-for="Username">@sr["Username"]</label>
+        <div class="input-group">
+            <div class="input-group-prepend">
+                <span class="input-group-text"><i class="@themeSettings.Icons.Username" aria-hidden="true"></i></span>
+            </div>
+            <input asp-for="Username" class="form-control" data-val-regex-pattern="^[a-zA-Z0-9]*$" data-val-regex=@sr["Username can only contain letters or digits, with no spaces"] />
+            <span asp-validation-for="Username" class="invalid-feedback"></span>
+            @Html.ValidationMessage("usernameerror", new { @class = "text-danger" })
+        </div>
+    </div>
+    <div class="form-group">
+        <label asp-for="Email">@sr["Email"]</label>
+        <div class="input-group">
+            <div class="input-group-prepend">
+                <span class="input-group-text"><i class="@themeSettings.Icons.Email" aria-hidden="true"></i></span>
+            </div>
+            <input asp-for="Email" class="form-control" />
+            <span asp-validation-for="Email" class="invalid-feedback"></span>
+        </div>
+    </div>
+    <partial name="RegisterMiddle" model="Model" />
+    <div class="form-group">
+        <label asp-for="Password">@sr["Password"]</label>
+        <div class="input-group">
+            <div class="input-group-prepend">
+                <span class="input-group-text"><i class="@themeSettings.Icons.Password" aria-hidden="true"></i></span>
+            </div>
+            <input asp-for="Password" class="form-control" data-val="true" data-val-length=@sr["The password must be at least {0} characters long.", Tenant.MinRequiredPasswordLength] data-val-length-max="100" data-val-length-min="@Tenant.MinRequiredPasswordLength" data-val-required="Password is required" />
+            <span asp-validation-for="Password" class="invalid-feedback"></span>
+        </div>
+
+    </div>
+    <div class="form-group">
+        <label asp-for="ConfirmPassword">@sr["Confirm Password"]</label>
+        <div class="input-group">
+            <div class="input-group-prepend">
+                <span class="input-group-text"><i class="@themeSettings.Icons.Password" aria-hidden="true"></i></span>
+            </div>
+            <input asp-for="ConfirmPassword" class="form-control" />
+            <span asp-validation-for="ConfirmPassword" class="invalid-feedback"></span>
+        </div>
+    </div>
+    <partial name="RegisterBottom" model="Model" />
+
+    @if (!string.IsNullOrWhiteSpace(Model.RegistrationAgreement))
+    {
+        <partial name="RegisterAgreementPartial" model="Model" />
+    }
+    else
+    {
+        <input name="AgreeToTerms" value="true" type="hidden" />
+    }
+    @if (!string.IsNullOrWhiteSpace(Model.RecaptchaSiteKey) && !Model.UseInvisibleCaptcha)
+    {
+        <div class="form-group">
+            <div class=" g-recaptcha" data-sitekey="@Model.RecaptchaSiteKey"></div>
+            @Html.ValidationMessage("recaptchaerror", new { @class = "text-danger" })
+        </div>
+    }
+
+    <div class="form-group">
+        @if (!string.IsNullOrWhiteSpace(Model.RecaptchaSiteKey) && Model.UseInvisibleCaptcha)
+        {
+            <button class="btn btn-primary g-recaptcha" data-sitekey="@Model.RecaptchaSiteKey" data-callback='onCaptchaSubmit' data-enabled-text='@sr["Register"]' data-disabled-text='@sr["Working..."]'>@sr["Register"]</button>
+        }
+        else
+        {
+            <button type="submit" class="btn btn-primary" data-enabled-text='@sr["Register"]' data-disabled-text='@sr["Working..."]'>@sr["Register"]</button>
+        }
+        @Html.ValidationMessage("registrationError", new { @class = "text-danger" })
+
+    </div>
+</form>
+@{
+    var LoginProviders = Model.ExternalAuthenticationList.ToList();
+    if (LoginProviders.Count > 0)
+    {
+        <partial name="SocialLoginPartial" model="LoginProviders" />
+    }
+}
+@section Scripts {
+    <partial name="RegistrationScriptsPartial" />
+    <script src="~/cr/js/jquery.validate.hooks.min.js"></script>
+    <script src="~/cr/js/jqueryvaildation.submitonce-unobtrusive.min.js"></script>
+
+}

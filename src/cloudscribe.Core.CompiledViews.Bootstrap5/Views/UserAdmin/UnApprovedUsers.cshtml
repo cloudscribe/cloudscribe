@@ -1,0 +1,19 @@
+﻿@model cloudscribe.Core.Web.ViewModels.UserAdmin.UserListViewModel
+@inject ICoreThemeHelper themeHelper
+@inject IStringLocalizer<CloudscribeCore> sr
+@{
+    var themeSettings = themeHelper.GetThemeSettings();
+    if (themeSettings.AdminSideNavExpanded) { ViewData["SideNavToggle"] = "show"; }
+    ViewData["SideNavVisible"] = true;
+}
+<h2>@ViewData["Title"]</h2>
+@{await Html.RenderPartialAsync("UserGridPartial", Model); }
+@section SideNav {
+    @{ await Html.RenderPartialAsync("AdminSideNav"); }
+}
+@section Toolbar{
+    @{ await Html.RenderPartialAsync("AdminSideNavToggle"); }
+}
+@section scripts {
+    @{ await Html.RenderPartialAsync("AdminSideNavScripts"); }
+}

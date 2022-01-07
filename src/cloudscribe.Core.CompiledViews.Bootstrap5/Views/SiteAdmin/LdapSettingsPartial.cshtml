@@ -1,0 +1,57 @@
+﻿@model cloudscribe.Core.Web.ViewModels.SiteSettings.SecuritySettingsViewModel
+@inject IStringLocalizer<CloudscribeCore> sr
+@inject cloudscribe.Core.Models.Identity.ILdapHelper ldap
+@if (ldap.IsImplemented)
+{
+<fieldset class="border p-2">
+    <legend class="w-auto">@sr["LDAP/Active Directory Settings"]</legend>
+    <div class="form-group">
+        <label asp-for="LdapServer">@sr["Hostname of the LDAP Server"]</label>
+        <input asp-for="LdapServer" class="form-control" />
+        <span asp-validation-for="LdapServer" class="invalid-feedback"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="LdapPort">@sr["Port Number of the LDAP Server"]</label>
+        <input asp-for="LdapPort" class="form-control" />
+        <span asp-validation-for="LdapPort" class="invalid-feedback"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="LdapDomain">@sr["LDAP Domain"]</label>
+        <input asp-for="LdapDomain" class="form-control" />
+        <span asp-validation-for="LdapDomain" class="invalid-feedback"></span>
+    </div>
+    @*<div class="form-group">
+        <label asp-for="LdapRootDN">@sr["LDAP Root DN"]</label>
+        <input asp-for="LdapRootDN" class="form-control" />
+        <span asp-validation-for="LdapRootDN" class="invalid-feedback"></span>
+    </div>*@
+    <input type="hidden" asp-for="LdapRootDN" />
+    @*<div class="form-group">
+            <label asp-for="LdapUserDNKey">@sr["LDAP User DN Key"]</label>
+            <select asp-for="LdapUserDNKey" class="form-control">
+                <option value="CN">@sr["CN (Active Directory)"]</option>
+                <option value="uid">@sr["uid (Open LDAP)"]</option>
+            </select>
+            <span asp-validation-for="LdapUserDNKey" class="invalid-feedback"></span>
+        </div>*@
+    <input type="hidden" asp-for="LdapUserDNKey" />
+    <div class="form-group">
+        <label asp-for="LdapUserDNFormat">@sr["LDAP User DN Format"]</label>
+        <select asp-for="LdapUserDNFormat" class="form-control">
+            <option value="username@LDAPDOMAIN">@sr["username@LDAPDOMAIN"]</option>
+            <option value="LDAPDOMAIN">@sr["LDAPDOMAIN\\username"]</option>
+        </select>
+        <span asp-validation-for="LdapUserDNKey" class="invalid-feedback"></span>
+    </div>
+    <div class="form-group">
+        <div class="form-check">
+            <input asp-for="LdapUseSsl" class="form-check-input" />
+            <label asp-for="LdapUseSsl" class="form-check-label">@sr["Ldap Uses SSL"]</label>
+        </div>
+    </div>
+
+</fieldset>
+}
+
+
+
