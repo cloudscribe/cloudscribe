@@ -36,17 +36,17 @@
                 </div>
                 <input type="text" class="form-control" id="maxWidth" name="maxWidth" value="@upoadOptions.WebSizeImageMaxWidth" />
             </div>
-            <div class="input-group ml-1">
+            <div class="input-group ms-1">
                 <div class="input-group-prepend">
                     <label class="input-group-text" for="maxHeight">@sr["Max Height"]</label>
                 </div>
                 <input type="text" class="form-control" id="maxHeight" name="maxHeight" value="@upoadOptions.WebSizeImageMaxHeight" />
             </div>
-            <div class="form-group form-check ml-1">
+            <div class="form-group form-check ms-1">
                 <input asp-for="ResizeImages" class="form-check-input" />
                 <label class="form-check-label" asp-for="ResizeImages"> @sr["Reduce Image Size For Web"]</label>
             </div>
-            <div class="form-group form-check ml-2">
+            <div class="form-group form-check ms-2">
                 <input asp-for="KeepOriginal" class="form-check-input" />
                 <label class="form-check-label" asp-for="KeepOriginal"> @sr["Keep Original Size Images"]</label>
             </div>

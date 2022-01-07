@@ -54,114 +54,114 @@
         <div class="col-md-12 docs-buttons">
             <div class="btn-group">
                 <label class="btn btn-primary btn-upload" for="inputImage">
-                    <input type="file" class="sr-only" id="inputImage" name="file" accept=".jpg,.jpeg,.png,.gif,.tiff" />
+                    <input type="file" class="visually-hidden" id="inputImage" name="file" accept=".jpg,.jpeg,.png,.gif,.tiff" />
                     @sr["Choose an image from your device"]
                 </label>
             </div>
             <div class="btn-group">
                 <button type="button" class="btn btn-primary" data-method="zoom" data-option="0.1" title='@sr["Zoom In"]'>
-                    <span class="docs-tooltip" data-toggle="tooltip" data-animation="false" title="" data-original-title='@sr["Zoom In"]'>
+                    <span class="docs-tooltip" data-bs-toggle="tooltip" data-animation="false" title="" data-original-title='@sr["Zoom In"]'>
                         <span class="@icons.ZoomIn"></span>
                     </span>
                 </button>
                 <button type="button" class="btn btn-primary" data-method="zoom" data-option="-0.1" title='@sr["Zoom Out"]'>
-                    <span class="docs-tooltip" data-toggle="tooltip" data-animation="false" title="" data-original-title='@sr["Zoom Out"]'>
+                    <span class="docs-tooltip" data-bs-toggle="tooltip" data-animation="false" title="" data-original-title='@sr["Zoom Out"]'>
                         <span class="@icons.ZoomOut"></span>
                     </span>
                 </button>
             </div>
             <div class="btn-group">
                 <button type="button" class="btn btn-primary" data-method="move" data-option="-10" data-second-option="0" title='@sr["Move Left"]'>
-                    <span class="docs-tooltip" data-toggle="tooltip" data-animation="false" title="" data-original-title='@sr["Move Left"]'>
+                    <span class="docs-tooltip" data-bs-toggle="tooltip" data-animation="false" title="" data-original-title='@sr["Move Left"]'>
                         <span class="@icons.MoveLeft"></span>
                     </span>
                 </button>
                 <button type="button" class="btn btn-primary" data-method="move" data-option="10" data-second-option="0" title='@sr["Move Right"]'>
-                    <span class="docs-tooltip" data-toggle="tooltip" data-animation="false" title="" data-original-title='@sr["Move Right"]'>
+                    <span class="docs-tooltip" data-bs-toggle="tooltip" data-animation="false" title="" data-original-title='@sr["Move Right"]'>
                         <span class="@icons.MoveRight"></span>
                     </span>
                 </button>
                 <button type="button" class="btn btn-primary" data-method="move" data-option="0" data-second-option="-10" title='@sr["Move Up"]'>
-                    <span class="docs-tooltip" data-toggle="tooltip" data-animation="false" title="" data-original-title='@sr["Move Up"]'>
+                    <span class="docs-tooltip" data-bs-toggle="tooltip" data-animation="false" title="" data-original-title='@sr["Move Up"]'>
                         <span class="@icons.MoveUp"></span>
                     </span>
                 </button>
                 <button type="button" class="btn btn-primary" data-method="move" data-option="0" data-second-option="10" title='@sr["Move Down"]'>
-                    <span class="docs-tooltip" data-toggle="tooltip" data-animation="false" title="" data-original-title='@sr["Move Down"]'>
+                    <span class="docs-tooltip" data-bs-toggle="tooltip" data-animation="false" title="" data-original-title='@sr["Move Down"]'>
                         <span class="@icons.MoveDown"></span>
                     </span>
                 </button>
             </div>
             <div class="btn-group">
                 <button type="button" class="btn btn-primary" data-method="rotate" data-option="-45" title='@sr["Rotate Left"]'>
-                    <span class="docs-tooltip" data-toggle="tooltip" data-animation="false" title="" data-original-title='@sr["Rotate Left"]'>
+                    <span class="docs-tooltip" data-bs-toggle="tooltip" data-animation="false" title="" data-original-title='@sr["Rotate Left"]'>
                         <span class="@icons.RotateLeft"></span>
                     </span>
                 </button>
                 <button type="button" class="btn btn-primary" data-method="rotate" data-option="45" title='@sr["Rotate Right"]'>
-                    <span class="docs-tooltip" data-toggle="tooltip" data-animation="false" title="" data-original-title='@sr["Rotate Right"]'>
+                    <span class="docs-tooltip" data-bs-toggle="tooltip" data-animation="false" title="" data-original-title='@sr["Rotate Right"]'>
                         <span class="@icons.RotateRight"></span>
                     </span>
                 </button>
             </div>
             <div class="btn-group">
                 <button type="button" class="btn btn-primary" data-method="scaleX" data-option="-1" title='@sr["Flip Horizontal"]'>
-                    <span class="docs-tooltip" data-toggle="tooltip" data-animation="false" title="" data-original-title='@sr["Flip Horizontal"]'>
+                    <span class="docs-tooltip" data-bs-toggle="tooltip" data-animation="false" title="" data-original-title='@sr["Flip Horizontal"]'>
                         <span class="@icons.FlipHorizontal"></span>
                     </span>
                 </button>
                 <button type="button" class="btn btn-primary" data-method="scaleY" data-option="-1" title='@sr["Flip Vertical"]'>
-                    <span class="docs-tooltip" data-toggle="tooltip" data-animation="false" title="" data-original-title='@sr["Flip Vertical"]'>
+                    <span class="docs-tooltip" data-bs-toggle="tooltip" data-animation="false" title="" data-original-title='@sr["Flip Vertical"]'>
                         <span class="@icons.FlipVertical"></span>
                     </span>
                 </button>
             </div>
             <button type="button" class="btn btn-primary" data-method="zoomTo" data-option="1">
-                <span class="docs-tooltip" data-toggle="tooltip" data-animation="false" title="" data-original-title='@sr["Zoom to 100%"]'>
+                <span class="docs-tooltip" data-bs-toggle="tooltip" data-animation="false" title="" data-original-title='@sr["Zoom to 100%"]'>
                     @sr["Zoom to 100%"]
                 </span>
             </button>
             <div class="btn-group">
                 <button type="button" class="btn btn-primary" data-method="reset" title='@sr["Reset"]'>
-                    <span class="docs-tooltip" data-toggle="tooltip" data-animation="false" title="" data-original-title='@sr["Reset"]'>
+                    <span class="docs-tooltip" data-bs-toggle="tooltip" data-animation="false" title="" data-original-title='@sr["Reset"]'>
                         <span class="@icons.Refresh"></span>
                     </span>
                 </button>
             </div>
-            <div class="docs-toggles btn-group " data-toggle="buttons">
+            <div class="docs-toggles btn-group " data-bs-toggle="buttons">
                 <label class="btn btn-primary active">
-                    <input type="radio" class="sr-only" id="aspectRatio0" name="aspectRatio" value="1.7777777777777777" />
-                    <span class="docs-tooltip" data-toggle="tooltip" data-animation="false" title="" data-original-title='@sr["aspectRatio: 16 / 9"]'>
+                    <input type="radio" class="visually-hidden" id="aspectRatio0" name="aspectRatio" value="1.7777777777777777" />
+                    <span class="docs-tooltip" data-bs-toggle="tooltip" data-animation="false" title="" data-original-title='@sr["aspectRatio: 16 / 9"]'>
                         16:9
                     </span>
                 </label>
                 <label class="btn btn-primary">
-                    <input type="radio" class="sr-only" id="aspectRatio1" name="aspectRatio" value="1.3333333333333333" />
-                    <span class="docs-tooltip" data-toggle="tooltip" data-animation="false" title="" data-original-title='@sr["aspectRatio: 4 / 3"]'>
+                    <input type="radio" class="visually-hidden" id="aspectRatio1" name="aspectRatio" value="1.3333333333333333" />
+                    <span class="docs-tooltip" data-bs-toggle="tooltip" data-animation="false" title="" data-original-title='@sr["aspectRatio: 4 / 3"]'>
                         4:3
                     </span>
                 </label>
                 <label class="btn btn-primary">
-                    <input type="radio" class="sr-only" id="aspectRatio2" name="aspectRatio" value="1" />
-                    <span class="docs-tooltip" data-toggle="tooltip" data-animation="false" title="" data-original-title='@sr["aspectRatio: 1 / 1"]'>
+                    <input type="radio" class="visually-hidden" id="aspectRatio2" name="aspectRatio" value="1" />
+                    <span class="docs-tooltip" data-bs-toggle="tooltip" data-animation="false" title="" data-original-title='@sr["aspectRatio: 1 / 1"]'>
                         1:1
                     </span>
                 </label>
                 <label class="btn btn-primary">
-                    <input type="radio" class="sr-only" id="aspectRatio3" name="aspectRatio" value="0.6666666666666666" />
-                    <span class="docs-tooltip" data-toggle="tooltip" data-animation="false" title="" data-original-title='@sr["aspectRatio: 2 / 3"]'>
+                    <input type="radio" class="visually-hidden" id="aspectRatio3" name="aspectRatio" value="0.6666666666666666" />
+                    <span class="docs-tooltip" data-bs-toggle="tooltip" data-animation="false" title="" data-original-title='@sr["aspectRatio: 2 / 3"]'>
                         2:3
                     </span>
                 </label>
                 <label class="btn btn-primary">
-                    <input type="radio" class="sr-only" id="aspectRatio4" name="aspectRatio" value="NaN" />
-                    <span class="docs-tooltip" data-toggle="tooltip" data-animation="false" title="" data-original-title='@sr["aspectRatio: Free Form"]'>
+                    <input type="radio" class="visually-hidden" id="aspectRatio4" name="aspectRatio" value="NaN" />
+                    <span class="docs-tooltip" data-bs-toggle="tooltip" data-animation="false" title="" data-original-title='@sr["aspectRatio: Free Form"]'>
                         Free
                     </span>
                 </label>
             </div>
             <div class="form-inline">
-                <div class="input-group input-group-sm mr-1">
+                <div class="input-group input-group-sm me-1">
                     <div class="input-group-prepend">
                         <label class="input-group-text" for="dataWidth">@sr["Output Width"]</label>
                     </div>
@@ -170,7 +170,7 @@
                         <span class="input-group-text">px</span>
                     </div>  
                 </div>
-                <div class="input-group input-group-sm mr-1">
+                <div class="input-group input-group-sm me-1">
                     <div class="input-group-prepend">
                         <label class="input-group-text" for="dataHeight">@sr["Output Height"]</label>
                     </div>
@@ -179,13 +179,13 @@
                         <span class="input-group-text">px</span>
                     </div>
                 </div>
-                <div class="input-group input-group-sm mr-1">
+                <div class="input-group input-group-sm me-1">
                     <div class="input-group-prepend">
                         <label class="input-group-text" for="maxWidth">@sr["Max Width"]</label>
                     </div>
                      <input type="text" class="form-control" id="cropMaxWidth" style="max-width:70px;" value="@upoadOptions.WebSizeImageMaxWidth" />
                 </div>
-                <div class="input-group input-group-sm mr-1">
+                <div class="input-group input-group-sm me-1">
                     <div class="checkbox">
                         <label>
                             <input type="checkbox" id="chkContrainWidthOfCrop" checked /> @sr["Constrain Width"]
@@ -212,13 +212,13 @@
                                 <input type="hidden" id="cropCurrentDir" name="currentDir" value="" />
                                 <input type="hidden" class="form-control" id="origFileName" />
                                 <span class="form-control " id="cropCurrentDirLabel" style="float:left;width:100%;margin-bottom:7px;text-align:left;"></span>
-                                <div class="form-group mr-1">
+                                <div class="form-group me-1">
                                     <input type="text" class="form-control " id="croppedFileName" name="croppedFileName" />
                                 </div>
 
-                                <button id="btnUploadCropped" type="submit" class="btn btn-primary mr-1"><i class="@icons.Upload" aria-hidden="true"></i>&nbsp;@sr["Upload"]</button>
-                                <a class="btn btn-primary mr-1" id="btnSaveLocal" href="javascript:void(0);" download="cropped.jpg">@sr["Save Locally"]</a>
-                                <button type="button" class="btn btn-secondary" data-dismiss="modal">@sr["Close"]</button>
+                                <button id="btnUploadCropped" type="submit" class="btn btn-primary me-1"><i class="@icons.Upload" aria-hidden="true"></i>&nbsp;@sr["Upload"]</button>
+                                <a class="btn btn-primary me-1" id="btnSaveLocal" href="javascript:void(0);" download="cropped.jpg">@sr["Save Locally"]</a>
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">@sr["Close"]</button>
                             </form>
                         </div>
                     </div>
