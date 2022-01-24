@@ -2,7 +2,7 @@
 @using cloudscribe.Core.IdentityServerIntegration
 @inject IStringLocalizer<CloudscribeIds4Resources> sr
 <form class="form-inline" asp-controller="Clients" asp-action="AddClientRedirect">
-    <div class="form-group">
+    <div class="mb-3">
         <label for="Type">@sr["Url"]</label>
         <input class="form-control" id="RedirectUri" name="RedirectUri" data-val="true" data-val-required='@sr["The Url field is required."]'
                aria-required="true" aria-invalid="false" aria-describedby="RedirectUri-error" />

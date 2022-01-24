@@ -47,7 +47,7 @@
                             <div class="modal-content">
                                 <div class="modal-header">
                                     <h4 class="modal-title" id="@("confirmDeleteClientHeading" + index)">@sr["Confirm Delete"]</h4>
-                                    <button type="button" class="close" data-bs-dismiss="modal" aria-label='@sr["Close"]'><span aria-hidden="true">&times;</span></button>
+                                    <button type="button" data-bs-dismiss="modal" class="btn-close" aria-label='@sr["Close"]'></button>
                                 </div>
                                 <div class="modal-body">
                                     @string.Format(sr["Are you sure you want to delete the client {0}? You cannot undo this ooperation."], s.ClientName)

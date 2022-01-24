@@ -2,7 +2,7 @@
 @using cloudscribe.Core.IdentityServerIntegration
 @inject IStringLocalizer<CloudscribeIds4Resources> sr
 <form class="form-inline" asp-controller="Clients" asp-action="AddClientCorsOrigin">
-    <div class="form-group">
+    <div class="mb-3">
         <label for="Type">@sr["CORS Origin"]</label>
         <input class="form-control" id="CorsOrigin" name="CorsOrigin" data-val="true" data-val-required='@sr["The CORS Origin field is required."]'
                aria-required="true" aria-invalid="false" aria-describedby="CorsOrigin-error" />
