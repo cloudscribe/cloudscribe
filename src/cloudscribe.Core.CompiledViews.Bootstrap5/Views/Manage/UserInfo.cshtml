@@ -28,7 +28,7 @@
     <div asp-validation-summary="All" class="text-danger"></div>
     @if (canUpload)
     {
-        <div class="form-group" style="height:300px">
+        <div class="mb-3" style="height:300px">
             <label>@sr["Profile Image/Avatar"]</label>
             <div class="d-flex align-items-stretch mb-2">
                 <div class="cs-crop-container" style="height:250px;">
@@ -87,14 +87,14 @@
 
     @if (string.IsNullOrWhiteSpace(Model.FirstName))
     {
-        <div class="form-group">
+        <div class="mb-3">
             <label asp-for="FirstName">@sr["First Name"]</label>
             <input asp-for="FirstName" class="form-control" />
         </div>
     }
     else
     {
-        <div class="form-group">
+        <div class="mb-3">
             <label asp-for="FirstName">@sr["First Name"]</label>
             <input asp-for="FirstName" type="hidden" />
             <span class="form-control">@Model.FirstName</span>
@@ -102,32 +102,32 @@
     }
     @if (string.IsNullOrWhiteSpace(Model.LastName))
     {
-        <div class="form-group">
+        <div class="mb-3">
             <label asp-for="LastName">@sr["Last Name"]</label>
             <input asp-for="LastName" class="form-control" />
         </div>
     }
     else
     {
-        <div class="form-group">
+        <div class="mb-3">
             <label asp-for="LastName">@sr["Last Name"]</label>
             <input asp-for="LastName" type="hidden" />
             <span class="form-control">@Model.LastName</span>
         </div>
     }
-    <div class="form-group">
+    <div class="mb-3">
         <label asp-for="PhoneNumber">@sr["Phone Number"]</label>
         <input asp-for="PhoneNumber" class="form-control" />
         <span asp-validation-for="PhoneNumber" class="invalid-feedback"></span>
     </div>
     <partial name="UserInfoDobPartial" model="Model" />
 
-    <div class="form-group">
+    <div class="mb-3">
         <label asp-for="WebSiteUrl">@sr["Website Url"]</label>
         <input asp-for="WebSiteUrl" class="form-control" />
     </div>
     <partial name="UserInfoMiddlePartial" model="Model" />
-    <div class="form-group">
+    <div class="mb-3">
         <button name="submit" type="submit" class="btn btn-primary">@sr["Update"]</button>
     </div>
 </form>

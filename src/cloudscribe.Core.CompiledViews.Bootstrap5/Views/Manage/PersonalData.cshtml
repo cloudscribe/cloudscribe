@@ -22,7 +22,7 @@
 <p>
     <b>@sr["Deleting this data will permanently remove your account, and this cannot be recovered."]</b>
 </p>
-<form id="download-data" asp-action="DownloadPersonalData" method="post" class="form-group">
+<form id="download-data" asp-action="DownloadPersonalData" method="post" class="mb-3">
     <button class="btn btn-primary" type="submit">@sr["Download"]</button>
 </form>
 <p>
@@ -45,14 +45,14 @@
                 }
                 @if (!string.IsNullOrWhiteSpace(link.DownloadController) && !string.IsNullOrWhiteSpace(link.DownloadAction))
                 {
-                    <form asp-controller="@link.DownloadController" asp-action="@link.DownloadAction" method="post" class="form-group">
+                    <form asp-controller="@link.DownloadController" asp-action="@link.DownloadAction" method="post" class="mb-3">
                         <button class="btn btn-primary" type="submit">@sr["Download"]</button>
                     </form>
 
                 }
                 @if (!string.IsNullOrWhiteSpace(link.DeleteController) && !string.IsNullOrWhiteSpace(link.DeleteAction))
                 {
-                    <form asp-controller="@link.DeleteController" asp-action="@link.DeleteAction" method="post" class="form-group">
+                    <form asp-controller="@link.DeleteController" asp-action="@link.DeleteAction" method="post" class="mb-3">
                         <input type="hidden" name="returnUrl" value="@Context.Request.PathAndQuery()" />
                         <button class="btn btn-danger" type="submit">@sr["Delete"]</button>
                     </form>

@@ -31,7 +31,7 @@
   </ItemGroup>
   
   <ItemGroup>
-    <ProjectReference Include="..\cloudscribe.Core.CompiledViews.Bootstrap4\cloudscribe.Core.CompiledViews.Bootstrap4.csproj" />
+    <ProjectReference Include="..\cloudscribe.Core.CompiledViews.Bootstrap5\cloudscribe.Core.CompiledViews.Bootstrap5.csproj" />
     <ProjectReference Include="..\cloudscribe.Core.IdentityServer.EFCore.PostgreSql\cloudscribe.Core.IdentityServer.EFCore.PostgreSql.csproj" />
     <ProjectReference Include="..\cloudscribe.Core.IdentityServer.EFCore.SQLite\cloudscribe.Core.IdentityServer.EFCore.SQLite.csproj" />
     <ProjectReference Include="..\cloudscribe.Core.IdentityServerIntegration\cloudscribe.Core.IdentityServerIntegration.csproj" />

@@ -12,7 +12,7 @@
 <form method="post" role="form" asp-antiforgery="true" data-submit-once="true">
     <div asp-validation-summary="All" class="text-danger"></div>
     <input asp-for="SiteId" type="hidden" />
-    <div class="form-group">
+    <div class="mb-3">
         <label asp-for="LoginInfoTop">@sr["Login Info Top"]</label>
         <textarea class="form-control" rows="5" asp-for="LoginInfoTop"
                   data-ckeditor-unobtrusive=""
@@ -23,7 +23,7 @@
                   data-ckeditor-config-imagebrowseurl="@ckOptions.ImageBrowseUrl"></textarea>
         <span asp-validation-for="LoginInfoTop" class="text-danger"></span>
     </div>
-    <div class="form-group">
+    <div class="mb-3">
         <label asp-for="LoginInfoBottom">@sr["Login Info Bottom"]</label>
         <textarea class="form-control" rows="5" asp-for="LoginInfoBottom"
                   data-ckeditor-unobtrusive=""
@@ -34,7 +34,7 @@
                   data-ckeditor-config-imagebrowseurl="@ckOptions.ImageBrowseUrl"></textarea>
         <span asp-validation-for="LoginInfoBottom" class="text-danger"></span>
     </div>
-    <div class="form-group">
+    <div class="mb-3">
         <button id="btnSave" name="submit" type="submit" class="btn btn-primary" data-enabled-text='@sr["Save"]' data-disabled-text='@sr["Working..."]'>@sr["Save"]</button>
     </div>
 </form>

@@ -16,17 +16,17 @@
     <input asp-for="SiteId" type="hidden" />
     @if (Model.UserId != Guid.Empty)
     {
-        <div class="form-group">
+        <div class="mb-3">
             <label asp-for="UserId">@sr["UserId"]</label>
             <label class="control-label">@Model.UserId.ToString()</label>
         </div>
     }
-    <div class="form-group">
+    <div class="mb-3">
         <label asp-for="Email">@sr["Email"]</label>
         <input asp-for="Email" class="form-control" />
         <span asp-validation-for="Email" class="invalid-feedback"></span>
     </div>
-    <div class="form-group">
+    <div class="mb-3">
         <label asp-for="Username">@sr["Username"]</label>
         <input asp-for="Username" class="form-control"
                data-remote-validate-onblur="true"
@@ -37,32 +37,32 @@
         <span id="spnUserNameWarn" class="text-danger" data-error-message='@sr["Username is already in use"]'></span>
         @Html.ValidationMessage("usernameerror", new { @class = "text-danger" })
     </div>
-    <div class="form-group">
+    <div class="mb-3">
         <label asp-for="DisplayName">@sr["Display Name"]</label>
         <input asp-for="DisplayName" class="form-control" />
         <span asp-validation-for="DisplayName" class="text-danger"></span>
     </div>
-    <div class="form-group">
+    <div class="mb-3">
         <label asp-for="FirstName">@sr["First Name"]</label>
         <input asp-for="FirstName" class="form-control" />
     </div>
-    <div class="form-group">
+    <div class="mb-3">
         <label asp-for="LastName">@sr["Last Name"]</label>
         <input asp-for="LastName" class="form-control" />
     </div>
     @if (Model.UserId == Guid.Empty)
     {
-        <div class="form-group">
+        <div class="mb-3">
             <label asp-for="Password">@sr["Password"]</label>
             <input asp-for="Password" type="password" class="form-control" />
             <span asp-validation-for="Password" class="invalid-feedback"></span>
         </div>
-        <div class="form-group">
+        <div class="mb-3">
             <label asp-for="ConfirmPassword">@sr["Confirm Password"]</label>
             <input asp-for="ConfirmPassword" type="password" class="form-control" />
             <span asp-validation-for="ConfirmPassword" class="invalid-feedback"></span>
         </div>
-        <div class="form-group">
+        <div class="mb-3">
             <div class="form-check">
                 <input asp-for="MustChangePwd" class="form-check-input" />
                 <label asp-for="MustChangePwd" class="form-check-label">@sr["Must Change Password"]</label>
@@ -71,7 +71,7 @@
     }
 
     <partial name="NewUserMiddlePartial" model="Model" />
-    <div class="form-group">
+    <div class="mb-3">
         <button type="submit" class="btn btn-primary" data-disabled-text='@sr["Working..."]' data-enabled-text='@sr["Save"]'>@sr["Save"]</button>
     </div>
     <div asp-validation-summary="All" class="text-danger"></div>

@@ -14,12 +14,12 @@
 </div>
 
 <div>
-    <form id="delete-user" method="post" class="form-group">
+    <form id="delete-user" method="post" class="mb-3">
         <div asp-validation-summary="All" class="text-danger"></div>
         <input asp-for="HasPassword" type="hidden" />
         @if (Model.HasPassword)
         {
-            <div class="form-group">
+            <div class="mb-3">
                 <label asp-for="Password"></label>
                 <input asp-for="Password" class="form-control" />
                 <span asp-validation-for="Password" class="invalid-feedback"></span>

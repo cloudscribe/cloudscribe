@@ -36,7 +36,7 @@
     <h4>@sr["Create a new account."]</h4>
     <hr />
     <div asp-validation-summary="All" class="text-danger"></div>
-    <div class="form-group">
+    <div class="mb-3">
         <label asp-for="Username">@sr["Username"]</label>
         <div class="input-group">
             <div class="input-group-prepend">
@@ -47,7 +47,7 @@
             @Html.ValidationMessage("usernameerror", new { @class = "text-danger" })
         </div>
     </div>
-    <div class="form-group">
+    <div class="mb-3">
         <label asp-for="Email">@sr["Email"]</label>
         <div class="input-group">
             <div class="input-group-prepend">
@@ -58,7 +58,7 @@
         </div>
     </div>
     <partial name="RegisterMiddle" model="Model" />
-    <div class="form-group">
+    <div class="mb-3">
         <label asp-for="Password">@sr["Password"]</label>
         <div class="input-group">
             <div class="input-group-prepend">
@@ -69,7 +69,7 @@
         </div>
 
     </div>
-    <div class="form-group">
+    <div class="mb-3">
         <label asp-for="ConfirmPassword">@sr["Confirm Password"]</label>
         <div class="input-group">
             <div class="input-group-prepend">
@@ -91,13 +91,13 @@
     }
     @if (!string.IsNullOrWhiteSpace(Model.RecaptchaSiteKey) && !Model.UseInvisibleCaptcha)
     {
-        <div class="form-group">
+        <div class="mb-3">
             <div class=" g-recaptcha" data-sitekey="@Model.RecaptchaSiteKey"></div>
             @Html.ValidationMessage("recaptchaerror", new { @class = "text-danger" })
         </div>
     }
 
-    <div class="form-group">
+    <div class="mb-3">
         @if (!string.IsNullOrWhiteSpace(Model.RecaptchaSiteKey) && Model.UseInvisibleCaptcha)
         {
             <button class="btn btn-primary g-recaptcha" data-sitekey="@Model.RecaptchaSiteKey" data-callback='onCaptchaSubmit' data-enabled-text='@sr["Register"]' data-disabled-text='@sr["Working..."]'>@sr["Register"]</button>

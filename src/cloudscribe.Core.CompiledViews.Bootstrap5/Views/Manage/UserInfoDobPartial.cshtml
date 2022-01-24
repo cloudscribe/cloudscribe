@@ -2,7 +2,7 @@
 @inject IStringLocalizer<CloudscribeCore> sr
 @if (Model.DateOfBirth.HasValue)
 {
-    <div class="form-group">
+    <div class="mb-3">
         <label asp-for="DateOfBirth">@sr["Date Of Birth"]</label>
         <input asp-for="DateOfBirth" type="hidden" />
         <span class="form-control">@Model.DateOfBirth.Value.ToString("d")</span>
@@ -10,7 +10,7 @@
 }
 else
 {
-    <div class="form-group">
+    <div class="mb-3">
         <label asp-for="DateOfBirth">@sr["Date of Birth"]</label>
         <input name="DateOfBirth" value="@(Model.DateOfBirth.HasValue ? Model.DateOfBirth.Value.ToString("d") : string.Empty)"
                 class="form-control"

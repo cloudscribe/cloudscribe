@@ -10,18 +10,18 @@
 <form method="post" asp-route-returnUrl="@ViewData["ReturnUrl"]">
     <input asp-for="RememberMe" type="hidden" />
     <div asp-validation-summary="All" class="text-danger"></div>
-    <div class="form-group">
+    <div class="mb-3">
         <label asp-for="TwoFactorCode"></label>
         <input asp-for="TwoFactorCode" class="form-control" autocomplete="off" />
         <span asp-validation-for="TwoFactorCode" class="invalid-feedback"></span>
     </div>
-    <div class="form-group">
+    <div class="mb-3">
         <div class="form-check">
             <input asp-for="RememberMachine" class="form-check-input" />
             <label asp-for="RememberMachine" class="form-check-label">@Html.DisplayNameFor(m => m.RememberMachine)</label>
         </div>
     </div>
-    <div class="form-group">
+    <div class="mb-3">
         <button type="submit" class="btn btn-primary">@sr["Log in"]</button>
     </div>
 </form>

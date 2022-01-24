@@ -20,14 +20,14 @@
     <div asp-validation-summary="All" class="text-danger"></div>
     <input asp-for="SiteId" type="hidden" />
     <input asp-for="ReturnPageNumber" type="hidden" />
-    <div class="form-group">
+    <div class="mb-3">
         <label asp-for="SiteName">@sr["Site Name"]</label>
         <input asp-for="SiteName" class="form-control" />
         <span asp-validation-for="SiteName" class="invalid-feedback"></span>
     </div>
     @if (useFolderTenants)
     {
-        <div class="form-group">
+        <div class="mb-3">
             <label asp-for="SiteFolderName">@sr["Site Folder Name"]</label>
             <div class="input-group">
                 <div class="input-group-prepend">
@@ -41,7 +41,7 @@
     }
     else if (useHostTenants)
     {
-        <div class="form-group">
+        <div class="mb-3">
             <label asp-for="HostName">@sr["Host Name"]</label>
             <input asp-for="HostName" class="form-control" />
             <span asp-validation-for="HostName" class="invalid-feedback"></span>
@@ -52,26 +52,26 @@
                asp-route-slp="ReturnPageNumber">@sr["Domain Mappings"]</a>
         </div>
     }
-    <div class="form-group">
+    <div class="mb-3">
         <label asp-for="TimeZoneId">@sr["Time Zone"]</label>
         <select asp-for="TimeZoneId" asp-items="Model.AllTimeZones" class="form-control"></select>
         <span asp-validation-for="TimeZoneId" class="invalid-feedback"></span>
     </div>
     @if (Model.AvailableThemes.Count > 0)
     {
-        <div class="form-group">
+        <div class="mb-3">
             <label asp-for="Theme">@sr["Theme"]</label>
             <select id="Layout" asp-for="Theme" asp-items="Model.AvailableThemes" class="form-control"></select>
             <span asp-validation-for="Theme" class="invalid-feedback"></span>
         </div>
     }
-    <div class="form-group">
+    <div class="mb-3">
         <div class="form-check">
             <input asp-for="IsClosed" class="form-check-input" />
             <label asp-for="IsClosed" class="form-check-label">@sr["Close Site To Public"]</label>
         </div>
     </div>
-    <div class="form-group">
+    <div class="mb-3">
         <label asp-for="ClosedMessage">@sr["Closed Message"]</label>
         <textarea class="form-control" rows="5" asp-for="ClosedMessage"
                   data-ckeditor-unobtrusive=""
@@ -87,32 +87,32 @@
     {
         <p>@sr["Note that this installation is using related sites mode, so any new sites will use the same users and roles as the master site. Therefore the administrative user you are creating here will not really be able to login. The purpose of this user is just as a fail safe measure in case you later change the configuration to not use related sites mode, then you would be able to login with this account."]</p>
     }
-    <div class="form-group">
+    <div class="mb-3">
         <label asp-for="Email">@sr["Email"]</label>
         <input asp-for="Email" class="form-control" />
         <span asp-validation-for="Email" class="invalid-feedback"></span>
     </div>
-    <div class="form-group">
+    <div class="mb-3">
         <label asp-for="LoginName">@sr["Login Name"]</label>
         <input asp-for="LoginName" class="form-control" />
         <span asp-validation-for="LoginName" class="invalid-feedback"></span>
     </div>
-    <div class="form-group">
+    <div class="mb-3">
         <label asp-for="DisplayName">@sr["Display Name"]</label>
         <input asp-for="DisplayName" class="form-control" />
         <span asp-validation-for="DisplayName" class="invalid-feedback"></span>
     </div>
-    <div class="form-group">
+    <div class="mb-3">
         <label asp-for="Password">@sr["Password"]</label>
         <input asp-for="Password" type="password" class="form-control" />
         <span asp-validation-for="Password" class="invalid-feedback"></span>
     </div>
-    <div class="form-group">
+    <div class="mb-3">
         <label asp-for="ConfirmPassword">@sr["Confirm Password"]</label>
         <input asp-for="ConfirmPassword" type="password" class="form-control" />
         <span asp-validation-for="ConfirmPassword" class="invalid-feedback"></span>
     </div>
-    <div class="form-group">
+    <div class="mb-3">
         <button name="submit" type="submit" class="btn btn-primary" data-disabled-text='@sr["Working..."]' data-enabled-text='@sr["Save"]'>@sr["Save"]</button>
     </div>
 </form>

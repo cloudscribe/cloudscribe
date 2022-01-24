@@ -23,17 +23,17 @@
     <input asp-for="CountryId" type="hidden" />
     <input asp-for="ReturnPageNumber" type="hidden" />
     <input asp-for="CountryListReturnPageNumber" type="hidden" />
-    <div class="form-group">
+    <div class="mb-3">
         <label asp-for="Name">@sr["Name"]</label>
         <input asp-for="Name" class="form-control" />
         <span asp-validation-for="Name" class="invalid-feedback"></span>
     </div>
-    <div class="form-group">
+    <div class="mb-3">
         <label asp-for="Code">@sr["Code"]</label>
         <input asp-for="Code" class="form-control" />
         <span asp-validation-for="Code" class="invalid-feedback"></span>
     </div>
-    <div class="form-group">
+    <div class="mb-3">
         <a class="btn btn-primary" asp-action="StateListPage"
            asp-controller="CoreData"
            asp-route-countryId="@Model.CountryId"
@@ -62,7 +62,7 @@
                 <div class="modal-content">
                     <div class="modal-header">
                         <h4 class="modal-title" id="confirmDeleteHeading">@sr["Confirm Delete"]</h4>
-                        <button type="button" class="close" data-bs-dismiss="modal" aria-label='@sr["Close"]'><span aria-hidden="true">&times;</span></button>
+                        <button type="button" data-bs-dismiss="modal" class="btn-close" aria-label='@sr["Close"]'></button>
                     </div>
                     <div class="modal-body">
                         @string.Format(sr["Are you sure you want to delete {0}?"], Model.Name)

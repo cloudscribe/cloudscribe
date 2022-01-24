@@ -9,7 +9,7 @@
 
     var isChecked = (!string.IsNullOrWhiteSpace(currentVal) && currentVal.Contains("true"));
 }
-<div class="form-group @Model.CssClass">
+<div class="mb-3 @Model.CssClass">
     <div class="form-check">
         <input type="hidden" name="@Model.Key" value="false" />
         @if (isChecked)

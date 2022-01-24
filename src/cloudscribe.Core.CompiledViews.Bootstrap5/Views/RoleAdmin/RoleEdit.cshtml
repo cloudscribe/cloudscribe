@@ -15,13 +15,13 @@
     <input asp-for="SiteId" type="hidden" />
     <input asp-for="NormalizedRoleName" type="hidden" />
     <div asp-validation-summary="All" class="text-danger"></div>
-    <div class="form-group">
+    <div class="mb-3">
         <label asp-for="RoleName">@sr["Role Name"]</label>
         <input asp-for="RoleName" class="form-control" />
         <span asp-validation-for="RoleName" class="invalid-feedback"></span>
         @Html.ValidationMessage("roleerror", new { @class = "text-danger" })
     </div>
-    <div class="form-group">
+    <div class="mb-3">
         <button name="submit" type="submit" class="btn btn-primary" data-disabled-text='@sr["Working..."]' data-enabled-text='@sr["Save"]'>@sr["Save"]</button>
         @if (Model.IsDeletable(setupOptions.RolesThatCannotBeDeleted))
         {
@@ -40,7 +40,7 @@
             <div class="modal-content">
                 <div class="modal-header">
                     <h4 class="modal-title" id="confirmDeleteHeading">@sr["Confirm Delete"]</h4>
-                    <button type="button" class="close" data-bs-dismiss="modal" aria-label='@sr["Close"]'><span aria-hidden="true">&times;</span></button>
+                    <button type="button" data-bs-dismiss="modal" class="btn-close" aria-label='@sr["Close"]'></button>
                 </div>
                 <div class="modal-body">
                     @string.Format(sr["Are you sure you want to delete {0}?"], Model.RoleName)

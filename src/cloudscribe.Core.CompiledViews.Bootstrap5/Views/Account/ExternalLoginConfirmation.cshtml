@@ -24,19 +24,19 @@
         </div>
 
     }
-    <div class="form-group">
+    <div class="mb-3">
         <label asp-for="Email">@sr["Email"]</label>
         <input asp-for="Email" class="form-control" />
         <span asp-validation-for="Email" class="invalid-feedback"></span>
     </div>
     @if (!string.IsNullOrWhiteSpace(Model.RegistrationAgreement))
     {
-        <div class="form-group">
+        <div class="mb-3">
             <div class=" agreementcontainer">
                 @Html.Raw(Model.RegistrationAgreement)
             </div>
         </div>
-        <div class="form-group">
+        <div class="mb-3">
             <input type="hidden" asp-for="AgreementRequired" />
             <div class="form-check">
                 <input asp-for="AgreeToTerms" class="form-check-input" data-val-enforcetrue='@sr["You must agree to the terms"]' />
@@ -50,7 +50,7 @@
     {
         <input name="AgreeToTerms" value="true" type="hidden" />
     }
-    <div class="form-group">
+    <div class="mb-3">
         <button name="submit" type="submit" class="btn btn-primary">@sr["Register"]</button>
     </div>
 </form>

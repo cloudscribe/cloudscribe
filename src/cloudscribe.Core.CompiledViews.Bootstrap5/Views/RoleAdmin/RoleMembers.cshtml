@@ -59,7 +59,7 @@
                             <div class="modal-content">
                                 <div class="modal-header">
                                     <h4 class="modal-title" id="@("confirmHeading" + item.Id)">@sr["Confirm Remove User From Role"]</h4>
-                                    <button type="button" class="close" data-bs-dismiss="modal" aria-label='@sr["Close"]'><span aria-hidden="true">&times;</span></button>
+                                    <button type="button" data-bs-dismiss="modal" class="btn-close" aria-label='@sr["Close"]'></button>
                                 </div>
                                 <div class="modal-body">
                                     @string.Format(sr["Are you sure you want to remove {0} from the role {1}?"], item.DisplayName, Model.Role.RoleName)
@@ -118,7 +118,7 @@
         <div class="modal-content">
             <div class="modal-header">
                 <h4 class="modal-title" id="confirmHeading">@sr["Confirm Add User To Role"]</h4>
-                <button type="button" class="close" data-bs-dismiss="modal" aria-label='@sr["Close"]'><span aria-hidden="true">&times;</span></button>
+                <button type="button" data-bs-dismiss="modal" class="btn-close" aria-label='@sr["Close"]'></button>
             </div>
             <div class="modal-body">
                 <span id="spnMessage"></span>

@@ -27,18 +27,18 @@
     <div asp-validation-summary="All" class="text-danger"></div>
     <input asp-for="SiteId" type="hidden" />
     <input asp-for="ReturnPageNumber" type="hidden" />
-    <div class="form-group">
+    <div class="mb-3">
         <label asp-for="SiteName">@sr["Site Name"]</label>
         <input asp-for="SiteName" class="form-control" />
         <span asp-validation-for="SiteName" class="invalid-feedback"></span>
     </div>
-    <div class="form-group">
+    <div class="mb-3">
         <label asp-for="AliasId">@sr["AliasId"]</label>
         <span class="form-control">@Model.AliasId</span>
     </div>
     @if (useFolderTenants)
     {
-        <div class="form-group">
+        <div class="mb-3">
             <label asp-for="SiteFolderName">@sr["Site Folder Name"]</label>
             <div class="input-group">
                 <div class="input-group-prepend">
@@ -57,7 +57,7 @@
     }
     else if (useHostTenants)
     {
-        <div class="form-group">
+        <div class="mb-3">
             <label asp-for="HostName">@sr["Host Name"]</label>
             <input asp-for="HostName" class="form-control" />
             <span asp-validation-for="HostName" class="invalid-feedback"></span>
@@ -68,20 +68,20 @@
                asp-route-slp="ReturnPageNumber">@sr["Domain Mappings"]</a>
         </div>
     }
-    <div class="form-group">
+    <div class="mb-3">
         <label asp-for="TimeZoneId">@sr["Time Zone"]</label>
         <select asp-for="TimeZoneId" asp-items="Model.AllTimeZones" class="form-control"></select>
         <span asp-validation-for="TimeZoneId" class="invalid-feedback"></span>
     </div>
     @if (Model.AvailableThemes.Count > 0)
     {
-        <div class="form-group">
+        <div class="mb-3">
             <label asp-for="Theme">@sr["Theme"]</label>
             <select id="Layout" asp-for="Theme" asp-items="Model.AvailableThemes" class="form-control"></select>
             <span asp-validation-for="Theme" class="invalid-feedback"></span>
         </div>
     }
-    <div class="form-group" style="height:300px">
+    <div class="mb-3" style="height:300px">
         <label>@sr["Site Logo"]</label>
         <div class="d-flex align-items-stretch mb-2">
             <div class="cs-crop-container" style="@themeSettings.GetNavbarStyle()">
@@ -128,7 +128,7 @@
         </div>
         <input id="imgUrlFull" asp-for="LogoUrl" type="hidden" />
     </div>
-    <div class="form-group">
+    <div class="mb-3">
         <div class="form-check">
             <input asp-for="ShowSiteNameLink" class="form-check-input" />
             <label asp-for="ShowSiteNameLink" class="form-check-label">@sr["Show Site Name Link in Header"]</label>
@@ -139,7 +139,7 @@
     {
 
         <p>@sr["Please note that adding header or footer content can mess up the layout of your page and may require CSS changes to accomodate your content."]</p>
-        <div class="form-group">
+        <div class="mb-3">
             <label asp-for="HeaderContent">@sr["Header Content"]</label>
             <textarea class="form-control" rows="5" asp-for="HeaderContent"
                       data-ckeditor-unobtrusive=""
@@ -151,7 +151,7 @@
                       data-ckeditor-config-height="100"></textarea>
             <span asp-validation-for="ClosedMessage" class="invalid-feedback"></span>
         </div>
-        <div class="form-group">
+        <div class="mb-3">
             <label asp-for="FooterContent">@sr["Footer Content"]</label>
             <textarea class="form-control" rows="5" asp-for="FooterContent"
                       data-ckeditor-unobtrusive=""
@@ -168,7 +168,7 @@
 
     @if (Model.AvailableCultures.Count > 0)
     {
-        <div class="form-group">
+        <div class="mb-3">
             <label asp-for="ForcedCulture">@sr["Forced Culture"]</label>
             <select asp-for="ForcedCulture" asp-items="Model.AvailableCultures" class="form-control"></select>
             <span asp-validation-for="ForcedCulture" class="invalid-feedback"></span>
@@ -176,29 +176,29 @@
     }
     @if (Model.AvailableUICultures.Count > 0)
     {
-        <div class="form-group">
+        <div class="mb-3">
             <label asp-for="ForcedUICulture">@sr["Forced UI Culture"]</label>
             <select asp-for="ForcedUICulture" asp-items="Model.AvailableUICultures" class="form-control"></select>
             <span asp-validation-for="ForcedUICulture" class="invalid-feedback"></span>
         </div>
     }
-    <div class="form-group">
+    <div class="mb-3">
         <label asp-for="GoogleAnalyticsProfileId">@sr["Google Analytics Tracking Id"]</label>
         <input asp-for="GoogleAnalyticsProfileId" class="form-control" />
         <span asp-validation-for="GoogleAnalyticsProfileId" class="invalid-feedback"></span>
     </div>
-    <div class="form-group">
+    <div class="mb-3">
         <label asp-for="AddThisProfileId">@sr["AddThis.com ProfileId"]</label>
         <input asp-for="AddThisProfileId" class="form-control" />
         <span asp-validation-for="AddThisProfileId" class="invalid-feedback"></span>
     </div>
-    <div class="form-group">
+    <div class="mb-3">
         <div class="form-check">
             <input asp-for="IsClosed" class="form-check-input" />
             <label asp-for="IsClosed" class="form-check-label">@sr["Close Site To Public"]</label>
         </div>
     </div>
-    <div class="form-group">
+    <div class="mb-3">
         <label asp-for="ClosedMessage">@sr["Closed Message"]</label>
         <textarea class="form-control" rows="5" asp-for="ClosedMessage"
                   data-ckeditor-unobtrusive=""
@@ -209,7 +209,7 @@
                   data-ckeditor-config-imagebrowseurl="@ckOptions.ImageBrowseUrl"></textarea>
         <span asp-validation-for="ClosedMessage" class="invalid-feedback"></span>
     </div>
-    <div class="form-group">
+    <div class="mb-3">
         <button id="btnSave" name="submit" type="submit" class="btn btn-primary" data-disabled-text='@sr["Working..."]' data-enabled-text='@sr["Save"]'>@sr["Save"]</button>
         @if ((Model.ShowDelete) && (Model.SiteId != Guid.Empty))
         {
@@ -231,7 +231,7 @@
                 <div class="modal-content">
                     <div class="modal-header">
                         <h4 class="modal-title" id="confirmDeleteHeading">@sr["Confirm Delete"]</h4>
-                        <button type="button" class="close" data-bs-dismiss="modal" aria-label='@sr["Close"]'><span aria-hidden="true">&times;</span></button>
+                        <button type="button" data-bs-dismiss="modal" class="btn-close" aria-label='@sr["Close"]'></button>
                     </div>
                     <div class="modal-body">
                         @string.Format(sr["Are you sure you want to delete the site {0} and all related data? You cannot undo this action."], Model.SiteName)
@@ -249,7 +249,7 @@
     <div class="modal-dialog modal-lg" style="height:99%;min-width:99%!important;">
         <div class="modal-content">
             <div class="modal-header">
-                <button type="button" class="close" data-bs-dismiss="modal" aria-hidden="true" title="Close"><span aria-hidden="true">&times;</span></button>
+                <button type="button" data-bs-dismiss="modal" class="btn-close" aria-label='@sr["Close"]'></button>
             </div>
             <iframe id="frFileDialog" frameborder="0" style="overflow:hidden;height:100%;width:100%;min-height: 650px;"></iframe>
         </div>

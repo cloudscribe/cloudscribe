@@ -10,19 +10,19 @@
 <form method="post" class="form-horizontal" role="form" asp-antiforgery="true" data-submit-once="true">
     <div asp-validation-summary="All" class="text-danger"></div>
     <input asp-for="SiteId" type="hidden" />
-    <div class="form-group">
+    <div class="mb-3">
         <div class="form-check">
             <input asp-for="UseEmailForLogin" class="form-check-input" />
             <label asp-for="UseEmailForLogin" class="form-check-label">@sr["Allow email for login in addition to username"]</label>
         </div>
     </div>
-    <div class="form-group">
+    <div class="mb-3">
         <div class="form-check">
             <input asp-for="AllowUserToChangeEmail" class="form-check-input" />
             <label asp-for="AllowUserToChangeEmail" class="form-check-label">@sr["Allow user to change email address"]</label>
         </div>
     </div>
-    <div class="form-group">
+    <div class="mb-3">
         <div class="form-check">
             <input asp-for="AllowNewRegistration" class="form-check-input" />
             <label asp-for="AllowNewRegistration" class="form-check-label">@sr["Allow new registrations"]</label>
@@ -30,37 +30,37 @@
     </div>
     @if (Model.EmailIsConfigured)
     {
-        <div class="form-group">
+        <div class="mb-3">
             <div class="form-check">
                 <input asp-for="RequireConfirmedEmail" class="form-check-input" />
                 <label asp-for="RequireConfirmedEmail" class="form-check-label">@sr["Require confirmed email"]</label>
             </div>
         </div>
     }
-    <div class="form-group">
+    <div class="mb-3">
         <div class="form-check">
             <input asp-for="RequireApprovalBeforeLogin" class="form-check-input" />
             <label asp-for="RequireApprovalBeforeLogin" class="form-check-label">@sr["Require approval before login"]</label>
         </div>
     </div>
-    <div class="form-group">
+    <div class="mb-3">
         <div class="form-check">
             <input asp-for="SingleBrowserSessions" class="form-check-input" />
             <label asp-for="SingleBrowserSessions" class="form-check-label">@sr["Enforce one active browser session per user"]</label>
         </div>
     </div>
-    <div class="form-group">
+    <div class="mb-3">
         <div class="form-check">
             <input asp-for="Require2FA" class="form-check-input" />
             <label asp-for="Require2FA" class="form-check-label">@sr["Require users to configure 2 factor authentication. Recommended ONLY for extreme security needs not for most sites, because a user must install an authenticator app on their phone and take a picture of the QR code using the authenticator app to get an access code. Note this will only be enforced when using https and it won't be enforced for users in Administrators role. Presumably administrators can and will voluntarily enable 2 factor authentication, but we don't want administrators to get locked out."]</label>
         </div>
     </div>
-    <div class="form-group">
+    <div class="mb-3">
         <label asp-for="AccountApprovalEmailCsv">@sr["Email addresses (csv) to notify of new users"]</label>
         <input asp-for="AccountApprovalEmailCsv" class="form-control" />
         <span asp-validation-for="AccountApprovalEmailCsv" class="invalid-feedback"></span>
     </div>
-    <div class="form-group">
+    <div class="mb-3">
         <div class="form-check">
             <input asp-for="AllowPersistentLogin" class="form-check-input" />
             <label asp-for="AllowPersistentLogin" class="form-check-label">@sr["Allow persistent login"]</label>
@@ -81,7 +81,7 @@
             }
 
         </p>
-        <div class="form-group">
+        <div class="mb-3">
             <div class="form-check">
                 <input asp-for="DisableDbAuth" class="form-check-input" />
                 <label asp-for="DisableDbAuth" class="form-check-label">@sr["Disable database authentication"]</label>
@@ -89,7 +89,7 @@
         </div>
     }
 
-    <div class="form-group">
+    <div class="mb-3">
         <button name="submit" type="submit" class="btn btn-primary" data-disabled-text='@sr["Working..."]' data-enabled-text='@sr["Save"]'>@sr["Save"]</button>
     </div>
 </form>

@@ -3,7 +3,7 @@
 <form class="form-inline mb-2" role="form" asp-controller="UserAdmin" asp-action="AddClaim" data-submit-once="true">
     <input asp-for="UserId" type="hidden" />
     <input asp-for="SiteId" type="hidden" />
-    <div class="form-group">
+    <div class="mb-3">
         <input name="claimType" type="text" class="form-control" placeholder="Claim Type" />
         <input name="claimValue" type="text" class="form-control" placeholder="Claim Value" /> 
     </div>
@@ -38,7 +38,7 @@
                                     <div class="modal-content">
                                         <div class="modal-header">
                                             <h4 class="modal-title" id="@("confirmDeleteHeading" + Model.UserClaims.IndexOf(item))">@sr["Confirm Delete"]</h4>
-                                            <button type="button" class="close" data-bs-dismiss="modal" aria-label='@sr["Close"]'><span aria-hidden="true">&times;</span></button>
+                                            <button type="button" data-bs-dismiss="modal" class="btn-close" aria-label='@sr["Close"]'></button>
                                         </div>
                                         <div class="modal-body">
                                             @string.Format(sr["Are you sure you want to remove the claim {0}?"], item.Type)
