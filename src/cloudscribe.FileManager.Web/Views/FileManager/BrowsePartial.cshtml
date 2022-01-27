@@ -46,7 +46,7 @@
         </div>
         <div>
             <form id="frmNewFolder" asp-action="CreateFolder" asp-controller="FileManager" class="form-inline">
-                <div class="form-group">
+                <div class="mb-3">
                     <input type="text" class="form-control" disabled id="newFolderCurrentDir" name="newFolderCurrentDir" value="@Model.InitialVirtualPath" />
                     <input type="hidden" id="hdnCurrentVirtualPath" name="currentVirtualPath" value="@Model.InitialVirtualPath" />
                     <input type="text" class="form-control" id="newFolderName" name="newFolderName" />
@@ -62,7 +62,7 @@
                         <div class="modal-content">
                             <div class="modal-header">
                                 <h4 class="modal-title" id="confirmRenameFolderHeading">@sr["Confirm Rename Folder"]</h4>
-                                <button type="button" class="close" data-bs-dismiss="modal" aria-label='@sr["Close"]'><span aria-hidden="true">&times;</span></button>
+                                <button type="button" data-bs-dismiss="modal" class="btn-close" aria-label='@sr["Close"]'></button>
                             </div>
                             <div id="renameFolderModalBody" class="modal-body">
 
@@ -83,7 +83,7 @@
                         <div class="modal-content">
                             <div class="modal-header">
                                 <h4 class="modal-title" id="confirmDeleteFolderHeading">@sr["Confirm Delete"]</h4>
-                                <button type="button" class="close" data-bs-dismiss="modal" aria-label='@sr["Close"]'><span aria-hidden="true">&times;</span></button>
+                                <button type="button" data-bs-dismiss="modal" class="btn-close" aria-label='@sr["Close"]'></button>
                             </div>
                             <div id="deleteFolderModalBody" class="modal-body">
 
@@ -105,7 +105,7 @@
                         <div class="modal-content">
                             <div class="modal-header">
                                 <h4 class="modal-title" id="confirmRenameFileHeading">@sr["Confirm Rename File"]</h4>
-                                <button type="button" class="close" data-bs-dismiss="modal" aria-label='@sr["Close"]'><span aria-hidden="true">&times;</span></button>
+                                <button type="button" data-bs-dismiss="modal" class="btn-close" aria-label='@sr["Close"]'></button>
                             </div>
                             <div id="renameFileModalBody" class="modal-body">
 
@@ -127,7 +127,7 @@
                         <div class="modal-content">
                             <div class="modal-header">
                                 <h4 class="modal-title" id="confirmDeleteFileHeading">@sr["Confirm Delete"]</h4>
-                                <button type="button" class="close" data-bs-dismiss="modal" aria-label='@sr["Close"]'><span aria-hidden="true">&times;</span></button>
+                                <button type="button" data-bs-dismiss="modal" class="btn-close" aria-label='@sr["Close"]'></button>
                             </div>
                             <div id="deleteFileModalBody" class="modal-body">
 
