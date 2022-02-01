@@ -45,18 +45,35 @@
             @sr["This image file is large and should not be used directly in content, consider using a resized version."]
         </div>
         <div>
-            <form id="frmNewFolder" asp-action="CreateFolder" asp-controller="FileManager" class="form-inline">
-                <div class="mb-3">
-                    <input type="text" class="form-control" disabled id="newFolderCurrentDir" name="newFolderCurrentDir" value="@Model.InitialVirtualPath" />
-                    <input type="hidden" id="hdnCurrentVirtualPath" name="currentVirtualPath" value="@Model.InitialVirtualPath" />
-                    <input type="text" class="form-control" id="newFolderName" name="newFolderName" />
+
+            <form id="frmNewFolder" asp-action="CreateFolder" asp-controller="FileManager">
+                <div class="row align-items-left mt-1 mb-3 gx-1">
+                    <div class="col-2 w-auto align-self-center">
+                        <input type="text" class="form-control" disabled id="newFolderCurrentDir" name="newFolderCurrentDir" value="@Model.InitialVirtualPath" />
+                        <input type="hidden" id="hdnCurrentVirtualPath" name="currentVirtualPath" value="@Model.InitialVirtualPath" />
+                    </div>
+                    <div class="col-2 w-auto align-self-center">
+                        <input type="text" class="form-control" id="newFolderName" name="newFolderName" />
+                    </div>
+                    <div class="col-2 w-auto align-self-center gx-1">
+                        <button id="btnCreateFolder" type="submit" class="btn btn-primary"><i class="@icons.Folder" aria-hidden="true"></i> @sr["Create Folder"]</button>
+                    </div>
                 </div>
-                <button id="btnCreateFolder" type="submit" class="btn btn-primary"><i class="@icons.Folder" aria-hidden="true"></i> @sr["Create Folder"]</button>
             </form>
-            <form id="frmRenameFolder" asp-action="RenameFolder" asp-controller="FileManager" class="form-inline collapse">
-                <input type="hidden" id="folderToRename" name="folderToRename" />
-                <input type="text" class="form-control" id="newNameSegment" name="newNameSegment" />
-                <button id="btnRenameFolderPrompt" type="button" class="btn btn-danger btn-ok">@sr["Rename Folder"]</button>
+
+
+            <form id="frmRenameFolder" asp-action="RenameFolder" asp-controller="FileManager" class="collapse">
+                <div class="row align-items-left mt-1 mb-3 gx-1">
+                    <div class="col-2 w-auto align-self-center">
+                        <input type="hidden" id="folderToRename" name="folderToRename" />
+                        <input type="text" class="form-control" id="newNameSegment" name="newNameSegment" />
+                    </div>
+
+                    <div class="col-2 w-auto align-self-center gx-1">
+                        <button id="btnRenameFolderPrompt" type="button" class="btn btn-danger btn-ok">@sr["Rename Folder"]</button>
+                    </div>
+                </div>
+
                 <div id="mdlRenameFolder" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="confirmRenameFolderHeading">
                     <div class="modal-dialog modal-sm" role="document">
                         <div class="modal-content">
@@ -75,6 +92,8 @@
                     </div>
                 </div>
             </form>
+
+
             <form id="frmDeleteFolder" asp-action="DeleteFolder" asp-controller="FileManager" class="form-inline collapse">
                 <input type="hidden" id="folderToDelete" name="folderToDelete" />
                 <button id="btnDeleteFolderPrompt" type="button" class="btn btn-danger btn-ok"><i class="@icons.Delete" aria-hidden="true"></i> @sr["Delete Folder"]</button>
