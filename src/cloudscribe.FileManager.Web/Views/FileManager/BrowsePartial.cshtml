@@ -115,29 +115,36 @@
                     </div>
                 </div>
             </form>
-            <form id="frmRenameFile" asp-action="RenameFile" asp-controller="FileManager" class="form-inline collapse">
-                <input type="hidden" id="fileToRename" name="fileToRename" />
-                <input type="text" class="form-control" id="newFileNameSegment" name="newNameSegment" style="min-width:50%;" />
-                <button id="btnRenameFilePrompt" type="button" class="btn btn-primary btn-ok">@sr["Rename File"]</button>
-                <div id="mdlRenameFile" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="confirmRenameFileHeading">
-                    <div class="modal-dialog modal-sm" role="document">
-                        <div class="modal-content">
-                            <div class="modal-header">
-                                <h4 class="modal-title" id="confirmRenameFileHeading">@sr["Confirm Rename File"]</h4>
-                                <button type="button" data-bs-dismiss="modal" class="btn-close" aria-label='@sr["Close"]'></button>
-                            </div>
-                            <div id="renameFileModalBody" class="modal-body">
+            <form id="frmRenameFile" asp-action="RenameFile" asp-controller="FileManager" class="collapse">
+                <div class="row align-items-left mt-1 mb-1 gx-2">
+                    <div class="col-2 w-auto align-self-center">
+                        <input type="hidden" id="fileToRename" name="fileToRename" />
+                        <input type="text" class="form-control" id="newFileNameSegment" name="newNameSegment" style="min-width:50%;" />
+                        <div id="mdlRenameFile" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="confirmRenameFileHeading">
+                            <div class="modal-dialog modal-sm" role="document">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h4 class="modal-title" id="confirmRenameFileHeading">@sr["Confirm Rename File"] +</h4>
+                                        <button type="button" data-bs-dismiss="modal" class="btn-close" aria-label='@sr["Close"]'></button>
+                                    </div>
+                                    <div id="renameFileModalBody" class="modal-body">
 
-                            </div>
-                            <div class="modal-footer">
-                                <button type="button" class="btn btn-primary" data-bs-dismiss="modal">@sr["Cancel"]</button>
-                                <button id="btnRenameFile" type="button" class="btn btn-danger btn-ok">@sr["Rename File"]</button>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-primary" data-bs-dismiss="modal">@sr["Cancel"]</button>
+                                        <button id="btnRenameFile" type="button" class="btn btn-danger btn-ok">@sr["Rename File"]</button>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
+                    <div class="col-3 w-auto align-self-center">
+                        <button id="btnRenameFilePrompt" type="button" class="btn btn-primary btn-ok">@sr["Rename File"]</button>
+                    </div>
                 </div>
             </form>
-            <form id="frmDeleteFile" asp-action="DeleteFile" asp-controller="FileManager" class="form-inline collapse">
+
+            <form id="frmDeleteFile" asp-action="DeleteFile" asp-controller="FileManager" class="collapse">
                 <input type="hidden" id="fileToDelete" name="fileToDelete" />
                 <button id="btnDeleteFilePrompt" type="button" class="btn btn-danger btn-ok"><i class="@icons.Delete" aria-hidden="true"></i> @sr["Delete File"]</button>
                 <a id="lnkDownloadFile" href="#" target="_blank" class="btn btn-outline-primary collapse" style="display:inline-block;"><i class="@icons.Download" aria-hidden="true"></i> @sr["Download"]</a>

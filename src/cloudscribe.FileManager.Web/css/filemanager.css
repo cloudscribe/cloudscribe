@@ -100,12 +100,6 @@ label.btn {
   margin-bottom: .5rem;
 }
 
-.docs-toggles > .btn,
-.docs-toggles > .btn-group,
-.docs-toggles > .dropdown {
-  margin-bottom: .5rem;
-}
-
 .docs-tooltip {
   display: block;
   margin: -.5rem -.75rem;
