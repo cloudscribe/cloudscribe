@@ -30,14 +30,14 @@
                             <div class="modal-dialog modal-sm" role="document">
                                 <div class="modal-content">
                                     <div class="modal-header">
-                                        <button type="button" data-bs-dismiss="modal" class="btn-close" aria-label='@sr["Close"]'></button>
                                         <h4 class="modal-title" id="@("confirmRoleDeleteHeading" + Model.UserRoles.IndexOf(item))">@sr["Confirm Delete"]</h4>
+                                        <button type="button" data-bs-dismiss="modal" class="btn-close float-end" aria-label='@sr["Close"]'></button>
                                     </div>
                                     <div class="modal-body">
                                         @string.Format(sr["Are you sure you want to remove the role {0}?"], item)
                                     </div>
                                     <div class="modal-footer">
-                                        <button type="button" class="btn btn-default" data-bs-dismiss="modal">@sr["Cancel"]</button>
+                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">@sr["Cancel"]</button>
                                         <input type="submit" value='@sr["Remove"]' class="btn btn-danger btn-ok" />
                                     </div>
                                 </div>
