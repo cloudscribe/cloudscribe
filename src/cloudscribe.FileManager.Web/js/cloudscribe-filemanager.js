@@ -47,7 +47,9 @@
             var name = url.substring(url.lastIndexOf("/"));
             $("#croppedFileName").val(name);
             $('#origFileName').val(name);
-            $('#lnkCrop').trigger('click');
+            // $('#lnkCrop').trigger('click');
+            $('#lnkCrop')[0].click();
+
             //alert('ready to crop');
         },
         clearServerCropImage: function () {
@@ -241,7 +243,7 @@
 
         },
         notify: function (message, cssClass) {
-            $('#alert_placeholder').html('<div class="alert ' + cssClass + '"><a class="close" data-dismiss="alert">×</a><span>' + message + '</span></div>');
+            $('#alert_placeholder').html('<div class="alert ' + cssClass + '"><button type="button" data-bs-dismiss="alert" class="btn-close me-2" style="float:right" aria-label="Close"></button><span>' + message + '</span></div>');
         },
         addFileToList: function (data, fileList, index, file) {
             var d = $("<span class='far fa-trash-alt' aria-role='button' title='Remove'></span>").click(function () {
@@ -866,7 +868,7 @@
 
 
             // Tooltip
-            $('[data-toggle="tooltip"]').tooltip();
+            $('[data-bs-toggle="tooltip"]').tooltip();
 
 
             // Cropper
@@ -1042,6 +1044,7 @@
 
                                 // Bootstrap's Modal
                                 $('#getCroppedCanvasModal').modal().find('.modal-body').html(result);
+                                $('#getCroppedCanvasModal').modal('show');
 
                                 if (!cropManager.saveLocalButton.hasClass('disabled')) {
                                     cropManager.saveLocalButton.attr('href', result.toDataURL('image/jpeg'));
@@ -1211,7 +1214,7 @@
         }
     };
 
-    $('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
+    $('a[data-bs-toggle="tab"]').on('shown.bs.tab', function (e) {
         var target = $(e.target).attr("href"); // activated tab
 
         if (target === "#tabCrop") {

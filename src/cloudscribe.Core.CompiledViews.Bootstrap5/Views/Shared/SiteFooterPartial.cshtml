@@ -1,0 +1,10 @@
+﻿@inject ISiteContextResolver siteResolver
+@inject ICoreThemeHelper themeHelper
+@{
+    var Tenant = await siteResolver.ResolveSite(Context.Request.Host.Host, Context.Request.Path);
+    var themeSettings = themeHelper.GetThemeSettings();
+}
+@if (Tenant != null && themeSettings.EnableHeaderFooterEditingInSiteSettings)
+{
+        @Html.Raw(Tenant.FooterContent)
+}

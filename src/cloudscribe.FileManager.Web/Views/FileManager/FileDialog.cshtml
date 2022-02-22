@@ -63,15 +63,15 @@
     <h3>@heading</h3>
     <ul class="nav nav-tabs" role="tablist">
         <li id="tab1" class="nav-item" role="tab">
-            <a href="#tabBrowse" data-toggle="tab" class="nav-link active"><i class="@icons.Browse" aria-hidden="true"></i>&nbsp;@sr["Browse"]</a>
+            <a href="#tabBrowse" data-bs-toggle="tab" class="nav-link active"><i class="@icons.Browse" aria-hidden="true"></i>&nbsp;@sr["Browse"]</a>
         </li>
         <li id="tab2" class="nav-item" role="tab">
-            <a href="#tabUpload" class="nav-link" data-toggle="tab"><i class="@icons.Upload" aria-hidden="true"></i>&nbsp;@sr["Upload"]</a>
+            <a href="#tabUpload" class="nav-link" data-bs-toggle="tab"><i class="@icons.Upload" aria-hidden="true"></i>&nbsp;@sr["Upload"]</a>
         </li>
         @if (Model.Type == "image")
         {
             <li id="tab3" class="nav-item" role="tab">
-                <a id="lnkCrop" class="nav-link" href="#tabCrop" data-toggle="tab"><i class="@icons.Cut" aria-hidden="true"></i>&nbsp;@sr["Crop"]</a>
+                <a id="lnkCrop" class="nav-link" href="#tabCrop" data-bs-toggle="tab"><i class="@icons.Cut" aria-hidden="true"></i>&nbsp;@sr["Crop"]</a>
             </li>
         }
 

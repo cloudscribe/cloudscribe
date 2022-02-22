@@ -1,0 +1,45 @@
+﻿@model cloudscribe.Core.Web.ViewModels.CoreData.GeoCountryViewModel
+@inject IStringLocalizer<CloudscribeCore> sr
+@{
+    ViewData["Title"] = sr["Country Detail"];
+}
+<h2>@ViewData["Title"]</h2>
+<div>
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.Id)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Id)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Name)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Name)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.ISOCode2)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.ISOCode2)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.ISOCode3)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.ISOCode3)
+        </dd>
+
+    </dl>
+</div>
+<p>
+    <a  asp-action="Index">@sr["Back To List"]</a>  
+</p>

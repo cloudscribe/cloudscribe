@@ -1,0 +1,107 @@
+﻿@model cloudscribe.Core.Web.ViewModels.UserAdmin.UserListViewModel
+@inject IStringLocalizer<CloudscribeCore> sr
+@inject cloudscribe.DateTimeUtils.ITimeZoneHelper tzHelper
+@inject ICoreThemeHelper themeHelper
+@{
+    var totalUsersMessage = string.Format(sr["{0} - Users"], Model.UserList.TotalItems);
+    var themeSettings = themeHelper.GetThemeSettings();
+    var query = Model.AlphaQuery;
+    if(string.IsNullOrWhiteSpace(query))
+    {
+        query = Model.SearchQuery;
+    }
+}
+
+<table class="table table-striped table-hover usergrid-table">
+    <tr>
+        <th>
+            <a class="btn btn-xs btn-primary" asp-action="NewUser" asp-controller="UserAdmin" asp-route-siteId="@Model.SiteId">@sr["New User"]</a>
+        </th>
+        <th>
+            <a asp-action="@Model.ActionName" asp-controller="UserAdmin"
+               asp-route-siteId="@Model.SiteId"
+               asp-route-query="@query"
+               asp-route-pagesize="@Model.UserList.PageSize"
+               asp-route-sortmode="1">@sr["Created"]</a>
+        </th>
+        <th></th>
+        <th>
+            @sr["Email/Login"]
+        </th>
+        <th>
+            <a asp-action="@Model.ActionName" asp-controller="UserAdmin"
+               asp-route-siteId="@Model.SiteId"
+               asp-route-query="@query"
+               asp-route-pagesize="@Model.UserList.PageSize"
+               asp-route-sortmode="0">@sr["Display Name"]</a>
+        </th>
+        <th>
+            @sr["First Name"]
+        </th>
+        <th>
+            <a asp-action="@Model.ActionName" asp-controller="UserAdmin"
+               asp-route-siteId="@Model.SiteId"
+               asp-route-query="@query"
+               asp-route-pagesize="@Model.UserList.PageSize"
+               asp-route-sortmode="2">@sr["Last Name"]</a>
+        </th>
+    </tr>
+    @foreach (var item in Model.UserList.Data)
+    {
+        <tr class="@((item.IsLockedOut) ? "table-danger" : null)">
+            <td class="usergrid-column1">
+                <span>
+                    <a class="btn btn-xs btn-primary" asp-action="UserEdit"
+                        asp-controller="UserAdmin"
+                        asp-route-siteId="@Model.SiteId"
+                        asp-route-userId="@item.Id">@sr["Manage"]</a>
+                </span>
+            </td>
+            <td class="text-break usergrid-column2">
+                <span>@tzHelper.ConvertToLocalTime(item.CreatedUtc, Model.TimeZoneId).ToString("g")</span>                
+            </td>
+            <td class="usergrid-column3">
+                <span><img gravatar-email="@item.Email" gravatar-enabled="@themeSettings.AllowGravatar" override-url="@item.AvatarUrl" disabled-default-url="@themeSettings.DefaultAvatarUrl" gravatar-size="30" /></span>
+            </td>
+            <td class="text-break usergrid-column4">
+                <span>@Html.DisplayFor(modelItem => item.Email) /
+                @Html.DisplayFor(modelItem => item.UserName)</span>
+            </td>
+            <td class="text-break usergrid-column5">
+                <span>
+                    <a asp-action="UserActivity" asp-controller="UserAdmin"
+                        asp-route-siteId="@Model.SiteId"
+                        asp-route-userid="@item.Id"
+                        title='@sr["Activity"]'>@item.DisplayName</a>
+                </span>
+            </td>
+            <td class="usergrid-column6">
+                <span>@Html.DisplayFor(modelItem => item.FirstName)</span>
+            </td>
+            <td class="usergrid-column7">
+                <span>@Html.DisplayFor(modelItem => item.LastName)</span>
+            </td>
+        </tr>
+    }
+</table>
+<div>
+    <div>@totalUsersMessage</div>
+    <cs-pager asp-action="@Model.ActionName" asp-controller="UserAdmin"
+              asp-route-siteId="@Model.SiteId"
+              asp-route-query="@query"
+              asp-route-sortmode="@Model.SortMode"
+              asp-route-pagesize="@Model.UserList.PageSize"
+              cs-paging-pagesize="@Model.UserList.PageSize"
+              cs-paging-pagenumber="@Model.UserList.PageNumber"
+              cs-paging-totalitems="@Model.UserList.TotalItems"
+              cs-first-page-title='@sr["First Page"]'
+              cs-last-page-title='@sr["Last Page"]'
+              cs-previous-page-title='@sr["Previous page"]'
+              cs-next-page-title='@sr["Next page"]'
+              cs-pager-ul-class="pagination d-flex flex-wrap"
+              cs-pager-li-current-class="page-item active"
+              cs-pager-li-other-class="page-item"
+              cs-pager-li-non-active-class="page-item disabled"
+              cs-pager-link-current-class="page-link"
+              cs-pager-link-other-class="page-link"></cs-pager>
+</div>

@@ -29,29 +29,63 @@
     <form id="frmUpload" method="post" enctype="multipart/form-data" asp-controller="FileManager" asp-action="AutomaticUpload">
         <input type="hidden" id="uploadCurrentDir" name="currentDir" />
 
-        <div class="form-inline">
+
+        <div class="row align-items-left mt-1 mb-3 gx-1">
+            <div class="col-2 w-auto align-self-center">
+                <div class="input-group">
+                    <div class="input-group-prepend">
+                        <label class="input-group-text" for="maxWidth">@sr["Max Width"]</label>
+                    </div>
+                    <input type="text" class="form-control" id="maxWidth" name="maxWidth" value="@upoadOptions.WebSizeImageMaxWidth" />
+                </div>
+            </div>
+
+            <div class="col-2 w-auto align-self-center">
+                <div class="input-group ms-1">
+                    <div class="input-group-prepend">
+                        <label class="input-group-text" for="maxHeight">@sr["Max Height"]</label>
+                    </div>
+                    <input type="text" class="form-control" id="maxHeight" name="maxHeight" value="@upoadOptions.WebSizeImageMaxHeight" />
+                </div>
+            </div>
+
+            <div class="col-2 w-auto align-self-center gx-1">
+                <div class="mt-2 form-check ms-2">
+                    <input asp-for="ResizeImages" class="form-check-input" />
+                    <label class="form-check-label" asp-for="ResizeImages"> @sr["Reduce Image Size For Web"]</label>
+                    <br />
+                    <input asp-for="KeepOriginal" class="form-check-input" />
+                    <label class="form-check-label" asp-for="KeepOriginal"> @sr["Keep Original Size Images"]</label>
+                </div>
+
+            </div>
+        </div>
+
+
+        @*<div class="form-inline">
             <div class="input-group">
                 <div class="input-group-prepend">
                     <label class="input-group-text" for="maxWidth">@sr["Max Width"]</label>
                 </div>
                 <input type="text" class="form-control" id="maxWidth" name="maxWidth" value="@upoadOptions.WebSizeImageMaxWidth" />
             </div>
-            <div class="input-group ml-1">
+            <div class="input-group ms-1">
                 <div class="input-group-prepend">
                     <label class="input-group-text" for="maxHeight">@sr["Max Height"]</label>
                 </div>
                 <input type="text" class="form-control" id="maxHeight" name="maxHeight" value="@upoadOptions.WebSizeImageMaxHeight" />
             </div>
-            <div class="form-group form-check ml-1">
+            <div class="mb-3 form-check ms-1">
                 <input asp-for="ResizeImages" class="form-check-input" />
                 <label class="form-check-label" asp-for="ResizeImages"> @sr["Reduce Image Size For Web"]</label>
             </div>
-            <div class="form-group form-check ml-2">
+            <div class="mb-3 form-check ms-2">
                 <input asp-for="KeepOriginal" class="form-check-input" />
                 <label class="form-check-label" asp-for="KeepOriginal"> @sr["Keep Original Size Images"]</label>
             </div>
-        </div>
-        <div class="form-group">
+        </div>*@
+
+        <div class="mb-3">
             <div id="divFileUpload" class="fileupload">
                 <p>@sr["Upload one or more files using this form:"]</p>
                 <div id="dropZone" class="fileupload-dropzone">

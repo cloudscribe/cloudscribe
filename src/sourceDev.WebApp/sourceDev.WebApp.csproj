@@ -31,7 +31,7 @@
   </ItemGroup>
   
   <ItemGroup>
-    <ProjectReference Include="..\cloudscribe.Core.CompiledViews.Bootstrap4\cloudscribe.Core.CompiledViews.Bootstrap4.csproj" />
+    <ProjectReference Include="..\cloudscribe.Core.CompiledViews.Bootstrap5\cloudscribe.Core.CompiledViews.Bootstrap5.csproj" />
     <ProjectReference Include="..\cloudscribe.Core.IdentityServer.EFCore.PostgreSql\cloudscribe.Core.IdentityServer.EFCore.PostgreSql.csproj" />
     <ProjectReference Include="..\cloudscribe.Core.IdentityServer.EFCore.SQLite\cloudscribe.Core.IdentityServer.EFCore.SQLite.csproj" />
     <ProjectReference Include="..\cloudscribe.Core.IdentityServerIntegration\cloudscribe.Core.IdentityServerIntegration.csproj" />
@@ -50,7 +50,7 @@
     <ProjectReference Include="..\cloudscribe.Core.IdentityServer.EFCore.MySql\cloudscribe.Core.IdentityServer.EFCore.MySql.csproj" />
     <ProjectReference Include="..\cloudscribe.Core.IdentityServer.EFCore.pgsql\cloudscribe.Core.IdentityServer.EFCore.pgsql.csproj" />
     <ProjectReference Include="..\cloudscribe.Core.IdentityServer.NoDb\cloudscribe.Core.IdentityServer.NoDb.csproj" />
-    <ProjectReference Include="..\cloudscribe.IdentityServerIntegration.CompiledViews.Bootstrap4\cloudscribe.IdentityServerIntegration.CompiledViews.Bootstrap4.csproj" />
+    <ProjectReference Include="..\cloudscribe.IdentityServerIntegration.CompiledViews.Bootstrap5\cloudscribe.IdentityServerIntegration.CompiledViews.Bootstrap5.csproj" />
     <ProjectReference Include="..\cloudscribe.MigrationHelper.mojoPortal\cloudscribe.MigrationHelper.mojoPortal.csproj" />
     <ProjectReference Include="..\cloudscribe.Web.StaticFiles\cloudscribe.Web.StaticFiles.csproj" />
   </ItemGroup>

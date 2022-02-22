@@ -20,12 +20,14 @@
     },
     openModal: function () {
         var div = $(this.modalSelector);
-        div.modal({ show: true, backdrop: true });
+        div.modal({ backdrop: true });
 
         div.on('hidden.bs.modal', function () {
             $(this).removeData('bs.modal');
             roleSelector.clearModal();
         });
+
+        div.modal('show');  /* undocumented change BS4 to BS5 - 'show' is no longer a defaulted initial option */
 
         roleSelector.bindClose();
     },

@@ -1,0 +1,64 @@
+﻿@model cloudscribe.Core.Web.ViewModels.SystemInfo.SystemInfoViewModel
+@inject ICoreThemeHelper themeHelper
+@inject IStringLocalizer<CloudscribeCore> sr
+@{
+    ViewData["BodyClass"] = "admin-section system-info";
+    var versionFormat = sr["{0} Version"];
+    var themeSettings = themeHelper.GetThemeSettings();
+    if (themeSettings.AdminSideNavExpanded) { ViewData["SideNavToggle"] = "show"; }
+    ViewData["SideNavVisible"] = true;
+}
+
+<h1>@ViewData["Title"]</h1>
+
+<table class="table table-striped">
+    <tr>
+        <th>@sr["Server Host Name"]</th>
+        <td>@Model.Name</td>
+    </tr>
+    <tr>
+        <th>@sr["Server IP Address"]</th>
+        <td>@Model.LocalAddress</td>
+    </tr>
+    <tr>
+        <th>@sr["Server Time UTC"]</th>
+        <td>@Model.ServerTimeUtc</td>
+    </tr>
+    <tr>
+        <th>@sr["Operating System"]</th>
+        <td>@Model.OperatingSystem</td>
+    </tr>
+    <tr>
+        <th>@sr["Runtime"]</th>
+        <td>@Model.Runtime</td>
+    </tr>
+    <tr>
+        <th>@sr["Environment Name"]</th>
+        <td>@Model.EnvironmentName</td>
+    </tr>
+    <tr>
+        <th>@sr["Database Platform"]</th>
+        <td>@Model.DatabasePlatform</td>
+    </tr>
+    <tr>
+        <th>@sr["cloudscribe.Core.Web"]</th>
+        <td>@Model.CloudscribeCoreVersion</td>
+    </tr>
+    @foreach (var v in Model.OtherVersions)
+    {
+        <tr>
+            <th>@v.Key</th>
+            <td>@v.Value</td>
+        </tr>
+    }
+</table>
+<partial name="CustomContentPartial" model="Model" />
+@section SideNav {
+    <partial name="AdminSideNav" />
+}
+@section Toolbar{
+    <partial name="AdminSideNavToggle" />
+}
+@section scripts {
+    <partial name="AdminSideNavScripts" />
+}

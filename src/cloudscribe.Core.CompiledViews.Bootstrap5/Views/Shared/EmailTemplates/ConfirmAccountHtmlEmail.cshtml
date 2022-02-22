@@ -1,0 +1,19 @@
+﻿@model cloudscribe.Core.Web.ViewModels.Email.ConfirmEmailAddessViewModel
+
+@{
+    Layout = "_LayoutEmailNotification";
+    ViewData["Title"] = "Email Confirmation Required";
+    ViewData["Site"] = Model.Tenant;
+}
+<p>
+    Please confirm your account by clicking this <a href="@Model.ConfirmationUrl">link</a>.
+</p>
+<p>
+    Or submit this code on the website form.
+</p>
+
+<table border="0" cellspacing="0" cellpadding="5">
+<tr>
+    <td style="word-break:break-all; border:1px solid black; width:500px;">@Model.ConfirmationCode</td>
+</tr>
+</table>

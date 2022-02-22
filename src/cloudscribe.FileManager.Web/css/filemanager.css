@@ -31,7 +31,7 @@ label.btn {
 
 .img-container {
   min-height: 200px;
-  max-height: 469px;
+  max-height: 469px;   /* this line breaks tooltips */*/
   margin-bottom: 1rem;
 }
 
@@ -97,12 +97,6 @@ label.btn {
 .docs-buttons > .btn-group,
 .docs-buttons > .form-control {
   margin-right: .25rem;
-  margin-bottom: .5rem;
-}
-
-.docs-toggles > .btn,
-.docs-toggles > .btn-group,
-.docs-toggles > .dropdown {
   margin-bottom: .5rem;
 }
 

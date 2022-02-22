@@ -217,3 +217,5 @@ tools/**
 !tools/packages.config
 
 **/siteuploadfiles/**
+**/slnx.sqlite
+**/VSWorkspaceState.json

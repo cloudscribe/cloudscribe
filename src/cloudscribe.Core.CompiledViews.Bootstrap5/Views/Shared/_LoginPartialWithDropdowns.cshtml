@@ -1,0 +1,39 @@
+﻿@using Microsoft.AspNetCore.Http.Features
+@inject IStringLocalizer<CloudscribeCore> sr
+@inject ISiteContextResolver siteResolver
+@inject SignInManager<SiteUser> SignInManager
+@inject ICoreThemeHelper themeHelper
+@{
+    var helloFormat = sr["Hello {0}!"];
+    var site = await siteResolver.ResolveSite(Context.Request.Host.Host, Context.Request.Path);
+    var consentFeature = Context.Features.Get<ITrackingConsentFeature>();
+    var themeSettings = themeHelper.GetThemeSettings();
+    var allowGravatar = (consentFeature?.CanTrack ?? true) && themeSettings.AllowGravatar; // gravatar has cookies
+}
+@if (SignInManager.IsSignedIn(User))
+{
+    <ul class="navbar-nav ms-auto my-2 my-lg-0" role="menubar">
+        <li class="nav-item dropdown">
+            <a id="dropdown-Manage" class="nav-link dropdown-toggle" asp-controller="Manage" asp-action="Index" title='@sr["Manage"]'>
+                <img gravatar-email="@User.GetEmail()" gravatar-enabled="@allowGravatar" override-url="@User.GetAvatarUrl()" disabled-default-url="@themeSettings.DefaultAvatarUrl" gravatar-size="20" alt="@sr["user avatar"]" />
+                @string.Format(helloFormat, User.GetDisplayName())
+            </a>
+            @await Component.InvokeAsync("Navigation", new { viewName = "Bs4ChildDropdown", filterName = "child-dropdown", startingNodeKey = "Manage" })
+        </li>
+        <li class="nav-item">
+            <a id="lnkLogout" href="#" class="nav-link">@sr["Log off"]</a>
+            <form asp-controller="Account" asp-action="LogOff" method="post" id="logoutForm"></form>
+            <script src="/cr/js/cloudscribe-logout-link.js" asp-append-version="true"></script>
+        </li>
+    </ul>
+}
+else
+{
+    <ul class="navbar-nav ms-auto my-2 my-lg-0">
+        @if (site.AllowNewRegistration)
+        {
+            <li class="nav-item"><a class="nav-link" id="registerLink" asp-controller="Account" asp-action="Register">@sr["Register"]</a></li>
+        }
+        <li class="nav-item"><a class="nav-link" id="loginLink" asp-controller="Account" asp-action="Login" asp-route-returnurl="@Context.Request.PathAndQuery()">@sr["Log in"]</a></li>
+    </ul>
+}

@@ -1,0 +1,15 @@
+﻿@model string
+@inject IStringLocalizer<CloudscribeCore> sr
+@{
+    ViewData["Title"] = @sr["Login Failure"];
+    ViewData["BodyClass"] = "account-section external-fail";
+}
+
+<hgroup>
+    <h2>@ViewData["Title"]</h2>
+    <h3 class="text-danger">@sr["Unsuccessful login with service."]</h3>
+</hgroup>
+@if(!string.IsNullOrWhiteSpace(Model))
+{
+    @Model
+}
