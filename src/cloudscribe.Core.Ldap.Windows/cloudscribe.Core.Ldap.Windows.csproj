@@ -2,9 +2,9 @@
 
   <PropertyGroup>
     <Description>ILdapHelper implementation for cloudscribe Core LDAP authentication support using windows compatibility shim</Description>
-    <Version>5.0.0-preview20211102</Version>
+    <Version>6.0.0-preview20220314</Version>
     <Authors>Joe Audette</Authors>
-    <TargetFramework>net5.0</TargetFramework>
+    <TargetFramework>net6.0</TargetFramework>
     <PackageTags>cloudscribe;LDAP;Active Directory</PackageTags>
     <PackageIcon>icon.png</PackageIcon>
     <PackageProjectUrl>https://github.com/cloudscribe/cloudscribe</PackageProjectUrl>
@@ -24,8 +24,8 @@
 
   <ItemGroup>
 
-    <PackageReference Include="Microsoft.Extensions.Configuration" Version="5.0.0" />
-    <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="5.0.0" />
+    <PackageReference Include="Microsoft.Extensions.Configuration" Version="6.0.0" />
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="6.0.0" />
 
     <PackageReference Include="Microsoft.Windows.Compatibility" Version="3.0.0-*" />
   </ItemGroup>
