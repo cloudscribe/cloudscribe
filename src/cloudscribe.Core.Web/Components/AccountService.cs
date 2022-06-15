@@ -21,6 +21,7 @@ using System.Security.Claims;
 using System.Threading.Tasks;
 using cloudscribe.Core.Models.Identity;
 using Microsoft.Extensions.Options;
+using System.Net.Mail;
 
 namespace cloudscribe.Core.Web.Components
 {
@@ -116,7 +117,21 @@ namespace cloudscribe.Core.Web.Components
             return false;
         }
 
-        
+
+        private bool IsValidEmail(string emailaddress)
+        {
+            try
+            {
+                MailAddress m = new MailAddress(emailaddress);
+
+                return true;
+            }
+            catch (FormatException)
+            {
+                return false;
+            }
+        }
+
         public virtual async Task<UserLoginResult> TryExternalLogin(string providedEmail = "", bool? didAcceptTerms = null)
         {
             var template = new LoginResultTemplate();
@@ -131,19 +146,37 @@ namespace cloudscribe.Core.Web.Components
             else
             {
                 template.User = await UserManager.FindByLoginAsync(template.ExternalLoginInfo.LoginProvider, template.ExternalLoginInfo.ProviderKey);
-                
+
                 if (template.User == null)
                 {
                     if (string.IsNullOrWhiteSpace(email))
                     {
+                        // Look for any likely claims that contain the user's email
                         var emailClaim = template.ExternalLoginInfo.Principal.Claims.Where(x => x.Type == ClaimTypes.Email || x.Type == "email").FirstOrDefault();
-                        if(emailClaim != null)
+                        if (emailClaim != null && IsValidEmail(emailClaim.Value))
                         {
                             email = emailClaim.Value;
                         }
+                        else
+                        {
+                            var emailClaim_upn = template.ExternalLoginInfo.Principal.Claims.Where(x => x.Type == ClaimTypes.Upn).FirstOrDefault();
+                            if (emailClaim_upn != null && IsValidEmail(emailClaim_upn.Value))
+                            {
+                                email = emailClaim_upn.Value;
+                            }
+                            else
+                            {
+                                var emailClaim_name = template.ExternalLoginInfo.Principal.Claims.Where(x => x.Type == ClaimTypes.Name)
+                                                                                                 .Where(x => IsValidEmail(x.Value)).FirstOrDefault();
+                                if (emailClaim_name != null)
+                                {
+                                    email = emailClaim_name.Value;
+                                }
+                            }
+                        }
                     }
-                    
-                    if (!string.IsNullOrWhiteSpace(email) && email.Contains("@"))
+
+                    if (!string.IsNullOrWhiteSpace(email))
                     {
                         template.User = await UserManager.FindByNameAsync(email);   
                     }
@@ -158,9 +191,7 @@ namespace cloudscribe.Core.Web.Components
                     {
                         var identityResult = await UserManager.AddLoginAsync(template.User, template.ExternalLoginInfo);
                     }
-
                 }
-                  
             }
  
             if (template.User != null)
