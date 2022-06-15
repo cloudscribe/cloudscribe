@@ -2,8 +2,8 @@
 
   <PropertyGroup>
     <Description>model classes for cloudscribe core. you should not normally install this separately, it will be installed if you install cloudscribe.Core.Web</Description>
-    <Version>5.0.1</Version>
-    <TargetFramework>net5.0</TargetFramework>
+    <Version>6.0.0</Version>
+    <TargetFramework>net6.0</TargetFramework>
     <Authors>Joe Audette</Authors>
     <PackageTags>cloudscribe;models</PackageTags>
     <PackageIcon>icon.png</PackageIcon>
@@ -20,7 +20,7 @@
   <ItemGroup>
     <PackageReference Include="cloudscribe.Pagination.Models" Version="1.1.0" />
     
-    <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="5.0.0" />
+    <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="6.0.0" />
     
     <PackageReference Include="System.Data.Common" Version="4.3.0" />
   </ItemGroup>

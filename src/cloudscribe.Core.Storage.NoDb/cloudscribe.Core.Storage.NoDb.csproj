@@ -2,8 +2,8 @@
 
   <PropertyGroup>
     <Description>NoDb implementation of cloudscribe core commands and queries</Description>
-    <Version>5.0.0</Version>
-    <TargetFramework>net5.0</TargetFramework>
+    <Version>6.0.0</Version>
+    <TargetFramework>net6.0</TargetFramework>
     <Authors>Joe Audette</Authors>
     <PackageTags>cloudscribe;commands;queries;NoDb</PackageTags>
     <PackageIcon>icon.png</PackageIcon>
@@ -26,8 +26,8 @@
     <PackageReference Include="cloudscribe.Pagination.Models" Version="1.1.0" />
     <PackageReference Include="NoDb" Version="1.2.1" />
     
-    <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="5.0.0" />
-    <PackageReference Include="Microsoft.Extensions.Options" Version="5.0.0" />
+    <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="6.0.0" />
+    <PackageReference Include="Microsoft.Extensions.Options" Version="6.0.0" />
 
     <PackageReference Include="System.Linq.Queryable" Version="4.3.0" />
   </ItemGroup>

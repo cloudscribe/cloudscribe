@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using cloudscribe.Core.IdentityServer.EFCore.PostgreSql;
@@ -11,9 +12,10 @@ using cloudscribe.Core.IdentityServer.EFCore.PostgreSql;
 namespace cloudscribe.Core.IdentityServer.EFCore.PostgreSql.Migrations
 {
     [DbContext(typeof(ConfigurationDbContext))]
-    partial class ConfigurationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20220419122538_cloudscribe-idserver-config-20220419")]
+    partial class cloudscribeidserverconfig20220419
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

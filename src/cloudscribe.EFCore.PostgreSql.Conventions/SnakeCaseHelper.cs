@@ -16,9 +16,12 @@ namespace cloudscribe.EFCore.PostgreSql.Conventions
             foreach (var table in modelBuilder.Model.GetEntityTypes())
             {
                 ConvertToSnake(mapper, table);
+
+                var newTableName = table.GetTableName();
+
                 foreach (var property in table.GetProperties())
                 {
-                    ConvertToSnake(mapper, property);
+                    ConvertToSnake(mapper, property, newTableName);
                 }
 
                 foreach (var primaryKey in table.GetKeys())
@@ -39,7 +42,7 @@ namespace cloudscribe.EFCore.PostgreSql.Conventions
         }
 
 
-        private static void ConvertToSnake(INpgsqlNameTranslator mapper, object entity)
+        private static void ConvertToSnake(INpgsqlNameTranslator mapper, object entity, string newTableName = "")
         {
             switch (entity)
             {
@@ -51,8 +54,12 @@ namespace cloudscribe.EFCore.PostgreSql.Conventions
                     break;
                 case IMutableProperty property:
                     //property.Relational().ColumnName = ConvertGeneralToSnake(mapper, property.Relational().ColumnName);
-                    var currentName = property.GetColumnName();
-                    if(currentName.IndexOf("_") == -1)
+
+                    // var currentName = property.GetColumnName();  - old: jk
+
+                    var currentName = property.GetColumnName(StoreObjectIdentifier.Table(newTableName, null));
+
+                    if (currentName.IndexOf("_") == -1)
                     {
                         var propName = ConvertGeneralToSnake(mapper, property.Name);
                         property.SetColumnName(propName);
@@ -72,7 +79,10 @@ namespace cloudscribe.EFCore.PostgreSql.Conventions
                     break;
                 case IMutableIndex indexKey:
                     //indexKey.Relational().Name = ConvertKeyToSnake(mapper, indexKey.Relational().Name);
-                    indexKey.SetName(ConvertKeyToSnake(mapper, indexKey.GetName()));
+                    
+                    //  indexKey.SetName(ConvertKeyToSnake(mapper, indexKey.GetName()));  - old: jk
+                    indexKey.SetDatabaseName(ConvertKeyToSnake(mapper, indexKey.GetDatabaseName()));  // new - jk
+
                     break;
                 default:
                     throw new NotImplementedException("Unexpected type was provided to snake case converter");
