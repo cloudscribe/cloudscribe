@@ -1,0 +1,14 @@
+@model cloudscribe.Core.Web.ViewModels.Email.NewExternalLoginMappingEmailViewModel 
+
+@{
+    Layout = "_LayoutEmailNotification";
+    ViewData["Title"] = "A new external login has been created with your email address";
+    ViewData["Site"] = Model.Tenant;
+}
+
+<p>An external login service has been registered at @Model.Tenant.SiteName 
+using the email address on your current @Model.Tenant.SiteName account
+and the external login provider @Model.ProviderDisplayName</p>
+
+<p>If this was not done by you, then please contact the administrator of this site.</p>
+<p>You can <a href="@Model.ManageExternalLoginsUrl">view your external login services here</a></p>

@@ -317,7 +317,56 @@ namespace cloudscribe.Core.Web.Components.Messaging
             {
                 _log.LogError("error sending account exists email: " + ex.Message + " stacktrace: " + ex.StackTrace);
             }
+        }
 
+
+        public async Task SendNewExternalLoginMappingEmailAsync(
+           ISiteContext siteSettings,
+           string toAddress,
+           string subject,
+           string providerKey,
+           string providerDisplayName,
+           string manageExternalLoginsUrl
+           )
+        {
+            var sender = await _emailSenderResolver.GetEmailSender(siteSettings.Id.ToString());
+            if (sender == null)
+            {
+                var logMessage = $"failed to send new external login mapping email because email settings are not populated for site {siteSettings.SiteName}";
+                _log.LogError(logMessage);
+                return;
+            }
+
+            var model = new NewExternalLoginMappingEmailViewModel
+            {
+                Tenant = siteSettings,
+                ToAddress = toAddress,
+                ProviderKey = providerKey,
+                ProviderDisplayName = providerDisplayName,
+                ManageExternalLoginsUrl = manageExternalLoginsUrl
+            };
+
+            try
+            {
+                var plainTextMessage
+                   = await _viewRenderer.RenderViewAsString<NewExternalLoginMappingEmailViewModel>("EmailTemplates/NewExternalLoginMappingTextEmail", model);
+
+                var htmlMessage
+                    = await _viewRenderer.RenderViewAsString<NewExternalLoginMappingEmailViewModel>("EmailTemplates/NewExternalLoginMappingHtmlEmail", model);
+
+                await sender.SendEmailAsync(
+                    toAddress,
+                    siteSettings.DefaultEmailFromAddress,
+                    subject,
+                    plainTextMessage,
+                    htmlMessage,
+                    configLookupKey: siteSettings.Id.ToString()
+                    ).ConfigureAwait(false);
+            }
+            catch (Exception ex)
+            {
+                _log.LogError("error sending new external login mapping email: " + ex.Message + " stacktrace: " + ex.StackTrace);
+            }
         }
 
 

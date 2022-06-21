@@ -185,11 +185,21 @@ namespace cloudscribe.Core.Web.Components
                     {
                         template.IsNewUserRegistration = true;
                         template.User = await CreateUserFromExternalLogin(template.ExternalLoginInfo, email, didAcceptTerms);
+                        template.IsNewExternalAuthMapping = template.User != null;
                     }
 
                     if (template.User != null)
                     {
-                        var identityResult = await UserManager.AddLoginAsync(template.User, template.ExternalLoginInfo);
+                        
+                        // jk - close the loophole whereby the user has supplied an email address that matches a pre-existing cs user
+                        // (as opposed to a successful external login which has returned a valid email in its Claims that
+                        // matches a pre-existing cs User)
+
+                        if(String.IsNullOrEmpty(providedEmail) && !String.IsNullOrEmpty(email)) 
+                        {
+                            var identityResult = await UserManager.AddLoginAsync(template.User, template.ExternalLoginInfo);
+                            template.IsNewExternalAuthMapping = identityResult != null;
+                        }
                     }
                 }
             }
@@ -248,7 +258,8 @@ namespace cloudscribe.Core.Web.Components
                 template.NeedsEmailConfirmation,
                 template.EmailConfirmationToken,
                 template.NeedsPhoneConfirmation,
-                template.ExternalLoginInfo
+                template.ExternalLoginInfo,
+                template.IsNewExternalAuthMapping
                 );
 
         }

@@ -713,7 +713,20 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
                         
                         return RedirectToAction("TermsOfUse");
                     }
+                    if (result.IsNewExternalAuthMapping)
+                    {
+                        // external login has created a new UserLogin entity, requiring email notification
+                        await EmailSender.SendNewExternalLoginMappingEmailAsync(
+                            CurrentSite,
+                            result.User.Email,
+                            StringLocalizer[$"A new external login user registration has been created"],
+                            result.ExternalLoginInfo.ProviderKey,
+                            result.ExternalLoginInfo.ProviderDisplayName,
+                            Url.Action("ManageLogins", "Manage", null, HttpContext.Request.Scheme)
+                            );
+                    }
                 }
+
                 return await HandleLoginSuccess(result, returnUrl);
             }
 
@@ -785,6 +798,19 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
                 var result = await AccountService.TryExternalLogin(model.Email, model.AgreeToTerms);
                 if (result.SignInResult.Succeeded)
                 {
+                    if (result.IsNewExternalAuthMapping)
+                    { 
+                        // external login has created a new UserLogin entity, requiring email notification
+                        await EmailSender.SendNewExternalLoginMappingEmailAsync(
+                            CurrentSite,
+                            model.Email,
+                            StringLocalizer[$"A new external login user registration has been created"],
+                            result.ExternalLoginInfo.ProviderKey,
+                            result.ExternalLoginInfo.ProviderDisplayName,
+                            Url.Action("ManageLogins", "Manage", null, HttpContext.Request.Scheme)
+                            );
+                    }
+
                     return await HandleLoginSuccess(result, returnUrl);
                 }
 
@@ -805,16 +831,22 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
                     Log.LogWarning("ExternalLoginInfo was null");
 
                     await Analytics.HandleLoginFail("Social", "ExternalLoginInfo was null");
-
-                    string message = string.Empty;
-                    var isExistingAccount = await AccountService.IsExistingAccount(model.Email);
-                    if(isExistingAccount)
-                    {
-                        message = StringLocalizer["The provided email address is already in use."];
-                    }
-
-                    return View("ExternalLoginFailure", message);
                 }
+                string message = string.Empty;
+                var isExistingAccount = await AccountService.IsExistingAccount(model.Email);
+                if(isExistingAccount)
+                {
+                    // message = StringLocalizer["The provided email address is already in use."];
+                    // don't reveal the above to the world
+                    message  = StringLocalizer["Your external login service cannot be registered."];
+                    
+                    if (!CurrentSite.DisableDbAuth)
+                        message += StringLocalizer[" You can still login directly with your stardard username and password, and then register an external login service from the 'My Account' page."];
+                }
+
+                
+
+                return View("ExternalLoginFailure", message);
 
             }
             else

@@ -44,6 +44,15 @@ namespace cloudscribe.Core.Web.Components.Messaging
             string confirmUrl,
             bool stillNeedsApproval);
 
+        Task SendNewExternalLoginMappingEmailAsync(
+            ISiteContext siteSettings,
+            string toAddress,
+            string subject,
+            string providerKey,
+            string providerDisplayName,
+            string manageExternalLoginsUrl
+          );
+
         Task SendSecurityCodeEmailAsync(
             ISiteContext siteSettings,
             string toAddress,

@@ -16,14 +16,14 @@
         @Html.Raw(successMessage)
         @sr["Please enter a valid email for this site below and click the Register button to finish logging in."]
     </p>
+
     @if (!string.IsNullOrWhiteSpace(Model.RegistrationPreamble))
     {
-
-        <div class="registration-preamble">
+        @*<div class="registration-preamble">
             @Html.Raw(Model.RegistrationPreamble)
-        </div>
-
+        </div>*@
     }
+
     <div class="mb-3">
         <label asp-for="Email">@sr["Email"]</label>
         <input asp-for="Email" class="form-control" />

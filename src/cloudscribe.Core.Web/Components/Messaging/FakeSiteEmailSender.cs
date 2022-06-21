@@ -51,6 +51,17 @@ namespace cloudscribe.Core.Web.Components.Messaging
             return Task.CompletedTask;
         }
 
+        public Task SendNewExternalLoginMappingEmailAsync(
+           ISiteContext siteSettings,
+           string toAddress,
+           string subject,
+           string providerKey,
+           string providerDisplayName,
+           string manageExternalLoginsUrl)
+        {
+            return Task.CompletedTask;
+        }
+
         public Task SendSecurityCodeEmailAsync(
             ISiteContext siteSettings,
             string toAddress,
