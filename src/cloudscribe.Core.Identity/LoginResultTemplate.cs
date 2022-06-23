@@ -20,5 +20,11 @@ namespace cloudscribe.Core.Identity
         public SiteUser User { get; set; } = null;
         public bool IsNewUserRegistration { get; set; }
         public SignInResult SignInResult { get; set; } = SignInResult.Failed;
+        
+        /// <summary>
+        /// Are we adding a new external UserLogin mapping to an existing cloudscribe account
+        /// - thereby requiring a confirmation
+        /// </summary>
+        public bool IsNewExternalAuthMapping { get; set; } = false;
     }
 }

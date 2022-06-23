@@ -23,13 +23,14 @@ namespace cloudscribe.Core.Identity
             bool needsEmailConfirmation,
             string emailConfirmationToken,
             bool needsPhoneConfirmation,
-            ExternalLoginInfo externalLoginInfo = null
+            ExternalLoginInfo externalLoginInfo = null,
+            bool isNewExternalAuthMapping = false
             )
         {
             SignInResult = signInResult;
             
             RejectReasons = rejectReasons;
-            if (RejectReasons != null)
+            if (RejectReasons == null)
             {
                 RejectReasons = new List<string>();
             }
@@ -41,8 +42,9 @@ namespace cloudscribe.Core.Identity
             EmailConfirmationToken = emailConfirmationToken;
             NeedsPhoneConfirmation = needsPhoneConfirmation;
             ExternalLoginInfo = externalLoginInfo;
-            
-        }
+            IsNewExternalAuthMapping = isNewExternalAuthMapping;
+
+    }
 
         public bool MustAcceptTerms { get; }
 
@@ -67,6 +69,12 @@ namespace cloudscribe.Core.Identity
         public IUserContext User { get; }
 
         public bool IsNewUserRegistration { get; }
+
+        /// <summary>
+        /// Are we adding a new external UserLogin mapping to an existing cloudscribe account
+        /// - thereby requiring a confirmation
+        /// </summary>
+        public bool IsNewExternalAuthMapping { get; }
     }
 
 }

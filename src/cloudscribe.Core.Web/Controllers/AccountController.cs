@@ -24,6 +24,7 @@ using Microsoft.Extensions.Localization;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Linq;
+using System.Net.Mail;
 using System.Security.Claims;
 using System.Threading.Tasks;
 
@@ -713,7 +714,20 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
                         
                         return RedirectToAction("TermsOfUse");
                     }
+                    if (result.IsNewExternalAuthMapping)
+                    {
+                        // external login has created a new UserLogin entity, requiring email notification
+                        await EmailSender.SendNewExternalLoginMappingEmailAsync(
+                            CurrentSite,
+                            result.User.Email,
+                            StringLocalizer[$"A new external login user registration has been created"],
+                            result.ExternalLoginInfo.ProviderKey,
+                            result.ExternalLoginInfo.ProviderDisplayName,
+                            Url.Action("ManageLogins", "Manage", null, HttpContext.Request.Scheme)
+                            );
+                    }
                 }
+
                 return await HandleLoginSuccess(result, returnUrl);
             }
 
@@ -722,6 +736,11 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
                 // these reasons are not meant to be shown in the ui
                 // but we can log them so admin will see failed attempts in the log along with reasons
                 Log.LogWarning(reason);
+            }
+
+            if (result.RejectReasons.Contains("Site is not configured to allow new user registrations") )
+            {
+                return RedirectToAction(nameof(Login));
             }
 
             if (result.SignInResult.IsNotAllowed)
@@ -746,7 +765,6 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
             }
 
             // result.Failed
-
             
 
             // If the user does not have an account, then ask the user to create an account.
@@ -756,6 +774,24 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
             ViewData["ReturnUrl"] = returnUrl;
             ViewData["LoginProvider"] = result.ExternalLoginInfo.LoginProvider;
             var email = result.ExternalLoginInfo.Principal.FindFirstValue(ClaimTypes.Email);
+            if (String.IsNullOrEmpty(email))
+            {
+                var emailClaim_upn = result.ExternalLoginInfo.Principal.Claims.Where(x => x.Type == ClaimTypes.Upn).FirstOrDefault();
+                if (emailClaim_upn != null && IsValidEmail(emailClaim_upn.Value))
+                {
+                    email = emailClaim_upn.Value;
+                }
+                else
+                {
+                    var emailClaim_name = result.ExternalLoginInfo.Principal.Claims.Where(x => x.Type == ClaimTypes.Name)
+                                                                                    .Where(x => IsValidEmail(x.Value)).FirstOrDefault();
+                    if (emailClaim_name != null)
+                    {
+                        email = emailClaim_name.Value;
+                    }
+                }
+            }
+
             var model = new ExternalLoginConfirmationViewModel
             {
                 Email = email,
@@ -785,6 +821,19 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
                 var result = await AccountService.TryExternalLogin(model.Email, model.AgreeToTerms);
                 if (result.SignInResult.Succeeded)
                 {
+                    if (result.IsNewExternalAuthMapping)
+                    { 
+                        // external login has created a new UserLogin entity, requiring email notification
+                        await EmailSender.SendNewExternalLoginMappingEmailAsync(
+                            CurrentSite,
+                            model.Email,
+                            StringLocalizer[$"A new external login user registration has been created"],
+                            result.ExternalLoginInfo.ProviderKey,
+                            result.ExternalLoginInfo.ProviderDisplayName,
+                            Url.Action("ManageLogins", "Manage", null, HttpContext.Request.Scheme)
+                            );
+                    }
+
                     return await HandleLoginSuccess(result, returnUrl);
                 }
 
@@ -805,16 +854,22 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
                     Log.LogWarning("ExternalLoginInfo was null");
 
                     await Analytics.HandleLoginFail("Social", "ExternalLoginInfo was null");
-
-                    string message = string.Empty;
-                    var isExistingAccount = await AccountService.IsExistingAccount(model.Email);
-                    if(isExistingAccount)
-                    {
-                        message = StringLocalizer["The provided email address is already in use."];
-                    }
-
-                    return View("ExternalLoginFailure", message);
                 }
+                string message = string.Empty;
+                var isExistingAccount = await AccountService.IsExistingAccount(model.Email);
+                if(isExistingAccount)
+                {
+                    // message = StringLocalizer["The provided email address is already in use."];
+                    // don't reveal the above to the world
+                    message  = StringLocalizer["Your external login service cannot be registered."];
+                    
+                    if (!CurrentSite.DisableDbAuth)
+                        message += StringLocalizer[" You can still login directly with your stardard username and password, and then register an external login service from the 'My Account' page."];
+                }
+
+                
+
+                return View("ExternalLoginFailure", message);
 
             }
             else
@@ -1331,6 +1386,18 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
         #region Helpers
 
 
+        private bool IsValidEmail(string emailaddress)
+        {
+            try
+            {
+                MailAddress m = new MailAddress(emailaddress);
+                return true;
+            }
+            catch (FormatException)
+            {
+                return false;
+            }
+        }
 
         protected void AddErrors(IdentityResult result)
         {
