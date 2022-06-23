@@ -36,7 +36,7 @@
     <PackageReference Include="System.Text.Encodings.Web" Version="6.0.0" />
    
     <PackageReference Include="cloudscribe.HtmlAgilityPack" Version="1.0.1" />
-    <PackageReference Include="Newtonsoft.Json" Version="11.0.1" />
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
   
   </ItemGroup>
 
