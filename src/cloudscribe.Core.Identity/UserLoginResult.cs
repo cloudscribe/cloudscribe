@@ -30,7 +30,7 @@ namespace cloudscribe.Core.Identity
             SignInResult = signInResult;
             
             RejectReasons = rejectReasons;
-            if (RejectReasons != null)
+            if (RejectReasons == null)
             {
                 RejectReasons = new List<string>();
             }

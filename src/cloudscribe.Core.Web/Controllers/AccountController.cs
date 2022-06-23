@@ -24,6 +24,7 @@ using Microsoft.Extensions.Localization;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Linq;
+using System.Net.Mail;
 using System.Security.Claims;
 using System.Threading.Tasks;
 
@@ -737,6 +738,11 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
                 Log.LogWarning(reason);
             }
 
+            if (result.RejectReasons.Contains("Site is not configured to allow new user registrations") )
+            {
+                return RedirectToAction(nameof(Login));
+            }
+
             if (result.SignInResult.IsNotAllowed)
             {
                 return await HandleLoginNotAllowed(result, returnUrl);
@@ -759,7 +765,6 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
             }
 
             // result.Failed
-
             
 
             // If the user does not have an account, then ask the user to create an account.
@@ -769,6 +774,24 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
             ViewData["ReturnUrl"] = returnUrl;
             ViewData["LoginProvider"] = result.ExternalLoginInfo.LoginProvider;
             var email = result.ExternalLoginInfo.Principal.FindFirstValue(ClaimTypes.Email);
+            if (String.IsNullOrEmpty(email))
+            {
+                var emailClaim_upn = result.ExternalLoginInfo.Principal.Claims.Where(x => x.Type == ClaimTypes.Upn).FirstOrDefault();
+                if (emailClaim_upn != null && IsValidEmail(emailClaim_upn.Value))
+                {
+                    email = emailClaim_upn.Value;
+                }
+                else
+                {
+                    var emailClaim_name = result.ExternalLoginInfo.Principal.Claims.Where(x => x.Type == ClaimTypes.Name)
+                                                                                    .Where(x => IsValidEmail(x.Value)).FirstOrDefault();
+                    if (emailClaim_name != null)
+                    {
+                        email = emailClaim_name.Value;
+                    }
+                }
+            }
+
             var model = new ExternalLoginConfirmationViewModel
             {
                 Email = email,
@@ -1363,6 +1386,18 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
         #region Helpers
 
 
+        private bool IsValidEmail(string emailaddress)
+        {
+            try
+            {
+                MailAddress m = new MailAddress(emailaddress);
+                return true;
+            }
+            catch (FormatException)
+            {
+                return false;
+            }
+        }
 
         protected void AddErrors(IdentityResult result)
         {

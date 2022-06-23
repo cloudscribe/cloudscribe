@@ -36,7 +36,8 @@ namespace cloudscribe.Core.Web.Components
             IUserCommands userCommands,
             IProcessAccountLoginRules loginRulesProcessor,
             INewUserDisplayNameResolver displayNameResolver,
-            IOptions<CustomSocialAuthSchemes> customSchemesAccessor
+            IOptions<CustomSocialAuthSchemes> customSchemesAccessor, 
+            SiteContext currentSite
             //,ILogger<AccountService> logger
             )
         {
@@ -49,6 +50,7 @@ namespace cloudscribe.Core.Web.Components
             CustomSocialAuthSchemes = customSchemesAccessor.Value;
             LdapHelper = ldapHelper;
             UserCommands = userCommands;
+            CurrentSite = currentSite;;
 
         }
 
@@ -61,6 +63,7 @@ namespace cloudscribe.Core.Web.Components
         protected INewUserDisplayNameResolver DisplayNameResolver { get; private set; }
         protected CustomSocialAuthSchemes CustomSocialAuthSchemes { get; private set; }
         protected IUserCommands UserCommands { get; private set; }
+        protected ISiteContext CurrentSite { get; private set; }
 
         protected virtual async Task<SiteUser> CreateUserFromExternalLogin(
             ExternalLoginInfo externalLoginInfo, 
@@ -71,17 +74,13 @@ namespace cloudscribe.Core.Web.Components
             var email = providedEmail;
             if (string.IsNullOrWhiteSpace(email))
             {
-                email = externalLoginInfo.Principal.FindFirstValue(ClaimTypes.Email);
-                if(string.IsNullOrWhiteSpace(email))
-                {
-                    email = externalLoginInfo.Principal.FindFirstValue("email");
-                }
+                email = GetEmailFromClaims(externalLoginInfo);
             }
 
             DateTime? termsAcceptedDate = null;
             if (didAcceptTerms == true && !string.IsNullOrWhiteSpace(UserManager.Site.RegistrationAgreement)) { termsAcceptedDate = DateTime.UtcNow; }
 
-            if (!string.IsNullOrWhiteSpace(email) && email.Contains("@"))
+            if (!string.IsNullOrWhiteSpace(email) && IsValidEmail(email))
             {
                 var userName = await UserManager.SuggestLoginNameFromEmail(UserManager.Site.Id, email);
                 var newUser = new SiteUser
@@ -132,6 +131,40 @@ namespace cloudscribe.Core.Web.Components
             }
         }
 
+        private string GetEmailFromClaims(ExternalLoginInfo externalLoginInfo)
+        {
+            var email = "";
+
+            if (externalLoginInfo?.Principal?.Claims != null)
+            {
+                var emailClaim = externalLoginInfo.Principal.Claims.Where(x => x.Type == ClaimTypes.Email || x.Type == "email").FirstOrDefault();
+                if (emailClaim != null && IsValidEmail(emailClaim.Value))
+                {
+                    email = emailClaim.Value;
+                }
+                else
+                {
+                    var emailClaim_upn = externalLoginInfo.Principal.Claims.Where(x => x.Type == ClaimTypes.Upn).FirstOrDefault();
+                    if (emailClaim_upn != null && IsValidEmail(emailClaim_upn.Value))
+                    {
+                        email = emailClaim_upn.Value;
+                    }
+                    else
+                    {
+                        var emailClaim_name = externalLoginInfo.Principal.Claims.Where(x => x.Type == ClaimTypes.Name)
+                                                                                         .Where(x => IsValidEmail(x.Value)).FirstOrDefault();
+                        if (emailClaim_name != null)
+                        {
+                            email = emailClaim_name.Value;
+                        }
+                    }
+                }
+            }
+
+            return email;
+        }
+
+
         public virtual async Task<UserLoginResult> TryExternalLogin(string providedEmail = "", bool? didAcceptTerms = null)
         {
             var template = new LoginResultTemplate();
@@ -152,28 +185,7 @@ namespace cloudscribe.Core.Web.Components
                     if (string.IsNullOrWhiteSpace(email))
                     {
                         // Look for any likely claims that contain the user's email
-                        var emailClaim = template.ExternalLoginInfo.Principal.Claims.Where(x => x.Type == ClaimTypes.Email || x.Type == "email").FirstOrDefault();
-                        if (emailClaim != null && IsValidEmail(emailClaim.Value))
-                        {
-                            email = emailClaim.Value;
-                        }
-                        else
-                        {
-                            var emailClaim_upn = template.ExternalLoginInfo.Principal.Claims.Where(x => x.Type == ClaimTypes.Upn).FirstOrDefault();
-                            if (emailClaim_upn != null && IsValidEmail(emailClaim_upn.Value))
-                            {
-                                email = emailClaim_upn.Value;
-                            }
-                            else
-                            {
-                                var emailClaim_name = template.ExternalLoginInfo.Principal.Claims.Where(x => x.Type == ClaimTypes.Name)
-                                                                                                 .Where(x => IsValidEmail(x.Value)).FirstOrDefault();
-                                if (emailClaim_name != null)
-                                {
-                                    email = emailClaim_name.Value;
-                                }
-                            }
-                        }
+                        email = GetEmailFromClaims(template.ExternalLoginInfo);
                     }
 
                     if (!string.IsNullOrWhiteSpace(email))
@@ -183,9 +195,16 @@ namespace cloudscribe.Core.Web.Components
 
                     if (template.User == null)
                     {
-                        template.IsNewUserRegistration = true;
-                        template.User = await CreateUserFromExternalLogin(template.ExternalLoginInfo, email, didAcceptTerms);
-                        template.IsNewExternalAuthMapping = template.User != null;
+                        if (CurrentSite.AllowNewRegistration)
+                        { 
+                            template.IsNewUserRegistration = true;
+                            template.User = await CreateUserFromExternalLogin(template.ExternalLoginInfo, email, didAcceptTerms);
+                            template.IsNewExternalAuthMapping = template.User != null;
+                        }
+                        else
+                        {
+                            template.RejectReasons.Add("Site is not configured to allow new user registrations");
+                        }
                     }
 
                     if (template.User != null)
@@ -263,7 +282,9 @@ namespace cloudscribe.Core.Web.Components
                 );
 
         }
-        
+
+      
+
         public virtual async Task<UserLoginResult> TryLogin(LoginViewModel model)
         {
             var template = new LoginResultTemplate();
