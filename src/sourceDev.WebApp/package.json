@@ -1,22 +1,23 @@
 {
-  "name": "app",
-  "version": "1.0.0",
-  "private": true,
-  "repository": "npm/npm",
-  "devDependencies": {
-    "bootstrap": "4.3.1",
-    "smartmenus": "^1.1.0",
-    "smartmenus-bootstrap-4": "^0.1.0",
-    "@fortawesome/fontawesome-free": "^5.1.0-8",
-    "gulp": "^3.9.1",
-    "gulp-cli": "^2.0.1",
-    "gulp-cssmin": "^0.2.0",
-    "gulp-sass": "^4.0.1",
-    "gulp-uglify": "^3.0.0",
-    "gulp-sourcemaps": "^2.6.4",
-    "gulp-concat": "^2.6.1",
-    "gulp-connect": "^5.5.0",
-    "merge-stream": "^1.0.1",
-    "exif-js": "2.3.0"
-  }
+    "name": "app",
+    "version": "1.0.0",
+    "private": true,
+    "repository": "npm/npm",
+    "devDependencies": {
+        "bootstrap": "4.3.1",
+        "smartmenus": "^1.1.0",
+        "smartmenus-bootstrap-4": "^0.1.0",
+        "@fortawesome/fontawesome-free": "^5.1.0-8",
+        "gulp": "^4.0.0",
+        "gulp-cli": "^2.0.1",
+        "gulp-cssmin": "^0.2.0",
+        "gulp-sass": "^5.1.0",
+        "gulp-uglify": "^3.0.0",
+        "gulp-sourcemaps": "^2.6.4",
+        "gulp-concat": "^2.6.1",
+        "gulp-connect": "^5.5.0",
+        "merge-stream": "^1.0.1",
+        "exif-js": "2.3.0",
+        "sass": "^1.53.0"
+    }
 }

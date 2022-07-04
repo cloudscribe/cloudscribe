@@ -5,7 +5,7 @@ var gulp = require("gulp"),
     cssmin = require("gulp-cssmin"),
     gp_rename = require('gulp-rename'),
     uglify = require("gulp-uglify"),
-    sass = require('gulp-sass'),
+    sass = require('gulp-sass')(require('sass')),
     sourcemaps = require('gulp-sourcemaps'),
     merge = require('merge-stream')
 ;
