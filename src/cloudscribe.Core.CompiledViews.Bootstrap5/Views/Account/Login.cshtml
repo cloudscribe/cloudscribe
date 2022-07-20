@@ -45,9 +45,7 @@
                         <label asp-for="UserName">@sr["Username"]</label>
                     }
                     <div class="input-group">
-                        <div class="input-group-prepend">
-                            <span class="input-group-text"><i class="@themeSettings.Icons.Username" aria-hidden="true"></i></span>
-                        </div>
+                        <span class="input-group-text"><i class="@themeSettings.Icons.Username" aria-hidden="true"></i></span>
                         <input asp-for="UserName" class="form-control" />
                         <span asp-validation-for="UserName" class="invalid-feedback"></span>
                     </div>
@@ -56,9 +54,7 @@
                 <div class="mb-3">
                     <label asp-for="Password">@sr["Password"]</label>
                     <div class="input-group">
-                        <div class="input-group-prepend">
-                            <span class="input-group-text"><i class="@themeSettings.Icons.Password" aria-hidden="true"></i></span>
-                        </div>
+                        <span class="input-group-text"><i class="@themeSettings.Icons.Password" aria-hidden="true"></i></span>
                         <input asp-for="Password" class="form-control" />
                         <span asp-validation-for="Password" class="invalid-feedback"></span>
                     </div>
