@@ -818,6 +818,7 @@
         dataScaleY: $('#dataScaleY'),
         outputHeight: $('#dataNewHeight'),
         outputWidth : $('#dataNewWidth'),
+        initialised : false,
 
         setup: function () {
             var options = {
@@ -913,32 +914,35 @@
 
 
             // Options
-            $('.docs-toggles').on('change', 'input', function () {
-                var $this = $(this);
-                var name = $this.attr('name');
-                var type = $this.prop('type');
-                var cropBoxData;
-                var canvasData;
+            if (cropManager.initialised == false) {   // jk bug spawning multiple canvases
 
-                if (!cropManager.image.data('cropper')) {
-                    return;
-                }
+                $('.docs-toggles').on('change', 'input', function () {
+                    var $this = $(this);
+                    var name = $this.attr('name');
+                    var type = $this.prop('type');
+                    var cropBoxData;
+                    var canvasData;
 
-                if (type === 'checkbox') {
-                    options[name] = $this.prop('checked');
-                    cropBoxData = cropManager.image.cropper('getCropBoxData');
-                    canvasData = cropManager.image.cropper('getCanvasData');
+                    if (!cropManager.image.data('cropper')) {
+                        return;
+                    }
 
-                    options.ready = function () {
-                        cropManager.image.cropper('setCropBoxData', cropBoxData);
-                        cropManager.image.cropper('setCanvasData', canvasData);
-                    };
-                } else if (type === 'radio') {
-                    options[name] = $this.val();
-                }
+                    if (type === 'checkbox') {
+                        options[name] = $this.prop('checked');
+                        cropBoxData = cropManager.image.cropper('getCropBoxData');
+                        canvasData = cropManager.image.cropper('getCanvasData');
 
-                cropManager.image.cropper('destroy').cropper(options);
-            });
+                        options.ready = function () {
+                            cropManager.image.cropper('setCropBoxData', cropBoxData);
+                            cropManager.image.cropper('setCanvasData', canvasData);
+                        };
+                    } else if (type === 'radio') {
+                        options[name] = $this.val();
+                    }
+
+                    cropManager.image.cropper('destroy').cropper(options);
+                });
+            }
 
 
             // Methods
@@ -1142,6 +1146,8 @@
             } else {
                 $inputImage.prop('disabled', true).parent().addClass('disabled');
             }
+
+            cropManager.initialised = true;
         },
         tearDown: function () {
             if (($('#image').data('cropper'))) {
@@ -1207,7 +1213,6 @@
                 });
 
             });
-
             
 
             return false; //cancel form submit
