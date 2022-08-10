@@ -212,7 +212,7 @@
         </div>
     </div>
 
-    <div class="btn-group btn-group-crop mb-3 mt-2">
+    <div class="btn-group btn-group-crop mb-3 mt-2 docs-buttons">
         <button id="btnUploadCrop" type="button" class="btn btn-primary" data-method="getCroppedCanvas">
             @sr["Upload/Save"]
         </button>
@@ -227,18 +227,31 @@
                 <div class="modal-body"></div>
                 <div class="modal-footer">
 
-                    <form id="frmUploadCropped" class="form-inline" asp-controller="FileManager" asp-action="Upload">
+                    <form id="frmUploadCropped" asp-controller="FileManager" asp-action="Upload">
                         <input type="hidden" id="cropResizeImages" name="resizeImages" value="false" />
                         <input type="hidden" id="cropCurrentDir" name="currentDir" value="" />
                         <input type="hidden" class="form-control" id="origFileName" />
-                        <span class="form-control " id="cropCurrentDirLabel" style="float:left;width:100%;margin-bottom:7px;text-align:left;"></span>
-                        <div class="mb-3 me-1">
-                            <input type="text" class="form-control " id="croppedFileName" name="croppedFileName" />
+
+                        <div class="row g-3 align-items-center">
+                            <div class="col-auto">
+                                <span class="form-control " id="cropCurrentDirLabel"></span>
+                            </div>
+                            <div class="col-auto">
+                                <input type="text" class="form-control " id="croppedFileName" name="croppedFileName" />
+                            </div>
                         </div>
 
-                        <button id="btnUploadCropped" type="submit" class="btn btn-primary me-1"><i class="@icons.Upload" aria-hidden="true"></i>&nbsp;@sr["Upload"]</button>
-                        <a class="btn btn-primary me-1" id="btnSaveLocal" href="javascript:void(0);" download="cropped.jpg">@sr["Save Locally"]</a>
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">@sr["Close"]</button>
+                        <div class="row g-3 mt-2 align-items-center">
+                            <div class="col-auto">
+                                <button id="btnUploadCropped" type="submit" class="btn btn-primary me-1"><i class="@icons.Upload" aria-hidden="true"></i>&nbsp;@sr["Upload"]</button>
+                            </div>
+                            <div class="col-auto">
+                                <a class="btn btn-primary me-1" id="btnSaveLocal" href="javascript:void(0);" download="cropped.jpg">@sr["Save Locally"]</a>
+                            </div>
+                            <div class="col-auto">
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">@sr["Close"]</button>
+                            </div>
+                        </div>
                     </form>
                 </div>
             </div>
