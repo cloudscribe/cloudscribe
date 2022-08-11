@@ -39,9 +39,7 @@
     <div class="mb-3">
         <label asp-for="Username">@sr["Username"]</label>
         <div class="input-group">
-            <div class="input-group-prepend">
                 <span class="input-group-text"><i class="@themeSettings.Icons.Username" aria-hidden="true"></i></span>
-            </div>
             <input asp-for="Username" class="form-control" data-val-regex-pattern="^[a-zA-Z0-9]*$" data-val-regex=@sr["Username can only contain letters or digits, with no spaces"] />
             <span asp-validation-for="Username" class="invalid-feedback"></span>
             @Html.ValidationMessage("usernameerror", new { @class = "text-danger" })
@@ -50,9 +48,7 @@
     <div class="mb-3">
         <label asp-for="Email">@sr["Email"]</label>
         <div class="input-group">
-            <div class="input-group-prepend">
                 <span class="input-group-text"><i class="@themeSettings.Icons.Email" aria-hidden="true"></i></span>
-            </div>
             <input asp-for="Email" class="form-control" />
             <span asp-validation-for="Email" class="invalid-feedback"></span>
         </div>
@@ -61,9 +57,7 @@
     <div class="mb-3">
         <label asp-for="Password">@sr["Password"]</label>
         <div class="input-group">
-            <div class="input-group-prepend">
                 <span class="input-group-text"><i class="@themeSettings.Icons.Password" aria-hidden="true"></i></span>
-            </div>
             <input asp-for="Password" class="form-control" data-val="true" data-val-length=@sr["The password must be at least {0} characters long.", Tenant.MinRequiredPasswordLength] data-val-length-max="100" data-val-length-min="@Tenant.MinRequiredPasswordLength" data-val-required="Password is required" />
             <span asp-validation-for="Password" class="invalid-feedback"></span>
         </div>
@@ -72,9 +66,7 @@
     <div class="mb-3">
         <label asp-for="ConfirmPassword">@sr["Confirm Password"]</label>
         <div class="input-group">
-            <div class="input-group-prepend">
                 <span class="input-group-text"><i class="@themeSettings.Icons.Password" aria-hidden="true"></i></span>
-            </div>
             <input asp-for="ConfirmPassword" class="form-control" />
             <span asp-validation-for="ConfirmPassword" class="invalid-feedback"></span>
         </div>

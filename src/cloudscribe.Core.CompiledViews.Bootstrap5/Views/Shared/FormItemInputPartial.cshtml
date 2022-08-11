@@ -15,9 +15,7 @@
     <div class="@grpClass">
         @if (!string.IsNullOrWhiteSpace(Model.IconCssClass) && Model.IconOnLeft)
     {
-        <div class="input-group-prepend">
             <span class="@spnClass"><i class="@Model.IconCssClass" aria-hidden="true"></i></span>
-        </div>
 }
         <input id="@Model.Key" name="@Model.Key" value="@ViewData[Model.Key]" title="@Model.Tooltip" class="form-control @Model.CssClass" cs-form-item-definition="@Model" />
         <span class="invalid-feedback field-validation-valid" data-valmsg-for="@Model.Key" data-valmsg-replace="true"></span>
