@@ -595,20 +595,21 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
             var user = await UserManager.Fetch(selectedSite.Id, userId);
             if (user != null)
             {
-                model.UserId = user.Id;
-                model.Email = user.Email;
-                model.FirstName = user.FirstName;
-                model.LastName = user.LastName;
-                model.Username = user.UserName;
-                model.DisplayName = user.DisplayName;
-                model.AccountApproved = user.AccountApproved;
-                model.Comment = user.Comment;
-                model.EmailConfirmed = user.EmailConfirmed;
-                model.IsLockedOut = user.IsLockedOut;
-                model.LastLoginDate = user.LastLoginUtc;
-                model.TimeZoneId = user.TimeZoneId;
-                model.WebSiteUrl = user.WebSiteUrl;
-                model.AvatarUrl = user.AvatarUrl;
+                model.UserId           = user.Id;
+                model.Email            = user.Email;
+                model.FirstName        = user.FirstName;
+                model.LastName         = user.LastName;
+                model.Username         = user.UserName;
+                model.DisplayName      = user.DisplayName;
+                model.AccountApproved  = user.AccountApproved;
+                model.Comment          = user.Comment;
+                model.EmailConfirmed   = user.EmailConfirmed;
+                model.IsLockedOut      = user.IsLockedOut;
+                model.LastLoginDate    = user.LastLoginUtc;
+                model.TimeZoneId       = user.TimeZoneId;
+                model.WebSiteUrl       = user.WebSiteUrl;
+                model.AvatarUrl        = user.AvatarUrl;
+                model.TwoFactorEnabled = user.TwoFactorEnabled;
 
                 if(string.IsNullOrEmpty(model.TimeZoneId))
                 {

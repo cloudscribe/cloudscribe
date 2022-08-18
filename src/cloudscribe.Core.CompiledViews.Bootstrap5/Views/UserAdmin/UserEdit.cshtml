@@ -53,9 +53,32 @@
     {
         <div class="mb-3">
             <label asp-for="UserId">@sr["UserId"]</label>
+            -
             <label class="control-label">@Model.UserId.ToString()</label>
         </div>
     }
+    
+    @if (Model.UserId != Guid.Empty && Model.TwoFactorEnabled)
+    {
+        <div class="mb-3">
+            <label for="TFA">@sr["Two Factor Authentication"]</label>
+            -
+            <label id="TFA" class="control-label">@sr["Enabled"]</label>
+            <br />
+             <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#confirmDisable2FA">
+                @sr["Disable Two Factor Auth."]
+            </button>
+        </div>
+    }
+    else
+    {
+         <div class="mb-3">
+            <label for="TFA">@sr["Two Factor Authentication"]</label>
+            -
+            <label id="TFA" class="control-label">@sr["Disabled"]</label>
+        </div>
+    }
+
     <div class="mb-3">
         <label asp-for="Email">@sr["Email"]</label>
         <input asp-for="Email" class="form-control" />
@@ -160,6 +183,30 @@
             </div>
         </div>
     </form>
+
+    <form id="deleteform" class="form-inline" asp-controller="Manage" asp-action="Disable2faForUser">
+        <input asp-for="UserId" type="hidden" />
+        <input name="returnUrl" type="hidden" value="@Context.Request.GetCurrentFullUrlWithQueryString()">
+
+        <div class="modal fade" id="confirmDisable2FA" tabindex="-1" role="dialog" aria-labelledby="confirmDisable2FAHeading">
+            <div class="modal-dialog modal-sm" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h4 class="modal-title" id="confirmDisable2FAHeading">@sr["Confirm Disable Two Factor Authentication"]</h4>
+                        <button type="button" data-bs-dismiss="modal" class="btn-close" aria-label='@sr["Close"]'></button>
+                    </div>
+                    <div class="modal-body">
+                        @string.Format(sr["Are you sure you want to disable two factor authentication for the user {0}? Disabling 2FA does not change any stored keys used by this user's authenticator apps."], Model.DisplayName)
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-primary" data-bs-dismiss="modal">@sr["Cancel"]</button>
+                        <input type="submit" value='@sr["Disable"]' class="btn btn-danger btn-ok" />
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+
 }
 <partial name="UserRoles" model="Model" />
 <partial name="UserClaims" model="Model" />
