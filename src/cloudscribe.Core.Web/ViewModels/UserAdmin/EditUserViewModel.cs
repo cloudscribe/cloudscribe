@@ -74,6 +74,6 @@ namespace cloudscribe.Core.Web.ViewModels.Account
 
         public string AvatarUrl { get; set; }
        
-        
+        public bool TwoFactorEnabled { get; set; }
     }
 }

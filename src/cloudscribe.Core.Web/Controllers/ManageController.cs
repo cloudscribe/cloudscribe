@@ -704,6 +704,36 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
             return RedirectToAction(nameof(TwoFactorAuthentication));
         }
 
+
+        [Authorize]
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public virtual async Task<IActionResult> Disable2faForUser(Guid userId, string returnUrl)
+        {
+            var userIdString = userId.ToString();
+
+            var user = await UserManager.FindByIdAsync(userIdString);
+            if (user == null)
+            {
+                this.AlertDanger(StringLocalizer[$"oops something went wrong, the user matching the supplied id '{userIdString}' was not recognised."]);
+            }
+
+            var disable2faResult = await UserManager.SetTwoFactorEnabledAsync(user, false);
+            if (!disable2faResult.Succeeded)
+            {
+                this.AlertDanger(StringLocalizer[$"Unexpected error occured disabling 2FA for user with ID '{userIdString}'."]);
+            }
+            else
+            {
+                this.AlertSuccess(StringLocalizer[$"2FA successfully disabled for user '{user.DisplayName}'."]);
+            }
+
+            Log.LogInformation("Admin has disabled 2FA for user ID {UserId}.", userIdString);
+
+            return Redirect(returnUrl);
+        }
+
+
         [Authorize]
         [HttpGet]
         public virtual async Task<IActionResult> EnableAuthenticator()
