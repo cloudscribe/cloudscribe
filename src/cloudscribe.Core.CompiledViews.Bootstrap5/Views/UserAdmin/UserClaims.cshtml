@@ -1,14 +1,28 @@
 ﻿@model cloudscribe.Core.Web.ViewModels.Account.EditUserViewModel
 @inject IStringLocalizer<CloudscribeCore> sr
+
+
 <form class="form-inline mb-2" role="form" asp-controller="UserAdmin" asp-action="AddClaim" data-submit-once="true">
     <input asp-for="UserId" type="hidden" />
     <input asp-for="SiteId" type="hidden" />
-    <div class="mb-3">
-        <input name="claimType" type="text" class="form-control" placeholder="Claim Type" />
-        <input name="claimValue" type="text" class="form-control" placeholder="Claim Value" /> 
+   
+
+
+     <div class="row g-3 align-items-center">
+        <div class="col-auto">
+            <input name="claimType" type="text" class="form-control" placeholder="Claim Type" />
+        </div>
+        <div class="col-auto">
+            <input name="claimValue" type="text" class="form-control" placeholder="Claim Value" />
+        </div>
+        <div class="col-auto">
+            <button type="submit" value="submit" class="btn btn-primary" data-enabled-text='@sr["Add Claim"]' data-disabled-text='@sr["Working..."]'>@sr["Add Claim"]</button>
+        </div>
     </div>
-    <button type="submit" value="submit" class="btn btn-primary" data-enabled-text='@sr["Add Claim"]' data-disabled-text='@sr["Working..."]'>@sr["Add Claim"]</button>
+
 </form>
+
+
 @if (Model.UserClaims.Count > 0)
 {
     <div>
