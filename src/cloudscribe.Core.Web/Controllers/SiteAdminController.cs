@@ -13,6 +13,10 @@ using cloudscribe.Core.Web.ViewModels.SiteSettings;
 using cloudscribe.Email;
 using cloudscribe.Web.Common.Extensions;
 using cloudscribe.Web.Common.Razor;
+using Microsoft.AspNetCore.Authentication.Facebook;
+using Microsoft.AspNetCore.Authentication.Google;
+using Microsoft.AspNetCore.Authentication.OpenIdConnect;
+using Microsoft.AspNetCore.Authentication.Twitter;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Mvc;
@@ -31,36 +35,48 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
     public class SiteAdminController : Controller
     {
         public SiteAdminController(
-            SiteManager                               siteManager,
-            GeoDataManager                            geoDataManager,
-            ILdapHelper                               ldapHelper,
-            ISiteAccountCapabilitiesProvider          siteCapabilities,
-            IEnumerable<IEmailSender>                 allEmailSenders,
-            ISiteMessageEmailSender                   messageSender,
-            IOptions<MultiTenantOptions>              multiTenantOptions,
-            IOptions<UIOptions>                       uiOptionsAccessor,
-            IThemeListBuilder                         layoutListBuilder,
-            IStringLocalizer<CloudscribeCore>         localizer,
-            cloudscribe.DateTimeUtils.ITimeZoneHelper timeZoneHelper,
-            IOptions<RequestLocalizationOptions>      localizationOptions
+            SiteManager                                siteManager,
+            SiteContext                                currentSite,
+            GeoDataManager                             geoDataManager,
+            ILdapHelper                                ldapHelper,
+            ISiteAccountCapabilitiesProvider           siteCapabilities,
+            IEnumerable<IEmailSender>                  allEmailSenders,
+            ISiteMessageEmailSender                    messageSender,
+            IOptions<MultiTenantOptions>               multiTenantOptions,
+            IOptions<UIOptions>                        uiOptionsAccessor,
+            IThemeListBuilder                          layoutListBuilder,
+            IStringLocalizer<CloudscribeCore>          localizer,
+            DateTimeUtils.ITimeZoneHelper              timeZoneHelper,
+            IOptions<RequestLocalizationOptions>       localizationOptions,
+            IOptionsMonitorCache<OpenIdConnectOptions> oidcOptionsCache,
+            IOptionsMonitorCache<FacebookOptions>      facebookOptionsCache,
+            IOptionsMonitorCache<GoogleOptions>        googleOptionsCache,
+            IOptionsMonitorCache<TwitterOptions>       twitterOptionsCache
             )
         {
             if (multiTenantOptions == null) { throw new ArgumentNullException(nameof(multiTenantOptions)); }
 
-            MultiTenantOptions  = multiTenantOptions.Value;
-            SiteManager         = siteManager ?? throw new ArgumentNullException(nameof(siteManager));
-            GeoDataManager      = geoDataManager ?? throw new ArgumentNullException(nameof(geoDataManager));
-            UIOptions           = uiOptionsAccessor.Value;
-            LayoutListBuilder   = layoutListBuilder;
-            StringLocalizer     = localizer;
-            TimeZoneHelper      = timeZoneHelper;
-            SiteCapabilities    = siteCapabilities;
-            LocalizationOptions = localizationOptions.Value;
-            EmailSenders        = allEmailSenders;
-            MessageSender       = messageSender;
-            LdapHelper          = ldapHelper;
+            MultiTenantOptions   = multiTenantOptions.Value;
+            SiteManager          = siteManager ?? throw new ArgumentNullException(nameof(siteManager));
+            GeoDataManager       = geoDataManager ?? throw new ArgumentNullException(nameof(geoDataManager));
+            UIOptions            = uiOptionsAccessor.Value;
+            LayoutListBuilder    = layoutListBuilder;
+            StringLocalizer      = localizer;
+            TimeZoneHelper       = timeZoneHelper;
+            CurrentSite          = currentSite;
+            SiteCapabilities     = siteCapabilities;
+            LocalizationOptions  = localizationOptions.Value;
+            EmailSenders         = allEmailSenders;
+            MessageSender        = messageSender;
+            LdapHelper           = ldapHelper;
+            OidcOptionsCache     = oidcOptionsCache;
+            FacebookOptionsCache = facebookOptionsCache;
+            GoogleOptionsCache   = googleOptionsCache;
+            TwitterOptionsCache  = twitterOptionsCache;
         }
 
+        protected SiteContext CurrentSite;
+        protected IOptionsMonitorCache<OpenIdConnectOptions> OidcOptionsCache;
         protected SiteManager SiteManager { get; private set; }
         protected GeoDataManager GeoDataManager { get; private set; }
         protected ILdapHelper LdapHelper { get; private set; }
@@ -73,7 +89,10 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
         protected IStringLocalizer StringLocalizer { get; private set; }
         protected IThemeListBuilder LayoutListBuilder { get; private set; }
         protected UIOptions UIOptions;
-        protected cloudscribe.DateTimeUtils.ITimeZoneHelper TimeZoneHelper { get; private set; }
+        protected DateTimeUtils.ITimeZoneHelper TimeZoneHelper { get; private set; }
+        protected IOptionsMonitorCache<FacebookOptions> FacebookOptionsCache { get; }
+        protected IOptionsMonitorCache<GoogleOptions> GoogleOptionsCache { get; }
+        protected IOptionsMonitorCache<TwitterOptions> TwitterOptionsCache { get; }
         protected RequestLocalizationOptions LocalizationOptions { get; private set; }
 
         // GET: /SiteAdmin
@@ -1234,12 +1253,27 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
 
         }
 
+
+        private string ResolveCacheName(SiteContext tenant, string name)
+        {
+            if (tenant == null || MultiTenantOptions.UseRelatedSitesMode)
+            {
+                return name;
+            }
+
+            return $"{name}-{tenant.Id}";
+        }
+
+
         // Post: /SiteAdmin/SocialLogins
-        [HttpPost]
+        [HttpPost] 
         [ValidateAntiForgeryToken]
         [Authorize(Policy = PolicyConstants.AdminPolicy)]
         public virtual async Task<ActionResult> SocialLogins(SocialLoginSettingsViewModel model)
         {
+           
+
+
             var selectedSite = await SiteManager.GetSiteForEdit(model.SiteId);
             // only server admin site can edit other sites settings
             if (selectedSite.Id == SiteManager.CurrentSite.Id)
@@ -1268,25 +1302,31 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
                 return RedirectToAction("Index");
             }
             
-            selectedSite.FacebookAppId = model.FacebookAppId;
-            selectedSite.FacebookAppSecret = model.FacebookAppSecret;
-            selectedSite.GoogleClientId = model.GoogleClientId;
-            selectedSite.GoogleClientSecret = model.GoogleClientSecret;
-            selectedSite.MicrosoftClientId = model.MicrosoftClientId;
+            selectedSite.FacebookAppId         = model.FacebookAppId;
+            selectedSite.FacebookAppSecret     = model.FacebookAppSecret;
+            selectedSite.GoogleClientId        = model.GoogleClientId;
+            selectedSite.GoogleClientSecret    = model.GoogleClientSecret;
+            selectedSite.MicrosoftClientId     = model.MicrosoftClientId;
             selectedSite.MicrosoftClientSecret = model.MicrosoftClientSecret;
-            selectedSite.TwitterConsumerKey = model.TwitterConsumerKey;
+            selectedSite.TwitterConsumerKey    = model.TwitterConsumerKey;
             selectedSite.TwitterConsumerSecret = model.TwitterConsumerSecret;
             selectedSite.OidConnectDisplayName = model.OidConnectDisplayName;
-            selectedSite.OidConnectAppId = model.OidConnectAppId;
-            selectedSite.OidConnectAppSecret = model.OidConnectAppSecret;
-            selectedSite.OidConnectAuthority = model.OidConnectAuthority;
-            selectedSite.OidConnectScopesCsv = model.OidConnectScopes;
+            selectedSite.OidConnectAppId       = model.OidConnectAppId;
+            selectedSite.OidConnectAppSecret   = model.OidConnectAppSecret;
+            selectedSite.OidConnectAuthority   = model.OidConnectAuthority;
+            selectedSite.OidConnectScopesCsv   = model.OidConnectScopes;
 
             await SiteManager.Update(selectedSite);
-            //TODO: need to wrap ICache into something more abstract and/or move it into sitemanager
-            // also need to clear using the folder name if it isn't root site or hostname if using tenants per host
-           // cache.Remove("root");
-            
+
+            // jk - clear these settings from the cache here knowing that they will get re-queried and re-added in 
+            // SiteOpenIdConnectOptions : OptionsMonitor<OpenIdConnectOptions>    >> Get >> CreateOptions
+            // and likewise for the other providers
+            OidcOptionsCache    .TryRemove(ResolveCacheName(CurrentSite, "OpenIdConnect"));
+            FacebookOptionsCache.TryRemove(ResolveCacheName(CurrentSite, "Facebook"));
+            TwitterOptionsCache .TryRemove(ResolveCacheName(CurrentSite, "Twitter"));
+            GoogleOptionsCache  .TryRemove(ResolveCacheName(CurrentSite, "Google"));
+
+
             this.AlertSuccess(string.Format(StringLocalizer["Social Login Settings for {0} was successfully updated."],
                         selectedSite.SiteName), true);
             
