@@ -29,6 +29,8 @@
     <PackageReference Include="SendGrid" Version="9.25.1" />
     <PackageReference Include="Microsoft.Identity.Client" Version="4.46.1" />
     
+    <PackageReference Include="Microsoft.Graph" Version="4.38.0" />
+    <PackageReference Include="Azure.Identity" Version="1.6.1" />
     
   </ItemGroup>
 

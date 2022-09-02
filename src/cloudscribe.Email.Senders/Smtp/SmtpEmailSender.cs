@@ -5,14 +5,17 @@
 // Last Modified:			2018-03-06
 // 
 
+using Azure.Identity;
 using MailKit.Net.Smtp;
 using MailKit.Security;
 using Microsoft.Extensions.Logging;
+using Microsoft.Graph;
 using Microsoft.Identity.Client;
 using MimeKit;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Threading;
 using System.Threading.Tasks;
 
 //TODO: not sure but we may need some changes in this class to support some languages
@@ -95,6 +98,99 @@ namespace cloudscribe.Email.Smtp
             )
         {
 
+
+            //--------------
+            // https://stackoverflow.com/questions/67279556/mailkit-office-365-and-oauth2-problem-in-authentication-of-a-server-side-app
+            // https://docs.microsoft.com/en-us/graph/api/user-sendmail?view=graph-rest-1.0&tabs=csharp
+            //--------------
+
+            var scopes = new[] { "User.Read" };
+
+            // Multi-tenant apps can use "common",
+            // single-tenant apps must use the tenant ID from the Azure portal
+            var tenantId = "d5fe733d-6d61-4060-a35c-27f589675587";
+
+            // Value from app registration
+            var clientId = "55cb2bc7-365e-4637-98b5-f5f5fe7ca13d";
+
+            // using Azure.Identity;
+            var options2 = new TokenCredentialOptions
+            {
+                AuthorityHost = AzureAuthorityHosts.AzurePublicCloud
+            };
+
+            // Callback function that receives the user prompt
+            // Prompt contains the generated device code that you must
+            // enter during the auth process in the browser
+            Func<DeviceCodeInfo, CancellationToken, Task> callback = (code, cancellation) => {
+                Console.WriteLine(code.Message);
+                return Task.FromResult(0);
+            };
+
+            // https://docs.microsoft.com/dotnet/api/azure.identity.devicecodecredential
+            var deviceCodeCredential = new DeviceCodeCredential( 
+                callback, tenantId, clientId, options2);
+
+            var graphClient = new GraphServiceClient(deviceCodeCredential, scopes);
+
+
+            var message = new Message
+            {
+                Subject = "Meet for lunch?",
+                Body = new ItemBody
+                {
+                    ContentType = BodyType.Text,
+                    Content = "The new cafeteria is open."
+                },
+                ToRecipients = new List<Recipient>()
+    {
+        new Recipient
+        {
+            EmailAddress = new EmailAddress
+            {
+                Address = "james.kerslake@gmail.com"
+            }
+        }
+    },
+                CcRecipients = new List<Recipient>()
+    {
+        //new Recipient
+        //{
+        //    EmailAddress = new EmailAddress
+        //    {
+        //        Address = "danas@contoso.onmicrosoft.com"
+        //    }
+        //}
+    }
+            };
+
+            var saveToSentItems = false;
+
+
+
+
+
+
+
+            try { 
+            //await graphClient.Me
+            //    .SendMail(message, saveToSentItems)
+            //    .Request()
+            //    .PostAsync();
+
+                await graphClient.Users["NoReply@esdm.co.uk"]
+                .SendMail(message, saveToSentItems)
+                .Request()
+                .PostAsync().ConfigureAwait(false); 
+
+
+            }
+            catch (Exception ex)
+            {
+                var tttt = ex.Message;
+            }
+
+
             /*
              From https://github.com/jstedfast/MailKit/blob/master/ExchangeOAuth2.md 
            
@@ -110,7 +206,9 @@ namespace cloudscribe.Email.Smtp
             PublicClientApplication object. See https://aka.ms/msal-net-os-browser for details
              
              */
-            // TRY USING OLD CREDS FOR SMTP HERE
+
+
+
 
             var options = new PublicClientApplicationOptions
             {
@@ -127,7 +225,7 @@ namespace cloudscribe.Email.Smtp
                 .WithRedirectUri("http://localhost:44399/signin-oidc")
                 .Build();
 
-            var scopes = new string[] {
+            var scopes2 = new string[] {
                "https://graph.microsoft.com/User.Read"
               //  "email",
              //   "offline_access",
@@ -164,7 +262,7 @@ namespace cloudscribe.Email.Smtp
                                 */
 
 
-                var builder = publicClientApplication.AcquireTokenByUsernamePassword(scopes, "NoReply@esdm.co.uk", "tROtkF0Wt1Hi");
+                var builder = publicClientApplication.AcquireTokenByUsernamePassword(scopes2, "NoReply@esdm.co.uk", "tROtkF0Wt1Hi");
                 var authToken = await builder.ExecuteAsync();
                 // var authToken = await publicClientApplication.AcquireTokenInteractive(scopes).ExecuteAsync();
 
