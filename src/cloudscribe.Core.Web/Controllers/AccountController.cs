@@ -94,6 +94,8 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
                     && (!returnUrl.Contains("/offline"))
                     && (!returnUrl.Contains("/account/logout"))
                     && (!returnUrl.Contains("/manage/changepassword"))
+                    // also don't go back to password change confirmation if we just changed passwd
+                    && (!returnUrl.Contains("/account/resetpasswordconfirmation"))
                     )
                 {
                     return LocalRedirect(returnUrl);
