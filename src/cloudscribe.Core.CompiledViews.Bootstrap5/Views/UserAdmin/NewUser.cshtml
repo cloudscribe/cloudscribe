@@ -68,6 +68,12 @@
                 <label asp-for="MustChangePwd" class="form-check-label">@sr["Must Change Password"]</label>
             </div>
         </div>
+        <div class="mb-3">
+            <div class="form-check">
+                <input asp-for="SendPasswordActivationEmail" class="form-check-input" />
+                <label asp-for="SendPasswordActivationEmail" class="form-check-label">@sr["Email an account activation link to the user"]</label>
+            </div>
+        </div>
     }
 
     <partial name="NewUserMiddlePartial" model="Model" />

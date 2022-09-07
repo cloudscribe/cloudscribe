@@ -59,6 +59,12 @@ namespace cloudscribe.Core.Web.Components.Messaging
             string subject,
             string securityCode);
 
+        Task SendInitialPasswordEmailAsync(
+            ISiteContext siteSettings,
+            string toAddress,
+            string subject,
+            string resetUrl);
+
         Task SendPasswordResetEmailAsync(
             ISiteContext siteSettings,
             string toAddress,

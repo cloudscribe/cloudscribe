@@ -71,6 +71,15 @@ namespace cloudscribe.Core.Web.Components.Messaging
             return Task.CompletedTask;
         }
 
+        public Task SendInitialPasswordEmailAsync(
+            ISiteContext siteSettings,
+            string toAddress,
+            string subject,
+            string resetUrl)
+        {
+            return Task.CompletedTask;
+        }
+
         public Task SendPasswordResetEmailAsync(
             ISiteContext siteSettings,
             string toAddress,
