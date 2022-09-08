@@ -245,7 +245,7 @@ namespace cloudscribe.Core.Web.Components.Messaging
             // so it doesn't block the UI. Which means it is running on a background thread
             // similar as the old ThreadPool.QueueWorkItem
             // as such we need to handle any error that may happen so it doesn't
-            // brind down the thread or the process
+            // bring down the thread or the process
             try
             {
                 var plainTextMessage
@@ -269,6 +269,59 @@ namespace cloudscribe.Core.Web.Components.Messaging
             }
 
         }
+
+        /// <summary>
+        /// Email sent when admin creates a new account, so user can specify own password
+        /// </summary>
+        public async Task SendInitialPasswordEmailAsync(
+           ISiteContext siteSettings,
+           string toAddress,
+           string subject,
+           string resetUrl)
+        {
+            var sender = await _emailSenderResolver.GetEmailSender(siteSettings.Id.ToString());
+            if (sender == null)
+            {
+                var logMessage = $"failed to send initial password email because email settings are not populated for site {siteSettings.SiteName}";
+                _log.LogError(logMessage);
+                return;
+            }
+
+            var model = new PasswordResetEmailViewModel
+            {
+                Tenant = siteSettings,
+                ResetUrl = resetUrl
+            };
+            // OLD JA comments - unsure whether this matters... jk:
+            // in account controller we are calling this method without await
+            // so it doesn't block the UI. Which means it is running on a background thread
+            // similar as the old ThreadPool.QueueWorkItem
+            // as such we need to handle any error that may happen so it doesn't
+            // brind down the thread or the process
+            try
+            {
+                var plainTextMessage
+                   = await _viewRenderer.RenderViewAsString<PasswordResetEmailViewModel>("EmailTemplates/InitialPasswordResetTextEmail", model);
+
+                var htmlMessage
+                    = await _viewRenderer.RenderViewAsString<PasswordResetEmailViewModel>("EmailTemplates/InitialPasswordResetHtmlEmail", model);
+
+                await sender.SendEmailAsync(
+                    toAddress,
+                    siteSettings.DefaultEmailFromAddress,
+                    subject,
+                    plainTextMessage,
+                    htmlMessage,
+                    configLookupKey: siteSettings.Id.ToString()
+                    ).ConfigureAwait(false);
+            }
+            catch (Exception ex)
+            {
+                _log.LogError("error sending initial password email: " + ex.Message + " stacktrace: " + ex.StackTrace);
+            }
+
+        }
+
 
         public async Task SendAccountExistsEmailAsync(
             ISiteContext siteSettings,

@@ -25,6 +25,10 @@
         <button type="submit" class="btn btn-success">@sr["Approve this account"]</button>
     </form>
 }
+
+
+
+
 <form data-submit-once="true" class="form-horizontal" role="form" asp-controller="UserAdmin" asp-action="UserEdit">
     <input asp-for="UserId" type="hidden" />
     <input asp-for="SiteId" type="hidden" />
@@ -208,8 +212,31 @@
     </form>
 
 }
+
+@if (Model.UserId != Guid.Empty)
+{
+    <form data-submit-once="true" class="form-inline" role="form" asp-controller="UserAdmin" asp-action="SendPasswordResetEmail" asp-route-returnurl='@ViewData["ReturnUrl"]'>
+        <input asp-for="UserId" type="hidden" />
+        <input asp-for="SiteId" type="hidden" />
+
+        <div class="mb-3 mt-2">
+            <span>@sr["Password Reset Email"]</span>
+            <button type="submit" id="btn_resetpwd" class="btn btn-primary">@sr["Send"]</button>
+        </div>
+    </form>
+
+    <script type="text/javascript">
+        function DisableButton() {
+            document.getElementById("btn_resetpwd").disabled = true;
+        }
+        window.onbeforeunload = DisableButton;
+    </script>
+}
+
+
 <partial name="UserRoles" model="Model" />
 <partial name="UserClaims" model="Model" />
+
 
 @section SideNav {
     <partial name="AdminSideNav" />
@@ -220,5 +247,4 @@
 @section Scripts {
     <partial name="AdminSideNavScripts" />
     <partial name="UserEditScriptsPartial" />
-
 }

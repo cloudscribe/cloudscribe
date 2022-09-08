@@ -41,7 +41,8 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
             IStringLocalizer<CloudscribeCore> localizer,
             DateTimeUtils.ITimeZoneIdResolver timeZoneIdResolver,
             DateTimeUtils.ITimeZoneHelper     timeZoneHelper,
-            IHandleCustomUserInfoAdmin        customUserEdit
+            IHandleCustomUserInfoAdmin        customUserEdit,
+            IAccountService                   accountService
             )
         {
             UserManager          = userManager;
@@ -53,6 +54,7 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
             TimeZoneIdResolver   = timeZoneIdResolver;
             TimeZoneHelper       = timeZoneHelper;
             CustomUserInfo       = customUserEdit;
+            AccountService       = accountService;
         }
 
         protected SiteManager                SiteManager { get; private set; }
@@ -62,6 +64,7 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
         protected UIOptions                  UIOptions { get; private set; }
         protected IStringLocalizer           StringLocalizer { get; private set; } // string resources
         protected IHandleCustomUserInfoAdmin CustomUserInfo { get; private set; }
+        public IAccountService AccountService { get; }
         protected cloudscribe.DateTimeUtils.ITimeZoneIdResolver TimeZoneIdResolver { get; private set; }
         protected cloudscribe.DateTimeUtils.ITimeZoneHelper     TimeZoneHelper { get; private set; }
 
@@ -405,6 +408,67 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
         [Authorize(Policy = PolicyConstants.UserManagementPolicy)]
         [HttpPost]
         [ValidateAntiForgeryToken]
+        public virtual async Task<IActionResult> SendPasswordResetEmail(Guid siteId,
+            Guid userId,
+            string returnUrl = null)
+        {
+            var selectedSite = await SiteManager.GetSiteForDataOperations(siteId);
+            var user = await UserManager.FindByIdAsync(userId.ToString());
+
+            var success = false;
+
+            if(user != null)
+            { 
+                var email = user.Email;
+
+                if(!string.IsNullOrWhiteSpace(email))
+                {
+                    try
+                    {
+                        var info = await AccountService.GetPasswordResetInfo(email);
+
+                        var resetUrl = Url.Action("ResetPassword", "Account",
+                            new { userId = info.User.Id.ToString(), code = info.PasswordResetToken },
+                            protocol: HttpContext.Request.Scheme);
+
+                        await EmailSender.SendPasswordResetEmailAsync(
+                            SiteManager.CurrentSite,
+                            email,
+                            StringLocalizer["Reset Password"],
+                            resetUrl);
+
+                        success = true;
+
+                        this.AlertSuccess(string.Format(StringLocalizer["Password reset email for {0} was sent."],
+                        user.DisplayName), true);
+                    }
+                    catch
+                    {
+                        // NOOP
+                    }
+                }
+            }
+           
+            if(!success)
+            {
+                this.AlertWarning(StringLocalizer["Failed to send password reset email for this user. Check that this user has a valid email, and check the site email settings"], true);
+            }
+
+            // potential for spamming end user
+            await Task.Delay(2000);
+
+            if (!string.IsNullOrEmpty(returnUrl))
+            {
+                return LocalRedirect(returnUrl);
+            }
+
+            return RedirectToAction("Index", "UserAdmin", new { siteId = selectedSite.Id });
+        }
+
+
+        [Authorize(Policy = PolicyConstants.UserManagementPolicy)]
+        [HttpPost]
+        [ValidateAntiForgeryToken]
         public virtual async Task<IActionResult> NewUser(NewUserViewModel model)
         {
             var selectedSite = await SiteManager.GetSiteForDataOperations(model.SiteId);
@@ -455,7 +519,14 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
 
                 await CustomUserInfo.ProcessUserBeforeCreate(user, HttpContext);
 
-                var result = await UserManager.CreateAsync(user, model.Password);
+                // ** No, never allow a password-less user via this pathway
+                /*  if (!String.IsNullOrWhiteSpace(model.Password))
+                        result = await UserManager.CreateAsync(user, model.Password);
+                    else
+                        result = await UserManager.CreateAsync(user);   */
+
+                IdentityResult result = await UserManager.CreateAsync(user, model.Password);
+
                 if (result.Succeeded)
                 {
                     await CustomUserInfo.HandleNewUserPostSuccess(
@@ -468,6 +539,21 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
                     {
                         user.MustChangePwd = true;
                         await UserManager.UpdateAsync(user);
+                    }
+
+                    if(model.SendPasswordActivationEmail)
+                    {
+                        var info = await AccountService.GetPasswordResetInfo(model.Email);
+
+                        var resetUrl = Url.Action("SetInitialPassword", "Account",
+                            new { userId = user.Id.ToString(), code = info.PasswordResetToken },
+                            protocol: HttpContext.Request.Scheme);
+
+                        await EmailSender.SendInitialPasswordEmailAsync(
+                            SiteManager.CurrentSite,
+                            model.Email,
+                            StringLocalizer["Set Your Password"],
+                            resetUrl);
                     }
 
                     this.AlertSuccess(string.Format(StringLocalizer["user account for {0} was successfully created."],
