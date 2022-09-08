@@ -30,6 +30,8 @@ namespace cloudscribe.Core.Web.ViewModels.UserAdmin
 
         public bool MustChangePwd { get; set; }
 
+        public bool SendPasswordActivationEmail { get; set; } = false;
+
         //[Remote("UsernameAvailable", "Account", AdditionalFields = "UserId",ErrorMessage = "Username not available, please try another value",HttpMethod = "Post")]
         [Required(ErrorMessage = "Username is required.")]
         public string Username { get; set; } = string.Empty;

@@ -94,6 +94,8 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
                     && (!returnUrl.Contains("/offline"))
                     && (!returnUrl.Contains("/account/logout"))
                     && (!returnUrl.Contains("/manage/changepassword"))
+                    // also don't go back to password change confirmation if we just changed passwd
+                    && (!returnUrl.Contains("/account/resetpasswordconfirmation"))
                     )
                 {
                     return LocalRedirect(returnUrl);
@@ -1122,11 +1124,10 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
             Guid selectedUserGuid = Guid.Empty;
             if (userId.HasValue) { selectedUserGuid = userId.Value; }
             bool available = await AccountService.LoginNameIsAvailable(selectedUserGuid, userName);
-
-            
             
             return Json(available);
         }
+
 
         // GET: /Account/ForgotPassword
         [HttpGet]
@@ -1217,6 +1218,58 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
         }
 
 
+        // GET: /Account/SetInitialPassword
+        [HttpGet]
+        [AllowAnonymous]
+        public virtual IActionResult SetInitialPassword(string code = null)
+        {
+            if (string.IsNullOrWhiteSpace(code))
+            {
+                Log.LogInformation("Set initial password url with no code, redirecting to site root.");
+                return this.RedirectToSiteRoot(CurrentSite);
+            }
+
+            return View();
+        }
+
+
+        // POST: /Account/SetInitialPassword
+        [HttpPost]
+        [AllowAnonymous]
+        [ValidateAntiForgeryToken]
+        public virtual async Task<IActionResult> SetInitialPassword(SetInitialPasswordViewModel model)
+        {
+            if (!ModelState.IsValid)
+            {
+                return View(model);
+            }
+
+            var result = await AccountService.ResetPassword(model.Email, model.Password, model.Code);
+
+            if (result.User == null)
+            {
+                // Don't reveal that the user does not exist
+                return RedirectToAction("SetInitialPasswordConfirmation", "Account");
+            }
+
+            if (result.IdentityResult.Succeeded)
+            {
+                return RedirectToAction("SetInitialPasswordConfirmation", "Account");
+            }
+
+            AddErrors(result.IdentityResult);
+            return View();
+        }
+
+        // GET: /Account/SetInitialPasswordConfirmation
+        [HttpGet]
+        [AllowAnonymous]
+        public virtual IActionResult SetInitialPasswordConfirmation()
+        {
+            return View();
+        }
+
+
         // GET: /Account/ResetPassword
         [HttpGet]
         [AllowAnonymous]
@@ -1230,6 +1283,8 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
 
             return View();
         }
+
+
 
         // POST: /Account/ResetPassword
         [HttpPost]
