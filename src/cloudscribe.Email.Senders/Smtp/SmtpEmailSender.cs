@@ -98,6 +98,53 @@ namespace cloudscribe.Email.Smtp
             )
         {
 
+            //  https://zimmergren.net/sending-e-mails-using-microsoft-graph-using-dotnet/#
+
+            // Define your credentials based on the created app and user details.
+            // Specify the options. In most cases we're running the Azure Public Cloud.
+            var credentials = new ClientSecretCredential("d5fe733d-6d61-4060-a35c-27f589675587", "96729b1c-098b-46bc-8090-900f97258a36", "GBZ8Q~soZMEZJRWZFR7VNMxhUyUt-ux13407YcE_",
+                new TokenCredentialOptions { AuthorityHost = AzureAuthorityHosts.AzurePublicCloud });
+
+
+            // Define our new Microsoft Graph client.
+            // Use the credentials we specified above.
+            GraphServiceClient graphServiceClient = new GraphServiceClient(credentials);
+
+
+            var subj = $"Sent from demo code at {DateTime.Now.ToString("s")}";
+            var body =  "email body";
+
+            // Define a simple e-mail message.
+            var message2 = new Message
+            {
+                Subject = subj,
+                Body = new ItemBody
+                {
+                    ContentType = BodyType.Html,
+                    Content = body
+                },
+                ToRecipients = new List<Recipient>()
+                    {
+                        new Recipient { EmailAddress = new EmailAddress { Address = "james.kerslake@gmail.com" }}
+                    }
+            };
+
+            // Send mail as the given user. 
+            try
+            {
+                await graphServiceClient
+                 .Users["3c240f45-4a48-4e40-be5f-c4059da2821a"]
+                 .SendMail(message2, true)
+                 .Request()
+                 .PostAsync();  //.Wait();
+
+            }
+            catch (Exception ex)
+            {
+                var thing = 1;
+            }
+
+
 
             //--------------
             // https://stackoverflow.com/questions/67279556/mailkit-office-365-and-oauth2-problem-in-authentication-of-a-server-side-app
@@ -132,6 +179,8 @@ namespace cloudscribe.Email.Smtp
                 callback, tenantId, clientId, options2);
 
             var graphClient = new GraphServiceClient(deviceCodeCredential, scopes);
+
+            //var user = await graphClient.Users["jimkerslake@esdm.co.uk"].Request().GetAsync();
 
 
             var message = new Message
