@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <Description>common static resources for web applications including ckeditor datepickers, and other js and css</Description>
-    <Version>6.0.0</Version>
+    <Version>6.0.1</Version>
     <TargetFramework>net6.0</TargetFramework>
     <Authors>Joe Audette</Authors>
     <PackageTags>cloudscribe</PackageTags>
@@ -12,6 +12,11 @@
     <RepositoryUrl>https://github.com/cloudscribe/cloudscribe.git</RepositoryUrl>
     <RepositoryType>git</RepositoryType>
   </PropertyGroup>
+
+  <ItemGroup>
+    <None Remove="js\bootstrap5.bundle.js" />
+    <None Remove="js\bootstrap5.bundle.min.js" />
+  </ItemGroup>
 
   <ItemGroup>
     <None Include="icon.png" Pack="true" PackagePath="\" />
@@ -26,6 +31,8 @@
     <EmbeddedResource Include="js\bootstrap-treeview.min.js" />
     <EmbeddedResource Include="js\bootstrap4-datetimepicker.min.js" />
     <EmbeddedResource Include="js\bootstrap4.bundle.min.js" />
+    <EmbeddedResource Include="js\bootstrap5.bundle.js" />
+    <EmbeddedResource Include="js\bootstrap5.bundle.min.js" />
     <EmbeddedResource Include="js\bs-toast.min.js" />
     <EmbeddedResource Include="js\bs4.smartmenus.min.js" />
     <EmbeddedResource Include="js\ckeditor4114\adapters\jquery.js" />
