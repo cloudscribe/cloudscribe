@@ -1246,18 +1246,23 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
 
             var result = await AccountService.ResetPassword(model.Email, model.Password, model.Code);
 
-            if (result.User == null)
-            {
-                // Don't reveal that the user does not exist
-                return RedirectToAction("SetInitialPasswordConfirmation", "Account");
-            }
-
             if (result.IdentityResult.Succeeded)
             {
                 return RedirectToAction("SetInitialPasswordConfirmation", "Account");
             }
 
-            AddErrors(result.IdentityResult);
+            if (result.User == null)
+            {
+                // User has entered non-existent email.
+                // Don't reveal that the user does not exist
+                ModelState.AddModelError(string.Empty, StringLocalizer["The password reset token is invalid. Password reset tokens have a short lifespan for security reasons. You will need to use the forgot password link on the login page to get a new reset token sent to your email address."]);
+            }
+            else
+            {
+                // typically here if user is trying to set password for some other existing user
+                AddErrors(result.IdentityResult);
+            }
+
             return View();
         }
 
