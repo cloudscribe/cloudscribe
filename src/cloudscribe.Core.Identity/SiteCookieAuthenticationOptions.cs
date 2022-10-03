@@ -14,7 +14,7 @@ using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using System.Collections.Generic;
 using System.Net;
-using System.Threading.Tasks;
+using System;
 
 namespace cloudscribe.Core.Identity
 {
@@ -35,39 +35,38 @@ namespace cloudscribe.Core.Identity
             ILogger<SiteCookieAuthenticationOptions> logger
             ) : base(factory, sources, cache)
         {
-            _multiTenantOptions = multiTenantOptionsAccessor.Value;
-            _configuration = configuration;
-            _httpContextAccessor = httpContextAccessor;
-            _cookieAuthRedirector = cookieAuthRedirector;
+            _multiTenantOptions            = multiTenantOptionsAccessor.Value;
+            _configuration                 = configuration;
+            _httpContextAccessor           = httpContextAccessor;
+            _cookieAuthRedirector          = cookieAuthRedirector;
             _cookieAuthTicketStoreProvider = cookieAuthTicketStoreProvider;
-            _siteAuthCookieEvents = siteAuthCookieEvents;
-            _factory = factory;
-            _cache = cache;
-            _log = logger;
-
+            _siteAuthCookieEvents          = siteAuthCookieEvents;
+            _factory                       = factory;
+            _cache                         = cache;
+            _log                           = logger;
         }
 
-        private readonly MultiTenantOptions _multiTenantOptions;
-        private readonly IConfiguration _configuration;
-        private readonly IHttpContextAccessor _httpContextAccessor;
-        private readonly ICookieAuthRedirector _cookieAuthRedirector;
+        private readonly MultiTenantOptions                                _multiTenantOptions;
+        private readonly IConfiguration                                    _configuration;
+        private readonly IHttpContextAccessor                              _httpContextAccessor;
+        private readonly ICookieAuthRedirector                             _cookieAuthRedirector;
         private readonly IOptionsMonitorCache<CookieAuthenticationOptions> _cache;
-        private readonly IOptionsFactory<CookieAuthenticationOptions> _factory;
-        private readonly ICookieAuthTicketStoreProvider _cookieAuthTicketStoreProvider;
-        private readonly ISiteAuthCookieEvents _siteAuthCookieEvents;
-        private readonly ILogger _log;
+        private readonly IOptionsFactory<CookieAuthenticationOptions>      _factory;
+        private readonly ICookieAuthTicketStoreProvider                    _cookieAuthTicketStoreProvider;
+        private readonly ISiteAuthCookieEvents                             _siteAuthCookieEvents;
+        private readonly ILogger                                           _log;
         
         public override CookieAuthenticationOptions Get(string name)
         {
             name = name ?? IdentityConstants.ApplicationScheme;
-            var isAppCookie = IsApplicationCookieName(name);
-            var tenant = _httpContextAccessor.HttpContext.GetTenant<SiteContext>();
-            var resolvedName = ResolveName(tenant, name);
-            return _cache.GetOrAdd(resolvedName, () => CreateOptions(resolvedName, tenant, isAppCookie));
+            
+            var isAppCookie   = IsApplicationCookieName(name);
+            var tenant        = _httpContextAccessor.HttpContext.GetTenant<SiteContext>();
+            var resolvedName  = ResolveName(tenant, name);
+            var cookieOptions = CreateOptions(resolvedName, tenant, isAppCookie);
+
+            return _cache.GetOrAdd(resolvedName, () => cookieOptions);
         }
-
-        
-
 
         private CookieAuthenticationOptions CreateOptions(string name, SiteContext tenant, bool isAppCookie)
         {
@@ -76,6 +75,21 @@ namespace cloudscribe.Core.Identity
             if (isAppCookie)
             {
                 ConfigureApplicationCookie(tenant, options, name);
+
+                try
+                {
+                    // if config setting is supplied, then set cookie expiry
+                    var cookieExpiry = _configuration.GetValue<int?>("AppSettings:MaximumInactivityInMinutes");
+                    if (cookieExpiry != null && cookieExpiry > 0)
+                    {
+                        options.ExpireTimeSpan = TimeSpan.FromMinutes((int)cookieExpiry);
+                        options.SlidingExpiration = true;
+                    }
+                }
+                catch (Exception ex)
+                {
+                    _log.LogError(ex,"Error setting maximum inactivity cookie expiry");
+                }
             }
             else
             {
@@ -121,6 +135,7 @@ namespace cloudscribe.Core.Identity
             options.LogoutPath = tenantPathBase + "/account/logoff";
             options.AccessDeniedPath = tenantPathBase + "/account/accessdenied";
 
+
             var ticketStore = _cookieAuthTicketStoreProvider.GetTicketStore();
             if(ticketStore != null)
             {
@@ -128,7 +143,6 @@ namespace cloudscribe.Core.Identity
             }
 
             //options.Events.OnSigningIn += HandleOnSigningIn;
-
 
 
             //https://github.com/IdentityServer/IdentityServer4.AspNetIdentity/blob/dev/src/IdentityServer4.AspNetIdentity/IdentityServerBuilderExtensions.cs
