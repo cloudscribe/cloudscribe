@@ -1,0 +1,19 @@
+﻿@inject IStringLocalizer<CloudscribeCore> sr
+@{ 
+    ViewData["BodyClass"] = "oops-page";
+}
+
+<div class="jumbotron text-center">
+    <header>
+        <h1><span aria-hidden="true" class="@ViewData["Icon"]"></span> @ViewData["Title"]</h1>
+    </header>
+    <p>@sr["You have been automatically logged out due to a period of inactivity."]</p>
+    @try
+    {
+        <partial name="TenantLoginPartial" />
+    }
+    catch
+    {
+        <partial name="FailSafeLoginPartial" />
+    }
+</div>

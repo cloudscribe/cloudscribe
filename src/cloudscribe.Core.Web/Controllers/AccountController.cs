@@ -16,7 +16,9 @@ using cloudscribe.Core.Web.ViewModels.SiteUser;
 using cloudscribe.Web.Common.Extensions;
 using cloudscribe.Web.Common.Models;
 using cloudscribe.Web.Common.Recaptcha;
+using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Routing;
@@ -33,6 +35,7 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
     
     public class AccountController : Controller
     {
+
         public AccountController(
             IAccountService accountService,
             SiteContext currentSite,
@@ -45,21 +48,23 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
             IRecaptchaServerSideValidator recaptchaServerSideValidator,
             IHandleCustomRegistration customRegistration,
             IHandleAccountAnalytics analyticsHandler,
+            IHttpContextAccessor httpContextAccessor,
             ILogger<AccountController> logger
             )
         {
-            AccountService = accountService;
-            CurrentSite = currentSite; 
-            IdentityServerIntegration = identityServerIntegration;
-            EmailSender = emailSender;
-            IpAddressTracker = ipAddressTracker;
-            StringLocalizer = localizer;
-            Log = logger;
-            RecaptchaKeysProvider = recaptchaKeysProvider;
+            AccountService               = accountService;
+            CurrentSite                  = currentSite; 
+            IdentityServerIntegration    = identityServerIntegration;
+            EmailSender                  = emailSender;
+            IpAddressTracker             = ipAddressTracker;
+            StringLocalizer              = localizer;
+            Log                          = logger;
+            RecaptchaKeysProvider        = recaptchaKeysProvider;
             RecaptchaServerSideValidator = recaptchaServerSideValidator;
-            TimeZoneHelper = timeZoneHelper;
-            CustomRegistration = customRegistration;
-            Analytics = analyticsHandler;
+            TimeZoneHelper               = timeZoneHelper;
+            CustomRegistration           = customRegistration;
+            Analytics                    = analyticsHandler;
+            HttpContextAccessor          = httpContextAccessor;
         }
 
         protected IAccountService AccountService { get; private set; }
@@ -74,6 +79,8 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
         protected SiteTimeZoneService TimeZoneHelper { get; private set; }
         protected IHandleCustomRegistration CustomRegistration { get; private set; }
         protected IHandleAccountAnalytics Analytics { get; private set; }
+        protected IHttpContextAccessor HttpContextAccessor;
+
 
         protected virtual async Task<IActionResult> HandleLoginSuccess(UserLoginResult result, string returnUrl)
         {
@@ -96,6 +103,8 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
                     && (!returnUrl.Contains("/manage/changepassword"))
                     // also don't go back to password change confirmation if we just changed passwd
                     && (!returnUrl.Contains("/account/resetpasswordconfirmation"))
+                    // and likewise if auto-logged-out
+                    && (!returnUrl.Contains("/account/autologoutnotification"))
                     )
                 {
                     return LocalRedirect(returnUrl);
@@ -885,6 +894,53 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
             ViewData["ReturnUrl"] = returnUrl;
             return View(model);
         }
+
+
+        // GET: /Account/RemainingSessionTime
+        [HttpGet]
+        [AllowAnonymous]
+        public virtual async Task<IActionResult> RemainingSessionTime()
+        { 
+            double secondsLeft;
+
+            var thing = HttpContextAccessor.HttpContext;
+                
+
+            try
+            {
+                var authResult = await HttpContextAccessor.HttpContext.AuthenticateAsync();
+                if (authResult.Succeeded)
+                {
+                    if(authResult.Properties.ExpiresUtc != null)
+                    { 
+                        secondsLeft = ((DateTimeOffset)authResult.Properties.ExpiresUtc  - DateTimeOffset.UtcNow).TotalSeconds;
+                    }
+                    else
+                    {
+                        secondsLeft = 0;  // auth success but we haven't managed to read expiry from cookie
+                    }
+                }
+                else {  secondsLeft = 0; }
+            }
+            catch 
+            {
+                secondsLeft = 0;
+            }
+
+            // answer in seconds 
+            return new JsonResult(secondsLeft);
+        }
+
+
+        // GET: /Account/AutoLogoutNotification
+        [HttpGet]
+        [AllowAnonymous]
+        public virtual IActionResult AutoLogoutNotification()
+        {
+            ViewData["Title"] = StringLocalizer["Automatic Logout"];
+            return View();
+        }
+
 
         [HttpGet]
         [AllowAnonymous]

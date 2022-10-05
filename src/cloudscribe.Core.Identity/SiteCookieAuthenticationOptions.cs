@@ -84,6 +84,7 @@ namespace cloudscribe.Core.Identity
                     {
                         options.ExpireTimeSpan = TimeSpan.FromMinutes((int)cookieExpiry);
                         options.SlidingExpiration = true;
+                        options.Cookie.MaxAge = options.ExpireTimeSpan;
                     }
                 }
                 catch (Exception ex)
