@@ -13,14 +13,14 @@
 @if (SignInManager.IsSignedIn(User))
 {
     <ul class="navbar-nav ms-auto my-2 my-lg-0" role="menubar">
-        <li class="nav-item dropdown">
+        <li role="menuitem" class="nav-item dropdown">
             <a id="dropdown-Manage" class="nav-link dropdown-toggle" asp-controller="Manage" asp-action="Index" title='@sr["Manage"]'>
                 <img gravatar-email="@User.GetEmail()" gravatar-enabled="@allowGravatar" override-url="@User.GetAvatarUrl()" disabled-default-url="@themeSettings.DefaultAvatarUrl" gravatar-size="20" alt="@sr["user avatar"]" />
                 @string.Format(helloFormat, User.GetDisplayName())
             </a>
             @await Component.InvokeAsync("Navigation", new { viewName = "Bs4ChildDropdown", filterName = "child-dropdown", startingNodeKey = "Manage" })
         </li>
-        <li class="nav-item">
+        <li role="menuitem" class="nav-item">
             <a id="lnkLogout" href="#" class="nav-link">@sr["Log off"]</a>
             <form asp-controller="Account" asp-action="LogOff" method="post" id="logoutForm"></form>
             <script src="/cr/js/cloudscribe-logout-link.js" asp-append-version="true"></script>
@@ -32,8 +32,8 @@ else
     <ul class="navbar-nav ms-auto my-2 my-lg-0">
         @if (site.AllowNewRegistration)
         {
-            <li class="nav-item"><a class="nav-link" id="registerLink" asp-controller="Account" asp-action="Register">@sr["Register"]</a></li>
+            <li role="menuitem" class="nav-item"><a class="nav-link" id="registerLink" asp-controller="Account" asp-action="Register">@sr["Register"]</a></li>
         }
-        <li class="nav-item"><a class="nav-link" id="loginLink" asp-controller="Account" asp-action="Login" asp-route-returnurl="@Context.Request.PathAndQuery()">@sr["Log in"]</a></li>
+        <li role="menuitem" class="nav-item"><a class="nav-link" id="loginLink" asp-controller="Account" asp-action="Login" asp-route-returnurl="@Context.Request.PathAndQuery()">@sr["Log in"]</a></li>
     </ul>
 }
