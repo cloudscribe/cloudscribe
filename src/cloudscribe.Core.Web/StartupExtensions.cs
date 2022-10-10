@@ -104,6 +104,8 @@ namespace Microsoft.Extensions.DependencyInjection
             services.AddScoped<SystemInfoManager, SystemInfoManager>();
             services.AddScoped<IpAddressTracker, IpAddressTracker>();
             services.AddScoped<SiteTimeZoneService, SiteTimeZoneService>();
+            
+            services.AddTransient<RemainingSessionTimeResolver, RemainingSessionTimeResolver>();
 
             services.AddScoped<SiteDataProtector>();
 

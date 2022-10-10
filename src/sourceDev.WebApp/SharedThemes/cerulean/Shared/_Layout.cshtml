@@ -40,6 +40,7 @@
         <link rel="stylesheet" href="~/css/site.min.css" cs-resolve-theme-resource="true" cs-shared-theme="true" cs-tenant="@Tenant" asp-append-version="true" />
     </environment>
     @RenderSection("Styles", required: false)
+    @Html.RenderResources("css") @*render any css resources declared via helpers in partial views etc*@
     <google-analytics profile-id="@Tenant.GoogleAnalyticsProfileId" user-id="@User.GetUserId()"></google-analytics>
 </head>
 <body class="d-flex flex-column @ViewData["BodyClass"]">
@@ -88,6 +89,7 @@
             <main id="content" class="col order-3">
                 <partial name="AlertsPartial" />
                 <partial name="_CookieConsentPartial" />
+                      <partial name="_AutoLogoutWarningPartial" />
                 @RenderBody()
             </main>
             @if (sideNavVisible)
@@ -152,6 +154,7 @@
     </environment>
     @RenderSection("Bottom", required: false)
     @RenderSection("Scripts", required: false)
+    @Html.RenderResources("js") @*render any js resources declared via helpers in partial views etc*@
     <add-this profile-id="@Tenant.AddThisDotComUsername" async></add-this>
 </body>
 </html>

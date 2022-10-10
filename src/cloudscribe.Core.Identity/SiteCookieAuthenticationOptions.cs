@@ -84,7 +84,9 @@ namespace cloudscribe.Core.Identity
                     {
                         options.ExpireTimeSpan = TimeSpan.FromMinutes((int)cookieExpiry);
                         options.SlidingExpiration = true;
-                        options.Cookie.MaxAge = options.ExpireTimeSpan;
+                        
+                        // this would set the default session cookie type to a fixed expiry one
+                        // options.Cookie.MaxAge = options.ExpireTimeSpan;
                     }
                 }
                 catch (Exception ex)

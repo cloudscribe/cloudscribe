@@ -42,6 +42,7 @@
         <link rel="stylesheet" href="~/css/ie11.css" />
     }
     @RenderSection("Styles", required: false)
+    @Html.RenderResources("css") @*render any css resources declared via helpers in partial views etc*@
     <google-analytics profile-id="@Tenant.GoogleAnalyticsProfileId" user-id="@User.GetUserId()"></google-analytics>
     <base href="@Context.Request.Path" />
 </head>
@@ -91,6 +92,8 @@
             <main id="content" class="col order-3">
                 @*<partial name="AlertsPartial" />*@
                 <partial name="_CookieConsentPartial" />
+                <partial name="_AutoLogoutWarningPartial" />
+
                 @RenderBody()
 
 
@@ -160,18 +163,10 @@
     <script src="~/cr/js/bs-toast.min.js" asp-append-version="true"></script>
     <script src="~/cr/js/toast-alerts.min.js" asp-append-version="true"></script>
 
-    <div hidden="hidden" 
-        id                    ="sessionExpiry" 
-        data-url-source       ="@Url.Action("RemainingSessionTime", "Account")" 
-        data-url-target       ="@Url.Action("AutoLogoutNotification", "Account", null, "https")"
-        data-alert-threshold  ="35"
-        data-alert-message    = "You're gonna get kicked out soon mate"
-        data-polling-interval ="10"
-    >
-    </div>
+  
 
 
-    <script type="text/javascript">
+@*    <script type="text/javascript">
 
         function doCountdown(expirytime, delay, alertThreshold, alertMessage, alerted, resolve) {
 
@@ -270,10 +265,11 @@
         });
 
 
-    </script>
+    </script>*@
 
     @RenderSection("Bottom", required: false)
     @RenderSection("Scripts", required: false)
+    @Html.RenderResources("js") @*render any js resources declared via helpers in partial views etc*@
     <add-this profile-id="@Tenant.AddThisDotComUsername" async></add-this>
 </body>
 </html>

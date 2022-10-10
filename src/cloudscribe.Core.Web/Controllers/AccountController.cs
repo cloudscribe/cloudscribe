@@ -49,6 +49,9 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
             IHandleCustomRegistration customRegistration,
             IHandleAccountAnalytics analyticsHandler,
             IHttpContextAccessor httpContextAccessor,
+            RemainingSessionTimeResolver remainingSessionTimeResolver,
+            SiteUserManager<SiteUser> userManager,
+            SignInManager<SiteUser> signInManager,
             ILogger<AccountController> logger
             )
         {
@@ -65,6 +68,9 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
             CustomRegistration           = customRegistration;
             Analytics                    = analyticsHandler;
             HttpContextAccessor          = httpContextAccessor;
+            RemainingSessionTimeResolver = remainingSessionTimeResolver;
+            UserManager = userManager;
+            SignInManager = signInManager;
         }
 
         protected IAccountService AccountService { get; private set; }
@@ -79,8 +85,10 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
         protected SiteTimeZoneService TimeZoneHelper { get; private set; }
         protected IHandleCustomRegistration CustomRegistration { get; private set; }
         protected IHandleAccountAnalytics Analytics { get; private set; }
+        protected RemainingSessionTimeResolver RemainingSessionTimeResolver { get; private set; }
         protected IHttpContextAccessor HttpContextAccessor;
-
+        protected SiteUserManager<SiteUser> UserManager { get; private set; }
+        public SignInManager<SiteUser> SignInManager { get; }
 
         protected virtual async Task<IActionResult> HandleLoginSuccess(UserLoginResult result, string returnUrl)
         {
@@ -898,37 +906,20 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
 
         // GET: /Account/RemainingSessionTime
         [HttpGet]
-        [AllowAnonymous]
+        [Authorize]
         public virtual async Task<IActionResult> RemainingSessionTime()
-        { 
-            double secondsLeft;
+        {
+            // https://stackoverflow.com/questions/41870309/refresh-user-cookie-ticket-in-asp-net-core-identity
+            //SiteUser user = await UserManager.GetUserAsync(User);
 
-            var thing = HttpContextAccessor.HttpContext;
-                
+            //if (SignInManager.IsSignedIn(User))
+            //{
+            //    await SignInManager.RefreshSignInAsync(user);
 
-            try
-            {
-                var authResult = await HttpContextAccessor.HttpContext.AuthenticateAsync();
-                if (authResult.Succeeded)
-                {
-                    if(authResult.Properties.ExpiresUtc != null)
-                    { 
-                        secondsLeft = ((DateTimeOffset)authResult.Properties.ExpiresUtc  - DateTimeOffset.UtcNow).TotalSeconds;
-                    }
-                    else
-                    {
-                        secondsLeft = 0;  // auth success but we haven't managed to read expiry from cookie
-                    }
-                }
-                else {  secondsLeft = 0; }
-            }
-            catch 
-            {
-                secondsLeft = 0;
-            }
-
+            var result = await RemainingSessionTimeResolver.RemainingSessionTimeInSeconds();
+            
             // answer in seconds 
-            return new JsonResult(secondsLeft);
+            return new JsonResult(result);
         }
 
 
@@ -937,7 +928,7 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
         [AllowAnonymous]
         public virtual IActionResult AutoLogoutNotification()
         {
-            ViewData["Title"] = StringLocalizer["Automatic Logout"];
+            ViewData["Title"] = StringLocalizer["Timed out"];
             return View();
         }
 

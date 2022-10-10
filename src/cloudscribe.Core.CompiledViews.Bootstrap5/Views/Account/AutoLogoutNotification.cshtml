@@ -7,7 +7,7 @@
     <header>
         <h1><span aria-hidden="true" class="@ViewData["Icon"]"></span> @ViewData["Title"]</h1>
     </header>
-    <p>@sr["You have been automatically logged out due to a period of inactivity."]</p>
+    <p>@Html.Raw(sr["For your security, you have been automatically logged out.<br />This is to protect your personal data, in case you are away from your computer."])</p>
     @try
     {
         <partial name="TenantLoginPartial" />
