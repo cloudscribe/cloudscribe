@@ -15,6 +15,12 @@
 //using System.Security.Claims;
 //using System.Threading.Tasks;
 
+
+
+///// jk  ???     context.Request.HttpContext.Items.Add("ExpiresUTC", context.Properties.ExpiresUtc); 
+
+
+
 //namespace cloudscribe.Core.Identity
 //{
 //    public class SiteAuthCookieValidator
@@ -48,7 +54,7 @@
 //            {
 //                await SecurityStampValidator.ValidatePrincipalAsync(context);
 //            }
-            
+
 //        }
 
 //    }

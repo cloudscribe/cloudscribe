@@ -16,7 +16,9 @@ using cloudscribe.Core.Web.ViewModels.SiteUser;
 using cloudscribe.Web.Common.Extensions;
 using cloudscribe.Web.Common.Models;
 using cloudscribe.Web.Common.Recaptcha;
+using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Routing;
@@ -33,6 +35,7 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
     
     public class AccountController : Controller
     {
+
         public AccountController(
             IAccountService accountService,
             SiteContext currentSite,
@@ -45,21 +48,29 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
             IRecaptchaServerSideValidator recaptchaServerSideValidator,
             IHandleCustomRegistration customRegistration,
             IHandleAccountAnalytics analyticsHandler,
+            IHttpContextAccessor httpContextAccessor,
+            RemainingSessionTimeResolver remainingSessionTimeResolver,
+            SiteUserManager<SiteUser> userManager,
+            SignInManager<SiteUser> signInManager,
             ILogger<AccountController> logger
             )
         {
-            AccountService = accountService;
-            CurrentSite = currentSite; 
-            IdentityServerIntegration = identityServerIntegration;
-            EmailSender = emailSender;
-            IpAddressTracker = ipAddressTracker;
-            StringLocalizer = localizer;
-            Log = logger;
-            RecaptchaKeysProvider = recaptchaKeysProvider;
+            AccountService               = accountService;
+            CurrentSite                  = currentSite; 
+            IdentityServerIntegration    = identityServerIntegration;
+            EmailSender                  = emailSender;
+            IpAddressTracker             = ipAddressTracker;
+            StringLocalizer              = localizer;
+            Log                          = logger;
+            RecaptchaKeysProvider        = recaptchaKeysProvider;
             RecaptchaServerSideValidator = recaptchaServerSideValidator;
-            TimeZoneHelper = timeZoneHelper;
-            CustomRegistration = customRegistration;
-            Analytics = analyticsHandler;
+            TimeZoneHelper               = timeZoneHelper;
+            CustomRegistration           = customRegistration;
+            Analytics                    = analyticsHandler;
+            HttpContextAccessor          = httpContextAccessor;
+            RemainingSessionTimeResolver = remainingSessionTimeResolver;
+            UserManager = userManager;
+            SignInManager = signInManager;
         }
 
         protected IAccountService AccountService { get; private set; }
@@ -74,6 +85,10 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
         protected SiteTimeZoneService TimeZoneHelper { get; private set; }
         protected IHandleCustomRegistration CustomRegistration { get; private set; }
         protected IHandleAccountAnalytics Analytics { get; private set; }
+        protected RemainingSessionTimeResolver RemainingSessionTimeResolver { get; private set; }
+        protected IHttpContextAccessor HttpContextAccessor;
+        protected SiteUserManager<SiteUser> UserManager { get; private set; }
+        public SignInManager<SiteUser> SignInManager { get; }
 
         protected virtual async Task<IActionResult> HandleLoginSuccess(UserLoginResult result, string returnUrl)
         {
@@ -96,6 +111,8 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
                     && (!returnUrl.Contains("/manage/changepassword"))
                     // also don't go back to password change confirmation if we just changed passwd
                     && (!returnUrl.Contains("/account/resetpasswordconfirmation"))
+                    // and likewise if auto-logged-out
+                    && (!returnUrl.Contains("/account/autologoutnotification"))
                     )
                 {
                     return LocalRedirect(returnUrl);
@@ -885,6 +902,36 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
             ViewData["ReturnUrl"] = returnUrl;
             return View(model);
         }
+
+
+        // GET: /Account/RemainingSessionTime
+        [HttpGet]
+        [Authorize]
+        public virtual async Task<IActionResult> RemainingSessionTime()
+        {
+            // https://stackoverflow.com/questions/41870309/refresh-user-cookie-ticket-in-asp-net-core-identity
+            //SiteUser user = await UserManager.GetUserAsync(User);
+
+            //if (SignInManager.IsSignedIn(User))
+            //{
+            //    await SignInManager.RefreshSignInAsync(user);
+
+            var result = await RemainingSessionTimeResolver.RemainingSessionTimeInSeconds();
+            
+            // answer in seconds 
+            return new JsonResult(result);
+        }
+
+
+        // GET: /Account/AutoLogoutNotification
+        [HttpGet]
+        [AllowAnonymous]
+        public virtual IActionResult AutoLogoutNotification()
+        {
+            ViewData["Title"] = StringLocalizer["Timed out"];
+            return View();
+        }
+
 
         [HttpGet]
         [AllowAnonymous]

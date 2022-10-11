@@ -42,6 +42,7 @@
         <link rel="stylesheet" href="~/css/ie11.css" />
     }
     @RenderSection("Styles", required: false)
+    @Html.RenderResources("css") @*render any css resources declared via helpers in partial views etc*@
     <google-analytics profile-id="@Tenant.GoogleAnalyticsProfileId" user-id="@User.GetUserId()"></google-analytics>
     <base href="@Context.Request.Path" />
 </head>
@@ -91,7 +92,11 @@
             <main id="content" class="col order-3">
                 @*<partial name="AlertsPartial" />*@
                 <partial name="_CookieConsentPartial" />
+                <partial name="_AutoLogoutWarningPartial" />
+
                 @RenderBody()
+
+
             </main>
             @if (sideNavVisible)
             {
@@ -158,8 +163,113 @@
     <script src="~/cr/js/bs-toast.min.js" asp-append-version="true"></script>
     <script src="~/cr/js/toast-alerts.min.js" asp-append-version="true"></script>
 
+  
+
+
+@*    <script type="text/javascript">
+
+        function doCountdown(expirytime, delay, alertThreshold, alertMessage, alerted, resolve) {
+
+            var secondsremaining = (expirytime.getTime() - new Date().getTime()) / 1000;
+
+            console.log("remains " + secondsremaining);
+
+            if (alertThreshold > 0 && secondsremaining < alertThreshold) {
+                if (!alerted) {
+                    alert(alertMessage);
+                    alerted = true;
+                }
+            }
+
+            if (secondsremaining < 0) {
+                resolve();
+            }
+            else {
+                setTimeout(doCountdown, delay, expirytime, delay, alertThreshold, alertMessage, alerted, resolve);
+            }
+        }
+
+        
+        function poll(retrievalFunction, source, timeout, interval, processingFunction, alertThreshold, alertMessage) {
+            var endTime = Number(new Date()) + (timeout || 5000);
+
+            interval = interval * 1000 || 10000;  // work in ms for setTimeout
+
+            var checkCondition = function(resolve, reject) {
+
+                var result = retrievalFunction(source);
+                
+                // we got a value for session time remaining from server
+                if (result) {
+                    //resolve(result);
+
+                    if (result == 0) {
+                        // server says we are already logged out - so 
+                        // this may well be an unauthenticated page - nothing to do here
+                    }
+
+                    else {
+                        // we have a valid result - so we know when auth cookie expires: 
+                        var expirytime = new Date();
+                        expirytime.setSeconds(expirytime.getSeconds() + result); 
+
+                        console.log('not yet ' + result);
+                        
+                        // now invoke recursively to watch this count down
+                        setTimeout(processingFunction, interval, expirytime, interval, alertThreshold, alertMessage, false, resolve);
+                    }
+                }
+
+                //  failure to get a session value back fromn the endpoint 
+                //  keep trying until endTime
+                else if (Number(new Date()) < endTime) {
+                    setTimeout(checkCondition, interval, resolve, reject);
+                }
+
+                // timeout of the poller in general
+                else {
+                    reject(new Error('session checker timed out'));
+                }
+            };
+
+            return new Promise(checkCondition);
+        }
+
+
+        function getRemainingTime(source) 
+        { 
+            var self = this;
+            let result = 0;
+            
+            $.get(source, function(data) {
+                self.result = data; 
+            });
+
+            return self.result;
+        }
+
+
+        window.addEventListener("DOMContentLoaded", () => {
+
+            let dom            = $("#sessionExpiry")[0];
+            let source         = dom.dataset.urlSource;
+            let target         = dom.dataset.urlTarget;
+            let alertThreshold = dom.dataset.alertThreshold  || 30;
+            let alertMessage   = dom.dataset.alertMessage    || "Session will be logged out soon due to inactivity";
+            let interval       = dom.dataset.pollingInterval || 10;
+
+            poll(getRemainingTime, source, 400000, interval, doCountdown, alertThreshold, alertMessage).then(function() {
+                window.location.href = target;
+            }).catch(function() { // Polling timed out
+            });
+        });
+
+
+    </script>*@
+
     @RenderSection("Bottom", required: false)
     @RenderSection("Scripts", required: false)
+    @Html.RenderResources("js") @*render any js resources declared via helpers in partial views etc*@
     <add-this profile-id="@Tenant.AddThisDotComUsername" async></add-this>
 </body>
 </html>

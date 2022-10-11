@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <Description>common static resources for web applications including ckeditor datepickers, and other js and css</Description>
-    <Version>6.0.1</Version>
+    <Version>6.0.2</Version>
     <TargetFramework>net6.0</TargetFramework>
     <Authors>Joe Audette</Authors>
     <PackageTags>cloudscribe</PackageTags>
@@ -16,6 +16,8 @@
   <ItemGroup>
     <None Remove="js\bootstrap5.bundle.js" />
     <None Remove="js\bootstrap5.bundle.min.js" />
+    <None Remove="js\cloudscribe-autologout-warning.js" />
+    <None Remove="js\cloudscribe-autologout-warning.min.js" />
   </ItemGroup>
 
   <ItemGroup>
@@ -708,6 +710,8 @@
     <EmbeddedResource Include="js\ckeditor4114\skins\moono-lisa\images\spinner.gif" />
     <EmbeddedResource Include="js\ckeditor4114\skins\moono-lisa\readme.md" />
     <EmbeddedResource Include="js\ckeditor4114\styles.js" />
+    <EmbeddedResource Include="js\cloudscribe-autologout-warning.min.js" />
+    <EmbeddedResource Include="js\cloudscribe-autologout-warning.js" />
     <EmbeddedResource Include="js\cloudscribe-autosuggest-unobtrusive.js" />
     <EmbeddedResource Include="js\cloudscribe-autosuggest-unobtrusive.min.js" />
     <EmbeddedResource Include="js\cloudscribe-cascade-unobtrusive.js" />

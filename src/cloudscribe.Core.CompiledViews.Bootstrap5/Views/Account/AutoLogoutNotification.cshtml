@@ -1,0 +1,19 @@
+﻿@inject IStringLocalizer<CloudscribeCore> sr
+@{ 
+    ViewData["BodyClass"] = "oops-page";
+}
+
+<div class="jumbotron text-center">
+    <header>
+        <h1><span aria-hidden="true" class="@ViewData["Icon"]"></span> @ViewData["Title"]</h1>
+    </header>
+    <p>@Html.Raw(sr["For your security, you have been automatically logged out.<br />This is to protect your personal data, in case you are away from your computer."])</p>
+    @try
+    {
+        <partial name="TenantLoginPartial" />
+    }
+    catch
+    {
+        <partial name="FailSafeLoginPartial" />
+    }
+</div>
