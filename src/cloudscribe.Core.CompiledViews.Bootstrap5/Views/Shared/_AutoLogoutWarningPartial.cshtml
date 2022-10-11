@@ -32,15 +32,14 @@
         style = "min-height:60px; display:none" 
         role  = "alert">
 
-        <p class="float-left">
-            <span class="float-left me-2"><i class="glyphicon glyphicon-warning-sign fas fa-exclamation-triangle fa-2x" aria-hidden="true"></i></span>
+        <div class="pull-left">
+            <span class="pull-left me-2"><i class="glyphicon glyphicon-warning-sign fas fa-exclamation-triangle fa-2x" aria-hidden="true"></i></span>
             @Html.Raw(String.Format(sr["For your security, your session will time out in {0} seconds..."], "<b><span id=\"sessionExpiryWarningSeconds\"></span></b>"))
-            @*For your security, your session will time out in <b><span id="sessionExpiryWarningSeconds"></span></b> seconds...*@
-        </p>
-        <div class="float-right">
+        
             <button type="button" class="btn btn-primary ms-2 mb-1 me-2" id="btnSessionLogOut">@sr["Log out"]</button>
 
             <button type="button" class="btn btn-primary ms-2 mb-1" id="sessionKeepAlive">@sr["Stay logged in"]</button>
+
         </div>
     </div>
 }
