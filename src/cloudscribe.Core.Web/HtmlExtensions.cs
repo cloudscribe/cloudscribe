@@ -3,7 +3,9 @@ using Microsoft.AspNetCore.Mvc.Razor;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using System.Text.Encodings.Web;
 
 namespace cloudscribe.Core.Web
 {
@@ -21,18 +23,54 @@ namespace cloudscribe.Core.Web
     /// 
     public static class HtmlExtensions
     {
-        public static HtmlString Resource(this IHtmlHelper HtmlHelper, Func<object, HelperResult> Template, string Type)
+        public static HtmlString Resource(this IHtmlHelper HtmlHelper, Func<object, HelperResult> Template, string Type, bool AllowDuplicates=false)
         {
-            var httpTemplates = HtmlHelper.ViewContext.HttpContext.Items[Type] as List<Func<object, HelperResult>>;
-            if (httpTemplates != null) {
-                var prevItem = from q in httpTemplates where q(null).ToString() == Template(null).ToString() select q;
-                if (!prevItem.Any())
+            if (HtmlHelper.ViewContext.HttpContext.Items[Type] != null)
+            {
+                var httpTemplates = HtmlHelper.ViewContext.HttpContext.Items[Type] as List<Func<object, HelperResult>>;
+
+                if (httpTemplates != null)
                 {
-                    httpTemplates.Add(Template);
+                    if (AllowDuplicates) 
+                    {
+                        httpTemplates.Add(Template);
+                    }
+                    else
+                    {
+                        var prevItem = from q in httpTemplates where q.Target.ToString() == Template.Target.ToString() select q;
+
+                        // watch for multiple invocations from one partial view (Target)
+                        if (prevItem.Any())
+                        {
+                            // do we have any from both the same target and also the same html reference when rendered?
+                            var candidate = "";
+                            using (var writer = new StringWriter())
+                            {
+                                Template(null).WriteTo(writer, HtmlEncoder.Default);
+                                candidate = writer.ToString();
+                                writer.Flush();
+
+                                using (var writer2 = new StringWriter())
+                                {
+                                    foreach (var pre in prevItem)
+                                    {
+                                        pre(null).WriteTo(writer2, HtmlEncoder.Default);
+                                        writer2.Flush();
+                                    }
+                                    if (!writer2.ToString().Contains(candidate)) httpTemplates.Add(Template);
+                                }
+                            }
+                        }
+                        else
+                        {
+                            httpTemplates.Add(Template);
+                        }
+                    }
                 }
-                    
             }
-            
+
+            //if (HtmlHelper.ViewContext.HttpContext.Items[Type] != null) ((List<Func<object, HelperResult>>)HtmlHelper.ViewContext.HttpContext.Items[Type]).Add(Template);
+
             else HtmlHelper.ViewContext.HttpContext.Items[Type] = new List<Func<object, HelperResult>>() { Template };
 
             return new HtmlString(String.Empty);
@@ -46,7 +84,7 @@ namespace cloudscribe.Core.Web
 
                 foreach (var Resource in Resources)
                 {
-                    if (Resource != null) HtmlHelper.ViewContext.Writer.Write(Resource(null));
+                    if (Resource != null) HtmlHelper.ViewContext.Writer.WriteLine(Resource(null));
                 }
             }
 
