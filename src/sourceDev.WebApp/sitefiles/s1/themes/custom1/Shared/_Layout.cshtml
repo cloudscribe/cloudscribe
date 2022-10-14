@@ -136,6 +136,17 @@
                             <a asp-controller="Privacy" asp-action="Index">Privacy Policy</a>
                         </li>
                     }
+
+                    @* uncomment if you want the registration agreement in the footer*@
+                    @*                    
+                    @if (Tenant != null && !string.IsNullOrWhiteSpace(Tenant.RegistrationAgreement))
+                    {
+                        <li class="border-left pl-2 mr-2">
+                            <a asp-controller="registrationagreement" asp-action="Index">Registration Agreement</a>
+                        </li>
+                    }
+                    *@
+
                     <li class="border-left pl-2 mr-2">
                         @* you are free to remove the powered by cloudscribe link but we appreciate it if you choose to keep it! *@
                         <a class="text-nowrap" target="_blank" href="https://www.cloudscribe.com/?utm_source=@Context.Request.Host.Value&amp;utm_medium=referral&amp;utm_campaign=poweredbycloudscribe">Powered by cloudscribe</a>
