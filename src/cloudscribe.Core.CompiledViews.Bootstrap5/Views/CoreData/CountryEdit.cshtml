@@ -12,17 +12,17 @@
     <div asp-validation-summary="All" class="text-danger"></div>
     <input asp-for="Id" type="hidden" />
     <div class="mb-3">
-        <label asp-for="Name">@sr["Name"]</label>
+        <label class="form-label" asp-for="Name">@sr["Name"]</label>
         <input asp-for="Name" class="form-control" />
         <span asp-validation-for="Name" class="invalid-feedback"></span>
     </div>
     <div class="mb-3">
-        <label asp-for="ISOCode2">@sr["ISOCode2"]</label>
+        <label class="form-label" asp-for="ISOCode2">@sr["ISOCode2"]</label>
         <input asp-for="ISOCode2" class="form-control" />
         <span asp-validation-for="ISOCode2" class="invalid-feedback"></span>
     </div>
     <div class="mb-3">
-        <label asp-for="ISOCode3">@sr["ISOCode3"]</label>
+        <label class="form-label" asp-for="ISOCode3">@sr["ISOCode3"]</label>
         <input asp-for="ISOCode3" class="form-control" />
         <span asp-validation-for="ISOCode3" class="invalid-feedback"></span>
     </div>

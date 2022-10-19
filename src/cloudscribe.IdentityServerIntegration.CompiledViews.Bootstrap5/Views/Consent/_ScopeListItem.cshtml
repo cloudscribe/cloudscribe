@@ -28,13 +28,13 @@
     @if (!string.IsNullOrWhiteSpace(Model.Description))
     {
         <div class="consent-description">
-            <label for="scopes_@Model.Name">@Model.Description</label>
+            <label class="form-label" for="scopes_@Model.Name">@Model.Description</label>
         </div>
     }
     else
     {
         <div class="consent-description">
-            <label for="scopes_@Model.Name">@Model.Name</label>
+            <label class="form-label" for="scopes_@Model.Name">@Model.Name</label>
         </div>
 
     }

@@ -24,12 +24,12 @@
     <input asp-for="ReturnPageNumber" type="hidden" />
     <input asp-for="CountryListReturnPageNumber" type="hidden" />
     <div class="mb-3">
-        <label asp-for="Name">@sr["Name"]</label>
+        <label class="form-label" asp-for="Name">@sr["Name"]</label>
         <input asp-for="Name" class="form-control" />
         <span asp-validation-for="Name" class="invalid-feedback"></span>
     </div>
     <div class="mb-3">
-        <label asp-for="Code">@sr["Code"]</label>
+        <label class="form-label" asp-for="Code">@sr["Code"]</label>
         <input asp-for="Code" class="form-control" />
         <span asp-validation-for="Code" class="invalid-feedback"></span>
     </div>

@@ -11,12 +11,12 @@
     <div asp-validation-summary="All" class="text-danger"></div>
     <input asp-for="SiteId" type="hidden" />
     <div class="mb-3">
-        <label asp-for="RecaptchaPublicKey">@sr["Recaptcha Public Key"]</label>
+        <label class="form-label" asp-for="RecaptchaPublicKey">@sr["Recaptcha Public Key"]</label>
         <input asp-for="RecaptchaPublicKey" class="form-control" />
         <span asp-validation-for="RecaptchaPublicKey" class="invalid-feedback"></span>
     </div>
     <div class="mb-3">
-        <label asp-for="RecaptchaPrivateKey">@sr["Recaptcha Private Key"]</label>
+        <label class="form-label" asp-for="RecaptchaPrivateKey">@sr["Recaptcha Private Key"]</label>
         <input asp-for="RecaptchaPrivateKey" class="form-control" />
         <span asp-validation-for="RecaptchaPrivateKey" class="invalid-feedback"></span>
     </div>

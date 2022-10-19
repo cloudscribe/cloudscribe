@@ -3,13 +3,13 @@
 @inject IStringLocalizer<CloudscribeIds4Resources> sr
 <form class="form-inline" asp-controller="Clients" asp-action="AddClientClaim">
     <div class="mb-3">
-        <label for="Type">@sr["Type"]</label>
+        <label class="form-label" for="Type">@sr["Type"]</label>
         <input class="form-control" id="Type" name="Type" data-val="true" data-val-required='@sr["The Type field is required."]'
                aria-required="true" aria-invalid="false" aria-describedby="Type-error" />
         <span class="invalid-feedback field-validation-valid" data-valmsg-for="Type" data-valmsg-replace="true"></span>
     </div>
     <div class="mb-3">
-        <label for="Value">@sr["Value"]</label>
+        <label class="form-label" for="Value">@sr["Value"]</label>
         <input class="form-control" id="Value" name="Value" data-val="true" data-val-required='@sr["The Value field is required."]'
                aria-required="true" aria-invalid="false" aria-describedby="Value-error" />
         <span class="invalid-feedback field-validation-valid" data-valmsg-for="Value" data-valmsg-replace="true"></span>

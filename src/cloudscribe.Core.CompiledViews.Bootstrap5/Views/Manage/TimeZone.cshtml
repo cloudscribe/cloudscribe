@@ -8,7 +8,7 @@
 <form asp-controller="Manage" asp-action="TimeZone" method="post"  role="form">
     <div asp-validation-summary="All" class="text-danger"></div>
     <div class="mb-3">
-    <label asp-for="TimeZoneId">@sr["Time Zone"]</label>
+    <label class="form-label" asp-for="TimeZoneId">@sr["Time Zone"]</label>
     <select asp-for="TimeZoneId" asp-items="Model.AllTimeZones" class="form-control"></select>
     <span asp-validation-for="TimeZoneId" class="text-danger"></span>
 </div>

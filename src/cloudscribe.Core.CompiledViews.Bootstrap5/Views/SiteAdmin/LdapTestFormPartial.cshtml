@@ -15,7 +15,7 @@
         <p>@sr["You should verify that the LDAP settings are valid and working by testing with a valid LDAP username and password."]</p>
         <div class="mb-3">
 
-            <label asp-for="LdapTestUsername">@sr["LDAP Username"]</label>
+            <label class="form-label" asp-for="LdapTestUsername">@sr["LDAP Username"]</label>
             <div class="input-group">
                 <div class="input-group-prepend">
                     <span class="input-group-text"><i class="@themeSettings.Icons.Username" aria-hidden="true"></i></span>
@@ -26,7 +26,7 @@
         </div>
 
         <div class="mb-3">
-            <label asp-for="LdapTestPassword">@sr["LDAP Password"]</label>
+            <label class="form-label" asp-for="LdapTestPassword">@sr["LDAP Password"]</label>
             <div class="input-group">
                 <div class="input-group-prepend">
                     <span class="input-group-text"><i class="@themeSettings.Icons.Password" aria-hidden="true"></i></span>

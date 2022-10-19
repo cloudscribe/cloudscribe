@@ -56,7 +56,7 @@
     @if (Model.UserId != Guid.Empty)
     {
         <div class="mb-3">
-            <label asp-for="UserId">@sr["UserId"]</label>
+            <label class="form-label" asp-for="UserId">@sr["UserId"]</label>
             -
             <label class="control-label">@Model.UserId.ToString()</label>
         </div>
@@ -65,7 +65,7 @@
     @if (Model.UserId != Guid.Empty && Model.TwoFactorEnabled)
     {
         <div class="mb-3">
-            <label for="TFA">@sr["Two Factor Authentication"]</label>
+            <label class="form-label" for="TFA">@sr["Two Factor Authentication"]</label>
             -
             <label id="TFA" class="control-label">@sr["Enabled"]</label>
             <br />
@@ -77,19 +77,19 @@
     else
     {
          <div class="mb-3">
-            <label for="TFA">@sr["Two Factor Authentication"]</label>
+            <label class="form-label" for="TFA">@sr["Two Factor Authentication"]</label>
             -
             <label id="TFA" class="control-label">@sr["Disabled"]</label>
         </div>
     }
 
     <div class="mb-3">
-        <label asp-for="Email">@sr["Email"]</label>
+        <label class="form-label" asp-for="Email">@sr["Email"]</label>
         <input asp-for="Email" class="form-control" />
         <span asp-validation-for="Email" class="invalid-feedback"></span>
     </div>
     <div class="mb-3">
-        <label asp-for="Username">@sr["Username"]</label>
+        <label class="form-label" asp-for="Username">@sr["Username"]</label>
         <input asp-for="Username" class="form-control"
                data-remote-validate-onblur="true"
                data-error-target-id="spnUserNameWarn"
@@ -100,20 +100,20 @@
         @Html.ValidationMessage("usernameerror", new { @class = "text-danger" })
     </div>
     <div class="mb-3">
-        <label asp-for="DisplayName">@sr["Display Name"]</label>
+        <label class="form-label" asp-for="DisplayName">@sr["Display Name"]</label>
         <input asp-for="DisplayName" class="form-control" />
         <span asp-validation-for="DisplayName" class="invalid-feedback"></span>
     </div>
     <div class="mb-3">
-        <label asp-for="FirstName">@sr["First Name"]</label>
+        <label class="form-label" asp-for="FirstName">@sr["First Name"]</label>
         <input asp-for="FirstName" class="form-control" />
     </div>
     <div class="mb-3">
-        <label asp-for="LastName">@sr["Last Name"]</label>
+        <label class="form-label" asp-for="LastName">@sr["Last Name"]</label>
         <input asp-for="LastName" class="form-control" />
     </div>
     <div class="mb-3">
-        <label asp-for="DateOfBirth">@sr["Date of Birth"]</label>
+        <label class="form-label" asp-for="DateOfBirth">@sr["Date of Birth"]</label>
         <input name="DateOfBirth" value="@(Model.DateOfBirth.HasValue ? Model.DateOfBirth.Value.ToString("d") : string.Empty)"
                class="form-control"
                data-bs-datepicker="true"
@@ -130,17 +130,17 @@
         <span asp-validation-for="DateOfBirth" class="invalid-feedback"></span>
     </div>
     <div class="mb-3">
-        <label asp-for="TimeZoneId">@sr["Time Zone"]</label>
+        <label class="form-label" asp-for="TimeZoneId">@sr["Time Zone"]</label>
         <select asp-for="TimeZoneId" asp-items="Model.AllTimeZones" class="form-control"></select>
         <span asp-validation-for="TimeZoneId" class="invalid-feedback"></span>
     </div>
     <div class="mb-3">
-        <label asp-for="WebSiteUrl">@sr["Website Url"]</label>
+        <label class="form-label" asp-for="WebSiteUrl">@sr["Website Url"]</label>
         <input asp-for="WebSiteUrl" class="form-control" />
     </div>
     <partial name="UserEditMiddlePartial" model="Model" />
     <div class="mb-3">
-        <label asp-for="Comment"></label>
+        <label class="form-label" asp-for="Comment"></label>
         <textarea class="form-control" rows="5" asp-for="Comment"
                   data-ckeditor-unobtrusive=""
                   data-ckeditor-config-url="@ckOptions.CustomConfigPath"

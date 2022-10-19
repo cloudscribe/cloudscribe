@@ -19,12 +19,12 @@
         </div>
     </div>
     <div class="mb-3">
-        <label asp-for="CookiePolicySummary">@sr["Cookie Policy Summary"]</label>
+        <label class="form-label" asp-for="CookiePolicySummary">@sr["Cookie Policy Summary"]</label>
         <input asp-for="CookiePolicySummary" class="form-control" />
         <span asp-validation-for="CookiePolicySummary" class="invalid-feedback"></span>
     </div>
     <div class="mb-3">
-        <label asp-for="PrivacyPolicy">@sr["Privacy Policy"]</label>
+        <label class="form-label" asp-for="PrivacyPolicy">@sr["Privacy Policy"]</label>
         <textarea class="form-control" rows="5" asp-for="PrivacyPolicy"
                   data-ckeditor-unobtrusive=""
                   data-ckeditor-config-url="@ckOptions.CustomConfigPath"

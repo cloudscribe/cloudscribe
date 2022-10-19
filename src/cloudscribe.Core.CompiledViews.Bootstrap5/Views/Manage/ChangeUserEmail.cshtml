@@ -47,18 +47,18 @@ else
         @if (Model.HasPassword)
             {
         <div class="mb-3">
-            <label asp-for="Password"></label>
+            <label class="form-label" asp-for="Password"></label>
             <input asp-for="Password" class="form-control" autocomplete="new-password" />
             <span asp-validation-for="Password" class="invalid-feedback"></span>
         </div>
             }
         <div class="mb-3">
-            <label asp-for="CurrentEmail"></label>
+            <label class="form-label" asp-for="CurrentEmail"></label>
             <input asp-for="CurrentEmail" class="form-control" disabled="disabled" />
         </div>
 
         <div class="mb-3">
-            <label asp-for="NewEmail"></label>
+            <label class="form-label" asp-for="NewEmail"></label>
             <input asp-for="NewEmail" class="form-control" />
         </div>
 

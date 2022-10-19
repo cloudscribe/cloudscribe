@@ -17,17 +17,17 @@
     @if (Model.UserId != Guid.Empty)
     {
         <div class="mb-3">
-            <label asp-for="UserId">@sr["UserId"]</label>
+            <label class="form-label" asp-for="UserId">@sr["UserId"]</label>
             <label class="control-label">@Model.UserId.ToString()</label>
         </div>
     }
     <div class="mb-3">
-        <label asp-for="Email">@sr["Email"]</label>
+        <label class="form-label" asp-for="Email">@sr["Email"]</label>
         <input asp-for="Email" class="form-control" />
         <span asp-validation-for="Email" class="invalid-feedback"></span>
     </div>
     <div class="mb-3">
-        <label asp-for="Username">@sr["Username"]</label>
+        <label class="form-label" asp-for="Username">@sr["Username"]</label>
         <input asp-for="Username" class="form-control"
                data-remote-validate-onblur="true"
                data-error-target-id="spnUserNameWarn"
@@ -38,27 +38,27 @@
         @Html.ValidationMessage("usernameerror", new { @class = "text-danger" })
     </div>
     <div class="mb-3">
-        <label asp-for="DisplayName">@sr["Display Name"]</label>
+        <label class="form-label" asp-for="DisplayName">@sr["Display Name"]</label>
         <input asp-for="DisplayName" class="form-control" />
         <span asp-validation-for="DisplayName" class="text-danger"></span>
     </div>
     <div class="mb-3">
-        <label asp-for="FirstName">@sr["First Name"]</label>
+        <label class="form-label" asp-for="FirstName">@sr["First Name"]</label>
         <input asp-for="FirstName" class="form-control" />
     </div>
     <div class="mb-3">
-        <label asp-for="LastName">@sr["Last Name"]</label>
+        <label class="form-label" asp-for="LastName">@sr["Last Name"]</label>
         <input asp-for="LastName" class="form-control" />
     </div>
     @if (Model.UserId == Guid.Empty)
     {
         <div class="mb-3">
-            <label asp-for="Password">@sr["Password"]</label>
+            <label class="form-label" asp-for="Password">@sr["Password"]</label>
             <input asp-for="Password" type="password" class="form-control" />
             <span asp-validation-for="Password" class="invalid-feedback"></span>
         </div>
         <div class="mb-3">
-            <label asp-for="ConfirmPassword">@sr["Confirm Password"]</label>
+            <label class="form-label" asp-for="ConfirmPassword">@sr["Confirm Password"]</label>
             <input asp-for="ConfirmPassword" type="password" class="form-control" />
             <span asp-validation-for="ConfirmPassword" class="invalid-feedback"></span>
         </div>

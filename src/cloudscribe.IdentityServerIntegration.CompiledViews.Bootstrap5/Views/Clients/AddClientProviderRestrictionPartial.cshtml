@@ -3,7 +3,7 @@
 @inject IStringLocalizer<CloudscribeIds4Resources> sr
 <form class="form-inline" asp-controller="Clients" asp-action="AddClientRestriction">
     <div class="mb-3">
-        <label for="Type">@sr["Restriction"]</label>
+        <label class="form-label" for="Type">@sr["Restriction"]</label>
         <input class="form-control" id="Restriction" name="Restriction" data-val="true" data-val-required='@sr["The Restriction field is required."]'
                aria-required="true" aria-invalid="false" aria-describedby="Restriction-error" />
         <span class="invalid-feedback field-validation-valid" data-valmsg-for="Restriction" data-valmsg-replace="true"></span>

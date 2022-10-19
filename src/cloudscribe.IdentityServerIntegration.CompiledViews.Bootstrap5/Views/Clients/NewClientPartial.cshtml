@@ -10,26 +10,26 @@
         <span asp-validation-for="ClientId" class="invalid-feedback"></span> 
     </div>
     <div class="mb-3">
-        <label for="ClientName">@sr["Name"]</label>
+        <label class="form-label" for="ClientName">@sr["Name"]</label>
         <input class="form-control" asp-for="ClientName" />
         <span asp-validation-for="ClientName" class="invalid-feedback"></span> 
     </div>
     <div class="mb-3">
-        <label for="AccessTokenType">@sr["Access Token Type"]</label>
+        <label class="form-label" for="AccessTokenType">@sr["Access Token Type"]</label>
         <select asp-for="AccessTokenType">
             <option value="Jwt">Jwt</option>
             <option value="Reference">Reference</option>
         </select>
     </div>
     <div class="mb-3">
-        <label for="RefreshTokenExpiration">@sr["Refresh Token Expiration"]</label>
+        <label class="form-label" for="RefreshTokenExpiration">@sr["Refresh Token Expiration"]</label>
         <select asp-for="RefreshTokenExpiration">
             <option value="Sliding">Sliding</option>
             <option value="Absolute">Absolute</option>
         </select>
     </div>
     <div class="mb-3">
-        <label for="RefreshTokenUsage">@sr["Refresh Token Usage"]</label>
+        <label class="form-label" for="RefreshTokenUsage">@sr["Refresh Token Usage"]</label>
         <select asp-for="RefreshTokenUsage">
             <option value="ReUse">ReUse</option>
             <option value="OneTimeOnly">OneTimeOnly</option>
