@@ -11,13 +11,13 @@
             <label class="form-control">@Model.Name</label>
         </div>
         <div class="mb-3">
-            <label asp-for="DisplayName">@sr["Display Name"]</label>
+            <label class="form-label" asp-for="DisplayName">@sr["Display Name"]</label>
             <input class="form-control" asp-for="DisplayName" />
             <span asp-validation-for="DisplayName" class="invalid-feedback"></span> 
             @Html.ValidationMessage("apierror", new { @class = "text-danger" })
         </div>
         <div class="mb-3">
-            <label asp-for="Description">@sr["Description"]</label>
+            <label class="form-label" asp-for="Description">@sr["Description"]</label>
             <input class="form-control" asp-for="Description" />
             <span asp-validation-for="Description" class="invalid-feedback"></span> 
         </div>

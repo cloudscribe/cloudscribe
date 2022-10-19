@@ -10,24 +10,24 @@
 <form asp-controller="SiteAdmin" asp-action="SendTestMessage" data-submit-once="true">
     <input value="@Model.Tenant.Id" name="siteId" type="hidden" />
     <div class="mb-3">
-        <label asp-for="ToEmailCsv">@sr["To CSV"]</label>
+        <label class="form-label" asp-for="ToEmailCsv">@sr["To CSV"]</label>
         <input asp-for="ToEmailCsv" class="form-control" />
         <span asp-validation-for="ToEmailCsv" class="text-danger"></span>
     </div>
 
     <div class="mb-3">
-        <label asp-for="Subject">@sr["Subject"]</label>
+        <label class="form-label" asp-for="Subject">@sr["Subject"]</label>
         <input asp-for="Subject" class="form-control" />
         <span asp-validation-for="Subject" class="text-danger"></span>
     </div>
     <div class="mb-3">
-        <label asp-for="Title">@sr["Template Heading"]</label>
+        <label class="form-label" asp-for="Title">@sr["Template Heading"]</label>
         <input asp-for="Title" class="form-control" />
         <span asp-validation-for="Title" class="text-danger"></span>
     </div>
 
     <div class="mb-3">
-        <label asp-for="HtmlBody">@sr["Message"]</label>
+        <label class="form-label" asp-for="HtmlBody">@sr["Message"]</label>
         <textarea class="form-control" rows="5" id="HtmlBody-@Guid.NewGuid().ToString()" name="HtmlBody"
                   data-ckeditor-unobtrusive=""
                   data-ckeditor-config-basehref="@ckBaseRef"

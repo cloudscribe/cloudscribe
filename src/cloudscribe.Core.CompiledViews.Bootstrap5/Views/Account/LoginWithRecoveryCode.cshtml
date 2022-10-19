@@ -11,7 +11,7 @@
 <form method="post">
     <div asp-validation-summary="All" class="text-danger"></div>
     <div class="mb-3">
-        <label asp-for="RecoveryCode"></label>
+        <label class="form-label" asp-for="RecoveryCode"></label>
         <input asp-for="RecoveryCode" class="form-control" autocomplete="off" />
         <span asp-validation-for="RecoveryCode" class="invalid-feedback"></span>
     </div>

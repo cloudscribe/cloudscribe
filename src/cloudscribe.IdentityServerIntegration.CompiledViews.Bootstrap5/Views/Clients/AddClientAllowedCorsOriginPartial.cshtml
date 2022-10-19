@@ -3,7 +3,7 @@
 @inject IStringLocalizer<CloudscribeIds4Resources> sr
 <form class="form-inline" asp-controller="Clients" asp-action="AddClientCorsOrigin">
     <div class="mb-3">
-        <label for="Type">@sr["CORS Origin"]</label>
+        <label class="form-label" for="Type">@sr["CORS Origin"]</label>
         <input class="form-control" id="CorsOrigin" name="CorsOrigin" data-val="true" data-val-required='@sr["The CORS Origin field is required."]'
                aria-required="true" aria-invalid="false" aria-describedby="CorsOrigin-error" />
         <span class="invalid-feedback field-validation-valid" data-valmsg-for="CorsOrigin" data-valmsg-replace="true"></span>

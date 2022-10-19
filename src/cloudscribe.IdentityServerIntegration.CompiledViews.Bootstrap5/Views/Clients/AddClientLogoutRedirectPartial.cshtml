@@ -3,7 +3,7 @@
 @inject IStringLocalizer<CloudscribeIds4Resources> sr
 <form class="form-inline" asp-controller="Clients" asp-action="AddClientLogoutRedirect">
     <div class="mb-3">
-        <label for="Type">@sr["Url"]</label>
+        <label class="form-label" for="Type">@sr["Url"]</label>
         <input class="form-control" id="LogoutRedirectUri" name="LogoutRedirectUri" data-val="true" data-val-required='@sr["The Url field is required."]'
                aria-required="true" aria-invalid="false" aria-describedby="LogoutRedirectUri-error" />
         <span class="invalid-feedback field-validation-valid" data-valmsg-for="LogoutRedirectUri" data-valmsg-replace="true"></span>

@@ -3,7 +3,7 @@
 @inject IStringLocalizer<CloudscribeIds4Resources> sr
 <form class="form-inline" asp-controller="Clients" asp-action="AddClientGrantType">
     <div class="mb-3">
-        <label for="Type">@sr["Grant Type"]</label>
+        <label class="form-label" for="Type">@sr["Grant Type"]</label>
         <input class="form-control" id="GrantType" name="GrantType" data-val="true" data-val-required='@sr["The Grant Type field is required."]'
                aria-required="true" aria-invalid="false" aria-describedby="GrantType-error" />
         <span class="invalid-feedback field-validation-valid" data-valmsg-for="GrantType" data-valmsg-replace="true"></span>

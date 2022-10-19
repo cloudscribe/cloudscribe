@@ -28,18 +28,18 @@
     <input asp-for="SiteId" type="hidden" />
     <input asp-for="ReturnPageNumber" type="hidden" />
     <div class="mb-3">
-        <label asp-for="SiteName">@sr["Site Name"]</label>
+        <label class="form-label" asp-for="SiteName">@sr["Site Name"]</label>
         <input asp-for="SiteName" class="form-control" />
         <span asp-validation-for="SiteName" class="invalid-feedback"></span>
     </div>
     <div class="mb-3">
-        <label asp-for="AliasId">@sr["AliasId"]</label>
+        <label class="form-label" asp-for="AliasId">@sr["AliasId"]</label>
         <span class="form-control">@Model.AliasId</span>
     </div>
     @if (useFolderTenants)
     {
         <div class="mb-3">
-            <label asp-for="SiteFolderName">@sr["Site Folder Name"]</label>
+            <label class="form-label" asp-for="SiteFolderName">@sr["Site Folder Name"]</label>
             <div class="input-group">
                 <div class="input-group-prepend">
                     <span class="input-group-text">@baseUrl</span>
@@ -58,7 +58,7 @@
     else if (useHostTenants)
     {
         <div class="mb-3">
-            <label asp-for="HostName">@sr["Host Name"]</label>
+            <label class="form-label" asp-for="HostName">@sr["Host Name"]</label>
             <input asp-for="HostName" class="form-control" />
             <span asp-validation-for="HostName" class="invalid-feedback"></span>
             @Html.ValidationMessage("hosterror", new { @class = "text-danger" })
@@ -69,14 +69,14 @@
         </div>
     }
     <div class="mb-3">
-        <label asp-for="TimeZoneId">@sr["Time Zone"]</label>
+        <label class="form-label" asp-for="TimeZoneId">@sr["Time Zone"]</label>
         <select asp-for="TimeZoneId" asp-items="Model.AllTimeZones" class="form-control"></select>
         <span asp-validation-for="TimeZoneId" class="invalid-feedback"></span>
     </div>
     @if (Model.AvailableThemes.Count > 0)
     {
         <div class="mb-3">
-            <label asp-for="Theme">@sr["Theme"]</label>
+            <label class="form-label" asp-for="Theme">@sr["Theme"]</label>
             <select id="Layout" asp-for="Theme" asp-items="Model.AvailableThemes" class="form-control"></select>
             <span asp-validation-for="Theme" class="invalid-feedback"></span>
         </div>
@@ -140,7 +140,7 @@
 
         <p>@sr["Please note that adding header or footer content can mess up the layout of your page and may require CSS changes to accomodate your content."]</p>
         <div class="mb-3">
-            <label asp-for="HeaderContent">@sr["Header Content"]</label>
+            <label class="form-label" asp-for="HeaderContent">@sr["Header Content"]</label>
             <textarea class="form-control" rows="5" asp-for="HeaderContent"
                       data-ckeditor-unobtrusive=""
                       data-ckeditor-config-url="@ckOptions.CustomConfigPath"
@@ -152,7 +152,7 @@
             <span asp-validation-for="ClosedMessage" class="invalid-feedback"></span>
         </div>
         <div class="mb-3">
-            <label asp-for="FooterContent">@sr["Footer Content"]</label>
+            <label class="form-label" asp-for="FooterContent">@sr["Footer Content"]</label>
             <textarea class="form-control" rows="5" asp-for="FooterContent"
                       data-ckeditor-unobtrusive=""
                       data-ckeditor-config-url="@ckOptions.CustomConfigPath"
@@ -169,7 +169,7 @@
     @if (Model.AvailableCultures.Count > 0)
     {
         <div class="mb-3">
-            <label asp-for="ForcedCulture">@sr["Forced Culture"]</label>
+            <label class="form-label" asp-for="ForcedCulture">@sr["Forced Culture"]</label>
             <select asp-for="ForcedCulture" asp-items="Model.AvailableCultures" class="form-control"></select>
             <span asp-validation-for="ForcedCulture" class="invalid-feedback"></span>
         </div>
@@ -177,18 +177,18 @@
     @if (Model.AvailableUICultures.Count > 0)
     {
         <div class="mb-3">
-            <label asp-for="ForcedUICulture">@sr["Forced UI Culture"]</label>
+            <label class="form-label" asp-for="ForcedUICulture">@sr["Forced UI Culture"]</label>
             <select asp-for="ForcedUICulture" asp-items="Model.AvailableUICultures" class="form-control"></select>
             <span asp-validation-for="ForcedUICulture" class="invalid-feedback"></span>
         </div>
     }
     <div class="mb-3">
-        <label asp-for="GoogleAnalyticsProfileId">@sr["Google Analytics Tracking Id"]</label>
+        <label class="form-label" asp-for="GoogleAnalyticsProfileId">@sr["Google Analytics Tracking Id"]</label>
         <input asp-for="GoogleAnalyticsProfileId" class="form-control" />
         <span asp-validation-for="GoogleAnalyticsProfileId" class="invalid-feedback"></span>
     </div>
     <div class="mb-3">
-        <label asp-for="AddThisProfileId">@sr["AddThis.com ProfileId"]</label>
+        <label class="form-label" asp-for="AddThisProfileId">@sr["AddThis.com ProfileId"]</label>
         <input asp-for="AddThisProfileId" class="form-control" />
         <span asp-validation-for="AddThisProfileId" class="invalid-feedback"></span>
     </div>
@@ -199,7 +199,7 @@
         </div>
     </div>
     <div class="mb-3">
-        <label asp-for="ClosedMessage">@sr["Closed Message"]</label>
+        <label class="form-label" asp-for="ClosedMessage">@sr["Closed Message"]</label>
         <textarea class="form-control" rows="5" asp-for="ClosedMessage"
                   data-ckeditor-unobtrusive=""
                   data-ckeditor-config-url="@ckOptions.CustomConfigPath"
