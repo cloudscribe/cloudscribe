@@ -52,6 +52,8 @@
     <ProjectReference Include="..\cloudscribe.Core.IdentityServer.NoDb\cloudscribe.Core.IdentityServer.NoDb.csproj" />
     <ProjectReference Include="..\cloudscribe.IdentityServerIntegration.CompiledViews.Bootstrap5\cloudscribe.IdentityServerIntegration.CompiledViews.Bootstrap5.csproj" />
     <ProjectReference Include="..\cloudscribe.MigrationHelper.mojoPortal\cloudscribe.MigrationHelper.mojoPortal.csproj" />
+    <ProjectReference Include="..\cloudscribe.QueryTool.EFCore.MSSQL\cloudscribe.QueryTool.EFCore.MSSQL.csproj" />
+    <ProjectReference Include="..\cloudscribe.QueryTool.EFCore.PostgreSql\cloudscribe.QueryTool.EFCore.PostgreSql.csproj" />
     <ProjectReference Include="..\cloudscribe.Web.StaticFiles\cloudscribe.Web.StaticFiles.csproj" />
   </ItemGroup>
   
