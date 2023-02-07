@@ -1,5 +1,6 @@
 ﻿using cloudscribe.Web.Common;
 using cloudscribe.Web.Common.Analytics;
+using cloudscribe.Web.Common.Analytics.GA4;
 using cloudscribe.Web.Common.Components;
 using cloudscribe.Web.Common.Helpers;
 //using cloudscribe.Web.Common.Http;
@@ -27,7 +28,7 @@ namespace Microsoft.Extensions.DependencyInjection
             {
                 c.BaseAddress = new Uri("https://www.google-analytics.com/");
             });
-            services.AddHttpClient<IRecaptchaValidationService, RecaptchaValidationService>(client => 
+            services.AddHttpClient<IRecaptchaValidationService, RecaptchaValidationService>(client =>
             {
                 client.BaseAddress = new Uri("https://www.google.com/");
 
@@ -40,7 +41,7 @@ namespace Microsoft.Extensions.DependencyInjection
 
             //services.TryAddScoped<ITimeZoneIdResolver, GmtTimeZoneIdResolver>();
             services.TryAddScoped<ICkeditorOptionsResolver, DefaultCkeditorOptionsResolver>();
-            
+
             if (configuration != null)
             {
                 services.Configure<CkeditorOptions>(configuration.GetSection("CkeditorOptions"));
@@ -48,11 +49,12 @@ namespace Microsoft.Extensions.DependencyInjection
                 services.TryAddScoped<IBannerService, ConfigBannerService>();
 
                 services.Configure<GoogleAnalyticsOptions>(configuration.GetSection("GoogleAnalyticsOptions"));
-                
+                services.Configure<GoogleAnalyticsGA4Options>(configuration.GetSection("GoogleAnalyticsGA4Options"));
+
             }
             else
             {
-                
+
                 services.Configure<CkeditorOptions>(c =>
                 {
                     // not doing anything just configuring the default
@@ -61,6 +63,7 @@ namespace Microsoft.Extensions.DependencyInjection
 
             services.AddScoped<GoogleAnalyticsApiService>();
             services.AddScoped<GoogleAnalyticsHelper>();
+            services.AddScoped<GoogleAnalyticsGA4Helper>();
 
             services.AddScoped<cloudscribe.Versioning.IVersionProvider, CommonVersionProvider>();
 
@@ -79,7 +82,7 @@ namespace Microsoft.Extensions.DependencyInjection
 
         //    return options;
         //}
-        
+
         //public static IApplicationBuilder UseCloudscribeCommonStaticFiles(this IApplicationBuilder builder)
         //{
 

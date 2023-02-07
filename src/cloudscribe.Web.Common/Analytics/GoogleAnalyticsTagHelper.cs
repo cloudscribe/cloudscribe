@@ -108,6 +108,13 @@ namespace cloudscribe.Web.Common.TagHelpers
                 return;
             }
 
+            //disable this tag helper if the Google Analytics Tracking Id (ProfileId) looks like a new GA4 tag
+            if (ProfileId.StartsWith("G"))
+            {
+                output.SuppressOutput();
+                return;
+            }
+
             output.TagName = "script";    // Replaces <google-analytics> with <script> tag
 
             var sb = new StringBuilder();

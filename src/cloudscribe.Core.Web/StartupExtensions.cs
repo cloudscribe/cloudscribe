@@ -10,7 +10,6 @@ using cloudscribe.Core.DataProtection;
 using cloudscribe.Core.Identity;
 using cloudscribe.Core.Models;
 using cloudscribe.Core.Models.Identity;
-using cloudscribe.Core.Web.Analytics;
 using cloudscribe.Core.Web.Components;
 using cloudscribe.Core.Web.Components.Messaging;
 using cloudscribe.Core.Web.Design;
@@ -121,8 +120,8 @@ namespace Microsoft.Extensions.DependencyInjection
             services.TryAddScoped<IHandleCustomUserInfo, NoUserInfoCustomization>();
             services.TryAddScoped<IHandleCustomUserInfoAdmin, NoUserEditCustomization>();
 
-            services.TryAddScoped<IHandleAccountAnalytics, GoogleAccountAnalytics>();
-
+            services.TryAddScoped<cloudscribe.Core.Web.Analytics.IHandleAccountAnalytics, cloudscribe.Core.Web.Analytics.GoogleAccountAnalytics>();
+            services.TryAddScoped<cloudscribe.Core.Web.Analytics.GA4.IHandleAccountAnalytics, cloudscribe.Core.Web.Analytics.GA4.GoogleAccountAnalytics>();
 
             //services.TryAddScoped<IViewRendererRouteProvider, SiteViewRendererRouteProvider>();
             services.AddCloudscribeCommmon(configuration);

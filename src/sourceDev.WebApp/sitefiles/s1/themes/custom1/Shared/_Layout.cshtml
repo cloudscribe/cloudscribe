@@ -43,6 +43,7 @@
     }
     @RenderSection("Styles", required: false)
     <google-analytics profile-id="@Tenant.GoogleAnalyticsProfileId" user-id="@User.GetUserId()"></google-analytics>
+    <google-analytics-ga4 profile-id="@Tenant.GoogleAnalyticsProfileId" user-id="@User.GetUserId()"></google-analytics-ga4>
     <base href="@Context.Request.Path" />
 </head>
 <body class="d-flex flex-column @ViewData["BodyClass"] @ieBodyClass">
