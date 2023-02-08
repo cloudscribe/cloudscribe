@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Simon Annetts/ESDM
 // Created:					2022-02-07
-// Last Modified:			2022-02-07
+// Last Modified:			2022-02-08
 //
 
 using Microsoft.AspNetCore.Http;
@@ -54,19 +54,6 @@ namespace cloudscribe.Web.Common.Analytics.GA4
                 _log.LogWarning("failed to add google analytics GA4 event because tempData was null");
             }
         }
-
-        // public void AddTransaction(Transaction transaction)
-        // {
-        //     var tempData = GetTempData();
-        //     if (tempData != null)
-        //     {
-        //         tempData.AddTransaction(transaction); //these are detected by the google analytics taghelper and rendered
-        //     }
-        //     else
-        //     {
-        //         _log.LogWarning("failed to add google analytics GA4 transaction because tempData was null");
-        //     }
-        // }
 
     }
 }

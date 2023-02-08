@@ -2,13 +2,11 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2014-10-26
-// Last Modified:			2019-01-30
+// Last Modified:			2022-02-08
 //
 
 using cloudscribe.Core.Identity;
 using cloudscribe.Core.Models;
-using cloudscribe.Core.Web.Analytics;
-using cloudscribe.Core.Web.Analytics.GA4;
 using cloudscribe.Core.Web.Components;
 using cloudscribe.Core.Web.Components.Messaging;
 using cloudscribe.Core.Web.ExtensionPoints;
@@ -17,7 +15,6 @@ using cloudscribe.Core.Web.ViewModels.SiteUser;
 using cloudscribe.Web.Common.Extensions;
 using cloudscribe.Web.Common.Models;
 using cloudscribe.Web.Common.Recaptcha;
-using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
@@ -49,7 +46,6 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
             IRecaptchaServerSideValidator recaptchaServerSideValidator,
             IHandleCustomRegistration customRegistration,
             Analytics.IHandleAccountAnalytics analyticsHandler,
-            Analytics.GA4.IHandleAccountAnalytics analyticsGA4Handler,
             IHttpContextAccessor httpContextAccessor,
             RemainingSessionTimeResolver remainingSessionTimeResolver,
             SiteUserManager<SiteUser> userManager,
@@ -69,7 +65,6 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
             TimeZoneHelper               = timeZoneHelper;
             CustomRegistration           = customRegistration;
             Analytics                    = analyticsHandler;
-            AnalyticsGA4                 = analyticsGA4Handler;
             HttpContextAccessor          = httpContextAccessor;
             RemainingSessionTimeResolver = remainingSessionTimeResolver;
             UserManager = userManager;
@@ -88,7 +83,6 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
         protected SiteTimeZoneService TimeZoneHelper { get; private set; }
         protected IHandleCustomRegistration CustomRegistration { get; private set; }
         protected Analytics.IHandleAccountAnalytics Analytics { get; private set; }
-        protected Analytics.GA4.IHandleAccountAnalytics AnalyticsGA4 { get; private set; }
         protected RemainingSessionTimeResolver RemainingSessionTimeResolver { get; private set; }
         protected IHttpContextAccessor HttpContextAccessor;
         protected SiteUserManager<SiteUser> UserManager { get; private set; }
@@ -97,7 +91,6 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
         protected virtual async Task<IActionResult> HandleLoginSuccess(UserLoginResult result, string returnUrl)
         {
             await Analytics.HandleLoginSuccess(result);
-            await AnalyticsGA4.HandleLoginSuccess(result);
 
             if (result.User != null)
             {
@@ -140,7 +133,6 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
         protected virtual async Task<IActionResult> HandleLoginNotAllowed(UserLoginResult result, string returnUrl)
         {
             await Analytics.HandleLoginNotAllowed(result);
-            await AnalyticsGA4.HandleLoginNotAllowed(result);
 
             if (result.User != null)
             {
@@ -193,7 +185,6 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
         protected virtual async Task<IActionResult> HandleRequiresTwoFactor(UserLoginResult result, string returnUrl, bool rememberMe)
         {
             await Analytics.HandleRequiresTwoFactor(result);
-            await AnalyticsGA4.HandleRequiresTwoFactor(result);
 
             if (result.User != null)
             {
@@ -210,7 +201,6 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
         protected virtual async Task<IActionResult> HandleLockout(UserLoginResult result = null)
         {
             await Analytics.HandleLockout(result);
-            await AnalyticsGA4.HandleLockout(result);
 
             ViewData["Title"] = StringLocalizer["Locked out"];
 
@@ -277,7 +267,6 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
             ViewData["ReturnUrl"] = returnUrl;
 
             await Analytics.HandleLoginSubmit("Onsite");
-            await AnalyticsGA4.HandleLoginSubmit("Onsite");
 
             var recaptchaKeys = await RecaptchaKeysProvider.GetKeys().ConfigureAwait(false);
             if ((CurrentSite.CaptchaOnLogin) && (!string.IsNullOrEmpty(recaptchaKeys.PublicKey)))
@@ -297,7 +286,6 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
                 var errors = ModelState.Keys.Where(k => ModelState[k].Errors.Count > 0).Select(k => new { propertyName = k, errorMessage = ModelState[k].Errors[0].ErrorMessage });
                 var trackedError = errors.FirstOrDefault().errorMessage;
                 await Analytics.HandleLoginFail("Onsite", trackedError);
-                await AnalyticsGA4.HandleLoginFail("Onsite", trackedError);
 
                 return View(model);
             }
@@ -308,7 +296,6 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
                 if (!captchaResponse.Success)
                 {
                     await Analytics.HandleLoginFail("Onsite", "reCAPTCHA Error");
-                    await AnalyticsGA4.HandleLoginFail("Onsite", "reCAPTCHA Error");
                     ModelState.AddModelError("recaptchaerror", StringLocalizer["reCAPTCHA Error occured. Please try again"]);
                     return View(model);
                 }
@@ -344,7 +331,6 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
             else
             {
                 await Analytics.HandleLoginFail("Onsite", StringLocalizer["Invalid login attempt."]);
-                await AnalyticsGA4.HandleLoginFail("Onsite", StringLocalizer["Invalid login attempt."]);
 
                 Log.LogInformation($"login did not succeed for {model.UserName}");
                 ModelState.AddModelError(string.Empty, StringLocalizer["Invalid login attempt."]);
@@ -410,7 +396,6 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
             else
             {
                 await Analytics.HandleLoginFail("Onsite", StringLocalizer["Invalid authenticator code."]);
-                await AnalyticsGA4.HandleLoginFail("Onsite", StringLocalizer["Invalid authenticator code."]);
 
                 ModelState.AddModelError(string.Empty, StringLocalizer["Invalid authenticator code."]);
                 return View(model);
@@ -475,7 +460,6 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
             else
             {
                 await Analytics.HandleLoginFail("Onsite", StringLocalizer["Invalid recovery code entered."]);
-                await AnalyticsGA4.HandleLoginFail("Onsite", StringLocalizer["Invalid recovery code entered."]);
 
                 ModelState.AddModelError(string.Empty, StringLocalizer["Invalid recovery code entered."]);
                 return View(model);
@@ -556,7 +540,6 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
             ViewData["ReturnUrl"] = returnUrl;
 
             await Analytics.HandleRegisterSubmit("Onsite");
-            await AnalyticsGA4.HandleRegisterSubmit("Onsite");
 
             if ((CurrentSite.CaptchaOnRegistration) && (!string.IsNullOrWhiteSpace(CurrentSite.RecaptchaPublicKey)))
             {
@@ -687,7 +670,6 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
                 if(string.IsNullOrEmpty(te)) { te = "unknown"; }
 
                 await Analytics.HandleRegisterFail("Onsite", te);
-                await AnalyticsGA4.HandleRegisterFail("Onsite", te);
 
                 Log.LogInformation($"registration did not succeed for {model.Email}");
                 ModelState.AddModelError("registrationError", StringLocalizer["Invalid registration attempt."]);
@@ -697,7 +679,6 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
             var errors = ModelState.Keys.Where(k => ModelState[k].Errors.Count > 0).Select(k => new { propertyName = k, errorMessage = ModelState[k].Errors[0].ErrorMessage });
             var trackedError = errors.FirstOrDefault().errorMessage;
             await Analytics.HandleRegisterFail("Onsite", trackedError);
-            await AnalyticsGA4.HandleRegisterFail("Onsite", trackedError);
 
             // If we got this far, something failed, redisplay form
             return View(model);
@@ -712,7 +693,6 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
             Log.LogDebug("ExternalLogin called for " + provider + " with returnurl " + returnUrl);
 
             await Analytics.HandleLoginSubmit(provider);
-            await AnalyticsGA4.HandleLoginSubmit(provider);
 
             // Request a redirect to the external login provider.
             var redirectUrl = Url.Action("ExternalLoginCallback", "Account", new { ReturnUrl = returnUrl });
@@ -732,7 +712,6 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
                 var errormessage = string.Format(StringLocalizer["Error from external provider: {0}"], remoteError);
 
                 await Analytics.HandleLoginFail("Social", errormessage);
-                await AnalyticsGA4.HandleLoginFail("Social", errormessage);
 
                 ModelState.AddModelError("providererror", errormessage);
                 return RedirectToAction("Login");
@@ -747,7 +726,6 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
                     if (result.MustAcceptTerms)
                     {
                         await Analytics.HandleLoginSuccess(result);
-                        await AnalyticsGA4.HandleLoginSuccess(result);
 
                         return RedirectToAction("TermsOfUse");
                     }
@@ -891,7 +869,6 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
                     Log.LogWarning("ExternalLoginInfo was null");
 
                     await Analytics.HandleLoginFail("Social", "ExternalLoginInfo was null");
-                    await AnalyticsGA4.HandleLoginFail("Social", "ExternalLoginInfo was null");
                 }
                 string message = string.Empty;
                 var isExistingAccount = await AccountService.IsExistingAccount(model.Email);
@@ -948,7 +925,7 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
         public virtual async Task<IActionResult> AutoLogoutNotification()
         {
             ViewData["Title"] = StringLocalizer["Timed out"];
-            await AnalyticsGA4.HandleLogout("Login Timed Out");
+            await Analytics.HandleLogout("Login Timed Out");
             return View();
         }
 
@@ -1135,7 +1112,7 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
         public virtual async Task<IActionResult> LogOff()
         {
             await AccountService.SignOutAsync();
-            await AnalyticsGA4.HandleLogout("User Signed Out");
+            await Analytics.HandleLogout("User Signed Out");
             //return Redirect("/");
             return this.RedirectToSiteRoot(CurrentSite);
         }
@@ -1165,6 +1142,7 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
         public virtual async Task<IActionResult> Logout(IdentityServerLogoutViewModel model)
         {
             await AccountService.SignOutAsync();
+            await Analytics.HandleLogout("Federated User Signed Out");
             // set this so UI rendering sees an anonymous user
             HttpContext.User = new ClaimsPrincipal(new ClaimsIdentity());
 

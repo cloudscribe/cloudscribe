@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Simon Annetts/ESDM
 // Created:					2022-02-07
-// Last Modified:			2022-02-07
+// Last Modified:			2022-02-08
 //
 
 using cloudscribe.Core.Identity;
@@ -13,85 +13,67 @@ using Microsoft.Extensions.Options;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace cloudscribe.Core.Web.Analytics.GA4
+namespace cloudscribe.Core.Web.Analytics
 {
-    public class GoogleAccountAnalytics : IHandleAccountAnalytics
+    public partial class GoogleAccountAnalytics : IHandleAccountAnalytics
     {
-        public GoogleAccountAnalytics(
-            SiteContext currentSite,
-            GoogleAnalyticsGA4Helper analyticsHelper,
-            IOptions<GoogleAnalyticsGA4Options> optionsAccessor,
-            IHttpContextAccessor contextAccessor
-            )
-        {
-            _currentSite = currentSite;
-            _analyticsHelper = analyticsHelper;
-            _options = optionsAccessor.Value;
-            _contextAccessor = contextAccessor;
-        }
-
-        private SiteContext _currentSite;
-        private GoogleAnalyticsGA4Helper _analyticsHelper;
-        private GoogleAnalyticsGA4Options _options;
-        private IHttpContextAccessor _contextAccessor;
-
-        public Task HandleLoginSubmit(string source)
+        public Task HandleGA4LoginSubmit(string source)
         {
             if(!string.IsNullOrEmpty(_currentSite.GoogleAnalyticsProfileId))
             {
                 var e = new GoogleAnalyticsGA4Event();
-                e.Name = _options.LoginSubmitEventName;
+                e.Name = _optionsGA4.LoginSubmitEventName;
                 e.Parameters.Add(new KeyValuePair<string, string>("method", source));
-                _analyticsHelper.AddEvent(e);
+                _analyticsGA4Helper.AddEvent(e);
             }
             return Task.FromResult(0);
         }
 
-        public Task HandleLoginFail(string source, string reason)
+        public Task HandleGA4LoginFail(string source, string reason)
         {
             if(!string.IsNullOrEmpty(_currentSite.GoogleAnalyticsProfileId))
             {
                 var e = new GoogleAnalyticsGA4Event();
-                e.Name = _options.LoginFailEventName;
+                e.Name = _optionsGA4.LoginFailEventName;
                 e.Parameters.Add(new KeyValuePair<string, string>("method", source));
                 e.Parameters.Add(new KeyValuePair<string, string>("reason", reason));
-                _analyticsHelper.AddEvent(e);
+                _analyticsGA4Helper.AddEvent(e);
             }
             return Task.FromResult(0);
         }
 
-        public Task HandleRegisterSubmit(string source)
+        public Task HandleGA4RegisterSubmit(string source)
         {
             if(!string.IsNullOrEmpty(_currentSite.GoogleAnalyticsProfileId))
             {
                 var e = new GoogleAnalyticsGA4Event();
-                e.Name = _options.RegisterSubmitEventName;
+                e.Name = _optionsGA4.RegisterSubmitEventName;
                 e.Parameters.Add(new KeyValuePair<string, string>("method", source));
-                _analyticsHelper.AddEvent(e);
+                _analyticsGA4Helper.AddEvent(e);
             }
             return Task.FromResult(0);
         }
 
-        public Task HandleRegisterFail(string source, string reason)
+        public Task HandleGA4RegisterFail(string source, string reason)
         {
             if(!string.IsNullOrEmpty(_currentSite.GoogleAnalyticsProfileId))
             {
                 var e = new GoogleAnalyticsGA4Event();
-                e.Name = _options.RegisterFailEventName;
+                e.Name = _optionsGA4.RegisterFailEventName;
                 e.Parameters.Add(new KeyValuePair<string, string>("method", source));
                 e.Parameters.Add(new KeyValuePair<string, string>("reason", reason));
-                _analyticsHelper.AddEvent(e);
+                _analyticsGA4Helper.AddEvent(e);
             }
             return Task.FromResult(0);
         }
 
-        public async Task HandleLoginSuccess(UserLoginResult result)
+        public async Task HandleGA4LoginSuccess(UserLoginResult result)
         {
             if(!string.IsNullOrEmpty(_currentSite.GoogleAnalyticsProfileId))
             {
                 if(result.IsNewUserRegistration)
                 {
-                    await HandleRegisterSuccess(result);
+                    await HandleGA4RegisterSuccess(result);
                     return;
                 }
 
@@ -102,13 +84,13 @@ namespace cloudscribe.Core.Web.Analytics.GA4
                 }
 
                 var e = new GoogleAnalyticsGA4Event();
-                e.Name = _options.LoginSuccessEventName;
+                e.Name = _optionsGA4.LoginSuccessEventName;
                 e.Parameters.Add(new KeyValuePair<string, string>("method", source));
-                _analyticsHelper.AddEvent(e);
+                _analyticsGA4Helper.AddEvent(e);
             }
         }
 
-        private async Task HandleRegisterSuccess(UserLoginResult result)
+        private async Task HandleGA4RegisterSuccess(UserLoginResult result)
         {
             if(!string.IsNullOrEmpty(_currentSite.GoogleAnalyticsProfileId))
             {
@@ -118,21 +100,21 @@ namespace cloudscribe.Core.Web.Analytics.GA4
                     source = result.ExternalLoginInfo.LoginProvider;
                 }
                 var e = new GoogleAnalyticsGA4Event();
-                e.Name = _options.RegisterSuccessEventName;
+                e.Name = _optionsGA4.RegisterSuccessEventName;
                 e.Parameters.Add(new KeyValuePair<string, string>("method", source));
-                _analyticsHelper.AddEvent(e);
+                _analyticsGA4Helper.AddEvent(e);
             }
         }
 
 
-        public async Task HandleLoginNotAllowed(UserLoginResult result)
+        public async Task HandleGA4LoginNotAllowed(UserLoginResult result)
         {
             if (!string.IsNullOrEmpty(_currentSite.GoogleAnalyticsProfileId))
             {
                 if (result.IsNewUserRegistration)
                 {
                     // first record successful registration
-                    await HandleRegisterSuccess(result);
+                    await HandleGA4RegisterSuccess(result);
 
                     var source = "Onsite";
                     if (result.ExternalLoginInfo != null)
@@ -147,16 +129,16 @@ namespace cloudscribe.Core.Web.Analytics.GA4
                     if (result.NeedsAccountApproval) { reason = "Needs account approval"; }
 
                     var e = new GoogleAnalyticsGA4Event();
-                    e.Name = _options.LoginFailEventName;
+                    e.Name = _optionsGA4.LoginFailEventName;
                     e.Parameters.Add(new KeyValuePair<string, string>("method", source));
                     e.Parameters.Add(new KeyValuePair<string, string>("reason", reason));
-                    _analyticsHelper.AddEvent(e);
+                    _analyticsGA4Helper.AddEvent(e);
                 }
             }
         }
 
 
-        public Task HandleRequiresTwoFactor(UserLoginResult result)
+        public Task HandleGA4RequiresTwoFactor(UserLoginResult result)
         {
             if (!string.IsNullOrEmpty(_currentSite.GoogleAnalyticsProfileId))
             {
@@ -166,14 +148,14 @@ namespace cloudscribe.Core.Web.Analytics.GA4
                     source = result.ExternalLoginInfo.LoginProvider;
                 }
                 var e = new GoogleAnalyticsGA4Event();
-                e.Name = _options.LoginRequires2FaEventName;
+                e.Name = _optionsGA4.LoginRequires2FaEventName;
                 e.Parameters.Add(new KeyValuePair<string, string>("method", source));
-                _analyticsHelper.AddEvent(e);
+                _analyticsGA4Helper.AddEvent(e);
             }
             return Task.FromResult(0);
         }
 
-        public Task HandleLockout(UserLoginResult result)
+        public Task HandleGA4Lockout(UserLoginResult result)
         {
             if (!string.IsNullOrEmpty(_currentSite.GoogleAnalyticsProfileId))
             {
@@ -183,23 +165,37 @@ namespace cloudscribe.Core.Web.Analytics.GA4
                     source = result.ExternalLoginInfo.LoginProvider;
                 }
                 var e = new GoogleAnalyticsGA4Event();
-                e.Name = _options.LoginLockoutEventName;
+                e.Name = _optionsGA4.LoginLockoutEventName;
                 e.Parameters.Add(new KeyValuePair<string, string>("method", source));
-                _analyticsHelper.AddEvent(e);
+                _analyticsGA4Helper.AddEvent(e);
             }
             return Task.FromResult(0);
         }
 
-        public Task HandleLogout(string reason)
+        public Task HandleGA4Logout(string reason)
         {
             if (!string.IsNullOrEmpty(_currentSite.GoogleAnalyticsProfileId))
             {
                 var e = new GoogleAnalyticsGA4Event();
-                e.Name = _options.LogoutEventName;
+                e.Name = _optionsGA4.LogoutEventName;
                 e.Parameters.Add(new KeyValuePair<string, string>("reason", reason));
-                _analyticsHelper.AddEvent(e);
+                _analyticsGA4Helper.AddEvent(e);
             }
             return Task.FromResult(0);
         }
+
+        public Task HandleGA4Search(string searchQuery, int numResults)
+        {
+            if (!string.IsNullOrEmpty(_currentSite.GoogleAnalyticsProfileId))
+            {
+                var e = new GoogleAnalyticsGA4Event();
+                e.Name = _optionsGA4.SearchEventName;
+                e.Parameters.Add(new KeyValuePair<string, string>("search_term", searchQuery));
+                e.Parameters.Add(new KeyValuePair<string, string>("number_of_results", numResults.ToString()));
+                _analyticsGA4Helper.AddEvent(e);
+            }
+            return Task.FromResult(0);
+        }
+
     }
 }

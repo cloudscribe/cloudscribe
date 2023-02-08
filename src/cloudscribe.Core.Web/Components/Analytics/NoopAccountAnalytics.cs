@@ -1,8 +1,4 @@
 ﻿using cloudscribe.Core.Identity;
-using Microsoft.AspNetCore.Http;
-using System;
-using System.Collections.Generic;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace cloudscribe.Core.Web.Analytics
@@ -10,7 +6,7 @@ namespace cloudscribe.Core.Web.Analytics
     /// <summary>
     /// No operation analytics doesn't do anything, register this as scoped if you don't want any analytics
     /// </summary>
-    public class NoopAccountAnalytics : IHandleAccountAnalytics
+    public partial class NoopAccountAnalytics : IHandleAccountAnalytics
     {
         public Task HandleLoginSubmit(string source)
         {
@@ -48,6 +44,16 @@ namespace cloudscribe.Core.Web.Analytics
         }
 
         public Task HandleLockout(UserLoginResult result)
+        {
+            return Task.FromResult(0);
+        }
+
+        public Task HandleLogout(string reason)
+        {
+            return Task.FromResult(0);
+        }
+
+        public Task HandleSearch(string searchQuery, int numResults)
         {
             return Task.FromResult(0);
         }

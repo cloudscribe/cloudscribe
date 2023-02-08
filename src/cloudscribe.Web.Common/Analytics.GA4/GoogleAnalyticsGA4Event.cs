@@ -1,4 +1,4 @@
-// Copyright (c) Idox Ltd All rights reserved.
+// Copyright (c) Idox Software Ltd All rights reserved.
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Simon Annetts/ESDM
 // Created:					2022-02-07

@@ -14,6 +14,12 @@ namespace cloudscribe.Web.Common.Analytics.GA4
         /// </summary>
         public bool TrackUserId { get; set; } = true;
 
+        /// <summary>
+        /// Enable this to see events in realtime within the Google Analytics UI
+        /// https://support.google.com/analytics/answer/7201382#zippy=%2Cgoogle-tag-websites
+        /// </summary>
+        public bool EnableDebugMode { get; set; } = false;
+
 
 
         // https://developers.google.com/analytics/devguides/collection/ga4/reference/events?client_type=gtag#login
@@ -30,6 +36,7 @@ namespace cloudscribe.Web.Common.Analytics.GA4
 
         public string LogoutEventName { get; set; } = "logout";                 //GA4 custom event name - needs to be defined in GA4
 
-
+        //https://developers.google.com/analytics/devguides/collection/ga4/reference/events?client_type=gtag#search
+        public string SearchEventName { get; set; } = "search";                 //GA4 recommended event name
     }
 }

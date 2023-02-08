@@ -1,4 +1,4 @@
-// Copyright (c) Idox Ltd All rights reserved.
+// Copyright (c) Idox Software Ltd All rights reserved.
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Simon Annetts/ESDM
 // Created:					2022-02-07
@@ -45,8 +45,7 @@ namespace cloudscribe.Web.Common.TagHelpers
                 return;
             }
 
-            // output.TagName = "script";    // Replaces <google-analytics> with <script> tag
-            output.TagName = null;
+            output.TagName = null; //not doing tag replacement
 
             var sb = new StringBuilder();
             sb.AppendLine(""); //testing with G-1Z6272PNTZ and UA-256173305-1
@@ -57,18 +56,21 @@ namespace cloudscribe.Web.Common.TagHelpers
             sb.AppendLine("window.dataLayer = window.dataLayer || [];");
             sb.AppendLine("function gtag(){dataLayer.push(arguments);}");
             sb.AppendLine("gtag('js', new Date());");
+            var url = ViewContext.HttpContext.Request.Path;
+            sb.AppendLine($"gtag('set', 'page_location', '{url}');");
+            var referer = ViewContext.HttpContext.Request.Headers["Referer"];
+            sb.AppendLine($"gtag('set', 'page_referrer', '{referer}');");
 
-            //Tracking by UserId is optional
-            if (_options.TrackUserId && !string.IsNullOrWhiteSpace(UserId))
-            {
-                sb.AppendLine("gtag('config', '" + ProfileId + "', {'user_id': '" + UserId + "'});");
-            }
-            else
-            {
-                sb.AppendLine("gtag('config', '" + ProfileId + "');");
-            }
+            //configure the profile id
+            sb.Append("gtag('config', '" + ProfileId + "', { ");
+            // Optionally set user id. This enables user-level reports and remarketing across devices.
+            if (_options.TrackUserId && !string.IsNullOrWhiteSpace(UserId)) sb.Append("'user_id': '" + UserId + "', ");
+            // Optionally enable debug view: https://support.google.com/analytics/answer/7201382
+            if (_options.EnableDebugMode) sb.Append("'debug_mode': true, ");
+            sb.Remove(sb.Length - 2, 2);
+            sb.AppendLine(" });");
 
-
+            //add any events that may have been stored in TempData
             var eventList = ViewContext.TempData.GetGoogleAnalyticsGA4Events();
             foreach (var e in eventList)
             {
@@ -83,7 +85,8 @@ namespace cloudscribe.Web.Common.TagHelpers
                         var comma = "";
                         foreach(var f in e.Parameters)
                         {
-                            sb.Append(comma + "'" + f.Key + "': '" + f.Value + "'");
+                            if(int.TryParse(f.Value, out int v)) sb.Append(comma + "'" + f.Key + "': " + f.Value);
+                            else sb.Append(comma + "'" + f.Key + "': '" + f.Value + "'");
                             comma = ",";
                         }
                         sb.Append("}");

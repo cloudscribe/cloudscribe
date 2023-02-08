@@ -1,9 +1,9 @@
-// Copyright (c) Idox Ltd All rights reserved.
+// Copyright (c) Idox Software Ltd All rights reserved.
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Simon Annetts/ESDM
 // Created:					2022-02-07
-// Last Modified:			2022-02-07
-// 
+// Last Modified:			2022-02-08
+//
 
 using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using Newtonsoft.Json;
@@ -27,7 +27,7 @@ namespace cloudscribe.Web.Common.Analytics.GA4
                 list = new List<GoogleAnalyticsGA4Event>();
             }
             list.Add(analyticsEvent);
-            
+
             tempData[GoogleAnalyticsGA4Event.TempDataKey] = JsonConvert.SerializeObject(list);
         }
 
@@ -43,36 +43,6 @@ namespace cloudscribe.Web.Common.Analytics.GA4
 
             return new List<GoogleAnalyticsGA4Event>();
         }
-
-        // public static void AddTransaction(this ITempDataDictionary tempData, Transaction transaction)
-        // {
-        //     List<Transaction> list;
-        //     if (tempData.ContainsKey(Transaction.TempDataKey))
-        //     {
-        //         string json = (string)tempData[Transaction.TempDataKey];
-        //         list = JsonConvert.DeserializeObject<List<Transaction>>(json);
-        //     }
-        //     else
-        //     {
-        //         list = new List<Transaction>();
-        //     }
-        //     list.Add(transaction);
-
-        //     tempData[Transaction.TempDataKey] = JsonConvert.SerializeObject(list);
-        // }
-
-        // public static List<Transaction> GetGoogleAnalyticsTransactions(this ITempDataDictionary tempData)
-        // {
-
-        //     if (tempData.ContainsKey(Transaction.TempDataKey))
-        //     {
-        //         string json = (string)tempData[Transaction.TempDataKey];
-        //         List<Transaction> list = JsonConvert.DeserializeObject<List<Transaction>>(json);
-        //         return list;
-        //     }
-
-        //     return new List<Transaction>();
-        // }
 
     }
 }

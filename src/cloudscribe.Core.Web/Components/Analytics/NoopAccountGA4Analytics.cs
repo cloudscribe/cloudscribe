@@ -1,4 +1,4 @@
-﻿// Copyright (c) Idox Ltd All rights reserved.
+﻿// Copyright (c) Idox Software Ltd All rights reserved.
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Simon Annetts/ESDM
 // Created:					2022-02-07
@@ -8,54 +8,59 @@
 using cloudscribe.Core.Identity;
 using System.Threading.Tasks;
 
-namespace cloudscribe.Core.Web.Analytics.GA4
+namespace cloudscribe.Core.Web.Analytics
 {
     /// <summary>
     /// No operation analytics doesn't do anything, register this as scoped if you don't want any analytics
     /// </summary>
-    public class NoopAccountAnalytics : IHandleAccountAnalytics
+    public partial class NoopAccountAnalytics : IHandleAccountAnalytics
     {
-        public Task HandleLoginSubmit(string source)
+        public Task HandleGA4LoginSubmit(string source)
         {
             return Task.FromResult(0);
         }
 
-        public Task HandleLoginFail(string source, string reason)
+        public Task HandleGA4LoginFail(string source, string reason)
         {
             return Task.FromResult(0);
         }
 
-        public Task HandleRegisterSubmit(string source)
+        public Task HandleGA4RegisterSubmit(string source)
         {
             return Task.FromResult(0);
         }
 
-        public Task HandleRegisterFail(string source, string reason)
+        public Task HandleGA4RegisterFail(string source, string reason)
         {
             return Task.FromResult(0);
         }
 
-        public Task HandleLoginSuccess(UserLoginResult result)
+        public Task HandleGA4LoginSuccess(UserLoginResult result)
         {
             return Task.FromResult(0);
         }
 
-        public Task HandleLoginNotAllowed(UserLoginResult result)
+        public Task HandleGA4LoginNotAllowed(UserLoginResult result)
         {
             return Task.FromResult(0);
         }
 
-        public Task HandleRequiresTwoFactor(UserLoginResult result)
+        public Task HandleGA4RequiresTwoFactor(UserLoginResult result)
         {
             return Task.FromResult(0);
         }
 
-        public Task HandleLockout(UserLoginResult result)
+        public Task HandleGA4Lockout(UserLoginResult result)
         {
             return Task.FromResult(0);
         }
 
-        public Task HandleLogout(string reason)
+        public Task HandleGA4Logout(string reason)
+        {
+            return Task.FromResult(0);
+        }
+
+        public Task HandleGA4Search(string searchQuery, int numResults)
         {
             return Task.FromResult(0);
         }
