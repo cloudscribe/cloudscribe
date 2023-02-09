@@ -546,5 +546,23 @@ namespace cloudscribe.Core.Web.Analytics
             }
             return Task.FromResult(0);
         }
+
+        /// <summary>
+        /// This is a generic event handler for any custom event you want to track
+        /// </summary>
+        public Task HandleEvent(string eventName, List<KeyValuePair<string,string>> parameters)
+        {
+            if (!string.IsNullOrEmpty(_currentSite.GoogleAnalyticsProfileId))
+            {
+                if(_currentSite.GoogleAnalyticsProfileId.StartsWith("G")) //switch to GA4
+                {
+                    HandleGA4Event(eventName, parameters);
+                    return Task.FromResult(0);
+                }
+
+                //This was never implemented in the original Google Analytics module
+            }
+            return Task.FromResult(0);
+        }
     }
 }

@@ -1,4 +1,5 @@
 ﻿using cloudscribe.Core.Identity;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace cloudscribe.Core.Web.Analytics
@@ -21,6 +22,9 @@ namespace cloudscribe.Core.Web.Analytics
         Task HandleLogout(string reason);
         // added new handler for search - not implemented in UA, but is in GA4
         Task HandleSearch(string searchQuery, int numResults);
-
+        /// <summary>
+        /// This is a generic event handler for any custom event you want to track - not implemented in UA, but is in GA4
+        /// </summary>
+        public Task HandleEvent(string eventName, List<KeyValuePair<string,string>> parameters);
     }
 }

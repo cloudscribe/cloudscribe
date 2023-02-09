@@ -6,6 +6,7 @@
 //
 
 using cloudscribe.Core.Identity;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace cloudscribe.Core.Web.Analytics
@@ -61,6 +62,11 @@ namespace cloudscribe.Core.Web.Analytics
         }
 
         public Task HandleGA4Search(string searchQuery, int numResults)
+        {
+            return Task.FromResult(0);
+        }
+
+        public Task HandleGA4Event(string eventName, List<KeyValuePair<string,string>> parameters)
         {
             return Task.FromResult(0);
         }

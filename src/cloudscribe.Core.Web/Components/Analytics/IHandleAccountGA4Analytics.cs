@@ -6,6 +6,7 @@
 //
 
 using cloudscribe.Core.Identity;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace cloudscribe.Core.Web.Analytics
@@ -25,6 +26,10 @@ namespace cloudscribe.Core.Web.Analytics
         Task HandleGA4Lockout(UserLoginResult result);
         Task HandleGA4Logout(string reason);
         Task HandleGA4Search(string searchQuery, int numResults);
+        /// <summary>
+        /// This is a generic event handler for any other event you want to track
+        /// </summary>
+        Task HandleGA4Event(string eventName, List<KeyValuePair<string,string>> parameters);
 
     }
 }
