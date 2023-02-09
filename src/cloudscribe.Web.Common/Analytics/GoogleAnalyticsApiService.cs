@@ -2,8 +2,8 @@
 // Licensed under the Apache License, Version 2.0.
 // Author:                  Joe Audette
 // Created:                 2017-09-21
-// Last Modified:           2019-02-20
-// 
+// Last Modified:           2022-02-08
+//
 
 //using cloudscribe.Web.Common.Http;
 using Microsoft.AspNetCore.Http;
@@ -17,6 +17,7 @@ using System.Threading.Tasks;
 //https://developers.google.com/analytics/devguides/collection/protocol/v1/
 //https://developers.google.com/analytics/devguides/collection/protocol/v1/devguide
 //https://developers.google.com/analytics/devguides/collection/protocol/v1/parameters
+//https://developers.google.com/analytics/devguides/collection/protocol/ga4/sending-events?client_type=gtag
 
 namespace cloudscribe.Web.Common.Analytics
 {
@@ -57,7 +58,7 @@ namespace cloudscribe.Web.Common.Analytics
         public StandardPostProps GetStandardProps(HttpContext context)
         {
             var props = new StandardPostProps();
-            
+
             props.ClientId = GetGAClientIdFromCookie(context);
             props.Host = context.Request.Host.Value;
             props.IpAddress = context.Connection.RemoteIpAddress.ToString();
@@ -91,6 +92,15 @@ namespace cloudscribe.Web.Common.Analytics
             if (string.IsNullOrWhiteSpace(profileId))
             {
                 _log.LogWarning("ignoring call to TrackPageView because profileid not provided");
+                return;
+            }
+
+            // Google Analytics GA4 does not support posting events using the old profileID. It needs a new api_secret.
+            // https://developers.google.com/analytics/devguides/collection/protocol/ga4/sending-events?client_type=gtag
+            // Also the format of data sent has changed. So for now we disable this interface if the profileId starts with G.
+            if (profileId.StartsWith("G"))
+            {
+                _log.LogWarning("ignoring call to TrackPageView because profileid is a new GA4 property id");
                 return;
             }
 
@@ -189,7 +199,7 @@ namespace cloudscribe.Web.Common.Analytics
                     var logmessage = $"failed to send pageview data to google analytics, response was: { responseBody }";
                     _log.LogWarning(logmessage);
                 }
-  
+
             }
             catch (Exception ex)
             {
@@ -219,7 +229,16 @@ namespace cloudscribe.Web.Common.Analytics
                 _log.LogWarning("ignoring call to TrackEvent because profileid not provided");
                 return;
             }
-            
+
+            // Google Analytics GA4 does not support posting events using the old profileID. It needs a new api_secret.
+            // https://developers.google.com/analytics/devguides/collection/protocol/ga4/sending-events?client_type=gtag
+            // Also the format of data sent has changed. So for now we disable this interface if the profileId starts with G.
+            if (profileId.StartsWith("G"))
+            {
+                _log.LogWarning("ignoring call to TrackPageView because profileid is a new GA4 property id");
+                return;
+            }
+
             if (string.IsNullOrWhiteSpace(eventCategory))
             {
                 _log.LogWarning("ignoring call to TrackEvent because eventCategory not provided");
@@ -286,7 +305,7 @@ namespace cloudscribe.Web.Common.Analytics
                     keyValues.Add(new KeyValuePair<string, string>(prop.Key, prop.Value));
                 }
             }
-            
+
             var content = new FormUrlEncodedContent(keyValues);
             var client = _httpClientFactory.CreateClient(httpClientName);
 
@@ -306,7 +325,7 @@ namespace cloudscribe.Web.Common.Analytics
                     var logmessage = $"failed to send event data to google analytics, response was: { responseBody }";
                     _log.LogWarning(logmessage);
                 }
-                
+
             }
             catch (Exception ex)
             {

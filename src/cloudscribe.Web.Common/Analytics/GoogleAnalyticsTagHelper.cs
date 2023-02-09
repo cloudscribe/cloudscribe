@@ -2,17 +2,16 @@
 // Licensed under the Apache License, Version 2.0.
 // Author:                  Joe Audette
 // Created:                 2017-01-04
-// Last Modified:           2018-08-19
-// 
+// Last Modified:           2022-02-08
+//
 
 using cloudscribe.Web.Common.Analytics;
+using cloudscribe.Web.Common.Analytics.GA4;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using Microsoft.AspNetCore.Razor.TagHelpers;
 using Microsoft.Extensions.Options;
-using System;
 using System.Globalization;
-using System.Security.Cryptography;
 using System.Text;
 
 namespace cloudscribe.Web.Common.TagHelpers
@@ -20,13 +19,16 @@ namespace cloudscribe.Web.Common.TagHelpers
     public class GoogleAnalyticsTagHelper : TagHelper
     {
         public GoogleAnalyticsTagHelper(
-            IOptions<GoogleAnalyticsOptions> optionsAccessor
+            IOptions<GoogleAnalyticsOptions> optionsAccessor,
+            IOptions<GoogleAnalyticsGA4Options> optionsGA4Accessor
             )
         {
             _options = optionsAccessor.Value;
+            _optionsGA4Accessor = optionsGA4Accessor;
         }
 
         private GoogleAnalyticsOptions _options;
+        private IOptions<GoogleAnalyticsGA4Options> _optionsGA4Accessor;
 
         private const string ProfileIdAttributeName = "profile-id";
         private const string UserIdAttributeName = "user-id";
@@ -50,7 +52,7 @@ namespace cloudscribe.Web.Common.TagHelpers
         /// </summary>
         [HtmlAttributeName("track-after-page-load")]
         public bool TrackAfterPageLoad { get; set; } = false;
-        
+
         [HtmlAttributeName("debug")]
         public bool Debug { get; set; } = false;
 
@@ -85,7 +87,7 @@ namespace cloudscribe.Web.Common.TagHelpers
 
         /// <summary>
         /// this setting applies to the default cookie consent function.
-        /// if true, then a value of "dismiss" in the consent cookie is treated 
+        /// if true, then a value of "dismiss" in the consent cookie is treated
         /// the same as "allow". This is useful especially for compliance type info
         /// where all the user can do is dismiss the popup and no opt-out option is provided
         /// the default is true
@@ -108,6 +110,19 @@ namespace cloudscribe.Web.Common.TagHelpers
                 return;
             }
 
+            //replace this tag helper with the GA4 tag helper if the Google Analytics Tracking Id (ProfileId) looks like a new GA4 tag
+            if (ProfileId.StartsWith("G"))
+            {
+                var ga4TagHelper = new GoogleAnalyticsGA4TagHelper(_optionsGA4Accessor){
+                    ViewContext = ViewContext,
+                    ProfileId = ProfileId,
+                    UserId = UserId,
+                };
+                ga4TagHelper.Process(context, output);
+                return;
+            }
+
+            //process tag helper the old way
             output.TagName = "script";    // Replaces <google-analytics> with <script> tag
 
             var sb = new StringBuilder();
@@ -161,12 +176,12 @@ namespace cloudscribe.Web.Common.TagHelpers
 
                 }
 
-                
+
 
 
                 sb.Append("}");
             }
-            
+
 
             if(TrackAfterPageLoad)
             {
@@ -191,7 +206,7 @@ namespace cloudscribe.Web.Common.TagHelpers
 
             sb.Append("ga('create',");
             sb.Append("'" + ProfileId + "', 'auto'");
-            
+
             sb.Append(", { ");
 
             var comma = "";
@@ -207,11 +222,11 @@ namespace cloudscribe.Web.Common.TagHelpers
                 sb.Append(comma);
                 sb.Append(" 'allowAnchor': true ");
             }
-            
+
             sb.Append(" }");
-            
+
             sb.Append(");");
-            
+
             sb.AppendLine("");
 
             if (CheckCookieConsent)
@@ -251,11 +266,11 @@ namespace cloudscribe.Web.Common.TagHelpers
 
                 sb.Append("}");
             }
-            
+
             sb.AppendLine("ga('send', 'pageview');");
 
             var eventList = ViewContext.TempData.GetGoogleAnalyticsEvents();
-            
+
             foreach (var e in eventList)
             {
                 if(e.IsValid())
@@ -375,7 +390,7 @@ namespace cloudscribe.Web.Common.TagHelpers
             //we need to generate a hash of the script and add it to CSP Header
             var rawScript = sb.ToString();
 
-            
+
 
             output.Content.SetHtmlContent(rawScript);
 
@@ -393,7 +408,7 @@ namespace cloudscribe.Web.Common.TagHelpers
             //    var foo = false;
             //}
 
-          
+
 
 
 
