@@ -1,0 +1,10 @@
+.fab,.far,.fas{display:inline-block;font-size:14px;text-rendering:auto;-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale;color:inherit;cursor:pointer}
+.far,.fas{font-family:"Font Awesome 6 Free"}
+.fab{font-family:"Font Awesome 6 Brands"}
+.far{font-weight:400}
+.fas{font-weight:900}
+.fab:before,.far:before,.fas:before{color:inherit}
+#ckeditor-fa-icons{text-align:center;white-space:normal;width:100%;height:350px;overflow:auto}
+#ckeditor-fa-icons a{display:inline-block;width:72px;padding:5px 0;text-align:center;vertical-align:top}
+#ckeditor-fa-icons a span{font-size:28px;display:block;text-align:center}
+.faSelect{display:block !important}
