@@ -400,7 +400,7 @@ namespace cloudscribe.Core.Web.Components
                     template.User,
                     model.Password,
                     persistent,
-                    lockoutOnFailure: false);
+                    lockoutOnFailure: true);
 
 
                 if (template.SignInResult.Succeeded)
