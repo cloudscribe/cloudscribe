@@ -4,6 +4,11 @@
     Layout = "_LayoutEmailNotification";
     ViewData["Title"] = "New User Account Needs Approval";
     ViewData["Site"] = Model.Tenant;
+    var url = ViewContext.HttpContext.Request.GetCurrentBaseUrl();
+    var link = url + "/useradmin/useredit/?siteId=" + Model.Tenant.Id + "&userId=" + Model.User.Id;
 }
+
 A new user just registered at @Model.Tenant.SiteName with email address @Model.User.Email
 <br />The account needs to be approved before the new user can login.
+<br /><br /><a href="@link">Manage the new user.</a>
+
