@@ -2,7 +2,7 @@
  * cloudscribe-filedrop plugin for CKEditor
  * Copyright (C) 2013 Joe Audette, Source Tree Solutions LLC
  * Created 2013-11-28
- * Last Modified 2017-02-20
+ * Last Modified 2022-02-16
  *
  */
 
@@ -42,6 +42,8 @@ CKEDITOR.plugins.add( 'cloudscribe-filedrop',
 		};
 
 		function onPaste(event) {
+			event = event || window.event;
+
 			var files = event.clipboardData.files || event.target.files;
 			if(files) {
 				event.preventDefault();
