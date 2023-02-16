@@ -5,7 +5,7 @@ $(function () {
         $elems.each(function (index, ele) {
             var config = {};
 
-           
+
             config.toolbar = ($(ele).data('ckeditor-config-toolbar') || "cloudscribedefault");
             config.height = ($(ele).data('ckeditor-config-height') || "200");
             config.title = ($(ele).data('ckeditor-config-title') || "false");
@@ -63,7 +63,7 @@ $(function () {
 
             var filebrowserBrowseUrl = $(ele).data('ckeditor-config-filebrowseurl');
             if (filebrowserBrowseUrl) {
-                config.filebrowserBrowseUrl = filebrowserBrowseUrl; 
+                config.filebrowserBrowseUrl = filebrowserBrowseUrl;
             }
             var filebrowserImageBrowseUrl = $(ele).data('ckeditor-config-imagebrowseurl');
             if (filebrowserImageBrowseUrl) {
@@ -77,7 +77,7 @@ $(function () {
             if (filebrowserImageBrowseLinkUrl) {
                 config.filebrowserImageBrowseLinkUrl = filebrowserImageBrowseLinkUrl;
             }
-            
+
             var dropFileUploadUrl = $(ele).data('ckeditor-config-dropfileuploadurl');
             if (dropFileUploadUrl) {
                 config.dropFileUploadUrl = dropFileUploadUrl;
@@ -87,16 +87,16 @@ $(function () {
             if (config.toolbar === "None") {
                 config.removePlugins = 'toolbar,elementspath,resize,clipboard,pastetext,pastefromword,tableselection,widget,uploadwidget,uploadimage,oembed,codesnippet,scayt,wsc';
             }
-            
+
 
             var editor = CKEDITOR.replace(ele, config);
-            
+
             editor.on('change', function() {
                 //console.log('ckeditor onchange');
                 window.thisPage = window.thisPage || {};
                 window.thisPage.hasUnsavedChanges = true;
             });
-            
+
         });
     }
 });

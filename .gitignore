@@ -211,6 +211,8 @@ src/sourceDev.WebApp/wwwroot/css/site.min.css.gz
 src/sourceDev.WebApp/cloudscribe.dev.db
 **/wwwroot/testfiles/**
 **/custom1/wwwroot/css/**
+src/cloudscribe.Web.StaticFiles/js/ckeditor.old
+src/cloudscribe.Web.StaticFiles/js/ckeditor4114/samples
 
 # Cake
 tools/**
