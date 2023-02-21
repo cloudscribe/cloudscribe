@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <Description>Multi-tenant web application foundation with management for sites, users, roles, claims, and geographic data.</Description>
-    <Version>6.0.21</Version>
+    <Version>6.0.22</Version>
     <TargetFramework>net6.0</TargetFramework>
     <Authors>Joe Audette</Authors>
     <PackageTags>cloudscribe;multi-tenant;asp.net core;site management</PackageTags>

@@ -195,16 +195,19 @@ namespace cloudscribe.Core.Web.Components
 
                     if (template.User == null)
                     {
-                        if (CurrentSite.AllowNewRegistration)
-                        { 
+                                            //if (CurrentSite.AllowNewRegistration)
+                                            //{ 
+
+                        // Allow new account creation regardless of the site setting 'allow new registrations'
+
                             template.IsNewUserRegistration = true;
                             template.User = await CreateUserFromExternalLogin(template.ExternalLoginInfo, email, didAcceptTerms);
                             template.IsNewExternalAuthMapping = template.User != null;
-                        }
-                        else
-                        {
-                            template.RejectReasons.Add("Site is not configured to allow new user registrations");
-                        }
+                                            //}
+                                            //else
+                                            //{
+                                            //    template.RejectReasons.Add("Site is not configured to  user registrations");
+                                            //}
                     }
 
                     if (template.User != null)
