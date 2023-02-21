@@ -62,7 +62,7 @@ namespace cloudscribe.Web.Common.TagHelpers
             sb.AppendLine($"gtag('set', 'page_referrer', '{referer}');");
 
             //configure the profile id
-            sb.Append("gtag('config', '" + ProfileId + "', { ");
+            sb.Append("gtag('config', '" + ProfileId + "', {  ");
             // Optionally set user id. This enables user-level reports and remarketing across devices.
             if (_options.TrackUserId && !string.IsNullOrWhiteSpace(UserId)) sb.Append("'user_id': '" + UserId + "', ");
             // Optionally enable debug view: https://support.google.com/analytics/answer/7201382
