@@ -54,6 +54,8 @@
     <ProjectReference Include="..\cloudscribe.MigrationHelper.mojoPortal\cloudscribe.MigrationHelper.mojoPortal.csproj" />
     <ProjectReference Include="..\cloudscribe.QueryTool.EFCore.MSSQL\cloudscribe.QueryTool.EFCore.MSSQL.csproj" />
     <ProjectReference Include="..\cloudscribe.QueryTool.EFCore.PostgreSql\cloudscribe.QueryTool.EFCore.PostgreSql.csproj" />
+    <ProjectReference Include="..\cloudscribe.QueryTool.EFCore.MySql\cloudscribe.QueryTool.EFCore.MySql.csproj" />
+    <ProjectReference Include="..\cloudscribe.QueryTool.EFCore.SQLite\cloudscribe.QueryTool.EFCore.SQLite.csproj" />
     <ProjectReference Include="..\cloudscribe.Web.StaticFiles\cloudscribe.Web.StaticFiles.csproj" />
   </ItemGroup>
   

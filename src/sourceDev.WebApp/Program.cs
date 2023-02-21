@@ -85,9 +85,11 @@ namespace sourceDev.WebApp
 
                 return 0;
             }
-            catch
+            catch(Exception ex)
             {
-                //Log.Fatal(ex, "Host terminated unexpectedly.");
+                //errors in appsettings.json would cause an exception here so let's at least display the exception!
+                Console.WriteLine("Host terminated unexpectedly.");
+                Console.WriteLine(ex.ToString());
                 return -1;
             }
             //finally

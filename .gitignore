@@ -221,3 +221,7 @@ tools/**
 **/siteuploadfiles/**
 **/slnx.sqlite
 **/VSWorkspaceState.json
+
+# any test SQLite databases
+**/*.db
+

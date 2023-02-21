@@ -1,6 +1,8 @@
 ﻿using cloudscribe.Core.Models;
 using cloudscribe.QueryTool.EFCore.MSSQL;
 using cloudscribe.QueryTool.EFCore.PostgreSql;
+using cloudscribe.QueryTool.EFCore.SQLite;
+using cloudscribe.QueryTool.EFCore.MySql;
 //using cloudscribe.UserProperties.Models;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
@@ -66,6 +68,12 @@ namespace Microsoft.Extensions.DependencyInjection
                             services.AddCloudscribeLoggingEFStorageSQLite(slConnection);
                             //services.AddCloudscribeKvpEFStorageSQLite(slConnection);
 
+                            services.AddQueryToolEFStorageSQLite(
+                                connectionString: slConnection,
+                                maxConnectionRetryCount: 0,
+                                maxConnectionRetryDelaySeconds: 30,
+                                commandTimeout: 30);
+
                             break;
 
                         case "pgsql-old":
@@ -96,6 +104,12 @@ namespace Microsoft.Extensions.DependencyInjection
                             services.AddCloudscribeCoreEFStorageMySql(mysqlConnection);
                             services.AddCloudscribeLoggingEFStorageMySQL(mysqlConnection);
                            // services.AddCloudscribeKvpEFStorageMySql(mysqlConnection);
+
+                           services.AddQueryToolEFStorageMySql(
+                               connectionString: mysqlConnection,
+                               maxConnectionRetryCount: 0,
+                               maxConnectionRetryDelaySeconds: 30,
+                               transientSqlErrorNumbersToAdd: null);
 
                             break;
 
