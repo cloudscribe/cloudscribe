@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore;
+﻿using cloudscribe.QueryTool.EFCore.Common;
+using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -139,7 +140,9 @@ namespace sourceDev.WebApp
                     // this creates ensures the database is created and initial data
                     CoreEFStartup.InitializeDatabaseAsync(services).Wait();
 
-                    
+                    // query tool
+                    QueryToolStartup.InitializeDatabaseAsync(services).Wait();
+
 
                     //KvpEFCoreStartup.InitializeDatabaseAsync(services).Wait();
 
@@ -235,82 +238,6 @@ namespace sourceDev.WebApp
                     webBuilder.UseStartup<Startup>();
                 });
 
-
-        //https://joonasw.net/view/aspnet-core-2-configuration-changes
-
-        //public static IWebHostBuilder CreateWebHostBuilder(string[] args) =>
-        //    WebHost.CreateDefaultBuilder(args)
-        //    .ConfigureAppConfiguration((builderContext, config) =>
-        //    {
-        //        //config.AddJsonFile("app-userproperties.json", optional: true, reloadOnChange: true);
-        //    })
-        //    .UseStartup<Startup>()
-        //    //.ConfigureKestrel((context, options) =>
-        //    //{
-        //    //    // Set properties and call methods on options
-        //    //})
-        //        ;
-
-
-        //public static IWebHostBuilder CreateWebHostBuilder(string[] args) =>
-        //    WebHost.CreateDefaultBuilder(args)
-        //        .UseStartup<Startup>();
-
-
-        //public static IWebHost BuildWebHost(string[] args)
-        //{
-        //    return new WebHostBuilder()
-        //        .UseKestrel()
-        //        .UseContentRoot(Directory.GetCurrentDirectory())
-        //        .ConfigureAppConfiguration((hostingContext, config) =>
-        //        {
-        //            var env = hostingContext.HostingEnvironment;
-
-        //            config.AddJsonFile("appsettings.json", optional: true, reloadOnChange: true)
-        //                    .AddJsonFile($"appsettings.{env.EnvironmentName}.json", optional: true, reloadOnChange: true)
-        //                    .AddJsonFile("appsettings.dev.json", optional: true, reloadOnChange: true)
-        //                    ;
-
-
-        //            if (env.IsDevelopment())
-        //            {
-        //                var appAssembly = Assembly.Load(new AssemblyName(env.ApplicationName));
-        //                if (appAssembly != null)
-        //                {
-        //                    config.AddUserSecrets(appAssembly, optional: true);
-        //                }
-        //            }
-
-        //            config.AddEnvironmentVariables();
-
-        //            if (args != null)
-        //            {
-        //                config.AddCommandLine(args);
-        //            }
-        //        })
-        //        .ConfigureLogging((hostingContext, logging) =>
-        //        {
-        //            logging.AddConfiguration(hostingContext.Configuration.GetSection("Logging"));
-        //            logging.AddConsole();
-        //            logging.AddDebug();
-        //        })
-        //        .UseIISIntegration()
-        //        .UseDefaultServiceProvider((context, options) =>
-        //        {
-        //            options.ValidateScopes = context.HostingEnvironment.IsDevelopment();
-        //        })
-        //        .UseStartup<Startup>()
-        //        .Build();
-        //}
-
-        //public static IWebHost BuildWebHost(string[] args) =>
-        //    WebHost.CreateDefaultBuilder(args)
-        //         .ConfigureAppConfiguration((builderContext, config) =>
-        //         {
-        //             config.AddJsonFile("appsettings.dev.json", optional: true, reloadOnChange: true);
-        //         })
-        //        .UseStartup<Startup>()
-        //        .Build();
 
     }
 }

@@ -1,4 +1,6 @@
 ﻿using cloudscribe.Core.Models;
+using cloudscribe.QueryTool.EFCore.MSSQL;
+using cloudscribe.QueryTool.EFCore.PostgreSql;
 //using cloudscribe.UserProperties.Models;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
@@ -80,6 +82,12 @@ namespace Microsoft.Extensions.DependencyInjection
                             services.AddCloudscribeLoggingPostgreSqlStorage(pgsConnection);
                             //services.AddCloudscribeKvpPostgreSqlStorage(pgsConnection);
 
+                            services.AddQueryToolEFStoragePostgreSql(
+                               connectionString: pgsConnection,
+                               maxConnectionRetryCount: 0,
+                               maxConnectionRetryDelaySeconds: 30,
+                               transientErrorCodesToAdd: null);
+
                             break;
 
 
@@ -94,6 +102,7 @@ namespace Microsoft.Extensions.DependencyInjection
                         case "MSSQL":
                         default:
                             var connectionString = config.GetConnectionString("EntityFrameworkConnectionString");
+                            var queryToolConnectionString = config.GetConnectionString("QueryToolConnectionString");
 
                             // this shows all the params with default values
                             // only connectionstring is required to be passed in
@@ -101,17 +110,19 @@ namespace Microsoft.Extensions.DependencyInjection
                                 connectionString: connectionString,
                                 maxConnectionRetryCount: 0,
                                 maxConnectionRetryDelaySeconds: 30,
-                                transientSqlErrorNumbersToAdd: null,
-                                useSql2008Compatibility: false);
-
-                            //services.AddCloudscribeCoreEFStorageMSSQL(
-                            //    connectionString: connectionString,
-                            //    useSql2008Compatibility: true);
+                                transientSqlErrorNumbersToAdd: null);
 
 
                             services.AddCloudscribeLoggingEFStorageMSSQL(connectionString);
                             //services.AddCloudscribeKvpEFStorageMSSQL(connectionString);
-                            
+
+
+                            services.AddQueryToolEFStorageMSSQL(
+                                connectionString: connectionString,
+                                maxConnectionRetryCount: 0,
+                                maxConnectionRetryDelaySeconds: 30,
+                                transientSqlErrorNumbersToAdd: null);
+
                             break;
                     }
 
