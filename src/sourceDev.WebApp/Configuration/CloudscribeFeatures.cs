@@ -10,6 +10,7 @@ using Microsoft.Extensions.Configuration;
 using sourceDev.WebApp.Components;
 using System;
 using System.IO;
+using cloudscribe.QueryTool.Services;
 
 namespace Microsoft.Extensions.DependencyInjection
 {
@@ -181,6 +182,8 @@ namespace Microsoft.Extensions.DependencyInjection
             //services.AddSingleton<cloudscribe.Core.Identity.ICookieAuthTicketStoreProvider, cloudscribe.Core.Identity.CookieAuthDistributedCacheTicketStoreProvider>();
 
            
+            services.AddScoped<IQueryTool>();
+
             //services.AddMojoPortalPasswordMigration();
 
             //services.AddCloudscribeCore(Configuration);

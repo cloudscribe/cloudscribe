@@ -56,6 +56,8 @@
     <ProjectReference Include="..\cloudscribe.QueryTool.EFCore.PostgreSql\cloudscribe.QueryTool.EFCore.PostgreSql.csproj" />
     <ProjectReference Include="..\cloudscribe.QueryTool.EFCore.MySql\cloudscribe.QueryTool.EFCore.MySql.csproj" />
     <ProjectReference Include="..\cloudscribe.QueryTool.EFCore.SQLite\cloudscribe.QueryTool.EFCore.SQLite.csproj" />
+    <ProjectReference Include="..\cloudscribe.QueryTool.Services\cloudscribe.QueryTool.Services.csproj" />
+    <ProjectReference Include="..\cloudscribe.QueryTool.Web\cloudscribe.QueryTool.Web.csproj" />
     <ProjectReference Include="..\cloudscribe.Web.StaticFiles\cloudscribe.Web.StaticFiles.csproj" />
   </ItemGroup>
   

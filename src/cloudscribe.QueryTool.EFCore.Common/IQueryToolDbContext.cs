@@ -8,6 +8,8 @@ namespace cloudscribe.QueryTool.EFCore.Common
     {
         DbSet<SavedQuery> SavedQueries { get; }
 
+        DbSet<QueryResult> QueryResults { get; }
+
         DatabaseFacade Database { get; }
     }
 }
