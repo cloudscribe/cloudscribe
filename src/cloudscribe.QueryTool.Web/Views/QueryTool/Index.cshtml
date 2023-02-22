@@ -1,0 +1,73 @@
+﻿@namespace cloudscribe.QueryTool.Web
+@model QueryToolViewModel
+@using System.Data
+
+@{
+    ViewData["Title"] = "Query Tool";
+}
+
+<h2>@ViewData["Title"]</h2>
+
+<form asp-action="Index">
+
+    <div class="row">
+        <div class="col-md-4">
+            <div class="form-group">
+                <label for="Table" class="control-label">Tables</label>
+                <div class="">
+                    <select id="Table" asp-for="Table" asp-items="@Model.TableNames" class="form-control" onchange="this.form.submit();"></select>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="form-group">
+                <label for="Column" class="control-label">Columns</label>
+                <div class="">
+                    <select id="Column" asp-for="Columns" asp-items="@Model.ColumnNames" size=8 class="form-control"></select>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <label for="Actions" class="control-label"></label>
+                <div class="form-group" id="Actions">
+                    <button class="btn btn-primary" id="Create-Select" type="submit" name="Command" value="create_select">Create SELECT</button>
+                    &nbsp;
+                    <button class="btn btn-primary" id="Create-Update" type="submit" name="Command" value="create_update">Create UPDATE</button>
+                </div>
+                <div class="form-group">
+                    <button class="btn btn-primary" id="Create-Insert" type="submit" name="Command" value="create_insert">Create INSERT</button>
+                    &nbsp;
+                    <button class="btn btn-primary" id="Create-Delete" type="submit" name="Command" value="create_delete">Create DELETE</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label for="Query" class="control-label">Query</label>
+        <div class="">
+            <textarea id="Query" name="Query" rows="5" cols="70" style="width:100%;" autocomplete="">@Model.Query</textarea>
+        </div>
+    </div>
+
+    <div class="form-group">
+        <button class="btn btn-primary" type="submit" name="Command" value="query">Execute Query</button>
+        <button class="btn btn-primary" type="submit" name="Command" value="nonquery">Execute Non Query</button>
+        <button class="btn btn-primary" type="submit" name="Command" value="clear">Clear Query</button>
+        @if (Model.RowsAffected.HasValue)
+        {
+            <div class="text-danger">@Model.RowsAffected.Value rows affected </div>
+        }
+        @if (!string.IsNullOrWhiteSpace(Model.ErrorMessage))
+        {
+            <div class="text-danger">@Model.ErrorMessage </div>
+
+        }
+    </div>
+
+</form>
+<div class="query-tool">
+    <data-table cs-data="@Model.Data"></data-table>
+</div>
+
+

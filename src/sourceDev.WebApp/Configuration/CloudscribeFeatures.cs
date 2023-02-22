@@ -40,8 +40,8 @@ namespace Microsoft.Extensions.DependencyInjection
                     //{
                     //    services.AddMiniProfiler();
                     //}
-                    
-                    
+
+
                     break;
 
                 case "ef":
@@ -181,8 +181,8 @@ namespace Microsoft.Extensions.DependencyInjection
             // so user is not logged in. That can be solved by injecting a real distributed cache such as Redis
             //services.AddSingleton<cloudscribe.Core.Identity.ICookieAuthTicketStoreProvider, cloudscribe.Core.Identity.CookieAuthDistributedCacheTicketStoreProvider>();
 
-           
-            services.AddScoped<IQueryTool>();
+
+            services.AddScoped<IQueryTool,QueryTool>();
 
             //services.AddMojoPortalPasswordMigration();
 
@@ -200,7 +200,7 @@ namespace Microsoft.Extensions.DependencyInjection
             {
                 services.AddCloudscribeLdapSupport(config);
             }
-            
+
 
             // this was just for testing expired password reset token
             //services.Configure<DataProtectionTokenProviderOptions>(options =>
