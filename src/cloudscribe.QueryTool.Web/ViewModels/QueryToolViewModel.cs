@@ -17,13 +17,21 @@ namespace cloudscribe.QueryTool.Web
         public List<string>? Columns { get; set; } = new List<string>();
 
         public string Query { get; set; } = string.Empty;
+        public bool QueryIsValid { get; set; } = false;
         public DataTable? Data { get; set; }
 
         public string Command { get; set; } = string.Empty;
 
+        public string SaveName { get; set; } = string.Empty;
+
+        public SelectList? SavedQueryNames { get; set; }
+        public string SavedQueryName { get; set; } = string.Empty;
+
 
         public int? RowsAffected { get; set; }
         public string? ErrorMessage { get; set; }
+        public string? InformationMessage { get; set; }
+        public string? WarningMessage { get; set; }
 
     }
 }

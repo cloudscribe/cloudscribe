@@ -8,6 +8,8 @@ namespace cloudscribe.QueryTool.EFCore.Common
     {
         DbSet<SavedQuery> SavedQueries { get; }
 
+        Task<int> SaveChangesAsync(CancellationToken cancellationToken = default(CancellationToken));
+
         DatabaseFacade Database { get; }
     }
 }

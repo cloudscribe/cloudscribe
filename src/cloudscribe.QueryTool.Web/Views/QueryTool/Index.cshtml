@@ -11,63 +11,88 @@
 <form asp-action="Index">
 
     <div class="row">
-        <div class="col-md-4">
+        <div class="col-md-10">
             <div class="form-group">
-                <label for="Table" class="control-label">Tables</label>
-                <div class="">
-                    <select id="Table" asp-for="Table" asp-items="@Model.TableNames" class="form-control" onchange="this.form.submit();"></select>
-                </div>
+                <label for="Table" class="form-label">Tables</label>
+                <select id="Table" asp-for="Table" asp-items="@Model.TableNames" class="form-control" style="font-family: monospace;" onchange="this.form.submit();"></select>
             </div>
         </div>
-        <div class="col-md-4">
+    </div>
+        <div class="row">
+        <div class="col-md-10">
             <div class="form-group">
-                <label for="Column" class="control-label">Columns</label>
-                <div class="">
-                    <select id="Column" asp-for="Columns" asp-items="@Model.ColumnNames" size=8 class="form-control"></select>
-                </div>
+                <label for="Column" class="form-label">Columns</label>
+                <select id="Column" asp-for="Columns" asp-items="@Model.ColumnNames" size=6 class="form-control" style="font-family: monospace;"></select>
             </div>
         </div>
+        <div class="col-md-2 text-right">
+            <label for="CreateActions" class="form-label"></label>
+            <div class="form-group" id="CreateActions">
+                <button class="btn btn-primary btn-sm mt-2" id="Create-Select" type="submit" name="Command" value="create_select">SELECT</button>
+                <button class="btn btn-primary btn-sm mt-2" id="Create-Update" type="submit" name="Command" value="create_update">UPDATE</button>
+                <button class="btn btn-primary btn-sm mt-2" id="Create-Insert" type="submit" name="Command" value="create_insert">INSERT</button>
+                <button class="btn btn-primary btn-sm mt-2" id="Create-Delete" type="submit" name="Command" value="create_delete">DELETE</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-10">
+            <div class="form-group">
+                <label for="Query" class="form-label">Query</label>
+                <textarea id="Query" name="Query" rows="5" cols="70" class="form-control" autocomplete="">@Model.Query</textarea>
+            </div>
+        </div>
+        <div class="col-md-2 text-right">
+            <label for="QueryActions" class="form-label"></label>
+            <div class="form-group" id="QueryActions">
+                <button class="btn btn-primary btn-sm mt-2" type="submit" name="Command" value="query">Execute Query</button>
+                <button class="btn btn-primary btn-sm mt-2" type="submit" name="Command" value="clear">Clear Query</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-12">
+            @if (Model.RowsAffected.HasValue)
+            {
+                <div class="text-danger">@Model.RowsAffected.Value rows affected
+                    <button class="btn btn-primary btn-sm mt-2" type="submit" name="Command" value="export">Export CSV</button>
+                </div>
+                <div class="query-tool">
+                    <data-table cs-data="@Model.Data"></data-table>
+                </div>
+            }
+            @if (!string.IsNullOrWhiteSpace(Model.ErrorMessage))
+            {
+                <div class="text-danger">@Model.ErrorMessage </div>
+            }
+        </div>
+    </div>
+
+    <div class="row">
         <div class="col-md-4">
-            <label for="Actions" class="control-label"></label>
-                <div class="form-group" id="Actions">
-                    <button class="btn btn-primary" id="Create-Select" type="submit" name="Command" value="create_select">Create SELECT</button>
-                    &nbsp;
-                    <button class="btn btn-primary" id="Create-Update" type="submit" name="Command" value="create_update">Create UPDATE</button>
-                </div>
-                <div class="form-group">
-                    <button class="btn btn-primary" id="Create-Insert" type="submit" name="Command" value="create_insert">Create INSERT</button>
-                    &nbsp;
-                    <button class="btn btn-primary" id="Create-Delete" type="submit" name="Command" value="create_delete">Create DELETE</button>
-                </div>
+            @if(Model.QueryIsValid)
+            {
+            <div class="form-group">
+                <label for="SaveQuery" class="form-label">Save Query As:</label>
+                <input id="SaveQuery" asp-for="SaveName" type="text"  value="@Model.SaveName" />
+                <button class="btn btn-primary btn-sm" type="submit" name="Command" value="save">Save Query</button>
             </div>
+            }
+        </div>
+        <div class="col-md-8 text-right">
+            @if (Model.SavedQueryNames != null && Model.SavedQueryNames.Count() > 0)
+            {
+            <div class="form-group">
+                <label for="LoadQuery" class="form-label">Load Query:</label>
+                <select id="SaveQuery" asp-for="SavedQueryName" asp-items="@Model.SavedQueryNames" class="form-select form-select-lg"></select>
+                <button class="btn btn-primary btn-sm" type="submit" name="Command" value="load">Load Query</button>
+            </div>
+            }
         </div>
     </div>
 
-    <div class="form-group">
-        <label for="Query" class="control-label">Query</label>
-        <div class="">
-            <textarea id="Query" name="Query" rows="5" cols="70" style="width:100%;" autocomplete="">@Model.Query</textarea>
-        </div>
-    </div>
 
-    <div class="form-group">
-        <button class="btn btn-primary" type="submit" name="Command" value="query">Execute Query</button>
-        <button class="btn btn-primary" type="submit" name="Command" value="nonquery">Execute Non Query</button>
-        <button class="btn btn-primary" type="submit" name="Command" value="clear">Clear Query</button>
-        @if (Model.RowsAffected.HasValue)
-        {
-            <div class="text-danger">@Model.RowsAffected.Value rows affected </div>
-        }
-        @if (!string.IsNullOrWhiteSpace(Model.ErrorMessage))
-        {
-            <div class="text-danger">@Model.ErrorMessage </div>
-
-        }
-    </div>
 
 </form>
-<div class="query-tool">
-    <data-table cs-data="@Model.Data"></data-table>
-</div>
-
-
