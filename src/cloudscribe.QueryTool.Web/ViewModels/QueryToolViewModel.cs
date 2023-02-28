@@ -17,6 +17,8 @@ namespace cloudscribe.QueryTool.Web
         public List<string>? Columns { get; set; } = new List<string>();
 
         public string Query { get; set; } = string.Empty;
+
+        public bool hasQuery { get; set; } = false;
         public bool QueryIsValid { get; set; } = false;
         public DataTable? Data { get; set; }
 

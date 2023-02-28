@@ -1,9 +1,10 @@
 ﻿@namespace cloudscribe.QueryTool.Web
 @model QueryToolViewModel
-@using System.Data
+@using Microsoft.Extensions.Localization
+@inject IStringLocalizer<QueryToolResources> sr
 
 @{
-    ViewData["Title"] = "Query Tool";
+    ViewData["Title"] = sr["Query Tool"];
 }
 
 <h2>@ViewData["Title"]</h2>
@@ -13,25 +14,36 @@
     <div class="row">
         <div class="col-md-10">
             <div class="form-group">
-                <label for="Table" class="form-label">Tables</label>
+                <label for="Table" class="form-label">@sr["Tables"]</label>
                 <select id="Table" asp-for="Table" asp-items="@Model.TableNames" class="form-control" style="font-family: monospace;" onchange="this.form.submit();"></select>
+            </div>
+        </div>
+        <div class="col-md-2 text-left">
+            <div class="form-group">
+                <label for="CreateActions1" class="form-label"></label>
+                <div class="form-group" id="CreateActions1">
+                    <button class="btn btn-primary btn-sm mt-2" id="Insert-Cursor1" type="submit" name="Command" value="insert">@sr["Insert at Cursor"]</button>
+                </div>
             </div>
         </div>
     </div>
         <div class="row">
         <div class="col-md-10">
             <div class="form-group">
-                <label for="Column" class="form-label">Columns</label>
-                <select id="Column" asp-for="Columns" asp-items="@Model.ColumnNames" size=6 class="form-control" style="font-family: monospace;"></select>
+                <label for="Columns" class="form-label">@sr["Columns"]</label>
+                <select id="Columns" asp-for="Columns" asp-items="@Model.ColumnNames" size=6 class="form-control" style="font-family: monospace;"></select>
             </div>
         </div>
-        <div class="col-md-2 text-right">
-            <label for="CreateActions" class="form-label"></label>
-            <div class="form-group" id="CreateActions">
-                <button class="btn btn-primary btn-sm mt-2" id="Create-Select" type="submit" name="Command" value="create_select">SELECT</button>
-                <button class="btn btn-primary btn-sm mt-2" id="Create-Update" type="submit" name="Command" value="create_update">UPDATE</button>
-                <button class="btn btn-primary btn-sm mt-2" id="Create-Insert" type="submit" name="Command" value="create_insert">INSERT</button>
-                <button class="btn btn-primary btn-sm mt-2" id="Create-Delete" type="submit" name="Command" value="create_delete">DELETE</button>
+        <div class="col-md-2 text-left">
+            <label for="CreateActions2" class="form-label"></label>
+            <div class="form-group" id="CreateActions2">
+                <button class="btn btn-primary btn-sm mt-2" id="Insert-Cursor2" type="submit" name="Command" value="insert">@sr["Insert at Cursor"]</button>
+                <br />
+                <button class="btn btn-primary btn-sm mt-2" id="Create-Select" type="submit" name="Command" value="create_select">@sr["Select"]</button>
+                <button class="btn btn-primary btn-sm mt-2" id="Create-Update" type="submit" name="Command" value="create_update">@sr["Update"]</button>
+                <br />
+                <button class="btn btn-primary btn-sm mt-2" id="Create-Insert" type="submit" name="Command" value="create_insert">@sr["Insert"]</button>
+                <button class="btn btn-primary btn-sm mt-2" id="Create-Delete" type="submit" name="Command" value="create_delete">@sr["Delete"]</button>
             </div>
         </div>
     </div>
@@ -39,16 +51,31 @@
     <div class="row">
         <div class="col-md-10">
             <div class="form-group">
-                <label for="Query" class="form-label">Query</label>
+                <label for="Query" class="form-label">@sr["Query"]</label>
                 <textarea id="Query" name="Query" rows="5" cols="70" class="form-control" autocomplete="">@Model.Query</textarea>
             </div>
         </div>
-        <div class="col-md-2 text-right">
+        <div class="col-md-2 text-left">
             <label for="QueryActions" class="form-label"></label>
             <div class="form-group" id="QueryActions">
-                <button class="btn btn-primary btn-sm mt-2" type="submit" name="Command" value="query">Execute Query</button>
-                <button class="btn btn-primary btn-sm mt-2" type="submit" name="Command" value="clear">Clear Query</button>
+                <button class="btn btn-primary btn-sm mt-2" type="submit" name="Command" value="query">@sr["Execute Query"]</button>
+                <button class="btn btn-primary btn-sm mt-2" type="submit" name="Command" value="clear">@sr["Clear Query"]</button>
             </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-10">
+            @if (Model.RowsAffected.HasValue)
+            {
+            <div class="text-danger">@String.Format(@sr["{0} rows affected"], @Model.RowsAffected.Value)</div>
+            }
+        </div>
+        <div class="col-md-2 text-left">
+            @if (Model.RowsAffected.HasValue)
+            {
+            <button class="btn btn-primary btn-sm mt-2" type="submit" name="Command" value="export">@sr["Export CSV"]</button>
+            }
         </div>
     </div>
 
@@ -56,13 +83,15 @@
         <div class="col-md-12">
             @if (Model.RowsAffected.HasValue)
             {
-                <div class="text-danger">@Model.RowsAffected.Value rows affected
-                    <button class="btn btn-primary btn-sm mt-2" type="submit" name="Command" value="export">Export CSV</button>
-                </div>
                 <div class="query-tool">
                     <data-table cs-data="@Model.Data"></data-table>
                 </div>
             }
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-12">
             @if (!string.IsNullOrWhiteSpace(Model.ErrorMessage))
             {
                 <div class="text-danger">@Model.ErrorMessage </div>
@@ -72,27 +101,57 @@
 
     <div class="row">
         <div class="col-md-4">
-            @if(Model.QueryIsValid)
+            @if(Model.hasQuery && Model.QueryIsValid)
             {
             <div class="form-group">
-                <label for="SaveQuery" class="form-label">Save Query As:</label>
+                <label for="SaveQuery" class="form-label">@sr["Save Query As"]:</label>
                 <input id="SaveQuery" asp-for="SaveName" type="text"  value="@Model.SaveName" />
-                <button class="btn btn-primary btn-sm" type="submit" name="Command" value="save">Save Query</button>
+                <button class="btn btn-primary btn-sm" type="submit" name="Command" value="save">@sr["Save Query"]</button>
             </div>
             }
         </div>
-        <div class="col-md-8 text-right">
+        <div class="col-md-6 text-right">
             @if (Model.SavedQueryNames != null && Model.SavedQueryNames.Count() > 0)
             {
             <div class="form-group">
-                <label for="LoadQuery" class="form-label">Load Query:</label>
+                <label for="LoadQuery" class="form-label">@sr["Load Query"]:</label>
                 <select id="SaveQuery" asp-for="SavedQueryName" asp-items="@Model.SavedQueryNames" class="form-select form-select-lg"></select>
-                <button class="btn btn-primary btn-sm" type="submit" name="Command" value="load">Load Query</button>
+            </div>
+            }
+        </div>
+        <div class="col-md-2 text-left">
+            @if (Model.SavedQueryNames != null && Model.SavedQueryNames.Count() > 0)
+            {
+            <div class="form-group">
+                <button class="btn btn-primary btn-sm" type="submit" name="Command" value="load">@sr["Load Query"]</button>
+                <button class="btn btn-primary btn-sm" type="submit" name="Command" value="delete">@sr["Delete Query"]</button>
             </div>
             }
         </div>
     </div>
 
-
-
 </form>
+@section Scripts {
+    <script>
+        $(document).ready(function() {
+            $('#Insert-Cursor1').on('click', function () {
+                var table = $('#Table').val();
+                var cursor = $('#Query').prop('selectionStart');
+                var query = $('#Query').val();
+                var before = query.substring(0, cursor);
+                var after = query.substring(cursor, query.length);
+                $('#Query').val(before + table + after);
+                return false;
+            });
+            $('#Insert-Cursor2').on('click', function () {
+                var columns = $('#Columns').val();
+                var cursor = $('#Query').prop('selectionStart');
+                var query = $('#Query').val();
+                var before = query.substring(0, cursor);
+                var after = query.substring(cursor, query.length);
+                $('#Query').val(before + columns.join(', ') + after);
+                return false;
+            });
+        })
+    </script>
+}

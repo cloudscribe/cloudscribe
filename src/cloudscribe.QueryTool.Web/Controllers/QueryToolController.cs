@@ -1,31 +1,31 @@
-using System.Data;
 using Microsoft.Extensions.Logging;
 using Microsoft.AspNetCore.Mvc;
 using cloudscribe.QueryTool.Services;
-using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.AspNetCore.Authorization;
 using cloudscribe.Core.Identity;
-using cloudscribe.Core.Models;
-using cloudscribe.QueryTool.Models;
 using cloudscribe.Web.Common.Extensions;
 using System.Text;
+using Microsoft.Extensions.Localization;
 
 namespace cloudscribe.QueryTool.Web
 {
     [Authorize(Policy = "ServerAdminPolicy")]
-    public class QueryToolController : Controller
+    public partial class QueryToolController : Controller
     {
         public QueryToolController(
             ILogger<QueryToolController> logger,
-            IQueryTool queryTool
+            IQueryTool queryTool,
+            IStringLocalizer<QueryToolResources> sr
             )
         {
             _log = logger;
             _queryToolService = queryTool;
+            _sr = sr;
         }
 
         private ILogger _log;
         private IQueryTool _queryToolService;
+        private IStringLocalizer _sr;
 
         [HttpGet]
         public async Task<IActionResult> Index()
@@ -55,9 +55,11 @@ namespace cloudscribe.QueryTool.Web
 
             bool queryWillReturnResults = false;
             bool queryIsValid = true;
+            model.hasQuery = false;
             var query = model.Query.Trim();
+            if (query.Length > 0) model.hasQuery = true;
 
-            if(model.Command == "query" || model.Command == "export" || model.Command == "save" )
+            if(model.Command == "query" || model.Command == "export" || model.Command == "save" || model.Command == "delete")
             {
                 if(query.Length > 0)
                 {
@@ -84,7 +86,7 @@ namespace cloudscribe.QueryTool.Web
 
             if(!queryIsValid)
             {
-                model.ErrorMessage = "Invalid query! Only SELECT, INSERT, UPDATE, and DELETE are allowed.";
+                model.ErrorMessage = _sr["Invalid query! Only SELECT, INSERT, UPDATE, and DELETE are allowed."];
             }
 
 
@@ -152,7 +154,7 @@ namespace cloudscribe.QueryTool.Web
                                     query += c + " = '', ";
                                 }
                                 query = query.TrimEnd().TrimEnd(',') + " where ";
-                            } else model.WarningMessage = "You must select at least one column from the 'Columns' list!";
+                            } else model.WarningMessage = _sr["You must select at least one column from the 'Columns' list!"];
                         }
                         break;
 
@@ -172,7 +174,7 @@ namespace cloudscribe.QueryTool.Web
                                     query += " '', ";
                                 }
                                 query = query.TrimEnd().TrimEnd(',') + ");";
-                            } else model.WarningMessage = "You must select at least one column from the 'Columns' list!";
+                            } else model.WarningMessage = _sr["You must select at least one column from the 'Columns' list!"];
                         }
                         break;
 
@@ -187,8 +189,8 @@ namespace cloudscribe.QueryTool.Web
                         if (queryIsValid && !string.IsNullOrWhiteSpace(model.SaveName))
                         {
                             var result = await _queryToolService.SaveQueryAsync(query, model.SaveName, User.GetUserIdAsGuid());
-                            if (result) model.InformationMessage = "Query saved";
-                            else model.WarningMessage = "Error saving query";
+                            if (result) model.InformationMessage = _sr["Query saved"];
+                            else model.WarningMessage = _sr["Error saving query"];
                         }
                         break;
 
@@ -199,8 +201,17 @@ namespace cloudscribe.QueryTool.Web
                             if (savedQuery != null)
                             {
                                 query = savedQuery.Statement;
-                                model.InformationMessage = "Query loaded";
-                            } else model.WarningMessage = "Error loading query";
+                                model.InformationMessage = _sr["Query loaded"];
+                            } else model.WarningMessage = _sr["Error loading query"];
+                        }
+                        break;
+
+                    case "delete":
+                        if (!string.IsNullOrWhiteSpace(model.SavedQueryName))
+                        {
+                            var result = await _queryToolService.DeleteQueryAsync(model.SavedQueryName);
+                            if (result) model.InformationMessage = _sr["Query deleted"];
+                            else model.WarningMessage = _sr["Error deleting query"];
                         }
                         break;
 
@@ -237,75 +248,5 @@ namespace cloudscribe.QueryTool.Web
 
             return View(model);
         }
-
-        [NonAction]
-        private string DataTableToCsv(DataTable table)
-        {
-            var sb = new StringBuilder();
-            var headers = table.Columns.Cast<DataColumn>();
-            sb.AppendLine(string.Join(",", headers.Select(column => "\"" + column.ColumnName + "\"").ToArray()));
-            foreach (DataRow row in table.Rows)
-            {
-                var fields = row.ItemArray.Select(field => "\"" + field.ToString().Replace("\"", "\"\"") + "\"");
-                sb.AppendLine(string.Join(",", fields));
-            }
-            return sb.ToString();
-        }
-
-        [NonAction]
-        private SelectList DataTableToSelectList(DataTable table, string valueField, string textField, bool prefixTextWithValue = false)
-        {
-            List<SelectListItem> list = new List<SelectListItem>();
-            int vLength = 0;
-            if(prefixTextWithValue)
-            {
-                foreach (DataRow row in table.Rows)
-                {
-                    if(row[valueField].ToString().Length > vLength) vLength = row[valueField].ToString().Length;
-                }
-            }
-            Console.WriteLine(vLength.ToString());
-
-            foreach (DataRow row in table.Rows)
-            {
-                string text = row[textField].ToString();
-                if (prefixTextWithValue)
-                {
-                    text = row[valueField].ToString().PadRight(vLength + 1, (char)160) + "| " + text;
-                }
-                list.Add(new SelectListItem()
-                {
-                    Text = text,
-                    Value = row[valueField].ToString()
-                });
-            }
-
-            return new SelectList(list, "Value", "Text");
-        }
-
-        [NonAction]
-        private SelectList SavedQueriesToSelectList(List<SavedQuery> queries, string valueField, List<string> textFields)
-        {
-            List<SelectListItem> list = new List<SelectListItem>();
-            foreach (var q in queries)
-            {
-                string text = "";
-                foreach(var f in textFields)
-                {
-                    text += q.GetType().GetProperty(f).GetValue(q).ToString() + " - ";
-                }
-                text = text.TrimEnd().TrimEnd('-').TrimEnd();
-
-                list.Add(new SelectListItem()
-                {
-                    Text = text,
-                    Value = q.GetType().GetProperty(valueField).GetValue(q).ToString()
-                });
-            }
-
-            return new SelectList(list, "Value", "Text");
-        }
-
-
     }
 }
