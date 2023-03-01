@@ -129,6 +129,9 @@
   <data name="Delete Query" xml:space="preserve">
     <value>Supprimer la requête</value>
   </data>
+  <data name="Enable as API query?" xml:space="preserve">
+    <value>Activer en tant que requête API ?</value>
+  </data>
   <data name="Error deleting query" xml:space="preserve">
     <value>Erreur lors de la suppression de la requête</value>
   </data>

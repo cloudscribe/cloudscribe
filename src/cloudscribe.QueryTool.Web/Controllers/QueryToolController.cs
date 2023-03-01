@@ -6,10 +6,12 @@ using cloudscribe.Core.Identity;
 using cloudscribe.Web.Common.Extensions;
 using System.Text;
 using Microsoft.Extensions.Localization;
+using System.Data;
+using Microsoft.AspNetCore.Http;
 
 namespace cloudscribe.QueryTool.Web
 {
-    [Authorize(Policy = "ServerAdminPolicy")]
+    [Authorize(Policy = "QueryToolAdminPolicy")]
     public partial class QueryToolController : Controller
     {
         public QueryToolController(
@@ -18,16 +20,17 @@ namespace cloudscribe.QueryTool.Web
             IStringLocalizer<QueryToolResources> sr
             )
         {
-            _log = logger;
-            _queryToolService = queryTool;
-            _sr = sr;
+            _log                = logger;
+            _queryToolService   = queryTool;
+            _sr                 = sr;
         }
 
-        private ILogger _log;
-        private IQueryTool _queryToolService;
-        private IStringLocalizer _sr;
+        private readonly ILogger            _log;
+        private readonly IQueryTool         _queryToolService;
+        private readonly IStringLocalizer   _sr;
 
         [HttpGet]
+        [Route("querytool")]
         public async Task<IActionResult> Index()
         {
             var model = new QueryToolViewModel();
@@ -41,9 +44,60 @@ namespace cloudscribe.QueryTool.Web
                 model.ColumnNames = DataTableToSelectList(fields, "ColumnName", "ColumnDataType", true);
             }
             var queries = await _queryToolService.GetSavedQueriesAsync();
-            var textFields = new List<string> { "Name", "Statement" };
+            var textFields = new List<string> { "Name", "Statement", "EnableAsApi" };
             model.SavedQueryNames = SavedQueriesToSelectList(queries, "Name", textFields);
             return View(model);
+        }
+
+        [HttpGet]
+        [Route("querytool/{savedQueryName}")]
+        public async Task<IActionResult> Index(string savedQueryName)
+        {
+            var savedQuery = await _queryToolService.LoadQueryAsync(savedQueryName);
+            if (savedQuery == null) return NotFound();
+            if (savedQuery.EnableAsApi == false) return NotFound();
+
+            string query = savedQuery.Statement;
+            DataTable data = await _queryToolService.ExecuteQueryAsync(query);
+            ContentResult response;
+
+            string accept = HttpContext.Request.Headers["Accept"];
+            switch(accept)
+            {
+                case "text/csv":
+                    var csv = DataTableToCsv(data);
+                    return File(Encoding.UTF8.GetBytes(csv), "text/csv", savedQueryName + ".csv");
+                    // response = new ContentResult() {
+                    //     Content = csv,
+                    //     ContentType = "text/csv",
+                    //     StatusCode = 200
+                    // };
+                    // return response;
+
+                case "text/xml":
+                case "application/xml":
+                    var list1 = DataTableToList(data);
+                    var json = "{ \"Row\": \n" + Newtonsoft.Json.JsonConvert.SerializeObject(list1) + "\n}";
+                    var xmlResult = Newtonsoft.Json.JsonConvert.DeserializeXNode(json, "Results");
+                    response = new ContentResult() {
+                        Content = xmlResult.ToString(),
+                        ContentType = "application/xml",
+                        StatusCode = 200
+                    };
+                    return response;
+
+                case "text/json":
+                case "application/json":
+                default:
+                    var list2 = DataTableToList(data);
+                    var jsonResult = Newtonsoft.Json.JsonConvert.SerializeObject(list2, Newtonsoft.Json.Formatting.Indented);
+                    response = new ContentResult() {
+                        Content = jsonResult,
+                        ContentType = "application/json",
+                        StatusCode = 200
+                    };
+                    return response;
+            }
         }
 
         [HttpPost]
@@ -55,33 +109,39 @@ namespace cloudscribe.QueryTool.Web
 
             bool queryWillReturnResults = false;
             bool queryIsValid = true;
+
             model.hasQuery = false;
             var query = model.Query.Trim();
             if (query.Length > 0) model.hasQuery = true;
 
-            if(model.Command == "query" || model.Command == "export" || model.Command == "save" || model.Command == "delete")
+            switch(model.Command)
             {
-                if(query.Length > 0)
-                {
-                    queryIsValid = false;
-                    if (query.StartsWith("select ", StringComparison.InvariantCultureIgnoreCase))
+                case "query":
+                case "export":
+                case "save":
+                case "delete":
+                    if(query.Length > 0)
                     {
-                        queryWillReturnResults = true;
-                        queryIsValid = true;
+                        queryIsValid = false;
+                        if (query.StartsWith("select ", StringComparison.InvariantCultureIgnoreCase))
+                        {
+                            queryWillReturnResults = true;
+                            queryIsValid = true;
+                        }
+                        else if (query.StartsWith("insert into ", StringComparison.InvariantCultureIgnoreCase))
+                        {
+                            queryIsValid = true;
+                        }
+                        else if (query.StartsWith("update ", StringComparison.InvariantCultureIgnoreCase))
+                        {
+                            queryIsValid = true;
+                        }
+                        else if (query.StartsWith("delete from ", StringComparison.InvariantCultureIgnoreCase))
+                        {
+                            queryIsValid = true;
+                        }
                     }
-                    else if (query.StartsWith("insert into ", StringComparison.InvariantCultureIgnoreCase))
-                    {
-                        queryIsValid = true;
-                    }
-                    else if (query.StartsWith("update ", StringComparison.InvariantCultureIgnoreCase))
-                    {
-                        queryIsValid = true;
-                    }
-                    else if (query.StartsWith("delete from ", StringComparison.InvariantCultureIgnoreCase))
-                    {
-                        queryIsValid = true;
-                    }
-                }
+                    break;
             }
 
             if(!queryIsValid)
@@ -92,10 +152,14 @@ namespace cloudscribe.QueryTool.Web
 
             try
             {
-                var tables = await _queryToolService.GetTableList();
-                model.TableNames = DataTableToSelectList(tables, "TableName", "TableName");
+                DataTable tableList = await _queryToolService.GetTableList();
+                // var tables = DataTableToList(tableList);
+                model.TableNames = DataTableToSelectList(tableList, "TableName", "TableName");
 
-                if(string.IsNullOrWhiteSpace(model.Table)) model.Table = model.TableNames.FirstOrDefault()?.Value;
+                if(string.IsNullOrWhiteSpace(model.Table))
+                {
+                    var table = model.TableNames.FirstOrDefault().Value;
+                }
 
                 if (!string.IsNullOrWhiteSpace(model.Table))
                 {
@@ -188,7 +252,7 @@ namespace cloudscribe.QueryTool.Web
                     case "save":
                         if (queryIsValid && !string.IsNullOrWhiteSpace(model.SaveName))
                         {
-                            var result = await _queryToolService.SaveQueryAsync(query, model.SaveName, User.GetUserIdAsGuid());
+                            var result = await _queryToolService.SaveQueryAsync(query, model.SaveName, model.SaveNameAsApi, User.GetUserIdAsGuid());
                             if (result) model.InformationMessage = _sr["Query saved"];
                             else model.WarningMessage = _sr["Error saving query"];
                         }
@@ -202,6 +266,8 @@ namespace cloudscribe.QueryTool.Web
                             {
                                 query = savedQuery.Statement;
                                 model.InformationMessage = _sr["Query loaded"];
+                                model.SaveName = model.SavedQueryName;
+                                model.SaveNameAsApi = savedQuery.EnableAsApi;
                             } else model.WarningMessage = _sr["Error loading query"];
                         }
                         break;
@@ -225,6 +291,7 @@ namespace cloudscribe.QueryTool.Web
             catch(Exception ex)
             {
                 model.ErrorMessage = $"{ex.Message} - {ex.StackTrace}";
+                queryIsValid = false;
             }
 
             if(model.Command == "export" && queryIsValid && model.Data != null)
@@ -239,7 +306,7 @@ namespace cloudscribe.QueryTool.Web
             model.QueryIsValid = queryIsValid;
 
             var queries = await _queryToolService.GetSavedQueriesAsync();
-            var textFields = new List<string> { "Name", "Statement" };
+            var textFields = new List<string> { "Name", "Statement", "EnableAsApi" };
             model.SavedQueryNames = SavedQueriesToSelectList(queries, "Name", textFields);
 
 

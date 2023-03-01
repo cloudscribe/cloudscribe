@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using cloudscribe.QueryTool.EFCore.MySql;
 
@@ -10,9 +11,10 @@ using cloudscribe.QueryTool.EFCore.MySql;
 namespace cloudscribe.QueryTool.EFCore.MySql.Migrations
 {
     [DbContext(typeof(QueryToolDbContext))]
-    partial class QueryToolDbContextModelSnapshot : ModelSnapshot
+    [Migration("20230301102949_AddEnableAsApi")]
+    partial class AddEnableAsApi
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

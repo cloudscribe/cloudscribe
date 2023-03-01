@@ -8,7 +8,7 @@ public interface IQueryTool
     Task<int>       ExecuteNonQueryAsync(string query);
     Task<DataTable> GetTableList();
     Task<DataTable> GetColumnList(string tableName);
-    Task<bool> SaveQueryAsync(string query, string name, Guid userGuid);
+    Task<bool> SaveQueryAsync(string query, string name, bool enableAsApi, Guid userGuid);
     Task<SavedQuery?> LoadQueryAsync(string name);
     Task<bool> DeleteQueryAsync(string name);
     Task<List<SavedQuery>> GetSavedQueriesAsync();

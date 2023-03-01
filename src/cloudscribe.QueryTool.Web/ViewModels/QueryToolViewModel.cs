@@ -25,6 +25,7 @@ namespace cloudscribe.QueryTool.Web
         public string Command { get; set; } = string.Empty;
 
         public string SaveName { get; set; } = string.Empty;
+        public bool SaveNameAsApi { get; set; } = false;
 
         public SelectList? SavedQueryNames { get; set; }
         public string SavedQueryName { get; set; } = string.Empty;

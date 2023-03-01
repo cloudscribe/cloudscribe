@@ -13,6 +13,8 @@ namespace cloudscribe.QueryTool.Models
 
         public string Statement { get; set; } = default!;
 
+        public bool EnableAsApi { get; set; } = false;
+
         public DateTime CreatedUtc { get; set; } = DateTime.UtcNow;
 
         public Guid CreatedBy { get; set; } = Guid.Empty;

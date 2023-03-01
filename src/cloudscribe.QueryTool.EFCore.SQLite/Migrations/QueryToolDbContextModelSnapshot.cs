@@ -29,6 +29,9 @@ namespace cloudscribe.QueryTool.EFCore.SQLite.Migrations
                     b.Property<DateTime>("CreatedUtc")
                         .HasColumnType("TEXT");
 
+                    b.Property<bool>("EnableAsApi")
+                        .HasColumnType("INTEGER");
+
                     b.Property<Guid>("LastModifiedBy")
                         .HasColumnType("TEXT");
 

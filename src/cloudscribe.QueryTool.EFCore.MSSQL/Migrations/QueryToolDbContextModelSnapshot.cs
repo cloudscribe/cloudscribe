@@ -34,6 +34,9 @@ namespace cloudscribe.QueryTool.EFCore.MSSQL.Migrations
                     b.Property<DateTime>("CreatedUtc")
                         .HasColumnType("datetime2");
 
+                    b.Property<bool>("EnableAsApi")
+                        .HasColumnType("bit");
+
                     b.Property<Guid>("LastModifiedBy")
                         .HasColumnType("uniqueidentifier");
 

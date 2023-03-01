@@ -24,6 +24,22 @@ namespace cloudscribe.QueryTool.Web
         }
 
         [NonAction]
+        private List<Dictionary<string,string>> DataTableToList(DataTable table)
+        {
+            List<Dictionary<string,string>> list = new List<Dictionary<string, string>>();
+            foreach (DataRow row in table.Rows)
+            {
+                Dictionary<string,string> jsonRow = new Dictionary<string, string>();
+                foreach (DataColumn col in table.Columns)
+                {
+                    jsonRow.Add(col.ColumnName, row[col].ToString());
+                }
+                list.Add(jsonRow);
+            }
+            return list;
+        }
+
+        [NonAction]
         private SelectList DataTableToSelectList(DataTable table, string valueField, string textField, bool prefixTextWithValue = false)
         {
             List<SelectListItem> list = new List<SelectListItem>();
@@ -54,18 +70,51 @@ namespace cloudscribe.QueryTool.Web
             return new SelectList(list, "Value", "Text");
         }
 
+        // [NonAction]
+        // private SelectList ListToSelectList(List<string> list)
+        // {
+        //     List<SelectListItem> selectList = new List<SelectListItem>();
+        //     foreach (var row in list)
+        //     {
+        //         selectList.Add(new SelectListItem()
+        //         {
+        //             Text = row["Text"],
+        //             Value = row[valueField].ToString()
+        //         });
+        //     }
+
+        //     return new SelectList(list, "Value", "Text");
+        // }
+
         [NonAction]
         private SelectList SavedQueriesToSelectList(List<SavedQuery> queries, string valueField, List<string> textFields)
         {
             List<SelectListItem> list = new List<SelectListItem>();
             foreach (var q in queries)
             {
+                if(q == null) continue;
                 string text = "";
                 foreach(var f in textFields)
                 {
-                    text += q.GetType().GetProperty(f).GetValue(q).ToString() + " - ";
+                    string value = q.GetType().GetProperty(f).GetValue(q).ToString() ?? "";
+                    switch(f)
+                    {
+                        case "EnableAsApi":
+                            if(value == "True") text += "(API ✔)" + (char)160 + (char)160;
+                            break;
+                        case "Name":
+                            text += value + ":" + (char)160 + (char)160;
+                            break;
+                        case "Statement":
+                            if(text.Length > 40) text +="\"" + value.Substring(0, 39) + "...\"" + (char)160 + (char)160;
+                            else text += "\"" + value + "\""  + (char)160 + (char)160;
+                            break;
+                        default:
+                            text += value  + (char)160 + (char)160;
+                            break;
+                   }
                 }
-                text = text.TrimEnd().TrimEnd('-').TrimEnd();
+                text = text.Remove(text.Length - 2, 2);
 
                 list.Add(new SelectListItem()
                 {

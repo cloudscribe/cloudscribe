@@ -129,6 +129,9 @@
   <data name="Delete Query" xml:space="preserve">
     <value>Dileu Ymholiad</value>
   </data>
+  <data name="Enable as API query?" xml:space="preserve">
+    <value>Galluogi fel ymholiad API?</value>
+  </data>
   <data name="Error deleting query" xml:space="preserve">
     <value>Gwall wrth ddileu ymholiad</value>
   </data>

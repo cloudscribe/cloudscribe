@@ -65,7 +65,7 @@
     </div>
 
     <div class="row">
-        <div class="col-md-10">
+        <div class="col-md-10"><a name="results"></a>
             @if (Model.RowsAffected.HasValue)
             {
             <div class="text-danger">@String.Format(@sr["{0} rows affected"], @Model.RowsAffected.Value)</div>
@@ -74,9 +74,10 @@
         <div class="col-md-2 text-left">
             @if (Model.RowsAffected.HasValue)
             {
-            <button class="btn btn-primary btn-sm mt-2" type="submit" name="Command" value="export">@sr["Export CSV"]</button>
+            <button class="btn btn-primary btn-sm mb-1" type="submit" name="Command" value="export">@sr["Export CSV"]</button>
             }
         </div>
+        <input type="hidden" id="RowsAffected" value="@Model.RowsAffected" />
     </div>
 
     <div class="row">
@@ -105,9 +106,17 @@
             {
             <div class="form-group">
                 <label for="SaveQuery" class="form-label">@sr["Save Query As"]:</label>
-                <input id="SaveQuery" asp-for="SaveName" type="text"  value="@Model.SaveName" />
+                <input id="SaveQuery" asp-for="SaveName" type="text"  value="@Model.SaveName" /><br />
+                <label for="SaveQueryApi">@sr["Enable as API query?"] </label>
+                <input id="SaveQueryApi" asp-for="SaveNameAsApi" type="checkbox" value="true" />
+                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                 <button class="btn btn-primary btn-sm" type="submit" name="Command" value="save">@sr["Save Query"]</button>
             </div>
+            }
+            else
+            {
+                <input id="SaveQuery" asp-for="SaveName" type="hidden"  value="@Model.SaveName" />
+                <input id="SaveQueryApi" asp-for="SaveNameAsApi" type="hidden"  value="@Model.SaveNameAsApi" />
             }
         </div>
         <div class="col-md-6 text-right">
@@ -152,6 +161,11 @@
                 $('#Query').val(before + columns.join(', ') + after);
                 return false;
             });
+            var hasResults=$('#RowsAffected').val() > 0;
+            if(hasResults) {
+                var r=$('a[name="results"]');
+                $('html,body').animate({scrollTop: r.offset().top},'slow');
+            }
         })
     </script>
 }
