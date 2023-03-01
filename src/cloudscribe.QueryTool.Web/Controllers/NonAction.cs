@@ -51,7 +51,6 @@ namespace cloudscribe.QueryTool.Web
                     if(row[valueField].ToString().Length > vLength) vLength = row[valueField].ToString().Length;
                 }
             }
-            Console.WriteLine(vLength.ToString());
 
             foreach (DataRow row in table.Rows)
             {

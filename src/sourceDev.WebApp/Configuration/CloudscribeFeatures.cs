@@ -1,4 +1,5 @@
 ﻿using cloudscribe.Core.Models;
+using cloudscribe.QueryTool.Services;
 using cloudscribe.QueryTool.EFCore.MSSQL;
 using cloudscribe.QueryTool.EFCore.PostgreSql;
 using cloudscribe.QueryTool.EFCore.SQLite;
@@ -10,7 +11,7 @@ using Microsoft.Extensions.Configuration;
 using sourceDev.WebApp.Components;
 using System;
 using System.IO;
-using cloudscribe.QueryTool.Services;
+
 
 namespace Microsoft.Extensions.DependencyInjection
 {
@@ -91,8 +92,9 @@ namespace Microsoft.Extensions.DependencyInjection
                             services.AddCloudscribeLoggingPostgreSqlStorage(pgsConnection);
                             //services.AddCloudscribeKvpPostgreSqlStorage(pgsConnection);
 
+                            var pgsqlQueryToolConnectionString = config.GetConnectionString("QueryToolConnectionString");
                             services.AddQueryToolEFStoragePostgreSql(
-                               connectionString: pgsConnection,
+                               connectionString: pgsqlQueryToolConnectionString,
                                maxConnectionRetryCount: 0,
                                maxConnectionRetryDelaySeconds: 30,
                                transientErrorCodesToAdd: null);
@@ -106,8 +108,9 @@ namespace Microsoft.Extensions.DependencyInjection
                             services.AddCloudscribeLoggingEFStorageMySQL(mysqlConnection);
                            // services.AddCloudscribeKvpEFStorageMySql(mysqlConnection);
 
+                           var mySqlQueryToolConnectionString = config.GetConnectionString("QueryToolConnectionString");
                            services.AddQueryToolEFStorageMySql(
-                               connectionString: mysqlConnection,
+                               connectionString: mySqlQueryToolConnectionString,
                                maxConnectionRetryCount: 0,
                                maxConnectionRetryDelaySeconds: 30,
                                transientSqlErrorNumbersToAdd: null);
@@ -117,8 +120,6 @@ namespace Microsoft.Extensions.DependencyInjection
                         case "MSSQL":
                         default:
                             var connectionString = config.GetConnectionString("EntityFrameworkConnectionString");
-                            var queryToolConnectionString = config.GetConnectionString("QueryToolConnectionString");
-
                             // this shows all the params with default values
                             // only connectionstring is required to be passed in
                             services.AddCloudscribeCoreEFStorageMSSQL(
@@ -131,9 +132,9 @@ namespace Microsoft.Extensions.DependencyInjection
                             services.AddCloudscribeLoggingEFStorageMSSQL(connectionString);
                             //services.AddCloudscribeKvpEFStorageMSSQL(connectionString);
 
-
+                            var mssqlQueryToolConnectionString = config.GetConnectionString("QueryToolConnectionString");
                             services.AddQueryToolEFStorageMSSQL(
-                                connectionString: connectionString,
+                                connectionString: mssqlQueryToolConnectionString,
                                 maxConnectionRetryCount: 0,
                                 maxConnectionRetryDelaySeconds: 30,
                                 transientSqlErrorNumbersToAdd: null);

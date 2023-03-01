@@ -124,7 +124,7 @@
             {
             <div class="form-group">
                 <label for="LoadQuery" class="form-label">@sr["Load Query"]:</label>
-                <select id="SaveQuery" asp-for="SavedQueryName" asp-items="@Model.SavedQueryNames" class="form-select form-select-lg"></select>
+                <select id="SaveQuery" asp-for="SavedQueryName" asp-items="@Model.SavedQueryNames" class="form-select-sm"></select>
             </div>
             }
         </div>
@@ -148,7 +148,7 @@
                     <button type="button" data-bs-dismiss="modal" class="btn-close" aria-label='@sr["Close"]'>X</button>
                 </div>
                 <div class="modal-body">
-                    @sr["Are you sure you want to delete the selected Query?"]
+                    @sr["Are you sure you want to delete the selected query?"]
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-primary" data-bs-dismiss="modal">@sr["Cancel"]</button>
