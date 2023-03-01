@@ -104,7 +104,15 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "cloudscribe.QueryTool.EFCor
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "cloudscribe.QueryTool.Models", "src\cloudscribe.QueryTool.Models\cloudscribe.QueryTool.Models.csproj", "{05343175-A515-4188-A610-BA310F3B732C}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "cloudscribe.QueryTool.EFCore.PostgreSql", "src\cloudscribe.QueryTool.EFCore.PostgreSql\cloudscribe.QueryTool.EFCore.PostgreSql.csproj", "{19F65D29-B7D7-493E-8216-07511DBE9F60}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "cloudscribe.QueryTool.EFCore.PostgreSql", "src\cloudscribe.QueryTool.EFCore.PostgreSql\cloudscribe.QueryTool.EFCore.PostgreSql.csproj", "{19F65D29-B7D7-493E-8216-07511DBE9F60}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "cloudscribe.QueryTool.EFCore.MySql", "src\cloudscribe.QueryTool.EFCore.MySql\cloudscribe.QueryTool.EFCore.MySql.csproj", "{6E20ACF7-E129-4685-BD4E-7EC66B984232}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "cloudscribe.QueryTool.EFCore.SQLite", "src\cloudscribe.QueryTool.EFCore.SQLite\cloudscribe.QueryTool.EFCore.SQLite.csproj", "{F46AF3DE-5383-4BC8-9E90-884B6D369700}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "cloudscribe.QueryTool.Services", "src\cloudscribe.QueryTool.Services\cloudscribe.QueryTool.Services.csproj", "{DC124528-3BF5-4FF4-B60E-28D5DF872C74}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "cloudscribe.QueryTool.Web", "src\cloudscribe.QueryTool.Web\cloudscribe.QueryTool.Web.csproj", "{BDADC452-F40A-44DF-A669-186D18DC0D7A}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -300,6 +308,22 @@ Global
 		{19F65D29-B7D7-493E-8216-07511DBE9F60}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{19F65D29-B7D7-493E-8216-07511DBE9F60}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{19F65D29-B7D7-493E-8216-07511DBE9F60}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6E20ACF7-E129-4685-BD4E-7EC66B984232}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6E20ACF7-E129-4685-BD4E-7EC66B984232}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6E20ACF7-E129-4685-BD4E-7EC66B984232}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6E20ACF7-E129-4685-BD4E-7EC66B984232}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F46AF3DE-5383-4BC8-9E90-884B6D369700}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F46AF3DE-5383-4BC8-9E90-884B6D369700}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F46AF3DE-5383-4BC8-9E90-884B6D369700}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F46AF3DE-5383-4BC8-9E90-884B6D369700}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DC124528-3BF5-4FF4-B60E-28D5DF872C74}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DC124528-3BF5-4FF4-B60E-28D5DF872C74}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DC124528-3BF5-4FF4-B60E-28D5DF872C74}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DC124528-3BF5-4FF4-B60E-28D5DF872C74}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BDADC452-F40A-44DF-A669-186D18DC0D7A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BDADC452-F40A-44DF-A669-186D18DC0D7A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BDADC452-F40A-44DF-A669-186D18DC0D7A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BDADC452-F40A-44DF-A669-186D18DC0D7A}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -352,6 +376,10 @@ Global
 		{AC229C5D-8AE4-4F94-B06D-29A7862D13E6} = {9C16B47A-B712-4237-B62F-B4403ACF1CD5}
 		{05343175-A515-4188-A610-BA310F3B732C} = {9C16B47A-B712-4237-B62F-B4403ACF1CD5}
 		{19F65D29-B7D7-493E-8216-07511DBE9F60} = {9C16B47A-B712-4237-B62F-B4403ACF1CD5}
+		{6E20ACF7-E129-4685-BD4E-7EC66B984232} = {9C16B47A-B712-4237-B62F-B4403ACF1CD5}
+		{F46AF3DE-5383-4BC8-9E90-884B6D369700} = {9C16B47A-B712-4237-B62F-B4403ACF1CD5}
+		{DC124528-3BF5-4FF4-B60E-28D5DF872C74} = {9C16B47A-B712-4237-B62F-B4403ACF1CD5}
+		{BDADC452-F40A-44DF-A669-186D18DC0D7A} = {9C16B47A-B712-4237-B62F-B4403ACF1CD5}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {3FDA23E8-B945-4001-92C5-F6A70186E3B0}
