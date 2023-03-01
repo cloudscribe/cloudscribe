@@ -76,7 +76,7 @@ namespace cloudscribe.QueryTool.Web
 
                 case "text/xml":
                 case "application/xml":
-                    var list1 = DataTableToList(data);
+                    var list1 = DataTableToListDictionary(data);
                     var json = "{ \"Row\": \n" + Newtonsoft.Json.JsonConvert.SerializeObject(list1) + "\n}";
                     var xmlResult = Newtonsoft.Json.JsonConvert.DeserializeXNode(json, "Results");
                     response = new ContentResult() {
@@ -89,7 +89,7 @@ namespace cloudscribe.QueryTool.Web
                 case "text/json":
                 case "application/json":
                 default:
-                    var list2 = DataTableToList(data);
+                    var list2 = DataTableToListDictionary(data);
                     var jsonResult = Newtonsoft.Json.JsonConvert.SerializeObject(list2, Newtonsoft.Json.Formatting.Indented);
                     response = new ContentResult() {
                         Content = jsonResult,
@@ -153,7 +153,6 @@ namespace cloudscribe.QueryTool.Web
             try
             {
                 DataTable tableList = await _queryToolService.GetTableList();
-                // var tables = DataTableToList(tableList);
                 model.TableNames = DataTableToSelectList(tableList, "TableName", "TableName");
 
                 if(string.IsNullOrWhiteSpace(model.Table))

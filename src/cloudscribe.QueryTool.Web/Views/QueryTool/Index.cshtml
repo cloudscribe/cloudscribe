@@ -68,7 +68,7 @@
         <div class="col-md-10"><a name="results"></a>
             @if (Model.RowsAffected.HasValue)
             {
-            <div class="text-danger">@String.Format(@sr["{0} rows affected"], @Model.RowsAffected.Value)</div>
+            <div class="text-danger"><b>@String.Format(@sr["{0} rows affected"], @Model.RowsAffected.Value)</b></div>
             }
         </div>
         <div class="col-md-2 text-left">
@@ -133,9 +133,28 @@
             {
             <div class="form-group">
                 <button class="btn btn-primary btn-sm" type="submit" name="Command" value="load">@sr["Load Query"]</button>
-                <button class="btn btn-primary btn-sm" type="submit" name="Command" value="delete">@sr["Delete Query"]</button>
+                <button class="btn btn-danger btn-sm" type="button" data-bs-toggle="modal" data-bs-target="#confirmDeleteModal">@sr["Delete Query"]</button>
             </div>
             }
+        </div>
+    </div>
+
+
+    <div class="modal fade" id="confirmDeleteModal" data-bs-backdrop="static" tabindex="-1" role="dialog" aria-labelledby="confirmDeleteHeading">
+        <div class="modal-dialog modal-dialog-centered modal-sm" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title" id="confirmDeleteHeading">@sr["Confirm Delete"]</h4>
+                    <button type="button" data-bs-dismiss="modal" class="btn-close" aria-label='@sr["Close"]'>X</button>
+                </div>
+                <div class="modal-body">
+                    @sr["Are you sure you want to delete the selected Query?"]
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary" data-bs-dismiss="modal">@sr["Cancel"]</button>
+                    <button type="submit" name="Command" value="delete" class="btn btn-danger btn-ok">@sr["Delete Query"]</button>
+                </div>
+            </div>
         </div>
     </div>
 

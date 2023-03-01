@@ -182,7 +182,12 @@ namespace Microsoft.Extensions.DependencyInjection
             //services.AddSingleton<cloudscribe.Core.Identity.ICookieAuthTicketStoreProvider, cloudscribe.Core.Identity.CookieAuthDistributedCacheTicketStoreProvider>();
 
 
-            services.AddScoped<IQueryTool,QueryTool>();
+            //The QueryTool can only work with Entity Framework databases and not with NoDb
+            var dbPlatform = config.GetValue<string>("DevOptions:DbPlatform");
+            if(dbPlatform == "ef")
+            {
+                services.AddScoped<IQueryTool,QueryTool>();
+            }
 
             //services.AddMojoPortalPasswordMigration();
 

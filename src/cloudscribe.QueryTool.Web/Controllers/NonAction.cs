@@ -24,7 +24,7 @@ namespace cloudscribe.QueryTool.Web
         }
 
         [NonAction]
-        private List<Dictionary<string,string>> DataTableToList(DataTable table)
+        private List<Dictionary<string,string>> DataTableToListDictionary(DataTable table)
         {
             List<Dictionary<string,string>> list = new List<Dictionary<string, string>>();
             foreach (DataRow row in table.Rows)
@@ -70,21 +70,21 @@ namespace cloudscribe.QueryTool.Web
             return new SelectList(list, "Value", "Text");
         }
 
-        // [NonAction]
-        // private SelectList ListToSelectList(List<string> list)
-        // {
-        //     List<SelectListItem> selectList = new List<SelectListItem>();
-        //     foreach (var row in list)
-        //     {
-        //         selectList.Add(new SelectListItem()
-        //         {
-        //             Text = row["Text"],
-        //             Value = row[valueField].ToString()
-        //         });
-        //     }
+        [NonAction]
+        private SelectList DictionaryToSelectList(Dictionary<string,string> dictionary)
+        {
+            List<SelectListItem> selectList = new List<SelectListItem>();
+            foreach (var row in dictionary)
+            {
+                selectList.Add(new SelectListItem()
+                {
+                    Text = row.Value.ToString(),
+                    Value = row.Key.ToString()
+                });
+            }
 
-        //     return new SelectList(list, "Value", "Text");
-        // }
+            return new SelectList(selectList, "Value", "Text");
+        }
 
         [NonAction]
         private SelectList SavedQueriesToSelectList(List<SavedQuery> queries, string valueField, List<string> textFields)
@@ -106,7 +106,7 @@ namespace cloudscribe.QueryTool.Web
                             text += value + ":" + (char)160 + (char)160;
                             break;
                         case "Statement":
-                            if(text.Length > 40) text +="\"" + value.Substring(0, 39) + "...\"" + (char)160 + (char)160;
+                            if(value.Length > 40) text +="\"" + value.Substring(0, 39) + "...\"" + (char)160 + (char)160;
                             else text += "\"" + value + "\""  + (char)160 + (char)160;
                             break;
                         default:
