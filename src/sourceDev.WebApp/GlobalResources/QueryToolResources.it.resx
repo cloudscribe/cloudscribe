@@ -117,11 +117,23 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="Are you sure you want to delete the selected query?" xml:space="preserve">
+    <value>Sei sicuro di voler eliminare la query selezionata?</value>
+  </data>
+  <data name="Cancel" xml:space="preserve">
+    <value>Annulla</value>
+  </data>
   <data name="Clear Query" xml:space="preserve">
     <value>Cancella domanda</value>
   </data>
+  <data name="Close" xml:space="preserve">
+    <value>Vicino</value>
+  </data>
   <data name="Columns" xml:space="preserve">
     <value>Colonne</value>
+  </data>
+  <data name="Confirm Delete" xml:space="preserve">
+    <value>Conferma cancellazione</value>
   </data>
   <data name="Delete" xml:space="preserve">
     <value>Eliminare</value>

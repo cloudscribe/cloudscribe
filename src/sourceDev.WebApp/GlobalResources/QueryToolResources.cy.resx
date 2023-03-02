@@ -117,11 +117,23 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="Are you sure you want to delete the selected query?" xml:space="preserve">
+    <value>Ydych chi'n siŵr eich bod am ddileu'r ymholiad a ddewiswyd?</value>
+  </data>
+  <data name="Cancel" xml:space="preserve">
+    <value>Canslo</value>
+  </data>
   <data name="Clear Query" xml:space="preserve">
     <value>Clirio Ymholiad</value>
   </data>
+  <data name="Close" xml:space="preserve">
+    <value>Cau</value>
+  </data>
   <data name="Columns" xml:space="preserve">
     <value>Colofnau</value>
+  </data>
+  <data name="Confirm Delete" xml:space="preserve">
+    <value>Cadarnhau Dileu</value>
   </data>
   <data name="Delete" xml:space="preserve">
     <value>Dileu</value>
