@@ -58,11 +58,11 @@ namespace Microsoft.Extensions.DependencyInjection
                     {
                         case "sqlite":
 
-                            var dbName = config.GetConnectionString("SQLiteDbName");
-                            var dbPath = Path.Combine(env.ContentRootPath, dbName);
-                            var slConnection = $"Data Source={dbPath}";
+                            // var dbName = config.GetConnectionString("SQLiteDbName");
+                            // var dbPath = Path.Combine(env.ContentRootPath, dbName);
+                            // var slConnection = $"Data Source={dbPath}";
 
-                            //var slConnection = config.GetConnectionString("SQLiteEntityFrameworkConnectionString");
+                            var slConnection = config.GetConnectionString("SQLiteEntityFrameworkConnectionString");
                             //Data Source=cloudscribe.dev2.db
 
 
@@ -92,9 +92,8 @@ namespace Microsoft.Extensions.DependencyInjection
                             services.AddCloudscribeLoggingPostgreSqlStorage(pgsConnection);
                             //services.AddCloudscribeKvpPostgreSqlStorage(pgsConnection);
 
-                            var pgsqlQueryToolConnectionString = config.GetConnectionString("QueryToolConnectionString");
                             services.AddQueryToolEFStoragePostgreSql(
-                               connectionString: pgsqlQueryToolConnectionString,
+                               connectionString: pgsConnection,
                                maxConnectionRetryCount: 0,
                                maxConnectionRetryDelaySeconds: 30,
                                transientErrorCodesToAdd: null);
@@ -108,9 +107,8 @@ namespace Microsoft.Extensions.DependencyInjection
                             services.AddCloudscribeLoggingEFStorageMySQL(mysqlConnection);
                            // services.AddCloudscribeKvpEFStorageMySql(mysqlConnection);
 
-                           var mySqlQueryToolConnectionString = config.GetConnectionString("QueryToolConnectionString");
                            services.AddQueryToolEFStorageMySql(
-                               connectionString: mySqlQueryToolConnectionString,
+                               connectionString: mysqlConnection,
                                maxConnectionRetryCount: 0,
                                maxConnectionRetryDelaySeconds: 30,
                                transientSqlErrorNumbersToAdd: null);
@@ -132,9 +130,8 @@ namespace Microsoft.Extensions.DependencyInjection
                             services.AddCloudscribeLoggingEFStorageMSSQL(connectionString);
                             //services.AddCloudscribeKvpEFStorageMSSQL(connectionString);
 
-                            var mssqlQueryToolConnectionString = config.GetConnectionString("QueryToolConnectionString");
                             services.AddQueryToolEFStorageMSSQL(
-                                connectionString: mssqlQueryToolConnectionString,
+                                connectionString: connectionString,
                                 maxConnectionRetryCount: 0,
                                 maxConnectionRetryDelaySeconds: 30,
                                 transientSqlErrorNumbersToAdd: null);

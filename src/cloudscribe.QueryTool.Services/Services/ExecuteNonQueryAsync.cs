@@ -8,10 +8,15 @@ namespace cloudscribe.QueryTool.Services
     {
         public async Task<int> ExecuteNonQueryAsync(string query)
         {
+            int rows = 0;
+
             using(var db = _dbContextFactory.CreateContext())
             {
-            return await db.Database.ExecuteSqlRawAsync(query);
+                DbConnection connection = db.Database.GetDbConnection();
+                rows = await RawNonQueryAsync(connection, query);
             }
+
+            return rows;
         }
     }
 }
