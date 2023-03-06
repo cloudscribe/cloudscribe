@@ -551,8 +551,8 @@ namespace cloudscribe.Core.Storage.NoDb
             foreach (var item in filtered)
             {
                 var key = item.UserId.ToString() + "~" + item.RoleId.ToString();
-
-                await _roleCommands.DeleteAsync(
+                    
+                await _userRoleCommands.DeleteAsync(
                     projectId,
                     key,
                     cancellationToken).ConfigureAwait(false);
@@ -583,7 +583,7 @@ namespace cloudscribe.Core.Storage.NoDb
             {
                 var key = item.UserId.ToString() + "~" + item.RoleId.ToString();
 
-                await _roleCommands.DeleteAsync(
+                await _userRoleCommands.DeleteAsync(
                     projectId,
                     key,
                     cancellationToken).ConfigureAwait(false);
@@ -619,7 +619,7 @@ namespace cloudscribe.Core.Storage.NoDb
             {
                 var key = item.UserId.ToString() + "~" + item.RoleId.ToString();
 
-                await _roleCommands.DeleteAsync(
+                await _userRoleCommands.DeleteAsync(
                     projectId,
                     key,
                     cancellationToken).ConfigureAwait(false);
