@@ -18,7 +18,7 @@
                 <select id="Table" asp-for="Table" asp-items="@Model.TableNames" class="form-control" style="font-family: monospace;" onchange="this.form.submit();"></select>
             </div>
         </div>
-        <div class="col-md-2 text-left">
+        <div class="col-md-2 text-start">
             <div class="form-group">
                 <label for="CreateActions1" class="form-label"></label>
                 <div class="form-group" id="CreateActions1">
@@ -34,7 +34,7 @@
                 <select id="Columns" asp-for="Columns" asp-items="@Model.ColumnNames" size=6 class="form-control" style="font-family: monospace;"></select>
             </div>
         </div>
-        <div class="col-md-2 text-left">
+        <div class="col-md-2 text-start">
             <label for="CreateActions2" class="form-label"></label>
             <div class="form-group" id="CreateActions2">
                 <button class="btn btn-primary btn-sm mt-2" id="Insert-Cursor2" type="submit" name="Command" value="insert">@sr["Insert at Cursor"]</button>
@@ -55,7 +55,7 @@
                 <textarea id="Query" name="Query" rows="5" cols="70" class="form-control" autocomplete="">@Model.Query</textarea>
             </div>
         </div>
-        <div class="col-md-2 text-left">
+        <div class="col-md-2 text-start">
             <label for="QueryActions" class="form-label"></label>
             <div class="form-group" id="QueryActions">
                 <button class="btn btn-primary btn-sm mt-2" type="submit" name="Command" value="query">@sr["Execute Query"]</button>
@@ -71,7 +71,7 @@
             <div class="text-danger"><b>@String.Format(@sr["{0} rows affected"], @Model.RowsAffected.Value)</b></div>
             }
         </div>
-        <div class="col-md-2 text-left">
+        <div class="col-md-2 text-start">
             @if (Model.RowsAffected.HasValue)
             {
             <button class="btn btn-primary btn-sm mb-1" type="submit" name="Command" value="export">@sr["Export CSV"]</button>
@@ -84,7 +84,7 @@
         <div class="col-md-12">
             @if (Model.RowsAffected.HasValue)
             {
-                <div class="query-tool">
+                <div class="table-responsive">
                     <data-table cs-data="@Model.Data"></data-table>
                 </div>
             }
@@ -101,7 +101,7 @@
     </div>
 
     <div class="row">
-        <div class="col-md-4">
+        <div class="col-md-4 mt-1">
             @if(Model.hasQuery && Model.QueryIsValid)
             {
             <div class="form-group">
@@ -119,7 +119,7 @@
                 <input id="SaveQueryApi" asp-for="SaveNameAsApi" type="hidden"  value="@Model.SaveNameAsApi" />
             }
         </div>
-        <div class="col-md-6 text-right">
+        <div class="col-md-6 mt-1 text-end">
             @if (Model.SavedQueryNames != null && Model.SavedQueryNames.Count() > 0)
             {
             <div class="form-group">
@@ -128,7 +128,7 @@
             </div>
             }
         </div>
-        <div class="col-md-2 text-left">
+        <div class="col-md-2 mt-1 text-start">
             @if (Model.SavedQueryNames != null && Model.SavedQueryNames.Count() > 0)
             {
             <div class="form-group">
