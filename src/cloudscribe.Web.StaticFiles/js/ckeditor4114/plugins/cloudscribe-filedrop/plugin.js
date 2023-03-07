@@ -6,6 +6,7 @@
  *
  */
 
+
 CKEDITOR.plugins.add( 'cloudscribe-filedrop',
 {
 	init : function( editor )
@@ -33,7 +34,7 @@ CKEDITOR.plugins.add( 'cloudscribe-filedrop',
 			event = event || window.event;
 
 			var files = event.dataTransfer.files || event.target.files;
-			if(files) {
+			if (files && files.length > 0) {
 				event.preventDefault();
 				event.stopPropagation ();
 				if(!isLocked) { isLocked = theEditor.lockSelection(); }
@@ -45,7 +46,7 @@ CKEDITOR.plugins.add( 'cloudscribe-filedrop',
 			event = event || window.event;
 
 			var files = event.clipboardData.files || event.target.files;
-			if(files) {
+			if (files && files.length > 0) {
 				event.preventDefault();
 				event.stopPropagation ();
 				if(!isLocked) { isLocked = theEditor.lockSelection(); }
