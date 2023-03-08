@@ -50,8 +50,22 @@ CKEDITOR.plugins.add( 'cloudscribe-filedrop',
 				event.preventDefault();
 				event.stopPropagation ();
 				if(!isLocked) { isLocked = theEditor.lockSelection(); }
-				uploadFile(files[0]); // one file at a time
+				var name = files[0].name; //usually this will always be image.png
+				var baseName = name.substring(0, name.lastIndexOf('.')) || name;
+				var ext = name.substring(name.lastIndexOf('.') + 1).toLowerCase();
+				var newName = baseName + '_' + new Date().getTime() + '.' + ext;
+				var file = renameFile(files[0], newName);
+				// console.log("onPaste");
+				// console.log(file);
+				uploadFile(file);
 			}
+		}
+
+		function renameFile(originalFile, newName) {
+			return new File([originalFile], newName, {
+				type: originalFile.type,
+				lastModified: originalFile.lastModified,
+			});
 		}
 
 		function uploadFile(file) {
