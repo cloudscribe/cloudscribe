@@ -46,7 +46,7 @@ namespace cloudscribe.QueryTool.Web.TagHelpers
             }
 
             output.Attributes.Clear();
-            output.Attributes.Add("class", "table table-sm table-striped table-bordered table-hover table-responsive");
+            output.Attributes.Add("class", "table table-sm table-striped table-bordered table-hover");
         }
     }
 }
