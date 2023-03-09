@@ -1,0 +1,258 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <!--
+    Microsoft ResX Schema
+
+    Version 2.0
+
+    The primary goals of this format is to allow a simple XML format
+    that is mostly human readable. The generation and parsing of the
+    various data types are done through the TypeConverter classes
+    associated with the data types.
+
+    Example:
+
+    ... ado.net/XML headers & schema ...
+    <resheader name="resmimetype">text/microsoft-resx</resheader>
+    <resheader name="version">2.0</resheader>
+    <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
+    <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
+    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
+    <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
+    <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
+        <value>[base64 mime encoded serialized .NET Framework object]</value>
+    </data>
+    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
+        <comment>This is a comment</comment>
+    </data>
+
+    There are any number of "resheader" rows that contain simple
+    name/value pairs.
+
+    Each data row contains a name, and value. The row also contains a
+    type or mimetype. Type corresponds to a .NET class that support
+    text/value conversion through the TypeConverter architecture.
+    Classes that don't support this are serialized and stored with the
+    mimetype set.
+
+    The mimetype is used for serialized objects, and tells the
+    ResXResourceReader how to depersist the object. This is currently not
+    extensible. For a given mimetype the value must be set accordingly:
+
+    Note - application/x-microsoft.net.object.binary.base64 is the format
+    that the ResXResourceWriter will generate, however the reader can
+    read any of the formats listed below.
+
+    mimetype: application/x-microsoft.net.object.binary.base64
+    value   : The object must be serialized with
+            : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
+            : and then encoded with base64 encoding.
+
+    mimetype: application/x-microsoft.net.object.soap.base64
+    value   : The object must be serialized with
+            : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
+            : and then encoded with base64 encoding.
+
+    mimetype: application/x-microsoft.net.object.bytearray.base64
+    value   : The object must be serialized into a byte array
+            : using a System.ComponentModel.TypeConverter
+            : and then encoded with base64 encoding.
+    -->
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="Are you sure you want to delete the selected saved query?" xml:space="preserve">
+    <value>Ydych chi'n siŵr eich bod am ddileu'r ymholiad sydd wedi'i gadw a ddewiswyd?</value>
+  </data>
+  <data name="Cancel" xml:space="preserve">
+    <value>Canslo</value>
+  </data>
+  <data name="Check to enable this query to be run via the QueryTool API." xml:space="preserve">
+    <value>Gwiriwch i alluogi rhedeg yr ymholiad hwn trwy'r API QueryTool.</value>
+  </data>
+  <data name="Choose a table name from the list" xml:space="preserve">
+    <value>Dewiswch enw tabl o'r rhestr</value>
+  </data>
+  <data name="Choose one or more column names from the list. Control and click to select multiple items." xml:space="preserve">
+    <value>Dewiswch un neu fwy o enwau colofnau o'r rhestr. Rheoli a chlicio i ddewis eitemau lluosog.</value>
+  </data>
+  <data name="Clear Query" xml:space="preserve">
+    <value>Clirio Ymholiad</value>
+  </data>
+  <data name="Close" xml:space="preserve">
+    <value>Cau</value>
+  </data>
+  <data name="Columns" xml:space="preserve">
+    <value>Colofnau</value>
+  </data>
+  <data name="Confirm Delete" xml:space="preserve">
+    <value>Cadarnhau Dileu</value>
+  </data>
+  <data name="Delete" xml:space="preserve">
+    <value>Dileu</value>
+  </data>
+  <data name="Delete Saved Query" xml:space="preserve">
+    <value>Dileu Ymholiad Wedi'i Gadw</value>
+  </data>
+  <data name="Enable as API query?" xml:space="preserve">
+    <value>Galluogi fel ymholiad API?</value>
+  </data>
+  <data name="Enter a name for the query to save it for later use" xml:space="preserve">
+    <value>Rhowch enw ar gyfer yr ymholiad i'w gadw i'w ddefnyddio'n ddiweddarach</value>
+  </data>
+  <data name="Error deleting query" xml:space="preserve">
+    <value>Gwall wrth ddileu ymholiad</value>
+  </data>
+  <data name="Error loading query" xml:space="preserve">
+    <value>Gwall wrth lwytho'r ymholiad</value>
+  </data>
+  <data name="Error saving query" xml:space="preserve">
+    <value>Gwall wrth gadw ymholiad</value>
+  </data>
+  <data name="Execute Query" xml:space="preserve">
+    <value>Gweithredu Ymholiad</value>
+  </data>
+  <data name="Export CSV" xml:space="preserve">
+    <value>Allforio CSV</value>
+  </data>
+  <data name="Export results to CSV file" xml:space="preserve">
+    <value>Allforio canlyniadau i ffeil CSV</value>
+  </data>
+  <data name="For the full instructions see the {0}Query Tool Documentation{1}." xml:space="preserve">
+    <value>Am y cyfarwyddiadau llawn gweler y {0}Dogfennaeth Offeryn Ymholiad{1}.</value>
+  </data>
+  <data name="Generate a DELETE statement for the selected table" xml:space="preserve">
+    <value>Cynhyrchu datganiad DELETE ar gyfer y tabl a ddewiswyd</value>
+  </data>
+  <data name="Generate a SELECT statement for the selected table and columns" xml:space="preserve">
+    <value>Cynhyrchu datganiad SELECT ar gyfer y tabl a'r colofnau a ddewiswyd</value>
+  </data>
+  <data name="Generate an INSERT statement for the selected table and columns" xml:space="preserve">
+    <value>Cynhyrchwch ddatganiad INSERT ar gyfer y tabl a'r colofnau a ddewiswyd</value>
+  </data>
+  <data name="Generate an UPDATE statement for the selected table and columns" xml:space="preserve">
+    <value>Cynhyrchu datganiad UPDATE ar gyfer y tabl a'r colofnau a ddewiswyd</value>
+  </data>
+  <data name="Insert" xml:space="preserve">
+    <value>Mewnosod</value>
+  </data>
+  <data name="Insert at Cursor" xml:space="preserve">
+    <value>Mewnosod yn Cursor</value>
+  </data>
+  <data name="Insert column names into Query at current cursor position" xml:space="preserve">
+    <value>Mewnosod enwau colofnau yn Ymholiad yn y safle cyrchwr cyfredol</value>
+  </data>
+  <data name="Insert table name into Query at current cursor position" xml:space="preserve">
+    <value>Mewnosod enw tabl yn Ymholiad yn y safle cyrchwr presennol</value>
+  </data>
+  <data name="Invalid query! Only SELECT, INSERT, UPDATE, and DELETE are allowed." xml:space="preserve">
+    <value>Ymholiad annilys! Dim ond SELECT, INSERT, UPDATE, a DELETE a ganiateir.</value>
+  </data>
+  <data name="Load Saved Query" xml:space="preserve">
+    <value>Llwyth Ymholiad Cadw</value>
+  </data>
+  <data name="Query" xml:space="preserve">
+    <value>Ymholiad</value>
+  </data>
+  <data name="Query Tool" xml:space="preserve">
+    <value>Offeryn Ymholiad</value>
+  </data>
+  <data name="Query deleted" xml:space="preserve">
+    <value>Ymholiad wedi'i ddileu</value>
+  </data>
+  <data name="Query loaded" xml:space="preserve">
+    <value>Ymholiad wedi'i lwytho</value>
+  </data>
+  <data name="Query saved" xml:space="preserve">
+    <value>Ymholiad wedi'i gadw</value>
+  </data>
+  <data name="Save Query" xml:space="preserve">
+    <value>Cadw Ymholiad</value>
+  </data>
+  <data name="Save Query As" xml:space="preserve">
+    <value>Cadw Ymholiad Fel</value>
+  </data>
+  <data name="Saved Queries" xml:space="preserve">
+    <value>Ymholiadau wedi'u Cadw</value>
+  </data>
+  <data name="Select" xml:space="preserve">
+    <value>Dewiswch</value>
+  </data>
+  <data name="Select a saved query to load it into the query editor" xml:space="preserve">
+    <value>Dewiswch ymholiad sydd wedi'i gadw i'w lwytho i mewn i olygydd yr ymholiad</value>
+  </data>
+  <data name="Tables" xml:space="preserve">
+    <value>Byrddau</value>
+  </data>
+  <data name="This tool allows you to query your database using SQL. You can create SQL statements for common operations such as SELECT, INSERT, UPDATE and DELETE. The tool can automatically generate the SQL for you based on the table and columns you select. You can also save your queries for later use." xml:space="preserve">
+    <value>Mae'r offeryn hwn yn caniatáu ichi gwestiynu'ch cronfa ddata gan ddefnyddio SQL. Gallwch greu datganiadau SQL ar gyfer gweithrediadau cyffredin fel SELECT, INSERT, UPDATE a DELETE. Gall yr offeryn gynhyrchu'r SQL yn awtomatig i chi yn seiliedig ar y tabl a'r colofnau a ddewiswch. Gallwch hefyd arbed eich ymholiadau i'w defnyddio'n ddiweddarach.</value>
+  </data>
+  <data name="Update" xml:space="preserve">
+    <value>Diweddariad</value>
+  </data>
+  <data name="Write your SQL query here" xml:space="preserve">
+    <value>Ysgrifennwch eich ymholiad SQL yma</value>
+  </data>
+  <data name="You must select at least one column from the 'Columns' list!" xml:space="preserve">
+    <value>Rhaid dewis o leiaf un golofn o'r rhestr 'Colofnau'!</value>
+  </data>
+  <data name="{0} rows affected" xml:space="preserve">
+    <value>{0} rhes wedi'u heffeithio</value>
+  </data>
+</root>

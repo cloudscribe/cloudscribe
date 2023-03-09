@@ -15,13 +15,13 @@
               >
       <Children />
     </NavNode>
-    
-    <NavNode key="Manage" 
-                 controller="Manage" 
-                 action="Index" 
-                 text="My Account" 
-                 preservedRouteParameters="siteId" 
-                 componentVisibility="breadcrumbs" 
+
+    <NavNode key="Manage"
+                 controller="Manage"
+                 action="Index"
+                 text="My Account"
+                 preservedRouteParameters="siteId"
+                 componentVisibility="breadcrumbs"
                  hideFromAnonymous="true">
           <Children>
             <NavNode key="UserProfile"
@@ -32,7 +32,7 @@
                      hideFromAnonymous="true">
               <Children />
             </NavNode>
-            
+
             <NavNode key="SetPassword"
               controller="Manage"
               action="SetPassword"
@@ -96,8 +96,8 @@
                   hideFromAnonymous="true">
                   <Children />
                 </NavNode>
-                
-                
+
+
               </Children>
             </NavNode>
             <NavNode key="UserTimeZone"
@@ -125,29 +125,29 @@
                 </NavNode>
               </Children>
             </NavNode>
-            
-            
+
+
           </Children>
         </NavNode>
-    
+
     <NavNode key="SiteAdmin"
-      controller="SiteAdmin" 
-      action="Index" 
+      controller="SiteAdmin"
+      action="Index"
       text="Administration"
       authorizationPolicy="AdminMenuPolicy">
       <Children>
-        <NavNode key="SiteList"  
-                 controller="SiteAdmin" 
-                 action="SiteList" 
-                 text="Site List" 
+        <NavNode key="SiteList"
+                 controller="SiteAdmin"
+                 action="SiteList"
+                 text="Site List"
                  iconCssClass="fas fa-list-ul"
                  componentVisibility="breadcrumbs,childtree,parenttree"
                  authorizationPolicy="ServerAdminPolicy">
           <Children>
-            <NavNode key="NewSite" 
-                     controller="SiteAdmin" 
-                     action="NewSite" 
-                     text="New Site" 
+            <NavNode key="NewSite"
+                     controller="SiteAdmin"
+                     action="NewSite"
+                     text="New Site"
                      iconCssClass="fas fa-bolt"
                      componentVisibility="breadcrumbs,childtree"
                      authorizationPolicy="ServerAdminPolicy">
@@ -155,37 +155,37 @@
             </NavNode>
           </Children>
         </NavNode>
-        
-        <NavNode 
-          key="BasicSettings" 
-          controller="SiteAdmin" 
-          action="SiteInfo" 
-          text="Site Settings" 
+
+        <NavNode
+          key="BasicSettings"
+          controller="SiteAdmin"
+          action="SiteInfo"
+          text="Site Settings"
           iconCssClass="fas fa-cogs"
-          preservedRouteParameters="siteId" 
+          preservedRouteParameters="siteId"
           componentVisibility="breadcrumbs,childtree,parenttree"
           authorizationPolicy="AdminPolicy">
           <Children>
-            <NavNode key="SiteHostMappings" 
-                     controller="SiteAdmin" 
-                     action="SiteHostMappings" 
-                     text="Domain Mappings" 
-                     preservedRouteParameters="siteId" 
+            <NavNode key="SiteHostMappings"
+                     controller="SiteAdmin"
+                     action="SiteHostMappings"
+                     text="Domain Mappings"
+                     preservedRouteParameters="siteId"
                      componentVisibility="breadcrumbs"
                      authorizationPolicy="ServerAdminPolicy">
               <Children />
             </NavNode>
           </Children>
         </NavNode>
-        <NavNode key="CompanyInfo" 
-                 controller="SiteAdmin" 
-                 action="CompanyInfo" 
-                 text="Company Info" 
+        <NavNode key="CompanyInfo"
+                 controller="SiteAdmin"
+                 action="CompanyInfo"
+                 text="Company Info"
                  iconCssClass="fas fa-address-card"
-                 preservedRouteParameters="siteId" 
+                 preservedRouteParameters="siteId"
                  componentVisibility="breadcrumbs,childtree,parenttree"
                  authorizationPolicy="AdminPolicy">
-          <Children>  
+          <Children>
           </Children>
         </NavNode>
         <NavNode key="MailSettings"
@@ -211,48 +211,48 @@
           </Children>
         </NavNode>
         -->
-        <NavNode key="SecuritySettings" 
-                 controller="SiteAdmin" 
-                 action="SecuritySettings" 
-                 text="Security Settings"  
+        <NavNode key="SecuritySettings"
+                 controller="SiteAdmin"
+                 action="SecuritySettings"
+                 text="Security Settings"
                  iconCssClass="fas fa-lock"
-                 preservedRouteParameters="siteId" 
+                 preservedRouteParameters="siteId"
                  componentVisibility="breadcrumbs,childtree,parenttree"
                  authorizationPolicy="AdminPolicy">
           <Children></Children>
         </NavNode>
-        
-        <NavNode key="CaptchaSettings" 
-                 controller="SiteAdmin" 
-                 action="Captcha" 
-                 text="Captcha Settings" 
+
+        <NavNode key="CaptchaSettings"
+                 controller="SiteAdmin"
+                 action="Captcha"
+                 text="Captcha Settings"
                  iconCssClass="fas fa-puzzle-piece"
-                 preservedRouteParameters="siteId" 
+                 preservedRouteParameters="siteId"
                  componentVisibility="breadcrumbs,childtree,parenttree"
                  authorizationPolicy="AdminPolicy">
               <Children />
         </NavNode>
-        <NavNode key="SocialLogins"  
-                 controller="SiteAdmin" 
-                 action="SocialLogins" 
-                 text="Social Logins" 
+        <NavNode key="SocialLogins"
+                 controller="SiteAdmin"
+                 action="SocialLogins"
+                 text="Social Logins"
                  iconCssClass="fab fa-facebook-square"
-                 preservedRouteParameters="siteId" 
+                 preservedRouteParameters="siteId"
                  componentVisibility="breadcrumbs,childtree,parenttree"
                  authorizationPolicy="AdminPolicy">
           <Children />
         </NavNode>
-        <NavNode key="PrivacySettings" 
-                 controller="SiteAdmin" 
-                 action="PrivacySettings" 
-                 text="Privacy Settings" 
+        <NavNode key="PrivacySettings"
+                 controller="SiteAdmin"
+                 action="PrivacySettings"
+                 text="Privacy Settings"
                  iconCssClass="fas fa-user-secret"
-                 preservedRouteParameters="siteId" 
+                 preservedRouteParameters="siteId"
                  componentVisibility="breadcrumbs,childtree,parenttree"
                  authorizationPolicy="AdminPolicy">
               <Children />
         </NavNode>
-        
+
           <NavNode key="OIDApiResources"
                   controller="ApiResource"
                   action="Index"
@@ -340,46 +340,46 @@
                       </NavNode>
                   </Children>
               </NavNode>
-        
-        <NavNode key="LoginPageInfo" 
-                 controller="SiteAdmin" 
-                 action="LoginPageInfo" 
-                 text="Login Page Info" 
+
+        <NavNode key="LoginPageInfo"
+                 controller="SiteAdmin"
+                 action="LoginPageInfo"
+                 text="Login Page Info"
                  iconCssClass="fas fa-info-circle"
-                 preservedRouteParameters="siteId" 
+                 preservedRouteParameters="siteId"
                  componentVisibility="breadcrumbs,childtree,parenttree"
                  authorizationPolicy="AdminPolicy">
           <Children>
           </Children>
         </NavNode>
-        <NavNode key="RegisterPageInfo" 
-                 controller="SiteAdmin" 
-                 action="RegisterPageInfo" 
-                 text="Register Page Info" 
+        <NavNode key="RegisterPageInfo"
+                 controller="SiteAdmin"
+                 action="RegisterPageInfo"
+                 text="Register Page Info"
                  iconCssClass="fas fa-info-circle"
-                 preservedRouteParameters="siteId" 
+                 preservedRouteParameters="siteId"
                  componentVisibility="breadcrumbs,childtree,parenttree"
                  authorizationPolicy="AdminPolicy">
           <Children>
           </Children>
         </NavNode>
-        
-        
-        
-        <NavNode key="UserAdmin"  
-                 controller="UserAdmin" 
-                 action="Index" 
-                 preservedRouteParameters="siteId" 
-                 text="User List"  
+
+
+
+        <NavNode key="UserAdmin"
+                 controller="UserAdmin"
+                 action="Index"
+                 preservedRouteParameters="siteId"
+                 text="User List"
                  iconCssClass="fas fa-user"
                  componentVisibility="breadcrumbs,childtree,parenttree"
                  authorizationPolicy="UserManagementPolicy">
           <Children>
-            <NavNode key="UserEdit" 
-                     controller="UserAdmin" 
+            <NavNode key="UserEdit"
+                     controller="UserAdmin"
                      action="UserEdit"
-                     text="New User" 
-                     preservedRouteParameters="siteId,userId" 
+                     text="New User"
+                     preservedRouteParameters="siteId,userId"
                      componentVisibility="breadcrumbs"
                      authorizationPolicy="UserManagementPolicy">
               <Children>
@@ -413,21 +413,21 @@
                      authorizationPolicy="UserManagementPolicy">
                 <Children />
             </NavNode>
-            
-            <NavNode key="UserSearch" 
-                     controller="UserAdmin" 
+
+            <NavNode key="UserSearch"
+                     controller="UserAdmin"
                      action="Search"
                      preservedRouteParameters="siteId"
-                     text="User Search" 
+                     text="User Search"
                      componentVisibility="breadcrumbs"
                      authorizationPolicy="UserManagementPolicy">
               <Children />
             </NavNode>
-            <NavNode key="IpSearch" 
-                     controller="UserAdmin" 
+            <NavNode key="IpSearch"
+                     controller="UserAdmin"
                      action="IpSearch"
                      preservedRouteParameters="siteId"
-                     text="IpSearch" 
+                     text="IpSearch"
                      componentVisibility="breadcrumbs"
                      authorizationPolicy="UserManagementPolicy">
               <Children />
@@ -456,31 +456,31 @@
           <Children>
           </Children>
         </NavNode>
-        
-        <NavNode key="RoleAdmin" 
-                 controller="RoleAdmin" 
+
+        <NavNode key="RoleAdmin"
+                 controller="RoleAdmin"
                  action="Index"
                  preservedRouteParameters="siteId"
-                 text="Role Management" 
+                 text="Role Management"
                  iconCssClass="fas fa-key"
                  componentVisibility="breadcrumbs,childtree,parenttree"
                  authorizationPolicy="RoleAdminPolicy">
           <Children>
-            <NavNode key="RoleMembers" 
-                     controller="RoleAdmin" 
-                     action="RoleMembers"  
-                     text="Role Members" 
-                     preservedRouteParameters="siteId,roleId,pageNumber,pageSize" 
+            <NavNode key="RoleMembers"
+                     controller="RoleAdmin"
+                     action="RoleMembers"
+                     text="Role Members"
+                     preservedRouteParameters="siteId,roleId,pageNumber,pageSize"
                      componentVisibility="breadcrumbs"
                      authorizationPolicy="RoleAdminPolicy">
               <Children />
             </NavNode>
-            <NavNode key="RoleEdit"  
-                     controller="RoleAdmin" 
-                     action="RoleEdit" 
+            <NavNode key="RoleEdit"
+                     controller="RoleAdmin"
+                     action="RoleEdit"
                      text="New Role"
                      iconCssClass="fas fa-plus-circle"
-                     preservedRouteParameters="siteId,roleId" 
+                     preservedRouteParameters="siteId,roleId"
                      componentVisibility="breadcrumbs,childtree"
                      authorizationPolicy="RoleAdminPolicy">
               <Children />
@@ -497,7 +497,7 @@
                  authorizationPolicy="FileManagerPolicy">
           <Children> </Children>
         </NavNode>
-        
+
         <NavNode key="CountryListPage"
                      controller="CoreData"
                      action="CountryListPage"
@@ -538,10 +538,21 @@
           </Children>
         </NavNode>
 
-        <NavNode key="SystemInfo" 
-                 controller="SystemInfo" 
-                 action="Index" 
-                 text="System Information"  
+        <NavNode key="QueryTool"
+                controller="QueryTool"
+                action="Index"
+                text="Query Tool"
+                  iconCssClass="fas fa-database  fa-fw"
+                componentVisibility="breadcrumbs,childtree,parenttree"
+                  excludeFromSearchSiteMap="true"
+                authorizationPolicy="ServerAdminPolicy">
+          <Children>
+          </Children>
+        </NavNode>
+        <NavNode key="SystemInfo"
+                 controller="SystemInfo"
+                 action="Index"
+                 text="System Information"
                  iconCssClass="fas fa-bolt"
                  componentVisibility="breadcrumbs,childtree,parenttree"
                  authorizationPolicy="AdminPolicy">
@@ -554,7 +565,7 @@
                 iconCssClass="fas fa-bug"
               componentVisibility="breadcrumbs,childtree,parenttree"
               authorizationPolicy="SystemLogPolicy" />
-      
+
       </Children>
     </NavNode>
   </Children>

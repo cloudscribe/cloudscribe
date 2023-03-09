@@ -1,4 +1,9 @@
 ﻿using cloudscribe.Core.Models;
+using cloudscribe.QueryTool.Services;
+using cloudscribe.QueryTool.EFCore.MSSQL;
+using cloudscribe.QueryTool.EFCore.PostgreSql;
+using cloudscribe.QueryTool.EFCore.SQLite;
+using cloudscribe.QueryTool.EFCore.MySql;
 //using cloudscribe.UserProperties.Models;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
@@ -6,6 +11,7 @@ using Microsoft.Extensions.Configuration;
 using sourceDev.WebApp.Components;
 using System;
 using System.IO;
+
 
 namespace Microsoft.Extensions.DependencyInjection
 {
@@ -35,8 +41,8 @@ namespace Microsoft.Extensions.DependencyInjection
                     //{
                     //    services.AddMiniProfiler();
                     //}
-                    
-                    
+
+
                     break;
 
                 case "ef":
@@ -52,17 +58,23 @@ namespace Microsoft.Extensions.DependencyInjection
                     {
                         case "sqlite":
 
-                            var dbName = config.GetConnectionString("SQLiteDbName");
-                            var dbPath = Path.Combine(env.ContentRootPath, dbName);
-                            var slConnection = $"Data Source={dbPath}";
+                            // var dbName = config.GetConnectionString("SQLiteDbName");
+                            // var dbPath = Path.Combine(env.ContentRootPath, dbName);
+                            // var slConnection = $"Data Source={dbPath}";
 
-                            //var slConnection = config.GetConnectionString("SQLiteEntityFrameworkConnectionString");
+                            var slConnection = config.GetConnectionString("SQLiteEntityFrameworkConnectionString");
                             //Data Source=cloudscribe.dev2.db
 
 
                             services.AddCloudscribeCoreEFStorageSQLite(slConnection);
                             services.AddCloudscribeLoggingEFStorageSQLite(slConnection);
                             //services.AddCloudscribeKvpEFStorageSQLite(slConnection);
+
+                            services.AddQueryToolEFStorageSQLite(
+                                connectionString: slConnection,
+                                maxConnectionRetryCount: 0,
+                                maxConnectionRetryDelaySeconds: 30,
+                                commandTimeout: 30);
 
                             break;
 
@@ -80,6 +92,12 @@ namespace Microsoft.Extensions.DependencyInjection
                             services.AddCloudscribeLoggingPostgreSqlStorage(pgsConnection);
                             //services.AddCloudscribeKvpPostgreSqlStorage(pgsConnection);
 
+                            services.AddQueryToolEFStoragePostgreSql(
+                               connectionString: pgsConnection,
+                               maxConnectionRetryCount: 0,
+                               maxConnectionRetryDelaySeconds: 30,
+                               transientErrorCodesToAdd: null);
+
                             break;
 
 
@@ -89,29 +107,35 @@ namespace Microsoft.Extensions.DependencyInjection
                             services.AddCloudscribeLoggingEFStorageMySQL(mysqlConnection);
                            // services.AddCloudscribeKvpEFStorageMySql(mysqlConnection);
 
+                           services.AddQueryToolEFStorageMySql(
+                               connectionString: mysqlConnection,
+                               maxConnectionRetryCount: 0,
+                               maxConnectionRetryDelaySeconds: 30,
+                               transientSqlErrorNumbersToAdd: null);
+
                             break;
 
                         case "MSSQL":
                         default:
                             var connectionString = config.GetConnectionString("EntityFrameworkConnectionString");
-
                             // this shows all the params with default values
                             // only connectionstring is required to be passed in
                             services.AddCloudscribeCoreEFStorageMSSQL(
                                 connectionString: connectionString,
                                 maxConnectionRetryCount: 0,
                                 maxConnectionRetryDelaySeconds: 30,
-                                transientSqlErrorNumbersToAdd: null,
-                                useSql2008Compatibility: false);
-
-                            //services.AddCloudscribeCoreEFStorageMSSQL(
-                            //    connectionString: connectionString,
-                            //    useSql2008Compatibility: true);
+                                transientSqlErrorNumbersToAdd: null);
 
 
                             services.AddCloudscribeLoggingEFStorageMSSQL(connectionString);
                             //services.AddCloudscribeKvpEFStorageMSSQL(connectionString);
-                            
+
+                            services.AddQueryToolEFStorageMSSQL(
+                                connectionString: connectionString,
+                                maxConnectionRetryCount: 0,
+                                maxConnectionRetryDelaySeconds: 30,
+                                transientSqlErrorNumbersToAdd: null);
+
                             break;
                     }
 
@@ -155,7 +179,14 @@ namespace Microsoft.Extensions.DependencyInjection
             // so user is not logged in. That can be solved by injecting a real distributed cache such as Redis
             //services.AddSingleton<cloudscribe.Core.Identity.ICookieAuthTicketStoreProvider, cloudscribe.Core.Identity.CookieAuthDistributedCacheTicketStoreProvider>();
 
-           
+
+            //The QueryTool can only work with Entity Framework databases and not with NoDb
+            var dbPlatform = config.GetValue<string>("DevOptions:DbPlatform");
+            if(dbPlatform == "ef")
+            {
+                services.AddScoped<IQueryTool,QueryTool>();
+            }
+
             //services.AddMojoPortalPasswordMigration();
 
             //services.AddCloudscribeCore(Configuration);
@@ -172,7 +203,7 @@ namespace Microsoft.Extensions.DependencyInjection
             {
                 services.AddCloudscribeLdapSupport(config);
             }
-            
+
 
             // this was just for testing expired password reset token
             //services.Configure<DataProtectionTokenProviderOptions>(options =>

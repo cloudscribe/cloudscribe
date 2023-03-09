@@ -1,0 +1,258 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <!--
+    Microsoft ResX Schema
+
+    Version 2.0
+
+    The primary goals of this format is to allow a simple XML format
+    that is mostly human readable. The generation and parsing of the
+    various data types are done through the TypeConverter classes
+    associated with the data types.
+
+    Example:
+
+    ... ado.net/XML headers & schema ...
+    <resheader name="resmimetype">text/microsoft-resx</resheader>
+    <resheader name="version">2.0</resheader>
+    <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
+    <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
+    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
+    <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
+    <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
+        <value>[base64 mime encoded serialized .NET Framework object]</value>
+    </data>
+    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
+        <comment>This is a comment</comment>
+    </data>
+
+    There are any number of "resheader" rows that contain simple
+    name/value pairs.
+
+    Each data row contains a name, and value. The row also contains a
+    type or mimetype. Type corresponds to a .NET class that support
+    text/value conversion through the TypeConverter architecture.
+    Classes that don't support this are serialized and stored with the
+    mimetype set.
+
+    The mimetype is used for serialized objects, and tells the
+    ResXResourceReader how to depersist the object. This is currently not
+    extensible. For a given mimetype the value must be set accordingly:
+
+    Note - application/x-microsoft.net.object.binary.base64 is the format
+    that the ResXResourceWriter will generate, however the reader can
+    read any of the formats listed below.
+
+    mimetype: application/x-microsoft.net.object.binary.base64
+    value   : The object must be serialized with
+            : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
+            : and then encoded with base64 encoding.
+
+    mimetype: application/x-microsoft.net.object.soap.base64
+    value   : The object must be serialized with
+            : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
+            : and then encoded with base64 encoding.
+
+    mimetype: application/x-microsoft.net.object.bytearray.base64
+    value   : The object must be serialized into a byte array
+            : using a System.ComponentModel.TypeConverter
+            : and then encoded with base64 encoding.
+    -->
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="Are you sure you want to delete the selected saved query?" xml:space="preserve">
+    <value>Voulez-vous vraiment supprimer la requête enregistrée sélectionnée ?</value>
+  </data>
+  <data name="Cancel" xml:space="preserve">
+    <value>Annuler</value>
+  </data>
+  <data name="Check to enable this query to be run via the QueryTool API." xml:space="preserve">
+    <value>Cochez cette case pour permettre à cette requête d'être exécutée via l'API QueryTool.</value>
+  </data>
+  <data name="Choose a table name from the list" xml:space="preserve">
+    <value>Choisissez un nom de table dans la liste</value>
+  </data>
+  <data name="Choose one or more column names from the list. Control and click to select multiple items." xml:space="preserve">
+    <value>Choisissez un ou plusieurs noms de colonne dans la liste. Contrôlez et cliquez pour sélectionner plusieurs éléments.</value>
+  </data>
+  <data name="Clear Query" xml:space="preserve">
+    <value>Effacer la requête</value>
+  </data>
+  <data name="Close" xml:space="preserve">
+    <value>Fermer</value>
+  </data>
+  <data name="Columns" xml:space="preserve">
+    <value>Colonnes</value>
+  </data>
+  <data name="Confirm Delete" xml:space="preserve">
+    <value>Confirmation de la suppression</value>
+  </data>
+  <data name="Delete" xml:space="preserve">
+    <value>Supprimer</value>
+  </data>
+  <data name="Delete Saved Query" xml:space="preserve">
+    <value>Supprimer la requête enregistrée</value>
+  </data>
+  <data name="Enable as API query?" xml:space="preserve">
+    <value>Activer en tant que requête API ?</value>
+  </data>
+  <data name="Enter a name for the query to save it for later use" xml:space="preserve">
+    <value>Entrez un nom pour la requête afin de l'enregistrer pour une utilisation ultérieure</value>
+  </data>
+  <data name="Error deleting query" xml:space="preserve">
+    <value>Erreur lors de la suppression de la requête</value>
+  </data>
+  <data name="Error loading query" xml:space="preserve">
+    <value>Erreur lors du chargement de la requête</value>
+  </data>
+  <data name="Error saving query" xml:space="preserve">
+    <value>Erreur lors de l'enregistrement de la requête</value>
+  </data>
+  <data name="Execute Query" xml:space="preserve">
+    <value>Exécuter l'ordre</value>
+  </data>
+  <data name="Export CSV" xml:space="preserve">
+    <value>Exporter CSV</value>
+  </data>
+  <data name="Export results to CSV file" xml:space="preserve">
+    <value>Exporter les résultats vers un fichier CSV</value>
+  </data>
+  <data name="For the full instructions see the {0}Query Tool Documentation{1}." xml:space="preserve">
+    <value>Pour obtenir des instructions complètes, consultez la {0}documentation de l'éditeur de requêtes{1}.</value>
+  </data>
+  <data name="Generate a DELETE statement for the selected table" xml:space="preserve">
+    <value>Générer une instruction DELETE pour la table sélectionnée</value>
+  </data>
+  <data name="Generate a SELECT statement for the selected table and columns" xml:space="preserve">
+    <value>Générer une instruction SELECT pour la table et les colonnes sélectionnées</value>
+  </data>
+  <data name="Generate an INSERT statement for the selected table and columns" xml:space="preserve">
+    <value>Générer une instruction INSERT pour la table et les colonnes sélectionnées</value>
+  </data>
+  <data name="Generate an UPDATE statement for the selected table and columns" xml:space="preserve">
+    <value>Générer une instruction UPDATE pour la table et les colonnes sélectionnées</value>
+  </data>
+  <data name="Insert" xml:space="preserve">
+    <value>Insérer</value>
+  </data>
+  <data name="Insert at Cursor" xml:space="preserve">
+    <value>Insérer au curseur</value>
+  </data>
+  <data name="Insert column names into Query at current cursor position" xml:space="preserve">
+    <value>Insérer les noms de colonne dans la requête à la position actuelle du curseur</value>
+  </data>
+  <data name="Insert table name into Query at current cursor position" xml:space="preserve">
+    <value>Insérer le nom de la table dans la requête à la position actuelle du curseur</value>
+  </data>
+  <data name="Invalid query! Only SELECT, INSERT, UPDATE, and DELETE are allowed." xml:space="preserve">
+    <value>Requête invalide ! Seuls SELECT, INSERT, UPDATE et DELETE sont autorisés.</value>
+  </data>
+  <data name="Load Saved Query" xml:space="preserve">
+    <value>Charger la requête enregistrée</value>
+  </data>
+  <data name="Query" xml:space="preserve">
+    <value>Mettre en doute</value>
+  </data>
+  <data name="Query Tool" xml:space="preserve">
+    <value>Outil de requête</value>
+  </data>
+  <data name="Query deleted" xml:space="preserve">
+    <value>Requête supprimée</value>
+  </data>
+  <data name="Query loaded" xml:space="preserve">
+    <value>Requête chargée</value>
+  </data>
+  <data name="Query saved" xml:space="preserve">
+    <value>Requête enregistrée</value>
+  </data>
+  <data name="Save Query" xml:space="preserve">
+    <value>Enregistrer la requête</value>
+  </data>
+  <data name="Save Query As" xml:space="preserve">
+    <value>Enregistrer la requête sous</value>
+  </data>
+  <data name="Saved Queries" xml:space="preserve">
+    <value>Requêtes enregistrées</value>
+  </data>
+  <data name="Select" xml:space="preserve">
+    <value>Sélectionner</value>
+  </data>
+  <data name="Select a saved query to load it into the query editor" xml:space="preserve">
+    <value>Sélectionnez une requête enregistrée pour la charger dans l'éditeur de requêtes</value>
+  </data>
+  <data name="Tables" xml:space="preserve">
+    <value>les tables</value>
+  </data>
+  <data name="This tool allows you to query your database using SQL. You can create SQL statements for common operations such as SELECT, INSERT, UPDATE and DELETE. The tool can automatically generate the SQL for you based on the table and columns you select. You can also save your queries for later use." xml:space="preserve">
+    <value>Cet outil vous permet d'interroger votre base de données en utilisant SQL. Vous pouvez créer des instructions SQL pour des opérations courantes telles que SELECT, INSERT, UPDATE et DELETE. L'outil peut générer automatiquement le SQL pour vous en fonction de la table et des colonnes que vous sélectionnez. Vous pouvez également enregistrer vos requêtes pour une utilisation ultérieure.</value>
+  </data>
+  <data name="Update" xml:space="preserve">
+    <value>Mise à jour</value>
+  </data>
+  <data name="Write your SQL query here" xml:space="preserve">
+    <value>Écrivez votre requête SQL ici</value>
+  </data>
+  <data name="You must select at least one column from the 'Columns' list!" xml:space="preserve">
+    <value>Vous devez sélectionner au moins une colonne dans la liste "Colonnes" !</value>
+  </data>
+  <data name="{0} rows affected" xml:space="preserve">
+    <value>{0} lignes concernées</value>
+  </data>
+</root>
