@@ -30,7 +30,7 @@
         </div>
         <div class="col-md-2 text-start">
             <div class="form-group">
-                <label for="CreateActions1" class="form-label"></label>
+                <br />
                 <div class="form-group" id="CreateActions1">
                     <button class="btn btn-primary btn-sm mt-2" id="Insert-Cursor1" type="submit"
                         data-bs-toggle="tooltip" data-bs-placement="top"
@@ -51,7 +51,7 @@
             </div>
         </div>
         <div class="col-md-2 text-start">
-            <label for="CreateActions2" class="form-label"></label>
+            <br />
             <div class="form-group" id="CreateActions2">
                 <button class="btn btn-primary btn-sm mt-2" id="Insert-Cursor2" type="submit"
                     data-bs-toggle="tooltip" data-bs-placement="top"
@@ -89,7 +89,7 @@
             </div>
         </div>
         <div class="col-md-2 text-start">
-            <label for="QueryActions" class="form-label"></label>
+            <br />
             <div class="form-group" id="QueryActions">
                 <button class="btn btn-primary btn-sm mt-2" type="submit" name="Command" title='@sr["Execute Query"]'
                     data-bs-toggle="tooltip" data-bs-placement="top"
@@ -173,8 +173,8 @@
             @if (Model.SavedQueryNames != null && Model.SavedQueryNames.Count() > 0)
             {
             <div class="form-group mt-2">
-                <label for="LoadQuery" class="form-label">@sr["Saved Queries"]:</label>
-                <select id="SaveQuery" asp-for="SavedQueryName" asp-items="@Model.SavedQueryNames"
+                <label for="SavedQueries" class="form-label">@sr["Saved Queries"]:</label>
+                <select id="SavedQueries" asp-for="SavedQueryName" asp-items="@Model.SavedQueryNames"
                     data-bs-toggle="tooltip" data-bs-placement="top"
                     title='@sr["Select a saved query to load it into the query editor"]'
                     class="form-select-sm"></select>
