@@ -7,7 +7,7 @@ using cloudscribe.Web.Common.Extensions;
 using System.Text;
 using Microsoft.Extensions.Localization;
 using System.Data;
-using Microsoft.AspNetCore.Http;
+using cloudscribe.Web.Common.Serialization;
 
 namespace cloudscribe.QueryTool.Web
 {
@@ -33,70 +33,27 @@ namespace cloudscribe.QueryTool.Web
         [Route("querytool")]
         public async Task<IActionResult> Index()
         {
-            var model = new QueryToolViewModel();
-            var tables = await _queryToolService.GetTableList();
-            model.TableNames = DataTableToSelectList(tables, "TableName", "TableName");
-            if(string.IsNullOrWhiteSpace(model.Table)) model.Table = model.TableNames.FirstOrDefault()?.Value;
-
-            if (!string.IsNullOrWhiteSpace(model.Table))
+            try
             {
-                var fields = await _queryToolService.GetColumnList(model.Table);
-                model.ColumnNames = DataTableToSelectList(fields, "ColumnName", "ColumnDataType", true);
+                var model = new QueryToolViewModel();
+                var tables = await _queryToolService.GetTableList();
+                model.TableNames = DataTableToSelectList(tables, "TableName", "TableName");
+                if(string.IsNullOrWhiteSpace(model.Table)) model.Table = model.TableNames.FirstOrDefault()?.Value;
+
+                if (!string.IsNullOrWhiteSpace(model.Table))
+                {
+                    var fields = await _queryToolService.GetColumnList(model.Table);
+                    model.ColumnNames = DataTableToSelectList(fields, "ColumnName", "ColumnDataType", true);
+                }
+                var queries = await _queryToolService.GetSavedQueriesAsync();
+                var textFields = new List<string> { "Name", "Statement", "EnableAsApi" };
+                model.SavedQueryNames = SavedQueriesToSelectList(queries, "Name", textFields);
+                return View(model);
             }
-            var queries = await _queryToolService.GetSavedQueriesAsync();
-            var textFields = new List<string> { "Name", "Statement", "EnableAsApi" };
-            model.SavedQueryNames = SavedQueriesToSelectList(queries, "Name", textFields);
-            return View(model);
-        }
-
-        [HttpGet]
-        [Route("querytool/{savedQueryName}")]
-        public async Task<IActionResult> Index(string savedQueryName)
-        {
-            var savedQuery = await _queryToolService.LoadQueryAsync(savedQueryName);
-            if (savedQuery == null) return NotFound();
-            if (savedQuery.EnableAsApi == false) return NotFound();
-
-            string query = savedQuery.Statement;
-            DataTable data = await _queryToolService.ExecuteQueryAsync(query);
-            ContentResult response;
-
-            string accept = HttpContext.Request.Headers["Accept"];
-            switch(accept)
+            catch (Exception ex)
             {
-                case "text/csv":
-                    var csv = DataTableToCsv(data);
-                    return File(Encoding.UTF8.GetBytes(csv), "text/csv", savedQueryName + ".csv");
-                    // response = new ContentResult() {
-                    //     Content = csv,
-                    //     ContentType = "text/csv",
-                    //     StatusCode = 200
-                    // };
-                    // return response;
-
-                case "text/xml":
-                case "application/xml":
-                    var list1 = DataTableToListDictionary(data);
-                    var json = "{ \"Row\": \n" + Newtonsoft.Json.JsonConvert.SerializeObject(list1) + "\n}";
-                    var xmlResult = Newtonsoft.Json.JsonConvert.DeserializeXNode(json, "Results");
-                    response = new ContentResult() {
-                        Content = xmlResult.ToString(),
-                        ContentType = "application/xml",
-                        StatusCode = 200
-                    };
-                    return response;
-
-                case "text/json":
-                case "application/json":
-                default:
-                    var list2 = DataTableToListDictionary(data);
-                    var jsonResult = Newtonsoft.Json.JsonConvert.SerializeObject(list2, Newtonsoft.Json.Formatting.Indented);
-                    response = new ContentResult() {
-                        Content = jsonResult,
-                        ContentType = "application/json",
-                        StatusCode = 200
-                    };
-                    return response;
+                _log.LogError(ex, "QueryTool: Error in Index()");
+                return View("Error");
             }
         }
 
@@ -187,6 +144,7 @@ namespace cloudscribe.QueryTool.Web
                             {
                                 model.RowsAffected = await _queryToolService.ExecuteNonQueryAsync(query);
                             }
+                            _log.LogInformation("QueryTool: UserId:" + User.GetUserId() + " Query: " + query + " Rows Affected: " + model.RowsAffected);
                         }
                         break;
 
@@ -291,22 +249,34 @@ namespace cloudscribe.QueryTool.Web
             {
                 model.ErrorMessage = $"{ex.Message} - {ex.StackTrace}";
                 queryIsValid = false;
+                _log.LogError(ex, "QueryTool: UserId:" + User.GetUserId() + " Query: " + query + " Command: " + model.Command);
             }
 
             if(model.Command == "export" && queryIsValid && model.Data != null)
             {
-                var csv = DataTableToCsv(model.Data);
-                var bytes = Encoding.UTF8.GetBytes(csv);
+                var csv = model.Data.ToCsv(); // custom extension method from cloudscribe.Web.Common.Extensions
                 var date = DateTime.Now.ToString("yyyy-MM-dd_HH-mm-ss");
-                return File(bytes, "text/csv", $"export_{date}.csv");
+                UTF8Encoding encoding = new UTF8Encoding(true);
+                byte[] contentAsBytes = encoding.GetBytes(csv);
+                var withBOM = Encoding.UTF8.GetPreamble().Concat(contentAsBytes).ToArray();
+                var result = new FileContentResult(withBOM, "text/csv");
+                result.FileDownloadName = $"export_{date}.csv";
+                return result;
             }
 
             model.Query = query;
             model.QueryIsValid = queryIsValid;
 
-            var queries = await _queryToolService.GetSavedQueriesAsync();
-            var textFields = new List<string> { "Name", "Statement", "EnableAsApi" };
-            model.SavedQueryNames = SavedQueriesToSelectList(queries, "Name", textFields);
+            try
+            {
+                var queries = await _queryToolService.GetSavedQueriesAsync();
+                var textFields = new List<string> { "Name", "Statement", "EnableAsApi" };
+                model.SavedQueryNames = SavedQueriesToSelectList(queries, "Name", textFields);
+            }
+            catch(Exception ex)
+            {
+                _log.LogError(ex, "QueryTool: UserId:" + User.GetUserId() + " GetSavedQueriesAsync() failed");
+            }
 
 
             if(model.WarningMessage != null) this.AlertWarning(model.WarningMessage, true);

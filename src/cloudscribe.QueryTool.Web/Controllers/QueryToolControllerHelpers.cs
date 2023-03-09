@@ -2,43 +2,11 @@ using System.Data;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using cloudscribe.QueryTool.Models;
-using System.Text;
 
 namespace cloudscribe.QueryTool.Web
 {
-
     public partial class QueryToolController : Controller
     {
-        [NonAction]
-        private string DataTableToCsv(DataTable table)
-        {
-            var sb = new StringBuilder();
-            var headers = table.Columns.Cast<DataColumn>();
-            sb.AppendLine(string.Join(",", headers.Select(column => "\"" + column.ColumnName + "\"").ToArray()));
-            foreach (DataRow row in table.Rows)
-            {
-                var fields = row.ItemArray.Select(field => "\"" + field.ToString().Replace("\"", "\"\"") + "\"");
-                sb.AppendLine(string.Join(",", fields));
-            }
-            return sb.ToString();
-        }
-
-        [NonAction]
-        private List<Dictionary<string,string>> DataTableToListDictionary(DataTable table)
-        {
-            List<Dictionary<string,string>> list = new List<Dictionary<string, string>>();
-            foreach (DataRow row in table.Rows)
-            {
-                Dictionary<string,string> jsonRow = new Dictionary<string, string>();
-                foreach (DataColumn col in table.Columns)
-                {
-                    jsonRow.Add(col.ColumnName, row[col].ToString());
-                }
-                list.Add(jsonRow);
-            }
-            return list;
-        }
-
         [NonAction]
         private SelectList DataTableToSelectList(DataTable table, string valueField, string textField, bool prefixTextWithValue = false)
         {
@@ -124,7 +92,5 @@ namespace cloudscribe.QueryTool.Web
 
             return new SelectList(list, "Value", "Text");
         }
-
-
     }
 }

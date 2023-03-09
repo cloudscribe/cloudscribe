@@ -23,4 +23,8 @@ public interface IQueryTool
     Task<int>               RawNonQueryAsync(DbConnection connection, string query);
     Task<int>               RawNonQueryAsync(DbConnection connection, string query, params DbParameter[] parameters);
 
+    // Helper methods:
+    Task<List<Dictionary<string,string>>> DataTableToDictionaryList(DataTable table);
+
+
 }

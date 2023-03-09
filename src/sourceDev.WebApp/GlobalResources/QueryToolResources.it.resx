@@ -117,11 +117,20 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="Are you sure you want to delete the selected query?" xml:space="preserve">
-    <value>Sei sicuro di voler eliminare la query selezionata?</value>
+  <data name="Are you sure you want to delete the selected saved query?" xml:space="preserve">
+    <value>Sei sicuro di voler eliminare la query salvata selezionata?</value>
   </data>
   <data name="Cancel" xml:space="preserve">
     <value>Annulla</value>
+  </data>
+  <data name="Check to enable this query to be run via the QueryTool API." xml:space="preserve">
+    <value>Selezionare per abilitare l'esecuzione di questa query tramite l'API QueryTool.</value>
+  </data>
+  <data name="Choose a table name from the list" xml:space="preserve">
+    <value>Scegli un nome di tabella dall'elenco</value>
+  </data>
+  <data name="Choose one or more column names from the list. Control and click to select multiple items." xml:space="preserve">
+    <value>Scegli uno o più nomi di colonna dall'elenco. Controllare e fare clic per selezionare più elementi.</value>
   </data>
   <data name="Clear Query" xml:space="preserve">
     <value>Cancella domanda</value>
@@ -138,11 +147,14 @@
   <data name="Delete" xml:space="preserve">
     <value>Eliminare</value>
   </data>
-  <data name="Delete Query" xml:space="preserve">
-    <value>Elimina domanda</value>
+  <data name="Delete Saved Query" xml:space="preserve">
+    <value>Elimina query salvata</value>
   </data>
   <data name="Enable as API query?" xml:space="preserve">
     <value>Abilitare come query API?</value>
+  </data>
+  <data name="Enter a name for the query to save it for later use" xml:space="preserve">
+    <value>Immettere un nome per la query per salvarla per un uso successivo</value>
   </data>
   <data name="Error deleting query" xml:space="preserve">
     <value>Errore durante l'eliminazione della query</value>
@@ -159,17 +171,41 @@
   <data name="Export CSV" xml:space="preserve">
     <value>Esporta CSV</value>
   </data>
+  <data name="Export results to CSV file" xml:space="preserve">
+    <value>Esporta i risultati in un file CSV</value>
+  </data>
+  <data name="For the full instructions see the {0}Query Tool Documentation{1}." xml:space="preserve">
+    <value>Per le istruzioni complete, consulta la {0}documentazione di Query Tool{1}.</value>
+  </data>
+  <data name="Generate a DELETE statement for the selected table" xml:space="preserve">
+    <value>Genera un'istruzione DELETE per la tabella selezionata</value>
+  </data>
+  <data name="Generate a SELECT statement for the selected table and columns" xml:space="preserve">
+    <value>Genera un'istruzione SELECT per la tabella e le colonne selezionate</value>
+  </data>
+  <data name="Generate an INSERT statement for the selected table and columns" xml:space="preserve">
+    <value>Genera un'istruzione INSERT per la tabella e le colonne selezionate</value>
+  </data>
+  <data name="Generate an UPDATE statement for the selected table and columns" xml:space="preserve">
+    <value>Genera un'istruzione UPDATE per la tabella e le colonne selezionate</value>
+  </data>
   <data name="Insert" xml:space="preserve">
     <value>Inserire</value>
   </data>
   <data name="Insert at Cursor" xml:space="preserve">
     <value>Inserisci al cursore</value>
   </data>
+  <data name="Insert column names into Query at current cursor position" xml:space="preserve">
+    <value>Inserisci i nomi delle colonne nella query nella posizione corrente del cursore</value>
+  </data>
+  <data name="Insert table name into Query at current cursor position" xml:space="preserve">
+    <value>Inserisci il nome della tabella nella query nella posizione corrente del cursore</value>
+  </data>
   <data name="Invalid query! Only SELECT, INSERT, UPDATE, and DELETE are allowed." xml:space="preserve">
     <value>Richiesta non valida! Sono consentiti solo SELECT, INSERT, UPDATE e DELETE.</value>
   </data>
-  <data name="Load Query" xml:space="preserve">
-    <value>Carica domanda</value>
+  <data name="Load Saved Query" xml:space="preserve">
+    <value>Carica query salvata</value>
   </data>
   <data name="Query" xml:space="preserve">
     <value>Domanda</value>
@@ -192,14 +228,26 @@
   <data name="Save Query As" xml:space="preserve">
     <value>Salva query con nome</value>
   </data>
+  <data name="Saved Queries" xml:space="preserve">
+    <value>Query salvate</value>
+  </data>
   <data name="Select" xml:space="preserve">
     <value>Selezionare</value>
+  </data>
+  <data name="Select a saved query to load it into the query editor" xml:space="preserve">
+    <value>Selezionare una query salvata per caricarla nell'editor di query</value>
   </data>
   <data name="Tables" xml:space="preserve">
     <value>Tabelle</value>
   </data>
+  <data name="This tool allows you to query your database using SQL. You can create SQL statements for common operations such as SELECT, INSERT, UPDATE and DELETE. The tool can automatically generate the SQL for you based on the table and columns you select. You can also save your queries for later use." xml:space="preserve">
+    <value>Questo strumento ti consente di interrogare il tuo database utilizzando SQL. È possibile creare istruzioni SQL per operazioni comuni come SELECT, INSERT, UPDATE e DELETE. Lo strumento può generare automaticamente l'SQL per te in base alla tabella e alle colonne selezionate. Puoi anche salvare le tue query per un uso successivo.</value>
+  </data>
   <data name="Update" xml:space="preserve">
     <value>Aggiornamento</value>
+  </data>
+  <data name="Write your SQL query here" xml:space="preserve">
+    <value>Scrivi qui la tua query SQL</value>
   </data>
   <data name="You must select at least one column from the 'Columns' list!" xml:space="preserve">
     <value>Devi selezionare almeno una colonna dall'elenco 'Colonne'!</value>
