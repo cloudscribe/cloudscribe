@@ -38,7 +38,17 @@ CKEDITOR.plugins.add( 'cloudscribe-filedrop',
 				event.preventDefault();
 				event.stopPropagation ();
 				if(!isLocked) { isLocked = theEditor.lockSelection(); }
-				uploadFile(files[0]); // one file at a time
+				for(var i = 0; i < files.length; i++) {
+					var name = files[i].name; //usually this will always be image.png
+					var baseName = name.substring(0, name.lastIndexOf('.')) || name;
+					var ext = name.substring(name.lastIndexOf('.') + 1).toLowerCase();
+					var date = new Date().toISOString().replace(/:|\./g, '-').substring(0, 21);
+					var newName = baseName + '_' + date + '.' + ext;
+					var file = renameFile(files[i], newName);
+					console.log("onDropped: " + newName);
+					// console.log(file);
+					uploadFile(file);
+				}
 			}
 		};
 
@@ -53,7 +63,8 @@ CKEDITOR.plugins.add( 'cloudscribe-filedrop',
 				var name = files[0].name; //usually this will always be image.png
 				var baseName = name.substring(0, name.lastIndexOf('.')) || name;
 				var ext = name.substring(name.lastIndexOf('.') + 1).toLowerCase();
-				var newName = baseName + '_' + new Date().getTime() + '.' + ext;
+				var date = new Date().toISOString().replace(/:|\./g, '-').substring(0, 21);
+				var newName = baseName + '_' + date + '.' + ext;
 				var file = renameFile(files[0], newName);
 				// console.log("onPaste");
 				// console.log(file);
