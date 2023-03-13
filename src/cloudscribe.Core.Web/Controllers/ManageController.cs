@@ -1186,7 +1186,9 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
         {
             return string.Format(
                 AuthenicatorUriFormat,
-                UrlEncoder.Encode(UserManager.Site.SiteName),
+                // UrlEncoder.Encode(UserManager.Site.SiteName),
+                // jk - truncate this value since the generated Uri can overrun the qr code generator's buffer
+                UrlEncoder.Encode(UserManager.Site.SiteName.Substring(0,40)),
                 UrlEncoder.Encode(email),
                 unformattedKey);
         }
