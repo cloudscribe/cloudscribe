@@ -1184,11 +1184,13 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
 
         private string GenerateQrCodeUri(string email, string unformattedKey)
         {
+            int stringLength = UserManager.Site.SiteName.Length;
+            int truncation = stringLength > 40 ? 40 : stringLength;
             return string.Format(
                 AuthenicatorUriFormat,
                 // UrlEncoder.Encode(UserManager.Site.SiteName),
                 // jk - truncate this value since the generated Uri can overrun the qr code generator's buffer
-                UrlEncoder.Encode(UserManager.Site.SiteName.Substring(0,40)),
+                UrlEncoder.Encode(UserManager.Site.SiteName.Substring(0, truncation-1)),
                 UrlEncoder.Encode(email),
                 unformattedKey);
         }
