@@ -8,6 +8,7 @@ using System.Text;
 using Microsoft.Extensions.Localization;
 using System.Data;
 using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.Configuration;
 
 namespace cloudscribe.QueryTool.Web
 {
@@ -17,17 +18,20 @@ namespace cloudscribe.QueryTool.Web
         public QueryToolApiController(
             ILogger<QueryToolController> logger,
             IQueryTool queryTool,
-            IStringLocalizer<QueryToolResources> sr
+            IStringLocalizer<QueryToolResources> sr,
+            IConfiguration config
             )
         {
             _log                = logger;
             _queryToolService   = queryTool;
             _sr                 = sr;
+            _config             = config;
         }
 
         private readonly ILogger            _log;
         private readonly IQueryTool         _queryToolService;
         private readonly IStringLocalizer   _sr;
+        private readonly IConfiguration     _config;
 
         [HttpGet]
         [Route("api/querytool/{savedQueryName}")]
@@ -35,6 +39,8 @@ namespace cloudscribe.QueryTool.Web
         {
             try
             {
+                var connectionString = _config.GetConnectionString("QueryToolConnectionString");
+                if (string.IsNullOrWhiteSpace(connectionString)) return NotFound();
                 var savedQuery = await _queryToolService.LoadQueryAsync(savedQueryName);
                 if (savedQuery == null) return NotFound();
                 if (savedQuery.EnableAsApi == false) return NotFound();

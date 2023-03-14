@@ -8,6 +8,7 @@ using System.Text;
 using Microsoft.Extensions.Localization;
 using System.Data;
 using cloudscribe.Web.Common.Serialization;
+using Microsoft.Extensions.Configuration;
 
 namespace cloudscribe.QueryTool.Web
 {
@@ -17,25 +18,34 @@ namespace cloudscribe.QueryTool.Web
         public QueryToolController(
             ILogger<QueryToolController> logger,
             IQueryTool queryTool,
-            IStringLocalizer<QueryToolResources> sr
+            IStringLocalizer<QueryToolResources> sr,
+            IConfiguration config
             )
         {
             _log                = logger;
             _queryToolService   = queryTool;
             _sr                 = sr;
+            _config             = config;
         }
 
         private readonly ILogger            _log;
         private readonly IQueryTool         _queryToolService;
         private readonly IStringLocalizer   _sr;
+        private readonly IConfiguration     _config;
 
         [HttpGet]
         [Route("querytool")]
         public async Task<IActionResult> Index()
         {
+            var model = new QueryToolViewModel();
             try
             {
-                var model = new QueryToolViewModel();
+                var connectionString = _config.GetConnectionString("QueryToolConnectionString");
+                if (string.IsNullOrWhiteSpace(connectionString))
+                {
+                    model.ErrorMessage = _sr["Connection string \"QueryToolConnectionString\" not found in config!"];
+                    return View(model);
+                }
                 var tables = await _queryToolService.GetTableList();
                 model.TableNames = DataTableToSelectList(tables, "TableName", "TableName");
                 if(string.IsNullOrWhiteSpace(model.Table)) model.Table = model.TableNames.FirstOrDefault()?.Value;
@@ -52,8 +62,9 @@ namespace cloudscribe.QueryTool.Web
             }
             catch (Exception ex)
             {
+                model.ErrorMessage = ex.Message;
                 _log.LogError(ex, "QueryTool: Error in Index()");
-                return View("Error");
+                return View(model);
             }
         }
 
@@ -64,12 +75,23 @@ namespace cloudscribe.QueryTool.Web
             if(model.Query == null) model.Query = string.Empty;
             if(model.Columns == null) model.Columns = new List<string>();
 
+            var connectionString = _config.GetConnectionString("QueryToolConnectionString");
+            if (string.IsNullOrWhiteSpace(connectionString))
+            {
+                model.ErrorMessage = _sr["Connection string \"QueryToolConnectionString\" not found in config!"];
+                return View(model);
+            }
+
             bool queryWillReturnResults = false;
             bool queryIsValid = true;
 
             model.hasQuery = false;
             var query = model.Query.Trim();
             if (query.Length > 0) model.hasQuery = true;
+            if (model.hasQuery)
+            {
+                if(!string.IsNullOrWhiteSpace(model.HighlightText)) query = model.HighlightText.Trim();
+            }
 
             switch(model.Command)
             {
@@ -126,7 +148,8 @@ namespace cloudscribe.QueryTool.Web
                 switch (model.Command)
                 {
                     case "clear":
-                        query= string.Empty;
+                        // query= string.Empty;
+                        model.Query = string.Empty;
                         model.Data = null;
                         model.RowsAffected = null;
                         break;
@@ -151,16 +174,17 @@ namespace cloudscribe.QueryTool.Web
                     case "create_select":
                         if (!string.IsNullOrWhiteSpace(model.Table))
                         {
-                            query = "select ";
-                            if(model.Columns.Count == 0) query += "* ";
+                            var q = "select ";
+                            if(model.Columns.Count == 0) q += "* ";
                             else
                             {
                                 foreach (string c in model.Columns)
                                 {
-                                    query += c + ", ";
+                                    q += c + ", ";
                                 }
                             }
-                            query = query.TrimEnd().TrimEnd(',') + " from " + model.Table + " ";
+                            q = q.TrimEnd().TrimEnd(',') + " from " + model.Table + " ";
+                            model.Query = q;
                         }
                         break;
 
@@ -169,12 +193,13 @@ namespace cloudscribe.QueryTool.Web
                         {
                             if(model.Columns.Count > 0)
                             {
-                                query = "update " + model.Table + " set ";
+                                var q = "update " + model.Table + " set ";
                                 foreach (string c in model.Columns)
                                 {
-                                    query += c + " = '', ";
+                                    q += c + " = '', ";
                                 }
-                                query = query.TrimEnd().TrimEnd(',') + " where ";
+                                q = q.TrimEnd().TrimEnd(',') + " where ";
+                                model.Query = q;
                             } else model.WarningMessage = _sr["You must select at least one column from the 'Columns' list!"];
                         }
                         break;
@@ -184,17 +209,18 @@ namespace cloudscribe.QueryTool.Web
                         {
                             if(model.Columns.Count > 0)
                             {
-                                query = "insert into " + model.Table + " (";
+                                var q = "insert into " + model.Table + " (";
                                 foreach (string c in model.Columns)
                                 {
-                                    query += c + ", ";
+                                    q += c + ", ";
                                 }
-                                query = query.TrimEnd().TrimEnd(',') + ") values (";
+                                q = q.TrimEnd().TrimEnd(',') + ") values (";
                                 foreach (string c in model.Columns)
                                 {
-                                    query += " '', ";
+                                    q += " '', ";
                                 }
-                                query = query.TrimEnd().TrimEnd(',') + ");";
+                                q = q.TrimEnd().TrimEnd(',') + ");";
+                                model.Query = q;
                             } else model.WarningMessage = _sr["You must select at least one column from the 'Columns' list!"];
                         }
                         break;
@@ -202,14 +228,15 @@ namespace cloudscribe.QueryTool.Web
                     case "create_delete":
                         if (!string.IsNullOrWhiteSpace(model.Table))
                         {
-                            query = "delete from " + model.Table + " where ";
+                            model.Query = "delete from " + model.Table + " where ";
                         }
                         break;
 
                     case "save":
                         if (queryIsValid && !string.IsNullOrWhiteSpace(model.SaveName))
                         {
-                            var result = await _queryToolService.SaveQueryAsync(query, model.SaveName, model.SaveNameAsApi, User.GetUserIdAsGuid());
+                            var q = model.Query.Trim();
+                            var result = await _queryToolService.SaveQueryAsync(q, model.SaveName, model.SaveNameAsApi, User.GetUserIdAsGuid());
                             if (result) model.InformationMessage = _sr["Query saved"];
                             else model.WarningMessage = _sr["Error saving query"];
                         }
@@ -221,7 +248,7 @@ namespace cloudscribe.QueryTool.Web
                             var savedQuery = await _queryToolService.LoadQueryAsync(model.SavedQueryName);
                             if (savedQuery != null)
                             {
-                                query = savedQuery.Statement;
+                                model.Query = savedQuery.Statement;
                                 model.InformationMessage = _sr["Query loaded"];
                                 model.SaveName = model.SavedQueryName;
                                 model.SaveNameAsApi = savedQuery.EnableAsApi;
@@ -247,7 +274,8 @@ namespace cloudscribe.QueryTool.Web
             }
             catch(Exception ex)
             {
-                model.ErrorMessage = $"{ex.Message} - {ex.StackTrace}";
+                // model.ErrorMessage = $"{ex.Message} - {ex.StackTrace}";
+                model.ErrorMessage = ex.Message;
                 queryIsValid = false;
                 _log.LogError(ex, "QueryTool: UserId:" + User.GetUserId() + " Query: " + query + " Command: " + model.Command);
             }
@@ -264,7 +292,7 @@ namespace cloudscribe.QueryTool.Web
                 return result;
             }
 
-            model.Query = query;
+            // model.Query = query;
             model.QueryIsValid = queryIsValid;
 
             try

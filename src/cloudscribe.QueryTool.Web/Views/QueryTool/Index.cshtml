@@ -7,7 +7,7 @@
     ViewData["Title"] = sr["Query Tool"];
     var introduction = sr["This tool allows you to query your database using SQL. You can create SQL statements for common operations such as SELECT, INSERT, UPDATE and DELETE. The tool can automatically generate the SQL for you based on the table and columns you select. You can also save your queries for later use."];
     var docsLink = sr["For the full instructions see the {0}Query Tool Documentation{1}."];
-    var docsUrl = "<a href=\"https://www.cloudscribe.com/cloudscribequerytoolweb\" target=\"_blank\">";
+    var docsUrl = "<a href=\"https://www.cloudscribe.com/query-tool\" target=\"_blank\">";
 }
 
 <h2>@ViewData["Title"]</h2>
@@ -101,6 +101,10 @@
             </div>
         </div>
     </div>
+
+    <input id="HighlightText" asp-for="@Model.HighlightText" type="hidden" value="@Model.HighlightText">
+    <input id="HighlightStart" asp-for="@Model.HighlightStart" type="hidden" value="@Model.HighlightStart">
+    <input id="HighlightEnd" asp-for="@Model.HighlightEnd" type="hidden" value="@Model.HighlightEnd">
 
     <div class="row">
         <div class="col-md-10"><a name="results"></a>
@@ -243,11 +247,38 @@
                 $('#Query').val(before + columns.join(', ') + after);
                 return false;
             });
-            var hasResults=$('#RowsAffected').val() > 0;
-            if(hasResults) {
-                var r=$('a[name="results"]');
-                $('html,body').animate({scrollTop: r.offset().top},'slow');
+            $('#Query').on({
+                select:function(e) {
+                    var selStart = $(this).prop('selectionStart');
+                    var selEnd = $(this).prop('selectionEnd');
+                    var selText = '';
+                    if(selEnd > 0 && selEnd > selStart) selText = $(this).val().substring(selStart, selEnd);
+                    $('#HighlightText').val(selText);
+                    $('#HighlightStart').val(selStart);
+                    $('#HighlightEnd').val(selEnd);
+                },
+                click:function(e) {
+                    $('#HighlightText').val('');
+                    $('#HighlightStart').val(0);
+                    $('#HighlightEnd').val(0);
+                }
+            });
+
+            var hs = $('#HighlightStart').val();
+            var he = $('#HighlightEnd').val();
+            if(he > 0 && he > hs) {
+                var q = document.getElementById('Query');
+                q.focus();
+                q.setSelectionRange(hs, he);
             }
+
+            // scroll to results
+            // var hasResults=$('#RowsAffected').val() > 0;
+            // if(hasResults) {
+            //     var r=$('a[name="results"]');
+            //     $('html,body').animate({scrollTop: r.offset().top},'slow');
+            // }
+
             var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'))
             var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
                 return new bootstrap.Tooltip(tooltipTriggerEl)
