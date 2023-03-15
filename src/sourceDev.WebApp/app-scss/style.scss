@@ -88,10 +88,9 @@ td img, video, iframe {
     height:100px;
 }
 
-.navbar {
+header .navbar {
     top: 100px;
 }
-
 #toast-container {
     position: sticky;
     z-index: 1055;
@@ -113,10 +112,6 @@ td img, video, iframe {
 
 #toast-container > #toast-wrapper > .toast > .toast-header strong {
     padding-right: 20px
-}
-
-.usergrid-table {
-    width: 100%;
 }
 
 div.input-group-prepend > span.input-group-text > i {

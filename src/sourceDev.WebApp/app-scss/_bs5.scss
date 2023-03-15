@@ -1,4 +1,5 @@
-//@import "variables"; // override the default variables in this file
+
+@import "variables"; // override the default variables in this file
 
 // Comment out below any parts of bootstrap not being used in the app to reduce size of output css
 
@@ -44,8 +45,10 @@
 @import "node_modules/bootstrap/scss/carousel";
 @import "node_modules/bootstrap/scss/spinners";
 @import "node_modules/bootstrap/scss/offcanvas";
-/*@import "node_modules/bootstrap/scss/placeholders";*/
+@import "node_modules/bootstrap/scss/placeholders";
 
 @import "node_modules/bootstrap/scss/helpers";
 
 @import "node_modules/bootstrap/scss/utilities/api";
+
+

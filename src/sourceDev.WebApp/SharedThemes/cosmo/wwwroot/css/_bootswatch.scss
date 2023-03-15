@@ -1,38 +1,35 @@
-// Cosmo 4.1.0
+// Cosmo 5.1.3
 // Bootswatch
 
 
-// Variables ===================================================================
+// Variables
 
-$web-font-path: "https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,700" !default;
-@import url($web-font-path);
+$web-font-path: "https://fonts.googleapis.com/css2?family=Source+Sans+Pro:wght@300;400;700&display=swap" !default;
+@if $web-font-path {
+  @import url($web-font-path);
+}
 
-// Navbar ======================================================================
-
-// Buttons =====================================================================
-
-// Typography ==================================================================
+// Typography
 
 body {
   -webkit-font-smoothing: antialiased;
 }
 
-// Tables ======================================================================
+// Indicators
 
-// Forms =======================================================================
+.badge {
+  &.bg-light {
+    color: $dark;
+  }
+}
 
-// Navs ========================================================================
-
-// Indicators ==================================================================
-
-// Progress bars ===============================================================
+// Progress bars
 
 .progress {
   @include box-shadow(none);
+
   .progress-bar {
     font-size: 8px;
     line-height: 8px;
   }
 }
-
-// Containers ==================================================================

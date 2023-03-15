@@ -1,16 +1,17 @@
-// Cyborg 4.1.0
+// Cyborg 5.1.3
 // Bootswatch
 
 
-// Variables ===================================================================
+// Variables
 
-$web-font-path: "https://fonts.googleapis.com/css?family=Roboto:400,700" !default;
-@import url($web-font-path);
+$web-font-path: "https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" !default;
+@if $web-font-path {
+  @import url($web-font-path);
+}
 
-// Navbar ======================================================================
+// Navbar
 
 .navbar {
-
   &.bg-primary {
     border: 1px solid $gray-700;
   }
@@ -25,105 +26,49 @@ $web-font-path: "https://fonts.googleapis.com/css?family=Roboto:400,700" !defaul
   }
 
   &.fixed-top {
-    border-width: 0 0 1px 0;
+    border-width: 0 0 1px;
   }
 
   &.fixed-bottom {
-    border-width: 1px 0 0 0;
+    border-width: 1px 0 0;
   }
-
 }
 
-// Buttons =====================================================================
+// Buttons
 
 .btn {
-
-  &-warning,
-  &-warning:hover {
-    color: $white;
+  @each $color, $value in $theme-colors {
+    &-#{$color} {
+      @if $enable-gradients {
+        background: $value linear-gradient(180deg, mix($white, $value, 15%), $value) repeat-x;
+      } @else {
+        background-color: $value;
+      }
+    }
   }
 }
 
-// Typography ==================================================================
+// Forms
 
-// Tables ======================================================================
-
-table {
-  color: #fff;
+legend {
+  color: $white;
 }
 
-.table {
+.form-control {
+  background-clip: border-box;
 
-  .thead-dark th {
-    color: $white;
-  }
-
-  &-success {
-    &, > th, > td {
-      background-color: $success;
-    }
-  }
-
-  &-info {
-    &, > th, > td {
-      background-color: $info;
-    }
-  }
-
-  &-danger {
-    &, > th, > td {
-      background-color: $danger;
-    }
-  }
-
-  &-warning {
-    &, > th, > td {
-      background-color: $warning;
-    }
-  }
-
-  &-hover {
-
-    .table-success:hover {
-      &, > th, > td {
-        background-color: darken($success, 5%);
-      }
-    }
-
-    .table-info:hover {
-      &, > th, > td {
-        background-color: darken($info, 5%);
-      }
-    }
-
-    .table-danger:hover {
-      &, > th, > td {
-        background-color: darken($danger, 5%);
-      }
-    }
-
-    .table-warning:hover {
-      &, > th, > td {
-        background-color: darken($warning, 5%);
-      }
-    }
-
+  &:disabled,
+  &[readonly] {
+    border-color: transparent;
   }
 }
 
-// Forms =======================================================================
-
-legend,
-.input-group-addon {
-  color: #fff;
-}
-
-// Navs ========================================================================
+// Navs
 
 .nav-tabs,
 .nav-pills {
   .nav-link {
-    color: #fff;
+    color: $white;
 
     &:hover {
       background-color: $gray-700;
@@ -143,7 +88,7 @@ legend,
 
 .breadcrumb {
   a {
-    color: #fff;
+    color: $white;
   }
 }
 
@@ -153,7 +98,7 @@ legend,
   }
 }
 
-// Indicators ==================================================================
+// Indicators
 
 .alert {
   border: none;
@@ -161,66 +106,33 @@ legend,
 
   a,
   .alert-link {
-    color: #fff;
+    color: $white;
     text-decoration: underline;
   }
 
   @each $color, $value in $theme-colors {
     &-#{$color} {
-      background-color: $value;
-    }
-  }
-
-  &-light {
-    &,
-    & a,
-    & .alert-link {
-      color: $body-bg;
+      @if $enable-gradients {
+        background: $value linear-gradient(180deg, mix($white, $value, 15%), $value) repeat-x;
+      } @else {
+        background-color: $value;
+      }
     }
   }
 }
 
 .badge {
-  &-warning {
-    color: $white;
+  &.bg-dark {
+    color: $gray-900;
   }
 }
 
-.close {
-  opacity: 0.6;
+// Containers
+
+.list-group-item-action {
 
   &:hover {
-    opacity: 1;
-  }
-}
-
-// Progress bars ===============================================================
-
-// Containers ==================================================================
-
-.list-group-item {
-  &:hover {
-    background-color: $gray-700;
-    color: #fff;
-  }
-
-  &-action {
-    color: $gray-500;
-
-    .list-group-item-heading {
-      color: $gray-500;
-    }
-  }
-
-  &:hover .list-group-item-heading {
-    color: #fff;
-  }
-}
-
-.card,
-.list-group-item {
-  h1, h2, h3, h4, h5, h6 {
-    color: inherit;
+    border-color: $primary;
   }
 }
 

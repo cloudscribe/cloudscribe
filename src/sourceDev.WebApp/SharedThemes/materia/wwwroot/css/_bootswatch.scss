@@ -1,18 +1,20 @@
-// Materia 4.1.0
+// Materia 5.1.3
 // Bootswatch
 
 
-// Variables ===================================================================
+// Variables
 
-$web-font-path: "https://fonts.googleapis.com/css?family=Roboto:300,400,500,700" !default;
-@import url($web-font-path);
+$web-font-path: "https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" !default;
+@if $web-font-path {
+  @import url($web-font-path);
+}
 
-// Effects =====================================================================
+// Mixins
 
-@mixin ripple($color){
+@mixin ripple($color) {
   position: relative;
 
-  &:after {
+  &::before {
     content: "";
     display: block;
     position: absolute;
@@ -30,70 +32,34 @@ $web-font-path: "https://fonts.googleapis.com/css?family=Roboto:300,400,500,700"
     transition: background .5s, opacity 1s;
   }
 
-  &:active:after {
+  &:active::before {
     background-size: 0 0;
     opacity: .2;
-    transition: 0s;
+    transition: none;
   }
 
   &.disabled,
   &[disabled] {
-    &:after {
+    &::before {
       display: none;
     }
   }
 }
 
-// Navbar ======================================================================
-
-.navbar {
-  border: none;
-  box-shadow: 0 1px 2px rgba(0,0,0,.3);
-
-  &-brand {
-    font-size: 24px;
-  }
-
-  &-nav .nav-link {
-    padding-top: 0.9rem;
-    padding-bottom: 0.9rem;
-  }
-
-  &.bg-dark,
-  &.bg-primary {
-
-    input[type=text],
-    input[type=password] {
-      color: #fff;
-      box-shadow: inset 0 -1px 0 rgba(255, 255, 255, 0.5);
-
-      &:focus {
-        box-shadow: inset 0 -2px 0 #fff;
-      }
-
-      &::placeholder {
-        color: rgba(255, 255, 255, 0.5);
-      }
-    }
-  }
-}
-
-// Buttons =====================================================================
-
-@mixin btn($class,$bg,$color){
+@mixin btn($class,$bg,$color) {
   .btn-#{$class} {
     &:focus {
       background-color: $bg;
-      box-shadow: 0 0 0 2px rgba(204, 204, 204, 0.5);
+      box-shadow: 0 0 0 2px rgba(204, 204, 204, .5);
     }
 
     &:hover,
     &:active:hover {
-      background-color: darken($bg, 6%);
+      background-color: shade-color($bg, 12%);
     }
 
     &:active {
-      box-shadow: 2px 2px 4px rgba(0,0,0,.4);
+      box-shadow: 2px 2px 4px rgba(0, 0, 0, .4);
     }
 
     @include ripple($color);
@@ -104,20 +70,66 @@ $web-font-path: "https://fonts.googleapis.com/css?family=Roboto:300,400,500,700"
   }
 }
 
-@include btn(primary,$primary,$white);
-@include btn(secondary,$secondary,$gray-500);
-@include btn(success,$success,$white);
-@include btn(info,$info,$white);
-@include btn(warning,$warning,$white);
-@include btn(danger,$danger,$white);
-@include btn(dark,$dark,$white);
-@include btn(light,$light,$white);
+.dropdown-toggle::after,
+.dropup .dropdown-toggle::after,
+.dropstart .dropdown-toggle::after,
+.dropend .dropdown-toggle::after {
+  border-width: 4px;
+}
+
+// Navbar
+
+.navbar {
+  border: none;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, .3);
+
+  &-brand {
+    font-size: 24px;
+  }
+
+  &-nav .nav-link {
+    padding-top: .9rem;
+    padding-bottom: .9rem;
+  }
+
+  &.bg-dark,
+  &.bg-primary {
+    input[type="search"],
+    input[type="text"],
+    input[type="password"],
+    input[type="email"],
+    input[type="number"],
+    input[type="tel"] {
+      color: $white;
+      box-shadow: inset 0 -1px 0 rgba(255, 255, 255, .5);
+
+      &:focus {
+        box-shadow: inset 0 -2px 0 $white;
+      }
+
+      &::placeholder {
+        color: rgba(255, 255, 255, .5);
+      }
+    }
+  }
+}
+
+// Buttons
+
+@include btn(primary, $primary, $white);
+@include btn(secondary, $secondary, $gray-500);
+@include btn(success, $success, $white);
+@include btn(info, $info, $white);
+@include btn(warning, $warning, $white);
+@include btn(danger, $danger, $white);
+@include btn(dark, $dark, $white);
+@include btn(light, $light, $white);
 
 .btn {
   text-transform: uppercase;
   border: none;
-  box-shadow: 0 1px 4px rgba(0,0,0,.4);
-  transition: all 0.4s;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, .4);
+  transition: color .4s, background-color .4s, border-color .4s, box-shadow .4s;
 
   &-link {
     box-shadow: none;
@@ -145,13 +157,13 @@ $web-font-path: "https://fonts.googleapis.com/css?family=Roboto:300,400,500,700"
     &.disabled,
     &[disabled],
     fieldset[disabled] & {
-      background-color: rgba(0, 0, 0, 0.1);
-      color: rgba(0, 0, 0, 0.4);
+      background-color: rgba(0, 0, 0, .1);
+      color: rgba(0, 0, 0, .4);
       opacity: 1;
 
       &:hover,
       &:focus {
-        background-color: rgba(0, 0, 0, 0.1);
+        background-color: rgba(0, 0, 0, .1);
       }
     }
   }
@@ -163,18 +175,6 @@ $web-font-path: "https://fonts.googleapis.com/css?family=Roboto:300,400,500,700"
 
   &-warning {
     color: $white;
-  }
-
-  &.dropdown-toggle::before {
-    display: inline-block;
-    width: 0;
-    height: 0;
-    margin-left: 0.3em;
-    vertical-align: middle;
-    content: "";
-    border-top: 0.3em solid;
-    border-right: 0.3em solid transparent;
-    border-left: 0.3em solid transparent;
   }
 }
 
@@ -194,18 +194,22 @@ $web-font-path: "https://fonts.googleapis.com/css?family=Roboto:300,400,500,700"
       margin-top: 0;
     }
   }
+
+  .btn + .btn,
+  .btn + .btn-group > .dropdown-toggle {
+    box-shadow: 1px 1px 4px rgba(0, 0, 0, .4);
+  }
 }
 
 .border-secondary {
   border: 1px solid #dfdfdf !important;
 }
 
-// Typography ==================================================================
+// Typography
 
 body,
 input,
 button {
-  -webkit-font-smoothing: antialiased;
   letter-spacing: .1px;
 }
 
@@ -213,17 +217,17 @@ p {
   margin: 0 0 1em;
 }
 
-a {
-  transition: all 0.2s;
+.text-secondary {
+  color: $gray-500 !important;
 }
 
-// Tables ======================================================================
+// Tables
 
 .table-hover {
   > tbody > tr,
   > tbody > tr > th,
   > tbody > tr > td {
-    transition: all 0.2s;
+    transition: background-color .2s, color .2s;
   }
 }
 
@@ -232,7 +236,7 @@ a {
   color: $white;
 }
 
-// Forms =======================================================================
+// Forms
 
 .col-form-label {
   font-size: 16px;
@@ -249,18 +253,17 @@ a {
 textarea,
 textarea.form-control,
 input.form-control,
-input[type=text],
-input[type=password],
-input[type=email],
-input[type=number],
-[type=text].form-control,
-[type=password].form-control,
-[type=email].form-control,
-[type=tel].form-control,
+input[type="text"],
+input[type="password"],
+input[type="email"],
+input[type="number"],
+[type="text"].form-control,
+[type="password"].form-control,
+[type="email"].form-control,
+[type="tel"].form-control,
 [contenteditable].form-control {
-  font-size: 1rem;
   box-shadow: inset 0 -1px 0 #ddd;
-  transition: all 0.2s;
+  transition: box-shadow .2s;
 
   &:focus {
     box-shadow: inset 0 -2px 0 $primary;
@@ -272,20 +275,9 @@ input[type=number],
     border-bottom: 1px dotted #ddd;
   }
 
-  &:not(textarea) {
-    height: $input-height;
-  }
-
-  &.form-control {
-    &-sm {
-      height: $input-height-sm;
-      font-size: $font-size-sm;
-    }
-
-    &-lg {
-      height: $input-height-lg;
-      font-size: $font-size-lg;
-    }
+  &[disabled],
+  &[disabled]::placeholder {
+    color: #ddd;
   }
 
   &::-ms-clear {
@@ -296,8 +288,9 @@ input[type=number],
 select,
 select.form-control {
   appearance: none;
-  background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABoAAAAaCAMAAACelLz8AAAAJ1BMVEVmZmZmZmZmZmZmZmZmZmZmZmZmZmZmZmZmZmZmZmZmZmZmZmZmZmaP/QSjAAAADHRSTlMAAgMJC0uWpKa6wMxMdjkoAAAANUlEQVR4AeXJyQEAERAAsNl7Hf3X6xt0QL6JpZWq30pdvdadme+0PMdzvHm8YThHcT1H7K0BtOMDniZhWOgAAAAASUVORK5CYII=);
-  background-size: 13px;
+  padding: .5rem 0;
+  background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' width='8' height='4' viewBox='0 0 8 4'%3e%3cpolygon fill='%23666' points='8 0 4 4 0 0'/%3e%3c/svg%3e%0a");
+  background-size: 8px 4px;
   background-repeat: no-repeat;
   background-position: right center;
   box-shadow: inset 0 -1px 0 #ddd;
@@ -318,7 +311,7 @@ select.form-control {
 
   &:focus {
     box-shadow: inset 0 -2px 0 $primary;
-    background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABoAAAAaCAMAAACelLz8AAAAJ1BMVEUhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISF8S9ewAAAADHRSTlMAAgMJC0uWpKa6wMxMdjkoAAAANUlEQVR4AeXJyQEAERAAsNl7Hf3X6xt0QL6JpZWq30pdvdadme+0PMdzvHm8YThHcT1H7K0BtOMDniZhWOgAAAAASUVORK5CYII=);
+    background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' width='8' height='4' viewBox='0 0 8 4'%3e%3cpolygon fill='%23212121' points='8 0 4 4 0 0'/%3e%3c/svg%3e%0a");
   }
 
   &[multiple] {
@@ -326,50 +319,116 @@ select.form-control {
   }
 }
 
-.custom-control-label {
-  &::before {
-    top: 0;
-    border: 2px solid $gray-400;
-  }
-  &::after {
-    top: 0;
-  }
+.form-check-input {
+  width: 1.25em;
+  height: 1.25em;
+  margin-top: 1px;
+  border: 2px solid $gray-400;
 
-  .custom-control-input:checked ~ &::before {
-    border-color: $primary;
+  &:checked[type="radio"] {
+    background-size: 1.8em;
+    background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='-4 -4 8 8'%3e%3ccircle r='2' fill='%232196f3' stroke='%23fff' stroke-width='1' /%3e%3c/svg%3e"), var(--bs-gradient);
   }
 }
 
-.custom-checkbox .custom-control-input:checked {
-  ~ .custom-control-label::after {
-    transform: scale(1.5);
-  }
-}
+.form-check.form-switch {
+  .form-check-input {
+    position: relative;
+    height: .8em;
+    border: none;
+    background-image: none;
+    background-color: $gray-400;
 
-.custom-radio .custom-control-input {
-  &:checked {
-    ~ .custom-control-label::before {
+    &:focus {
+      box-shadow: none;
+    }
+
+    &::before {
+      content: "";
+      position: absolute;
+      top: -.2em;
+      left: -.2em;
+      width: 1.2em;
+      height: 1.2em;
       background-color: $white;
+      border-radius: 50%;
+      box-shadow: 0 1px 4px rgba(0, 0, 0, .3);
+      transition: left .15s ease-in-out;
     }
-    ~ .custom-control-label::after {
-      transform: scale(1.125);
-      transition: 240ms;
+
+    &::after {
+      content: "";
+      position: absolute;
+      top: -.2em;
+      left: -.2em;
+      width: 1.2em;
+      height: 1.2em;
+      border-radius: 50%;
+      box-shadow: 0 0 0 9px rgba(0, 0, 0, .05);
+      transform: scale(0);
+      transition: left .15s ease-in-out, transform .15s ease-in-out, box-shadow .15s ease-in-out;
+      z-index: -1;
+    }
+
+    &:hover:not(.disabled),
+    &:focus:not(.disabled) {
+
+      &::after {
+        transform: scale(.9);
+      }
+    }
+
+    &:focus:not(.disabled) {
+      &::after {
+        box-shadow: 0 0 0 9px rgba(0, 0, 0, .1);
+      }
+    }
+
+    &:checked {
+      background-color: rgba(33, 150, 243, .3);
+
+      &::before {
+        background-color: rgba(33, 150, 243, 1);
+        left: calc(100% - .8em);
+      }
+
+      &::after {
+        left: calc(100% - .8em);
+        box-shadow: 0 0 0 9px rgba(33, 150, 243, .1);
+      }
+
+      &:hover:not(.disabled),
+      &:focus:not(.disabled) {
+        &::after {
+          transform: scale(.9);
+        }
+      }
+
+      &:focus:not(.disabled) {
+        &::after {
+          box-shadow: 0 0 0 9px rgba(33, 150, 243, .2);
+        }
+      }
     }
   }
-  & {
-    ~ .custom-control-label::after {
-      transform: scale(.75);
+}
+
+.form-check:not(.form-switch) {
+  .form-check-input {
+    &:checked[type="checkbox"] {
+      background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20'%3e%3cpath fill='none' stroke='%23fff' stroke-width='2' d='M6 10l3 3l6-6'/%3e%3c/svg%3e"), var(--bs-gradient);
+      background-size: 1.6em;
     }
   }
 }
 
 .has-warning {
-  input:not([type=checkbox]),
+  input:not([type="checkbox"]),
   .form-control,
   input.form-control[readonly],
-  input[type=text][readonly],
-  [type=text].form-control[readonly],
-  input:not([type=checkbox]):focus,
+  input[type="text"][readonly],
+  [type="text"].form-control[readonly],
+  input:not([type="checkbox"]):focus,
   .form-control:focus {
     border-bottom: none;
     box-shadow: inset 0 -2px 0 $warning;
@@ -377,12 +436,12 @@ select.form-control {
 }
 
 .has-danger {
-  input:not([type=checkbox]),
+  input:not([type="checkbox"]),
   .form-control,
   input.form-control[readonly],
-  input[type=text][readonly],
-  [type=text].form-control[readonly],
-  input:not([type=checkbox]):focus,
+  input[type="text"][readonly],
+  [type="text"].form-control[readonly],
+  input:not([type="checkbox"]):focus,
   .form-control:focus {
     border-bottom: none;
     box-shadow: inset 0 -2px 0 $danger;
@@ -390,12 +449,12 @@ select.form-control {
 }
 
 .has-success {
-  input:not([type=checkbox]),
+  input:not([type="checkbox"]),
   .form-control,
   input.form-control[readonly],
-  input[type=text][readonly],
-  [type=text].form-control[readonly],
-  input:not([type=checkbox]):focus,
+  input[type="text"][readonly],
+  [type="text"].form-control[readonly],
+  input:not([type="checkbox"]):focus,
   .form-control:focus {
     border-bottom: none;
     box-shadow: inset 0 -2px 0 $success;
@@ -404,81 +463,14 @@ select.form-control {
 
 // Remove the Bootstrap feedback styles for input addons
 .input-group-addon {
-  .has-warning &, .has-danger &, .has-success & {
+  .has-warning &,
+  .has-danger &,
+  .has-success & {
     color: $input-color;
     border-color: $input-group-addon-border-color;
     background-color: $input-group-addon-bg;
   }
 }
-
-.input-group {
-
-  > .input-group-prepend > .input-group-text {
-    padding-right: 0.25rem;
-  }
-
-  > .input-group-append > .input-group-text {
-    padding-left: 0.25rem;
-  }
-
-  .form-control {
-    padding-left: 0.25rem;
-    padding-right: 0.25rem;
-  }
-}
-
-.input-group-sm {
-
-  > .input-group-prepend > .btn,
-  > .input-group-append > .btn {
-    padding: $input-btn-padding-y-sm $input-btn-padding-x-sm;
-  }
-
-  > .input-group-prepend > .input-group-text {
-    padding: $input-btn-padding-y-sm $input-btn-padding-x-sm $input-btn-padding-y-sm 0;
-  }
-
-  > .input-group-append > .input-group-text {
-    padding: $input-btn-padding-y-sm 0 $input-btn-padding-y-sm $input-btn-padding-x-sm;
-  }
-
-  > .input-group-prepend > .btn {
-    border-top-left-radius: $btn-border-radius-sm;
-    border-bottom-left-radius: $btn-border-radius-sm;
-  }
-
-  > .input-group-append > .btn {
-    border-top-right-radius: $btn-border-radius-sm;
-    border-bottom-right-radius: $btn-border-radius-sm;
-  }
-}
-
-.input-group-lg {
-
-  > .input-group-prepend > .btn,
-  > .input-group-append > .btn {
-    padding: $input-btn-padding-y-lg $input-btn-padding-x-lg;
-  }
-
-  > .input-group-prepend > .input-group-text {
-    padding: $input-btn-padding-y-lg $input-btn-padding-x-lg $input-btn-padding-y-lg 0;
-  }
-
-  > .input-group-append > .input-group-text {
-    padding: $input-btn-padding-y-lg 0 $input-btn-padding-y-lg $input-btn-padding-x-lg;
-  }
-
-  > .input-group-prepend > .btn {
-    border-top-left-radius: $btn-border-radius-lg;
-    border-bottom-left-radius: $btn-border-radius-lg;
-  }
-
-  > .input-group-append > .btn {
-    border-top-right-radius: $btn-border-radius-lg;
-    border-bottom-right-radius: $btn-border-radius-lg;
-  }
-}
-
 
 .form-group-lg {
   select,
@@ -487,7 +479,7 @@ select.form-control {
   }
 }
 
-// Navs ========================================================================
+// Navs
 
 .nav-tabs {
   .nav-item + .nav-item {
@@ -501,7 +493,7 @@ select.form-control {
     border: none;
     color: $body-color;
     box-shadow: inset 0 -1px 0 #ddd;
-    transition: all 0.2s;
+    transition: color .2s, box-shadow .2s;
 
     &:hover {
       background-color: transparent;
@@ -527,7 +519,6 @@ select.form-control {
   }
 
   &.nav-justified {
-
     .nav-link,
     .nav-link:hover,
     .nav-link:focus,
@@ -546,80 +537,66 @@ select.form-control {
 .dropdown-menu {
   margin-top: 0;
   border: none;
-  box-shadow: 0 1px 4px rgba(0,0,0,.3);
+  box-shadow: 0 1px 4px rgba(0, 0, 0, .3);
 }
 
-// Indicators ==================================================================
+// Indicators
 
 .alert {
   padding-right: 2.5rem;
+  border: none;
 
-  &, h1, h2, h3, h4, h5, h6 {
-    color: #fff;
+  &,
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    color: $white;
   }
 
   @each $color, $value in $theme-colors {
     &-#{$color} {
-      background-color: $value;
+      @if $enable-gradients {
+        background: $value linear-gradient(180deg, mix($body-bg, $value, 15%), $value) repeat-x;
+      } @else {
+        background-color: $value;
+      }
     }
   }
 
   a:not(.btn),
   .alert-link {
-    color: #fff;
-    font-weight: bold;
-  }
-
-  .close {
-    color: #fff;
+    color: $white;
+    font-weight: 700;
   }
 
   &-secondary,
   &-light {
     &,
-    & a:not(.btn),
-    & .alert-link {
+    a:not(.btn),
+    .alert-link {
       color: $body-color;
     }
   }
 }
 
 .badge {
-
-  &-secondary {
-    background-color: $gray-500;
-    color: $white;
-  }
-
-  &-light {
-    background-color: $gray-200;
-  }
-
-  &-warning {
-    color: $white;
+  &.bg-secondary,
+  &.bg-light {
+    color: $dark;
   }
 }
 
 .tag {
-  padding: 4px 6px 4px;
+  padding: 4px 6px;
 }
 
-// Progress bars ===============================================================
-
-// Containers ==================================================================
-
-.close {
-  line-height: 0.5;
-  opacity: 0.6;
-  transition: all 0.2s;
-
-  &:hover {
-    opacity: 1;
-  }
-}
+// Containers
 
 .card {
-  box-shadow: 0 1px 4px rgba(0,0,0,.4);
+  box-shadow: 0 1px 4px rgba(0, 0, 0, .4);
 
   &.border-primary,
   &.border-secondary,
@@ -633,33 +610,44 @@ select.form-control {
   }
 }
 
-.alert-dismissible {
-  .close {
-    padding: 0.5rem 0.75rem;
-  }
-}
-
 .list-group {
   &-item-action.active {
-    h1, h2, h3, h4, h5, h6 {
+    h1,
+    h2,
+    h3,
+    h4,
+    h5,
+    h6 {
       color: $white;
     }
   }
 }
 
 .modal-content {
-  border-radius: 0.2rem;
-  box-shadow: 0 6px 36px rgba(0,0,0,.3);
+  border-radius: .2rem;
+  box-shadow: 0 6px 36px rgba(0, 0, 0, .3);
+}
+
+.modal,
+.toast {
+  .btn-close {
+    background-image: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='%23000'><path d='M.293.293a1 1 0 011.414 0L8 6.586 14.293.293a1 1 0 111.414 1.414L9.414 8l6.293 6.293a1 1 0 01-1.414 1.414L8 9.414l-6.293 6.293a1 1 0 01-1.414-1.414L6.586 8 .293 1.707a1 1 0 010-1.414z'/></svg>");
+  }
 }
 
 .popover {
   border: none;
-  box-shadow: 0 1px 4px rgba(0,0,0,.3);
+  box-shadow: 0 1px 4px rgba(0, 0, 0, .3);
 }
 
 .carousel {
   &-caption {
-    h1, h2, h3, h4, h5, h6 {
+    h1,
+    h2,
+    h3,
+    h4,
+    h5,
+    h6 {
       color: inherit;
     }
   }
