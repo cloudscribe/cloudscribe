@@ -6,13 +6,10 @@
 body {
     min-height: 100vh;
     padding-top: 3.5rem;
+    /*margin-bottom: 60px;*/
 }
 
-.flex-fill {
-    flex: 1 1 auto !important;
-}
-
-
+   
 #newPostLink {
     position: absolute;
     top: 110px;
@@ -21,8 +18,14 @@ body {
 
 #editPostLink {
     position: absolute;
-    top: 140px;
+    top: 145px;
     right: 0px;
+}
+
+#unpublishPostLink {
+    position: absolute;
+    top: 180px !important;
+    right: 0px !important;
 }
 
 #pageManagerLink {
@@ -33,20 +36,28 @@ body {
 
 #newPageLink {
     position: absolute;
-    top: 140px;
+    top: 145px;
     right: 0px;
 }
 
 #editPageLink {
     position: absolute;
-    top: 170px;
+    top: 180px;
     right: 0px
 }
+
+#unpublishPageLink {
+    position: absolute;
+    top: 215px !important;
+    right: 0px !important
+}
+
 #sidenavtoggle {
     position: absolute;
     top: 120px;
     right: 5px;
 }
+
 
 @media screen and (max-width: 812px) {
     #sidenavtoggle,
@@ -55,9 +66,11 @@ body {
     }
 }
 
+.flex-fill {
+    flex: 1 1 auto !important;
+}
 
 
-/* Carousel */
 .carousel-caption p {
     font-size: 20px;
     line-height: 1.4;

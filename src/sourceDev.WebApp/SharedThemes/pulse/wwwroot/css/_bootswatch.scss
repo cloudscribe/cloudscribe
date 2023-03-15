@@ -1,13 +1,9 @@
-// Pulse 4.1.0
+// Pulse 5.1.3
 // Bootswatch
 
-
-// Variables ===================================================================
-
-// Buttons =====================================================================
+// Buttons
 
 .btn {
-
   &:focus,
   &:active,
   &:active:focus,
@@ -28,8 +24,8 @@
 
     &.disabled {
       background-color: $white;
-      border-color: lighten(#ccc, 5%);
-      color: lighten($gray-900, 5%);
+      border-color: tint-color(#ccc, 5%);
+      color: tint-color($gray-900, 5%);
     }
   }
 
@@ -38,7 +34,7 @@
   }
 
   &-primary:focus {
-    box-shadow: 0 0 5px lighten($primary, 10%);
+    box-shadow: 0 0 5px tint-color($primary, 10%);
   }
 
   &-secondary:focus {
@@ -46,49 +42,45 @@
   }
 
   &-success:focus {
-    box-shadow: 0 0 5px lighten($success, 10%);
+    box-shadow: 0 0 5px tint-color($success, 10%);
   }
 
   &-info:focus {
-    box-shadow: 0 0 5px lighten($info, 10%);
+    box-shadow: 0 0 5px tint-color($info, 10%);
   }
 
   &-warning:focus {
-    box-shadow: 0 0 5px lighten($warning, 10%);
+    box-shadow: 0 0 5px tint-color($warning, 10%);
   }
 
   &-danger:focus {
-    box-shadow: 0 0 5px lighten($danger, 10%);
+    box-shadow: 0 0 5px tint-color($danger, 10%);
   }
 
   &.disabled:focus {
     box-shadow: none;
   }
-
 }
 
-// Typography ==================================================================
-
-// Tables ======================================================================
+// Tables
 
 .table .thead-dark th {
   background-color: $secondary;
   border-color: $table-border-color;
 }
 
-// Forms =======================================================================
+// Forms
 
 .form-control:focus {
-  box-shadow: 0 0 5px rgba(100,65,164,.4);
+  box-shadow: 0 0 5px rgba(100, 65, 164, .4);
 }
 
-// Navs ========================================================================
+// Navs
 
 .nav-tabs {
-
   .nav-link,
   .nav-link.active, {
-    border-width: 0 0 1px 0;
+    border-width: 0 0 1px;
   }
 
   .nav-link:hover,
@@ -109,38 +101,34 @@
   }
 }
 
-// Indicators ==================================================================
+// Indicators
 
 .badge {
-  padding-bottom: 0.4em;
-
-  &-secondary,
-  &-warning {
-    color: $white;
+  &.bg-light {
+    color: $dark;
   }
 }
 
-// Progress bars ===============================================================
+// Progress bars
 
 .progress {
   height: 8px;
 }
 
-// Containers ==================================================================
+// Containers
 
 .list-group {
-
   &-item {
-    color: rgba(255, 255, 255, 0.8);
+    color: rgba(255, 255, 255, .8);
 
     &.active,
     &:hover,
     &:focus {
-      color: #fff;
+      color: $white;
     }
 
     &.active {
-      font-weight: bold;
+      font-weight: 700;
 
       &:hover {
         background-color: $list-group-hover-bg;
