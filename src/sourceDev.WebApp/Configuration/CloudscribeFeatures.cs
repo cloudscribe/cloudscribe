@@ -158,6 +158,9 @@ namespace Microsoft.Extensions.DependencyInjection
             //services.Configure<ProfilePropertySetContainer>(config.GetSection("ProfilePropertySetContainer"));
             //services.AddCloudscribeKvpUserProperties();
 
+            services.AddScoped<cloudscribe.Web.Navigation.INavigationNodePermissionResolver, cloudscribe.Web.Navigation.NavigationNodePermissionResolver>();
+
+
             /* these are optional and only needed if using cloudscribe Setup */
             //services.Configure<SetupOptions>(Configuration.GetSection("SetupOptions"));
             //services.AddScoped<SetupManager, SetupManager>();

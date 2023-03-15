@@ -53,36 +53,43 @@ namespace sourceDev.WebApp.Controllers
             return View();
         }
 
-        public async Task<IActionResult> About()
+        public IActionResult About()
         {
             ViewData["Message"] = "Your application description page.";
-            //AddAnayticsTransaction();
-            var client = _httpClientFactory.CreateClient();
-            HttpRequestMessage message = new HttpRequestMessage();
-            message.RequestUri = new Uri("https://localhost:44399/api/identity");
-            
-            var token = await _oidcHybridFlowHelper.GetAccessToken(User);
-
-            if (!string.IsNullOrEmpty(token))
-            {
-                message.Headers.Add("Authorization", "Bearer " + token);
-            }
-
-
-
-            var response = await client.SendAsync(message);
-            if (response.IsSuccessStatusCode)
-            {
-                var content = await response.Content.ReadAsStringAsync();
-                if (!string.IsNullOrEmpty(content))
-                {
-
-                }
-            }
-            
 
             return View();
         }
+
+        // public async Task<IActionResult> About()
+        // {
+        //     ViewData["Message"] = "Your application description page.";
+        //     //AddAnayticsTransaction();
+        //     var client = _httpClientFactory.CreateClient();
+        //     HttpRequestMessage message = new HttpRequestMessage();
+        //     message.RequestUri = new Uri("https://localhost:44399/api/identity");
+
+        //     var token = await _oidcHybridFlowHelper.GetAccessToken(User);
+
+        //     if (!string.IsNullOrEmpty(token))
+        //     {
+        //         message.Headers.Add("Authorization", "Bearer " + token);
+        //     }
+
+
+
+        //     var response = await client.SendAsync(message);
+        //     if (response.IsSuccessStatusCode)
+        //     {
+        //         var content = await response.Content.ReadAsStringAsync();
+        //         if (!string.IsNullOrEmpty(content))
+        //         {
+
+        //         }
+        //     }
+
+
+        //     return View();
+        // }
 
         //[HttpGet]
         //public IActionResult GetAlerts()
@@ -140,14 +147,14 @@ namespace sourceDev.WebApp.Controllers
             var claims = User.Claims.ToList();
 
             var accessToken = await HttpContext.GetTokenAsync(IdentityConstants.ExternalScheme, "access_token");
-            
+
 
             return View();
         }
 
         public IActionResult Test1()
         {
-            
+
 
             return View();
         }
@@ -183,7 +190,7 @@ namespace sourceDev.WebApp.Controllers
             model.Subject = "Testing Email Providers";
             model.ConfigLookupKey = _currentSite.Id.ToString();
 
-            
+
             return View(model);
         }
 
@@ -220,7 +227,7 @@ namespace sourceDev.WebApp.Controllers
                     attachments.Add(attachment);
                 }
             }
-            
+
             var result = await sender.SendEmailAsync(
                 model.ToEmailCsv,
                 model.FromEmail,
@@ -249,7 +256,7 @@ namespace sourceDev.WebApp.Controllers
             {
                 this.AlertDanger(result.ErrorMessage, true);
             }
-            
+
 
             return RedirectToAction("TestEmail");
         }

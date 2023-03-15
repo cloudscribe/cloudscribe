@@ -231,6 +231,6 @@ td img, video, iframe {
     background-color: #2B3E50;
 }
 
-.navbar {
+header .navbar {
     top: 100px;
 }

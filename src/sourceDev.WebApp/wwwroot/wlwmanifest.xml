@@ -1,0 +1,33 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<manifest xmlns="http://schemas.microsoft.com/wlw/manifest/weblog">
+  <options>
+    <clientType>Metaweblog</clientType>
+    <supportsEmbeds>Yes</supportsEmbeds>
+    <supportsScripts>No</supportsScripts>
+    <supportsKeywords>No</supportsKeywords>
+    <supportsNewCategories>Yes</supportsNewCategories>
+    <supportsNewCategoriesInline>Yes</supportsNewCategoriesInline>
+    <supportsCommentPolicy>Yes</supportsCommentPolicy>
+    <supportsSlug>Yes</supportsSlug>
+    <supportsExcerpt>Yes</supportsExcerpt>
+    <supportsPages>Yes</supportsPages>
+    <supportsPageParent>Yes</supportsPageParent>
+    <supportsPageOrder>Yes</supportsPageOrder>
+    <supportsAuthor>No</supportsAuthor>
+    <supportsGetTags>No</supportsGetTags>
+    <requiresHtmlTitles>No</requiresHtmlTitles>
+    <supportsEmptyTitles>No</supportsEmptyTitles>
+    <fileUploadNameFormat>{FileName}</fileUploadNameFormat>
+  </options>
+  <weblog>
+    <ServiceName>cloudscribe.SimpleContent</ServiceName>
+    <imageUrl>favicon.ico</imageUrl>
+    <watermarkImageUrl>favicon.ico</watermarkImageUrl>
+    <homepageLinkText>View your blog</homepageLinkText>
+    <adminLinkText>Manage your blog</adminLinkText>
+      <!-- 
+      https://msdn.microsoft.com/en-us/library/bb463260.aspx
+    <adminUrl><![CDATA[{blog-homepage-url}views/login.cshtml]]></adminUrl>
+    -->
+  </weblog>
+</manifest>
