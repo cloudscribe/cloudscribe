@@ -52,7 +52,7 @@ namespace cloudscribe.QueryTool.Web
 
                 ContentResult response;
                 string accept = HttpContext.Request.Headers["Accept"];
-                _log.LogInformation("QueryTool: API Query Name: " + savedQueryName + " UserId:" + User.GetUserId() + " Query: " + query + " Rows Affected: " + rowsAffected + " Output Format: " + accept);
+                _log.LogInformation("QueryTool:\nUserId: " + User.GetUserId() + "\nAPI Query Name: " + savedQueryName + "\nRows Affected: " + rowsAffected + "\nOutput Format: " + accept + "\nQuery: " + query);
 
                 switch(accept)
                 {
@@ -93,7 +93,7 @@ namespace cloudscribe.QueryTool.Web
             }
             catch(Exception ex)
             {
-                _log.LogError(ex, "QueryTool: API Query Name: " + savedQueryName + " UserId:" + User.GetUserId() + " Error: " + ex.Message);
+                _log.LogError(ex, "QueryTool:\nAPI Query Name: " + savedQueryName + "\nUserId: " + User.GetUserId()  + "\nError: " + ex.Message);
                 return StatusCode(500, ex.Message);
             }
         }
