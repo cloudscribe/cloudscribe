@@ -63,15 +63,15 @@
 
   <ItemGroup>
 
-    <PackageReference Include="cloudscribe.Web.Localization" Version="6.0.0" />
+    <PackageReference Include="cloudscribe.Web.Localization" Version="6.0.*" />
 
-    <PackageReference Include="cloudscribe.Logging.Web" Version="6.0.0" />
-    <PackageReference Include="cloudscribe.Logging.EFCore.MSSQL" Version="6.0.0" />
-    <PackageReference Include="cloudscribe.Logging.EFCore.MySql" Version="6.0.0" />
-    <PackageReference Include="cloudscribe.Logging.EFCore.pgsql" Version="6.0.0" />
-    <PackageReference Include="cloudscribe.Logging.EFCore.PostgreSql" Version="6.0.0" />
-    <PackageReference Include="cloudscribe.Logging.EFCore.SQLite" Version="6.0.0" />
-    <PackageReference Include="cloudscribe.Logging.NoDb" Version="6.0.0" />
+    <PackageReference Include="cloudscribe.Logging.Web" Version="6.0.*" />
+    <PackageReference Include="cloudscribe.Logging.EFCore.MSSQL" Version="6.0.*" />
+    <PackageReference Include="cloudscribe.Logging.EFCore.MySql" Version="6.0.*" />
+    <PackageReference Include="cloudscribe.Logging.EFCore.pgsql" Version="6.0.*" />
+    <PackageReference Include="cloudscribe.Logging.EFCore.PostgreSql" Version="6.0.*" />
+    <PackageReference Include="cloudscribe.Logging.EFCore.SQLite" Version="6.0.*" />
+    <PackageReference Include="cloudscribe.Logging.NoDb" Version="6.0.*" />
 
 	<PackageReference Include="IdentityServer4.AccessTokenValidation" Version="3.0.0" />
 
