@@ -87,6 +87,12 @@
                     data-bs-toggle="tooltip" data-bs-placement="top"
                     autocomplete="">@Model.Query</textarea>
             </div>
+            <div class="form-group">
+                <label for="QueryParameters" class="form-label">@sr["Optional Query Parameters"]:</label>
+                <input id="QueryParameters" asp-for="QueryParameters" class="form-control" title='@sr["Optional query parameters in the format - param1=value&param2=value... etc."]'
+                    data-bs-toggle="tooltip" data-bs-placement="top" class="container-fluid"
+                    autocomplete="" value="@ModelExpressionProvider.QueryParameters">
+            </div>
         </div>
         <div class="col-md-2 text-start">
             <br />

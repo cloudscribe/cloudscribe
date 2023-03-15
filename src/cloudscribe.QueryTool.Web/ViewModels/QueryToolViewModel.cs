@@ -9,14 +9,17 @@ namespace cloudscribe.QueryTool.Web
         /// The list of tables in the database
         /// </summary>
         public SelectList? TableNames { get; set; }
+
         /// <summary>
         /// The name of the table selected by the user
         /// </summary>
         public string Table { get; set; } = string.Empty;
+
         /// <summary>
         /// The list of columns in the selected table
         /// </summary>
         public SelectList? ColumnNames { get; set; }
+
         /// <summary>
         /// The name(s) of the column(s) selected by the user
         /// </summary>
@@ -26,6 +29,13 @@ namespace cloudscribe.QueryTool.Web
         /// The SQL Query string from the Query input box
         /// </summary>
         public string Query { get; set; } = string.Empty;
+
+        /// <summary>
+        /// An optional list of query parameters to mimic the behaviour of the Query API
+        /// If parameters are supplied here then the SQL query will need to be parameterised
+        /// </summary>
+        public string QueryParameters { get; set; } = string.Empty;
+
         /// <summary>
         /// The hightlighted/selected SQL Query string from the Query input box
         /// </summary>
@@ -37,6 +47,7 @@ namespace cloudscribe.QueryTool.Web
         /// Do we have a query to run?
         /// </summary>
         public bool hasQuery { get; set; } = false;
+
         /// <summary>
         /// Is the query valid?
         /// </summary>
@@ -56,6 +67,7 @@ namespace cloudscribe.QueryTool.Web
         /// The name we give to a saved query
         /// </summary>
         public string SaveName { get; set; } = string.Empty;
+
         /// <summary>
         /// Do we want to save the query as an API Query?
         /// </summary>
@@ -65,6 +77,7 @@ namespace cloudscribe.QueryTool.Web
         /// The list of saved queries available to the user
         /// </summary>
         public SelectList? SavedQueryNames { get; set; }
+
         /// <summary>
         /// The name of the saved query selected by the user
         /// </summary>
@@ -79,10 +92,12 @@ namespace cloudscribe.QueryTool.Web
         /// Any SQL or runtime errors go here
         /// </summary>
         public string? ErrorMessage { get; set; }
+
         /// <summary>
         /// Any informational messages go here
         /// </summary>
         public string? InformationMessage { get; set; }
+
         /// <summary>
         /// Any warning messages go here
         /// </summary>

@@ -126,8 +126,8 @@ namespace cloudscribe.QueryTool.Web
             if(!queryIsValid)
             {
                 model.ErrorMessage = _sr["Invalid query! Only SELECT, INSERT, UPDATE, and DELETE are allowed."];
+                _log.LogError("QueryTool:\n" + model.ErrorMessage + "\nQuery: " + query);
             }
-
 
             try
             {
@@ -148,10 +148,12 @@ namespace cloudscribe.QueryTool.Web
                 switch (model.Command)
                 {
                     case "clear":
-                        // query= string.Empty;
                         model.Query = string.Empty;
                         model.Data = null;
                         model.RowsAffected = null;
+                        model.HighlightStart = 0;
+                        model.HighlightEnd = 0;
+                        model.HighlightText = string.Empty;
                         break;
 
                     case "query":
@@ -167,7 +169,7 @@ namespace cloudscribe.QueryTool.Web
                             {
                                 model.RowsAffected = await _queryToolService.ExecuteNonQueryAsync(query);
                             }
-                            _log.LogInformation("QueryTool: UserId:" + User.GetUserId() + " Query: " + query + " Rows Affected: " + model.RowsAffected);
+                            _log.LogInformation("QueryTool:\nUserId: " + User.GetUserId() + "\nRows Affected: " + model.RowsAffected + "\nQuery: " + query);
                         }
                         break;
 
@@ -185,6 +187,9 @@ namespace cloudscribe.QueryTool.Web
                             }
                             q = q.TrimEnd().TrimEnd(',') + " from " + model.Table + " ";
                             model.Query = q;
+                            model.HighlightStart = 0;
+                            model.HighlightEnd = 0;
+                            model.HighlightText = string.Empty;
                         }
                         break;
 
@@ -200,6 +205,9 @@ namespace cloudscribe.QueryTool.Web
                                 }
                                 q = q.TrimEnd().TrimEnd(',') + " where ";
                                 model.Query = q;
+                                model.HighlightStart = 0;
+                                model.HighlightEnd = 0;
+                                model.HighlightText = string.Empty;
                             } else model.WarningMessage = _sr["You must select at least one column from the 'Columns' list!"];
                         }
                         break;
@@ -221,6 +229,9 @@ namespace cloudscribe.QueryTool.Web
                                 }
                                 q = q.TrimEnd().TrimEnd(',') + ");";
                                 model.Query = q;
+                                model.HighlightStart = 0;
+                                model.HighlightEnd = 0;
+                                model.HighlightText = string.Empty;
                             } else model.WarningMessage = _sr["You must select at least one column from the 'Columns' list!"];
                         }
                         break;
@@ -229,6 +240,9 @@ namespace cloudscribe.QueryTool.Web
                         if (!string.IsNullOrWhiteSpace(model.Table))
                         {
                             model.Query = "delete from " + model.Table + " where ";
+                            model.HighlightStart = 0;
+                            model.HighlightEnd = 0;
+                            model.HighlightText = string.Empty;
                         }
                         break;
 
@@ -252,6 +266,9 @@ namespace cloudscribe.QueryTool.Web
                                 model.InformationMessage = _sr["Query loaded"];
                                 model.SaveName = model.SavedQueryName;
                                 model.SaveNameAsApi = savedQuery.EnableAsApi;
+                                model.HighlightStart = 0;
+                                model.HighlightEnd = 0;
+                                model.HighlightText = string.Empty;
                             } else model.WarningMessage = _sr["Error loading query"];
                         }
                         break;
@@ -274,10 +291,9 @@ namespace cloudscribe.QueryTool.Web
             }
             catch(Exception ex)
             {
-                // model.ErrorMessage = $"{ex.Message} - {ex.StackTrace}";
                 model.ErrorMessage = ex.Message;
                 queryIsValid = false;
-                _log.LogError(ex, "QueryTool: UserId:" + User.GetUserId() + " Query: " + query + " Command: " + model.Command);
+                _log.LogError(ex, "QueryTool:\nUserId: " + User.GetUserId() + "\nCommand: " + model.Command + "\nQuery: " + query);
             }
 
             if(model.Command == "export" && queryIsValid && model.Data != null)
@@ -292,7 +308,6 @@ namespace cloudscribe.QueryTool.Web
                 return result;
             }
 
-            // model.Query = query;
             model.QueryIsValid = queryIsValid;
 
             try
@@ -303,9 +318,8 @@ namespace cloudscribe.QueryTool.Web
             }
             catch(Exception ex)
             {
-                _log.LogError(ex, "QueryTool: UserId:" + User.GetUserId() + " GetSavedQueriesAsync() failed");
+                _log.LogError(ex, "QueryTool:\nUserId: " + User.GetUserId() + "\nGetSavedQueriesAsync() failed");
             }
-
 
             if(model.WarningMessage != null) this.AlertWarning(model.WarningMessage, true);
             if(model.InformationMessage != null) this.AlertInformation(model.InformationMessage, true);
