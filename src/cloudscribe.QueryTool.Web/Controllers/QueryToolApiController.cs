@@ -34,67 +34,101 @@ namespace cloudscribe.QueryTool.Web
         private readonly IConfiguration     _config;
 
         [HttpGet]
-        [Route("api/querytool/{savedQueryName}")]
-        public async Task<IActionResult> Index(string savedQueryName)
+        [Route("api/querytool/{savedQueryName?}")]
+        public async Task<IActionResult> Index(string savedQueryName = null)
         {
+            DataTable data = new DataTable();
+            ContentResult response;
+            string accept = HttpContext.Request.Headers["Accept"];
+
             try
             {
+                if(string.IsNullOrWhiteSpace(savedQueryName)) throw new Exception("Saved Query Name is required");
+
                 var connectionString = _config.GetConnectionString("QueryToolConnectionString");
-                if (string.IsNullOrWhiteSpace(connectionString)) return NotFound();
+                if (string.IsNullOrWhiteSpace(connectionString)) throw new Exception("'QueryToolConnectionString' not found in config!");
+
                 var savedQuery = await _queryToolService.LoadQueryAsync(savedQueryName);
-                if (savedQuery == null) return NotFound();
-                if (savedQuery.EnableAsApi == false) return NotFound();
+                if (savedQuery == null) throw new Exception("A Saved Query with that name was not found");
+                if (savedQuery.EnableAsApi == false) throw new Exception("This Saved Query is not enabled for API access");
 
                 string query = savedQuery.Statement;
-                int rowsAffected = 0;
-                DataTable data = await _queryToolService.ExecuteQueryAsync(query);
-                if (data != null) rowsAffected = data.Rows.Count;
-
-                ContentResult response;
-                string accept = HttpContext.Request.Headers["Accept"];
-                _log.LogInformation("QueryTool:\nUserId: " + User.GetUserId() + "\nAPI Query Name: " + savedQueryName + "\nRows Affected: " + rowsAffected + "\nOutput Format: " + accept + "\nQuery: " + query);
-
-                switch(accept)
+                bool queryHasParameters = false;
+                var parameters = new Dictionary<string, string>();
+                var requestParameters = HttpContext.Request.Query;
+                if(requestParameters.Count > 0)
                 {
-                    case "text/csv":
-                        var csv = data.ToCsv(); // custom extension method from cloudscribe.Web.Common.Extensions
-                        var date = DateTime.Now.ToString("yyyy-MM-dd_HH-mm-ss");
-                        UTF8Encoding encoding = new UTF8Encoding(true);
-                        byte[] contentAsBytes = encoding.GetBytes(csv);
-                        var withBOM = Encoding.UTF8.GetPreamble().Concat(contentAsBytes).ToArray();
-                        var result = new FileContentResult(withBOM, "text/csv");
-                        result.FileDownloadName = $"export_{date}.csv";
-                        return result;
-
-                    case "text/xml":
-                    case "application/xml":
-                        var list1 = await _queryToolService.DataTableToDictionaryList(data);
-                        var json = "{ \"Row\": \n" + Newtonsoft.Json.JsonConvert.SerializeObject(list1) + "\n}";
-                        var xmlResult = Newtonsoft.Json.JsonConvert.DeserializeXNode(json, "Results");
-                        response = new ContentResult() {
-                            Content = xmlResult.ToString(),
-                            ContentType = "application/xml",
-                            StatusCode = 200
-                        };
-                        return response;
-
-                    case "text/json":
-                    case "application/json":
-                    default:
-                        var list2 = await _queryToolService.DataTableToDictionaryList(data);
-                        var jsonResult = Newtonsoft.Json.JsonConvert.SerializeObject(list2, Newtonsoft.Json.Formatting.Indented);
-                        response = new ContentResult() {
-                            Content = jsonResult,
-                            ContentType = "application/json",
-                            StatusCode = 200
-                        };
-                        return response;
+                    queryHasParameters = true;
+                    foreach (var item in requestParameters)
+                    {
+                        if(parameters.ContainsKey(item.Key)) continue; //ignore duplicate keys, these are SQL parameter names
+                        parameters.Add(item.Key, item.Value);
+                    }
                 }
+
+                int rowsAffected = 0;
+                if(queryHasParameters)
+                {
+                    data = await _queryToolService.ExecuteQueryAsync(query, parameters);
+                }
+                else
+                {
+                    data = await _queryToolService.ExecuteQueryAsync(query);
+                }
+                rowsAffected = data.Rows.Count;
+                if(queryHasParameters)
+                {
+                    var pText = HttpContext.Request.QueryString.Value??"?";
+                    pText = pText.Remove(0, 1); // remove the leading ?
+                    _log.LogInformation("QueryTool API:\nQuery Name: " + savedQueryName + "\nUserId: " + User.GetUserId() + "\nRows Affected: " + rowsAffected + "\nParameters: " + pText + "\nOutput Format: " + accept + "\nQuery: " + query);
+                }
+                else
+                {
+                    _log.LogInformation("QueryTool API:\nQuery Name: " + savedQueryName + "\nUserId: " + User.GetUserId() + "\nRows Affected: " + rowsAffected + "\nOutput Format: " + accept + "\nQuery: " + query);
+                }
+
             }
             catch(Exception ex)
             {
-                _log.LogError(ex, "QueryTool:\nAPI Query Name: " + savedQueryName + "\nUserId: " + User.GetUserId()  + "\nError: " + ex.Message);
-                return StatusCode(500, ex.Message);
+                _log.LogError(ex, "QueryTool API:\nQuery Name: " + savedQueryName + "\nUserId: " + User.GetUserId()  + "\nError: " + ex.Message);
+            }
+
+
+            switch(accept)
+            {
+                case "text/csv":
+                    var csv = data.ToCsv(); // custom extension method from cloudscribe.Web.Common.Extensions
+                    var date = DateTime.Now.ToString("yyyy-MM-dd_HH-mm-ss");
+                    UTF8Encoding encoding = new UTF8Encoding(true);
+                    byte[] contentAsBytes = encoding.GetBytes(csv);
+                    var withBOM = Encoding.UTF8.GetPreamble().Concat(contentAsBytes).ToArray();
+                    var result = new FileContentResult(withBOM, "text/csv");
+                    result.FileDownloadName = $"export_{date}.csv";
+                    return result;
+
+                case "text/xml":
+                case "application/xml":
+                    var list1 = await _queryToolService.DataTableToDictionaryList(data);
+                    var json = "{ \"Row\": \n" + Newtonsoft.Json.JsonConvert.SerializeObject(list1) + "\n}";
+                    var xmlResult = Newtonsoft.Json.JsonConvert.DeserializeXNode(json, "Results");
+                    response = new ContentResult() {
+                        Content = xmlResult.ToString(),
+                        ContentType = "application/xml",
+                        StatusCode = 200
+                    };
+                    return response;
+
+                case "text/json":
+                case "application/json":
+                default:
+                    var list2 = await _queryToolService.DataTableToDictionaryList(data);
+                    var jsonResult = Newtonsoft.Json.JsonConvert.SerializeObject(list2, Newtonsoft.Json.Formatting.Indented);
+                    response = new ContentResult() {
+                        Content = jsonResult,
+                        ContentType = "application/json",
+                        StatusCode = 200
+                    };
+                    return response;
             }
         }
 

@@ -542,7 +542,7 @@
                 controller="QueryTool"
                 action="Index"
                 text="Query Tool"
-                  iconCssClass="fas fa-database  fa-fw"
+                  iconCssClass="fas fa-database"
                 componentVisibility="breadcrumbs,childtree,parenttree"
                   excludeFromSearchSiteMap="true"
                 authorizationPolicy="ServerAdminPolicy">

@@ -9,6 +9,9 @@ using Microsoft.Extensions.Localization;
 using System.Data;
 using cloudscribe.Web.Common.Serialization;
 using Microsoft.Extensions.Configuration;
+using System.Web;
+using System.Collections.Specialized;
+using System.Data.Common;
 
 namespace cloudscribe.QueryTool.Web
 {
@@ -43,7 +46,7 @@ namespace cloudscribe.QueryTool.Web
                 var connectionString = _config.GetConnectionString("QueryToolConnectionString");
                 if (string.IsNullOrWhiteSpace(connectionString))
                 {
-                    model.ErrorMessage = _sr["Connection string \"QueryToolConnectionString\" not found in config!"];
+                    model.ErrorMessage = _sr["'QueryToolConnectionString' not found in config!"];
                     return View(model);
                 }
                 var tables = await _queryToolService.GetTableList();
@@ -78,55 +81,30 @@ namespace cloudscribe.QueryTool.Web
             var connectionString = _config.GetConnectionString("QueryToolConnectionString");
             if (string.IsNullOrWhiteSpace(connectionString))
             {
-                model.ErrorMessage = _sr["Connection string \"QueryToolConnectionString\" not found in config!"];
+                model.ErrorMessage = _sr["'QueryToolConnectionString' not found in config!"];
                 return View(model);
             }
 
             bool queryWillReturnResults = false;
-            bool queryIsValid = true;
+            bool queryIsValid = false;
+            bool queryHasParameters = false;
+            NameValueCollection queryNVC = new NameValueCollection();
 
-            model.hasQuery = false;
             var query = model.Query.Trim();
-            if (query.Length > 0) model.hasQuery = true;
-            if (model.hasQuery)
+            if (query.Length > 0) queryIsValid = true;
+
+            if (queryIsValid)
             {
                 if(!string.IsNullOrWhiteSpace(model.HighlightText)) query = model.HighlightText.Trim();
-            }
 
-            switch(model.Command)
-            {
-                case "query":
-                case "export":
-                case "save":
-                case "delete":
-                    if(query.Length > 0)
-                    {
-                        queryIsValid = false;
-                        if (query.StartsWith("select ", StringComparison.InvariantCultureIgnoreCase))
-                        {
-                            queryWillReturnResults = true;
-                            queryIsValid = true;
-                        }
-                        else if (query.StartsWith("insert into ", StringComparison.InvariantCultureIgnoreCase))
-                        {
-                            queryIsValid = true;
-                        }
-                        else if (query.StartsWith("update ", StringComparison.InvariantCultureIgnoreCase))
-                        {
-                            queryIsValid = true;
-                        }
-                        else if (query.StartsWith("delete from ", StringComparison.InvariantCultureIgnoreCase))
-                        {
-                            queryIsValid = true;
-                        }
-                    }
-                    break;
-            }
+                //try and make an educated guess as to whether the query will return results
+                if(query.StartsWith("select ", StringComparison.OrdinalIgnoreCase)) queryWillReturnResults = true;
+                if(query.Contains(" select ", StringComparison.OrdinalIgnoreCase)) queryWillReturnResults = true;
 
-            if(!queryIsValid)
-            {
-                model.ErrorMessage = _sr["Invalid query! Only SELECT, INSERT, UPDATE, and DELETE are allowed."];
-                _log.LogError("QueryTool:\n" + model.ErrorMessage + "\nQuery: " + query);
+                if(!string.IsNullOrWhiteSpace(model.QueryParameters)) {
+                    queryNVC = HttpUtility.ParseQueryString("?" + model.QueryParameters);
+                    if(queryNVC.Count > 0) queryHasParameters = true;
+                }
             }
 
             try
@@ -160,32 +138,60 @@ namespace cloudscribe.QueryTool.Web
                     case "export":
                         if (queryIsValid)
                         {
-                            if(queryWillReturnResults)
+                            if(queryHasParameters)
                             {
-                                model.Data = await _queryToolService.ExecuteQueryAsync(query);
-                                if (model.Data != null) model.RowsAffected = model.Data.Rows.Count;
+                                var parameters = new Dictionary<string,string>();
+                                foreach(var p in queryNVC.AllKeys)
+                                {
+                                    if(parameters.ContainsKey(p)) continue; //ignore duplicate keys, these are SQL parameter names
+                                    parameters.Add(p, queryNVC[p]??string.Empty);
+                                }
+
+                                if(queryWillReturnResults)
+                                {
+                                    model.Data = await _queryToolService.ExecuteQueryAsync(query, parameters);
+                                    if (model.Data != null) model.RowsAffected = model.Data.Rows.Count;
+                                }
+                                else
+                                {
+                                    model.RowsAffected = await _queryToolService.ExecuteNonQueryAsync(query, parameters);
+                                }
+                                _log.LogInformation("QueryTool:\nUserId: " + User.GetUserId() + "\nRows Affected: " + model.RowsAffected + "\nParameters: " + model.QueryParameters + "\nQuery: " + query);
                             }
                             else
                             {
-                                model.RowsAffected = await _queryToolService.ExecuteNonQueryAsync(query);
+                                if(queryWillReturnResults)
+                                {
+                                    model.Data = await _queryToolService.ExecuteQueryAsync(query);
+                                    if (model.Data != null) model.RowsAffected = model.Data.Rows.Count;
+                                }
+                                else
+                                {
+                                    model.RowsAffected = await _queryToolService.ExecuteNonQueryAsync(query);
+                                }
+                                _log.LogInformation("QueryTool:\nUserId: " + User.GetUserId() + "\nRows Affected: " + model.RowsAffected + "\nQuery: " + query);
+
                             }
-                            _log.LogInformation("QueryTool:\nUserId: " + User.GetUserId() + "\nRows Affected: " + model.RowsAffected + "\nQuery: " + query);
                         }
                         break;
 
                     case "create_select":
                         if (!string.IsNullOrWhiteSpace(model.Table))
                         {
+                            var databaseType = _queryToolService.GetDatabaseType();
+
                             var q = "select ";
                             if(model.Columns.Count == 0) q += "* ";
                             else
                             {
                                 foreach (string c in model.Columns)
                                 {
-                                    q += c + ", ";
+                                    if(databaseType.isMySql) q += "`" + c + "`, ";
+                                    else q += "\"" + c + "\", ";
                                 }
                             }
-                            q = q.TrimEnd().TrimEnd(',') + " from " + model.Table + " ";
+                            if(databaseType.isMySql) q = q.TrimEnd().TrimEnd(',') + " from `" + model.Table + "` ";
+                            else q = q.TrimEnd().TrimEnd(',') + " from \"" + model.Table + "\" ";
                             model.Query = q;
                             model.HighlightStart = 0;
                             model.HighlightEnd = 0;
@@ -198,10 +204,15 @@ namespace cloudscribe.QueryTool.Web
                         {
                             if(model.Columns.Count > 0)
                             {
-                                var q = "update " + model.Table + " set ";
+                                var databaseType = _queryToolService.GetDatabaseType();
+
+                                var q = "update ";
+                                if(databaseType.isMySql) q += "`" + model.Table + "` set ";
+                                else q += "\"" + model.Table + "\" set ";
                                 foreach (string c in model.Columns)
                                 {
-                                    q += c + " = '', ";
+                                    if(databaseType.isMySql) q += "`" + c + "` = '', ";
+                                    else q += "\"" + c + "\" = '', ";
                                 }
                                 q = q.TrimEnd().TrimEnd(',') + " where ";
                                 model.Query = q;
@@ -217,10 +228,15 @@ namespace cloudscribe.QueryTool.Web
                         {
                             if(model.Columns.Count > 0)
                             {
-                                var q = "insert into " + model.Table + " (";
+                                var databaseType = _queryToolService.GetDatabaseType();
+
+                                var q = "insert into ";
+                                if(databaseType.isMySql) q += "`" + model.Table + "` (";
+                                else q += "\"" + model.Table + "\" (";
                                 foreach (string c in model.Columns)
                                 {
-                                    q += c + ", ";
+                                    if(databaseType.isMySql) q += "`" + c + "`, ";
+                                    else q += "\"" + c + "\", ";
                                 }
                                 q = q.TrimEnd().TrimEnd(',') + ") values (";
                                 foreach (string c in model.Columns)
@@ -239,7 +255,10 @@ namespace cloudscribe.QueryTool.Web
                     case "create_delete":
                         if (!string.IsNullOrWhiteSpace(model.Table))
                         {
-                            model.Query = "delete from " + model.Table + " where ";
+                            var databaseType = _queryToolService.GetDatabaseType();
+
+                            if(databaseType.isMySql) model.Query = "delete from `" + model.Table + "` where ";
+                            else model.Query = "delete from \"" + model.Table + "\" where ";
                             model.HighlightStart = 0;
                             model.HighlightEnd = 0;
                             model.HighlightText = string.Empty;
@@ -309,6 +328,7 @@ namespace cloudscribe.QueryTool.Web
             }
 
             model.QueryIsValid = queryIsValid;
+            model.HasQuery = queryIsValid;
 
             try
             {

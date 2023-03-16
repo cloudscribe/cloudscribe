@@ -20,7 +20,7 @@
 
     <div class="row">
         <div class="col-md-10">
-            <div class="form-group">
+            <div class="mb-3">
                 <label for="Table" class="form-label">@sr["Tables"]:</label>
                 <select id="Table" asp-for="Table" asp-items="@Model.TableNames"
                     data-bs-toggle="tooltip" data-bs-placement="top"
@@ -29,9 +29,9 @@
             </div>
         </div>
         <div class="col-md-2 text-start">
-            <div class="form-group">
+            <div class="mb-3">
                 <br />
-                <div class="form-group" id="CreateActions1">
+                <div class="mb-3" id="CreateActions1">
                     <button class="btn btn-primary btn-sm mt-2" id="Insert-Cursor1" type="submit"
                         data-bs-toggle="tooltip" data-bs-placement="top"
                         title='@sr["Insert table name into Query at current cursor position"]'
@@ -42,7 +42,7 @@
     </div>
         <div class="row">
         <div class="col-md-10">
-            <div class="form-group">
+            <div class="mb-3">
                 <label for="Columns" class="form-label">@sr["Columns"]:</label>
                 <select id="Columns" asp-for="Columns" asp-items="@Model.ColumnNames"
                      size=6 class="form-control" style="font-family: monospace;"
@@ -52,7 +52,7 @@
         </div>
         <div class="col-md-2 text-start">
             <br />
-            <div class="form-group" id="CreateActions2">
+            <div class="mb-3" id="CreateActions2">
                 <button class="btn btn-primary btn-sm mt-2" id="Insert-Cursor2" type="submit"
                     data-bs-toggle="tooltip" data-bs-placement="top"
                     title='@sr["Insert column names into Query at current cursor position"]' name="Command"
@@ -81,21 +81,21 @@
 
     <div class="row">
         <div class="col-md-10">
-            <div class="form-group">
+            <div class="mb-3">
                 <label for="Query" class="form-label">@sr["Query"]:</label>
                 <textarea id="Query" name="Query" rows="5" cols="70" class="form-control" title='@sr["Write your SQL query here"]'
                     data-bs-toggle="tooltip" data-bs-placement="top"
                     autocomplete="">@Model.Query</textarea>
             </div>
-            @* <div class="form-group">
+            <div class="mb-3">
                 <label for="QueryParameters" class="form-label">@sr["Optional Query Parameters"]:</label>
-                <input id="QueryParameters" asp-for="QueryParameters" class="form-control" title='@sr["Optional query parameters in the format - param1=value&param2=value... etc."]'
+                <input id="QueryParameters" asp-for="QueryParameters" class="form-control" title='@sr["Optional query parameters in the format: param1=value&param2=value... etc."]'
                     data-bs-toggle="tooltip" data-bs-placement="top" autocomplete="" value="@Model.QueryParameters">
-            </div> *@
+            </div>
         </div>
         <div class="col-md-2 text-start">
             <br />
-            <div class="form-group" id="QueryActions">
+            <div class="mb-3" id="QueryActions">
                 <button class="btn btn-primary btn-sm mt-2" type="submit" name="Command" title='@sr["Execute Query"]'
                     data-bs-toggle="tooltip" data-bs-placement="top"
                     value="query">@sr["Execute Query"]</button>
@@ -134,9 +134,8 @@
         <div class="col-md-12">
             @if (Model.RowsAffected.HasValue)
             {
-                <div class="table-responsive">
-                    <data-table cs-data="@Model.Data"></data-table>
-                </div>
+                <data-table cs-data="@Model.Data" cs-caption='@sr["Query Results"]'
+                    cs-id="DataTable" cs-height="400" cs-fix-heading="true"></data-table>
             }
         </div>
     </div>
@@ -152,9 +151,9 @@
 
     <div class="row mt-2 mb-2">
         <div class="col-md-4">
-            @if(Model.hasQuery && Model.QueryIsValid)
+            @if(Model.HasQuery && Model.QueryIsValid)
             {
-            <div class="form-group mt-2">
+            <div class="mb-3 mt-2">
                 <label for="SaveQuery" class="form-label">@sr["Save Query As"]:</label>
                 <input id="SaveQuery" asp-for="SaveName" type="text"
                     data-bs-toggle="tooltip" data-bs-placement="top"
@@ -181,7 +180,7 @@
         <div class="col-md-6 text-end text-right">
             @if (Model.SavedQueryNames != null && Model.SavedQueryNames.Count() > 0)
             {
-            <div class="form-group mt-2">
+            <div class="mb-3 mt-2">
                 <label for="SavedQueries" class="form-label">@sr["Saved Queries"]:</label>
                 <select id="SavedQueries" asp-for="SavedQueryName" asp-items="@Model.SavedQueryNames"
                     data-bs-toggle="tooltip" data-bs-placement="top"
@@ -193,7 +192,7 @@
         <div class="col-md-2 text-start">
             @if (Model.SavedQueryNames != null && Model.SavedQueryNames.Count() > 0)
             {
-            <div class="form-group">
+            <div class="mb-3">
                 <button class="btn btn-primary btn-sm mt-2" type="submit" name="Command"
                     data-bs-toggle="tooltip" data-bs-placement="top"
                     title='@sr["Load Saved Query"]'
