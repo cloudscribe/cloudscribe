@@ -117,6 +117,9 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="'QueryToolConnectionString' not found in config!" xml:space="preserve">
+    <value>'QueryToolConnectionString' non trovato nella configurazione!</value>
+  </data>
   <data name="Are you sure you want to delete the selected saved query?" xml:space="preserve">
     <value>Sei sicuro di voler eliminare la query salvata selezionata?</value>
   </data>
@@ -201,14 +204,20 @@
   <data name="Insert table name into Query at current cursor position" xml:space="preserve">
     <value>Inserisci il nome della tabella nella query nella posizione corrente del cursore</value>
   </data>
-  <data name="Invalid query! Only SELECT, INSERT, UPDATE, and DELETE are allowed." xml:space="preserve">
-    <value>Richiesta non valida! Sono consentiti solo SELECT, INSERT, UPDATE e DELETE.</value>
-  </data>
   <data name="Load Saved Query" xml:space="preserve">
     <value>Carica query salvata</value>
   </data>
+  <data name="Optional Query Parameters" xml:space="preserve">
+    <value>Parametri di query facoltativi</value>
+  </data>
+  <data name="Optional query parameters in the format: param1=value&param2=value... etc." xml:space="preserve">
+    <value>Parametri di query facoltativi nel formato: param1=value&param2=value... ecc.</value>
+  </data>
   <data name="Query" xml:space="preserve">
     <value>Domanda</value>
+  </data>
+  <data name="Query Results" xml:space="preserve">
+    <value>Risultati della query</value>
   </data>
   <data name="Query Tool" xml:space="preserve">
     <value>Strumento di interrogazione</value>

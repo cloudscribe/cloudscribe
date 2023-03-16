@@ -71,6 +71,38 @@ namespace cloudscribe.QueryTool.Services
             return table;
         }
 
+        public async Task<DataTable> RawQueryAsync(DbConnection connection, string query, Dictionary<string,string> parameters)
+        {
+            var connectionString = _config.GetConnectionString("QueryToolConnectionString");
+            var dbFactory = DbProviderFactories.GetFactory(connection);
+            var table = new DataTable();
+
+            using (var cmd = dbFactory.CreateCommand())
+            {
+                cmd.Connection = connection;
+                cmd.Connection.ConnectionString = connectionString;
+                cmd.CommandType = CommandType.Text;
+                cmd.CommandText = query;
+                if (parameters != null)
+                {
+                    foreach (var item in parameters)
+                    {
+                        var p = cmd.CreateParameter();
+                        p.ParameterName = "@" + item.Key;
+                        p.DbType = DbType.String;
+                        p.Value = item.Value;
+                        cmd.Parameters.Add(p);
+                    }
+                }
+                cmd.Connection.Open();
+                DbDataReader reader = await cmd.ExecuteReaderAsync();
+                table.Load(reader);
+                cmd.Connection.Close();
+            }
+
+            return table;
+        }
+
         public async Task<int> RawNonQueryAsync(DbConnection connection, string query)
         {
             var connectionString = _config.GetConnectionString("QueryToolConnectionString");
@@ -108,6 +140,37 @@ namespace cloudscribe.QueryTool.Services
                     foreach (var item in parameters)
                     {
                         cmd.Parameters.Add(item);
+                    }
+                }
+                cmd.Connection.Open();
+                rows = await cmd.ExecuteNonQueryAsync();
+                cmd.Connection.Close();
+            }
+
+            return rows;
+        }
+
+        public async Task<int> RawNonQueryAsync(DbConnection connection, string query, Dictionary<string,string> parameters)
+        {
+            var connectionString = _config.GetConnectionString("QueryToolConnectionString");
+            var dbFactory = DbProviderFactories.GetFactory(connection);
+            int rows = 0;
+
+            using (var cmd = dbFactory.CreateCommand())
+            {
+                cmd.Connection = connection;
+                cmd.Connection.ConnectionString = connectionString;
+                cmd.CommandType = CommandType.Text;
+                cmd.CommandText = query;
+                if (parameters != null)
+                {
+                    foreach (var item in parameters)
+                    {
+                        var p = cmd.CreateParameter();
+                        p.ParameterName = "@" + item.Key;
+                        p.DbType = DbType.String;
+                        p.Value = item.Value;
+                        cmd.Parameters.Add(p);
                     }
                 }
                 cmd.Connection.Open();

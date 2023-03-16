@@ -6,10 +6,26 @@ namespace cloudscribe.QueryTool.Web.TagHelpers
 {
     public class DataTableTagHelper : TagHelper
     {
+        private const string IdAttributeName = "cs-id";
         private const string DataAttributeName = "cs-data";
+        private const string HeightAttributeName = "cs-height";
+        private const string FixHeadingAttributeName = "cs-fix-heading";
+        private const string CaptionAttributeName = "cs-caption";
+
+        [HtmlAttributeName(IdAttributeName)]
+        public string? Id { get; set; } = null;
 
         [HtmlAttributeName(DataAttributeName)]
-        public DataTable? Data { get; set; }
+        public DataTable? Data { get; set; } = null;
+
+        [HtmlAttributeName(HeightAttributeName)]
+        public int Height { get; set; } = 600;
+
+        [HtmlAttributeName(FixHeadingAttributeName)]
+        public bool FixHeading { get; set; }= true;
+
+        [HtmlAttributeName(CaptionAttributeName)]
+        public string? Caption { get; set; } = null;
 
         public override void Process(TagHelperContext context, TagHelperOutput output)
         {
@@ -19,34 +35,59 @@ namespace cloudscribe.QueryTool.Web.TagHelpers
                 return;
             }
 
-            output.TagName = "table";
+            output.Content.Clear();
+            output.TagName = "div";
 
-            var trHead = new TagBuilder("tr");
+            var html = "<table class=\"table table-sm table-striped table-bordered table-hover\">";
+            html += @"
+                <thead class=""table-dark""><tr>";
             foreach (DataColumn col in Data.Columns)
             {
-                var th = new TagBuilder("th");
-                th.InnerHtml.Append(col.ColumnName);
-                trHead.InnerHtml.AppendHtml(th);
+                html += @$"
+                    <th>{col.ColumnName}</th>";
             }
-            output.Content.AppendHtml(trHead);
-
+            html += @"
+                </tr></thead>
+                <tbody>";
             var c=Data.Columns.Count;
             foreach(DataRow row in Data.Rows)
             {
-                var tr = new TagBuilder("tr");
+                html += @"
+                    <tr>";
                 for(int i=0; i<c; i++)
                 {
                     var col = row[i];
-                    if(col == null) col = string.Empty;
-                    var td = new TagBuilder("td");
-                    td.InnerHtml.Append(col.ToString());
-                    tr.InnerHtml.AppendHtml(td);
+                    html += @$"
+                        <td>{col.ToString()??string.Empty}</td>";
                 }
-                output.Content.AppendHtml(tr);
+                html += @"
+                    </tr>";
             }
+            html += @"
+                </tbody>
+            </table>";
 
+            output.Content.AppendHtml(html);
             output.Attributes.Clear();
-            output.Attributes.Add("class", "table table-sm table-striped table-bordered table-hover");
+            output.Attributes.Add("class", "table-responsive border border-secondary rounded");
+            if(!string.IsNullOrWhiteSpace(Caption)) output.Attributes.Add("title", Caption);
+            if(!string.IsNullOrWhiteSpace(Id))
+            {
+                output.Attributes.Add("id", Id);
+                if(FixHeading)
+                {
+                    var heightStyle = "";
+                    if(Height > 0) heightStyle = $"height: {Height}px;";
+                    output.Content.AppendHtml(@$"
+                    <style>
+                    #" + Id + "{ overflow: scroll; " + heightStyle + "width: 100%; }" + @"
+                    #" + Id + " table { border-collapse: collapse; }" + @"
+                    #" + Id + " table th, #" + Id + " table td { max-width: 100%; padding: 8px 16px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }" + @"
+                    #" + Id + " table thead { position: sticky; inset-block-start: 0; }" + @"
+                    </style>");
+
+                }
+            }
         }
     }
 }

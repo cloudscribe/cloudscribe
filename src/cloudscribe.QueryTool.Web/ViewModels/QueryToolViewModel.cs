@@ -46,7 +46,7 @@ namespace cloudscribe.QueryTool.Web
         /// <summary>
         /// Do we have a query to run?
         /// </summary>
-        public bool hasQuery { get; set; } = false;
+        public bool HasQuery { get; set; } = false;
 
         /// <summary>
         /// Is the query valid?

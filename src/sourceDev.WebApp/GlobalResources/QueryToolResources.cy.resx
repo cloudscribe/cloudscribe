@@ -117,6 +117,9 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="'QueryToolConnectionString' not found in config!" xml:space="preserve">
+    <value>Heb ganfod 'QueryToolConnectionString' yn y ffurfwedd!</value>
+  </data>
   <data name="Are you sure you want to delete the selected saved query?" xml:space="preserve">
     <value>Ydych chi'n siŵr eich bod am ddileu'r ymholiad sydd wedi'i gadw a ddewiswyd?</value>
   </data>
@@ -187,7 +190,7 @@
     <value>Cynhyrchwch ddatganiad INSERT ar gyfer y tabl a'r colofnau a ddewiswyd</value>
   </data>
   <data name="Generate an UPDATE statement for the selected table and columns" xml:space="preserve">
-    <value>Cynhyrchu datganiad UPDATE ar gyfer y tabl a'r colofnau a ddewiswyd</value>
+    <value>Cynhyrchu datganiad DIWEDDARIAD ar gyfer y tabl a'r colofnau a ddewiswyd</value>
   </data>
   <data name="Insert" xml:space="preserve">
     <value>Mewnosod</value>
@@ -199,16 +202,22 @@
     <value>Mewnosod enwau colofnau yn Ymholiad yn y safle cyrchwr cyfredol</value>
   </data>
   <data name="Insert table name into Query at current cursor position" xml:space="preserve">
-    <value>Mewnosod enw tabl yn Ymholiad yn y safle cyrchwr presennol</value>
-  </data>
-  <data name="Invalid query! Only SELECT, INSERT, UPDATE, and DELETE are allowed." xml:space="preserve">
-    <value>Ymholiad annilys! Dim ond SELECT, INSERT, UPDATE, a DELETE a ganiateir.</value>
+    <value>Mewnosod enw tabl yn Ymholiad yn y safle cyrchwr cyfredol</value>
   </data>
   <data name="Load Saved Query" xml:space="preserve">
     <value>Llwyth Ymholiad Cadw</value>
   </data>
+  <data name="Optional Query Parameters" xml:space="preserve">
+    <value>Paramedrau Ymholiad Dewisol</value>
+  </data>
+  <data name="Optional query parameters in the format: param1=value&param2=value... etc." xml:space="preserve">
+    <value>Paramedrau ymholiad dewisol yn y fformat: param1=value&param2=value... ac ati.</value>
+  </data>
   <data name="Query" xml:space="preserve">
     <value>Ymholiad</value>
+  </data>
+  <data name="Query Results" xml:space="preserve">
+    <value>Canlyniadau Ymholiad</value>
   </data>
   <data name="Query Tool" xml:space="preserve">
     <value>Offeryn Ymholiad</value>
