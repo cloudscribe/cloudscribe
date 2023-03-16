@@ -23,10 +23,10 @@ namespace Microsoft.Extensions.DependencyInjection
             var supportedCultures = new[]
                 {
                     new CultureInfo("en-US"),
-                    //new CultureInfo("en-GB"),
-                    new CultureInfo("cy-GB"),
-                   // new CultureInfo("cy"),
-                   // new CultureInfo("sv"),
+                    new CultureInfo("en-GB"),
+                    // new CultureInfo("cy-GB"),
+                    new CultureInfo("cy"),
+                    // new CultureInfo("sv"),
                     new CultureInfo("fr-FR"),
                     //new CultureInfo("fr")
                 };
@@ -35,7 +35,7 @@ namespace Microsoft.Extensions.DependencyInjection
 
             services.Configure<RequestLocalizationOptions>(options =>
             {
-                
+
 
                 // State what the default culture for your application is. This will be used if no specific culture
                 // can be determined for a given request.

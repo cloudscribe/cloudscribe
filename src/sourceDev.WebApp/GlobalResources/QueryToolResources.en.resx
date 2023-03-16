@@ -210,8 +210,8 @@
   <data name="Optional Query Parameters" xml:space="preserve">
     <value>Optional Query Parameters</value>
   </data>
-  <data name="Optional query parameters in the format: param1=value&param2=value... etc." xml:space="preserve">
-    <value>Optional query parameters in the format: param1=value&param2=value... etc.</value>
+  <data name="Optional query parameters in the format: param1=value&amp;param2=value... etc." xml:space="preserve">
+    <value>Optional query parameters in the format: param1=value&amp;param2=value... etc.</value>
   </data>
   <data name="Query" xml:space="preserve">
     <value>Query</value>

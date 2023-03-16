@@ -210,8 +210,8 @@
   <data name="Optional Query Parameters" xml:space="preserve">
     <value>Paramedrau Ymholiad Dewisol</value>
   </data>
-  <data name="Optional query parameters in the format: param1=value&param2=value... etc." xml:space="preserve">
-    <value>Paramedrau ymholiad dewisol yn y fformat: param1=value&param2=value... ac ati.</value>
+  <data name="Optional query parameters in the format: param1=value&amp;param2=value... etc." xml:space="preserve">
+    <value>Paramedrau ymholiad dewisol yn y fformat: param1=value&amp;param2=value... ac ati.</value>
   </data>
   <data name="Query" xml:space="preserve">
     <value>Ymholiad</value>

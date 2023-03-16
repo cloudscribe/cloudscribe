@@ -210,8 +210,8 @@
   <data name="Optional Query Parameters" xml:space="preserve">
     <value>Paramètres de requête facultatifs</value>
   </data>
-  <data name="Optional query parameters in the format: param1=value&param2=value... etc." xml:space="preserve">
-    <value>Paramètres de requête facultatifs au format : param1=valeur&param2=valeur... etc.</value>
+  <data name="Optional query parameters in the format: param1=value&amp;param2=value... etc." xml:space="preserve">
+    <value>Paramètres de requête facultatifs au format : param1=valeur&amp;param2=valeur... etc.</value>
   </data>
   <data name="Query" xml:space="preserve">
     <value>Mettre en doute</value>
