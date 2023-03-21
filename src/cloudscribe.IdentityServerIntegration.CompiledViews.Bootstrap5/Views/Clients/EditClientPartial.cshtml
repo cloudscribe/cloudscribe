@@ -112,7 +112,7 @@
         <div class="mb-3">
             <div class="form-check">
                 <input asp-for="AllowRememberConsent" class="form-check-input" />
-                <label asp-for="RequireConsent" class="form-check-label">@sr["Allow Remember Consent"]</label>
+                <label asp-for="AllowRememberConsent" class="form-check-label">@sr["Allow Remember Consent"]</label>
             </div>
         </div>
         <div class="mb-3">
@@ -175,6 +175,5 @@
             <a class="btn btn-primary" asp-action="Index" asp-controller="Clients"
                     asp-route-siteId="SiteId">@sr["Cancel"]</a>
         </div>
-    
+
     </form>
-   
