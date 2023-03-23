@@ -27,6 +27,9 @@ namespace cloudscribe.Core.Web.ViewModels.UserAdmin
         public DateTime CreatedUtc { get; set; }
 
         public DateTime? LastLoginUtc { get; set; }
+
+        public int AccessFailedCount { get; set; } = 0;
+
         public DateTime? LastPassswordChangenUtc { get; set; }
 
         public PagedResult<IUserLocation> Locations { get; set; }
@@ -35,11 +38,11 @@ namespace cloudscribe.Core.Web.ViewModels.UserAdmin
 
         public string UserTimeZone { get; set; } = "";
 
-        
+
         public IList<UserLoginInfo> Logins { get; set; }
         public bool TwoFactor { get; set; }
 
         public string AvatarUrl { get; set; }
-        
+
     }
 }
