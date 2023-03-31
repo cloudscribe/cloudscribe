@@ -366,6 +366,7 @@ namespace cloudscribe.Core.Storage.EFCore.Common
 
 
                 var data = await query
+                    .AsSingleQuery()
                     .AsNoTracking()
                     .Skip(offset)
                     .Take(pageSize)
@@ -467,6 +468,7 @@ namespace cloudscribe.Core.Storage.EFCore.Common
                 }
 
                 var data = await query
+                    .AsSingleQuery()
                     .AsNoTracking()
                     .Skip(offset)
                     .Take(pageSize)
@@ -544,6 +546,7 @@ namespace cloudscribe.Core.Storage.EFCore.Common
 
 
                 var data = await query
+                    .AsSingleQuery()
                     .AsNoTracking()
                     .Skip(offset)
                     .Take(pageSize)
@@ -628,6 +631,7 @@ namespace cloudscribe.Core.Storage.EFCore.Common
 
 
                 var data = await query
+                    .AsSingleQuery()
                     .AsNoTracking()
                     .Skip(offset)
                     .Take(pageSize)
@@ -710,6 +714,7 @@ namespace cloudscribe.Core.Storage.EFCore.Common
 
 
                 var data = await query
+                    .AsSingleQuery()
                     .AsNoTracking()
                     .Skip(offset)
                     .Take(pageSize)
@@ -792,6 +797,7 @@ namespace cloudscribe.Core.Storage.EFCore.Common
 
 
                 var data = await query
+                    .AsSingleQuery()
                     .AsNoTracking()
                     .Skip(offset)
                     .Take(pageSize)
@@ -870,6 +876,7 @@ namespace cloudscribe.Core.Storage.EFCore.Common
 
 
                 var data = await query
+                    .AsSingleQuery()
                     .AsNoTracking()
                     .Skip(offset)
                     .Take(pageSize)
@@ -1115,6 +1122,7 @@ namespace cloudscribe.Core.Storage.EFCore.Common
                                 };
 
                 var anonList = await listQuery
+                    .AsSingleQuery()
                     .AsNoTracking()
                     .Skip(offset)
                     .Take(pageSize)
@@ -1211,6 +1219,7 @@ namespace cloudscribe.Core.Storage.EFCore.Common
 
 
                 var data = await query
+                    .AsSingleQuery()
                     .AsNoTracking()
                     .Skip(offset)
                     .Take(pageSize)
@@ -1334,6 +1343,7 @@ namespace cloudscribe.Core.Storage.EFCore.Common
                             select u;
 
                 var data = await query
+                    .AsSingleQuery()
                     .AsNoTracking()
                     .Skip(offset)
                     .Take(pageSize)
@@ -1602,6 +1612,7 @@ namespace cloudscribe.Core.Storage.EFCore.Common
 
                 var data = await query
                     .AsNoTracking()
+                    .AsSingleQuery()
                     .ToListAsync<UserLocation>(cancellationToken)
                     .ConfigureAwait(false);
 
