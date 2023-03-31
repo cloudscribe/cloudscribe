@@ -258,6 +258,7 @@ namespace cloudscribe.Core.Storage.EFCore.Common
 
 
                 var data = await query
+                    .AsSingleQuery()
                     .AsNoTracking()
                     .Skip(offset)
                     .Take(pageSize)
@@ -327,6 +328,7 @@ namespace cloudscribe.Core.Storage.EFCore.Common
                         ;
 
                 var data = await query
+                    .AsSingleQuery()
                     .AsNoTracking()
                     .Skip(offset)
                     .Take(pageSize)

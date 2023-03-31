@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <Description>PostgreSql (pgsql) Entity Framework configuration and operational stores for IdentityServer4 cloudscribe multi-tenant identity integration</Description>
-    <Version>6.0.2</Version>
+    <Version>6.0.3</Version>
     <TargetFramework>net6.0</TargetFramework>
     <Authors>Joe Audette</Authors>
     <PackageTags>cloudscribe;identity</PackageTags>

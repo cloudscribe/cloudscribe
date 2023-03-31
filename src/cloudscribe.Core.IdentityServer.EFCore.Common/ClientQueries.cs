@@ -86,6 +86,7 @@ namespace cloudscribe.Core.IdentityServer.EFCore
             using (var context = _contextFactory.CreateContext())
             {
                 var data = await context.Clients
+                .AsSingleQuery()
                 .AsNoTracking()
                 .Include(x => x.AllowedGrantTypes)
                 .Include(x => x.RedirectUris)
