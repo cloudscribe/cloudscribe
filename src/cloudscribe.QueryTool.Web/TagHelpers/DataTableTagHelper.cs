@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.AspNetCore.Razor.TagHelpers;
 using System.Data;
+using System.Web;
 
 namespace cloudscribe.QueryTool.Web.TagHelpers
 {
@@ -58,7 +59,7 @@ namespace cloudscribe.QueryTool.Web.TagHelpers
                 {
                     var col = row[i];
                     html += @$"
-                        <td>{col.ToString()??string.Empty}</td>";
+                        <td>{HttpUtility.HtmlEncode(col.ToString()??string.Empty)}</td>";
                 }
                 html += @"
                     </tr>";
