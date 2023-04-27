@@ -15,27 +15,54 @@
         <select id="EmailSenderName" asp-for="EmailSenderName" asp-items="Model.AvailableEmailProviders" class="form-control"></select>
         <span asp-validation-for="EmailSenderName" class="invalid-feedback"></span>
     </div>
-    <div class="mb-3">
-        <label class="form-label" asp-for="EmailApiKey">@sr["Email Api Key"]</label>
-        <input asp-for="EmailApiKey" class="form-control" />
-        <span asp-validation-for="EmailApiKey" class="invalid-feedback"></span>
-    </div>
-    <div class="mb-3">
-        <label class="form-label" asp-for="EmailApiEndpoint">@sr["Email Api Endpoint"]</label>
-        <input asp-for="EmailApiEndpoint" class="form-control" />
-        <span asp-validation-for="EmailApiEndpoint" class="invalid-feedback"></span>
-    </div>
-    <div class="mb-3">
-        <label class="form-label" asp-for="DefaultEmailFromAddress">@sr["Default Email From Address"]</label>
-        <input asp-for="DefaultEmailFromAddress" class="form-control" />
-        <span asp-validation-for="DefaultEmailFromAddress" class="invalid-feedback"></span>
-    </div>
-    <div class="mb-3">
-        <label class="form-label" asp-for="DefaultEmailFromAlias">@sr["Default Email From Name"]</label>
-        <input asp-for="DefaultEmailFromAlias" class="form-control" />
-        <span asp-validation-for="DefaultEmailFromAlias" class="invalid-feedback"></span>
-    </div>
-    <fieldset>
+
+    <fieldset class="email-api">
+        <legend>@sr["API Settings"]</legend>
+        <div class="mb-3">
+            <label class="form-label" asp-for="EmailApiKey">@sr["Email Api Key"]</label>
+            <input asp-for="EmailApiKey" class="form-control" />
+            <span asp-validation-for="EmailApiKey" class="invalid-feedback"></span>
+        </div>
+        <div class="mb-3">
+            <label class="form-label" asp-for="EmailApiEndpoint">@sr["Email Api Endpoint"]</label>
+            <input asp-for="EmailApiEndpoint" class="form-control" />
+            <span asp-validation-for="EmailApiEndpoint" class="invalid-feedback"></span>
+        </div>
+    </fieldset>
+
+    <fieldset class="email-smtp-oauth">
+        <legend>@sr["OAuth Settings"]</legend>
+        <div class="mb-3">
+            <label class="form-label" asp-for="SmtpOAuthAuthorizeEndpoint">@sr["Authorize Endpoint"]</label>
+            <input asp-for="SmtpOAuthAuthorizeEndpoint" class="form-control" />
+            <span asp-validation-for="SmtpOAuthAuthorizeEndpoint" class="invalid-feedback"></span>
+        </div>
+        <div class="mb-3">
+            <label class="form-label" asp-for="SmtpOAuthTokenEndpoint">@sr["Token Endpoint"]</label>
+            <input asp-for="SmtpOAuthTokenEndpoint" class="form-control" />
+            <span asp-validation-for="SmtpOAuthTokenEndpoint" class="invalid-feedback"></span>
+        </div>
+        <div class="mb-3">
+            <label class="form-label" asp-for="SmtpOAuthClientId">@sr["Client Id"]</label>
+            <input asp-for="SmtpOAuthClientId" class="form-control" />
+            <span asp-validation-for="SmtpOAuthClientId" class="invalid-feedback"></span>
+        </div>
+        <div class="mb-3">
+            <label class="form-label" asp-for="SmtpOAuthClientSecret">@sr["Client Secret"]</label>
+            <input asp-for="SmtpOAuthClientSecret" class="form-control" />
+            <span asp-validation-for="SmtpOAuthClientSecret" class="invalid-feedback"></span>
+        </div>
+        <div class="mb-3">
+            <label class="form-label" asp-for="SmtpOAuthScopesCsv">@sr["Scope(s)"]</label>
+            <input asp-for="SmtpOAuthScopesCsv" class="form-control" />
+            <span asp-validation-for="SmtpOAuthScopesCsv" class="invalid-feedback"></span>
+        </div>
+        <div class="mb-3">
+            <button name="SmtpOAuthCommand" type="submit" value="AcquireToken" class="btn btn-primary" data-disabled-text='@sr["Working..."]' data-enabled-text='@sr["Acquire User Token"]'>@sr["Acquire User Token"]</button>
+        </div>
+    </fieldset>
+
+    <fieldset class="email-smtp">
         <legend>@sr["SMTP Settings"]</legend>
 
         <div class="mb-3">
@@ -43,7 +70,7 @@
             <input asp-for="SmtpUser" class="form-control" />
             <span asp-validation-for="SmtpUser" class="invalid-feedback"></span>
         </div>
-        <div class="mb-3">
+        <div class="mb-3 email-smtp-pwd">
             <label class="form-label" asp-for="SmtpPassword">@sr["Smtp Password"]</label>
             <input asp-for="SmtpPassword" class="form-control" />
             <span asp-validation-for="SmtpPassword" class="invalid-feedback"></span>
@@ -58,7 +85,7 @@
             <input asp-for="SmtpPort" class="form-control" />
             <span asp-validation-for="SmtpPort" class="invalid-feedback"></span>
         </div>
-        <div class="mb-3">
+        <div class="mb-3 email-smtp-pwd">
             <div class="form-check">
                 <input asp-for="SmtpRequiresAuth" class="form-check-input" />
                 <label asp-for="SmtpRequiresAuth" class="form-check-label">@sr["Requires Authentication?"]</label>
@@ -69,6 +96,20 @@
                 <input asp-for="SmtpUseSsl" class="form-check-input" />
                 <label asp-for="SmtpUseSsl" class="form-check-label">@sr["Requires SSL?"]</label>
             </div>
+        </div>
+    </fieldset>
+
+    <fieldset class="email-sender">
+        <legend>@sr["Sender Settings"]</legend>
+        <div class="mb-3">
+            <label class="form-label" asp-for="DefaultEmailFromAddress">@sr["Default Email From Address"]</label>
+            <input asp-for="DefaultEmailFromAddress" class="form-control" />
+            <span asp-validation-for="DefaultEmailFromAddress" class="invalid-feedback"></span>
+        </div>
+        <div class="mb-3">
+            <label class="form-label" asp-for="DefaultEmailFromAlias">@sr["Default Email From Name"]</label>
+            <input asp-for="DefaultEmailFromAlias" class="form-control" />
+            <span asp-validation-for="DefaultEmailFromAlias" class="invalid-feedback"></span>
         </div>
     </fieldset>
 
@@ -87,9 +128,25 @@
     <partial name="AdminSideNavScripts" />
     <script src="~/cr/js/ckeditor4114/ckeditor.js"></script>
     <script src="~/cr/js/cloudscribe-ckeditor-unobtrusive.min.js"></script>
+    <script src="~/cr/js/jquery.min.js"></script>
     <script src="~/cr/js/jquery.validate.min.js"></script>
     <script src="~/cr/js/jquery.validate.unobtrusive.min.js"></script>
     <script src="~/cr/js/unobtrusive-validation-bs4.min.js"></script>
     <script src="~/cr/js/jquery.validate.hooks.min.js"></script>
     <script src="~/cr/js/jqueryvaildation.submitonce-unobtrusive.min.js"></script>
 }
+<script>
+    document.addEventListener("DOMContentLoaded", function(e) {
+        $('#EmailSenderName').change(function () { email_sender_check(); });
+        email_sender_check();
+    });
+    function email_sender_check() {
+        var s=$('#EmailSenderName').val();
+        $('.email-api,.email-smtp,.email-smtp-oauth,.email-smtp-pwd').hide();
+        if (s=='SmtpMailSender') $('.email-smtp,.email-smtp-pwd').show();
+        else {
+            if (s=='SmtpOAuthMailSender') $('.email-smtp,.email-smtp-oauth').show();
+            else $('.email-api').show();
+        };
+    }
+</script>

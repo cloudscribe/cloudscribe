@@ -26,6 +26,7 @@
     <ProjectReference Include="..\cloudscribe.Core.Models\cloudscribe.Core.Models.csproj" />
     <ProjectReference Include="..\cloudscribe.DateTimeUtils\cloudscribe.DateTimeUtils.csproj" />
     <ProjectReference Include="..\cloudscribe.Email.Senders\cloudscribe.Email.Senders.csproj" />
+    <ProjectReference Include="..\cloudscribe.Core.Storage.UserInteractiveServiceTokens\cloudscribe.Core.Storage.UserInteractiveServiceTokens.csproj" />
     <ProjectReference Include="..\cloudscribe.MultiTenancy\cloudscribe.MultiTenancy.csproj" />
     <ProjectReference Include="..\cloudscribe.Versioning\cloudscribe.Versioning.csproj" />
     <ProjectReference Include="..\cloudscribe.Web.Common\cloudscribe.Web.Common.csproj" />

@@ -2,7 +2,7 @@
 // Author:					Joe Audette
 // Created:					2015-11-16
 // Last Modified:			2019-09-29
-// 
+//
 
 using cloudscribe.Core.Models;
 using cloudscribe.Core.Models.Geography;
@@ -61,14 +61,14 @@ namespace cloudscribe.Core.Storage.EFCore.PostgreSql
 
                 entity.Property(p => p.Theme).HasMaxLength(100);
 
-                
+
 
                 entity.Property(p => p.RequireConfirmedEmail).IsRequired();
 
                 entity.Property(p => p.RequireConfirmedPhone).IsRequired();
 
                 entity.Property(p => p.IsServerAdminSite).IsRequired();
-                
+
 
                 entity.Property(p => p.LdapServer).HasMaxLength(255);
 
@@ -111,8 +111,8 @@ namespace cloudscribe.Core.Storage.EFCore.PostgreSql
                 entity.Property(p => p.DisableDbAuth).IsRequired();
 
                 entity.Property(p => p.RequireApprovalBeforeLogin).IsRequired();
-                
-               
+
+
 
                 entity.Property(p => p.CaptchaOnLogin).IsRequired();
 
@@ -176,7 +176,7 @@ namespace cloudscribe.Core.Storage.EFCore.PostgreSql
 
                 entity.HasIndex(p => p.SiteFolderName);
 
-                
+
 
                 entity.Property(p => p.SmtpServer).HasMaxLength(200);
 
@@ -517,12 +517,24 @@ namespace cloudscribe.Core.Storage.EFCore.PostgreSql
 
             });
 
+            modelBuilder.Entity<UserInteractiveServiceToken>(entity =>
+            {
+                entity.ToTable(tableNames.TablePrefix + tableNames.UserInteractiveServiceTokenTableName);
+
+                entity.HasKey(p => p.Id);
+
+                entity.HasIndex(p => p.SiteId);
+
+                entity.HasIndex(p => p.CloudscribeServiceProvider);
+
+
+            });
 
             modelBuilder.ApplySnakeCaseConventions();
 
         }
 
-       
+
 
 
 

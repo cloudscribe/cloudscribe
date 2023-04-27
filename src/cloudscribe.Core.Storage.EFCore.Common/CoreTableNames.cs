@@ -5,7 +5,7 @@
     /// but using custom tables names requires deleting all existing migrations and re-regenerating them
     /// so you would probably want to fork this project to do that
     /// </summary>
-    public class CoreTableNames 
+    public class CoreTableNames
     {
         public CoreTableNames()
         {
@@ -26,6 +26,8 @@
         public string GeoZoneTableName { get; set; } = "GeoZone";
         public string CurrencyTableName { get; set; } = "Currency";
         public string LanguageTableName { get; set; } = "Language";
-        
+
+        public string UserInteractiveServiceTokenTableName { get; set; } = "UserInteractiveServiceToken";
+
     }
 }

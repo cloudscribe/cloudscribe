@@ -1,5 +1,5 @@
 ﻿// Author: J Audette 2015-05-15, 2017-06-08
-$(function () {
+$(document).ready(function () {
     var $elems = $('textarea[data-ckeditor-unobtrusive]');
     if ($elems) {
         $elems.each(function (index, ele) {
@@ -88,9 +88,7 @@ $(function () {
                 config.removePlugins = 'toolbar,elementspath,resize,clipboard,pastetext,pastefromword,tableselection,widget,uploadwidget,uploadimage,oembed,codesnippet,scayt,wsc';
             }
 
-
             var editor = CKEDITOR.replace(ele, config);
-
             editor.on('change', function() {
                 //console.log('ckeditor onchange');
                 window.thisPage = window.thisPage || {};

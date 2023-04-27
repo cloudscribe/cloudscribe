@@ -27,7 +27,7 @@ namespace cloudscribe.Core.Models
         public Guid Id
         {
             get { return site.Id; }
-        } 
+        }
         public string AliasId
         {
             get { return site.AliasId; }
@@ -43,7 +43,7 @@ namespace cloudscribe.Core.Models
             get { return site.SiteFolderName; }
         }
 
-        
+
         public string PreferredHostName
         {
             get { return site.PreferredHostName; }
@@ -88,7 +88,7 @@ namespace cloudscribe.Core.Models
         //{
         //    get { return site.AutoCreateLdapUserOnFirstLogin; }
         //}
-        
+
         public string LdapServer
         {
             get { return site.LdapServer; }
@@ -128,7 +128,7 @@ namespace cloudscribe.Core.Models
         //{
         //    get { return site.ReallyDeleteUsers; }
         //}
-        
+
         public bool UseEmailForLogin
         {
             get { return site.UseEmailForLogin; }
@@ -216,7 +216,7 @@ namespace cloudscribe.Core.Models
         public bool UseInvisibleRecaptcha
         {
             get { return site.UseInvisibleRecaptcha; }
-        } 
+        }
 
         public string FacebookAppId
         {
@@ -391,6 +391,29 @@ namespace cloudscribe.Core.Models
             get { return site.SmtpUseSsl; }
         }
 
+
+        //SMTP OAuth2
+        public string SmtpOauthAuthorizeEndpoint
+        {
+            get { return site.SmtpOauthAuthorizeEndpoint; }
+        }
+        public string SmtpOauthTokenEndpoint
+        {
+            get { return site.SmtpOauthTokenEndpoint; }
+        }
+        public string SmtpOauthClientId
+        {
+            get { return site.SmtpOauthClientId; }
+        }
+        public string SmtpOauthClientSecret
+        {
+            get { return site.SmtpOauthClientSecret; }
+        }
+        public string SmtpOauthScopesCsv
+        {
+            get { return site.SmtpOauthScopesCsv; }
+        }
+
         public string DkimPublicKey
         {
             get { return site.DkimPublicKey; }
@@ -419,7 +442,7 @@ namespace cloudscribe.Core.Models
         public string EmailSenderName
         {
             get { return site.EmailSenderName; }
-        } 
+        }
         public string EmailApiKey
         {
             get { return site.EmailApiKey; }

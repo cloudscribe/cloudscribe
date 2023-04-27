@@ -16,11 +16,11 @@ namespace cloudscribe.Core.Models
         bool IsServerAdminSite { get; }
 
         // from ISiteSettings but without setters
-       
+
         bool DisableDbAuth { get; }
-        bool RequireConfirmedEmail { get; } 
+        bool RequireConfirmedEmail { get; }
         bool RequireConfirmedPhone { get; }
-        bool RequireApprovalBeforeLogin { get; } 
+        bool RequireApprovalBeforeLogin { get; }
         string AccountApprovalEmailCsv { get; }
         int MaxInvalidPasswordAttempts { get; }
         int MinRequiredPasswordLength { get; }
@@ -71,8 +71,15 @@ namespace cloudscribe.Core.Models
         string SmtpServer { get; }
         string SmtpUser { get; }
         bool SmtpUseSsl { get; }
+
+        string SmtpOauthAuthorizeEndpoint { get; }
+        string SmtpOauthTokenEndpoint { get; }
+        string SmtpOauthClientId { get; }
+        string SmtpOauthClientSecret { get; }
+        string SmtpOauthScopesCsv { get; }
+
         string DkimPublicKey { get; }
-        string DkimPrivateKey { get; } 
+        string DkimPrivateKey { get; }
         string DkimDomain { get; }
         string DkimSelector { get; }
         bool SignEmailWithDkim { get; }
@@ -81,7 +88,7 @@ namespace cloudscribe.Core.Models
         string EmailApiEndpoint { get; }
 
         string SmsClientId { get; }
-        string SmsSecureToken { get; } 
+        string SmsSecureToken { get; }
         string SmsFrom { get; }
         string PrivacyPolicy { get; }
         string Theme { get; }

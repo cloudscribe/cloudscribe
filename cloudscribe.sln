@@ -114,6 +114,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "cloudscribe.QueryTool.Servi
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "cloudscribe.QueryTool.Web", "src\cloudscribe.QueryTool.Web\cloudscribe.QueryTool.Web.csproj", "{BDADC452-F40A-44DF-A669-186D18DC0D7A}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "cloudscribe.Core.Storage.UserInteractiveServiceTokens", "src\cloudscribe.Core.Storage.UserInteractiveServiceTokens\cloudscribe.Core.Storage.UserInteractiveServiceTokens.csproj", "{2371F356-07D2-410F-A6F9-1484B273E458}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -324,6 +326,10 @@ Global
 		{BDADC452-F40A-44DF-A669-186D18DC0D7A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{BDADC452-F40A-44DF-A669-186D18DC0D7A}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{BDADC452-F40A-44DF-A669-186D18DC0D7A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2371F356-07D2-410F-A6F9-1484B273E458}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2371F356-07D2-410F-A6F9-1484B273E458}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2371F356-07D2-410F-A6F9-1484B273E458}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2371F356-07D2-410F-A6F9-1484B273E458}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -380,6 +386,7 @@ Global
 		{F46AF3DE-5383-4BC8-9E90-884B6D369700} = {9C16B47A-B712-4237-B62F-B4403ACF1CD5}
 		{DC124528-3BF5-4FF4-B60E-28D5DF872C74} = {9C16B47A-B712-4237-B62F-B4403ACF1CD5}
 		{BDADC452-F40A-44DF-A669-186D18DC0D7A} = {9C16B47A-B712-4237-B62F-B4403ACF1CD5}
+		{2371F356-07D2-410F-A6F9-1484B273E458} = {9C16B47A-B712-4237-B62F-B4403ACF1CD5}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {3FDA23E8-B945-4001-92C5-F6A70186E3B0}

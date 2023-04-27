@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace cloudscribe.Email
@@ -55,7 +56,7 @@ namespace cloudscribe.Email
 
 
             return null;
-            
+
         }
     }
 }

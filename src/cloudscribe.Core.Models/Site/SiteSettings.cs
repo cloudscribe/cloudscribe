@@ -3,7 +3,7 @@
 // Author:					Joe Audette
 // Created:					2014-08-16
 // Last Modified:			2019-04-20
-// 
+//
 
 using System;
 
@@ -17,32 +17,32 @@ namespace cloudscribe.Core.Models
         {
             this.Id = Guid.NewGuid();
         }
-        
+
         public bool RequireCookieConsent { get; set; } = true;
-        
+
         public string CookiePolicySummary { get; set; } = "To ensure you get the best experience, this website uses cookies.";
-        
+
         public string ConcurrencyStamp { get; set; } = Guid.NewGuid().ToString();
-        
+
         public string Theme { get; set; }
 
         public bool AllowNewRegistration { get; set; } = true;
-        
+
         public bool RequireConfirmedEmail { get; set; } = false;
-        
+
         public bool RequireConfirmedPhone { get; set; } = false;
 
         //public bool UseLdapAuth { get; set; } = false;
         //public bool AllowDbFallbackWithLdap { get; set; } = false;
         //public bool EmailLdapDbFallback { get; set; } = false;
         //public bool AutoCreateLdapUserOnFirstLogin { get; set; } = true;
- 
+
         public string LdapServer { get; set; }
 
         public string LdapDomain { get; set; }
 
         public int LdapPort { get; set; } = 389;
-        
+
         public string LdapRootDN { get; set; }
 
         public string LdapUserDNKey { get; set; } = "CN";
@@ -61,37 +61,37 @@ namespace cloudscribe.Core.Models
         public bool AllowUserToChangeEmail { get; set; } = true;
 
         public bool DisableDbAuth { get; set; } = false;
-       
+
         public bool RequiresQuestionAndAnswer { get; set; } = false;
 
         public bool RequireApprovalBeforeLogin { get; set; } = false;
-        
+
         public string AccountApprovalEmailCsv { get; set; }
-        
+
         public int MaxInvalidPasswordAttempts { get; set; } = 5;
-        
+
         public int MinRequiredPasswordLength { get; set; } = 7;
-        
+
         public bool PwdRequireNonAlpha { get; set; } = true;
-        
+
         public bool PwdRequireLowercase { get; set; } = true;
-        
+
         public bool PwdRequireUppercase { get; set; } = true;
-       
+
         public bool PwdRequireDigit { get; set; } = true;
-        
+
         public bool AllowPersistentLogin { get; set; } = true;
-        
+
         public bool CaptchaOnRegistration { get; set; } = false;
-        
+
         public bool CaptchaOnLogin { get; set; } = false;
-        
+
         public string RecaptchaPrivateKey { get; set; }
 
         public string RecaptchaPublicKey { get; set; }
 
         public bool UseInvisibleRecaptcha { get; set; } = false;
-   
+
         public string FacebookAppId { get; set; }
 
         public string FacebookAppSecret { get; set; }
@@ -120,58 +120,65 @@ namespace cloudscribe.Core.Models
         public string OidConnectScopesCsv { get; set; }
 
         public string AddThisDotComUsername { get; set; }
-        
+
         public string TimeZoneId { get; set; } = "America/New_York";
-        
+
         public string CompanyName { get; set; }
-        
+
         public string CompanyStreetAddress { get; set; }
-        
+
         public string CompanyStreetAddress2 { get; set; }
-        
+
         public string CompanyLocality { get; set; }
-        
+
         public string CompanyRegion { get; set; }
-       
+
         public string CompanyPostalCode { get; set; }
-        
+
         public string CompanyCountry { get; set; }
-        
+
         public string CompanyPhone { get; set; }
-        
+
         public string CompanyFax { get; set; }
-       
+
         public string CompanyPublicEmail { get; set; }
-        
+
         public string CompanyWebsite { get; set; }
 
         public string DefaultEmailFromAddress { get; set; }
-        
+
         public string DefaultEmailFromAlias { get; set; }
-        
+
         public string SmtpUser { get; set; }
-        
+
         public string SmtpPassword { get; set; }
-        
+
         public int SmtpPort { get; set; } = 25;
 
         public string SmtpPreferredEncoding { get; set; }
-        
+
         public string SmtpServer { get; set; }
-        
+
         public bool SmtpRequiresAuth { get; set; } = false;
 
         public bool SmtpUseSsl { get; set; } = false;
 
+        //SMTP OAuth2
+        public string SmtpOauthAuthorizeEndpoint { get; set; }
+        public string SmtpOauthTokenEndpoint { get; set; }
+        public string SmtpOauthClientId { get; set; }
+        public string SmtpOauthClientSecret { get; set; }
+        public string SmtpOauthScopesCsv { get; set; }
+
         public string DkimPublicKey { get; set; }
-        
+
         // protected with data protection
         public string DkimPrivateKey { get; set; }
-       
+
         public string DkimDomain { get; set; }
-        
+
         public string DkimSelector { get; set; }
-        
+
         public bool SignEmailWithDkim { get; set; } = false;
 
         public string EmailSenderName { get; set; } = "SmtpMailSender";
@@ -179,32 +186,32 @@ namespace cloudscribe.Core.Models
         public string EmailApiKey { get; set; }
 
         public string EmailApiEndpoint { get; set; }
-        
+
         public string SmsClientId { get; set; }
-        
+
         //protected with data protection
         public string SmsSecureToken { get; set; }
-        
+
         public string SmsFrom { get; set; }
-        
+
         public string GoogleAnalyticsProfileId { get; set; }
-        
+
         public string RegistrationAgreement { get; set; }
-        
+
         public string RegistrationPreamble { get; set; }
-        
+
         public string LoginInfoTop { get; set; }
-        
+
         public string LoginInfoBottom { get; set; }
-        
+
         public bool SiteIsClosed { get; set; } = false;
-        
+
         public string SiteIsClosedMessage { get; set; }
-        
+
         public string PrivacyPolicy { get; set; }
-       
+
         public bool IsDataProtected { get; set; } = false;
-        
+
 
         public DateTime TermsUpdatedUtc { get; set; } = DateTime.UtcNow;
 
@@ -301,7 +308,7 @@ namespace cloudscribe.Core.Models
                 PwdRequireLowercase        = i.PwdRequireLowercase,
                 PwdRequireNonAlpha         = i.PwdRequireNonAlpha,
                 PwdRequireUppercase        = i.PwdRequireUppercase,
-                
+
                 RecaptchaPrivateKey        = i.RecaptchaPrivateKey,
                 RecaptchaPublicKey         = i.RecaptchaPublicKey,
                 RegistrationAgreement      = i.RegistrationAgreement,
@@ -331,6 +338,11 @@ namespace cloudscribe.Core.Models
                 SmtpServer                 = i.SmtpServer,
                 SmtpUser                   = i.SmtpUser,
                 SmtpUseSsl                 = i.SmtpUseSsl,
+                SmtpOauthAuthorizeEndpoint = i.SmtpOauthAuthorizeEndpoint,
+                SmtpOauthTokenEndpoint     = i.SmtpOauthTokenEndpoint,
+                SmtpOauthClientId          = i.SmtpOauthClientId,
+                SmtpOauthClientSecret      = i.SmtpOauthClientSecret,
+                SmtpOauthScopesCsv         = i.SmtpOauthScopesCsv,
                 TimeZoneId                 = i.TimeZoneId,
                 TwitterConsumerKey         = i.TwitterConsumerKey,
                 TwitterConsumerSecret      = i.TwitterConsumerSecret,

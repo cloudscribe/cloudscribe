@@ -21,6 +21,8 @@ using cloudscribe.Email.ElasticEmail;
 using cloudscribe.Email.Mailgun;
 using cloudscribe.Email.SendGrid;
 using cloudscribe.Email.Smtp;
+using cloudscribe.Email.SmtpOAuth;
+using cloudscribe.Core.Storage.UserInteractiveServiceTokens;
 using cloudscribe.Web.Common.Components;
 using cloudscribe.Web.Common.Models;
 using cloudscribe.Web.Common.Razor;
@@ -134,18 +136,21 @@ namespace Microsoft.Extensions.DependencyInjection
 
             services.Configure<SmtpOptions>(configuration.GetSection("SmtpOptions"));
             services.TryAddScoped<ISmtpOptionsProvider, SiteSmtpOptionsResolver>();
+            services.Configure<SmtpOAuthOptions>(configuration.GetSection("SmtpOAuthOptions"));
+            services.TryAddScoped<ISmtpOAuthOptionsProvider, SiteSmtpOAuthOptionsResolver>();
             services.TryAddScoped<IEmailSenderResolver, SiteEmailSenderResolver>();
 
             services.AddScoped<ISiteMessageEmailSender, SiteEmailMessageSender>();
 
             services.TryAddScoped<IEmailChangeHandler, EmailChangeHandler>();
 
-
             //services.AddTransient<ISiteMessageEmailSender, FakeSiteEmailSender>();
             services.TryAddScoped<ISendGridOptionsProvider, SiteSendGridOptionsProvider>();
             services.TryAddScoped<IMailgunOptionsProvider, SiteMailgunOptionsProvider>();
             services.TryAddScoped<IElasticEmailOptionsProvider, SiteElasticEmailOptionsProvider>();
             services.AddCloudscribeEmailSenders(configuration);
+
+            services.AddCloudscribeUserInteractiveServiceTokens();
 
             services.TryAddSingleton<IThemeListBuilder, SiteThemeListBuilder>();
             //services.AddSingleton<IRazorViewEngine, CoreViewEngine>();

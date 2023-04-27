@@ -3,13 +3,13 @@
 // Author:					Joe Audette
 // Created:					2014-08-16
 // Last Modified:			2019-04-20
-// 
+//
 
 using System;
 
 namespace cloudscribe.Core.Models
 {
-    
+
     // lighter base version for lists
     public interface ISiteInfo
     {
@@ -23,7 +23,7 @@ namespace cloudscribe.Core.Models
 
     }
 
-    
+
     public interface ISiteSettings : ISiteInfo
     {
         //TODO: implement ldap auth middleware or helper for accountcontroller
@@ -43,16 +43,16 @@ namespace cloudscribe.Core.Models
 
         string ConcurrencyStamp { get; set; }
 
-        
+
         bool DisableDbAuth { get; set; }
-    
-        bool RequireConfirmedEmail { get; set; } 
+
+        bool RequireConfirmedEmail { get; set; }
 
         // maps to IdentitySignInOptions
         //https://github.com/aspnet/Identity/blob/dev/src/Microsoft.AspNetCore.Identity/SignInOptions.cs
         bool RequireConfirmedPhone { get; set; }
 
-        bool RequireApprovalBeforeLogin { get; set; } 
+        bool RequireApprovalBeforeLogin { get; set; }
         string AccountApprovalEmailCsv { get; set; }
 
         //https://github.com/aspnet/Identity/blob/dev/src/Microsoft.AspNetCore.Identity/LockoutOptions.cs
@@ -67,13 +67,13 @@ namespace cloudscribe.Core.Models
         /// </remarks>
         //public bool AllowedForNewUsers { get; set; } = true;
 
-            
+
         /// <summary>
         /// maps to Identity LockoutOptions.MaxFailedAttempts default 5
         /// </summary>
         int MaxInvalidPasswordAttempts { get; set; }
 
-        
+
         // This is from IdentityOptions.cs
         // should this be configurable per site or not? I lean towards not
         /// <summary>
@@ -114,19 +114,19 @@ namespace cloudscribe.Core.Models
         bool UseEmailForLogin { get; set; }
 
         bool AllowUserToChangeEmail {  get; set; }
-        
+
         bool RequiresQuestionAndAnswer { get; set; }
-        
+
         bool AllowNewRegistration { get; set; }
-      
+
         bool AllowPersistentLogin { get; set; }
-        
+
         bool CaptchaOnLogin { get; set; }
         bool CaptchaOnRegistration { get; set; }
         string RecaptchaPrivateKey { get; set; }
         string RecaptchaPublicKey { get; set; }
         bool UseInvisibleRecaptcha { get; set; }
-        
+
         //company info
         string CompanyCountry { get; set; }
         string CompanyFax { get; set; }
@@ -145,14 +145,14 @@ namespace cloudscribe.Core.Models
         string LoginInfoTop { get; set; }
         string RegistrationAgreement { get; set; }
         string RegistrationPreamble { get; set; }
-        
+
         string TimeZoneId { get; set; }
         bool SiteIsClosed { get; set; }
         string SiteIsClosedMessage { get; set; }
 
         string DefaultEmailFromAddress { get; set; }
         string DefaultEmailFromAlias { get; set; }
-      
+
         string SmtpPassword { get; set; }
         int SmtpPort { get; set; }
         string SmtpPreferredEncoding { get; set; }
@@ -160,6 +160,13 @@ namespace cloudscribe.Core.Models
         string SmtpServer { get; set; }
         string SmtpUser { get; set; }
         bool SmtpUseSsl { get; set; }
+
+        //SMTP OAuth2
+        string SmtpOauthAuthorizeEndpoint { get; set; }
+        string SmtpOauthTokenEndpoint { get; set; }
+        string SmtpOauthClientId { get; set; }
+        string SmtpOauthClientSecret { get; set; }
+        string SmtpOauthScopesCsv { get; set; }
 
         string EmailSenderName { get; set; }
         string EmailApiKey { get; set; }
@@ -169,10 +176,10 @@ namespace cloudscribe.Core.Models
         string DkimPrivateKey { get; set; } // protected with data protection
         string DkimDomain { get; set; }
         /// <summary>
-        /// The selector is used to identify the keys used to attach a token to a piece of email. It does appear in the header 
-        /// of the email sent, but isn’t otherwise visible or meaningful to the final recipient. Any time you generate a new key pair 
+        /// The selector is used to identify the keys used to attach a token to a piece of email. It does appear in the header
+        /// of the email sent, but isn’t otherwise visible or meaningful to the final recipient. Any time you generate a new key pair
         /// you need to choose a new selector.
-        /// A selector is a string of no more than 63 lower-case alphanumeric characters(a-z or 0-9) followed by a period “.”, followed 
+        /// A selector is a string of no more than 63 lower-case alphanumeric characters(a-z or 0-9) followed by a period “.”, followed
         /// by another string of no more than 63 lower-case alphanumeric characters.
         /// </summary>
         string DkimSelector { get; set; }
@@ -184,9 +191,9 @@ namespace cloudscribe.Core.Models
 
 
         string PrivacyPolicy { get; set; }
-        string Theme { get; set; } 
+        string Theme { get; set; }
         string GoogleAnalyticsProfileId { get; set; }
-        
+
         //social login stuff
         string FacebookAppId { get; set; }
         string FacebookAppSecret { get; set; }
@@ -204,7 +211,7 @@ namespace cloudscribe.Core.Models
         string OidConnectScopesCsv { get; set; }
 
         string AddThisDotComUsername { get; set; }
-        
+
         bool IsDataProtected { get; set; }
         DateTime CreatedUtc { get; set; }
         DateTime TermsUpdatedUtc { get; set; }

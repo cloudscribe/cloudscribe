@@ -3,7 +3,7 @@
 // Author:					Joe Audette
 // Created:					2015-08-11
 // Last Modified:			2018-05-07
-// 
+//
 
 using cloudscribe.Core.Models;
 using cloudscribe.Core.Web.ViewModels.Email;
@@ -33,14 +33,14 @@ namespace cloudscribe.Core.Web.Components.Messaging
             _sr = localizer;
             _viewRenderer = viewRenderer;
             _emailSenderResolver = emailSenderResolver;
-            
+
         }
 
         private ViewRenderer _viewRenderer;
         private IEmailSenderResolver _emailSenderResolver;
         private IStringLocalizer _sr;
         private ILogger _log;
-        
+
         public async Task SendAccountConfirmationEmailAsync(
             ISiteContext siteSettings,
             string toAddress,
@@ -48,7 +48,7 @@ namespace cloudscribe.Core.Web.Components.Messaging
             string confirmationUrl,
             string confirmCode)
         {
-            
+
             var sender = await _emailSenderResolver.GetEmailSender(siteSettings.Id.ToString());
             if (sender == null)
             {
@@ -80,7 +80,7 @@ namespace cloudscribe.Core.Web.Components.Messaging
                     plainTextMessage,
                     htmlMessage,
                     configLookupKey: siteSettings.Id.ToString()
-                    
+
                     ).ConfigureAwait(false);
             }
             catch (Exception ex)
@@ -172,7 +172,7 @@ namespace cloudscribe.Core.Web.Components.Messaging
 
             // send notification to new email address
             if (!String.IsNullOrWhiteSpace(newEmail))
-            { 
+            {
                 try
                 {
                     var plainTextMessage
@@ -196,8 +196,8 @@ namespace cloudscribe.Core.Web.Components.Messaging
             }
 
             // send notification to old email address
-            if (!String.IsNullOrWhiteSpace(oldEmail)) 
-            { 
+            if (!String.IsNullOrWhiteSpace(oldEmail))
+            {
                 try
                 {
                     var plainTextMessage
@@ -470,14 +470,14 @@ namespace cloudscribe.Core.Web.Components.Messaging
             ISiteContext siteSettings,
             IUserContext user)
         {
-            
-            if (siteSettings.AccountApprovalEmailCsv == null || siteSettings.AccountApprovalEmailCsv.Trim().Length == 0) 
-            { 
+
+            if (siteSettings.AccountApprovalEmailCsv == null || siteSettings.AccountApprovalEmailCsv.Trim().Length == 0)
+            {
                 var logMessage = $"failed to send new account approval notifications to admins because email settings are not populated for site {siteSettings.SiteName}";
                 _log.LogError(logMessage);
-                return; 
+                return;
             }
-            
+
             string subject = _sr["New Account Pending Approval"];
 
             var sender = await _emailSenderResolver.GetEmailSender(siteSettings.Id.ToString());
@@ -523,7 +523,7 @@ namespace cloudscribe.Core.Web.Components.Messaging
             IUserContext user)
         {
             if (siteSettings.AccountApprovalEmailCsv == null || siteSettings.AccountApprovalEmailCsv.Trim().Length == 0) { return; }
-            
+
             string subject = _sr["New Account"];
 
             var sender = await _emailSenderResolver.GetEmailSender(siteSettings.Id.ToString());
@@ -633,23 +633,23 @@ namespace cloudscribe.Core.Web.Components.Messaging
 
             if (model.Tenant == null) model.Tenant = siteSettings;
             if (string.IsNullOrWhiteSpace(model.ConfigLookupKey)) model.ConfigLookupKey = sender.Name;
-            
+
             try
             {
                 if(!string.IsNullOrWhiteSpace(model.TextBody))
                 {
                     plainTextMessage = await _viewRenderer.RenderViewAsString<SiteMessageModel>("SiteMessageTextPartial", model).ConfigureAwait(false);
                 }
-                
+
                 if (!string.IsNullOrWhiteSpace(model.HtmlBody))
                 {
                     htmlMessage = await _viewRenderer.RenderViewAsString<SiteMessageModel>("SiteMessageHtmlPartial", model).ConfigureAwait(false);
                     if(!string.IsNullOrWhiteSpace(baseUrl))
                     {
                         htmlMessage = cloudscribe.Web.Common.Html.HtmlHelper.ConvertUrlsToAbsolute(baseUrl, htmlMessage);
-                    } 
+                    }
                 }
-                
+
                 await sender.SendEmailAsync(
                     model.ToEmailCsv,
                     siteSettings.DefaultEmailFromAddress,

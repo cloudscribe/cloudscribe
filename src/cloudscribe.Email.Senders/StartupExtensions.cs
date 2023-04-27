@@ -4,6 +4,7 @@ using cloudscribe.Email.Mailgun;
 using cloudscribe.Email.Senders;
 using cloudscribe.Email.SendGrid;
 using cloudscribe.Email.Smtp;
+using cloudscribe.Email.SmtpOAuth;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 
@@ -12,13 +13,17 @@ namespace Microsoft.Extensions.DependencyInjection
     public static class StartupExtensions
     {
         public static IServiceCollection AddCloudscribeEmailSenders(
-            this IServiceCollection services, 
+            this IServiceCollection services,
             IConfiguration configuration
             )
         {
             services.TryAddScoped<ISmtpOptionsProvider, ConfigSmtpOptionsProvider>();
             services.Configure<SmtpOptions>(configuration.GetSection("SmtpOptions"));
             services.AddScoped<IEmailSender, SmtpEmailSender>();
+
+            services.TryAddScoped<ISmtpOAuthOptionsProvider, ConfigSmtpOAuthOptionsProvider>();
+            services.Configure<SmtpOAuthOptions>(configuration.GetSection("SmtpOAuthOptions"));
+            services.AddScoped<IEmailSender, SmtpOAuthEmailSender>();
 
             services.TryAddScoped<ISendGridOptionsProvider, ConfigSendGridOptionsProvider>();
             services.Configure<SendGridOptions>(configuration.GetSection("SendGridOptions"));
