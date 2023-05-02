@@ -513,7 +513,7 @@ namespace cloudscribe.Core.Identity
             // TODO: should DefaultLockoutTimeSpan be promoted to a site setting?
             await store.SetLockoutEndDateAsync(
                 user, 
-                DateTimeOffset.UtcNow.Add(_identityOptions.Lockout.DefaultLockoutTimeSpan),
+                DateTimeOffset.Now.Add(_identityOptions.Lockout.DefaultLockoutTimeSpan), // gets converted to UTC later
                 CancellationToken);
 
             await store.ResetAccessFailedCountAsync(user, CancellationToken);
