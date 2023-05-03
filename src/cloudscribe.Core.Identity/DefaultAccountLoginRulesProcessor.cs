@@ -7,6 +7,7 @@
 
 using cloudscribe.Core.Models;
 using Microsoft.AspNetCore.Identity;
+using System;
 using System.Threading.Tasks;
 
 namespace cloudscribe.Core.Identity
@@ -80,7 +81,6 @@ namespace cloudscribe.Core.Identity
                         template.NeedsPhoneConfirmation = true;
                     }
                 }
-
             }
 
             if (!string.IsNullOrWhiteSpace(_userManager.Site.RegistrationAgreement))
@@ -91,7 +91,6 @@ namespace cloudscribe.Core.Identity
                 {
                     template.MustAcceptTerms = true;
                 }
-
             }
 
             if (template.User.IsLockedOut)
@@ -99,8 +98,13 @@ namespace cloudscribe.Core.Identity
                 var reason = $"login not allowed for {template.User.Email} because account is locked out";
                 template.RejectReasons.Add(reason);
                 template.SignInResult = SignInResult.LockedOut;
+            }
 
-
+            if (template.User.CanAutoLockout && template.User.LockoutEndDateUtc != null && template.User.LockoutEndDateUtc > DateTime.UtcNow)
+            {
+                var reason = $"login is temporarily blocked for {template.User.Email} due to multiple failed login attempts";
+                template.RejectReasons.Add(reason);
+                template.SignInResult = SignInResult.LockedOut;
             }
 
             //if (template.User.IsDeleted)
@@ -108,8 +112,6 @@ namespace cloudscribe.Core.Identity
             //    var reason = $"login not allowed for {template.User.Email} because account is flagged as deleted";
             //    template.RejectReasons.Add(reason);
             //    template.User = null;
-
-
             //}
         }
     }
