@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <Description>model classes for cloudscribe core. you should not normally install this separately, it will be installed if you install cloudscribe.Core.Web</Description>
-    <Version>6.0.0</Version>
+    <Version>6.0.1</Version>
     <TargetFramework>net6.0</TargetFramework>
     <Authors>Joe Audette</Authors>
     <PackageTags>cloudscribe;models</PackageTags>

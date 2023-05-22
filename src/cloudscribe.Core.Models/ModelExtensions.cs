@@ -20,8 +20,6 @@ namespace cloudscribe.Core.Models
 
             var segments = requestPath.SplitOnCharAndTrim('/');
             return segments.FirstOrDefault();
-
-
         }
 
         public static List<string> SplitOnCharAndTrim(this string s, char c)
@@ -35,20 +33,17 @@ namespace cloudscribe.Core.Models
                 if (!string.IsNullOrWhiteSpace(item)) { list.Add(item.Trim()); }
             }
 
-
             return list;
         }
 
         public static string ToInvariantString(this int i)
         {
             return i.ToString(CultureInfo.InvariantCulture);
-
         }
 
         public static string ToInvariantString(this float i)
         {
             return i.ToString(CultureInfo.InvariantCulture);
-
         }
 
         public static List<string> SplitOnChar(this string s, char c)
@@ -62,7 +57,6 @@ namespace cloudscribe.Core.Models
                 if (!string.IsNullOrWhiteSpace(item)) { list.Add(item); }
             }
 
-
             return list;
         }
 
@@ -75,14 +69,8 @@ namespace cloudscribe.Core.Models
         public static bool IsDeletable(this ISiteRole role, List<string> rolesThatCannotBeDeleted)
         {
             if (role.RoleName == "Administrators") { return false; }
-            //if (role.RoleName == "Content Administrators") { return false; }
-            //if (role.RoleName == "Authenticated Users") { return false; }
-            //if (role.RoleName == "Role Administrators") { return false; }
 
             if (role.NormalizedRoleName == "Administrators") { return false; }
-            //if (role.NormalizedRoleName == "Content Administrators") { return false; }
-            //if (role.NormalizedRoleName == "Authenticated Users") { return false; }
-            //if (role.NormalizedRoleName == "Role Administrators") { return false; }
 
             if (rolesThatCannotBeDeleted != null)
             {
@@ -113,22 +101,10 @@ namespace cloudscribe.Core.Models
             if ((!string.IsNullOrWhiteSpace(site.FacebookAppId)) && (!string.IsNullOrWhiteSpace(site.FacebookAppSecret))) return true;
             if ((!string.IsNullOrWhiteSpace(site.GoogleClientId)) && (!string.IsNullOrWhiteSpace(site.GoogleClientSecret))) return true;
             if ((!string.IsNullOrWhiteSpace(site.TwitterConsumerKey)) && (!string.IsNullOrWhiteSpace(site.TwitterConsumerSecret))) return true;
+            if ((!string.IsNullOrWhiteSpace(site.OidConnectAppId)) && (!string.IsNullOrWhiteSpace(site.OidConnectAppSecret)) && (!string.IsNullOrWhiteSpace(site.OidConnectAuthority))) return true;
 
             return false;
         }
-
-        /// <summary>
-        /// this method returns false if not configured in site but
-        /// fails to account for smtp can be configured from config
-        /// </summary>
-        /// <param name="site"></param>
-        /// <returns></returns>
-        //public static bool SmtpIsConfigured(this ISiteContext site)
-        //{
-        //    if (!string.IsNullOrEmpty(site.SmtpServer)) return true;
-
-        //    return false;
-        //}
 
         public static bool SmtpIsConfigured(this ISiteSettings site)
         {
@@ -150,10 +126,5 @@ namespace cloudscribe.Core.Models
 
             return false;
         }
-
-
-
-
-
     }
 }
