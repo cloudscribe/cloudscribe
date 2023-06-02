@@ -1096,7 +1096,7 @@ namespace cloudscribe.Core.Storage.EFCore.Common
                 var listQuery = from x in dbContext.Roles
                                 where (
                                 x.SiteId.Equals(siteId) &&
-                                (searchInput == "" || x.RoleName.Contains(searchInput) || x.NormalizedRoleName.Contains(searchInput))
+                                (searchInput == "" || x.RoleName.Contains(searchInput) || x.NormalizedRoleName.Contains(searchInput.ToUpper()))
                                 )
                                 orderby x.NormalizedRoleName ascending
                                 //select new SiteRole

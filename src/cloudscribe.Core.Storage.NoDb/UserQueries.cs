@@ -1215,7 +1215,7 @@ namespace cloudscribe.Core.Storage.NoDb
                 && (
                  (searchInput == "")
                         || x.RoleName.Contains(searchInput)
-                        || x.NormalizedRoleName.Contains(searchInput)
+                        || x.NormalizedRoleName.Contains(searchInput.ToUpper())
                 )
             );
 
