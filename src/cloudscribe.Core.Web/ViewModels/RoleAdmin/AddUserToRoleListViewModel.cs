@@ -9,6 +9,7 @@ using cloudscribe.Core.Models;
 using cloudscribe.Pagination.Models;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace cloudscribe.Core.Web.ViewModels.RoleAdmin
 {
@@ -25,5 +26,7 @@ namespace cloudscribe.Core.Web.ViewModels.RoleAdmin
         public Guid UserId { get; set; }
 
         public IList<string> SelectedRoles { get; set; }
+
+        public string SelectedCheckboxesCSV { get; set; }
     }
 }

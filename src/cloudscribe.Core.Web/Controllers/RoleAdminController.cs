@@ -18,6 +18,7 @@ using Microsoft.Extensions.Options;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace cloudscribe.Core.Web.Controllers.Mvc
@@ -202,33 +203,40 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
             var selectedSite = await SiteManager.GetSiteForDataOperations(model.SiteId, true);
             var user         = await UserManager.Fetch(selectedSite.Id, model.UserId);
 
-            if (user != null && model.SelectedRoles != null)
+            if (user != null && model.SelectedCheckboxesCSV != null)
             {
+                // somewhat clumsy workaround for persisting roles checkboxes across paging
+                model.SelectedRoles = model.SelectedCheckboxesCSV.Split(',').Where(x=>x.Length > 0).ToList();
+
                 foreach(var selectedRole in model.SelectedRoles)
                 {
                     var role = await RoleManager.FindByIdAsync(selectedRole);
 
-                    var canAdd = true;
-                    if (role.NormalizedRoleName == "ADMINISTRATORS")
-                    {
-                        var adminAuthResult = await AuthorizationService.AuthorizeAsync(User, "AdminPolicy");
-                        canAdd = adminAuthResult.Succeeded;
-                    }
+                    if(role != null) {
 
-                    if (canAdd)
-                    {
-                        if ((role != null) && (role.SiteId == selectedSite.Id))
+                        var canAdd = true;
+                        
+                        if (role.NormalizedRoleName == "ADMINISTRATORS")
                         {
-                            await RoleManager.AddUserToRole(user, role);
-
-                            this.AlertSuccess(string.Format(StringLocalizer["{0} was successfully added to the role {1}."],
-                                user.DisplayName,
-                                role.RoleName), true);
+                            var adminAuthResult = await AuthorizationService.AuthorizeAsync(User, "AdminPolicy");
+                            canAdd = adminAuthResult.Succeeded;
                         }
-                    }
-                    else
-                    {
-                        this.AlertDanger(StringLocalizer["Sorry, but only other Administrators can add users to the Administrators role."], true);
+
+                        if (canAdd)
+                        {
+                            if ((role != null) && (role.SiteId == selectedSite.Id))
+                            {
+                                await RoleManager.AddUserToRole(user, role);
+
+                                this.AlertSuccess(string.Format(StringLocalizer["{0} was successfully added to the role {1}."],
+                                    user.DisplayName,
+                                    role.RoleName), true);
+                            }
+                        }
+                        else
+                        {
+                            this.AlertDanger(StringLocalizer["Sorry, but only other Administrators can add users to the Administrators role."], true);
+                        }
                     }
                 }
             }
