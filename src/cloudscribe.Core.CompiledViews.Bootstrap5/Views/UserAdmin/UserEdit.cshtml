@@ -155,11 +155,11 @@
         @if (Model.UserId != Guid.Empty)
         {
 
-            <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#confirmDeleteModal">
+            <button type="button" class="ms-2 btn btn-danger" data-bs-toggle="modal" data-bs-target="#confirmDeleteModal">
                 @sr["Delete"]
             </button>
             @Html.ValidationMessage("deleteerror", new { @class = "text-danger" })
-            <a asp-controller="UserAdmin" asp-action="ChangeUserPassword" asp-route-siteid="@Model.SiteId" asp-route-userid="@Model.UserId">@sr["Change Password"]</a>
+            <a class="ms-2" asp-controller="UserAdmin" asp-action="ChangeUserPassword" asp-route-siteid="@Model.SiteId" asp-route-userid="@Model.UserId">@sr["Change Password"]</a>
         }
     </div>
     <div asp-validation-summary="All" class="text-danger"></div>
@@ -221,7 +221,7 @@
 
         <div class="mb-3 mt-2">
             <span>@sr["Password Reset Email"]</span>
-            <button type="submit" id="btn_resetpwd" class="btn btn-primary">@sr["Send"]</button>
+            <button type="submit" id="btn_resetpwd" class="ms-2 btn btn-primary">@sr["Send"]</button>
         </div>
     </form>
 
