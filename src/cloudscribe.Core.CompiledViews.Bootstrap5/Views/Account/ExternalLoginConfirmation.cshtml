@@ -7,8 +7,8 @@
     var subHeadMessage = string.Format(CultureInfo.CurrentUICulture, sr["Associate your {0} account"], loginProvider);
     var successMessage = string.Format(CultureInfo.CurrentUICulture, sr["You've successfully authenticated with <strong>{0}</strong>."], loginProvider);
 }
-<h2>@ViewData["Title"]</h2>
-<h3>@subHeadMessage</h3>
+<h1>@ViewData["Title"]</h1>
+<h2>@subHeadMessage</h2>
 
 <form asp-controller="Account" asp-action="ExternalLoginConfirmation" asp-route-returnurl='@ViewData["ReturnUrl"]' method="post" class="form-horizontal">
     <div asp-validation-summary="All" class="text-danger"></div>
