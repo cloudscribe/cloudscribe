@@ -11,6 +11,8 @@ using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using Microsoft.AspNetCore.Razor.TagHelpers;
 using Microsoft.Extensions.Options;
 using System.Text;
+using System.Text.RegularExpressions;
+using System.Web;
 
 namespace cloudscribe.Web.Common.TagHelpers
 {
@@ -86,7 +88,16 @@ namespace cloudscribe.Web.Common.TagHelpers
                         foreach(var f in e.Parameters)
                         {
                             if(int.TryParse(f.Value, out int v)) sb.Append(comma + "'" + f.Key + "': " + f.Value);
-                            else sb.Append(comma + "'" + f.Key + "': '" + f.Value + "'");
+                            else 
+                            {
+                                // caution about allowing injected user input back out here - from pen testing
+                                var safeValue = Regex.Replace(f.Value, "[><']", "")
+                                                     .Replace("%3C", "")
+                                                     .Replace("%3E", "")
+                                                     .Replace("%27", "");
+                                sb.Append(comma + "'" + f.Key + "': '" + safeValue + "'");
+                            }
+
                             comma = ",";
                         }
                         sb.Append("}");
