@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Mvc.Razor;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Localization;
 
 namespace Microsoft.AspNetCore.Builder
 {
@@ -121,7 +122,13 @@ namespace Microsoft.AspNetCore.Builder
 
             services.AddMvc(options => {
                 //options.EnableEndpointRouting = false;
-               
+
+                // https://stackoverflow.com/questions/45927545/asp-net-core-model-binding-error-messages-localization-in-asp-net-core-2-0
+
+                var F = services.BuildServiceProvider().GetService<IStringLocalizerFactory>();
+                var L = F.Create("ModelBindingMessages", null);
+                options.ModelBindingMessageProvider.SetAttemptedValueIsInvalidAccessor(
+                        (x, y) => L["The value supplied for {0} is invalid.", y]);
             })
                     .AddViewLocalization(LanguageViewLocationExpanderFormat.Suffix)
                     .AddDataAnnotationsLocalization()
