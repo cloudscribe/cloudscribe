@@ -3,7 +3,7 @@
 // Author:					Joe Audette
 // Created:					2017-05-22
 // Last Modified:			2019-04-22
-// 
+//
 
 using cloudscribe.Core.Identity;
 using cloudscribe.Core.Models;
@@ -36,7 +36,7 @@ namespace cloudscribe.Core.Web.Components
             IUserCommands userCommands,
             IProcessAccountLoginRules loginRulesProcessor,
             INewUserDisplayNameResolver displayNameResolver,
-            IOptions<CustomSocialAuthSchemes> customSchemesAccessor, 
+            IOptions<CustomSocialAuthSchemes> customSchemesAccessor,
             SiteContext currentSite
             //,ILogger<AccountService> logger
             )
@@ -66,7 +66,7 @@ namespace cloudscribe.Core.Web.Components
         protected ISiteContext CurrentSite { get; private set; }
 
         protected virtual async Task<SiteUser> CreateUserFromExternalLogin(
-            ExternalLoginInfo externalLoginInfo, 
+            ExternalLoginInfo externalLoginInfo,
             string providedEmail = null,
             bool? didAcceptTerms = null
             )
@@ -170,7 +170,7 @@ namespace cloudscribe.Core.Web.Components
             var template = new LoginResultTemplate();
             IUserContext userContext = null;
             var email = providedEmail;
-            
+
             template.ExternalLoginInfo = await SignInManager.GetExternalLoginInfoAsync();
             if (template.ExternalLoginInfo == null)
             {
@@ -190,13 +190,13 @@ namespace cloudscribe.Core.Web.Components
 
                     if (!string.IsNullOrWhiteSpace(email))
                     {
-                        template.User = await UserManager.FindByNameAsync(email);   
+                        template.User = await UserManager.FindByNameAsync(email);
                     }
 
                     if (template.User == null)
                     {
                                             //if (CurrentSite.AllowNewRegistration)
-                                            //{ 
+                                            //{
 
                         // Allow new account creation regardless of the site setting 'allow new registrations'
 
@@ -212,12 +212,12 @@ namespace cloudscribe.Core.Web.Components
 
                     if (template.User != null)
                     {
-                        
+
                         // jk - close the loophole whereby the user has supplied an email address that matches a pre-existing cs user
                         // (as opposed to a successful external login which has returned a valid email in its Claims that
                         // matches a pre-existing cs User)
 
-                        if(String.IsNullOrEmpty(providedEmail) && !String.IsNullOrEmpty(email)) 
+                        if(String.IsNullOrEmpty(providedEmail) && !String.IsNullOrEmpty(email))
                         {
                             var identityResult = await UserManager.AddLoginAsync(template.User, template.ExternalLoginInfo);
                             template.IsNewExternalAuthMapping = identityResult != null;
@@ -225,7 +225,7 @@ namespace cloudscribe.Core.Web.Components
                     }
                 }
             }
- 
+
             if (template.User != null)
             {
                 //this will get persisted if login succeeds
@@ -237,10 +237,10 @@ namespace cloudscribe.Core.Web.Components
                     // and we need it to see the updated browserkey to set the claim
                     await UserManager.UpdateAsync(template.User);
                 }
-                
+
                 await LoginRulesProcessor.ProcessAccountLoginRules(template);
             }
-            
+
             if (template.SignInResult == SignInResult.Failed && template.User != null && template.RejectReasons.Count == 0)
             {
                 var updatTokenResult = await SignInManager.UpdateExternalAuthenticationTokensAsync(template.ExternalLoginInfo);
@@ -249,7 +249,7 @@ namespace cloudscribe.Core.Web.Components
 
                 template.SignInResult = await SignInManager.ExternalLoginSignInAsync(template.ExternalLoginInfo.LoginProvider, template.ExternalLoginInfo.ProviderKey, isPersistent: false);
 
-                
+
 
                 if (template.SignInResult.Succeeded)
                 {
@@ -257,19 +257,19 @@ namespace cloudscribe.Core.Web.Components
                     template.User.LastLoginUtc = DateTime.UtcNow;
                     await UserManager.UpdateAsync(template.User);
 
-                }      
+                }
             }
 
             if(template.User != null
-                && template.SignInResult != SignInResult.Success 
+                && template.SignInResult != SignInResult.Success
                 && template.SignInResult != SignInResult.TwoFactorRequired)
             {
-                //clear the external login 
+                //clear the external login
                 await SignInManager.SignOutAsync();
             }
 
             if(template.User != null) { userContext = new UserContext(template.User); }
-            
+
             return new UserLoginResult(
                 template.SignInResult,
                 template.RejectReasons,
@@ -286,7 +286,7 @@ namespace cloudscribe.Core.Web.Components
 
         }
 
-      
+
 
         public virtual async Task<UserLoginResult> TryLogin(LoginViewModel model)
         {
@@ -294,7 +294,7 @@ namespace cloudscribe.Core.Web.Components
             IUserContext userContext = null;
             LdapUser ldapUser = null;
             var isFakeLdapEmail = false;
-            
+
             if(UserManager.Site.UseEmailForLogin && !string.IsNullOrWhiteSpace(model.UserName) && model.UserName.IndexOf("@") > -1)
             {
                 template.User = await UserManager.FindByEmailAsync(model.UserName);
@@ -302,14 +302,14 @@ namespace cloudscribe.Core.Web.Components
 
             if(template.User == null)
             {
-                template.User = await UserManager.FindByNameAsync(model.UserName);  
+                template.User = await UserManager.FindByNameAsync(model.UserName);
             }
 
             if (template.User == null || string.IsNullOrWhiteSpace(template.User.PasswordHash)) //no password on cloudscribe user so could be ldap
             {
                 if (LdapHelper.IsImplemented && !string.IsNullOrWhiteSpace(UserManager.Site.LdapServer) && !string.IsNullOrWhiteSpace(UserManager.Site.LdapDomain))
                 {
-                    ldapUser = await LdapHelper.TryLdapLogin(UserManager.Site as ILdapSettings, model.UserName, model.Password);
+                    ldapUser = await LdapHelper.TryLdapLogin(UserManager.Site as ILdapSettings, model.UserName, model.Password, UserManager.Site.Id.ToString());
                 }
             }
 
@@ -337,7 +337,7 @@ namespace cloudscribe.Core.Web.Components
 
                     if (string.IsNullOrWhiteSpace(cloudscribeUser.Email))
                     {
-                        // identity doesn't allow create user with no email so fake it here then null it out below after sign in. 
+                        // identity doesn't allow create user with no email so fake it here then null it out below after sign in.
                         // the cloudscribe site rules middleware will then force the user to provide an email
                         cloudscribeUser.Email = model.UserName + "@fake-email.com";
                         isFakeLdapEmail = true;
@@ -367,9 +367,9 @@ namespace cloudscribe.Core.Web.Components
                     template.SignInResult = SignInResult.Success;
 
                 }
-                
+
             }
-           
+
             if (template.User != null && ldapUser == null) //these rules don't apply for ldap users
             {
                 await LoginRulesProcessor.ProcessAccountLoginRules(template);
@@ -382,9 +382,9 @@ namespace cloudscribe.Core.Web.Components
 
                 userContext = new UserContext(template.User);
             }
-           
-            if(userContext != null 
-                && template.SignInResult == SignInResult.Failed 
+
+            if(userContext != null
+                && template.SignInResult == SignInResult.Failed
                 &&  template.RejectReasons.Count == 0)
             {
                 var persistent = false;
@@ -428,13 +428,13 @@ namespace cloudscribe.Core.Web.Components
 
                             await SignInManager.SignOutAsync();
                             // security stamp needs to be there before authentication to avoid the problem
-                            
+
                             template.SignInResult = await SignInManager.PasswordSignInAsync(
                                 model.UserName,
                                 model.Password,
                                 persistent,
                                 lockoutOnFailure: false);
-                            
+
                         }
 
                     }
@@ -442,13 +442,13 @@ namespace cloudscribe.Core.Web.Components
                     {
                         await UserManager.UpdateAsync(template.User);
                     }
-  
+
                 }
             }
-            
+
             return new UserLoginResult(
-                template.SignInResult, 
-                template.RejectReasons, 
+                template.SignInResult,
+                template.RejectReasons,
                 userContext,
                 template.IsNewUserRegistration,
                 template.MustAcceptTerms,
@@ -476,7 +476,7 @@ namespace cloudscribe.Core.Web.Components
                 template.User.BrowserKey = Guid.NewGuid().ToString();
                 userContext = new UserContext(template.User);
             }
-            
+
             if(userContext != null
                 && template.SignInResult == SignInResult.Failed //initial state
                 && template.RejectReasons.Count == 0
@@ -485,7 +485,7 @@ namespace cloudscribe.Core.Web.Components
                 var authenticatorCode = model.TwoFactorCode.Replace(" ", string.Empty).Replace("-", string.Empty);
                 template.SignInResult = await SignInManager.TwoFactorAuthenticatorSignInAsync(authenticatorCode, rememberMe, model.RememberMachine);
             }
-            
+
             if (template.SignInResult.Succeeded)
             {
                 //update last login time and browser key
@@ -573,7 +573,7 @@ namespace cloudscribe.Core.Web.Components
 
 
         public virtual async Task<UserLoginResult> TryRegister(
-            RegisterViewModel model, 
+            RegisterViewModel model,
             ModelStateDictionary modelState,
             HttpContext httpContext,
             IHandleCustomRegistration customRegistration
@@ -588,7 +588,7 @@ namespace cloudscribe.Core.Web.Components
             {
                 userName = await UserManager.SuggestLoginNameFromEmail(UserManager.Site.Id, model.Email);
             }
-            
+
             var user = new SiteUser
             {
                 SiteId = UserManager.Site.Id,
@@ -603,7 +603,7 @@ namespace cloudscribe.Core.Web.Components
             };
 
             await customRegistration.ProcessUserBeforeCreate(user, httpContext);
-            
+
 
             if (model.DateOfBirth.HasValue)
             {
@@ -617,9 +617,9 @@ namespace cloudscribe.Core.Web.Components
                     user.AgreementAcceptedUtc = DateTime.UtcNow;
                 }
             }
-            
+
             var result = await UserManager.CreateAsync(user, model.Password);
-            
+
             if (result.Succeeded)
             {
                 template.User = user;
@@ -641,16 +641,16 @@ namespace cloudscribe.Core.Web.Components
                     {
                         modelState.AddModelError(string.Empty, error.Description);
                     }
-                    
+
                 }
             }
-           
 
-            if(template.RejectReasons.Count == 0 
-                && user != null 
+
+            if(template.RejectReasons.Count == 0
+                && user != null
                 && template.SignInResult == SignInResult.Failed // failed is initial state, could have been changed to lockedout
                 && result.Errors.Count<IdentityError>() == 0
-                ) 
+                )
             {
                 await SignInManager.SignInAsync(user, isPersistent: false);
                 template.SignInResult = SignInResult.Success;
@@ -794,7 +794,7 @@ namespace cloudscribe.Core.Web.Components
                     await SignInManager.SignInAsync(user, isPersistent: false);
                 }
             }
-            
+
         }
 
         public virtual async Task<bool> AcceptRegistrationAgreement(ClaimsPrincipal principal)
@@ -882,8 +882,8 @@ namespace cloudscribe.Core.Web.Components
                 case "OpenIdConnect":
                     if (!string.IsNullOrWhiteSpace(UserManager.Site.OidConnectAppId)) { return true; }
                     break;
-               
-                    
+
+
             }
 
             return false;

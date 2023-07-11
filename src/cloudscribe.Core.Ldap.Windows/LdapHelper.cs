@@ -2,6 +2,7 @@
 using cloudscribe.Core.Models.Identity;
 using Microsoft.Extensions.Logging;
 using System;
+using System.Collections.Generic;
 using System.DirectoryServices;
 using System.Threading.Tasks;
 
@@ -22,13 +23,17 @@ namespace cloudscribe.Core.Ldap.Windows
 
         //private bool useRootDn = false;
 
-        
-        public Task<LdapUser> TryLdapLogin(ILdapSettings ldapSettings, string userName, string password)
+        // this implementation assumes only one server is defined in settings.ldapServer
+        public Task<LdapUser> TryLdapLogin(
+            ILdapSettings ldapSettings,
+            string userName,
+            string password,
+            string siteId = null)
         {
             bool success = false;
             LdapUser user = null;
             DirectoryEntry directoryEntry = null;
-            
+
             try
             {
 
@@ -49,7 +54,7 @@ namespace cloudscribe.Core.Ldap.Windows
                 {
                     directoryEntry = new DirectoryEntry("LDAP://" + ldapSettings.LdapServer, ldapSettings.LdapDomain + "\\" + userName, password);
                 }
-                
+
             }
             catch (Exception ex)
             {
@@ -75,7 +80,7 @@ namespace cloudscribe.Core.Ldap.Windows
                 if (success && directoryEntry != null)
                 {
                     user = GetLdapUser(directoryEntry, ldapSettings, userName);
-                    
+
                 }
             }
 
@@ -83,9 +88,31 @@ namespace cloudscribe.Core.Ldap.Windows
             return Task.FromResult(user);
         }
 
+        // this implementation assumes only one server is defined in settings.ldapServer
+        public Task<Dictionary<string,string>> TestLdapServers(
+            ILdapSettings settings,
+            string username,
+            string password)
+        {
+            string message;
+            var ldapUser = TryLdapLogin(settings, username, password).Result;
+            if(ldapUser != null)
+            {
+                message = "PASS";
+            }
+            else
+            {
+                message = "AUTHFAIL";
+            }
+
+            var result = new Dictionary<string, string>();
+            result.Add(settings.LdapServer, message);
+            return Task.FromResult(result);
+        }
+
         private LdapUser GetLdapUser(DirectoryEntry directoryEntry, ILdapSettings ldapSettings, string userName)
         {
-     
+
             DirectorySearcher ds = new DirectorySearcher(directoryEntry);
             ds.Filter = "(&(sAMAccountName=" + userName + "))";
             SearchResult result = ds.FindOne();
@@ -99,7 +126,7 @@ namespace cloudscribe.Core.Ldap.Windows
             if (ent != null)
             {
                 var user = new LdapUser();
-                
+
                 if (ent.Properties["cn"].Value != null)
                 {
                     user.CommonName = ent.Properties["cn"].Value.ToString();

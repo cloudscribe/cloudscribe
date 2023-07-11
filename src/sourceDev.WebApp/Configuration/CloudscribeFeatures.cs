@@ -200,10 +200,13 @@ namespace Microsoft.Extensions.DependencyInjection
             var useWindowsCompatLdap = config.GetValue<bool>("DevOptions:UseWindowsCompatLdap");
             if(useWindowsCompatLdap)
             {
+                //this I think was an experimental LDAP service written by Joe Audette
+                //it is not the one that is normally used in cloudscribe
                 services.AddCloudscribeLdapWindowsSupport(config);
             }
             else
             {
+                //this is the service that normally gets used in cloudscribe for LDAP authentication
                 services.AddCloudscribeLdapSupport(config);
             }
 
