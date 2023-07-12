@@ -33,7 +33,6 @@ namespace cloudscribe.Core.Ldap
 
         public bool IsImplemented { get; } = true;
 
-
         public Task<LdapUser> TryLdapLogin(
             ILdapSettings ldapSettings,
             string userName,
@@ -52,7 +51,6 @@ namespace cloudscribe.Core.Ldap
                 };
             }
 
-
             return Task.FromResult(user);
         }
 
@@ -62,21 +60,7 @@ namespace cloudscribe.Core.Ldap
             string password)
         {
             var result = new Dictionary<string,string>();
-
-            //determine which DN format the LDAP server uses for users
-            string userDn;
-            switch (settings.LdapUserDNFormat)
-            {
-                case "username@LDAPDOMAIN":     //support for Active Directory
-                    userDn = $"{username}@{settings.LdapDomain}";
-                    break;
-                case "uid=username,LDAPDOMAIN": //new additional support for Open LDAP or 389 Directory Server
-                    userDn = $"uid={username},{settings.LdapDomain}";
-                    break;
-                default:
-                    userDn = $"{settings.LdapDomain}\\{username}";
-                    break;
-            }
+            var userDn = makeUserDN(settings, username);
 
             //determine which LDAP server to use
             string[] servers = settings.LdapServer.Split(',');
@@ -84,7 +68,7 @@ namespace cloudscribe.Core.Ldap
             while(activeConnection < servers.Length) //only try each server in the list once
             {
                 string activeServer = servers[activeConnection].Trim();
-                Console.WriteLine($"Trying LDAP: {activeServer}");
+                string message = $"Test Querying LDAP server: {activeServer} for {userDn} -";
                 try
                 {
                     using (var connection = GetConnection(activeServer, settings.LdapPort, settings.LdapUseSsl))
@@ -92,19 +76,38 @@ namespace cloudscribe.Core.Ldap
                         connection.Bind(userDn, password);
                         if (connection.Bound)
                         {
+                            _log.LogInformation($"{message} bind succeeded");
+                            LdapEntry entry = GetOneUserEntry(connection, settings, username);
+                            string mail = entry.GetAttribute("mail").StringValue;
+                            string givenName = entry.GetAttribute("givenName").StringValue;
+                            string sn = entry.GetAttribute("sn").StringValue;
+                            string displayName = entry.GetAttribute("displayName").StringValue;
+                            _log.LogInformation($"{message} user details query succeeded.\nmail: {mail}\ngivenName: {givenName}\nsn: {sn}\ndisplayName: {displayName}");
                             result.Add(activeServer,"PASS");
                         }
                         else
                         {
-                            _log.LogWarning($"LDAP bind failed for {userDn}");
-                            result.Add(activeServer,"AUTHFAIL");
+                            _log.LogWarning($"{message} bind failed");
+                            result.Add(activeServer,"Invalid Credentials");
                         }
                     }
                 }
                 catch(Exception ex)
                 {
-                    _log.LogError($"{ex.Message}:{ex.StackTrace}");
-                    result.Add(activeServer,"CONNECTFAIL");
+                    switch (ex.Message) {
+                        case "Connect Error":
+                            _log.LogError($"{message} connect to LDAP server failed");
+                            result.Add(activeServer,ex.Message);
+                            break;
+                        case "Invalid Credentials":
+                            _log.LogWarning($"{message} bind failed");
+                            result.Add(activeServer,ex.Message);
+                            break;
+                        default:
+                            _log.LogError($"{message} connect to LDAP server failed. The exception was:\n{ex.Message}:{ex.StackTrace}");
+                            result.Add(activeServer, ex.Message);
+                            break;
+                    }
                 }
                 activeConnection++;
             }
@@ -112,11 +115,7 @@ namespace cloudscribe.Core.Ldap
             return Task.FromResult(result);
         }
 
-        private bool ValidateUser(
-            ILdapSettings settings,
-            string username,
-            string password,
-            string siteId)
+        private string makeUserDN(ILdapSettings settings , string username)
         {
             //determine which DN format the LDAP server uses for users
             string userDn;
@@ -129,19 +128,49 @@ namespace cloudscribe.Core.Ldap
                     userDn = $"uid={username},{settings.LdapDomain}";
                     break;
                 default:
-                    userDn = $"{settings.LdapDomain}\\{username}";
+                    userDn = $"{settings.LdapDomain}\\{username}"; //is this also for AD ??
                     break;
             }
+            return userDn;
+        }
+
+        private string makeUserFilter(ILdapSettings settings , string username)
+        {
+            //determine which format a user filter should be in
+            string filter;
+            switch (settings.LdapUserDNFormat)
+            {
+                case "username@LDAPDOMAIN":     //support for Active Directory
+                    filter = $"(&(objectclass=person)(sAMAccountName={username}))";
+                    break;
+                case "uid=username,LDAPDOMAIN": //new additional support for Open LDAP or 389 Directory Server
+                    filter = $"(&(|(objectclass=person)(objectclass=iNetOrgPerson))(uid={username}))";
+                    break;
+                default:
+                    filter = $"(sAMAccountName={username})"; //is this also for AD ??
+                    break;
+            }
+            return filter;
+        }
+
+        private bool ValidateUser(
+            ILdapSettings settings,
+            string username,
+            string password,
+            string siteId)
+        {
+            var userDn = makeUserDN(settings, username);
 
             //determine which LDAP server to use
             string[] servers = settings.LdapServer.Split(',');
             string memCacheKey = $"LdapActiveConnection_{siteId}"; //support for multi-tenancy
             int activeConnection = _memoryCache.TryGetValue<int>(memCacheKey, out activeConnection) ? activeConnection : 0;
             string activeServer = servers[activeConnection].Trim();
+
             int tryCount = 0;
             while (tryCount < servers.Length) //only try each server in the list once
             {
-                Console.WriteLine($"Trying LDAP: {activeServer}");
+                string message = $"Querying LDAP server: {activeServer} for {userDn} -";
                 try
                 {
                     using (var connection = GetConnection(activeServer, settings.LdapPort, settings.LdapUseSsl))
@@ -149,28 +178,41 @@ namespace cloudscribe.Core.Ldap
                         connection.Bind(userDn, password);
                         if (connection.Bound)
                         {
+                            _log.LogInformation($"{message} bind succeeded");
                             _memoryCache.Set(memCacheKey, activeConnection);
                             return true;
                         }
                         else
                         {
-                            _log.LogWarning($"LDAP bind failed for {userDn}");
+                            _log.LogWarning($"{message} bind failed");
+                            _memoryCache.Set(memCacheKey, activeConnection);
                             return false;
                         }
                     }
                 }
                 catch (Exception ex)
                 {
-                    _log.LogError($"{ex.Message}:{ex.StackTrace}");
+                    if(ex.Message == "Invalid Credentials") {
+                        _log.LogWarning($"{message} bind failed");
+                        _memoryCache.Set(memCacheKey, activeConnection);
+                        return false;
+                    }
+                    if(ex.Message == "Connect Error") {
+                        _log.LogError($"{message} connect to LDAP server failed");
+                    }
+                    else
+                    {
+                        _log.LogError($"{message} {ex.Message}:\n{ex.StackTrace}");
+                    }
                 }
+
                 activeConnection = (activeConnection + 1) % servers.Length;
                 activeServer = servers[activeConnection].Trim();
                 tryCount++;
             }
+            _log.LogError($"All LDAP servers failed for {userDn}");
             return false;
         }
-
-
 
         private LdapConnection GetConnection(string server, int port, bool useSsl = false)
         {
@@ -182,11 +224,9 @@ namespace cloudscribe.Core.Ldap
                 //http://stackoverflow.com/questions/386982/novell-ldap-c-novell-directory-ldap-has-anybody-made-it-work
                 conn.SecureSocketLayer = true;
                 conn.UserDefinedServerCertValidationDelegate += LdapSSLCertificateValidator;
-
             }
 
             conn.Connect(server, port);
-
             return conn;
         }
 
@@ -206,6 +246,86 @@ namespace cloudscribe.Core.Ldap
 
         }
 
+        private LdapEntry GetOneUserEntry(
+            LdapConnection conn,
+            ILdapSettings ldapSettings,
+            string username)
+        {
+            string baseDn = ldapSettings.LdapDomain;
+            string filter = makeUserFilter(ldapSettings, username);
+            LdapEntry entry = null;
+            LdapSearchConstraints cons = new LdapSearchConstraints();
+            cons.TimeLimit = 10000 ;
+            string[] attrs = new string[] { "cn", "mail", "givenName", "sn", "displayName" };
+
+            var lsc = conn.Search(
+                baseDn,
+                LdapConnection.ScopeSub,
+                filter,
+                null,
+                false,
+                cons
+                );
+
+            while (lsc.HasMore())
+            {
+                LdapEntry nextEntry = null;
+                try
+                {
+                    nextEntry = lsc.Next();
+                    return nextEntry;
+                }
+                catch(LdapException e)
+                {
+                    Console.WriteLine("Error: " + e.LdapErrorMessage);
+                    //Exception is thrown, go for next entry
+                    continue;
+                }
+
+                Console.WriteLine("\n" + nextEntry.Dn);
+
+                // Get the attribute set of the entry
+                LdapAttributeSet attributeSet = nextEntry.GetAttributeSet();
+                System.Collections.IEnumerator ienum = attributeSet.GetEnumerator();
+
+                // Parse through the attribute set to get the attributes and the  corresponding values
+                while(ienum.MoveNext())
+                {
+                    LdapAttribute attribute=(LdapAttribute)ienum.Current;
+                    string attributeName = attribute.Name;
+                    string attributeVal = attribute.StringValue;
+                    Console.WriteLine( attributeName + "value:" + attributeVal);
+                }
+            }
+
+
+        //     queue = conn.Search(
+        //         ldapSettings.LdapRootDN,
+        //         LdapConnection.SCOPE_SUB,
+        //         filter,
+        //         null,
+        //         false,
+        //         (LdapSearchQueue)null,
+        //         (LdapSearchConstraints)null
+        //         );
+
+        //    if (queue != null)
+        //    {
+        //        LdapMessage message = queue.getResponse();
+        //        if (message != null)
+        //        {
+        //            if (message is LdapSearchResult)
+        //            {
+        //                entry = ((LdapSearchResult)message).Entry;
+        //            }
+        //        }
+        //    }
+        //    else
+        //    {
+        //        _log.LogWarning("queue was null");
+        //    }
+           return entry;
+        }
 
         //private LdapUser BuildUserFromEntry(LdapEntry entry)
         //{

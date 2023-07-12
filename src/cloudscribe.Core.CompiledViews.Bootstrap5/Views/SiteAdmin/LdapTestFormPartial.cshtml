@@ -20,7 +20,7 @@
                 <div class="input-group-prepend">
                     <span class="input-group-text"><i class="@themeSettings.Icons.Username" aria-hidden="true"></i></span>
                 </div>
-                <input asp-for="LdapTestUsername" class="form-control" />
+                <input asp-for="LdapTestUsername" class="form-control" autocomplete="new-password" />
                 <span asp-validation-for="LdapTestUsername" class="invalid-feedback"></span>
             </div>
         </div>
@@ -31,7 +31,7 @@
                 <div class="input-group-prepend">
                     <span class="input-group-text"><i class="@themeSettings.Icons.Password" aria-hidden="true"></i></span>
                 </div>
-                <input asp-for="LdapTestPassword" class="form-control" />
+                <input asp-for="LdapTestPassword" class="form-control" autocomplete="new-password" />
                 <span asp-validation-for="LdapTestPassword" class="invalid-feedback"></span>
             </div>
 

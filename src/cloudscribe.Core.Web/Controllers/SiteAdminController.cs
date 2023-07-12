@@ -1030,35 +1030,23 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
                 switch (result.Value)
                 {
                     case "PASS":
-                        message = result.Key + ": " + StringLocalizer["Test of LDAP connection succeeded, LDAP settings seem to be correct."];
+                        message = result.Key + ": " + StringLocalizer["Test of LDAP connection succeeded, LDAP settings seem to be correct and the user authorisation succeeded."];
                         this.AlertSuccess(message, true);
                         break;
-                    case "CONNECTIONFAIL":
-                        message = result.Key + ": " + StringLocalizer["Test of LDAP connection failed, check the system log for related errors and review your settings."];
-                        this.AlertDanger(message, true);
-                        break;
-                    case "AUTHFAIL":
+                    case "Invalid Credentials":
                         message = result.Key + ": " + StringLocalizer["Test of LDAP connection succeeded, but the user authorisation failed. Check the system log for related errors and review your settings."];
                         this.AlertWarning(message, true);
+                        break;
+                    case "Connect Error":
+                        message = result.Key + ": " + StringLocalizer["Test of LDAP connection failed, check the system log for related errors and review your settings."];
+                        this.AlertDanger(message, true);
                         break;
                 }
 
 
             }
 
-            // var ldapUser = await LdapHelper.TryLdapLogin(siteContext as ILdapSettings, ldapTestUsername, ldapTestPassword);
-            // if(ldapUser == null)
-            // {
-            //     message = StringLocalizer["Test of LDAP authentication failed, check the system log for related errors and review your settings."];
-            //     this.AlertDanger(message, true);
-            // }
-            // else
-            // {
-            //     message = StringLocalizer["Test of LDAP authentication succeeded, LDAP settings seem to be correct."];
-            //     this.AlertSuccess(message, true);
-            // }
             return RedirectToAction("SecuritySettings");
-
 
         }
 
