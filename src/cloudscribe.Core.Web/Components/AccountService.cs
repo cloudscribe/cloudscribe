@@ -309,11 +309,15 @@ namespace cloudscribe.Core.Web.Components
             {
                 if (LdapHelper.IsImplemented && !string.IsNullOrWhiteSpace(UserManager.Site.LdapServer) && !string.IsNullOrWhiteSpace(UserManager.Site.LdapDomain))
                 {
-                    ldapUser = await LdapHelper.TryLdapLogin(UserManager.Site as ILdapSettings, model.UserName, model.Password, UserManager.Site.Id.ToString());
+                    ldapUser = await LdapHelper.TryLdapLogin(
+                        UserManager.Site as ILdapSettings,
+                        model.UserName,
+                        model.Password
+                    );
                 }
             }
 
-            if (ldapUser != null) //ldap auth success
+            if (ldapUser != null && ldapUser.ResultStatus == "PASS") //ldap auth success
             {
                 if(template.User == null)
                 {
@@ -370,7 +374,9 @@ namespace cloudscribe.Core.Web.Components
 
             }
 
-            if (template.User != null && ldapUser == null) //these rules don't apply for ldap users
+            if (template.User != null &&
+                (ldapUser == null || ldapUser.ResultStatus != "PASS")
+            ) //these rules don't apply for ldap users
             {
                 await LoginRulesProcessor.ProcessAccountLoginRules(template);
             }

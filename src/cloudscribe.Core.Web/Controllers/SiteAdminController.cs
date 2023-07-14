@@ -977,7 +977,7 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
 
             selectedSite.LdapDomain                 = model.LdapDomain;
             selectedSite.LdapPort                   = model.LdapPort;
-            selectedSite.LdapRootDN                 = model.LdapRootDN;
+            // selectedSite.LdapRootDN                 = model.LdapRootDN; //should never need this!
             selectedSite.LdapServer                 = model.LdapServer;
             selectedSite.LdapUserDNKey              = model.LdapUserDNKey;
             selectedSite.LdapUserDNFormat           = model.LdapUserDNFormat;
@@ -1027,13 +1027,19 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
             var results = await LdapHelper.TestLdapServers(siteContext as ILdapSettings, ldapTestUsername, ldapTestPassword);
             foreach (var result in results)
             {
-                switch (result.Value)
+                LdapUser user = result.Value;
+                switch (user.ResultStatus)
                 {
                     case "PASS":
-                        message = result.Key + ": " + StringLocalizer["Test of LDAP connection succeeded, LDAP settings seem to be correct and the user authorisation succeeded."];
+                        message = result.Key + ": "
+                            + "<br>" + StringLocalizer["Test of LDAP connection succeeded, LDAP settings seem to be correct and the user authorisation succeeded."]
+                            + "<br>" + StringLocalizer["Firstname"] + ": " + user.FirstName
+                            + "<br>" + StringLocalizer["Lastname"] + ": " + user.LastName
+                            + "<br>" + StringLocalizer["Email"] + ": " + user.Email
+                            + "<br>" + StringLocalizer["Display Name"] + ": " + user.DisplayName;
                         this.AlertSuccess(message, true);
                         break;
-                    case "Invalid Credentials":
+                    case "Bind Failed":
                         message = result.Key + ": " + StringLocalizer["Test of LDAP connection succeeded, but the user authorisation failed. Check the system log for related errors and review your settings."];
                         this.AlertWarning(message, true);
                         break;
@@ -1042,7 +1048,6 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
                         this.AlertDanger(message, true);
                         break;
                 }
-
 
             }
 

@@ -27,8 +27,8 @@ namespace cloudscribe.Core.Ldap.Windows
         public Task<LdapUser> TryLdapLogin(
             ILdapSettings ldapSettings,
             string userName,
-            string password,
-            string siteId = null)
+            string password
+        )
         {
             bool success = false;
             LdapUser user = null;
@@ -60,7 +60,7 @@ namespace cloudscribe.Core.Ldap.Windows
             {
                 string msg = $"Login failure for user: {userName} Exception: {ex.Message}:{ex.StackTrace}";
                 _log.LogError(msg);
-
+                user.ResultStatus = "Invalid Credentials";
             }
             if (directoryEntry != null)
             {
@@ -76,23 +76,25 @@ namespace cloudscribe.Core.Ldap.Windows
                     _log.LogError(msg);
 
                     success = false;
+                    user.ResultStatus = "Invalid Credentials";
                 }
+
                 if (success && directoryEntry != null)
                 {
                     user = GetLdapUser(directoryEntry, ldapSettings, userName);
-
+                    user.ResultStatus = "PASS";
                 }
             }
-
 
             return Task.FromResult(user);
         }
 
         // this implementation assumes only one server is defined in settings.ldapServer
-        public Task<Dictionary<string,string>> TestLdapServers(
+        public Task<Dictionary<string,LdapUser>> TestLdapServers(
             ILdapSettings settings,
             string username,
-            string password)
+            string password
+        )
         {
             string message;
             var ldapUser = TryLdapLogin(settings, username, password).Result;
@@ -102,11 +104,13 @@ namespace cloudscribe.Core.Ldap.Windows
             }
             else
             {
-                message = "AUTHFAIL";
+                message = "Invalid Credentials";
             }
 
-            var result = new Dictionary<string, string>();
-            result.Add(settings.LdapServer, message);
+            var result = new Dictionary<string, LdapUser>();
+            var user = new LdapUser();
+            user.ResultStatus = message;
+            result.Add(settings.LdapServer, user);
             return Task.FromResult(result);
         }
 
