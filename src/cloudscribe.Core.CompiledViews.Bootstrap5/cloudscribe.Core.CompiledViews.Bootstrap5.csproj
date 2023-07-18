@@ -1,8 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk.Razor">
 
   <PropertyGroup>
-    <Description>Bootstrap 5 pre-compiled views for cloudscribe.Core.Web</Description>
-    <Version>6.0.23</Version>
+    <Description>Bootstrap 5 pre-compiled views for cloudscribe.Core.Web</Description>    
     <Version>6.0.25</Version>
     <TargetFramework>net6.0</TargetFramework>
     <AddRazorSupportForMvc>true</AddRazorSupportForMvc>
