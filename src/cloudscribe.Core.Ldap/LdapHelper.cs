@@ -299,9 +299,9 @@ namespace cloudscribe.Core.Ldap
             string filter = makeUserFilter(ldapSettings, username);
             LdapEntry entry = null;
 
-            Console.ForegroundColor = ConsoleColor.Yellow;
-            Console.WriteLine($"Searching for UserDN: {userDn} in BaseDN: {baseDn} with filter: {filter}");
-            Console.ResetColor();
+            // Console.ForegroundColor = ConsoleColor.Yellow;
+            // Console.WriteLine($"Searching for UserDN: {userDn} in BaseDN: {baseDn} with filter: {filter}");
+            // Console.ResetColor();
 
             var lsc = conn.Search(
                 baseDn,
@@ -316,7 +316,7 @@ namespace cloudscribe.Core.Ldap
                 try
                 {
                     entry = lsc.Next();
-                    Console.WriteLine(entry.ToString());
+                    // Console.WriteLine(entry.ToString());
                     if(entry.Dn == userDn) return entry;
                 }
                 catch (LdapException e)
@@ -357,174 +357,5 @@ namespace cloudscribe.Core.Ldap
 
             return user;
         }
-
-        //     while (lsc.HasMore())
-        //     {
-        //         LdapEntry nextEntry = null;
-        //         try
-        //         {
-        //             nextEntry = lsc.Next();
-        //             return nextEntry;
-        //         }
-        //         catch(LdapException e)
-        //         {
-        //             Console.WriteLine("Error: " + e.LdapErrorMessage);
-        //             //Exception is thrown, go for next entry
-        //             continue;
-        //         }
-
-        //         Console.WriteLine("\n" + nextEntry.Dn);
-
-        //         // Get the attribute set of the entry
-        //         LdapAttributeSet attributeSet = nextEntry.GetAttributeSet();
-        //         System.Collections.IEnumerator ienum = attributeSet.GetEnumerator();
-
-        //         // Parse through the attribute set to get the attributes and the  corresponding values
-        //         while(ienum.MoveNext())
-        //         {
-        //             LdapAttribute attribute=(LdapAttribute)ienum.Current;
-        //             string attributeName = attribute.Name;
-        //             string attributeVal = attribute.StringValue;
-        //             Console.WriteLine( attributeName + "value:" + attributeVal);
-        //         }
-        //     }
-
-
-        // //     queue = conn.Search(
-        // //         ldapSettings.LdapRootDN,
-        // //         LdapConnection.SCOPE_SUB,
-        // //         filter,
-        // //         null,
-        // //         false,
-        // //         (LdapSearchQueue)null,
-        // //         (LdapSearchConstraints)null
-        // //         );
-
-        // //    if (queue != null)
-        // //    {
-        // //        LdapMessage message = queue.getResponse();
-        // //        if (message != null)
-        // //        {
-        // //            if (message is LdapSearchResult)
-        // //            {
-        // //                entry = ((LdapSearchResult)message).Entry;
-        // //            }
-        // //        }
-        // //    }
-        // //    else
-        // //    {
-        // //        _log.LogWarning("queue was null");
-        // //    }
-        //    return entry;
-        // }
-
-
-
-
-        //private LdapUser LdapStandardLogin(ILdapSettings ldapSettings, string userName, string password, bool useSsl)
-        //{
-        //    bool success = false;
-        //    LdapUser user = null;
-
-        //    LdapConnection conn = null;
-        //    try
-        //    {
-        //        using (conn = GetConnection(ldapSettings, useSsl))
-        //        {
-
-        //            if ((conn != null) && (conn.Connected))
-        //            {
-        //                LdapEntry entry = null;
-
-        //                try
-        //                {
-        //                    entry = GetOneUserEntry(conn, ldapSettings, userName);
-        //                    if (entry != null)
-        //                    {
-        //                        conn.Bind(entry.DN, password);
-        //                        success = true;
-        //                    }
-        //                    else
-        //                    {
-        //                        _log.LogWarning($"could not find entry for {userName}");
-        //                    }
-        //                }
-        //                catch (Exception ex)
-        //                {
-        //                    string msg = $"Login failure for user: {userName} Exception: {ex.Message}:{ex.StackTrace}";
-        //                    _log.LogError(msg);
-
-        //                    success = false;
-        //                }
-
-        //                if (success)
-        //                {
-        //                    if (entry != null)
-        //                    {
-        //                        user = BuildUserFromEntry(entry);
-        //                    }
-        //                }
-
-        //                conn.Disconnect();
-        //            }
-        //        }
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        string msg = $"Login failure for user: {userName} Exception: {ex.Message}:{ex.StackTrace}";
-        //        _log.LogError(msg);
-
-        //    }
-
-        //    return user;
-        //}
-
-        //private LdapEntry GetOneUserEntry(
-        //    LdapConnection conn,
-        //    ILdapSettings ldapSettings,
-        //    string userName)
-        //{
-
-        //    LdapSearchConstraints constraints = new LdapSearchConstraints();
-
-        //    var filter = "(&(sAMAccountName=" + userName + "))";
-        //    //ldapSettings.LdapUserDNKey + "=" + search,
-
-        //    LdapSearchQueue queue = null;
-        //    queue = conn.Search(
-        //        ldapSettings.LdapRootDN,
-        //        LdapConnection.SCOPE_SUB,
-        //        filter,
-        //        null,
-        //        false,
-        //        (LdapSearchQueue)null,
-        //        (LdapSearchConstraints)null
-        //        );
-
-
-
-        //    LdapEntry entry = null;
-
-        //    if (queue != null)
-        //    {
-        //        LdapMessage message = queue.getResponse();
-        //        if (message != null)
-        //        {
-        //            if (message is LdapSearchResult)
-        //            {
-        //                entry = ((LdapSearchResult)message).Entry;
-        //            }
-        //        }
-        //    }
-        //    else
-        //    {
-        //        _log.LogWarning("queue was null");
-        //    }
-
-        //    return entry;
-        //}
-
-
-
     }
 }
