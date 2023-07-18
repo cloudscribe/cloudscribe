@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <Description>common static resources for web applications including ckeditor datepickers, and other js and css</Description>
-    <Version>6.0.10</Version>
+    <Version>6.0.11</Version>
     <TargetFramework>net6.0</TargetFramework>
     <Authors>Joe Audette</Authors>
     <PackageTags>cloudscribe</PackageTags>
@@ -14,12 +14,14 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="js\bootstrap4-datetimepicker.min.js" />
     <None Remove="js\bootstrap5.bundle.js" />
     <None Remove="js\bootstrap5.bundle.min.js" />
     <None Remove="js\cloudscribe-autologout-warning.js" />
     <None Remove="js\cloudscribe-autologout-warning.min.js" />
     <None Remove="js\cloudscribe-modaldialog-pagination.js" />
     <None Remove="js\cloudscribe-modaldialog-pagination.min.js" />
+    <None Remove="js\moment-with-locales.min.js" />
   </ItemGroup>
 
   <ItemGroup>
@@ -28,12 +30,12 @@
 
 <ItemGroup>
     <EmbeddedResource Include="js\baguetteBox.min.js" />
+    <EmbeddedResource Include="js\bootstrap4-datetimepicker.min.js" />
     <EmbeddedResource Include="js\bootstrap-datetimepicker-old.min.js" />
     <EmbeddedResource Include="js\bootstrap-datetimepicker.min.js" />
     <EmbeddedResource Include="js\bootstrap-tooltip-toggle.js" />
     <EmbeddedResource Include="js\bootstrap-treeview.js" />
     <EmbeddedResource Include="js\bootstrap-treeview.min.js" />
-    <EmbeddedResource Include="js\bootstrap4-datetimepicker.min.js" />
     <EmbeddedResource Include="js\bootstrap4.bundle.min.js" />
     <EmbeddedResource Include="js\bootstrap5.bundle.js" />
     <EmbeddedResource Include="js\bootstrap5.bundle.min.js" />
