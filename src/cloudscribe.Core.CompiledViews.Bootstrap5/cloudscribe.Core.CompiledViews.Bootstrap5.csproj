@@ -3,6 +3,7 @@
   <PropertyGroup>
     <Description>Bootstrap 5 pre-compiled views for cloudscribe.Core.Web</Description>
     <Version>6.0.23</Version>
+    <Version>6.0.25</Version>
     <TargetFramework>net6.0</TargetFramework>
     <AddRazorSupportForMvc>true</AddRazorSupportForMvc>
     <Authors>Joe Audette</Authors>

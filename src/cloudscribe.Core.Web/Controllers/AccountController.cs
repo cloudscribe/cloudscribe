@@ -1112,8 +1112,22 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
         public virtual async Task<IActionResult> LogOff()
         {
             await AccountService.SignOutAsync();
+
+            if (CurrentSite.SingleBrowserSessions)
+            {
+                // invalidate all other sign-ins, of which there should be none
+                var userid = UserManager.GetUserId(User);
+                if (!String.IsNullOrWhiteSpace(userid))
+                {
+                    var user = await UserManager.FindByIdAsync(userid);
+                    if (user != null)
+                    {
+                        await UserManager.UpdateSecurityStampAsync(user);
+                    }
+                }
+            }
+
             await Analytics.HandleLogout("User Signed Out");
-            //return Redirect("/");
             return this.RedirectToSiteRoot(CurrentSite);
         }
 

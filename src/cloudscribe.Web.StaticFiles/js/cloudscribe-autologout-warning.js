@@ -118,6 +118,11 @@ window.addEventListener("DOMContentLoaded", () => {
     let interval       = Number(dom.dataset.pollingInterval) || 5;
     var secondsLeft    = Number(dom.dataset.secondsLeft) || Number(getRemainingTime(source)) || 0.0;
 
+    // fix for arriving at the 'timed out' page whilst still being logged in
+    if (window.location.href == target) {
+        btnManualLogout();
+    }
+
     if (secondsLeft > 0) {
 
         doCountdownPromise(secondsLeft, interval, alertThreshold, false).then(function () {
