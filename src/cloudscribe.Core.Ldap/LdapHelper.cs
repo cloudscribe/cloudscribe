@@ -130,14 +130,14 @@ namespace cloudscribe.Core.Ldap
             string userDn;
             switch (settings.LdapUserDNFormat)
             {
-                case "username@LDAPDOMAIN":     //support for Active Directory (current)
+                case "username@LDAPDOMAIN":     //support for Active Directory (using userPrincipalName)
                     userDn = $"{username}@{settings.LdapDomain}";
                     break;
                 case "uid=username,LDAPDOMAIN": //new additional support for Open LDAP or 389 Directory Server
                     userDn = $"uid={username},{settings.LdapDomain}";
                     break;
                 default:
-                    userDn = $"{settings.LdapDomain}\\{username}"; //Active Directory, pre Windows 2000?
+                    userDn = $"{settings.LdapDomain}\\{username}"; //Active Directory (using sAMAccountName)
                     break;
             }
             return userDn;
@@ -149,13 +149,13 @@ namespace cloudscribe.Core.Ldap
             string filter;
             switch (settings.LdapUserDNFormat)
             {
-                case "username@LDAPDOMAIN":     //support for Active Directory (current)
+                case "username@LDAPDOMAIN":     //support for Active Directory (using userPrincipalName)
                     filter = $"(sAMAccountName={username})";
                     break;
                 case "uid=username,LDAPDOMAIN": //new additional support for Open LDAP or 389 Directory Server
                     filter = $"(&(|(objectclass=person)(objectclass=iNetOrgPerson))(uid={username}))";
                     break;
-                default:                        //Active Directory, pre Windows 2000?
+                default:                        //Active Directory (using sAMAccountName)
                     filter = $"(sAMAccountName={username})";
                     break;
             }
@@ -168,7 +168,7 @@ namespace cloudscribe.Core.Ldap
             string searchBase = string.Empty;
             switch (settings.LdapUserDNFormat)
             {
-                case "username@LDAPDOMAIN":     //support for Active Directory (current)
+                case "username@LDAPDOMAIN":     //support for Active Directory (using userPrincipalName)
                     var domainParts1 = settings.LdapDomain.Split('.'); //a dotted format domain needs to be converted to a DC= format
                     foreach(var part in domainParts1) searchBase += $"dc={part},";
                     searchBase = "cn=users," + searchBase.TrimEnd(',');
@@ -176,7 +176,7 @@ namespace cloudscribe.Core.Ldap
                 case "uid=username,LDAPDOMAIN": //new additional support for Open LDAP or 389 Directory Server
                     searchBase = settings.LdapDomain; //openldap is consistent, and the same base DN is used for searches and logins
                     break;
-                default:                        //Active Directory, pre Windows 2000?
+                default:                        //Active Directory (using sAMAccountName)
                     var domainParts2 = settings.LdapDomain.Split('.');
                     foreach(var part in domainParts2) searchBase += $"dc={part},";
                     searchBase = "cn=users," + searchBase.TrimEnd(',');
