@@ -1032,19 +1032,27 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
                 {
                     case "PASS":
                         message = result.Key + ": "
-                            + "<br>" + StringLocalizer["Test of LDAP connection succeeded, LDAP settings seem to be correct and the user authorisation succeeded."]
+                            + "<br>" + StringLocalizer["Test of LDAP connection succeeded, LDAP settings seem to be correct and the user authorisation succeeded."];
+                        if (user.FirstName != null || user.LastName != null || user.Email != null || user.DisplayName != null)
+                        {
+                            message += "<br>" + StringLocalizer["The following user details were retrieved from LDAP: "]
                             + "<br>" + StringLocalizer["Firstname"] + ": " + user.FirstName
                             + "<br>" + StringLocalizer["Lastname"] + ": " + user.LastName
                             + "<br>" + StringLocalizer["Email"] + ": " + user.Email
                             + "<br>" + StringLocalizer["Display Name"] + ": " + user.DisplayName;
+                        }
                         this.AlertSuccess(message, true);
                         break;
                     case "Bind Failed":
-                        message = result.Key + ": " + StringLocalizer["Test of LDAP connection succeeded, but the user authorisation failed. Check the system log for related errors and review your settings."];
+                        message = result.Key + ": "
+                            + "<br>" + StringLocalizer["Test of LDAP connection succeeded, but the user authorisation failed."]
+                            + "<br>" + StringLocalizer["Check the system log for related errors and review your settings."];
                         this.AlertWarning(message, true);
                         break;
                     case "Connect Error":
-                        message = result.Key + ": " + StringLocalizer["Test of LDAP connection failed, check the system log for related errors and review your settings."];
+                        message = result.Key + ": "
+                            + "<br>" + StringLocalizer["Test of LDAP connection failed. check the system log for related errors and review your settings."]
+                            + "<br>" + StringLocalizer["Check the system log for related errors and review your settings."];
                         this.AlertDanger(message, true);
                         break;
                 }

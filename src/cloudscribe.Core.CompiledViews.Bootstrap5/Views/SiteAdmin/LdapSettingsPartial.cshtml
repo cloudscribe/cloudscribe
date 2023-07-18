@@ -22,7 +22,7 @@
         <select asp-for="LdapUserDNFormat" class="form-select">
             <option value="username@LDAPDOMAIN">@sr["username@LDAP Domain (Active Directory using userPrincipalName)"]</option>
             <option value="LDAPDOMAIN">@sr["LDAP Domain\\username (Active Directory using sAMAccountName)"]</option>
-            <option value="uid=username,Base DN">@sr["uid=username,LDAPDOMAIN (Open LDAP / 389 Directory Server)"]</option>
+            <option value="uid=username,LDAPDOMAIN">@sr["uid=username,Base DN (Open LDAP / 389 Directory Server)"]</option>
 
         </select>
         <span asp-validation-for="LdapUserDNKey" class="invalid-feedback"></span>
