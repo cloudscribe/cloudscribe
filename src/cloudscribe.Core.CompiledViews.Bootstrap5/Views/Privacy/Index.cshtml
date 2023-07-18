@@ -3,7 +3,7 @@
 @{
     ViewData["Title"] = sr["Privacy Policy"];
 }
-<h2>@ViewData["Title"]</h2>
+<h1>@ViewData["Title"]</h1>
 @if (string.IsNullOrWhiteSpace(Model.PrivacyPolicy))
 {
     @sr["This site has not yet defined a privacy policy"]
