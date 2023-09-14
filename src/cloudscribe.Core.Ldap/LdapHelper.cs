@@ -53,7 +53,6 @@ namespace cloudscribe.Core.Ldap
         {
             var result = new Dictionary<string,LdapUser>();
             var userDn = makeUserDn(settings, username);
-            var user = new LdapUser();
             bool getLdapUserDetails = _configuration.GetValue<bool>("LdapOptions:GetLdapUserDetails", false);
 
             //determine which LDAP server to use
@@ -61,6 +60,7 @@ namespace cloudscribe.Core.Ldap
             int activeConnection = 0;
             while(activeConnection < servers.Length) //only try each server in the list once
             {
+                var user = new LdapUser();
                 string activeServer = servers[activeConnection].Trim(); //the current host/ip we will use
                 string message = $"Test querying LDAP server: {activeServer} for {userDn} -";
                 try
