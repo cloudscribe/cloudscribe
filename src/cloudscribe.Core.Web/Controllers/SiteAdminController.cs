@@ -198,6 +198,13 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
 
             model.Theme = selectedSite.Theme;
 
+            model.CloneSiteName = model.SiteName + " Clone";
+            model.CloneSiteFolderName = model.SiteFolderName + "-clone";
+            var h = model.HostName.Split('.');
+            if (h.Length > 0) h[0] = h[0] + "-clone";
+            model.CloneHostName = string.Join(".", h);
+            model.CloneAliasId = model.AliasId + "-clone";
+
 
             // can only delete from server admin site/cannot delete server admin site
             if (SiteManager.CurrentSite.IsServerAdminSite)
@@ -334,6 +341,13 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
 
                 selectedSite.PreferredHostName = model.HostName;
             }
+
+            model.CloneSiteName = model.SiteName + " Clone";
+            model.CloneSiteFolderName = model.SiteFolderName + "-clone";
+            var h = model.HostName.Split('.');
+            if (h.Length > 0) h[0] = h[0] + "-clone";
+            model.CloneHostName = string.Join(".", h);
+            model.CloneAliasId = model.AliasId + "-clone";
 
             selectedSite.SiteName = model.SiteName;
             selectedSite.TimeZoneId = model.TimeZoneId;
@@ -504,6 +518,62 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
 
             return RedirectToAction("SiteList", new { pageNumber = model.ReturnPageNumber });
 
+        }
+
+        // GET: /SiteAdmin/SiteInfo
+        [HttpGet]
+        [Authorize(Policy = PolicyConstants.AdminPolicy)]
+        public virtual async Task<IActionResult> SiteClone(
+            Guid? siteId,
+            int slp = 1)
+        {
+            ISiteSettings selectedSite;
+            if(siteId.HasValue)
+            {
+                selectedSite = await SiteManager.Fetch(siteId.Value);
+            }
+            else
+            {
+                selectedSite = await SiteManager.Fetch(SiteManager.CurrentSite.Id);
+            }
+
+            if (selectedSite == null)
+            {
+                this.AlertDanger(StringLocalizer["oops something went wrong."], true);
+
+                return RedirectToAction("Index");
+            }
+
+            var newSite = new SiteBasicSettingsViewModel
+            {
+                ReturnPageNumber = slp, // site list page number to return to
+                TimeZoneId = selectedSite.TimeZoneId,
+                SiteId = selectedSite.Id,
+                SiteName = selectedSite.SiteName,
+                AliasId = selectedSite.AliasId,
+                GoogleAnalyticsProfileId = selectedSite.GoogleAnalyticsProfileId,
+                AddThisProfileId = selectedSite.AddThisDotComUsername,
+                IsClosed = selectedSite.SiteIsClosed,
+                ClosedMessage = selectedSite.SiteIsClosedMessage,
+                ShowSiteNameLink = selectedSite.ShowSiteNameLink,
+                HeaderContent = selectedSite.HeaderContent,
+                FooterContent = selectedSite.FooterContent,
+                LogoUrl = selectedSite.LogoUrl
+            };
+
+            if (MultiTenantOptions.Mode == MultiTenantMode.FolderName)
+            {
+                newSite.SiteFolderName = selectedSite.SiteFolderName + "-clone";
+            }
+            else if (MultiTenantOptions.Mode == MultiTenantMode.HostName)
+            {
+                newSite.HostName = selectedSite.PreferredHostName;
+            }
+
+            this.AlertSuccess(string.Format(StringLocalizer["Basic site settings for {0} were successfully created."],
+                        newSite.SiteName), true);
+
+            return RedirectToAction("SiteList", new { pageNumber = newSite.ReturnPageNumber });
         }
 
         [Authorize(Policy = PolicyConstants.AdminPolicy)]

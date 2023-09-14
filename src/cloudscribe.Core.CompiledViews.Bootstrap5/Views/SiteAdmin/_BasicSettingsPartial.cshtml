@@ -218,6 +218,13 @@
             </button>
             @Html.ValidationMessage("deleteerror", new { @class = "text-danger" })
         }
+        @if (Model.SiteId != Guid.Empty)
+        {
+            <button type="button" class="btn btn-secondary float-end" data-bs-toggle="modal" data-bs-target="#settingsCloneModal">
+                @sr["Clone"]
+            </button>
+            @Html.ValidationMessage("cloneerror", new { @class = "text-danger" })
+        }
     </div>
 </form>
 @if ((Model.ShowDelete) && (Model.SiteId != Guid.Empty))
@@ -245,6 +252,84 @@
         </div>
     </form>
 }
+
+@if (Model.SiteId != Guid.Empty)
+{
+    <form id="cloneform" class="form-inline" asp-controller="SiteAdmin"
+          asp-action="SiteClone">
+        <input asp-for="SiteId" type="hidden" />
+        <input asp-for="ReturnPageNumber" type="hidden" />
+        <div class="modal fade" id="settingsCloneModal" tabindex="-1" role="dialog" aria-labelledby="confirmCloneHeading">
+            <div class="modal-dialog modal-lg" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h4 class="modal-title" id="confirmCloneHeading">@sr["Confirm Clone Settings"]</h4>
+                        <button type="button" data-bs-dismiss="modal" class="btn-close" aria-label='@sr["Close"]'></button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="mb-3">
+                            @sr["Please enter the following information for the new site:"]
+                        </div>
+                            <input id="CloneSiteId" name="SiteId" value="" type="hidden" />
+
+                        <div class="mb-3">
+                            <label class="form-label" for="CloneSiteName">@sr["Site Name"]</label>
+                            <input id="CloneSiteName" name="SiteName" value="@Model.CloneSiteName" class="form-control" />
+                            <span asp-validation-for="SiteName" class="invalid-feedback"></span>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label" for="CloneAliasId">@sr["AliasId"]</label>
+                            <input id="CloneAliasId" name="AliasId" value="@Model.CloneAliasId" class="form-control" />
+                            <span asp-validation-for="AliasId" class="invalid-feedback"></span>
+                        </div>
+
+                        @if (useFolderTenants)
+                        {
+                        <div class="mb-3">
+                            <label class="form-label" for="CloneSiteFolderName">@sr["Site Folder Name"]</label>
+                            <div class="input-group">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text">@baseUrl</span>
+                                </div>
+                                <input id="CloneSiteFolderName"
+                                    name="SiteFolderName"
+                                    value="@Model.CloneSiteFolderName"
+                                    class="form-control"
+                                    data-remote-validate-onblur="true"
+                                    data-error-target-id="spnFolderNameWarn"
+                                    data-additional-input-ids="CloneSiteId"
+                                    data-validation-url='@Url.Action("FolderNameAvailable", "SiteAdmin")' />
+                                <span id="spnFolderNameWarn" class="invalid-feedback" data-error-message='@sr["Requested Site Folder Name is not available, please try another value"]'></span>
+                                <span asp-validation-for="CloneSiteFolderName" class="text-danger"></span>
+                                @* @Html.ValidationMessage("foldererror", new { @class = "text-danger" }) *@
+                            </div>
+                        </div>
+                        }
+                        else if (useHostTenants)
+                        {
+                        <div class="mb-3">
+                            <label class="form-label" asp-for="CloneHostName">@sr["Host Name"]</label>
+                            <input asp-for="CloneHostName" class="form-control" />
+                            <span asp-validation-for="CloneHostName" class="invalid-feedback"></span>
+                            @Html.ValidationMessage("hosterror", new { @class = "text-danger" })
+                            <a class="hostmap" asp-action="SiteHostMappings"
+                            asp-controller="SiteAdmin"
+                            asp-route-siteGuid="SiteGuid"
+                            asp-route-slp="ReturnPageNumber">@sr["Domain Mappings"]</a>
+                        </div>
+                        }
+
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-primary" data-bs-dismiss="modal">@sr["Cancel"]</button>
+                        <input type="submit" value='@sr["Clone"]' class="btn btn-danger btn-ok" />
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+}
+
 <div id="fileBrowseDialog" class="modal fade" tabindex="-1" role="dialog">
     <div class="modal-dialog modal-lg" style="height:99%;min-width:99%!important;">
         <div class="modal-content">
