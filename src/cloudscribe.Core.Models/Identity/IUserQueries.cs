@@ -47,6 +47,15 @@ namespace cloudscribe.Core.Models
             string email,
             CancellationToken cancellationToken = default(CancellationToken));
 
+
+        Task<List<ISiteUser>> GetAllUsersForSite(
+            Guid siteId,
+            CancellationToken cancellationToken = default(CancellationToken));
+
+        Task<List<ISiteUser>> GetAllApprovedUsersForSite(
+            Guid siteId,
+            CancellationToken cancellationToken = default(CancellationToken));
+
         Task<List<ISiteUser>> GetUsers(
             Guid siteId,
             List<Guid> userIds,
