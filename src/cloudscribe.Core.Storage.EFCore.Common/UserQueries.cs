@@ -82,6 +82,43 @@ namespace cloudscribe.Core.Storage.EFCore.Common
             
         }
 
+
+        public async Task<List<ISiteUser>> GetAllUsersForSite(
+            Guid siteId,
+            CancellationToken cancellationToken = default(CancellationToken))
+        {
+            cancellationToken.ThrowIfCancellationRequested();
+
+            using (var dbContext = _contextFactory.CreateContext())
+            {
+                var list
+                = await dbContext.Users
+                .AsNoTracking()
+                .Where(x => x.SiteId == siteId)
+                .ToListAsync<ISiteUser>(cancellationToken).ConfigureAwait(false);
+
+                return list;
+            }
+        }
+
+        public async Task<List<ISiteUser>> GetAllApprovedUsersForSite(
+          Guid siteId,
+          CancellationToken cancellationToken = default(CancellationToken))
+        {
+            cancellationToken.ThrowIfCancellationRequested();
+
+            using (var dbContext = _contextFactory.CreateContext())
+            {
+                var list
+                = await dbContext.Users
+                .AsNoTracking()
+                .Where(x => x.SiteId == siteId && x.AccountApproved == true)
+                .ToListAsync<ISiteUser>(cancellationToken).ConfigureAwait(false);
+
+                return list;
+            }
+        }
+
         public async Task<List<ISiteUser>> GetUsers(
             Guid siteId,
             List<Guid> userIds,

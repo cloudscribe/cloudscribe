@@ -63,7 +63,7 @@ namespace cloudscribe.Core.Identity
             _identityOptions             = optionsAccessor.Value;
             _userStore                   = store;
             _commands                    = userCommands ?? throw new ArgumentNullException(nameof(userCommands));
-            _queries                     = userQueries ?? throw new ArgumentNullException(nameof(userQueries));
+            _queries                     = userQueries  ?? throw new ArgumentNullException(nameof(userQueries));
 
             _siteSettings                = currentSite;
             _multiTenantOptions          = multiTenantOptionsAccessor.Value;
@@ -125,7 +125,17 @@ namespace cloudscribe.Core.Identity
 
             return _queries.GetPage(siteId, pageNumber, pageSize, userNameBeginsWith, sortMode, CancellationToken);
         }
-        
+
+        public async Task<List<ISiteUser>> GetAllSiteUsers(Guid siteId, bool approvedOnly=true)
+        {
+            if (_multiTenantOptions.UseRelatedSitesMode) { siteId = _multiTenantOptions.RelatedSiteId; }
+
+            if (approvedOnly)
+                return await _queries.GetAllApprovedUsersForSite(siteId, CancellationToken);
+            else
+                return await _queries.GetAllUsersForSite(siteId, CancellationToken);
+        }
+
         public Task<int> CountUsers(Guid siteId, string userNameBeginsWith)
         {
             if (_multiTenantOptions.UseRelatedSitesMode) { siteId = _multiTenantOptions.RelatedSiteId; }

@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <Description>asp.net identity implementation for cloudscribe web application foundation</Description>
-    <Version>6.0.6</Version>
+    <Version>6.0.7</Version>
     <Authors>Joe Audette</Authors>
     <TargetFramework>net6.0</TargetFramework>
     <PackageTags>cloudscribe;identity</PackageTags>

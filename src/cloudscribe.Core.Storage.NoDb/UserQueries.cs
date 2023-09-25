@@ -126,6 +126,35 @@ namespace cloudscribe.Core.Storage.NoDb
                 ).FirstOrDefault();
         }
 
+        public async Task<List<ISiteUser>> GetAllUsersForSite(
+           Guid siteId,
+           CancellationToken cancellationToken = default(CancellationToken))
+        {
+            cancellationToken.ThrowIfCancellationRequested();
+
+            var projectId = siteId.ToString();
+
+            var allUsers = await userQueries.GetAllAsync(projectId, cancellationToken).ConfigureAwait(false);
+
+            return allUsers.Where(x => x.SiteId == siteId 
+                ).ToList<ISiteUser>();
+        }
+
+        public async Task<List<ISiteUser>> GetAllApprovedUsersForSite(
+          Guid siteId,
+          CancellationToken cancellationToken = default(CancellationToken))
+        {
+            cancellationToken.ThrowIfCancellationRequested();
+
+            var projectId = siteId.ToString();
+
+            var allUsers = await userQueries.GetAllAsync(projectId, cancellationToken).ConfigureAwait(false);
+
+            return allUsers.Where(x => x.SiteId == siteId && x.AccountApproved == true
+                ).ToList<ISiteUser>();
+        }
+
+
         public async Task<List<ISiteUser>> GetUsers(
             Guid siteId,
             List<Guid> userIds,
