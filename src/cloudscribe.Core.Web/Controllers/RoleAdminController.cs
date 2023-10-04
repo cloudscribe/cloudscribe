@@ -332,6 +332,7 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
 
             string successFormat;
             var role = SiteRole.FromISiteRole(model);
+
             if (model.Id == Guid.Empty)
             {
                 var exists = await RoleManager.RoleExistsAsync(model.RoleName);
@@ -348,10 +349,20 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
             }
             else
             {
+                var existingRole = await RoleManager.FindByIdAsync(model.Id.ToString());
+                if(existingRole != null && !role.RoleName.Equals(existingRole.RoleName))
+                {
+                    // hooks available here to respond to a role whose name has changed
+                    await RoleManager.UpdateRole(role, existingRole.RoleName);
+                }
+                else
+                {
+                    await RoleManager.UpdateAsync(role);
+                }
+
                 successFormat = StringLocalizer["The role <b>{0}</b> was successfully updated."];
-                await RoleManager.UpdateAsync(role);
             }
-            
+
             this.AlertSuccess(string.Format(successFormat, role.RoleName), true);
             
             return RedirectToAction("Index", new { siteId = selectedSite.Id, pageNumber = returnPageNumber });
