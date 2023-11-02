@@ -10,13 +10,17 @@
     var docsUrl = "<a href=\"https://www.cloudscribe.com/query-tool\" target=\"_blank\">";
 }
 
-<h2>@ViewData["Title"]</h2>
-
-<p>@introduction</p>
-
-<p>@Html.Raw(String.Format(docsLink, docsUrl, "</a>"))</p>
-
 <form asp-action="Index">
+
+    <div class="form-check form-switch float-end">
+        <label class="form-check-label" for="Tooltip-Switch">@sr["Enable Tooltips"]</label>
+        <input class="form-check-input" type="checkbox" id="Tooltip-Switch" title='@sr["Enable Tooltips"]' asp-for="@Model.EnableTooltips">
+    </div>
+    <h2>@ViewData["Title"]</h2>
+
+    <p>@introduction</p>
+
+    <p>@Html.Raw(String.Format(docsLink, docsUrl, "</a>"))</p>
 
     <div class="row">
         <div class="col-md-10">
@@ -251,6 +255,10 @@
 @section Scripts {
     <script>
         $(document).ready(function() {
+            $('#Tooltip-Switch').on('change', function() {
+                var checked = $(this).prop('checked');
+                $('[data-bs-toggle="tooltip"]').tooltip(checked?'enable':'disable');
+            });
             $('#Insert-Cursor1').on('click', function () {
                 var table = $('#Table').val();
                 var cursor = $('#Query').prop('selectionStart');
@@ -325,6 +333,9 @@
             var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
                 return new bootstrap.Tooltip(tooltipTriggerEl)
             });
+            var checked = $('#Tooltip-Switch').prop('checked');
+            $('[data-bs-toggle="tooltip"]').tooltip(checked?'enable':'disable');
+
         })
     </script>
 }
