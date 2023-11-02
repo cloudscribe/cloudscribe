@@ -103,5 +103,10 @@ namespace cloudscribe.QueryTool.Web
         /// </summary>
         public string? WarningMessage { get; set; }
 
+        /// <summary>
+        /// Do we enable tooltips on the page?
+        /// </summary>
+        public bool EnableTooltips { get; set; } = false;
+
     }
 }
