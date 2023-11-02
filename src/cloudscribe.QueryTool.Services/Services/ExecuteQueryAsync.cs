@@ -19,7 +19,7 @@ namespace cloudscribe.QueryTool.Services
             return dataTable;
         }
 
-        public async Task<DataTable> ExecuteQueryAsync(string query, Dictionary<string,string> parameters)
+        public async Task<DataTable> ExecuteQueryAsync(string query, Dictionary<string,string?> parameters)
         {
             DataTable dataTable = new DataTable();
 

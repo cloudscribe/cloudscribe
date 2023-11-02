@@ -54,6 +54,11 @@ namespace cloudscribe.QueryTool.Web
         public bool QueryIsValid { get; set; } = false;
 
         /// <summary>
+        /// Is the query an API query?
+        /// </summary>
+        public bool QueryIsAPI { get; set; } = false;
+
+        /// <summary>
         /// The result of the query
         /// </summary>
         public DataTable? Data { get; set; }

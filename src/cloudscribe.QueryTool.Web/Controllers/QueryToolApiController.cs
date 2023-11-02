@@ -35,7 +35,7 @@ namespace cloudscribe.QueryTool.Web
 
         [HttpGet]
         [Route("api/querytool/{savedQueryName?}")]
-        public async Task<IActionResult> Index(string savedQueryName = null)
+        public async Task<IActionResult> Index(string? savedQueryName)
         {
             DataTable data = new DataTable();
             ContentResult response;
@@ -54,15 +54,20 @@ namespace cloudscribe.QueryTool.Web
 
                 string query = savedQuery.Statement;
                 bool queryHasParameters = false;
-                var parameters = new Dictionary<string, string>();
-                var requestParameters = HttpContext.Request.Query;
-                if(requestParameters.Count > 0)
+                //Get a list of needed parameters from the SQL Query, all defaulted to null
+                Dictionary<string,string?> parameters = _queryToolService.ExtractParametersFromQueryString(query);
+                if(parameters.Count > 0)
                 {
                     queryHasParameters = true;
+                    var requestParameters = HttpContext.Request.Query;
                     foreach (var item in requestParameters)
                     {
-                        if(parameters.ContainsKey(item.Key)) continue; //ignore duplicate keys, these are SQL parameter names
-                        parameters.Add(item.Key, item.Value);
+                        var key = item.Key.TrimStart('@');
+                        if(parameters.ContainsKey(key))
+                        {
+                            if(parameters[key] != null) continue; //ignore duplicate supplied parameters, just use the first value
+                            parameters[key] = item.Value;
+                        }
                     }
                 }
 

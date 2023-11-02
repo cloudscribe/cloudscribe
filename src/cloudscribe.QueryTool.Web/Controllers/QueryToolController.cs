@@ -11,7 +11,7 @@ using cloudscribe.Web.Common.Serialization;
 using Microsoft.Extensions.Configuration;
 using System.Web;
 using System.Collections.Specialized;
-using System.Data.Common;
+using System.Text.RegularExpressions;
 
 namespace cloudscribe.QueryTool.Web
 {
@@ -51,7 +51,11 @@ namespace cloudscribe.QueryTool.Web
                 }
                 var tables = await _queryToolService.GetTableList();
                 model.TableNames = DataTableToSelectList(tables, "TableName", "TableName");
-                if(string.IsNullOrWhiteSpace(model.Table)) model.Table = model.TableNames.FirstOrDefault()?.Value;
+                if(string.IsNullOrWhiteSpace(model.Table))
+                {
+                    var firstTable = model.TableNames.FirstOrDefault();
+                    if(firstTable != null) model.Table = firstTable.Value;
+                }
 
                 if (!string.IsNullOrWhiteSpace(model.Table))
                 {
@@ -101,10 +105,6 @@ namespace cloudscribe.QueryTool.Web
                 if(query.StartsWith("select ", StringComparison.OrdinalIgnoreCase)) queryWillReturnResults = true;
                 if(query.Contains(" select ", StringComparison.OrdinalIgnoreCase)) queryWillReturnResults = true;
 
-                if(!string.IsNullOrWhiteSpace(model.QueryParameters)) {
-                    queryNVC = HttpUtility.ParseQueryString("?" + model.QueryParameters);
-                    if(queryNVC.Count > 0) queryHasParameters = true;
-                }
             }
 
             try
@@ -114,7 +114,8 @@ namespace cloudscribe.QueryTool.Web
 
                 if(string.IsNullOrWhiteSpace(model.Table))
                 {
-                    var table = model.TableNames.FirstOrDefault().Value;
+                    var firstTable = model.TableNames.FirstOrDefault();
+                    if(firstTable != null) model.Table = firstTable.Value;
                 }
 
                 if (!string.IsNullOrWhiteSpace(model.Table))
@@ -138,13 +139,22 @@ namespace cloudscribe.QueryTool.Web
                     case "export":
                         if (queryIsValid)
                         {
+                            //Get a list of needed parameters from the SQL Query, all defaulted to null
+                            Dictionary<string,string?> parameters = _queryToolService.ExtractParametersFromQueryString(query);
+                            if(parameters.Count > 0) queryHasParameters = true;
+
                             if(queryHasParameters)
                             {
-                                var parameters = new Dictionary<string,string>();
+                                if(!string.IsNullOrWhiteSpace(model.QueryParameters)) {
+                                    queryNVC = HttpUtility.ParseQueryString("?" + model.QueryParameters);
+                                }
                                 foreach(var p in queryNVC.AllKeys)
                                 {
-                                    if(parameters.ContainsKey(p)) continue; //ignore duplicate keys, these are SQL parameter names
-                                    parameters.Add(p, queryNVC[p]??string.Empty);
+                                    if(p != null) {
+                                        var key = p.TrimStart('@');
+                                        if(parameters.ContainsKey(key) && parameters[key]!=null) continue; //ignore duplicate supplied parameters, just use the first value
+                                        parameters[key]=queryNVC[p]; //overwrite the default null value with the supplied value
+                                    }
                                 }
 
                                 if(queryWillReturnResults)
@@ -339,6 +349,15 @@ namespace cloudscribe.QueryTool.Web
             catch(Exception ex)
             {
                 _log.LogError(ex, "QueryTool:\nUserId: " + User.GetUserId() + "\nGetSavedQueriesAsync() failed");
+            }
+
+            if (!string.IsNullOrWhiteSpace(model.SavedQueryName))
+            {
+                var savedQuery = await _queryToolService.LoadQueryAsync(model.SavedQueryName);
+                if (savedQuery != null)
+                {
+                    model.QueryIsAPI = savedQuery.EnableAsApi;
+                }
             }
 
             if(model.WarningMessage != null) this.AlertWarning(model.WarningMessage, true);
