@@ -15,7 +15,8 @@ namespace cloudscribe.QueryTool.Services
                     Dictionary<string,string> jsonRow = new Dictionary<string, string>();
                     foreach (DataColumn col in table.Columns)
                     {
-                        jsonRow.Add(col.ColumnName, row[col].ToString());
+                        var value = row[col].ToString();
+                        jsonRow.Add(col.ColumnName, value ?? string.Empty);
                     }
                     list.Add(jsonRow);
                 }

@@ -91,11 +91,6 @@
                     data-bs-toggle="tooltip" data-bs-placement="top"
                     autocomplete="">@Model.Query</textarea>
             </div>
-            <div class="mb-3">
-                <label for="QueryParameters" class="form-label">@sr["Optional Query Parameters"]:</label>
-                <input id="QueryParameters" asp-for="QueryParameters" class="form-control" title='@sr["Optional query parameters in the format: param1=value&param2=value... etc."]'
-                    data-bs-toggle="tooltip" data-bs-placement="top" autocomplete="" value="@Model.QueryParameters">
-            </div>
         </div>
         <div class="col-md-2 text-start">
             <br />
@@ -107,6 +102,24 @@
                 <button class="btn btn-primary btn-sm mt-2" type="submit" name="Command" title='@sr["Clear Query"]'
                     data-bs-toggle="tooltip" data-bs-placement="bottom"
                     value="clear">@sr["Clear Query"]</button>
+            </div>
+        </div>
+        <div class="col-md-10">
+            <div class="mb-3">
+                <label for="QueryParameters" class="form-label">@sr["Optional Query Parameters"]:</label>
+                <input id="QueryParameters" asp-for="QueryParameters" class="form-control" title='@sr["Optional query parameters in the format: param1=value&param2=value... etc."]'
+                    data-bs-toggle="tooltip" data-bs-placement="top" autocomplete="" value="@Model.QueryParameters">
+            </div>
+        </div>
+        <div class="col-md-2 text-start">
+            <br />
+            <div class="mb-3" id="QueryParameterActions">
+                @if (Model.QueryIsAPI)
+                {
+                <button id="Test-Query-Api" class="btn btn-primary btn-sm mt-2" type="button"
+                    data-query-name="@Model.SavedQueryName" title='@sr["Test Query via API >>"]'
+                    data-bs-toggle="tooltip" data-bs-placement="top">@sr["Test Query via API >>"]</button>
+                }
             </div>
         </div>
     </div>
@@ -291,6 +304,15 @@
                     $('#HighlightText').val('');
                     $('#HighlightStart').val(0);
                     $('#HighlightEnd').val(0);
+                }
+            });
+            $('#Test-Query-Api').on('click', function () {
+                var queryName = $(this).data('query-name');
+                if(queryName) {
+                    var url = '@Url.Action("Index", "QueryToolApi")';
+                    var params = $('#QueryParameters').val();
+                    url = url + '/' + queryName + '?' + params;
+                    window.open(url, 'QueryTool');
                 }
             });
             $('#Results-Expand').on('click', function() {

@@ -2,6 +2,7 @@ using System.Data;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using cloudscribe.QueryTool.Models;
+using System.Text.RegularExpressions;
 
 namespace cloudscribe.QueryTool.Web
 {
@@ -16,16 +17,18 @@ namespace cloudscribe.QueryTool.Web
             {
                 foreach (DataRow row in table.Rows)
                 {
-                    if(row[valueField].ToString().Length > vLength) vLength = row[valueField].ToString().Length;
+                    var value = row[valueField].ToString();
+                    if(value != null && value.Length > vLength) vLength = value.Length;
                 }
             }
 
             foreach (DataRow row in table.Rows)
             {
-                string text = row[textField].ToString();
+                var text = row[textField].ToString();
                 if (prefixTextWithValue)
                 {
-                    text = row[valueField].ToString().PadRight(vLength + 1, (char)160) + "| " + text;
+                    var value = row[valueField].ToString();
+                    if(value != null) text = value.PadRight(vLength + 1, (char)160) + "| " + text;
                 }
                 list.Add(new SelectListItem()
                 {
@@ -61,23 +64,31 @@ namespace cloudscribe.QueryTool.Web
             {
                 if(q == null) continue;
                 string text = "";
+                string value = "";
                 foreach(var f in textFields)
                 {
-                    string value = q.GetType().GetProperty(f).GetValue(q).ToString() ?? "";
+                    string v = "";
+                    var field = q.GetType().GetProperty(f);
+                    if(field != null)
+                    {
+                        var v1 = field.GetValue(q) ?? "";
+                        v = v1.ToString() ?? "";
+                    }
+                    if(f == valueField) value = v;
                     switch(f)
                     {
                         case "EnableAsApi":
-                            if(value == "True") text += "(API ✔)" + (char)160 + (char)160;
+                            if(v == "True") text += "(API ✔)" + (char)160 + (char)160;
                             break;
                         case "Name":
-                            text += value + ":" + (char)160 + (char)160;
+                            text += v + ":" + (char)160 + (char)160;
                             break;
                         case "Statement":
-                            if(value.Length > 40) text +="\"" + value.Substring(0, 39) + "...\"" + (char)160 + (char)160;
-                            else text += "\"" + value + "\""  + (char)160 + (char)160;
+                            if(v.Length > 40) text +="\"" + v.Substring(0, 39) + "...\"" + (char)160 + (char)160;
+                            else text += "\"" + v + "\""  + (char)160 + (char)160;
                             break;
                         default:
-                            text += value  + (char)160 + (char)160;
+                            text += v  + (char)160 + (char)160;
                             break;
                    }
                 }
@@ -86,7 +97,7 @@ namespace cloudscribe.QueryTool.Web
                 list.Add(new SelectListItem()
                 {
                     Text = text,
-                    Value = q.GetType().GetProperty(valueField).GetValue(q).ToString()
+                    Value = value //q.GetType().GetProperty(valueField).GetValue(q).ToString()
                 });
             }
 

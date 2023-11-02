@@ -19,7 +19,7 @@ namespace cloudscribe.QueryTool.Services
             return rows;
         }
 
-        public async Task<int> ExecuteNonQueryAsync(string query, Dictionary<string,string> parameters)
+        public async Task<int> ExecuteNonQueryAsync(string query, Dictionary<string,string?> parameters)
         {
             int rows = 0;
 
