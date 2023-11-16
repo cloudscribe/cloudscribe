@@ -1084,7 +1084,8 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
             return RedirectToAction("UserEdit", "UserAdmin", new { siteId = selectedSite.Id, userId });
         }
 
-        [Authorize(Policy = PolicyConstants.RoleAdminPolicy)]
+        [Authorize(Policy = PolicyConstants.UserManagementPolicy)]
+        [Authorize(Policy = PolicyConstants.RoleLookupPolicy)]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public virtual async Task<IActionResult> RemoveRole(
