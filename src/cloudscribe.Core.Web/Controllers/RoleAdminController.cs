@@ -197,7 +197,8 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
 
 
         [HttpPost]
-        [Authorize(Policy = PolicyConstants.RoleAdminPolicy)]
+        [Authorize(Policy = PolicyConstants.UserManagementPolicy)]
+        [Authorize(Policy = PolicyConstants.RoleLookupPolicy)]
         public virtual async Task<IActionResult> AddUserToRoles(AddUserToRoleListViewModel model)
         {
             var selectedSite = await SiteManager.GetSiteForDataOperations(model.SiteId, true);
@@ -415,7 +416,8 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
 
 
         [HttpGet]
-        [Authorize(Policy = PolicyConstants.RoleAdminPolicy)]
+        [Authorize(Policy = PolicyConstants.UserManagementPolicy)]
+        [Authorize(Policy = PolicyConstants.RoleLookupPolicy)]
         public virtual async Task<IActionResult> RoleMembers(
             Guid? siteId,
             Guid roleId,
@@ -476,7 +478,8 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
         }
 
         [HttpGet]
-        [Authorize(Policy = PolicyConstants.RoleAdminPolicy)]
+        [Authorize(Policy = PolicyConstants.UserManagementPolicy)]
+        [Authorize(Policy = PolicyConstants.RoleLookupPolicy)]
         public virtual async Task<IActionResult> RoleNonMembers(
             Guid? siteId,
             Guid roleId,
@@ -541,7 +544,8 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
         }
 
         [HttpPost]
-        [Authorize(Policy = PolicyConstants.RoleAdminPolicy)]
+        [Authorize(Policy = PolicyConstants.UserManagementPolicy)]
+        [Authorize(Policy = PolicyConstants.RoleLookupPolicy)]
         public virtual async Task<IActionResult> AddUser(
             Guid? siteId, 
             Guid roleId, 
