@@ -1121,7 +1121,7 @@
     <value>Require Users To Accept Changed Agreement?</value>
   </data>
   <data name="Send Email Notification" xml:space="preserve">
-    <value>Send Email Notification</value>
+    <value>Send Email Notification Of Approval</value>
   </data>
   <data name="Use Invisible reCaptcha?" xml:space="preserve">
     <value>Use Invisible reCaptcha?</value>
