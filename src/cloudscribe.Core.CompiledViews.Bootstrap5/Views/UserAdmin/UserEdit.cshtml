@@ -18,15 +18,19 @@
     <form class="form-inline" role="form" asp-controller="UserAdmin" asp-action="ApproveUserAccount" asp-route-returnurl='@ViewData["ReturnUrl"]'>
         <input asp-for="UserId" type="hidden" />
         <input asp-for="SiteId" type="hidden" />
-        <div class="form-check">
-            <input type="checkbox" asp-for="SendApprovalEmail" class="form-check-input" />
-            <label asp-for="SendApprovalEmail" class="form-check-label">@sr["Send Email Notification"]</label>
+        <div class="row mb-4 mt-3 gx-3 align-items-center">
+            <div class="col-md-2 w-auto">
+                <div class="form-check">
+                    <input type="checkbox" asp-for="SendApprovalEmail" class="form-check-input" />
+                    <label asp-for="SendApprovalEmail" class="form-check-label">@sr["Send Email Notification"]</label>
+                </div>
+            </div>
+            <div class="ms-0 col-md-3 w-auto">
+                <button type="submit" class="btn btn-primary">@sr["Approve this account"]</button>
+            </div>
         </div>
-        <button type="submit" class="btn btn-success">@sr["Approve this account"]</button>
     </form>
 }
-
-
 
 
 <form data-submit-once="true" class="form-horizontal" role="form" asp-controller="UserAdmin" asp-action="UserEdit">
