@@ -6,6 +6,7 @@
 //
 
 using cloudscribe.Core.Models;
+using cloudscribe.Core.Models.EventHandlers;
 using cloudscribe.Core.Models.Identity;
 using cloudscribe.Core.Web.Components;
 using cloudscribe.Core.Web.Components.Messaging;
@@ -21,6 +22,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Localization;
 using Microsoft.Extensions.Options;
 using System;
@@ -51,7 +53,9 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
             IOptionsMonitorCache<OpenIdConnectOptions> oidcOptionsCache,
             IOptionsMonitorCache<FacebookOptions>      facebookOptionsCache,
             IOptionsMonitorCache<GoogleOptions>        googleOptionsCache,
-            IOptionsMonitorCache<TwitterOptions>       twitterOptionsCache
+            IOptionsMonitorCache<TwitterOptions>       twitterOptionsCache,
+            ISiteQueries                               siteQueries,
+            IConfiguration                             configuration
             )
         {
             if (multiTenantOptions == null) { throw new ArgumentNullException(nameof(multiTenantOptions)); }
@@ -73,10 +77,13 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
             FacebookOptionsCache = facebookOptionsCache;
             GoogleOptionsCache   = googleOptionsCache;
             TwitterOptionsCache  = twitterOptionsCache;
+            SiteQueries          = siteQueries;
+            Configuration        = configuration;
         }
 
         protected SiteContext CurrentSite;
         protected IOptionsMonitorCache<OpenIdConnectOptions> OidcOptionsCache;
+
         protected SiteManager SiteManager { get; private set; }
         protected GeoDataManager GeoDataManager { get; private set; }
         protected ILdapHelper LdapHelper { get; private set; }
@@ -94,6 +101,9 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
         protected IOptionsMonitorCache<GoogleOptions> GoogleOptionsCache { get; }
         protected IOptionsMonitorCache<TwitterOptions> TwitterOptionsCache { get; }
         protected RequestLocalizationOptions LocalizationOptions { get; private set; }
+        protected ISiteQueries SiteQueries { get; private set; }
+        protected IConfiguration Configuration { get; private set; }
+
 
         // GET: /SiteAdmin
         [Authorize(Policy = PolicyConstants.AdminMenuPolicy)]
@@ -388,6 +398,187 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
 
             return View(model);
         }
+
+
+        // GET: /SiteAdmin/CloneSite
+        [HttpGet]
+        [Authorize(Policy = PolicyConstants.ServerAdminPolicy)]
+        public virtual async Task<ActionResult> CloneSite(int slp = 1)
+        {
+            ViewData["Title"] = StringLocalizer["Create New Site From Existing Site"];
+
+            var model = new NewSiteFromCloneViewModel
+            {
+                ReturnPageNumber = slp, //site list return page
+                SiteId = Guid.Empty,
+                TimeZoneId = SiteManager.CurrentSite.TimeZoneId
+            };
+            model.AllTimeZones = TimeZoneHelper.GetTimeZoneList().Select(x =>
+                               new SelectListItem
+                               {
+                                   Text = x,
+                                   Value = x,
+                                   Selected = model.TimeZoneId == x
+                               });
+
+            List<ISiteInfo> sites = await SiteQueries.GetList();
+
+            bool useFolderNames = Configuration.GetSection("MultiTenantOptions").GetValue<string>("Mode") == "FolderName";
+
+            foreach (var site in sites)
+            {
+                string url = string.Empty;
+                if (useFolderNames) url = "/" + site.SiteFolderName;
+                else url = site.PreferredHostName;
+
+                model.CloneFromSites.Add(new NewSiteFromCloneViewModel.SiteDetails
+                {
+                    SiteId = site.Id,
+                    SiteDescriptor = site.SiteName + " (" + url + ") [ " + site.Id + " ]"
+                });
+            }
+
+            return View(model);
+        }
+
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        [Authorize(Policy = PolicyConstants.ServerAdminPolicy)]
+        public virtual async Task<ActionResult> CloneSite(NewSiteFromCloneViewModel model)
+        {
+            ViewData["Title"] = "Clone Site";
+
+            if (!ModelState.IsValid)
+            {
+                return View(model);
+            }
+
+            bool addHostName = false;
+            var newSite = new SiteSettings
+            {
+                Id = Guid.NewGuid()
+            };
+
+            // Get clone source
+            SiteSettings sourceSite = await SiteManager.Fetch(model.CloneFromSiteId) as SiteSettings;
+
+            if (sourceSite == null)
+            {
+                ModelState.AddModelError("siteerror", StringLocalizer["Source site to clone from was not found."]);
+                return View(model);
+            }
+
+            if (MultiTenantOptions.Mode == MultiTenantMode.FolderName)
+            {
+                if (string.IsNullOrEmpty(model.SiteFolderName))
+                {
+                    model.AllTimeZones = TimeZoneHelper.GetTimeZoneList().Select(x =>
+                               new SelectListItem
+                               {
+                                   Text = x,
+                                   Value = x,
+                                   Selected = model.TimeZoneId == x
+                               });
+                    ModelState.AddModelError("foldererror", StringLocalizer["Folder name is required."]);
+                    return View(model);
+                }
+                else
+                {
+                    //https://github.com/joeaudette/cloudscribe.StarterKits/issues/27
+                    model.SiteFolderName = model.SiteFolderName.ToLowerInvariant();
+                }
+
+                bool folderAvailable = await SiteManager.FolderNameIsAvailable(newSite.Id, model.SiteFolderName);
+                if (!folderAvailable)
+                {
+                    model.AllTimeZones = TimeZoneHelper.GetTimeZoneList().Select(x =>
+                               new SelectListItem
+                               {
+                                   Text = x,
+                                   Value = x,
+                                   Selected = model.TimeZoneId == x
+                               });
+                    ModelState.AddModelError("foldererror", StringLocalizer["The selected folder name is already in use on another site."]);
+                    return View(model);
+                }
+            }
+            else
+            {
+                ISiteHost host;
+                if (!string.IsNullOrEmpty(model.HostName))
+                {
+                    model.HostName = model.HostName.Replace("https://", string.Empty).Replace("http://", string.Empty);
+                    host = await SiteManager.GetSiteHost(model.HostName);
+                    if (host != null)
+                    {
+                        model.AllTimeZones = TimeZoneHelper.GetTimeZoneList().Select(x =>
+                               new SelectListItem
+                               {
+                                   Text = x,
+                                   Value = x,
+                                   Selected = model.TimeZoneId == x
+                               });
+                        ModelState.AddModelError("hosterror", StringLocalizer["The selected host/domain name is already in use on another site."]);
+                        return View(model);
+                    }
+                    addHostName = true;
+                }
+            }
+
+            // only the first site created by setup page should be a server admin site
+            newSite.IsServerAdminSite = false;
+            newSite.SiteName = model.SiteName;
+
+            var siteNumber = 1 + await SiteManager.CountOtherSites(Guid.Empty);
+            newSite.AliasId = $"s{siteNumber}";
+
+
+            if (MultiTenantOptions.Mode == MultiTenantMode.FolderName)
+            {
+                newSite.SiteFolderName = model.SiteFolderName;
+            }
+            else if (addHostName)
+            {
+                newSite.PreferredHostName = model.HostName;
+            }
+
+            newSite.SiteIsClosed = model.IsClosed;
+            newSite.SiteIsClosedMessage = model.ClosedMessage;
+            newSite.TimeZoneId = model.TimeZoneId;
+
+            
+            /// CLONING SPECIFIC 
+            /// ===================
+            await SiteManager.CreateNewSiteFromClone(newSite, sourceSite);
+
+            await SiteManager.CreateRequiredRolesAndAdminUser(
+                newSite,
+                model.Email,
+                model.LoginName,
+                model.DisplayName,
+                model.Password
+                );
+
+            await SiteManager.CreateRolesFromClone(newSite, sourceSite, model.LoginName);
+            
+            await SiteManager.PostProcessClonedSite(newSite, sourceSite);
+
+            ////  -------------------
+
+
+            if (addHostName)
+            {
+                await SiteManager.AddHost(newSite.Id, model.HostName);
+            }
+
+            this.AlertSuccess(string.Format(StringLocalizer["Basic site settings for {0} were successfully cloned."],
+                        newSite.SiteName), true);
+
+            return RedirectToAction("SiteList", new { pageNumber = model.ReturnPageNumber });
+
+        }
+
 
         [HttpPost]
         [ValidateAntiForgeryToken]

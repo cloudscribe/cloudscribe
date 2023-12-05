@@ -6,7 +6,9 @@
 // 
 
 using cloudscribe.Core.DataProtection;
+using cloudscribe.Core.Identity;
 using cloudscribe.Core.Models;
+using cloudscribe.Core.Models.EventHandlers;
 using cloudscribe.Pagination.Models;
 using cloudscribe.Web.Navigation;
 using cloudscribe.Web.Navigation.Caching;
@@ -36,26 +38,27 @@ namespace cloudscribe.Core.Web.Components
             IOptions<MultiTenantOptions> multiTenantOptionsAccessor,
             IOptions<SiteConfigOptions> setupOptionsAccessor,
             CacheHelper cacheHelper,
-            ITreeCache treeCache
-            
+            ITreeCache treeCache,
+            SiteRoleManager<SiteRole> roleManager
             )
         {
 
-            _commands = siteCommands;
-            _queries = siteQueries;
-            _userCommands = userCommands;
-            _userQueries = userQueries;
+            _commands           = siteCommands;
+            _queries            = siteQueries;
+            _userCommands       = userCommands;
+            _userQueries        = userQueries;
             _multiTenantOptions = multiTenantOptionsAccessor.Value;
-            _setupOptions = setupOptionsAccessor.Value;
-            _context = contextAccessor?.HttpContext;
-            _dataProtector = dataProtector;
-            _log = logger;
+            _setupOptions       = setupOptionsAccessor.Value;
+            _context            = contextAccessor?.HttpContext;
+            _dataProtector      = dataProtector;
+            _log                = logger;
 
             //resolver = siteResolver;
-            _currentSite = currentSite;
-            _cacheHelper = cacheHelper;
-            _eventHandlers = siteEventHandlers;
+            _currentSite     = currentSite;
+            _cacheHelper     = cacheHelper;
+            _eventHandlers   = siteEventHandlers;
             _navigationCache = treeCache;
+            _roleManager     = roleManager;
             //_navigationTreeBuilderService = navigationTreeBuilderService;
         }
 
@@ -73,6 +76,8 @@ namespace cloudscribe.Core.Web.Components
         private ISiteContext _currentSite = null;
         private SiteEvents _eventHandlers;
         private readonly ITreeCache _navigationCache;
+        private readonly SiteRoleManager<SiteRole> _roleManager;
+
         //private readonly NavigationTreeBuilderService _navigationTreeBuilderService;
 
 
@@ -290,6 +295,130 @@ namespace cloudscribe.Core.Web.Components
 
         }
 
+        public async Task CreateNewSiteFromClone(ISiteSettings newSite, ISiteSettings sourceSite)
+        {
+            if (newSite == null) { throw new ArgumentNullException("you must pass in an instance of ISiteSettings"); }
+
+            if (string.IsNullOrEmpty(newSite.Theme))
+            {
+                if (string.IsNullOrEmpty(sourceSite.Theme))
+                    newSite.Theme = _setupOptions.DefaultTheme;
+                else
+                    newSite.Theme = sourceSite.Theme;
+            }
+
+            /// Clone lots of things
+            /// Maybe separate out into UI options
+            newSite.RequireCookieConsent       = sourceSite.RequireCookieConsent;
+            newSite.CookiePolicySummary        = sourceSite.CookiePolicySummary;
+            newSite.AllowNewRegistration       = sourceSite.AllowNewRegistration;
+            newSite.RequireConfirmedEmail      = sourceSite.RequireConfirmedEmail;
+            newSite.RequireConfirmedPhone      = sourceSite.RequireConfirmedPhone;
+            newSite.LdapUseSsl                 = sourceSite.LdapUseSsl;
+            newSite.LdapServer                 = sourceSite.LdapServer;
+            newSite.LdapDomain                 = sourceSite.LdapDomain;
+            newSite.LdapPort                   = sourceSite.LdapPort;
+            newSite.LdapRootDN                 = sourceSite.LdapRootDN;
+            newSite.LdapUserDNKey              = sourceSite.LdapUserDNKey;
+            newSite.UseEmailForLogin           = sourceSite.UseEmailForLogin;
+            newSite.DisableDbAuth              = sourceSite.DisableDbAuth;
+            newSite.RequiresQuestionAndAnswer  = sourceSite.RequiresQuestionAndAnswer;
+            newSite.RequireApprovalBeforeLogin = sourceSite.RequireApprovalBeforeLogin;
+            newSite.AccountApprovalEmailCsv    = sourceSite.AccountApprovalEmailCsv;
+            newSite.MaxInvalidPasswordAttempts = sourceSite.MaxInvalidPasswordAttempts;
+            newSite.MinRequiredPasswordLength  = sourceSite.MinRequiredPasswordLength;
+            newSite.PwdRequireNonAlpha         = sourceSite.PwdRequireNonAlpha;
+            newSite.PwdRequireLowercase        = sourceSite.PwdRequireLowercase;
+            newSite.PwdRequireUppercase        = sourceSite.PwdRequireUppercase;
+            newSite.PwdRequireDigit            = sourceSite.PwdRequireDigit;
+            newSite.AllowPersistentLogin       = sourceSite.AllowPersistentLogin;
+            newSite.CaptchaOnRegistration      = sourceSite.CaptchaOnRegistration;
+            newSite.CaptchaOnLogin             = sourceSite.CaptchaOnLogin;
+            newSite.RecaptchaPrivateKey        = sourceSite.RecaptchaPrivateKey;
+            newSite.RecaptchaPublicKey         = sourceSite.RecaptchaPublicKey;
+            newSite.UseInvisibleRecaptcha      = sourceSite.UseInvisibleRecaptcha;
+            newSite.FacebookAppId              = sourceSite.FacebookAppId;
+            newSite.FacebookAppSecret          = sourceSite.FacebookAppSecret;
+            newSite.MicrosoftClientId          = sourceSite.MicrosoftClientId;
+            newSite.MicrosoftClientSecret      = sourceSite.MicrosoftClientSecret;
+            newSite.GoogleClientId             = sourceSite.GoogleClientId;
+            newSite.GoogleClientSecret         = sourceSite.GoogleClientSecret;
+            newSite.TwitterConsumerKey         = sourceSite.TwitterConsumerKey;
+            newSite.TwitterConsumerSecret      = sourceSite.TwitterConsumerSecret;
+            newSite.OidConnectAppId            = sourceSite.OidConnectAppId;
+            newSite.OidConnectAppSecret        = sourceSite.OidConnectAppSecret;
+            newSite.OidConnectAuthority        = sourceSite.OidConnectAuthority;
+            newSite.OidConnectDisplayName      = sourceSite.OidConnectDisplayName;
+            newSite.TimeZoneId                 = sourceSite.TimeZoneId;
+            
+            
+            // We might want to leave out all the company stuff since that's likely to be differrent?
+            newSite.CompanyName                = sourceSite.CompanyName;
+            newSite.CompanyStreetAddress       = sourceSite.CompanyStreetAddress;
+            newSite.CompanyStreetAddress2      = sourceSite.CompanyStreetAddress2;
+            newSite.CompanyLocality            = sourceSite.CompanyLocality;
+            newSite.CompanyRegion              = sourceSite.CompanyRegion;
+            newSite.CompanyPostalCode          = sourceSite.CompanyPostalCode;
+            newSite.CompanyCountry             = sourceSite.CompanyCountry;
+            newSite.CompanyPhone               = sourceSite.CompanyPhone;
+            newSite.CompanyFax                 = sourceSite.CompanyFax;
+            newSite.CompanyPublicEmail         = sourceSite.CompanyPublicEmail;
+            newSite.CompanyWebsite             = sourceSite.CompanyWebsite;
+
+
+            newSite.DefaultEmailFromAddress    = sourceSite.DefaultEmailFromAddress;
+            newSite.DefaultEmailFromAlias      = sourceSite.DefaultEmailFromAlias;
+            newSite.SmtpUser                   = sourceSite.SmtpUser;
+            newSite.SmtpPassword               = sourceSite.SmtpPassword;
+            newSite.SmtpPort                   = sourceSite.SmtpPort;
+            newSite.SmtpPreferredEncoding      = sourceSite.SmtpPreferredEncoding;
+            newSite.SmtpServer                 = sourceSite.SmtpServer;
+            newSite.SmtpRequiresAuth           = sourceSite.SmtpRequiresAuth;
+            newSite.SmtpUseSsl                 = sourceSite.SmtpUseSsl;
+            newSite.DkimPrivateKey             = sourceSite.DkimPrivateKey;
+            newSite.DkimDomain                 = sourceSite.DkimDomain;
+            newSite.DkimSelector               = sourceSite.DkimSelector;
+            newSite.SignEmailWithDkim          = sourceSite.SignEmailWithDkim;
+            newSite.EmailSenderName            = sourceSite.EmailSenderName;
+            newSite.EmailApiKey                = sourceSite.EmailApiKey;
+            newSite.EmailApiEndpoint           = sourceSite.EmailApiEndpoint;
+            newSite.SmsClientId                = sourceSite.SmsClientId;
+            newSite.SmsSecureToken             = sourceSite.SmsSecureToken;
+            newSite.SmsFrom                    = sourceSite.SmsFrom;
+            newSite.GoogleAnalyticsProfileId   = sourceSite.GoogleAnalyticsProfileId;
+            newSite.RegistrationAgreement      = sourceSite.RegistrationAgreement;
+            newSite.RegistrationPreamble       = sourceSite.RegistrationPreamble;
+            newSite.LoginInfoTop               = sourceSite.LoginInfoTop;
+            newSite.LoginInfoBottom            = sourceSite.LoginInfoBottom;
+            newSite.SiteIsClosed               = sourceSite.SiteIsClosed;
+            newSite.SiteIsClosedMessage        = sourceSite.SiteIsClosedMessage;
+            newSite.PrivacyPolicy              = sourceSite.PrivacyPolicy;
+            newSite.IsDataProtected            = sourceSite.IsDataProtected;
+            newSite.ForcedCulture              = sourceSite.ForcedCulture;
+            newSite.ForcedUICulture            = sourceSite.ForcedUICulture;
+            newSite.FooterContent              = sourceSite.FooterContent;
+            newSite.HeaderContent              = sourceSite.HeaderContent;
+            newSite.Require2FA                 = sourceSite.Require2FA;
+            newSite.ShowSiteNameLink           = sourceSite.ShowSiteNameLink;
+            newSite.LogoUrl                    = sourceSite.LogoUrl;
+            newSite.LdapUserDNFormat           = sourceSite.LdapUserDNFormat;
+            newSite.OidConnectScopesCsv        = sourceSite.OidConnectScopesCsv;
+            newSite.SingleBrowserSessions      = sourceSite.SingleBrowserSessions;
+            newSite.AllowUserToChangeEmail     = sourceSite.AllowUserToChangeEmail;
+
+            /// end clone 
+
+            await _commands.Create(newSite, CancellationToken.None);
+
+            if (_multiTenantOptions.Mode == MultiTenantMode.FolderName)
+            {
+                await _cacheHelper.ClearSiteFolderListCache();
+            }
+
+            await _eventHandlers.HandleSiteCreated(newSite).ConfigureAwait(false);
+        }
+
+
         public async Task CreateRequiredRolesAndAdminUser(
             SiteSettings site,
             string adminEmail,
@@ -344,7 +473,49 @@ namespace cloudscribe.Core.Web.Components
         {
             await EnsureRequiredRoles(site);
             await CreateAdminUser(site);
-            
+        }
+
+        public async Task CreateRolesFromClone(
+           SiteSettings newSite,
+           SiteSettings sourceSite,
+           string adminUserName
+            )
+        {
+            var rolesToClone = await _roleManager.GetAllRolesBySite(sourceSite.Id);
+
+            foreach(var role in rolesToClone)
+            {
+                // beware here this RoleExists query operates on normalised name
+                bool exists = await _userQueries.RoleExists(newSite.Id, role.NormalizedRoleName, CancellationToken);
+
+                // Add admin to these roles also - query operates on normalised name
+                var adminUser = await _userQueries.FetchByLoginName(newSite.Id, adminUserName.ToUpperInvariant(), false, CancellationToken);
+
+                if (!exists)
+                {
+                    var clonedRole = new SiteRole
+                    {
+                        RoleName           = role.RoleName,
+                        NormalizedRoleName = role.RoleName.ToUpperInvariant(),
+                        SiteId             = newSite.Id
+                    };
+                    await _userCommands.CreateRole(clonedRole, CancellationToken.None);
+
+                    if(adminUser != null)
+                    { 
+                        await _userCommands.AddUserToRole(
+                        newSite.Id,
+                        clonedRole.Id,
+                        adminUser.Id,
+                        CancellationToken.None);
+                    }
+                }
+            }
+        }
+
+        public async Task PostProcessClonedSite(SiteSettings newSite, SiteSettings sourceSite)
+        {
+            await _eventHandlers.HandleSiteCloned(newSite, sourceSite).ConfigureAwait(false);
         }
 
         public async Task CreateAdminUser(ISiteSettings site)

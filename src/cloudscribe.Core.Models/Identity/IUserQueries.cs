@@ -196,6 +196,10 @@ namespace cloudscribe.Core.Models
             int pageSize,
             CancellationToken cancellationToken = default(CancellationToken));
 
+        Task<List<ISiteRole>> GetAllRolesBySite(
+            Guid siteId,
+            CancellationToken cancellationToken = default(CancellationToken));
+
         Task<List<string>> GetUserRoles(
             Guid siteId,
             Guid userId,
