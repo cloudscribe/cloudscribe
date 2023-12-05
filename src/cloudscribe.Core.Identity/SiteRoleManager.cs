@@ -102,7 +102,15 @@ namespace cloudscribe.Core.Identity
             return await _queries.GetRolesBySite(siteId, searchInput, pageNumber, pageSize, CancellationToken);
         }
 
-        
+        public async Task<List<ISiteRole>> GetAllRolesBySite(
+            Guid siteId)
+        {
+            if (_multiTenantOptions.UseRelatedSitesMode) { siteId = _multiTenantOptions.RelatedSiteId; }
+
+            return await _queries.GetAllRolesBySite(siteId, CancellationToken);
+        }
+
+
         public async Task DeleteUserRolesByRole(Guid roleId)
         {
             var siteId = Site.Id;

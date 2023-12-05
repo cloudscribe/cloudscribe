@@ -1192,6 +1192,60 @@ namespace cloudscribe.Core.Storage.EFCore.Common
         }
 
 
+        public async Task<List<ISiteRole>> GetAllRolesBySite(
+            Guid siteId,
+            CancellationToken cancellationToken = default(CancellationToken))
+        {
+
+            using (var dbContext = _contextFactory.CreateContext())
+            {
+                var listQuery = from x in dbContext.Roles
+                                where (
+                                x.SiteId.Equals(siteId) 
+                                )
+                                orderby x.NormalizedRoleName ascending
+                                //select new SiteRole
+                                //{
+                                //    Id = x.Id,
+                                //    SiteId = x.SiteId,
+                                //    NormalizedRoleName = x.NormalizedRoleName,
+                                //    RoleName = x.RoleName,
+                                //    // 2017-03-21 this line broke
+                                //    // https://github.com/aspnet/EntityFramework/issues/7714
+                                //    MemberCount = dbContext.UserRoles.Count<UserRole>(u => u.RoleId == x.Id)
+                                //};
+                                // workaround need to use anonymous type and then project back into SiteRole
+                                select new
+                                {
+                                    Id = x.Id,
+                                    SiteId = x.SiteId,
+                                    NormalizedRoleName = x.NormalizedRoleName,
+                                    RoleName = x.RoleName,
+                                    MemberCount = dbContext.UserRoles.Count<UserRole>(u => u.RoleId == x.Id)
+                                };
+
+                var anonList = await listQuery
+                    .AsSingleQuery()
+                    .AsNoTracking()
+                    .ToListAsync(cancellationToken)
+                    .ConfigureAwait(false);
+
+                var result = anonList.Select(x =>
+                   new SiteRole
+                   {
+                       Id = x.Id,
+                       SiteId = x.SiteId,
+                       NormalizedRoleName = x.NormalizedRoleName,
+                       RoleName = x.RoleName,
+                       MemberCount = x.MemberCount
+                   }
+                );
+
+                return result.ToList<ISiteRole>();
+            }
+        }
+
+
         public async Task<int> CountUsersInRole(
             Guid siteId,
             Guid roleId,

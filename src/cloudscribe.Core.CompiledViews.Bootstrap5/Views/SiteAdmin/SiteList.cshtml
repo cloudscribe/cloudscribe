@@ -17,10 +17,19 @@
 <table class="table table-striped table-bordered">
     <thead>
         <tr>
-            <th>
+            <th colspan="3">
                 <a class="btn btn-xs btn-primary" asp-action="NewSite"
                    asp-controller="SiteAdmin"
                    asp-route-slp="@Model.Sites.PageNumber">@sr["New Site"]</a>
+                   
+                <a class="btn btn-xs btn-primary ms-2" asp-action="CloneSite"
+                   asp-controller="SiteAdmin"
+                   asp-route-slp="@Model.Sites.PageNumber">@sr["Clone Existing Site"]</a>
+            </th>
+        </tr>
+        <tr>
+            <th>
+                
             </th>
             <th>
                 @sr["Site Name"]

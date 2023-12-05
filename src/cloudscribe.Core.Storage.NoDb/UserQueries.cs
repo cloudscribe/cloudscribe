@@ -1277,6 +1277,42 @@ namespace cloudscribe.Core.Storage.NoDb
 
         }
 
+
+        public async Task<List<ISiteRole>> GetAllRolesBySite(
+            Guid siteId,
+            CancellationToken cancellationToken = default(CancellationToken))
+        {
+            ThrowIfDisposed();
+            cancellationToken.ThrowIfCancellationRequested();
+
+            //await EnsureProjectId().ConfigureAwait(false);
+            var projectId = siteId.ToString();
+
+            var allRoles = await roleQueries.GetAllAsync(projectId, cancellationToken).ConfigureAwait(false);
+            var filteredRoles = allRoles.Where(
+                x => x.SiteId == siteId
+               );
+
+            var allUserRoles = await userRoleQueries.GetAllAsync(projectId, cancellationToken).ConfigureAwait(false);
+
+            var listQuery = from x in filteredRoles
+                            orderby x.NormalizedRoleName ascending
+                            select new SiteRole
+                            {
+                                Id = x.Id,
+                                SiteId = x.SiteId,
+                                NormalizedRoleName = x.NormalizedRoleName,
+                                RoleName = x.RoleName,
+                                MemberCount = allUserRoles.Count<UserRole>(u => u.RoleId == x.Id)
+                            };
+
+            var data = listQuery
+                .ToList<ISiteRole>();
+
+            return data;
+        }
+
+
         public async Task<int> CountUsersInRole(
             Guid siteId,
             Guid roleId,
