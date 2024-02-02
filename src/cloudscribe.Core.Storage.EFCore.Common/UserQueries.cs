@@ -164,8 +164,34 @@ namespace cloudscribe.Core.Storage.EFCore.Common
 
                 return item;
             }
+        }
 
-            
+
+        public async Task<ISiteUser> FetchByLoginNameCaseInsensitive(
+            Guid siteId,
+            string userName,
+            bool allowEmailFallback,
+            CancellationToken cancellationToken = default(CancellationToken))
+        {
+            cancellationToken.ThrowIfCancellationRequested();
+
+            using (var dbContext = _contextFactory.CreateContext())
+            {
+                var item = await dbContext.Users
+                .AsNoTracking()
+                .SingleOrDefaultAsync(
+                    x => x.SiteId == siteId
+                    && (
+                    (x.NormalizedUserName == userName.ToUpperInvariant())
+                    || (allowEmailFallback && x.NormalizedEmail == userName.ToUpperInvariant())
+                    || x.UserName.ToUpperInvariant() == userName.ToUpperInvariant()
+                    ),
+                    cancellationToken
+                    )
+                    .ConfigureAwait(false);
+
+                return item;
+            }
         }
 
         public async Task<List<IUserInfo>> GetByIPAddress(
