@@ -199,6 +199,33 @@ namespace cloudscribe.Core.Storage.NoDb
                 ).FirstOrDefault();
         }
 
+
+        public async Task<ISiteUser> FetchByLoginNameCaseInsensitive(
+            Guid siteId,
+            string userName,
+            bool allowEmailFallback,
+            CancellationToken cancellationToken = default(CancellationToken))
+        {
+            ThrowIfDisposed();
+            cancellationToken.ThrowIfCancellationRequested();
+
+            //await EnsureProjectId().ConfigureAwait(false);
+            var projectId = siteId.ToString();
+
+            var allUsers = await userQueries.GetAllAsync(projectId, cancellationToken).ConfigureAwait(false);
+
+            //string loweredUserName = userName.ToLowerInvariant();
+
+            return allUsers.Where(
+                x => x.SiteId == siteId
+                && (
+                    (x.NormalizedUserName == userName.ToUpperInvariant())
+                    || (allowEmailFallback && x.NormalizedEmail == userName)
+                    || x.UserName.ToUpperInvariant() == userName.ToUpperInvariant()
+                    )
+                ).FirstOrDefault();
+        }
+
         public async Task<List<IUserInfo>> GetByIPAddress(
             Guid siteId,
             string ipv4Address,

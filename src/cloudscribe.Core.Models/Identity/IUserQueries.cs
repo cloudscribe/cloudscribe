@@ -67,6 +67,12 @@ namespace cloudscribe.Core.Models
             bool allowEmailFallback,
             CancellationToken cancellationToken = default(CancellationToken));
 
+        Task<ISiteUser> FetchByLoginNameCaseInsensitive(
+            Guid siteId,
+            string userName,
+            bool allowEmailFallback,
+            CancellationToken cancellationToken = default(CancellationToken));
+
         Task<List<IUserInfo>> GetByIPAddress(
             Guid siteId,
             string ipv4Address,
