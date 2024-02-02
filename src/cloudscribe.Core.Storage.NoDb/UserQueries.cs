@@ -219,9 +219,9 @@ namespace cloudscribe.Core.Storage.NoDb
             return allUsers.Where(
                 x => x.SiteId == siteId
                 && (
-                    (x.NormalizedUserName == userName.ToUpperInvariant())
-                    || (allowEmailFallback && x.NormalizedEmail == userName)
-                    || x.UserName.ToUpperInvariant() == userName.ToUpperInvariant()
+                    (x.NormalizedUserName == userName.ToUpper())
+                    || (allowEmailFallback && x.NormalizedEmail == userName.ToUpper())
+                    || x.UserName.ToUpper() == userName.ToUpper()
                     )
                 ).FirstOrDefault();
         }
