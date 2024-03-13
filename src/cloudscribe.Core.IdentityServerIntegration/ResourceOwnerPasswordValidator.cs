@@ -39,8 +39,10 @@ namespace cloudscribe.Core.IdentityServerIntegration
         public async Task ValidateAsync(ResourceOwnerPasswordValidationContext context)
         {
             var user = await _userManager.FindByNameAsync(context.UserName);
+            bool signInSuccess = false;
 
-            if (user != null && !string.IsNullOrWhiteSpace(user.PasswordHash)) // LDAP users are there but with an empty password
+            //try ordinary sign in if not an LDAP User. LDAP users have an account with no password set.
+            if (user != null && !string.IsNullOrWhiteSpace(user.PasswordHash))
             {
                 if (await _signInManager.CanSignInAsync(user))
                 {
@@ -60,6 +62,7 @@ namespace cloudscribe.Core.IdentityServerIntegration
                         context.Result = new GrantValidationResult(sub, AuthenticationMethods.Password);
 
                         await _handler.HandlePasswordValidationSuccess(user);
+                        signInSuccess = true;
                     }
                     else if (_userManager.SupportsUserLockout)
                     {
@@ -67,36 +70,31 @@ namespace cloudscribe.Core.IdentityServerIntegration
                     }
                 }
             }
-            else  // either no CS user, or a user with no password set - try LDAP
+
+            if(!signInSuccess) // failed a standard login - so possibly try LDAP (if enabled)
             {
                 if (_ldapHelper.IsImplemented && !string.IsNullOrWhiteSpace(_userManager.Site.LdapServer) && !string.IsNullOrWhiteSpace(_userManager.Site.LdapDomain))
                 {
-                    LdapUser ldapUser = await _ldapHelper.TryLdapLogin(_userManager.Site as ILdapSettings, context.UserName, context.Password);
-                    if (ldapUser != null) //ldap auth success  
+                    LdapUser ldapUser = await _ldapHelper.TryLdapLogin(
+                        _userManager.Site as ILdapSettings,
+                        context.UserName,
+                        context.Password
+                    );
+                    if (ldapUser != null && ldapUser.ResultStatus == "PASS") //ldap auth success
                     {
-                        // lets assume that the ldap user has already been created as a user in cs
-                        // So - how best do we find them?
-
-                                 //  ldapUser = new LdapUser() { CommonName = context.UserName };  // ** debug helper
-
-                        var cs_ldapUser = await _userManager.FindByNameAsync(context.UserName);
-                        if (cs_ldapUser == null && !string.IsNullOrWhiteSpace(ldapUser.Email)) // I think the CS LDAPHelper never retrieves this email...
-                            cs_ldapUser = await _userManager.FindByEmailAsync(ldapUser.Email);  
-
-                        if (cs_ldapUser != null)
+                        signInSuccess = true;
+                        if (user != null) //and a CS user exists also
                         {
                             if (_userManager.SupportsUserLockout)
                             {
-                                await _userManager.ResetAccessFailedCountAsync(cs_ldapUser);
+                                await _userManager.ResetAccessFailedCountAsync(user);
                             }
 
-                            var sub = await _userManager.GetUserIdAsync(cs_ldapUser);
+                            var sub = await _userManager.GetUserIdAsync(user);
                             context.Result = new GrantValidationResult(sub, AuthenticationMethods.Password);
-
-                            await _handler.HandlePasswordValidationSuccess(cs_ldapUser);
+                            await _handler.HandlePasswordValidationSuccess(user);
                         }
-                        else // create the CS placeholder user to match the LDAP one
-                             // following same logic here as 'front door' TryLogin
+                        else // No CS user exists yet so create the CS placeholder user to match the LDAP one
                         {
                             var isFakeLdapEmail = false;
 
@@ -119,7 +117,7 @@ namespace cloudscribe.Core.IdentityServerIntegration
 
                             if (string.IsNullOrWhiteSpace(cloudscribeUser.Email))
                             {
-                                // identity doesn't allow create user with no email so fake it here then null it out below after sign in. 
+                                // identity doesn't allow create user with no email so fake it here then null it out below after sign in.
                                 // the cloudscribe site rules middleware will then force the user to provide an email
                                 cloudscribeUser.Email = context.UserName + "@fake-email.com";
                                 isFakeLdapEmail = true;
@@ -128,7 +126,10 @@ namespace cloudscribe.Core.IdentityServerIntegration
                             var createdResult = await _userManager.CreateAsync((TUser)cloudscribeUser);
                             if (createdResult.Succeeded)
                             {
-                                context.Result = new GrantValidationResult(cloudscribeUser.Id.ToString(), AuthenticationMethods.Password);
+                                //need to get newly created user's ID
+                                user = await _userManager.FindByNameAsync(context.UserName);
+                                var sub = await _userManager.GetUserIdAsync(user);
+                                context.Result = new GrantValidationResult(sub, AuthenticationMethods.Password);
 
                                 if (isFakeLdapEmail)
                                 {
@@ -142,8 +143,15 @@ namespace cloudscribe.Core.IdentityServerIntegration
                             }
                         }
                     }
+
                 }
             }
+            //So standard login failed and LDAP login failed
+            if (!signInSuccess)
+            {
+                context.Result = new GrantValidationResult(IdentityServer4.Models.TokenRequestErrors.InvalidGrant);
+            }
+
         }
     }
 }
