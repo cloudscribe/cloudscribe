@@ -22,6 +22,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using cloudscribe.Core.IdentityServerIntegration.Mvc;
+using cloudscribe.Core.IdentityServerIntegration.Handlers;
 
 // https://github.com/IdentityServer/IdentityServer4/issues/19
 
@@ -149,6 +150,9 @@ namespace Microsoft.Extensions.DependencyInjection
 
             builder.Services.AddScoped<cloudscribe.Versioning.IVersionProvider, IntegrationVersionProvider>();
             builder.Services.AddScoped<cloudscribe.Versioning.IVersionProvider, StorageVersionProvider>();
+
+            builder.Services.AddScoped<IHandlePasswordValidation<SiteUser>, NoopHandlePasswordValidation<SiteUser>>();
+
 
             return builder;
         }
