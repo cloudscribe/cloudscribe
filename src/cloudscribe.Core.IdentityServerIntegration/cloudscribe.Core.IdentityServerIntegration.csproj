@@ -2,17 +2,17 @@
 
   <PropertyGroup>
     <Description>cloudscribe multi-tenant identity integration for IdentityServer4</Description>
-    <Version>6.0.1</Version>
+    <Version>6.0.2</Version>
     <TargetFramework>net6.0</TargetFramework>
     <Authors>Joe Audette</Authors>
     <PackageTags>cloudscribe;identity</PackageTags>
     <PackageIcon>icon.png</PackageIcon>
     <PackageProjectUrl>https://github.com/cloudscribe/cloudscribe</PackageProjectUrl>
     <PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
-    
+
     <RepositoryUrl>https://github.com/cloudscribe/cloudscribe.git</RepositoryUrl>
     <RepositoryType>git</RepositoryType>
-    
+
   </PropertyGroup>
 
   <ItemGroup>
@@ -24,26 +24,26 @@
   </ItemGroup>
 
   <ItemGroup>
-    
+
     <ProjectReference Include="..\cloudscribe.Core.Identity\cloudscribe.Core.Identity.csproj" />
-    
+
     <ProjectReference Include="..\cloudscribe.Core.Web\cloudscribe.Core.Web.csproj" />
-    
+
     <ProjectReference Include="..\cloudscribe.Versioning\cloudscribe.Versioning.csproj" />
     <ProjectReference Include="..\cloudscribe.Web.Common\cloudscribe.Web.Common.csproj" />
- 
+
   </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="cloudscribe.Web.Pagination" Version="6.0.0" />
-    
+
     <PackageReference Include="Microsoft.Extensions.Options" Version="6.0.0" />
     <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="6.0.0" />
     <PackageReference Include="Microsoft.Extensions.FileProviders.Embedded" Version="6.0.0" />
-    <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="6.0.0" />    
-    
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="6.0.0" />
+
     <PackageReference Include="IdentityServer4" Version="3.0.1" />
-    
+
   </ItemGroup>
 
 </Project>
