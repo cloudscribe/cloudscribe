@@ -16,7 +16,7 @@
     <input asp-for="NormalizedRoleName" type="hidden" />
     <div asp-validation-summary="All" class="text-danger"></div>
     <div class="mb-3">
-        <label asp-for="RoleName">@sr["Role Name"]</label>
+        <label class="form-label" asp-for="RoleName">@sr["Role Name"]</label>
         <input asp-for="RoleName" class="form-control" />
         <span asp-validation-for="RoleName" class="invalid-feedback"></span>
         @Html.ValidationMessage("roleerror", new { @class = "text-danger" })

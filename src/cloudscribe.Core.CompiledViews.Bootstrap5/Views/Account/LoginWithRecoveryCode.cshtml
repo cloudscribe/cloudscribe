@@ -3,7 +3,7 @@
 @{
     ViewData["BodyClass"] = "account-section login2fa-recovery";
 }
-<h2>@ViewData["Title"]</h2>
+<h1>@ViewData["Title"]</h1>
 <hr />
 <p>
     @sr["You have requested to login with a recovery code. This login will not be remembered until you provide an authenticator app code at login or disable 2FA and login again."]
@@ -11,7 +11,7 @@
 <form method="post">
     <div asp-validation-summary="All" class="text-danger"></div>
     <div class="mb-3">
-        <label asp-for="RecoveryCode"></label>
+        <label class="form-label" asp-for="RecoveryCode"></label>
         <input asp-for="RecoveryCode" class="form-control" autocomplete="off" />
         <span asp-validation-for="RecoveryCode" class="invalid-feedback"></span>
     </div>

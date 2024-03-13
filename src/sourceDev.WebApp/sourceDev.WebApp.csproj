@@ -8,7 +8,7 @@
     <Content Remove="appsettings.Development.json" CopyToPublishDirectory="Never" />
     <Content Remove="bundleconfig.json" />
     <Content Include="appsettings.Development.json" CopyToPublishDirectory="Never" />
-    
+
     <Content Include="sitefiles\**\wwwroot\**" CopyToPublishDirectory="PreserveNewest" />
     <Content Include="SharedThemes\**\wwwroot\**" CopyToPublishDirectory="PreserveNewest" />
   </ItemGroup>
@@ -19,56 +19,64 @@
     <EmbeddedResource Remove="nodb_storage\**" />
     <None Remove="nodb_storage\**" />
   </ItemGroup>
- 
+
   <ItemGroup>
     <None Include="bundleconfig.json" />
   </ItemGroup>
-  
+
   <ItemGroup>
     <None Update="wwwroot\**\*;dp_keys;navigation.xml">
       <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
     </None>
   </ItemGroup>
-  
+
   <ItemGroup>
-    <ProjectReference Include="..\cloudscribe.Core.CompiledViews.Bootstrap5\cloudscribe.Core.CompiledViews.Bootstrap5.csproj" />
-    <ProjectReference Include="..\cloudscribe.Core.IdentityServer.EFCore.PostgreSql\cloudscribe.Core.IdentityServer.EFCore.PostgreSql.csproj" />
-    <ProjectReference Include="..\cloudscribe.Core.IdentityServer.EFCore.SQLite\cloudscribe.Core.IdentityServer.EFCore.SQLite.csproj" />
-    <ProjectReference Include="..\cloudscribe.Core.IdentityServerIntegration\cloudscribe.Core.IdentityServerIntegration.csproj" />
-    <ProjectReference Include="..\cloudscribe.Core.Identity\cloudscribe.Core.Identity.csproj" />
     <ProjectReference Include="..\cloudscribe.Core.Ldap.Windows\cloudscribe.Core.Ldap.Windows.csproj" />
     <ProjectReference Include="..\cloudscribe.Core.Ldap\cloudscribe.Core.Ldap.csproj" />
+
+    <ProjectReference Include="..\cloudscribe.Core.Identity\cloudscribe.Core.Identity.csproj" />
     <ProjectReference Include="..\cloudscribe.Core.Models\cloudscribe.Core.Models.csproj" />
+
     <ProjectReference Include="..\cloudscribe.Core.Storage.EFCore.MSSQL\cloudscribe.Core.Storage.EFCore.MSSQL.csproj" />
     <ProjectReference Include="..\cloudscribe.Core.Storage.EFCore.MySql\cloudscribe.Core.Storage.EFCore.MySql.csproj" />
     <ProjectReference Include="..\cloudscribe.Core.Storage.EFCore.pgsql\cloudscribe.Core.Storage.EFCore.pgsql.csproj" />
     <ProjectReference Include="..\cloudscribe.Core.Storage.EFCore.PostgreSql\cloudscribe.Core.Storage.EFCore.PostgreSql.csproj" />
     <ProjectReference Include="..\cloudscribe.Core.Storage.EFCore.SQLite\cloudscribe.Core.Storage.EFCore.SQLite.csproj" />
     <ProjectReference Include="..\cloudscribe.Core.Storage.NoDb\cloudscribe.Core.Storage.NoDb.csproj" />
+
     <ProjectReference Include="..\cloudscribe.Core.Web\cloudscribe.Core.Web.csproj" />
+    <ProjectReference Include="..\cloudscribe.Core.CompiledViews.Bootstrap5\cloudscribe.Core.CompiledViews.Bootstrap5.csproj" />
+    <ProjectReference Include="..\cloudscribe.Web.StaticFiles\cloudscribe.Web.StaticFiles.csproj" />
+
+    <ProjectReference Include="..\cloudscribe.Core.IdentityServer.EFCore.PostgreSql\cloudscribe.Core.IdentityServer.EFCore.PostgreSql.csproj" />
+    <ProjectReference Include="..\cloudscribe.Core.IdentityServer.EFCore.SQLite\cloudscribe.Core.IdentityServer.EFCore.SQLite.csproj" />
     <ProjectReference Include="..\cloudscribe.Core.IdentityServer.EFCore.MSSQL\cloudscribe.Core.IdentityServer.EFCore.MSSQL.csproj" />
     <ProjectReference Include="..\cloudscribe.Core.IdentityServer.EFCore.MySql\cloudscribe.Core.IdentityServer.EFCore.MySql.csproj" />
     <ProjectReference Include="..\cloudscribe.Core.IdentityServer.EFCore.pgsql\cloudscribe.Core.IdentityServer.EFCore.pgsql.csproj" />
     <ProjectReference Include="..\cloudscribe.Core.IdentityServer.NoDb\cloudscribe.Core.IdentityServer.NoDb.csproj" />
+    <ProjectReference Include="..\cloudscribe.Core.IdentityServerIntegration\cloudscribe.Core.IdentityServerIntegration.csproj" />
     <ProjectReference Include="..\cloudscribe.IdentityServerIntegration.CompiledViews.Bootstrap5\cloudscribe.IdentityServerIntegration.CompiledViews.Bootstrap5.csproj" />
+
     <ProjectReference Include="..\cloudscribe.MigrationHelper.mojoPortal\cloudscribe.MigrationHelper.mojoPortal.csproj" />
-    <ProjectReference Include="..\cloudscribe.Web.StaticFiles\cloudscribe.Web.StaticFiles.csproj" />
+
+    <ProjectReference Include="..\cloudscribe.QueryTool.EFCore.MSSQL\cloudscribe.QueryTool.EFCore.MSSQL.csproj" />
+    <ProjectReference Include="..\cloudscribe.QueryTool.EFCore.PostgreSql\cloudscribe.QueryTool.EFCore.PostgreSql.csproj" />
+    <ProjectReference Include="..\cloudscribe.QueryTool.EFCore.MySql\cloudscribe.QueryTool.EFCore.MySql.csproj" />
+    <ProjectReference Include="..\cloudscribe.QueryTool.EFCore.SQLite\cloudscribe.QueryTool.EFCore.SQLite.csproj" />
+    <ProjectReference Include="..\cloudscribe.QueryTool.Services\cloudscribe.QueryTool.Services.csproj" />
+    <ProjectReference Include="..\cloudscribe.QueryTool.Web\cloudscribe.QueryTool.Web.csproj" />
   </ItemGroup>
-  
+
   <ItemGroup>
-
-    <PackageReference Include="cloudscribe.Web.Localization" Version="6.0.0" />
-
-    <PackageReference Include="cloudscribe.Logging.Web" Version="6.0.0" />
-    <PackageReference Include="cloudscribe.Logging.EFCore.MSSQL" Version="6.0.0" />
-    <PackageReference Include="cloudscribe.Logging.EFCore.MySql" Version="6.0.0" />
-    <PackageReference Include="cloudscribe.Logging.EFCore.pgsql" Version="6.0.0" />
-    <PackageReference Include="cloudscribe.Logging.EFCore.PostgreSql" Version="6.0.0" />
-    <PackageReference Include="cloudscribe.Logging.EFCore.SQLite" Version="6.0.0" />
-    <PackageReference Include="cloudscribe.Logging.NoDb" Version="6.0.0" />
-    
-	<PackageReference Include="IdentityServer4.AccessTokenValidation" Version="3.0.0" />
-
+    <PackageReference Include="cloudscribe.Web.Localization" Version="6.0.*" />
+    <PackageReference Include="cloudscribe.Logging.Web" Version="6.0.*" />
+    <PackageReference Include="cloudscribe.Logging.EFCore.MSSQL" Version="6.0.*" />
+    <PackageReference Include="cloudscribe.Logging.EFCore.MySql" Version="6.0.*" />
+    <PackageReference Include="cloudscribe.Logging.EFCore.pgsql" Version="6.0.*" />
+    <PackageReference Include="cloudscribe.Logging.EFCore.PostgreSql" Version="6.0.*" />
+    <PackageReference Include="cloudscribe.Logging.EFCore.SQLite" Version="6.0.*" />
+    <PackageReference Include="cloudscribe.Logging.NoDb" Version="6.0.*" />
+	  <PackageReference Include="IdentityServer4.AccessTokenValidation" Version="3.0.0" />
   </ItemGroup>
- 
+
 </Project>

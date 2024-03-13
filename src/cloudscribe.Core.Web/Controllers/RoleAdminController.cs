@@ -18,6 +18,7 @@ using Microsoft.Extensions.Options;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace cloudscribe.Core.Web.Controllers.Mvc
@@ -145,7 +146,103 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
                 return PartialView("ModalListPartial", model);
             }
             return PartialView(model);
+        }
 
+
+
+        [HttpGet]
+        [Authorize]
+        public virtual async Task<IActionResult> ModalAddUserToRoles(
+           Guid siteId,
+           Guid userId, 
+           string searchInput = "",
+           bool ajaxGrid = false,
+           int pageNumber = 1,
+           int pageSize = -1)
+        {
+            var selectedSite = await SiteManager.GetSiteForDataOperations(siteId, true);
+            
+            var model = new AddUserToRoleListViewModel
+            {
+                SiteId = selectedSite.Id,
+                UserId = userId 
+            };
+
+            int itemsPerPage = UIOptions.DefaultPageSize_RoleList;
+            if (pageSize > 0)
+            {
+                itemsPerPage = pageSize;
+            }
+
+            if (searchInput == null) searchInput = string.Empty;
+
+            model.SiteRoles = await RoleManager.GetRolesBySite(
+                selectedSite.Id,
+                searchInput,
+                pageNumber,
+                itemsPerPage);
+
+            var user = await UserManager.Fetch(selectedSite.Id, userId);
+            if (user != null)
+            {
+                model.UserRoles = await UserManager.GetRolesAsync((SiteUser)user);
+            }
+
+            if (ajaxGrid)
+            {
+                return PartialView("ModalAddUserToRolesPartial", model);
+            }
+            return PartialView("ModalAddUserToRoles", model);
+        }
+
+
+        [HttpPost]
+        [Authorize(Policy = PolicyConstants.UserManagementPolicy)]
+        [Authorize(Policy = PolicyConstants.RoleLookupPolicy)]
+        public virtual async Task<IActionResult> AddUserToRoles(AddUserToRoleListViewModel model)
+        {
+            var selectedSite = await SiteManager.GetSiteForDataOperations(model.SiteId, true);
+            var user         = await UserManager.Fetch(selectedSite.Id, model.UserId);
+
+            if (user != null && model.SelectedCheckboxesCSV != null)
+            {
+                // somewhat clumsy workaround for persisting roles checkboxes across paging
+                model.SelectedRoles = model.SelectedCheckboxesCSV.Split(',').Where(x=>x.Length > 0).ToList();
+
+                foreach(var selectedRole in model.SelectedRoles)
+                {
+                    var role = await RoleManager.FindByIdAsync(selectedRole);
+
+                    if(role != null) {
+
+                        var canAdd = true;
+                        
+                        if (role.NormalizedRoleName == "ADMINISTRATORS")
+                        {
+                            var adminAuthResult = await AuthorizationService.AuthorizeAsync(User, "AdminPolicy");
+                            canAdd = adminAuthResult.Succeeded;
+                        }
+
+                        if (canAdd)
+                        {
+                            if ((role != null) && (role.SiteId == selectedSite.Id))
+                            {
+                                await RoleManager.AddUserToRole(user, role);
+
+                                this.AlertSuccess(string.Format(StringLocalizer["{0} was successfully added to the role {1}."],
+                                    user.DisplayName,
+                                    role.RoleName), true);
+                            }
+                        }
+                        else
+                        {
+                            this.AlertDanger(StringLocalizer["Sorry, but only other Administrators can add users to the Administrators role."], true);
+                        }
+                    }
+                }
+            }
+
+            return RedirectToAction("UserEdit", "Useradmin", new { userId = model.UserId, siteId = model.SiteId });
         }
 
 
@@ -236,6 +333,7 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
 
             string successFormat;
             var role = SiteRole.FromISiteRole(model);
+
             if (model.Id == Guid.Empty)
             {
                 var exists = await RoleManager.RoleExistsAsync(model.RoleName);
@@ -252,10 +350,20 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
             }
             else
             {
+                var existingRole = await RoleManager.FindByIdAsync(model.Id.ToString());
+                if(existingRole != null && !role.RoleName.Equals(existingRole.RoleName))
+                {
+                    // hooks available here to respond to a role whose name has changed
+                    await RoleManager.UpdateRole(role, existingRole.RoleName);
+                }
+                else
+                {
+                    await RoleManager.UpdateAsync(role);
+                }
+
                 successFormat = StringLocalizer["The role <b>{0}</b> was successfully updated."];
-                await RoleManager.UpdateAsync(role);
             }
-            
+
             this.AlertSuccess(string.Format(successFormat, role.RoleName), true);
             
             return RedirectToAction("Index", new { siteId = selectedSite.Id, pageNumber = returnPageNumber });
@@ -308,7 +416,8 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
 
 
         [HttpGet]
-        [Authorize(Policy = PolicyConstants.RoleAdminPolicy)]
+        [Authorize(Policy = PolicyConstants.UserManagementPolicy)]
+        [Authorize(Policy = PolicyConstants.RoleLookupPolicy)]
         public virtual async Task<IActionResult> RoleMembers(
             Guid? siteId,
             Guid roleId,
@@ -369,7 +478,8 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
         }
 
         [HttpGet]
-        [Authorize(Policy = PolicyConstants.RoleAdminPolicy)]
+        [Authorize(Policy = PolicyConstants.UserManagementPolicy)]
+        [Authorize(Policy = PolicyConstants.RoleLookupPolicy)]
         public virtual async Task<IActionResult> RoleNonMembers(
             Guid? siteId,
             Guid roleId,
@@ -434,7 +544,8 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
         }
 
         [HttpPost]
-        [Authorize(Policy = PolicyConstants.RoleAdminPolicy)]
+        [Authorize(Policy = PolicyConstants.UserManagementPolicy)]
+        [Authorize(Policy = PolicyConstants.RoleLookupPolicy)]
         public virtual async Task<IActionResult> AddUser(
             Guid? siteId, 
             Guid roleId, 

@@ -6,8 +6,9 @@
 @inject IStringLocalizer<CloudscribeCore> sr
 @inject IAuthorizationService _authorizationService
 @{
-    var roleAuthResult = await _authorizationService.AuthorizeAsync(User, PolicyConstants.RoleAdminPolicy).ConfigureAwait(false);
-    var canManageRoles = roleAuthResult.Succeeded;
+    var userAuthResult       = await _authorizationService.AuthorizeAsync(User, PolicyConstants.UserManagementPolicy).ConfigureAwait(false);
+    var roleLookupAuthResult = await _authorizationService.AuthorizeAsync(User, PolicyConstants.RoleLookupPolicy).ConfigureAwait(false);
+    var canManageUserRoles   = userAuthResult.Succeeded && roleLookupAuthResult.Succeeded;
 }
 @if (Model.UserRoles.Count > 0)
 {
@@ -16,14 +17,18 @@
         @foreach (var item in Model.UserRoles)
         {
             <li class="mb-2">
-                @item
-                @if (canManageRoles)
-                {
-                    <button type="button" class="btn btn-danger btn-xs" data-bs-toggle="modal" data-bs-target="@("#confirmRoleDeleteModal" + Model.UserRoles.IndexOf(item))">
-                        @sr["Remove"]
-                    </button>
-                    <form asp-controller="UserAdmin" asp-action="RemoveRole">
-                        <input name="roleName" value="@item" type="hidden" />
+                <div class="row align-items-left pb-2 gx-0">
+                    <div class="col-md-2 mt-1">
+                        @item
+                    </div>
+                    <div class="col w-auto">
+                        @if (canManageUserRoles)
+                        {
+                            <button type="button" class="btn btn-danger btn-xs" data-bs-toggle="modal" data-bs-target="@("#confirmRoleDeleteModal" + Model.UserRoles.IndexOf(item))">
+                                @sr["Remove"]
+                            </button>
+                            <form asp-controller="UserAdmin" asp-action="RemoveRole">
+                                <input name="roleName" value="@item" type="hidden" />
 
                         <input name="userId" value="@Model.UserId" type="hidden" />
                         <div class="modal fade" id="@("confirmRoleDeleteModal" + Model.UserRoles.IndexOf(item))" tabindex="-1" role="dialog" aria-labelledby="@("confirmRoleDeleteHeading" + Model.UserRoles.IndexOf(item))">
@@ -45,9 +50,20 @@
                         </div>
                     </form>
                 }
+                    </div>
+                </div>
+                
+     
             </li>
         }
     </ul>
 }
 
+<div class="mb-3">
+    <a id="AddToRolesModalLink" class="btn btn-xs btn-primary" asp-action="ModalAddUserToRoles" asp-controller="RoleAdmin"
+       asp-route-siteId="@Model.SiteId"
+       asp-route-userId="@Model.UserId"
+       asp-route-pageSize="12"
+       bs-modal-link="true">@sr["Add Roles"]</a>
+</div>
 

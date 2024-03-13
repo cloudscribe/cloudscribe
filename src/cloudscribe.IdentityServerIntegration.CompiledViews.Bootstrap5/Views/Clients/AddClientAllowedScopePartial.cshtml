@@ -3,7 +3,7 @@
 @inject IStringLocalizer<CloudscribeIds4Resources> sr
 <form class="form-inline" asp-controller="Clients" asp-action="AddClientScope">
     <div class="mb-3">
-        <label for="Type">@sr["Scope"]</label>
+        <label class="form-label" for="Type">@sr["Scope"]</label>
         <input class="form-control" id="ScopeName" name="ScopeName" data-val="true" data-val-required='@sr["The Scope field is required."]'
                aria-required="true" aria-invalid="false" aria-describedby="ScopeName-error" />
         <span class="invalid-feedback field-validation-valid" data-valmsg-for="ScopeName" data-valmsg-replace="true"></span>

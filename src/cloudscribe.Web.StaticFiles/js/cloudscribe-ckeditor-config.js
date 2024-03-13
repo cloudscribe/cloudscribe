@@ -4,146 +4,106 @@
 	config.smiley_path = '/cr/images/emojis/';
 	config.scayt_autoStartup = false;
 	config.disableNativeSpellChecker = false;
-	//config.justifyClasses = [ 'AlignLeft', 'AlignCenter', 'AlignRight', 'AlignJustify' ];
-	//config.indentClasses = ['Indent1', 'Indent2', 'Indent3'];
-    config.extraPlugins = 'oembed,cloudscribe-filedrop,sourcedialog,codesnippet,autosave,notification';
-    config.autosave = { saveDetectionSelectors: "a[href^='javascript:__doPostBack'][id*='Save'],a[id*='Cancel'],button[id*='Save']", messageType: "no"};
-	
-    config.removePlugins = 'scayt,wsc';
-	//config.oembed_maxWidth = '560';
-	//config.oembed_maxHeight = '315';
-    config.allowedContent = true;
-    config.extraAllowedContent = "div(*){*}[*]; ol li span a(*){*}[*]";
+    config.extraPlugins = 'cloudscribe-filedrop,autosave';
+	config.autosave = { saveDetectionSelectors: "a[href^='javascript:__doPostBack'][id*='Save'],a[id*='Cancel'],button[id*='Save']", messageType: "no"};
+	config.removePlugins = 'uploadimage,language'; //cloudscribe now does this via it's own mechanism to support drag/drop/paste image upload
+
+	//this is needed if the language plugin is not removed above. Creates a list for the WCAG 3.1.2 Language of Parts specification
+	config.language_list = [ 'en:English', 'cy:Welsh', 'fr:French', 'es:Spanish' ];
+
     config.fillEmptyBlocks = false;
-    config.forcePasteAsPlainText = true;
+    config.forcePasteAsPlainText = 'allow-word';
     config.filebrowserWindowHeight = '70%';
     config.filebrowserWindowWidth = '80%';
 
-    config.linkWebSizeToOriginal = true;
-	
-	//config.protectedSource.push(/<i[^>]></i>/g);
-    //config.protectedSource.push(/<span[^>]></span>/g);
-	//config.protectedSource.push(/<div[^>]></div>/g);
 	config.allowedContent = true;
     config.extraAllowedContent = 'p(*)[*]{*};div(*)[*]{*};li(*)[*]{*};ul(*)[*]{*};span(*)[*]{*}';
-    CKEDITOR.dtd.$removeEmpty.i = 0;
-	
+
 	config.fontSize_defaultLabel = 'Normal';
     config.fontSize_sizes = 'X-Small/font-xsmall;Small/font-small;Normal/font-normal;Large/font-large;X-Large/font-xlarge';
     config.fontSize_style =
     {
-                element:             'span',
-                attributes:           { 'class': '#(size)' },
-                overrides: [{ element: 'font', attributes: { 'size': null}}]
+		element:    'span',
+		attributes: { 'class': '#(size)' },
+		overrides:  [{ element: 'font', attributes: { 'size': null}}]
     };
-	
-	config.format_tags = 'p;h1;h2;h3;h4;pre;address;div'; 
-	
 
-    config.toolbar_cloudscribedefault =
-    [
-        ['Sourcedialog', 'Maximize'],
-        ['SelectAll', 'RemoveFormat', 'Cut', 'Copy', 'Paste', 'PasteText', 'PasteFromWord', '-', 'Print'],
-        ['Undo', 'Redo', '-', 'Find', 'Replace', 'Bold', 'Italic', 'Underline', '-', 'Strike', 'Superscript'],
-        '/',
-        ['Blockquote', 'Format'], ['NumberedList', 'BulletedList'],
-        ['Link', 'Unlink', 'Anchor'],
-        ['Image', 'oembed', 'Table', 'HorizontalRule', 'Smiley', 'SpecialChar', 'CodeSnippet']
-    ];
-    
-	config.toolbar_CKFull =
+	config.format_tags = 'p;h1;h2;h3;h4;pre;address;div';
+	config.toolbarCanCollapse = true;
+	config.toolbarStartupExpanded = true;
+
+	var defaultToolbar =
 	[
-		['Source','-','Save','NewPage','Preview','-','Templates'],
-		['Cut','Copy','Paste','PasteText','PasteFromWord','-','Print'],
-		['Undo','Redo','-','Find','Replace','-','SelectAll','RemoveFormat'],
-		['Form', 'Checkbox', 'Radio', 'TextField', 'Textarea', 'Select', 'Button', 'ImageButton', 'HiddenField'],
+		{ name: 'document', items: [ 'Maximize','Sourcedialog', '-', 'Preview', 'Print', '-', 'Templates' ] },
+		{ name: 'clipboard', items: [ 'Cut', 'Copy', 'Paste', 'PasteText', 'PasteFromWord', '-', 'Undo', 'Redo' ] },
+		{ name: 'editing', items: [ 'Find', 'Replace', '-', 'SelectAll', '-', 'Scayt' ] },
+		{ name: 'insert', items: [ 'Image', 'CodeSnippet', 'oembed', 'Table', 'HorizontalRule', 'SpecialChar', 'PageBreak', 'Iframe', 'pre', 'EmojiPanel' ] },
 		'/',
-		['Bold','Italic','Underline','Strike','-','Subscript','Superscript'],
-		['NumberedList','BulletedList','-','Outdent','Indent','Blockquote'],
-		['JustifyLeft','JustifyCenter','JustifyRight','JustifyBlock'],
-		['Link','Unlink','Anchor'],
-		['Image','Table','HorizontalRule','Smiley','SpecialChar','PageBreak'],
+		{ name: 'styles', items: [ 'Format', '-', 'Bold', 'Italic', 'Underline', 'Strike', 'Subscript', 'Superscript', '-', 'TextColor', 'BGColor', '-', 'RemoveFormat' ] },
+		{ name: 'paragraph', items: [ 'NumberedList', 'BulletedList', '-', 'Outdent', 'Indent', '-', 'Blockquote', '-', 'JustifyLeft', 'JustifyCenter', 'JustifyRight', 'JustifyBlock' ] },
+		{ name: 'links', items: [ 'Link', 'Unlink', 'Anchor' ] }
+	];
+
+	var ckAll =
+	[
+		{ name: 'document', items: [ 'Maximize','Source', 'Sourcedialog', '-', 'NewPage', 'ExportPdf', 'Preview', 'Print', '-', 'Templates' ] },
+		{ name: 'clipboard', items: [ 'Cut', 'Copy', 'Paste', 'PasteText', 'PasteFromWord', '-', 'Undo', 'Redo' ] },
+		{ name: 'editing', items: [ 'Find', 'Replace', '-', 'SelectAll', '-', 'Scayt' ] },
+		{ name: 'insert', items: [ 'Image', 'CodeSnippet', 'oembed', 'Table', 'HorizontalRule', 'SpecialChar', 'PageBreak', 'Iframe', 'pre', 'EmojiPanel' ] },
 		'/',
-		['Styles','Format','Font','FontSize'],
-		['TextColor','BGColor'],
-		['Maximize', 'ShowBlocks','-','About']
-        ];
+		{ name: 'styles', items: [ 'Styles', 'Format', 'Font', 'FontSize', '-', 'Bold', 'Italic', 'Underline', 'Strike', 'Subscript', 'Superscript', '-', 'TextColor', 'BGColor', '-', 'CopyFormatting', 'RemoveFormat' ] },
+		{ name: 'paragraph', items: [ 'NumberedList', 'BulletedList', '-', 'Outdent', 'Indent', '-', 'Blockquote', '-', 'JustifyLeft', 'JustifyCenter', 'JustifyRight', 'JustifyBlock', '-', 'BidiLtr', 'BidiRtl', 'Language' ] },
+		{ name: 'links', items: [ 'Link', 'Unlink', 'Anchor' ] },
+		{ name: 'forms', items: [ 'Form', 'Checkbox', 'Radio', 'TextField', 'Textarea', 'Select', 'Button', 'ImageButton', 'HiddenField' ] }
+	];
 
-   
-
-	
-	config.toolbar_Full =
-    [
-		['Source','Maximize'],
-		['SelectAll', 'RemoveFormat', 'Cut', 'Copy', 'Paste', 'PasteText', 'PasteFromWord', '-', 'Print'],
-		['Undo','Redo','-','Find','Replace','Bold','Italic','Underline','-','Strike','Superscript'],
-		'/',
-		['Blockquote','Format','Styles','FontSize'],['NumberedList','BulletedList'],
-		['Link','Unlink','Anchor'],
-		['Image','oembed','Table','HorizontalRule','Smiley','SpecialChar']
-
-    ];
+	config.toolbar_cloudscribedefault = defaultToolbar;
+	config.toolbar_CKFull = ckAll;
+	config.toolbar_Full = defaultToolbar;
 
 	config.toolbar_Newsletter =
-    [
-		['Source'],
-		['SelectAll', 'RemoveFormat', 'Cut', 'Copy', 'Paste', 'PasteText', 'PasteFromWord', '-', 'Print'],
-		['Undo', 'Redo', '-', 'Find', 'Replace'],
+	[
+		{ name: 'document', items: [ 'Maximize','Sourcedialog', '-', 'Preview', 'Print' ] },
+		{ name: 'clipboard', items: [ 'Cut', 'Copy', 'Paste', 'PasteText', 'PasteFromWord', '-', 'Undo', 'Redo' ] },
+		{ name: 'editing', items: [ 'Find', 'Replace', '-', 'SelectAll' ] },
+		{ name: 'insert', items: [ 'Image', 'Table', 'HorizontalRule', 'SpecialChar' ] },
 		'/',
-		['Blockquote', 'Bold', 'Italic', 'Underline', 'Strike', 'Superscript'],
-		['NumberedList', 'BulletedList', '-', 'Outdent', 'Indent'],
-		['JustifyLeft', 'JustifyCenter', 'JustifyRight', 'JustifyBlock'],
-		['Link', 'Unlink', 'Anchor'],
-		['Image', 'Table', 'HorizontalRule', 'SpecialChar'],
-		'/',
-		['Format', 'Font', 'FontSize'],
-		['TextColor', 'BGColor'],
-		['Maximize','Preview']
+		{ name: 'styles', items: [ 'Format', '-', 'Bold', 'Italic', 'Underline', 'Strike', 'Subscript', 'Superscript', '-', 'TextColor', 'BGColor', '-', 'RemoveFormat' ] },
+		{ name: 'paragraph', items: [ 'NumberedList', 'BulletedList', '-', 'Outdent', 'Indent', '-', 'Blockquote', '-', 'JustifyLeft', 'JustifyCenter', 'JustifyRight', 'JustifyBlock' ] },
+		{ name: 'links', items: [ 'Link', 'Unlink', 'Anchor' ] }
+	];
 
-    ];
-	
-	config.toolbar_FullWithTemplates =
-    [
-		['Source','Maximize','ShowBlocks'],
-		['SelectAll', 'RemoveFormat', 'Cut', 'Copy', 'Paste', 'PasteText', 'PasteFromWord', '-', 'Print'],
-		['Undo','Redo'],['Find','Replace'],['Bold','Italic','Underline','Strike','Superscript'],
-		'/',
-		['Blockquote','Format','Styles','FontSize'],['NumberedList','BulletedList','Outdent', 'Indent'],['JustifyLeft', 'JustifyCenter', 'JustifyRight', 'JustifyBlock'],
-		['Link','Unlink','Anchor'],
-		['Templates','Image','Flash','oembed','Table','HorizontalRule','Smiley','SpecialChar']
-	
-    ];
-	
+	config.toolbar_FullWithTemplates = defaultToolbar;
+
 	config.toolbar_Forum =
-    [
-		['Cut','Copy','PasteText','-'],
-		['Undo', 'Redo', '-', 'Find', 'Replace', '-', 'SelectAll', 'RemoveFormat'],
-		['Blockquote','Bold','Italic','Underline'],
-		['NumberedList', 'BulletedList'],
-		['Link','Unlink'],
-		['SpecialChar','Smiley']
+	[
+		{ name: 'clipboard', items: [ 'Cut', 'Copy', 'Paste', 'PasteText', '-', 'Undo', 'Redo' ] },
+		{ name: 'editing', items: [ 'Find', 'Replace', '-', 'SelectAll' ] },
+		{ name: 'insert', items: [ 'HorizontalRule', 'SpecialChar', 'EmojiPanel' ] },
+		{ name: 'styles', items: [ 'Bold', 'Italic', 'Underline', 'Strike', 'Subscript', 'Superscript' ] },
+		{ name: 'paragraph', items: [ 'NumberedList', 'BulletedList', '-', 'Blockquote' ] },
+		{ name: 'links', items: [ 'Link', 'Unlink' ] }
 	];
-	
+
 	config.toolbar_ForumWithImages =
-    [
-		['Cut','Copy','PasteText','-'],
-		['Undo','Redo','-','Find','Replace','-','SelectAll','RemoveFormat'],
-		['Blockquote','Bold','Italic','Underline','Image'],
-		['NumberedList', 'BulletedList'],
-		['Link','Unlink'],
-		['SpecialChar','Smiley']
+	[
+		{ name: 'clipboard', items: [ 'Cut', 'Copy', 'Paste', 'PasteText', '-', 'Undo', 'Redo' ] },
+		{ name: 'editing', items: [ 'Find', 'Replace', '-', 'SelectAll' ] },
+		{ name: 'insert', items: [ 'Image', 'HorizontalRule', 'SpecialChar', 'EmojiPanel' ] },
+		{ name: 'styles', items: [ 'Bold', 'Italic', 'Underline', 'Strike', 'Subscript', 'Superscript' ] },
+		{ name: 'paragraph', items: [ 'NumberedList', 'BulletedList', '-', 'Blockquote' ] },
+		{ name: 'links', items: [ 'Link', 'Unlink' ] }
 	];
-	
-	
-	
+
 	config.toolbar_AnonymousUser =
-    [
-		['Cut','Copy','PasteText'],
-		['Blockquote', 'Bold', 'Italic', '-', 'NumberedList', 'BulletedList', '-', 'Link', 'Unlink', 'Smiley']
+	[
+		{ name: 'clipboard', items: [ 'Cut', 'Copy', 'PasteText'] },
+		{ name: 'insert', items: [ 'EmojiPanel' ] },
+		{ name: 'styles', items: [ 'Bold', 'Italic', 'Underline'  ] },
+		{ name: 'paragraph', items: [ 'NumberedList', 'BulletedList', '-', 'Blockquote' ] },
+		{ name: 'links', items: [ 'Link', 'Unlink' ] }
 	];
-	
+
 	config.toolbar_None = [];
 
-	
-	
 };

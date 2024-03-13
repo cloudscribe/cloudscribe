@@ -231,6 +231,7 @@ td img, video, iframe {
     height: 100px;
 }
 
-.navbar {
+header .navbar {
     top: 100px;
 }
+

@@ -1,0 +1,46 @@
+﻿@using cloudscribe.Core.Web
+@inject RemainingSessionTimeResolver rstResolver
+@inject ISiteContextResolver siteResolver
+@inject ICoreThemeHelper themeHelper
+@inject IStringLocalizer<CloudscribeCore> sr
+
+@{
+    var secondsTilLogout = await rstResolver.RemainingSessionTimeInSeconds();
+    //<h1>@secondsTilLogout</h1>
+}
+
+@if (secondsTilLogout > 0 && secondsTilLogout < 43200) // 43200: only render countdown js if < 12 hrs left 
+{
+    // declaring script in this way means it gets renered at foot of _layout page
+    Html.Resource(@<script src="/cr/js/cloudscribe-autologout-warning.min.js"></script>, "js");
+
+    var pageScheme = Context.Request.Scheme;
+
+    <div 
+     hidden                ="hidden"
+     id                    ="sessionExpiry"
+     data-url-target       ="@Url.Action("AutoLogoutNotification", "Account", null, pageScheme)"
+     data-alert-threshold  ="60"
+     data-polling-interval ="5"
+     data-seconds-left     =@secondsTilLogout>
+    </div>
+
+
+    <div id="sessionExpiryWarning" 
+        data-url-keep-alive ="@Url.Action("RemainingSessionTime", "Account")" 
+        class = "alert alert-warning mt-2" 
+        style = "min-height:60px; display:none" 
+        role  = "alert">
+
+        <div class="pull-left">
+            <span class="pull-left me-2"><i class="glyphicon glyphicon-warning-sign fas fa-exclamation-triangle fa-2x" aria-hidden="true"></i></span>
+            @Html.Raw(String.Format(sr["For your security, your session will time out in {0} seconds..."], "<b><span id=\"sessionExpiryWarningSeconds\"></span></b>"))
+        
+            <button type="button" class="btn btn-primary ms-2 mb-1 me-2" id="btnSessionLogOut">@sr["Log out"]</button>
+
+            <button type="button" class="btn btn-primary ms-2 mb-1" id="sessionKeepAlive">@sr["Stay logged in"]</button>
+
+        </div>
+    </div>
+}
+

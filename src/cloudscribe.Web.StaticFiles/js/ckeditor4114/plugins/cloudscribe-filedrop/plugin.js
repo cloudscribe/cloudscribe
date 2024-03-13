@@ -2,47 +2,85 @@
  * cloudscribe-filedrop plugin for CKEditor
  * Copyright (C) 2013 Joe Audette, Source Tree Solutions LLC
  * Created 2013-11-28
- * Last Modified 2017-02-20
+ * Last Modified 2022-02-16
  *
  */
+
 
 CKEDITOR.plugins.add( 'cloudscribe-filedrop',
 {
 	init : function( editor )
 	{
 		if(!(editor.config.dropFileUploadUrl)) {  return; }
-	
+
 		var theEditor = editor;
 		var uploadUrl = editor.config.dropFileUploadUrl;
 		var xsrfToken = editor.config.dropFileXsrfToken;
 		var isLocked = false;
 		var linkToOrig = editor.config.linkWebSizeToOriginal;
-		
-		function onDragStart(event) {                 
+
+		function onDragStart(event) {
                 //console.log("onDragStart");
         };
-			
-		function onDragOver(event) { 
-				event.preventDefault();
-				return false;
-                //console.log("onDragOver");	
+
+		function onDragOver(event) {
+			event.preventDefault();
+			return false;
+			//console.log("onDragOver");
          };
-			
-		
-		function onDropped(event) { 
-				event = event || window.event;
-				
-				var files = event.dataTransfer.files || event.target.files; 
-				if(files) {
-					event.preventDefault();
-					event.stopPropagation ();
-					if(!isLocked) { isLocked = theEditor.lockSelection(); }
-					uploadFile(files[0]); // one file at a time
+
+
+		function onDropped(event) {
+			event = event || window.event;
+
+			var files = event.dataTransfer.files || event.target.files;
+			if (files && files.length > 0) {
+				event.preventDefault();
+				event.stopPropagation ();
+				if(!isLocked) { isLocked = theEditor.lockSelection(); }
+				for(var i = 0; i < files.length; i++) {
+					var name = files[i].name; //usually this will always be image.png
+					var baseName = name.substring(0, name.lastIndexOf('.')) || name;
+					var ext = name.substring(name.lastIndexOf('.') + 1).toLowerCase();
+					var date = new Date().toISOString().replace(/:|\./g, '-').substring(0, 21);
+					var newName = baseName + '_' + date + '.' + ext;
+					var file = renameFile(files[i], newName);
+					console.log("onDropped: " + newName);
+					// console.log(file);
+					uploadFile(file);
 				}
-            };
-			
+			}
+		};
+
+		function onPaste(event) {
+			event = event || window.event;
+
+			var files = event.clipboardData.files || event.target.files;
+			if (files && files.length > 0) {
+				event.preventDefault();
+				event.stopPropagation ();
+				if(!isLocked) { isLocked = theEditor.lockSelection(); }
+				var name = files[0].name; //usually this will always be image.png
+				var baseName = name.substring(0, name.lastIndexOf('.')) || name;
+				var ext = name.substring(name.lastIndexOf('.') + 1).toLowerCase();
+				var date = new Date().toISOString().replace(/:|\./g, '-').substring(0, 21);
+				var newName = baseName + '_' + date + '.' + ext;
+				var file = renameFile(files[0], newName);
+				// console.log("onPaste");
+				// console.log(file);
+				uploadFile(file);
+			}
+		}
+
+		function renameFile(originalFile, newName) {
+			return new File([originalFile], newName, {
+				type: originalFile.type,
+				lastModified: originalFile.lastModified,
+			});
+		}
+
 		function uploadFile(file) {
-		
+
 			switch(file.type){
 				case "image/jpeg":
 				case "image/jpg":
@@ -53,7 +91,7 @@ CKEDITOR.plugins.add( 'cloudscribe-filedrop',
 				var formData = new FormData();
 				formData.append("__RequestVerificationToken", xsrfToken);
 				formData.append(file.name, file);
-					
+
 				$.ajax({
 					type:"POST",
 					processData: false,
@@ -64,23 +102,23 @@ CKEDITOR.plugins.add( 'cloudscribe-filedrop',
 					success: uploadSuccess,
 					complete: ajaxComplete
 					});
-					
+
 					break;
 			}
 		}
-		
+
 		function ajaxComplete() {
 			if(isLocked) {
 			  theEditor.unlockSelection();
 			  isLocked = false;
 			}
 		}
-		
+
 		function uploadSuccess( data, textStatus, jqXHR ) {
-			
+
 			try {
 			    if(data[0].errorMessage) { alert(data[0].errorMessage); return; }
-				
+
 				if(data[0].resizedUrl) {
 				    if(linkToOrig)
 					{
@@ -109,9 +147,9 @@ CKEDITOR.plugins.add( 'cloudscribe-filedrop',
 					//console.log(err2);
 				}
 			}
-			
+
 		}
-			 
+
 		editor.on('instanceReady', function (e) {
 			// make sure the browser supports the file api
 			if (window.File && window.FileList && window.FileReader) {
@@ -120,18 +158,19 @@ CKEDITOR.plugins.add( 'cloudscribe-filedrop',
 				//editor.document.on('dragover', onDragOver);
 				editor.document.$.addEventListener("drop", onDropped, true);
 				editor.document.$.addEventListener("dragover", onDragOver, true);
-				
+				editor.document.$.addEventListener("paste", onPaste, true);
+
 				}
 		});
-		
+
 		editor.on('blur', function (e) {
 			// make sure the browser supports the file api
 			if (window.File && window.FileList && window.FileReader) {
-				isLocked = theEditor.lockSelection(); //this is needed for ie but should not really be needed here seems like a bug in the editor 
-				
+				isLocked = theEditor.lockSelection(); //this is needed for ie but should not really be needed here seems like a bug in the editor
+
 				}
 		});
-		
-			
+
+
 	} //Init
 } );

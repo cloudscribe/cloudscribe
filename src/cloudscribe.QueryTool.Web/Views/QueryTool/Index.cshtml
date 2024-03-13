@@ -1,0 +1,363 @@
+﻿@namespace cloudscribe.QueryTool.Web
+@model QueryToolViewModel
+@using Microsoft.Extensions.Localization
+@inject IStringLocalizer<QueryToolResources> sr
+
+@{
+    ViewData["Title"] = sr["Query Tool"];
+    var introduction = sr["This tool allows you to query your database using SQL. You can create SQL statements for common operations such as SELECT, INSERT, UPDATE and DELETE. The tool can automatically generate the SQL for you based on the table and columns you select. You can also save your queries for later use."];
+    var docsLink = sr["For the full instructions see the {0}Query Tool Documentation{1}."];
+    var docsUrl = "<a href=\"https://www.cloudscribe.com/query-tool\" target=\"_blank\">";
+}
+
+<form asp-action="Index">
+
+    <div class="form-check form-switch float-end">
+        <label class="form-check-label" for="Tooltip-Switch">@sr["Enable Tooltips"]</label>
+        <input class="form-check-input" type="checkbox" id="Tooltip-Switch" title='@sr["Enable Tooltips"]' asp-for="@Model.EnableTooltips">
+    </div>
+    <h2>@ViewData["Title"]</h2>
+
+    <p>@introduction</p>
+
+    <p>@Html.Raw(String.Format(docsLink, docsUrl, "</a>"))</p>
+
+    <div class="row">
+        <div class="col-md-10">
+            <div class="mb-3">
+                <label for="Table" class="form-label">@sr["Tables"]:</label>
+                <select id="Table" asp-for="Table" asp-items="@Model.TableNames"
+                    data-bs-toggle="tooltip" data-bs-placement="top"
+                    class="form-select" style="font-family: monospace;"
+                    title='@sr["Choose a table name from the list"]' onchange="this.form.submit();"></select>
+            </div>
+        </div>
+        <div class="col-md-2 text-start">
+            <div class="mb-3">
+                <br />
+                <div class="mb-3" id="CreateActions1">
+                    <button class="btn btn-primary btn-sm mt-2" id="Insert-Cursor1" type="submit"
+                        data-bs-toggle="tooltip" data-bs-placement="top"
+                        title='@sr["Insert table name into Query at current cursor position"]'
+                        name="Command" value="insert">@sr["Insert at Cursor"]</button>
+                </div>
+            </div>
+        </div>
+    </div>
+        <div class="row">
+        <div class="col-md-10">
+            <div class="mb-3">
+                <label for="Columns" class="form-label">@sr["Columns"]:</label>
+                <select id="Columns" asp-for="Columns" asp-items="@Model.ColumnNames"
+                     size=6 class="form-control" style="font-family: monospace;"
+                     data-bs-toggle="tooltip" data-bs-placement="top"
+                     title='@sr["Choose one or more column names from the list. Control and click to select multiple items."]'></select>
+            </div>
+        </div>
+        <div class="col-md-2 text-start">
+            <br />
+            <div class="mb-3" id="CreateActions2">
+                <button class="btn btn-primary btn-sm mt-2" id="Insert-Cursor2" type="submit"
+                    data-bs-toggle="tooltip" data-bs-placement="top"
+                    title='@sr["Insert column names into Query at current cursor position"]' name="Command"
+                    value="insert">@sr["Insert at Cursor"]</button>
+                <br />
+                <button class="btn btn-primary btn-sm mt-2" id="Create-Select" type="submit" name="Command"
+                    data-bs-toggle="tooltip" data-bs-placement="left"
+                    title='@sr["Generate a SELECT statement for the selected table and columns"]'
+                    value="create_select">@sr["Select"]</button>
+                <button class="btn btn-primary btn-sm mt-2" id="Create-Update" type="submit" name="Command"
+                    data-bs-toggle="tooltip" data-bs-placement="right"
+                    title='@sr["Generate an UPDATE statement for the selected table and columns"]'
+                    value="create_update">@sr["Update"]</button>
+                <br />
+                <button class="btn btn-primary btn-sm mt-2" id="Create-Insert" type="submit" name="Command"
+                    data-bs-toggle="tooltip" data-bs-placement="left"
+                    title='@sr["Generate an INSERT statement for the selected table and columns"]'
+                    value="create_insert">@sr["Insert"]</button>
+                <button class="btn btn-primary btn-sm mt-2" id="Create-Delete" type="submit" name="Command"
+                    data-bs-toggle="tooltip" data-bs-placement="right"
+                    title='@sr["Generate a DELETE statement for the selected table"]'
+                    value="create_delete">@sr["Delete"]</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-10">
+            <div class="mb-3">
+                <label for="Query" class="form-label">@sr["Query"]:</label>
+                <textarea id="Query" name="Query" rows="5" cols="70" class="form-control" title='@sr["Write your SQL query here"]'
+                    data-bs-toggle="tooltip" data-bs-placement="top"
+                    autocomplete="">@Model.Query</textarea>
+            </div>
+        </div>
+        <div class="col-md-2 text-start">
+            <br />
+            <div class="mb-3" id="QueryActions">
+                <button class="btn btn-primary btn-sm mt-2" type="submit" name="Command" title='@sr["Execute Query"]'
+                    data-bs-toggle="tooltip" data-bs-placement="top"
+                    value="query">@sr["Execute Query"]</button>
+                <br />
+                <button class="btn btn-primary btn-sm mt-2" type="submit" name="Command" title='@sr["Clear Query"]'
+                    data-bs-toggle="tooltip" data-bs-placement="bottom"
+                    value="clear">@sr["Clear Query"]</button>
+            </div>
+        </div>
+        <div class="col-md-10">
+            <div class="mb-3">
+                <label for="QueryParameters" class="form-label">@sr["Optional Query Parameters"]:</label>
+                <input id="QueryParameters" asp-for="QueryParameters" class="form-control" title='@sr["Optional query parameters in the format: param1=value&param2=value... etc."]'
+                    data-bs-toggle="tooltip" data-bs-placement="top" autocomplete="" value="@Model.QueryParameters">
+            </div>
+        </div>
+        <div class="col-md-2 text-start">
+            <br />
+            <div class="mb-3" id="QueryParameterActions">
+                @if (Model.QueryIsAPI)
+                {
+                <button id="Test-Query-Api" class="btn btn-primary btn-sm mt-2" type="button"
+                    data-query-name="@Model.SavedQueryName" title='@sr["Test Query via API >>"]'
+                    data-bs-toggle="tooltip" data-bs-placement="top">@sr["Test Query via API >>"]</button>
+                }
+            </div>
+        </div>
+    </div>
+
+    <input id="HighlightText" asp-for="@Model.HighlightText" type="hidden" value="@Model.HighlightText">
+    <input id="HighlightStart" asp-for="@Model.HighlightStart" type="hidden" value="@Model.HighlightStart">
+    <input id="HighlightEnd" asp-for="@Model.HighlightEnd" type="hidden" value="@Model.HighlightEnd">
+
+    <div class="row">
+        <div class="col-md-8"><a name="results"></a>
+            @if (Model.RowsAffected.HasValue)
+            {
+            <div class="text-danger"><b>@String.Format(@sr["{0} rows affected"], @Model.RowsAffected.Value)</b></div>
+            }
+        </div>
+        <div class="col-md-4 text-end">
+            @if (Model.RowsAffected.HasValue)
+            {
+            <button class="btn btn-primary btn-sm mb-1" type="submit" name="Command"
+                data-bs-toggle="tooltip" data-bs-placement="top"
+                title='@sr["Export results to CSV file"]'
+                value="export">@sr["Export CSV"]</button>
+
+            <button class="btn btn-primary btn-sm mb-1" type="button" id="Results-Expand"
+                data-bs-toggle="tooltip" data-bs-placement="top"
+                title='@sr["Expand Results"]'
+                value="export">@sr["Expand"] <i class="fa fa-caret-down"></i></button>
+            <button class="btn btn-primary btn-sm mb-1" type="button" id="Results-Collapse"
+                data-bs-toggle="tooltip" data-bs-placement="top" style="display:none"
+                title='@sr["Shrink Results"]'
+                value="export">@sr["Shrink"] <i class="fa fa-caret-up"></i></button>
+
+            <button class="btn btn-primary btn-sm mb-1" type="button" id="Results-Bigger"
+                data-bs-toggle="tooltip" data-bs-placement="top"
+                title='@sr["Larger Text"]'
+                value="export"><i class="fa fa-search"></i><i class="fa fa-plus"></i></button>
+            <button class="btn btn-primary btn-sm mb-1" type="button" id="Results-Smaller"
+                data-bs-toggle="tooltip" data-bs-placement="top"
+                title='@sr["Smaller Text"]'
+                value="export"><i class="fa fa-search"></i><i class="fa fa-minus"></i></button>
+            }
+        </div>
+        <input type="hidden" id="RowsAffected" value="@Model.RowsAffected" />
+    </div>
+
+    <div class="row">
+        <div class="col-md-12">
+            @if (Model.RowsAffected.HasValue)
+            {
+                <data-table cs-data="@Model.Data" cs-caption='@sr["Query Results"]'
+                    cs-id="DataTable" cs-height="400" cs-fix-heading="true"></data-table>
+            }
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-12">
+            @if (!string.IsNullOrWhiteSpace(Model.ErrorMessage))
+            {
+                <div class="text-danger">@Model.ErrorMessage </div>
+            }
+        </div>
+    </div>
+
+    <div class="row mt-2 mb-2">
+        <div class="col-md-4">
+            @if(Model.HasQuery && Model.QueryIsValid)
+            {
+            <div class="mb-3 mt-2">
+                <label for="SaveQuery" class="form-label">@sr["Save Query As"]:</label>
+                <input id="SaveQuery" asp-for="SaveName" type="text"
+                    data-bs-toggle="tooltip" data-bs-placement="top"
+                    title='@sr["Enter a name for the query to save it for later use"]'
+                    value="@Model.SaveName" /><br />
+                <label for="SaveQueryApi">@sr["Enable as API query?"] </label>
+                <input id="SaveQueryApi" asp-for="SaveNameAsApi" type="checkbox"
+                    data-bs-toggle="tooltip" data-bs-placement="top"
+                    title='@sr["Check to enable this query to be run via the QueryTool API."]'
+                    value="true" />
+                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                <button class="btn btn-primary btn-sm mt-2" type="submit" name="Command"
+                    data-bs-toggle="tooltip" data-bs-placement="top"
+                    title='@sr["Save Query"]'
+                    value="save">@sr["Save Query"]</button>
+            </div>
+            }
+            else
+            {
+                <input id="SaveQuery" asp-for="SaveName" type="hidden"  value="@Model.SaveName" />
+                <input id="SaveQueryApi" asp-for="SaveNameAsApi" type="hidden"  value="@Model.SaveNameAsApi" />
+            }
+        </div>
+        <div class="col-md-6 text-end text-right">
+            @if (Model.SavedQueryNames != null && Model.SavedQueryNames.Count() > 0)
+            {
+            <div class="mb-3 mt-2">
+                <label for="SavedQueries" class="form-label">@sr["Saved Queries"]:</label>
+                <select id="SavedQueries" asp-for="SavedQueryName" asp-items="@Model.SavedQueryNames"
+                    data-bs-toggle="tooltip" data-bs-placement="top"
+                    title='@sr["Select a saved query to load it into the query editor"]'
+                    class="form-select-sm"></select>
+            </div>
+            }
+        </div>
+        <div class="col-md-2 text-start">
+            @if (Model.SavedQueryNames != null && Model.SavedQueryNames.Count() > 0)
+            {
+            <div class="mb-3">
+                <button class="btn btn-primary btn-sm mt-2" type="submit" name="Command"
+                    data-bs-toggle="tooltip" data-bs-placement="top"
+                    title='@sr["Load Saved Query"]'
+                    value="load">@sr["Load Saved Query"]</button>
+                <br />
+                <span data-bs-toggle="tooltip" data-bs-placement="bottom" title='@sr["Delete Saved Query"]'>
+                    <button class="btn btn-danger btn-sm mt-2" type="button"
+                        data-bs-toggle="modal" data-bs-target="#confirmDeleteModal">@sr["Delete Saved Query"]
+                    </button>
+                </span>
+            </div>
+            }
+        </div>
+    </div>
+
+
+    <div class="modal fade" id="confirmDeleteModal" data-bs-backdrop="static" tabindex="-1" role="dialog" aria-labelledby="confirmDeleteHeading">
+        <div class="modal-dialog modal-dialog-centered modal-sm" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title" id="confirmDeleteHeading">@sr["Confirm Delete"]</h4>
+                    <button type="button" data-bs-dismiss="modal" class="btn-close" aria-label='@sr["Close"]'>X</button>
+                </div>
+                <div class="modal-body">
+                    @sr["Are you sure you want to delete the selected saved query?"]
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary" data-bs-dismiss="modal">@sr["Cancel"]</button>
+                    <button type="submit" name="Command" value="delete"
+                        title='@sr["Delete Saved Query"]'
+                        class="btn btn-danger btn-ok">@sr["Delete Saved Query"]</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</form>
+@section Scripts {
+    <script>
+        $(document).ready(function() {
+            $('#Tooltip-Switch').on('change', function() {
+                var checked = $(this).prop('checked');
+                $('[data-bs-toggle="tooltip"]').tooltip(checked?'enable':'disable');
+            });
+            $('#Insert-Cursor1').on('click', function () {
+                var table = $('#Table').val();
+                var cursor = $('#Query').prop('selectionStart');
+                var query = $('#Query').val();
+                var before = query.substring(0, cursor);
+                var after = query.substring(cursor, query.length);
+                $('#Query').val(before + table + after);
+                return false;
+            });
+            $('#Insert-Cursor2').on('click', function () {
+                var columns = $('#Columns').val();
+                var cursor = $('#Query').prop('selectionStart');
+                var query = $('#Query').val();
+                var before = query.substring(0, cursor);
+                var after = query.substring(cursor, query.length);
+                $('#Query').val(before + columns.join(', ') + after);
+                return false;
+            });
+            $('#Query').on({
+                select:function(e) {
+                    var selStart = $(this).prop('selectionStart');
+                    var selEnd = $(this).prop('selectionEnd');
+                    var selText = '';
+                    if(selEnd > 0 && selEnd > selStart) selText = $(this).val().substring(selStart, selEnd);
+                    $('#HighlightText').val(selText);
+                    $('#HighlightStart').val(selStart);
+                    $('#HighlightEnd').val(selEnd);
+                },
+                click:function(e) {
+                    $('#HighlightText').val('');
+                    $('#HighlightStart').val(0);
+                    $('#HighlightEnd').val(0);
+                }
+            });
+            $('#Test-Query-Api').on('click', function () {
+                var queryName = $(this).data('query-name');
+                if(queryName) {
+                    var url = '@Url.Action("Index", "QueryToolApi")';
+                    var params = $('#QueryParameters').val();
+                    url = url + '/' + queryName + '?' + params;
+                    window.open(url, 'QueryTool');
+                }
+            });
+            $('#Results-Expand').on('click', function() {
+                $(this).hide();
+                $('#Results-Collapse').show();
+                $('#DataTable').css({'height':'inherit'});
+            });
+            $('#Results-Collapse').on('click', function() {
+                $(this).hide();
+                $('#Results-Expand').show();
+                $('#DataTable').css({'height':'400px'});
+            });
+            $('#Results-Bigger').on('click', function() {
+                var s=parseInt($('#DataTable').css('font-size'));
+                if(s<20) s++;
+                $('#DataTable').css({'font-size': s + 'px'});
+            });
+            $('#Results-Smaller').on('click', function() {
+                var s=parseInt($('#DataTable').css('font-size'));
+                if(s>5) s--;
+                $('#DataTable').css({'font-size': s + 'px'});
+            });
+
+            var hs = $('#HighlightStart').val();
+            var he = $('#HighlightEnd').val();
+            if(he > 0 && he > hs) {
+                var q = document.getElementById('Query');
+                q.focus();
+                q.setSelectionRange(hs, he);
+            }
+
+            // scroll to results
+            // var hasResults=$('#RowsAffected').val() > 0;
+            // if(hasResults) {
+            //     var r=$('a[name="results"]');
+            //     $('html,body').animate({scrollTop: r.offset().top},'slow');
+            // }
+
+            var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'))
+            var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
+                return new bootstrap.Tooltip(tooltipTriggerEl)
+            });
+            var checked = $('#Tooltip-Switch').prop('checked');
+            $('[data-bs-toggle="tooltip"]').tooltip(checked?'enable':'disable');
+
+        })
+    </script>
+}

@@ -25,7 +25,7 @@
 {
     <script src="~/cr/js/cloudscribe-register-page.js"></script> 
 }
-<h2>@ViewData["Title"]</h2>
+<h1>@ViewData["Title"]</h1>
 @if (!string.IsNullOrWhiteSpace(Model.RegistrationPreamble))
 {
     <partial name="RegisterPreamblePartial" model="Model" />
@@ -33,11 +33,37 @@
 <form id="register-form" asp-controller="Account" asp-action="Register" asp-route-returnurl='@ViewData["ReturnUrl"]'
       data-submit-once="true">
     <input asp-for="UserId" type="hidden" />
-    <h4>@sr["Create a new account."]</h4>
     <hr />
+
+    <h4>@sr["Create a new account."]</h4>
+     @{
+        if (ViewData.ModelState.IsValid && (Tenant.PwdRequireDigit || Tenant.PwdRequireLowercase || Tenant.PwdRequireNonAlpha || Tenant.PwdRequireUppercase))
+        {
+            <div class="mb-3">
+                <ul>
+                    @if (Tenant.PwdRequireDigit) {
+                    <li>@sr["Passwords must have at least one digit ('0'-'9')."]</li>
+                    }
+
+                    @if (Tenant.PwdRequireLowercase) {
+                    <li>@sr["Passwords must have at least one lowercase character ('a'-'z')."]</li>
+                    }
+
+                    @if (Tenant.PwdRequireNonAlpha) {
+                    <li>@sr["Passwords must have at least one non alphanumeric character"]</li>
+                    }
+
+                    @if (Tenant.PwdRequireUppercase) {
+                    <li>@sr["Passwords must have at least one uppercase character ('A'-'Z')."]</li>
+                    }
+                </ul>
+            </div>
+        }
+    }
+
     <div asp-validation-summary="All" class="text-danger"></div>
     <div class="mb-3">
-        <label asp-for="Username">@sr["Username"]</label>
+        <label class="form-label" asp-for="Username">@sr["Username"]</label>
         <div class="input-group">
                 <span class="input-group-text"><i class="@themeSettings.Icons.Username" aria-hidden="true"></i></span>
             <input asp-for="Username" class="form-control" data-val-regex-pattern="^[a-zA-Z0-9]*$" data-val-regex=@sr["Username can only contain letters or digits, with no spaces"] />
@@ -46,7 +72,7 @@
         </div>
     </div>
     <div class="mb-3">
-        <label asp-for="Email">@sr["Email"]</label>
+        <label class="form-label" asp-for="Email">@sr["Email"]</label>
         <div class="input-group">
                 <span class="input-group-text"><i class="@themeSettings.Icons.Email" aria-hidden="true"></i></span>
             <input asp-for="Email" class="form-control" />
@@ -55,7 +81,7 @@
     </div>
     <partial name="RegisterMiddle" model="Model" />
     <div class="mb-3">
-        <label asp-for="Password">@sr["Password"]</label>
+        <label class="form-label" asp-for="Password">@sr["Password"]</label>
         <div class="input-group">
                 <span class="input-group-text"><i class="@themeSettings.Icons.Password" aria-hidden="true"></i></span>
             <input asp-for="Password" class="form-control" data-val="true" data-val-length=@sr["The password must be at least {0} characters long.", Tenant.MinRequiredPasswordLength] data-val-length-max="100" data-val-length-min="@Tenant.MinRequiredPasswordLength" data-val-required="Password is required" />
@@ -64,7 +90,7 @@
 
     </div>
     <div class="mb-3">
-        <label asp-for="ConfirmPassword">@sr["Confirm Password"]</label>
+        <label class="form-label" asp-for="ConfirmPassword">@sr["Confirm Password"]</label>
         <div class="input-group">
                 <span class="input-group-text"><i class="@themeSettings.Icons.Password" aria-hidden="true"></i></span>
             <input asp-for="ConfirmPassword" class="form-control" />

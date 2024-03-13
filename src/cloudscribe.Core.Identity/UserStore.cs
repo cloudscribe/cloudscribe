@@ -799,7 +799,7 @@ namespace cloudscribe.Core.Identity
             //bool result;
             if (lockoutEnd.HasValue)
             {
-                user.LockoutEndDateUtc = lockoutEnd.Value.DateTime;
+                user.LockoutEndDateUtc = lockoutEnd.Value.DateTime.ToUniversalTime();
                 //if(user.LockoutEndDateUtc > DateTime.UtcNow)
                 //{
                 //    //result = await repo.LockoutAccount(user.UserGuid, cancellationToken);

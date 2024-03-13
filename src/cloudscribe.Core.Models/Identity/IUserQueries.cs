@@ -47,12 +47,27 @@ namespace cloudscribe.Core.Models
             string email,
             CancellationToken cancellationToken = default(CancellationToken));
 
+
+        Task<List<ISiteUser>> GetAllUsersForSite(
+            Guid siteId,
+            CancellationToken cancellationToken = default(CancellationToken));
+
+        Task<List<ISiteUser>> GetAllApprovedUsersForSite(
+            Guid siteId,
+            CancellationToken cancellationToken = default(CancellationToken));
+
         Task<List<ISiteUser>> GetUsers(
             Guid siteId,
             List<Guid> userIds,
             CancellationToken cancellationToken = default(CancellationToken));
 
         Task<ISiteUser> FetchByLoginName(
+            Guid siteId,
+            string userName,
+            bool allowEmailFallback,
+            CancellationToken cancellationToken = default(CancellationToken));
+
+        Task<ISiteUser> FetchByLoginNameCaseInsensitive(
             Guid siteId,
             string userName,
             bool allowEmailFallback,
@@ -185,6 +200,10 @@ namespace cloudscribe.Core.Models
             string searchInput,
             int pageNumber,
             int pageSize,
+            CancellationToken cancellationToken = default(CancellationToken));
+
+        Task<List<ISiteRole>> GetAllRolesBySite(
+            Guid siteId,
             CancellationToken cancellationToken = default(CancellationToken));
 
         Task<List<string>> GetUserRoles(

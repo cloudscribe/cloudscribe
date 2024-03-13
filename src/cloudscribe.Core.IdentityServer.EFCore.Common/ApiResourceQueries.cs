@@ -80,6 +80,7 @@ namespace cloudscribe.Core.IdentityServer.EFCore
             using (var context = _contextFactory.CreateContext())
             {
                 var list = await context.ApiResources
+                .AsSingleQuery()
                 .AsNoTracking()
                 .Where(x => x.SiteId == siteId)
                 .OrderBy(x => x.Name)

@@ -1,0 +1,67 @@
+﻿@model cloudscribe.Core.Web.ViewModels.RoleAdmin.AddUserToRoleListViewModel
+@inject IStringLocalizer<CloudscribeCore> sr
+
+<form role="form" method="get" class="form-inline" asp-controller="RoleAdmin" asp-action="ModalAddUserToRoles" asp-antiforgery="false"
+      data-ajax="true"
+      data-ajax-method="GET"
+      data-ajax-mode="replace"
+      data-ajax-update="#gridcontainer">
+
+    <input name="ajaxGrid" type="hidden" value="true" />
+    <input name="userId"   type="hidden" value="@Model.UserId" />
+    <input name="siteId"   type="hidden" value="@Model.SiteId" />
+    <div class="input-group">
+        <input type="search" name="searchInput" value="@Model.SearchQuery" class="form-control" />
+        <span class="input-group-btn">
+            <button type="submit" name='submit' class="btn btn-primary">@sr["Search"]</button>
+        </span>
+    </div>
+</form>
+
+<form role="form" method="post" asp-controller="RoleAdmin" asp-action="AddUserToRoles">
+    <input name="siteId" type="hidden" value="@Model.SiteId" />
+    <input name="UserId" type="hidden" value="@Model.UserId" />
+
+    <ul class="list-unstyled mt-3 ms-3">
+        @foreach (var role in Model.SiteRoles.Data)
+        {
+            var userIsInRole = Model.UserRoles.Contains(role.RoleName);
+            <li>
+                <input id="@role.Id" name="selectedroles[]" data-rolename="@role.RoleName" type="checkbox" value="@role.Id" class="RoleCheckbox PersistedCheckbox" 
+                   @(userIsInRole ? "checked=\"checked\" disabled" : "") />
+                <label class="form-label" for="@role.Id">@role.RoleName</label>
+            </li>
+        }
+    </ul>
+    
+    <input type="hidden" name="SelectedCheckboxesCSV" id="SelectedCheckboxesCSV" />
+
+    <button type="submit" class="btn btn-success btn-xs mb-3 ms-3" id="SubmitPagedCheckboxes">
+        @sr["Add"]
+    </button>
+
+<div>
+        <cs-pager asp-action="ModalAddUserToRoles" asp-controller="RoleAdmin"
+                  asp-route-siteId="@Model.SiteId"
+                  asp-route-userId="@Model.UserId"
+                  asp-route-ajaxgrid="true"
+                  cs-paging-pagesize="@Model.SiteRoles.PageSize"
+                  cs-paging-pagenumber="@Model.SiteRoles.PageNumber"
+                  cs-paging-totalitems="@Model.SiteRoles.TotalItems"
+                  cs-ajax-target="#gridcontainer"
+                  cs-first-page-title='@sr["First Page"]'
+                  cs-last-page-title='@sr["Last Page"]'
+                  cs-previous-page-title='@sr["Previous page"]'
+                  cs-next-page-title='@sr["Next page"]'
+                  cs-pager-ul-class="pagination d-flex flex-wrap"
+                  cs-pager-li-current-class="page-item active"
+                  cs-pager-li-other-class="page-item"
+                  cs-pager-li-non-active-class="page-item disabled"
+                  cs-pager-link-current-class="page-link"
+                  cs-pager-link-other-class="page-link"></cs-pager>
+</div>
+
+</form>
+
+<script src="~/cr/js/cloudscribe-modaldialog-pagination.min.js"></script>
+

@@ -1,0 +1,20 @@
+﻿@model cloudscribe.Core.Web.ViewModels.RoleAdmin.AddUserToRoleListViewModel
+@inject IStringLocalizer<CloudscribeCore> sr
+<div class="modal-dialog modal-lg" role="document">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h2 class="modal-title" id="myModalLabel">@sr["Add User to Roles"]</h2>
+            <button type="button" data-bs-dismiss="modal" class="btn-close" aria-label='@sr["Close"]'></button>
+        </div>
+        <div class="modal-body">
+            <div id="gridcontainer">
+                <partial name="ModalAddUserToRolesPartial" model="Model" />
+            </div>
+                <div id="savedCheckboxes" class="d-none"></div>
+        </div>
+        <div class="modal-footer">
+            <input id="selectedcsv" type="hidden" value="" />
+            <button type="button" class="btn btn-primary" data-bs-dismiss="modal">@sr["Close"]</button>
+        </div>
+    </div>
+</div>

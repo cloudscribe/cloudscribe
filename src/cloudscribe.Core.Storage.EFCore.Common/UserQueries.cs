@@ -82,6 +82,43 @@ namespace cloudscribe.Core.Storage.EFCore.Common
             
         }
 
+
+        public async Task<List<ISiteUser>> GetAllUsersForSite(
+            Guid siteId,
+            CancellationToken cancellationToken = default(CancellationToken))
+        {
+            cancellationToken.ThrowIfCancellationRequested();
+
+            using (var dbContext = _contextFactory.CreateContext())
+            {
+                var list
+                = await dbContext.Users
+                .AsNoTracking()
+                .Where(x => x.SiteId == siteId)
+                .ToListAsync<ISiteUser>(cancellationToken).ConfigureAwait(false);
+
+                return list;
+            }
+        }
+
+        public async Task<List<ISiteUser>> GetAllApprovedUsersForSite(
+          Guid siteId,
+          CancellationToken cancellationToken = default(CancellationToken))
+        {
+            cancellationToken.ThrowIfCancellationRequested();
+
+            using (var dbContext = _contextFactory.CreateContext())
+            {
+                var list
+                = await dbContext.Users
+                .AsNoTracking()
+                .Where(x => x.SiteId == siteId && x.AccountApproved == true)
+                .ToListAsync<ISiteUser>(cancellationToken).ConfigureAwait(false);
+
+                return list;
+            }
+        }
+
         public async Task<List<ISiteUser>> GetUsers(
             Guid siteId,
             List<Guid> userIds,
@@ -127,8 +164,34 @@ namespace cloudscribe.Core.Storage.EFCore.Common
 
                 return item;
             }
+        }
 
-            
+
+        public async Task<ISiteUser> FetchByLoginNameCaseInsensitive(
+            Guid siteId,
+            string userName,
+            bool allowEmailFallback,
+            CancellationToken cancellationToken = default(CancellationToken))
+        {
+            cancellationToken.ThrowIfCancellationRequested();
+
+            using (var dbContext = _contextFactory.CreateContext())
+            {
+                var item = await dbContext.Users
+                .AsNoTracking()
+                .SingleOrDefaultAsync(
+                    x => x.SiteId == siteId
+                    && (
+                    (x.NormalizedUserName == userName.ToUpper())
+                    || (allowEmailFallback && x.NormalizedEmail == userName.ToUpper())
+                    || x.UserName.ToUpper() == userName.ToUpper()
+                    ),
+                    cancellationToken
+                    )
+                    .ConfigureAwait(false);
+
+                return item;
+            }
         }
 
         public async Task<List<IUserInfo>> GetByIPAddress(
@@ -366,6 +429,7 @@ namespace cloudscribe.Core.Storage.EFCore.Common
 
 
                 var data = await query
+                    .AsSingleQuery()
                     .AsNoTracking()
                     .Skip(offset)
                     .Take(pageSize)
@@ -467,6 +531,7 @@ namespace cloudscribe.Core.Storage.EFCore.Common
                 }
 
                 var data = await query
+                    .AsSingleQuery()
                     .AsNoTracking()
                     .Skip(offset)
                     .Take(pageSize)
@@ -544,6 +609,7 @@ namespace cloudscribe.Core.Storage.EFCore.Common
 
 
                 var data = await query
+                    .AsSingleQuery()
                     .AsNoTracking()
                     .Skip(offset)
                     .Take(pageSize)
@@ -628,6 +694,7 @@ namespace cloudscribe.Core.Storage.EFCore.Common
 
 
                 var data = await query
+                    .AsSingleQuery()
                     .AsNoTracking()
                     .Skip(offset)
                     .Take(pageSize)
@@ -710,6 +777,7 @@ namespace cloudscribe.Core.Storage.EFCore.Common
 
 
                 var data = await query
+                    .AsSingleQuery()
                     .AsNoTracking()
                     .Skip(offset)
                     .Take(pageSize)
@@ -792,6 +860,7 @@ namespace cloudscribe.Core.Storage.EFCore.Common
 
 
                 var data = await query
+                    .AsSingleQuery()
                     .AsNoTracking()
                     .Skip(offset)
                     .Take(pageSize)
@@ -870,6 +939,7 @@ namespace cloudscribe.Core.Storage.EFCore.Common
 
 
                 var data = await query
+                    .AsSingleQuery()
                     .AsNoTracking()
                     .Skip(offset)
                     .Take(pageSize)
@@ -1089,7 +1159,7 @@ namespace cloudscribe.Core.Storage.EFCore.Common
                 var listQuery = from x in dbContext.Roles
                                 where (
                                 x.SiteId.Equals(siteId) &&
-                                (searchInput == "" || x.RoleName.Contains(searchInput) || x.NormalizedRoleName.Contains(searchInput))
+                                (searchInput == "" || x.RoleName.Contains(searchInput) || x.NormalizedRoleName.Contains(searchInput.ToUpper()))
                                 )
                                 orderby x.NormalizedRoleName ascending
                                 //select new SiteRole
@@ -1115,6 +1185,7 @@ namespace cloudscribe.Core.Storage.EFCore.Common
                                 };
 
                 var anonList = await listQuery
+                    .AsSingleQuery()
                     .AsNoTracking()
                     .Skip(offset)
                     .Take(pageSize)
@@ -1144,6 +1215,60 @@ namespace cloudscribe.Core.Storage.EFCore.Common
 
             }
 
+        }
+
+
+        public async Task<List<ISiteRole>> GetAllRolesBySite(
+            Guid siteId,
+            CancellationToken cancellationToken = default(CancellationToken))
+        {
+
+            using (var dbContext = _contextFactory.CreateContext())
+            {
+                var listQuery = from x in dbContext.Roles
+                                where (
+                                x.SiteId.Equals(siteId) 
+                                )
+                                orderby x.NormalizedRoleName ascending
+                                //select new SiteRole
+                                //{
+                                //    Id = x.Id,
+                                //    SiteId = x.SiteId,
+                                //    NormalizedRoleName = x.NormalizedRoleName,
+                                //    RoleName = x.RoleName,
+                                //    // 2017-03-21 this line broke
+                                //    // https://github.com/aspnet/EntityFramework/issues/7714
+                                //    MemberCount = dbContext.UserRoles.Count<UserRole>(u => u.RoleId == x.Id)
+                                //};
+                                // workaround need to use anonymous type and then project back into SiteRole
+                                select new
+                                {
+                                    Id = x.Id,
+                                    SiteId = x.SiteId,
+                                    NormalizedRoleName = x.NormalizedRoleName,
+                                    RoleName = x.RoleName,
+                                    MemberCount = dbContext.UserRoles.Count<UserRole>(u => u.RoleId == x.Id)
+                                };
+
+                var anonList = await listQuery
+                    .AsSingleQuery()
+                    .AsNoTracking()
+                    .ToListAsync(cancellationToken)
+                    .ConfigureAwait(false);
+
+                var result = anonList.Select(x =>
+                   new SiteRole
+                   {
+                       Id = x.Id,
+                       SiteId = x.SiteId,
+                       NormalizedRoleName = x.NormalizedRoleName,
+                       RoleName = x.RoleName,
+                       MemberCount = x.MemberCount
+                   }
+                );
+
+                return result.ToList<ISiteRole>();
+            }
         }
 
 
@@ -1211,6 +1336,7 @@ namespace cloudscribe.Core.Storage.EFCore.Common
 
 
                 var data = await query
+                    .AsSingleQuery()
                     .AsNoTracking()
                     .Skip(offset)
                     .Take(pageSize)
@@ -1334,6 +1460,7 @@ namespace cloudscribe.Core.Storage.EFCore.Common
                             select u;
 
                 var data = await query
+                    .AsSingleQuery()
                     .AsNoTracking()
                     .Skip(offset)
                     .Take(pageSize)
@@ -1602,6 +1729,7 @@ namespace cloudscribe.Core.Storage.EFCore.Common
 
                 var data = await query
                     .AsNoTracking()
+                    .AsSingleQuery()
                     .ToListAsync<UserLocation>(cancellationToken)
                     .ConfigureAwait(false);
 

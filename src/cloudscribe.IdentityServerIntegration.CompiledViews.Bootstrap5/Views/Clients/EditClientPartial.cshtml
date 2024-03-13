@@ -10,84 +10,84 @@
             <label class="form-control">@Model.ClientId</label>
         </div>
         <div class="mb-3">
-            <label for="ClientName">@sr["Name"]</label>
+            <label class="form-label" for="ClientName">@sr["Name"]</label>
             <input class="form-control" asp-for="ClientName" />
             <span asp-validation-for="ClientName" class="invalid-feedback"></span>
             @Html.ValidationMessage("clienterror", new { @class = "text-danger" })
         </div>
         <div class="mb-3">
-            <label for="ClientUri">@sr["Client Uri"]</label>
+            <label class="form-label" for="ClientUri">@sr["Client Uri"]</label>
             <input class="form-control" asp-for="ClientUri" />
             <span asp-validation-for="ClientUri" class="invalid-feedback"></span>
         </div>
         <div class="mb-3">
-            <label for="AccessTokenType">@sr["Access Token Type"]</label>
+            <label class="form-label" for="AccessTokenType">@sr["Access Token Type"]</label>
             <select asp-for="AccessTokenType">
                 <option value="Jwt">Jwt</option>
                 <option value="Reference">Reference</option>
             </select>
         </div>
         <div class="mb-3">
-            <label for="RefreshTokenExpiration">@sr["Refresh Token Expiration"]</label>
+            <label class="form-label" for="RefreshTokenExpiration">@sr["Refresh Token Expiration"]</label>
             <select asp-for="RefreshTokenExpiration">
                 <option value="Sliding">Sliding</option>
                 <option value="Absolute">Absolute</option>
             </select>
         </div>
         <div class="mb-3">
-            <label for="RefreshTokenUsage">@sr["Refresh Token Usage"]</label>
+            <label class="form-label" for="RefreshTokenUsage">@sr["Refresh Token Usage"]</label>
             <select asp-for="RefreshTokenUsage">
                 <option value="ReUse">ReUse</option>
                 <option value="OneTimeOnly">OneTimeOnly</option>
             </select>
         </div>
         <div class="mb-3">
-            <label for="LogoUri">@sr["Logo Uri"]</label>
+            <label class="form-label" for="LogoUri">@sr["Logo Uri"]</label>
             <input class="form-control" asp-for="LogoUri" />
             <span asp-validation-for="LogoUri" class="invalid-feedback"></span>
         </div>
         <div class="mb-3">
-            <label for="FrontChannelLogoutUri">@sr["Front Channel Logout Uri"]</label>
+            <label class="form-label" for="FrontChannelLogoutUri">@sr["Front Channel Logout Uri"]</label>
             <input class="form-control" asp-for="FrontChannelLogoutUri" />
             <span asp-validation-for="FrontChannelLogoutUri" class="invalid-feedback"></span>
         </div>
         <div class="mb-3">
-            <label for="BackChannelLogoutUri">@sr["Back Channel Logout Uri"]</label>
+            <label class="form-label" for="BackChannelLogoutUri">@sr["Back Channel Logout Uri"]</label>
             <input class="form-control" asp-for="BackChannelLogoutUri" />
             <span asp-validation-for="BackChannelLogoutUri" class="invalid-feedback"></span>
         </div>
         <div class="mb-3">
-            <label for="AbsoluteRefreshTokenLifetime">@sr["Absolute Refresh Token Lifetime"]</label>
+            <label class="form-label" for="AbsoluteRefreshTokenLifetime">@sr["Absolute Refresh Token Lifetime"]</label>
             <input class="form-control" asp-for="AbsoluteRefreshTokenLifetime" />
             <span asp-validation-for="AbsoluteRefreshTokenLifetime" class="invalid-feedback"></span>
         </div>
         <div class="mb-3">
-            <label for="AccessTokenLifetime">@sr["Access Token Lifetime"]</label>
+            <label class="form-label" for="AccessTokenLifetime">@sr["Access Token Lifetime"]</label>
             <input class="form-control" asp-for="AccessTokenLifetime" />
             <span asp-validation-for="AccessTokenLifetime" class="invalid-feedback"></span>
         </div>
         <div class="mb-3">
-            <label for="AuthorizationCodeLifetime">@sr["Authorization Code Lifetime"]</label>
+            <label class="form-label" for="AuthorizationCodeLifetime">@sr["Authorization Code Lifetime"]</label>
             <input class="form-control" asp-for="AuthorizationCodeLifetime" />
             <span asp-validation-for="AuthorizationCodeLifetime" class="invalid-feedback"></span>
         </div>
         <div class="mb-3">
-            <label for="IdentityTokenLifetime">@sr["Identity Token Lifetime"]</label>
+            <label class="form-label" for="IdentityTokenLifetime">@sr["Identity Token Lifetime"]</label>
             <input class="form-control" asp-for="IdentityTokenLifetime" />
             <span asp-validation-for="IdentityTokenLifetime" class="invalid-feedback"></span>
         </div>
         <div class="mb-3">
-            <label for="SlidingRefreshTokenLifetime">@sr["Sliding Refresh Token Lifetime"]</label>
+            <label class="form-label" for="SlidingRefreshTokenLifetime">@sr["Sliding Refresh Token Lifetime"]</label>
             <input class="form-control" asp-for="SlidingRefreshTokenLifetime" />
             <span asp-validation-for="SlidingRefreshTokenLifetime" class="invalid-feedback"></span>
         </div>
         <div class="mb-3">
-            <label for="ClientClaimsPrefix">@sr["Client Claims Prefix"]</label>
+            <label class="form-label" for="ClientClaimsPrefix">@sr["Client Claims Prefix"]</label>
             <input class="form-control" asp-for="ClientClaimsPrefix" />
             <span asp-validation-for="ClientClaimsPrefix" class="invalid-feedback"></span>
         </div>
         <div class="mb-3">
-            <label for="PairWiseSubjectSalt">@sr["Pairwise Subject Salt"]</label>
+            <label class="form-label" for="PairWiseSubjectSalt">@sr["Pairwise Subject Salt"]</label>
             <input class="form-control" asp-for="PairWiseSubjectSalt" />
             <span asp-validation-for="PairWiseSubjectSalt" class="invalid-feedback"></span>
         </div>
@@ -112,7 +112,7 @@
         <div class="mb-3">
             <div class="form-check">
                 <input asp-for="AllowRememberConsent" class="form-check-input" />
-                <label asp-for="RequireConsent" class="form-check-label">@sr["Allow Remember Consent"]</label>
+                <label asp-for="AllowRememberConsent" class="form-check-label">@sr["Allow Remember Consent"]</label>
             </div>
         </div>
         <div class="mb-3">
@@ -175,6 +175,5 @@
             <a class="btn btn-primary" asp-action="Index" asp-controller="Clients"
                     asp-route-siteId="SiteId">@sr["Cancel"]</a>
         </div>
-    
+
     </form>
-   

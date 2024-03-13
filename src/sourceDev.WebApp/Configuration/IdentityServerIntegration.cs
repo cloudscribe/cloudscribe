@@ -1,4 +1,6 @@
-﻿using IdentityServer4.AccessTokenValidation;
+﻿using cloudscribe.Core.IdentityServerIntegration;
+using IdentityServer4.AccessTokenValidation;
+using IdentityServer4.Validation;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
@@ -29,6 +31,9 @@ namespace Microsoft.Extensions.DependencyInjection
             var efProvider = config["DevOptions:EFProvider"];
 
             var tmpKeyPath = Path.Combine(environment.ContentRootPath, "tempkey.rsa");
+
+
+            services.AddTransient<IRedirectUriValidator, IdServerRedirectValidator>();
 
             switch (storage)
             {

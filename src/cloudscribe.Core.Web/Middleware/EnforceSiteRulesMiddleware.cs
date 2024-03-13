@@ -12,6 +12,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using System.Linq;
+using System.Net;
 using System.Threading.Tasks;
 
 namespace cloudscribe.Core.Web.Middleware
@@ -182,18 +183,30 @@ namespace cloudscribe.Core.Web.Middleware
                         && (!context.Request.Path.Value.EndsWith("css.map")) //css.map
                         )
                     {
-                        var logMessage = $"user {userContext.Email} has not accepted terms of use so redirecting to terms of use acceptance page from requested path {context.Request.Path}";
-                        _logger.LogWarning(logMessage);
-                        context.Response.Redirect(agreementUrl);
+                        if (!context.Request.Path.StartsWithSegments("/api")) // exclude API calls
+                        {
+                            var logMessage = $"user {userContext.Email} has not accepted terms of use so redirecting to terms of use acceptance page from requested path {context.Request.Path}";
+                            _logger.LogWarning(logMessage);
+                            context.Response.Redirect(agreementUrl);
+                        }
+                        else
+                        {
+                            // unauth response for /api calls
+                            await ReturnErrorResponse(context);
+                        }
                     }
-
                 }
-
             }
             
             await _next(context);
-
         }
 
+
+        private async Task ReturnErrorResponse(HttpContext context)
+        {
+            context.Response.ContentType = "application/json";
+            context.Response.StatusCode = (int)HttpStatusCode.Forbidden;
+            await context.Response.StartAsync();
+        }
     }
 }

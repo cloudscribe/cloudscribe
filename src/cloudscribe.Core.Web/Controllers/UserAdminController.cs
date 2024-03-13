@@ -3,7 +3,7 @@
 // Author:					Joe Audette
 // Created:					2014-12-08
 // Last Modified:			2019-05-17
-// 
+//
 
 using cloudscribe.Core.Identity;
 using cloudscribe.Core.Models;
@@ -88,13 +88,13 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
             {
                 ViewData["Title"] = StringLocalizer["User Management"];
             }
-            
+
             var itemsPerPage = UIOptions.DefaultPageSize_UserList;
             if (pageSize > 0)
             {
                 itemsPerPage = pageSize;
             }
-            
+
             var siteMembers = await UserManager.GetPage(
                 selectedSite.Id,
                 pageNumber,
@@ -136,7 +136,7 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
             {
                 ViewData["Title"] = StringLocalizer["User Management"];
             }
-            
+
             var itemsPerPage = UIOptions.DefaultPageSize_UserList;
             if (pageSize > 0)
             {
@@ -213,7 +213,7 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
             )
         {
             var selectedSite = await SiteManager.GetSiteForDataOperations(siteId);
-            
+
             var itemsPerPage = UIOptions.DefaultPageSize_UserList;
             if (pageSize > 0)
             {
@@ -244,9 +244,9 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
             {
                 return PartialView("UserModalGridPartial", model);
             }
-            
+
             return PartialView("UserLookupModal", model);
-            
+
         }
 
         [Authorize(Policy = PolicyConstants.UserManagementPolicy)]
@@ -265,7 +265,7 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
             {
                 ViewData["Title"] = StringLocalizer["User Management"];
             }
-            
+
             var siteMembers = await UserManager.GetByIPAddress(
                 selectedSite.Id,
                 ipQuery);
@@ -309,13 +309,13 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
             {
                 ViewData["Title"] = StringLocalizer["Locked Out User Accounts"];
             }
-            
+
             var itemsPerPage = UIOptions.DefaultPageSize_UserList;
             if (pageSize > 0)
             {
                 itemsPerPage = pageSize;
             }
-            
+
             var siteMembers = await UserManager.GetPageLockedUsers(
                 selectedSite.Id,
                 pageNumber,
@@ -356,7 +356,7 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
             {
                 itemsPerPage = pageSize;
             }
-            
+
             var siteMembers = await UserManager.GetNotApprovedUsers(
                 selectedSite.Id,
                 pageNumber,
@@ -418,7 +418,7 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
             var success = false;
 
             if(user != null)
-            { 
+            {
                 var email = user.Email;
 
                 if(!string.IsNullOrWhiteSpace(email))
@@ -448,7 +448,7 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
                     }
                 }
             }
-           
+
             if(!success)
             {
                 this.AlertWarning(StringLocalizer["Failed to send password reset email for this user. Check that this user has a valid email, and check the site email settings"], true);
@@ -500,7 +500,7 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
 
 
             if (isValid && customDataIsValid)
-            { 
+            {
                 var user = new SiteUser()
                 {
                     SiteId = selectedSite.Id,
@@ -509,7 +509,7 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
                     FirstName = model.FirstName,
                     LastName = model.LastName,
                     DisplayName = model.DisplayName
-                       
+
                 };
 
                 if (model.DateOfBirth.HasValue)
@@ -575,7 +575,7 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
         public virtual async Task<ActionResult> UserActivity(
             Guid userId,
             Guid? siteId,
-            int pageNumber = 1, 
+            int pageNumber = 1,
             int pageSize = 10
             )
         {
@@ -613,6 +613,7 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
                 AvatarUrl = user.AvatarUrl,
                 FirstName = user.FirstName,
                 LastLoginUtc = user.LastLoginUtc,
+                AccessFailedCount = user.AccessFailedCount,
                 LastName = user.LastName,
                 LastPassswordChangenUtc = user.LastPasswordChangeUtc,
                 TimeZoneId = await TimeZoneIdResolver.GetUserTimeZoneId(),
@@ -640,7 +641,7 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
             {
                 KeyToAdjust = "UserActivity",
                 AdjustedText = string.Format(CultureInfo.CurrentUICulture, StringLocalizer["Activity - {0}"], user.Email),
-                ViewFilterName = NamedNavigationFilters.Breadcrumbs // this is default but showing here for readers of code 
+                ViewFilterName = NamedNavigationFilters.Breadcrumbs // this is default but showing here for readers of code
             };
             currentCrumbAdjuster.AddToContext();
 
@@ -722,10 +723,10 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
                 {
                     KeyToAdjust = "UserEdit",
                     AdjustedText = user.DisplayName,
-                    ViewFilterName = NamedNavigationFilters.Breadcrumbs // this is default but showing here for readers of code 
+                    ViewFilterName = NamedNavigationFilters.Breadcrumbs // this is default but showing here for readers of code
                 };
                 currentCrumbAdjuster.AddToContext();
-                
+
             }
 
             var viewName = await CustomUserInfo.GetUserEditViewName(UserManager.Site, HttpContext);
@@ -754,7 +755,7 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
                 ViewData["Title"] = StringLocalizer["Manage User"];
             }
 
-            
+
 
             bool isValid = ModelState.IsValid && (model.UserId != Guid.Empty);
             bool userNameAvailable = await UserManager.LoginIsAvailable(model.UserId, model.Username);
@@ -783,7 +784,7 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
             }
 
             //editing an existing user
-            
+
             if (user != null)
             {
                 user.Email = model.Email;
@@ -802,7 +803,7 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
                     // email is sent when approving an account
                 }
                 user.IsLockedOut = model.IsLockedOut;
-                        
+
                 user.TimeZoneId = model.TimeZoneId;
 
                 if (model.DateOfBirth.HasValue)
@@ -824,12 +825,12 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
 
                 await UserManager.UpdateAsync((SiteUser)user);
 
-                
+
 
                 this.AlertSuccess(string.Format(StringLocalizer["user account for {0} was successfully updated."],
                         user.DisplayName), true);
-                        
-                    
+
+
             }
             else
             {
@@ -856,7 +857,7 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
                 return RedirectToAction("Index");
             }
 
-            
+
             var selectedSite = await SiteManager.GetSiteForDataOperations(siteId);
             // only server admin site can edit other sites users
             if (selectedSite.Id != SiteManager.CurrentSite.Id)
@@ -938,7 +939,7 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
             var result = await UserManager.ChangeUserPassword(user as SiteUser, model.NewPassword, true);
             if (result.Succeeded)
             {
-               
+
 
                 this.AlertSuccess(StringLocalizer["The user password has been changed."], true);
                 return RedirectToAction("Index");
@@ -956,7 +957,7 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
                 }
 
                 return RedirectToAction("ChangeUserPassword", new { userId = model.UserId });
-                
+
             }
             //AddErrors(result);
 
@@ -968,8 +969,8 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
         [HttpPost]
         [ValidateAntiForgeryToken]
         public virtual async Task<ActionResult> ApproveUserAccount(
-            Guid siteId, 
-            Guid userId, 
+            Guid siteId,
+            Guid userId,
             bool sendApprovalEmail,
             string returnUrl = null)
         {
@@ -985,7 +986,7 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
 
                     this.AlertSuccess(string.Format(StringLocalizer["user account for {0} was successfully approved."],
                             user.DisplayName), true);
-                    
+
                     if(sendApprovalEmail)
                     {
                         var loginUrl = Url.Action("Login", "Account",
@@ -998,7 +999,7 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
                             StringLocalizer["Account Approved"],
                             loginUrl);
                     }
-                }   
+                }
             }
 
             if (!string.IsNullOrEmpty(returnUrl))
@@ -1024,8 +1025,8 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
                 {
                     this.AlertSuccess(string.Format(StringLocalizer["user account for {0} was successfully deleted."],
                         user.DisplayName), true);
- 
-                }        
+
+                }
             }
 
             return RedirectToAction("Index", "UserAdmin", new { siteId = selectedSite.Id, pageNumber = returnPageNumber });
@@ -1036,8 +1037,8 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
         [ValidateAntiForgeryToken]
         public virtual async Task<IActionResult> AddClaim(
             //Guid siteId,
-            Guid  userId, 
-            string claimType, 
+            Guid  userId,
+            string claimType,
             string claimValue)
         {
             var selectedSite = SiteManager.CurrentSite;
@@ -1053,7 +1054,7 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
                              claimType), true);
                 }
             }
-            
+
             return RedirectToAction("UserEdit", "UserAdmin", new { siteId = selectedSite.Id, userId });
         }
 
@@ -1083,7 +1084,8 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
             return RedirectToAction("UserEdit", "UserAdmin", new { siteId = selectedSite.Id, userId });
         }
 
-        [Authorize(Policy = PolicyConstants.RoleAdminPolicy)]
+        [Authorize(Policy = PolicyConstants.UserManagementPolicy)]
+        [Authorize(Policy = PolicyConstants.RoleLookupPolicy)]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public virtual async Task<IActionResult> RemoveRole(
@@ -1091,7 +1093,7 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
             Guid userId,
             string roleName)
         {
-            
+
             var selectedSite = SiteManager.CurrentSite;
 
             var canRemove = true;
@@ -1115,8 +1117,8 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
                 this.AlertDanger(StringLocalizer["Sorry, but only other Administrators can remove users from the Administrators role."], true);
             }
 
-           
-           
+
+
             return RedirectToAction("UserEdit", "UserAdmin", new { siteId = selectedSite.Id, userId });
         }
 

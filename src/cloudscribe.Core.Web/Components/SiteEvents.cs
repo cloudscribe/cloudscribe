@@ -22,13 +22,15 @@ namespace cloudscribe.Core.Web.Components
             IEnumerable<IHandleSitePreUpdate> preUpdateHandlers,
             IEnumerable<IHandleSitePreDelete> preDeleteHandlers,
             IEnumerable<IHandleSiteUpdated> updateHandlers,
+            IEnumerable<IHandleSiteCloned> cloneSiteHandlers,
             ILogger<SiteEvents> logger
             )
         {
-            _createdHandlers = createdHandlers;
+            _createdHandlers   = createdHandlers;
             _preUpdateHandlers = preUpdateHandlers;
             _preDeleteHandlers = preDeleteHandlers;
-            _updateHandlers = updateHandlers;
+            _updateHandlers    = updateHandlers;
+            _cloneSiteHandlers = cloneSiteHandlers;
             _log = logger;
         }
 
@@ -36,6 +38,7 @@ namespace cloudscribe.Core.Web.Components
         private IEnumerable<IHandleSitePreUpdate> _preUpdateHandlers;
         private IEnumerable<IHandleSitePreDelete> _preDeleteHandlers;
         private IEnumerable<IHandleSiteUpdated> _updateHandlers;
+        private readonly IEnumerable<IHandleSiteCloned> _cloneSiteHandlers;
         private ILogger _log;
 
         public async Task HandleSiteCreated(
@@ -110,6 +113,25 @@ namespace cloudscribe.Core.Web.Components
             }
         }
 
+
+        public async Task HandleSiteCloned(
+           ISiteSettings newSite, 
+           ISiteSettings sourceSite,
+           CancellationToken cancellationToken = default(CancellationToken)
+           )
+        {
+            foreach (var handler in _cloneSiteHandlers)
+            {
+                try
+                {
+                    await handler.HandleSiteCloned(newSite, sourceSite, cancellationToken).ConfigureAwait(false);
+                }
+                catch (Exception ex)
+                {
+                    _log.LogError($"{ex.Message} :  {ex.StackTrace}");
+                }
+            }
+        }
 
     }
 }

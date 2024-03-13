@@ -1,0 +1,23 @@
+{
+	"folders": [
+		{
+			"path": "."
+		}
+	],
+	"settings": {
+		"taskExplorer.enabledTasks": {
+			"ant": false,
+			"batch": false,
+			"composer": false,
+			"gradle": false,
+			"grunt": false,
+			"make": false,
+			"maven": false,
+			"perl": false,
+			"pipenv": false,
+			"python": false,
+			"ruby": false
+		},
+		"trailing-spaces.trimOnSave": true
+	}
+}

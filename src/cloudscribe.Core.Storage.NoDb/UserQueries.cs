@@ -126,6 +126,35 @@ namespace cloudscribe.Core.Storage.NoDb
                 ).FirstOrDefault();
         }
 
+        public async Task<List<ISiteUser>> GetAllUsersForSite(
+           Guid siteId,
+           CancellationToken cancellationToken = default(CancellationToken))
+        {
+            cancellationToken.ThrowIfCancellationRequested();
+
+            var projectId = siteId.ToString();
+
+            var allUsers = await userQueries.GetAllAsync(projectId, cancellationToken).ConfigureAwait(false);
+
+            return allUsers.Where(x => x.SiteId == siteId 
+                ).ToList<ISiteUser>();
+        }
+
+        public async Task<List<ISiteUser>> GetAllApprovedUsersForSite(
+          Guid siteId,
+          CancellationToken cancellationToken = default(CancellationToken))
+        {
+            cancellationToken.ThrowIfCancellationRequested();
+
+            var projectId = siteId.ToString();
+
+            var allUsers = await userQueries.GetAllAsync(projectId, cancellationToken).ConfigureAwait(false);
+
+            return allUsers.Where(x => x.SiteId == siteId && x.AccountApproved == true
+                ).ToList<ISiteUser>();
+        }
+
+
         public async Task<List<ISiteUser>> GetUsers(
             Guid siteId,
             List<Guid> userIds,
@@ -166,6 +195,33 @@ namespace cloudscribe.Core.Storage.NoDb
                 && (
                     (x.NormalizedUserName == userName)
                     || (allowEmailFallback && x.NormalizedEmail == userName)
+                    )
+                ).FirstOrDefault();
+        }
+
+
+        public async Task<ISiteUser> FetchByLoginNameCaseInsensitive(
+            Guid siteId,
+            string userName,
+            bool allowEmailFallback,
+            CancellationToken cancellationToken = default(CancellationToken))
+        {
+            ThrowIfDisposed();
+            cancellationToken.ThrowIfCancellationRequested();
+
+            //await EnsureProjectId().ConfigureAwait(false);
+            var projectId = siteId.ToString();
+
+            var allUsers = await userQueries.GetAllAsync(projectId, cancellationToken).ConfigureAwait(false);
+
+            //string loweredUserName = userName.ToLowerInvariant();
+
+            return allUsers.Where(
+                x => x.SiteId == siteId
+                && (
+                    (x.NormalizedUserName == userName.ToUpper())
+                    || (allowEmailFallback && x.NormalizedEmail == userName.ToUpper())
+                    || x.UserName.ToUpper() == userName.ToUpper()
                     )
                 ).FirstOrDefault();
         }
@@ -1215,7 +1271,7 @@ namespace cloudscribe.Core.Storage.NoDb
                 && (
                  (searchInput == "")
                         || x.RoleName.Contains(searchInput)
-                        || x.NormalizedRoleName.Contains(searchInput)
+                        || x.NormalizedRoleName.Contains(searchInput.ToUpper())
                 )
             );
 
@@ -1247,6 +1303,42 @@ namespace cloudscribe.Core.Storage.NoDb
             return result;
 
         }
+
+
+        public async Task<List<ISiteRole>> GetAllRolesBySite(
+            Guid siteId,
+            CancellationToken cancellationToken = default(CancellationToken))
+        {
+            ThrowIfDisposed();
+            cancellationToken.ThrowIfCancellationRequested();
+
+            //await EnsureProjectId().ConfigureAwait(false);
+            var projectId = siteId.ToString();
+
+            var allRoles = await roleQueries.GetAllAsync(projectId, cancellationToken).ConfigureAwait(false);
+            var filteredRoles = allRoles.Where(
+                x => x.SiteId == siteId
+               );
+
+            var allUserRoles = await userRoleQueries.GetAllAsync(projectId, cancellationToken).ConfigureAwait(false);
+
+            var listQuery = from x in filteredRoles
+                            orderby x.NormalizedRoleName ascending
+                            select new SiteRole
+                            {
+                                Id = x.Id,
+                                SiteId = x.SiteId,
+                                NormalizedRoleName = x.NormalizedRoleName,
+                                RoleName = x.RoleName,
+                                MemberCount = allUserRoles.Count<UserRole>(u => u.RoleId == x.Id)
+                            };
+
+            var data = listQuery
+                .ToList<ISiteRole>();
+
+            return data;
+        }
+
 
         public async Task<int> CountUsersInRole(
             Guid siteId,

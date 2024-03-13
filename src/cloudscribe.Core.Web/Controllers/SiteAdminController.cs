@@ -3,9 +3,10 @@
 // Author:					Joe Audette
 // Created:					2014-10-26
 // Last Modified:			2019-04-20
-// 
+//
 
 using cloudscribe.Core.Models;
+using cloudscribe.Core.Models.EventHandlers;
 using cloudscribe.Core.Models.Identity;
 using cloudscribe.Core.Web.Components;
 using cloudscribe.Core.Web.Components.Messaging;
@@ -21,6 +22,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Localization;
 using Microsoft.Extensions.Options;
 using System;
@@ -51,7 +53,9 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
             IOptionsMonitorCache<OpenIdConnectOptions> oidcOptionsCache,
             IOptionsMonitorCache<FacebookOptions>      facebookOptionsCache,
             IOptionsMonitorCache<GoogleOptions>        googleOptionsCache,
-            IOptionsMonitorCache<TwitterOptions>       twitterOptionsCache
+            IOptionsMonitorCache<TwitterOptions>       twitterOptionsCache,
+            ISiteQueries                               siteQueries,
+            IConfiguration                             configuration
             )
         {
             if (multiTenantOptions == null) { throw new ArgumentNullException(nameof(multiTenantOptions)); }
@@ -73,10 +77,13 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
             FacebookOptionsCache = facebookOptionsCache;
             GoogleOptionsCache   = googleOptionsCache;
             TwitterOptionsCache  = twitterOptionsCache;
+            SiteQueries          = siteQueries;
+            Configuration        = configuration;
         }
 
         protected SiteContext CurrentSite;
         protected IOptionsMonitorCache<OpenIdConnectOptions> OidcOptionsCache;
+
         protected SiteManager SiteManager { get; private set; }
         protected GeoDataManager GeoDataManager { get; private set; }
         protected ILdapHelper LdapHelper { get; private set; }
@@ -94,6 +101,9 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
         protected IOptionsMonitorCache<GoogleOptions> GoogleOptionsCache { get; }
         protected IOptionsMonitorCache<TwitterOptions> TwitterOptionsCache { get; }
         protected RequestLocalizationOptions LocalizationOptions { get; private set; }
+        protected ISiteQueries SiteQueries { get; private set; }
+        protected IConfiguration Configuration { get; private set; }
+
 
         // GET: /SiteAdmin
         [Authorize(Policy = PolicyConstants.AdminMenuPolicy)]
@@ -127,7 +137,7 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
             {
                 itemsPerPage = pageSize;
             }
-            
+
             var filteredSiteId = Guid.Empty; //nothing filtered
             var sites = await SiteManager.GetPageOtherSites(
                 filteredSiteId,
@@ -195,10 +205,10 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
             {
                 model.HostName = selectedSite.PreferredHostName;
             }
-            
+
             model.Theme = selectedSite.Theme;
-            
-            
+
+
             // can only delete from server admin site/cannot delete server admin site
             if (SiteManager.CurrentSite.IsServerAdminSite)
             {
@@ -209,7 +219,7 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
             }
 
             PopulateLists(model, selectedSite);
-            
+
             return View(model);
         }
 
@@ -251,7 +261,7 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
                     model.ShowDelete = UIOptions.AllowDeleteChildSites;
                 }
             }
-            
+
             if (model.SiteId == Guid.Empty)
             {
                 this.AlertDanger(StringLocalizer["oops something went wrong, site was not found."], true);
@@ -296,7 +306,7 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
                     PopulateLists(model, selectedSite);
                     return View(model);
                 }
-                
+
                 var folderAvailable = await SiteManager.FolderNameIsAvailable(selectedSite.Id, model.SiteFolderName);
                 if (!folderAvailable)
                 {
@@ -331,10 +341,10 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
                             model.HostName);
                     }
                 }
-                
+
                 selectedSite.PreferredHostName = model.HostName;
             }
-            
+
             selectedSite.SiteName = model.SiteName;
             selectedSite.TimeZoneId = model.TimeZoneId;
             string oldFolderName = null;
@@ -356,12 +366,12 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
             selectedSite.HeaderContent = model.HeaderContent;
             selectedSite.FooterContent = model.FooterContent;
             selectedSite.LogoUrl = model.LogoUrl;
-            
+
             await SiteManager.Update(selectedSite, oldFolderName);
-            
+
             this.AlertSuccess(string.Format(StringLocalizer["Basic site settings for {0} were successfully updated."],
                         selectedSite.SiteName), true);
-            
+
             return RedirectToAction("Index");
         }
 
@@ -385,9 +395,190 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
                                    Value = x,
                                    Selected = model.TimeZoneId == x
                                });
-            
+
             return View(model);
         }
+
+
+        // GET: /SiteAdmin/CloneSite
+        [HttpGet]
+        [Authorize(Policy = PolicyConstants.ServerAdminPolicy)]
+        public virtual async Task<ActionResult> CloneSite(int slp = 1)
+        {
+            ViewData["Title"] = StringLocalizer["Create New Site From Existing Site"];
+
+            var model = new NewSiteFromCloneViewModel
+            {
+                ReturnPageNumber = slp, //site list return page
+                SiteId = Guid.Empty,
+                TimeZoneId = SiteManager.CurrentSite.TimeZoneId
+            };
+            model.AllTimeZones = TimeZoneHelper.GetTimeZoneList().Select(x =>
+                               new SelectListItem
+                               {
+                                   Text = x,
+                                   Value = x,
+                                   Selected = model.TimeZoneId == x
+                               });
+
+            List<ISiteInfo> sites = await SiteQueries.GetList();
+
+            bool useFolderNames = Configuration.GetSection("MultiTenantOptions").GetValue<string>("Mode") == "FolderName";
+
+            foreach (var site in sites)
+            {
+                string url = string.Empty;
+                if (useFolderNames) url = "/" + site.SiteFolderName;
+                else url = site.PreferredHostName;
+
+                model.CloneFromSites.Add(new NewSiteFromCloneViewModel.SiteDetails
+                {
+                    SiteId = site.Id,
+                    SiteDescriptor = site.SiteName + " (" + url + ") [ " + site.Id + " ]"
+                });
+            }
+
+            return View(model);
+        }
+
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        [Authorize(Policy = PolicyConstants.ServerAdminPolicy)]
+        public virtual async Task<ActionResult> CloneSite(NewSiteFromCloneViewModel model)
+        {
+            ViewData["Title"] = "Clone Site";
+
+            if (!ModelState.IsValid)
+            {
+                return View(model);
+            }
+
+            bool addHostName = false;
+            var newSite = new SiteSettings
+            {
+                Id = Guid.NewGuid()
+            };
+
+            // Get clone source
+            SiteSettings sourceSite = await SiteManager.Fetch(model.CloneFromSiteId) as SiteSettings;
+
+            if (sourceSite == null)
+            {
+                ModelState.AddModelError("siteerror", StringLocalizer["Source site to clone from was not found."]);
+                return View(model);
+            }
+
+            if (MultiTenantOptions.Mode == MultiTenantMode.FolderName)
+            {
+                if (string.IsNullOrEmpty(model.SiteFolderName))
+                {
+                    model.AllTimeZones = TimeZoneHelper.GetTimeZoneList().Select(x =>
+                               new SelectListItem
+                               {
+                                   Text = x,
+                                   Value = x,
+                                   Selected = model.TimeZoneId == x
+                               });
+                    ModelState.AddModelError("foldererror", StringLocalizer["Folder name is required."]);
+                    return View(model);
+                }
+                else
+                {
+                    //https://github.com/joeaudette/cloudscribe.StarterKits/issues/27
+                    model.SiteFolderName = model.SiteFolderName.ToLowerInvariant();
+                }
+
+                bool folderAvailable = await SiteManager.FolderNameIsAvailable(newSite.Id, model.SiteFolderName);
+                if (!folderAvailable)
+                {
+                    model.AllTimeZones = TimeZoneHelper.GetTimeZoneList().Select(x =>
+                               new SelectListItem
+                               {
+                                   Text = x,
+                                   Value = x,
+                                   Selected = model.TimeZoneId == x
+                               });
+                    ModelState.AddModelError("foldererror", StringLocalizer["The selected folder name is already in use on another site."]);
+                    return View(model);
+                }
+            }
+            else
+            {
+                ISiteHost host;
+                if (!string.IsNullOrEmpty(model.HostName))
+                {
+                    model.HostName = model.HostName.Replace("https://", string.Empty).Replace("http://", string.Empty);
+                    host = await SiteManager.GetSiteHost(model.HostName);
+                    if (host != null)
+                    {
+                        model.AllTimeZones = TimeZoneHelper.GetTimeZoneList().Select(x =>
+                               new SelectListItem
+                               {
+                                   Text = x,
+                                   Value = x,
+                                   Selected = model.TimeZoneId == x
+                               });
+                        ModelState.AddModelError("hosterror", StringLocalizer["The selected host/domain name is already in use on another site."]);
+                        return View(model);
+                    }
+                    addHostName = true;
+                }
+            }
+
+            // only the first site created by setup page should be a server admin site
+            newSite.IsServerAdminSite = false;
+            newSite.SiteName = model.SiteName;
+
+            var siteNumber = 1 + await SiteManager.CountOtherSites(Guid.Empty);
+            newSite.AliasId = $"s{siteNumber}";
+
+
+            if (MultiTenantOptions.Mode == MultiTenantMode.FolderName)
+            {
+                newSite.SiteFolderName = model.SiteFolderName;
+            }
+            else if (addHostName)
+            {
+                newSite.PreferredHostName = model.HostName;
+            }
+
+            newSite.SiteIsClosed = model.IsClosed;
+            newSite.SiteIsClosedMessage = model.ClosedMessage;
+            newSite.TimeZoneId = model.TimeZoneId;
+
+            
+            /// CLONING SPECIFIC 
+            /// ===================
+            await SiteManager.CreateNewSiteFromClone(newSite, sourceSite);
+
+            await SiteManager.CreateRequiredRolesAndAdminUser(
+                newSite,
+                model.Email,
+                model.LoginName,
+                model.DisplayName,
+                model.Password
+                );
+
+            await SiteManager.CreateRolesFromClone(newSite, sourceSite, model.LoginName);
+            
+            await SiteManager.PostProcessClonedSite(newSite, sourceSite);
+
+            ////  -------------------
+
+
+            if (addHostName)
+            {
+                await SiteManager.AddHost(newSite.Id, model.HostName);
+            }
+
+            this.AlertSuccess(string.Format(StringLocalizer["Basic site settings for {0} were successfully cloned."],
+                        newSite.SiteName), true);
+
+            return RedirectToAction("SiteList", new { pageNumber = model.ReturnPageNumber });
+
+        }
+
 
         [HttpPost]
         [ValidateAntiForgeryToken]
@@ -400,7 +591,7 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
             {
                 return View(model);
             }
-            
+
             bool addHostName = false;
             var newSite = new SiteSettings
             {
@@ -463,14 +654,14 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
                     addHostName = true;
                 }
             }
-            
+
             // only the first site created by setup page should be a server admin site
             newSite.IsServerAdminSite = false;
             newSite.SiteName = model.SiteName;
-            
+
             var siteNumber = 1 + await SiteManager.CountOtherSites(Guid.Empty);
             newSite.AliasId = $"s{siteNumber}";
-            
+
 
             if (MultiTenantOptions.Mode == MultiTenantMode.FolderName)
             {
@@ -493,15 +684,15 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
                 model.DisplayName,
                 model.Password
                 );
-            
+
             if (addHostName)
             {
                 await SiteManager.AddHost(newSite.Id, model.HostName);
             }
-            
+
             this.AlertSuccess(string.Format(StringLocalizer["Basic site settings for {0} were successfully created."],
                         newSite.SiteName), true);
-            
+
             return RedirectToAction("SiteList", new { pageNumber = model.ReturnPageNumber });
 
         }
@@ -519,7 +710,7 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
         [Authorize(Policy = PolicyConstants.AdminPolicy)]
         [HttpPost]
         public virtual async Task<JsonResult> FolderNameAvailable(Guid? siteId, string siteFolderName)
-        {           
+        {
             if(string.IsNullOrWhiteSpace(siteFolderName))
             {
                 return Json(false);
@@ -540,7 +731,7 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
             return Json(available);
         }
 
-        
+
         [HttpGet]
         [Authorize(Policy = PolicyConstants.AdminPolicy)]
         public virtual async Task<IActionResult> CompanyInfo(
@@ -618,7 +809,7 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
             {
                 ViewData["Title"] = StringLocalizer["Company Info"];
             }
-            else 
+            else
             {
                 ViewData["Title"] = string.Format(CultureInfo.CurrentUICulture, StringLocalizer["{0} - Company Info"], selectedSite.SiteName);
             }
@@ -641,7 +832,7 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
 
                 return RedirectToAction("Index");
             }
-            
+
             selectedSite.CompanyName = model.CompanyName;
             selectedSite.CompanyStreetAddress = model.CompanyStreetAddress;
             selectedSite.CompanyStreetAddress2 = model.CompanyStreetAddress2;
@@ -655,10 +846,10 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
             selectedSite.CompanyWebsite = model.CompanyWebsite;
 
             await SiteManager.Update(selectedSite);
-            
+
             this.AlertSuccess(string.Format(StringLocalizer["Company Info for {0} was successfully updated."],
                         selectedSite.SiteName), true);
-            
+
             if ((SiteManager.CurrentSite.IsServerAdminSite)
                 && (SiteManager.CurrentSite.Id != selectedSite.Id)
                 )
@@ -770,12 +961,12 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
             selectedSite.EmailSenderName = model.EmailSenderName;
             selectedSite.EmailApiKey = model.EmailApiKey;
             selectedSite.EmailApiEndpoint = model.EmailApiEndpoint;
-            
+
             await SiteManager.Update(selectedSite);
-            
+
             this.AlertSuccess(string.Format(StringLocalizer["Email Settings for {0} were successfully updated."],
                         selectedSite.SiteName), true);
-            
+
             if ((SiteManager.CurrentSite.IsServerAdminSite)
                 && (SiteManager.CurrentSite.Id != selectedSite.Id)
                 )
@@ -838,7 +1029,7 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
         //    {
         //        ViewData["Title"] = _sr["SMS Settings"];
         //    }
-        //    else 
+        //    else
         //    {
         //        ViewData["Title"] = string.Format(CultureInfo.CurrentUICulture, _sr["{0} - SMS Settings"], selectedSite.SiteName);
         //    }
@@ -902,7 +1093,7 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
                 SiteId                     = selectedSite.Id,
                 AllowNewRegistration       = selectedSite.AllowNewRegistration,
                 AllowPersistentLogin       = selectedSite.AllowPersistentLogin,
-                DisableDbAuth              = selectedSite.DisableDbAuth, 
+                DisableDbAuth              = selectedSite.DisableDbAuth,
                 RequireApprovalBeforeLogin = selectedSite.RequireApprovalBeforeLogin,
                 RequireConfirmedEmail      = selectedSite.RequireConfirmedEmail,
                 UseEmailForLogin           = selectedSite.UseEmailForLogin,
@@ -954,7 +1145,7 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
                 this.AlertDanger(StringLocalizer["oops something went wrong, site was not found."], true);
                 return RedirectToAction("Index");
             }
-            
+
             if (!ModelState.IsValid)
             {
                 model.EmailIsConfigured = await SiteCapabilities.SupportsEmailNotification(new SiteContext(selectedSite));
@@ -962,7 +1153,7 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
                 model.HasAnySocialAuthEnabled = selectedSite.HasAnySocialAuthEnabled();
                 return View(model);
             }
-            
+
             selectedSite.AccountApprovalEmailCsv    = model.AccountApprovalEmailCsv;
             selectedSite.AllowNewRegistration       = model.AllowNewRegistration;
             selectedSite.AllowPersistentLogin       = model.AllowPersistentLogin;
@@ -977,17 +1168,17 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
 
             selectedSite.LdapDomain                 = model.LdapDomain;
             selectedSite.LdapPort                   = model.LdapPort;
-            selectedSite.LdapRootDN                 = model.LdapRootDN;
+            // selectedSite.LdapRootDN                 = model.LdapRootDN; //should never need this!
             selectedSite.LdapServer                 = model.LdapServer;
             selectedSite.LdapUserDNKey              = model.LdapUserDNKey;
             selectedSite.LdapUserDNFormat           = model.LdapUserDNFormat;
             selectedSite.LdapUseSsl                 = model.LdapUseSsl;
-            
+
             await SiteManager.Update(selectedSite);
-            
+
             this.AlertSuccess(string.Format(StringLocalizer["Security Settings for {0} was successfully updated."],
                         selectedSite.SiteName), true);
-            
+
             if ((SiteManager.CurrentSite.IsServerAdminSite)
                 && (SiteManager.CurrentSite.Id != selectedSite.Id)
                 )
@@ -1003,7 +1194,7 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
         [Authorize(Policy = PolicyConstants.AdminPolicy)]
         public virtual async Task<ActionResult> TestLdap(
             Guid siteId,
-            string ldapTestUsername, 
+            string ldapTestUsername,
             string ldapTestPassword)
         {
             var selectedSite = await SiteManager.GetSiteForEdit(siteId);
@@ -1024,19 +1215,42 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
                 return RedirectToAction("SecuritySettings");
             }
 
-            var ldapUser = await LdapHelper.TryLdapLogin(siteContext as ILdapSettings, ldapTestUsername, ldapTestPassword);
-            if(ldapUser == null)
+            var results = await LdapHelper.TestLdapServers(siteContext as ILdapSettings, ldapTestUsername, ldapTestPassword);
+            foreach (var result in results)
             {
-                message = StringLocalizer["Test of LDAP authentication failed, check the system log for related errors and review your settings."];
-                this.AlertDanger(message, true);
-            }
-            else
-            {
-                message = StringLocalizer["Test of LDAP authentication succeeded, LDAP settings seem to be correct."];
-                this.AlertSuccess(message, true);
-            }
-            return RedirectToAction("SecuritySettings");
+                LdapUser user = result.Value;
+                switch (user.ResultStatus)
+                {
+                    case "PASS":
+                        message = result.Key + ": "
+                            + "<br>" + StringLocalizer["Test of LDAP connection succeeded, LDAP settings seem to be correct and the user authorisation succeeded."];
+                        if (user.FirstName != null || user.LastName != null || user.Email != null || user.DisplayName != null)
+                        {
+                            message += "<br>" + StringLocalizer["The following user details were retrieved from LDAP: "]
+                            + "<br>" + StringLocalizer["Firstname"] + ": " + user.FirstName
+                            + "<br>" + StringLocalizer["Lastname"] + ": " + user.LastName
+                            + "<br>" + StringLocalizer["Email"] + ": " + user.Email
+                            + "<br>" + StringLocalizer["Display Name"] + ": " + user.DisplayName;
+                        }
+                        this.AlertSuccess(message, true);
+                        break;
+                    case "Bind Failed":
+                        message = result.Key + ": "
+                            + "<br>" + StringLocalizer["Test of LDAP connection succeeded, but the user authorisation failed."]
+                            + "<br>" + StringLocalizer["Check the system log for related errors and review your settings."];
+                        this.AlertWarning(message, true);
+                        break;
+                    case "Connect Error":
+                        message = result.Key + ": "
+                            + "<br>" + StringLocalizer["Test of LDAP connection failed. check the system log for related errors and review your settings."]
+                            + "<br>" + StringLocalizer["Check the system log for related errors and review your settings."];
+                        this.AlertDanger(message, true);
+                        break;
+                }
 
+            }
+
+            return RedirectToAction("SecuritySettings");
 
         }
 
@@ -1064,7 +1278,7 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
                 SiteId = selectedSite.Id,
                 PrivacyPolicy = selectedSite.PrivacyPolicy,
                 RequireCookieConsent = selectedSite.RequireCookieConsent
-                
+
             };
             if(!string.IsNullOrWhiteSpace(selectedSite.CookiePolicySummary))
             {
@@ -1096,7 +1310,7 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
             {
                 ViewData["Title"] = string.Format(CultureInfo.CurrentUICulture, "{0} - Privacy Settings", selectedSite.SiteName);
             }
-            
+
             if (model.SiteId == Guid.Empty)
             {
                 this.AlertDanger(StringLocalizer["oops something went wrong, site was not found."], true);
@@ -1111,7 +1325,7 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
             selectedSite.CookiePolicySummary = model.CookiePolicySummary;
             selectedSite.PrivacyPolicy = model.PrivacyPolicy;
             selectedSite.RequireCookieConsent = model.RequireCookieConsent;
-            
+
             await SiteManager.Update(selectedSite);
 
             this.AlertSuccess(string.Format(StringLocalizer["Privacy Settings for {0} was successfully updated."],
@@ -1170,7 +1384,7 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
             {
                 ViewData["Title"] = StringLocalizer["Captcha Settings"];
             }
-            else 
+            else
             {
                 ViewData["Title"] = string.Format(CultureInfo.CurrentUICulture, StringLocalizer["{0} - Captcha Settings"], selectedSite.SiteName);
             }
@@ -1199,10 +1413,10 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
             selectedSite.CaptchaOnLogin = model.RequireCaptchaOnLogin;
 
             await SiteManager.Update(selectedSite);
-            
+
             this.AlertSuccess(string.Format(StringLocalizer["Captcha Settings for {0} was successfully updated."],
                         selectedSite.SiteName), true);
-            
+
             if ((SiteManager.CurrentSite.IsServerAdminSite)
                 &&(SiteManager.CurrentSite.Id != selectedSite.Id)
                 )
@@ -1266,12 +1480,12 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
 
 
         // Post: /SiteAdmin/SocialLogins
-        [HttpPost] 
+        [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize(Policy = PolicyConstants.AdminPolicy)]
         public virtual async Task<ActionResult> SocialLogins(SocialLoginSettingsViewModel model)
         {
-           
+
 
 
             var selectedSite = await SiteManager.GetSiteForEdit(model.SiteId);
@@ -1301,7 +1515,7 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
                 this.AlertDanger(StringLocalizer["oops something went wrong, site was not found."], true);
                 return RedirectToAction("Index");
             }
-            
+
             selectedSite.FacebookAppId         = model.FacebookAppId;
             selectedSite.FacebookAppSecret     = model.FacebookAppSecret;
             selectedSite.GoogleClientId        = model.GoogleClientId;
@@ -1318,7 +1532,7 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
 
             await SiteManager.Update(selectedSite);
 
-            // jk - clear these settings from the cache here knowing that they will get re-queried and re-added in 
+            // jk - clear these settings from the cache here knowing that they will get re-queried and re-added in
             // SiteOpenIdConnectOptions : OptionsMonitor<OpenIdConnectOptions>    >> Get >> CreateOptions
             // and likewise for the other providers
             OidcOptionsCache    .TryRemove(ResolveCacheName(CurrentSite, "OpenIdConnect"));
@@ -1329,7 +1543,7 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
 
             this.AlertSuccess(string.Format(StringLocalizer["Social Login Settings for {0} was successfully updated."],
                         selectedSite.SiteName), true);
-            
+
             if ((SiteManager.CurrentSite.IsServerAdminSite)
                 && (SiteManager.CurrentSite.Id != selectedSite.Id)
                 )
@@ -1401,15 +1615,15 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
                 this.AlertDanger(StringLocalizer["oops something went wrong, site was not found."], true);
                 return RedirectToAction("Index");
             }
-            
+
             selectedSite.LoginInfoTop = model.LoginInfoTop;
             selectedSite.LoginInfoBottom = model.LoginInfoBottom;
-            
+
             await SiteManager.Update(selectedSite);
-            
+
             this.AlertSuccess(string.Format(StringLocalizer["Login Page Info for {0} was successfully updated."],
                         selectedSite.SiteName), true);
-            
+
             if ((SiteManager.CurrentSite.IsServerAdminSite)
                 && (SiteManager.CurrentSite.Id != selectedSite.Id)
                 )
@@ -1490,17 +1704,17 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
                     // changing the terms date will force non admin users to re-accept the terms
                     selectedSite.TermsUpdatedUtc = DateTime.UtcNow;
                 }
-                
+
             }
-            
+
             selectedSite.RegistrationPreamble = model.RegistrationPreamble;
             selectedSite.RegistrationAgreement = model.RegistrationAgreement;
-            
+
             await SiteManager.Update(selectedSite);
-            
+
             this.AlertSuccess(string.Format(StringLocalizer["Registration Page Content for {0} was successfully updated."],
                         selectedSite.SiteName), true);
-            
+
             if ((SiteManager.CurrentSite.IsServerAdminSite)
                 && (SiteManager.CurrentSite.Id != selectedSite.Id)
                 )
@@ -1541,7 +1755,7 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
                             selectedSite.SiteName)
                             , true);
             }
-            
+
             return RedirectToAction("SiteList", new { pageNumber = returnPageNumber });
         }
 
@@ -1615,7 +1829,7 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
                 else
                 {
                     await SiteManager.AddHost(selectedSite.Id, hostName);
-                    
+
                     this.AlertSuccess(string.Format(StringLocalizer["Host/domain mapping for {0} was successfully created."],
                                 selectedSite.SiteName), true);
                 }
@@ -1645,7 +1859,7 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
             }
 
             var host = await SiteManager.GetSiteHost(hostName);
-            
+
             if (host != null)
             {
                 if (host.SiteId == selectedSite.Id)
@@ -1657,7 +1871,7 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
                     }
 
                     await SiteManager.DeleteHost(host.SiteId, host.Id);
-                    
+
                     this.AlertSuccess(string.Format(StringLocalizer["Host/domain mapping for {0} was successfully removed."],
                                 selectedSite.SiteName), true);
                 }
@@ -1665,6 +1879,6 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
 
             return RedirectToAction("SiteHostMappings", new { siteId, slp });
         }
-  
+
     }
 }

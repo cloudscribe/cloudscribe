@@ -88,14 +88,14 @@
     @if (string.IsNullOrWhiteSpace(Model.FirstName))
     {
         <div class="mb-3">
-            <label asp-for="FirstName">@sr["First Name"]</label>
+            <label class="form-label" asp-for="FirstName">@sr["First Name"]</label>
             <input asp-for="FirstName" class="form-control" />
         </div>
     }
     else
     {
         <div class="mb-3">
-            <label asp-for="FirstName">@sr["First Name"]</label>
+            <label class="form-label" asp-for="FirstName">@sr["First Name"]</label>
             <input asp-for="FirstName" type="hidden" />
             <span class="form-control">@Model.FirstName</span>
         </div>
@@ -103,27 +103,27 @@
     @if (string.IsNullOrWhiteSpace(Model.LastName))
     {
         <div class="mb-3">
-            <label asp-for="LastName">@sr["Last Name"]</label>
+            <label class="form-label" asp-for="LastName">@sr["Last Name"]</label>
             <input asp-for="LastName" class="form-control" />
         </div>
     }
     else
     {
         <div class="mb-3">
-            <label asp-for="LastName">@sr["Last Name"]</label>
+            <label class="form-label" asp-for="LastName">@sr["Last Name"]</label>
             <input asp-for="LastName" type="hidden" />
             <span class="form-control">@Model.LastName</span>
         </div>
     }
     <div class="mb-3">
-        <label asp-for="PhoneNumber">@sr["Phone Number"]</label>
+        <label class="form-label" asp-for="PhoneNumber">@sr["Phone Number"]</label>
         <input asp-for="PhoneNumber" class="form-control" />
         <span asp-validation-for="PhoneNumber" class="invalid-feedback"></span>
     </div>
     <partial name="UserInfoDobPartial" model="Model" />
 
     <div class="mb-3">
-        <label asp-for="WebSiteUrl">@sr["Website Url"]</label>
+        <label class="form-label" asp-for="WebSiteUrl">@sr["Website Url"]</label>
         <input asp-for="WebSiteUrl" class="form-control" />
     </div>
     <partial name="UserInfoMiddlePartial" model="Model" />

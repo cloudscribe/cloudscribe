@@ -21,7 +21,7 @@
 {
     <script src="~/cr/js/cloudscribe-login-page.js"></script>
 }
-<h2>@ViewData["Title"]</h2>
+<h1>@ViewData["Title"]</h1>
 @if (!string.IsNullOrWhiteSpace(Model.LoginInfoTop))
 {
     <p>
@@ -38,11 +38,11 @@
                 <div class="mb-3">
                     @if (Model.UseEmailForLogin)
                     {
-                        <label asp-for="UserName">@sr["Email or Username"]</label>
+                        <label class="form-label" asp-for="UserName">@sr["Email or Username"]</label>
                     }
                     else
                     {
-                        <label asp-for="UserName">@sr["Username"]</label>
+                        <label class="form-label" asp-for="UserName">@sr["Username"]</label>
                     }
                     <div class="input-group">
                         <span class="input-group-text"><i class="@themeSettings.Icons.Username" aria-hidden="true"></i></span>
@@ -52,7 +52,7 @@
                 </div>
 
                 <div class="mb-3">
-                    <label asp-for="Password">@sr["Password"]</label>
+                    <label class="form-label" asp-for="Password">@sr["Password"]</label>
                     <div class="input-group">
                         <span class="input-group-text"><i class="@themeSettings.Icons.Password" aria-hidden="true"></i></span>
                         <input asp-for="Password" class="form-control" />

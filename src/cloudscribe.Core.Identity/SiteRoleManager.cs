@@ -37,7 +37,9 @@ namespace cloudscribe.Core.Identity
             ILogger<RoleManager<TRole>> logger,
             IHttpContextAccessor contextAccessor,
             IEnumerable<IHandleUserAddedToRole> userAddedToRoleHandlers,
-            IEnumerable<IHandleUserRemovedFromRole> userRemovedFromRoleHandlers
+            IEnumerable<IHandleUserRemovedFromRole> userRemovedFromRoleHandlers,
+            IEnumerable<IHandleRoleUpdated> roleUpdatedHandlers,
+            IEnumerable<IHandleRoleDeleted> roleDeletedHandlers
             ) : base(
                 roleStore, 
                 roleValidators,
@@ -46,26 +48,29 @@ namespace cloudscribe.Core.Identity
                 logger)
         {
             if (roleStore == null) { throw new ArgumentNullException(nameof(roleStore)); }
-            _commands = userCommands ?? throw new ArgumentNullException(nameof(userCommands));
-            _queries = userQueries ?? throw new ArgumentNullException(nameof(userQueries));
-            _siteSettings = currentSite ?? throw new ArgumentNullException(nameof(currentSite));
-            _log = logger;
-            _multiTenantOptions = multiTenantOptionsAccessor.Value;
-            _context = contextAccessor?.HttpContext;
-            _userAddedToRoleHandlers = userAddedToRoleHandlers;
+            _commands                    = userCommands ?? throw new ArgumentNullException(nameof(userCommands));
+            _queries                     = userQueries  ?? throw new ArgumentNullException(nameof(userQueries));
+            _siteSettings                = currentSite  ?? throw new ArgumentNullException(nameof(currentSite));
+            _log                         = logger;
+            _multiTenantOptions          = multiTenantOptionsAccessor.Value;
+            _context                     = contextAccessor?.HttpContext;
+            _userAddedToRoleHandlers     = userAddedToRoleHandlers;
             _userRemovedFromRoleHandlers = userRemovedFromRoleHandlers;
-
+            _roleUpdatedHandlers         = roleUpdatedHandlers;
+            _roleDeletedHandlers         = roleDeletedHandlers;
         }
 
         private readonly HttpContext _context;
         //private CancellationToken CancellationToken => _context?.RequestAborted ?? CancellationToken.None;
 
-        private MultiTenantOptions _multiTenantOptions;
-        private IUserCommands _commands;
-        private IUserQueries _queries;
-        private ILogger _log;
-        private readonly IEnumerable<IHandleUserAddedToRole> _userAddedToRoleHandlers;
+        private MultiTenantOptions                               _multiTenantOptions;
+        private IUserCommands                                    _commands;
+        private IUserQueries                                     _queries;
+        private ILogger                                          _log;
+        private readonly IEnumerable<IHandleUserAddedToRole>     _userAddedToRoleHandlers;
         private readonly IEnumerable<IHandleUserRemovedFromRole> _userRemovedFromRoleHandlers;
+        private readonly IEnumerable<IHandleRoleUpdated>         _roleUpdatedHandlers;
+        private readonly IEnumerable<IHandleRoleDeleted>         _roleDeletedHandlers;
 
 
         private ISiteContext _siteSettings = null;
@@ -95,10 +100,17 @@ namespace cloudscribe.Core.Identity
             if (_multiTenantOptions.UseRelatedSitesMode) { siteId = _multiTenantOptions.RelatedSiteId; }
 
             return await _queries.GetRolesBySite(siteId, searchInput, pageNumber, pageSize, CancellationToken);
-
         }
 
-        
+        public async Task<List<ISiteRole>> GetAllRolesBySite(
+            Guid siteId)
+        {
+            if (_multiTenantOptions.UseRelatedSitesMode) { siteId = _multiTenantOptions.RelatedSiteId; }
+
+            return await _queries.GetAllRolesBySite(siteId, CancellationToken);
+        }
+
+
         public async Task DeleteUserRolesByRole(Guid roleId)
         {
             var siteId = Site.Id;
@@ -112,7 +124,44 @@ namespace cloudscribe.Core.Identity
             var siteId = Site.Id;
             if (_multiTenantOptions.UseRelatedSitesMode) { siteId = _multiTenantOptions.RelatedSiteId; }
 
+            var existingRole = await FindByIdAsync(roleId.ToString());
+            if (existingRole != null)
+            {
+                // hooks available here to respond to a role being deleted
+                foreach (var handler in _roleDeletedHandlers)
+                {
+                    try
+                    {
+                        await handler.Handle(existingRole);
+                    }
+                    catch (Exception ex)
+                    {
+                        _log.LogError($"{ex.Message}-{ex.StackTrace}");
+                    }
+                }
+            }
+
             await _commands.DeleteRole(siteId, roleId, CancellationToken);
+        }
+
+        public async Task UpdateRole(ISiteRole role, string oldRoleName)
+        {
+            var result = await UpdateAsync((TRole)role);
+
+            if (result.Succeeded)
+            {
+                foreach (var handler in _roleUpdatedHandlers)
+                {
+                    try
+                    {
+                        await handler.Handle(role, oldRoleName);
+                    }
+                    catch (Exception ex)
+                    {
+                        _log.LogError($"{ex.Message}-{ex.StackTrace}");
+                    }
+                }
+            }
         }
 
         //public async Task<bool> RoleExists(Guid siteId, string roleName)
@@ -188,8 +237,6 @@ namespace cloudscribe.Core.Identity
                     _log.LogError($"{ex.Message}-{ex.StackTrace}");
                 }
             }
-            
-            
         }
 
         public async Task RemoveUserFromRole(ISiteUser user, ISiteRole role)
@@ -213,8 +260,6 @@ namespace cloudscribe.Core.Identity
                     _log.LogError($"{ex.Message}-{ex.StackTrace}");
                 }
             }
-
         }
-
     }
 }

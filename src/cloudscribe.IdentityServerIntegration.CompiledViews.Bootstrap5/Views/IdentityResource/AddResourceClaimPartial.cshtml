@@ -3,7 +3,7 @@
 @inject IStringLocalizer<CloudscribeIds4Resources> sr
 <form class="form-inline" asp-controller="IdentityResource" asp-action="AddClaim">
     <div class="mb-3">
-        <label asp-for="ClaimName">@sr["Name"]</label>
+        <label class="form-label" asp-for="ClaimName">@sr["Name"]</label>
         <input class="form-control" asp-for="ClaimName">
         <span asp-validation-for="ClaimName" class="invalid-feedback"></span>
     </div>

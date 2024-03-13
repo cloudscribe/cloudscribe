@@ -1,0 +1,7 @@
+﻿@inject ICoreThemeHelper themeHelper
+@inject IStringLocalizer<CloudscribeCore> sr
+@inject ISiteContextResolver siteResolver
+@{
+    var Tenant = await siteResolver.ResolveSite(Context.Request.Host.Host, Context.Request.Path);
+}
+<a class="btn btn-primary btn-lg" href="~/@(String.IsNullOrWhiteSpace(Tenant?.SiteFolderName) ? "" : Tenant?.SiteFolderName + "/")account/login"><span aria-hidden="true" class="fa fa-key"></span> @sr["Log in"]</a>

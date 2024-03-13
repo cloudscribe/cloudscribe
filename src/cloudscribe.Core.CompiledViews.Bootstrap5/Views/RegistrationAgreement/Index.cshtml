@@ -1,0 +1,23 @@
+﻿@model SiteContext
+@inject IStringLocalizer<CloudscribeCore> sr
+@inject cloudscribe.DateTimeUtils.ITimeZoneHelper tzHelper
+@{
+    ViewData["Title"] = sr["Registration Agreement"];
+}
+<h1>@ViewData["Title"]</h1>
+@if (string.IsNullOrWhiteSpace(Model.RegistrationAgreement))
+{
+    @sr["This site has not yet defined a registration agreement"]
+}
+else
+{
+<div class="mb-3">
+	<div class="agreementcontainer">
+		@Html.Raw(Model.RegistrationAgreement)
+	</div>
+</div>
+<div>
+	@sr["Agreement last updated:"]
+	@tzHelper.ConvertToLocalTime((DateTime)Model.TermsUpdatedUtc, Model.TimeZoneId).ToString("dd MMMM yyyy H:mm")
+</div>
+}

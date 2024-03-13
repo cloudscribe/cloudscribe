@@ -14,16 +14,15 @@
 }
 @if (showBanner)
 {
-    <div id="cookieConsent" class="alert alert-dark mt-2" style="min-height:60px;" role="alert">
-        <p class="float-left">
-            <span class="float-left me-2"><i class="glyphicon glyphicon-info-sign fas fa-info-circle fa-2x" aria-hidden="true"></i></span>
+        <div id="cookieConsent" class="alert alert-dark mt-2" style="min-height:60px;" role="alert">
+            <p class="d-flex align-items-center">
+                <span class="me-2"><i class="fas fa-info-circle fa-2x" aria-hidden="true"></i></span>
             @policySummary
-        </p>
-        <div class="float-left">
-            <a asp-controller="Privacy" asp-action="Index" class="btn btn-info  ms-2 mb-1">@sr["Learn More"]</a>
-            <button type="button" class="btn btn-primary ms-2 mb-1" data-cookie-string="@cookieString">Accept</button>
+            </p>
+            <div class="d-flex gap-2">
+                <a asp-controller="Privacy" asp-action="Index" class="btn btn-info">@sr["Learn More"]</a>
+                <button type="button" class="btn btn-primary" data-cookie-string="@cookieString">Accept</button>
+            </div>
         </div>
-    </div>
-    <script src="~/cr/js/cloudscribe-cookie-consent-click-handler.js"></script>
-    
+        <script src="~/cr/js/cloudscribe-cookie-consent-click-handler.js"></script>
 }

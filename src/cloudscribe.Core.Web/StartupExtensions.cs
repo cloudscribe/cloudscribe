@@ -3,8 +3,7 @@
 // Author:					Joe Audette
 // Created:					2016-05-07
 // Last Modified:			2018-06-19
-// 
-
+//
 
 using cloudscribe.Core.DataProtection;
 using cloudscribe.Core.Identity;
@@ -54,7 +53,7 @@ namespace Microsoft.Extensions.DependencyInjection
             return services;
         }
 
-        
+
 
 
         public static IServiceCollection AddCloudscribeCoreCommon(this IServiceCollection services, IConfiguration configuration)
@@ -71,7 +70,7 @@ namespace Microsoft.Extensions.DependencyInjection
 
             services.TryAddSingleton<IHttpContextAccessor, HttpContextAccessor>();
             services.AddOptions();
-            
+
             services.Configure<MultiTenantOptions>(configuration.GetSection("MultiTenantOptions"));
             services.Configure<NewUserOptions>(configuration.GetSection("NewUserOptions"));
 
@@ -88,7 +87,7 @@ namespace Microsoft.Extensions.DependencyInjection
             services.Configure<CachingSiteResolverOptions>(configuration.GetSection("CachingSiteResolverOptions"));
 
 
-            
+
             //services.TryAddScoped<ISiteContextResolver, SiteContextResolver>();
             services.TryAddScoped<ISiteContextResolver, CachingSiteContextResolver>();
 
@@ -104,6 +103,8 @@ namespace Microsoft.Extensions.DependencyInjection
             services.AddScoped<SystemInfoManager, SystemInfoManager>();
             services.AddScoped<IpAddressTracker, IpAddressTracker>();
             services.AddScoped<SiteTimeZoneService, SiteTimeZoneService>();
+
+            services.AddTransient<RemainingSessionTimeResolver, RemainingSessionTimeResolver>();
 
             services.AddScoped<SiteDataProtector>();
 
@@ -121,10 +122,9 @@ namespace Microsoft.Extensions.DependencyInjection
 
             services.TryAddScoped<IHandleAccountAnalytics, GoogleAccountAnalytics>();
 
-
             //services.TryAddScoped<IViewRendererRouteProvider, SiteViewRendererRouteProvider>();
             services.AddCloudscribeCommmon(configuration);
-            
+
             services.AddCloudscribePagination();
 
             services.AddScoped<cloudscribe.Versioning.IVersionProviderFactory, cloudscribe.Versioning.VersionProviderFactory>();
@@ -146,7 +146,7 @@ namespace Microsoft.Extensions.DependencyInjection
             services.TryAddScoped<IMailgunOptionsProvider, SiteMailgunOptionsProvider>();
             services.TryAddScoped<IElasticEmailOptionsProvider, SiteElasticEmailOptionsProvider>();
             services.AddCloudscribeEmailSenders(configuration);
-            
+
             services.TryAddSingleton<IThemeListBuilder, SiteThemeListBuilder>();
             //services.AddSingleton<IRazorViewEngine, CoreViewEngine>();
             services.TryAddScoped<ViewRenderer>();
@@ -201,8 +201,8 @@ namespace Microsoft.Extensions.DependencyInjection
         //    return options;
         //}
 
-        
-        
+
+
         /// this strategy to support views under /Sys really is a relic from mvc 5 not really needed now
         public static RazorViewEngineOptions AddCloudscribeViewLocationFormats(this RazorViewEngineOptions options)
         {

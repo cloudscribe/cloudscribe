@@ -18,15 +18,19 @@
     <form class="form-inline" role="form" asp-controller="UserAdmin" asp-action="ApproveUserAccount" asp-route-returnurl='@ViewData["ReturnUrl"]'>
         <input asp-for="UserId" type="hidden" />
         <input asp-for="SiteId" type="hidden" />
-        <div class="form-check">
-            <input type="checkbox" asp-for="SendApprovalEmail" class="form-check-input" />
-            <label asp-for="SendApprovalEmail" class="form-check-label">@sr["Send Email Notification"]</label>
+        <div class="row mb-4 mt-3 gx-3 align-items-center">
+            <div class="col-md-2 w-auto">
+                <div class="form-check">
+                    <input type="checkbox" asp-for="SendApprovalEmail" class="form-check-input" />
+                    <label asp-for="SendApprovalEmail" class="form-check-label">@sr["Send Email Notification"]</label>
+                </div>
+            </div>
+            <div class="ms-0 col-md-3 w-auto">
+                <button type="submit" class="btn btn-primary">@sr["Approve this account"]</button>
+            </div>
         </div>
-        <button type="submit" class="btn btn-success">@sr["Approve this account"]</button>
     </form>
 }
-
-
 
 
 <form data-submit-once="true" class="form-horizontal" role="form" asp-controller="UserAdmin" asp-action="UserEdit">
@@ -56,7 +60,7 @@
     @if (Model.UserId != Guid.Empty)
     {
         <div class="mb-3">
-            <label asp-for="UserId">@sr["UserId"]</label>
+            <label class="form-label" asp-for="UserId">@sr["UserId"]</label>
             -
             <label class="control-label">@Model.UserId.ToString()</label>
         </div>
@@ -65,7 +69,7 @@
     @if (Model.UserId != Guid.Empty && Model.TwoFactorEnabled)
     {
         <div class="mb-3">
-            <label for="TFA">@sr["Two Factor Authentication"]</label>
+            <label class="form-label" for="TFA">@sr["Two Factor Authentication"]</label>
             -
             <label id="TFA" class="control-label">@sr["Enabled"]</label>
             <br />
@@ -77,19 +81,19 @@
     else
     {
          <div class="mb-3">
-            <label for="TFA">@sr["Two Factor Authentication"]</label>
+            <label class="form-label" for="TFA">@sr["Two Factor Authentication"]</label>
             -
             <label id="TFA" class="control-label">@sr["Disabled"]</label>
         </div>
     }
 
     <div class="mb-3">
-        <label asp-for="Email">@sr["Email"]</label>
+        <label class="form-label" asp-for="Email">@sr["Email"]</label>
         <input asp-for="Email" class="form-control" />
         <span asp-validation-for="Email" class="invalid-feedback"></span>
     </div>
     <div class="mb-3">
-        <label asp-for="Username">@sr["Username"]</label>
+        <label class="form-label" asp-for="Username">@sr["Username"]</label>
         <input asp-for="Username" class="form-control"
                data-remote-validate-onblur="true"
                data-error-target-id="spnUserNameWarn"
@@ -100,20 +104,20 @@
         @Html.ValidationMessage("usernameerror", new { @class = "text-danger" })
     </div>
     <div class="mb-3">
-        <label asp-for="DisplayName">@sr["Display Name"]</label>
+        <label class="form-label" asp-for="DisplayName">@sr["Display Name"]</label>
         <input asp-for="DisplayName" class="form-control" />
         <span asp-validation-for="DisplayName" class="invalid-feedback"></span>
     </div>
     <div class="mb-3">
-        <label asp-for="FirstName">@sr["First Name"]</label>
+        <label class="form-label" asp-for="FirstName">@sr["First Name"]</label>
         <input asp-for="FirstName" class="form-control" />
     </div>
     <div class="mb-3">
-        <label asp-for="LastName">@sr["Last Name"]</label>
+        <label class="form-label" asp-for="LastName">@sr["Last Name"]</label>
         <input asp-for="LastName" class="form-control" />
     </div>
     <div class="mb-3">
-        <label asp-for="DateOfBirth">@sr["Date of Birth"]</label>
+        <label class="form-label" asp-for="DateOfBirth">@sr["Date of Birth"]</label>
         <input name="DateOfBirth" value="@(Model.DateOfBirth.HasValue ? Model.DateOfBirth.Value.ToString("d") : string.Empty)"
                class="form-control"
                data-bs-datepicker="true"
@@ -130,17 +134,17 @@
         <span asp-validation-for="DateOfBirth" class="invalid-feedback"></span>
     </div>
     <div class="mb-3">
-        <label asp-for="TimeZoneId">@sr["Time Zone"]</label>
+        <label class="form-label" asp-for="TimeZoneId">@sr["Time Zone"]</label>
         <select asp-for="TimeZoneId" asp-items="Model.AllTimeZones" class="form-control"></select>
         <span asp-validation-for="TimeZoneId" class="invalid-feedback"></span>
     </div>
     <div class="mb-3">
-        <label asp-for="WebSiteUrl">@sr["Website Url"]</label>
+        <label class="form-label" asp-for="WebSiteUrl">@sr["Website Url"]</label>
         <input asp-for="WebSiteUrl" class="form-control" />
     </div>
     <partial name="UserEditMiddlePartial" model="Model" />
     <div class="mb-3">
-        <label asp-for="Comment"></label>
+        <label class="form-label" asp-for="Comment"></label>
         <textarea class="form-control" rows="5" asp-for="Comment"
                   data-ckeditor-unobtrusive=""
                   data-ckeditor-config-url="@ckOptions.CustomConfigPath"
@@ -155,11 +159,11 @@
         @if (Model.UserId != Guid.Empty)
         {
 
-            <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#confirmDeleteModal">
+            <button type="button" class="ms-2 btn btn-danger" data-bs-toggle="modal" data-bs-target="#confirmDeleteModal">
                 @sr["Delete"]
             </button>
             @Html.ValidationMessage("deleteerror", new { @class = "text-danger" })
-            <a asp-controller="UserAdmin" asp-action="ChangeUserPassword" asp-route-siteid="@Model.SiteId" asp-route-userid="@Model.UserId">@sr["Change Password"]</a>
+            <a class="ms-2" asp-controller="UserAdmin" asp-action="ChangeUserPassword" asp-route-siteid="@Model.SiteId" asp-route-userid="@Model.UserId">@sr["Change Password"]</a>
         }
     </div>
     <div asp-validation-summary="All" class="text-danger"></div>
@@ -221,7 +225,7 @@
 
         <div class="mb-3 mt-2">
             <span>@sr["Password Reset Email"]</span>
-            <button type="submit" id="btn_resetpwd" class="btn btn-primary">@sr["Send"]</button>
+            <button type="submit" id="btn_resetpwd" class="ms-2 btn btn-primary">@sr["Send"]</button>
         </div>
     </form>
 
