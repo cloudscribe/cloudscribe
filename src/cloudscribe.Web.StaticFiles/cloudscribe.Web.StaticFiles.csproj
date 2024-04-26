@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <Description>common static resources for web applications including ckeditor datepickers, and other js and css</Description>
-    <Version>6.0.11</Version>
+    <Version>6.0.12</Version>
     <TargetFramework>net6.0</TargetFramework>
     <Authors>Joe Audette</Authors>
     <PackageTags>cloudscribe</PackageTags>
@@ -21,6 +21,7 @@
     <None Remove="js\cloudscribe-autologout-warning.min.js" />
     <None Remove="js\cloudscribe-modaldialog-pagination.js" />
     <None Remove="js\cloudscribe-modaldialog-pagination.min.js" />
+    <None Remove="js\knockout-3.5.1.js" />
     <None Remove="js\moment-with-locales.min.js" />
   </ItemGroup>
 
@@ -118,6 +119,7 @@
     <EmbeddedResource Include="js\jqueryvaildation.submitonce-unobtrusive.js" />
     <EmbeddedResource Include="js\jqueryvaildation.submitonce-unobtrusive.min.js" />
     <EmbeddedResource Include="js\knockout-3.4.2.js" />
+    <EmbeddedResource Include="js\knockout-3.5.1.js" />
     <EmbeddedResource Include="js\metisMenu.min.js" />
     <EmbeddedResource Include="js\moment-with-locales.min.js" />
     <EmbeddedResource Include="js\plyr.min.js" />
