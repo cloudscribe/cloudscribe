@@ -109,11 +109,12 @@ namespace cloudscribe.Web.Common.TagHelpers
             sb.AppendLine("<!-- End Analytics.GA4 Tag Helper -->");
             var rawScript = sb.ToString();
             output.Content.SetHtmlContent(rawScript);
-
         }
 
         private string Sanitise(string input)
         {
+            if (string.IsNullOrWhiteSpace(input)) return "";
+
             return Regex.Replace(input, "[><']", "")
                         .Replace("%3C", "")
                         .Replace("%3E", "")
