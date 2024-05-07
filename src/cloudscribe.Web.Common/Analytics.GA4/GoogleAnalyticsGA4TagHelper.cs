@@ -59,14 +59,14 @@ namespace cloudscribe.Web.Common.TagHelpers
             sb.AppendLine("function gtag(){dataLayer.push(arguments);}");
             sb.AppendLine("gtag('js', new Date());");
             var url = ViewContext.HttpContext.Request.Path;
-            sb.AppendLine($"gtag('set', 'page_location', '{url}');");
+            sb.AppendLine($"gtag('set', 'page_location', '{Sanitise(url)}');");
             var referer = ViewContext.HttpContext.Request.Headers["Referer"];
-            sb.AppendLine($"gtag('set', 'page_referrer', '{referer}');");
+            sb.AppendLine($"gtag('set', 'page_referrer', '{Sanitise(referer)}');");  // injection vulnerability - from pen testing
 
             //configure the profile id
-            sb.Append("gtag('config', '" + ProfileId + "', {  ");
+            sb.Append("gtag('config', '" + Sanitise(ProfileId) + "', {  ");
             // Optionally set user id. This enables user-level reports and remarketing across devices.
-            if (_options.TrackUserId && !string.IsNullOrWhiteSpace(UserId)) sb.Append("'user_id': '" + UserId + "', ");
+            if (_options.TrackUserId && !string.IsNullOrWhiteSpace(UserId)) sb.Append("'user_id': '" + Sanitise(UserId) + "', ");
             // Optionally enable debug view: https://support.google.com/analytics/answer/7201382
             if (_options.EnableDebugMode) sb.Append("'debug_mode': true, ");
             sb.Remove(sb.Length - 2, 2);
@@ -79,7 +79,7 @@ namespace cloudscribe.Web.Common.TagHelpers
                 if(e.IsValid())
                 {
                     sb.Append("gtag('event'");
-                    sb.Append(", '" + e.Name + "'");
+                    sb.Append(", '" + Sanitise(e.Name) + "'");
 
                     if(e.Parameters.Count > 0)
                     {
@@ -91,10 +91,7 @@ namespace cloudscribe.Web.Common.TagHelpers
                             else 
                             {
                                 // caution about allowing injected user input back out here - from pen testing
-                                var safeValue = Regex.Replace(f.Value, "[><']", "")
-                                                     .Replace("%3C", "")
-                                                     .Replace("%3E", "")
-                                                     .Replace("%27", "");
+                                var safeValue = Sanitise(f.Value);
                                 sb.Append(comma + "'" + f.Key + "': '" + safeValue + "'");
                             }
 
@@ -114,5 +111,14 @@ namespace cloudscribe.Web.Common.TagHelpers
             output.Content.SetHtmlContent(rawScript);
 
         }
+
+        private string Sanitise(string input)
+        {
+            return Regex.Replace(input, "[><']", "")
+                        .Replace("%3C", "")
+                        .Replace("%3E", "")
+                        .Replace("%27", "");
+        }
+
     }
 }
