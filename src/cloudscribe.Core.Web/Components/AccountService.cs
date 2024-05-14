@@ -642,7 +642,8 @@ namespace cloudscribe.Core.Web.Components
                         //asp identity is returning an error message like "Email someaddress@somedomain is alreaady taken"
                         // this is account disclosure and we don't want that so return a more generic error message
                         //modelState.AddModelError(string.Empty, "Provided email address not accepted, please try again with a different email address.");
-                        // even the above message would give a clue so don't add anything.
+                        
+                        // NO - even the above message would give a clue so don't add anything.
                         // Instead we go down a different pathway of emailing the owner of that email address.
                     }
                     else if (!string.IsNullOrWhiteSpace(error.Description) && error.Description.IndexOf("is already taken") > -1)
@@ -653,7 +654,7 @@ namespace cloudscribe.Core.Web.Components
                     }
                     else
                     {
-                        modelState.AddModelError(string.Empty, error.Description);
+                        modelState.AddModelError("validationError", error.Description);
                     }
                 }
             }

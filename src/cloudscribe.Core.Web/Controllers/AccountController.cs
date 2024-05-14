@@ -631,45 +631,47 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
 
                 await Analytics.HandleRegisterFail("Onsite", te);
 
-                // separate pathway for duplicate emails - disguising the fact to avoid leaking information
-                if(ModelState.Any(x => x.Key.Equals("duplicateEmail")))
+                if(!ModelState.Any(x => x.Key.Equals("validationError")))
                 {
-                    Log.LogInformation($"registration did not succeed for {model.Email} due to the email already existing");
-
-                    var existingUser = await AccountService.GetUserInfo(model.Email);
-
-                    bool needsConfirming = CurrentSite.RequireConfirmedEmail && !existingUser.EmailConfirmed;
-                    bool needsApproval = CurrentSite.RequireApprovalBeforeLogin && !existingUser.AccountApproved;
-
-                    string resetUrl = Url.Action("ForgotPassword", "Account", null, protocol: HttpContext.Request.Scheme);
-                    string loginUrl = Url.Action("Login", "Account", null, protocol: HttpContext.Request.Scheme);
-
-                    string confirmUrl = null;
-
-                    if (needsConfirming)
+                    // separate pathway for registration attempt on an email address that is already taken
+                    if (ModelState.Any(x => x.Key.Equals("duplicateEmail")))
                     {
-                        var verifyEmailInfo = await AccountService.GetEmailVerificationInfo(existingUser.Id);
-                        confirmUrl = Url.Action(
-                            "ConfirmEmail",
-                            "Account",
-                            new { UserId = existingUser.Id, Code = verifyEmailInfo.EmailVerificationToken },
-                            protocol: HttpContext.Request.Scheme
-                        );
+                        Log.LogInformation($"registration did not succeed for {model.Email} due to the email already existing");
+
+                        var existingUser = await AccountService.GetUserInfo(model.Email);
+
+                        bool needsConfirming = CurrentSite.RequireConfirmedEmail && !existingUser.EmailConfirmed;
+                        bool needsApproval = CurrentSite.RequireApprovalBeforeLogin && !existingUser.AccountApproved;
+
+                        string resetUrl = Url.Action("ForgotPassword", "Account", null, protocol: HttpContext.Request.Scheme);
+                        string loginUrl = Url.Action("Login", "Account", null, protocol: HttpContext.Request.Scheme);
+
+                        string confirmUrl = null;
+
+                        if (needsConfirming)
+                        {
+                            var verifyEmailInfo = await AccountService.GetEmailVerificationInfo(existingUser.Id);
+                            confirmUrl = Url.Action(
+                                "ConfirmEmail",
+                                "Account",
+                                new { UserId = existingUser.Id, Code = verifyEmailInfo.EmailVerificationToken },
+                                protocol: HttpContext.Request.Scheme
+                            );
+                        }
+
+                        await EmailSender.SendAccountExistsEmailAsync(
+                            CurrentSite,
+                            model.Email,
+                            StringLocalizer["A new user registration was attempted with your email address"],
+                            resetUrl,
+                            loginUrl,
+                            confirmUrl,
+                            needsApproval);
+
+                        this.AlertSuccess(StringLocalizer["Please check your email inbox, we just sent you a link that you need to click to confirm your account"], true);
+
+                        return RedirectToAction("EmailConfirmationRequired", new { userId = existingUser.Id, didSend = true, returnUrl });
                     }
-
-                    await EmailSender.SendAccountExistsEmailAsync(
-                        CurrentSite,
-                        model.Email,
-                        StringLocalizer["A new user registration was attempted with your email address"],
-                        resetUrl,
-                        loginUrl,
-                        confirmUrl,
-                        needsApproval);
-
-                    this.AlertSuccess(StringLocalizer["Please check your email inbox, we just sent you a link that you need to click to confirm your account"], true);
-
-                    return RedirectToAction("EmailConfirmationRequired", new { userId = existingUser.Id, didSend = true, returnUrl });
-
                 }
 
                 Log.LogInformation($"registration did not succeed for {model.Email}");
