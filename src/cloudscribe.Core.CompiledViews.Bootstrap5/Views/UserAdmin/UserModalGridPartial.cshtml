@@ -41,7 +41,7 @@
     {
         <tr class="@((item.IsLockedOut) ? "table-danger" : null)">
             <td>
-                <a class="btn btn-xs btn-primary"  href="#" onclick="userSelected(this)"
+                <a class="btn btn-xs btn-primary" href="#" id="btnUserSelected" 
                    data-user-email="@item.Email"
                    data-user-display-name="@item.DisplayName"
                    data-user-first-name="@item.FirstName"
