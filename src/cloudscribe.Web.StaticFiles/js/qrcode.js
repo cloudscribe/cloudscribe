@@ -611,4 +611,21 @@ var QRCode;
 	 * @name QRCode.CorrectLevel
 	 */
 	QRCode.CorrectLevel = QRErrorCorrectLevel;
+
+
+
+	/// Moved this here to get rid of inline script tags - jk
+	var codePlaceholder = document.getElementById("qrCode");
+	var urlPlaceholder  = document.getElementById("qrCodeData");
+
+	if (codePlaceholder != null && codePlaceholder != undefined
+		&& urlPlaceholder != null && urlPlaceholder != undefined) {
+		new QRCode(document.getElementById("qrCode"),
+			{
+				text: urlPlaceholder.dataset.url,
+				width: 150,
+				height: 150
+			});
+	};
+
 })();

@@ -22,7 +22,7 @@
             <div id="qrCode"></div>
             <div id="qrCodeData" data-url="@Html.Raw(Model.AuthenticatorUri)"></div>
         </li>
-        <li>
+        <li class="mt-2">
             <p>
                 @sr["Once you have scanned the QR code or input the key above, your two factor authentication app will provide you with a unique code. Enter the code in the confirmation box below."]
             </p>
@@ -48,12 +48,14 @@
     <script src="~/cr/js/jquery.validate.unobtrusive.min.js"></script>
     <script src="~/cr/js/unobtrusive-validation-bs4.min.js"></script>
     <script type="text/javascript" src="~/cr/js/qrcode.min.js"></script>
-    <script type="text/javascript">
+    
+    @* Get rid of inline scripts - jk
+        <script type="text/javascript">
         new QRCode(document.getElementById("qrCode"),
             {
                 text: "@Html.Raw(Model.AuthenticatorUri)",
                 width: 150,
                 height: 150
             });
-    </script>
+    </script> *@
 }
