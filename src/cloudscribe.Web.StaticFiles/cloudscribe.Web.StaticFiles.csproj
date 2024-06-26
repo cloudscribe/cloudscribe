@@ -4,6 +4,8 @@
     <Description>common static resources for web applications including ckeditor datepickers, and other js and css</Description>
     <Version>8.0.0</Version>
     <TargetFramework>net8.0</TargetFramework>
+    <Version>6.0.13</Version>
+    <TargetFramework>net6.0</TargetFramework>
     <Authors>Joe Audette</Authors>
     <PackageTags>cloudscribe</PackageTags>
     <PackageIcon>icon.png</PackageIcon>
