@@ -1,4 +1,8 @@
 /**
+ * 
+ *  !!!!  NOTE - this contains additional cs-specific code at the bottom !
+ * 
+ * 
  * @fileoverview
  * - Using the 'QRCode for Javascript library'
  * - Fixed dataset of 'QRCode for Javascript library' for support full-spec.
@@ -703,6 +707,8 @@ if (typeof module != "undefined") {
 	module.exports = QRCode;
 }
 
+
+//////////////  additional cs-specific code  //////////////
 
 /// Moved this here to get rid of inline script tags - jk
 var codePlaceholder = document.getElementById("qrCode");
