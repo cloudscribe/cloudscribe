@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2014-10-26
-// Last Modified:			2019-03-01
+// Last Modified:			2024-07-08
 // 
 
 using cloudscribe.Common.Gdpr;
@@ -20,6 +20,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.AspNetCore.Mvc.Routing;
 using Microsoft.Extensions.Localization;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -37,7 +38,6 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
             SiteUserManager<SiteUser>         userManager,
             SignInManager<SiteUser>           signInManager,
             IAccountService                   accountService,
-            //ISmsSender                      smsSender,
             IStringLocalizer<CloudscribeCore> localizer,
             DateTimeUtils.ITimeZoneIdResolver timeZoneIdResolver,
             DateTimeUtils.ITimeZoneHelper     timeZoneHelper,
@@ -46,10 +46,12 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
             UrlEncoder                        urlEncoder,
             ISiteAccountCapabilitiesProvider  siteCapabilities,
             ISiteMessageEmailSender           emailSender,
-            IEmailChangeHandler               emailChangeHandler
+            IEmailChangeHandler               emailChangeHandler,
+            IOptions<MultiTenantOptions>      multiTenantOptionsAccessor,
+            SiteManager                       siteManager
             )
         {
-            CurrentSite        = currentSite; 
+            CurrentSite        = currentSite;
             UserManager        = userManager;
             SignInManager      = signInManager;
             AccountService     = accountService;
@@ -62,6 +64,8 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
             SiteCapabilities   = siteCapabilities;
             EmailSender        = emailSender;
             EmailChangeHandler = emailChangeHandler;
+            SiteManager        = siteManager;
+            MultiTenantOptions = multiTenantOptionsAccessor.Value;
         }
 
         protected IAccountService                  AccountService     { get; private set; }
@@ -75,11 +79,15 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
         protected ISiteAccountCapabilitiesProvider SiteCapabilities   { get; private set; }
         protected ISiteMessageEmailSender          EmailSender        { get; private set; }
         protected IEmailChangeHandler              EmailChangeHandler { get; private set; }
+        protected SiteManager                      SiteManager        { get; private set; }
+        protected MultiTenantOptions               MultiTenantOptions { get; private set; }
+
 
         protected cloudscribe.DateTimeUtils.ITimeZoneIdResolver TimeZoneIdResolver { get; private set; }
-        protected cloudscribe.DateTimeUtils.ITimeZoneHelper     TimeZoneHelper     { get; private set; }
-        
+        protected cloudscribe.DateTimeUtils.ITimeZoneHelper     TimeZoneHelper { get; private set; }
+
         protected const string AuthenicatorUriFormat = "otpauth://totp/{0}:{1}?secret={2}&issuer={0}&digits=6";
+
 
         [TempData]
         public string StatusMessage { get; set; }
@@ -102,11 +110,11 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
                 Email             = user.Email
             };
 
-            if(string.IsNullOrEmpty(model.TimeZone))
+            if (string.IsNullOrEmpty(model.TimeZone))
             {
                 model.TimeZone = await TimeZoneIdResolver.GetSiteTimeZoneId();
             }
-            
+
             return View("Index", model);
         }
 
@@ -140,7 +148,7 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
             {
                 personalData.Add(p.Name, p.GetValue(user)?.ToString() ?? "null");
             }
-            
+
             var logins = await UserManager.GetLoginsAsync(user);
             foreach (var l in logins)
             {
@@ -151,7 +159,7 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
 
             var locations = await UserManager.GetUserLocations(user.SiteId, user.Id, 1, 100);
             int i = 1;
-            foreach(var location in locations.Data)
+            foreach (var location in locations.Data)
             {
                 personalData.Add($"IpAddress {i}", location.IpAddress);
                 i += 1;
@@ -221,18 +229,18 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
                 if (!await UserManager.CheckPasswordAsync(user, model.Password))
                 {
                     ModelState.AddModelError(string.Empty, "Password not correct.");
-                    model.Password     = "";
+                    model.Password = "";
                     return View(model);
                 }
             }
 
-            if(!model.AccountApproved)
+            if (!model.AccountApproved)
             {
                 this.AlertDanger(StringLocalizer["This user account is not currently approved."]);
                 return View(model);
             }
 
-            if(!model.AllowUserToChangeEmail)
+            if (!model.AllowUserToChangeEmail)
             {
                 this.AlertDanger(StringLocalizer["Site is not configured to allow email changing."]);
                 return View(model);
@@ -249,9 +257,9 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
 
             var siteUrl = Url.Action(new UrlActionContext
             {
-                Action     = "Index",
+                Action = "Index",
                 Controller = "Home",
-                Protocol   = HttpContext.Request.Scheme
+                Protocol = HttpContext.Request.Scheme
             });
 
             if (!model.RequireConfirmedEmail)
@@ -279,21 +287,21 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
                 {
                     var confirmationUrl = Url.Action(new UrlActionContext
                     {
-                        Action     = "ConfirmEmailChange",
+                        Action = "ConfirmEmailChange",
                         Controller = "Manage",
-                        Values     = new { userId = user.Id.ToString(), newEmail = model.NewEmail, code = token },
-                        Protocol   = HttpContext.Request.Scheme
+                        Values = new { userId = user.Id.ToString(), newEmail = model.NewEmail, code = token },
+                        Protocol = HttpContext.Request.Scheme
                     });
 
                     var success = await EmailChangeHandler.HandleEmailChangeWithUserConfirmation(model, user, token, confirmationUrl, siteUrl);
 
                     if (success)
-                    { 
+                    {
                         this.AlertSuccess(model.SuccessNotification, true);
                         return View("EmailChangeConfirmationSent", model);
                     }
                     else
-                    { 
+                    {
                         this.AlertDanger(model.SuccessNotification, true);
                     }
                 }
@@ -362,9 +370,9 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
             {
                 var siteUrl = Url.Action(new UrlActionContext
                 {
-                    Action     = "Index",
+                    Action = "Index",
                     Controller = "Home",
-                    Protocol   = HttpContext.Request.Scheme
+                    Protocol = HttpContext.Request.Scheme
                 });
 
                 var success = await EmailChangeHandler.HandleEmailChangeConfirmation(model, user, newEmail, code, siteUrl);
@@ -399,7 +407,7 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
             {
                 HasPassword = await UserManager.HasPasswordAsync(user)
             };
-            
+
             return View(model);
         }
 
@@ -495,12 +503,12 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
             var user = await UserManager.FindByIdAsync(HttpContext.User.GetUserId());
             var model = new UserInfoViewModel
             {
-                FirstName = user.FirstName,
-                LastName = user.LastName,
+                FirstName   = user.FirstName,
+                LastName    = user.LastName,
                 DateOfBirth = user.DateOfBirth,
-                WebSiteUrl = user.WebSiteUrl,
+                WebSiteUrl  = user.WebSiteUrl,
                 PhoneNumber = user.PhoneNumber,
-                AvatarUrl = user.AvatarUrl
+                AvatarUrl   = user.AvatarUrl
             };
 
             var viewName = await CustomUserInfo.GetUserInfoViewName(CurrentSite, user, HttpContext);
@@ -538,19 +546,18 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
 
             if (user != null)
             {
-                user.FirstName = model.FirstName;
-                user.LastName = model.LastName;
+                user.FirstName   = model.FirstName;
+                user.LastName    = model.LastName;
                 user.PhoneNumber = model.PhoneNumber;
-                if(model.DateOfBirth.HasValue)
+
+                if (model.DateOfBirth.HasValue)
                 {
                     user.DateOfBirth = model.DateOfBirth;
                 }
 
                 user.RolesChanged = (user.AvatarUrl != model.AvatarUrl);
-                
-                
-                user.WebSiteUrl = model.WebSiteUrl;
-                user.AvatarUrl = model.AvatarUrl;
+                user.WebSiteUrl   = model.WebSiteUrl;
+                user.AvatarUrl    = model.AvatarUrl;
 
                 await CustomUserInfo.HandleUserInfoPostSuccess(
                         CurrentSite,
@@ -561,8 +568,6 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
 
 
                 await UserManager.UpdateAsync(user);
-
-                
 
                 this.AlertSuccess(StringLocalizer["Your information has been updated."]);
             }
@@ -575,8 +580,8 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
         [HttpGet]
         public virtual async Task<IActionResult> RemoveLogin()
         {
-            var user = await UserManager.FindByIdAsync(HttpContext.User.GetUserId());
-            var linkedAccounts = await UserManager.GetLoginsAsync(user);
+            var user                     = await UserManager.FindByIdAsync(HttpContext.User.GetUserId());
+            var linkedAccounts           = await UserManager.GetLoginsAsync(user);
             ViewData["ShowRemoveButton"] = await UserManager.HasPasswordAsync(user) || linkedAccounts.Count > 1;
             return View(linkedAccounts);
         }
@@ -652,9 +657,9 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
 
             var model = new TwoFactorAuthenticationViewModel
             {
-                HasAuthenticator = await UserManager.GetAuthenticatorKeyAsync(user) != null,
-                Is2faEnabled = user.TwoFactorEnabled,
-                RecoveryCodesLeft = await UserManager.CountRecoveryCodesAsync(user),
+                HasAuthenticator     = await UserManager.GetAuthenticatorKeyAsync(user) != null,
+                Is2faEnabled         = user.TwoFactorEnabled,
+                RecoveryCodesLeft    = await UserManager.CountRecoveryCodesAsync(user),
                 Is2faRequiredByAdmin = UserManager.Site.Require2FA
             };
 
@@ -699,7 +704,7 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
             {
                 throw new ApplicationException($"Unexpected error occured disabling 2FA for user with ID '{user.Id}'.");
             }
-            
+
             Log.LogInformation("User with ID {UserId} has disabled 2fa.", user.Id);
             return RedirectToAction(nameof(TwoFactorAuthentication));
         }
@@ -756,7 +761,7 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
             var model = new EnableAuthenticatorViewModel
             {
                 SharedKey = FormatKey(unformattedKey),
-                AuthenticatorUri = GenerateQrCodeUri(user.Email, unformattedKey)
+                AuthenticatorUri = await GenerateQrCodeUri(user.Email, unformattedKey)
             };
 
             return View(model);
@@ -983,7 +988,7 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
                 }
                 AddErrors(result);
             }
-           
+
             return View(model);
 
         }
@@ -1026,10 +1031,10 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
                 }
 
                 AddErrors(result);
-                
+
             }
 
-            return View(model);     
+            return View(model);
         }
 
 
@@ -1038,7 +1043,7 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
         [HttpGet]
         public virtual async Task<IActionResult> ManageLogins()
         {
-            if(!CurrentSite.HasAnySocialAuthEnabled())
+            if (!CurrentSite.HasAnySocialAuthEnabled())
             {
                 return RedirectToAction("Index");
             }
@@ -1052,7 +1057,7 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
             //var externalSchemes = await SignInManager.GetExternalAuthenticationSchemesAsync();
             var externalSchemes = await AccountService.GetExternalAuthenticationSchemes();
             var otherLogins = externalSchemes.Where(auth => userLogins.All(ul => auth.Name != ul.LoginProvider)).ToList();
-            
+
             var model = new ManageLoginsViewModel
             {
                 CurrentLogins = userLogins,
@@ -1061,7 +1066,7 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
             };
             model.ShowRemoveButton = await UserManager.HasPasswordAsync(user) || model.CurrentLogins.Count > 1;
 
-            return View(model);  
+            return View(model);
         }
 
 
@@ -1117,7 +1122,7 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
             {
                 return this.RedirectToSiteRoot(CurrentSite);
             }
-            
+
             var model = new EmailRequiredViewModel
             {
 
@@ -1143,13 +1148,13 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
             }
 
             var emailUser = await UserManager.FindByEmailAsync(model.Email);
-            if(emailUser != null && emailUser.Id != user.Id)
+            if (emailUser != null && emailUser.Id != user.Id)
             {
                 //email already in use but don't disclose that
                 ModelState.AddModelError("invalidEmail", StringLocalizer["The provided email address was not accepted, please use a different email address."]);
                 return View(model);
             }
-              
+
             var result = await UserManager.SetEmailAsync(user, model.Email);
 
             if (result.Succeeded)
@@ -1182,15 +1187,20 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
             return result.ToString().ToLowerInvariant();
         }
 
-        private string GenerateQrCodeUri(string email, string unformattedKey)
+        private async Task<string> GenerateQrCodeUri(string email, string unformattedKey)
         {
-            int stringLength = UserManager.Site.SiteName.Length;
-            int truncation = stringLength > 40 ? 40 : stringLength;
+            // get the user's site accounting for possibility of being in related sites mode
+            // in which case our URI and stored tokens all use the RelatedSiteId
+            var effectiveSite = await SiteManager.GetSiteForDataOperations(UserManager.Site.Id, true);
+
+            // at one stage was truncating this to prevent QR buffer overflow..:
+            // int stringLength = thing.SiteName.Length;
+            // int truncation = stringLength > 40 ? 40 : stringLength;
+            // UrlEncoder.Encode(thing.SiteName.Substring(0, truncation - 1)),
+
             return string.Format(
                 AuthenicatorUriFormat,
-                // UrlEncoder.Encode(UserManager.Site.SiteName),
-                // jk - truncate this value since the generated Uri can overrun the qr code generator's buffer
-                UrlEncoder.Encode(UserManager.Site.SiteName.Substring(0, truncation-1)),
+                UrlEncoder.Encode(effectiveSite.SiteName),
                 UrlEncoder.Encode(email),
                 unformattedKey);
         }
@@ -1202,8 +1212,6 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
                 ModelState.AddModelError(string.Empty, error.Description);
             }
         }
-
-        
 
         #endregion
     }
