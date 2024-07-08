@@ -1099,7 +1099,6 @@ namespace cloudscribe.Core.Identity
 
         #region IUserTwoFactorStore
 
-
         /// <summary>
         /// Returns a flag indicating whether the specified <paramref name="user "/>has two factor authentication enabled or not,
         /// as an asynchronous operation.
