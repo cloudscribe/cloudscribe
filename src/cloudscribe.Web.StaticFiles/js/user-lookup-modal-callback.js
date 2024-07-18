@@ -4,7 +4,9 @@
     var elements = $(".btn-modal-userselect");
 
     elements.each(function () {
-        $(this).on('click', function () {
+        $(this).on('click', function(e) {
+            e.preventDefault();
+            e.stopPropagation();
             if (window.UserSelectedCallback) {
                 var userInfo = {
                     "id":          $(this).data('userId'),
