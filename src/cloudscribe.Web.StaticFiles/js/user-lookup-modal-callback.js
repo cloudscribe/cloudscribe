@@ -1,26 +1,27 @@
-﻿//$(function () {
-//    // get rid of onClick references in the BS5 views
-//    // no this isn't working and too obscure to trace its usages across everything right now - jk
-//    var elements = $(".btn-modal-userselect");
+﻿$(function () {
+    // get rid of onClick references in the BS5 views
+    // this is used in some hideous ajax user selection grid in obscure other places scattered around elsewhere - jk
+    var elements = $(".btn-modal-userselect");
 
-//    elements.each(function () {
-//        $(this).on('click', function() {
-//            if (window.UserSelectedCallback) {
-//                var userInfo = {
-//                    "id": $(this).data.userId,
-//                    "email": $(this).data.userEmail,
-//                    "displayName": $(this).data.userDisplayName,
-//                    "firstName": $(this).data.userFirstName,
-//                    "lastName": $(this).data.userLastName
-//                };
-//                window.UserSelectedCallback(userInfo);
-//            }
-//            $('#userLookupModal').closest(".modal").modal("hide");
-//        })
-//    })
-//});
+    elements.each(function () {
+        $(this).on('click', function () {
+            if (window.UserSelectedCallback) {
+                var userInfo = {
+                    "id":          $(this).data('userId'),
+                    "email":       $(this).data('userEmail'),
+                    "displayName": $(this).data('userDisplayName'),
+                    "firstName":   $(this).data('userFirstName'),
+                    "lastName":    $(this).data('userLastName')
+                };
+                window.UserSelectedCallback(userInfo);
+            }
+            $('#userLookupModal').closest(".modal").modal("hide");
+        })
+    })
+});
 
 
+// this is the older version of the same
 function userSelected(ele) {
     if (window.UserSelectedCallback) {
         var userInfo = {
