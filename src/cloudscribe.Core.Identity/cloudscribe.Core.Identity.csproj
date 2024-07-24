@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <Description>asp.net identity implementation for cloudscribe web application foundation</Description>
-    <Version>8.0.1</Version>
+    <Version>8.0.2</Version>
     <Authors>Joe Audette</Authors>
     <TargetFramework>net8.0</TargetFramework>
     <PackageTags>cloudscribe;identity</PackageTags>
@@ -28,7 +28,7 @@
 
   <ItemGroup>
     <PackageReference Include="cloudscribe.Pagination.Models" Version="8.0.0" />
-    <PackageReference Include="IdentityModel" Version="7.0.0" />
+    <PackageReference Include="IdentityModel" Version="4.0.0" />
     
 
     <PackageReference Include="Microsoft.AspNetCore.Authentication.Facebook" Version="8.0.0" />
