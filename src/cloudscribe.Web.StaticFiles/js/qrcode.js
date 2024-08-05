@@ -1,4 +1,8 @@
 /**
+ * 
+ *  !!!!  NOTE - this contains additional cs-specific code at the bottom !
+ * 
+ * 
  * @fileoverview
  * - Using the 'QRCode for Javascript library'
  * - Fixed dataset of 'QRCode for Javascript library' for support full-spec.
@@ -702,3 +706,20 @@ var QRCode;
 if (typeof module != "undefined") {
 	module.exports = QRCode;
 }
+
+
+//////////////  additional cs-specific code  //////////////
+
+/// Moved this here to get rid of inline script tags - jk
+var codePlaceholder = document.getElementById("qrCode");
+var urlPlaceholder = document.getElementById("qrCodeData");
+
+if (codePlaceholder != null && codePlaceholder != undefined
+	&& urlPlaceholder != null && urlPlaceholder != undefined) {
+	new QRCode(document.getElementById("qrCode"),
+		{
+			text: urlPlaceholder.dataset.url,
+			width: 150,
+			height: 150
+		});
+};

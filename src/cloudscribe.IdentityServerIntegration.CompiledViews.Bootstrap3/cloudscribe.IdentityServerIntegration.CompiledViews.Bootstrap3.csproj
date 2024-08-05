@@ -2,8 +2,8 @@
 
   <PropertyGroup>
     <Description>Bootstrap 3 pre-compiled views for cloudscribe.Core.IdentityServerIntegration</Description>
-    <Version>6.0.0</Version>
-    <TargetFramework>net6.0</TargetFramework>
+    <Version>8.0.0</Version>
+    <TargetFramework>net8.0</TargetFramework>
     <AddRazorSupportForMvc>true</AddRazorSupportForMvc>
     <Authors>Joe Audette</Authors>
     <PackageTags>cloudscribe;IdentityServer4;Bootstrap3</PackageTags>

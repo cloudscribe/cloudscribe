@@ -2,6 +2,7 @@
 
   <PropertyGroup>
     <TargetFramework>netcoreapp2.1</TargetFramework>
+    <!-- This needs effort to get it up to net 8... a bunch of Startup stuff is deprecated now -->
   </PropertyGroup>
 
   
