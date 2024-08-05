@@ -304,6 +304,7 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
             var result = await AccountService.TryLogin(model);
             if (result.SignInResult.Succeeded)
             {
+                Log.LogInformation($"login succeeded for {model.UserName}");
                 return await HandleLoginSuccess(result, returnUrl);
             }
 
