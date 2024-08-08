@@ -18,7 +18,12 @@ namespace cloudscribe.Core.IdentityServer.EFCore.MSSQL
         {
            
         }
-        
+
+        protected override void ConfigureConventions(ModelConfigurationBuilder configurationBuilder)
+        {
+            configurationBuilder.Conventions.Add(_ => new BlankTriggerAddingConvention_IS4());
+        }
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
