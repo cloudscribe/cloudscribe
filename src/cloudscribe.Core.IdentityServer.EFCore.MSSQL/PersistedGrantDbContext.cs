@@ -13,7 +13,12 @@ namespace cloudscribe.Core.IdentityServer.EFCore.MSSQL
     {
         public PersistedGrantDbContext(DbContextOptions<PersistedGrantDbContext> options) : base(options) { }
 
-        
+
+        protected override void ConfigureConventions(ModelConfigurationBuilder configurationBuilder)
+        {
+            configurationBuilder.Conventions.Add(_ => new BlankTriggerAddingConvention_IS4());
+        }
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
@@ -68,8 +73,6 @@ namespace cloudscribe.Core.IdentityServer.EFCore.MSSQL
 
                 entity.HasIndex(x => x.DeviceCode).IsUnique();
             });
-
-
         }
     }
 }
