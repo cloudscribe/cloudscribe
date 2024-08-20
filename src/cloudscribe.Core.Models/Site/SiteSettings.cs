@@ -222,7 +222,7 @@ namespace cloudscribe.Core.Models
 
         public bool SingleBrowserSessions { get; set; }
 
-
+        public string RegRestrictionTld { get; set; }
 
         public static SiteSettings FromISiteSettings(ISiteSettings i)
         {
@@ -341,7 +341,8 @@ namespace cloudscribe.Core.Models
                 TermsUpdatedUtc            = i.TermsUpdatedUtc,
                 EmailApiEndpoint           = i.EmailApiEndpoint,
                 EmailApiKey                = i.EmailApiKey,
-                EmailSenderName            = i.EmailSenderName
+                EmailSenderName            = i.EmailSenderName,
+                RegRestrictionTld          = i.RegRestrictionTld
             };
 
             return s;

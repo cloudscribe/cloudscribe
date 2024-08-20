@@ -231,7 +231,7 @@ namespace cloudscribe.Core.Storage.EFCore.PostgreSql
                 entity.Property(p => p.LogoUrl)
                .HasMaxLength(250);
                 ;
-
+                entity.Property(p => p.RegRestrictionTld);
             });
 
             modelBuilder.Entity<SiteHost>(entity =>
