@@ -194,7 +194,8 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
                 ShowSiteNameLink = selectedSite.ShowSiteNameLink,
                 HeaderContent = selectedSite.HeaderContent,
                 FooterContent = selectedSite.FooterContent,
-                LogoUrl = selectedSite.LogoUrl
+                LogoUrl = selectedSite.LogoUrl,
+                RegRestrictionTld = selectedSite.RegRestrictionTld
             };
 
             if (MultiTenantOptions.Mode == MultiTenantMode.FolderName)
@@ -366,6 +367,7 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
             selectedSite.HeaderContent = model.HeaderContent;
             selectedSite.FooterContent = model.FooterContent;
             selectedSite.LogoUrl = model.LogoUrl;
+            selectedSite.RegRestrictionTld = model.RegRestrictionTld;
 
             await SiteManager.Update(selectedSite, oldFolderName);
 
