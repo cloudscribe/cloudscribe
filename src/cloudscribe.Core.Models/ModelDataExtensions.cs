@@ -327,7 +327,7 @@ namespace cloudscribe.Core.Models.DataExtensions
             site.SmsClientId = reader["SmsClientId"].ToString();
             site.SmsSecureToken = reader["SmsSecureToken"].ToString();
             site.SmsFrom = reader["SmsFrom"].ToString();
-
+            site.RegRestrictionTld = reader["RegRestrictionTld"].ToString();
 
         }
 
