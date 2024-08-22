@@ -11,8 +11,7 @@ function doCountdownPromise(secondsLeft, delay, alertThreshold, alerted) {
         // console.log("remains " + secondsremaining);
 
         if (alertThreshold > 0 && secondsremaining > alertThreshold) {
-            let dom = $("#sessionExpiryWarning");
-            dom.hide();
+            $("#sessionExpiryWarning").modal("hide");
             alerted = false;
         }
 
@@ -26,7 +25,7 @@ function doCountdownPromise(secondsLeft, delay, alertThreshold, alerted) {
             if (!alerted) {
                 var backupDelay = delay;
                 delay = 1000;
-                dom.show();
+                $("#sessionExpiryWarning").modal()
 
                 $("#sessionKeepAlive").off();  // prevent binding this multiple times
 
