@@ -28,7 +28,7 @@ namespace cloudscribe.Core.Web.Components
             {
                 string regRestrictionTld = GetRegRestrictionTld;
                 string fullEmailAddress = model.Email;
-                string emailAddressTld = fullEmailAddress[(fullEmailAddress.LastIndexOf('@') + 1)..];
+                string emailAddressTld = fullEmailAddress[(fullEmailAddress.LastIndexOf('@') + 1)..].ToLower();
 
                 if (regRestrictionTld != null)
                 {
@@ -49,7 +49,7 @@ namespace cloudscribe.Core.Web.Components
                         }
                         else
                         {
-                            emailValidation.ErrorMessage = "Your email address must be from a permitted Top Level Domain.";
+                            emailValidation.ErrorMessage = "Registration Failed.";
                             emailValidation.IsValid = false;
                         }
                     }

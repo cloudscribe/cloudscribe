@@ -240,7 +240,7 @@
   <data name="Phone" xml:space="preserve">
     <value>Phone</value>
   </data>
-  <data name="Please Click here to log in" xml:space="preserve">
+  <data name="Please Click here to Log in" xml:space="preserve">
     <value>Please Click here to Log in</value>
   </data>
   <data name="Please Confirm Email Address" xml:space="preserve">
@@ -387,7 +387,7 @@
   <data name="Forgot your password?" xml:space="preserve">
     <value>Forgot your password?</value>
   </data>
-  <data name="Log In" xml:space="preserve">
+  <data name="Log in" xml:space="preserve">
     <value>Log In</value>
   </data>
   <data name="Must match password" xml:space="preserve">
@@ -774,14 +774,8 @@
   <data name="Captcha Settings" xml:space="preserve">
     <value>Captcha Settings</value>
   </data>
-  <data name="Captcha Settings for {0} was successfully updated." xml:space="preserve">
-    <value>Captcha Settings for {0} was successfully updated.</value>
-  </data>
   <data name="Company Info" xml:space="preserve">
     <value>Company Info</value>
-  </data>
-  <data name="Company Info for {0} was successfully updated." xml:space="preserve">
-    <value>Company Info for {0} was successfully updated.</value>
   </data>
   <data name="Create New Site" xml:space="preserve">
     <value>Create New Site</value>
@@ -837,9 +831,6 @@
   <data name="Security Settings" xml:space="preserve">
     <value>Security Settings</value>
   </data>
-  <data name="Security Settings for {0} was successfully updated." xml:space="preserve">
-    <value>Security Settings for {0} was successfully updated.</value>
-  </data>
   <data name="Site Administration" xml:space="preserve">
     <value>Site Administration</value>
   </data>
@@ -881,9 +872,6 @@
   </data>
   <data name="Your password has been changed." xml:space="preserve">
     <value>Your password has been changed.</value>
-  </data>
-  <data name="Your password has been set." xml:space="preserve">
-    <value>your password has been set</value>
   </data>
   <data name="Your phone number was added." xml:space="preserve">
     <value>Your phone number was added.</value>
@@ -933,9 +921,6 @@
   <data name="Username not accepted please try a different value" xml:space="preserve">
     <value>Username not accepted please try a different value</value>
   </data>
-  <data name="Register using your {0} account" xml:space="preserve">
-    <value>Register in using your {0} account</value>
-  </data>
   <data name="Use an existing account" xml:space="preserve">
     <value>Use an existing account</value>
   </data>
@@ -947,6 +932,21 @@
   </data>
   <data name="Log off" xml:space="preserve">
     <value>Log off</value>
+  </data>
+  <data name="Captcha Settings for {0} was successfully updated." xml:space="preserve">
+    <value>Captcha Settings for {0} was successfully updated.</value>
+  </data>
+  <data name="Company Info for {0} was successfully updated." xml:space="preserve">
+    <value>Company Info for {0} was successfully updated.</value>
+  </data>
+  <data name="Security Settings for {0} was successfully updated." xml:space="preserve">
+    <value>Security Settings for {0} was successfully updated.</value>
+  </data>
+  <data name="Your password has been set." xml:space="preserve">
+    <value>your password has been set</value>
+  </data>
+  <data name="Register using your {0} account" xml:space="preserve">
+    <value>Register in using your {0} account</value>
   </data>
   <data name="Access Denied" xml:space="preserve">
     <value>Access Denied</value>
@@ -1269,5 +1269,8 @@
   </data>
   <data name="Notification emails will be sent to old and new addresses." xml:space="preserve">
     <value>Notification emails will be sent to old and new addresses.</value>
+  </data>
+  <data name="Registration Permitted Top Level Domain(s)" xml:space="preserve">
+    <value>Registration Permitted Top Level Domain(s)</value>
   </data>
 </root>

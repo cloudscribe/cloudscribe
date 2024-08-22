@@ -240,7 +240,7 @@
   <data name="Phone" xml:space="preserve">
     <value>Telefono</value>
   </data>
-  <data name="Please Click here to log in" xml:space="preserve">
+  <data name="Please Click here to Log in" xml:space="preserve">
     <value>Clicca qui per accedere</value>
   </data>
   <data name="Please Confirm Email Address" xml:space="preserve">
@@ -387,7 +387,7 @@
   <data name="Forgot your password?" xml:space="preserve">
     <value>Password dimenticata?</value>
   </data>
-  <data name="Log In" xml:space="preserve">
+  <data name="Log in" xml:space="preserve">
     <value>Accedi</value>
   </data>
   <data name="Must match password" xml:space="preserve">
@@ -774,14 +774,8 @@
   <data name="Captcha Settings" xml:space="preserve">
     <value>Impostazioni captcha</value>
   </data>
-  <data name="Captcha Settings for {0} was successfully updated." xml:space="preserve">
-    <value>Le impostazioni captcha di {0} sono state aggoirnate.</value>
-  </data>
   <data name="Company Info" xml:space="preserve">
     <value>Informazioni sulla società</value>
-  </data>
-  <data name="Company Info for {0} was successfully updated." xml:space="preserve">
-    <value>Le informazioni sulla società per {0} sono state aggiornate.</value>
   </data>
   <data name="Create New Site" xml:space="preserve">
     <value>Crea nuovo sito</value>
@@ -837,9 +831,6 @@
   <data name="Security Settings" xml:space="preserve">
     <value>Impostazioni di sicurezza</value>
   </data>
-  <data name="Security Settings for {0} was successfully updated." xml:space="preserve">
-    <value>Le Impostazioni di sicurezza per {0} sono state aggiornate,</value>
-  </data>
   <data name="Site Administration" xml:space="preserve">
     <value>Amministrazione sito</value>
   </data>
@@ -881,9 +872,6 @@
   </data>
   <data name="Your password has been changed." xml:space="preserve">
     <value>La tua password è stata cambiata.</value>
-  </data>
-  <data name="Your password has been set." xml:space="preserve">
-    <value>La tua password è stata impostata.</value>
   </data>
   <data name="Your phone number was added." xml:space="preserve">
     <value>Il tuo numero di telefono è stato aggiunto.</value>
@@ -933,9 +921,6 @@
   <data name="Username not accepted please try a different value" xml:space="preserve">
     <value>Nome utente non accettato, prova con un altro valore</value>
   </data>
-  <data name="Register using your {0} account" xml:space="preserve">
-    <value>Registrati usanto il tuo account {0}</value>
-  </data>
   <data name="Use an existing account" xml:space="preserve">
     <value>Utilizza un account esistente</value>
   </data>
@@ -947,6 +932,21 @@
   </data>
   <data name="Log off" xml:space="preserve">
     <value>Esci</value>
+  </data>
+  <data name="Captcha Settings for {0} was successfully updated." xml:space="preserve">
+    <value>Le impostazioni captcha di {0} sono state aggoirnate.</value>
+  </data>
+  <data name="Company Info for {0} was successfully updated." xml:space="preserve">
+    <value>Le informazioni sulla società per {0} sono state aggiornate.</value>
+  </data>
+  <data name="Security Settings for {0} was successfully updated." xml:space="preserve">
+    <value>Le Impostazioni di sicurezza per {0} sono state aggiornate,</value>
+  </data>
+  <data name="Your password has been set." xml:space="preserve">
+    <value>La tua password è stata impostata.</value>
+  </data>
+  <data name="Register using your {0} account" xml:space="preserve">
+    <value>Registrati usanto il tuo account {0}</value>
   </data>
   <data name="Access Denied" xml:space="preserve">
     <value>Accesso negato</value>
@@ -1122,6 +1122,9 @@
   <data name="Send Email Notification" xml:space="preserve">
     <value>Invia email di notifica</value>
   </data>
+  <data name="Use Invisible reCaptcha?" xml:space="preserve">
+    <value>Utilizza il reCaptcha invisibile?</value>
+  </data>
   <data name="Your information has been updated." xml:space="preserve">
     <value>Le tue informazioni sono state aggiornate.</value>
   </data>
@@ -1254,9 +1257,6 @@
   <data name="Phone Number" xml:space="preserve">
     <value>Telefono</value>
   </data>
-  <data name="Use Invisible reCaptcha?" xml:space="preserve">
-    <value>Utilizza il reCaptcha invisibile?</value>
-  </data>
   <data name="User Accounts Pending Approval" xml:space="preserve">
     <value>Account utente in attesa di approvazione</value>
   </data>
@@ -1274,5 +1274,8 @@
   </data>
   <data name="Working..." xml:space="preserve">
     <value>Attendere prego</value>
+  </data>
+  <data name="Registration Permitted Top Level Domain(s)" xml:space="preserve">
+    <value>Registrazione consentita Dominio di primo livello</value>
   </data>
 </root>

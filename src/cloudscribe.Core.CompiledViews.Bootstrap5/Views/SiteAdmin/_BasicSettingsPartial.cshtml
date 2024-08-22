@@ -81,12 +81,6 @@
             <span asp-validation-for="Theme" class="invalid-feedback"></span>
         </div>
     }
-    <div class="mb-4">
-        <label class="form-label" asp-for="RegRestrictionTld">@sr["Registration Permitted Top Level Domain(s)"]</label>
-        <input asp-for="RegRestrictionTld" class="form-control" />
-        <p class="small">To restrict user registration to specific TLD's. E.g. entering: <i>mycompany.com</i> will restrict registration to users whose emails end with <i>@@mycompany.com</i>. To have multiple TLD's, separate them with a comma: <i>mycompany.com, mycompany2.com</i></p>
-        @Html.ValidationMessage("RegRestrictionTld", new { @class = "text-danger" })
-    </div>
     <div class="mb-3" style="height:300px">
         <label>@sr["Site Logo"]</label>
         <div class="d-flex align-items-stretch mb-2">
