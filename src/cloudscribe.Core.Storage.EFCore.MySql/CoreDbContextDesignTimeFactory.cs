@@ -9,7 +9,7 @@ namespace cloudscribe.Core.Storage.EFCore.MySql
         {
             var builder = new DbContextOptionsBuilder<CoreDbContext>();
 
-            var connString = "Server=yourserver;Database=yourdb;Uid=youruser;Pwd=yourpassword;Charset=utf8;";
+            var connString = "Server=localhost;Database=cloudscribe;Uid=cloudscribe_user;Pwd=Qwerty_1;Charset=utf8;";
 
             // builder.UseMySql(connString);
 

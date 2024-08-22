@@ -81,6 +81,7 @@ namespace cloudscribe.Core.Web.ViewModels.SiteSettings
         [DataType(DataType.Password)]
         [Display(Name = "Password")]
         public string LdapTestPassword { get; set; }
+        public string MaximumInactivityInMinutes { get; set; }
 
     }
 }

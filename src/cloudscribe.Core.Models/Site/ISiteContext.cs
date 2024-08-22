@@ -123,6 +123,6 @@ namespace cloudscribe.Core.Models
         string LogoUrl { get; }
 
         bool SingleBrowserSessions { get; }
-
+        string MaximumInactivityInMinutes { get; }
     }
 }

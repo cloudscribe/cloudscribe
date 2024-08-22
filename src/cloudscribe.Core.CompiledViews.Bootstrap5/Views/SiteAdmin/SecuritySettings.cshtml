@@ -66,6 +66,12 @@
             <label asp-for="AllowPersistentLogin" class="form-check-label">@sr["Allow persistent login"]</label>
         </div>
     </div>
+    <div class="mb-3">
+        <div class="form-input">
+            <label asp-for="MaximumInactivityInMinutes" class="form-input-label">@sr["Auto logout time (in minutes, leave blank to disable)."]</label>
+            <input asp-for="MaximumInactivityInMinutes" class="form-control" />
+        </div>
+    </div>
     <partial name="LdapSettingsPartial" model="Model" />
 
     @if (Model.HasAnySocialAuthEnabled || (!string.IsNullOrWhiteSpace(Model.LdapDomain) && !string.IsNullOrWhiteSpace(Model.LdapServer)))

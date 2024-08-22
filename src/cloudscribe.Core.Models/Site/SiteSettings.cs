@@ -221,8 +221,7 @@ namespace cloudscribe.Core.Models
         public string FooterContent { get; set; }
 
         public bool SingleBrowserSessions { get; set; }
-
-
+        public string MaximumInactivityInMinutes { get; set; }
 
         public static SiteSettings FromISiteSettings(ISiteSettings i)
         {
@@ -341,7 +340,9 @@ namespace cloudscribe.Core.Models
                 TermsUpdatedUtc            = i.TermsUpdatedUtc,
                 EmailApiEndpoint           = i.EmailApiEndpoint,
                 EmailApiKey                = i.EmailApiKey,
-                EmailSenderName            = i.EmailSenderName
+                EmailSenderName            = i.EmailSenderName,
+                RegRestrictionTld          = i.RegRestrictionTld,
+                MaximumInactivityInMinutes = i.MaximumInactivityInMinutes
             };
 
             return s;

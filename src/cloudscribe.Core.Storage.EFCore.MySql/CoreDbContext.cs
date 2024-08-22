@@ -365,6 +365,7 @@ namespace cloudscribe.Core.Storage.EFCore.MySql
                .HasMaxLength(250);
                 ;
 
+                entity.Property(p => p.MaximumInactivityInMinutes);
             });
 
             modelBuilder.Entity<SiteHost>(entity =>

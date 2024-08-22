@@ -3,21 +3,27 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using cloudscribe.Core.Storage.EFCore.MSSQL;
+
+#nullable disable
 
 namespace cloudscribe.Core.Storage.EFCore.MSSQL.Migrations
 {
     [DbContext(typeof(CoreDbContext))]
-    partial class CoreDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240822140535_cs-core-20240822")]
+    partial class cscore20240822
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "3.1.0")
-                .HasAnnotation("Relational:MaxIdentifierLength", 128)
-                .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                .HasAnnotation("ProductVersion", "8.0.0")
+                .HasAnnotation("Relational:MaxIdentifierLength", 128);
+
+            SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
             modelBuilder.Entity("cloudscribe.Core.Models.Geography.GeoCountry", b =>
                 {
@@ -28,24 +34,29 @@ namespace cloudscribe.Core.Storage.EFCore.MSSQL.Migrations
 
                     b.Property<string>("ISOCode2")
                         .IsRequired()
-                        .HasColumnType("nvarchar(2)")
-                        .HasMaxLength(2);
+                        .HasMaxLength(2)
+                        .HasColumnType("nvarchar(2)");
 
                     b.Property<string>("ISOCode3")
                         .IsRequired()
-                        .HasColumnType("nvarchar(3)")
-                        .HasMaxLength(3);
+                        .HasMaxLength(3)
+                        .HasColumnType("nvarchar(3)");
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasColumnType("nvarchar(255)")
-                        .HasMaxLength(255);
+                        .HasMaxLength(255)
+                        .HasColumnType("nvarchar(255)");
 
                     b.HasKey("Id");
 
                     b.HasIndex("ISOCode2");
 
-                    b.ToTable("cs_GeoCountry");
+                    b.ToTable("cs_GeoCountry", null, t =>
+                        {
+                            t.HasTrigger("cs_GeoCountry_Trigger");
+                        });
+
+                    b.HasAnnotation("SqlServer:UseSqlOutputClause", false);
                 });
 
             modelBuilder.Entity("cloudscribe.Core.Models.Geography.GeoZone", b =>
@@ -57,16 +68,16 @@ namespace cloudscribe.Core.Storage.EFCore.MSSQL.Migrations
 
                     b.Property<string>("Code")
                         .IsRequired()
-                        .HasColumnType("nvarchar(255)")
-                        .HasMaxLength(255);
+                        .HasMaxLength(255)
+                        .HasColumnType("nvarchar(255)");
 
                     b.Property<Guid>("CountryId")
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasColumnType("nvarchar(255)")
-                        .HasMaxLength(255);
+                        .HasMaxLength(255)
+                        .HasColumnType("nvarchar(255)");
 
                     b.HasKey("Id");
 
@@ -74,7 +85,12 @@ namespace cloudscribe.Core.Storage.EFCore.MSSQL.Migrations
 
                     b.HasIndex("CountryId");
 
-                    b.ToTable("cs_GeoZone");
+                    b.ToTable("cs_GeoZone", null, t =>
+                        {
+                            t.HasTrigger("cs_GeoZone_Trigger");
+                        });
+
+                    b.HasAnnotation("SqlServer:UseSqlOutputClause", false);
                 });
 
             modelBuilder.Entity("cloudscribe.Core.Models.SiteHost", b =>
@@ -86,8 +102,8 @@ namespace cloudscribe.Core.Storage.EFCore.MSSQL.Migrations
 
                     b.Property<string>("HostName")
                         .IsRequired()
-                        .HasColumnType("nvarchar(255)")
-                        .HasMaxLength(255);
+                        .HasMaxLength(255)
+                        .HasColumnType("nvarchar(255)");
 
                     b.Property<Guid>("SiteId")
                         .HasColumnType("uniqueidentifier");
@@ -98,7 +114,12 @@ namespace cloudscribe.Core.Storage.EFCore.MSSQL.Migrations
 
                     b.HasIndex("SiteId");
 
-                    b.ToTable("cs_SiteHost");
+                    b.ToTable("cs_SiteHost", null, t =>
+                        {
+                            t.HasTrigger("cs_SiteHost_Trigger");
+                        });
+
+                    b.HasAnnotation("SqlServer:UseSqlOutputClause", false);
                 });
 
             modelBuilder.Entity("cloudscribe.Core.Models.SiteRole", b =>
@@ -110,13 +131,13 @@ namespace cloudscribe.Core.Storage.EFCore.MSSQL.Migrations
 
                     b.Property<string>("NormalizedRoleName")
                         .IsRequired()
-                        .HasColumnType("nvarchar(50)")
-                        .HasMaxLength(50);
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
 
                     b.Property<string>("RoleName")
                         .IsRequired()
-                        .HasColumnType("nvarchar(50)")
-                        .HasMaxLength(50);
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
 
                     b.Property<Guid>("SiteId")
                         .HasColumnType("uniqueidentifier");
@@ -130,7 +151,12 @@ namespace cloudscribe.Core.Storage.EFCore.MSSQL.Migrations
 
                     b.HasIndex("SiteId");
 
-                    b.ToTable("cs_Role");
+                    b.ToTable("cs_Role", null, t =>
+                        {
+                            t.HasTrigger("cs_Role_Trigger");
+                        });
+
+                    b.HasAnnotation("SqlServer:UseSqlOutputClause", false);
                 });
 
             modelBuilder.Entity("cloudscribe.Core.Models.SiteSettings", b =>
@@ -143,12 +169,12 @@ namespace cloudscribe.Core.Storage.EFCore.MSSQL.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("AddThisDotComUsername")
-                        .HasColumnType("nvarchar(50)")
-                        .HasMaxLength(50);
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
 
                     b.Property<string>("AliasId")
-                        .HasColumnType("nvarchar(36)")
-                        .HasMaxLength(36);
+                        .HasMaxLength(36)
+                        .HasColumnType("nvarchar(36)");
 
                     b.Property<bool>("AllowNewRegistration")
                         .HasColumnType("bit");
@@ -166,55 +192,55 @@ namespace cloudscribe.Core.Storage.EFCore.MSSQL.Migrations
                         .HasColumnType("bit");
 
                     b.Property<string>("CompanyCountry")
-                        .HasColumnType("nvarchar(10)")
-                        .HasMaxLength(10);
+                        .HasMaxLength(10)
+                        .HasColumnType("nvarchar(10)");
 
                     b.Property<string>("CompanyFax")
-                        .HasColumnType("nvarchar(20)")
-                        .HasMaxLength(20);
+                        .HasMaxLength(20)
+                        .HasColumnType("nvarchar(20)");
 
                     b.Property<string>("CompanyLocality")
-                        .HasColumnType("nvarchar(200)")
-                        .HasMaxLength(200);
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)");
 
                     b.Property<string>("CompanyName")
-                        .HasColumnType("nvarchar(250)")
-                        .HasMaxLength(250);
+                        .HasMaxLength(250)
+                        .HasColumnType("nvarchar(250)");
 
                     b.Property<string>("CompanyPhone")
-                        .HasColumnType("nvarchar(20)")
-                        .HasMaxLength(20);
+                        .HasMaxLength(20)
+                        .HasColumnType("nvarchar(20)");
 
                     b.Property<string>("CompanyPostalCode")
-                        .HasColumnType("nvarchar(20)")
-                        .HasMaxLength(20);
+                        .HasMaxLength(20)
+                        .HasColumnType("nvarchar(20)");
 
                     b.Property<string>("CompanyPublicEmail")
-                        .HasColumnType("nvarchar(100)")
-                        .HasMaxLength(100);
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
 
                     b.Property<string>("CompanyRegion")
-                        .HasColumnType("nvarchar(200)")
-                        .HasMaxLength(200);
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)");
 
                     b.Property<string>("CompanyStreetAddress")
-                        .HasColumnType("nvarchar(250)")
-                        .HasMaxLength(250);
+                        .HasMaxLength(250)
+                        .HasColumnType("nvarchar(250)");
 
                     b.Property<string>("CompanyStreetAddress2")
-                        .HasColumnType("nvarchar(250)")
-                        .HasMaxLength(250);
+                        .HasMaxLength(250)
+                        .HasColumnType("nvarchar(250)");
 
                     b.Property<string>("CompanyWebsite")
-                        .HasColumnType("nvarchar(255)")
-                        .HasMaxLength(255);
+                        .HasMaxLength(255)
+                        .HasColumnType("nvarchar(255)");
 
                     b.Property<string>("ConcurrencyStamp")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("CookiePolicySummary")
-                        .HasColumnType("nvarchar(255)")
-                        .HasMaxLength(255);
+                        .HasMaxLength(255)
+                        .HasColumnType("nvarchar(255)");
 
                     b.Property<DateTime>("CreatedUtc")
                         .ValueGeneratedOnAdd()
@@ -222,19 +248,19 @@ namespace cloudscribe.Core.Storage.EFCore.MSSQL.Migrations
                         .HasDefaultValueSql("getutcdate()");
 
                     b.Property<string>("DefaultEmailFromAddress")
-                        .HasColumnType("nvarchar(100)")
-                        .HasMaxLength(100);
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
 
                     b.Property<string>("DefaultEmailFromAlias")
-                        .HasColumnType("nvarchar(100)")
-                        .HasMaxLength(100);
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
 
                     b.Property<bool>("DisableDbAuth")
                         .HasColumnType("bit");
 
                     b.Property<string>("DkimDomain")
-                        .HasColumnType("nvarchar(255)")
-                        .HasMaxLength(255);
+                        .HasMaxLength(255)
+                        .HasColumnType("nvarchar(255)");
 
                     b.Property<string>("DkimPrivateKey")
                         .HasColumnType("nvarchar(max)");
@@ -243,8 +269,8 @@ namespace cloudscribe.Core.Storage.EFCore.MSSQL.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("DkimSelector")
-                        .HasColumnType("nvarchar(128)")
-                        .HasMaxLength(128);
+                        .HasMaxLength(128)
+                        .HasColumnType("nvarchar(128)");
 
                     b.Property<string>("EmailApiEndpoint")
                         .HasColumnType("nvarchar(max)");
@@ -255,13 +281,13 @@ namespace cloudscribe.Core.Storage.EFCore.MSSQL.Migrations
                     b.Property<string>("EmailSenderName")
                         .IsRequired()
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("nvarchar(100)")
                         .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)")
                         .HasDefaultValue("SmtpMailSender");
 
                     b.Property<string>("FacebookAppId")
-                        .HasColumnType("nvarchar(100)")
-                        .HasMaxLength(100);
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
 
                     b.Property<string>("FacebookAppSecret")
                         .HasColumnType("nvarchar(max)");
@@ -270,20 +296,20 @@ namespace cloudscribe.Core.Storage.EFCore.MSSQL.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("ForcedCulture")
-                        .HasColumnType("nvarchar(10)")
-                        .HasMaxLength(10);
+                        .HasMaxLength(10)
+                        .HasColumnType("nvarchar(10)");
 
                     b.Property<string>("ForcedUICulture")
-                        .HasColumnType("nvarchar(10)")
-                        .HasMaxLength(10);
+                        .HasMaxLength(10)
+                        .HasColumnType("nvarchar(10)");
 
                     b.Property<string>("GoogleAnalyticsProfileId")
-                        .HasColumnType("nvarchar(25)")
-                        .HasMaxLength(25);
+                        .HasMaxLength(25)
+                        .HasColumnType("nvarchar(25)");
 
                     b.Property<string>("GoogleClientId")
-                        .HasColumnType("nvarchar(100)")
-                        .HasMaxLength(100);
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
 
                     b.Property<string>("GoogleClientSecret")
                         .HasColumnType("nvarchar(max)");
@@ -301,30 +327,30 @@ namespace cloudscribe.Core.Storage.EFCore.MSSQL.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<string>("LdapDomain")
-                        .HasColumnType("nvarchar(255)")
-                        .HasMaxLength(255);
+                        .HasMaxLength(255)
+                        .HasColumnType("nvarchar(255)");
 
                     b.Property<int>("LdapPort")
                         .HasColumnType("int");
 
                     b.Property<string>("LdapRootDN")
-                        .HasColumnType("nvarchar(255)")
-                        .HasMaxLength(255);
+                        .HasMaxLength(255)
+                        .HasColumnType("nvarchar(255)");
 
                     b.Property<string>("LdapServer")
-                        .HasColumnType("nvarchar(255)")
-                        .HasMaxLength(255);
+                        .HasMaxLength(255)
+                        .HasColumnType("nvarchar(255)");
 
                     b.Property<bool>("LdapUseSsl")
                         .HasColumnType("bit");
 
                     b.Property<string>("LdapUserDNFormat")
-                        .HasColumnType("nvarchar(100)")
-                        .HasMaxLength(100);
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
 
                     b.Property<string>("LdapUserDNKey")
-                        .HasColumnType("nvarchar(10)")
-                        .HasMaxLength(10);
+                        .HasMaxLength(10)
+                        .HasColumnType("nvarchar(10)");
 
                     b.Property<string>("LoginInfoBottom")
                         .HasColumnType("nvarchar(max)");
@@ -333,8 +359,8 @@ namespace cloudscribe.Core.Storage.EFCore.MSSQL.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("LogoUrl")
-                        .HasColumnType("nvarchar(250)")
-                        .HasMaxLength(250);
+                        .HasMaxLength(250)
+                        .HasColumnType("nvarchar(250)");
 
                     b.Property<int>("MaxInvalidPasswordAttempts")
                         .HasColumnType("int");
@@ -343,8 +369,8 @@ namespace cloudscribe.Core.Storage.EFCore.MSSQL.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("MicrosoftClientId")
-                        .HasColumnType("nvarchar(100)")
-                        .HasMaxLength(100);
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
 
                     b.Property<string>("MicrosoftClientSecret")
                         .HasColumnType("nvarchar(max)");
@@ -353,27 +379,27 @@ namespace cloudscribe.Core.Storage.EFCore.MSSQL.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("OidConnectAppId")
-                        .HasColumnType("nvarchar(255)")
-                        .HasMaxLength(255);
+                        .HasMaxLength(255)
+                        .HasColumnType("nvarchar(255)");
 
                     b.Property<string>("OidConnectAppSecret")
-                        .HasColumnType("nvarchar(255)")
-                        .HasMaxLength(255);
+                        .HasMaxLength(255)
+                        .HasColumnType("nvarchar(255)");
 
                     b.Property<string>("OidConnectAuthority")
-                        .HasColumnType("nvarchar(255)")
-                        .HasMaxLength(255);
+                        .HasMaxLength(255)
+                        .HasColumnType("nvarchar(255)");
 
                     b.Property<string>("OidConnectDisplayName")
-                        .HasColumnType("nvarchar(150)")
-                        .HasMaxLength(150);
+                        .HasMaxLength(150)
+                        .HasColumnType("nvarchar(150)");
 
                     b.Property<string>("OidConnectScopesCsv")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("PreferredHostName")
-                        .HasColumnType("nvarchar(250)")
-                        .HasMaxLength(250);
+                        .HasMaxLength(250)
+                        .HasColumnType("nvarchar(250)");
 
                     b.Property<string>("PrivacyPolicy")
                         .HasColumnType("nvarchar(max)");
@@ -391,12 +417,15 @@ namespace cloudscribe.Core.Storage.EFCore.MSSQL.Migrations
                         .HasColumnType("bit");
 
                     b.Property<string>("RecaptchaPrivateKey")
-                        .HasColumnType("nvarchar(255)")
-                        .HasMaxLength(255);
+                        .HasMaxLength(255)
+                        .HasColumnType("nvarchar(255)");
 
                     b.Property<string>("RecaptchaPublicKey")
-                        .HasColumnType("nvarchar(255)")
-                        .HasMaxLength(255);
+                        .HasMaxLength(255)
+                        .HasColumnType("nvarchar(255)");
+
+                    b.Property<string>("RegRestrictionTld")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("RegistrationAgreement")
                         .HasColumnType("nvarchar(max)");
@@ -432,8 +461,8 @@ namespace cloudscribe.Core.Storage.EFCore.MSSQL.Migrations
                         .HasColumnType("bit");
 
                     b.Property<string>("SiteFolderName")
-                        .HasColumnType("nvarchar(50)")
-                        .HasMaxLength(50);
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
 
                     b.Property<bool>("SiteIsClosed")
                         .HasColumnType("bit");
@@ -443,16 +472,16 @@ namespace cloudscribe.Core.Storage.EFCore.MSSQL.Migrations
 
                     b.Property<string>("SiteName")
                         .IsRequired()
-                        .HasColumnType("nvarchar(255)")
-                        .HasMaxLength(255);
+                        .HasMaxLength(255)
+                        .HasColumnType("nvarchar(255)");
 
                     b.Property<string>("SmsClientId")
-                        .HasColumnType("nvarchar(255)")
-                        .HasMaxLength(255);
+                        .HasMaxLength(255)
+                        .HasColumnType("nvarchar(255)");
 
                     b.Property<string>("SmsFrom")
-                        .HasColumnType("nvarchar(100)")
-                        .HasMaxLength(100);
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
 
                     b.Property<string>("SmsSecureToken")
                         .HasColumnType("nvarchar(max)");
@@ -464,37 +493,37 @@ namespace cloudscribe.Core.Storage.EFCore.MSSQL.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("SmtpPreferredEncoding")
-                        .HasColumnType("nvarchar(20)")
-                        .HasMaxLength(20);
+                        .HasMaxLength(20)
+                        .HasColumnType("nvarchar(20)");
 
                     b.Property<bool>("SmtpRequiresAuth")
                         .HasColumnType("bit");
 
                     b.Property<string>("SmtpServer")
-                        .HasColumnType("nvarchar(200)")
-                        .HasMaxLength(200);
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)");
 
                     b.Property<bool>("SmtpUseSsl")
                         .HasColumnType("bit");
 
                     b.Property<string>("SmtpUser")
-                        .HasColumnType("nvarchar(500)")
-                        .HasMaxLength(500);
+                        .HasMaxLength(500)
+                        .HasColumnType("nvarchar(500)");
 
                     b.Property<DateTime>("TermsUpdatedUtc")
                         .HasColumnType("datetime2");
 
                     b.Property<string>("Theme")
-                        .HasColumnType("nvarchar(100)")
-                        .HasMaxLength(100);
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
 
                     b.Property<string>("TimeZoneId")
-                        .HasColumnType("nvarchar(50)")
-                        .HasMaxLength(50);
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
 
                     b.Property<string>("TwitterConsumerKey")
-                        .HasColumnType("nvarchar(100)")
-                        .HasMaxLength(100);
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
 
                     b.Property<string>("TwitterConsumerSecret")
                         .HasColumnType("nvarchar(max)");
@@ -511,7 +540,12 @@ namespace cloudscribe.Core.Storage.EFCore.MSSQL.Migrations
 
                     b.HasIndex("SiteFolderName");
 
-                    b.ToTable("cs_Site");
+                    b.ToTable("cs_Site", null, t =>
+                        {
+                            t.HasTrigger("cs_Site_Trigger");
+                        });
+
+                    b.HasAnnotation("SqlServer:UseSqlOutputClause", false);
                 });
 
             modelBuilder.Entity("cloudscribe.Core.Models.SiteUser", b =>
@@ -534,12 +568,12 @@ namespace cloudscribe.Core.Storage.EFCore.MSSQL.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("AvatarUrl")
-                        .HasColumnType("nvarchar(255)")
-                        .HasMaxLength(255);
+                        .HasMaxLength(255)
+                        .HasColumnType("nvarchar(255)");
 
                     b.Property<string>("BrowserKey")
-                        .HasColumnType("nvarchar(50)")
-                        .HasMaxLength(50);
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
 
                     b.Property<bool>("CanAutoLockout")
                         .HasColumnType("bit");
@@ -558,12 +592,12 @@ namespace cloudscribe.Core.Storage.EFCore.MSSQL.Migrations
 
                     b.Property<string>("DisplayName")
                         .IsRequired()
-                        .HasColumnType("nvarchar(100)")
-                        .HasMaxLength(100);
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
 
                     b.Property<string>("Email")
-                        .HasColumnType("nvarchar(100)")
-                        .HasMaxLength(100);
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
 
                     b.Property<DateTime?>("EmailConfirmSentUtc")
                         .HasColumnType("datetime2");
@@ -572,8 +606,8 @@ namespace cloudscribe.Core.Storage.EFCore.MSSQL.Migrations
                         .HasColumnType("bit");
 
                     b.Property<string>("FirstName")
-                        .HasColumnType("nvarchar(100)")
-                        .HasMaxLength(100);
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
 
                     b.Property<string>("Gender")
                         .HasColumnType("nvarchar(max)");
@@ -588,8 +622,8 @@ namespace cloudscribe.Core.Storage.EFCore.MSSQL.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<string>("LastName")
-                        .HasColumnType("nvarchar(100)")
-                        .HasMaxLength(100);
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
 
                     b.Property<DateTime?>("LastPasswordChangeUtc")
                         .HasColumnType("datetime2");
@@ -601,27 +635,27 @@ namespace cloudscribe.Core.Storage.EFCore.MSSQL.Migrations
                         .HasColumnType("bit");
 
                     b.Property<string>("NewEmail")
-                        .HasColumnType("nvarchar(100)")
-                        .HasMaxLength(100);
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
 
                     b.Property<bool>("NewEmailApproved")
                         .HasColumnType("bit");
 
                     b.Property<string>("NormalizedEmail")
-                        .HasColumnType("nvarchar(100)")
-                        .HasMaxLength(100);
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
 
                     b.Property<string>("NormalizedUserName")
                         .IsRequired()
-                        .HasColumnType("nvarchar(50)")
-                        .HasMaxLength(50);
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
 
                     b.Property<string>("PasswordHash")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("PhoneNumber")
-                        .HasColumnType("nvarchar(50)")
-                        .HasMaxLength(50);
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
 
                     b.Property<bool>("PhoneNumberConfirmed")
                         .HasColumnType("bit");
@@ -630,8 +664,8 @@ namespace cloudscribe.Core.Storage.EFCore.MSSQL.Migrations
                         .HasColumnType("bit");
 
                     b.Property<string>("SecurityStamp")
-                        .HasColumnType("nvarchar(50)")
-                        .HasMaxLength(50);
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
 
                     b.Property<string>("Signature")
                         .HasColumnType("nvarchar(max)");
@@ -640,20 +674,20 @@ namespace cloudscribe.Core.Storage.EFCore.MSSQL.Migrations
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("TimeZoneId")
-                        .HasColumnType("nvarchar(50)")
-                        .HasMaxLength(50);
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
 
                     b.Property<bool>("TwoFactorEnabled")
                         .HasColumnType("bit");
 
                     b.Property<string>("UserName")
                         .IsRequired()
-                        .HasColumnType("nvarchar(50)")
-                        .HasMaxLength(50);
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
 
                     b.Property<string>("WebSiteUrl")
-                        .HasColumnType("nvarchar(100)")
-                        .HasMaxLength(100);
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
 
                     b.HasKey("Id");
 
@@ -665,7 +699,12 @@ namespace cloudscribe.Core.Storage.EFCore.MSSQL.Migrations
 
                     b.HasIndex("SiteId");
 
-                    b.ToTable("cs_User");
+                    b.ToTable("cs_User", null, t =>
+                        {
+                            t.HasTrigger("cs_User_Trigger");
+                        });
+
+                    b.HasAnnotation("SqlServer:UseSqlOutputClause", false);
                 });
 
             modelBuilder.Entity("cloudscribe.Core.Models.UserClaim", b =>
@@ -676,8 +715,8 @@ namespace cloudscribe.Core.Storage.EFCore.MSSQL.Migrations
                         .HasDefaultValueSql("newid()");
 
                     b.Property<string>("ClaimType")
-                        .HasColumnType("nvarchar(255)")
-                        .HasMaxLength(255);
+                        .HasMaxLength(255)
+                        .HasColumnType("nvarchar(255)");
 
                     b.Property<string>("ClaimValue")
                         .HasColumnType("nvarchar(max)");
@@ -696,7 +735,12 @@ namespace cloudscribe.Core.Storage.EFCore.MSSQL.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("cs_UserClaim");
+                    b.ToTable("cs_UserClaim", null, t =>
+                        {
+                            t.HasTrigger("cs_UserClaim_Trigger");
+                        });
+
+                    b.HasAnnotation("SqlServer:UseSqlOutputClause", false);
                 });
 
             modelBuilder.Entity("cloudscribe.Core.Models.UserLocation", b =>
@@ -710,34 +754,34 @@ namespace cloudscribe.Core.Storage.EFCore.MSSQL.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("City")
-                        .HasColumnType("nvarchar(255)")
-                        .HasMaxLength(255);
+                        .HasMaxLength(255)
+                        .HasColumnType("nvarchar(255)");
 
                     b.Property<string>("Continent")
-                        .HasColumnType("nvarchar(255)")
-                        .HasMaxLength(255);
+                        .HasMaxLength(255)
+                        .HasColumnType("nvarchar(255)");
 
                     b.Property<string>("Country")
-                        .HasColumnType("nvarchar(255)")
-                        .HasMaxLength(255);
+                        .HasMaxLength(255)
+                        .HasColumnType("nvarchar(255)");
 
                     b.Property<DateTime>("FirstCaptureUtc")
                         .HasColumnType("datetime2");
 
                     b.Property<string>("HostName")
-                        .HasColumnType("nvarchar(255)")
-                        .HasMaxLength(255);
+                        .HasMaxLength(255)
+                        .HasColumnType("nvarchar(255)");
 
                     b.Property<string>("IpAddress")
-                        .HasColumnType("nvarchar(50)")
-                        .HasMaxLength(50);
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
 
                     b.Property<long>("IpAddressLong")
                         .HasColumnType("bigint");
 
                     b.Property<string>("Isp")
-                        .HasColumnType("nvarchar(255)")
-                        .HasMaxLength(255);
+                        .HasMaxLength(255)
+                        .HasColumnType("nvarchar(255)");
 
                     b.Property<DateTime>("LastCaptureUtc")
                         .HasColumnType("datetime2");
@@ -749,15 +793,15 @@ namespace cloudscribe.Core.Storage.EFCore.MSSQL.Migrations
                         .HasColumnType("float");
 
                     b.Property<string>("Region")
-                        .HasColumnType("nvarchar(255)")
-                        .HasMaxLength(255);
+                        .HasMaxLength(255)
+                        .HasColumnType("nvarchar(255)");
 
                     b.Property<Guid>("SiteId")
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("TimeZone")
-                        .HasColumnType("nvarchar(255)")
-                        .HasMaxLength(255);
+                        .HasMaxLength(255)
+                        .HasColumnType("nvarchar(255)");
 
                     b.Property<Guid>("UserId")
                         .HasColumnType("uniqueidentifier");
@@ -768,7 +812,12 @@ namespace cloudscribe.Core.Storage.EFCore.MSSQL.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("cs_UserLocation");
+                    b.ToTable("cs_UserLocation", null, t =>
+                        {
+                            t.HasTrigger("cs_UserLocation_Trigger");
+                        });
+
+                    b.HasAnnotation("SqlServer:UseSqlOutputClause", false);
                 });
 
             modelBuilder.Entity("cloudscribe.Core.Models.UserLogin", b =>
@@ -780,16 +829,16 @@ namespace cloudscribe.Core.Storage.EFCore.MSSQL.Migrations
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("LoginProvider")
-                        .HasColumnType("nvarchar(128)")
-                        .HasMaxLength(128);
+                        .HasMaxLength(128)
+                        .HasColumnType("nvarchar(128)");
 
                     b.Property<string>("ProviderKey")
-                        .HasColumnType("nvarchar(128)")
-                        .HasMaxLength(128);
+                        .HasMaxLength(128)
+                        .HasColumnType("nvarchar(128)");
 
                     b.Property<string>("ProviderDisplayName")
-                        .HasColumnType("nvarchar(100)")
-                        .HasMaxLength(100);
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
 
                     b.HasKey("UserId", "SiteId", "LoginProvider", "ProviderKey");
 
@@ -797,7 +846,12 @@ namespace cloudscribe.Core.Storage.EFCore.MSSQL.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("cs_UserLogin");
+                    b.ToTable("cs_UserLogin", null, t =>
+                        {
+                            t.HasTrigger("cs_UserLogin_Trigger");
+                        });
+
+                    b.HasAnnotation("SqlServer:UseSqlOutputClause", false);
                 });
 
             modelBuilder.Entity("cloudscribe.Core.Models.UserRole", b =>
@@ -814,7 +868,12 @@ namespace cloudscribe.Core.Storage.EFCore.MSSQL.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("cs_UserRole");
+                    b.ToTable("cs_UserRole", null, t =>
+                        {
+                            t.HasTrigger("cs_UserRole_Trigger");
+                        });
+
+                    b.HasAnnotation("SqlServer:UseSqlOutputClause", false);
                 });
 
             modelBuilder.Entity("cloudscribe.Core.Models.UserToken", b =>
@@ -826,12 +885,12 @@ namespace cloudscribe.Core.Storage.EFCore.MSSQL.Migrations
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("LoginProvider")
-                        .HasColumnType("nvarchar(450)")
-                        .HasMaxLength(450);
+                        .HasMaxLength(450)
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("Name")
-                        .HasColumnType("nvarchar(450)")
-                        .HasMaxLength(450);
+                        .HasMaxLength(450)
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("Value")
                         .HasColumnType("nvarchar(max)");
@@ -842,7 +901,12 @@ namespace cloudscribe.Core.Storage.EFCore.MSSQL.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("cs_UserToken");
+                    b.ToTable("cs_UserToken", null, t =>
+                        {
+                            t.HasTrigger("cs_UserToken_Trigger");
+                        });
+
+                    b.HasAnnotation("SqlServer:UseSqlOutputClause", false);
                 });
 #pragma warning restore 612, 618
         }
