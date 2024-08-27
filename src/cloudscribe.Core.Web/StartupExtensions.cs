@@ -177,7 +177,7 @@ namespace Microsoft.Extensions.DependencyInjection
             services.TryAddScoped<ILdapHelper, NotImplementedLdapHelper>();
 
             services.TryAddScoped<ILdapSslCertificateValidator, AlwaysValidLdapSslCertificateValidator>();
-
+            services.TryAddScoped<IEmailValidationService, EmailValidationService>();
 
             return services;
         }

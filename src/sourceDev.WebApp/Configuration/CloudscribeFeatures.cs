@@ -29,9 +29,9 @@ namespace Microsoft.Extensions.DependencyInjection
             var efProvider = config["DevOptions:EFProvider"];
             var useMiniProfiler = config.GetValue<bool>("DevOptions:EnableMiniProfiler");
 
-            switch (storage)
+            switch (storage.ToLower())
             {
-                case "NoDb":
+                case "nodb":
                     var useSingletons = true;
                     services.AddCloudscribeCoreNoDbStorage(useSingletons);
                     services.AddCloudscribeLoggingNoDbStorage(config);
@@ -54,7 +54,7 @@ namespace Microsoft.Extensions.DependencyInjection
                     //        .AddEntityFramework();
                     //}
 
-                    switch (efProvider)
+                    switch (efProvider.ToLower())
                     {
                         case "sqlite":
 
@@ -101,7 +101,7 @@ namespace Microsoft.Extensions.DependencyInjection
                             break;
 
 
-                        case "MySql":
+                        case "myqql":
                             var mysqlConnection = config.GetConnectionString("MySqlEntityFrameworkConnectionString");
                             services.AddCloudscribeCoreEFStorageMySql(mysqlConnection);
                             services.AddCloudscribeLoggingEFStorageMySQL(mysqlConnection);
@@ -115,7 +115,7 @@ namespace Microsoft.Extensions.DependencyInjection
 
                             break;
 
-                        case "MSSQL":
+                        case "mssql":
                         default:
                             var connectionString = config.GetConnectionString("EntityFrameworkConnectionString");
                             // this shows all the params with default values

@@ -1270,4 +1270,7 @@
   <data name="Notification emails will be sent to old and new addresses." xml:space="preserve">
     <value>Notification emails will be sent to old and new addresses.</value>
   </data>
+  <data name="Registration Permitted Top Level Domain(s)" xml:space="preserve">
+    <value>Registration Permitted Top Level Domain(s)</value>
+  </data>
 </root>

@@ -93,8 +93,5 @@ namespace cloudscribe.Core.Web.ViewModels.SiteSettings
         public string FooterContent { get; set; }
 
         public string LogoUrl { get; set; }
-
-
-
     }
 }
