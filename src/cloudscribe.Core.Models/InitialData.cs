@@ -27,7 +27,7 @@ namespace cloudscribe.Core.Models
             newSite.RequireConfirmedEmail      = false;
             newSite.RequiresQuestionAndAnswer  = false;
             newSite.MaxInvalidPasswordAttempts = 10;
-            newSite.MinRequiredPasswordLength  = 7;
+            newSite.MinRequiredPasswordLength  = 8;
 
             return newSite;
         }
