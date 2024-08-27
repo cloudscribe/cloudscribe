@@ -1112,7 +1112,8 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
                 LdapServer                 = selectedSite.LdapServer,
                 LdapUserDNKey              = selectedSite.LdapUserDNKey,
                 LdapUserDNFormat           = selectedSite.LdapUserDNFormat,
-                LdapUseSsl                 = selectedSite.LdapUseSsl
+                LdapUseSsl                 = selectedSite.LdapUseSsl,
+                RegRestrictionTld = selectedSite.RegRestrictionTld
             };
 
             return View(model);
@@ -1173,6 +1174,7 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
             selectedSite.LdapUserDNKey              = model.LdapUserDNKey;
             selectedSite.LdapUserDNFormat           = model.LdapUserDNFormat;
             selectedSite.LdapUseSsl                 = model.LdapUseSsl;
+            selectedSite.RegRestrictionTld = model.RegRestrictionTld;
 
             await SiteManager.Update(selectedSite);
 

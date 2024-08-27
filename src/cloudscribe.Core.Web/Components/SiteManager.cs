@@ -350,7 +350,7 @@ namespace cloudscribe.Core.Web.Components
             newSite.OidConnectAuthority        = sourceSite.OidConnectAuthority;
             newSite.OidConnectDisplayName      = sourceSite.OidConnectDisplayName;
             newSite.TimeZoneId                 = sourceSite.TimeZoneId;
-            
+            newSite.RegRestrictionTld          = sourceSite.RegRestrictionTld;
             
             // We might want to leave out all the company stuff since that's likely to be differrent?
             newSite.CompanyName                = sourceSite.CompanyName;

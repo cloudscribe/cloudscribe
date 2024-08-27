@@ -7,6 +7,7 @@
 
 using cloudscribe.Core.Identity;
 using cloudscribe.Core.Models;
+using cloudscribe.Core.Models.Site;
 using cloudscribe.Core.Web.Components;
 using cloudscribe.Core.Web.Components.Messaging;
 using cloudscribe.Core.Web.ExtensionPoints;
@@ -50,7 +51,8 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
             RemainingSessionTimeResolver remainingSessionTimeResolver,
             SiteUserManager<SiteUser> userManager,
             SignInManager<SiteUser> signInManager,
-            ILogger<AccountController> logger
+            ILogger<AccountController> logger,
+            IEmailValidationService emailValidationService
             )
         {
             AccountService               = accountService;
@@ -69,6 +71,7 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
             RemainingSessionTimeResolver = remainingSessionTimeResolver;
             UserManager = userManager;
             SignInManager = signInManager;
+            EmailValidationService = emailValidationService;
         }
 
         protected IAccountService AccountService { get; private set; }
@@ -87,6 +90,7 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
         protected IHttpContextAccessor HttpContextAccessor;
         protected SiteUserManager<SiteUser> UserManager { get; private set; }
         public SignInManager<SiteUser> SignInManager { get; }
+        public IEmailValidationService EmailValidationService { get; }
 
         protected virtual async Task<IActionResult> HandleLoginSuccess(UserLoginResult result, string returnUrl)
         {
@@ -561,6 +565,18 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
                 HttpContext,
                 ViewData,
                 ModelState);
+
+            EmailValidation emailValidation = EmailValidationService.RegisterEmailValidation(model);
+
+            if (emailValidation.IsValid)
+            {
+                isValid = true;
+            }
+            else
+            {
+                ModelState.AddModelError("registrationEmailError", emailValidation.ErrorMessage);
+                isValid = false;
+            }
 
             if (isValid && customDataIsValid)
             {

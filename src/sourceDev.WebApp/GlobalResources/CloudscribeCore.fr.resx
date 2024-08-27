@@ -159,4 +159,7 @@
   <data name="Site Settings" xml:space="preserve">
     <value>Paramètres du site</value>
   </data>
+  <data name="Registration Permitted Top Level Domain(s)" xml:space="preserve">
+    <value>Enregistrement de domaines de premier niveau autorisés</value>
+  </data>
 </root>

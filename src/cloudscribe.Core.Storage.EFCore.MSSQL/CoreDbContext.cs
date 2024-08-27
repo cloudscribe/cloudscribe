@@ -415,6 +415,7 @@ namespace cloudscribe.Core.Storage.EFCore.MSSQL
                 .HasMaxLength(250);
                 ;
 
+                entity.Property(p => p.RegRestrictionTld);
             });
 
             modelBuilder.Entity<SiteHost>(entity =>
