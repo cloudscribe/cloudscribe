@@ -70,7 +70,7 @@ namespace cloudscribe.Core.Models
         
         public int MaxInvalidPasswordAttempts { get; set; } = 5;
         
-        public int MinRequiredPasswordLength { get; set; } = 7;
+        public int MinRequiredPasswordLength { get; set; } = 8;
         
         public bool PwdRequireNonAlpha { get; set; } = true;
         
