@@ -197,7 +197,7 @@ namespace cloudscribe.Core.Storage.EFCore.SQLite
                 entity.Property(p => p.LogoUrl)
                .HasMaxLength(250);
                 ;
-
+                entity.Property(p => p.RegRestrictionTld);
             });
 
             modelBuilder.Entity<SiteHost>(entity =>

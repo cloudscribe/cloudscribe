@@ -5,6 +5,8 @@ using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using cloudscribe.Core.Storage.EFCore.MySql;
 
+#nullable disable
+
 namespace cloudscribe.Core.Storage.EFCore.MySql.Migrations
 {
     [DbContext(typeof(CoreDbContext))]
@@ -14,7 +16,7 @@ namespace cloudscribe.Core.Storage.EFCore.MySql.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "3.1.0")
+                .HasAnnotation("ProductVersion", "8.0.0")
                 .HasAnnotation("Relational:MaxIdentifierLength", 64);
 
             modelBuilder.Entity("cloudscribe.Core.Models.Geography.GeoCountry", b =>
@@ -25,24 +27,24 @@ namespace cloudscribe.Core.Storage.EFCore.MySql.Migrations
 
                     b.Property<string>("ISOCode2")
                         .IsRequired()
-                        .HasColumnType("varchar(2) CHARACTER SET utf8mb4")
-                        .HasMaxLength(2);
+                        .HasMaxLength(2)
+                        .HasColumnType("varchar(2)");
 
                     b.Property<string>("ISOCode3")
                         .IsRequired()
-                        .HasColumnType("varchar(3) CHARACTER SET utf8mb4")
-                        .HasMaxLength(3);
+                        .HasMaxLength(3)
+                        .HasColumnType("varchar(3)");
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasColumnType("varchar(255) CHARACTER SET utf8mb4")
-                        .HasMaxLength(255);
+                        .HasMaxLength(255)
+                        .HasColumnType("varchar(255)");
 
                     b.HasKey("Id");
 
                     b.HasIndex("ISOCode2");
 
-                    b.ToTable("cs_GeoCountry");
+                    b.ToTable("cs_GeoCountry", (string)null);
                 });
 
             modelBuilder.Entity("cloudscribe.Core.Models.Geography.GeoZone", b =>
@@ -53,16 +55,16 @@ namespace cloudscribe.Core.Storage.EFCore.MySql.Migrations
 
                     b.Property<string>("Code")
                         .IsRequired()
-                        .HasColumnType("varchar(255) CHARACTER SET utf8mb4")
-                        .HasMaxLength(255);
+                        .HasMaxLength(255)
+                        .HasColumnType("varchar(255)");
 
                     b.Property<Guid>("CountryId")
                         .HasColumnType("char(36)");
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasColumnType("varchar(255) CHARACTER SET utf8mb4")
-                        .HasMaxLength(255);
+                        .HasMaxLength(255)
+                        .HasColumnType("varchar(255)");
 
                     b.HasKey("Id");
 
@@ -70,7 +72,7 @@ namespace cloudscribe.Core.Storage.EFCore.MySql.Migrations
 
                     b.HasIndex("CountryId");
 
-                    b.ToTable("cs_GeoZone");
+                    b.ToTable("cs_GeoZone", (string)null);
                 });
 
             modelBuilder.Entity("cloudscribe.Core.Models.SiteHost", b =>
@@ -81,8 +83,8 @@ namespace cloudscribe.Core.Storage.EFCore.MySql.Migrations
 
                     b.Property<string>("HostName")
                         .IsRequired()
-                        .HasColumnType("varchar(255) CHARACTER SET utf8mb4")
-                        .HasMaxLength(255);
+                        .HasMaxLength(255)
+                        .HasColumnType("varchar(255)");
 
                     b.Property<Guid>("SiteId")
                         .HasColumnType("char(36)");
@@ -93,7 +95,7 @@ namespace cloudscribe.Core.Storage.EFCore.MySql.Migrations
 
                     b.HasIndex("SiteId");
 
-                    b.ToTable("cs_SiteHost");
+                    b.ToTable("cs_SiteHost", (string)null);
                 });
 
             modelBuilder.Entity("cloudscribe.Core.Models.SiteRole", b =>
@@ -104,13 +106,13 @@ namespace cloudscribe.Core.Storage.EFCore.MySql.Migrations
 
                     b.Property<string>("NormalizedRoleName")
                         .IsRequired()
-                        .HasColumnType("varchar(50) CHARACTER SET utf8mb4")
-                        .HasMaxLength(50);
+                        .HasMaxLength(50)
+                        .HasColumnType("varchar(50)");
 
                     b.Property<string>("RoleName")
                         .IsRequired()
-                        .HasColumnType("varchar(50) CHARACTER SET utf8mb4")
-                        .HasMaxLength(50);
+                        .HasMaxLength(50)
+                        .HasColumnType("varchar(50)");
 
                     b.Property<Guid>("SiteId")
                         .HasColumnType("char(36)");
@@ -124,7 +126,7 @@ namespace cloudscribe.Core.Storage.EFCore.MySql.Migrations
 
                     b.HasIndex("SiteId");
 
-                    b.ToTable("cs_Role");
+                    b.ToTable("cs_Role", (string)null);
                 });
 
             modelBuilder.Entity("cloudscribe.Core.Models.SiteSettings", b =>
@@ -134,15 +136,15 @@ namespace cloudscribe.Core.Storage.EFCore.MySql.Migrations
                         .HasColumnType("char(36)");
 
                     b.Property<string>("AccountApprovalEmailCsv")
-                        .HasColumnType("longtext CHARACTER SET utf8mb4");
+                        .HasColumnType("longtext");
 
                     b.Property<string>("AddThisDotComUsername")
-                        .HasColumnType("varchar(50) CHARACTER SET utf8mb4")
-                        .HasMaxLength(50);
+                        .HasMaxLength(50)
+                        .HasColumnType("varchar(50)");
 
                     b.Property<string>("AliasId")
-                        .HasColumnType("varchar(36) CHARACTER SET utf8mb4")
-                        .HasMaxLength(36);
+                        .HasMaxLength(36)
+                        .HasColumnType("varchar(36)");
 
                     b.Property<bool>("AllowNewRegistration")
                         .HasColumnType("tinyint(1)");
@@ -160,128 +162,128 @@ namespace cloudscribe.Core.Storage.EFCore.MySql.Migrations
                         .HasColumnType("tinyint(1)");
 
                     b.Property<string>("CompanyCountry")
-                        .HasColumnType("varchar(10) CHARACTER SET utf8mb4")
-                        .HasMaxLength(10);
+                        .HasMaxLength(10)
+                        .HasColumnType("varchar(10)");
 
                     b.Property<string>("CompanyFax")
-                        .HasColumnType("varchar(20) CHARACTER SET utf8mb4")
-                        .HasMaxLength(20);
+                        .HasMaxLength(20)
+                        .HasColumnType("varchar(20)");
 
                     b.Property<string>("CompanyLocality")
-                        .HasColumnType("varchar(200) CHARACTER SET utf8mb4")
-                        .HasMaxLength(200);
+                        .HasMaxLength(200)
+                        .HasColumnType("varchar(200)");
 
                     b.Property<string>("CompanyName")
-                        .HasColumnType("varchar(250) CHARACTER SET utf8mb4")
-                        .HasMaxLength(250);
+                        .HasMaxLength(250)
+                        .HasColumnType("varchar(250)");
 
                     b.Property<string>("CompanyPhone")
-                        .HasColumnType("varchar(20) CHARACTER SET utf8mb4")
-                        .HasMaxLength(20);
+                        .HasMaxLength(20)
+                        .HasColumnType("varchar(20)");
 
                     b.Property<string>("CompanyPostalCode")
-                        .HasColumnType("varchar(20) CHARACTER SET utf8mb4")
-                        .HasMaxLength(20);
+                        .HasMaxLength(20)
+                        .HasColumnType("varchar(20)");
 
                     b.Property<string>("CompanyPublicEmail")
-                        .HasColumnType("varchar(100) CHARACTER SET utf8mb4")
-                        .HasMaxLength(100);
+                        .HasMaxLength(100)
+                        .HasColumnType("varchar(100)");
 
                     b.Property<string>("CompanyRegion")
-                        .HasColumnType("varchar(200) CHARACTER SET utf8mb4")
-                        .HasMaxLength(200);
+                        .HasMaxLength(200)
+                        .HasColumnType("varchar(200)");
 
                     b.Property<string>("CompanyStreetAddress")
-                        .HasColumnType("varchar(250) CHARACTER SET utf8mb4")
-                        .HasMaxLength(250);
+                        .HasMaxLength(250)
+                        .HasColumnType("varchar(250)");
 
                     b.Property<string>("CompanyStreetAddress2")
-                        .HasColumnType("varchar(250) CHARACTER SET utf8mb4")
-                        .HasMaxLength(250);
+                        .HasMaxLength(250)
+                        .HasColumnType("varchar(250)");
 
                     b.Property<string>("CompanyWebsite")
-                        .HasColumnType("varchar(255) CHARACTER SET utf8mb4")
-                        .HasMaxLength(255);
+                        .HasMaxLength(255)
+                        .HasColumnType("varchar(255)");
 
                     b.Property<string>("ConcurrencyStamp")
-                        .HasColumnType("longtext CHARACTER SET utf8mb4");
+                        .HasColumnType("longtext");
 
                     b.Property<string>("CookiePolicySummary")
-                        .HasColumnType("varchar(255) CHARACTER SET utf8mb4")
-                        .HasMaxLength(255);
+                        .HasMaxLength(255)
+                        .HasColumnType("varchar(255)");
 
                     b.Property<DateTime>("CreatedUtc")
                         .HasColumnType("datetime(6)");
 
                     b.Property<string>("DefaultEmailFromAddress")
-                        .HasColumnType("varchar(100) CHARACTER SET utf8mb4")
-                        .HasMaxLength(100);
+                        .HasMaxLength(100)
+                        .HasColumnType("varchar(100)");
 
                     b.Property<string>("DefaultEmailFromAlias")
-                        .HasColumnType("varchar(100) CHARACTER SET utf8mb4")
-                        .HasMaxLength(100);
+                        .HasMaxLength(100)
+                        .HasColumnType("varchar(100)");
 
                     b.Property<bool>("DisableDbAuth")
                         .HasColumnType("tinyint(1)");
 
                     b.Property<string>("DkimDomain")
-                        .HasColumnType("varchar(255) CHARACTER SET utf8mb4")
-                        .HasMaxLength(255);
+                        .HasMaxLength(255)
+                        .HasColumnType("varchar(255)");
 
                     b.Property<string>("DkimPrivateKey")
-                        .HasColumnType("longtext CHARACTER SET utf8mb4");
+                        .HasColumnType("longtext");
 
                     b.Property<string>("DkimPublicKey")
-                        .HasColumnType("longtext CHARACTER SET utf8mb4");
+                        .HasColumnType("longtext");
 
                     b.Property<string>("DkimSelector")
-                        .HasColumnType("varchar(128) CHARACTER SET utf8mb4")
-                        .HasMaxLength(128);
+                        .HasMaxLength(128)
+                        .HasColumnType("varchar(128)");
 
                     b.Property<string>("EmailApiEndpoint")
-                        .HasColumnType("longtext CHARACTER SET utf8mb4");
+                        .HasColumnType("longtext");
 
                     b.Property<string>("EmailApiKey")
-                        .HasColumnType("longtext CHARACTER SET utf8mb4");
+                        .HasColumnType("longtext");
 
                     b.Property<string>("EmailSenderName")
                         .IsRequired()
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("varchar(100) CHARACTER SET utf8mb4")
                         .HasMaxLength(100)
+                        .HasColumnType("varchar(100)")
                         .HasDefaultValue("SmtpMailSender");
 
                     b.Property<string>("FacebookAppId")
-                        .HasColumnType("varchar(100) CHARACTER SET utf8mb4")
-                        .HasMaxLength(100);
+                        .HasMaxLength(100)
+                        .HasColumnType("varchar(100)");
 
                     b.Property<string>("FacebookAppSecret")
-                        .HasColumnType("longtext CHARACTER SET utf8mb4");
+                        .HasColumnType("longtext");
 
                     b.Property<string>("FooterContent")
-                        .HasColumnType("longtext CHARACTER SET utf8mb4");
+                        .HasColumnType("longtext");
 
                     b.Property<string>("ForcedCulture")
-                        .HasColumnType("varchar(10) CHARACTER SET utf8mb4")
-                        .HasMaxLength(10);
+                        .HasMaxLength(10)
+                        .HasColumnType("varchar(10)");
 
                     b.Property<string>("ForcedUICulture")
-                        .HasColumnType("varchar(10) CHARACTER SET utf8mb4")
-                        .HasMaxLength(10);
+                        .HasMaxLength(10)
+                        .HasColumnType("varchar(10)");
 
                     b.Property<string>("GoogleAnalyticsProfileId")
-                        .HasColumnType("varchar(25) CHARACTER SET utf8mb4")
-                        .HasMaxLength(25);
+                        .HasMaxLength(25)
+                        .HasColumnType("varchar(25)");
 
                     b.Property<string>("GoogleClientId")
-                        .HasColumnType("varchar(100) CHARACTER SET utf8mb4")
-                        .HasMaxLength(100);
+                        .HasMaxLength(100)
+                        .HasColumnType("varchar(100)");
 
                     b.Property<string>("GoogleClientSecret")
-                        .HasColumnType("longtext CHARACTER SET utf8mb4");
+                        .HasColumnType("longtext");
 
                     b.Property<string>("HeaderContent")
-                        .HasColumnType("longtext CHARACTER SET utf8mb4");
+                        .HasColumnType("longtext");
 
                     b.Property<bool>("IsDataProtected")
                         .HasColumnType("tinyint(1)");
@@ -293,40 +295,40 @@ namespace cloudscribe.Core.Storage.EFCore.MySql.Migrations
                         .HasColumnType("datetime(6)");
 
                     b.Property<string>("LdapDomain")
-                        .HasColumnType("varchar(255) CHARACTER SET utf8mb4")
-                        .HasMaxLength(255);
+                        .HasMaxLength(255)
+                        .HasColumnType("varchar(255)");
 
                     b.Property<int>("LdapPort")
                         .HasColumnType("int");
 
                     b.Property<string>("LdapRootDN")
-                        .HasColumnType("varchar(255) CHARACTER SET utf8mb4")
-                        .HasMaxLength(255);
+                        .HasMaxLength(255)
+                        .HasColumnType("varchar(255)");
 
                     b.Property<string>("LdapServer")
-                        .HasColumnType("varchar(255) CHARACTER SET utf8mb4")
-                        .HasMaxLength(255);
+                        .HasMaxLength(255)
+                        .HasColumnType("varchar(255)");
 
                     b.Property<bool>("LdapUseSsl")
                         .HasColumnType("tinyint(1)");
 
                     b.Property<string>("LdapUserDNFormat")
-                        .HasColumnType("varchar(100) CHARACTER SET utf8mb4")
-                        .HasMaxLength(100);
+                        .HasMaxLength(100)
+                        .HasColumnType("varchar(100)");
 
                     b.Property<string>("LdapUserDNKey")
-                        .HasColumnType("varchar(10) CHARACTER SET utf8mb4")
-                        .HasMaxLength(10);
+                        .HasMaxLength(10)
+                        .HasColumnType("varchar(10)");
 
                     b.Property<string>("LoginInfoBottom")
-                        .HasColumnType("longtext CHARACTER SET utf8mb4");
+                        .HasColumnType("longtext");
 
                     b.Property<string>("LoginInfoTop")
-                        .HasColumnType("longtext CHARACTER SET utf8mb4");
+                        .HasColumnType("longtext");
 
                     b.Property<string>("LogoUrl")
-                        .HasColumnType("varchar(250) CHARACTER SET utf8mb4")
-                        .HasMaxLength(250);
+                        .HasMaxLength(250)
+                        .HasColumnType("varchar(250)");
 
                     b.Property<int>("MaxInvalidPasswordAttempts")
                         .HasColumnType("int");
@@ -335,40 +337,40 @@ namespace cloudscribe.Core.Storage.EFCore.MySql.Migrations
                         .HasColumnType("longtext");
 
                     b.Property<string>("MicrosoftClientId")
-                        .HasColumnType("varchar(100) CHARACTER SET utf8mb4")
-                        .HasMaxLength(100);
+                        .HasMaxLength(100)
+                        .HasColumnType("varchar(100)");
 
                     b.Property<string>("MicrosoftClientSecret")
-                        .HasColumnType("longtext CHARACTER SET utf8mb4");
+                        .HasColumnType("longtext");
 
                     b.Property<int>("MinRequiredPasswordLength")
                         .HasColumnType("int");
 
                     b.Property<string>("OidConnectAppId")
-                        .HasColumnType("varchar(255) CHARACTER SET utf8mb4")
-                        .HasMaxLength(255);
+                        .HasMaxLength(255)
+                        .HasColumnType("varchar(255)");
 
                     b.Property<string>("OidConnectAppSecret")
-                        .HasColumnType("varchar(255) CHARACTER SET utf8mb4")
-                        .HasMaxLength(255);
+                        .HasMaxLength(255)
+                        .HasColumnType("varchar(255)");
 
                     b.Property<string>("OidConnectAuthority")
-                        .HasColumnType("varchar(255) CHARACTER SET utf8mb4")
-                        .HasMaxLength(255);
+                        .HasMaxLength(255)
+                        .HasColumnType("varchar(255)");
 
                     b.Property<string>("OidConnectDisplayName")
-                        .HasColumnType("varchar(150) CHARACTER SET utf8mb4")
-                        .HasMaxLength(150);
+                        .HasMaxLength(150)
+                        .HasColumnType("varchar(150)");
 
                     b.Property<string>("OidConnectScopesCsv")
-                        .HasColumnType("longtext CHARACTER SET utf8mb4");
+                        .HasColumnType("longtext");
 
                     b.Property<string>("PreferredHostName")
-                        .HasColumnType("varchar(250) CHARACTER SET utf8mb4")
-                        .HasMaxLength(250);
+                        .HasMaxLength(250)
+                        .HasColumnType("varchar(250)");
 
                     b.Property<string>("PrivacyPolicy")
-                        .HasColumnType("longtext CHARACTER SET utf8mb4");
+                        .HasColumnType("longtext");
 
                     b.Property<bool>("PwdRequireDigit")
                         .HasColumnType("tinyint(1)");
@@ -383,18 +385,21 @@ namespace cloudscribe.Core.Storage.EFCore.MySql.Migrations
                         .HasColumnType("tinyint(1)");
 
                     b.Property<string>("RecaptchaPrivateKey")
-                        .HasColumnType("varchar(255) CHARACTER SET utf8mb4")
-                        .HasMaxLength(255);
+                        .HasMaxLength(255)
+                        .HasColumnType("varchar(255)");
 
                     b.Property<string>("RecaptchaPublicKey")
-                        .HasColumnType("varchar(255) CHARACTER SET utf8mb4")
-                        .HasMaxLength(255);
+                        .HasMaxLength(255)
+                        .HasColumnType("varchar(255)");
+
+                    b.Property<string>("RegRestrictionTld")
+                        .HasColumnType("longtext");
 
                     b.Property<string>("RegistrationAgreement")
-                        .HasColumnType("longtext CHARACTER SET utf8mb4");
+                        .HasColumnType("longtext");
 
                     b.Property<string>("RegistrationPreamble")
-                        .HasColumnType("longtext CHARACTER SET utf8mb4");
+                        .HasColumnType("longtext");
 
                     b.Property<bool>("Require2FA")
                         .HasColumnType("tinyint(1)");
@@ -425,73 +430,73 @@ namespace cloudscribe.Core.Storage.EFCore.MySql.Migrations
 
                     b.Property<string>("SiteFolderName")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("varchar(50) CHARACTER SET utf8mb4")
                         .HasMaxLength(50)
+                        .HasColumnType("varchar(50)")
                         .HasDefaultValue("");
 
                     b.Property<bool>("SiteIsClosed")
                         .HasColumnType("tinyint(1)");
 
                     b.Property<string>("SiteIsClosedMessage")
-                        .HasColumnType("longtext CHARACTER SET utf8mb4");
+                        .HasColumnType("longtext");
 
                     b.Property<string>("SiteName")
                         .IsRequired()
-                        .HasColumnType("varchar(255) CHARACTER SET utf8mb4")
-                        .HasMaxLength(255);
+                        .HasMaxLength(255)
+                        .HasColumnType("varchar(255)");
 
                     b.Property<string>("SmsClientId")
-                        .HasColumnType("varchar(255) CHARACTER SET utf8mb4")
-                        .HasMaxLength(255);
+                        .HasMaxLength(255)
+                        .HasColumnType("varchar(255)");
 
                     b.Property<string>("SmsFrom")
-                        .HasColumnType("varchar(100) CHARACTER SET utf8mb4")
-                        .HasMaxLength(100);
+                        .HasMaxLength(100)
+                        .HasColumnType("varchar(100)");
 
                     b.Property<string>("SmsSecureToken")
-                        .HasColumnType("longtext CHARACTER SET utf8mb4");
+                        .HasColumnType("longtext");
 
                     b.Property<string>("SmtpPassword")
-                        .HasColumnType("longtext CHARACTER SET utf8mb4");
+                        .HasColumnType("longtext");
 
                     b.Property<int>("SmtpPort")
                         .HasColumnType("int");
 
                     b.Property<string>("SmtpPreferredEncoding")
-                        .HasColumnType("varchar(20) CHARACTER SET utf8mb4")
-                        .HasMaxLength(20);
+                        .HasMaxLength(20)
+                        .HasColumnType("varchar(20)");
 
                     b.Property<bool>("SmtpRequiresAuth")
                         .HasColumnType("tinyint(1)");
 
                     b.Property<string>("SmtpServer")
-                        .HasColumnType("varchar(200) CHARACTER SET utf8mb4")
-                        .HasMaxLength(200);
+                        .HasMaxLength(200)
+                        .HasColumnType("varchar(200)");
 
                     b.Property<bool>("SmtpUseSsl")
                         .HasColumnType("tinyint(1)");
 
                     b.Property<string>("SmtpUser")
-                        .HasColumnType("varchar(500) CHARACTER SET utf8mb4")
-                        .HasMaxLength(500);
+                        .HasMaxLength(500)
+                        .HasColumnType("varchar(500)");
 
                     b.Property<DateTime>("TermsUpdatedUtc")
                         .HasColumnType("datetime(6)");
 
                     b.Property<string>("Theme")
-                        .HasColumnType("varchar(100) CHARACTER SET utf8mb4")
-                        .HasMaxLength(100);
+                        .HasMaxLength(100)
+                        .HasColumnType("varchar(100)");
 
                     b.Property<string>("TimeZoneId")
-                        .HasColumnType("varchar(50) CHARACTER SET utf8mb4")
-                        .HasMaxLength(50);
+                        .HasMaxLength(50)
+                        .HasColumnType("varchar(50)");
 
                     b.Property<string>("TwitterConsumerKey")
-                        .HasColumnType("varchar(100) CHARACTER SET utf8mb4")
-                        .HasMaxLength(100);
+                        .HasMaxLength(100)
+                        .HasColumnType("varchar(100)");
 
                     b.Property<string>("TwitterConsumerSecret")
-                        .HasColumnType("longtext CHARACTER SET utf8mb4");
+                        .HasColumnType("longtext");
 
                     b.Property<bool>("UseEmailForLogin")
                         .HasColumnType("tinyint(1)");
@@ -505,7 +510,7 @@ namespace cloudscribe.Core.Storage.EFCore.MySql.Migrations
 
                     b.HasIndex("SiteFolderName");
 
-                    b.ToTable("cs_Site");
+                    b.ToTable("cs_Site", (string)null);
                 });
 
             modelBuilder.Entity("cloudscribe.Core.Models.SiteUser", b =>
@@ -524,21 +529,21 @@ namespace cloudscribe.Core.Storage.EFCore.MySql.Migrations
                         .HasColumnType("datetime(6)");
 
                     b.Property<string>("AuthorBio")
-                        .HasColumnType("longtext CHARACTER SET utf8mb4");
+                        .HasColumnType("longtext");
 
                     b.Property<string>("AvatarUrl")
-                        .HasColumnType("varchar(255) CHARACTER SET utf8mb4")
-                        .HasMaxLength(255);
+                        .HasMaxLength(255)
+                        .HasColumnType("varchar(255)");
 
                     b.Property<string>("BrowserKey")
-                        .HasColumnType("varchar(50) CHARACTER SET utf8mb4")
-                        .HasMaxLength(50);
+                        .HasMaxLength(50)
+                        .HasColumnType("varchar(50)");
 
                     b.Property<bool>("CanAutoLockout")
                         .HasColumnType("tinyint(1)");
 
                     b.Property<string>("Comment")
-                        .HasColumnType("longtext CHARACTER SET utf8mb4");
+                        .HasColumnType("longtext");
 
                     b.Property<DateTime>("CreatedUtc")
                         .HasColumnType("datetime(6)");
@@ -551,12 +556,12 @@ namespace cloudscribe.Core.Storage.EFCore.MySql.Migrations
 
                     b.Property<string>("DisplayName")
                         .IsRequired()
-                        .HasColumnType("varchar(100) CHARACTER SET utf8mb4")
-                        .HasMaxLength(100);
+                        .HasMaxLength(100)
+                        .HasColumnType("varchar(100)");
 
                     b.Property<string>("Email")
-                        .HasColumnType("varchar(100) CHARACTER SET utf8mb4")
-                        .HasMaxLength(100);
+                        .HasMaxLength(100)
+                        .HasColumnType("varchar(100)");
 
                     b.Property<DateTime?>("EmailConfirmSentUtc")
                         .HasColumnType("datetime(6)");
@@ -565,11 +570,11 @@ namespace cloudscribe.Core.Storage.EFCore.MySql.Migrations
                         .HasColumnType("tinyint(1)");
 
                     b.Property<string>("FirstName")
-                        .HasColumnType("varchar(100) CHARACTER SET utf8mb4")
-                        .HasMaxLength(100);
+                        .HasMaxLength(100)
+                        .HasColumnType("varchar(100)");
 
                     b.Property<string>("Gender")
-                        .HasColumnType("longtext CHARACTER SET utf8mb4");
+                        .HasColumnType("longtext");
 
                     b.Property<bool>("IsLockedOut")
                         .HasColumnType("tinyint(1)");
@@ -581,8 +586,8 @@ namespace cloudscribe.Core.Storage.EFCore.MySql.Migrations
                         .HasColumnType("datetime(6)");
 
                     b.Property<string>("LastName")
-                        .HasColumnType("varchar(100) CHARACTER SET utf8mb4")
-                        .HasMaxLength(100);
+                        .HasMaxLength(100)
+                        .HasColumnType("varchar(100)");
 
                     b.Property<DateTime?>("LastPasswordChangeUtc")
                         .HasColumnType("datetime(6)");
@@ -594,27 +599,27 @@ namespace cloudscribe.Core.Storage.EFCore.MySql.Migrations
                         .HasColumnType("tinyint(1)");
 
                     b.Property<string>("NewEmail")
-                        .HasColumnType("varchar(100) CHARACTER SET utf8mb4")
-                        .HasMaxLength(100);
+                        .HasMaxLength(100)
+                        .HasColumnType("varchar(100)");
 
                     b.Property<bool>("NewEmailApproved")
                         .HasColumnType("tinyint(1)");
 
                     b.Property<string>("NormalizedEmail")
-                        .HasColumnType("varchar(100) CHARACTER SET utf8mb4")
-                        .HasMaxLength(100);
+                        .HasMaxLength(100)
+                        .HasColumnType("varchar(100)");
 
                     b.Property<string>("NormalizedUserName")
                         .IsRequired()
-                        .HasColumnType("varchar(50) CHARACTER SET utf8mb4")
-                        .HasMaxLength(50);
+                        .HasMaxLength(50)
+                        .HasColumnType("varchar(50)");
 
                     b.Property<string>("PasswordHash")
-                        .HasColumnType("longtext CHARACTER SET utf8mb4");
+                        .HasColumnType("longtext");
 
                     b.Property<string>("PhoneNumber")
-                        .HasColumnType("varchar(50) CHARACTER SET utf8mb4")
-                        .HasMaxLength(50);
+                        .HasMaxLength(50)
+                        .HasColumnType("varchar(50)");
 
                     b.Property<bool>("PhoneNumberConfirmed")
                         .HasColumnType("tinyint(1)");
@@ -623,30 +628,30 @@ namespace cloudscribe.Core.Storage.EFCore.MySql.Migrations
                         .HasColumnType("tinyint(1)");
 
                     b.Property<string>("SecurityStamp")
-                        .HasColumnType("varchar(50) CHARACTER SET utf8mb4")
-                        .HasMaxLength(50);
+                        .HasMaxLength(50)
+                        .HasColumnType("varchar(50)");
 
                     b.Property<string>("Signature")
-                        .HasColumnType("longtext CHARACTER SET utf8mb4");
+                        .HasColumnType("longtext");
 
                     b.Property<Guid>("SiteId")
                         .HasColumnType("char(36)");
 
                     b.Property<string>("TimeZoneId")
-                        .HasColumnType("varchar(50) CHARACTER SET utf8mb4")
-                        .HasMaxLength(50);
+                        .HasMaxLength(50)
+                        .HasColumnType("varchar(50)");
 
                     b.Property<bool>("TwoFactorEnabled")
                         .HasColumnType("tinyint(1)");
 
                     b.Property<string>("UserName")
                         .IsRequired()
-                        .HasColumnType("varchar(50) CHARACTER SET utf8mb4")
-                        .HasMaxLength(50);
+                        .HasMaxLength(50)
+                        .HasColumnType("varchar(50)");
 
                     b.Property<string>("WebSiteUrl")
-                        .HasColumnType("varchar(100) CHARACTER SET utf8mb4")
-                        .HasMaxLength(100);
+                        .HasMaxLength(100)
+                        .HasColumnType("varchar(100)");
 
                     b.HasKey("Id");
 
@@ -658,7 +663,7 @@ namespace cloudscribe.Core.Storage.EFCore.MySql.Migrations
 
                     b.HasIndex("SiteId");
 
-                    b.ToTable("cs_User");
+                    b.ToTable("cs_User", (string)null);
                 });
 
             modelBuilder.Entity("cloudscribe.Core.Models.UserClaim", b =>
@@ -668,11 +673,11 @@ namespace cloudscribe.Core.Storage.EFCore.MySql.Migrations
                         .HasColumnType("char(36)");
 
                     b.Property<string>("ClaimType")
-                        .HasColumnType("varchar(255) CHARACTER SET utf8mb4")
-                        .HasMaxLength(255);
+                        .HasMaxLength(255)
+                        .HasColumnType("varchar(255)");
 
                     b.Property<string>("ClaimValue")
-                        .HasColumnType("longtext CHARACTER SET utf8mb4");
+                        .HasColumnType("longtext");
 
                     b.Property<Guid>("SiteId")
                         .HasColumnType("char(36)");
@@ -688,7 +693,7 @@ namespace cloudscribe.Core.Storage.EFCore.MySql.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("cs_UserClaim");
+                    b.ToTable("cs_UserClaim", (string)null);
                 });
 
             modelBuilder.Entity("cloudscribe.Core.Models.UserLocation", b =>
@@ -701,34 +706,34 @@ namespace cloudscribe.Core.Storage.EFCore.MySql.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("City")
-                        .HasColumnType("varchar(255) CHARACTER SET utf8mb4")
-                        .HasMaxLength(255);
+                        .HasMaxLength(255)
+                        .HasColumnType("varchar(255)");
 
                     b.Property<string>("Continent")
-                        .HasColumnType("varchar(255) CHARACTER SET utf8mb4")
-                        .HasMaxLength(255);
+                        .HasMaxLength(255)
+                        .HasColumnType("varchar(255)");
 
                     b.Property<string>("Country")
-                        .HasColumnType("varchar(255) CHARACTER SET utf8mb4")
-                        .HasMaxLength(255);
+                        .HasMaxLength(255)
+                        .HasColumnType("varchar(255)");
 
                     b.Property<DateTime>("FirstCaptureUtc")
                         .HasColumnType("datetime(6)");
 
                     b.Property<string>("HostName")
-                        .HasColumnType("varchar(255) CHARACTER SET utf8mb4")
-                        .HasMaxLength(255);
+                        .HasMaxLength(255)
+                        .HasColumnType("varchar(255)");
 
                     b.Property<string>("IpAddress")
-                        .HasColumnType("varchar(50) CHARACTER SET utf8mb4")
-                        .HasMaxLength(50);
+                        .HasMaxLength(50)
+                        .HasColumnType("varchar(50)");
 
                     b.Property<long>("IpAddressLong")
                         .HasColumnType("bigint");
 
                     b.Property<string>("Isp")
-                        .HasColumnType("varchar(255) CHARACTER SET utf8mb4")
-                        .HasMaxLength(255);
+                        .HasMaxLength(255)
+                        .HasColumnType("varchar(255)");
 
                     b.Property<DateTime>("LastCaptureUtc")
                         .HasColumnType("datetime(6)");
@@ -740,15 +745,15 @@ namespace cloudscribe.Core.Storage.EFCore.MySql.Migrations
                         .HasColumnType("double");
 
                     b.Property<string>("Region")
-                        .HasColumnType("varchar(255) CHARACTER SET utf8mb4")
-                        .HasMaxLength(255);
+                        .HasMaxLength(255)
+                        .HasColumnType("varchar(255)");
 
                     b.Property<Guid>("SiteId")
                         .HasColumnType("char(36)");
 
                     b.Property<string>("TimeZone")
-                        .HasColumnType("varchar(255) CHARACTER SET utf8mb4")
-                        .HasMaxLength(255);
+                        .HasMaxLength(255)
+                        .HasColumnType("varchar(255)");
 
                     b.Property<Guid>("UserId")
                         .HasColumnType("char(36)");
@@ -759,7 +764,7 @@ namespace cloudscribe.Core.Storage.EFCore.MySql.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("cs_UserLocation");
+                    b.ToTable("cs_UserLocation", (string)null);
                 });
 
             modelBuilder.Entity("cloudscribe.Core.Models.UserLogin", b =>
@@ -771,16 +776,16 @@ namespace cloudscribe.Core.Storage.EFCore.MySql.Migrations
                         .HasColumnType("char(36)");
 
                     b.Property<string>("LoginProvider")
-                        .HasColumnType("varchar(128) CHARACTER SET utf8mb4")
-                        .HasMaxLength(128);
+                        .HasMaxLength(128)
+                        .HasColumnType("varchar(128)");
 
                     b.Property<string>("ProviderKey")
-                        .HasColumnType("varchar(128) CHARACTER SET utf8mb4")
-                        .HasMaxLength(128);
+                        .HasMaxLength(128)
+                        .HasColumnType("varchar(128)");
 
                     b.Property<string>("ProviderDisplayName")
-                        .HasColumnType("varchar(100) CHARACTER SET utf8mb4")
-                        .HasMaxLength(100);
+                        .HasMaxLength(100)
+                        .HasColumnType("varchar(100)");
 
                     b.HasKey("UserId", "SiteId", "LoginProvider", "ProviderKey");
 
@@ -788,7 +793,7 @@ namespace cloudscribe.Core.Storage.EFCore.MySql.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("cs_UserLogin");
+                    b.ToTable("cs_UserLogin", (string)null);
                 });
 
             modelBuilder.Entity("cloudscribe.Core.Models.UserRole", b =>
@@ -805,7 +810,7 @@ namespace cloudscribe.Core.Storage.EFCore.MySql.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("cs_UserRole");
+                    b.ToTable("cs_UserRole", (string)null);
                 });
 
             modelBuilder.Entity("cloudscribe.Core.Models.UserToken", b =>
@@ -817,15 +822,15 @@ namespace cloudscribe.Core.Storage.EFCore.MySql.Migrations
                         .HasColumnType("char(36)");
 
                     b.Property<string>("LoginProvider")
-                        .HasColumnType("varchar(128) CHARACTER SET utf8mb4")
-                        .HasMaxLength(128);
+                        .HasMaxLength(128)
+                        .HasColumnType("varchar(128)");
 
                     b.Property<string>("Name")
-                        .HasColumnType("varchar(450) CHARACTER SET utf8mb4")
-                        .HasMaxLength(450);
+                        .HasMaxLength(450)
+                        .HasColumnType("varchar(450)");
 
                     b.Property<string>("Value")
-                        .HasColumnType("longtext CHARACTER SET utf8mb4");
+                        .HasColumnType("longtext");
 
                     b.HasKey("UserId", "SiteId", "LoginProvider", "Name");
 
@@ -833,7 +838,7 @@ namespace cloudscribe.Core.Storage.EFCore.MySql.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("cs_UserToken");
+                    b.ToTable("cs_UserToken", (string)null);
                 });
 #pragma warning restore 612, 618
         }

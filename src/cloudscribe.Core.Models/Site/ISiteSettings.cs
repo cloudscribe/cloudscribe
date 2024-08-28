@@ -231,7 +231,7 @@ namespace cloudscribe.Core.Models
         /// </summary>
         bool SingleBrowserSessions { get; set; }
 
-
+        string RegRestrictionTld { get; set; }
         // TODO: drop
         //bool AllowUserFullNameChange { get; set; }
         //string ApiKeyExtra1 { get; set; }

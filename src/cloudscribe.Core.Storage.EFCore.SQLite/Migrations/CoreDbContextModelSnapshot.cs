@@ -5,6 +5,8 @@ using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using cloudscribe.Core.Storage.EFCore.SQLite;
 
+#nullable disable
+
 namespace cloudscribe.Core.Storage.EFCore.SQLite.Migrations
 {
     [DbContext(typeof(CoreDbContext))]
@@ -13,8 +15,7 @@ namespace cloudscribe.Core.Storage.EFCore.SQLite.Migrations
         protected override void BuildModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
-            modelBuilder
-                .HasAnnotation("ProductVersion", "3.1.0");
+            modelBuilder.HasAnnotation("ProductVersion", "8.0.0");
 
             modelBuilder.Entity("cloudscribe.Core.Models.Geography.GeoCountry", b =>
                 {
@@ -24,24 +25,24 @@ namespace cloudscribe.Core.Storage.EFCore.SQLite.Migrations
 
                     b.Property<string>("ISOCode2")
                         .IsRequired()
-                        .HasColumnType("TEXT")
-                        .HasMaxLength(2);
+                        .HasMaxLength(2)
+                        .HasColumnType("TEXT");
 
                     b.Property<string>("ISOCode3")
                         .IsRequired()
-                        .HasColumnType("TEXT")
-                        .HasMaxLength(3);
+                        .HasMaxLength(3)
+                        .HasColumnType("TEXT");
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasColumnType("TEXT")
-                        .HasMaxLength(255);
+                        .HasMaxLength(255)
+                        .HasColumnType("TEXT");
 
                     b.HasKey("Id");
 
                     b.HasIndex("ISOCode2");
 
-                    b.ToTable("cs_GeoCountry");
+                    b.ToTable("cs_GeoCountry", (string)null);
                 });
 
             modelBuilder.Entity("cloudscribe.Core.Models.Geography.GeoZone", b =>
@@ -52,16 +53,16 @@ namespace cloudscribe.Core.Storage.EFCore.SQLite.Migrations
 
                     b.Property<string>("Code")
                         .IsRequired()
-                        .HasColumnType("TEXT")
-                        .HasMaxLength(255);
+                        .HasMaxLength(255)
+                        .HasColumnType("TEXT");
 
                     b.Property<Guid>("CountryId")
                         .HasColumnType("TEXT");
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasColumnType("TEXT")
-                        .HasMaxLength(255);
+                        .HasMaxLength(255)
+                        .HasColumnType("TEXT");
 
                     b.HasKey("Id");
 
@@ -69,7 +70,7 @@ namespace cloudscribe.Core.Storage.EFCore.SQLite.Migrations
 
                     b.HasIndex("CountryId");
 
-                    b.ToTable("cs_GeoZone");
+                    b.ToTable("cs_GeoZone", (string)null);
                 });
 
             modelBuilder.Entity("cloudscribe.Core.Models.SiteHost", b =>
@@ -80,8 +81,8 @@ namespace cloudscribe.Core.Storage.EFCore.SQLite.Migrations
 
                     b.Property<string>("HostName")
                         .IsRequired()
-                        .HasColumnType("TEXT")
-                        .HasMaxLength(255);
+                        .HasMaxLength(255)
+                        .HasColumnType("TEXT");
 
                     b.Property<Guid>("SiteId")
                         .HasColumnType("TEXT");
@@ -92,7 +93,7 @@ namespace cloudscribe.Core.Storage.EFCore.SQLite.Migrations
 
                     b.HasIndex("SiteId");
 
-                    b.ToTable("cs_SiteHost");
+                    b.ToTable("cs_SiteHost", (string)null);
                 });
 
             modelBuilder.Entity("cloudscribe.Core.Models.SiteRole", b =>
@@ -103,13 +104,13 @@ namespace cloudscribe.Core.Storage.EFCore.SQLite.Migrations
 
                     b.Property<string>("NormalizedRoleName")
                         .IsRequired()
-                        .HasColumnType("TEXT")
-                        .HasMaxLength(50);
+                        .HasMaxLength(50)
+                        .HasColumnType("TEXT");
 
                     b.Property<string>("RoleName")
                         .IsRequired()
-                        .HasColumnType("TEXT")
-                        .HasMaxLength(50);
+                        .HasMaxLength(50)
+                        .HasColumnType("TEXT");
 
                     b.Property<Guid>("SiteId")
                         .HasColumnType("TEXT");
@@ -123,7 +124,7 @@ namespace cloudscribe.Core.Storage.EFCore.SQLite.Migrations
 
                     b.HasIndex("SiteId");
 
-                    b.ToTable("cs_Role");
+                    b.ToTable("cs_Role", (string)null);
                 });
 
             modelBuilder.Entity("cloudscribe.Core.Models.SiteSettings", b =>
@@ -136,12 +137,12 @@ namespace cloudscribe.Core.Storage.EFCore.SQLite.Migrations
                         .HasColumnType("TEXT");
 
                     b.Property<string>("AddThisDotComUsername")
-                        .HasColumnType("TEXT")
-                        .HasMaxLength(50);
+                        .HasMaxLength(50)
+                        .HasColumnType("TEXT");
 
                     b.Property<string>("AliasId")
-                        .HasColumnType("TEXT")
-                        .HasMaxLength(36);
+                        .HasMaxLength(36)
+                        .HasColumnType("TEXT");
 
                     b.Property<bool>("AllowNewRegistration")
                         .HasColumnType("INTEGER");
@@ -159,73 +160,73 @@ namespace cloudscribe.Core.Storage.EFCore.SQLite.Migrations
                         .HasColumnType("INTEGER");
 
                     b.Property<string>("CompanyCountry")
-                        .HasColumnType("TEXT")
-                        .HasMaxLength(10);
+                        .HasMaxLength(10)
+                        .HasColumnType("TEXT");
 
                     b.Property<string>("CompanyFax")
-                        .HasColumnType("TEXT")
-                        .HasMaxLength(20);
+                        .HasMaxLength(20)
+                        .HasColumnType("TEXT");
 
                     b.Property<string>("CompanyLocality")
-                        .HasColumnType("TEXT")
-                        .HasMaxLength(200);
+                        .HasMaxLength(200)
+                        .HasColumnType("TEXT");
 
                     b.Property<string>("CompanyName")
-                        .HasColumnType("TEXT")
-                        .HasMaxLength(250);
+                        .HasMaxLength(250)
+                        .HasColumnType("TEXT");
 
                     b.Property<string>("CompanyPhone")
-                        .HasColumnType("TEXT")
-                        .HasMaxLength(20);
+                        .HasMaxLength(20)
+                        .HasColumnType("TEXT");
 
                     b.Property<string>("CompanyPostalCode")
-                        .HasColumnType("TEXT")
-                        .HasMaxLength(20);
+                        .HasMaxLength(20)
+                        .HasColumnType("TEXT");
 
                     b.Property<string>("CompanyPublicEmail")
-                        .HasColumnType("TEXT")
-                        .HasMaxLength(100);
+                        .HasMaxLength(100)
+                        .HasColumnType("TEXT");
 
                     b.Property<string>("CompanyRegion")
-                        .HasColumnType("TEXT")
-                        .HasMaxLength(200);
+                        .HasMaxLength(200)
+                        .HasColumnType("TEXT");
 
                     b.Property<string>("CompanyStreetAddress")
-                        .HasColumnType("TEXT")
-                        .HasMaxLength(250);
+                        .HasMaxLength(250)
+                        .HasColumnType("TEXT");
 
                     b.Property<string>("CompanyStreetAddress2")
-                        .HasColumnType("TEXT")
-                        .HasMaxLength(250);
+                        .HasMaxLength(250)
+                        .HasColumnType("TEXT");
 
                     b.Property<string>("CompanyWebsite")
-                        .HasColumnType("TEXT")
-                        .HasMaxLength(255);
+                        .HasMaxLength(255)
+                        .HasColumnType("TEXT");
 
                     b.Property<string>("ConcurrencyStamp")
                         .HasColumnType("TEXT");
 
                     b.Property<string>("CookiePolicySummary")
-                        .HasColumnType("TEXT")
-                        .HasMaxLength(255);
+                        .HasMaxLength(255)
+                        .HasColumnType("TEXT");
 
                     b.Property<DateTime>("CreatedUtc")
                         .HasColumnType("TEXT");
 
                     b.Property<string>("DefaultEmailFromAddress")
-                        .HasColumnType("TEXT")
-                        .HasMaxLength(100);
+                        .HasMaxLength(100)
+                        .HasColumnType("TEXT");
 
                     b.Property<string>("DefaultEmailFromAlias")
-                        .HasColumnType("TEXT")
-                        .HasMaxLength(100);
+                        .HasMaxLength(100)
+                        .HasColumnType("TEXT");
 
                     b.Property<bool>("DisableDbAuth")
                         .HasColumnType("INTEGER");
 
                     b.Property<string>("DkimDomain")
-                        .HasColumnType("TEXT")
-                        .HasMaxLength(255);
+                        .HasMaxLength(255)
+                        .HasColumnType("TEXT");
 
                     b.Property<string>("DkimPrivateKey")
                         .HasColumnType("TEXT");
@@ -234,8 +235,8 @@ namespace cloudscribe.Core.Storage.EFCore.SQLite.Migrations
                         .HasColumnType("TEXT");
 
                     b.Property<string>("DkimSelector")
-                        .HasColumnType("TEXT")
-                        .HasMaxLength(128);
+                        .HasMaxLength(128)
+                        .HasColumnType("TEXT");
 
                     b.Property<string>("EmailApiEndpoint")
                         .HasColumnType("TEXT");
@@ -246,13 +247,13 @@ namespace cloudscribe.Core.Storage.EFCore.SQLite.Migrations
                     b.Property<string>("EmailSenderName")
                         .IsRequired()
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("TEXT")
                         .HasMaxLength(100)
+                        .HasColumnType("TEXT")
                         .HasDefaultValue("SmtpMailSender");
 
                     b.Property<string>("FacebookAppId")
-                        .HasColumnType("TEXT")
-                        .HasMaxLength(100);
+                        .HasMaxLength(100)
+                        .HasColumnType("TEXT");
 
                     b.Property<string>("FacebookAppSecret")
                         .HasColumnType("TEXT");
@@ -261,20 +262,20 @@ namespace cloudscribe.Core.Storage.EFCore.SQLite.Migrations
                         .HasColumnType("TEXT");
 
                     b.Property<string>("ForcedCulture")
-                        .HasColumnType("TEXT")
-                        .HasMaxLength(10);
+                        .HasMaxLength(10)
+                        .HasColumnType("TEXT");
 
                     b.Property<string>("ForcedUICulture")
-                        .HasColumnType("TEXT")
-                        .HasMaxLength(10);
+                        .HasMaxLength(10)
+                        .HasColumnType("TEXT");
 
                     b.Property<string>("GoogleAnalyticsProfileId")
-                        .HasColumnType("TEXT")
-                        .HasMaxLength(25);
+                        .HasMaxLength(25)
+                        .HasColumnType("TEXT");
 
                     b.Property<string>("GoogleClientId")
-                        .HasColumnType("TEXT")
-                        .HasMaxLength(100);
+                        .HasMaxLength(100)
+                        .HasColumnType("TEXT");
 
                     b.Property<string>("GoogleClientSecret")
                         .HasColumnType("TEXT");
@@ -292,30 +293,30 @@ namespace cloudscribe.Core.Storage.EFCore.SQLite.Migrations
                         .HasColumnType("TEXT");
 
                     b.Property<string>("LdapDomain")
-                        .HasColumnType("TEXT")
-                        .HasMaxLength(255);
+                        .HasMaxLength(255)
+                        .HasColumnType("TEXT");
 
                     b.Property<int>("LdapPort")
                         .HasColumnType("INTEGER");
 
                     b.Property<string>("LdapRootDN")
-                        .HasColumnType("TEXT")
-                        .HasMaxLength(255);
+                        .HasMaxLength(255)
+                        .HasColumnType("TEXT");
 
                     b.Property<string>("LdapServer")
-                        .HasColumnType("TEXT")
-                        .HasMaxLength(255);
+                        .HasMaxLength(255)
+                        .HasColumnType("TEXT");
 
                     b.Property<bool>("LdapUseSsl")
                         .HasColumnType("INTEGER");
 
                     b.Property<string>("LdapUserDNFormat")
-                        .HasColumnType("TEXT")
-                        .HasMaxLength(100);
+                        .HasMaxLength(100)
+                        .HasColumnType("TEXT");
 
                     b.Property<string>("LdapUserDNKey")
-                        .HasColumnType("TEXT")
-                        .HasMaxLength(10);
+                        .HasMaxLength(10)
+                        .HasColumnType("TEXT");
 
                     b.Property<string>("LoginInfoBottom")
                         .HasColumnType("TEXT");
@@ -324,15 +325,15 @@ namespace cloudscribe.Core.Storage.EFCore.SQLite.Migrations
                         .HasColumnType("TEXT");
 
                     b.Property<string>("LogoUrl")
-                        .HasColumnType("TEXT")
-                        .HasMaxLength(250);
+                        .HasMaxLength(250)
+                        .HasColumnType("TEXT");
 
                     b.Property<int>("MaxInvalidPasswordAttempts")
                         .HasColumnType("INTEGER");
 
                     b.Property<string>("MicrosoftClientId")
-                        .HasColumnType("TEXT")
-                        .HasMaxLength(100);
+                        .HasMaxLength(100)
+                        .HasColumnType("TEXT");
 
                     b.Property<string>("MicrosoftClientSecret")
                         .HasColumnType("TEXT");
@@ -341,27 +342,27 @@ namespace cloudscribe.Core.Storage.EFCore.SQLite.Migrations
                         .HasColumnType("INTEGER");
 
                     b.Property<string>("OidConnectAppId")
-                        .HasColumnType("TEXT")
-                        .HasMaxLength(255);
+                        .HasMaxLength(255)
+                        .HasColumnType("TEXT");
 
                     b.Property<string>("OidConnectAppSecret")
-                        .HasColumnType("TEXT")
-                        .HasMaxLength(255);
+                        .HasMaxLength(255)
+                        .HasColumnType("TEXT");
 
                     b.Property<string>("OidConnectAuthority")
-                        .HasColumnType("TEXT")
-                        .HasMaxLength(255);
+                        .HasMaxLength(255)
+                        .HasColumnType("TEXT");
 
                     b.Property<string>("OidConnectDisplayName")
-                        .HasColumnType("TEXT")
-                        .HasMaxLength(150);
+                        .HasMaxLength(150)
+                        .HasColumnType("TEXT");
 
                     b.Property<string>("OidConnectScopesCsv")
                         .HasColumnType("TEXT");
 
                     b.Property<string>("PreferredHostName")
-                        .HasColumnType("TEXT")
-                        .HasMaxLength(250);
+                        .HasMaxLength(250)
+                        .HasColumnType("TEXT");
 
                     b.Property<string>("PrivacyPolicy")
                         .HasColumnType("TEXT");
@@ -379,12 +380,15 @@ namespace cloudscribe.Core.Storage.EFCore.SQLite.Migrations
                         .HasColumnType("INTEGER");
 
                     b.Property<string>("RecaptchaPrivateKey")
-                        .HasColumnType("TEXT")
-                        .HasMaxLength(255);
+                        .HasMaxLength(255)
+                        .HasColumnType("TEXT");
 
                     b.Property<string>("RecaptchaPublicKey")
-                        .HasColumnType("TEXT")
-                        .HasMaxLength(255);
+                        .HasMaxLength(255)
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("RegRestrictionTld")
+                        .HasColumnType("TEXT");
 
                     b.Property<string>("RegistrationAgreement")
                         .HasColumnType("TEXT");
@@ -420,8 +424,8 @@ namespace cloudscribe.Core.Storage.EFCore.SQLite.Migrations
                         .HasColumnType("INTEGER");
 
                     b.Property<string>("SiteFolderName")
-                        .HasColumnType("TEXT")
-                        .HasMaxLength(50);
+                        .HasMaxLength(50)
+                        .HasColumnType("TEXT");
 
                     b.Property<bool>("SiteIsClosed")
                         .HasColumnType("INTEGER");
@@ -431,16 +435,16 @@ namespace cloudscribe.Core.Storage.EFCore.SQLite.Migrations
 
                     b.Property<string>("SiteName")
                         .IsRequired()
-                        .HasColumnType("TEXT")
-                        .HasMaxLength(255);
+                        .HasMaxLength(255)
+                        .HasColumnType("TEXT");
 
                     b.Property<string>("SmsClientId")
-                        .HasColumnType("TEXT")
-                        .HasMaxLength(255);
+                        .HasMaxLength(255)
+                        .HasColumnType("TEXT");
 
                     b.Property<string>("SmsFrom")
-                        .HasColumnType("TEXT")
-                        .HasMaxLength(100);
+                        .HasMaxLength(100)
+                        .HasColumnType("TEXT");
 
                     b.Property<string>("SmsSecureToken")
                         .HasColumnType("TEXT");
@@ -452,37 +456,37 @@ namespace cloudscribe.Core.Storage.EFCore.SQLite.Migrations
                         .HasColumnType("INTEGER");
 
                     b.Property<string>("SmtpPreferredEncoding")
-                        .HasColumnType("TEXT")
-                        .HasMaxLength(20);
+                        .HasMaxLength(20)
+                        .HasColumnType("TEXT");
 
                     b.Property<bool>("SmtpRequiresAuth")
                         .HasColumnType("INTEGER");
 
                     b.Property<string>("SmtpServer")
-                        .HasColumnType("TEXT")
-                        .HasMaxLength(200);
+                        .HasMaxLength(200)
+                        .HasColumnType("TEXT");
 
                     b.Property<bool>("SmtpUseSsl")
                         .HasColumnType("INTEGER");
 
                     b.Property<string>("SmtpUser")
-                        .HasColumnType("TEXT")
-                        .HasMaxLength(500);
+                        .HasMaxLength(500)
+                        .HasColumnType("TEXT");
 
                     b.Property<DateTime>("TermsUpdatedUtc")
                         .HasColumnType("TEXT");
 
                     b.Property<string>("Theme")
-                        .HasColumnType("TEXT")
-                        .HasMaxLength(100);
+                        .HasMaxLength(100)
+                        .HasColumnType("TEXT");
 
                     b.Property<string>("TimeZoneId")
-                        .HasColumnType("TEXT")
-                        .HasMaxLength(50);
+                        .HasMaxLength(50)
+                        .HasColumnType("TEXT");
 
                     b.Property<string>("TwitterConsumerKey")
-                        .HasColumnType("TEXT")
-                        .HasMaxLength(100);
+                        .HasMaxLength(100)
+                        .HasColumnType("TEXT");
 
                     b.Property<string>("TwitterConsumerSecret")
                         .HasColumnType("TEXT");
@@ -499,7 +503,7 @@ namespace cloudscribe.Core.Storage.EFCore.SQLite.Migrations
 
                     b.HasIndex("SiteFolderName");
 
-                    b.ToTable("cs_Site");
+                    b.ToTable("cs_Site", (string)null);
                 });
 
             modelBuilder.Entity("cloudscribe.Core.Models.SiteUser", b =>
@@ -521,12 +525,12 @@ namespace cloudscribe.Core.Storage.EFCore.SQLite.Migrations
                         .HasColumnType("TEXT");
 
                     b.Property<string>("AvatarUrl")
-                        .HasColumnType("TEXT")
-                        .HasMaxLength(255);
+                        .HasMaxLength(255)
+                        .HasColumnType("TEXT");
 
                     b.Property<string>("BrowserKey")
-                        .HasColumnType("TEXT")
-                        .HasMaxLength(50);
+                        .HasMaxLength(50)
+                        .HasColumnType("TEXT");
 
                     b.Property<bool>("CanAutoLockout")
                         .HasColumnType("INTEGER");
@@ -545,12 +549,12 @@ namespace cloudscribe.Core.Storage.EFCore.SQLite.Migrations
 
                     b.Property<string>("DisplayName")
                         .IsRequired()
-                        .HasColumnType("TEXT")
-                        .HasMaxLength(100);
+                        .HasMaxLength(100)
+                        .HasColumnType("TEXT");
 
                     b.Property<string>("Email")
-                        .HasColumnType("TEXT")
-                        .HasMaxLength(100);
+                        .HasMaxLength(100)
+                        .HasColumnType("TEXT");
 
                     b.Property<DateTime?>("EmailConfirmSentUtc")
                         .HasColumnType("TEXT");
@@ -559,8 +563,8 @@ namespace cloudscribe.Core.Storage.EFCore.SQLite.Migrations
                         .HasColumnType("INTEGER");
 
                     b.Property<string>("FirstName")
-                        .HasColumnType("TEXT")
-                        .HasMaxLength(100);
+                        .HasMaxLength(100)
+                        .HasColumnType("TEXT");
 
                     b.Property<string>("Gender")
                         .HasColumnType("TEXT");
@@ -575,8 +579,8 @@ namespace cloudscribe.Core.Storage.EFCore.SQLite.Migrations
                         .HasColumnType("TEXT");
 
                     b.Property<string>("LastName")
-                        .HasColumnType("TEXT")
-                        .HasMaxLength(100);
+                        .HasMaxLength(100)
+                        .HasColumnType("TEXT");
 
                     b.Property<DateTime?>("LastPasswordChangeUtc")
                         .HasColumnType("TEXT");
@@ -588,27 +592,27 @@ namespace cloudscribe.Core.Storage.EFCore.SQLite.Migrations
                         .HasColumnType("INTEGER");
 
                     b.Property<string>("NewEmail")
-                        .HasColumnType("TEXT")
-                        .HasMaxLength(100);
+                        .HasMaxLength(100)
+                        .HasColumnType("TEXT");
 
                     b.Property<bool>("NewEmailApproved")
                         .HasColumnType("INTEGER");
 
                     b.Property<string>("NormalizedEmail")
-                        .HasColumnType("TEXT")
-                        .HasMaxLength(100);
+                        .HasMaxLength(100)
+                        .HasColumnType("TEXT");
 
                     b.Property<string>("NormalizedUserName")
                         .IsRequired()
-                        .HasColumnType("TEXT")
-                        .HasMaxLength(50);
+                        .HasMaxLength(50)
+                        .HasColumnType("TEXT");
 
                     b.Property<string>("PasswordHash")
                         .HasColumnType("TEXT");
 
                     b.Property<string>("PhoneNumber")
-                        .HasColumnType("TEXT")
-                        .HasMaxLength(50);
+                        .HasMaxLength(50)
+                        .HasColumnType("TEXT");
 
                     b.Property<bool>("PhoneNumberConfirmed")
                         .HasColumnType("INTEGER");
@@ -617,8 +621,8 @@ namespace cloudscribe.Core.Storage.EFCore.SQLite.Migrations
                         .HasColumnType("INTEGER");
 
                     b.Property<string>("SecurityStamp")
-                        .HasColumnType("TEXT")
-                        .HasMaxLength(50);
+                        .HasMaxLength(50)
+                        .HasColumnType("TEXT");
 
                     b.Property<string>("Signature")
                         .HasColumnType("TEXT");
@@ -627,20 +631,20 @@ namespace cloudscribe.Core.Storage.EFCore.SQLite.Migrations
                         .HasColumnType("TEXT");
 
                     b.Property<string>("TimeZoneId")
-                        .HasColumnType("TEXT")
-                        .HasMaxLength(50);
+                        .HasMaxLength(50)
+                        .HasColumnType("TEXT");
 
                     b.Property<bool>("TwoFactorEnabled")
                         .HasColumnType("INTEGER");
 
                     b.Property<string>("UserName")
                         .IsRequired()
-                        .HasColumnType("TEXT")
-                        .HasMaxLength(50);
+                        .HasMaxLength(50)
+                        .HasColumnType("TEXT");
 
                     b.Property<string>("WebSiteUrl")
-                        .HasColumnType("TEXT")
-                        .HasMaxLength(100);
+                        .HasMaxLength(100)
+                        .HasColumnType("TEXT");
 
                     b.HasKey("Id");
 
@@ -652,7 +656,7 @@ namespace cloudscribe.Core.Storage.EFCore.SQLite.Migrations
 
                     b.HasIndex("SiteId");
 
-                    b.ToTable("cs_User");
+                    b.ToTable("cs_User", (string)null);
                 });
 
             modelBuilder.Entity("cloudscribe.Core.Models.UserClaim", b =>
@@ -662,8 +666,8 @@ namespace cloudscribe.Core.Storage.EFCore.SQLite.Migrations
                         .HasColumnType("TEXT");
 
                     b.Property<string>("ClaimType")
-                        .HasColumnType("TEXT")
-                        .HasMaxLength(255);
+                        .HasMaxLength(255)
+                        .HasColumnType("TEXT");
 
                     b.Property<string>("ClaimValue")
                         .HasColumnType("TEXT");
@@ -682,7 +686,7 @@ namespace cloudscribe.Core.Storage.EFCore.SQLite.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("cs_UserClaim");
+                    b.ToTable("cs_UserClaim", (string)null);
                 });
 
             modelBuilder.Entity("cloudscribe.Core.Models.UserLocation", b =>
@@ -695,34 +699,34 @@ namespace cloudscribe.Core.Storage.EFCore.SQLite.Migrations
                         .HasColumnType("INTEGER");
 
                     b.Property<string>("City")
-                        .HasColumnType("TEXT")
-                        .HasMaxLength(255);
+                        .HasMaxLength(255)
+                        .HasColumnType("TEXT");
 
                     b.Property<string>("Continent")
-                        .HasColumnType("TEXT")
-                        .HasMaxLength(255);
+                        .HasMaxLength(255)
+                        .HasColumnType("TEXT");
 
                     b.Property<string>("Country")
-                        .HasColumnType("TEXT")
-                        .HasMaxLength(255);
+                        .HasMaxLength(255)
+                        .HasColumnType("TEXT");
 
                     b.Property<DateTime>("FirstCaptureUtc")
                         .HasColumnType("TEXT");
 
                     b.Property<string>("HostName")
-                        .HasColumnType("TEXT")
-                        .HasMaxLength(255);
+                        .HasMaxLength(255)
+                        .HasColumnType("TEXT");
 
                     b.Property<string>("IpAddress")
-                        .HasColumnType("TEXT")
-                        .HasMaxLength(50);
+                        .HasMaxLength(50)
+                        .HasColumnType("TEXT");
 
                     b.Property<long>("IpAddressLong")
                         .HasColumnType("INTEGER");
 
                     b.Property<string>("Isp")
-                        .HasColumnType("TEXT")
-                        .HasMaxLength(255);
+                        .HasMaxLength(255)
+                        .HasColumnType("TEXT");
 
                     b.Property<DateTime>("LastCaptureUtc")
                         .HasColumnType("TEXT");
@@ -734,15 +738,15 @@ namespace cloudscribe.Core.Storage.EFCore.SQLite.Migrations
                         .HasColumnType("REAL");
 
                     b.Property<string>("Region")
-                        .HasColumnType("TEXT")
-                        .HasMaxLength(255);
+                        .HasMaxLength(255)
+                        .HasColumnType("TEXT");
 
                     b.Property<Guid>("SiteId")
                         .HasColumnType("TEXT");
 
                     b.Property<string>("TimeZone")
-                        .HasColumnType("TEXT")
-                        .HasMaxLength(255);
+                        .HasMaxLength(255)
+                        .HasColumnType("TEXT");
 
                     b.Property<Guid>("UserId")
                         .HasColumnType("TEXT");
@@ -753,7 +757,7 @@ namespace cloudscribe.Core.Storage.EFCore.SQLite.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("cs_UserLocation");
+                    b.ToTable("cs_UserLocation", (string)null);
                 });
 
             modelBuilder.Entity("cloudscribe.Core.Models.UserLogin", b =>
@@ -765,16 +769,16 @@ namespace cloudscribe.Core.Storage.EFCore.SQLite.Migrations
                         .HasColumnType("TEXT");
 
                     b.Property<string>("LoginProvider")
-                        .HasColumnType("TEXT")
-                        .HasMaxLength(128);
+                        .HasMaxLength(128)
+                        .HasColumnType("TEXT");
 
                     b.Property<string>("ProviderKey")
-                        .HasColumnType("TEXT")
-                        .HasMaxLength(128);
+                        .HasMaxLength(128)
+                        .HasColumnType("TEXT");
 
                     b.Property<string>("ProviderDisplayName")
-                        .HasColumnType("TEXT")
-                        .HasMaxLength(100);
+                        .HasMaxLength(100)
+                        .HasColumnType("TEXT");
 
                     b.HasKey("UserId", "SiteId", "LoginProvider", "ProviderKey");
 
@@ -782,7 +786,7 @@ namespace cloudscribe.Core.Storage.EFCore.SQLite.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("cs_UserLogin");
+                    b.ToTable("cs_UserLogin", (string)null);
                 });
 
             modelBuilder.Entity("cloudscribe.Core.Models.UserRole", b =>
@@ -799,7 +803,7 @@ namespace cloudscribe.Core.Storage.EFCore.SQLite.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("cs_UserRole");
+                    b.ToTable("cs_UserRole", (string)null);
                 });
 
             modelBuilder.Entity("cloudscribe.Core.Models.UserToken", b =>
@@ -811,12 +815,12 @@ namespace cloudscribe.Core.Storage.EFCore.SQLite.Migrations
                         .HasColumnType("TEXT");
 
                     b.Property<string>("LoginProvider")
-                        .HasColumnType("TEXT")
-                        .HasMaxLength(450);
+                        .HasMaxLength(450)
+                        .HasColumnType("TEXT");
 
                     b.Property<string>("Name")
-                        .HasColumnType("TEXT")
-                        .HasMaxLength(450);
+                        .HasMaxLength(450)
+                        .HasColumnType("TEXT");
 
                     b.Property<string>("Value")
                         .HasColumnType("TEXT");
@@ -827,7 +831,7 @@ namespace cloudscribe.Core.Storage.EFCore.SQLite.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("cs_UserToken");
+                    b.ToTable("cs_UserToken", (string)null);
                 });
 #pragma warning restore 612, 618
         }

@@ -555,5 +555,9 @@ namespace cloudscribe.Core.Models
         {
             get { return site.MaximumInactivityInMinutes; }
         }
+        public string RegRestrictionTld
+        {
+            get { return site.RegRestrictionTld; }
+        }
     }
 }

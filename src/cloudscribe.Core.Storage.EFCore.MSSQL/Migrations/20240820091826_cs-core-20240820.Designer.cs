@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using cloudscribe.Core.Storage.EFCore.MSSQL;
 
@@ -11,9 +12,11 @@ using cloudscribe.Core.Storage.EFCore.MSSQL;
 namespace cloudscribe.Core.Storage.EFCore.MSSQL.Migrations
 {
     [DbContext(typeof(CoreDbContext))]
-    partial class CoreDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240820091826_cs-core-20240820")]
+    partial class cscore20240820
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -361,9 +364,6 @@ namespace cloudscribe.Core.Storage.EFCore.MSSQL.Migrations
 
                     b.Property<int>("MaxInvalidPasswordAttempts")
                         .HasColumnType("int");
-
-                    b.Property<string>("MaximumInactivityInMinutes")
-                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("MicrosoftClientId")
                         .HasMaxLength(100)

@@ -70,7 +70,7 @@ namespace cloudscribe.Core.Models
         
         public int MaxInvalidPasswordAttempts { get; set; } = 5;
         
-        public int MinRequiredPasswordLength { get; set; } = 7;
+        public int MinRequiredPasswordLength { get; set; } = 8;
         
         public bool PwdRequireNonAlpha { get; set; } = true;
         
@@ -223,6 +223,8 @@ namespace cloudscribe.Core.Models
         public bool SingleBrowserSessions { get; set; }
         public string MaximumInactivityInMinutes { get; set; }
 
+        public string RegRestrictionTld { get; set; }
+
         public static SiteSettings FromISiteSettings(ISiteSettings i)
         {
             if(i == null) { return null; }
@@ -340,9 +342,7 @@ namespace cloudscribe.Core.Models
                 TermsUpdatedUtc            = i.TermsUpdatedUtc,
                 EmailApiEndpoint           = i.EmailApiEndpoint,
                 EmailApiKey                = i.EmailApiKey,
-                EmailSenderName            = i.EmailSenderName,
-                RegRestrictionTld          = i.RegRestrictionTld,
-                MaximumInactivityInMinutes = i.MaximumInactivityInMinutes
+                EmailSenderName            = i.EmailSenderName
             };
 
             return s;

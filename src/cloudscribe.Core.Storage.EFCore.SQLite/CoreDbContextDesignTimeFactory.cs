@@ -8,7 +8,7 @@ namespace cloudscribe.Core.Storage.EFCore.SQLite
         public CoreDbContext CreateDbContext(string[] args)
         {
             var builder = new DbContextOptionsBuilder<CoreDbContext>();
-            builder.UseSqlite("Data Source=cloudscribe.db");
+            builder.UseSqlite("Data Source=test123.db;");
             return new CoreDbContext(builder.Options);
         }
     }
