@@ -184,7 +184,7 @@ namespace Microsoft.Extensions.DependencyInjection
             // No interface for the error describer so we can add errors without rev'ing the interface
             services.TryAddScoped<IdentityErrorDescriber>();
             services.TryAddScoped<ISecurityStampValidator, SecurityStampValidator<SiteUser>>();
-            
+            services.TryAddSingleton<IAutoLogoutTime, AutoLogoutTime>();
 
             services.AddScoped<UserEvents, UserEvents>();
 

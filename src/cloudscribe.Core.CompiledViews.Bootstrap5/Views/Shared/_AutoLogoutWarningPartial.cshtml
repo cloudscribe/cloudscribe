@@ -6,13 +6,13 @@
 
 @{
     var secondsTilLogout = await rstResolver.RemainingSessionTimeInSeconds();
-    //<h1>@secondsTilLogout</h1>
+    <h1>@secondsTilLogout</h1>
 }
 
-@if (secondsTilLogout > 0 && secondsTilLogout < 43200) // 43200: only render countdown js if < 12 hrs left 
+@if (secondsTilLogout > 0 && secondsTilLogout < 43200) // 43200: only render countdown js if < 12 hrs left
 {
     // declaring script in this way means it gets renered at foot of _layout page
-    Html.Resource(@<script src="/cr/js/cloudscribe-autologout-warning.min.js"></script>, "js");
+    Html.Resource(@<script src="/cr/js/cloudscribe-autologout-warning.js"></script>, "js");
 
     var pageScheme = Context.Request.Scheme;
 
@@ -42,4 +42,3 @@
         </div>
     </div>
 }
-

@@ -2,13 +2,9 @@
 function doCountdownPromise(secondsLeft, delay, alertThreshold, alerted) {
 
     delay = delay * 1000 || 10000;  // work in ms for setTimeout
-    
     var startingTime = new Date();
-
     var checkTimer = function (resolve, reject) {
-
-        var secondsremaining = Number(secondsLeft) - (Number(new Date() - Number(startingTime)) / 1000.0);
-        // console.log("remains " + secondsremaining);
+    var secondsremaining = Number(secondsLeft) - (Number(new Date() - Number(startingTime)) / 1000.0);
 
         if (alertThreshold > 0 && secondsremaining > alertThreshold) {
             $("#sessionExpiryWarning").modal("hide");
@@ -16,8 +12,8 @@ function doCountdownPromise(secondsLeft, delay, alertThreshold, alerted) {
         }
 
         if (alertThreshold > 0 && secondsremaining <= alertThreshold) {
-
             let dom = $("#sessionExpiryWarning");
+
             if (dom != null && parseInt(secondsremaining) >=0) {
                 $("#sessionExpiryWarningSeconds").text(parseInt(secondsremaining));
             }
@@ -25,7 +21,7 @@ function doCountdownPromise(secondsLeft, delay, alertThreshold, alerted) {
             if (!alerted) {
                 var backupDelay = delay;
                 delay = 1000;
-                $("#sessionExpiryWarning").modal()
+                $("#sessionExpiryWarning").modal("show")
 
                 $("#sessionKeepAlive").off();  // prevent binding this multiple times
 
@@ -110,7 +106,7 @@ function pollForKeepAlive(retrievalFunction, source, timeout, interval) {
 
 
 window.addEventListener("DOMContentLoaded", () => {
-
+    
     let dom            = $("#sessionExpiry")[0];
     let target         = dom.dataset.urlTarget;
     let alertThreshold = Number(dom.dataset.alertThreshold) || 60;
@@ -123,7 +119,6 @@ window.addEventListener("DOMContentLoaded", () => {
     }
 
     if (secondsLeft > 0) {
-
         doCountdownPromise(secondsLeft, interval, alertThreshold, false).then(function () {
             window.location.href = target;
         }).catch(function () { 

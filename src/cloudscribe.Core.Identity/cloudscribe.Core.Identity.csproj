@@ -23,6 +23,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\cloudscribe.Core.Models\cloudscribe.Core.Models.csproj" />
+    <ProjectReference Include="..\cloudscribe.Core.Storage.EFCore.Common\cloudscribe.Core.Storage.EFCore.Common.csproj" />
     <ProjectReference Include="..\cloudscribe.MultiTenancy\cloudscribe.MultiTenancy.csproj" />
   </ItemGroup>
 
