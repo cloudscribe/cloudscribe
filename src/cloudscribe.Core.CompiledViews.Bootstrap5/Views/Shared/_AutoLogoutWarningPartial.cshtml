@@ -6,7 +6,7 @@
 
 @{
     var secondsTilLogout = await rstResolver.RemainingSessionTimeInSeconds();
-    <h1>@secondsTilLogout</h1>
+    // <h1>@secondsTilLogout</h1>
 }
 
 @if (secondsTilLogout > 0 && secondsTilLogout < 43200) // 43200: only render countdown js if < 12 hrs left
