@@ -1273,4 +1273,19 @@
   <data name="Registration Permitted Top Level Domain(s)" xml:space="preserve">
     <value>Registration Permitted Top Level Domain(s)</value>
   </data>
+  <data name="Auto logout time (in minutes, leave blank to disable)" xml:space="preserve">
+	<value>Auto logout time (in minutes, leave blank to disable)</value>
+  </data>
+  <data name="Session Expiry" xml:space="preserve">
+	<value>Session Expiry</value>
+  </data>
+  <data name="For your security, your session will time out in {0} seconds..." xml:space="preserve">
+	<value>For your security, your session will time out in {0} seconds...</value>
+  </data>
+  <data name="Log out" xml:space="preserve">
+	<value>Log out</value>
+  </data>
+  <data name="Stay logged in" xml:space="preserve">
+	<value>Stay logged in</value>
+  </data>
 </root>

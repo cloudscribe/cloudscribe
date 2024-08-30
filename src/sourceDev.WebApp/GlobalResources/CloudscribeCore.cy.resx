@@ -951,4 +951,19 @@
   <data name="Registration Permitted Top Level Domain(s)" xml:space="preserve">
     <value>Parth(au) Lefel Uchaf a Ganiateir Cofrestru</value>
   </data>
+  <data name="Auto logout time (in minutes, leave blank to disable)" xml:space="preserve">
+	<value>Amser allgofnodi awtomatig (mewn munudau, gadewch yn wag i analluogi)</value>
+  </data>
+  <data name="Session Expiry" xml:space="preserve">
+	<value>Sesiwn yn dod i ben</value>
+  </data>
+  <data name="For your security, your session will time out in {0} seconds..." xml:space="preserve">
+	<value>Er eich diogelwch, bydd eich sesiwn yn dod i ben ymhen {0} eiliad...</value>
+  </data>
+  <data name="Log out" xml:space="preserve">
+	<value>Allgofnodi</value>
+  </data>
+  <data name="Stay logged in" xml:space="preserve">
+	<value>Arhoswch wedi mewngofnodi</value>
+  </data>
 </root>
