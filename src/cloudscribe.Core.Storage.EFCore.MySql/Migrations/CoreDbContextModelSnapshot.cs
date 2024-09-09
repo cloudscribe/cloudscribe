@@ -333,6 +333,9 @@ namespace cloudscribe.Core.Storage.EFCore.MySql.Migrations
                     b.Property<int>("MaxInvalidPasswordAttempts")
                         .HasColumnType("int");
 
+                    b.Property<string>("MaximumInactivityInMinutes")
+                        .HasColumnType("longtext");
+
                     b.Property<string>("MicrosoftClientId")
                         .HasMaxLength(100)
                         .HasColumnType("varchar(100)");

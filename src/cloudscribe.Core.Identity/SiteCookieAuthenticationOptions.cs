@@ -32,37 +32,40 @@ namespace cloudscribe.Core.Identity
             IConfiguration configuration,
             IHttpContextAccessor httpContextAccessor,
             ICookieAuthRedirector cookieAuthRedirector,
-            ILogger<SiteCookieAuthenticationOptions> logger
+            ILogger<SiteCookieAuthenticationOptions> logger,
+            IAutoLogoutTime autoLogoutTime
             ) : base(factory, sources, cache)
         {
-            _multiTenantOptions            = multiTenantOptionsAccessor.Value;
-            _configuration                 = configuration;
-            _httpContextAccessor           = httpContextAccessor;
-            _cookieAuthRedirector          = cookieAuthRedirector;
+            _multiTenantOptions = multiTenantOptionsAccessor.Value;
+            _configuration = configuration;
+            _httpContextAccessor = httpContextAccessor;
+            _cookieAuthRedirector = cookieAuthRedirector;
             _cookieAuthTicketStoreProvider = cookieAuthTicketStoreProvider;
-            _siteAuthCookieEvents          = siteAuthCookieEvents;
-            _factory                       = factory;
-            _cache                         = cache;
-            _log                           = logger;
+            _siteAuthCookieEvents = siteAuthCookieEvents;
+            _factory = factory;
+            _cache = cache;
+            _log = logger;
+            _autoLogoutTime = autoLogoutTime;
         }
 
-        private readonly MultiTenantOptions                                _multiTenantOptions;
-        private readonly IConfiguration                                    _configuration;
-        private readonly IHttpContextAccessor                              _httpContextAccessor;
-        private readonly ICookieAuthRedirector                             _cookieAuthRedirector;
+        private readonly MultiTenantOptions _multiTenantOptions;
+        private readonly IConfiguration _configuration;
+        private readonly IHttpContextAccessor _httpContextAccessor;
+        private readonly ICookieAuthRedirector _cookieAuthRedirector;
         private readonly IOptionsMonitorCache<CookieAuthenticationOptions> _cache;
-        private readonly IOptionsFactory<CookieAuthenticationOptions>      _factory;
-        private readonly ICookieAuthTicketStoreProvider                    _cookieAuthTicketStoreProvider;
-        private readonly ISiteAuthCookieEvents                             _siteAuthCookieEvents;
-        private readonly ILogger                                           _log;
-        
+        private readonly IOptionsFactory<CookieAuthenticationOptions> _factory;
+        private readonly ICookieAuthTicketStoreProvider _cookieAuthTicketStoreProvider;
+        private readonly ISiteAuthCookieEvents _siteAuthCookieEvents;
+        private readonly ILogger _log;
+        public readonly IAutoLogoutTime _autoLogoutTime;
+
         public override CookieAuthenticationOptions Get(string name)
         {
             name = name ?? IdentityConstants.ApplicationScheme;
-            
-            var isAppCookie   = IsApplicationCookieName(name);
-            var tenant        = _httpContextAccessor.HttpContext.GetTenant<SiteContext>();
-            var resolvedName  = ResolveName(tenant, name);
+
+            var isAppCookie = IsApplicationCookieName(name);
+            var tenant = _httpContextAccessor.HttpContext.GetTenant<SiteContext>();
+            var resolvedName = ResolveName(tenant, name);
             var cookieOptions = CreateOptions(resolvedName, tenant, isAppCookie);
 
             return _cache.GetOrAdd(resolvedName, () => cookieOptions);
@@ -71,7 +74,7 @@ namespace cloudscribe.Core.Identity
         private CookieAuthenticationOptions CreateOptions(string name, SiteContext tenant, bool isAppCookie)
         {
             var options = _factory.Create(name);
-            
+
             if (isAppCookie)
             {
                 ConfigureApplicationCookie(tenant, options, name);
@@ -79,19 +82,23 @@ namespace cloudscribe.Core.Identity
                 try
                 {
                     // if config setting is supplied, then set cookie expiry
-                    var cookieExpiry = _configuration.GetValue<int?>("AppSettings:MaximumInactivityInMinutes");
-                    if (cookieExpiry != null && cookieExpiry > 0)
+                    string cookieExpiry = _autoLogoutTime.GetMaximumInactivityMinutes(tenant.Id);
+                    double cookieExpiryTime;
+
+                    bool success = double.TryParse(cookieExpiry, out cookieExpiryTime);
+
+                    if (success)
                     {
-                        options.ExpireTimeSpan = TimeSpan.FromMinutes((int)cookieExpiry);
+                        options.ExpireTimeSpan = TimeSpan.FromMinutes((int)cookieExpiryTime);
                         options.SlidingExpiration = true;
-                        
+
                         // this would set the default session cookie type to a fixed expiry one
                         // options.Cookie.MaxAge = options.ExpireTimeSpan;
                     }
                 }
                 catch (Exception ex)
                 {
-                    _log.LogError(ex,"Error setting maximum inactivity cookie expiry");
+                    _log.LogError(ex, "Error setting maximum inactivity cookie expiry");
                 }
             }
             else

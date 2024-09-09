@@ -221,6 +221,7 @@ namespace cloudscribe.Core.Models
         public string FooterContent { get; set; }
 
         public bool SingleBrowserSessions { get; set; }
+        public string MaximumInactivityInMinutes { get; set; }
 
         public string RegRestrictionTld { get; set; }
 
@@ -342,7 +343,7 @@ namespace cloudscribe.Core.Models
                 EmailApiEndpoint           = i.EmailApiEndpoint,
                 EmailApiKey                = i.EmailApiKey,
                 EmailSenderName            = i.EmailSenderName,
-                RegRestrictionTld          = i.RegRestrictionTld
+                MaximumInactivityInMinutes = i.MaximumInactivityInMinutes
             };
 
             return s;

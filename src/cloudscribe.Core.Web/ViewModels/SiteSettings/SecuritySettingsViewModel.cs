@@ -81,6 +81,7 @@ namespace cloudscribe.Core.Web.ViewModels.SiteSettings
         [DataType(DataType.Password)]
         [Display(Name = "Password")]
         public string LdapTestPassword { get; set; }
+        public string MaximumInactivityInMinutes { get; set; }
 
         [RegularExpression(@"^[a-zA-Z0-9\s-.,]+$", ErrorMessage = "Domains should only include A-Z, 0-9 and a full stop.")]
         public string RegRestrictionTld { get; set; }

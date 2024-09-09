@@ -331,6 +331,9 @@ namespace cloudscribe.Core.Storage.EFCore.SQLite.Migrations
                     b.Property<int>("MaxInvalidPasswordAttempts")
                         .HasColumnType("INTEGER");
 
+                    b.Property<string>("MaximumInactivityInMinutes")
+                        .HasColumnType("TEXT");
+
                     b.Property<string>("MicrosoftClientId")
                         .HasMaxLength(100)
                         .HasColumnType("TEXT");

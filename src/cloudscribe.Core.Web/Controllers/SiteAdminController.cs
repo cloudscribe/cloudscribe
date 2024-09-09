@@ -1113,6 +1113,7 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
                 LdapUserDNKey              = selectedSite.LdapUserDNKey,
                 LdapUserDNFormat           = selectedSite.LdapUserDNFormat,
                 LdapUseSsl                 = selectedSite.LdapUseSsl,
+                MaximumInactivityInMinutes = selectedSite.MaximumInactivityInMinutes,
                 RegRestrictionTld = selectedSite.RegRestrictionTld
             };
 
@@ -1174,7 +1175,7 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
             selectedSite.LdapUserDNKey              = model.LdapUserDNKey;
             selectedSite.LdapUserDNFormat           = model.LdapUserDNFormat;
             selectedSite.LdapUseSsl                 = model.LdapUseSsl;
-            selectedSite.RegRestrictionTld = model.RegRestrictionTld;
+            selectedSite.MaximumInactivityInMinutes = model.MaximumInactivityInMinutes;
 
             await SiteManager.Update(selectedSite);
 

@@ -162,4 +162,19 @@
   <data name="Registration Permitted Top Level Domain(s)" xml:space="preserve">
     <value>Enregistrement de domaines de premier niveau autorisés</value>
   </data>
+  <data name="Auto logout time (in minutes, leave blank to disable)" xml:space="preserve">
+	<value>Délai de déconnexion automatique (en minutes, laissez vide pour désactiver)</value>
+  </data>
+  <data name="Session Expiry" xml:space="preserve">
+	<value>Expiration de la session</value>
+  </data>
+  <data name="For your security, your session will time out in {0} seconds..." xml:space="preserve">
+	<value>Pour votre sécurité, votre session expirera dans {0} secondes...</value>
+  </data>
+  <data name="Log out" xml:space="preserve">
+	<value>Se déconnecter</value>
+  </data>
+  <data name="Stay logged in" xml:space="preserve">
+	<value>Rester connecté</value>
+  </data>
 </root>

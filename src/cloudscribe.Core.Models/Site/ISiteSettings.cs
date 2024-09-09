@@ -242,6 +242,6 @@ namespace cloudscribe.Core.Models
         //bool UseSslOnAllPages { get; set; }
         //int MinReqNonAlphaChars { get; set; }
         //int PasswordAttemptWindowMinutes { get; set; }
-
+        string MaximumInactivityInMinutes { get; set; }
     }
 }

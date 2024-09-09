@@ -416,6 +416,8 @@ namespace cloudscribe.Core.Storage.EFCore.MSSQL
                 ;
 
                 entity.Property(p => p.RegRestrictionTld);
+
+                entity.Property(p => p.MaximumInactivityInMinutes);
             });
 
             modelBuilder.Entity<SiteHost>(entity =>
