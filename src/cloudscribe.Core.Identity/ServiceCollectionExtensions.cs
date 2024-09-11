@@ -28,6 +28,7 @@ using Microsoft.AspNetCore.Authentication.OAuth;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using Newtonsoft.Json.Linq;
+using cloudscribe.Core.Web.Components;
 
 namespace Microsoft.Extensions.DependencyInjection
 {
@@ -184,7 +185,6 @@ namespace Microsoft.Extensions.DependencyInjection
             // No interface for the error describer so we can add errors without rev'ing the interface
             services.TryAddScoped<IdentityErrorDescriber>();
             services.TryAddScoped<ISecurityStampValidator, SecurityStampValidator<SiteUser>>();
-            services.TryAddSingleton<IAutoLogoutTime, AutoLogoutTime>();
 
             services.AddScoped<UserEvents, UserEvents>();
 
