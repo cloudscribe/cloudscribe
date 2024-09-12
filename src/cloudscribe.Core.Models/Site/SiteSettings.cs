@@ -343,7 +343,8 @@ namespace cloudscribe.Core.Models
                 EmailApiEndpoint           = i.EmailApiEndpoint,
                 EmailApiKey                = i.EmailApiKey,
                 EmailSenderName            = i.EmailSenderName,
-                MaximumInactivityInMinutes = i.MaximumInactivityInMinutes
+                MaximumInactivityInMinutes = i.MaximumInactivityInMinutes,
+                RegRestrictionTld = i.RegRestrictionTld
             };
 
             return s;
