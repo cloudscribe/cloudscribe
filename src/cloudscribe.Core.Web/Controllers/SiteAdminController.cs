@@ -1176,6 +1176,7 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
             selectedSite.LdapUserDNFormat           = model.LdapUserDNFormat;
             selectedSite.LdapUseSsl                 = model.LdapUseSsl;
             selectedSite.MaximumInactivityInMinutes = model.MaximumInactivityInMinutes;
+            selectedSite.RegRestrictionTld = model.RegRestrictionTld;
 
             await SiteManager.Update(selectedSite);
 
