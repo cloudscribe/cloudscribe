@@ -32,8 +32,7 @@ namespace cloudscribe.Core.Identity
             IConfiguration configuration,
             IHttpContextAccessor httpContextAccessor,
             ICookieAuthRedirector cookieAuthRedirector,
-            ILogger<SiteCookieAuthenticationOptions> logger,
-            IAutoLogoutTime autoLogoutTime
+            ILogger<SiteCookieAuthenticationOptions> logger
             ) : base(factory, sources, cache)
         {
             _multiTenantOptions = multiTenantOptionsAccessor.Value;
@@ -45,7 +44,6 @@ namespace cloudscribe.Core.Identity
             _factory = factory;
             _cache = cache;
             _log = logger;
-            _autoLogoutTime = autoLogoutTime;
         }
 
         private readonly MultiTenantOptions _multiTenantOptions;
@@ -57,7 +55,6 @@ namespace cloudscribe.Core.Identity
         private readonly ICookieAuthTicketStoreProvider _cookieAuthTicketStoreProvider;
         private readonly ISiteAuthCookieEvents _siteAuthCookieEvents;
         private readonly ILogger _log;
-        public readonly IAutoLogoutTime _autoLogoutTime;
 
         public override CookieAuthenticationOptions Get(string name)
         {
@@ -82,7 +79,7 @@ namespace cloudscribe.Core.Identity
                 try
                 {
                     // if config setting is supplied, then set cookie expiry
-                    string cookieExpiry = _autoLogoutTime.GetMaximumInactivityMinutes(tenant.Id);
+                    string cookieExpiry = tenant.MaximumInactivityInMinutes;
                     double cookieExpiryTime;
 
                     bool success = double.TryParse(cookieExpiry, out cookieExpiryTime);
