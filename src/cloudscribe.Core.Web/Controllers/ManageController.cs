@@ -107,7 +107,8 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
                 Logins            = await UserManager.GetLoginsAsync(user),
                 BrowserRemembered = await SignInManager.IsTwoFactorClientRememberedAsync(user),
                 TimeZone          = user.TimeZoneId,
-                Email             = user.Email
+                Email             = user.Email,
+                NormalizedUserName = user.NormalizedUserName
             };
 
             if (string.IsNullOrEmpty(model.TimeZone))
@@ -508,7 +509,8 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
                 DateOfBirth = user.DateOfBirth,
                 WebSiteUrl  = user.WebSiteUrl,
                 PhoneNumber = user.PhoneNumber,
-                AvatarUrl   = user.AvatarUrl
+                AvatarUrl   = user.AvatarUrl,
+                NormalizedUserName = user.NormalizedUserName
             };
 
             var viewName = await CustomUserInfo.GetUserInfoViewName(CurrentSite, user, HttpContext);

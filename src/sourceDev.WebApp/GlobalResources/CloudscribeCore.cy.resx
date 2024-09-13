@@ -966,4 +966,7 @@
   <data name="Stay logged in" xml:space="preserve">
 	<value>Arhoswch wedi mewngofnodi</value>
   </data>
+  <data name="Not you?" xml:space="preserve">
+	<value>Nid chi?</value>
+  </data>
 </root>

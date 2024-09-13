@@ -1288,4 +1288,7 @@
   <data name="Stay logged in" xml:space="preserve">
 	<value>Stay logged in</value>
   </data>
+  <data name="Not you?" xml:space="preserve">
+	<value>Not you?</value>
+  </data>
 </root>
