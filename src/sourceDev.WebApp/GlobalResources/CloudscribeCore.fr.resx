@@ -177,4 +177,7 @@
   <data name="Stay logged in" xml:space="preserve">
 	<value>Rester connecté</value>
   </data>
+  <data name="Not you?" xml:space="preserve">
+	<value>Pas toi?</value>
+  </data>
 </root>
