@@ -25,7 +25,7 @@
 }
 <h2>@ViewData["Title"]</h2>
 <p>
-    @sr["Username"]: @Model.NormalizedUserName | @sr["Not you?"] <a id="linkLogout" href="#" onclick="document.getElementById('lnkLogout').click();" class="nav-link">@sr["Log off"]</a>
+    @sr["Username"]: @Model.NormalizedUserName | @sr["Not you?"] <a id="linkLogout" href="#" onclick="document.getElementById('lnkLogout').click();">@sr["Log off"]</a>
 </p>
 <form asp-controller="Manage" asp-action="UserInfo" method="post" role="form">
     <div asp-validation-summary="All" class="text-danger"></div>
