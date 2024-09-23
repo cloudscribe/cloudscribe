@@ -85,5 +85,13 @@ namespace cloudscribe.Core.Web.ViewModels.SiteSettings
 
         [RegularExpression(@"^[a-zA-Z0-9\s-.,]+$", ErrorMessage = "Domains should only include A-Z, 0-9 and a full stop.")]
         public string RegRestrictionTld { get; set; }
+        public bool PwdRequireDigit { get; set; }
+        public bool PwdRequireLowercase { get; set; }
+        public bool PwdRequireNonAlpha { get; set; }
+        public bool PwdRequireUppercase { get; set; }
+        public int MaxInvalidPasswordAttempts { get; set; }
+
+        [Range(7, int.MaxValue)]
+        public int MinRequiredPasswordLength { get; set; }
     }
 }

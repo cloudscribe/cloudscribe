@@ -1291,4 +1291,25 @@
   <data name="Not you?" xml:space="preserve">
 	<value>Not you?</value>
   </data>
+  <data name="Password Settings" xml:space="preserve">
+	<value>Password Settings</value>
+  </data>
+  <data name="Require passwords to have at least one digit" xml:space="preserve">
+	<value>Require passwords to have at least one digit</value>
+  </data>
+  <data name="Require passwords to have at least one lowercase character" xml:space="preserve">
+	<value>Require passwords to have at least one lowercase character</value>
+  </data>
+  <data name="Require passwords to have at least one uppercase character" xml:space="preserve">
+	<value>Require passwords to have at least one uppercase character</value>
+  </data>
+  <data name="Require passwords to have at least one non-alphanumeric character" xml:space="preserve">
+	<value>Require passwords to have at least one non-alphanumeric character</value>
+  </data>
+  <data name="Maximum invalid password attempts before account is locked" xml:space="preserve">
+	<value>Maximum invalid password attempts before account is locked</value>
+  </data>
+  <data name="Minimum required password length (the system will not allow a number less than seven)" xml:space="preserve">
+	<value>Minimum required password length (the system will not allow a number less than seven)</value>
+  </data>
 </root>

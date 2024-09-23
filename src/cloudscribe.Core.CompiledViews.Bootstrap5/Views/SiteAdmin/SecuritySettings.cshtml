@@ -72,11 +72,40 @@
             <input asp-for="MaximumInactivityInMinutes" class="form-control" />
         </div>
     </div>
-    <div class="mb-4">
+    <div class="mb-3">
         <label class="form-label" asp-for="RegRestrictionTld">@sr["Registration Permitted Top Level Domain(s)"]</label>
         <input asp-for="RegRestrictionTld" class="form-control" />
         <p class="small">To restrict user registration to specific TLD's. E.g. entering: <i>mycompany.com</i> will restrict registration to users whose emails end with <i>@@mycompany.com</i>. To have multiple TLD's, separate them with a comma: <i>mycompany.com, mycompany2.com</i></p>
         @Html.ValidationMessage("RegRestrictionTld", new { @class = "text-danger" })
+    </div>
+    <div class="mb-4">
+        <h3>@sr["Password Settings"]</h3>
+        <div class="form-check form-switch mb-2">
+            <label class="form-label" asp-for="PwdRequireDigit">@sr["Require passwords to have at least one digit"]</label>
+            <input class="form-check-input" asp-for="PwdRequireDigit" type="checkbox" id="PwdRequireDigit">
+        </div>
+        <div class="form-check form-switch mb-2">
+            <label class="form-label" asp-for="PwdRequireLowercase">@sr["Require passwords to have at least one lowercase character"]</label>
+            <input class="form-check-input" asp-for="PwdRequireLowercase" type="checkbox" id="PwdRequireLowercase">
+        </div>
+        <div class="form-check form-switch mb-2">
+            <label class="form-label" asp-for="PwdRequireUppercase">@sr["Require passwords to have at least one uppercase character"]</label>
+            <input class="form-check-input" asp-for="PwdRequireUppercase" type="checkbox" id="PwdRequireUppercase">
+        </div>
+        <div class="form-check form-switch mb-2">
+            <label class="form-label" asp-for="PwdRequireNonAlpha">@sr["Require passwords to have at least one non-alphanumeric character"]</label>
+            <input class="form-check-input" asp-for="PwdRequireNonAlpha" type="checkbox" id="PwdRequireNonAlpha">
+        </div>
+        <div class="mb-2">
+            <label class="form-label" asp-for="MaxInvalidPasswordAttempts">@sr["Maximum invalid password attempts before account is locked"]</label>
+            <input class="form-input" asp-for="MaxInvalidPasswordAttempts" type="number" id="MaxInvalidPasswordAttempts">
+            @Html.ValidationMessage("MaxInvalidPasswordAttempts", new { @class = "text-danger" })
+        </div>
+        <div class="mb-2">
+            <label class="form-label" asp-for="MinRequiredPasswordLength">@sr["Minimum required password length (the system will not allow a number less than seven)"]</label>
+            <input class="form-input" asp-for="MinRequiredPasswordLength" type="number" min="7" id="MinRequiredPasswordLength">
+            @Html.ValidationMessage("MinRequiredPasswordLength", new { @class = "text-danger" })
+        </div>
     </div>
     <partial name="LdapSettingsPartial" model="Model" />
 

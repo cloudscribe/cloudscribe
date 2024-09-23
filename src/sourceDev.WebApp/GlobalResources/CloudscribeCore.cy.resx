@@ -969,4 +969,25 @@
   <data name="Not you?" xml:space="preserve">
 	<value>Nid chi?</value>
   </data>
+  <data name="Password Settings" xml:space="preserve">
+	<value>Gosodiadau Cyfrinair</value>
+  </data>
+  <data name="Require passwords to have at least one digit" xml:space="preserve">
+	<value>Ei gwneud yn ofynnol i gyfrineiriau gael o leiaf un digid</value>
+  </data>
+  <data name="Require passwords to have at least one lowercase character" xml:space="preserve">
+	<value>Ei gwneud yn ofynnol i gyfrineiriau gael o leiaf un nod llythrennau bach</value>
+  </data>
+  <data name="Require passwords to have at least one uppercase character" xml:space="preserve">
+	<value>Ei gwneud yn ofynnol i gyfrineiriau gael o leiaf un nod mawr</value>
+  </data>
+  <data name="Require passwords to have at least one non-alphanumeric character" xml:space="preserve">
+	<value>Ei gwneud yn ofynnol i gyfrineiriau fod ag o leiaf un nod nad yw'n alffaniwmerig</value>
+  </data>
+  <data name="Maximum invalid password attempts before account is locked" xml:space="preserve">
+	<value>Uchafswm ymdrechion cyfrinair annilys cyn cloi'r cyfrif</value>
+  </data>
+  <data name="Minimum required password length (the system will not allow a number less than seven)" xml:space="preserve">
+	<value>Isafswm hyd cyfrinair gofynnol (ni fydd y system yn caniatáu rhif llai na saith)</value>
+  </data>
 </root>
