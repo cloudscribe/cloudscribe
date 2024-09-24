@@ -1296,4 +1296,25 @@
   <data name="Not you?" xml:space="preserve">
 	<value>Non sei tu?</value>
   </data>
+  <data name="Password Settings" xml:space="preserve">
+	<value>Impostazioni password</value>
+  </data>
+  <data name="Require passwords to have at least one digit" xml:space="preserve">
+	<value>Richiedi che le password abbiano almeno una cifra</value>
+  </data>
+  <data name="Require passwords to have at least one lowercase character" xml:space="preserve">
+	<value>Richiedi che le password contengano almeno un carattere minuscolo</value>
+  </data>
+  <data name="Require passwords to have at least one uppercase character" xml:space="preserve">
+	<value>Richiedi che le password contengano almeno un carattere maiuscolo</value>
+  </data>
+  <data name="Require passwords to have at least one non-alphanumeric character" xml:space="preserve">
+	<value>Richiedi che le password contengano almeno un carattere non alfanumerico</value>
+  </data>
+  <data name="Maximum invalid password attempts before account is locked" xml:space="preserve">
+	<value>Numero massimo di tentativi di password non valide prima che l'account venga bloccato</value>
+  </data>
+  <data name="Minimum required password length (the system will not allow a number less than seven)" xml:space="preserve">
+	<value>Lunghezza minima richiesta della password (il sistema non consentirà un numero inferiore a sette)</value>
+  </data>
 </root>

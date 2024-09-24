@@ -1114,7 +1114,13 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
                 LdapUserDNFormat           = selectedSite.LdapUserDNFormat,
                 LdapUseSsl                 = selectedSite.LdapUseSsl,
                 MaximumInactivityInMinutes = selectedSite.MaximumInactivityInMinutes,
-                RegRestrictionTld = selectedSite.RegRestrictionTld
+                RegRestrictionTld = selectedSite.RegRestrictionTld,
+                PwdRequireDigit = selectedSite.PwdRequireDigit,
+                PwdRequireLowercase = selectedSite.PwdRequireLowercase,
+                PwdRequireNonAlpha = selectedSite.PwdRequireNonAlpha,
+                PwdRequireUppercase = selectedSite.PwdRequireUppercase,
+                MaxInvalidPasswordAttempts = selectedSite.MaxInvalidPasswordAttempts,
+                MinRequiredPasswordLength = selectedSite.MinRequiredPasswordLength
             };
 
             return View(model);
@@ -1177,6 +1183,12 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
             selectedSite.LdapUseSsl                 = model.LdapUseSsl;
             selectedSite.MaximumInactivityInMinutes = model.MaximumInactivityInMinutes;
             selectedSite.RegRestrictionTld = model.RegRestrictionTld;
+            selectedSite.PwdRequireDigit = model.PwdRequireDigit;
+            selectedSite.PwdRequireLowercase = model.PwdRequireLowercase;
+            selectedSite.PwdRequireNonAlpha = model.PwdRequireNonAlpha;
+            selectedSite.PwdRequireUppercase = model.PwdRequireUppercase;
+            selectedSite.MaxInvalidPasswordAttempts = model.MaxInvalidPasswordAttempts;
+            selectedSite.MinRequiredPasswordLength = model.MinRequiredPasswordLength;
 
             await SiteManager.Update(selectedSite);
 
