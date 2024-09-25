@@ -224,6 +224,8 @@ namespace cloudscribe.Core.Models
         public string MaximumInactivityInMinutes { get; set; }
 
         public string RegRestrictionTld { get; set; }
+        public int PasswordExpiryWarningDays { get; set; }
+        public int PasswordExpiresDays { get; set; }
 
         public static SiteSettings FromISiteSettings(ISiteSettings i)
         {
@@ -344,7 +346,9 @@ namespace cloudscribe.Core.Models
                 EmailApiKey                = i.EmailApiKey,
                 EmailSenderName            = i.EmailSenderName,
                 MaximumInactivityInMinutes = i.MaximumInactivityInMinutes,
-                RegRestrictionTld = i.RegRestrictionTld
+                RegRestrictionTld = i.RegRestrictionTld,
+                PasswordExpiryWarningDays = i.PasswordExpiryWarningDays,
+                PasswordExpiresDays = i.PasswordExpiresDays
             };
 
             return s;

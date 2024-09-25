@@ -101,6 +101,11 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
                 await IpAddressTracker.TackUserIpAddress(CurrentSite.Id, result.User.Id);
             }
 
+            if (result.PasswordExpiryReminder != null)
+            {
+                this.AlertDanger(StringLocalizer[result.PasswordExpiryReminder], true);
+            }
+
             if (!string.IsNullOrEmpty(returnUrl))
             {
                 // when site is closed login is still allowed

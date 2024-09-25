@@ -1120,7 +1120,9 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
                 PwdRequireNonAlpha = selectedSite.PwdRequireNonAlpha,
                 PwdRequireUppercase = selectedSite.PwdRequireUppercase,
                 MaxInvalidPasswordAttempts = selectedSite.MaxInvalidPasswordAttempts,
-                MinRequiredPasswordLength = selectedSite.MinRequiredPasswordLength
+                MinRequiredPasswordLength = selectedSite.MinRequiredPasswordLength,
+                PasswordExpiryWarningDays = selectedSite.PasswordExpiryWarningDays,
+                PasswordExpiresDays = selectedSite.PasswordExpiresDays
             };
 
             return View(model);
@@ -1189,6 +1191,8 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
             selectedSite.PwdRequireUppercase = model.PwdRequireUppercase;
             selectedSite.MaxInvalidPasswordAttempts = model.MaxInvalidPasswordAttempts;
             selectedSite.MinRequiredPasswordLength = model.MinRequiredPasswordLength;
+            selectedSite.PasswordExpiryWarningDays = model.PasswordExpiryWarningDays;
+            selectedSite.PasswordExpiresDays = model.PasswordExpiresDays;
 
             await SiteManager.Update(selectedSite);
 
