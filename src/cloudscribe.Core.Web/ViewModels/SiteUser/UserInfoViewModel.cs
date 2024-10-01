@@ -21,6 +21,6 @@ namespace cloudscribe.Core.Web.ViewModels.SiteUser
         public string WebSiteUrl { get; set; }
 
         public string AvatarUrl { get; set; }
-        public string NormalizedUserName { get; set; }
+        public string DisplayName { get; set; }
     }
 }
