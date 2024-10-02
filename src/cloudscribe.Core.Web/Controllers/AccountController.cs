@@ -576,7 +576,6 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
             {
                 ModelState.AddModelError("registrationEmailError", emailValidation.ErrorMessage);
                 isValid = false;
-                ViewData["EmailError"] = true;
             }
 
             if (isValid && customDataIsValid)
