@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <Description>Bootstrap 5 pre-compiled views for cloudscribe.Core.Web</Description>    
-    <Version>8.0.12</Version>
+    <Version>8.0.13</Version>
     <TargetFramework>net8.0</TargetFramework>
     <AddRazorSupportForMvc>true</AddRazorSupportForMvc>
     <Authors>Joe Audette</Authors>
