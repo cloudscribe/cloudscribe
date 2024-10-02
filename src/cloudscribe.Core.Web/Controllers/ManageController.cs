@@ -108,7 +108,7 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
                 BrowserRemembered = await SignInManager.IsTwoFactorClientRememberedAsync(user),
                 TimeZone          = user.TimeZoneId,
                 Email             = user.Email,
-                DisplayName = user.DisplayName
+                UserName = user.UserName
             };
 
             if (string.IsNullOrEmpty(model.TimeZone))
@@ -510,7 +510,7 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
                 WebSiteUrl  = user.WebSiteUrl,
                 PhoneNumber = user.PhoneNumber,
                 AvatarUrl   = user.AvatarUrl,
-                DisplayName = user.DisplayName
+                UserName = user.UserName
             };
 
             var viewName = await CustomUserInfo.GetUserInfoViewName(CurrentSite, user, HttpContext);
