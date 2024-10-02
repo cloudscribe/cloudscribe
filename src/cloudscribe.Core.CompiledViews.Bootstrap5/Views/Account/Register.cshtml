@@ -9,6 +9,7 @@
     ViewData["SocialFormat"] = sr["Register using your {0} account"];
     ViewData["SocialHeading"] = sr["Use an existing account"];
     var Tenant = await siteResolver.ResolveSite(Context.Request.Host.Host, Context.Request.Path);
+    bool emailError = ViewData["EmailError"] != null ? (bool)ViewData["EmailError"] : false;
 
 }
 @section Meta {
@@ -37,7 +38,7 @@
 
     <h4>@sr["Create a new account."]</h4>
      @{
-        if (ViewData.ModelState.IsValid && (Tenant.PwdRequireDigit || Tenant.PwdRequireLowercase || Tenant.PwdRequireNonAlpha || Tenant.PwdRequireUppercase))
+        if ((ViewData.ModelState.IsValid || emailError == true) && (Tenant.PwdRequireDigit || Tenant.PwdRequireLowercase || Tenant.PwdRequireNonAlpha || Tenant.PwdRequireUppercase))
         {
             <div class="mb-3">
                 <ul>
