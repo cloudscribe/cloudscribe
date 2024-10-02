@@ -570,7 +570,6 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
             if (emailValidation.IsValid)
             {
                 isValid = true;
-                ViewData["EmailError"] = false;
             }
             else
             {
