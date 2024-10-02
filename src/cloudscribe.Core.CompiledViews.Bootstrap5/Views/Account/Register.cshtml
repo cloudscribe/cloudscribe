@@ -37,7 +37,7 @@
 
     <h4>@sr["Create a new account."]</h4>
      @{
-        if (ViewData.ModelState.IsValid && (Tenant.PwdRequireDigit || Tenant.PwdRequireLowercase || Tenant.PwdRequireNonAlpha || Tenant.PwdRequireUppercase))
+        if (Tenant.PwdRequireDigit || Tenant.PwdRequireLowercase || Tenant.PwdRequireNonAlpha || Tenant.PwdRequireUppercase)
         {
             <div class="mb-3">
                 <ul>

@@ -541,7 +541,6 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
         public virtual async Task<IActionResult> Register(RegisterViewModel model, string returnUrl = null)
         {
             ViewData["Title"] = StringLocalizer["Register"];
-
             ViewData["ReturnUrl"] = returnUrl;
 
             await Analytics.HandleRegisterSubmit("Onsite");
