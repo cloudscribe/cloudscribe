@@ -34,5 +34,14 @@ namespace cloudscribe.Core.Web.Components
             return Task.FromResult(result);
         }
 
+        public int GetPasswordExpiryWarningDays(ISiteContext site)
+        {
+            return site.PasswordExpiryWarningDays;
+        }
+
+        public int GetPasswordExpiryDays(ISiteContext site)
+        {
+            return site.PasswordExpiresDays;
+        }
     }
 }

@@ -125,5 +125,7 @@ namespace cloudscribe.Core.Models
         bool SingleBrowserSessions { get; }
         string MaximumInactivityInMinutes { get; }
         string RegRestrictionTld { get; }
+        int PasswordExpiryWarningDays { get; }
+        int PasswordExpiresDays { get; }
     }
 }

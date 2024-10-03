@@ -363,6 +363,12 @@ namespace cloudscribe.Core.Storage.EFCore.SQLite.Migrations
                     b.Property<string>("OidConnectScopesCsv")
                         .HasColumnType("TEXT");
 
+                    b.Property<int>("PasswordExpiresDays")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int>("PasswordExpiryWarningDays")
+                        .HasColumnType("INTEGER");
+
                     b.Property<string>("PreferredHostName")
                         .HasMaxLength(250)
                         .HasColumnType("TEXT");

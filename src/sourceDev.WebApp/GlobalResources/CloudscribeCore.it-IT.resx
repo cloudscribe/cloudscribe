@@ -1317,4 +1317,10 @@
   <data name="Minimum required password length (the system will not allow a number less than seven)" xml:space="preserve">
 	<value>Lunghezza minima richiesta della password (il sistema non consentirà un numero inferiore a sette)</value>
   </data>
+  <data name="Number of days until password expires, 0 to disable" xml:space="preserve">
+	<value>Numero di giorni fino alla scadenza della password, 0 per disabilitare</value>
+  </data>
+  <data name="Password expiry alert display (days)" xml:space="preserve">
+	<value>Visualizzazione dell'avviso di scadenza della password (giorni)</value>
+  </data>
 </root>

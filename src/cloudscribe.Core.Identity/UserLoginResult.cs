@@ -23,6 +23,7 @@ namespace cloudscribe.Core.Identity
             bool needsEmailConfirmation,
             string emailConfirmationToken,
             bool needsPhoneConfirmation,
+            string passwordExpiryReminder,
             ExternalLoginInfo externalLoginInfo = null,
             bool isNewExternalAuthMapping = false
             )
@@ -43,7 +44,7 @@ namespace cloudscribe.Core.Identity
             NeedsPhoneConfirmation = needsPhoneConfirmation;
             ExternalLoginInfo = externalLoginInfo;
             IsNewExternalAuthMapping = isNewExternalAuthMapping;
-
+            PasswordExpiryReminder = passwordExpiryReminder;
     }
 
         public bool MustAcceptTerms { get; }
@@ -75,6 +76,7 @@ namespace cloudscribe.Core.Identity
         /// - thereby requiring a confirmation
         /// </summary>
         public bool IsNewExternalAuthMapping { get; }
+        public string PasswordExpiryReminder { get; set; }
     }
 
 }

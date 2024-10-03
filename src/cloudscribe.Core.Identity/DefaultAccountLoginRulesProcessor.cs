@@ -107,12 +107,34 @@ namespace cloudscribe.Core.Identity
                 template.SignInResult = SignInResult.LockedOut;
             }
 
-            //if (template.User.IsDeleted)
-            //{
-            //    var reason = $"login not allowed for {template.User.Email} because account is flagged as deleted";
-            //    template.RejectReasons.Add(reason);
-            //    template.User = null;
-            //}
+            if (template.User.LastPasswordChangeUtc != null)
+            {
+                int passwordExpiryWarningDays = _capabilitiesProvider.GetPasswordExpiryWarningDays(_userManager.Site);
+                int daysSinceLastPasswordChange = (DateTime.UtcNow - (DateTime)template.User.LastPasswordChangeUtc).Days;
+                int passwordExpiryDays = _capabilitiesProvider.GetPasswordExpiryDays(_userManager.Site);
+
+                if (passwordExpiryDays == 0)
+                {
+                    return;
+                }
+
+                if (daysSinceLastPasswordChange > passwordExpiryDays)
+                {
+                    var reason = "please check your details and try again, or use the forgot password link";
+                    template.RejectReasons.Add(reason);
+                    template.SignInResult = SignInResult.Failed;
+                }
+
+                if (daysSinceLastPasswordChange >= passwordExpiryWarningDays && daysSinceLastPasswordChange < passwordExpiryDays)
+                {
+                    template.PasswordExpiryReminder = $"Your password will expire in {passwordExpiryDays - daysSinceLastPasswordChange} day(s). It is recommended you change it now.";
+                }
+
+                if (daysSinceLastPasswordChange >= passwordExpiryWarningDays && daysSinceLastPasswordChange <= passwordExpiryDays)
+                {
+                    template.PasswordExpiryReminder = $"Your password will expire today! Please change it now.";
+                }
+            }
         }
     }
 }
