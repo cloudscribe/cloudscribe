@@ -990,4 +990,10 @@
   <data name="Minimum required password length (the system will not allow a number less than seven)" xml:space="preserve">
 	<value>Isafswm hyd cyfrinair gofynnol (ni fydd y system yn caniatáu rhif llai na saith)</value>
   </data>
+  <data name="Number of days until password expires, 0 to disable" xml:space="preserve">
+	<value>Nifer y dyddiau nes bod y cyfrinair yn dod i ben, 0 i'w analluogi</value>
+  </data>
+  <data name="Password expiry alert display (days)" xml:space="preserve">
+	<value>Arddangosfa rhybudd dod i ben cyfrinair (diwrnodau)</value>
+  </data>
 </root>

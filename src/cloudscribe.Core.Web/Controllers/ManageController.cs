@@ -973,6 +973,12 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
             {
                 return View(model);
             }
+            if (model.OldPassword == model.NewPassword)
+            {
+                this.AlertDanger(StringLocalizer["New password cannot be the same as current password"]);
+                return View(model);
+            }
+
             var user = await UserManager.FindByIdAsync(HttpContext.User.GetUserId());
             if (user != null)
             {

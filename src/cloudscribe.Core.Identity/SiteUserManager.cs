@@ -298,6 +298,13 @@ namespace cloudscribe.Core.Identity
             var hash = newPassword != null ? this._passwordHasher.HashPassword(user, newPassword) : null;
             var passwordStore = GetPasswordStore();
             await passwordStore.SetPasswordHashAsync(user, hash, CancellationToken);
+            IdentityResult passwordDifferentFromPrevious = CheckPasswordIsDifferentFromPrevious(user, hash);
+
+            if (!passwordDifferentFromPrevious.Succeeded)
+            {
+                return passwordDifferentFromPrevious;
+            }
+
             user.MustChangePwd = mustChangePwd;
             await UpdateAsync(user);
             
@@ -321,6 +328,22 @@ namespace cloudscribe.Core.Identity
                 Logger.LogWarning(14, "User {userId} password validation failed: {errors}.", await GetUserIdAsync(user), string.Join(";", errors.Select(e => e.Code)));
                 return IdentityResult.Failed(errors.ToArray());
             }
+            return IdentityResult.Success;
+        }
+
+        protected IdentityResult CheckPasswordIsDifferentFromPrevious(TUser user, string hash)
+        {
+            IdentityError errors;
+
+            if (user.PasswordHash == hash)
+            {
+                errors = new IdentityError{
+                    Code = "19",
+                    Description = "New password cannot be the same as current password"
+                };
+                return IdentityResult.Failed(errors);
+            }
+
             return IdentityResult.Success;
         }
 

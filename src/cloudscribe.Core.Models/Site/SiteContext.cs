@@ -559,5 +559,13 @@ namespace cloudscribe.Core.Models
         {
             get { return site.RegRestrictionTld; }
         }
+        public int PasswordExpiryWarningDays
+        {
+            get { return site.PasswordExpiryWarningDays; }
+        }
+        public int PasswordExpiresDays
+        {
+            get { return site.PasswordExpiresDays; }
+        }
     }
 }

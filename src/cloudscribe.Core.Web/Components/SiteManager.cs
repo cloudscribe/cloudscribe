@@ -405,6 +405,8 @@ namespace cloudscribe.Core.Web.Components
             newSite.OidConnectScopesCsv        = sourceSite.OidConnectScopesCsv;
             newSite.SingleBrowserSessions      = sourceSite.SingleBrowserSessions;
             newSite.AllowUserToChangeEmail     = sourceSite.AllowUserToChangeEmail;
+            newSite.PasswordExpiryWarningDays = sourceSite.PasswordExpiryWarningDays;
+            newSite.PasswordExpiresDays = sourceSite.PasswordExpiresDays;
 
             /// end clone 
 

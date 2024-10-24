@@ -365,6 +365,12 @@ namespace cloudscribe.Core.Storage.EFCore.MySql.Migrations
                     b.Property<string>("OidConnectScopesCsv")
                         .HasColumnType("longtext");
 
+                    b.Property<int>("PasswordExpiresDays")
+                        .HasColumnType("int");
+
+                    b.Property<int>("PasswordExpiryWarningDays")
+                        .HasColumnType("int");
+
                     b.Property<string>("PreferredHostName")
                         .HasMaxLength(250)
                         .HasColumnType("varchar(250)");

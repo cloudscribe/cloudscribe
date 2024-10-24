@@ -106,6 +106,16 @@
             <input class="form-input" asp-for="MinRequiredPasswordLength" type="number" min="7" id="MinRequiredPasswordLength">
             @Html.ValidationMessage("MinRequiredPasswordLength", new { @class = "text-danger" })
         </div>
+        <div class="mb-2">
+            <label class="form-label" asp-for="PasswordExpiresDays">@sr["Number of days until password expires, 0 to disable"]</label>
+            <input class="form-input" asp-for="PasswordExpiresDays" type="number" id="PasswordExpiresDays" />
+            @Html.ValidationMessage("PasswordExpiresDays", new { @class = "text-danger" })
+        </div>
+        <div class="mb-2">
+            <label class="form-label" asp-for="PasswordExpiryWarningDays">@sr["Password expiry alert display (days)"]</label>
+            <input class="form-input" asp-for="PasswordExpiryWarningDays" type="number" id="PasswordExpiryWarningDays" />
+            @Html.ValidationMessage("PasswordExpiryWarningDays", new { @class = "text-danger" })
+        </div>
     </div>
     <partial name="LdapSettingsPartial" model="Model" />
 

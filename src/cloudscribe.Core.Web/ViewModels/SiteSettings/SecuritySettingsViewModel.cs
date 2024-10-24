@@ -93,5 +93,7 @@ namespace cloudscribe.Core.Web.ViewModels.SiteSettings
 
         [Range(7, int.MaxValue)]
         public int MinRequiredPasswordLength { get; set; }
+        public int PasswordExpiryWarningDays { get; set; }
+        public int PasswordExpiresDays { get; set; }
     }
 }

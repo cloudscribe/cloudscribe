@@ -8,6 +8,9 @@ namespace cloudscribe.Core.Models
         Task<bool> SupportsEmailNotification(ISiteContext site);
         
         Task<bool> SupportsSmsNotification(ISiteContext site);
+
+        int GetPasswordExpiryWarningDays(ISiteContext site);
+        int GetPasswordExpiryDays(ISiteContext site);
     }
 
     public class DefaultSiteAcountCapabilitiesProvider : ISiteAccountCapabilitiesProvider
@@ -24,5 +27,14 @@ namespace cloudscribe.Core.Models
             return Task.FromResult(result);
         }
 
+        public int GetPasswordExpiryWarningDays(ISiteContext site)
+        {
+            return site.PasswordExpiryWarningDays;
+        }
+
+        public int GetPasswordExpiryDays(ISiteContext site)
+        {
+            return site.PasswordExpiresDays;
+        }
     }
 }

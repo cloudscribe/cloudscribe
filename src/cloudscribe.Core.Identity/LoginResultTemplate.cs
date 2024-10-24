@@ -26,5 +26,6 @@ namespace cloudscribe.Core.Identity
         /// - thereby requiring a confirmation
         /// </summary>
         public bool IsNewExternalAuthMapping { get; set; } = false;
+        public string PasswordExpiryReminder { get; set; }
     }
 }
