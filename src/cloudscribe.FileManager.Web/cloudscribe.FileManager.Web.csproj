@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <Description>media file management</Description>
-    <Version>8.0.0</Version>
+    <Version>8.0.1</Version>
     <TargetFramework>net8.0</TargetFramework>
     <Authors>Joe Audette</Authors>
     <AddRazorSupportForMvc>true</AddRazorSupportForMvc>
@@ -35,7 +35,7 @@
     <PackageReference Include="Microsoft.Extensions.Localization" Version="8.0.0" />
     <PackageReference Include="Microsoft.Extensions.FileProviders.Embedded" Version="8.0.0" />
 
-    <PackageReference Include="SixLabors.ImageSharp" Version="3.0.*" />
+    <PackageReference Include="SixLabors.ImageSharp" Version="3.1.*" />
     <PackageReference Include="SixLabors.ImageSharp.Drawing" Version="1.0.0-beta15" />
   </ItemGroup>
 

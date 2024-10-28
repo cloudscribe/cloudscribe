@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <Description>asp.net identity implementation for cloudscribe web application foundation</Description>
-    <Version>8.0.5</Version>
+    <Version>8.0.6</Version>
     <Authors>Joe Audette</Authors>
     <TargetFramework>net8.0</TargetFramework>
     <PackageTags>cloudscribe;identity</PackageTags>
@@ -43,7 +43,7 @@
     <PackageReference Include="Microsoft.Extensions.Primitives" Version="8.0.0" />
     <PackageReference Include="Microsoft.Extensions.Identity.Core" Version="8.0.0" />
     <PackageReference Include="Microsoft.Extensions.Identity.Stores" Version="8.0.0" />
-    <PackageReference Include="Microsoft.Extensions.Options" Version="8.0.0" />
+    <PackageReference Include="Microsoft.Extensions.Options" Version="8.0.2" />
     <PackageReference Include="Microsoft.Extensions.Options.ConfigurationExtensions" Version="8.0.0" />
 
     <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />

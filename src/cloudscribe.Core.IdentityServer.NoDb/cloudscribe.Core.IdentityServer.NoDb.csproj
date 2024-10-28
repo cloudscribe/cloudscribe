@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <Description>NoDb configuration and operational stores for IdentityServer4 cloudscribe multi-tenant identity integration</Description>
-    <Version>8.0.0</Version>
+    <Version>8.0.1</Version>
     <TargetFramework>net8.0</TargetFramework>
     <Authors>Joe Audette</Authors>
     <PackageTags>cloudscribe;identity</PackageTags>
@@ -27,7 +27,7 @@
   <ItemGroup>
     
     <PackageReference Include="NoDb" Version="1.2.2" />
-    <PackageReference Include="Microsoft.Extensions.Caching.Memory" Version="8.0.0" />
+    <PackageReference Include="Microsoft.Extensions.Caching.Memory" Version="8.0.1" />
    
   </ItemGroup>
 
