@@ -201,4 +201,10 @@
   <data name="Minimum required password length (the system will not allow a number less than seven)" xml:space="preserve">
 	<value>Longueur minimale requise du mot de passe (le système n'autorisera pas un nombre inférieur à sept)</value>
   </data>
+  <data name="Number of days until password expires, 0 to disable" xml:space="preserve">
+	<value>Nombre de jours avant l'expiration du mot de passe, 0 pour désactiver</value>
+  </data>
+  <data name="Password expiry alert display (days)" xml:space="preserve">
+	<value>Affichage de l'alerte d'expiration du mot de passe (jours)</value>
+  </data>
 </root>

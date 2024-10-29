@@ -367,6 +367,8 @@ namespace cloudscribe.Core.Storage.EFCore.MySql
 
                 entity.Property(p => p.MaximumInactivityInMinutes);
                 entity.Property(p => p.RegRestrictionTld);
+                entity.Property(p => p.PasswordExpiresDays);
+                entity.Property(p => p.PasswordExpiryWarningDays);
             });
 
             modelBuilder.Entity<SiteHost>(entity =>

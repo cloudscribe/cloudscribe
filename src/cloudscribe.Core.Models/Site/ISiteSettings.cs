@@ -243,5 +243,7 @@ namespace cloudscribe.Core.Models
         //int MinReqNonAlphaChars { get; set; }
         //int PasswordAttemptWindowMinutes { get; set; }
         string MaximumInactivityInMinutes { get; set; }
+        int PasswordExpiryWarningDays {  get; set; }
+        int PasswordExpiresDays { get; set; }
     }
 }

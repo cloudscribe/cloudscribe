@@ -280,6 +280,7 @@ namespace cloudscribe.Core.Web.Components
                 template.NeedsEmailConfirmation,
                 template.EmailConfirmationToken,
                 template.NeedsPhoneConfirmation,
+                template.PasswordExpiryReminder,
                 template.ExternalLoginInfo,
                 template.IsNewExternalAuthMapping
                 );
@@ -461,7 +462,8 @@ namespace cloudscribe.Core.Web.Components
                 template.NeedsAccountApproval,
                 template.NeedsEmailConfirmation,
                 template.EmailConfirmationToken,
-                template.NeedsPhoneConfirmation
+                template.NeedsPhoneConfirmation,
+                template.PasswordExpiryReminder
                 );
         }
 
@@ -515,7 +517,8 @@ namespace cloudscribe.Core.Web.Components
                 template.NeedsAccountApproval,
                 template.NeedsEmailConfirmation,
                 template.EmailConfirmationToken,
-                template.NeedsPhoneConfirmation
+                template.NeedsPhoneConfirmation,
+                template.PasswordExpiryReminder
                 );
 
         }
@@ -571,7 +574,8 @@ namespace cloudscribe.Core.Web.Components
                 template.NeedsAccountApproval,
                 template.NeedsEmailConfirmation,
                 template.EmailConfirmationToken,
-                template.NeedsPhoneConfirmation
+                template.NeedsPhoneConfirmation,
+                template.PasswordExpiryReminder
                 );
 
         }
@@ -684,7 +688,8 @@ namespace cloudscribe.Core.Web.Components
                 template.NeedsAccountApproval,
                 template.NeedsEmailConfirmation,
                 template.EmailConfirmationToken,
-                template.NeedsPhoneConfirmation
+                template.NeedsPhoneConfirmation,
+                template.PasswordExpiryReminder
                 );
         }
 

@@ -7,6 +7,7 @@
 
 using cloudscribe.Core.Models;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.Extensions.Localization;
 using System;
 using System.Threading.Tasks;
 
@@ -16,16 +17,18 @@ namespace cloudscribe.Core.Identity
     {
         public DefaultAccountLoginRulesProcessor(
             SiteUserManager<SiteUser> userManager,
-            ISiteAccountCapabilitiesProvider capabilitiesProvider
+            ISiteAccountCapabilitiesProvider capabilitiesProvider,
+            IStringLocalizer<DefaultAccountLoginRulesProcessor> stringLocalizer
             )
         {
             _userManager = userManager;
             _capabilitiesProvider = capabilitiesProvider;
+            _sr = stringLocalizer;
         }
 
         private readonly SiteUserManager<SiteUser> _userManager;
         private readonly ISiteAccountCapabilitiesProvider _capabilitiesProvider;
-        
+        private IStringLocalizer<DefaultAccountLoginRulesProcessor> _sr;
 
         private async Task<bool> RequireConfirmedEmail()
         {
@@ -107,12 +110,34 @@ namespace cloudscribe.Core.Identity
                 template.SignInResult = SignInResult.LockedOut;
             }
 
-            //if (template.User.IsDeleted)
-            //{
-            //    var reason = $"login not allowed for {template.User.Email} because account is flagged as deleted";
-            //    template.RejectReasons.Add(reason);
-            //    template.User = null;
-            //}
+            if (template.User.LastPasswordChangeUtc != null)
+            {
+                int passwordExpiryWarningDays = _capabilitiesProvider.GetPasswordExpiryWarningDays(_userManager.Site);
+                int daysSinceLastPasswordChange = (DateTime.UtcNow - (DateTime)template.User.LastPasswordChangeUtc).Days;
+                int passwordExpiryDays = _capabilitiesProvider.GetPasswordExpiryDays(_userManager.Site);
+
+                if (passwordExpiryDays == 0)
+                {
+                    return;
+                }
+
+                if (daysSinceLastPasswordChange > passwordExpiryDays)
+                {
+                    var reason = _sr["please check your details and try again, or use the forgot password link"];
+                    template.RejectReasons.Add(reason);
+                    template.SignInResult = SignInResult.Failed;
+                }
+
+                if (daysSinceLastPasswordChange >= passwordExpiryWarningDays && daysSinceLastPasswordChange < passwordExpiryDays)
+                {
+                    template.PasswordExpiryReminder = _sr["Your password will expire in {0} day(s). It is recommended you change it now.", passwordExpiryDays - daysSinceLastPasswordChange];
+                }
+
+                if (daysSinceLastPasswordChange >= passwordExpiryWarningDays && daysSinceLastPasswordChange == passwordExpiryDays)
+                {
+                    template.PasswordExpiryReminder =  _sr["Your password will expire today! Please change it now."];
+                }
+            }
         }
     }
 }
