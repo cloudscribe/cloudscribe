@@ -109,9 +109,9 @@ window.addEventListener("DOMContentLoaded", () => {
     
     let dom            = $("#sessionExpiry")[0];
     let target         = dom.dataset.urlTarget;
-    let alertThreshold = Number(dom.dataset.alertThreshold) || 60;
+    let alertThreshold = Number(dom.dataset.alertThreshold)  || 60;
     let interval       = Number(dom.dataset.pollingInterval) || 5;
-    var secondsLeft    = Number(dom.dataset.secondsLeft) || Number(getRemainingTime(source)) || 0.0;
+    var secondsLeft    = Number(dom.dataset.secondsLeft)     || Number(getRemainingTimePromise(source)) || 0.0;
 
     // fix for arriving at the 'timed out' page whilst still being logged in
     if (window.location.href == target) {
