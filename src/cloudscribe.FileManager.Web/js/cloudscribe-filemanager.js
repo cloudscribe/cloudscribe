@@ -2,7 +2,7 @@
     var fileManager = {
         headers: {
             'X-CSRFToken': $("#fmconfig").data("anti-forgery-token")
-           
+
         },
         treeDataApiUrl: $("#fmconfig").data("filetree-url"),
         //fileType: $("#fmconfig").data("file-type"),
@@ -57,7 +57,7 @@
             $("#croppedFileName").val('');
             $('#origFileName').val('');
         },
-        //fileManager.setPreview(node.virtualPath, node.text, node.mediaType, node.mimeType); 
+        //fileManager.setPreview(node.virtualPath, node.text, node.mediaType, node.mimeType);
         setPreview: function (node) {
             fileManager.clearPreview();
             switch (node.mediaType) {
@@ -83,12 +83,12 @@
                     break;
                 case "image":
                     $("#divPreview").show();
-                    $("#filePreview").attr("src", node.virtualPath);
+                    $("#filePreview").attr("src", node.virtualPath + '?' + performance.now());
 
                     break;
 
             }
-            
+
             fileManager.uploadTab.hide();
             fileManager.selectForCropButton.show();
 
@@ -161,7 +161,7 @@
             $("#folderToDelete").val(virtualPath);
             $("#folderToRename").val(virtualPath);
             fileManager.showFolderTools();
-            
+
 
         },
         clearCurrentDirectory: function () {
@@ -186,7 +186,7 @@
                     $("#lnkDownloadFile").attr("href", fileManager.downloadFileApiUrl + "?fileToDownload=" + virtualPath);
                 }
             }
-            
+
             fileManager.showFileTools();
 
         },
@@ -197,7 +197,7 @@
             $("#newFileNameSegment").val('');
             fileManager.hideFileTools();
             fileManager.clearPreview();
-            
+
 
         },
         backToRoot: function () {
@@ -208,7 +208,7 @@
             //var tree = $('#tree').treeview(true);
             //tree.unselectNode();
             fileManager.loadTree();
-            
+
         },
         showFolderTools: function () {
             if (fileManager.canDelete) {
@@ -217,7 +217,7 @@
                     $('#frmDeleteFolder').show();
                     $("#frmRenameFolder").show();
                 }
-                
+
             }
             $('#frmNewFolder').show();
         },
@@ -233,7 +233,7 @@
                 if (fileManager.downloadFileApiUrl) {
                     $("#lnkDownloadFile").show();
                 }
-                
+
             }
         },
         hideFileTools: function () {
@@ -281,7 +281,7 @@
                     else {
                         fileManager.reloadSubTree();
                     }
-                    
+
                     $("#newFolderName").val('');
                     //fileManager.notify('Folder created', 'alert-success');
                 }
@@ -313,7 +313,7 @@
             if (currentPath === fileManager.rootVirtualPath) {
                 return false;
             }
-            
+
             var formData = $('#frmDeleteFolder').serializeArray();
             //alert(JSON.stringify(formData));
             $.ajax({
@@ -325,7 +325,7 @@
                 if (data.succeeded) {
                     fileManager.removeNode(currentPath);
                     fileManager.clearCurrentDirectory();
-                        
+
                 }
                 else {
                     fileManager.notify(data.message, 'alert-danger');
@@ -336,7 +336,7 @@
             .fail(function () {
                 fileManager.notify('An error occured', 'alert-danger');
             });
-          
+
             return false; //cancel form submit
         },
         renameFolderPrompt: function () {
@@ -356,7 +356,7 @@
             if (currentPath === fileManager.rootVirtualPath) {
                 return false;
             }
-           
+
             var formData = $('#frmRenameFolder').serializeArray();
             //alert(JSON.stringify(formData));
             $.ajax({
@@ -379,7 +379,7 @@
 
                     }
                     $('#newNameSegment').val('');
-                            
+
                     fileManager.clearCurrentDirectory();
 
                 }
@@ -392,7 +392,7 @@
             .fail(function () {
                 fileManager.notify('An error occured', 'alert-danger');
             });
-           
+
             return false; //cancel form submit
         },
         deleteFilePrompt: function () {
@@ -414,7 +414,7 @@
             if (currentPath === fileManager.rootVirtualPath) {
                 return false;
             }
-            
+
             var formData = $('#frmDeleteFile').serializeArray();
             //alert(JSON.stringify(formData));
             $.ajax({
@@ -434,7 +434,7 @@
             .fail(function () {
                 fileManager.notify('An error occured', 'alert-danger');
             });
-            
+
             return false; //cancel form submit
         },
         renameFilePrompt: function () {
@@ -490,7 +490,7 @@
             .fail(function () {
                 fileManager.notify('An error occured', 'alert-danger');
             });
-       
+
             return false; //cancel form submit
         },
         selectfile: function () {
@@ -509,7 +509,7 @@
                     window.close();
                 }
 
-                
+
             }
         },
         removeNode: function (id) {
@@ -534,7 +534,7 @@
 
                 }
 
-                
+
                 var theNode = matchingNodes[0];
                 //alert(JSON.stringify(theNode));
                 //alert(theNode.id)
@@ -548,7 +548,7 @@
                     nodes: [],
                     lazyLoad: true //this makes it load child nodes on expand
                 };
-                
+
                 try {
                     tree.updateNode(theNode, newNode, { silent: true });
                     matchingNodes = tree.findNodes(currentFolderId, 'id');
@@ -557,7 +557,7 @@
                 catch (err) {
 
                 }
-                
+
 
             }
             else {
@@ -593,7 +593,7 @@
                     })
                       .done(function (data) {
                           dataFunc(data);
-                          
+
                       })
                     ;
                     node.lazyLoaded = true;
@@ -604,11 +604,11 @@
                     //console.log(node);
                     $("#divPreview").hide();
                     if (node.canPreview) {
-                        //fileManager.setPreview(node.virtualPath, node.text, node.mediaType, node.mimeType);   
-                        fileManager.setPreview(node); 
+                        //fileManager.setPreview(node.virtualPath, node.text, node.mediaType, node.mimeType);
+                        fileManager.setPreview(node);
                     }
                     else {
-                        fileManager.clearPreview();    
+                        fileManager.clearPreview();
                     }
                     if (node.type === "d") {
                         fileManager.setCurrentDirectory(node.virtualPath);
@@ -638,7 +638,7 @@
                     {
                         fileManager.hideFileTools();
                     }
-                    
+
                 }
             });
 
@@ -661,7 +661,7 @@
                     //$('#fileList').html('');
                     $('#fileList').empty();
                     $('#fileList').append($("<ul class='filelist'></ul>"));
-                   
+
                     var allowedFiles = fileManager.allowedFiles.split('|');
                     var regx = new RegExp("([a-zA-Z0-9\u0600-\u06FF\s_\\.\-:])+(" + allowedFiles.join('|') + ")$");
                     var j = 0;
@@ -728,7 +728,7 @@
                     //try {
                     //    fileManager.reloadSubTree();
                     //} catch (err) {}
-                    
+
                 },
                 progressall: function (e, data) {
                     var progress = parseInt(data.loaded / data.total * 100, 10);
@@ -742,9 +742,9 @@
                         fileManager.notify('File upload success.', 'alert-success');
                         setTimeout(function () {
                             fileManager.reloadSubTree();
-                            
+
                         }, 3000);
-                       
+
                     }
                 },
                 fail: function (e, data) {
@@ -765,7 +765,7 @@
             });
 
         },
-        
+
         init: function () {
             $(document).bind('drop dragover', function (e) { e.preventDefault(); });
             this.progressUI.hide();
@@ -850,7 +850,7 @@
                     }
 
                     if ($.isFunction(document.createElement('canvas').getContext)) {
-                        
+
                         var currentSrc = cropManager.image.attr("src");
                         if (currentSrc === fileManager.emptyPreviewUrl) {
                             cropManager.uploadCropButton.prop('disabled', true);
@@ -860,7 +860,7 @@
                             cropManager.uploadCropButton.prop('disabled', false);
                         }
                     }
-                    
+
 
                 }
             };
@@ -961,7 +961,7 @@
                     cropManager.outputHeight.val(newHeight);
                     cropManager.setCroppedFileName(newWidth, newHeight)
                 }
-                
+
             });
 
             cropManager.outputHeight.on('blur', function () {
@@ -974,7 +974,7 @@
                     cropManager.outputWidth.val(newWidth);
                     cropManager.setCroppedFileName(newWidth, newHeight)
                 }
-                
+
             });
 
             cropManager.chkConstrainCrop.change(function () {
@@ -1029,7 +1029,7 @@
                         //alert('need size');
                         data.option = { width: cropManager.outputWidth.val(), height: cropManager.outputHeight.val()};
                     }
-                    
+
 
                     result = cropManager.image.cropper(data.method, data.option, data.secondOption);
 
@@ -1179,7 +1179,7 @@
                 $.each(otherData, function (key, input) {
                     formData.append(input.name, input.value);
                 })
-                
+
                 $.ajax({
                     method: "POST",
                     url: fileManager.uploadApiUrl,
@@ -1193,7 +1193,7 @@
                         fileManager.notify(data[0].errorMessage, 'alert-danger');
                     }
                     else {
-                        
+
                         var currentPath = $("#cropCurrentDir").val();
                         if (currentPath === fileManager.rootVirtualPath) {
                             fileManager.loadTree();
@@ -1213,7 +1213,7 @@
                 });
 
             });
-            
+
 
             return false; //cancel form submit
         }
@@ -1234,7 +1234,7 @@
                     cropManager.tearDown();
                 }
             }
-            
+
         }
     });
 
