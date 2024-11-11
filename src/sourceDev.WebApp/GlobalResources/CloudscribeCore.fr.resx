@@ -207,4 +207,10 @@
   <data name="Password expiry alert display (days)" xml:space="preserve">
 	<value>Affichage de l'alerte d'expiration du mot de passe (jours)</value>
   </data>
+  <data name="View User Activity" xml:space="preserve">
+	<value>Afficher l'activité de l'utilisateur</value>
+  </data>
+  <data name="Back to User Edit" xml:space="preserve">
+    <value>Retour à l'édition de l'utilisateur</value>
+  </data>
 </root>

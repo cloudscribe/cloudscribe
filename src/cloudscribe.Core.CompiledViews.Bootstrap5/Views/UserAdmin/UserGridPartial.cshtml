@@ -24,7 +24,9 @@
                asp-route-pagesize="@Model.UserList.PageSize"
                asp-route-sortmode="1">@sr["Created"]</a>
         </th>
-        <th></th>
+        <th>
+            @sr["View User Activity"]
+        </th>
         <th>
             @sr["Email/Login"]
         </th>
@@ -61,7 +63,9 @@
                 <span>@tzHelper.ConvertToLocalTime(item.CreatedUtc, Model.TimeZoneId).ToString("g")</span>                
             </td>
             <td class="usergrid-column3">
-                <span><img gravatar-email="@item.Email" gravatar-enabled="@themeSettings.AllowGravatar" override-url="@item.AvatarUrl" disabled-default-url="@themeSettings.DefaultAvatarUrl" gravatar-size="30" /></span>
+                <a asp-controller="UserAdmin" asp-action="UserActivity" asp-route-siteid="@Model.SiteId" asp-route-userid="@item.Id" title="Activty">
+                    <span><img gravatar-email="@item.Email" gravatar-enabled="@themeSettings.AllowGravatar" override-url="@item.AvatarUrl" disabled-default-url="@themeSettings.DefaultAvatarUrl" gravatar-size="30" /></span>
+                </a>
             </td>
             <td class="text-break usergrid-column4">
                 <span>@Html.DisplayFor(modelItem => item.Email) /
