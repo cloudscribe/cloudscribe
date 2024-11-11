@@ -2,7 +2,7 @@
 @inject IStringLocalizer<CloudscribeCore> sr
 @using Microsoft.AspNetCore.Authorization
 @inject IAuthorizationService authorizationService
-@inject ICkeditorOptionsResolver editorOptionsResolver
+@inject ITinyMceEditorOptionsResolver editorOptionsResolver
 @using Microsoft.AspNetCore.Antiforgery
 @inject IAntiforgery antiforgery
 @{
@@ -10,7 +10,7 @@
     ViewData["BodyClass"] = "manage-section user-info";
     var canUploadAuth = await authorizationService.AuthorizeAsync(User, "FileUploadPolicy");
     var canUpload = canUploadAuth.Succeeded;
-    var ckOptions = await editorOptionsResolver.GetCkeditorOptions();
+    var mceOptions = await editorOptionsResolver.GetTinyMceEditorOptions();
     var tokens = antiforgery.GetAndStoreTokens(Context);
 }
 @functions{
@@ -31,19 +31,19 @@
     <div asp-validation-summary="All" class="text-danger"></div>
     @if (canUpload)
     {
-        <div class="mb-3" style="height:300px">
+        <div class="mb-3">
             <label>@sr["Profile Image/Avatar"]</label>
             <div class="d-flex align-items-stretch mb-2">
-                <div class="cs-crop-container" style="height:250px;">
-                    <img id="dz1Image" style="width:250px;height:250px;" src="@GetImageUrl(Model.AvatarUrl)" />
+                <div class="cs-crop-container" style="height:250px;width:auto;">
+                    <img id="dz1Image" style="height:250px;" src="@GetImageUrl(Model.AvatarUrl)" />
                 </div>
                 <div class="d-flex flex-column">
                     <div id="dz1" class="cloudscribe-dropzone-standalone" style="cursor:pointer;"
                          data-dropzone=""
                          data-upload-url="@Url.Action("DropFile", "FileManager")"
                          data-anti-forgery-token="@tokens.RequestToken"
-                         data-file-browse-url="@ckOptions.ImageBrowseUrl"
-                         data-file-crop-url="@ckOptions.CropFileUrl"
+                         data-file-browse-url="@mceOptions.ImageBrowseUrl"
+                         data-file-crop-url="@mceOptions.CropFileUrl"
                          data-target-path="/media/user-avatars"
                          data-create-thumb="false"
                          data-resize-image="true"

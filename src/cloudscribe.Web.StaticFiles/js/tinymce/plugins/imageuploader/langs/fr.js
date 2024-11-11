@@ -1,0 +1,1 @@
+tinymce.addI18n('cy', {'Images from the Server': 'Images du serveur'});

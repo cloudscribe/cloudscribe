@@ -108,7 +108,7 @@ namespace Microsoft.Extensions.DependencyInjection
 
             services.AddScoped<SiteDataProtector>();
 
-            services.TryAddScoped<ICkeditorOptionsResolver, SiteCkeditorOptionsResolver>();
+            services.TryAddScoped<ITinyMceEditorOptionsResolver, SiteTinyMceEditorOptionsResolver>();
             //TODO: remove in a future version
             // services.AddScoped<cloudscribe.Web.Common.ITimeZoneIdResolver, RequestTimeZoneIdResolver>();
 

@@ -2,7 +2,7 @@
 @inject IStringLocalizer<CloudscribeCore> sr
 @using Microsoft.AspNetCore.Authorization
 @inject IAuthorizationService authorizationService
-@inject ICkeditorOptionsResolver editorOptionsResolver
+@inject ITinyMceEditorOptionsResolver editorOptionsResolver
 @using Microsoft.AspNetCore.Antiforgery
 @inject IAntiforgery antiforgery
 @{
@@ -10,7 +10,7 @@
     ViewData["BodyClass"] = "manage-section user-info";
     var canUploadAuth = await authorizationService.AuthorizeAsync(User, "FileUploadPolicy");
     var canUpload = canUploadAuth.Succeeded;
-    var ckOptions = await editorOptionsResolver.GetCkeditorOptions();
+    var mceOptions = await editorOptionsResolver.GetTinyMceEditorOptions();
     var tokens = antiforgery.GetAndStoreTokens(Context);
 }
 @functions{
@@ -39,8 +39,8 @@
                          data-dropzone=""
                          data-upload-url="@Url.Action("DropFile", "FileManager")"
                          data-anti-forgery-token="@tokens.RequestToken"
-                         data-file-browse-url="@ckOptions.ImageBrowseUrl"
-                         data-file-crop-url="@ckOptions.CropFileUrl"
+                         data-file-browse-url="@mceOptions.ImageBrowseUrl"
+                         data-file-crop-url="@mceOptions.CropFileUrl"
                          data-target-path="/media/user-avatars"
                          data-create-thumb="false"
                          data-resize-image="true"

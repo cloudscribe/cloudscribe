@@ -1,8 +1,8 @@
 ﻿@model cloudscribe.Core.Web.Components.Messaging.SiteMessageModel
-@inject ICkeditorOptionsResolver editorOptionsResolver
+@inject ITinyMceEditorOptionsResolver editorOptionsResolver
 @inject IStringLocalizer<CloudscribeCore> sr
 @{
-    var ckOptions = await editorOptionsResolver.GetCkeditorOptions();
+    var mceOptions = await editorOptionsResolver.GetTinyMceEditorOptions();
     var ckBaseRef = Context.Request.GetCurrentBaseUrl();
 }
 <h3>@sr["Send Test Message"]</h3>
@@ -28,14 +28,7 @@
 
     <div class="mb-3">
         <label class="form-label" asp-for="HtmlBody">@sr["Message"]</label>
-        <textarea class="form-control" rows="5" id="HtmlBody-@Guid.NewGuid().ToString()" name="HtmlBody"
-                  data-ckeditor-unobtrusive=""
-                  data-ckeditor-config-basehref="@ckBaseRef"
-                  data-ckeditor-config-url="@ckOptions.CustomConfigPath"
-                  data-ckeditor-config-language="@ckOptions.LanguageCode"
-                  data-ckeditor-config-dropfileuploadurl="@ckOptions.DropFileUrl"
-                  data-ckeditor-config-filebrowserurl="@ckOptions.FileBrowseUrl"
-                  data-ckeditor-config-imagebrowseurl="@ckOptions.ImageBrowseUrl"></textarea>
+        <textarea class="form-control" rows="5" id="HtmlBody-@Guid.NewGuid().ToString()" name="HtmlBody" asp-for="HtmlBody" data-tinymce="" data-tinymce-config-url="@mceOptions.CustomConfigPath"></textarea>
         <span asp-validation-for="HtmlBody" class="text-danger"></span>
     </div>
 

@@ -40,11 +40,11 @@ namespace Microsoft.Extensions.DependencyInjection
             services.TryAddScoped<IResourceHelper, ResourceHelper>();
 
             //services.TryAddScoped<ITimeZoneIdResolver, GmtTimeZoneIdResolver>();
-            services.TryAddScoped<ICkeditorOptionsResolver, DefaultCkeditorOptionsResolver>();
+            services.TryAddScoped<ITinyMceEditorOptionsResolver, DefaultTinyMceEditorOptionsResolver>();
 
             if (configuration != null)
             {
-                services.Configure<CkeditorOptions>(configuration.GetSection("CkeditorOptions"));
+                services.Configure<TinyMceEditorOptions>(configuration.GetSection("TinyMceEditorOptions"));
                 services.Configure<BannerImageMap>(configuration.GetSection("BannerImageMap"));
                 services.TryAddScoped<IBannerService, ConfigBannerService>();
 
@@ -54,11 +54,8 @@ namespace Microsoft.Extensions.DependencyInjection
             }
             else
             {
-
-                services.Configure<CkeditorOptions>(c =>
-                {
-                    // not doing anything just configuring the default
-                });
+                services.Configure<TinyMceEditorOptions>(c =>
+                {  });
             }
 
             services.AddScoped<GoogleAnalyticsApiService>();

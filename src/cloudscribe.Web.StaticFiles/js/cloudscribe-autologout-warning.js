@@ -111,7 +111,15 @@ window.addEventListener("DOMContentLoaded", () => {
     let target         = dom.dataset.urlTarget;
     let alertThreshold = Number(dom.dataset.alertThreshold)  || 60;
     let interval       = Number(dom.dataset.pollingInterval) || 5;
-    var secondsLeft    = Number(dom.dataset.secondsLeft)     || Number(getRemainingTimePromise(source)) || 0.0;
+    var secondsLeft;
+    
+    if (dom.dataset.secondsLeft) {
+        secondsLeft = Number(dom.dataset.secondsLeft);
+    } else if (source) {
+        secondsLeft = Number(getRemainingTimePromise(source));
+    } else {
+        secondsLeft = 0.0;
+    }
 
     // fix for arriving at the 'timed out' page whilst still being logged in
     if (window.location.href == target) {

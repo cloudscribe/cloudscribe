@@ -1,9 +1,9 @@
 ﻿@model cloudscribe.Core.Web.ViewModels.SiteSettings.PrivacyPolicyViewModel
 @inject IStringLocalizer<CloudscribeCore> sr
 @inject ICoreThemeHelper themeHelper
-@inject ICkeditorOptionsResolver editorOptionsResolver
+@inject ITinyMceEditorOptionsResolver editorOptionsResolver
 @{
-    var ckOptions = await editorOptionsResolver.GetCkeditorOptions();
+    var mceOptions = await editorOptionsResolver.GetTinyMceEditorOptions();
     var themeSettings = themeHelper.GetThemeSettings();
     if (themeSettings.AdminSideNavExpanded) { ViewData["SideNavToggle"] = "show"; }
     ViewData["SideNavVisible"] = true;
@@ -25,13 +25,7 @@
     </div>
     <div class="mb-3">
         <label class="form-label" asp-for="PrivacyPolicy">@sr["Privacy Policy"]</label>
-        <textarea class="form-control" rows="5" asp-for="PrivacyPolicy"
-                  data-ckeditor-unobtrusive=""
-                  data-ckeditor-config-url="@ckOptions.CustomConfigPath"
-                  data-ckeditor-config-language="@ckOptions.LanguageCode"
-                  data-ckeditor-config-dropfileuploadurl="@ckOptions.DropFileUrl"
-                  data-ckeditor-config-filebrowserurl="@ckOptions.FileBrowseUrl"
-                  data-ckeditor-config-imagebrowseurl="@ckOptions.ImageBrowseUrl"></textarea>
+        <textarea class="form-control" rows="5" asp-for="PrivacyPolicy" data-tinymce="" data-tinymce-config-url="@mceOptions.CustomConfigPath"></textarea>
         <span asp-validation-for="PrivacyPolicy" class="invalid-feedback"></span>
     </div>
 
@@ -52,6 +46,6 @@
     <script src="~/cr/js/unobtrusive-validation-bs4.min.js"></script>
     <script src="~/cr/js/jquery.validate.hooks.min.js"></script>
     <script src="~/cr/js/jqueryvaildation.submitonce-unobtrusive.min.js"></script>
-    <script src="~/cr/js/ckeditor4114/ckeditor.js"></script>
-    <script src="~/cr/js/cloudscribe-ckeditor-unobtrusive.min.js"></script>
+    <script src="~/cr/js/tinymce/tinymce.min.js" asp-append-version="true"></script>
+    <script src="~/cr/js/cloudscribe-tinymceeditor-unobtrusive.js" asp-append-version="true"></script>
 }

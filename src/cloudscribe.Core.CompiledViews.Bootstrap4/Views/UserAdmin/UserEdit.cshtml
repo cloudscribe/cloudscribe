@@ -1,9 +1,9 @@
 ﻿@model cloudscribe.Core.Web.ViewModels.Account.EditUserViewModel
 @inject ICoreThemeHelper themeHelper
 @inject IStringLocalizer<CloudscribeCore> sr
-@inject ICkeditorOptionsResolver editorOptionsResolver
+@inject ITinyMceEditorOptionsResolver editorOptionsResolver
 @{
-    var ckOptions = await editorOptionsResolver.GetCkeditorOptions();
+    var mceOptions = await editorOptionsResolver.GetTinyMceEditorOptions();
     var themeSettings = themeHelper.GetThemeSettings();
     if (themeSettings.AdminSideNavExpanded) { ViewData["SideNavToggle"] = "show"; }
     ViewData["SideNavVisible"] = true;
@@ -116,11 +116,11 @@
         <label asp-for="Comment"></label>
         <textarea class="form-control" rows="5" asp-for="Comment"
                   data-ckeditor-unobtrusive=""
-                  data-ckeditor-config-url="@ckOptions.CustomConfigPath"
-                  data-ckeditor-config-language="@ckOptions.LanguageCode"
-                  data-ckeditor-config-dropfileuploadurl="@ckOptions.DropFileUrl"
-                  data-ckeditor-config-filebrowserurl="@ckOptions.FileBrowseUrl"
-                  data-ckeditor-config-imagebrowseurl="@ckOptions.ImageBrowseUrl"></textarea>
+                  data-ckeditor-config-url="@mceOptions.CustomConfigPath"
+                  data-ckeditor-config-language="@mceOptions.LanguageCode"
+                  data-ckeditor-config-dropfileuploadurl="@mceOptions.DropFileUrl"
+                  data-ckeditor-config-filebrowserurl="@mceOptions.FileBrowseUrl"
+                  data-ckeditor-config-imagebrowseurl="@mceOptions.ImageBrowseUrl"></textarea>
     </div>
 
     <div class="form-group">

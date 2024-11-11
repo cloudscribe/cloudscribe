@@ -505,8 +505,13 @@
                     window.parent.FileSelectCallback(fileUrl);
                 }
                 else {
-                    window.opener.CKEDITOR.tools.callFunction(funcNum, fileUrl);
-                    window.close();
+					window.parent.postMessage({
+						mceAction: 'insertContent',
+						content: '<img src="' + fileUrl + '" />'
+					}, '*');
+					window.parent.postMessage({
+						mceAction: 'close'
+					}, origin);
                 }
 
 

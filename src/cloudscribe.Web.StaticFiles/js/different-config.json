@@ -1,0 +1,11 @@
+{
+    "toolbar": [
+        "fullscreen code | preview print | cut copy paste pastetext | undo redo | searchreplace | selectall | image imageuploader | codesample | table | hr | charmap | pagebreak | accordion | emoticons | help",
+        "blocks | bold italic underline strikethrough subscript superscript | forecolor backcolor | removeformat | numlist bullist | indent outdent | blockquote | alignleft aligncenter alignright alignjustify alignnone | link unlink | anchor"
+    ],
+    "plugins": "fullscreen code preview searchreplace image imageuploader codesample table charmap pagebreak accordion emoticons lists advlist link anchor",
+	"menubar": true,
+    "promotion": false,
+    "branding": false,
+    "license_key": "gpl"
+}

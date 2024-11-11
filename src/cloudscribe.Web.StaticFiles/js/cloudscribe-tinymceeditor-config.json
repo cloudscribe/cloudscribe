@@ -1,0 +1,19 @@
+{
+    "toolbar": "fullscreen code | cut copy paste pastetext | undo redo | searchreplace | selectall removeformat | image imageuploader | codesample | table | hr charmap emoticons | accordion | help | blocks bold italic underline strikethrough subscript superscript | numlist bullist | blockquote | alignleft aligncenter alignright alignjustify | link unlink anchor",
+    "plugins": "fullscreen code searchreplace image imageuploader codesample table charmap accordion emoticons lists advlist link anchor help autosave quickbars cloudscribefiledrop",
+	"help_tabs": [
+		"shortcuts",
+		"keyboardnav"
+	],
+	"toolbar_mode": "sliding",
+	"autosave_restore_when_empty": true,
+	"quickbars_insert_toolbar": "quicktable codesample",
+	"quickbars_selection_toolbar": "bold italic | quicklink h2 h3 blockquote quicktable",
+	"contextmenu": "undo redo | inserttable | cell row column deletetable | help",
+	"width": "100%",
+	"language": "en-GB",
+	"menubar": false,
+    "promotion": false,
+    "branding": false,
+    "license_key": "gpl"
+}

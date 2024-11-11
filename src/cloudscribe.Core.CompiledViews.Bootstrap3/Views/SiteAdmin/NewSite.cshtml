@@ -7,7 +7,7 @@
 @using Microsoft.Extensions.Options
 @using Microsoft.Extensions.Localization
 @inject IStringLocalizer<CloudscribeCore> sr
-@inject ICkeditorOptionsResolver editorOptionsResolver
+@inject ITinyMceEditorOptionsResolver editorOptionsResolver
 @inject IOptions<MultiTenantOptions> multiTenantOptionsAccessor
 @{
     MultiTenantOptions multiTenantOptions = multiTenantOptionsAccessor.Value;
@@ -15,7 +15,7 @@
     if (multiTenantOptions.Mode != MultiTenantMode.FolderName) { useFolderTenants = false; }
     bool useHostTenants = true;
     if (multiTenantOptions.Mode != MultiTenantMode.HostName) { useHostTenants = false; }
-    var ckOptions = await editorOptionsResolver.GetCkeditorOptions();
+    var mceOptions = await editorOptionsResolver.GetTinyMceEditorOptions();
     var baseUrl = this.Context.Request.GetCurrentBaseUrl() + "/";
 }
 <div class="row">
@@ -94,11 +94,11 @@
                 <div class="col-md-10">
                     <textarea class="form-control" rows="5" asp-for="ClosedMessage"
                               data-ckeditor-unobtrusive=""
-                              data-ckeditor-config-url="@ckOptions.CustomConfigPath"
-                              data-ckeditor-config-language="@ckOptions.LanguageCode"
-                              data-ckeditor-config-dropfileuploadurl="@ckOptions.DropFileUrl"
-                              data-ckeditor-config-filebrowserurl="@ckOptions.FileBrowseUrl"
-                              data-ckeditor-config-imagebrowseurl="@ckOptions.ImageBrowseUrl"></textarea>
+                              data-ckeditor-config-url="@mceOptions.CustomConfigPath"
+                              data-ckeditor-config-language="@mceOptions.LanguageCode"
+                              data-ckeditor-config-dropfileuploadurl="@mceOptions.DropFileUrl"
+                              data-ckeditor-config-filebrowserurl="@mceOptions.FileBrowseUrl"
+                              data-ckeditor-config-imagebrowseurl="@mceOptions.ImageBrowseUrl"></textarea>
                     <span asp-validation-for="ClosedMessage" class="text-danger"></span>
                 </div>
             </div>

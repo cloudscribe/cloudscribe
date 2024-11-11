@@ -6,9 +6,9 @@
 @using Microsoft.Extensions.Options
 @using Microsoft.Extensions.Localization
 @inject IStringLocalizer<CloudscribeCore> sr
-@inject ICkeditorOptionsResolver editorOptionsResolver
+@inject ITinyMceEditorOptionsResolver editorOptionsResolver
 @{
-    var ckOptions = await editorOptionsResolver.GetCkeditorOptions();
+    var mceOptions = await editorOptionsResolver.GetTinyMceEditorOptions();
 }
 <div class="row">
     <div class="col-md-10 col-md-push-2">
@@ -20,22 +20,22 @@
                 <label asp-for="LoginInfoTop" class="control-label">@sr["Login Info Top"]</label>
                 <textarea class="form-control" rows="5" asp-for="LoginInfoTop"
                           data-ckeditor-unobtrusive=""
-                          data-ckeditor-config-url="@ckOptions.CustomConfigPath"
-                          data-ckeditor-config-language="@ckOptions.LanguageCode"
-                          data-ckeditor-config-dropfileuploadurl="@ckOptions.DropFileUrl"
-                          data-ckeditor-config-filebrowserurl="@ckOptions.FileBrowseUrl"
-                          data-ckeditor-config-imagebrowseurl="@ckOptions.ImageBrowseUrl"></textarea>
+                          data-ckeditor-config-url="@mceOptions.CustomConfigPath"
+                          data-ckeditor-config-language="@mceOptions.LanguageCode"
+                          data-ckeditor-config-dropfileuploadurl="@mceOptions.DropFileUrl"
+                          data-ckeditor-config-filebrowserurl="@mceOptions.FileBrowseUrl"
+                          data-ckeditor-config-imagebrowseurl="@mceOptions.ImageBrowseUrl"></textarea>
                 <span asp-validation-for="LoginInfoTop" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="LoginInfoBottom" class="control-label">@sr["Login Info Bottom"]</label>
                 <textarea class="form-control" rows="5" asp-for="LoginInfoBottom"
                           data-ckeditor-unobtrusive=""
-                          data-ckeditor-config-url="@ckOptions.CustomConfigPath"
-                          data-ckeditor-config-language="@ckOptions.LanguageCode"
-                          data-ckeditor-config-dropfileuploadurl="@ckOptions.DropFileUrl"
-                          data-ckeditor-config-filebrowserurl="@ckOptions.FileBrowseUrl"
-                          data-ckeditor-config-imagebrowseurl="@ckOptions.ImageBrowseUrl"></textarea>
+                          data-ckeditor-config-url="@mceOptions.CustomConfigPath"
+                          data-ckeditor-config-language="@mceOptions.LanguageCode"
+                          data-ckeditor-config-dropfileuploadurl="@mceOptions.DropFileUrl"
+                          data-ckeditor-config-filebrowserurl="@mceOptions.FileBrowseUrl"
+                          data-ckeditor-config-imagebrowseurl="@mceOptions.ImageBrowseUrl"></textarea>
                 <span asp-validation-for="LoginInfoBottom" class="text-danger"></span>
             </div>
             <div class="form-group">

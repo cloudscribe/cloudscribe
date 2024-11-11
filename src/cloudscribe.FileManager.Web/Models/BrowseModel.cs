@@ -10,9 +10,9 @@
         /// <summary>
         /// the client side id of the editor
         /// </summary>
-        public string CKEditor { get; set; }
+        public string TinyMceEditor { get; set; }
 
-        public string CKEditorFuncNum { get; set; }
+        public string TinyMceEditorFuncNum { get; set; }
 
         public string LangCode { get; set; } = "en";
 

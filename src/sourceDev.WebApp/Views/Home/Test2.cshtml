@@ -1,10 +1,10 @@
 ﻿@using Microsoft.AspNetCore.Antiforgery
 @inject IAntiforgery antiforgery
-@inject ICkeditorOptionsResolver editorOptionsResolver
+@inject ITinyMceEditorOptionsResolver editorOptionsResolver
 @{
     ViewData["Title"] = "Test2";
     var tokens = antiforgery.GetAndStoreTokens(Context);
-    var ckOptions = await editorOptionsResolver.GetCkeditorOptions();
+    var mceOptions = await editorOptionsResolver.GetTinyMceEditorOptions();
 }
 @section Styles {
     <link rel="stylesheet" href="/cr/css/dropzone.min.css" />
@@ -60,8 +60,8 @@
              data-dropzone=""
              data-upload-url="@Url.Action("DropFile", "FileManager")"
              data-anti-forgery-token="@tokens.RequestToken"
-             data-file-browse-url="@ckOptions.ImageBrowseUrl"
-             data-file-crop-url="@ckOptions.CropFileUrl"
+             data-file-browse-url="@mceOptions.ImageBrowseUrl"
+             data-file-crop-url="@mceOptions.CropFileUrl"
              data-target-path="/media/gallery"
              data-create-thumb="false"
              data-resize-image="true"
@@ -109,8 +109,8 @@
              data-dropzone=""
              data-upload-url="@Url.Action("DropFile", "FileManager")"
              data-anti-forgery-token="@tokens.RequestToken"
-             data-file-browse-url="@ckOptions.ImageBrowseUrl"
-             data-file-crop-url="@ckOptions.CropFileUrl"
+             data-file-browse-url="@mceOptions.ImageBrowseUrl"
+             data-file-crop-url="@mceOptions.CropFileUrl"
              data-target-path="/media/folder2"
              data-target-fullsize-input-id="imgUrl2"
              data-target-resized-input-id="imgUrl2Resized"

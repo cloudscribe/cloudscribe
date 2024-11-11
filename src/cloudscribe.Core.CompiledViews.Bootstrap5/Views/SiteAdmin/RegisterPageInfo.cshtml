@@ -1,12 +1,12 @@
 ﻿@model cloudscribe.Core.Web.ViewModels.SiteSettings.RegisterInfoViewModel
-@inject ICkeditorOptionsResolver editorOptionsResolver
+@inject ITinyMceEditorOptionsResolver editorOptionsResolver
 @inject IStringLocalizer<CloudscribeCore> sr
 @inject ICoreThemeHelper themeHelper
 @{
     var themeSettings = themeHelper.GetThemeSettings();
     if (themeSettings.AdminSideNavExpanded) { ViewData["SideNavToggle"] = "show"; }
     ViewData["SideNavVisible"] = true;
-    var ckOptions = await editorOptionsResolver.GetCkeditorOptions();
+    var mceOptions = await editorOptionsResolver.GetTinyMceEditorOptions();
 }
 <h2>@ViewBag.Title</h2>
 <form method="post" role="form" asp-antiforgery="true" data-submit-once="true">
@@ -14,24 +14,12 @@
     <input asp-for="SiteId" type="hidden" />
     <div class="mb-3">
         <label class="form-label" asp-for="RegistrationPreamble">@sr["Registration Preamble"]</label>
-        <textarea class="form-control" rows="5" asp-for="RegistrationPreamble"
-                  data-ckeditor-unobtrusive=""
-                  data-ckeditor-config-url="@ckOptions.CustomConfigPath"
-                  data-ckeditor-config-language="@ckOptions.LanguageCode"
-                  data-ckeditor-config-dropfileuploadurl="@ckOptions.DropFileUrl"
-                  data-ckeditor-config-filebrowserurl="@ckOptions.FileBrowseUrl"
-                  data-ckeditor-config-imagebrowseurl="@ckOptions.ImageBrowseUrl"></textarea>
+        <textarea class="form-control" rows="5" asp-for="RegistrationPreamble" data-tinymce="" data-tinymce-config-url="@mceOptions.CustomConfigPath"></textarea>
         <span asp-validation-for="RegistrationPreamble" class="text-danger"></span>
     </div>
     <div class="mb-3">
         <label class="form-label" asp-for="RegistrationAgreement">@sr["Registration Agreement/Terms of Use"]</label>
-        <textarea class="form-control" rows="5" asp-for="RegistrationAgreement"
-                  data-ckeditor-unobtrusive=""
-                  data-ckeditor-config-url="@ckOptions.CustomConfigPath"
-                  data-ckeditor-config-language="@ckOptions.LanguageCode"
-                  data-ckeditor-config-dropfileuploadurl="@ckOptions.DropFileUrl"
-                  data-ckeditor-config-filebrowserurl="@ckOptions.FileBrowseUrl"
-                  data-ckeditor-config-imagebrowseurl="@ckOptions.ImageBrowseUrl"></textarea>
+        <textarea class="form-control" rows="5" asp-for="RegistrationAgreement" data-tinymce="" data-tinymce-config-url="@mceOptions.CustomConfigPath"></textarea>
         <span asp-validation-for="RegistrationAgreement" class="text-danger"></span>
     </div>
     <div class="mb-3">
@@ -56,6 +44,6 @@
     <script src="~/cr/js/jquery.validate.unobtrusive.min.js"></script>
     <script src="~/cr/js/jquery.validate.hooks.min.js"></script>
     <script src="~/cr/js/jqueryvaildation.submitonce-unobtrusive.min.js"></script>
-    <script src="~/cr/js/ckeditor4114/ckeditor.js"></script>
-    <script src="~/cr/js/cloudscribe-ckeditor-unobtrusive.min.js"></script>
+    <script src="~/cr/js/tinymce/tinymce.min.js" asp-append-version="true"></script>
+    <script src="~/cr/js/cloudscribe-tinymceeditor-unobtrusive.js" asp-append-version="true"></script>
 }

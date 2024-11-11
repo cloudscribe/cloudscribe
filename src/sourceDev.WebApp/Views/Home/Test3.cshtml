@@ -1,7 +1,7 @@
-﻿@inject ICkeditorOptionsResolver editorOptionsResolver
+﻿@inject ITinyMceEditorOptionsResolver editorOptionsResolver
 @{
     ViewData["Title"] = "Test3";
-    var ckOptions = await editorOptionsResolver.GetCkeditorOptions();
+    var mceOptions = await editorOptionsResolver.GetTinyMceEditorOptions();
 }
 
 <h2>Test3</h2>
@@ -16,7 +16,7 @@
                 data-file-selector="true"
                 data-target-input-id="input1"
                 data-alt-target-input-id="altinput"
-                data-file-browse-url="@ckOptions.VideoBrowseUrl">
+                data-file-browse-url="@mceOptions.VideoBrowseUrl">
             Browse Files
         </button>
     </div>
@@ -29,7 +29,7 @@
         <button class="btn btn-outline-primary" id="btnFile2" type="button"
                 data-file-selector="true"
                 data-target-input-id="input2"
-                data-file-browse-url="@ckOptions.AudioBrowseUrl">
+                data-file-browse-url="@mceOptions.AudioBrowseUrl">
             Browse Files
         </button>
     </div>
