@@ -210,7 +210,4 @@
   <data name="View User Activity" xml:space="preserve">
 	<value>Afficher l'activité de l'utilisateur</value>
   </data>
-  <data name="Back to User Edit" xml:space="preserve">
-    <value>Retour à l'édition de l'utilisateur</value>
-  </data>
 </root>
