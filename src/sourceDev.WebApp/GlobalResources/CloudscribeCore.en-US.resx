@@ -1318,4 +1318,7 @@
   <data name="Password expiry alert display (days)" xml:space="preserve">
 	<value>Password expiry alert display (days)</value>
   </data>
+  <data name="View User Activity" xml:space="preserve">
+	<value>View User Activity</value>
+  </data>
 </root>
