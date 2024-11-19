@@ -5,6 +5,8 @@
 @{
     var lastLogin = "";
     var lastPasswordChange = "";
+    var userCreatedDate = tzHelper.ConvertToLocalTime(Model.CreatedUtc, Model.TimeZoneId).ToString("g"); ;
+
     if (Model.LastLoginUtc != null)
     {
         lastLogin = tzHelper.ConvertToLocalTime(Model.LastLoginUtc.Value, Model.TimeZoneId).ToString("g");
@@ -37,7 +39,7 @@
     </tr>
     <tr>
         <th>@sr["Created"]</th>
-        <td>@Model.CreatedUtc</td>
+        <td>@userCreatedDate</td>
     </tr>
     <tr>
         <th>@sr["Last Login"]</th>
@@ -137,11 +139,17 @@
 }
 
 @section SideNav {
-    @{ await Html.RenderPartialAsync("AdminSideNav"); }
+    @{
+        await Html.RenderPartialAsync("AdminSideNav");
+    }
 }
-@section Toolbar{
-    @{ await Html.RenderPartialAsync("AdminSideNavToggle"); }
+@section Toolbar {
+    @{
+        await Html.RenderPartialAsync("AdminSideNavToggle");
+    }
 }
 @section scripts {
-    @{ await Html.RenderPartialAsync("AdminSideNavScripts"); }
+    @{
+        await Html.RenderPartialAsync("AdminSideNavScripts");
+    }
 }
