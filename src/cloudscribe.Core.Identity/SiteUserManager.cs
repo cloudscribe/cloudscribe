@@ -296,20 +296,20 @@ namespace cloudscribe.Core.Identity
             var mustChangePwd = user.MustChangePwd; 
 
             var hash = newPassword != null ? this._passwordHasher.HashPassword(user, newPassword) : null;
-            var passwordStore = GetPasswordStore();
-            await passwordStore.SetPasswordHashAsync(user, hash, CancellationToken);
-            IdentityResult passwordDifferentFromPrevious = CheckPasswordIsDifferentFromPrevious(user, hash);
 
+            IdentityResult passwordDifferentFromPrevious = CheckPasswordIsDifferentFromPrevious(user, hash);
             if (!passwordDifferentFromPrevious.Succeeded)
             {
                 return passwordDifferentFromPrevious;
             }
 
+            var passwordStore = GetPasswordStore();
+            await passwordStore.SetPasswordHashAsync(user, hash, CancellationToken);
+
             user.MustChangePwd = mustChangePwd;
             await UpdateAsync(user);
             
             return IdentityResult.Success;
-
         }
 
         protected async Task<IdentityResult> ValidatePassword(TUser user, string password)
