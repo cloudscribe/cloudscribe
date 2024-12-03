@@ -1,8 +1,8 @@
 ﻿@model cloudscribe.Core.Web.Components.Messaging.SiteMessageModel
-@inject ICkeditorOptionsResolver editorOptionsResolver
+@inject ISummernoteOptionsResolver summernoteOptionsResolver
 @inject IStringLocalizer<CloudscribeCore> sr
 @{
-    var ckOptions = await editorOptionsResolver.GetCkeditorOptions();
+    var summernoteOptions = await summernoteOptionsResolver.GetSummernoteOptions();
     var ckBaseRef = Context.Request.GetCurrentBaseUrl();
 }
 <h3>@sr["Send Test Message"]</h3>
@@ -28,14 +28,15 @@
 
     <div class="mb-3">
         <label class="form-label" asp-for="HtmlBody">@sr["Message"]</label>
-        <textarea class="form-control" rows="5" id="HtmlBody-@Guid.NewGuid().ToString()" name="HtmlBody"
-                  data-ckeditor-unobtrusive=""
-                  data-ckeditor-config-basehref="@ckBaseRef"
-                  data-ckeditor-config-url="@ckOptions.CustomConfigPath"
-                  data-ckeditor-config-language="@ckOptions.LanguageCode"
-                  data-ckeditor-config-dropfileuploadurl="@ckOptions.DropFileUrl"
-                  data-ckeditor-config-filebrowserurl="@ckOptions.FileBrowseUrl"
-                  data-ckeditor-config-imagebrowseurl="@ckOptions.ImageBrowseUrl"></textarea>
+        <textarea id="HtmlBody-@Guid.NewGuid().ToString()" name="HtmlBody" rows="5"
+            data-summernote-unobtrusive=""
+            data-summernote-config-url="@summernoteOptions.CustomConfigPath"
+            data-summernote-toolbar-config-url="@summernoteOptions.CustomToolbarConfigPath"
+            data-summernote-config-language="@summernoteOptions.LanguageCode"
+            data-summernote-config-dropfileuploadurl="@summernoteOptions.DropFileUrl"
+            data-summernote-config-filebrowserurl="@summernoteOptions.FileBrowseUrl"
+            data-summernote-config-imagebrowseurl="@summernoteOptions.ImageBrowseUrl">
+        </textarea>
         <span asp-validation-for="HtmlBody" class="text-danger"></span>
     </div>
 
@@ -43,5 +44,4 @@
     <div class="mb-3">
         <button id="btnSave" name="submit" type="submit" class="btn btn-primary" data-disabled-text='@sr["Working..."]' data-enabled-text='@sr["Send"]'>@sr["Send"]</button>
     </div>
-
 </form>

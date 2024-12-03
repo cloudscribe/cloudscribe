@@ -1,9 +1,9 @@
 ﻿@model cloudscribe.Core.Web.ViewModels.Account.EditUserViewModel
 @inject ICoreThemeHelper themeHelper
 @inject IStringLocalizer<CloudscribeCore> sr
-@inject ICkeditorOptionsResolver editorOptionsResolver
+@inject ISummernoteOptionsResolver summernoteOptionsResolver
 @{
-    var ckOptions = await editorOptionsResolver.GetCkeditorOptions();
+    var summernoteOptions = await summernoteOptionsResolver.GetSummernoteOptions();
     var themeSettings = themeHelper.GetThemeSettings();
     if (themeSettings.AdminSideNavExpanded) { ViewData["SideNavToggle"] = "show"; }
     ViewData["SideNavVisible"] = true;
@@ -11,6 +11,7 @@
 }
 @section Styles {
     <partial name="UserEditStylePartial" />
+    <link href="/cr/css/summernote-bs5.min.css" rel="stylesheet">
 }
 <h2>@ViewData["Title"]</h2>
 @if (Model.UserId != Guid.Empty && !Model.AccountApproved)
@@ -145,13 +146,15 @@
     <partial name="UserEditMiddlePartial" model="Model" />
     <div class="mb-3">
         <label class="form-label" asp-for="Comment"></label>
-        <textarea class="form-control" rows="5" asp-for="Comment"
-                  data-ckeditor-unobtrusive=""
-                  data-ckeditor-config-url="@ckOptions.CustomConfigPath"
-                  data-ckeditor-config-language="@ckOptions.LanguageCode"
-                  data-ckeditor-config-dropfileuploadurl="@ckOptions.DropFileUrl"
-                  data-ckeditor-config-filebrowserurl="@ckOptions.FileBrowseUrl"
-                  data-ckeditor-config-imagebrowseurl="@ckOptions.ImageBrowseUrl"></textarea>
+        <textarea asp-for="Comment" rows="5"
+            data-summernote-unobtrusive=""
+            data-summernote-config-url="@summernoteOptions.CustomConfigPath"
+            data-summernote-toolbar-config-url="@summernoteOptions.CustomToolbarConfigPath"
+            data-summernote-config-language="@summernoteOptions.LanguageCode"
+            data-summernote-config-dropfileuploadurl="@summernoteOptions.DropFileUrl"
+            data-summernote-config-filebrowserurl="@summernoteOptions.FileBrowseUrl"
+            data-summernote-config-imagebrowseurl="@summernoteOptions.ImageBrowseUrl">
+        </textarea>
     </div>
 
     <div class="mb-3">
@@ -228,22 +231,10 @@
             <button type="submit" id="btn_resetpwd" class="ms-2 btn btn-primary">@sr["Send"]</button>
         </div>
     </form>
-
-@*     
-    No idea why we were doing this - jk    
-    <script type="text/javascript">
-        function DisableButton() {
-            document.getElementById("btn_resetpwd").disabled = true;
-        }
-        window.onbeforeunload = DisableButton;
-    </script> *@
 }
-
 
 <partial name="UserRoles" model="Model" />
 <partial name="UserClaims" model="Model" />
-
-
 @section SideNav {
     <partial name="AdminSideNav" />
 }
@@ -253,4 +244,5 @@
 @section Scripts {
     <partial name="AdminSideNavScripts" />
     <partial name="UserEditScriptsPartial" />
+    <partial name="SummernoteScripts" />
 }
