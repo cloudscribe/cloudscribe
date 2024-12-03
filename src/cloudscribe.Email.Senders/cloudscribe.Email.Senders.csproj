@@ -2,8 +2,8 @@
 
   <PropertyGroup>
     <Description>Classes that provide a common interface for sending email with smtp or popular email apis including SendGrid, Mailgun, and ElasticEmail</Description>
-    <Version>8.0.0</Version>
-    <AssemblyVersion>8.0.0</AssemblyVersion>
+    <Version>8.0.1</Version>
+    <AssemblyVersion>8.0.1</AssemblyVersion>
     <Authors>Joe Audette</Authors>
     <TargetFramework>net8.0</TargetFramework>
     <PackageTags>smtp;email;SendGrid,Mailgun,ElasticEmail</PackageTags>
@@ -24,8 +24,8 @@
     <PackageReference Include="Microsoft.Extensions.Options" Version="8.0.0" />
     <PackageReference Include="Microsoft.Extensions.Options.ConfigurationExtensions" Version="8.0.0" />
     <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="8.0.0" />
-    <PackageReference Include="MailKit" Version="4.4.0" />
-    <PackageReference Include="MimeKit" Version="4.7.1" />
+    <PackageReference Include="MailKit" Version="4.8.0" />
+    <PackageReference Include="MimeKit" Version="4.8.0" />
     <PackageReference Include="SendGrid" Version="9.29.2" />
   </ItemGroup>
 
