@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <Description>asp.net identity implementation for cloudscribe web application foundation</Description>
-    <Version>8.0.8</Version>
+    <Version>8.0.9</Version>
     <Authors>Joe Audette</Authors>
     <TargetFramework>net8.0</TargetFramework>
     <PackageTags>cloudscribe;identity</PackageTags>
@@ -49,6 +49,12 @@
     <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
     
     <PackageReference Include="System.Security.Claims" Version="4.3.*" />
+    
+    <!-- pulling up transitive deps to resolve security vulns -->
+    <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="8.2.*" />
+    <PackageReference Include="Microsoft.IdentityModel.JsonWebTokens" Version="8.2.*" />
+    <PackageReference Include="System.Text.Encodings.Web" Version="8.0.0" />
+    
   </ItemGroup>
 
 </Project>

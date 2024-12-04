@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <Description>model classes for cloudscribe core. you should not normally install this separately, it will be installed if you install cloudscribe.Core.Web</Description>
-    <Version>8.0.6</Version>
+    <Version>8.0.7</Version>
     <TargetFramework>net8.0</TargetFramework>
     <Authors>Joe Audette</Authors>
     <PackageTags>cloudscribe;models</PackageTags>
@@ -21,6 +21,13 @@
     <PackageReference Include="cloudscribe.Pagination.Models" Version="8.0.0" />
     <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="8.0.0" />
     <PackageReference Include="System.Data.Common" Version="4.3.0" />
+
+
+    <!-- should not have to do this, but system.data.common has a transitive dep on 
+    system.text.regularexpressions which is a vuln at 4.3.0
+    -->
+    <PackageReference Include="System.Text.RegularExpressions" Version="4.3.1" />
+    
   </ItemGroup>
 
   <ItemGroup>
