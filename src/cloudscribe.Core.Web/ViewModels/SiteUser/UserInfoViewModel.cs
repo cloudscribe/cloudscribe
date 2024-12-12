@@ -22,5 +22,8 @@ namespace cloudscribe.Core.Web.ViewModels.SiteUser
 
         public string AvatarUrl { get; set; }
         public string UserName { get; set; }
+
+        [StringLength(100, ErrorMessage = "Display Name has a maximum length of 100 characters")]
+        public string DisplayName { get; set; }
     }
 }

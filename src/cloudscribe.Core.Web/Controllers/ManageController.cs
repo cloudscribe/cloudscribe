@@ -510,7 +510,8 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
                 WebSiteUrl  = user.WebSiteUrl,
                 PhoneNumber = user.PhoneNumber,
                 AvatarUrl   = user.AvatarUrl,
-                UserName = user.UserName
+                UserName = user.UserName,
+                DisplayName = user.DisplayName
             };
 
             var viewName = await CustomUserInfo.GetUserInfoViewName(CurrentSite, user, HttpContext);
@@ -560,6 +561,7 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
                 user.RolesChanged = (user.AvatarUrl != model.AvatarUrl);
                 user.WebSiteUrl   = model.WebSiteUrl;
                 user.AvatarUrl    = model.AvatarUrl;
+                user.DisplayName = model.DisplayName;
 
                 await CustomUserInfo.HandleUserInfoPostSuccess(
                         CurrentSite,
@@ -614,36 +616,6 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
             return RedirectToAction("ManageLogins");
 
         }
-
-
-        // GET: /Manage/AddPhoneNumber
-        //[HttpGet]
-        //public IActionResult AddPhoneNumber()
-        //{
-        //    return View();
-        //}
-
-
-        //// POST: /Manage/AddPhoneNumber
-        //[HttpPost]
-        //[ValidateAntiForgeryToken]
-        //public async Task<IActionResult> AddPhoneNumber(AddPhoneNumberViewModel model)
-        //{
-        //    if (!ModelState.IsValid)
-        //    {
-        //        return View(model);
-        //    }
-        //    // Generate the token and send it
-        //    var user = await userManager.FindByIdAsync(HttpContext.User.GetUserId());
-        //    var code = await userManager.GenerateChangePhoneNumberTokenAsync(user, model.Number);
-        //    await smsSender.SendSmsAsync(
-        //        Site, 
-        //        model.Number,
-        //        string.Format(sr["Your security code is: {0}"], code)
-        //        );
-        //    return RedirectToAction("VerifyPhoneNumber", new { PhoneNumber = model.Number });
-
-        //}
 
         [Authorize]
         [HttpGet]
@@ -859,7 +831,6 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
         }
 
 
-        // POST: /Manage/EnableTwoFactorAuthentication
         [Authorize]
         [HttpPost]
         [ValidateAntiForgeryToken]
@@ -875,7 +846,6 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
         }
 
 
-        // POST: /Manage/DisableTwoFactorAuthentication
         [Authorize]
         [HttpPost]
         [ValidateAntiForgeryToken]
@@ -890,48 +860,6 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
             return RedirectToAction("Index", "Manage");
         }
 
-
-        // GET: /Manage/VerifyPhoneNumber
-        //[HttpGet]
-        //public async Task<IActionResult> VerifyPhoneNumber(string phoneNumber)
-        //{
-        //    var user = await userManager.FindByIdAsync(HttpContext.User.GetUserId());
-        //    var code = await userManager.GenerateChangePhoneNumberTokenAsync(user, phoneNumber);
-        //    // Send an SMS to verify the phone number
-        //    return phoneNumber == null ? View("Error") : View(new VerifyPhoneNumberViewModel { PhoneNumber = phoneNumber });
-        //}
-
-
-        //// POST: /Manage/VerifyPhoneNumber
-        //[HttpPost]
-        //[ValidateAntiForgeryToken]
-        //public async Task<IActionResult> VerifyPhoneNumber(VerifyPhoneNumberViewModel model)
-        //{
-        //    if (!ModelState.IsValid)
-        //    {
-        //        return View(model);
-        //    }
-        //    var user = await userManager.FindByIdAsync(HttpContext.User.GetUserId());
-        //    if (user != null)
-        //    {
-        //        var result = await userManager.ChangePhoneNumberAsync(user, model.PhoneNumber, model.Code);
-        //        if (result.Succeeded)
-        //        {
-        //            await signInManager.SignInAsync(user, isPersistent: false);
-
-        //            this.AlertSuccess(sr["Your phone number was added."]);
-
-        //            return RedirectToAction("Index");
-        //        }
-        //    }
-        //    // If we got this far, something failed, redisplay the form
-        //    ModelState.AddModelError(string.Empty, sr["Failed to verify phone number"]);
-        //    return View(model);
-
-        //}
-
-        //
-        // GET: /Manage/RemovePhoneNumber
         [Authorize]
         [HttpGet]
         public virtual async Task<IActionResult> RemovePhoneNumber()
@@ -953,8 +881,6 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
             return RedirectToAction("Index");
         }
 
-
-        // GET: /Manage/ChangePassword
         [Authorize]
         [HttpGet]
         public virtual IActionResult ChangePassword()
@@ -962,8 +888,6 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
             return View();
         }
 
-
-        // POST: /Manage/ChangePassword
         [Authorize]
         [HttpPost]
         [ValidateAntiForgeryToken]
@@ -998,11 +922,8 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
             }
 
             return View(model);
-
         }
 
-
-        // GET: /Manage/SetPassword
         [Authorize]
         [HttpGet]
         public virtual IActionResult SetPassword()
@@ -1010,8 +931,6 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
             return View();
         }
 
-
-        // POST: /Manage/SetPassword
         [Authorize]
         [HttpPost]
         [ValidateAntiForgeryToken]
@@ -1045,8 +964,6 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
             return View(model);
         }
 
-
-        // GET: /Manage/ManageLogins
         [Authorize]
         [HttpGet]
         public virtual async Task<IActionResult> ManageLogins()
@@ -1077,8 +994,6 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
             return View(model);
         }
 
-
-        // POST: /Manage/LinkLogin
         [Authorize]
         [HttpPost]
         [ValidateAntiForgeryToken]
@@ -1090,8 +1005,6 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
             return new ChallengeResult(provider, properties);
         }
 
-
-        // GET: /Manage/LinkLoginCallback
         [Authorize]
         [HttpGet]
         public virtual async Task<IActionResult> LinkLoginCallback()

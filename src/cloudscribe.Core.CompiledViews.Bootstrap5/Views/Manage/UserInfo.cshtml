@@ -77,7 +77,6 @@
             </div>
             <input id="imgUrlFull" type="hidden" />
             <input id="imgUrlResized" asp-for="AvatarUrl" type="hidden" />
-
         </div>
         <p>@sr["Don't forget to click the Update button below if you change your profile image."]</p>
     }
@@ -85,44 +84,24 @@
     {
         <input asp-for="AvatarUrl" type="hidden" />
     }
-
-    @if (string.IsNullOrWhiteSpace(Model.FirstName))
-    {
-        <div class="mb-3">
-            <label class="form-label" asp-for="FirstName">@sr["First Name"]</label>
-            <input asp-for="FirstName" class="form-control" />
-        </div>
-    }
-    else
-    {
-        <div class="mb-3">
-            <label class="form-label" asp-for="FirstName">@sr["First Name"]</label>
-            <input asp-for="FirstName" type="hidden" />
-            <span class="form-control">@Model.FirstName</span>
-        </div>
-    }
-    @if (string.IsNullOrWhiteSpace(Model.LastName))
-    {
-        <div class="mb-3">
-            <label class="form-label" asp-for="LastName">@sr["Last Name"]</label>
-            <input asp-for="LastName" class="form-control" />
-        </div>
-    }
-    else
-    {
-        <div class="mb-3">
-            <label class="form-label" asp-for="LastName">@sr["Last Name"]</label>
-            <input asp-for="LastName" type="hidden" />
-            <span class="form-control">@Model.LastName</span>
-        </div>
-    }
+    <div class="mb-3">
+        <label class="form-label" asp-for="DisplayName">@sr["Display Name"]</label>
+        <input asp-for="DisplayName" class="form-control" required />
+    </div>
+    <div class="mb-3">
+        <label class="form-label" asp-for="FirstName">@sr["First Name"]</label>
+        <input asp-for="FirstName" class="form-control" />
+    </div>
+    <div class="mb-3">
+        <label class="form-label" asp-for="LastName">@sr["Last Name"]</label>
+        <input asp-for="LastName" class="form-control" />
+    </div>
     <div class="mb-3">
         <label class="form-label" asp-for="PhoneNumber">@sr["Phone Number"]</label>
         <input asp-for="PhoneNumber" class="form-control" />
         <span asp-validation-for="PhoneNumber" class="invalid-feedback"></span>
     </div>
     <partial name="UserInfoDobPartial" model="Model" />
-
     <div class="mb-3">
         <label class="form-label" asp-for="WebSiteUrl">@sr["Website Url"]</label>
         <input asp-for="WebSiteUrl" class="form-control" />
@@ -134,5 +113,4 @@
 </form>
 @section Scripts {
     <partial name="UserInfoScriptsPartial" />
-
 }
