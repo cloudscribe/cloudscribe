@@ -926,27 +926,22 @@ namespace cloudscribe.Core.Storage.NoDb
 
             var folderPath = await _loginPathResolver.ResolvePath(projectId).ConfigureAwait(false);
 
-            // understand structure of key which is the filename
-            //var key = login.UserGuid.ToString()
-            //    + "~" + login.SiteGuid.ToString()
-            //    + "~" + login.LoginProvider
-            //    + "~" + login.ProviderKey;
-
-            var matchPattern = "*~" + siteId.ToString() + "~*";
-
-            var dir = new DirectoryInfo(folderPath);
-            var matches = dir.GetFiles(matchPattern);
-
-            foreach (var match in matches)
+            if (Directory.Exists(folderPath))
             {
-                var foundFileKey = Path.GetFileNameWithoutExtension(match.Name);
-                await _loginCommands.DeleteAsync(
-                    projectId,
-                    foundFileKey,
-                    cancellationToken).ConfigureAwait(false);
+                var matchPattern = "*~" + siteId.ToString() + "~*";
 
+                var dir = new DirectoryInfo(folderPath);
+                var matches = dir.GetFiles(matchPattern);
+
+                foreach (var match in matches)
+                {
+                    var foundFileKey = Path.GetFileNameWithoutExtension(match.Name);
+                    await _loginCommands.DeleteAsync(
+                        projectId,
+                        foundFileKey,
+                        cancellationToken).ConfigureAwait(false);
+                }
             }
-
         }
 
 
@@ -1096,19 +1091,21 @@ namespace cloudscribe.Core.Storage.NoDb
             //    + "~" + login.LoginProvider
             //    + "~" + login.Name;
 
-            var matchPattern = "*~" + siteId.ToString() + "~*";
-
-            var dir = new DirectoryInfo(folderPath);
-            var matches = dir.GetFiles(matchPattern);
-
-            foreach (var match in matches)
+            if (Directory.Exists(folderPath))
             {
-                var foundFileKey = Path.GetFileNameWithoutExtension(match.Name);
-                await _tokenCommands.DeleteAsync(
-                    projectId,
-                    foundFileKey,
-                    cancellationToken).ConfigureAwait(false);
+                var matchPattern = "*~" + siteId.ToString() + "~*";
 
+                var dir = new DirectoryInfo(folderPath);
+                var matches = dir.GetFiles(matchPattern);
+
+                foreach (var match in matches)
+                {
+                    var foundFileKey = Path.GetFileNameWithoutExtension(match.Name);
+                    await _tokenCommands.DeleteAsync(
+                        projectId,
+                        foundFileKey,
+                        cancellationToken).ConfigureAwait(false);
+                }
             }
         }
 
