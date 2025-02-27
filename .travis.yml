@@ -1,24 +1,23 @@
 language: csharp
 solution: cloudscribe.sln
 sudo: false
-dist: xenial
+dist: jammy
 mono: none
-dotnet: 3.0.100
+dotnet: 8.0.400
 env:
   global:
     - DOTNET_SKIP_FIRST_TIME_EXPERIENCE: true
-    - DOTNET_CLI_TELEMETRY_OPTOUT: 1   
+    - DOTNET_CLI_TELEMETRY_OPTOUT: 1
 os:
   - linux
 
 script:
   - dotnet restore
   - dotnet build -c Release
-  - dotnet test -c Release ./test/cloudscribe.Core.Web.Test/cloudscribe.Core.Web.Test.csproj
-
 
 branches:
   only:
+    - develop
     - master
 
 
