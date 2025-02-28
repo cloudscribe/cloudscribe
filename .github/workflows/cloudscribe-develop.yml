@@ -23,10 +23,10 @@ jobs:
     - name: Setup NuGet
       run: dotnet nuget add source ${{ secrets.NUGET_SOURCE_URL }} -u ${{secrets.NUGET_USERNAME }} -p ${{ secrets.NUGET_PASSWORD }} --store-password-in-clear-text
     - name: Restore dependencies
-      run: cd src && dotnet restore
+      run: dotnet restore
     - name: Build
-      run: cd src && dotnet build -c Release
+      run: dotnet build -c Release
     - name: Create NuGet package
-      run: cd src && dotnet pack -c Release
+      run: dotnet pack -c Release
     - name: Publish NuGet package
-      run: cd src && dotnet nuget push **/*.nupkg --source ${{ secrets.NUGET_SOURCE_URL }}
+      run: dotnet nuget push **/*.nupkg --source ${{ secrets.NUGET_SOURCE_URL }}
