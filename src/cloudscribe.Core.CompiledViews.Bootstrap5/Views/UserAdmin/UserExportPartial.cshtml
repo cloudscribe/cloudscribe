@@ -1,0 +1,28 @@
+@model cloudscribe.Core.Web.ViewModels.UserAdmin.UserListViewModel
+@inject IStringLocalizer<CloudscribeCore> sr
+
+<div class="row">
+    <div class="col">
+        <form class="form-inline" role="form" asp-controller="UserAdmin" method="get" asp-antiforgery="false">
+            <input asp-for="SiteId" type="hidden" />
+            <input asp-for="SortMode" type="hidden" />
+
+            @if(Model.ActionName == "Index")
+            {
+                <input asp-for="AlphaQuery" name="query" type="hidden" />
+                <button asp-action="IndexExport" type="submit" title='@sr["Export Users"]' value='@sr["Export Users"]' class="btn btn-primary">@sr["Export Users"]</button>
+            }
+            @if(Model.ActionName == "Search")
+            {
+                <input asp-for="SearchQuery" name="query" type="hidden" />
+                <button asp-action="SearchExport" type="submit" title='@sr["Export Users"]' value='@sr["Export Users"]' class="btn btn-primary">@sr["Export Users"]</button>
+            }
+            @if(Model.ActionName == "IpSearch")
+            {
+                <input asp-for="IpQuery" type="hidden" />
+                <button asp-action="IpSearchExport" type="submit" title='@sr["Export Users"]' value='@sr["Export Users"]' class="btn btn-primary">@sr["Export Users"]</button>
+            }
+        </form>
+    </div>
+</div>
+
