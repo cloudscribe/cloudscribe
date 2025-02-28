@@ -1,0 +1,32 @@
+# This workflow will build a .NET project
+# For more information see: https://docs.github.com/en/actions/automating-builds-and-tests/building-and-testing-net
+
+name: cloudscribe-develop-nuget-build
+
+on:
+  push:
+    branches: [ "develop" ]
+#   pull_request:
+#     branches: [ "develop" ]
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v4
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v4
+      with:
+        dotnet-version: 8.0.x
+    - name: Setup NuGet
+      run: dotnet nuget add source ${{ secrets.NUGET_SOURCE_URL }} -u ${{secrets.NUGET_USERNAME }} -p ${{ secrets.NUGET_PASSWORD }} --store-password-in-clear-text
+    - name: Restore dependencies
+      run: dotnet restore
+    - name: Build
+      run: dotnet build -c Release
+    - name: Create NuGet package
+      run: dotnet pack -c Release
+    - name: Publish NuGet package
+      run: dotnet nuget push **/*.nupkg --source ${{ secrets.NUGET_SOURCE_URL }}
