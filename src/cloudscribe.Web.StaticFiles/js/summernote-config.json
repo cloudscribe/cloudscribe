@@ -1,4 +1,5 @@
 {
+	"dialogsFade": true,
 	"height": 300,
 	"icons": {
 		"align": "fa fa-align",
@@ -33,7 +34,7 @@
 		"superscript": "fa fa-superscript",
 		"table": "fa fa-table",
 		"textHeight": "fa fa-text-height",
-		"trash": "<fa fa-trash",
+		"trash": "fa fa-trash",
 		"underline": "fa fa-underline",
 		"undo": "fa fa-undo",
 		"unorderedlist": "fa fa-list-ul",

@@ -116,8 +116,7 @@
 
 					var formData = new FormData();
 					formData.append("__RequestVerificationToken", dropFileXsrfToken);
-					formData.append(file.name, file);
-                    formData.append("uploadUrl", dropFileUploadUrl);
+					formData.append(file.name, file);                 
 
 					$.ajax({
 						type: "POST",
