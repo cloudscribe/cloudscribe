@@ -19,6 +19,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.AspNetCore.Mvc.ViewEngines;
 using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using Microsoft.AspNetCore.Routing;
+using Microsoft.Extensions.Localization;
 using System;
 using System.IO;
 using System.Linq;
@@ -38,7 +39,8 @@ namespace cloudscribe.Web.Common.Razor
             IHttpContextAccessor httpContextAccessor,
             IActionContextAccessor actionContextAccesor,
             IServiceProvider serviceProvider,
-            IViewRendererRouteProvider viewRendererRouteProvider
+            IViewRendererRouteProvider viewRendererRouteProvider,
+            IStringLocalizer<ViewRenderer> stringLocalizer
             )
         {
             _viewEngine = viewEngine;
@@ -47,9 +49,7 @@ namespace cloudscribe.Web.Common.Razor
             _actionContextAccesor = actionContextAccesor;
             _serviceProvider = serviceProvider;
             _viewRendererRouteProvider = viewRendererRouteProvider;
-
-
-
+            StringLocalizer = stringLocalizer;
         }
 
         private readonly IRazorViewEngine _viewEngine;
@@ -58,7 +58,7 @@ namespace cloudscribe.Web.Common.Razor
         private readonly IHttpContextAccessor _httpContextAccessor;
         private IActionContextAccessor _actionContextAccesor;
         private readonly IViewRendererRouteProvider _viewRendererRouteProvider;
-
+        private readonly IStringLocalizer StringLocalizer;
 
 
         public async Task<string> RenderViewAsString<TModel>(string viewName, TModel model)
@@ -106,7 +106,7 @@ namespace cloudscribe.Web.Common.Razor
             var searchedLocations = getViewResult.SearchedLocations.Concat(findViewResult.SearchedLocations);
             var errorMessage = string.Join(
                 Environment.NewLine,
-                new[] { $"Unable to find view '{viewName}'. The following locations were searched:" }.Concat(searchedLocations)); ;
+                new[] { $"{StringLocalizer["Unable to find view"]} '{viewName}'. {StringLocalizer["The following locations were searched:"]}" }.Concat(searchedLocations)); ;
 
             throw new InvalidOperationException(errorMessage);
         }

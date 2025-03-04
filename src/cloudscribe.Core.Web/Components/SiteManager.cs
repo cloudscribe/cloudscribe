@@ -13,6 +13,7 @@ using cloudscribe.Pagination.Models;
 using cloudscribe.Web.Navigation;
 using cloudscribe.Web.Navigation.Caching;
 using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.Localization;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using System;
@@ -52,14 +53,11 @@ namespace cloudscribe.Core.Web.Components
             _context            = contextAccessor?.HttpContext;
             _dataProtector      = dataProtector;
             _log                = logger;
-
-            //resolver = siteResolver;
             _currentSite     = currentSite;
             _cacheHelper     = cacheHelper;
             _eventHandlers   = siteEventHandlers;
             _navigationCache = treeCache;
             _roleManager     = roleManager;
-            //_navigationTreeBuilderService = navigationTreeBuilderService;
         }
 
         private readonly HttpContext _context;
@@ -77,10 +75,6 @@ namespace cloudscribe.Core.Web.Components
         private SiteEvents _eventHandlers;
         private readonly ITreeCache _navigationCache;
         private readonly SiteRoleManager<SiteRole> _roleManager;
-
-        //private readonly NavigationTreeBuilderService _navigationTreeBuilderService;
-
-
 
         public ISiteContext CurrentSite
         {

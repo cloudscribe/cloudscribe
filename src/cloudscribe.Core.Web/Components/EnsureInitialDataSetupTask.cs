@@ -9,6 +9,7 @@ using cloudscribe.Core.Models;
 using cloudscribe.Core.Models.Geography;
 using cloudscribe.Core.Models.Setup;
 using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.Localization;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -21,16 +22,18 @@ namespace cloudscribe.Core.Web.Components
         public EnsureInitialDataSetupTask(
             IHttpContextAccessor contextAccessor,
             SiteManager siteManager,
-            GeoDataManager geoDataManager)
+            GeoDataManager geoDataManager, IStringLocalizer<CloudscribeCore> localizer)
         {
             _siteManager = siteManager;
             _contextAccessor = contextAccessor;
             _geoDataManager = geoDataManager;
+            StringLocalizer = localizer;
         }
 
         private SiteManager _siteManager;
         private GeoDataManager _geoDataManager;
         private IHttpContextAccessor _contextAccessor;
+        protected IStringLocalizer StringLocalizer { get; private set; }
 
         public async Task DoSetupStep(
             Func<string, bool, Task> output,
@@ -43,7 +46,7 @@ namespace cloudscribe.Core.Web.Components
            
             if (needsUpgrade)
             {
-                await output("cloudscribe-core needs schema upgrade", false);
+                await output(StringLocalizer["cloudscribe-core needs schema upgrade"], false);
                 return;
             }
 
@@ -51,11 +54,11 @@ namespace cloudscribe.Core.Web.Components
             Version schemaVersion = schemaVersionLookup("cloudscribe-core");
             if(codeVersion == null)
             {
-                await output("cloudscribe-core code version not found", false);
+                await output(StringLocalizer["cloudscribe-core code version not found"], false);
             }
             if (schemaVersion == null)
             {
-                await output("cloudscribe-core schema version not found", false);
+                await output(StringLocalizer["cloudscribe-core schema version not found"], false);
             }
 
             if((codeVersion != null)&&(schemaVersion != null))
@@ -63,7 +66,7 @@ namespace cloudscribe.Core.Web.Components
                 if(codeVersion == schemaVersion)
                 {
                     var message = string.Format(
-                        "cloudscribe-core schema is up to date at version: {0}",
+                        StringLocalizer["cloudscribe-core schema is up to date at version: {0}"],
                         codeVersion
                         );
 
@@ -73,7 +76,7 @@ namespace cloudscribe.Core.Web.Components
                 else
                 {
                     var message = string.Format(
-                        "cloudscribe-core code version: {0} is out of sync with schema version: {1}",
+                        StringLocalizer["cloudscribe-core code version: {0} is out of sync with schema version: {1}"],
                         codeVersion, 
                         schemaVersion
                         );
@@ -85,7 +88,7 @@ namespace cloudscribe.Core.Web.Components
             int countryCount = await _geoDataManager.GetCountryCount();
             if(countryCount == 0)
             {
-                await output("creating initial country data", true);
+                await output(StringLocalizer["creating initial country data"], true);
 
                 List<GeoCountry> countries = InitialData.BuildCountryList();
                 foreach(GeoCountry c in countries)
@@ -93,7 +96,7 @@ namespace cloudscribe.Core.Web.Components
                     await _geoDataManager.Add(c);
                 }
 
-                await output("creating initial state/region data", true);
+                await output(StringLocalizer["creating initial state/region data"], true);
                 List<GeoZone> states = InitialData.BuildStateList();
                 foreach (GeoZone s in states)
                 {
@@ -105,17 +108,17 @@ namespace cloudscribe.Core.Web.Components
 
             await output(
                         string.Format(
-                        "ExistingSiteCount {0}", //SetupResources.ExistingSiteCountMessage,
+                        StringLocalizer["ExistingSiteCount {0}"],
                         existingSiteCount.ToString()),
                         false);
 
             if (existingSiteCount == 0)
             {
-                await output("CreatingSite", true);
+                await output(StringLocalizer["CreatingSite"], true);
 
                 SiteSettings newSite = await _siteManager.CreateNewSite(true);
 
-                await output("CreatingRolesAndAdminUser", true);
+                await output(StringLocalizer["CreatingRolesAndAdminUser"], true);
 
                 await _siteManager.CreateRequiredRolesAndAdminUser(newSite);
 
@@ -140,14 +143,14 @@ namespace cloudscribe.Core.Web.Components
                         int roleCount = await _siteManager.GetRoleCount(site.Id);
                         if (roleCount == 0)
                         {
-                            await output("CreatingRoles", true);
+                            await output(StringLocalizer["CreatingRoles"], true);
                             await _siteManager.EnsureRequiredRoles(site);
                         }
  
                         int userCount = await _siteManager.GetUserCount(site.Id);
                         if (userCount == 0)
                         {
-                            await output("CreatingAdminUser", true);
+                            await output(StringLocalizer["CreatingAdminUser"], true);
                             await _siteManager.CreateAdminUser(site);
                         }
                         

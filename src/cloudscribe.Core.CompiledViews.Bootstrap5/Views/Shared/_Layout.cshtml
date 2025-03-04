@@ -1,4 +1,5 @@
 ﻿@inject ISiteContextResolver siteResolver
+@inject IStringLocalizer<CloudscribeCore> sr
 @{
     @*
         These viewstate settings can be set by a main view to show additional columns.
@@ -38,11 +39,11 @@
     <header>
         <a id="skippy" class="visually-hidden visually-hidden-focusable" href="#content">
             <div class="container">
-                <span class="skiplink-text">Skip to main content</span>
+                <span class="skiplink-text">@sr["Skip to main content"]</span>
             </div>
         </a>
         <nav class="navbar navbar-expand-lg navbar-light fixed-top bg-white ">
-            <a href="~/@(Tenant?.SiteFolderName ?? "")" class="navbar-brand">@(Tenant?.SiteName ?? "Sample")</a>
+            <a href="@Url.Action("Index", "Home")" class="navbar-brand">@(Tenant?.SiteName ?? "Sample")</a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
@@ -88,12 +89,12 @@
         <div class="p-2">
             <ul class="list-unstyled d-flex flex-wrap">
                 <li class=" me-2">
-                    <a class="text-nowrap" href="/sitemap">Site Map</a>
+                    <a class="text-nowrap" href="/sitemap">@sr["Site Map"]</a>
                 </li>
                 @if (Tenant != null && !string.IsNullOrWhiteSpace(Tenant.PrivacyPolicy))
                 {
                     <li class="border-left ps-2 me-2">
-                        <a asp-controller="Privacy" asp-action="Index">Privacy Policy</a>
+                        <a asp-controller="Privacy" asp-action="Index">@sr["Privacy Policy"]</a>
                     </li>
                 }
                 <li class="border-left ps-2 me-2">
@@ -102,7 +103,7 @@
                 </li>
             </ul>
         </div>
-        <div class="p-2 text-nowrap">Copyright &copy; @DateTime.Now.Year - @(Tenant?.SiteName ?? "Sample")</div>
+        <div class="p-2 text-nowrap">@sr["Copyright"] &copy; @DateTime.Now.Year - @(Tenant?.SiteName ?? "Sample")</div>
         
     </footer>
     @RenderSection("Toolbar", required: false)
