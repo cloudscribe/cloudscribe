@@ -77,6 +77,9 @@
     </div>
 </form>
 <partial name="TestMessagePartial" model="Model.TestMessage" />
+@section Styles {
+    <link href="/cr/css/summernote-bs5.min.css" rel="stylesheet">
+}
 @section SideNav {
     <partial name="AdminSideNav" />
 }
@@ -92,4 +95,5 @@
     <script src="~/cr/js/unobtrusive-validation-bs4.min.js"></script>
     <script src="~/cr/js/jquery.validate.hooks.min.js"></script>
     <script src="~/cr/js/jqueryvaildation.submitonce-unobtrusive.min.js"></script>
+    <partial name="SummernoteScripts" />
 }

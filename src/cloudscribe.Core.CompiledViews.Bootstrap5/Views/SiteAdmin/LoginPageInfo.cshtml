@@ -1,12 +1,12 @@
 ﻿@model cloudscribe.Core.Web.ViewModels.SiteSettings.LoginInfoViewModel
-@inject ICkeditorOptionsResolver editorOptionsResolver
+@inject ISummernoteOptionsResolver summernoteOptionsResolver
 @inject IStringLocalizer<CloudscribeCore> sr
 @inject ICoreThemeHelper themeHelper
 @{
     var themeSettings = themeHelper.GetThemeSettings();
     if (themeSettings.AdminSideNavExpanded) { ViewData["SideNavToggle"] = "show"; }
     ViewData["SideNavVisible"] = true;
-    var ckOptions = await editorOptionsResolver.GetCkeditorOptions();
+    var summernoteOptions = await summernoteOptionsResolver.GetSummernoteOptions();
 }
 <h2>@ViewBag.Title</h2>
 <form method="post" role="form" asp-antiforgery="true" data-submit-once="true">
@@ -14,30 +14,37 @@
     <input asp-for="SiteId" type="hidden" />
     <div class="mb-3">
         <label class="form-label" asp-for="LoginInfoTop">@sr["Login Info Top"]</label>
-        <textarea class="form-control" rows="5" asp-for="LoginInfoTop"
-                  data-ckeditor-unobtrusive=""
-                  data-ckeditor-config-url="@ckOptions.CustomConfigPath"
-                  data-ckeditor-config-language="@ckOptions.LanguageCode"
-                  data-ckeditor-config-dropfileuploadurl="@ckOptions.DropFileUrl"
-                  data-ckeditor-config-filebrowserurl="@ckOptions.FileBrowseUrl"
-                  data-ckeditor-config-imagebrowseurl="@ckOptions.ImageBrowseUrl"></textarea>
+        <textarea asp-for="LoginInfoTop" rows="5"
+            data-summernote-unobtrusive=""
+            data-summernote-config-url="@summernoteOptions.CustomConfigPath"
+            data-summernote-toolbar-config-url="@summernoteOptions.CustomToolbarConfigPath"
+            data-summernote-config-language="@summernoteOptions.LanguageCode"
+            data-summernote-config-dropfileuploadurl="@summernoteOptions.DropFileUrl"
+            data-summernote-config-filebrowserurl="@summernoteOptions.FileBrowseUrl"
+            data-summernote-config-imagebrowseurl="@summernoteOptions.ImageBrowseUrl">
+        </textarea>
         <span asp-validation-for="LoginInfoTop" class="text-danger"></span>
     </div>
     <div class="mb-3">
         <label class="form-label" asp-for="LoginInfoBottom">@sr["Login Info Bottom"]</label>
-        <textarea class="form-control" rows="5" asp-for="LoginInfoBottom"
-                  data-ckeditor-unobtrusive=""
-                  data-ckeditor-config-url="@ckOptions.CustomConfigPath"
-                  data-ckeditor-config-language="@ckOptions.LanguageCode"
-                  data-ckeditor-config-dropfileuploadurl="@ckOptions.DropFileUrl"
-                  data-ckeditor-config-filebrowserurl="@ckOptions.FileBrowseUrl"
-                  data-ckeditor-config-imagebrowseurl="@ckOptions.ImageBrowseUrl"></textarea>
+        <textarea asp-for="LoginInfoBottom" rows="5"
+            data-summernote-unobtrusive=""
+            data-summernote-config-url="@summernoteOptions.CustomConfigPath"
+            data-summernote-toolbar-config-url="@summernoteOptions.CustomToolbarConfigPath"
+            data-summernote-config-language="@summernoteOptions.LanguageCode"
+            data-summernote-config-dropfileuploadurl="@summernoteOptions.DropFileUrl"
+            data-summernote-config-filebrowserurl="@summernoteOptions.FileBrowseUrl"
+            data-summernote-config-imagebrowseurl="@summernoteOptions.ImageBrowseUrl">
+        </textarea>
         <span asp-validation-for="LoginInfoBottom" class="text-danger"></span>
     </div>
     <div class="mb-3">
         <button id="btnSave" name="submit" type="submit" class="btn btn-primary" data-enabled-text='@sr["Save"]' data-disabled-text='@sr["Working..."]'>@sr["Save"]</button>
     </div>
 </form>
+@section Styles {
+    <link href="/cr/css/summernote-bs5.min.css" rel="stylesheet">
+}
 @section SideNav {
     <partial name="AdminSideNav" />
 }
@@ -53,4 +60,5 @@
     <script src="~/cr/js/jquery.validate.unobtrusive.min.js"></script>
     <script src="~/cr/js/jquery.validate.hooks.min.js"></script>
     <script src="~/cr/js/jqueryvaildation.submitonce-unobtrusive.min.js"></script>
+    <partial name="SummernoteScripts" />
 }
