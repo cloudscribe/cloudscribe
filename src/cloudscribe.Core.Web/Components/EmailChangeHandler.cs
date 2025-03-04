@@ -45,7 +45,7 @@ namespace cloudscribe.Core.Web.Components
             if (result.Succeeded)
             {
                 Log.LogInformation($"User with ID {user.Id} changed email address successfully.");
-                model.SuccessNotification = "Email address was changed successfully.";
+                model.SuccessNotification = StringLocalizer["Email address was changed successfully."];
 
                 if (model.EmailIsConfigured)
                 {
@@ -66,7 +66,7 @@ namespace cloudscribe.Core.Web.Components
             else
             {
                 model.SuccessNotification = StringLocalizer["Error - email could not be changed. Contact the site administrator for support."];
-                var resultError = $"Error occurred changing email address for user ID '{user.Id}'";
+                var resultError = $"{StringLocalizer["Error occurred changing email address for user ID"]} '{user.Id}'";
                 if (result?.Errors != null && result.Errors.Count() > 0)
                     resultError += result.Errors.First().Description;
                 Log.LogError(resultError);
@@ -115,7 +115,7 @@ namespace cloudscribe.Core.Web.Components
             if (result.Succeeded)
             {
                 Log.LogInformation($"User with ID {user.Id} changed email address successfully.");
-                model.SuccessNotification = "Email address was changed successfully.";
+                model.SuccessNotification = StringLocalizer["Email address was changed successfully."];
 
                 if (model.EmailIsConfigured)
                 {
@@ -136,7 +136,7 @@ namespace cloudscribe.Core.Web.Components
             else
             {
                 model.SuccessNotification = StringLocalizer["Error - email could not be changed. Contact the site administrator for support."];
-                var resultError = $"Error occurred changing email address for user ID '{user.Id}'";
+                var resultError = $"{StringLocalizer["Error occurred changing email address for user ID"]} '{user.Id}'";
                 if (result?.Errors != null && result.Errors.Count() > 0)
                     resultError += result.Errors.First().Description;
                 Log.LogError(resultError);

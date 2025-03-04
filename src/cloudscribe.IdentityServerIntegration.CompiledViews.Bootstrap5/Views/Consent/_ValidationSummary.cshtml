@@ -1,7 +1,10 @@
-﻿@if (ViewContext.ModelState.IsValid == false)
+﻿@using cloudscribe.Core.IdentityServerIntegration
+@inject IStringLocalizer<CloudscribeIds4Resources> sr
+
+@if (ViewContext.ModelState.IsValid == false)
 {
     <div class="alert alert-danger">
-        <strong>Error</strong>
+        <strong>@sr["Error"]</strong>
         <div asp-validation-summary="All" class="danger"></div>
     </div>
 }

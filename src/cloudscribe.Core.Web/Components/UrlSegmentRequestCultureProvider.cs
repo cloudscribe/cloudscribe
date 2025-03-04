@@ -27,7 +27,7 @@ namespace cloudscribe.Core.Web.Localization
 
         public override Task<ProviderCultureResult> DetermineProviderCultureResult(HttpContext httpContext)
         {
-            var segments = GetSegments(httpContext.Request.Path);
+           var segments = GetSegments(httpContext.Request.Path);
 
             if (!string.IsNullOrWhiteSpace(segments.FirstSegment))
             {

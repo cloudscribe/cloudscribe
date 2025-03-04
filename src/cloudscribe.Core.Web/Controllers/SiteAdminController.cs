@@ -310,7 +310,7 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
                 var folderAvailable = await SiteManager.FolderNameIsAvailable(selectedSite.Id, model.SiteFolderName);
                 if (!folderAvailable)
                 {
-                    ModelState.AddModelError("foldererror", "The selected folder name is already in use on another site.");
+                    ModelState.AddModelError("foldererror", StringLocalizer["The selected folder name is already in use on another site."]);
                     PopulateLists(model, selectedSite);
                     return View(model);
                 }
@@ -585,7 +585,7 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
         [Authorize(Policy = PolicyConstants.ServerAdminPolicy)]
         public virtual async Task<ActionResult> NewSite(NewSiteViewModel model)
         {
-            ViewData["Title"] = "Create New Site";
+            ViewData["Title"] = StringLocalizer["Create New Site"];
 
             if (!ModelState.IsValid)
             {
@@ -1324,7 +1324,7 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
             // only server admin site can edit other sites settings
             if (selectedSite.Id == SiteManager.CurrentSite.Id)
             {
-                ViewData["Title"] = "Privacy Settings";
+                ViewData["Title"] = StringLocalizer["Privacy Settings"];
             }
             else if (SiteManager.CurrentSite.IsServerAdminSite)
             {

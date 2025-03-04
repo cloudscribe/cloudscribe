@@ -50,23 +50,23 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
                     switch (statusCode)
                     {
                         case 400:
-                            errorMessage = "Bad Request";
+                            errorMessage = StringLocalizer["Bad Request"];
                             break;
                         case 401:
-                            errorMessage = "Unauthorized";
+                            errorMessage = StringLocalizer["Unauthorized"];
                             break;
                         case 403:
-                            errorMessage = "Forbidden";
+                            errorMessage = StringLocalizer["Forbidden"];
                             break;
                         case 404:
-                            errorMessage = "Page Not Found";
+                            errorMessage = StringLocalizer["Page Not Found"];
                             break;
                        
                         default:
 
                             if (statusCode >= 500)
                             {
-                                errorMessage = "Unexpected Error";
+                                errorMessage = StringLocalizer["Unexpected Error"];
                             }
 
                             break;
@@ -82,10 +82,6 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
 
             }
             
-
-            
-            
-
             return View(statusCode);
         }
 

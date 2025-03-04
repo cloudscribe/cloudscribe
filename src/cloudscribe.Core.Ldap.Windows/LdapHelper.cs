@@ -1,5 +1,6 @@
 ﻿using cloudscribe.Core.Models;
 using cloudscribe.Core.Models.Identity;
+using Microsoft.Extensions.Localization;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
@@ -11,13 +12,16 @@ namespace cloudscribe.Core.Ldap.Windows
     public class LdapHelper : ILdapHelper
     {
         public LdapHelper(
-            ILogger<LdapHelper> logger
+            ILogger<LdapHelper> logger,
+            IStringLocalizer<LdapHelper> localizer
             )
         {
             _log = logger;
+            StringLocalizer = localizer;
         }
 
         private readonly ILogger _log;
+        private readonly IStringLocalizer StringLocalizer;
 
         public bool IsImplemented { get; } = true;
 
@@ -60,7 +64,7 @@ namespace cloudscribe.Core.Ldap.Windows
             {
                 string msg = $"Login failure for user: {userName} Exception: {ex.Message}:{ex.StackTrace}";
                 _log.LogError(msg);
-                user.ResultStatus = "Invalid Credentials";
+                user.ResultStatus = StringLocalizer["Invalid Credentials"];
             }
             if (directoryEntry != null)
             {
@@ -76,13 +80,13 @@ namespace cloudscribe.Core.Ldap.Windows
                     _log.LogError(msg);
 
                     success = false;
-                    user.ResultStatus = "Invalid Credentials";
+                    user.ResultStatus = StringLocalizer["Invalid Credentials"];
                 }
 
                 if (success && directoryEntry != null)
                 {
                     user = GetLdapUser(directoryEntry, ldapSettings, userName);
-                    user.ResultStatus = "PASS";
+                    user.ResultStatus = StringLocalizer["PASS"];
                 }
             }
 
@@ -100,11 +104,11 @@ namespace cloudscribe.Core.Ldap.Windows
             var ldapUser = TryLdapLogin(settings, username, password).Result;
             if(ldapUser != null)
             {
-                message = "PASS";
+                message = StringLocalizer["PASS"];
             }
             else
             {
-                message = "Invalid Credentials";
+                message = StringLocalizer["Invalid Credentials"];
             }
 
             var result = new Dictionary<string, LdapUser>();
