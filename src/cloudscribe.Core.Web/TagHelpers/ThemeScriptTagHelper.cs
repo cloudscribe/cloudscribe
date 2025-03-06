@@ -40,7 +40,6 @@ namespace cloudscribe.Core.Web.TagHelpers
 
         public override void Process(TagHelperContext context, TagHelperOutput output)
         {
-            // we don't need to output these attributes 
             output.Attributes.RemoveAll(CloudscribeTenantAttributeName);
             output.Attributes.RemoveAll(ResolveThemeResourceAttributeName);
             output.Attributes.RemoveAll(SharedThemeAttributeName);

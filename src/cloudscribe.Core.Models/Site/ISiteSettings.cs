@@ -10,7 +10,6 @@ using System;
 namespace cloudscribe.Core.Models
 {
     
-    // lighter base version for lists
     public interface ISiteInfo
     {
         Guid Id { get; set; }
@@ -26,11 +25,6 @@ namespace cloudscribe.Core.Models
     
     public interface ISiteSettings : ISiteInfo
     {
-        //TODO: implement ldap auth middleware or helper for accountcontroller
-        //bool UseLdapAuth { get; set; }
-        //bool AllowDbFallbackWithLdap { get; set; }
-        //bool EmailLdapDbFallback { get; set; }
-        //bool AutoCreateLdapUserOnFirstLogin { get; set; }
         string LdapServer { get; set; }
         string LdapDomain { get; set; }
         int LdapPort { get; set; }
@@ -38,14 +32,9 @@ namespace cloudscribe.Core.Models
         string LdapUserDNKey { get; set; }
 
         string LdapUserDNFormat { get; set; }
-
         bool LdapUseSsl { get; set; }
-
         string ConcurrencyStamp { get; set; }
-
-        
         bool DisableDbAuth { get; set; }
-    
         bool RequireConfirmedEmail { get; set; } 
 
         // maps to IdentitySignInOptions
@@ -54,37 +43,11 @@ namespace cloudscribe.Core.Models
 
         bool RequireApprovalBeforeLogin { get; set; } 
         string AccountApprovalEmailCsv { get; set; }
-
-        //https://github.com/aspnet/Identity/blob/dev/src/Microsoft.AspNetCore.Identity/LockoutOptions.cs
-
-        // should we make this configurable per site:
-
-        /// <value>
-        /// True if a newly created user can be locked out, otherwise false.
-        /// </value>
-        /// <remarks>
-        /// Defaults to true.
-        /// </remarks>
-        //public bool AllowedForNewUsers { get; set; } = true;
-
-            
+           
         /// <summary>
         /// maps to Identity LockoutOptions.MaxFailedAttempts default 5
         /// </summary>
         int MaxInvalidPasswordAttempts { get; set; }
-
-        
-        // This is from IdentityOptions.cs
-        // should this be configurable per site or not? I lean towards not
-        /// <summary>
-        /// Gets or sets the <see cref="TimeSpan"/> after which security stamps are re-validated.
-        /// </summary>
-        /// <value>
-        /// The <see cref="TimeSpan"/> after which security stamps are re-validated.
-        /// </value>
-        //public TimeSpan SecurityStampValidationInterval { get; set; } = TimeSpan.FromMinutes(30);
-
-
 
         /// <summary>
         /// min password length is something that should be allowed to be configured
@@ -92,7 +55,7 @@ namespace cloudscribe.Core.Models
         /// It is reasonable that some may want to require longer passwords, but we probably should not let passwords ever be shorter than 6
         /// which is the default in IdentityPasswordOptions
         /// </summary>
-        int MinRequiredPasswordLength { get; set; } // maps to IdentityPasswordOptions public int RequiredLength { get; set; } = 6;
+        int MinRequiredPasswordLength { get; set; } 
 
         bool PwdRequireNonAlpha { get; set; }
         bool PwdRequireLowercase { get; set; }
@@ -127,7 +90,6 @@ namespace cloudscribe.Core.Models
         string RecaptchaPublicKey { get; set; }
         bool UseInvisibleRecaptcha { get; set; }
         
-        //company info
         string CompanyCountry { get; set; }
         string CompanyFax { get; set; }
         string CompanyLocality { get; set; }
@@ -182,12 +144,10 @@ namespace cloudscribe.Core.Models
         string SmsSecureToken { get; set; } //protected with data protection
         string SmsFrom { get; set; }
 
-
         string PrivacyPolicy { get; set; }
         string Theme { get; set; } 
         string GoogleAnalyticsProfileId { get; set; }
         
-        //social login stuff
         string FacebookAppId { get; set; }
         string FacebookAppSecret { get; set; }
         string MicrosoftClientId { get; set; }
@@ -232,16 +192,6 @@ namespace cloudscribe.Core.Models
         bool SingleBrowserSessions { get; set; }
 
         string RegRestrictionTld { get; set; }
-        // TODO: drop
-        //bool AllowUserFullNameChange { get; set; }
-        //string ApiKeyExtra1 { get; set; }
-        //string ApiKeyExtra2 { get; set; }
-        //string ApiKeyExtra3 { get; set; }
-        //string ApiKeyExtra4 { get; set; }
-        //string ApiKeyExtra5 { get; set; }
-        //bool UseSslOnAllPages { get; set; }
-        //int MinReqNonAlphaChars { get; set; }
-        //int PasswordAttemptWindowMinutes { get; set; }
         string MaximumInactivityInMinutes { get; set; }
         int PasswordExpiryWarningDays {  get; set; }
         int PasswordExpiresDays { get; set; }

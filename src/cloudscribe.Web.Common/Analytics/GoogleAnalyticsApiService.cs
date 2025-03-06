@@ -3,9 +3,7 @@
 // Author:                  Joe Audette
 // Created:                 2017-09-21
 // Last Modified:           2022-02-08
-//
 
-//using cloudscribe.Web.Common.Http;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
 using System;

@@ -3,7 +3,6 @@
 // Author:					Joe Audette
 // Created:					2014-08-18
 // Last Modified:			2019-07-24
-// 
 
 using cloudscribe.Pagination.Models;
 using System;
@@ -13,10 +12,8 @@ using System.Threading.Tasks;
 
 namespace cloudscribe.Core.Models
 {
-    // a marker interface so we can inject as singleton
     public interface IUserQueriesSingleton : IUserQueries
     {
-
     }
     public interface IUserQueries
     {
@@ -77,12 +74,6 @@ namespace cloudscribe.Core.Models
             Guid siteId,
             string ipv4Address,
             CancellationToken cancellationToken = default(CancellationToken));
-
-        //Task<List<IUserInfo>> GetCrossSiteUserListByEmail(
-        //    string email,
-        //    CancellationToken cancellationToken = default(CancellationToken));
-
-
 
         Task<PagedResult<IUserInfo>> GetPage(
             Guid siteId,
@@ -164,16 +155,12 @@ namespace cloudscribe.Core.Models
             Guid siteId,
             string email,
             CancellationToken cancellationToken = default(CancellationToken));
-        
-        
-
         Task<bool> LoginIsAvailable(
             Guid siteId,
             Guid userId,
             string loginName,
             CancellationToken cancellationToken = default(CancellationToken));
 
-        //roles
 
         Task<int> CountOfRoles(
             Guid siteId,
@@ -211,7 +198,6 @@ namespace cloudscribe.Core.Models
             Guid userId,
             CancellationToken cancellationToken = default(CancellationToken));
 
-        //IList<ISiteRole> GetRolesUserIsNotIn(int siteId, int userId);
         Task<IList<ISiteUser>> GetUsersInRole(
             Guid siteId,
             string roleName,
@@ -245,8 +231,6 @@ namespace cloudscribe.Core.Models
             string searchInput,
             CancellationToken cancellationToken = default(CancellationToken));
 
-        // claims
-
         Task<IList<IUserClaim>> GetClaimsByUser(
             Guid siteId,
             Guid userId,
@@ -257,8 +241,6 @@ namespace cloudscribe.Core.Models
             string claimType,
             string claimValue,
             CancellationToken cancellationToken = default(CancellationToken));
-
-        // logins
 
         Task<IUserLogin> FindLogin(
             Guid siteId,

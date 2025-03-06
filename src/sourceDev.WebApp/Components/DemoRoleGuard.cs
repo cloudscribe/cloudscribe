@@ -12,11 +12,9 @@ namespace sourceDev.WebApp.Components
 
             if (string.IsNullOrWhiteSpace(role)) return Task.FromResult(result);
 
-            // more realistic example would lookup whether the role is used in the feature here
             // this hard coded example is just an example
             if(role == "Members")
             {
-                // this could be localized using IStringLocalizer in a more realistic example
                 result = "The members role cannot be edited or removed because it is in use in the demo feature";
             }
 

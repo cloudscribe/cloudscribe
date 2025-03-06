@@ -92,8 +92,6 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
         [TempData]
         public string StatusMessage { get; set; }
 
-
-        // GET: /Manage/Index
         [Authorize]
         [HttpGet]
         public virtual async Task<IActionResult> Index()
@@ -265,7 +263,6 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
 
             if (!model.RequireConfirmedEmail)
             {
-                // no need for round-trip email confirmation
                 try
                 {
                     var success = await EmailChangeHandler.HandleEmailChangeWithoutUserConfirmation(model, user, token, siteUrl);
@@ -576,8 +573,6 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
             return RedirectToAction("Index");
         }
 
-        //
-        // GET: /Manage/RemoveLogin
         [Authorize]
         [HttpGet]
         public virtual async Task<IActionResult> RemoveLogin()
@@ -588,8 +583,6 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
             return View(linkedAccounts);
         }
 
-
-        // POST: /Manage/RemoveLogin
         [Authorize]
         [HttpPost]
         [ValidateAntiForgeryToken]
@@ -614,36 +607,6 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
             return RedirectToAction("ManageLogins");
 
         }
-
-
-        // GET: /Manage/AddPhoneNumber
-        //[HttpGet]
-        //public IActionResult AddPhoneNumber()
-        //{
-        //    return View();
-        //}
-
-
-        //// POST: /Manage/AddPhoneNumber
-        //[HttpPost]
-        //[ValidateAntiForgeryToken]
-        //public async Task<IActionResult> AddPhoneNumber(AddPhoneNumberViewModel model)
-        //{
-        //    if (!ModelState.IsValid)
-        //    {
-        //        return View(model);
-        //    }
-        //    // Generate the token and send it
-        //    var user = await userManager.FindByIdAsync(HttpContext.User.GetUserId());
-        //    var code = await userManager.GenerateChangePhoneNumberTokenAsync(user, model.Number);
-        //    await smsSender.SendSmsAsync(
-        //        Site, 
-        //        model.Number,
-        //        string.Format(sr["Your security code is: {0}"], code)
-        //        );
-        //    return RedirectToAction("VerifyPhoneNumber", new { PhoneNumber = model.Number });
-
-        //}
 
         [Authorize]
         [HttpGet]
@@ -787,7 +750,6 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
                 throw new ApplicationException($"Unable to load user with ID '{User.GetUserId()}'.");
             }
 
-            // Strip spaces and hypens
             var verificationCode = model.Code.Replace(" ", string.Empty).Replace("-", string.Empty);
 
             var is2faTokenValid = await UserManager.VerifyTwoFactorTokenAsync(
@@ -858,8 +820,6 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
             return View(model);
         }
 
-
-        // POST: /Manage/EnableTwoFactorAuthentication
         [Authorize]
         [HttpPost]
         [ValidateAntiForgeryToken]
@@ -874,8 +834,6 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
             return RedirectToAction("Index", "Manage");
         }
 
-
-        // POST: /Manage/DisableTwoFactorAuthentication
         [Authorize]
         [HttpPost]
         [ValidateAntiForgeryToken]
@@ -890,48 +848,6 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
             return RedirectToAction("Index", "Manage");
         }
 
-
-        // GET: /Manage/VerifyPhoneNumber
-        //[HttpGet]
-        //public async Task<IActionResult> VerifyPhoneNumber(string phoneNumber)
-        //{
-        //    var user = await userManager.FindByIdAsync(HttpContext.User.GetUserId());
-        //    var code = await userManager.GenerateChangePhoneNumberTokenAsync(user, phoneNumber);
-        //    // Send an SMS to verify the phone number
-        //    return phoneNumber == null ? View("Error") : View(new VerifyPhoneNumberViewModel { PhoneNumber = phoneNumber });
-        //}
-
-
-        //// POST: /Manage/VerifyPhoneNumber
-        //[HttpPost]
-        //[ValidateAntiForgeryToken]
-        //public async Task<IActionResult> VerifyPhoneNumber(VerifyPhoneNumberViewModel model)
-        //{
-        //    if (!ModelState.IsValid)
-        //    {
-        //        return View(model);
-        //    }
-        //    var user = await userManager.FindByIdAsync(HttpContext.User.GetUserId());
-        //    if (user != null)
-        //    {
-        //        var result = await userManager.ChangePhoneNumberAsync(user, model.PhoneNumber, model.Code);
-        //        if (result.Succeeded)
-        //        {
-        //            await signInManager.SignInAsync(user, isPersistent: false);
-
-        //            this.AlertSuccess(sr["Your phone number was added."]);
-
-        //            return RedirectToAction("Index");
-        //        }
-        //    }
-        //    // If we got this far, something failed, redisplay the form
-        //    ModelState.AddModelError(string.Empty, sr["Failed to verify phone number"]);
-        //    return View(model);
-
-        //}
-
-        //
-        // GET: /Manage/RemovePhoneNumber
         [Authorize]
         [HttpGet]
         public virtual async Task<IActionResult> RemovePhoneNumber()
@@ -953,8 +869,6 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
             return RedirectToAction("Index");
         }
 
-
-        // GET: /Manage/ChangePassword
         [Authorize]
         [HttpGet]
         public virtual IActionResult ChangePassword()
@@ -962,8 +876,6 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
             return View();
         }
 
-
-        // POST: /Manage/ChangePassword
         [Authorize]
         [HttpPost]
         [ValidateAntiForgeryToken]
@@ -1001,8 +913,6 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
 
         }
 
-
-        // GET: /Manage/SetPassword
         [Authorize]
         [HttpGet]
         public virtual IActionResult SetPassword()
@@ -1010,8 +920,6 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
             return View();
         }
 
-
-        // POST: /Manage/SetPassword
         [Authorize]
         [HttpPost]
         [ValidateAntiForgeryToken]
@@ -1045,8 +953,6 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
             return View(model);
         }
 
-
-        // GET: /Manage/ManageLogins
         [Authorize]
         [HttpGet]
         public virtual async Task<IActionResult> ManageLogins()
@@ -1062,7 +968,6 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
                 return View("Error");
             }
             var userLogins = await UserManager.GetLoginsAsync(user);
-            //var externalSchemes = await SignInManager.GetExternalAuthenticationSchemesAsync();
             var externalSchemes = await AccountService.GetExternalAuthenticationSchemes();
             var otherLogins = externalSchemes.Where(auth => userLogins.All(ul => auth.Name != ul.LoginProvider)).ToList();
 
@@ -1077,8 +982,6 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
             return View(model);
         }
 
-
-        // POST: /Manage/LinkLogin
         [Authorize]
         [HttpPost]
         [ValidateAntiForgeryToken]
@@ -1090,8 +993,6 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
             return new ChallengeResult(provider, properties);
         }
 
-
-        // GET: /Manage/LinkLoginCallback
         [Authorize]
         [HttpGet]
         public virtual async Task<IActionResult> LinkLoginCallback()
@@ -1158,7 +1059,6 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
             var emailUser = await UserManager.FindByEmailAsync(model.Email);
             if (emailUser != null && emailUser.Id != user.Id)
             {
-                //email already in use but don't disclose that
                 ModelState.AddModelError("invalidEmail", StringLocalizer["The provided email address was not accepted, please use a different email address."]);
                 return View(model);
             }
@@ -1200,11 +1100,6 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
             // get the user's site accounting for possibility of being in related sites mode
             // in which case our URI and stored tokens all use the RelatedSiteId
             var effectiveSite = await SiteManager.GetSiteForDataOperations(UserManager.Site.Id, true);
-
-            // at one stage was truncating this to prevent QR buffer overflow..:
-            // int stringLength = thing.SiteName.Length;
-            // int truncation = stringLength > 40 ? 40 : stringLength;
-            // UrlEncoder.Encode(thing.SiteName.Substring(0, truncation - 1)),
 
             return string.Format(
                 AuthenicatorUriFormat,

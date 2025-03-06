@@ -44,7 +44,6 @@ namespace cloudscribe.Core.IdentityServerIntegration
             var neededClaims = requestedClaims.Except(foundClaims);
             var claimsToAdd = new List<Claim>();
 
-            //try to add needed claims if we know what they are
             foreach (var c in neededClaims)
             {
                 if (c == JwtClaimTypes.Name)

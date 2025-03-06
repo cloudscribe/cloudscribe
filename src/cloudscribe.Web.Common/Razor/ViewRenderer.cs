@@ -8,7 +8,6 @@
 //https://github.com/aspnet/Entropy/blob/master/samples/Mvc.RenderViewToString/RazorViewToStringRenderer.cs
 
 using Microsoft.AspNetCore.Builder;
-//using Microsoft.AspNetCore.Builder.Internal;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Abstractions;
@@ -58,8 +57,6 @@ namespace cloudscribe.Web.Common.Razor
         private readonly IHttpContextAccessor _httpContextAccessor;
         private IActionContextAccessor _actionContextAccesor;
         private readonly IViewRendererRouteProvider _viewRendererRouteProvider;
-
-
 
         public async Task<string> RenderViewAsString<TModel>(string viewName, TModel model)
         {
@@ -118,12 +115,6 @@ namespace cloudscribe.Web.Common.Razor
                 return _actionContextAccesor.ActionContext;
             }
 
-            // this breaks redirects in controller after execution
-            //if (_httpContextAccessor.HttpContext != null)
-            //{
-            //    return new ActionContext(_httpContextAccessor.HttpContext, new RouteData(), new ActionDescriptor());
-            //}
-
             var httpContext = new DefaultHttpContext
             {
                 RequestServices = _serviceProvider
@@ -147,10 +138,6 @@ namespace cloudscribe.Web.Common.Razor
 
             _viewRendererRouteProvider.AddRoutes(routes);
 
-            //routes.MapRoute(
-            //    name: "default",
-            //    template: "{controller=Home}/{action=Index}/{id?}"
-            //);
             actionContext.RouteData.Routers.Add(routes.Build());
         }
 
@@ -162,68 +149,5 @@ namespace cloudscribe.Web.Common.Razor
             public VirtualPathData GetVirtualPath(VirtualPathContext context) => null;
             public Task RouteAsync(RouteContext context) => Task.CompletedTask;
         }
-
-
     }
-
-
-
-    //previous implementation
-
-    //public class ViewRenderer
-    //{
-    //    public ViewRenderer(
-    //        IRazorViewEngine viewEngine,
-    //        ITempDataProvider tempDataProvider,
-    //        IActionContextAccessor actionAccessor,
-    //        IServiceProvider serviceProvider
-    //        )
-    //    {
-    //        _viewEngine = viewEngine;
-    //        _tempDataProvider = tempDataProvider;
-    //        _serviceProvider = serviceProvider;
-    //        _actionAccessor = actionAccessor;
-    //    }
-
-    //    private IRazorViewEngine _viewEngine;
-    //    private ITempDataProvider _tempDataProvider;
-    //    private IServiceProvider _serviceProvider;
-    //    private IActionContextAccessor _actionAccessor;
-
-    //    public async Task<string> RenderViewAsString<TModel>(string viewName, TModel model)
-    //    {
-    //        var viewData = new ViewDataDictionary<TModel>(
-    //                    metadataProvider: new EmptyModelMetadataProvider(),
-    //                    modelState: new ModelStateDictionary())
-    //        {
-    //            Model = model
-    //        };
-
-    //        //var httpContext = new DefaultHttpContext { RequestServices = _serviceProvider };
-    //        //var actionContext = new ActionContext(httpContext, new RouteData(), new ActionDescriptor());
-    //        //var tempData = new TempDataDictionary(actionContext.HttpContext, _tempDataProvider);
-    //        var actionContext = _actionAccessor.ActionContext;
-
-    //        var tempData = new TempDataDictionary(actionContext.HttpContext, _tempDataProvider);
-
-    //        using (StringWriter output = new StringWriter())
-    //        {
-
-    //            ViewEngineResult viewResult = _viewEngine.FindView(actionContext, viewName, true);
-
-    //            ViewContext viewContext = new ViewContext(
-    //                actionContext,
-    //                viewResult.View,
-    //                viewData,
-    //                tempData,
-    //                output,
-    //                new HtmlHelperOptions()
-    //            );
-
-    //            await viewResult.View.RenderAsync(viewContext);
-
-    //            return output.GetStringBuilder().ToString();
-    //        }
-    //    }
-    //}
 }

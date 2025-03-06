@@ -23,16 +23,9 @@ namespace cloudscribe.Core.Storage.EFCore.Common
             _contextFactory = coreDbContextFactory;
         }
 
-        //private ICoreDbContext dbContext;
-
         private readonly ICoreDbContextFactory _contextFactory;
 
         #region User
-
-        //public int GetCount(Guid siteId)
-        //{
-        //    return dbContext.Users.Count<SiteUser>(x => x.SiteId == siteId);
-        //}
 
         public async Task<ISiteUser> Fetch(
             Guid siteId,
@@ -255,7 +248,6 @@ namespace cloudscribe.Core.Storage.EFCore.Common
                 x =>
                 (
                     x.SiteId == siteId
-                    //&& x.IsDeleted == false
                     && x.AccountApproved == true
                     && (
                     userNameBeginsWith == string.Empty
@@ -277,28 +269,22 @@ namespace cloudscribe.Core.Storage.EFCore.Common
             int sortMode,
             CancellationToken cancellationToken = default(CancellationToken))
         {
-            //sortMode: 0 = DisplayName asc, 1 = JoinDate desc, 2 = Last, First
-
             int offset = (pageSize * pageNumber) - pageSize;
             
             userNameBeginsWith = userNameBeginsWith.ToUpper();
 
             using (var dbContext = _contextFactory.CreateContext())
             {
-                //this is pretty ugly, surely there is a better way to dynamically set the order by
-
                 IQueryable<IUserInfo> query;
                 switch (sortMode)
                 {
                     case 2:
-                        //query = query.OrderBy(sl => sl.LastName).ThenBy(s2 => s2.FirstName).AsQueryable();
                         query
                     = from x in dbContext.Users
 
                       where
                       (
                           x.SiteId == siteId
-                          // && x.IsDeleted == false
                           && x.AccountApproved == true
                           && (
                           userNameBeginsWith == string.Empty
@@ -307,43 +293,14 @@ namespace cloudscribe.Core.Storage.EFCore.Common
                       )
                       orderby x.LastName, x.FirstName
                       select x;
-                        //select new UserInfo
-                        //{
-                        //    Id = x.Id,
-                        //    AvatarUrl = x.AvatarUrl,
-                        //    AccountApproved = x.AccountApproved,
-                        //    CreatedUtc = x.CreatedUtc,
-                        //    DateOfBirth = x.DateOfBirth,
-                        //    DisplayInMemberList = x.DisplayInMemberList,
-                        //    DisplayName = x.DisplayName,
-                        //    Email = x.Email,
-                        //    FirstName = x.FirstName,
-                        //    Gender = x.Gender,
-                        //    IsLockedOut = x.IsLockedOut,
-                        //    LastLoginUtc = x.LastLoginUtc,
-                        //    LastName = x.LastName,
-                        //    PhoneNumber = x.PhoneNumber,
-                        //    PhoneNumberConfirmed = x.PhoneNumberConfirmed,
-                        //    SiteId = x.SiteId,
-                        //    TimeZoneId = x.TimeZoneId, 
-                        //    UserName = x.UserName,
-                        //    WebSiteUrl = x.WebSiteUrl
-
-                        //};
-
-
-
                         break;
                     case 1:
-                        //query = query.OrderByDescending(sl => sl.CreatedUtc).AsQueryable();
-
                         query
                     = from x in dbContext.Users
 
                       where
                       (
                           x.SiteId == siteId
-                          //&& x.IsDeleted == false
                           && x.AccountApproved == true
                           && (
                           userNameBeginsWith == string.Empty
@@ -352,44 +309,16 @@ namespace cloudscribe.Core.Storage.EFCore.Common
                       )
                       orderby x.CreatedUtc descending
                       select x;
-                        //select new UserInfo
-                        //{
-                        //    Id = x.Id,
-                        //    AvatarUrl = x.AvatarUrl,
-                        //    AccountApproved = x.AccountApproved,
-                        //    CreatedUtc = x.CreatedUtc,
-                        //    DateOfBirth = x.DateOfBirth,
-                        //    DisplayInMemberList = x.DisplayInMemberList,
-                        //    DisplayName = x.DisplayName,
-                        //    Email = x.Email,
-                        //    FirstName = x.FirstName,
-                        //    Gender = x.Gender,
-                        //    IsLockedOut = x.IsLockedOut,
-                        //    LastLoginUtc = x.LastLoginUtc,
-                        //    LastName = x.LastName,
-                        //    PhoneNumber = x.PhoneNumber,
-                        //    PhoneNumberConfirmed = x.PhoneNumberConfirmed,
-                        //    SiteId = x.SiteId,
-                        //    TimeZoneId = x.TimeZoneId,
-                        //    UserName = x.UserName,
-                        //    WebSiteUrl = x.WebSiteUrl
-
-                        //};
-
-
                         break;
 
                     case 0:
                     default:
-                        //query = query.OrderBy(sl => sl.DisplayName).AsQueryable();
-
                         query
                     = from x in dbContext.Users
 
                       where
                       (
                           x.SiteId == siteId
-                          //&& x.IsDeleted == false
                           && x.AccountApproved == true
                           && (
                           userNameBeginsWith == string.Empty
@@ -398,32 +327,6 @@ namespace cloudscribe.Core.Storage.EFCore.Common
                       )
                       orderby x.DisplayName
                       select x;
-                        //select new UserInfo
-                        //{
-                        //    Id = x.Id,
-                        //    AvatarUrl = x.AvatarUrl,
-                        //    AccountApproved = x.AccountApproved,
-                        //    CreatedUtc = x.CreatedUtc,
-                        //    DateOfBirth = x.DateOfBirth,
-                        //    DisplayInMemberList = x.DisplayInMemberList,
-                        //    DisplayName = x.DisplayName,
-                        //    Email = x.Email,
-                        //    FirstName = x.FirstName,
-                        //    Gender = x.Gender,
-                        //    IsLockedOut = x.IsLockedOut,
-                        //    LastLoginUtc = x.LastLoginUtc,
-                        //    LastName = x.LastName,
-                        //    PhoneNumber = x.PhoneNumber,
-                        //    PhoneNumberConfirmed = x.PhoneNumberConfirmed,
-                        //    SiteId = x.SiteId,
-                        //    TimeZoneId = x.TimeZoneId,
-                        //    UserName = x.UserName,
-                        //    WebSiteUrl = x.WebSiteUrl
-
-                        //};
-
-
-
                         break;
                 }
 
@@ -486,8 +389,6 @@ namespace cloudscribe.Core.Storage.EFCore.Common
             int sortMode,
             CancellationToken cancellationToken = default(CancellationToken))
         {
-            //sortMode: 0 = DisplayName asc, 1 = JoinDate desc, 2 = Last, First
-            
             if (searchInput == null) searchInput = string.Empty;
 
             //allows user to enter multiple words (e.g. to allow full name search)
@@ -583,30 +484,6 @@ namespace cloudscribe.Core.Storage.EFCore.Common
                   )
                   orderby x.DisplayName
                   select x;
-                //select new UserInfo
-                //{
-                //    Id = x.Id,
-                //    AvatarUrl = x.AvatarUrl,
-                //    AccountApproved = x.AccountApproved,
-                //    CreatedUtc = x.CreatedUtc,
-                //    DateOfBirth = x.DateOfBirth,
-                //    DisplayInMemberList = x.DisplayInMemberList,
-                //    DisplayName = x.DisplayName,
-                //    Email = x.Email,
-                //    FirstName = x.FirstName,
-                //    Gender = x.Gender,
-                //    IsLockedOut = x.IsLockedOut,
-                //    LastLoginUtc = x.LastLoginUtc,
-                //    LastName = x.LastName,
-                //    PhoneNumber = x.PhoneNumber,
-                //    PhoneNumberConfirmed = x.PhoneNumberConfirmed,
-                //    SiteId = x.SiteId,
-                //    TimeZoneId = x.TimeZoneId,
-                //    UserName = x.UserName,
-                //    WebSiteUrl = x.WebSiteUrl
-
-                //};
-
 
                 var data = await query
                     .AsSingleQuery()
@@ -668,30 +545,6 @@ namespace cloudscribe.Core.Storage.EFCore.Common
                   )
                   orderby x.DisplayName
                   select x;
-                //select new UserInfo
-                //{
-                //    Id = x.Id,
-                //    AvatarUrl = x.AvatarUrl,
-                //    AccountApproved = x.AccountApproved,
-                //    CreatedUtc = x.CreatedUtc,
-                //    DateOfBirth = x.DateOfBirth,
-                //    DisplayInMemberList = x.DisplayInMemberList,
-                //    DisplayName = x.DisplayName,
-                //    Email = x.Email,
-                //    FirstName = x.FirstName,
-                //    Gender = x.Gender,
-                //    IsLockedOut = x.IsLockedOut,
-                //    LastLoginUtc = x.LastLoginUtc,
-                //    LastName = x.LastName,
-                //    PhoneNumber = x.PhoneNumber,
-                //    PhoneNumberConfirmed = x.PhoneNumberConfirmed,
-                //    SiteId = x.SiteId,
-                //    TimeZoneId = x.TimeZoneId,
-                //    UserName = x.UserName,
-                //    WebSiteUrl = x.WebSiteUrl
-
-                //};
-
 
                 var data = await query
                     .AsSingleQuery()
@@ -709,8 +562,6 @@ namespace cloudscribe.Core.Storage.EFCore.Common
                 return result;
             }
 
-            
-
         }
 
         public async Task<int> CountUnconfirmedEmail(
@@ -727,8 +578,6 @@ namespace cloudscribe.Core.Storage.EFCore.Common
                 cancellationToken)
                 .ConfigureAwait(false);
             }
-
-            
         }
 
         public async Task<PagedResult<IUserInfo>> GetPageUnconfirmedEmailUsers(
@@ -751,30 +600,6 @@ namespace cloudscribe.Core.Storage.EFCore.Common
                   )
                   orderby x.DisplayName
                   select x;
-                //select new UserInfo
-                //{
-                //    Id = x.Id,
-                //    AvatarUrl = x.AvatarUrl,
-                //    AccountApproved = x.AccountApproved,
-                //    CreatedUtc = x.CreatedUtc,
-                //    DateOfBirth = x.DateOfBirth,
-                //    DisplayInMemberList = x.DisplayInMemberList,
-                //    DisplayName = x.DisplayName,
-                //    Email = x.Email,
-                //    FirstName = x.FirstName,
-                //    Gender = x.Gender,
-                //    IsLockedOut = x.IsLockedOut,
-                //    LastLoginUtc = x.LastLoginUtc,
-                //    LastName = x.LastName,
-                //    PhoneNumber = x.PhoneNumber,
-                //    PhoneNumberConfirmed = x.PhoneNumberConfirmed,
-                //    SiteId = x.SiteId,
-                //    TimeZoneId = x.TimeZoneId,
-                //    UserName = x.UserName,
-                //    WebSiteUrl = x.WebSiteUrl
-
-                //};
-
 
                 var data = await query
                     .AsSingleQuery()
@@ -792,9 +617,6 @@ namespace cloudscribe.Core.Storage.EFCore.Common
                 return result;
 
             }
-
-            
-
         }
 
         public async Task<int> CountUnconfirmedPhone(
@@ -810,8 +632,6 @@ namespace cloudscribe.Core.Storage.EFCore.Common
                 cancellationToken)
                 .ConfigureAwait(false);
             }
-
-            
         }
 
         public async Task<PagedResult<IUserInfo>> GetPageUnconfirmedPhoneUsers(
@@ -834,30 +654,6 @@ namespace cloudscribe.Core.Storage.EFCore.Common
                   )
                   orderby x.DisplayName
                   select x;
-                //select new UserInfo
-                //{
-                //    Id = x.Id,
-                //    AvatarUrl = x.AvatarUrl,
-                //    AccountApproved = x.AccountApproved,
-                //    CreatedUtc = x.CreatedUtc,
-                //    DateOfBirth = x.DateOfBirth,
-                //    DisplayInMemberList = x.DisplayInMemberList,
-                //    DisplayName = x.DisplayName,
-                //    Email = x.Email,
-                //    FirstName = x.FirstName,
-                //    Gender = x.Gender,
-                //    IsLockedOut = x.IsLockedOut,
-                //    LastLoginUtc = x.LastLoginUtc,
-                //    LastName = x.LastName,
-                //    PhoneNumber = x.PhoneNumber,
-                //    PhoneNumberConfirmed = x.PhoneNumberConfirmed,
-                //    SiteId = x.SiteId,
-                //    TimeZoneId = x.TimeZoneId,
-                //    UserName = x.UserName,
-                //    WebSiteUrl = x.WebSiteUrl
-
-                //};
-
 
                 var data = await query
                     .AsSingleQuery()
@@ -875,9 +671,6 @@ namespace cloudscribe.Core.Storage.EFCore.Common
                 return result;
 
             }
-
-            
-
         }
 
         public async Task<int> CountNotApprovedUsers(
@@ -913,30 +706,6 @@ namespace cloudscribe.Core.Storage.EFCore.Common
                   )
                   orderby x.DisplayName
                   select x;
-                //select new UserInfo
-                //{
-                //    Id = x.Id,
-                //    AvatarUrl = x.AvatarUrl,
-                //    AccountApproved = x.AccountApproved,
-                //    CreatedUtc = x.CreatedUtc,
-                //    DateOfBirth = x.DateOfBirth,
-                //    DisplayInMemberList = x.DisplayInMemberList,
-                //    DisplayName = x.DisplayName,
-                //    Email = x.Email,
-                //    FirstName = x.FirstName,
-                //    Gender = x.Gender,
-                //    IsLockedOut = x.IsLockedOut,
-                //    LastLoginUtc = x.LastLoginUtc,
-                //    LastName = x.LastName,
-                //    PhoneNumber = x.PhoneNumber,
-                //    PhoneNumberConfirmed = x.PhoneNumberConfirmed,
-                //    SiteId = x.SiteId,
-                //    TimeZoneId = x.TimeZoneId,
-                //    UserName = x.UserName,
-                //    WebSiteUrl = x.WebSiteUrl
-
-                //};
-
 
                 var data = await query
                     .AsSingleQuery()
@@ -1041,7 +810,6 @@ namespace cloudscribe.Core.Storage.EFCore.Common
         #endregion
 
         #region Roles
-
         
         public async Task<bool> RoleExists(
             Guid siteId,
@@ -1162,25 +930,12 @@ namespace cloudscribe.Core.Storage.EFCore.Common
                                 (searchInput == "" || x.RoleName.Contains(searchInput) || x.NormalizedRoleName.Contains(searchInput.ToUpper()))
                                 )
                                 orderby x.NormalizedRoleName ascending
-                                //select new SiteRole
-                                //{
-                                //    Id = x.Id,
-                                //    SiteId = x.SiteId,
-                                //    NormalizedRoleName = x.NormalizedRoleName,
-                                //    RoleName = x.RoleName,
-                                //    // 2017-03-21 this line broke
-                                //    // https://github.com/aspnet/EntityFramework/issues/7714
-                                //    MemberCount = dbContext.UserRoles.Count<UserRole>(u => u.RoleId == x.Id)
-                                //};
-                                // workaround need to use anonymous type and then project back into SiteRole
                                 select new
                                 {
                                     Id = x.Id,
                                     SiteId = x.SiteId,
                                     NormalizedRoleName = x.NormalizedRoleName,
                                     RoleName = x.RoleName,
-                                    // 2017-03-21 this line broke
-                                    // https://github.com/aspnet/EntityFramework/issues/7714
                                     MemberCount = dbContext.UserRoles.Count<UserRole>(u => u.RoleId == x.Id)
                                 };
 
@@ -1230,17 +985,6 @@ namespace cloudscribe.Core.Storage.EFCore.Common
                                 x.SiteId.Equals(siteId) 
                                 )
                                 orderby x.NormalizedRoleName ascending
-                                //select new SiteRole
-                                //{
-                                //    Id = x.Id,
-                                //    SiteId = x.SiteId,
-                                //    NormalizedRoleName = x.NormalizedRoleName,
-                                //    RoleName = x.RoleName,
-                                //    // 2017-03-21 this line broke
-                                //    // https://github.com/aspnet/EntityFramework/issues/7714
-                                //    MemberCount = dbContext.UserRoles.Count<UserRole>(u => u.RoleId == x.Id)
-                                //};
-                                // workaround need to use anonymous type and then project back into SiteRole
                                 select new
                                 {
                                     Id = x.Id,
@@ -1294,7 +1038,6 @@ namespace cloudscribe.Core.Storage.EFCore.Common
                                     || (x.LastName != null && x.LastName.Contains(searchInput))
                                 )
                                 )
-                            //select x.UserGuid
                             select 1
                         ;
 
@@ -1331,9 +1074,7 @@ namespace cloudscribe.Core.Storage.EFCore.Common
                                     || (x.LastName != null && x.LastName.Contains(searchInput))
                                 )
                                 )
-                            select x
-                        ;
-
+                            select x;
 
                 var data = await query
                     .AsSingleQuery()
@@ -1381,8 +1122,6 @@ namespace cloudscribe.Core.Storage.EFCore.Common
                 return items;
 
             }
-
-           
         }
 
         public async Task<int> CountUsersNotInRole(
@@ -1414,7 +1153,6 @@ namespace cloudscribe.Core.Storage.EFCore.Common
                             && t2 == null
                             )
 
-                            //select u.UserId;
                             select 1;
 
                 return await query.CountAsync<int>(cancellationToken).ConfigureAwait(false);
@@ -1431,8 +1169,7 @@ namespace cloudscribe.Core.Storage.EFCore.Common
             CancellationToken cancellationToken = default(CancellationToken))
         {
             int offset = (pageSize * pageNumber) - pageSize;
-            // it took me a lot of tries and googling to figure out how to get this query to work as intended
-            // it works but is still logging a warning DefaultIfEmpty() could not be translated and will be evaluated locally
+            // logging a warning DefaultIfEmpty() could not be translated and will be evaluated locally
 
             using (var dbContext = _contextFactory.CreateContext())
             {
@@ -1721,11 +1458,8 @@ namespace cloudscribe.Core.Storage.EFCore.Common
                 var query = dbContext.UserLocations
                 .Where(x => x.UserId == userId)
                 .OrderByDescending(x => x.LastCaptureUtc)
-                //.Select(p => p)
                 .Skip(offset)
-                .Take(pageSize)
-
-                ;
+                .Take(pageSize);
 
                 var data = await query
                     .AsNoTracking()
@@ -1734,19 +1468,12 @@ namespace cloudscribe.Core.Storage.EFCore.Common
                     .ConfigureAwait(false);
 
                 result.Data = data.ToList<IUserLocation>();
-
-
             }
 
             result.TotalItems = await CountUserLocationsByUser(siteId, userId, cancellationToken).ConfigureAwait(false);
             return result;
-
-
-
         }
 
         #endregion
-
-        
     }
 }

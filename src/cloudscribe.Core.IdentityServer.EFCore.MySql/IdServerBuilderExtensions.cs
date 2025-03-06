@@ -23,15 +23,11 @@ namespace Microsoft.Extensions.DependencyInjection
             ICollection<int> transientSqlErrorNumbersToAdd = null
             )
         {
-            //builder.AddConfigurationStoreMSSQL(connectionString);    
-            //builder.AddOperationalStoreMSSQL(connectionString);
             builder.Services.AddCloudscribeCoreIdentityServerEFStorageMySql(connectionString, maxConnectionRetryCount, maxConnectionRetryDelaySeconds, transientSqlErrorNumbersToAdd);
             builder.Services.AddScoped<IStorageInfo, StorageInfo>();
 
             return builder;
         }
-
-       
 
         public static IIdentityServerBuilder AddConfigurationStoreCache(
             this IIdentityServerBuilder builder)
@@ -39,19 +35,14 @@ namespace Microsoft.Extensions.DependencyInjection
             builder.Services.AddMemoryCache(); // TODO: remove once update idsvr since it does this
             builder.AddInMemoryCaching();
 
-            // these need to be registered as concrete classes in DI for
-            // the caching decorators to work
             builder.Services.AddTransient<ClientStore>();
             builder.Services.AddTransient<ResourceStore>();
 
-            // add the caching decorators
             builder.AddClientStoreCache<ClientStore>();
             builder.AddResourceStoreCache<ResourceStore>();
 
             return builder;
         }
-
-       
 
         public static IServiceCollection AddCloudscribeCoreIdentityServerEFStorageMySql(
             this IServiceCollection services,
@@ -61,17 +52,13 @@ namespace Microsoft.Extensions.DependencyInjection
             ICollection<int> transientSqlErrorNumbersToAdd = null
             )
         {
-            //services.AddEntityFrameworkMySql()
-            //    .AddDbContext<ConfigurationDbContext>(options =>
-            //        options.UseMySql(connectionString));
 
             services.AddCloudscribeCoreIdentityServerStores();
 
 
-            services // .AddEntityFrameworkMySql()
-                .AddDbContext<ConfigurationDbContext>(options =>
+            services.AddDbContext<ConfigurationDbContext>(options =>
                     options.UseMySql(connectionString,
-                    ServerVersion.AutoDetect(connectionString),  // breaking change here in Net5.0
+                    ServerVersion.AutoDetect(connectionString),
                     mySqlOptionsAction: sqlOptions =>
                     {
                         if (maxConnectionRetryCount > 0)
@@ -88,10 +75,9 @@ namespace Microsoft.Extensions.DependencyInjection
 
 
 
-            services // .AddEntityFrameworkMySql()
-                .AddDbContext<PersistedGrantDbContext>(options =>
+            services.AddDbContext<PersistedGrantDbContext>(options =>
                     options.UseMySql(connectionString,
-                    ServerVersion.AutoDetect(connectionString),  // breaking change here in Net5.0
+                    ServerVersion.AutoDetect(connectionString),
                     mySqlOptionsAction: sqlOptions =>
                     {
                         if (maxConnectionRetryCount > 0)
@@ -114,9 +100,5 @@ namespace Microsoft.Extensions.DependencyInjection
 
             return services;
         }
-
-
-
-
     }
 }

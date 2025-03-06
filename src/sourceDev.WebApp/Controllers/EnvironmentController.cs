@@ -19,15 +19,7 @@ namespace sourceDev.WebApp.Controllers
         [HttpGet]
         public IActionResult Routes()
         {
-            //var routes = _actionDescriptorCollectionProvider.ActionDescriptors.Items.Select(x => new {
-            //    Action = x.RouteValues["Action"],
-            //    Controller = x.RouteValues["Controller"],
-            //    Name = x.AttributeRouteInfo.Name,
-            //    Template = x.AttributeRouteInfo.Template
-            //}).ToList();
-
             var items = _actionDescriptorCollectionProvider.ActionDescriptors.Items;
-
 
             return Ok();
         }

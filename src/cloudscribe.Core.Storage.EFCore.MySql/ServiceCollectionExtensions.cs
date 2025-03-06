@@ -22,14 +22,9 @@ namespace Microsoft.Extensions.DependencyInjection
         {
             services.AddCloudscribeCoreEFCommon(useSingletonLifetime);
 
-            //services.AddEntityFrameworkMySql()
-            //    .AddDbContext<CoreDbContext>(options =>
-            //        options.UseMySql(connectionString));
-
-            services   // .AddEntityFrameworkMySql()
-                .AddDbContext<CoreDbContext>(options =>
+            services.AddDbContext<CoreDbContext>(options =>
                     options.UseMySql(connectionString,
-                    ServerVersion.AutoDetect(connectionString),  // breaking change here in Net5.0
+                    ServerVersion.AutoDetect(connectionString),
                     mySqlOptionsAction: sqlOptions =>
                     {
                         if (mySqlOptions != null)

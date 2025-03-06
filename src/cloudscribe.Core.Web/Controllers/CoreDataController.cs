@@ -43,7 +43,6 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
         protected UIOptions UIOptions { get; private set; }
         protected IStringLocalizer StringLocalizer { get; private set; }
 
-        // GET: /CoreData/
         [Authorize(Policy = PolicyConstants.CoreDataPolicy)]
         [HttpGet]
         public virtual IActionResult Index()
@@ -138,8 +137,6 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
         }
 
 
-        // probably should hide by config by default
-        // seems like an unusual event to delete a country and its states
         [Authorize(Policy = PolicyConstants.CoreDataPolicy)]
         [HttpPost]
         [ValidateAntiForgeryToken]
@@ -255,7 +252,7 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
             }
             else
             {
-                states = new List<IGeoZone>(); //empty list
+                states = new List<IGeoZone>();
             }
 
             var selecteList = new SelectList(states, "Code", "Name");

@@ -50,7 +50,7 @@ namespace cloudscribe.Core.IdentityServerIntegration.Controllers.Mvc
             )
         {
             var selectedSite = await siteManager.GetSiteForDataOperations(siteId);
-            // only server admin site can edit other sites settings
+
             if (selectedSite.Id != siteManager.CurrentSite.Id)
             {
                 ViewData["Title"] = string.Format(CultureInfo.CurrentUICulture, sr["{0} - Client Management"], selectedSite.SiteName);
@@ -69,10 +69,6 @@ namespace cloudscribe.Core.IdentityServerIntegration.Controllers.Mvc
             model.SiteId = selectedSite.Id.ToString();
             var result = await clientsManager.GetClients(selectedSite.Id.ToString(), pageNumber, itemsPerPage);
             model.Clients = result;
-
-            //model.Paging.CurrentPage = pageNumber;
-            //model.Paging.ItemsPerPage = itemsPerPage;
-            //model.Paging.TotalItems = result.TotalItems;
 
             return View(model);
         }
@@ -157,10 +153,6 @@ namespace cloudscribe.Core.IdentityServerIntegration.Controllers.Mvc
             client.FrontChannelLogoutUri = clientModel.FrontChannelLogoutUri;
             client.BackChannelLogoutSessionRequired = clientModel.BackChannelLogoutSessionRequired;
             client.BackChannelLogoutUri = clientModel.BackChannelLogoutUri;
-            //Consider making client claims prefix value configurable
-            //https://github.com/IdentityServer/IdentityServer4/issues/1534
-            //PrefixClientClaims = client.PrefixClientClaims;
-            //client.PrefixClientClaims = clientModel.PrefixClientClaims;
             client.ClientClaimsPrefix = clientModel.ClientClaimsPrefix;
 
             client.PairWiseSubjectSalt = clientModel.PairWiseSubjectSalt;
@@ -326,7 +318,6 @@ namespace cloudscribe.Core.IdentityServerIntegration.Controllers.Mvc
 
             if(client.Properties.Keys.Contains(model.Key))
             {
-                //client.Properties[model.Key] = model.Value;
                 this.AlertDanger(sr["Client already has a property with that key, to change a proprty you must delete it and then add it back with the new value."], true);
                 return RedirectToAction("EditClient", new { siteId = selectedSite.Id.ToString(), clientId = model.ClientId });
             }

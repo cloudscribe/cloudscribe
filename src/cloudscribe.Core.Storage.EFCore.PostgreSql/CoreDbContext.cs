@@ -221,8 +221,7 @@ namespace cloudscribe.Core.Storage.EFCore.PostgreSql
                 entity.Property(p => p.EmailSenderName)
                 .HasMaxLength(100)
                 .IsRequired()
-                .HasDefaultValue("SmtpMailSender")
-                ;
+                .HasDefaultValue("SmtpMailSender");
 
                 entity.Property(p => p.CookiePolicySummary).HasMaxLength(255);
 
@@ -230,7 +229,6 @@ namespace cloudscribe.Core.Storage.EFCore.PostgreSql
 
                 entity.Property(p => p.LogoUrl)
                .HasMaxLength(250);
-                ;
                 entity.Property(p => p.RegRestrictionTld);
                 entity.Property(p => p.MaximumInactivityInMinutes);
                 entity.Property(p => p.PasswordExpiresDays);
@@ -272,14 +270,10 @@ namespace cloudscribe.Core.Storage.EFCore.PostgreSql
                 entity.Property(p => p.DisplayInMemberList).IsRequired();
 
                 entity.Property(p => p.Email)
-                 //.IsRequired() 2019-03-01 need to allow initial null value for ldap auth and other scenarios, site rules middleware will force the user to provide an email
-                 .HasMaxLength(100)
-                 ;
+                 .HasMaxLength(100);
 
                 entity.Property(p => p.NormalizedEmail)
-                // .IsRequired()
-                .HasMaxLength(100)
-                ;
+                .HasMaxLength(100);
 
                 entity.Property(p => p.NewEmail).HasMaxLength(100);
 
@@ -300,8 +294,6 @@ namespace cloudscribe.Core.Storage.EFCore.PostgreSql
                 entity.Property(p => p.LastName).HasMaxLength(100);
 
                 entity.Property(p => p.EmailConfirmed).IsRequired();
-
-                //entity.Property(p => p.IsDeleted).IsRequired();
 
                 entity.Property(p => p.IsLockedOut).IsRequired();
 
@@ -524,10 +516,5 @@ namespace cloudscribe.Core.Storage.EFCore.PostgreSql
             modelBuilder.ApplySnakeCaseConventions();
 
         }
-
-       
-
-
-
     }
 }

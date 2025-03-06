@@ -8,7 +8,6 @@ namespace cloudscribe.Core.Identity
     {
         public Task AddClaims(SiteUser user, ClaimsIdentity identity)
         {
-            // do nothing
             return Task.FromResult(0);
         }
     }

@@ -4,7 +4,6 @@
     <form asp-controller="Clients" asp-action="EditClient">
         <input asp-for="SiteId" type="hidden" />
         <input name="ClientId" value="@Model.ClientId" type="hidden" />
-        @*<div asp-validation-summary="All" class="text-danger"></div>*@
         <div class="form-group">
             <label>@sr["Id"]</label>
             <label class="form-control">@Model.ClientId</label>

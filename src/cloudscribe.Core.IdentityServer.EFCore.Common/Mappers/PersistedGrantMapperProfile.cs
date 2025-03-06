@@ -1,7 +1,6 @@
 ﻿// Copyright (c) Brock Allen & Dominick Baier. All rights reserved.
 // Licensed under the Apache License, Version 2.0. See LICENSE in the project root for license information.
 
-
 using AutoMapper;
 using cloudscribe.Core.IdentityServer.EFCore.Entities;
 
@@ -24,15 +23,5 @@ namespace cloudscribe.Core.IdentityServer.EFCore.Mappers
             CreateMap<Entities.PersistedGrant, IdentityServer4.Models.PersistedGrant>(MemberList.Destination)
                 .ReverseMap();
         }
-
-
-        //public PersistedGrantMapperProfile()
-        //{
-        //    // entity to model
-        //    CreateMap<PersistedGrant, IdentityServer4.Models.PersistedGrant>(MemberList.Destination);
-
-        //    // model to entity
-        //    CreateMap<IdentityServer4.Models.PersistedGrant, PersistedGrant>(MemberList.Source);
-        //}
     }
 }

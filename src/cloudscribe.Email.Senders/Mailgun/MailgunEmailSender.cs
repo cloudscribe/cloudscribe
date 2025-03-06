@@ -112,7 +112,6 @@ namespace cloudscribe.Email.Mailgun
             var keyValues = new List<KeyValuePair<string, string>>();
 #pragma warning restore IDE0028 // Simplify collection initialization
 
-            //"Bob <bob@host.com>"
             var emailFormat = "{0} <{1}>";
             if (!string.IsNullOrWhiteSpace(fromEmail))
             {
@@ -184,7 +183,6 @@ namespace cloudscribe.Email.Mailgun
                         if (!string.IsNullOrEmpty(adrs[i]))
                         {
                             sb.Append(comma + string.Format(emailFormat, toAliases[i].Trim(), adrs[i].Trim()));
-                            //email.To(adrs[i].Trim(), toAliases[i].Trim());
                             comma = ",";
                         }    
                     }
@@ -197,7 +195,6 @@ namespace cloudscribe.Email.Mailgun
             }
             else
             {
-                //not really a csv
                 keyValues.Add(new KeyValuePair<string, string>("to", toEmailCsv));
             }
 
@@ -280,16 +277,6 @@ namespace cloudscribe.Email.Mailgun
                     keyValues.Add(new KeyValuePair<string, string>("bcc", bccEmailCsv));
                 }
             }
-
-            //if (importance == Importance.High)
-            //{
-            //    email.HighPriority();
-            //}
-            //if (importance == Importance.Low)
-            //{
-            //    email.LowPriority();
-            //}
-
             
             if (attachments == null || attachments.Count == 0)
             {

@@ -196,7 +196,6 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       },
       _handleIndexActions: function () {
           switch (this.$.apploc.route.__queryParams.action) {
-              // /index.html?action=popupcallback
               case "popupcallback":
                   this.$.oidc.signinPopupCallback()
                       .then(this._redirectToRoot.bind(this), this._redirectToRoot.bind(this));

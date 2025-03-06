@@ -23,12 +23,10 @@ namespace cloudscribe.QueryTool.Services
                     if(provider.EndsWith("sqlite"))
                     {
                         query = "SELECT name AS TableName FROM sqlite_master WHERE type='table' ORDER BY name;";
-                        // dataTable = RawQuery<System.Data.SQLite.SQLiteConnection>(query);
                     }
                     else if(provider.EndsWith("sqlserver"))
                     {
                         query = "SELECT TABLE_NAME AS TableName FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_TYPE = 'BASE TABLE' ORDER BY TABLE_NAME;";
-                        // dataTable = RawQuery<System.Data.SqlClient.SqlConnection>(query);
                     }
                     else if(provider.EndsWith("mysql"))
                     {

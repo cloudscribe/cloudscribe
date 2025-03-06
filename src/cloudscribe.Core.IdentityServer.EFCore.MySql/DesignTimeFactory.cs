@@ -1,8 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Design;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace cloudscribe.Core.IdentityServer.EFCore.MySql
 {
@@ -13,9 +10,6 @@ namespace cloudscribe.Core.IdentityServer.EFCore.MySql
             var builder = new DbContextOptionsBuilder<ConfigurationDbContext>();
             var connString = "Server=yourserver;Database=yourdb;Uid=youruser;Pwd=yourpassword;Charset=utf8;";
 
-            // builder.UseMySql(connString);
-            
-            // for breaking changes in Net5.0:
             builder.UseMySql(connString, ServerVersion.AutoDetect(connString));
 
 
@@ -30,9 +24,6 @@ namespace cloudscribe.Core.IdentityServer.EFCore.MySql
             var builder = new DbContextOptionsBuilder<PersistedGrantDbContext>();
             var connString = "Server=yourserver;Database=yourdb;Uid=youruser;Pwd=yourpassword;Charset=utf8;";
 
-            // builder.UseMySql(connString);
-
-            // for breaking changes in Net5.0:
             builder.UseMySql(connString, ServerVersion.AutoDetect(connString));
 
             return new PersistedGrantDbContext(builder.Options);

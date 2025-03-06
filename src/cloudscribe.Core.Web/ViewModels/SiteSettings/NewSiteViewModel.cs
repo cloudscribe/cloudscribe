@@ -74,7 +74,6 @@ namespace cloudscribe.Core.Web.ViewModels.SiteSettings
 
         public bool IsClosed { get; set; } = false;
 
-        // info for new site admin
         [Required(ErrorMessage = "Email is required.")]
         [EmailAddress(ErrorMessage = "invalid email format")]
         [StringLength(100, ErrorMessage = "Email has a maximum length of 100 characters")]
@@ -93,20 +92,8 @@ namespace cloudscribe.Core.Web.ViewModels.SiteSettings
         [StringLength(50, ErrorMessage = "Login name has a maximum length of 50 characters")]
         public string LoginName { get; set; } = string.Empty;
 
-        // TODO: do we want unique display names?
-        // people can have the same real names like John Smith and why should we prevent anyone from using their real name?
-        // not that we can be sure they are telling the truth about anything
-        // TODO: display name is prone to abuse, like using offensive language
-        // would be nice to implement validation and remote validation
-        // with a way to plugin a list of rules that can evaluate the requested displayname and reject it
-        // but this problem can also be mitigated by an admin editing the display name
-        
-        
         [Required(ErrorMessage = "Display Name is required.")]
         [StringLength(100, ErrorMessage = "Display name has a maximum length of 100 characters")]
         public string DisplayName { get; set; } = string.Empty;
-
-        
-
     }
 }

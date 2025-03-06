@@ -31,10 +31,8 @@ namespace cloudscribe.Core.Models.Geography
 
     }
 
-    // a marker interface so we can inject as singleton
     public interface IGeoQueriesSingleton : IGeoQueries
     {
-
     }
 
 }

@@ -63,7 +63,7 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
         protected ISiteMessageEmailSender    EmailSender { get; private set; }
         protected IAuthorizationService      AuthorizationService { get; private set; }
         protected UIOptions                  UIOptions { get; private set; }
-        protected IStringLocalizer           StringLocalizer { get; private set; } // string resources
+        protected IStringLocalizer           StringLocalizer { get; private set; }
         protected IHandleCustomUserInfoAdmin CustomUserInfo { get; private set; }
         public IAccountService AccountService { get; }
         protected cloudscribe.DateTimeUtils.ITimeZoneIdResolver TimeZoneIdResolver { get; private set; }
@@ -80,7 +80,7 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
             )
         {
             var selectedSite = await SiteManager.GetSiteForDataOperations(siteId);
-            // only server admin site can edit other sites settings
+
             if (selectedSite.Id != SiteManager.CurrentSite.Id)
             {
                 ViewData["Title"] = string.Format(CultureInfo.CurrentUICulture, StringLocalizer["{0} - User Management"], selectedSite.SiteName);
@@ -147,9 +147,7 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
                });
             }
             var export = users.ToCsv(null, true, true);
-            // return export as a file download
             var fileName = selectedSite.SiteName + "-users-" + DateTime.UtcNow.ToString("yyyyMMddHHmmss") + ".csv";
-            //sanitise this to a safe filename using an extension method without making it up
             fileName = fileName.ToSafeFileName();
             return File(System.Text.Encoding.UTF8.GetBytes(export), "text/csv", fileName);
         }
@@ -166,7 +164,7 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
             )
         {
             var selectedSite = await SiteManager.GetSiteForDataOperations(siteId);
-            // only server admin site can edit other sites settings
+
             if (selectedSite.Id != SiteManager.CurrentSite.Id)
             {
                 ViewData["Title"] = string.Format(CultureInfo.CurrentUICulture, StringLocalizer["{0} - User Management"], selectedSite.SiteName);
@@ -331,9 +329,7 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
                });
             }
             var export = users.ToCsv(null, true, true);
-            // return export as a file download
             var fileName = selectedSite.SiteName + "-users-" + DateTime.UtcNow.ToString("yyyyMMddHHmmss") + ".csv";
-            //sanitise this to a safe filename using an extension method without making it up
             fileName = fileName.ToSafeFileName();
             return File(System.Text.Encoding.UTF8.GetBytes(export), "text/csv", fileName);
 
@@ -346,7 +342,7 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
             string ipQuery = "")
         {
             var selectedSite = await SiteManager.GetSiteForDataOperations(siteId);
-            // only server admin site can edit other sites settings
+
             if (selectedSite.Id != SiteManager.CurrentSite.Id)
             {
                 ViewData["Title"] = string.Format(CultureInfo.CurrentUICulture, StringLocalizer["{0} - User Management"], selectedSite.SiteName);
@@ -408,9 +404,7 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
                });
             }
             var export = users.ToCsv(null, true, true);
-            // return export as a file download
             var fileName = selectedSite.SiteName + "-users-" + DateTime.UtcNow.ToString("yyyyMMddHHmmss") + ".csv";
-            //sanitise this to a safe filename using an extension method without making it up
             fileName = fileName.ToSafeFileName();
             return File(System.Text.Encoding.UTF8.GetBytes(export), "text/csv", fileName);
 
@@ -424,7 +418,7 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
             int pageSize = -1)
         {
             var selectedSite = await SiteManager.GetSiteForDataOperations(siteId);
-            // only server admin site can edit other sites settings
+
             if (selectedSite.Id != SiteManager.CurrentSite.Id)
             {
                 ViewData["Title"] = string.Format(CultureInfo.CurrentUICulture, StringLocalizer["{0} - Locked Out User Accounts"], selectedSite.SiteName);
@@ -465,7 +459,7 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
             int pageSize = -1)
         {
             var selectedSite = await SiteManager.GetSiteForDataOperations(siteId);
-            // only server admin site can edit other sites settings
+
             if (selectedSite.Id != SiteManager.CurrentSite.Id)
             {
                 ViewData["Title"] = string.Format(CultureInfo.CurrentUICulture, StringLocalizer["{0} - User Accounts Pending Approval"], selectedSite.SiteName);
@@ -504,7 +498,7 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
             Guid? siteId)
         {
             var selectedSite = await SiteManager.GetSiteForDataOperations(siteId);
-            // only server admin site can edit other sites settings
+
             if (selectedSite.Id != SiteManager.CurrentSite.Id)
             {
                 ViewData["Title"] = string.Format(CultureInfo.CurrentUICulture, StringLocalizer["{0} - New User"], selectedSite.SiteName);
@@ -578,7 +572,6 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
                 this.AlertWarning(StringLocalizer["Failed to send password reset email for this user. Check that this user has a valid email, and check the site email settings"], true);
             }
 
-            // potential for spamming end user
             await Task.Delay(2000);
 
             if (!string.IsNullOrEmpty(returnUrl))
@@ -596,7 +589,7 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
         public virtual async Task<IActionResult> NewUser(NewUserViewModel model)
         {
             var selectedSite = await SiteManager.GetSiteForDataOperations(model.SiteId);
-            // only server admin site can edit other sites settings
+
             if (selectedSite.Id != SiteManager.CurrentSite.Id)
             {
                 ViewData["Title"] = string.Format(CultureInfo.CurrentUICulture, StringLocalizer["{0} - New User"], selectedSite.SiteName);
@@ -642,12 +635,6 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
                 }
 
                 await CustomUserInfo.ProcessUserBeforeCreate(user, HttpContext);
-
-                // ** No, never allow a password-less user via this pathway
-                /*  if (!String.IsNullOrWhiteSpace(model.Password))
-                        result = await UserManager.CreateAsync(user, model.Password);
-                    else
-                        result = await UserManager.CreateAsync(user);   */
 
                 IdentityResult result = await UserManager.CreateAsync(user, model.Password);
 
@@ -717,7 +704,6 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
                 return RedirectToAction("Index");
             }
 
-            // only server admin site can edit other sites settings
             if (selectedSite.Id != SiteManager.CurrentSite.Id)
             {
                 ViewData["Title"] = string.Format(CultureInfo.CurrentUICulture, StringLocalizer["{0} - User Activity - {1}"], selectedSite.SiteName, user.Email);
@@ -786,7 +772,7 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
 
             ViewData["ReturnUrl"] = Request.Path + Request.QueryString;
             var selectedSite = await SiteManager.GetSiteForDataOperations(siteId);
-            // only server admin site can edit other sites settings
+
             if (selectedSite.Id != SiteManager.CurrentSite.Id)
             {
                 ViewData["Title"] = string.Format(CultureInfo.CurrentUICulture, StringLocalizer["{0} - Manage User"], selectedSite.SiteName);
@@ -869,7 +855,7 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
         public virtual async Task<IActionResult> UserEdit(EditUserViewModel model)
         {
             var selectedSite = await SiteManager.GetSiteForDataOperations(model.SiteId);
-            // only server admin site can edit other sites settings
+
             if (selectedSite.Id != SiteManager.CurrentSite.Id)
             {
                 ViewData["Title"] = string.Format(CultureInfo.CurrentUICulture, StringLocalizer["{0} - Manage User"], selectedSite.SiteName);
@@ -878,8 +864,6 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
             {
                 ViewData["Title"] = StringLocalizer["Manage User"];
             }
-
-
 
             bool isValid = ModelState.IsValid && (model.UserId != Guid.Empty);
             bool userNameAvailable = await UserManager.LoginIsAvailable(model.UserId, model.Username);
@@ -907,8 +891,6 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
                 return View(viewName, model);
             }
 
-            //editing an existing user
-
             if (user != null)
             {
                 user.Email = model.Email;
@@ -916,7 +898,6 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
                 user.LastName = model.LastName;
                 user.UserName = model.Username;
                 user.DisplayName = model.DisplayName;
-                //user.AccountApproved = model.AccountApproved;
                 user.Comment = model.Comment;
                 user.EmailConfirmed = model.EmailConfirmed;
 
@@ -949,12 +930,8 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
 
                 await UserManager.UpdateAsync((SiteUser)user);
 
-
-
                 this.AlertSuccess(string.Format(StringLocalizer["user account for {0} was successfully updated."],
                         user.DisplayName), true);
-
-
             }
             else
             {
@@ -983,7 +960,7 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
 
 
             var selectedSite = await SiteManager.GetSiteForDataOperations(siteId);
-            // only server admin site can edit other sites users
+
             if (selectedSite.Id != SiteManager.CurrentSite.Id)
             {
                 ViewData["Title"] = string.Format(CultureInfo.CurrentUICulture, StringLocalizer["{0} - Change User Password"], selectedSite.SiteName);
@@ -1037,7 +1014,7 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
 
 
             var selectedSite = await SiteManager.GetSiteForDataOperations(model.SiteId);
-            // only server admin site can edit other sites users
+
             if (selectedSite.Id != SiteManager.CurrentSite.Id)
             {
                 ViewData["Title"] = string.Format(CultureInfo.CurrentUICulture, StringLocalizer["{0} - Change User Password"], selectedSite.SiteName);
@@ -1083,10 +1060,6 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
                 return RedirectToAction("ChangeUserPassword", new { userId = model.UserId });
 
             }
-            //AddErrors(result);
-
-            //return View(model);
-
         }
 
         [Authorize(Policy = PolicyConstants.UserManagementPolicy)]
@@ -1160,7 +1133,6 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
         [HttpPost]
         [ValidateAntiForgeryToken]
         public virtual async Task<IActionResult> AddClaim(
-            //Guid siteId,
             Guid  userId,
             string claimType,
             string claimValue)
@@ -1186,7 +1158,6 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> RemoveClaim(
-            //Guid siteId,
             Guid userId,
             string claimType,
             string claimValue)
@@ -1213,7 +1184,6 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
         [HttpPost]
         [ValidateAntiForgeryToken]
         public virtual async Task<IActionResult> RemoveRole(
-            //Guid siteId,
             Guid userId,
             string roleName)
         {

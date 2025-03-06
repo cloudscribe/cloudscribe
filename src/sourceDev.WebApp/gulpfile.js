@@ -20,7 +20,6 @@ gulp.task('buildCustom1ThemeCss', function () {
     return gulp.src(config.srcSassDir + '/style.scss')
     .pipe(sourcemaps.init())
     .pipe(sass({
-        //outputStyle: 'compressed',
         includePaths: [
             config.srcSassDir
            

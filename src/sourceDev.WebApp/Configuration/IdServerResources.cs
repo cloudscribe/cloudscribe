@@ -69,25 +69,5 @@ namespace sourceDev.WebApp.Configuration
                 }
             };
         }
-
-        // test data for identityserver integration
-
-        // scopes define the resources in your system
-        //private IEnumerable<Scope> GetScopes()
-        //{
-        //    return new List<Scope>
-        //    {
-        //        StandardScopes.OpenId,
-        //        StandardScopes.Profile,
-        //        StandardScopes.OfflineAccess,
-
-        //        new Scope
-        //        {
-        //            Name = "s2",
-        //            DisplayName = "Site 2 api access",
-        //            Description = "Site2 APIs"
-        //        }
-        //    };
-        //}
     }
 }

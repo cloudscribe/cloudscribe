@@ -47,7 +47,7 @@ namespace cloudscribe.Core.IdentityServer.EFCore.Entities
         public int RefreshTokenUsage { get; set; } = (int)TokenUsage.OneTimeOnly;
         public bool UpdateAccessTokenClaimsOnRefresh { get; set; }
         public int RefreshTokenExpiration { get; set; } = (int)TokenExpiration.Absolute;
-        public int AccessTokenType { get; set; } = (int)0; // AccessTokenType.Jwt;
+        public int AccessTokenType { get; set; } = (int)0;
         public bool EnableLocalLogin { get; set; } = true;
         public List<ClientIdPRestriction> IdentityProviderRestrictions { get; set; }
         public bool IncludeJwtId { get; set; }
@@ -58,7 +58,6 @@ namespace cloudscribe.Core.IdentityServer.EFCore.Entities
         public List<ClientCorsOrigin> AllowedCorsOrigins { get; set; }
         public List<ClientProperty> Properties { get; set; }
 
-        //new in 2.3
         public DateTime Created { get; set; } = DateTime.UtcNow;
         public DateTime? Updated { get; set; }
         public DateTime? LastAccessed { get; set; }

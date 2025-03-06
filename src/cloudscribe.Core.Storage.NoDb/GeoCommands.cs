@@ -17,7 +17,6 @@ namespace cloudscribe.Core.Storage.NoDb
     public class GeoCommands : IGeoCommands, IGeoCommandsSingleton
     {
         public GeoCommands(
-            //IProjectResolver projectResolver,
             IBasicQueries<GeoCountry> countryQueries,
             IBasicCommands<GeoCountry> countryCommands,
             IBasicQueries<GeoZone> stateQueries,
@@ -25,7 +24,6 @@ namespace cloudscribe.Core.Storage.NoDb
            
             )
         {
-            //this.projectResolver = new DefaultProjectResolver();
             this.countryQueries = countryQueries;
             this.countryCommands = countryCommands;
             this.stateQueries = stateQueries;
@@ -33,23 +31,11 @@ namespace cloudscribe.Core.Storage.NoDb
            
         }
 
-        //private IProjectResolver projectResolver;
         private IBasicQueries<GeoCountry> countryQueries;
         private IBasicCommands<GeoCountry> countryCommands;
         private IBasicQueries<GeoZone> stateQueries;
         private IBasicCommands<GeoZone> stateCommands;
         
-        //protected string projectId;
-
-        //private async Task EnsureProjectId()
-        //{
-        //    if (string.IsNullOrEmpty(projectId))
-        //    {
-        //        projectId = await projectResolver.ResolveProjectId().ConfigureAwait(false);
-        //    }
-
-        //}
-
         public async Task Add(
             IGeoCountry geoCountry,
             CancellationToken cancellationToken = default(CancellationToken)
@@ -61,10 +47,9 @@ namespace cloudscribe.Core.Storage.NoDb
             if (geoCountry == null) throw new ArgumentException("geoCountry must not be null");
             if (geoCountry.Id == Guid.Empty) throw new ArgumentException("geoCountry must have a non-empty id");
 
-            //await EnsureProjectId().ConfigureAwait(false);
             var projectId = "default";
 
-            var country = GeoCountry.FromIGeoCountry(geoCountry); // convert from IGeoCountry
+            var country = GeoCountry.FromIGeoCountry(geoCountry);
 
             await countryCommands.CreateAsync(
                 projectId,
@@ -84,10 +69,9 @@ namespace cloudscribe.Core.Storage.NoDb
             if (geoCountry == null) throw new ArgumentException("geoCountry must not be null");
             if (geoCountry.Id == Guid.Empty) throw new ArgumentException("geoCountry must have a non-empty id");
 
-            //await EnsureProjectId().ConfigureAwait(false);
             var projectId = "default";
 
-            var country = GeoCountry.FromIGeoCountry(geoCountry); // convert from IGeoCountry
+            var country = GeoCountry.FromIGeoCountry(geoCountry);
 
             await countryCommands.UpdateAsync(
                 projectId,
@@ -106,7 +90,6 @@ namespace cloudscribe.Core.Storage.NoDb
 
             if (countryId == Guid.Empty) throw new ArgumentException("countryid must be a non-empty id");
 
-            //await EnsureProjectId().ConfigureAwait(false);
             var projectId = "default";
 
             await countryCommands.DeleteAsync(
@@ -125,10 +108,9 @@ namespace cloudscribe.Core.Storage.NoDb
             if (geoZone == null) throw new ArgumentException("geoZone must not be null");
             if (geoZone.Id == Guid.Empty) throw new ArgumentException("geoZone must have a non-empty id");
 
-            //await EnsureProjectId().ConfigureAwait(false);
             var projectId = "default";
 
-            var state = GeoZone.FromIGeoZone(geoZone); // convert from IGeoZone
+            var state = GeoZone.FromIGeoZone(geoZone);
 
             await stateCommands.CreateAsync(
                 projectId,
@@ -148,10 +130,9 @@ namespace cloudscribe.Core.Storage.NoDb
             if (geoZone.Id == Guid.Empty) throw new ArgumentException("geoZone must have a non-empty id");
             if (geoZone.CountryId == Guid.Empty) throw new ArgumentException("geoZone must have a non-empty CountryId");
 
-            //await EnsureProjectId().ConfigureAwait(false);
             var projectId = "default";
 
-            var state = GeoZone.FromIGeoZone(geoZone); // convert from IGeoZone
+            var state = GeoZone.FromIGeoZone(geoZone);
 
             await stateCommands.UpdateAsync(
                 projectId,
@@ -169,7 +150,6 @@ namespace cloudscribe.Core.Storage.NoDb
             cancellationToken.ThrowIfCancellationRequested();
             if (stateId == Guid.Empty) throw new ArgumentException("stateid must be a non-empty guid");
 
-            //await EnsureProjectId().ConfigureAwait(false);
             var projectId = "default";
 
             await stateCommands.DeleteAsync(
@@ -186,7 +166,6 @@ namespace cloudscribe.Core.Storage.NoDb
             cancellationToken.ThrowIfCancellationRequested();
             if (countryId == Guid.Empty) throw new ArgumentException("countryId must be a non-empty guid");
 
-            // await EnsureProjectId().ConfigureAwait(false);
             var projectId = "default";
             var allStates = await stateQueries.GetAllAsync(projectId, cancellationToken).ConfigureAwait(false);
             var states = allStates.ToList().AsQueryable();
@@ -216,7 +195,7 @@ namespace cloudscribe.Core.Storage.NoDb
             }
         }
 
-        private bool disposedValue = false; // To detect redundant calls
+        private bool disposedValue = false;
 
         void Dispose(bool disposing)
         {

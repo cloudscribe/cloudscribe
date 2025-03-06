@@ -4,7 +4,6 @@
 <form asp-controller="ApiResource" asp-action="EditApiResource">
     <input asp-for="SiteId" type="hidden" />
     <input asp-for="Name" type="hidden" />  
-    @*<div asp-validation-summary="All" class="text-danger"></div>*@
     <div class="form-group">
         <label>@sr["Name"]</label>
         <label class="form-control">@Model.Name</label>

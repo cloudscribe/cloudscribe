@@ -344,13 +344,6 @@
                 q.setSelectionRange(hs, he);
             }
 
-            // scroll to results
-            // var hasResults=$('#RowsAffected').val() > 0;
-            // if(hasResults) {
-            //     var r=$('a[name="results"]');
-            //     $('html,body').animate({scrollTop: r.offset().top},'slow');
-            // }
-
             var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'))
             var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
                 return new bootstrap.Tooltip(tooltipTriggerEl)

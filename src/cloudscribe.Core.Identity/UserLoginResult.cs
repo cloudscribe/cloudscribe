@@ -61,10 +61,6 @@ namespace cloudscribe.Core.Identity
         
         public SignInResult SignInResult { get; }
 
-        /// <summary>
-        /// these reasons  are not meant for display in the ui
-        /// it is not a good idea to give reasons, in ui just show invalid login message without showing reason
-        /// </summary>
         public List<string> RejectReasons { get; }
 
         public IUserContext User { get; }

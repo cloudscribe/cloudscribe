@@ -19,7 +19,6 @@ namespace cloudscribe.Core.Models.Identity
 
             if(!string.IsNullOrWhiteSpace(user.DisplayName))
             {
-                //if already populated just return it
                 return user.DisplayName;
             }
 

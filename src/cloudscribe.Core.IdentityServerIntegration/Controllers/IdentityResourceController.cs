@@ -48,7 +48,7 @@ namespace cloudscribe.Core.IdentityServerIntegration.Controllers.Mvc
             )
         {
             var selectedSite = await _siteManager.GetSiteForDataOperations(siteId);
-            // only server admin site can edit other sites settings
+
             if (selectedSite.Id != _siteManager.CurrentSite.Id)
             {
                 ViewData["Title"] = string.Format(CultureInfo.CurrentUICulture, sr["{0} - Identity Resource Management"], selectedSite.SiteName);
@@ -67,10 +67,6 @@ namespace cloudscribe.Core.IdentityServerIntegration.Controllers.Mvc
             model.SiteId = selectedSite.Id.ToString();
             var result = await _idManager.GetIdentityResources(selectedSite.Id.ToString(), pageNumber, itemsPerPage);
             model.IdentityResources = result;
-
-            //model.Paging.CurrentPage = pageNumber;
-            //model.Paging.ItemsPerPage = itemsPerPage;
-            //model.Paging.TotalItems = result.TotalItems;
 
             return View(model);
         }
@@ -251,9 +247,6 @@ namespace cloudscribe.Core.IdentityServerIntegration.Controllers.Mvc
                 this.AlertDanger(sr["Invalid request, Identity Resource not found."], true);
                 return RedirectToAction("Index");
             }
-
-            //var claim = new ScopeClaim(model.Name, model.AlwaysIncludeInIdToken);
-            //claim.Description = model.Description;
 
             if (resource.UserClaims.Contains(model.ClaimName))
             {

@@ -45,16 +45,11 @@ namespace Microsoft.Extensions.DependencyInjection
         public static IServiceCollection AddCloudscribeCoreMvc(this IServiceCollection services, IConfiguration configuration)
         {
             services.AddCloudscribeCoreCommon(configuration);
-            //services.AddScoped<IVersionProvider, ControllerVersionInfo>();
 
             services.TryAddScoped<IDecideErrorResponseType, DefaultErrorResponseTypeDecider>();
 
-
             return services;
         }
-
-
-
 
         public static IServiceCollection AddCloudscribeCoreCommon(this IServiceCollection services, IConfiguration configuration)
         {
@@ -86,12 +81,8 @@ namespace Microsoft.Extensions.DependencyInjection
 
             services.Configure<CachingSiteResolverOptions>(configuration.GetSection("CachingSiteResolverOptions"));
 
-
-
-            //services.TryAddScoped<ISiteContextResolver, SiteContextResolver>();
             services.TryAddScoped<ISiteContextResolver, CachingSiteContextResolver>();
 
-            //services.AddMultitenancy<SiteContext, CachingSiteResolver>();
             services.AddMultitenancy<SiteContext, SiteResolver>();
 
             services.AddScoped<CacheHelper, CacheHelper>();
@@ -109,8 +100,6 @@ namespace Microsoft.Extensions.DependencyInjection
             services.AddScoped<SiteDataProtector>();
 
             services.TryAddScoped<ICkeditorOptionsResolver, SiteCkeditorOptionsResolver>();
-            //TODO: remove in a future version
-            // services.AddScoped<cloudscribe.Web.Common.ITimeZoneIdResolver, RequestTimeZoneIdResolver>();
 
             services.TryAddSingleton<IDateTimeZoneProvider>(new DateTimeZoneCache(TzdbDateTimeZoneSource.Default));
             services.AddScoped<cloudscribe.DateTimeUtils.ITimeZoneIdResolver, SiteTimeZoneIdResolver>();
@@ -122,7 +111,6 @@ namespace Microsoft.Extensions.DependencyInjection
 
             services.TryAddScoped<IHandleAccountAnalytics, GoogleAccountAnalytics>();
 
-            //services.TryAddScoped<IViewRendererRouteProvider, SiteViewRendererRouteProvider>();
             services.AddCloudscribeCommmon(configuration);
 
             services.AddCloudscribePagination();
@@ -140,25 +128,20 @@ namespace Microsoft.Extensions.DependencyInjection
 
             services.TryAddScoped<IEmailChangeHandler, EmailChangeHandler>();
 
-
-            //services.AddTransient<ISiteMessageEmailSender, FakeSiteEmailSender>();
             services.TryAddScoped<ISendGridOptionsProvider, SiteSendGridOptionsProvider>();
             services.TryAddScoped<IMailgunOptionsProvider, SiteMailgunOptionsProvider>();
             services.TryAddScoped<IElasticEmailOptionsProvider, SiteElasticEmailOptionsProvider>();
             services.AddCloudscribeEmailSenders(configuration);
 
             services.TryAddSingleton<IThemeListBuilder, SiteThemeListBuilder>();
-            //services.AddSingleton<IRazorViewEngine, CoreViewEngine>();
             services.TryAddScoped<ViewRenderer>();
 
             services.AddSingleton<IOptions<NavigationOptions>, SiteNavigationOptionsResolver>();
             services.AddScoped<ITreeCacheKeyResolver, SiteNavigationCacheKeyResolver>();
-            //services.AddScoped<INodeUrlPrefixProvider, FolderTenantNodeUrlPrefixProvider>();
             services.AddCloudscribeNavigation(configuration);
 
             services.AddScoped<ISiteMapNodeService, NavigationTreeSiteMapNodeService>();
 
-            // Identity ***
             services.TryAddScoped<ISiteAccountCapabilitiesProvider, SiteAccountCapabilitiesProvider>();
             services.AddCloudscribeIdentity();
 
@@ -181,27 +164,6 @@ namespace Microsoft.Extensions.DependencyInjection
 
             return services;
         }
-
-        /// <summary>
-        /// This method adds an embedded file provider to the RazorViewOptions to be able to load the cloudscribe Core related views.
-        /// If you download and install the views below your view folder you don't need this method and you can customize the views.
-        /// You can get the views from https://github.com/joeaudette/cloudscribe/tree/master/src/cloudscribe.Core.Web/Views
-        /// </summary>
-        /// <param name="options"></param>
-        /// <returns>RazorViewEngineOptions</returns>
-        //[Obsolete("AddEmbeddedViewsForCloudscribeCore is deprecated, please use AddEmbeddedBootstrap3ViewsForCloudscribeCore instead.")]
-        //public static RazorViewEngineOptions AddEmbeddedViewsForCloudscribeCore(this RazorViewEngineOptions options)
-        //{
-        //    //options.FileProviders.Add(new EmbeddedFileProvider(
-        //    //        typeof(SiteManager).GetTypeInfo().Assembly,
-        //    //        "cloudscribe.Core.Web"
-        //    //    ));
-        //    options.AddEmbeddedBootstrap3ViewsForCloudscribeCore();
-
-        //    return options;
-        //}
-
-
 
         /// this strategy to support views under /Sys really is a relic from mvc 5 not really needed now
         public static RazorViewEngineOptions AddCloudscribeViewLocationFormats(this RazorViewEngineOptions options)
