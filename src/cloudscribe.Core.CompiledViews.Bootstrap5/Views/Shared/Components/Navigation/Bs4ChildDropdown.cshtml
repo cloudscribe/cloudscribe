@@ -18,7 +18,7 @@
 
                 <li role="menuitem" aria-haspopup="menu" class='@Model.GetClass(childNode.Value, "dropdown ",  "active", true)'>
                     <a class="dropdown-item dropdown-toggle" href="@Url.Content(Model.AdjustUrl(childNode))">@Html.Raw(Model.GetIcon(childNode.Value))@Model.AdjustText(childNode) </a>
-                    @Model.UpdateTempNode(childNode) <partial name="Bootstrap4NavigationNodeChildDropdownPartial" model="@Model" />   @* recursion *@
+                    @Model.UpdateTempNode(childNode) <partial name="Bootstrap4NavigationNodeChildDropdownPartial" model="@Model" />
                 </li>
 
             }

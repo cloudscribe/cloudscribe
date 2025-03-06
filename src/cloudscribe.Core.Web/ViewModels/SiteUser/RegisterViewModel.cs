@@ -37,21 +37,12 @@ namespace cloudscribe.Core.Web.ViewModels.Account
         [Compare("Password", ErrorMessage = "Confirm password doesn't match password")]
         public string ConfirmPassword { get; set; }
 
-        //public bool UseEmailForLogin { get; set; } = true;
-
         [Remote("UsernameAvailable", "Account", AdditionalFields = "UserId",
            ErrorMessage = "Username not accepted, please try another value",
            HttpMethod = "Post")]
         [Required(ErrorMessage = "Username is required")]
-        //[RegularExpression(@"^[a-zA-Z0-9]*$", ErrorMessage = "Username can only contain letters or digits, with no spaces")]
-        //[RequiredWhen("UseEmailForLogin", false, ErrorMessage = "Username is required")]
         public string Username { get; set; } = string.Empty;
 
-        // TODO do we want unique display names?
-        // people can have the same real names like John Smith and why should we prevent anyone from using their real name?
-        // not that we can be sure they are telling the truth about anything
-        
-        //[Required(ErrorMessage = "Display name  is required")]
         public string DisplayName { get; set; } = string.Empty;
         
         [StringLength(100, ErrorMessage = "First name has a maximum length of 100 characters")]

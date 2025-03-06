@@ -6,13 +6,9 @@
 // 
 
 using System;
-using System.Collections.Generic;
 
 namespace cloudscribe.Core.Models
 {
-    // lighter weight version of user for lists, search etc
-    // where full model is not needed
-    // we can add more to IUserInfo, but only fields that exist in mp_Users
     public interface IUserInfo
     {
         Guid Id { get; }
@@ -43,11 +39,6 @@ namespace cloudscribe.Core.Models
         bool AccountApproved { get; set; }
         string AvatarUrl { get; set; }
         string Gender { get; set; }
-        //string Country { get; set; }
-        //string State { get; set; }
-
-        
-
     }
 
     public interface ISiteUser : IUserInfo
@@ -64,14 +55,6 @@ namespace cloudscribe.Core.Models
         /// as opposed to IsLockedOut which is a property the admin can use to permanently lock out an account.
         /// </summary>
         DateTime? LockoutEndDateUtc { get; set; }
-
-        /// <summary>
-        /// This property determines whether a user account can be locked out using LockouEndDateUtc,
-        /// ie whether failed login attempts can cause the account to be locked by setting the LockoutEndDate.
-        /// It should be true for most accounts but perhaps for admin accounts you may not want it to be possible 
-        /// for an admin user to be locked out
-        /// </summary>
-        //bool CanBeLockedOut { get; set; } // TODO: add this property
 
         bool TwoFactorEnabled { get; set; }
 
@@ -125,7 +108,6 @@ namespace cloudscribe.Core.Models
         string Signature { get; set; }
         string AuthorBio { get; set; }
         string Comment { get; set; }
-        // string ConcurrencyStamp { get; set; }
 
         /// <summary>
         /// a random guid string generated upon successful login, also stored as a claim.
@@ -133,8 +115,5 @@ namespace cloudscribe.Core.Models
         /// to prevent account sharing and simulatenous use from multiple devices or web browsers.
         /// </summary>
         string BrowserKey { get; set; }
-
-
-
     }
 }

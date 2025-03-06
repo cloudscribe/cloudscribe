@@ -42,7 +42,6 @@ namespace cloudscribe.Core.Web.Components
             SiteRoleManager<SiteRole> roleManager
             )
         {
-
             _commands           = siteCommands;
             _queries            = siteQueries;
             _userCommands       = userCommands;
@@ -52,14 +51,11 @@ namespace cloudscribe.Core.Web.Components
             _context            = contextAccessor?.HttpContext;
             _dataProtector      = dataProtector;
             _log                = logger;
-
-            //resolver = siteResolver;
             _currentSite     = currentSite;
             _cacheHelper     = cacheHelper;
             _eventHandlers   = siteEventHandlers;
             _navigationCache = treeCache;
             _roleManager     = roleManager;
-            //_navigationTreeBuilderService = navigationTreeBuilderService;
         }
 
         private readonly HttpContext _context;
@@ -77,10 +73,6 @@ namespace cloudscribe.Core.Web.Components
         private SiteEvents _eventHandlers;
         private readonly ITreeCache _navigationCache;
         private readonly SiteRoleManager<SiteRole> _roleManager;
-
-        //private readonly NavigationTreeBuilderService _navigationTreeBuilderService;
-
-
 
         public ISiteContext CurrentSite
         {
@@ -251,7 +243,6 @@ namespace cloudscribe.Core.Web.Components
         {
             await _eventHandlers.HandleSitePreDelete(site.Id).ConfigureAwait(false);
 
-            // delete users
             await _userCommands.DeleteUsersBySite(site.Id, CancellationToken.None); // this also deletes userroles claims logins
             await _userCommands.DeleteRolesBySite(site.Id, CancellationToken.None);
             await _commands.DeleteHostsBySite(site.Id, CancellationToken.None);
@@ -307,8 +298,6 @@ namespace cloudscribe.Core.Web.Components
                     newSite.Theme = sourceSite.Theme;
             }
 
-            /// Clone lots of things
-            /// Maybe separate out into UI options
             newSite.RequireCookieConsent       = sourceSite.RequireCookieConsent;
             newSite.CookiePolicySummary        = sourceSite.CookiePolicySummary;
             newSite.AllowNewRegistration       = sourceSite.AllowNewRegistration;
@@ -352,7 +341,6 @@ namespace cloudscribe.Core.Web.Components
             newSite.TimeZoneId                 = sourceSite.TimeZoneId;
             newSite.RegRestrictionTld          = sourceSite.RegRestrictionTld;
             
-            // We might want to leave out all the company stuff since that's likely to be differrent?
             newSite.CompanyName                = sourceSite.CompanyName;
             newSite.CompanyStreetAddress       = sourceSite.CompanyStreetAddress;
             newSite.CompanyStreetAddress2      = sourceSite.CompanyStreetAddress2;
@@ -364,7 +352,6 @@ namespace cloudscribe.Core.Web.Components
             newSite.CompanyFax                 = sourceSite.CompanyFax;
             newSite.CompanyPublicEmail         = sourceSite.CompanyPublicEmail;
             newSite.CompanyWebsite             = sourceSite.CompanyWebsite;
-
 
             newSite.DefaultEmailFromAddress    = sourceSite.DefaultEmailFromAddress;
             newSite.DefaultEmailFromAlias      = sourceSite.DefaultEmailFromAlias;
@@ -407,8 +394,6 @@ namespace cloudscribe.Core.Web.Components
             newSite.AllowUserToChangeEmail     = sourceSite.AllowUserToChangeEmail;
             newSite.PasswordExpiryWarningDays = sourceSite.PasswordExpiryWarningDays;
             newSite.PasswordExpiresDays = sourceSite.PasswordExpiresDays;
-
-            /// end clone 
 
             await _commands.Create(newSite, CancellationToken.None);
 
@@ -543,11 +528,6 @@ namespace cloudscribe.Core.Web.Components
                 && (_multiTenantOptions.UseRelatedSitesMode)
                 )
             {
-                //TODO: do we need to replace this logic now that we don't have an integer id?
-                //if (site.SiteId > 1)
-                //{
-                //    siteDifferentiator = site.SiteId.ToInvariantString();
-                //}
             }
 
 
@@ -565,8 +545,6 @@ namespace cloudscribe.Core.Web.Components
                 adminRole.Id,
                 adminUser.Id,
                 CancellationToken.None);
-
-            
         }
 
         public async Task EnsureRequiredRoles(ISiteSettings site)

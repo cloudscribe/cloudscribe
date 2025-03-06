@@ -11,10 +11,8 @@ using System.Threading.Tasks;
 
 namespace cloudscribe.Core.Models
 {
-    // a marker interface so we can inject as singleton
     public interface IUserCommandsSingleton : IUserCommands
     {
-
     }
 
     public interface IUserCommands
@@ -35,17 +33,6 @@ namespace cloudscribe.Core.Models
         Task DeleteUsersBySite(
             Guid siteId,
             CancellationToken cancellationToken = default(CancellationToken));
-
-
-        //Task FlagAsDeleted(
-        //    Guid siteId,
-        //    Guid userId,
-        //    CancellationToken cancellationToken = default(CancellationToken));
-
-        //Task FlagAsNotDeleted(
-        //    Guid siteId,
-        //    Guid userId,
-        //    CancellationToken cancellationToken = default(CancellationToken));
 
         Task LockoutAccount(
             Guid siteId,
@@ -69,7 +56,6 @@ namespace cloudscribe.Core.Models
             DateTime lastLoginTime,
             CancellationToken cancellationToken = default(CancellationToken));
 
-        //roles
         Task AddUserToRole(
             Guid siteId,
             Guid roleId,
@@ -113,7 +99,6 @@ namespace cloudscribe.Core.Models
             ISiteRole role,
             CancellationToken cancellationToken = default(CancellationToken));
 
-        //claims
         Task DeleteClaim(
             Guid siteId,
             Guid claimId,
@@ -143,7 +128,6 @@ namespace cloudscribe.Core.Models
             IUserClaim userClaim,
             CancellationToken cancellationToken = default(CancellationToken));
 
-        //logins
         Task CreateLogin(
             IUserLogin userLogin,
             CancellationToken cancellationToken = default(CancellationToken));

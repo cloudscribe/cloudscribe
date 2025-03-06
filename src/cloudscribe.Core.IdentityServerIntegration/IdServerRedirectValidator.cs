@@ -1,9 +1,5 @@
 ﻿using IdentityServer4.Models;
 using IdentityServer4.Validation;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace cloudscribe.Core.IdentityServerIntegration
@@ -31,8 +27,6 @@ namespace cloudscribe.Core.IdentityServerIntegration
             {
                 return true;
             }
-
-            // var istrue = client.PostLogoutRedirectUris.Contains(requestedUri, StringComparer.OrdinalIgnoreCase);
 
             var check = await base.IsPostLogoutRedirectUriValidAsync(requestedUri, client);
             return check;

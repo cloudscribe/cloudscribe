@@ -337,8 +337,6 @@ namespace cloudscribe.Web.Common.TagHelpers
             sb.Append(",\"expiryDays\":" + CookieExpiryDays );
             sb.Append("}");
             
-
-
             if(!string.IsNullOrWhiteSpace(PopupOpenCallback))
             {
                 sb.Append(",onPopupOpen:" + PopupOpenCallback);
@@ -395,24 +393,12 @@ namespace cloudscribe.Web.Common.TagHelpers
             
             sb.Append("}");
 
-            
-
-            //sb.Append(",onInitialise: function (status) {"); //this apparently only fires if the user has already consented or declined
-            //                                                 //sb.Append("alert('oninitialize');");
-            //sb.Append("console.log('cookie name ' + this.options.cookie.name);");
-
-            //if (Debug) sb.Append("console.log(\"cookieConsent.onInitialize\");");
-            //sb.Append("}"); // end onInitialise
-
             sb.Append("})");
-            sb.Append("})"); //end add event listener
+            sb.Append("})");
             sb.Append(";");
             sb.AppendLine("</script>");
 
             output.Content.SetHtmlContent(sb.ToString());
-
-
         }
-
     }
 }

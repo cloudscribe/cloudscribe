@@ -143,7 +143,6 @@ namespace cloudscribe.Core.Identity
                             return null;
                         }
 
-                        //set the token to return
                         accessToken = response.AccessToken;
 
                         var newAccessToken = new UserToken()

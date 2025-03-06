@@ -45,11 +45,6 @@
                                 @sr["Delete"]
                             </button>
                             <form asp-controller="ApiResource" asp-action="DeleteApiScope">
-                                @*<button type="submit"
-                                        class="btn btn-danger btn-xs"
-                                        onclick="javascript: return confirm('@Html.FormatValue(c.Name, sr["Are you sure you want to delete {0}?"])');">
-                                    @sr["Delete"]
-                                </button>*@
                                 <input asp-for="SiteId" type="hidden" />
                                 <input name="ApiName" value="@Model.CurrentApi.Name" type="hidden" />
                                 <input name="ScopeName" value="@c.Name" type="hidden" />

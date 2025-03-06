@@ -43,12 +43,6 @@ namespace cloudscribe.Core.Models.DataExtensions
 
         public static void LoadFromReader(this IUserInfo user, DbDataReader reader)
         {
-           //TODO: this got broken by the change to require id passed in the constructor of SuteUser
-            //if (reader["UserGuid"] != DBNull.Value)
-            //{
-            //    user.Id = new Guid(reader["UserGuid"].ToString());
-            //}
-            
             user.SiteId = new Guid(reader["SiteGuid"].ToString());
             user.DisplayName = reader["Name"].ToString();
             user.UserName = reader["LoginName"].ToString();
@@ -67,22 +61,14 @@ namespace cloudscribe.Core.Models.DataExtensions
             {
                 user.DisplayInMemberList = Convert.ToBoolean(reader["DisplayInMemberList"]);
             }
-            user.WebSiteUrl = reader["WebSiteURL"].ToString();
-            //user.Country = reader["Country"].ToString();
-            //user.State = reader["State"].ToString();
-           
+            user.WebSiteUrl = reader["WebSiteURL"].ToString();      
             user.AvatarUrl = reader["AvatarUrl"].ToString();
 
             if (reader["DateCreated"] != DBNull.Value)
             {
                 user.CreatedUtc = Convert.ToDateTime(reader["DateCreated"]);
             }
-
-            //if (reader["IsDeleted"] != DBNull.Value)
-            //{
-            //    user.IsDeleted = Convert.ToBoolean(reader["IsDeleted"]);
-            //}
-            
+           
             if (reader["LastLoginDate"] != DBNull.Value)
             {
                 user.LastLoginUtc = Convert.ToDateTime(reader["LastLoginDate"]);
@@ -106,12 +92,6 @@ namespace cloudscribe.Core.Models.DataExtensions
 
         public static void LoadFromReader(this SiteUser user, DbDataReader reader)
         {
-            //TODO: this is broken because SiteUser must nnow have id in consrtructor
-            //if (reader["UserGuid"] != DBNull.Value)
-            //{
-            //    user.Id = new Guid(reader["UserGuid"].ToString());
-            //} 
-
             user.DisplayName = reader["Name"].ToString();
             user.UserName = reader["LoginName"].ToString();
 
@@ -130,10 +110,7 @@ namespace cloudscribe.Core.Models.DataExtensions
             {
                 user.DisplayInMemberList = Convert.ToBoolean(reader["DisplayInMemberList"]);
             }
-            user.WebSiteUrl = reader["WebSiteURL"].ToString();
-            //user.Country = reader["Country"].ToString();
-            //user.State = reader["State"].ToString();
-            
+            user.WebSiteUrl = reader["WebSiteURL"].ToString();           
             user.AvatarUrl = reader["AvatarUrl"].ToString();
 
             user.Signature = reader["Signature"].ToString();
@@ -141,13 +118,7 @@ namespace cloudscribe.Core.Models.DataExtensions
             {
                 user.CreatedUtc = Convert.ToDateTime(reader["DateCreated"]);
             }
-            
-            
-            //if (reader["IsDeleted"] != DBNull.Value)
-            //{
-            //    user.IsDeleted = Convert.ToBoolean(reader["IsDeleted"]);
-            //}
-            
+                       
             if (reader["LastLoginDate"] != DBNull.Value)
             {
                 user.LastLoginUtc = Convert.ToDateTime(reader["LastLoginDate"]);
@@ -161,8 +132,6 @@ namespace cloudscribe.Core.Models.DataExtensions
             {
                 user.AccessFailedCount = Convert.ToInt32(reader["FailedPasswordAttemptCount"]);
             }
-           
-            
             
             if (reader["IsLockedOut"] != DBNull.Value)
             {
@@ -178,7 +147,6 @@ namespace cloudscribe.Core.Models.DataExtensions
 
             user.MustChangePwd = Convert.ToBoolean(reader["MustChangePwd"]);
             user.NewEmail = reader["NewEmail"].ToString();
-            
             
             user.TimeZoneId = reader["TimeZoneId"].ToString();
             
@@ -219,7 +187,6 @@ namespace cloudscribe.Core.Models.DataExtensions
 
         public static void LoadFromReader(this ISiteInfo site, DbDataReader reader)
         {
-            
             site.Id = new Guid(reader["SiteGuid"].ToString());
             site.SiteName = reader["SiteName"].ToString();
             site.SiteFolderName = reader["SiteFolderName"].ToString();
@@ -229,7 +196,6 @@ namespace cloudscribe.Core.Models.DataExtensions
 
         public static void LoadFromReader(this ISiteSettings site, DbDataReader reader)
         {
-            
             site.Id = new Guid(reader["SiteGuid"].ToString());
             
             site.SiteName = reader["SiteName"].ToString();
@@ -239,7 +205,6 @@ namespace cloudscribe.Core.Models.DataExtensions
             
             site.IsServerAdminSite = Convert.ToBoolean(reader["IsServerAdminSite"]);
             
-            
             site.LdapServer = reader["LdapServer"].ToString();
             site.LdapPort = Convert.ToInt32(reader["LdapPort"]);
             site.LdapDomain = reader["LdapDomain"].ToString();
@@ -247,7 +212,6 @@ namespace cloudscribe.Core.Models.DataExtensions
             site.LdapUserDNKey = reader["LdapUserDNKey"].ToString();
             site.LdapUserDNFormat = reader["LdapUserDNFormat"].ToString();
 
-            //site.ReallyDeleteUsers = Convert.ToBoolean(reader["ReallyDeleteUsers"]);
             site.UseEmailForLogin = Convert.ToBoolean(reader["UseEmailForLogin"]);
             site.AllowUserToChangeEmail = Convert.ToBoolean(reader["AllowUserToChangeEmail"]);
             
@@ -331,14 +295,6 @@ namespace cloudscribe.Core.Models.DataExtensions
 
         }
 
-
-        //public static void LoadFromReader(this ISiteFolder folder, DbDataReader reader)
-        //{
-        //    folder.Guid = new Guid(reader["Guid"].ToString());
-        //    folder.SiteGuid = new Guid(reader["SiteGuid"].ToString());
-        //    folder.FolderName = reader["FolderName"].ToString();
-        //}
-
         public static void LoadFromReader(this ISiteHost host, DbDataReader reader)
         {
             host.Id = new Guid(reader["HostGuid"].ToString());
@@ -367,62 +323,5 @@ namespace cloudscribe.Core.Models.DataExtensions
             location.FirstCaptureUtc = Convert.ToDateTime(reader["FirstCaptureUTC"]);
             location.LastCaptureUtc = Convert.ToDateTime(reader["LastCaptureUTC"]);
         }
-
-        public static void LoadExpandoSettings(this ISiteSettings site, List<ExpandoSetting> expandoProperties)
-        {
-            // this may go away
-
-            //string b = GetExpandoProperty(expandoProperties, "AllowPersistentLogin");
-            //if (!string.IsNullOrEmpty(b)) { site.AllowPersistentLogin = Convert.ToBoolean(b); }
-
-            //site.AvatarSystem = GetExpandoProperty(expandoProperties, "AvatarSystem");
-            //site.CommentProvider = GetExpandoProperty(expandoProperties, "CommentProvider");
-            
-
-        }
-
-        public static void SetExpandoSettings(this ISiteSettings site, List<ExpandoSetting> expandoProperties)
-        {
-            //SetExpandoProperty(expandoProperties, "AvatarSystem", site.AvatarSystem);
-            //SetExpandoProperty(expandoProperties, "AllowUserEditorPreference", site.AllowUserEditorPreference);
-            
-        }
-
-        private static string GetExpandoProperty(List<ExpandoSetting> exapandoProperties, string keyName)
-        {
-            //EnsureExpandoProperties();
-
-            foreach (ExpandoSetting s in exapandoProperties)
-            {
-                if (s.KeyName.Trim().Equals(keyName, StringComparison.CurrentCulture))
-                {
-                    return s.KeyValue;
-                }
-
-            }
-
-            return null;
-
-        }
-
-        private static void SetExpandoProperty(List<ExpandoSetting> exapandoProperties, string keyName, string keyValue)
-        {  
-            foreach (ExpandoSetting s in exapandoProperties)
-            {
-                if (s.KeyName.Trim().Equals(keyName, StringComparison.CurrentCulture))
-                {
-                    if (s.KeyValue != keyValue)
-                    {
-                        s.KeyValue = keyValue;
-                        s.IsDirty = true;
-                    };
-                    break;
-                }
-            }
-        }
-
-        
-
-        
     }
 }

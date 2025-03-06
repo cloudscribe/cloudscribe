@@ -83,7 +83,6 @@ namespace cloudscribe.Core.IdentityServer.NoDb
 
         public async Task CreateClient(string siteId, Client client, CancellationToken cancellationToken = default(CancellationToken))
         {
-            // claims can only be added during update
             await _commands.CreateAsync(siteId, client.ClientId, client, cancellationToken).ConfigureAwait(false);
         }
 

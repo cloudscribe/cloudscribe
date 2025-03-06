@@ -59,60 +59,8 @@ namespace cloudscribe.Core.Web.Components
                     return Task.FromResult(tenant.TimeZoneId);
             }
 
-            return Task.FromResult("America/New_York"); //default
+            return Task.FromResult("America/New_York");
         }
 
     }
-
-    //TODO: deprecate
-    //[Obsolete("Please use SiteTimeZoneIdResolver instead")]
-    //public class RequestTimeZoneIdResolver : cloudscribe.Web.Common.ITimeZoneIdResolver
-    //{
-    //    public RequestTimeZoneIdResolver(
-    //        IHttpContextAccessor contextAccessor,
-    //        ITenantResolver<SiteContext> siteResolver,
-    //        SiteUserManager<SiteUser> userManager
-    //        )
-    //    {
-    //        _contextAccessor = contextAccessor;
-    //        _siteResolver = siteResolver;
-    //        _userManager = userManager;
-    //    }
-
-    //    private IHttpContextAccessor _contextAccessor;
-    //    private ITenantResolver<SiteContext> _siteResolver;
-    //    private SiteUserManager<SiteUser> _userManager;
-
-    //    public async Task<string> GetUserTimeZoneId(CancellationToken cancellationToken = default(CancellationToken))
-    //    {
-    //        cancellationToken.ThrowIfCancellationRequested();
-
-    //        var context = _contextAccessor.HttpContext;
-    //        if (context.User.Identity.IsAuthenticated)
-    //        {
-    //            var user = await _userManager.FindByIdAsync(context.User.GetUserId());
-    //            if ((user != null) && (!string.IsNullOrEmpty(user.TimeZoneId)))
-    //            {
-    //                return user.TimeZoneId;
-    //            }
-    //        }
-
-    //        return await GetSiteTimeZoneId(cancellationToken);
-    //    }
-
-    //    public Task<string> GetSiteTimeZoneId(CancellationToken cancellationToken = default(CancellationToken))
-    //    {
-    //        cancellationToken.ThrowIfCancellationRequested();
-
-    //        var tenant = _contextAccessor.HttpContext.GetTenant<SiteContext>();
-    //        if (tenant != null)
-    //        {
-    //            if (!string.IsNullOrEmpty(tenant.TimeZoneId))
-    //                return Task.FromResult(tenant.TimeZoneId);
-    //        }
-
-    //        return Task.FromResult("America/New_York"); //default
-    //    }
-
-    //}
 }

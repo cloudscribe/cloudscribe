@@ -11,10 +11,6 @@ namespace cloudscribe.QueryTool.EFCore.MySql
         public QueryToolDbContext(DbContextOptions<QueryToolDbContext> options) : base(options)
         {
         }
-
-        // note new nullable types handling in net6.0
-        // https://docs.microsoft.com/en-us/ef/core/miscellaneous/nullable-reference-types
-
         public DbSet<SavedQuery> SavedQueries => Set<SavedQuery>();
 
 
@@ -29,7 +25,6 @@ namespace cloudscribe.QueryTool.EFCore.MySql
                 entity.HasKey(p => p.Id);
             });
 
-            // modelBuilder.ApplySnakeCaseConventions();
             modelBuilder.UseCollation("utf8mb4_general_ci");
         }
     }

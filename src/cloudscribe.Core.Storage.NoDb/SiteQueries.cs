@@ -38,7 +38,6 @@ namespace cloudscribe.Core.Storage.NoDb
         {
             cancellationToken.ThrowIfCancellationRequested();
 
-            //await EnsureProjectId().ConfigureAwait(false);
             var projectId = siteId.ToString();
 
             return await queries.FetchAsync(
@@ -56,7 +55,6 @@ namespace cloudscribe.Core.Storage.NoDb
 
             cancellationToken.ThrowIfCancellationRequested();
 
-            //await EnsureProjectId().ConfigureAwait(false);
             var projectId = "default";
 
             var allHosts = await hostQueries.GetAllAsync(projectId, cancellationToken).ConfigureAwait(false);
@@ -95,7 +93,6 @@ namespace cloudscribe.Core.Storage.NoDb
         {
             cancellationToken.ThrowIfCancellationRequested();
 
-            //await EnsureProjectId().ConfigureAwait(false);
             var projectId = "default";
 
             var allSites = await queries.GetAllAsync(projectId, cancellationToken).ConfigureAwait(false);
@@ -131,7 +128,6 @@ namespace cloudscribe.Core.Storage.NoDb
         {
             cancellationToken.ThrowIfCancellationRequested();
 
-            //await EnsureProjectId().ConfigureAwait(false);
             var projectId = "default";
 
             var allSites = await queries.GetAllAsync(projectId, cancellationToken).ConfigureAwait(false);
@@ -140,7 +136,7 @@ namespace cloudscribe.Core.Storage.NoDb
                     x => x.Id != requestingSiteId
                     && x.AliasId == aliasId
                     ).FirstOrDefault();
-            // if no site exists that has that alias with a different siteid then it is available
+
             if (item == null) { return true; }
             return false;
         }
@@ -153,7 +149,6 @@ namespace cloudscribe.Core.Storage.NoDb
         {
             cancellationToken.ThrowIfCancellationRequested();
 
-            //await EnsureProjectId().ConfigureAwait(false);
             var projectId = "default";
 
             var allSites = await queries.GetAllAsync(projectId, cancellationToken).ConfigureAwait(false);
@@ -162,7 +157,7 @@ namespace cloudscribe.Core.Storage.NoDb
                     x => x.Id != requestingSiteId
                     && x.PreferredHostName == hostName
                     ).FirstOrDefault();
-            // if no site exists that has that host with a different siteid then it is available
+
             if (item == null)
             {
                 var host = await GetSiteHost(hostName, cancellationToken).ConfigureAwait(false);
@@ -179,7 +174,6 @@ namespace cloudscribe.Core.Storage.NoDb
         {
             cancellationToken.ThrowIfCancellationRequested();
 
-            //await EnsureProjectId().ConfigureAwait(false);
             var projectId = "default";
 
             var allSites = await queries.GetAllAsync(projectId, cancellationToken).ConfigureAwait(false);
@@ -190,7 +184,6 @@ namespace cloudscribe.Core.Storage.NoDb
         {
             cancellationToken.ThrowIfCancellationRequested();
 
-            //await EnsureProjectId().ConfigureAwait(false);
             var projectId = "default";
 
             var allSites = await queries.GetAllAsync(projectId, cancellationToken).ConfigureAwait(false);
@@ -221,7 +214,6 @@ namespace cloudscribe.Core.Storage.NoDb
 
             cancellationToken.ThrowIfCancellationRequested();
 
-            //await EnsureProjectId().ConfigureAwait(false);
             var projectId = "default";
 
             var allSites = await queries.GetAllAsync(projectId, cancellationToken).ConfigureAwait(false);
@@ -237,7 +229,6 @@ namespace cloudscribe.Core.Storage.NoDb
         {
             cancellationToken.ThrowIfCancellationRequested();
 
-            //await EnsureProjectId().ConfigureAwait(false);
             var projectId = "default";
 
             var allSites = await queries.GetAllAsync(projectId, cancellationToken).ConfigureAwait(false);
@@ -276,7 +267,6 @@ namespace cloudscribe.Core.Storage.NoDb
         {
             cancellationToken.ThrowIfCancellationRequested();
 
-            //await EnsureProjectId().ConfigureAwait(false);
             var projectId = "default";
 
             var allHosts = await hostQueries.GetAllAsync(projectId, cancellationToken).ConfigureAwait(false);
@@ -293,7 +283,6 @@ namespace cloudscribe.Core.Storage.NoDb
         {
             cancellationToken.ThrowIfCancellationRequested();
 
-            //await EnsureProjectId().ConfigureAwait(false);
             var projectId = "default";
 
             var allHosts = await hostQueries.GetAllAsync(projectId, cancellationToken).ConfigureAwait(false);
@@ -307,7 +296,6 @@ namespace cloudscribe.Core.Storage.NoDb
         {
             cancellationToken.ThrowIfCancellationRequested();
 
-            //await EnsureProjectId().ConfigureAwait(false);
             var projectId = "default";
 
             var allHosts = await hostQueries.GetAllAsync(projectId, cancellationToken).ConfigureAwait(false);
@@ -338,7 +326,6 @@ namespace cloudscribe.Core.Storage.NoDb
         {
             cancellationToken.ThrowIfCancellationRequested();
 
-            //await EnsureProjectId().ConfigureAwait(false);
             var projectId = "default";
 
             var allHosts = await hostQueries.GetAllAsync(projectId, cancellationToken).ConfigureAwait(false);
@@ -359,7 +346,6 @@ namespace cloudscribe.Core.Storage.NoDb
         {
             cancellationToken.ThrowIfCancellationRequested();
 
-            //await EnsureProjectId().ConfigureAwait(false);
             var projectId = "default";
 
             var allHosts = await hostQueries.GetAllAsync(projectId, cancellationToken).ConfigureAwait(false);
@@ -379,7 +365,6 @@ namespace cloudscribe.Core.Storage.NoDb
         {
             cancellationToken.ThrowIfCancellationRequested();
 
-            //await EnsureProjectId().ConfigureAwait(false);
             var projectId = "default";
 
             var allSites = await queries.GetAllAsync(projectId, cancellationToken).ConfigureAwait(false);

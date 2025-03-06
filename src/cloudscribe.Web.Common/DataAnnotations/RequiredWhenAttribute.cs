@@ -49,20 +49,16 @@ namespace cloudscribe.Web.Common.DataAnnotations
             }
         }
 
-        
-
         protected override ValidationResult IsValid(object value, ValidationContext validationContext)
         {
-            // get a reference to the property this validation depends upon         
             var containerType = validationContext.ObjectInstance.GetType();
             var field = containerType.GetProperty(DependentProperty);
             
            
             if (field != null)
             {
-                // get the value of the dependent property
                 var dependentValue = field.GetValue(validationContext.ObjectInstance, null);
-                // trim spaces of dependent value
+
                 if (dependentValue != null && dependentValue is string)
                 {
                     dependentValue = (dependentValue as string).Trim();
@@ -73,13 +69,10 @@ namespace cloudscribe.Web.Common.DataAnnotations
                     }
                 }
 
-                // compare the value against the target value
                 if ((dependentValue == null && TargetValue == null) ||
                     (dependentValue != null && (TargetValue.Equals("*") || dependentValue.Equals(TargetValue))))
                 {
-                    // match => means we should try validating this field
                     if (!_innerAttribute.IsValid(value))
-                        // validation failed - return an error
                         return new ValidationResult(FormatErrorMessage(validationContext.DisplayName), new[] { validationContext.MemberName });
                 }
             }

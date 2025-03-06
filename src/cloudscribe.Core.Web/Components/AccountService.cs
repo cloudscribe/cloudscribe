@@ -38,7 +38,6 @@ namespace cloudscribe.Core.Web.Components
             INewUserDisplayNameResolver displayNameResolver,
             IOptions<CustomSocialAuthSchemes> customSchemesAccessor,
             SiteContext currentSite
-            //,ILogger<AccountService> logger
             )
         {
             UserManager = userManager;
@@ -184,8 +183,7 @@ namespace cloudscribe.Core.Web.Components
                 {
                     if (string.IsNullOrWhiteSpace(email))
                     {
-                        // Look for any likely claims that contain the user's email
-                        email = GetEmailFromClaims(template.ExternalLoginInfo);
+                       email = GetEmailFromClaims(template.ExternalLoginInfo);
                     }
 
                     if (!string.IsNullOrWhiteSpace(email))
@@ -195,19 +193,10 @@ namespace cloudscribe.Core.Web.Components
 
                     if (template.User == null)
                     {
-                                            //if (CurrentSite.AllowNewRegistration)
-                                            //{
-
                         // Allow new account creation regardless of the site setting 'allow new registrations'
-
                             template.IsNewUserRegistration = true;
                             template.User = await CreateUserFromExternalLogin(template.ExternalLoginInfo, email, didAcceptTerms);
                             template.IsNewExternalAuthMapping = template.User != null;
-                                            //}
-                                            //else
-                                            //{
-                                            //    template.RejectReasons.Add("Site is not configured to  user registrations");
-                                            //}
                     }
 
                     if (template.User != null)
@@ -216,7 +205,6 @@ namespace cloudscribe.Core.Web.Components
                         // jk - close the loophole whereby the user has supplied an email address that matches a pre-existing cs user
                         // (as opposed to a successful external login which has returned a valid email in its Claims that
                         // matches a pre-existing cs User)
-
                         if(String.IsNullOrEmpty(providedEmail) && !String.IsNullOrEmpty(email))
                         {
                             var identityResult = await UserManager.AddLoginAsync(template.User, template.ExternalLoginInfo);
@@ -244,8 +232,6 @@ namespace cloudscribe.Core.Web.Components
             if (template.SignInResult == SignInResult.Failed && template.User != null && template.RejectReasons.Count == 0)
             {
                 var updatTokenResult = await SignInManager.UpdateExternalAuthenticationTokensAsync(template.ExternalLoginInfo);
-                //var accessToken = template.ExternalLoginInfo.AuthenticationTokens.Where(x => x.Name == "access_token").FirstOrDefault();
-
 
                 template.SignInResult = await SignInManager.ExternalLoginSignInAsync(template.ExternalLoginInfo.LoginProvider, template.ExternalLoginInfo.ProviderKey, isPersistent: false);
 
@@ -253,10 +239,8 @@ namespace cloudscribe.Core.Web.Components
 
                 if (template.SignInResult.Succeeded)
                 {
-                    //update last login time and browser key set above
                     template.User.LastLoginUtc = DateTime.UtcNow;
                     await UserManager.UpdateAsync(template.User);
-
                 }
             }
 
@@ -264,7 +248,6 @@ namespace cloudscribe.Core.Web.Components
                 && template.SignInResult != SignInResult.Success
                 && template.SignInResult != SignInResult.TwoFactorRequired)
             {
-                //clear the external login
                 await SignInManager.SignOutAsync();
             }
 
@@ -286,8 +269,6 @@ namespace cloudscribe.Core.Web.Components
                 );
 
         }
-
-
 
         public virtual async Task<UserLoginResult> TryLogin(LoginViewModel model)
         {
@@ -400,12 +381,6 @@ namespace cloudscribe.Core.Web.Components
                     persistent = model.RememberMe;
                 }
 
-                //template.SignInResult = await SignInManager.PasswordSignInAsync(
-                //    model.UserName,
-                //    model.Password,
-                //    persistent,
-                //    lockoutOnFailure: false);
-
                 template.SignInResult = await SignInManager.PasswordSignInAsync(
                     template.User,
                     model.Password,
@@ -415,7 +390,6 @@ namespace cloudscribe.Core.Web.Components
 
                 if (template.SignInResult.Succeeded)
                 {
-                    //update last login time
                     template.User.LastLoginUtc = DateTime.UtcNow;
 
                     if (string.IsNullOrEmpty(template.User.SecurityStamp))
@@ -496,7 +470,6 @@ namespace cloudscribe.Core.Web.Components
 
             if (template.SignInResult.Succeeded)
             {
-                //update last login time and browser key
                 template.User.LastLoginUtc = DateTime.UtcNow;
                 await UserManager.UpdateAsync(template.User);
 
@@ -580,8 +553,6 @@ namespace cloudscribe.Core.Web.Components
 
         }
 
-
-
         public virtual async Task<UserLoginResult> TryRegister(
             RegisterViewModel model,
             ModelStateDictionary modelState,
@@ -643,18 +614,9 @@ namespace cloudscribe.Core.Web.Components
                     if (!string.IsNullOrWhiteSpace(error.Description) && error.Description.IndexOf("Email") > -1 && error.Description.IndexOf("is already taken") > -1)
                     {
                         modelState.AddModelError("duplicateEmail", error.Description);
-                        //asp identity is returning an error message like "Email someaddress@somedomain is alreaady taken"
-                        // this is account disclosure and we don't want that so return a more generic error message
-                        //modelState.AddModelError(string.Empty, "Provided email address not accepted, please try again with a different email address.");
-                        
-                        // NO - even the above message would give a clue so don't add anything.
-                        // Instead we go down a different pathway of emailing the owner of that email address.
                     }
                     else if (!string.IsNullOrWhiteSpace(error.Description) && error.Description.IndexOf("is already taken") > -1)
                     {
-                        // likewise don't reveal the username already taken.
-                        // modelState.AddModelError(string.Empty, "Invalid registration attempt.");
-                        // The user still sees message "Invalid registration attempt."
                     }
                     else
                     {
@@ -763,7 +725,7 @@ namespace cloudscribe.Core.Web.Components
                 userContext = new UserContext(user);
                 return userContext.EmailConfirmed;
             }
-            //return bool? null if not a valid user
+
             return null;
         }
 
@@ -828,17 +790,6 @@ namespace cloudscribe.Core.Web.Components
 
             return false;
         }
-
-        //public async Task<string> GenerateTwoFactorTokenAsync(string provider)
-        //{
-        //    var user = await signInManager.GetTwoFactorAuthenticationUserAsync();
-        //    if(user != null)
-        //    {
-        //        return await userManager.GenerateTwoFactorTokenAsync(user, provider);
-        //    }
-
-        //    return null;
-        //}
 
         public virtual async Task<SignInResult> TwoFactorSignInAsync(string provider, string code, bool rememberMe, bool rememberBrowser)
         {

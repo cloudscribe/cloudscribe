@@ -55,10 +55,9 @@ namespace cloudscribe.Core.Ldap
             var userDn = makeUserDn(settings, username);
             bool getLdapUserDetails = _configuration.GetValue<bool>("LdapOptions:GetLdapUserDetails", false);
 
-            //determine which LDAP server to use
             string[] servers = settings.LdapServer.Split(',');
             int activeConnection = 0;
-            while(activeConnection < servers.Length) //only try each server in the list once
+            while(activeConnection < servers.Length)
             {
                 var user = new LdapUser();
                 string activeServer = servers[activeConnection].Trim(); //the current host/ip we will use
@@ -198,7 +197,7 @@ namespace cloudscribe.Core.Ldap
             string activeServer = servers[activeConnection].Trim();     //the current host/ip we will use
 
             int tryCount = 0;
-            while (tryCount < servers.Length) //only try each server in the list once
+            while (tryCount < servers.Length)
             {
                 string message = $"Querying LDAP server: {activeServer} for {userDn} -";
                 try
@@ -219,7 +218,7 @@ namespace cloudscribe.Core.Ldap
                             connection.Disconnect();
                             return user;
                         }
-                        else // I don't think this is ever triggered as an exception is thrown if the bind fails?
+                        else
                         {
                             _log.LogWarning($"{message} bind failed");
                             _memoryCache.Set(memCacheKey, activeConnection);
@@ -299,10 +298,6 @@ namespace cloudscribe.Core.Ldap
             string filter = makeUserFilter(ldapSettings, username);
             LdapEntry entry = null;
 
-            // Console.ForegroundColor = ConsoleColor.Yellow;
-            // Console.WriteLine($"Searching for UserDN: {userDn} in BaseDN: {baseDn} with filter: {filter}");
-            // Console.ResetColor();
-
             var lsc = conn.Search(
                 baseDn,
                 LdapConnection.ScopeSub,
@@ -316,7 +311,6 @@ namespace cloudscribe.Core.Ldap
                 try
                 {
                     entry = lsc.Next();
-                    // Console.WriteLine(entry.ToString());
                     if(entry.Dn == userDn) return entry;
                 }
                 catch (LdapException e)

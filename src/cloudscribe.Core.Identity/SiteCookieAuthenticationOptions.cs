@@ -78,7 +78,6 @@ namespace cloudscribe.Core.Identity
 
                 try
                 {
-                    // if config setting is supplied, then set cookie expiry
                     string cookieExpiry = tenant.MaximumInactivityInMinutes;
                     double cookieExpiryTime;
 
@@ -106,13 +105,6 @@ namespace cloudscribe.Core.Identity
             return options;
         }
 
-        //private Task HandleOnSigningIn(CookieSigningInContext context)
-        //{
-            
-        //    return Task.CompletedTask;
-        //}
-
-
         private void ConfigureApplicationCookie(SiteContext tenant, CookieAuthenticationOptions options, string name)
         {
             if (tenant == null)
@@ -130,7 +122,6 @@ namespace cloudscribe.Core.Identity
             else
             {
                 options.Cookie.Path = "/" + tenant.SiteFolderName;
-                //options.Events.OnValidatePrincipal = SiteAuthCookieValidator.ValidatePrincipalAsync;
                 options.EventsType = _siteAuthCookieEvents.GetCookieAuthenticationEventsType();
             }
 
@@ -148,9 +139,6 @@ namespace cloudscribe.Core.Identity
             {
                 options.SessionStore = ticketStore;
             }
-
-            //options.Events.OnSigningIn += HandleOnSigningIn;
-
 
             //https://github.com/IdentityServer/IdentityServer4.AspNetIdentity/blob/dev/src/IdentityServer4.AspNetIdentity/IdentityServerBuilderExtensions.cs
             // we need to disable to allow iframe for authorize requests

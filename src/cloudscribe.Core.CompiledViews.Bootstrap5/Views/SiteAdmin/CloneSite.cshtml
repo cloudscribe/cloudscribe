@@ -70,40 +70,6 @@
                asp-route-slp="ReturnPageNumber">@sr["Domain Mappings"]</a>
         </div>
     }
-
-  @*  // Don't think we need to ask for all this when cloning - inherit it all from cloned site?  
-      
-    <div class="mb-3">
-        <label class="form-label" asp-for="TimeZoneId">@sr["Time Zone"]</label>
-        <select asp-for="TimeZoneId" asp-items="Model.AllTimeZones" class="form-control"></select>
-        <span asp-validation-for="TimeZoneId" class="invalid-feedback"></span>
-    </div>
-    @if (Model.AvailableThemes.Count > 0)
-    {
-        <div class="mb-3">
-            <label class="form-label" asp-for="Theme">@sr["Theme"]</label>
-            <select id="Layout" asp-for="Theme" asp-items="Model.AvailableThemes" class="form-control"></select>
-            <span asp-validation-for="Theme" class="invalid-feedback"></span>
-        </div>
-    }
-    <div class="mb-3">
-        <div class="form-check">
-            <input asp-for="IsClosed" class="form-check-input" />
-            <label asp-for="IsClosed" class="form-check-label">@sr["Close Site To Public"]</label>
-        </div>
-    </div>
-    <div class="mb-3">
-        <label class="form-label" asp-for="ClosedMessage">@sr["Closed Message"]</label>
-        <textarea class="form-control" rows="5" asp-for="ClosedMessage"
-                  data-ckeditor-unobtrusive=""
-                  data-ckeditor-config-url="@ckOptions.CustomConfigPath"
-                  data-ckeditor-config-language="@ckOptions.LanguageCode"
-                  data-ckeditor-config-dropfileuploadurl="@ckOptions.DropFileUrl"
-                  data-ckeditor-config-filebrowserurl="@ckOptions.FileBrowseUrl"
-                  data-ckeditor-config-imagebrowseurl="@ckOptions.ImageBrowseUrl"></textarea>
-        <span asp-validation-for="ClosedMessage" class="invalid-feedback"></span>
-    </div>*@
-
     <h2>@sr["New Site Administrator"]</h2>
     @if(multiTenantOptions.UseRelatedSitesMode && multiTenantOptions.RelatedSiteId != Guid.Empty)
     {

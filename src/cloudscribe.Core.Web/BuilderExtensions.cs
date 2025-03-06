@@ -88,11 +88,7 @@ namespace Microsoft.AspNetCore.Builder
                 }
 
                 // resolve static files from wwwroot folders within themes and within sitefiles
-                builder.UseSiteAndThemeStaticFiles(multiTenantOptions, ctx.Tenant);
-
-                
-                //builder.UseAuthentication();
-                
+                builder.UseSiteAndThemeStaticFiles(multiTenantOptions, ctx.Tenant);               
             });
             app.UseRouting();
             app.UseAuthentication();
@@ -198,7 +194,6 @@ namespace Microsoft.AspNetCore.Builder
                         builder.UseStaticFiles(new StaticFileOptions()
                         {
                             FileProvider = new PhysicalFileProvider(siteFilesPath)
-                            //,RequestPath = new PathString("/files")
                         });
                     }
                     else if(!usingSharedAlias) //separate folders per folder tenant

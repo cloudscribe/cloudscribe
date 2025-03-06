@@ -8,7 +8,7 @@
     var site = await siteResolver.ResolveSite(Context.Request.Host.Host, Context.Request.Path);
     var consentFeature = Context.Features.Get<ITrackingConsentFeature>();
     var themeSettings = themeHelper.GetThemeSettings();
-    var allowGravatar = (consentFeature?.CanTrack ?? true) && themeSettings.AllowGravatar; // gravatar has cookies
+    var allowGravatar = (consentFeature?.CanTrack ?? true) && themeSettings.AllowGravatar;
 }
 @if (SignInManager.IsSignedIn(User))
 {

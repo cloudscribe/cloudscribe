@@ -52,7 +52,6 @@ namespace Microsoft.Extensions.DependencyInjection
                     switch (efProvider)
                     {
                         case "sqlite":
-                            //var slConnection = config.GetConnectionString("SQLiteEntityFrameworkConnectionString");
                             var dbName = config.GetConnectionString("SQLiteDbName");
                             var dbPath = Path.Combine(environment.ContentRootPath, dbName);
                             var slConnection = $"Data Source={dbPath}";
@@ -60,8 +59,7 @@ namespace Microsoft.Extensions.DependencyInjection
                             services.AddIdentityServerConfiguredForCloudscribe()
                                 .AddCloudscribeCoreEFIdentityServerStorageSQLite(slConnection)
                                 .AddCloudscribeIdentityServerIntegrationMvc()
-                                .AddDeveloperSigningCredential(true, tmpKeyPath)
-                            ;
+                                .AddDeveloperSigningCredential(true, tmpKeyPath);
                             
                             break;
 
@@ -71,8 +69,7 @@ namespace Microsoft.Extensions.DependencyInjection
                             services.AddIdentityServerConfiguredForCloudscribe()
                                 .AddCloudscribeCoreEFIdentityServerStoragePostgreSql(pgConnection)
                                 .AddCloudscribeIdentityServerIntegrationMvc()
-                                .AddDeveloperSigningCredential(true, tmpKeyPath)
-                            ;
+                                .AddDeveloperSigningCredential(true, tmpKeyPath);
                             
                             break;
 
@@ -82,8 +79,7 @@ namespace Microsoft.Extensions.DependencyInjection
                             services.AddIdentityServerConfiguredForCloudscribe()
                                 .AddCloudscribeCoredentityServerPostgreSqlStorage(pgsConnection)
                                 .AddCloudscribeIdentityServerIntegrationMvc()
-                                .AddDeveloperSigningCredential(true, tmpKeyPath)
-                            ;
+                                .AddDeveloperSigningCredential(true, tmpKeyPath);
 
                             break;
 
@@ -93,8 +89,7 @@ namespace Microsoft.Extensions.DependencyInjection
                             services.AddIdentityServerConfiguredForCloudscribe()
                                 .AddCloudscribeCoreEFIdentityServerStorageMySql(mysqlConnection)
                                 .AddCloudscribeIdentityServerIntegrationMvc()
-                                .AddDeveloperSigningCredential(true, tmpKeyPath)
-                                ;
+                                .AddDeveloperSigningCredential(true, tmpKeyPath);
                            
                             break;
 
@@ -105,8 +100,7 @@ namespace Microsoft.Extensions.DependencyInjection
                             services.AddIdentityServerConfiguredForCloudscribe()
                                 .AddCloudscribeCoreEFIdentityServerStorageMSSQL(connectionString)
                                 .AddCloudscribeIdentityServerIntegrationMvc()
-                                .AddDeveloperSigningCredential(true, tmpKeyPath)
-                                ;
+                                .AddDeveloperSigningCredential(true, tmpKeyPath);
                             
                             break;
                     }
@@ -121,9 +115,6 @@ namespace Microsoft.Extensions.DependencyInjection
                 // this defines a CORS policy called "default"
                 options.AddPolicy("default", policy =>
                 {
-                    //policy.WithOrigins("http://localhost:5010", "http://localhost:5011")
-                    //    .AllowAnyHeader()
-                    //    .AllowAnyMethod();
                     policy.AllowAnyOrigin()
                         .AllowAnyHeader()
                         .AllowAnyMethod();

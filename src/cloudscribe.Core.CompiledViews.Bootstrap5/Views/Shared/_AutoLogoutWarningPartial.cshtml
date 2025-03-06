@@ -6,7 +6,6 @@
 
 @{
     var secondsTilLogout = await rstResolver.RemainingSessionTimeInSeconds();
-    // <h1>@secondsTilLogout</h1>
 }
 
 @Html.Resource(@<script src="/cr/js/cloudscribe-autologout-warning.min.js"></script>, "js")

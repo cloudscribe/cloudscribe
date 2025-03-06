@@ -11,9 +11,6 @@ namespace cloudscribe.Core.Storage.EFCore.MySql
 
             var connString = "Server=yourserver;Database=yourdb;Uid=youruser;Pwd=yourpassword;Charset=utf8;";
 
-            // builder.UseMySql(connString);
-
-            // for breaking changes in Net5.0:
             builder.UseMySql(connString, ServerVersion.AutoDetect(connString));
 
 

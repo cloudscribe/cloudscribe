@@ -97,7 +97,7 @@ namespace cloudscribe.QueryTool.Web
                 list.Add(new SelectListItem()
                 {
                     Text = text,
-                    Value = value //q.GetType().GetProperty(valueField).GetValue(q).ToString()
+                    Value = value
                 });
             }
 

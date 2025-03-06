@@ -39,11 +39,6 @@ namespace cloudscribe.Core.IdentityServer.NoDb
         private IBasicQueries<GrantItem> _queries;
         private IBasicCommands<GrantItem> _commands;
 
-        // key is not a good thing to use to name the storage file, an example key is
-        // OIvXyoxM+JDUP4c0PA6EzeYCvxcZpYdZWQn2mP+Q34Q=
-        // so stored as OIvXyoxM+JDUP4c0PA6EzeYCvxcZpYdZWQn2mP+Q34Q=.json results in file system errors
-        // therefore introduced GrantItem which adds a guid id
-
         private async Task<IEnumerable<PersistedGrant>> GetAllInternalAsync(string siteId)
         {
             //TODO: cache

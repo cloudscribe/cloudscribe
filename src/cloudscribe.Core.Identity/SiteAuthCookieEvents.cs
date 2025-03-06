@@ -99,7 +99,6 @@ namespace cloudscribe.Core.Identity
 
         public override async Task SigningOut(CookieSigningOutContext context)
         {
-            //any persisted oidc tokens should be cleared when signing out
             try
             {
                 var userId = context.HttpContext.User.GetUserIdAsGuid();

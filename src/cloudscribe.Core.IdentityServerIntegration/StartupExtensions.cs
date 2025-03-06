@@ -1,27 +1,21 @@
-﻿
-using cloudscribe.Core.Identity;
+﻿using cloudscribe.Core.Identity;
 using cloudscribe.Core.IdentityServerIntegration;
 using cloudscribe.Core.IdentityServerIntegration.Services;
 using cloudscribe.Core.IdentityServerIntegration.Configuration;
 using cloudscribe.Core.IdentityServerIntegration.Hosting;
 using cloudscribe.Core.Models;
-using cloudscribe.Web.Common.Setup;
 using IdentityModel;
-using IdentityServer4;
 using IdentityServer4.Configuration;
-using IdentityServer4.Endpoints;
 using IdentityServer4.Hosting;
 using IdentityServer4.Services;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
-using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using cloudscribe.Core.IdentityServerIntegration.Mvc;
 using cloudscribe.Core.IdentityServerIntegration.Handlers;
 
 // https://github.com/IdentityServer/IdentityServer4/issues/19
@@ -34,8 +28,6 @@ namespace Microsoft.Extensions.DependencyInjection
         {
             builder.AddCloudscribeIdentityServerIntegrationCommon();
 
-           // builder.Services.AddScoped<IVersionProvider, VersionProvider>();
-
             return builder;
         }
 
@@ -47,7 +39,6 @@ namespace Microsoft.Extensions.DependencyInjection
 
             builder
                 .AddRequiredPlatformServices()
-                //.AddCookieAuthentication() //cloudscribe already does this and we don't want the Identityserver defaults here
                 .AddCookieAuthenticationForCloudscribe()
                 .AddCoreServices()
                 .AddDefaultEndpoints()
@@ -64,10 +55,6 @@ namespace Microsoft.Extensions.DependencyInjection
 
         public static IIdentityServerBuilder AddCookieAuthenticationForCloudscribe(this IIdentityServerBuilder builder)
         {
-            //builder.Services.AddAuthentication(IdentityServerConstants.DefaultCookieAuthenticationScheme)
-            //    .AddCookie(IdentityServerConstants.DefaultCookieAuthenticationScheme)
-            //    .AddCookie(IdentityServerConstants.ExternalCookieAuthenticationScheme);
-
             builder.Services.AddAuthentication();
 
             builder.Services.AddSingleton<IConfigureOptions<CookieAuthenticationOptions>, ConfigureInternalCookieOptions>();
@@ -84,8 +71,6 @@ namespace Microsoft.Extensions.DependencyInjection
             return services.AddIdentityServerConfiguredForCloudscribe();
         }
 
-
-
         public static IIdentityServerBuilder AddCloudscribeIdentityServerIntegrationCommon(this IIdentityServerBuilder builder)   
         {
 
@@ -96,18 +81,12 @@ namespace Microsoft.Extensions.DependencyInjection
 
             builder.Services.Configure<IdentityServerOptions>(options =>
             {
-                //https://github.com/IdentityServer/IdentityServer4/releases/tag/2.0.0
-                // related? https://github.com/IdentityServer/IdentityServer4/issues/1477
-                //options.Authentication.AuthenticationScheme = AuthenticationScheme.Application;
                 //TODO: are the options set here actually used?
                 // how to make this handle folder tenants?
                 options.UserInteraction.ErrorUrl = "/oops/error";
                 options.UserInteraction.LogoutUrl = "/account/logout";
                 options.UserInteraction.LoginUrl = "/account/login";
                 options.UserInteraction.LoginReturnUrlParameter = "returnUrl";
-
-
-
             });
 
             builder.Services.Configure<SecurityStampValidatorOptions>(opts =>
@@ -136,27 +115,17 @@ namespace Microsoft.Extensions.DependencyInjection
             builder.AddResourceOwnerValidator<ResourceOwnerPasswordValidator<SiteUser>>();
             builder.Services.AddTransient<IProfileService, ProfileService<SiteUser>>();
             
-
-           
-            //builder.Services.AddScoped<IMatchAuthorizeProtocolRoutePaths, MultiTenantAuthorizeProtocolRouteMatcher>();
-            //builder.Services.AddScoped<IMatchEndSessionProtocolRoutePaths, MultiTenantEndSessionProtocolRouteMatcher>();
-
             builder.Services.AddScoped<ApiResourceManager, ApiResourceManager>();
             builder.Services.AddScoped<IdentityResourceManager, IdentityResourceManager>();
             builder.Services.AddScoped<ClientsManager, ClientsManager>();
-
-            
-            //builder.Services.AddTransient<ICorsPathValidator, CorsPathValidator>();
 
             builder.Services.AddScoped<cloudscribe.Versioning.IVersionProvider, IntegrationVersionProvider>();
             builder.Services.AddScoped<cloudscribe.Versioning.IVersionProvider, StorageVersionProvider>();
 
             builder.Services.AddScoped<IHandlePasswordValidation<SiteUser>, NoopHandlePasswordValidation<SiteUser>>();
 
-
             return builder;
         }
-
 
         internal static void AddTransientDecorator<TService, TImplementation>(this IServiceCollection services)
             where TService : class

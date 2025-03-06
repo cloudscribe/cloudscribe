@@ -38,12 +38,9 @@ namespace Microsoft.Extensions.DependencyInjection
             builder.Services.AddMemoryCache(); // TODO: remove once update idsvr since it does this
             builder.AddInMemoryCaching();
 
-            // these need to be registered as concrete classes in DI for
-            // the caching decorators to work
             builder.Services.AddTransient<ClientStore>();
             builder.Services.AddTransient<ResourceStore>();
 
-            // add the caching decorators
             builder.AddClientStoreCache<ClientStore>();
             builder.AddResourceStoreCache<ResourceStore>();
 
@@ -61,10 +58,7 @@ namespace Microsoft.Extensions.DependencyInjection
            
             services.AddCloudscribeCoreIdentityServerStores();
 
-            // AddEntityFrameworkNpgsql call should be deprecated:
-            // https://www.npgsql.org/efcore/api/Microsoft.Extensions.DependencyInjection.NpgsqlServiceCollectionExtensions.html
-            services // .AddEntityFrameworkNpgsql()
-                .AddDbContext<ConfigurationDbContext>(options =>
+            services.AddDbContext<ConfigurationDbContext>(options =>
                     options.UseNpgsql(connectionString,
                     npgsqlOptionsAction: sqlOptions =>
                     {
@@ -82,10 +76,7 @@ namespace Microsoft.Extensions.DependencyInjection
                     optionsLifetime: ServiceLifetime.Singleton
                     );
 
-            // AddEntityFrameworkNpgsql call should be deprecated:
-            // https://www.npgsql.org/efcore/api/Microsoft.Extensions.DependencyInjection.NpgsqlServiceCollectionExtensions.html
-            services // .AddEntityFrameworkNpgsql()
-                .AddDbContext<PersistedGrantDbContext>(options =>
+            services.AddDbContext<PersistedGrantDbContext>(options =>
                     options.UseNpgsql(connectionString,
                     npgsqlOptionsAction: sqlOptions =>
                     {
@@ -111,8 +102,5 @@ namespace Microsoft.Extensions.DependencyInjection
 
             return services;
         }
-
-
-
     }
 }

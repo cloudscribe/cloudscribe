@@ -140,8 +140,6 @@ namespace cloudscribe.Core.Identity
             {
                 await _oidcHybridFlowHelper.CaptureOidcTokens(context.Principal, tokens);
             }
-
-            //return Task.CompletedTask;
         }
 
         //private async Task HandleTokenResponseRecieved(TokenResponseReceivedContext context)
@@ -160,15 +158,6 @@ namespace cloudscribe.Core.Identity
         //    //return Task.CompletedTask;
         //}
 
-        //private Task HandleUserInformationResponseRecieved(UserInformationReceivedContext context)
-        //{
-        //    _log.LogWarning($"user info received");
-
-        //    var tokens = context.Properties.GetTokens();
-
-
-        //    return Task.CompletedTask;
-        //}
 
         //private Task HandleAuthorizationCodeRecieved(AuthorizationCodeReceivedContext context)
         //{
@@ -185,8 +174,6 @@ namespace cloudscribe.Core.Identity
         //    return Task.CompletedTask;
 
         //}
-
-
 
         private void ConfigureTenantOptions(SiteContext tenant, OpenIdConnectOptions options)
         {
@@ -217,13 +204,8 @@ namespace cloudscribe.Core.Identity
                     }
                 }
 
-                //options.Scope.Add("openid");
-                //options.Scope.Add("profile");
-                //options.Scope.Add("idserverapi");
-               
                 //options.Events.OnTokenResponseReceived += HandleTokenResponseRecieved;
                 //options.Events.OnAuthorizationCodeReceived += HandleAuthorizationCodeRecieved;
-                //options.Events.OnUserInformationReceived += HandleUserInformationResponseRecieved;
                 options.Events.OnTicketReceived += HandleTicketRecieved;
 
                 if (useFolder)

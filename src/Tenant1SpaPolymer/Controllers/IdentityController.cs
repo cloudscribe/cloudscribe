@@ -9,7 +9,6 @@ namespace Tenant1SpaPolymer.Controllers
     [Authorize]
     public class IdentityController : ControllerBase
     {
-        // [Authorize(Policy = "AdminPolicy")]
         [Authorize(Policy = "ApiAccessPolicy", AuthenticationSchemes = IdentityServerAuthenticationDefaults.AuthenticationScheme)]
         [HttpGet]
         public IActionResult Get()

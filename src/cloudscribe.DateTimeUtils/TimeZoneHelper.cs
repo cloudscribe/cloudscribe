@@ -42,7 +42,7 @@ namespace cloudscribe.DateTimeUtils
                 case DateTimeKind.Local:
                     dUtc = utcDateTime.ToUniversalTime();
                     break;
-                default: //DateTimeKind.Unspecified
+                default:
                     dUtc = DateTime.SpecifyKind(utcDateTime, DateTimeKind.Utc);
                     break;
             }

@@ -48,7 +48,6 @@ namespace cloudscribe.Web.Common.Helpers
             if (!inputIdentifier.Contains("-")) return inputIdentifier;
 
             // we need to not replace - from folder names but not file names
-            
             var pathBeforeFileNaame = inputIdentifier.Replace(fileName, string.Empty).Replace("-", "_");
 
             return pathBeforeFileNaame + fileName;
@@ -57,7 +56,6 @@ namespace cloudscribe.Web.Common.Helpers
 
         // https://stackoverflow.com/questions/189850/what-is-the-javascript-mime-type-for-the-type-attribute-of-a-script-tag
         // application/javascript is preferred vs text/javascript
-
         public string GetMimeType(string extension)
         {
             if (string.IsNullOrEmpty(extension)) return extension;

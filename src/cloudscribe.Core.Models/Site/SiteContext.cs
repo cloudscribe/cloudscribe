@@ -2,7 +2,7 @@
 
 namespace cloudscribe.Core.Models
 {
-    public class SiteContext : ISiteContext //, IEquatable<SiteContext>
+    public class SiteContext : ISiteContext
     {
         public SiteContext(ISiteSettings siteSettings)
         {
@@ -10,19 +10,6 @@ namespace cloudscribe.Core.Models
         }
 
         private readonly ISiteSettings site;
-
-        //https://github.com/cloudscribe/cloudscribe/issues/76
-
-        //public bool Equals(SiteContext other)
-        //{
-        //    if (other == null) return false;
-        //    return other.Id == this.Id;
-        //}
-
-        //public override int GetHashCode()
-        //{
-        //    return this.Id.GetHashCode();
-        //}
 
         public Guid Id
         {
@@ -71,23 +58,6 @@ namespace cloudscribe.Core.Models
         {
             get { return site.RequireConfirmedPhone; }
         }
-
-        //public bool UseLdapAuth
-        //{
-        //    get { return site.UseLdapAuth; }
-        //}
-        //public bool AllowDbFallbackWithLdap
-        //{
-        //    get { return site.AllowDbFallbackWithLdap; }
-        //}
-        //public bool EmailLdapDbFallback
-        //{
-        //    get { return site.EmailLdapDbFallback; }
-        //}
-        //public bool AutoCreateLdapUserOnFirstLogin
-        //{
-        //    get { return site.AutoCreateLdapUserOnFirstLogin; }
-        //}
         
         public string LdapServer
         {
@@ -123,11 +93,6 @@ namespace cloudscribe.Core.Models
         {
             get { return site.LdapUseSsl; }
         }
-
-        //public bool ReallyDeleteUsers
-        //{
-        //    get { return site.ReallyDeleteUsers; }
-        //}
         
         public bool UseEmailForLogin
         {
@@ -187,8 +152,6 @@ namespace cloudscribe.Core.Models
         {
             get { return site.PwdRequireDigit; }
         }
-
-
 
         public bool AllowPersistentLogin
         {
@@ -483,8 +446,6 @@ namespace cloudscribe.Core.Models
         {
             get { return site.PrivacyPolicy; }
         }
-
-        //public bool IsDataProtected { get; set; } = false;
 
         public DateTime CreatedUtc
         {

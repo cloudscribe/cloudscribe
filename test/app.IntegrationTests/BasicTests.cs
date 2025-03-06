@@ -46,9 +46,7 @@ namespace app.IntegrationTests
             // Act
             var response = await client.GetAsync(url);
 
-            //var content = await response.Content.ReadAsStringAsync();
-
-            // Assert
+           // Assert
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
         }
 

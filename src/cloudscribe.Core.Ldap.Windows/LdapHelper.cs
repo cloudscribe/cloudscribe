@@ -21,8 +21,6 @@ namespace cloudscribe.Core.Ldap.Windows
 
         public bool IsImplemented { get; } = true;
 
-        //private bool useRootDn = false;
-
         // this implementation assumes only one server is defined in settings.ldapServer
         public Task<LdapUser> TryLdapLogin(
             ILdapSettings ldapSettings,
@@ -36,16 +34,6 @@ namespace cloudscribe.Core.Ldap.Windows
 
             try
             {
-
-                //if (useRootDn)
-                //{
-                //    directoryEntry = new DirectoryEntry("LDAP://" + ldapSettings.LdapServer + "/" + ldapSettings.LdapRootDN, ldapSettings.LdapDomain + "\\" + userName, password);
-                //}
-                //else
-                //{
-                //directoryEntry = new DirectoryEntry("LDAP://" + ldapSettings.LdapServer, ldapSettings.LdapDomain + "\\" + userName, password);
-                //}
-
                 if(ldapSettings.LdapUseSsl)
                 {
                     directoryEntry = new DirectoryEntry("LDAP://" + ldapSettings.LdapServer, ldapSettings.LdapDomain + "\\" + userName, password, AuthenticationTypes.SecureSocketsLayer);

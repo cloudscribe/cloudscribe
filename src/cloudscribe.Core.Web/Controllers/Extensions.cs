@@ -25,21 +25,7 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
             }
 
             return controller.Redirect("/");
-        }
-
-        
-
-        //public static IActionResult RedirectToLocal(this Controller controller, string returnUrl)
-        //{
-        //    if (controller.Url.IsLocalUrl(returnUrl))
-        //    {
-        //        return controller.Redirect(returnUrl);
-        //    }
-        //    else
-        //    {
-        //        return controller.RedirectToAction("Index", "Home");
-        //    }
-        //}   
+        }   
 
     }
 }

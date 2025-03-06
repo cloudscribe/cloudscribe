@@ -46,7 +46,7 @@ namespace cloudscribe.Core.Models
 
             // clear text password will be hashed upon login
             // this format allows migrating from mojoportal
-            adminUser.PasswordHash = "admin||0"; //pwd/salt/format 
+            adminUser.PasswordHash = "admin||0";
 
             return adminUser;
         }
@@ -86,7 +86,6 @@ namespace cloudscribe.Core.Models
 
             return role;
         }
-        
 
         public static List<GeoCountry> BuildCountryList()
         {

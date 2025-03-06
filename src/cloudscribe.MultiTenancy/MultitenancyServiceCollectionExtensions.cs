@@ -15,7 +15,6 @@ namespace Microsoft.Extensions.DependencyInjection
 
             services.AddScoped<ITenantResolver<TTenant>, TResolver>();
 
-            // No longer registered by default as of ASP.NET Core RC2
             services.TryAddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 
 			// Make Tenant and TenantContext injectable
@@ -24,13 +23,6 @@ namespace Microsoft.Extensions.DependencyInjection
 
 			// Make ITenant injectable for handling null injection, similar to IOptions
 			services.AddScoped<ITenant<TTenant>>(prov => new TenantWrapper<TTenant>(prov.GetService<TTenant>()));
-
-			// Ensure caching is available for caching resolvers
-			//var resolverType = typeof(TResolver);
-   //         if (typeof(MemoryCacheTenantResolver<TTenant>).IsAssignableFrom(resolverType))
-   //         {
-   //             services.AddMemoryCache();
-   //         }
 
             return services;
         }
