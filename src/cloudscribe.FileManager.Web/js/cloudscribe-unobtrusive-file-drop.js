@@ -411,8 +411,10 @@
 
                         if (img) {
                             img.src = "/cr/images/690x517-placeholder.png";
-                            imgResized.src = "";
-                            imgResized.value = "";
+                            if (imgResized) {
+                                imgResized.src = "";
+                                imgResized.value = "";
+                            }
 
                             for (let i = 0; i < imageCollection.length; i++) {
                                 imageCollection[i].src = "/cr/images/690x517-placeholder.png";
