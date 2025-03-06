@@ -34,4 +34,4 @@ jobs:
       with:
         token: ${{ secrets.GHB_PAT }}
         repository: GreatHouseBarn/cloudscribe-testing
-        event-type: build-main
+        event-type: cloudscribe
