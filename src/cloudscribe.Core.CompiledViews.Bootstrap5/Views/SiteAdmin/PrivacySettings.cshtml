@@ -1,9 +1,9 @@
 ﻿@model cloudscribe.Core.Web.ViewModels.SiteSettings.PrivacyPolicyViewModel
 @inject IStringLocalizer<CloudscribeCore> sr
 @inject ICoreThemeHelper themeHelper
-@inject ICkeditorOptionsResolver editorOptionsResolver
+@inject ISummernoteOptionsResolver summernoteOptionsResolver
 @{
-    var ckOptions = await editorOptionsResolver.GetCkeditorOptions();
+    var summernoteOptions = await summernoteOptionsResolver.GetSummernoteOptions();
     var themeSettings = themeHelper.GetThemeSettings();
     if (themeSettings.AdminSideNavExpanded) { ViewData["SideNavToggle"] = "show"; }
     ViewData["SideNavVisible"] = true;
@@ -25,13 +25,15 @@
     </div>
     <div class="mb-3">
         <label class="form-label" asp-for="PrivacyPolicy">@sr["Privacy Policy"]</label>
-        <textarea class="form-control" rows="5" asp-for="PrivacyPolicy"
-                  data-ckeditor-unobtrusive=""
-                  data-ckeditor-config-url="@ckOptions.CustomConfigPath"
-                  data-ckeditor-config-language="@ckOptions.LanguageCode"
-                  data-ckeditor-config-dropfileuploadurl="@ckOptions.DropFileUrl"
-                  data-ckeditor-config-filebrowserurl="@ckOptions.FileBrowseUrl"
-                  data-ckeditor-config-imagebrowseurl="@ckOptions.ImageBrowseUrl"></textarea>
+        <textarea asp-for="PrivacyPolicy" rows="5"
+            data-summernote-unobtrusive=""
+            data-summernote-config-url="@summernoteOptions.CustomConfigPath"
+            data-summernote-toolbar-config-url="@summernoteOptions.CustomToolbarConfigPath"
+            data-summernote-config-language="@summernoteOptions.LanguageCode"
+            data-summernote-config-dropfileuploadurl="@summernoteOptions.DropFileUrl"
+            data-summernote-config-filebrowserurl="@summernoteOptions.FileBrowseUrl"
+            data-summernote-config-imagebrowseurl="@summernoteOptions.ImageBrowseUrl">
+        </textarea>
         <span asp-validation-for="PrivacyPolicy" class="invalid-feedback"></span>
     </div>
 
@@ -39,6 +41,9 @@
         <button id="btnSave" name="submit" type="submit" class="btn btn-primary" data-disabled-text='@sr["Working..."]' data-enabled-text='@sr["Save"]'>@sr["Save"]</button>
     </div>
 </form>
+@section Styles {
+    <link href="/cr/css/summernote-bs5.min.css" rel="stylesheet">
+}
 @section SideNav {
     <partial name="AdminSideNav" />
 }
@@ -54,4 +59,5 @@
     <script src="~/cr/js/jqueryvaildation.submitonce-unobtrusive.min.js"></script>
     <script src="~/cr/js/ckeditor4114/ckeditor.js"></script>
     <script src="~/cr/js/cloudscribe-ckeditor-unobtrusive.min.js"></script>
+    <partial name="SummernoteScripts" />
 }

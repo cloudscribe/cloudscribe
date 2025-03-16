@@ -1,7 +1,7 @@
 ﻿@model cloudscribe.Core.Web.ViewModels.SiteSettings.NewSiteViewModel
 @inject ICoreThemeHelper themeHelper
 @inject IStringLocalizer<CloudscribeCore> sr
-@inject ICkeditorOptionsResolver editorOptionsResolver
+@inject ISummernoteOptionsResolver summernoteOptionsResolver
 @inject IOptions<MultiTenantOptions> multiTenantOptionsAccessor
 @{
     MultiTenantOptions multiTenantOptions = multiTenantOptionsAccessor.Value;
@@ -9,7 +9,7 @@
     if (multiTenantOptions.Mode != MultiTenantMode.FolderName) { useFolderTenants = false; }
     bool useHostTenants = true;
     if (multiTenantOptions.Mode != MultiTenantMode.HostName) { useHostTenants = false; }
-    var ckOptions = await editorOptionsResolver.GetCkeditorOptions();
+    var summernoteOptions = await summernoteOptionsResolver.GetSummernoteOptions();
     var baseUrl = this.Context.Request.GetCurrentBaseUrl() + "/";
     var themeSettings = themeHelper.GetThemeSettings();
     if (themeSettings.AdminSideNavExpanded) { ViewData["SideNavToggle"] = "show"; }
@@ -73,13 +73,15 @@
     </div>
     <div class="mb-3">
         <label class="form-label" asp-for="ClosedMessage">@sr["Closed Message"]</label>
-        <textarea class="form-control" rows="5" asp-for="ClosedMessage"
-                  data-ckeditor-unobtrusive=""
-                  data-ckeditor-config-url="@ckOptions.CustomConfigPath"
-                  data-ckeditor-config-language="@ckOptions.LanguageCode"
-                  data-ckeditor-config-dropfileuploadurl="@ckOptions.DropFileUrl"
-                  data-ckeditor-config-filebrowserurl="@ckOptions.FileBrowseUrl"
-                  data-ckeditor-config-imagebrowseurl="@ckOptions.ImageBrowseUrl"></textarea>
+        <textarea asp-for="ClosedMessage" rows="5"
+            data-summernote-unobtrusive=""
+            data-summernote-config-url="@summernoteOptions.CustomConfigPath"
+            data-summernote-toolbar-config-url="@summernoteOptions.CustomToolbarConfigPath"
+            data-summernote-config-language="@summernoteOptions.LanguageCode"
+            data-summernote-config-dropfileuploadurl="@summernoteOptions.DropFileUrl"
+            data-summernote-config-filebrowserurl="@summernoteOptions.FileBrowseUrl"
+            data-summernote-config-imagebrowseurl="@summernoteOptions.ImageBrowseUrl">
+        </textarea>
         <span asp-validation-for="ClosedMessage" class="invalid-feedback"></span>
     </div>
     <h2>@sr["New Site Administrator"]</h2>
@@ -116,6 +118,9 @@
         <button name="submit" type="submit" class="btn btn-primary" data-disabled-text='@sr["Working..."]' data-enabled-text='@sr["Save"]'>@sr["Save"]</button>
     </div>
 </form>
+@section Styles {
+    <link href="/cr/css/summernote-bs5.min.css" rel="stylesheet">
+}
 @section SideNav {
     <partial name="AdminSideNav" />
 }
@@ -131,4 +136,5 @@
     <script src="~/cr/js/cloudscribe-ckeditor-unobtrusive.min.js"></script>
     <script src="~/cr/js/jquery.validate.hooks.min.js"></script>
     <script src="~/cr/js/jqueryvaildation.submitonce-unobtrusive.min.js"></script>
+    <partial name="SummernoteScripts" />
 }
