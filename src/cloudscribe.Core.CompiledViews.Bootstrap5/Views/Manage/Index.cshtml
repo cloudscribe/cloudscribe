@@ -7,7 +7,7 @@
     var currentSite = await siteResolver.ResolveSite(Context.Request.Host.Host, Context.Request.Path);
     var showExternal = currentSite.HasAnySocialAuthEnabled();
 }
-<h2>@ViewData["Title"]</h2>
+<h1>@ViewData["Title"]</h1>
 
 
 <h4>@sr["Change your account settings"]</h4>
