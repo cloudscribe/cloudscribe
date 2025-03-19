@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <Description>common static resources for web applications including ckeditor datepickers, and other js and css</Description>
-    <Version>8.0.6</Version>
+    <Version>8.0.7</Version>
     <TargetFramework>net8.0</TargetFramework>
     <Authors>Joe Audette</Authors>
     <PackageTags>cloudscribe</PackageTags>
