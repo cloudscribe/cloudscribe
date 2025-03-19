@@ -28,14 +28,14 @@ ul.jqtree-tree li.jqtree_common {
 ul.jqtree-tree .jqtree-toggler {
     display: block;
     position: absolute;
-    left: -1.5em;
+    left: -0.5em;
     top: 30%;
     *top: 0;  /* fix for ie7 */
-    font-size: 12px;
     line-height: 12px;
     font-family: arial;  /* fix for ie9 */
     border-bottom: none;
     color: #333;
+    text-decoration: none;
 }
 
 ul.jqtree-tree .jqtree-toggler:hover {
