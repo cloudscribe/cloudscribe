@@ -6,8 +6,7 @@ name: cloudscribe-develop-nuget-build
 on:
   push:
     branches: [ "develop" ]
-#   pull_request:
-#     branches: [ "develop" ]
+  workflow_dispatch:
 
 jobs:
   build:
@@ -30,3 +29,9 @@ jobs:
       run: dotnet pack -c Release
     - name: Publish NuGet package
       run: dotnet nuget push **/*.nupkg --source ${{ secrets.NUGET_SOURCE_URL }}
+    - name: Remote Repository Dispatch
+      uses: peter-evans/repository-dispatch@v3
+      with:
+        token: ${{ secrets.GHB_PAT }}
+        repository: GreatHouseBarn/cloudscribe-testing
+        event-type: cloudscribe
