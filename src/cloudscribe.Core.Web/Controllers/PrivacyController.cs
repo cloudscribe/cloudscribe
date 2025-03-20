@@ -28,7 +28,7 @@ namespace cloudscribe.Core.Web.Controllers
                 consentFeature.WithdrawConsent();
             }
 
-            return this.RedirectToSiteRoot(CurrentSite);
+            return RedirectToAction("Index", "Home");
         }
 
     }

@@ -1,6 +1,7 @@
 ﻿using cloudscribe.Core.Models;
 using cloudscribe.Core.Models.Site;
 using cloudscribe.Core.Web.ViewModels.Account;
+using Microsoft.Extensions.Localization;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -9,15 +10,17 @@ namespace cloudscribe.Core.Web.Components
     public class EmailValidationService : IEmailValidationService
     {
         private ISiteContext _siteSettings = null;
+        protected IStringLocalizer StringLocalizer { get; private set; }
 
         private string GetRegRestrictionTld
         {
             get { return _siteSettings.RegRestrictionTld; }
         }
 
-        public EmailValidationService(SiteContext currentSite)
+        public EmailValidationService(SiteContext currentSite, IStringLocalizer<CloudscribeCore> localizer)
         {
             _siteSettings = currentSite;
+            StringLocalizer = localizer;
         }
 
         public EmailValidation RegisterEmailValidation(RegisterViewModel model)
@@ -49,7 +52,7 @@ namespace cloudscribe.Core.Web.Components
                         }
                         else
                         {
-                            emailValidation.ErrorMessage = "Registration Failed.";
+                            emailValidation.ErrorMessage = StringLocalizer["Registration Failed."];
                             emailValidation.IsValid = false;
                         }
                     }
@@ -62,7 +65,7 @@ namespace cloudscribe.Core.Web.Components
             }
             else
             {
-                emailValidation.ErrorMessage = "No email supplied.";
+                emailValidation.ErrorMessage = StringLocalizer["No email supplied."];
                 emailValidation.IsValid = false;
             }
              

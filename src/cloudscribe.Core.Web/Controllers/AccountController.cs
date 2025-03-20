@@ -126,8 +126,7 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
                 }
 
             }
-
-            return this.RedirectToSiteRoot(CurrentSite);
+            return RedirectToAction("Index", "Home");
         }
 
         protected virtual bool ShouldSendConfirmation(IUserContext user)
@@ -187,8 +186,7 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
 
                 }
             }
-
-            return this.RedirectToSiteRoot(CurrentSite);
+            return RedirectToAction("Index", "Home");
         }
 
         protected virtual async Task<IActionResult> HandleRequiresTwoFactor(UserLoginResult result, string returnUrl, bool rememberMe)
@@ -230,7 +228,7 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
         {
             if (AccountService.IsSignedIn(User))
             {
-                return this.RedirectToSiteRoot(CurrentSite);
+                return RedirectToAction("Index", "Home");
             }
 
             returnUrl = IdentityServerIntegration.EnsureFolderSegmentIfNeeded(CurrentSite, returnUrl);
@@ -359,7 +357,7 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
 
             if (user == null)
             {
-                throw new ApplicationException($"Unable to load two-factor authentication user.");
+                throw new ApplicationException(StringLocalizer["Unable to load two-factor authentication user."]);
             }
 
             var model = new LoginWith2faViewModel { RememberMe = rememberMe };
@@ -424,7 +422,7 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
             var user = await AccountService.GetTwoFactorAuthenticationUserAsync();
             if (user == null)
             {
-                throw new ApplicationException($"Unable to load two-factor authentication user.");
+                throw new ApplicationException(StringLocalizer["Unable to load two-factor authentication user."]);
             }
 
             ViewData["ReturnUrl"] = returnUrl;
@@ -486,7 +484,7 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
         {
             if(AccountService.IsSignedIn(User))
             {
-                return this.RedirectToSiteRoot(CurrentSite);
+                return RedirectToAction("Index", "Home");
             }
             if(!CurrentSite.AllowNewRegistration)
             {
@@ -648,7 +646,7 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
                 }
 
                 var te = result.RejectReasons.FirstOrDefault();
-                if(string.IsNullOrEmpty(te)) { te = "unknown"; }
+                if(string.IsNullOrEmpty(te)) { te = StringLocalizer["unknown"]; }
 
                 await Analytics.HandleRegisterFail("Onsite", te);
 
@@ -960,7 +958,7 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
         {
             if (AccountService.IsSignedIn(User))
             {
-                return this.RedirectToSiteRoot(CurrentSite);
+                return RedirectToAction("Index", "Home");
             }
 
             var model = new PendingNotificationViewModel
@@ -977,7 +975,7 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
         {
             if (!AccountService.IsSignedIn(User) || string.IsNullOrWhiteSpace(CurrentSite.RegistrationAgreement))
             {
-                return this.RedirectToSiteRoot(CurrentSite);
+                return RedirectToAction("Index", "Home");
             }
 
             ViewData["Title"] = StringLocalizer["Registration Agreement Required"];
@@ -999,7 +997,7 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
         {
             if (!AccountService.IsSignedIn(User) || string.IsNullOrWhiteSpace(CurrentSite.RegistrationAgreement))
             {
-                return this.RedirectToSiteRoot(CurrentSite);
+                return RedirectToAction("Index", "Home");
             }
 
             if (!ModelState.IsValid)
@@ -1017,7 +1015,7 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
             //return Redirect("/");
             if(result)
             {
-                return this.RedirectToSiteRoot(CurrentSite);
+                return RedirectToAction("Index", "Home");
             }
 
             return View(model);
@@ -1030,7 +1028,7 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
         {
             if (AccountService.IsSignedIn(User))
             {
-                return this.RedirectToSiteRoot(CurrentSite);
+                return RedirectToAction("Index", "Home");
             }
             var model = new PendingNotificationViewModel
             {
@@ -1053,12 +1051,12 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
 
             if(info.User == null)
             {
-                return this.RedirectToSiteRoot(CurrentSite);
+                return RedirectToAction("Index", "Home");
             }
 
             if(info.User.EmailConfirmed)
             {
-                return this.RedirectToSiteRoot(CurrentSite);
+                return RedirectToAction("Index", "Home");
             }
 
             var callbackUrl = Url.Action("ConfirmEmail", "Account",
@@ -1085,11 +1083,11 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
         {
             if (AccountService.IsSignedIn(User))
             {
-                return this.RedirectToSiteRoot(CurrentSite);
+                return RedirectToAction("Index", "Home");
             }
             if (userId == null || code == null)
             {
-                return this.RedirectToSiteRoot(CurrentSite);
+                return RedirectToAction("Index", "Home");
             }
 
             bool? isEmailAlreadyConfirmed = await AccountService.IsEmailConfirmedAsync(userId);
@@ -1098,7 +1096,7 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
 
             if (result.User == null)
             {
-                return this.RedirectToSiteRoot(CurrentSite);
+                return RedirectToAction("Index", "Home");
             }
 
             if(result.IdentityResult.Succeeded)
@@ -1152,7 +1150,7 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
             }
 
             await Analytics.HandleLogout("User Signed Out");
-            return this.RedirectToSiteRoot(CurrentSite);
+            return RedirectToAction("Index", "Home");
         }
 
         // identityserver integration point
@@ -1220,7 +1218,7 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
         {
             if (AccountService.IsSignedIn(User))
             {
-                return this.RedirectToSiteRoot(CurrentSite);
+                return RedirectToAction("Index", "Home");
             }
 
             return View();
@@ -1295,7 +1293,7 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
         {
             if (AccountService.IsSignedIn(User))
             {
-                return this.RedirectToSiteRoot(CurrentSite);
+                return RedirectToAction("Index", "Home");
             }
 
             return View();
@@ -1310,7 +1308,7 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
             if (string.IsNullOrWhiteSpace(code))
             {
                 Log.LogInformation("Set initial password url with no code, redirecting to site root.");
-                return this.RedirectToSiteRoot(CurrentSite);
+                return RedirectToAction("Index", "Home");
             }
 
             return View();
@@ -1367,7 +1365,7 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
             if(string.IsNullOrWhiteSpace(code))
             {
                 Log.LogInformation("Reset password url with no code, redirecting to site root.");
-                return this.RedirectToSiteRoot(CurrentSite);
+                return RedirectToAction("Index", "Home");
             }
 
             return View();

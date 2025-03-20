@@ -16,6 +16,7 @@ using cloudscribe.Web.Common.Extensions;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.AspNetCore.Mvc.Routing;
 using Microsoft.Extensions.Localization;
@@ -153,16 +154,16 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
             var logins = await UserManager.GetLoginsAsync(user);
             foreach (var l in logins)
             {
-                personalData.Add($"{l.LoginProvider} external login provider key", l.ProviderKey);
+                personalData.Add($"{l.LoginProvider} {StringLocalizer["external login provider key"]}", l.ProviderKey);
             }
 
-            personalData.Add($"Authenticator Key", await UserManager.GetAuthenticatorKeyAsync(user));
+            personalData.Add($"{StringLocalizer["Authenticator Key"]}", await UserManager.GetAuthenticatorKeyAsync(user));
 
             var locations = await UserManager.GetUserLocations(user.SiteId, user.Id, 1, 100);
             int i = 1;
             foreach (var location in locations.Data)
             {
-                personalData.Add($"IpAddress {i}", location.IpAddress);
+                personalData.Add($"{StringLocalizer["IpAddress"]} {i}", location.IpAddress);
                 i += 1;
             }
 
@@ -181,7 +182,7 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
 
             if (user == null)
             {
-                return NotFound($"Unable to load user with ID '{UserManager.GetUserId(User)}'.");
+                return NotFound($"{StringLocalizer["Unable to load user with ID"]} '{UserManager.GetUserId(User)}'.");
             }
 
             var model = new ChangeUserEmailViewModel
@@ -208,7 +209,7 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
 
             if (user == null)
             {
-                return NotFound($"Unable to load user with ID '{UserManager.GetUserId(User)}'.");
+                return NotFound($"{StringLocalizer["Unable to load user with ID"]} '{UserManager.GetUserId(User)}'.");
             }
 
             var requirePassword          = await UserManager.HasPasswordAsync(user);
@@ -223,13 +224,13 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
             {
                 if (string.IsNullOrWhiteSpace(model.Password))
                 {
-                    ModelState.AddModelError(string.Empty, "Password is required");
+                    ModelState.AddModelError(string.Empty, StringLocalizer["Password is required"]);
                     return View(model);
                 }
 
                 if (!await UserManager.CheckPasswordAsync(user, model.Password))
                 {
-                    ModelState.AddModelError(string.Empty, "Password not correct.");
+                    ModelState.AddModelError(string.Empty, StringLocalizer["Password not correct."]);
                     model.Password = "";
                     return View(model);
                 }
@@ -346,14 +347,14 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
 
             if (userId == null || code == null)
             {
-                return this.RedirectToSiteRoot(CurrentSite);
+                return RedirectToAction("Index", "Home");
             }
 
             var user = await UserManager.FindByIdAsync(userId);
 
             if (user == null)
             {
-                return NotFound($"Unable to load user with ID '{UserManager.GetUserId(User)}'.");
+                return NotFound($"{StringLocalizer["Unable to load user with ID"]} '{UserManager.GetUserId(User)}'.");
             }
 
             var model = new ChangeUserEmailViewModel
@@ -401,7 +402,7 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
 
             if (user == null)
             {
-                return NotFound($"Unable to load user with ID '{UserManager.GetUserId(User)}'.");
+                return NotFound($"{StringLocalizer["Unable to load user with ID"]} '{UserManager.GetUserId(User)}'.");
             }
 
             var model = new DeletePersonalDataViewModel
@@ -421,7 +422,7 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
 
             if (user == null)
             {
-                return NotFound($"Unable to load user with ID '{UserManager.GetUserId(User)}'.");
+                return NotFound($"{StringLocalizer["Unable to load user with ID"]} '{UserManager.GetUserId(User)}'.");
             }
 
             var requirePassword = await UserManager.HasPasswordAsync(user);
@@ -429,14 +430,14 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
             {
                 if (string.IsNullOrWhiteSpace(model.Password))
                 {
-                    ModelState.AddModelError(string.Empty, "Password is required");
+                    ModelState.AddModelError(string.Empty, StringLocalizer["Password is required"]);
                     model.HasPassword = requirePassword;
                     return View(model);
                 }
 
                 if (!await UserManager.CheckPasswordAsync(user, model.Password))
                 {
-                    ModelState.AddModelError(string.Empty, "Password not correct.");
+                    ModelState.AddModelError(string.Empty, StringLocalizer["Password not correct."]);
                     model.HasPassword = requirePassword;
                     return View();
                 }
@@ -446,14 +447,14 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
             var userId = await UserManager.GetUserIdAsync(user);
             if (!result.Succeeded)
             {
-                throw new InvalidOperationException($"Unexpected error occurred deleting user with ID '{userId}'.");
+                throw new InvalidOperationException($"{StringLocalizer["Unexpected error occurred deleting user with ID"]} '{userId}'.");
             }
 
             await SignInManager.SignOutAsync();
 
             Log.LogInformation($"User with ID {userId} deleted themselves.");
 
-            return this.RedirectToSiteRoot(CurrentSite);
+            return RedirectToAction("Index", "Home");
         }
 
         [Authorize]
@@ -654,7 +655,7 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
             var user = await UserManager.FindByIdAsync(User.GetUserId());
             if (user == null)
             {
-                throw new ApplicationException($"Unable to load user with ID '{UserManager.GetUserId(User)}'.");
+                throw new ApplicationException($"{StringLocalizer["Unable to load user with ID"]} '{UserManager.GetUserId(User)}'.");
             }
 
             var model = new TwoFactorAuthenticationViewModel
@@ -677,12 +678,12 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
             var user = await UserManager.FindByIdAsync(User.GetUserId());
             if (user == null)
             {
-                throw new ApplicationException($"Unable to load user with ID '{User.GetUserId()}'.");
+                throw new ApplicationException($"{StringLocalizer["Unable to load user with ID"]} '{User.GetUserId()}'.");
             }
 
             if (!user.TwoFactorEnabled)
             {
-                throw new ApplicationException($"Unexpected error occured disabling 2FA for user with ID '{user.Id}'.");
+                throw new ApplicationException($"{StringLocalizer["Unexpected error occured disabling 2FA for user with ID"]} '{user.Id}'.");
             }
 
             return View(nameof(Disable2fa));
@@ -698,13 +699,13 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
             var user = await UserManager.FindByIdAsync(User.GetUserId());
             if (user == null)
             {
-                throw new ApplicationException($"Unable to load user with ID '{User.GetUserId()}'.");
+                throw new ApplicationException($"{StringLocalizer["Unable to load user with ID"]} '{User.GetUserId()}'.");
             }
 
             var disable2faResult = await UserManager.SetTwoFactorEnabledAsync(user, false);
             if (!disable2faResult.Succeeded)
             {
-                throw new ApplicationException($"Unexpected error occured disabling 2FA for user with ID '{user.Id}'.");
+                throw new ApplicationException($"{StringLocalizer["Unexpected error occured disabling 2FA for user with ID"]} '{user.Id}'.");
             }
 
             Log.LogInformation("User with ID {UserId} has disabled 2fa.", user.Id);
@@ -750,7 +751,7 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
             var user = await UserManager.FindByIdAsync(User.GetUserId());
             if (user == null)
             {
-                throw new ApplicationException($"Unable to load user with ID '{User.GetUserId()}'.");
+                throw new ApplicationException($"{StringLocalizer["Unable to load user with ID"]} '{User.GetUserId()}'.");
             }
 
             var unformattedKey = await UserManager.GetAuthenticatorKeyAsync(user);
@@ -784,7 +785,7 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
             var user = await UserManager.FindByIdAsync(User.GetUserId());
             if (user == null)
             {
-                throw new ApplicationException($"Unable to load user with ID '{User.GetUserId()}'.");
+                throw new ApplicationException($"{StringLocalizer["Unable to load user with ID"]} '{User.GetUserId()}'.");
             }
 
             // Strip spaces and hypens
@@ -795,7 +796,7 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
 
             if (!is2faTokenValid)
             {
-                ModelState.AddModelError("model.Code", "Verification code is invalid.");
+                ModelState.AddModelError("model.Code", StringLocalizer["Verification code is invalid."]);
                 return View(model);
             }
 
@@ -823,7 +824,7 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
             var user = await UserManager.FindByIdAsync(User.GetUserId());
             if (user == null)
             {
-                throw new ApplicationException($"Unable to load user with ID '{User.GetUserId()}'.");
+                throw new ApplicationException($"{StringLocalizer["Unable to load user with ID"]} '{User.GetUserId()}'.");
             }
 
             await UserManager.SetTwoFactorEnabledAsync(user, false);
@@ -842,12 +843,12 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
             var user = await UserManager.FindByIdAsync(User.GetUserId());
             if (user == null)
             {
-                throw new ApplicationException($"Unable to load user with ID '{User.GetUserId()}'.");
+                throw new ApplicationException($"{StringLocalizer["Unable to load user with ID"]} '{User.GetUserId()}'.");
             }
 
             if (!user.TwoFactorEnabled)
             {
-                throw new ApplicationException($"Cannot generate recovery codes for user with ID '{user.Id}' as they do not have 2FA enabled.");
+                throw new ApplicationException($"{StringLocalizer["Cannot generate recovery codes for user with ID"]} '{user.Id}' {StringLocalizer["as they do not have 2FA enabled."]}");
             }
 
             var recoveryCodes = await UserManager.GenerateNewTwoFactorRecoveryCodesAsync(user, 10);
@@ -1122,13 +1123,13 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
         {
             if (!AccountService.IsSignedIn(User))
             {
-                return this.RedirectToSiteRoot(CurrentSite);
+                return RedirectToAction("Index", "Home");
             }
 
             var user = await UserManager.FindByIdAsync(HttpContext.User.GetUserId());
             if (user == null || !string.IsNullOrWhiteSpace(user.Email))
             {
-                return this.RedirectToSiteRoot(CurrentSite);
+                return RedirectToAction("Index", "Home");
             }
 
             var model = new EmailRequiredViewModel
@@ -1147,7 +1148,7 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
             var user = await UserManager.FindByIdAsync(HttpContext.User.GetUserId());
             if (user == null || !string.IsNullOrWhiteSpace(user.Email))
             {
-                return this.RedirectToSiteRoot(CurrentSite);
+                return RedirectToAction("Index", "Home");
             }
 
             if (!ModelState.IsValid)
@@ -1170,7 +1171,7 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
                 user.RolesChanged = true; //needed to get the new email claim
                 await UserManager.UpdateAsync(user);
 
-                return this.RedirectToSiteRoot(CurrentSite);
+                return RedirectToAction("Index", "Home");
             }
 
             return View(model);

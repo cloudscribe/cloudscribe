@@ -9,16 +9,16 @@
     <ol class="list">
         <li>
             <p>
-                Download a two-factor authenticator app like Microsoft Authenticator for
-                <a href="https://go.microsoft.com/fwlink/?Linkid=825072">Android</a> and
-                <a href="https://go.microsoft.com/fwlink/?Linkid=825073">iOS</a> or
-                Google Authenticator for
-                <a href="https://play.google.com/store/apps/details?id=com.google.android.apps.authenticator2&amp;hl=en">Android</a> and
-                <a href="https://itunes.apple.com/us/app/google-authenticator/id388497605?mt=8">iOS</a>.
+                @sr["Download a two-factor authenticator app like Microsoft Authenticator for"]
+                <a href="https://go.microsoft.com/fwlink/?Linkid=825072">@sr["Android"]</a> @sr["and"]
+                <a href="https://go.microsoft.com/fwlink/?Linkid=825073">@sr["iOS"]</a> @sr["or"]
+                @sr["Google Authenticator for"]
+                <a href="https://play.google.com/store/apps/details?id=com.google.android.apps.authenticator2&amp;hl=en">@sr["Android"]</a> @sr["and"]
+                <a href="https://itunes.apple.com/us/app/google-authenticator/id388497605?mt=8">@sr["iOS"]</a>.
             </p>
         </li>
         <li>
-            <p>Scan the QR Code or enter this key <kbd>@Model.SharedKey</kbd> into your two factor authenticator app. Spaces and casing do not matter.</p>
+            <p>@sr["Scan the QR Code or enter this key"] <kbd>@Model.SharedKey</kbd> @sr["into your two factor authenticator app. Spaces and casing do not matter."]</p>
             <div id="qrCode"></div>
             <div id="qrCodeData" data-url="@Html.Raw(Model.AuthenticatorUri)"></div>
         </li>
@@ -34,7 +34,7 @@
                             <input asp-for="Code" class="form-control" autocomplete="off" />
                             <span asp-validation-for="Code" class="invalid-feedback"></span>
                         </div>
-                        <button type="submit" class="btn btn-primary">@sr["Verify"]</button>
+                        <button type="submit" class="btn btn-primary" asp-route-culture="@CultureInfo.CurrentUICulture.Name">@sr["Verify"]</button>
                         @*<div asp-validation-summary="ModelOnly" class="text-danger"></div>*@
                     </form>
                 </div>

@@ -1,2 +1,2 @@
 ﻿@model SiteContext 
-<a href="~/@(Model?.SiteFolderName ?? "")" class="h2 me-3" aria-hidden="true">@Model.SiteName </a>
+@Html.ActionLink(Model.SiteName, "Index", "Home", null, new { @class = "h2 me-3" })
