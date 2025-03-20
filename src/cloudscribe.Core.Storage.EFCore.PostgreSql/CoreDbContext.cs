@@ -9,6 +9,7 @@ using cloudscribe.Core.Models.Geography;
 using cloudscribe.Core.Storage.EFCore.Common;
 using cloudscribe.EFCore.PostgreSql.Conventions;
 using Microsoft.EntityFrameworkCore;
+using System;
 
 namespace cloudscribe.Core.Storage.EFCore.PostgreSql
 {
@@ -328,7 +329,11 @@ namespace cloudscribe.Core.Storage.EFCore.PostgreSql
                 entity.Property(p => p.TimeZoneId).HasMaxLength(50);
 
                 entity.Property(p => p.BrowserKey).HasMaxLength(50);
-
+                
+                entity.Property(p => p.DateOfBirth).HasConversion(
+                    u => u.Value.ToUniversalTime(),
+                    u => DateTime.SpecifyKind(u, DateTimeKind.Utc)
+                );
             });
 
             modelBuilder.Entity<SiteRole>(entity =>
