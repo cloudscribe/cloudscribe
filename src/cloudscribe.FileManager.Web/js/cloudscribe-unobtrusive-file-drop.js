@@ -406,8 +406,19 @@
                             hidden.value = '';
                         }
                         var img = document.getElementById("dz1Image");
+                        let imgResized = document.getElementById("imgUrlResized");
+                        let imageCollection = document.getElementsByClassName("cr-image");
+
                         if (img) {
                             img.src = "/cr/images/690x517-placeholder.png";
+                            if (imgResized) {
+                                imgResized.src = "";
+                                imgResized.value = "";
+                            }
+
+                            for (let i = 0; i < imageCollection.length; i++) {
+                                imageCollection[i].src = "/cr/images/690x517-placeholder.png";
+                            }
                         }
                     };
                 }

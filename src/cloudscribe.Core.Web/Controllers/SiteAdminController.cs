@@ -592,6 +592,13 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
                 return View(model);
             }
 
+            if (!SiteManager.CheckSiteNameIsAllowed(model.SiteName))
+            {
+                ModelState.AddModelError("sitenameerror", StringLocalizer["The selected site name is already in use or uses a reserved word. Please try a different site name."]);
+
+                return View(model);
+            }
+
             bool addHostName = false;
             var newSite = new SiteSettings
             {

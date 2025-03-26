@@ -14,6 +14,6 @@ namespace cloudscribe.Core.Models
         public string FirstSiteTheme { get; set; } = "";
         public string RolesThatCannotBeDeleted { get; set; } = string.Empty;
         public bool AllowAdminsToChangeUserPasswords { get; set; }
-
+        public string ReservedSiteNames { get; set; } = string.Empty;
     }
 }

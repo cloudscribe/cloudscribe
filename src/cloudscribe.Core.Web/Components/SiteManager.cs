@@ -660,5 +660,16 @@ namespace cloudscribe.Core.Web.Components
             
         }
 
+        public bool CheckSiteNameIsAllowed(string siteName)
+        {
+            string ReservedSiteNames = _setupOptions.ReservedSiteNames;
+
+            if (ReservedSiteNames.Contains(siteName.ToLower()))
+            {
+                return false;
+            }
+
+            return true;
+        }
     }
 }

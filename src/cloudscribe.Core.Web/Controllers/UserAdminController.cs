@@ -638,7 +638,16 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
 
                 if (model.DateOfBirth.HasValue)
                 {
-                    user.DateOfBirth = model.DateOfBirth.Value;
+                    // Fix for timezone issues / PgSQL:
+                    // always take what the user has entered literally
+                    // and store it as UTC with no offset
+                    if (model.DateOfBirth.Value.Kind != DateTimeKind.Utc)
+                        user.DateOfBirth = new DateTime(model.DateOfBirth.Value.Year,
+                                                        model.DateOfBirth.Value.Month,
+                                                        model.DateOfBirth.Value.Day,
+                                                        0, 0, 0, DateTimeKind.Utc);
+                    else
+                        user.DateOfBirth = model.DateOfBirth.Value;
                 }
 
                 await CustomUserInfo.ProcessUserBeforeCreate(user, HttpContext);
@@ -932,7 +941,16 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
 
                 if (model.DateOfBirth.HasValue)
                 {
-                    user.DateOfBirth = model.DateOfBirth.Value;
+                    // Fix for timezone issues / PgSQL:
+                    // always take what the user has entered literally
+                    // and store it as UTC with no offset
+                    if (model.DateOfBirth.Value.Kind != DateTimeKind.Utc)
+                        user.DateOfBirth = new DateTime(model.DateOfBirth.Value.Year, 
+                                                        model.DateOfBirth.Value.Month, 
+                                                        model.DateOfBirth.Value.Day, 
+                                                        0,0,0, DateTimeKind.Utc);
+                    else
+                        user.DateOfBirth = model.DateOfBirth.Value;
                 }
                 else
                 {
