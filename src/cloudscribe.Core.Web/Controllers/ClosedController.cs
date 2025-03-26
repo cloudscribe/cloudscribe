@@ -22,7 +22,7 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
         {
             if(!CurrentSite.SiteIsClosed)
             {
-                return RedirectToAction("Index", "Home");
+                return this.RedirectToSiteRoot(CurrentSite);
             }
 
             ViewData["Title"] = StringLocalizer["Site Closed To Public Temporarily"];

@@ -347,7 +347,7 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
 
             if (userId == null || code == null)
             {
-                return RedirectToAction("Index", "Home");
+                return this.RedirectToSiteRoot(CurrentSite);
             }
 
             var user = await UserManager.FindByIdAsync(userId);
@@ -454,7 +454,7 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
 
             Log.LogInformation($"User with ID {userId} deleted themselves.");
 
-            return RedirectToAction("Index", "Home");
+            return this.RedirectToSiteRoot(CurrentSite);
         }
 
         [Authorize]
@@ -1123,13 +1123,13 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
         {
             if (!AccountService.IsSignedIn(User))
             {
-                return RedirectToAction("Index", "Home");
+                return this.RedirectToSiteRoot(CurrentSite);
             }
 
             var user = await UserManager.FindByIdAsync(HttpContext.User.GetUserId());
             if (user == null || !string.IsNullOrWhiteSpace(user.Email))
             {
-                return RedirectToAction("Index", "Home");
+                return this.RedirectToSiteRoot(CurrentSite);
             }
 
             var model = new EmailRequiredViewModel
@@ -1148,7 +1148,7 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
             var user = await UserManager.FindByIdAsync(HttpContext.User.GetUserId());
             if (user == null || !string.IsNullOrWhiteSpace(user.Email))
             {
-                return RedirectToAction("Index", "Home");
+                return this.RedirectToSiteRoot(CurrentSite);
             }
 
             if (!ModelState.IsValid)
@@ -1171,7 +1171,7 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
                 user.RolesChanged = true; //needed to get the new email claim
                 await UserManager.UpdateAsync(user);
 
-                return RedirectToAction("Index", "Home");
+                return this.RedirectToSiteRoot(CurrentSite);
             }
 
             return View(model);

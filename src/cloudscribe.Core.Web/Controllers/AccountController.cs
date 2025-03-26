@@ -126,7 +126,7 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
                 }
 
             }
-            return RedirectToAction("Index", "Home");
+            return this.RedirectToSiteRoot(CurrentSite);
         }
 
         protected virtual bool ShouldSendConfirmation(IUserContext user)
@@ -186,7 +186,7 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
 
                 }
             }
-            return RedirectToAction("Index", "Home");
+            return this.RedirectToSiteRoot(CurrentSite);
         }
 
         protected virtual async Task<IActionResult> HandleRequiresTwoFactor(UserLoginResult result, string returnUrl, bool rememberMe)
@@ -228,7 +228,7 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
         {
             if (AccountService.IsSignedIn(User))
             {
-                return RedirectToAction("Index", "Home");
+                return this.RedirectToSiteRoot(CurrentSite);
             }
 
             returnUrl = IdentityServerIntegration.EnsureFolderSegmentIfNeeded(CurrentSite, returnUrl);
@@ -484,7 +484,7 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
         {
             if(AccountService.IsSignedIn(User))
             {
-                return RedirectToAction("Index", "Home");
+                return this.RedirectToSiteRoot(CurrentSite);
             }
             if(!CurrentSite.AllowNewRegistration)
             {
@@ -958,7 +958,7 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
         {
             if (AccountService.IsSignedIn(User))
             {
-                return RedirectToAction("Index", "Home");
+                return this.RedirectToSiteRoot(CurrentSite);
             }
 
             var model = new PendingNotificationViewModel
@@ -975,7 +975,7 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
         {
             if (!AccountService.IsSignedIn(User) || string.IsNullOrWhiteSpace(CurrentSite.RegistrationAgreement))
             {
-                return RedirectToAction("Index", "Home");
+                return this.RedirectToSiteRoot(CurrentSite);
             }
 
             ViewData["Title"] = StringLocalizer["Registration Agreement Required"];
@@ -997,7 +997,7 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
         {
             if (!AccountService.IsSignedIn(User) || string.IsNullOrWhiteSpace(CurrentSite.RegistrationAgreement))
             {
-                return RedirectToAction("Index", "Home");
+                return this.RedirectToSiteRoot(CurrentSite);
             }
 
             if (!ModelState.IsValid)
@@ -1015,7 +1015,7 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
             //return Redirect("/");
             if(result)
             {
-                return RedirectToAction("Index", "Home");
+                return this.RedirectToSiteRoot(CurrentSite);
             }
 
             return View(model);
@@ -1028,7 +1028,7 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
         {
             if (AccountService.IsSignedIn(User))
             {
-                return RedirectToAction("Index", "Home");
+                return this.RedirectToSiteRoot(CurrentSite);
             }
             var model = new PendingNotificationViewModel
             {
@@ -1051,12 +1051,12 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
 
             if(info.User == null)
             {
-                return RedirectToAction("Index", "Home");
+                return this.RedirectToSiteRoot(CurrentSite);
             }
 
             if(info.User.EmailConfirmed)
             {
-                return RedirectToAction("Index", "Home");
+                return this.RedirectToSiteRoot(CurrentSite);
             }
 
             var callbackUrl = Url.Action("ConfirmEmail", "Account",
@@ -1083,11 +1083,11 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
         {
             if (AccountService.IsSignedIn(User))
             {
-                return RedirectToAction("Index", "Home");
+                return this.RedirectToSiteRoot(CurrentSite);
             }
             if (userId == null || code == null)
             {
-                return RedirectToAction("Index", "Home");
+                return this.RedirectToSiteRoot(CurrentSite);
             }
 
             bool? isEmailAlreadyConfirmed = await AccountService.IsEmailConfirmedAsync(userId);
@@ -1096,7 +1096,7 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
 
             if (result.User == null)
             {
-                return RedirectToAction("Index", "Home");
+                return this.RedirectToSiteRoot(CurrentSite);
             }
 
             if(result.IdentityResult.Succeeded)
@@ -1150,7 +1150,7 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
             }
 
             await Analytics.HandleLogout("User Signed Out");
-            return RedirectToAction("Index", "Home");
+            return this.RedirectToSiteRoot(CurrentSite);
         }
 
         // identityserver integration point
@@ -1227,7 +1227,7 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
 
             if (AccountService.IsSignedIn(User))
             {
-                return RedirectToAction("Index", "Home");
+                return this.RedirectToSiteRoot(CurrentSite);
             }
 
             return View(forgotPasswordViewModel);
@@ -1322,7 +1322,7 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
         {
             if (AccountService.IsSignedIn(User))
             {
-                return RedirectToAction("Index", "Home");
+                return this.RedirectToSiteRoot(CurrentSite);
             }
 
             return View();
@@ -1337,7 +1337,7 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
             if (string.IsNullOrWhiteSpace(code))
             {
                 Log.LogInformation("Set initial password url with no code, redirecting to site root.");
-                return RedirectToAction("Index", "Home");
+                return this.RedirectToSiteRoot(CurrentSite);
             }
 
             return View();
@@ -1394,7 +1394,7 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
             if(string.IsNullOrWhiteSpace(code))
             {
                 Log.LogInformation("Reset password url with no code, redirecting to site root.");
-                return RedirectToAction("Index", "Home");
+                return this.RedirectToSiteRoot(CurrentSite);
             }
 
             return View();
