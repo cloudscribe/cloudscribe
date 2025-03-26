@@ -73,6 +73,7 @@ namespace cloudscribe.FileManager.Web.Controllers
             model.CreateFolderServiceUrl = Url.Action("CreateFolder", "FileManager");
             model.DeleteFolderServiceUrl = Url.Action("DeleteFolder", "FileManager");
             model.RenameFolderServiceUrl = Url.Action("RenameFolder", "FileManager");
+            model.MoveFileServiceUrl = Url.Action("MoveFile", "FileManager");
             model.DeleteFileServiceUrl = Url.Action("DeleteFile", "FileManager");
             model.RenameFileServiceUrl = Url.Action("RenameFile", "FileManager");
             var authResult = await _authorizationService.AuthorizeAsync(User, "FileManagerDeletePolicy");
@@ -651,6 +652,16 @@ namespace cloudscribe.FileManager.Web.Controllers
             var list = await _fileManagerService.GetFileTree(fileType, virtualStartPath).ConfigureAwait(false);
 
             return Json(list);
+        }
+
+        [HttpPost]
+        [Authorize(Policy = "FileManagerPolicy")]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> MoveFile(string fileToMove, string folderToMoveTo)
+        {
+            var result = await _fileManagerService.MoveFile(fileToMove, folderToMoveTo).ConfigureAwait(false);
+
+            return Json(result);
         }
 
         //[HttpGet]

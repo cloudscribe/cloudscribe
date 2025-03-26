@@ -1167,7 +1167,65 @@ namespace cloudscribe.FileManager.Web.Services
 
         }
 
+        public async Task<OperationResult> MoveFile(string fileToMove, string folderToMoveTo)
+        {
+            if (string.IsNullOrEmpty(fileToMove)) { return new OperationResult(false); }
+            if (string.IsNullOrEmpty(folderToMoveTo)) { return new OperationResult(false); }
 
+            await EnsureProjectSettings().ConfigureAwait(false);
+
+            OperationResult result;
+            var virtualSubPath = fileToMove.Substring(_rootPath.RootVirtualPath.Length);
+            var segments = virtualSubPath.Split('/');
+
+            if (segments.Length == 0)
+            {
+                result = new OperationResult(false);
+                result.Message = _sr["Invalid path"];
+                _log.LogWarning($"RenameFile: {fileToMove} was not valid for root path {_rootPath.RootVirtualPath}");
+                
+                return result;
+            }
+
+            var currentFsPath = Path.Combine(_rootPath.RootFileSystemPath, Path.Combine(segments));
+            var ext = Path.GetExtension(currentFsPath);
+
+            if (!File.Exists(currentFsPath))
+            {
+                result = new OperationResult(false);
+                result.Message = _sr["Invalid path"];
+                _log.LogWarning($"RenameFile: {fileToMove} does not exist");
+
+                return result;
+            }
+
+            string fileNameOnly = segments.Last();
+            fileNameOnly = fileNameOnly.TrimStart('/');
+            segments = segments.Take(segments.Count() - 1).ToArray();
+
+            string folderToMoveToSlashes = folderToMoveTo.TrimStart('/').Replace('/', '\\');
+            string fullPathToFolder = _rootPath.RootFileSystemPath + "\\" + folderToMoveToSlashes;
+            string newFullPath = Path.Combine(fullPathToFolder, fileNameOnly);
+
+            try
+            {
+                File.Move(currentFsPath, newFullPath);
+
+                result = new OperationResult(true);
+                result.Message = _sr["File Moved"];
+                _log.LogInformation($"MoveFile: {fileToMove} moved successfully");
+            
+                return result;
+            }
+            catch (IOException ex)
+            {
+                result = new OperationResult(false);
+                result.Message = _sr[$"There has been an error. {ex.Message}"];
+                _log.LogError($"MoveFile: {fileToMove} error. {ex.Message}");
+
+                return result;
+            }
+        }
 
         public bool IsNonAttacmentFileType(string fileExtension)
         {
