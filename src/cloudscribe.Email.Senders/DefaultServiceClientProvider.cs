@@ -4,7 +4,7 @@ using System.Net.Http;
 
 namespace cloudscribe.Email.Senders
 {
-    public class DefaultServiceClientProvider : IServiceClientProvider   // Register as singleton
+    public class DefaultServiceClientProvider : IServiceClientProvider
     {
         public DefaultServiceClientProvider()
         {

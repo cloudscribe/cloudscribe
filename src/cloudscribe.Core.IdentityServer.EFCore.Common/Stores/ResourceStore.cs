@@ -75,11 +75,6 @@ namespace cloudscribe.Core.IdentityServer.EFCore.Stores
 
             var names = scopeNames.ToArray();
 
-            //var query =
-            //    from api in _context.ApiResources
-            //    let scopes = api.Scopes.Select(x => x.Name)
-            //    where api.SiteId == _siteId && scopes.Intersect(names).Any()
-            //    select api;
             var query =
                 from api in _context.ApiResources
                 where api.SiteId == _siteId && api.Scopes.Where(x => names.Contains(x.Name)).Any()
@@ -145,10 +140,6 @@ namespace cloudscribe.Core.IdentityServer.EFCore.Stores
                 .Include(x => x.UserClaims)
                 .Where(x => x.SiteId == _siteId)
                 ;
-
-            //var result = new Resources(
-            //    identity.ToArray().Select(x => x.ToModel()).AsEnumerable(),
-            //    apis.ToArray().Select(x => x.ToModel()).AsEnumerable());
 
             var i = await identity.ToArrayAsync();
             var a = await apis.ToArrayAsync();

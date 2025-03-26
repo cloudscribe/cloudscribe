@@ -3,8 +3,6 @@
 // Author:					Joe Audette
 // Created:					2015-06-27
 // Last Modified:			2019-04-20
-// 
-
 
 using cloudscribe.Core.Models;
 using Microsoft.AspNetCore.Identity;
@@ -23,7 +21,6 @@ namespace cloudscribe.Core.Identity
         where TRole : SiteRole
     {
         public SiteUserClaimsPrincipalFactory(
-            //IOidcHybridFlowHelper oidcHybridFlowHelper,
             ISiteQueries siteQueries,
             SiteUserManager<TUser> userManager,
             SiteRoleManager<TRole> roleManager,
@@ -40,13 +37,11 @@ namespace cloudscribe.Core.Identity
             _queries = siteQueries;
             _options = optionsAccessor.Value;
             _customClaimProviders = customClaimProviders;
-           // _oidcHybridFlowHelper = oidcHybridFlowHelper;
         }
         
         private readonly ISiteQueries _queries;
         private IdentityOptions _options;
         private readonly IEnumerable<ICustomClaimProvider> _customClaimProviders;
-        //private readonly IOidcHybridFlowHelper _oidcHybridFlowHelper;
 
         public override async Task<ClaimsPrincipal> CreateAsync(TUser user)
         {
@@ -55,7 +50,6 @@ namespace cloudscribe.Core.Identity
                 throw new ArgumentNullException("user");
             }
 
-            // base class takes care of all the default stuff like roles name id etc
             var principal = await base.CreateAsync(user);
             
             if (principal.Identity is ClaimsIdentity)
@@ -75,7 +69,6 @@ namespace cloudscribe.Core.Identity
                         identity.AddClaim(browserKeyClaim);
                     }
                 }
-                
 
                 var displayNameClaim = new Claim("DisplayName", user.DisplayName);
                 if (!identity.HasClaim(displayNameClaim.Type, displayNameClaim.Value))
@@ -122,21 +115,6 @@ namespace cloudscribe.Core.Identity
                         identity.AddClaim(serverAdminRoleClaim);
                     }
                 }
-
-                //var jwt = await _oidcHybridFlowHelper.GetCurrentJwt(principal);
-
-                //if (!string.IsNullOrEmpty(jwt))
-                //{
-                //    var accessTokenClaim = new Claim("access_token", jwt);
-                //    if (!identity.HasClaim(accessTokenClaim.Type, accessTokenClaim.Value))
-                //    {
-                //        identity.AddClaim(accessTokenClaim);
-                //    }
-                //}
-
-
-               
-
             }
             
             return principal;

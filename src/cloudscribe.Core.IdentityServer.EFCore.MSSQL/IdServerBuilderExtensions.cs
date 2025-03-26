@@ -24,8 +24,6 @@ namespace Microsoft.Extensions.DependencyInjection
             bool useSql2008Compatibility = false
             )
         {
-            //builder.AddConfigurationStoreMSSQL(connectionString);    
-            //builder.AddOperationalStoreMSSQL(connectionString);
             builder.Services.AddCloudscribeCoreIdentityServerEFStorageMSSQL(
                 connectionString, 
                 maxConnectionRetryCount, 
@@ -38,27 +36,20 @@ namespace Microsoft.Extensions.DependencyInjection
             return builder;
         }
 
-        
-
         public static IIdentityServerBuilder AddConfigurationStoreCache(
             this IIdentityServerBuilder builder)
         {
             builder.Services.AddMemoryCache(); // TODO: remove once update idsvr since it does this
             builder.AddInMemoryCaching();
 
-            // these need to be registered as concrete classes in DI for
-            // the caching decorators to work
             builder.Services.AddTransient<ClientStore>();
             builder.Services.AddTransient<ResourceStore>();
 
-            // add the caching decorators
             builder.AddClientStoreCache<ClientStore>();
             builder.AddResourceStoreCache<ResourceStore>();
 
             return builder;
         }
-
-        
 
         public static IServiceCollection AddCloudscribeCoreIdentityServerEFStorageMSSQL(
             this IServiceCollection services,
@@ -70,11 +61,7 @@ namespace Microsoft.Extensions.DependencyInjection
             )
         {
 
-            //   deprecated call in EF Core3:  .AddEntityFrameworkSqlServer()
-            //   https://github.com/aspnet/EntityFrameworkCore/issues/12905
-
-            services // .AddEntityFrameworkSqlServer()
-                .AddDbContext<ConfigurationDbContext>(options =>
+            services.AddDbContext<ConfigurationDbContext>(options =>
                     options.UseSqlServer(connectionString,
                         sqlServerOptionsAction: sqlOptions =>
                         {
@@ -101,11 +88,7 @@ namespace Microsoft.Extensions.DependencyInjection
 
             services.AddScoped<IConfigurationDbContext, ConfigurationDbContext>();
 
-            //   deprecated call in EF Core3:  .AddEntityFrameworkSqlServer()
-            //   https://github.com/aspnet/EntityFrameworkCore/issues/12905
-
-            services // .AddEntityFrameworkSqlServer()
-                .AddDbContext<PersistedGrantDbContext>(options =>
+            services.AddDbContext<PersistedGrantDbContext>(options =>
                     options.UseSqlServer(connectionString,
                         sqlServerOptionsAction: sqlOptions =>
                         {
@@ -125,7 +108,6 @@ namespace Microsoft.Extensions.DependencyInjection
                             //    sqlOptions.UseRowNumberForPaging();  // removed in Core3.1
                             //}
 
-
                         }),
                         optionsLifetime: ServiceLifetime.Singleton
                         );
@@ -137,9 +119,5 @@ namespace Microsoft.Extensions.DependencyInjection
 
             return services;
         }
-
-
-
-
     }
 }

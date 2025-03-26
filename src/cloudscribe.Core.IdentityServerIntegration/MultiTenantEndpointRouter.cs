@@ -14,9 +14,7 @@ namespace cloudscribe.Core.IdentityServerIntegration
 {
     public class MultiTenantEndpointRouter : IEndpointRouter
     {
-        //private readonly Dictionary<string, EndpointName> _pathToNameMap;
         private readonly IdentityServerOptions _options;
-        //private readonly IEnumerable<EndpointMapping> _mappings;
         private readonly IEnumerable<IdentityServer4.Hosting.Endpoint> _endpoints;
         
         private readonly ILogger<MultiTenantEndpointRouter> _logger;
@@ -29,10 +27,8 @@ namespace cloudscribe.Core.IdentityServerIntegration
             ILogger<MultiTenantEndpointRouter> logger
             )
         {
-            //_pathToNameMap = pathToNameMap;
             _endpoints = endpoints;
             _options = options;
-            //_mappings = mappings;
             _logger = logger;
             _multiTenantOptions = multiTenantOptionsAccessor.Value;
         }
@@ -44,7 +40,7 @@ namespace cloudscribe.Core.IdentityServerIntegration
             foreach (var endpoint in _endpoints)
             {
                 var path = endpoint.Path;
-                //if (context.Request.Path.StartsWithSegments(path))
+
                 if (IsMatch(context, path))
                 {
                     var endpointName = endpoint.Name;
@@ -58,8 +54,6 @@ namespace cloudscribe.Core.IdentityServerIntegration
 
             return null;
         }
-
-
 
         //public IEndpoint Find(HttpContext context)
         //{
@@ -174,11 +168,8 @@ namespace cloudscribe.Core.IdentityServerIntegration
                 case EndpointNames.UserInfo:
                     return options.EnableUserInfoEndpoint;
                 default:
-                    // fall thru to true to allow custom endpoints
                     return true;
             }
         }
-
-       
     }
 }

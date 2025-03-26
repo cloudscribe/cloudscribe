@@ -85,7 +85,7 @@ namespace cloudscribe.Core.Identity
 
             if(claim == null)
             {
-                claim = principal.FindFirst("sub");  //JwtClaimTypes.Subject;
+                claim = principal.FindFirst("sub");
             }
 
             return claim != null ? claim.Value : null;

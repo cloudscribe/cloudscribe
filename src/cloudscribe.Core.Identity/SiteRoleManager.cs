@@ -3,8 +3,6 @@
 // Author:					Joe Audette
 // Created:				    2014-07-17
 // Last Modified:		    2018-06-16
-// 
-//
 
 using cloudscribe.Core.Models;
 using cloudscribe.Core.Models.EventHandlers;
@@ -61,8 +59,6 @@ namespace cloudscribe.Core.Identity
         }
 
         private readonly HttpContext _context;
-        //private CancellationToken CancellationToken => _context?.RequestAborted ?? CancellationToken.None;
-
         private MultiTenantOptions                               _multiTenantOptions;
         private IUserCommands                                    _commands;
         private IUserQueries                                     _queries;
@@ -71,15 +67,12 @@ namespace cloudscribe.Core.Identity
         private readonly IEnumerable<IHandleUserRemovedFromRole> _userRemovedFromRoleHandlers;
         private readonly IEnumerable<IHandleRoleUpdated>         _roleUpdatedHandlers;
         private readonly IEnumerable<IHandleRoleDeleted>         _roleDeletedHandlers;
-
-
         private ISiteContext _siteSettings = null;
 
         private ISiteContext Site
         {
             get
             {
-                //if (siteSettings == null) { siteSettings = siteResolver.Resolve(); }
                 return _siteSettings;
             }
         }
@@ -110,7 +103,6 @@ namespace cloudscribe.Core.Identity
             return await _queries.GetAllRolesBySite(siteId, CancellationToken);
         }
 
-
         public async Task DeleteUserRolesByRole(Guid roleId)
         {
             var siteId = Site.Id;
@@ -127,7 +119,6 @@ namespace cloudscribe.Core.Identity
             var existingRole = await FindByIdAsync(roleId.ToString());
             if (existingRole != null)
             {
-                // hooks available here to respond to a role being deleted
                 foreach (var handler in _roleDeletedHandlers)
                 {
                     try
@@ -163,13 +154,6 @@ namespace cloudscribe.Core.Identity
                 }
             }
         }
-
-        //public async Task<bool> RoleExists(Guid siteId, string roleName)
-        //{
-        //    if (multiTenantOptions.UseRelatedSitesMode) { siteId = multiTenantOptions.RelatedSiteGuid; }
-
-        //    return await queries.RoleExists(siteId, roleName, CancellationToken);
-        //}
 
         public async Task<PagedResult<IUserInfo>> GetUsersInRole(
             Guid siteId, 

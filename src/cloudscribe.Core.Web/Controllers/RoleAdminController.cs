@@ -66,7 +66,7 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
             int pageSize = -1)
         {
             var selectedSite = await SiteManager.GetSiteForDataOperations(siteId);
-            // only server admin site can edit other sites settings
+
             if (selectedSite.Id != SiteManager.CurrentSite.Id)
             {
                 ViewData["Title"] = string.Format(CultureInfo.CurrentUICulture, StringLocalizer["{0} - Role Management"], selectedSite.SiteName);
@@ -112,7 +112,7 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
             int pageSize = -1)
         {
             var selectedSite = await SiteManager.GetSiteForDataOperations(siteId, true);
-            // only server admin site can edit other sites settings
+
             if (selectedSite.Id != SiteManager.CurrentSite.Id)
             { 
                 ViewData["Title"] = string.Format(CultureInfo.CurrentUICulture, StringLocalizer["{0} - Role Management"], selectedSite.SiteName);
@@ -206,7 +206,6 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
 
             if (user != null && model.SelectedCheckboxesCSV != null)
             {
-                // somewhat clumsy workaround for persisting roles checkboxes across paging
                 model.SelectedRoles = model.SelectedCheckboxesCSV.Split(',').Where(x=>x.Length > 0).ToList();
 
                 foreach(var selectedRole in model.SelectedRoles)
@@ -253,7 +252,7 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
             Guid? roleId)
         {
             var selectedSite = await SiteManager.GetSiteForDataOperations(siteId, true);
-            // only server admin site can edit other sites settings
+
             if (selectedSite.Id != SiteManager.CurrentSite.Id)
             {
                 ViewData["Title"] = string.Format(CultureInfo.CurrentUICulture, StringLocalizer["{0} - New Role"], selectedSite.SiteName);  
@@ -316,7 +315,7 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
         public virtual async Task<IActionResult> RoleEdit(RoleViewModel model, int returnPageNumber = 1)
         {
             var selectedSite = await SiteManager.GetSiteForDataOperations(model.SiteId, true);
-            // only server admin site can edit other sites settings
+
             if (selectedSite.Id != SiteManager.CurrentSite.Id)
             {
                 ViewData["Title"] = string.Format(CultureInfo.CurrentUICulture, StringLocalizer["{0} - Edit Role"], selectedSite.SiteName);
@@ -426,7 +425,7 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
             int pageSize = -1)
         {
             var selectedSite = await SiteManager.GetSiteForDataOperations(siteId, true);
-            // only server admin site can edit other sites settings
+
             if (selectedSite.Id != SiteManager.CurrentSite.Id)
             {
                 ViewData["Title"] = string.Format(CultureInfo.CurrentUICulture, StringLocalizer["{0} - Role Members"], selectedSite.SiteName);
@@ -451,7 +450,6 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
             RoleMemberListViewModel model = new RoleMemberListViewModel
             {
                 SiteId = selectedSite.Id,
-                //UseEmailForLogin = selectedSite.UseEmailForLogin,
                 Role = RoleViewModel.FromISiteRole(role)
             };
             if (selectedSite.Id != SiteManager.CurrentSite.Id)
@@ -489,7 +487,7 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
             bool ajaxGrid = false)
         {
             var selectedSite = await SiteManager.GetSiteForDataOperations(siteId, true);
-            // only server admin site can edit other sites settings
+
             if (selectedSite.Id != SiteManager.CurrentSite.Id)
             {
                 ViewData["Title"] = string.Format(CultureInfo.CurrentUICulture, StringLocalizer["{0} - Non Role Members"], selectedSite.SiteName);

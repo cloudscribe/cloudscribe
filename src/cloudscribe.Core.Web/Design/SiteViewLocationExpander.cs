@@ -42,7 +42,6 @@ namespace cloudscribe.Core.Web.Components
             if (context.ActionContext.HttpContext == null) { return viewLocations; }
             if (context.ActionContext.HttpContext.RequestServices == null) { return viewLocations; }
 
-            // could not avoid the servicelocator pattern here because of the way ViewLocationExpander is added in startup
             var optionsAccessor = context.ActionContext.HttpContext.RequestServices.GetService(typeof(IOptions<MultiTenantOptions>)) as IOptions<MultiTenantOptions>;
             var options = optionsAccessor.Value;
 

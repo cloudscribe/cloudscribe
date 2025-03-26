@@ -24,7 +24,6 @@ namespace sourceDev.WebApp.Controllers
         public HomeController(
             IOidcHybridFlowHelper oidcHybridFlowHelper,
             IHttpClientFactory httpClientFactory,
-            //IdentityServer4.IdentityServerTools idserver,
             SiteContext currentSite,
             IEmailSenderResolver emailSenderResolver,
             ViewRenderer viewRenderer,
@@ -37,7 +36,6 @@ namespace sourceDev.WebApp.Controllers
             _viewRenderer = viewRenderer;
             _analyticsHelper = analyticsHelper;
             _httpClientFactory = httpClientFactory;
-           // _idserver = idserver;
         }
 
         private readonly IOidcHybridFlowHelper _oidcHybridFlowHelper;
@@ -46,7 +44,6 @@ namespace sourceDev.WebApp.Controllers
         private ViewRenderer _viewRenderer;
         private GoogleAnalyticsHelper _analyticsHelper;
         private readonly IHttpClientFactory _httpClientFactory;
-        //private readonly IdentityServer4.IdentityServerTools _idserver;
 
         public IActionResult Index()
         {
@@ -59,47 +56,6 @@ namespace sourceDev.WebApp.Controllers
 
             return View();
         }
-
-        // public async Task<IActionResult> About()
-        // {
-        //     ViewData["Message"] = "Your application description page.";
-        //     //AddAnayticsTransaction();
-        //     var client = _httpClientFactory.CreateClient();
-        //     HttpRequestMessage message = new HttpRequestMessage();
-        //     message.RequestUri = new Uri("https://localhost:44399/api/identity");
-
-        //     var token = await _oidcHybridFlowHelper.GetAccessToken(User);
-
-        //     if (!string.IsNullOrEmpty(token))
-        //     {
-        //         message.Headers.Add("Authorization", "Bearer " + token);
-        //     }
-
-
-
-        //     var response = await client.SendAsync(message);
-        //     if (response.IsSuccessStatusCode)
-        //     {
-        //         var content = await response.Content.ReadAsStringAsync();
-        //         if (!string.IsNullOrEmpty(content))
-        //         {
-
-        //         }
-        //     }
-
-
-        //     return View();
-        // }
-
-        //[HttpGet]
-        //public IActionResult GetAlerts()
-        //{
-        //    var alerts = TempData.GetAlerts();
-
-
-        //    return Ok(alerts);
-        //}
-
 
         [HttpGet]
         public IActionResult DateTest()
@@ -154,22 +110,16 @@ namespace sourceDev.WebApp.Controllers
 
         public IActionResult Test1()
         {
-
-
             return View();
         }
 
         public IActionResult Test2()
         {
-
-
             return View();
         }
 
         public IActionResult Test3()
         {
-
-
             return View();
         }
 
@@ -189,7 +139,6 @@ namespace sourceDev.WebApp.Controllers
             var model = new TestSendEmailViewModel();
             model.Subject = "Testing Email Providers";
             model.ConfigLookupKey = _currentSite.Id.ToString();
-
 
             return View(model);
         }
@@ -244,8 +193,6 @@ namespace sourceDev.WebApp.Controllers
                 bccAliasCsv:model.BccAliasCsv,
                 attachments: attachments,
                 configLookupKey: model.ConfigLookupKey
-
-
                 ).ConfigureAwait(false);
 
             if(result.Succeeded)
@@ -256,7 +203,6 @@ namespace sourceDev.WebApp.Controllers
             {
                 this.AlertDanger(result.ErrorMessage, true);
             }
-
 
             return RedirectToAction("TestEmail");
         }

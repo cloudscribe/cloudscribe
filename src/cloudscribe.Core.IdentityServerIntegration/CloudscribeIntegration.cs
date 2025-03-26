@@ -34,7 +34,6 @@ namespace cloudscribe.Core.IdentityServerIntegration
 
             if (url.StartsWith("/" + CustomConstants.ProtocolRoutePaths.Authorize)) return true;
             if (url.StartsWith("/" + CustomConstants.ProtocolRoutePaths.AuthorizeCallback)) return true;
-            //if (url.StartsWith("/" + CustomConstants.ProtocolRoutePaths.AuthorizeAfterLogin)) return true;
             if (url.StartsWith("/" + CustomConstants.ProtocolRoutePaths.CheckSession)) return true;
             if (url.StartsWith("/" + CustomConstants.ProtocolRoutePaths.DiscoveryConfiguration)) return true;
             if (url.StartsWith("/" + CustomConstants.ProtocolRoutePaths.EndSession)) return true;

@@ -161,7 +161,6 @@ namespace cloudscribe.FileManager.Web.Services
                     : Degrees < 0 ? "W" : "E");
         }
 
-        //42;56;42.960000000000001
         public static DmsPoint ParseFromGps(string gps, PointType type, string directionRef, char separator = ';')
         {
             if (!string.IsNullOrWhiteSpace(gps) && !string.IsNullOrWhiteSpace(directionRef))
@@ -174,7 +173,6 @@ namespace cloudscribe.FileManager.Web.Services
                         var degrees = Convert.ToInt32(arr[0].Trim());
                         var minutes = Convert.ToInt32(arr[1].Trim());
                         var seconds = Convert.ToDouble(arr[2].Trim());
-                        //var seconds = double.Parse(arr[2]);
                         if (directionRef == "S" || directionRef == "W")
                         {
                             degrees = degrees * -1;

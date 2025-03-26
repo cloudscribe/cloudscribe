@@ -73,20 +73,16 @@ namespace cloudscribe.Core.IdentityServerIntegration.Mvc
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Index(ConsentInputModel model)
         {
-            // parse the return URL back to an AuthorizeRequest object
             var returnUrl = identityServerIntegration.EnsureFolderSegmentIfNeeded(_site, model.ReturnUrl);
             var request = await _interaction.GetAuthorizationContextAsync(returnUrl);
             ConsentResponse response = null;
 
-            // user clicked 'no' - send back the standard 'access_denied' response
             if (model.Button == "no")
             {
                 response = ConsentResponse.Denied;
             }
-            // user clicked 'yes' - validate the data
             else if (model.Button == "yes" && model != null)
             {
-                // if the user consented to some scope, build the response model
                 if (model.ScopesConsented != null && model.ScopesConsented.Any())
                 {
                     response = new ConsentResponse
@@ -110,7 +106,6 @@ namespace cloudscribe.Core.IdentityServerIntegration.Mvc
                 // communicate outcome of consent back to identityserver
                 await _interaction.GrantConsentAsync(request, response);
 
-                // redirect back to authorization endpoint
                 return Redirect(returnUrl);
             }
 

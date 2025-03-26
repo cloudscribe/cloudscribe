@@ -34,7 +34,6 @@ namespace cloudscribe.Core.Models
         bool AllowUserToChangeEmail { get; }
 
         bool RequiresQuestionAndAnswer { get; }
-        //bool ReallyDeleteUsers { get; }
         bool AllowNewRegistration { get; }
         bool AllowPersistentLogin { get; }
         bool CaptchaOnLogin { get; }
@@ -43,7 +42,6 @@ namespace cloudscribe.Core.Models
         string RecaptchaPublicKey { get; }
         bool UseInvisibleRecaptcha { get; }
 
-        //company info
         string CompanyCountry { get; }
         string CompanyFax { get; }
         string CompanyLocality { get; }
@@ -87,7 +85,6 @@ namespace cloudscribe.Core.Models
         string Theme { get; }
         string GoogleAnalyticsProfileId { get; }
 
-        //social login stuff
         string FacebookAppId { get; }
         string FacebookAppSecret { get; }
         string MicrosoftClientId { get; }
@@ -103,7 +100,6 @@ namespace cloudscribe.Core.Models
 
         string OidConnectScopesCsv { get; }
         string AddThisDotComUsername { get; }
-        //bool IsDataProtected { get; }
         DateTime CreatedUtc { get; }
         DateTime TermsUpdatedUtc { get; }
 

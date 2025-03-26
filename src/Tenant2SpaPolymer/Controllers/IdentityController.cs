@@ -8,8 +8,6 @@ namespace Tenant2SpaPolymer.Controllers
     [Authorize]
     public class IdentityController : ControllerBase
     {
-        //[Authorize(Policy = "SecureApiPolicy")]
-        //[Authorize(Policy = "OtherPolicy")]
         [HttpGet]
         public IActionResult Get()
         {

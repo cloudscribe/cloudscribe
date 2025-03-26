@@ -17,8 +17,6 @@ public interface IQueryTool
     Task<List<SavedQuery>>  GetSavedQueriesAsync();
 
 
-    // Low level Raw SQL Query methods:
-
     Task<DataTable>         RawQueryAsync(DbConnection connection, string query);
     Task<DataTable>         RawQueryAsync(DbConnection connection, string query, params DbParameter[] parameters);
 
@@ -29,7 +27,6 @@ public interface IQueryTool
 
     Task<int>               RawNonQueryAsync(DbConnection connection, string query, Dictionary<string,string?> parameters);
 
-    // Helper methods:
     Task<List<Dictionary<string,string>>> DataTableToDictionaryList(DataTable table);
 
     DatabaseType GetDatabaseType();

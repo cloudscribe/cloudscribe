@@ -72,27 +72,5 @@ namespace Microsoft.Extensions.DependencyInjection
 
             return services;
         }
-
-        //public static RazorViewEngineOptions AddCloudscribeCommonEmbeddedViews(this RazorViewEngineOptions options)
-        //{
-        //    options.FileProviders.Add(new EmbeddedFileProvider(
-        //           typeof(CloudscribeCommonResources).GetTypeInfo().Assembly,
-        //           "cloudscribe.Web.Common"
-        //       ));
-
-        //    return options;
-        //}
-
-        //public static IApplicationBuilder UseCloudscribeCommonStaticFiles(this IApplicationBuilder builder)
-        //{
-
-        //    builder.UseStaticFiles(new StaticFileOptions()
-        //    {
-        //        FileProvider = new EmbeddedFileResolvingProvider(typeof(CloudscribeCommonResources).GetTypeInfo().Assembly,"cloudscribe.Web.Common")
-        //        , RequestPath = new PathString("/cr")
-        //    });
-
-        //    return builder;
-        //}
     }
 }

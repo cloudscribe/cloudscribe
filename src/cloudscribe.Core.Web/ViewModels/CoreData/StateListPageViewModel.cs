@@ -7,7 +7,6 @@
 
 using cloudscribe.Core.Models.Geography;
 using cloudscribe.Pagination.Models;
-using System.Collections.Generic;
 
 namespace cloudscribe.Core.Web.ViewModels.CoreData
 {
@@ -17,14 +16,11 @@ namespace cloudscribe.Core.Web.ViewModels.CoreData
         {
             Country = new GeoCountryViewModel();
             States = new PagedResult<IGeoZone>();
-            //Paging = new PaginationSettings();
         }
         
         public GeoCountryViewModel Country { get; set; }
         public PagedResult<IGeoZone> States { get; set; }
-        //public PaginationSettings Paging { get; set; }  
         public int ReturnPageNumber { get; set; } = 1;
         public int CountryListReturnPageNumber { get; set; } = 1;
-       
     }
 }

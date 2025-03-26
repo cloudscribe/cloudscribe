@@ -65,7 +65,7 @@ namespace Tenant2SpaPolymer
                 // this defines a CORS policy called "default"
                 options.AddPolicy("default", policy =>
                 {
-                    policy.WithOrigins("http://localhost:5011") //HtmlClient2
+                    policy.WithOrigins("http://localhost:5011")
                         .AllowAnyHeader()
                         .AllowAnyMethod();
                 });
@@ -78,9 +78,6 @@ namespace Tenant2SpaPolymer
         {
             loggerFactory.AddConsole(Configuration.GetSection("Logging"));
             loggerFactory.AddDebug();
-
-            // this uses the policy called "default"
-            //app.UseCors("default");
 
             app.UseDefaultFiles();
             app.UseStaticFiles();

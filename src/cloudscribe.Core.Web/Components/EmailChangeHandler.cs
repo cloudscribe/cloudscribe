@@ -39,7 +39,6 @@ namespace cloudscribe.Core.Web.Components
                                                                          string token, 
                                                                          string siteUrl)
         {
-            // do it
             var result = await UserManager.ChangeEmailAsync(user, model.NewEmail, token);
 
             if (result.Succeeded)
@@ -109,7 +108,6 @@ namespace cloudscribe.Core.Web.Components
                                                               string token,
                                                               string siteUrl)
         {
-            // do it
             var result = await UserManager.ChangeEmailAsync(user, newEmail, token);
             
             if (result.Succeeded)
@@ -121,8 +119,8 @@ namespace cloudscribe.Core.Web.Components
                 {
                     await EmailSender.SendEmailChangedNotificationEmailsAsync(
                         CurrentSite,
-                        String.Empty,       // no need to re-notify new address
-                        model.CurrentEmail, // notify old address
+                        String.Empty, 
+                        model.CurrentEmail,
                         StringLocalizer["Email address successfully changed"],
                         siteUrl
                         );

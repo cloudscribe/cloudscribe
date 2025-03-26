@@ -24,11 +24,8 @@ namespace Microsoft.Extensions.DependencyInjection
                 {
                     new CultureInfo("en-US"),
                     new CultureInfo("en-GB"),
-                    // new CultureInfo("cy-GB"),
                     new CultureInfo("cy"),
-                    // new CultureInfo("sv"),
                     new CultureInfo("fr-FR"),
-                    //new CultureInfo("fr")
                 };
 
             var routeSegmentLocalizationProvider = new UrlSegmentRequestCultureProvider(supportedCultures.ToList());

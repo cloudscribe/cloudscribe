@@ -52,24 +52,6 @@ namespace cloudscribe.Web.Common.Extensions
             return (feature != null);
         }
 
-        // this did not work, always false
-        //public static bool TempDataIsAvailable(this Controller controller)
-        //{
-        //    var feature = controller.HttpContext.Features.Get<ITempDataProvider>();
-        //    return (feature != null);
-        //}
-
-        //public static RedirectResult RedirectToSiteRoot(this Controller controller, ISiteSettings site)
-        //{
-        //    if(site.SiteFolderName.Length > 0)
-        //    {
-        //        return controller.Redirect("/" + site.SiteFolderName);
-        //    }
-
-        //    return controller.Redirect("/");
-        //}
-
-
         public static void AlertSuccess(
             this Controller controller,
             string message,
@@ -109,8 +91,6 @@ namespace cloudscribe.Web.Common.Extensions
             bool dismissable)
         {
             
-            //if (controller.TempDataIsAvailable())
-            //{
                 var alerts = controller.TempData.GetAlerts();
 
                 alerts.Add(new Alert
@@ -121,8 +101,6 @@ namespace cloudscribe.Web.Common.Extensions
                 });
 
                 controller.TempData.AddAlerts(alerts);
-            //}
-
         }
 
         public static void AddAlerts(this ITempDataDictionary tempData, List<Alert> alerts)
@@ -142,21 +120,5 @@ namespace cloudscribe.Web.Common.Extensions
 
             return new List<Alert>();
         }
-
-        //public static IActionResult RedirectToLocal(this Controller controller, string returnUrl)
-        //{
-        //    if (controller.Url.IsLocalUrl(returnUrl))
-        //    {
-        //        return controller.Redirect(returnUrl);
-        //    }
-        //    else
-        //    {
-        //        return controller.RedirectToAction("Index", "Home");
-        //    }
-        //}
-
-        
-
-
     }
 }

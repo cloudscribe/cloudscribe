@@ -64,7 +64,7 @@ namespace cloudscribe.Core.IdentityServer.NoDb
             if (site == null) return null;
 
             var client =  await _queries.FetchAsync(
-                site.Id.ToString(), // aka nodb projectid
+                site.Id.ToString(),
                 clientId 
                 ).ConfigureAwait(false);
 

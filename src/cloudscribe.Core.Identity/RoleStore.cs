@@ -84,7 +84,6 @@ namespace cloudscribe.Core.Identity
                 throw new ArgumentNullException("role");
             }
 
-            // remove all users form the role
             await _commands.DeleteUserRolesByRole(role.SiteId, role.Id, cancellationToken);
             await _commands.DeleteRole(role.SiteId, role.Id, cancellationToken);
 
@@ -206,7 +205,7 @@ namespace cloudscribe.Core.Identity
         }
 
         #region IDisposable Support
-        private bool disposedValue = false; // To detect redundant calls
+        private bool disposedValue = false;
 
         void Dispose(bool disposing)
         {
@@ -230,7 +229,6 @@ namespace cloudscribe.Core.Identity
         //   Dispose(false);
         // }
 
-        // This code added to correctly implement the disposable pattern.
         public void Dispose()
         {
             // Do not change this code. Put cleanup code in Dispose(bool disposing) above.

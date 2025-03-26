@@ -32,7 +32,6 @@ namespace cloudscribe.FileManager.Web.Controllers
             FileManagerService fileManagerService,
             IAuthorizationService authorizationService,
             IEnumerable<IHandleFilesUploaded> uploadHandlers,
-            //IFileExtensionValidationRegexBuilder allowedFilesRegexBuilder,
             IOptions<AutomaticUploadOptions> autoUploadOptionsAccessor,
             IAntiforgery antiforgery,
             IResourceHelper resourceHelper,
@@ -42,7 +41,6 @@ namespace cloudscribe.FileManager.Web.Controllers
             _fileManagerService = fileManagerService;
             _uploadHandlers = uploadHandlers;
             _authorizationService = authorizationService;
-           // _allowedFilesRegexBuilder = allowedFilesRegexBuilder;
             _autoUploadOptions = autoUploadOptionsAccessor.Value;
             _antiforgery = antiforgery;
             _resourceHelper = resourceHelper;
@@ -52,17 +50,13 @@ namespace cloudscribe.FileManager.Web.Controllers
         private FileManagerService _fileManagerService;
         private readonly IEnumerable<IHandleFilesUploaded> _uploadHandlers;
         private IAuthorizationService _authorizationService;
-        //private IFileExtensionValidationRegexBuilder _allowedFilesRegexBuilder;
         private AutomaticUploadOptions _autoUploadOptions;
         private readonly IAntiforgery _antiforgery;
         private IResourceHelper _resourceHelper;
-        // Get the default form options so that we can use them to set the default limits for
-        // request body data
         private static readonly FormOptions _defaultFormOptions = new FormOptions();
         private ILogger _log;
 
         [HttpGet]
-        //[GenerateAntiforgeryTokenCookieForAjax]
         [Authorize(Policy = "FileManagerPolicy")]
         public async Task<IActionResult> Index(BrowseModel model)
         {
@@ -78,28 +72,21 @@ namespace cloudscribe.FileManager.Web.Controllers
             var authResult = await _authorizationService.AuthorizeAsync(User, "FileManagerDeletePolicy");
             model.CanDelete = authResult.Succeeded;
 
-            //model.AllowedFileExtensionsRegex = @"/(\.|\/)(gif|GIF|jpg|JPG|jpeg|JPEG|png|PNG|flv|FLV|swf|SWF|wmv|WMV|mp3|MP3|mp4|MP4|m4a|M4A|m4v|M4V|oga|OGA|ogv|OGV|webma|WEBMA|webmv|WEBMV|webm|WEBM|wav|WAV|fla|FLA|tif|TIF|asf|ASF|asx|ASX|avi|AVI|mov|MOV|mpeg|MPEG|mpg|MPG|zip|ZIP|pdf|PDF|doc|DOC|docx|DOCX|xls|XLS|xlsx|XLSX|ppt|PPT|pptx|PPTX|pps|PPS|csv|CSV|txt|TXT|htm|HTM|html|HTML|css|CSS)$/i";
             switch (model.Type)
             {
                 case "image":
-                    //model.AllowedFileExtensionsRegex = _allowedFilesRegexBuilder.BuildRegex(_autoUploadOptions.ImageFileExtensions);
                     model.AllowedFileExtensions = _autoUploadOptions.ImageFileExtensions;
                     break;
 
                 case "video":
-                    //model.AllowedFileExtensionsRegex = _allowedFilesRegexBuilder.BuildRegex(_autoUploadOptions.VideoFileExtensions);
                     model.AllowedFileExtensions = _autoUploadOptions.VideoFileExtensions;
                     break;
 
                 case "audio":
-                    // model.AllowedFileExtensionsRegex = _allowedFilesRegexBuilder.BuildRegex(_autoUploadOptions.AudioFileExtensions);
                     model.AllowedFileExtensions = _autoUploadOptions.AudioFileExtensions;
                     break;
 
-
-
                 default:
-                    //model.AllowedFileExtensionsRegex = _allowedFilesRegexBuilder.BuildRegex(_autoUploadOptions.AllowedFileExtensions);
                     model.AllowedFileExtensions = _autoUploadOptions.AllowedFileExtensions;
                     break;
             }
@@ -114,14 +101,12 @@ namespace cloudscribe.FileManager.Web.Controllers
 
 
         [HttpGet]
-        //[GenerateAntiforgeryTokenCookieForAjax]
         [Authorize(Policy = "FileManagerPolicy")]
         public async Task<IActionResult> FileDialog(BrowseModel model)
         {
             model.InitialVirtualPath = await _fileManagerService.GetRootVirtualPath().ConfigureAwait(false);
             model.FileTreeServiceUrl = Url.Action("GetFileTreeJson","FileManager", new { fileType = model.Type});
             model.UploadServiceUrl = Url.Action("Upload", "FileManager");
-            //model.FileDownloadServiceUrl = Url.Action("DownloadFile", "FileManager");
             model.CreateFolderServiceUrl = Url.Action("CreateFolder", "FileManager");
             model.DeleteFolderServiceUrl = Url.Action("DeleteFolder", "FileManager");
             model.RenameFolderServiceUrl = Url.Action("RenameFolder", "FileManager");
@@ -129,9 +114,6 @@ namespace cloudscribe.FileManager.Web.Controllers
             model.RenameFileServiceUrl = Url.Action("RenameFile", "FileManager");
             var authResult = await _authorizationService.AuthorizeAsync(User, "FileManagerDeletePolicy");
             model.CanDelete = authResult.Succeeded;
-
-            //model.AllowedFileExtensionsRegex = @"/(\.|\/)(gif|GIF|jpg|JPG|jpeg|JPEG|png|PNG|flv|FLV|swf|SWF|wmv|WMV|mp3|MP3|mp4|MP4|m4a|M4A|m4v|M4V|oga|OGA|ogv|OGV|webma|WEBMA|webmv|WEBMV|webm|WEBM|wav|WAV|fla|FLA|tif|TIF|asf|ASF|asx|ASX|avi|AVI|mov|MOV|mpeg|MPEG|mpg|MPG|zip|ZIP|pdf|PDF|doc|DOC|docx|DOCX|xls|XLS|xlsx|XLSX|ppt|PPT|pptx|PPTX|pps|PPS|csv|CSV|txt|TXT|htm|HTM|html|HTML|css|CSS)$/i";
-            
 
             switch(model.Type)
             {
@@ -147,8 +129,6 @@ namespace cloudscribe.FileManager.Web.Controllers
                     model.AllowedFileExtensions = _autoUploadOptions.AudioFileExtensions;
                     break;
 
-
-
                 default:
                     model.AllowedFileExtensions = _autoUploadOptions.AllowedFileExtensions;
 
@@ -163,16 +143,12 @@ namespace cloudscribe.FileManager.Web.Controllers
             return View(model);
         }
 
-
         //https://docs.microsoft.com/en-us/aspnet/core/mvc/models/file-uploads
-
-
         
         [HttpPost]
         [Authorize(Policy = "FileManagerPolicy")]
         [ValidateAntiForgeryToken] 
         public async Task<IActionResult> Upload(
-            //List<IFormFile> files
             bool? resizeImages,
             int? maxWidth,
             int? maxHeight,
@@ -259,7 +235,6 @@ namespace cloudscribe.FileManager.Web.Controllers
             var createThumbnail = false;
             var requestedFilePath = Request.Form["targetPath"].ToString();
 
-            //TODO: refactor, this is very cloudscribe core specific
             if(requestedFilePath == "/media/user-avatars")
             {
                 var userName = User.Identity.Name;
@@ -272,7 +247,6 @@ namespace cloudscribe.FileManager.Web.Controllers
                     }
                 }
             }
-            //_log.LogWarning($"requested upload path {requestedFilePath}");
             bool? resizeImages = null;
             int? maxWidth = null;
             int? maxHeight = null;
@@ -386,9 +360,6 @@ namespace cloudscribe.FileManager.Web.Controllers
             )
         {
 
-            //var widthToCrop = x2 - x1;
-            //var heightToCrop = y2 - y1;
-
             var result = await _fileManagerService.CropFile(
                 _autoUploadOptions,
                 sourceFilePath,
@@ -421,7 +392,6 @@ namespace cloudscribe.FileManager.Web.Controllers
 
         }
 
-        // /filemanager/js/
         [HttpGet]
         [AllowAnonymous]
         public IActionResult js()
@@ -440,7 +410,6 @@ namespace cloudscribe.FileManager.Web.Controllers
             return GetResult(baseSegment + seg, mimeType);
         }
 
-        // /filemanager/css/
         [HttpGet]
         [AllowAnonymous]
         public IActionResult css()
@@ -477,89 +446,6 @@ namespace cloudscribe.FileManager.Web.Controllers
             
             return new FileStreamResult(resourceStream, contentType);
         }
-
-
-
-
-        //[HttpPost]
-        //[Authorize(Policy = "FileManagerPolicy")]
-        //[ValidateAntiForgeryToken]
-        //public async Task<IActionResult> UploadBase64(
-        //    //List<IFormFile> files
-        //    bool? resizeImages,
-        //    int? maxWidth,
-        //    int? maxHeight,
-        //    string currentDir = "",
-        //    string croppedFileName = ""
-        //    )
-        //{
-        //    var theFiles = HttpContext.Request.Form.Files;
-        //    var imageList = new List<UploadResult>();
-        //    if (resizeImages.HasValue)
-        //    {
-        //        if (resizeImages.Value == false)
-        //        {
-        //            if (Path.HasExtension(currentDir)) //this will be true for cropped
-        //            {
-        //                currentDir = currentDir.Substring(currentDir.LastIndexOf("/"));
-        //            }
-        //        }
-        //    }
-
-        //    foreach (var formFile in theFiles)
-        //    {
-        //        try
-        //        {
-        //            if (formFile.Length > 0)
-        //            {
-        //                var uploadResult = await fileManagerService.ProcessFile(
-        //                    formFile,
-        //                    autoUploadOptions,
-        //                    resizeImages,
-        //                    maxWidth,
-        //                    maxHeight,
-        //                    currentDir
-        //                    ).ConfigureAwait(false);
-
-        //                imageList.Add(uploadResult);
-
-        //            }
-        //        }
-        //        catch (Exception ex)
-        //        {
-        //            log.LogError(MediaLoggingEvents.FILE_PROCCESSING, ex, ex.StackTrace);
-        //        }
-
-        //    }
-
-        //    return Json(imageList);
-        //}
-
-        //[HttpGet]
-        //[Authorize(Policy = "FileManagerDeletePolicy")]
-        //public async Task<IActionResult> DownloadFolder(string folderToDownload)
-        //{
-        //    var result = await _fileManagerService.GetInfoForDownload(folderToDownload);
-        //    if (result == null || string.IsNullOrEmpty(result.FileSystemPath))
-        //    {
-        //        return NotFound();
-        //    }
-
-        //    var zip = ZipFile.CreateFromDirectory()
-
-        //    if (result.MimeType == "application/pdf")
-        //    {
-        //        return File(new FileStream(result.FileSystemPath, FileMode.Open), result.MimeType); //inline
-        //    }
-
-        //    //Response.Headers.Add("Content-Disposition", "attachment; filename=" + result.FileName);
-        //    //Response.Headers.Add("X-Content-Type-Options", "nosniff");
-
-        //    return File(new FileStream(result.FileSystemPath, FileMode.Open), result.MimeType, result.FileName);
-
-        //}
-
-
 
         [HttpPost]
         [Authorize(Policy = "FileManagerPolicy")]
@@ -608,9 +494,6 @@ namespace cloudscribe.FileManager.Web.Controllers
                 return File(new FileStream(result.FileSystemPath, FileMode.Open), result.MimeType); //inline
             }
 
-            //Response.Headers.Add("Content-Disposition", "attachment; filename=" + result.FileName);
-            //Response.Headers.Add("X-Content-Type-Options", "nosniff");
-
             return File(new FileStream(result.FileSystemPath, FileMode.Open), result.MimeType, result.FileName);
 
         }
@@ -635,14 +518,7 @@ namespace cloudscribe.FileManager.Web.Controllers
             return Json(result);
 
         }
-
-        // 1. Disable the form value model binding here to take control of handling 
-        //    potentially large files.
-        // 2. Typically antiforgery tokens are sent in request body, but since we 
-        //    do not want to read the request body early, the tokens are made to be 
-        //    sent via headers. The antiforgery token filter first looks for tokens
-        //    in the request header and then falls back to reading the body.
-        
+       
 
         [HttpGet]
         [Authorize(Policy = "FileManagerPolicy")]
@@ -652,136 +528,5 @@ namespace cloudscribe.FileManager.Web.Controllers
 
             return Json(list);
         }
-
-        //[HttpGet]
-        //[Authorize(Policy = "FileManagerPolicy")]
-        //public IActionResult Get()
-        //{
-        //    var tokens = antiforgery.GetAndStoreTokens(HttpContext);
-
-        //    return new ObjectResult(new
-        //    {
-        //        token = tokens.RequestToken,
-        //        tokenName = tokens.HeaderName
-        //    });
-        //}
-
-        //[HttpPost]
-        //[DisableFormValueModelBinding]
-        //[ValidateAntiForgeryToken]
-        //public async Task<IActionResult> StreamedUpload()
-        //{
-        //    if (!MultipartRequestHelper.IsMultipartContentType(Request.ContentType))
-        //    {
-        //        return BadRequest($"Expected a multipart request, but got {Request.ContentType}");
-        //    }
-
-        //    // Used to accumulate all the form url encoded key value pairs in the 
-        //    // request.
-        //    var formAccumulator = new KeyValueAccumulator();
-        //    string targetFilePath = null;
-
-        //    var boundary = MultipartRequestHelper.GetBoundary(
-        //        MediaTypeHeaderValue.Parse(Request.ContentType),
-        //        defaultFormOptions.MultipartBoundaryLengthLimit);
-        //    var reader = new MultipartReader(boundary, HttpContext.Request.Body);
-
-        //    var section = await reader.ReadNextSectionAsync();
-        //    while (section != null)
-        //    {
-        //        ContentDispositionHeaderValue contentDisposition;
-        //        var hasContentDispositionHeader = ContentDispositionHeaderValue.TryParse(section.ContentDisposition, out contentDisposition);
-
-        //        if (hasContentDispositionHeader)
-        //        {
-        //            if (MultipartRequestHelper.HasFileContentDisposition(contentDisposition))
-        //            {
-        //                targetFilePath = Path.GetTempFileName();
-        //                using (var targetStream = System.IO.File.Create(targetFilePath))
-        //                {
-        //                    await section.Body.CopyToAsync(targetStream);
-
-        //                    log.LogInformation($"Copied the uploaded file '{targetFilePath}'");
-        //                }
-        //            }
-        //            else if (MultipartRequestHelper.HasFormDataContentDisposition(contentDisposition))
-        //            {
-        //                // Content-Disposition: form-data; name="key"
-        //                //
-        //                // value
-
-        //                // Do not limit the key name length here because the 
-        //                // multipart headers length limit is already in effect.
-        //                var key = HeaderUtilities.RemoveQuotes(contentDisposition.Name);
-        //                var encoding = GetEncoding(section);
-        //                using (var streamReader = new StreamReader(
-        //                    section.Body,
-        //                    encoding,
-        //                    detectEncodingFromByteOrderMarks: true,
-        //                    bufferSize: 1024,
-        //                    leaveOpen: true))
-        //                {
-        //                    // The value length limit is enforced by MultipartBodyLengthLimit
-        //                    var value = await streamReader.ReadToEndAsync();
-        //                    if (String.Equals(value, "undefined", StringComparison.OrdinalIgnoreCase))
-        //                    {
-        //                        value = String.Empty;
-        //                    }
-        //                    formAccumulator.Append(key, value);
-
-        //                    if (formAccumulator.ValueCount > defaultFormOptions.ValueCountLimit)
-        //                    {
-        //                        throw new InvalidDataException($"Form key count limit {defaultFormOptions.ValueCountLimit} exceeded.");
-        //                    }
-        //                }
-        //            }
-        //        }
-
-        //        // Drains any remaining section body that has not been consumed and
-        //        // reads the headers for the next section.
-        //        section = await reader.ReadNextSectionAsync();
-        //    }
-
-        //    // Bind form data to a model
-        //    //var user = new User();
-        //    //var formValueProvider = new FormValueProvider(
-        //    //    BindingSource.Form,
-        //    //    new FormCollection(formAccumulator.GetResults()),
-        //    //    CultureInfo.CurrentCulture);
-
-        //    //var bindingSuccessful = await TryUpdateModelAsync(user, prefix: "",
-        //    //    valueProvider: formValueProvider);
-        //    //if (!bindingSuccessful)
-        //    //{
-        //    //    if (!ModelState.IsValid)
-        //    //    {
-        //    //        return BadRequest(ModelState);
-        //    //    }
-        //    //}
-
-        //    //var uploadedData = new UploadedData()
-        //    //{
-        //    //    Name = user.Name,
-        //    //    Age = user.Age,
-        //    //    Zipcode = user.Zipcode,
-        //    //    FilePath = targetFilePath
-        //    //};
-        //    //return Json(uploadedData);
-        //    return Ok();
-        //}
-
-
-        //private static Encoding GetEncoding(MultipartSection section)
-        //{
-        //    MediaTypeHeaderValue mediaType;
-        //    var hasMediaTypeHeader = MediaTypeHeaderValue.TryParse(section.ContentType, out mediaType);
-        //    // UTF-7 is insecure and should not be honored. UTF-8 will succeed in 
-        //    // most cases.
-        //    if (!hasMediaTypeHeader || Encoding.UTF7.Equals(mediaType.Encoding))
-        //    {
-        //        return Encoding.UTF8;
-        //    }
-        //    return mediaType.Encoding;
-        //}
     }
 }

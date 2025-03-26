@@ -1,8 +1,8 @@
 ﻿@model cloudscribe.Web.Common.Models.FormItemDefinition
 @inject IStringLocalizer<CloudscribeCommonResources> sr
 @{
-    var grpClass = "";// input-group
-    var spnClass = ""; //input-group-addon
+    var grpClass = "";
+    var spnClass = "";
     if (!string.IsNullOrWhiteSpace(Model.IconCssClass))
     {
         grpClass = "input-group";

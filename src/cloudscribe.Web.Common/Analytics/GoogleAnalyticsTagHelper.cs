@@ -211,12 +211,6 @@ namespace cloudscribe.Web.Common.TagHelpers
 
             var comma = "";
 
-            //if (_options.TrackUserId && !string.IsNullOrWhiteSpace(UserId))
-            //{
-            //    sb.Append("'userId': " + "'" + UserId + "'");
-            //    comma = ",";
-            //}
-
             if (AllowAnchor)
             {
                 sb.Append(comma);
@@ -393,25 +387,6 @@ namespace cloudscribe.Web.Common.TagHelpers
 
 
             output.Content.SetHtmlContent(rawScript);
-
-            //var content = output.Content.GetContent();
-            //content = content.Replace("\r\n", "\n");
-
-            //byte[] contentHashBytes = SHA256.Create().ComputeHash(Encoding.UTF8.GetBytes(content));
-            //string contentHash = "sha256-" +  Convert.ToBase64String(contentHashBytes);
-            ////stash the hash in items collection
-            //ViewContext.HttpContext.Items["ga-csp-hash"] = contentHash;
-            //if(!ViewContext.HttpContext.Response.HasStarted)
-            //{
-            //    var cspHeader = ViewContext.HttpContext.Response.Headers["content-security-policy"];
-
-            //    var foo = false;
-            //}
-
-
-
-
-
         }
     }
 }

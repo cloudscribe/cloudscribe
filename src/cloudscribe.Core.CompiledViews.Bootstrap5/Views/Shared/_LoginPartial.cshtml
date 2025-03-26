@@ -6,7 +6,7 @@
     var helloFormat = sr["Hello {0}!"];
     var site = await siteResolver.ResolveSite(Context.Request.Host.Host, Context.Request.Path);
     var consentFeature = Context.Features.Get<ITrackingConsentFeature>();
-    var allowGravatar = consentFeature?.CanTrack ?? true; // gravatar has cookies
+    var allowGravatar = consentFeature?.CanTrack ?? true;
 }
 @if (SignInManager.IsSignedIn(User))
 {

@@ -9,15 +9,12 @@ using cloudscribe.Core.Models;
 using cloudscribe.Core.Models.Geography;
 using Microsoft.EntityFrameworkCore;
 
-
 namespace cloudscribe.Core.Storage.EFCore.Common
 {
     public class CoreDbContextBase : DbContext
     {
         public CoreDbContextBase(DbContextOptions options) : base(options)
         {
-
-            
         }
 
         protected CoreDbContextBase() { }
@@ -33,18 +30,5 @@ namespace cloudscribe.Core.Storage.EFCore.Common
         public DbSet<UserLocation> UserLocations { get; set; }
         public DbSet<UserRole> UserRoles { get; set; }
         public DbSet<UserToken> UserTokens { get; set; }
-
-        //protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-        //{    
-        //    base.OnConfiguring(optionsBuilder);  
-        //}
-
-        //protected override void OnModelCreating(ModelBuilder modelBuilder)
-        //{ 
-
-        //    base.OnModelCreating(modelBuilder);
-
-        //}
-
     }
 }

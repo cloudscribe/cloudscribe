@@ -234,21 +234,10 @@
             <button type="submit" id="btn_resetpwd" class="ms-2 btn btn-primary">@sr["Send"]</button>
         </div>
     </form>
-
-@*     
-    No idea why we were doing this - jk    
-    <script type="text/javascript">
-        function DisableButton() {
-            document.getElementById("btn_resetpwd").disabled = true;
-        }
-        window.onbeforeunload = DisableButton;
-    </script> *@
 }
-
 
 <partial name="UserRoles" model="Model" />
 <partial name="UserClaims" model="Model" />
-
 
 @section SideNav {
     <partial name="AdminSideNav" />

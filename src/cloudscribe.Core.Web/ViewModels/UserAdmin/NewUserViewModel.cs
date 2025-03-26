@@ -32,14 +32,9 @@ namespace cloudscribe.Core.Web.ViewModels.UserAdmin
 
         public bool SendPasswordActivationEmail { get; set; } = false;
 
-        //[Remote("UsernameAvailable", "Account", AdditionalFields = "UserId",ErrorMessage = "Username not available, please try another value",HttpMethod = "Post")]
         [Required(ErrorMessage = "Username is required.")]
         public string Username { get; set; } = string.Empty;
 
-        // TODO do we want unique display names?
-        // people can have the same real names like John Smith and why should we prevent anyone from using their real name?
-        // not that we can be sure they are telling the truth about anything
-        
         [Required(ErrorMessage = "Display Name is required.")]
         public string DisplayName { get; set; } = string.Empty;
         

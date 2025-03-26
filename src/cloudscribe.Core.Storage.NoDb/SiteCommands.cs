@@ -17,36 +17,22 @@ namespace cloudscribe.Core.Storage.NoDb
     public class SiteCommands : ISiteCommands, ISiteCommandsSingleton
     {
         public SiteCommands(
-            //IProjectResolver projectResolver,
             IBasicQueries<SiteSettings> queries,
             IBasicCommands<SiteSettings> commands,
             IBasicQueries<SiteHost> hostQueries,
             IBasicCommands<SiteHost> hostCommands
             )
         {
-            //this.projectResolver = new DefaultProjectResolver();
             this.queries = queries;
             this.commands = commands;
             this.hostQueries = hostQueries;
             this.hostCommands = hostCommands;
         }
 
-        //private IProjectResolver projectResolver;
         private IBasicQueries<SiteSettings> queries;
         private IBasicCommands<SiteSettings> commands;
         private IBasicQueries<SiteHost> hostQueries;
         private IBasicCommands<SiteHost> hostCommands;
-
-        //protected string projectId;
-
-        //private async Task EnsureProjectId()
-        //{
-        //    if (string.IsNullOrEmpty(projectId))
-        //    {
-        //        projectId = await projectResolver.ResolveProjectId().ConfigureAwait(false);
-        //    }
-
-        //}
 
         public async Task Create(
             ISiteSettings site,
@@ -58,8 +44,6 @@ namespace cloudscribe.Core.Storage.NoDb
             ThrowIfDisposed();
             cancellationToken.ThrowIfCancellationRequested();
 
-            //await EnsureProjectId().ConfigureAwait(false);
-            
             var siteSettings = SiteSettings.FromISiteSettings(site);
             var projectId = siteSettings.Id.ToString();
 
@@ -80,8 +64,6 @@ namespace cloudscribe.Core.Storage.NoDb
 
             ThrowIfDisposed();
             cancellationToken.ThrowIfCancellationRequested();
-
-            //await EnsureProjectId().ConfigureAwait(false);
 
             var siteSettings = SiteSettings.FromISiteSettings(site);
             siteSettings.LastModifiedUtc = DateTime.UtcNow;
@@ -104,7 +86,6 @@ namespace cloudscribe.Core.Storage.NoDb
             ThrowIfDisposed();
             cancellationToken.ThrowIfCancellationRequested();
 
-            //await EnsureProjectId().ConfigureAwait(false);
             var projectId = siteId.ToString();
 
             await commands.DeleteAsync(
@@ -126,7 +107,6 @@ namespace cloudscribe.Core.Storage.NoDb
             ThrowIfDisposed();
             cancellationToken.ThrowIfCancellationRequested();
 
-            //await EnsureProjectId().ConfigureAwait(false);
             var projectId = siteId.ToString();
 
             var host = new SiteHost();
@@ -151,7 +131,6 @@ namespace cloudscribe.Core.Storage.NoDb
             ThrowIfDisposed();
             cancellationToken.ThrowIfCancellationRequested();
 
-            //await EnsureProjectId().ConfigureAwait(false);
             var projectId = siteId.ToString();
 
             await hostCommands.DeleteAsync(
@@ -170,7 +149,6 @@ namespace cloudscribe.Core.Storage.NoDb
             ThrowIfDisposed();
             cancellationToken.ThrowIfCancellationRequested();
 
-            //await EnsureProjectId().ConfigureAwait(false);
             var projectId = siteId.ToString();
 
             var allHosts = await hostQueries.GetAllAsync(
@@ -200,7 +178,7 @@ namespace cloudscribe.Core.Storage.NoDb
             }
         }
 
-        private bool disposedValue = false; // To detect redundant calls
+        private bool disposedValue = false;
 
         void Dispose(bool disposing)
         {

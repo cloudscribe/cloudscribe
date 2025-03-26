@@ -44,11 +44,5 @@
         public string AudioFileExtensions { get; set; } = ".mp3|.ogg|.oga|.aac";
 
         public string AllowedLessPrivilegedFileExtensions { get; set; } = ".gif|.jpg|.jpeg|.png";
-
-        //public string AudioFileExtensions { get; set; } = ".wma|.mp3|.m4a|.m4a|.oga|.webma|.webm|.wav|.asf|.asx|.fla";
-
-        //public string VideoFileExtensions { get; set; } = ".flv|.swf|.wmv|.mp4|.m4v|.ogv|.webmv|.webm|.avi|.mov|.mpeg|.mpg";
-
-
     }
 }

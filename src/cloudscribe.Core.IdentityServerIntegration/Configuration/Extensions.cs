@@ -50,7 +50,6 @@ namespace cloudscribe.Core.IdentityServerIntegration.Configuration
             {
                 var clientIds = logoutMessage?.ClientIds;
 
-                // check if current user is same, since we migth have new clients (albeit unlikely)
                 if (currentSubId == logoutMessage?.SubjectId)
                 {
                     clientIds = clientIds.Union(await userSession.GetClientListAsync());
@@ -93,7 +92,6 @@ namespace cloudscribe.Core.IdentityServerIntegration.Configuration
                 return signoutIframeUrl;
             }
 
-            // no sessions, so nothing to cleanup
             return null;
         }
 

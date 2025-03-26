@@ -40,9 +40,6 @@ namespace cloudscribe.Core.Web.Components
         private ILogger _log;
         private IHttpContextAccessor _contextAccessor;
 
-        //private readonly HttpContext context;
-        //private CancellationToken CancellationToken => context?.RequestAborted ?? CancellationToken.None;
-
         public async Task TackUserIpAddress(Guid siteId, Guid userGuid)
         {
            
