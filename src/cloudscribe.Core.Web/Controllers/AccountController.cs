@@ -1214,14 +1214,23 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
         // GET: /Account/ForgotPassword
         [HttpGet]
         [AllowAnonymous]
-        public virtual IActionResult ForgotPassword()
+        public virtual async Task<IActionResult> ForgotPasswordAsync()
         {
+            ForgotPasswordViewModel forgotPasswordViewModel = new ForgotPasswordViewModel();
+            var recaptchaKeys = await RecaptchaKeysProvider.GetKeys().ConfigureAwait(false);
+
+            if ((CurrentSite.CaptchaOnLogin || CurrentSite.CaptchaOnRegistration) && (!string.IsNullOrEmpty(recaptchaKeys.PublicKey)))
+            {
+                forgotPasswordViewModel.RecaptchaSiteKey = recaptchaKeys.PublicKey;
+                forgotPasswordViewModel.UseInvisibleCaptcha = recaptchaKeys.Invisible;
+            }
+
             if (AccountService.IsSignedIn(User))
             {
                 return RedirectToAction("Index", "Home");
             }
 
-            return View();
+            return View(forgotPasswordViewModel);
         }
 
         // POST: /Account/ForgotPassword
@@ -1232,6 +1241,26 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
         {
             if (ModelState.IsValid)
             {
+                var recaptchaKeys = await RecaptchaKeysProvider.GetKeys().ConfigureAwait(false);
+
+                if ((CurrentSite.CaptchaOnLogin || CurrentSite.CaptchaOnRegistration) && (!string.IsNullOrEmpty(recaptchaKeys.PublicKey)))
+                {
+                    model.RecaptchaSiteKey = recaptchaKeys.PublicKey;
+                    model.UseInvisibleCaptcha = recaptchaKeys.Invisible;
+                }
+
+                if ((CurrentSite.CaptchaOnLogin || CurrentSite.CaptchaOnRegistration) && (!string.IsNullOrEmpty(recaptchaKeys.PrivateKey)))
+                {
+                    var captchaResponse = await RecaptchaServerSideValidator.ValidateRecaptcha(Request, CurrentSite.RecaptchaPrivateKey);
+
+                    if (!captchaResponse.Success)
+                    {
+                        await Analytics.HandleLoginFail("Onsite", "reCAPTCHA Error");
+                        ModelState.AddModelError("recaptchaerror", StringLocalizer["reCAPTCHA Error occured. Please try again"]);
+                        return View(model);
+                    }
+                }
+
                 var info = await AccountService.GetPasswordResetInfo(model.Email);
                 if (info.User == null || (CurrentSite.RequireConfirmedEmail && !(info.User.EmailConfirmed)))
                 {

@@ -11,5 +11,8 @@ namespace cloudscribe.Core.Web.ViewModels.SiteUser
         [EmailAddress(ErrorMessage = "The email address does not appear as valid")]
         [Display(Name = "Email")]
         public string Email { get; set; }
+        public string RecaptchaSiteKey { get; set; } = string.Empty;
+
+        public bool UseInvisibleCaptcha { get; set; } = false;
     }
 }
