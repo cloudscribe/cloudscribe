@@ -38,6 +38,10 @@ ul.jqtree-tree .jqtree-toggler {
     text-decoration: none;
 }
 
+.jqtree_common jqtree-title {
+    margin-left: 1rem;
+}
+
 ul.jqtree-tree .jqtree-toggler:hover {
     color: #000;
 }
