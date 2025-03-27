@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <Description>media file management</Description>
-    <Version>8.0.3</Version>
+    <Version>8.0.4</Version>
     <TargetFramework>net8.0</TargetFramework>
     <Authors>Joe Audette</Authors>
     <AddRazorSupportForMvc>true</AddRazorSupportForMvc>
