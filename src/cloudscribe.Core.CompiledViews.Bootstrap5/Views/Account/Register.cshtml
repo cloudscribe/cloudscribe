@@ -118,11 +118,11 @@
     <div class="mb-3">
         @if (!string.IsNullOrWhiteSpace(Model.RecaptchaSiteKey) && Model.UseInvisibleCaptcha)
         {
-            <button class="btn btn-primary g-recaptcha" data-sitekey="@Model.RecaptchaSiteKey" data-callback='onCaptchaSubmit' data-enabled-text='@sr["Register"]' data-disabled-text='@sr["Working..."]'>@sr["Register"]</button>
+            <button class="btn btn-primary g-recaptcha" data-sitekey="@Model.RecaptchaSiteKey" data-callback='onCaptchaSubmit' data-enabled-text='@sr["Register"]' data-disabled-text='@sr["Working..."]' asp-route-culture="@CultureInfo.CurrentUICulture.Name">@sr["Register"]</button>
         }
         else
         {
-            <button type="submit" class="btn btn-primary" data-enabled-text='@sr["Register"]' data-disabled-text='@sr["Working..."]'>@sr["Register"]</button>
+            <button type="submit" class="btn btn-primary" data-enabled-text='@sr["Register"]' data-disabled-text='@sr["Working..."]' asp-route-culture="@CultureInfo.CurrentUICulture.Name">@sr["Register"]</button>
         }
         @Html.ValidationMessage("registrationError", new { @class = "text-danger" })
 

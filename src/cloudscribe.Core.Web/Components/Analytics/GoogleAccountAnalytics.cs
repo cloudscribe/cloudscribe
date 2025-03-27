@@ -10,6 +10,7 @@ using cloudscribe.Core.Models;
 using cloudscribe.Web.Common.Analytics;
 using cloudscribe.Web.Common.Analytics.GA4;
 using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.Localization;
 using Microsoft.Extensions.Options;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -25,7 +26,8 @@ namespace cloudscribe.Core.Web.Analytics
             GoogleAnalyticsGA4Helper analyticsGA4Helper,
             IOptions<GoogleAnalyticsOptions> optionsAccessor,
             IOptions<GoogleAnalyticsGA4Options> optionsGA4Accessor,
-            IHttpContextAccessor contextAccessor
+            IHttpContextAccessor contextAccessor,
+            IStringLocalizer<CloudscribeCore> localizer
             )
         {
             _currentSite = currentSite;
@@ -35,6 +37,7 @@ namespace cloudscribe.Core.Web.Analytics
             _options = optionsAccessor.Value;
             _optionsGA4 = optionsGA4Accessor.Value;
             _contextAccessor = contextAccessor;
+            StringLocalizer = localizer;
         }
 
         private SiteContext _currentSite;
@@ -44,6 +47,7 @@ namespace cloudscribe.Core.Web.Analytics
         private GoogleAnalyticsOptions _options;
         private GoogleAnalyticsGA4Options _optionsGA4;
         private IHttpContextAccessor _contextAccessor;
+        protected IStringLocalizer StringLocalizer { get; private set; }
 
         public async Task HandleLoginSubmit(string source)
         {
@@ -333,11 +337,11 @@ namespace cloudscribe.Core.Web.Analytics
                         source = result.ExternalLoginInfo.LoginProvider;
                     }
 
-                    var reason = "Login not allowed";
-                    if (result.MustAcceptTerms) { reason = "User must accept terms of use"; }
-                    if (result.NeedsPhoneConfirmation) { reason = "Needs phone number confirmation"; }
-                    if (result.NeedsEmailConfirmation) { reason = "Needs email confirmation"; }
-                    if (result.NeedsAccountApproval) { reason = "Needs account approval"; }
+                    var reason = StringLocalizer["Login not allowed"];
+                    if (result.MustAcceptTerms) { reason = StringLocalizer["User must accept terms of use"]; }
+                    if (result.NeedsPhoneConfirmation) { reason = StringLocalizer["Needs phone number confirmation"]; }
+                    if (result.NeedsEmailConfirmation) { reason = StringLocalizer["Needs email confirmation"]; }
+                    if (result.NeedsAccountApproval) { reason = StringLocalizer["Needs account approval"]; }
 
                     if (_options.TrackSocialLoginServerSide && result.ExternalLoginInfo != null)
                     {

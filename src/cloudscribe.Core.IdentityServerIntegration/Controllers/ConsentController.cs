@@ -102,7 +102,7 @@ namespace cloudscribe.Core.IdentityServerIntegration.Mvc
             }
             else
             {
-                ModelState.AddModelError("", "Invalid Selection");
+                ModelState.AddModelError("", sr["Invalid Selection"]);
             }
 
             if (response != null)

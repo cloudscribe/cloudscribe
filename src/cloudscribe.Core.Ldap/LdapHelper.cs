@@ -2,6 +2,7 @@
 using cloudscribe.Core.Models.Identity;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Localization;
 using Microsoft.Extensions.Logging;
 using Novell.Directory.Ldap;
 using System;
@@ -20,19 +21,22 @@ namespace cloudscribe.Core.Ldap
             ILdapSslCertificateValidator ldapSslCertificateValidator,
             ILogger<LdapHelper> logger,
             IMemoryCache memoryCache,
-            IConfiguration configuration
+            IConfiguration configuration,
+            IStringLocalizer<LdapHelper> localizer
             )
         {
             _ldapSslCertificateValidator = ldapSslCertificateValidator;
             _log = logger;
             _memoryCache = memoryCache;
             _configuration = configuration;
+            StringLocalizer = localizer;
         }
 
         private readonly ILdapSslCertificateValidator _ldapSslCertificateValidator;
         private readonly ILogger _log;
         private readonly IMemoryCache _memoryCache;
         private readonly IConfiguration _configuration;
+        private readonly IStringLocalizer StringLocalizer;
 
         public bool IsImplemented { get; } = true;
 
@@ -84,13 +88,13 @@ namespace cloudscribe.Core.Ldap
                                     _log.LogInformation($"{message} user details query succeeded.\nEmail: {user.Email}\nFirstame: {user.FirstName}\nLastname: {user.LastName}\nDisplayName: {user.DisplayName}");
                                 }
                             }
-                            user.ResultStatus = "PASS";
+                            user.ResultStatus = StringLocalizer["PASS"];
                             result.Add(activeServer, user);
                         }
                         else
                         {
                             _log.LogWarning($"{message} bind failed");
-                            user.ResultStatus = "Bind Failed";
+                            user.ResultStatus = StringLocalizer["Bind Failed"];
                             result.Add(activeServer, user);
                         }
                         connection.Disconnect();
@@ -102,13 +106,13 @@ namespace cloudscribe.Core.Ldap
                     switch (ex.Message) {
                         case "Connect Error":
                             _log.LogError($"{message} connect to LDAP server failed");
-                            user.ResultStatus = "Connect Error";
+                            user.ResultStatus = StringLocalizer["Connect Error"];
                             result.Add(activeServer, user);
                             break;
                         case "Invalid Credentials":
                         case "Unwilling To Perform":
                             _log.LogWarning($"{message} bind failed. The exception was:\n{ex.Message}:{ex.StackTrace}");
-                            user.ResultStatus = "Bind Failed";
+                            user.ResultStatus = StringLocalizer["Bind Failed"];
                             result.Add(activeServer, user);
                             break;
                         default:
@@ -215,7 +219,7 @@ namespace cloudscribe.Core.Ldap
                                 LdapEntry entry = GetOneUserEntry(connection, settings, username);
                                 if (entry != null) user = BuildUserFromEntry(entry);
                             }
-                            user.ResultStatus = "PASS";
+                            user.ResultStatus = StringLocalizer["PASS"];
                             connection.Disconnect();
                             return user;
                         }
@@ -223,7 +227,7 @@ namespace cloudscribe.Core.Ldap
                         {
                             _log.LogWarning($"{message} bind failed");
                             _memoryCache.Set(memCacheKey, activeConnection);
-                            user.ResultStatus = "Bind Failed";
+                            user.ResultStatus = StringLocalizer["Bind Failed"];
                             connection.Disconnect();
                             return user;
                         }
@@ -237,7 +241,7 @@ namespace cloudscribe.Core.Ldap
                         case "Unwilling To Perform":
                             _log.LogWarning($"{message} bind failed. The exception was:\n{ex.Message}:{ex.StackTrace}");
                             _memoryCache.Set(memCacheKey, activeConnection);
-                            user.ResultStatus = "Bind Failed";
+                            user.ResultStatus = StringLocalizer["Bind Failed"];
                             return user;
                         case "Connect Error":
                             _log.LogError($"{message} connect to LDAP server failed. The exception was:\n{ex.Message}:{ex.StackTrace}");
@@ -253,7 +257,7 @@ namespace cloudscribe.Core.Ldap
                 tryCount++;
             }
             _log.LogError($"All LDAP servers failed for {userDn}");
-            user.ResultStatus = "Connect Error";
+            user.ResultStatus = StringLocalizer["Connect Error"];
             return user;
         }
 

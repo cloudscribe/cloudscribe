@@ -1,4 +1,6 @@
 ﻿@model cloudscribe.Core.IdentityServerIntegration.Models.ScopeViewModel
+@using cloudscribe.Core.IdentityServerIntegration
+@inject IStringLocalizer<CloudscribeIds4Resources> sr
 
 <li class="list-group-item">
     <label>
@@ -23,7 +25,7 @@
     </label>
     @if (Model.Required)
     {
-        <span><em>(required)</em></span>
+        <span><em>@sr["(required)"]</em></span>
     }
     @if (!string.IsNullOrWhiteSpace(Model.Description))
     {
