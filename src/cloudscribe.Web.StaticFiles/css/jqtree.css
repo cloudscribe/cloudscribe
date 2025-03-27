@@ -38,7 +38,7 @@ ul.jqtree-tree .jqtree-toggler {
     text-decoration: none;
 }
 
-.jqtree_common jqtree-title {
+.jqtree_common .jqtree-title {
     margin-left: 1rem;
 }
 
