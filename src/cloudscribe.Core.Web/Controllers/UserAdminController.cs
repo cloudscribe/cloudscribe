@@ -23,10 +23,11 @@ using Microsoft.Extensions.Localization;
 using Microsoft.Extensions.Options;
 using System;
 using System.Globalization;
+using System.Collections.Generic;
 using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
-
+using cloudscribe.Web.Common.Serialization;
 
 namespace cloudscribe.Core.Web.Controllers.Mvc
 {
@@ -113,6 +114,44 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
 
             var viewName = await CustomUserInfo.GetUserListViewName(UserManager.Site, HttpContext);
             return View(viewName, model);
+        }
+
+        [Authorize(Policy = PolicyConstants.UserManagementPolicy)]
+        [HttpGet]
+        public virtual async Task<IActionResult> IndexExport(
+            Guid? siteId,
+            string query   = "",
+            int sortMode   = 1  //sortMode: 0 = DisplayName asc, 1 = JoinDate desc, 2 = Last, First
+            )
+        {
+            var selectedSite = await SiteManager.GetSiteForDataOperations(siteId);
+            var siteMembers = await UserManager.GetPage(
+                selectedSite.Id,
+                1,
+                9999999,
+                query,
+                sortMode);
+
+            List<UserExportModel> users = new ();
+
+            foreach (var user in siteMembers.Data)
+            {
+               users.Add(new UserExportModel
+               {
+                   FirstName = user.FirstName,
+                   LastName = user.LastName,
+                   DisplayName = user.DisplayName,
+                   UserName = user.UserName,
+                   Email = user.Email,
+                   CreatedUtc = user.CreatedUtc.ToString("yyyy-MM-dd HH:mm:ss")
+               });
+            }
+            var export = users.ToCsv(null, true, true);
+            // return export as a file download
+            var fileName = selectedSite.SiteName + "-users-" + DateTime.UtcNow.ToString("yyyyMMddHHmmss") + ".csv";
+            //sanitise this to a safe filename using an extension method without making it up
+            fileName = fileName.ToSafeFileName();
+            return File(System.Text.Encoding.UTF8.GetBytes(export), "text/csv", fileName);
         }
 
         [Authorize(Policy = PolicyConstants.UserManagementPolicy)]
@@ -251,6 +290,57 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
 
         [Authorize(Policy = PolicyConstants.UserManagementPolicy)]
         [HttpGet]
+        public virtual async Task<IActionResult> SearchExport(
+            Guid? siteId,
+            string query = "",
+            int sortMode = 2
+            )
+        {
+            var selectedSite = await SiteManager.GetSiteForDataOperations(siteId);
+            if(query == null) { query = string.Empty; }
+
+            var siteMembers = await CustomUserInfo.GetCustomUserAdminSearchPage(
+                            selectedSite.Id,
+                            1,
+                            9999999,
+                            query,
+                            sortMode);
+
+            if (siteMembers?.Data == null)
+            {
+                siteMembers = await UserManager.GetUserAdminSearchPage(
+                    selectedSite.Id,
+                    1,
+                    9999999,
+                    query,
+                    sortMode);
+            }
+
+            List<UserExportModel> users = new ();
+
+            foreach (var user in siteMembers.Data)
+            {
+               users.Add(new UserExportModel
+               {
+                   FirstName = user.FirstName,
+                   LastName = user.LastName,
+                   DisplayName = user.DisplayName,
+                   UserName = user.UserName,
+                   Email = user.Email,
+                   CreatedUtc = user.CreatedUtc.ToString("yyyy-MM-dd HH:mm:ss")
+               });
+            }
+            var export = users.ToCsv(null, true, true);
+            // return export as a file download
+            var fileName = selectedSite.SiteName + "-users-" + DateTime.UtcNow.ToString("yyyyMMddHHmmss") + ".csv";
+            //sanitise this to a safe filename using an extension method without making it up
+            fileName = fileName.ToSafeFileName();
+            return File(System.Text.Encoding.UTF8.GetBytes(export), "text/csv", fileName);
+
+        }
+
+        [Authorize(Policy = PolicyConstants.UserManagementPolicy)]
+        [HttpGet]
         public virtual async Task<IActionResult> IpSearch(
             Guid? siteId,
             string ipQuery = "")
@@ -289,6 +379,40 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
                 ActionName = "IpSearch"
             };
             return View("Index", model);
+
+        }
+
+        [Authorize(Policy = PolicyConstants.UserManagementPolicy)]
+        [HttpGet]
+        public virtual async Task<IActionResult> IpSearchExport(
+            Guid? siteId,
+            string ipQuery = "")
+        {
+            var selectedSite = await SiteManager.GetSiteForDataOperations(siteId);
+            var siteMembers = await UserManager.GetByIPAddress(
+                selectedSite.Id,
+                ipQuery);
+
+            List<UserExportModel> users = new ();
+
+            foreach (var user in siteMembers)
+            {
+               users.Add(new UserExportModel
+               {
+                   FirstName = user.FirstName,
+                   LastName = user.LastName,
+                   DisplayName = user.DisplayName,
+                   UserName = user.UserName,
+                   Email = user.Email,
+                   CreatedUtc = user.CreatedUtc.ToString("yyyy-MM-dd HH:mm:ss")
+               });
+            }
+            var export = users.ToCsv(null, true, true);
+            // return export as a file download
+            var fileName = selectedSite.SiteName + "-users-" + DateTime.UtcNow.ToString("yyyyMMddHHmmss") + ".csv";
+            //sanitise this to a safe filename using an extension method without making it up
+            fileName = fileName.ToSafeFileName();
+            return File(System.Text.Encoding.UTF8.GetBytes(export), "text/csv", fileName);
 
         }
 
@@ -514,7 +638,16 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
 
                 if (model.DateOfBirth.HasValue)
                 {
-                    user.DateOfBirth = model.DateOfBirth.Value;
+                    // Fix for timezone issues / PgSQL:
+                    // always take what the user has entered literally
+                    // and store it as UTC with no offset
+                    if (model.DateOfBirth.Value.Kind != DateTimeKind.Utc)
+                        user.DateOfBirth = new DateTime(model.DateOfBirth.Value.Year,
+                                                        model.DateOfBirth.Value.Month,
+                                                        model.DateOfBirth.Value.Day,
+                                                        0, 0, 0, DateTimeKind.Utc);
+                    else
+                        user.DateOfBirth = model.DateOfBirth.Value;
                 }
 
                 await CustomUserInfo.ProcessUserBeforeCreate(user, HttpContext);
@@ -808,7 +941,16 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
 
                 if (model.DateOfBirth.HasValue)
                 {
-                    user.DateOfBirth = model.DateOfBirth.Value;
+                    // Fix for timezone issues / PgSQL:
+                    // always take what the user has entered literally
+                    // and store it as UTC with no offset
+                    if (model.DateOfBirth.Value.Kind != DateTimeKind.Utc)
+                        user.DateOfBirth = new DateTime(model.DateOfBirth.Value.Year, 
+                                                        model.DateOfBirth.Value.Month, 
+                                                        model.DateOfBirth.Value.Day, 
+                                                        0,0,0, DateTimeKind.Utc);
+                    else
+                        user.DateOfBirth = model.DateOfBirth.Value;
                 }
                 else
                 {
