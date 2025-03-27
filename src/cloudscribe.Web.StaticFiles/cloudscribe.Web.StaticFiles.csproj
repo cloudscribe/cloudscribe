@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <Description>common static resources for web applications including ckeditor datepickers, and other js and css</Description>
-    <Version>8.0.7</Version>
+    <Version>8.0.8</Version>
     <TargetFramework>net8.0</TargetFramework>
     <Authors>Joe Audette</Authors>
     <PackageTags>cloudscribe</PackageTags>
@@ -65,6 +65,7 @@
     <EmbeddedResource Include="js\cloudscribe-datepicker-jqui-unobtrusive.js" />
     <EmbeddedResource Include="js\cloudscribe-datepicker-jqui-unobtrusive.min.js" />
     <EmbeddedResource Include="js\cloudscribe-login-page.js" />
+	  <EmbeddedResource Include="js\cloudscribe-forgot-password-page.js" />
     <EmbeddedResource Include="js\cloudscribe-logout-link.js" />
     <EmbeddedResource Include="js\cloudscribe-modaldialog-bootstrap.js" />
     <EmbeddedResource Include="js\cloudscribe-modaldialog-bootstrap.min.js" />
