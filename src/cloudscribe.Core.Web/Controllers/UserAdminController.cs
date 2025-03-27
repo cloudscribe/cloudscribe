@@ -138,12 +138,13 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
             {
                users.Add(new UserExportModel
                {
-                   FirstName = user.FirstName,
-                   LastName = user.LastName,
-                   DisplayName = user.DisplayName,
-                   UserName = user.UserName,
-                   Email = user.Email,
-                   CreatedUtc = user.CreatedUtc.ToString("yyyy-MM-dd HH:mm:ss")
+                    Id = user.Id.ToString(),
+                    FirstName = user.FirstName,
+                    LastName = user.LastName,
+                    DisplayName = user.DisplayName,
+                    UserName = user.UserName,
+                    Email = user.Email,
+                    CreatedUtc = user.CreatedUtc.ToString("yyyy-MM-dd HH:mm:ss")
                });
             }
             var export = users.ToCsv(null, true, true);
@@ -322,12 +323,13 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
             {
                users.Add(new UserExportModel
                {
-                   FirstName = user.FirstName,
-                   LastName = user.LastName,
-                   DisplayName = user.DisplayName,
-                   UserName = user.UserName,
-                   Email = user.Email,
-                   CreatedUtc = user.CreatedUtc.ToString("yyyy-MM-dd HH:mm:ss")
+                    Id = user.Id.ToString(),
+                    FirstName = user.FirstName,
+                    LastName = user.LastName,
+                    DisplayName = user.DisplayName,
+                    UserName = user.UserName,
+                    Email = user.Email,
+                    CreatedUtc = user.CreatedUtc.ToString("yyyy-MM-dd HH:mm:ss")
                });
             }
             var export = users.ToCsv(null, true, true);
@@ -399,12 +401,13 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
             {
                users.Add(new UserExportModel
                {
-                   FirstName = user.FirstName,
-                   LastName = user.LastName,
-                   DisplayName = user.DisplayName,
-                   UserName = user.UserName,
-                   Email = user.Email,
-                   CreatedUtc = user.CreatedUtc.ToString("yyyy-MM-dd HH:mm:ss")
+                    Id = user.Id.ToString(),
+                    FirstName = user.FirstName,
+                    LastName = user.LastName,
+                    DisplayName = user.DisplayName,
+                    UserName = user.UserName,
+                    Email = user.Email,
+                    CreatedUtc = user.CreatedUtc.ToString("yyyy-MM-dd HH:mm:ss")
                });
             }
             var export = users.ToCsv(null, true, true);
