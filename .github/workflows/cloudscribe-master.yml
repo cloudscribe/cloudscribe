@@ -4,8 +4,8 @@
 name: cloudscribe-master-nuget-build
 
 on:
-  push:
-    branches: [ "master" ]
+#   push:
+#     branches: [ "master" ]
 #   pull_request:
 #     branches: [ "master" ]
 
