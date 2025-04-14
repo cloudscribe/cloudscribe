@@ -8,10 +8,6 @@ namespace cloudscribe.Core.IdentityServer.EFCore
     {
         public class TableNames
         {
-            //public const string Scope = "csids_Scopes";
-            //public const string ScopeClaim = "csids_ScopeClaims";
-            //public const string ScopeSecrets = "csids_ScopeSecrets";
-
             public const string IdentityResource = "csids_IdentityResources";
             public const string IdentityClaim = "csids_IdentityClaims";
             public const string ApiResource = "csids_ApiResources";

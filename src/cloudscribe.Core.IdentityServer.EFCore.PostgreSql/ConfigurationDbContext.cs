@@ -34,14 +34,12 @@ namespace cloudscribe.Core.IdentityServer.EFCore.PostgreSql
                 entity.Property(x => x.ProtocolType).HasMaxLength(200).IsRequired();
                 entity.Property(x => x.ClientName).HasMaxLength(200);
                 entity.Property(x => x.ClientUri).HasMaxLength(2000);
-                //new in 2.0
                 entity.Property(x => x.ClientClaimsPrefix).HasMaxLength(200);
                 entity.Property(x => x.BackChannelLogoutUri).HasMaxLength(2000);
                 entity.Property(x => x.Description).HasMaxLength(1000);
                 entity.Property(x => x.FrontChannelLogoutUri).HasMaxLength(2000);
                 entity.Property(x => x.PairWiseSubjectSalt).HasMaxLength(200);
 
-                //new in 2.3
                 entity.Property(x => x.LogoUri).HasMaxLength(2000);
                 entity.Property(x => x.Description).HasMaxLength(1000);
                 entity.Property(x => x.UserCodeType).HasMaxLength(100);

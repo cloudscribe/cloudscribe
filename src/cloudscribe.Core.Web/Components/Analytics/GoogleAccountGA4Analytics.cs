@@ -113,8 +113,7 @@ namespace cloudscribe.Core.Web.Analytics
             {
                 if (result.IsNewUserRegistration)
                 {
-                    // first record successful registration
-                    await HandleGA4RegisterSuccess(result);
+                   await HandleGA4RegisterSuccess(result);
 
                     var source = "Onsite";
                     if (result.ExternalLoginInfo != null)

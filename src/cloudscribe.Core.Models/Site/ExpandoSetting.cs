@@ -5,8 +5,6 @@
 // Last Modified:			2015-12-08
 // 
 
-
-
 namespace cloudscribe.Core.Models
 {
     /// <summary>

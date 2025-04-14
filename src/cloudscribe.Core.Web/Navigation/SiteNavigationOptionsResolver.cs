@@ -43,7 +43,6 @@ namespace cloudscribe.Core.Web.Navigation
                 {
                     options.NavigationMapXmlFileName = siteXmlFileName;
                 }
-                // TODO: do we care to support json?
 
                 return options;
             }

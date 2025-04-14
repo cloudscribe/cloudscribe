@@ -15,45 +15,8 @@ namespace sourceDev.WebApp
     {
         public static int Main(string[] args) => StartWebServer(args);
 
-        //public static void Main(string[] args)
-        //{
-        //    var hostBuilder = CreateWebHostBuilder(args);
-        //    var host = hostBuilder.Build();
-
-        //    var config = host.Services.GetRequiredService<IConfiguration>();
-
-        //    using (var scope = host.Services.CreateScope())
-        //    {
-        //        var services = scope.ServiceProvider;
-
-        //        try
-        //        {
-        //            EnsureDataStorageIsReady(config, services);
-
-        //        }
-        //        catch (Exception ex)
-        //        {
-        //            var logger = services.GetRequiredService<ILogger<Program>>();
-        //            logger.LogError(ex, "An error occurred while migrating the database.");
-        //        }
-        //    }
-
-        //    var env = host.Services.GetRequiredService<IHostingEnvironment>();
-        //    var loggerFactory = host.Services.GetRequiredService<ILoggerFactory>();
-        //    ConfigureLogging(env, loggerFactory, host.Services, config);
-
-        //    host.Run();
-        //}
-
         public static int StartWebServer(string[] args)
         {
-
-            //Log.Logger =
-            //new LoggerConfiguration()
-            //    .MinimumLevel.Warning()
-            //    .Enrich.WithProperty("Application", "MyApplicationName")
-            //    .WriteTo.Console()
-            //    .CreateLogger();
             try
             {
                 var hostBuilder = CreateHostBuilder(args);
@@ -92,13 +55,6 @@ namespace sourceDev.WebApp
                 Console.WriteLine(ex.ToString());
                 return -1;
             }
-            //finally
-            //{
-            //    Log.CloseAndFlush();
-            //}
-
-
-
         }
 
 
@@ -111,8 +67,7 @@ namespace sourceDev.WebApp
                 case "NoDb":
                     CoreNoDbStartup.InitializeDataAsync(services).Wait();
 
-                    // you can use this hack to add clients and scopes into the db during startup if needed
-                    // I used this before we implemented the UI for adding them
+                    // you can use this to add clients and scopes into the db during startup if needed
                     // you should not use this on the first run that actually creates the initial cloudscribe data
                     // you must wait until after that and then you can get the needed siteid from the database
                     // this will only run at startup time and only add data if no data exists for the given site.
@@ -145,11 +100,7 @@ namespace sourceDev.WebApp
                     // query tool
                     QueryToolStartup.InitializeDatabaseAsync(services).Wait();
 
-
-                    //KvpEFCoreStartup.InitializeDatabaseAsync(services).Wait();
-
-                    // you can use this hack to add clients and scopes into the db during startup if needed
-                    // I used this before we implemented the UI for adding them
+                    // you can use this to add clients and scopes into the db during startup if needed
                     // you should not use this on the first run that actually creates the initial cloudscribe data
                     // you must wait until after that and then you can get the needed siteid from the database
                     // this will only run at startup time and only add data if no data exists for the given site.
@@ -239,7 +190,5 @@ namespace sourceDev.WebApp
                 {
                     webBuilder.UseStartup<Startup>();
                 });
-
-
     }
 }

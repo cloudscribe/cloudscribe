@@ -165,7 +165,6 @@ namespace cloudscribe.Email.SendGrid
             }
             else
             {
-                //not really a csv
                 m.AddTo(new EmailAddress(toEmailCsv, toAliasCsv));
             }
 

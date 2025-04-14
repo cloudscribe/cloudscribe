@@ -436,32 +436,6 @@ namespace cloudscribe.Core.Storage.EFCore.Common
                
         }
 
-        //private async Task DeleteUserRoles(
-        //    Guid siteId,
-        //    Guid userId,
-        //    bool saveChanges,
-        //    CancellationToken cancellationToken = default(CancellationToken))
-        //{
-        //    cancellationToken.ThrowIfCancellationRequested();
-
-        //    using (var dbContext = _contextFactory.CreateContext())
-        //    {
-        //        var query = from x in dbContext.UserRoles
-        //                    where x.UserId == userId
-        //                    select x;
-
-        //        dbContext.UserRoles.RemoveRange(query);
-        //        if (saveChanges)
-        //        {
-        //            int rowsAffected = await dbContext.SaveChangesAsync(cancellationToken)
-        //                .ConfigureAwait(false);
-
-
-        //        }
-        //    }
-
-        //}
-
         public async Task DeleteUserRolesByRole(
             Guid siteId,
             Guid roleId,

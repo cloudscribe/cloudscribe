@@ -135,7 +135,7 @@ namespace cloudscribe.Core.Storage.EFCore.Common
                     x => x.Id != requestingSiteId
                     && x.AliasId == aliasId
                     ).ConfigureAwait(false);
-                // if no site exists that has that alias with a different siteid then it is available
+
                 if (item == null) { return true; }
                 return false;
             }
@@ -156,7 +156,7 @@ namespace cloudscribe.Core.Storage.EFCore.Common
                     x => x.Id != requestingSiteId
                     && x.PreferredHostName == hostName
                     ).ConfigureAwait(false);
-                // if no site exists that has that host with a different siteid then it is available
+
                 if (item == null)
                 {
                     var host = await GetSiteHost(hostName, cancellationToken).ConfigureAwait(false);

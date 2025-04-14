@@ -27,7 +27,6 @@ namespace cloudscribe.Web.Common.TagHelpers
 
         public override void Process(TagHelperContext context, TagHelperOutput output)
         {
-            // we don't need to output this attribute it was only used for matching in razor
             TagHelperAttribute matchAttribute = null;
             output.Attributes.TryGetAttribute(FormItemDefinitionAttributeName, out matchAttribute);
             if (matchAttribute != null) { output.Attributes.Remove(matchAttribute); }

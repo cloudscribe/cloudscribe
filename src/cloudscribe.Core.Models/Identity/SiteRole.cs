@@ -43,8 +43,6 @@ namespace cloudscribe.Core.Models
                 NormalizedRoleName = i.NormalizedRoleName,
                 SiteId = i.SiteId
             };
-            // r.ConcurrencyStamp = i.ConcurrencyStamp;
-
 
             return r;
         }

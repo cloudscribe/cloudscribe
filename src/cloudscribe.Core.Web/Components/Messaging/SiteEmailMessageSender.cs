@@ -19,8 +19,6 @@ namespace cloudscribe.Core.Web.Components.Messaging
     public class SiteEmailMessageSender : ISiteMessageEmailSender
     {
         //TODO: we should have an option to force only plain text email
-        // html emails are a lot more likely to be phished with copies
-        // because the link urls are obfuscated to some degree
 
         public SiteEmailMessageSender(
             ViewRenderer viewRenderer,
@@ -120,8 +118,6 @@ namespace cloudscribe.Core.Web.Components.Messaging
                 ConfirmationUrl   = confirmationUrl
             };
 
-
-            // send confirmation request to new email address
             try
             {
                 var plainTextMessage
@@ -170,7 +166,6 @@ namespace cloudscribe.Core.Web.Components.Messaging
                 Tenant   = siteSettings
             };
 
-            // send notification to new email address
             if (!String.IsNullOrWhiteSpace(newEmail))
             { 
                 try
@@ -195,7 +190,6 @@ namespace cloudscribe.Core.Web.Components.Messaging
                 }
             }
 
-            // send notification to old email address
             if (!String.IsNullOrWhiteSpace(oldEmail)) 
             { 
                 try
@@ -220,7 +214,6 @@ namespace cloudscribe.Core.Web.Components.Messaging
                 }
             }
         }
-
 
         public async Task SendPasswordResetEmailAsync(
             ISiteContext siteSettings,
@@ -292,7 +285,7 @@ namespace cloudscribe.Core.Web.Components.Messaging
                 Tenant = siteSettings,
                 ResetUrl = resetUrl
             };
-            // OLD JA comments - unsure whether this matters... jk:
+
             // in account controller we are calling this method without await
             // so it doesn't block the UI. Which means it is running on a background thread
             // similar as the old ThreadPool.QueueWorkItem

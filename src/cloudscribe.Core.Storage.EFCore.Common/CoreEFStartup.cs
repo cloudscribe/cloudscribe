@@ -16,7 +16,7 @@ using System;
 using System.Threading.Tasks;
 
 
-namespace Microsoft.AspNetCore.Hosting // so it will show up in startup without a using
+namespace Microsoft.AspNetCore.Hosting
 {
     public static class CoreEFStartup
     {
@@ -63,7 +63,6 @@ namespace Microsoft.AspNetCore.Hosting // so it will show up in startup without 
             SiteSettings newSite = null;
             if (count == 0)
             {
-                // create first site
                 newSite = InitialData.BuildInitialSite();
                 newSite.Theme = config.FirstSiteTheme;
                 
@@ -73,7 +72,6 @@ namespace Microsoft.AspNetCore.Hosting // so it will show up in startup without 
                    
             }
 
-            // ensure roles
             count = await db.Roles.CountAsync<SiteRole>();
             if (count == 0)
             {
@@ -109,7 +107,6 @@ namespace Microsoft.AspNetCore.Hosting // so it will show up in startup without 
 
             }
 
-            // ensure admin user
             count = await db.Users.CountAsync<SiteUser>();
             
             if (count == 0)

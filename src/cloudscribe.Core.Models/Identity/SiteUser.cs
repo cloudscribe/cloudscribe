@@ -35,11 +35,9 @@ namespace cloudscribe.Core.Models
 
         public bool NewEmailApproved { get; set; } = false;
 
-        public DateTime? LastPasswordChangeUtc { get; set; } //= DateTime.MinValue;
-        
+        public DateTime? LastPasswordChangeUtc { get; set; }
         
         public bool MustChangePwd { get; set; } = false;
-
      
         public string PasswordHash { get; set; }
 
@@ -49,7 +47,6 @@ namespace cloudscribe.Core.Models
         
         public bool RolesChanged { get; set; } = false;
 
-    
         public string SecurityStamp { get; set; }
 
         [ProtectedPersonalDataMarker]
@@ -59,8 +56,6 @@ namespace cloudscribe.Core.Models
         public bool TwoFactorEnabled { get; set; } = false;
 
         public string BrowserKey { get; set; }
-
-
 
         public static SiteUser FromISiteUser(ISiteUser user)
         {
@@ -120,7 +115,6 @@ namespace cloudscribe.Core.Models
             u.Signature = user.Signature;
             u.SiteId = user.SiteId;
             
-            //u.State = user.State;
             u.TimeZoneId = user.TimeZoneId;
             
             u.TwoFactorEnabled = user.TwoFactorEnabled;
@@ -130,7 +124,6 @@ namespace cloudscribe.Core.Models
             u.EmailConfirmSentUtc = user.EmailConfirmSentUtc;
             u.AgreementAcceptedUtc = user.AgreementAcceptedUtc;
            
-
             return u;
         }
 

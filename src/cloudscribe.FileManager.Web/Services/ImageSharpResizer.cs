@@ -168,7 +168,6 @@ namespace cloudscribe.FileManager.Web.Services
                         scaleFactor = GetScaleFactor(fullsizeImage.Width, fullsizeImage.Height, maxWidth, maxHeight);
                         if (!allowEnlargement)
                         {
-                            // don't need to resize since image is smaller than max
                             if (scaleFactor > 1) { imageNeedsResizing = false; }
                             if (scaleFactor == 0) { imageNeedsResizing = false; }
                         }
@@ -192,9 +191,7 @@ namespace cloudscribe.FileManager.Web.Services
                         }
 
                     }
-
-                        
-                } //end using stream
+                }
 
 
             }
@@ -223,8 +220,6 @@ namespace cloudscribe.FileManager.Web.Services
                     return new GifEncoder();
                 case ".png":
                     return new PngEncoder();
-                //case ".webp":
-                //    return SKEncodedImageFormat.Webp;
             }
 
             var j = new JpegEncoder

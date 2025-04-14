@@ -68,9 +68,6 @@ namespace cloudscribe.Core.Web
                     }
                 }
             }
-
-            //if (HtmlHelper.ViewContext.HttpContext.Items[Type] != null) ((List<Func<object, HelperResult>>)HtmlHelper.ViewContext.HttpContext.Items[Type]).Add(Template);
-
             else HtmlHelper.ViewContext.HttpContext.Items[Type] = new List<Func<object, HelperResult>>() { Template };
 
             return new HtmlString(String.Empty);

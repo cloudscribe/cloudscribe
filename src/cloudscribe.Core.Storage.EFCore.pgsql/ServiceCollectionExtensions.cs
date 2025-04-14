@@ -19,15 +19,7 @@ namespace Microsoft.Extensions.DependencyInjection
         {
             services.AddCloudscribeCoreEFCommon();
 
-            //services.AddEntityFrameworkNpgsql()
-            //    .AddDbContext<CoreDbContext>(options =>
-            //        options.UseNpgsql(connectionString));
-
-            // AddEntityFrameworkNpgsql call should be deprecated:
-            // https://www.npgsql.org/efcore/api/Microsoft.Extensions.DependencyInjection.NpgsqlServiceCollectionExtensions.html
-
-            services // .AddEntityFrameworkNpgsql()
-                .AddDbContext<CoreDbContext>(options =>
+            services.AddDbContext<CoreDbContext>(options =>
                     options.UseNpgsql(connectionString,
                     npgsqlOptionsAction: sqlOptions =>
                     {

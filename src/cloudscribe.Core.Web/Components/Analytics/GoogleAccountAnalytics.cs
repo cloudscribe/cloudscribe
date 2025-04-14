@@ -49,7 +49,7 @@ namespace cloudscribe.Core.Web.Analytics
         {
             if(!string.IsNullOrEmpty(_currentSite.GoogleAnalyticsProfileId))
             {
-                if(_currentSite.GoogleAnalyticsProfileId.StartsWith("G")) //switch to GA4
+                if(_currentSite.GoogleAnalyticsProfileId.StartsWith("G"))
                 {
                     await HandleGA4LoginSubmit(source);
                     return;
@@ -324,7 +324,6 @@ namespace cloudscribe.Core.Web.Analytics
 
                 if (result.IsNewUserRegistration)
                 {
-                    // first record successful registration
                     await HandleRegisterSuccess(result);
 
                     var source = "Onsite";
@@ -484,7 +483,7 @@ namespace cloudscribe.Core.Web.Analytics
         {
             if (!string.IsNullOrEmpty(_currentSite.GoogleAnalyticsProfileId))
             {
-                if(_currentSite.GoogleAnalyticsProfileId.StartsWith("G")) //switch to GA4
+                if(_currentSite.GoogleAnalyticsProfileId.StartsWith("G"))
                 {
                     HandleGA4Lockout(result);
                     return Task.FromResult(0);
@@ -522,10 +521,6 @@ namespace cloudscribe.Core.Web.Analytics
                     HandleGA4Logout(reason);
                     return Task.FromResult(0);
                 }
-
-                //Logout was never implemented in the original Google Analytics module
-
-
             }
             return Task.FromResult(0);
         }
@@ -539,10 +534,6 @@ namespace cloudscribe.Core.Web.Analytics
                     HandleGA4Search(searchQuery, numResults);
                     return Task.FromResult(0);
                 }
-
-                //Search was never implemented in the original Google Analytics module
-
-
             }
             return Task.FromResult(0);
         }
@@ -559,8 +550,6 @@ namespace cloudscribe.Core.Web.Analytics
                     HandleGA4Event(eventName, parameters);
                     return Task.FromResult(0);
                 }
-
-                //This was never implemented in the original Google Analytics module
             }
             return Task.FromResult(0);
         }

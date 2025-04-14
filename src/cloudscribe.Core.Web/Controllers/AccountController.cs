@@ -203,8 +203,6 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
             }
 
             return RedirectToAction(nameof(LoginWith2fa), new { returnUrl, rememberMe });
-
-            //return RedirectToAction(nameof(SendCode), new { ReturnUrl = returnUrl, RememberMe = rememberMe });
         }
 
         protected virtual async Task<IActionResult> HandleLockout(UserLoginResult result = null)
@@ -223,7 +221,6 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
             return View("Lockout");
         }
 
-        // GET: /Account/Login
         [HttpGet]
         [AllowAnonymous]
         public virtual async Task<IActionResult> Login(string returnUrl = null)
@@ -266,7 +263,6 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
             return View(model);
         }
 
-        // POST: /Account/Login
         [HttpPost]
         [AllowAnonymous]
         [ValidateAntiForgeryToken]
@@ -319,8 +315,6 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
 
             foreach (var reason in result.RejectReasons)
             {
-                //these reasons are not meant to be shown in the ui
-                // but we can log them so admin will see failed attempts in the log along with reasons
                 Log.LogWarning(reason);
             }
 
@@ -389,8 +383,6 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
 
             foreach (var reason in result.RejectReasons)
             {
-                //these reasons are not meant to be shown in the ui
-                // but we can log them so admin will see failed attempts in the log along with reasons
                 Log.LogWarning(reason);
             }
 
@@ -453,8 +445,6 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
 
             foreach (var reason in result.RejectReasons)
             {
-                //these reasons are not meant to be shown in the ui
-                // but we can log them so admin will see failed attempts in the log along with reasons
                 Log.LogWarning(reason);
             }
 
@@ -478,8 +468,6 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
 
         }
 
-
-        // GET: /Account/Register
         [HttpGet]
         [AllowAnonymous]
         public virtual async Task<IActionResult> Register(string returnUrl = null)
@@ -522,7 +510,6 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
                 model.RecaptchaSiteKey = CurrentSite.RecaptchaPublicKey;
                 model.UseInvisibleCaptcha = CurrentSite.UseInvisibleRecaptcha;
             }
-           // model.UseEmailForLogin = CurrentSite.UseEmailForLogin;
             model.RegistrationPreamble = CurrentSite.RegistrationPreamble;
             model.RegistrationAgreement = CurrentSite.RegistrationAgreement;
             model.AgreementRequired = !string.IsNullOrWhiteSpace(CurrentSite.RegistrationAgreement);
@@ -539,7 +526,6 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
             return View(viewName, model);
         }
 
-        // POST: /Account/Register
         [HttpPost]
         [AllowAnonymous]
         [ValidateAntiForgeryToken]
@@ -555,7 +541,6 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
                 model.RecaptchaSiteKey = CurrentSite.RecaptchaPublicKey;
                 model.UseInvisibleCaptcha = CurrentSite.UseInvisibleRecaptcha;
             }
-            //model.UseEmailForLogin = CurrentSite.UseEmailForLogin;
             model.RegistrationPreamble = CurrentSite.RegistrationPreamble;
             model.RegistrationAgreement = CurrentSite.RegistrationAgreement;
             model.AgreementRequired = !string.IsNullOrWhiteSpace(CurrentSite.RegistrationAgreement);
@@ -637,8 +622,6 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
 
                 foreach (var reason in result.RejectReasons)
                 {
-                    //these reasons are not meant to be shown in the ui
-                    // but we can log them so admin will see failed attempts in the log along with reasons
                     Log.LogWarning(reason);
                 }
 
@@ -704,11 +687,9 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
             var trackedError = errors.FirstOrDefault().errorMessage;
             await Analytics.HandleRegisterFail("Onsite", trackedError);
 
-            // If we got this far, something failed, redisplay form
             return View(model);
         }
 
-        // POST: /Account/ExternalLogin
         [HttpPost]
         [AllowAnonymous]
         [ValidateAntiForgeryToken]
@@ -718,13 +699,11 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
 
             await Analytics.HandleLoginSubmit(provider);
 
-            // Request a redirect to the external login provider.
             var redirectUrl = Url.Action("ExternalLoginCallback", "Account", new { ReturnUrl = returnUrl });
             var properties = AccountService.ConfigureExternalAuthenticationProperties(provider, redirectUrl);
             return Challenge(properties, provider);
         }
 
-        // GET: /Account/ExternalLoginCallback
         [HttpGet]
         [AllowAnonymous]
         public virtual async Task<IActionResult> ExternalLoginCallback(string returnUrl = null, string remoteError = null)
@@ -772,8 +751,6 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
 
             foreach (var reason in result.RejectReasons)
             {
-                // these reasons are not meant to be shown in the ui
-                // but we can log them so admin will see failed attempts in the log along with reasons
                 Log.LogWarning(reason);
             }
 
@@ -802,9 +779,6 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
             {
                 return await HandleLockout(result);
             }
-
-            // result.Failed
-
 
             // If the user does not have an account, then ask the user to create an account.
             // check the claims from the provider to see if we have what we need
@@ -841,7 +815,6 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
             return View("ExternalLoginConfirmation", model);
         }
 
-        // POST: /Account/ExternalLoginConfirmation
         [HttpPost]
         [AllowAnonymous]
         [ValidateAntiForgeryToken]
@@ -878,8 +851,6 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
 
                 foreach (var reason in result.RejectReasons)
                 {
-                    // these reasons are not meant to be shown in the ui
-                    // but we can log them so admin will see failed attempts in the log along with reasons
                     Log.LogWarning(reason);
                 }
 
@@ -898,15 +869,11 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
                 var isExistingAccount = await AccountService.IsExistingAccount(model.Email);
                 if(isExistingAccount)
                 {
-                    // message = StringLocalizer["The provided email address is already in use."];
-                    // don't reveal the above to the world
                     message  = StringLocalizer["Your external login service cannot be registered."];
 
                     if (!CurrentSite.DisableDbAuth)
                         message += StringLocalizer[" You can still login directly with your stardard username and password, and then register an external login service from the 'My Account' page."];
                 }
-
-
 
                 return View("ExternalLoginFailure", message);
 
@@ -923,27 +890,16 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
             return View(model);
         }
 
-
-        // GET: /Account/RemainingSessionTime
         [HttpGet]
         [Authorize]
         public virtual async Task<IActionResult> RemainingSessionTime()
         {
-            // https://stackoverflow.com/questions/41870309/refresh-user-cookie-ticket-in-asp-net-core-identity
-            //SiteUser user = await UserManager.GetUserAsync(User);
-
-            //if (SignInManager.IsSignedIn(User))
-            //{
-            //    await SignInManager.RefreshSignInAsync(user);
-
             var result = await RemainingSessionTimeResolver.RemainingSessionTimeInSeconds();
 
             // answer in seconds
             return new JsonResult(result);
         }
 
-
-        // GET: /Account/AutoLogoutNotification
         [HttpGet]
         [AllowAnonymous]
         public virtual async Task<IActionResult> AutoLogoutNotification()
@@ -1014,7 +970,7 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
             }
 
             var result = await AccountService.AcceptRegistrationAgreement(User);
-            //return Redirect("/");
+
             if(result)
             {
                 return this.RedirectToSiteRoot(CurrentSite);
@@ -1078,7 +1034,6 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
             return RedirectToAction("EmailConfirmationRequired", new { userId = info.User.Id, didSend = true });
         }
 
-        // GET: /Account/ConfirmEmail
         [HttpGet]
         [AllowAnonymous]
         public virtual async Task<IActionResult> ConfirmEmail(string userId, string code, string returnUrl)
@@ -1130,7 +1085,6 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
             return View();
         }
 
-        // POST: /Account/LogOff
         [HttpPost]
         [ValidateAntiForgeryToken]
         public virtual async Task<IActionResult> LogOff()
@@ -1212,8 +1166,6 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
             return Json(available);
         }
 
-
-        // GET: /Account/ForgotPassword
         [HttpGet]
         [AllowAnonymous]
         public virtual IActionResult ForgotPassword()
@@ -1226,7 +1178,6 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
             return View();
         }
 
-        // POST: /Account/ForgotPassword
         [HttpPost]
         [AllowAnonymous]
         [ValidateAntiForgeryToken]
@@ -1241,15 +1192,11 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
                     {
                         Log.LogWarning(info.User.Email + ": user tried to use pasword recovery but no email was sent because user email is not confirmed and security settings require confirmed email");
                     }
-                    //2018-08-21 see below, we now have to wait for sending the email
-                    // that delay can be used to determine an account exists
-                    // so add a delay here as well
                     var random = new Random();
                     var randomMilliseconds = random.Next(1, 3) * 1000; //between 1 and 3 seconds
 
                     await Task.Delay(randomMilliseconds);
 
-                    // Don't reveal that the user does not exist or is not confirmed
                     return View("ForgotPasswordConfirmation");
                 }
 
@@ -1258,20 +1205,6 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
                 var resetUrl = Url.Action("ResetPassword", "Account",
                     new { userId = info.User.Id.ToString(), code = info.PasswordResetToken },
                     protocol: HttpContext.Request.Scheme);
-
-                // await emailSender.SendPasswordResetEmailAsync(
-                // not awaiting this awaitable method on purpose
-                // so it does not delay the ui response
-                // vs would show a warning squiggly line here if not for .Forget()
-                //http://stackoverflow.com/questions/35175960/net-core-alternative-to-threadpool-queueuserworkitem
-                //http://stackoverflow.com/questions/22629951/suppressing-warning-cs4014-because-this-call-is-not-awaited-execution-of-the
-                //EmailSender.SendPasswordResetEmailAsync(
-                //    CurrentSite,
-                //    model.Email,
-                //    StringLocalizer["Reset Password"],
-                //    resetUrl).Forget();
-
-                // the above broke in aspnetcore 2.1.x by not awaiting the httpcontext goes out of scope and viewrenderer fails IServiceProvider is disposed
 
                 await EmailSender.SendPasswordResetEmailAsync(
                     CurrentSite,
@@ -1283,12 +1216,9 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
                 return View("ForgotPasswordConfirmation");
             }
 
-            // If we got this far, something failed, redisplay form
             return View(model);
         }
 
-
-        // GET: /Account/ForgotPasswordConfirmation
         [HttpGet]
         [AllowAnonymous]
         public virtual IActionResult ForgotPasswordConfirmation()
@@ -1301,8 +1231,6 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
             return View();
         }
 
-
-        // GET: /Account/SetInitialPassword
         [HttpGet]
         [AllowAnonymous]
         public virtual IActionResult SetInitialPassword(string code = null)
@@ -1316,8 +1244,6 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
             return View();
         }
 
-
-        // POST: /Account/SetInitialPassword
         [HttpPost]
         [AllowAnonymous]
         [ValidateAntiForgeryToken]
@@ -1337,8 +1263,7 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
 
             if (result.User == null)
             {
-                // User has entered non-existent email.
-                // Don't reveal that the user does not exist
+                // User has entered non-existent email. Don't reveal that the user does not exist
                 ModelState.AddModelError(string.Empty, StringLocalizer["The password reset token is invalid. Password reset tokens have a short lifespan for security reasons. You will need to use the forgot password link on the login page to get a new reset token sent to your email address."]);
             }
             else
@@ -1350,7 +1275,6 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
             return View();
         }
 
-        // GET: /Account/SetInitialPasswordConfirmation
         [HttpGet]
         [AllowAnonymous]
         public virtual IActionResult SetInitialPasswordConfirmation()
@@ -1358,8 +1282,6 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
             return View();
         }
 
-
-        // GET: /Account/ResetPassword
         [HttpGet]
         [AllowAnonymous]
         public virtual IActionResult ResetPassword(string code = null)
@@ -1373,9 +1295,6 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
             return View();
         }
 
-
-
-        // POST: /Account/ResetPassword
         [HttpPost]
         [AllowAnonymous]
         [ValidateAntiForgeryToken]
@@ -1403,7 +1322,6 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
             return View();
         }
 
-        // GET: /Account/ResetPasswordConfirmation
         [HttpGet]
         [AllowAnonymous]
         public virtual IActionResult ResetPasswordConfirmation()
@@ -1418,114 +1336,6 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
             ViewData["Title"] = StringLocalizer["Oops something went wrong"];
             return View();
         }
-
-        // GET: /Account/SendCode
-        //[HttpGet]
-        //[AllowAnonymous]
-        //public async Task<IActionResult> SendCode(string returnUrl = null, bool rememberMe = false)
-        //{
-        //    var twoFactorInfo = await accountService.GetTwoFactorInfo();
-
-        //    if (twoFactorInfo.User == null)
-        //    {
-        //        return View("Error");
-        //    }
-
-        //    var factorOptions = twoFactorInfo.UserFactors.Select(purpose => new SelectListItem { Text = purpose, Value = purpose }).ToList();
-        //    return View(new SendCodeViewModel { Providers = factorOptions, ReturnUrl = returnUrl, RememberMe = rememberMe });
-        //}
-
-        //// POST: /Account/SendCode
-        //[HttpPost]
-        //[AllowAnonymous]
-        //[ValidateAntiForgeryToken]
-        //public async Task<ActionResult> SendCode(SendCodeViewModel model)
-        //{
-        //    if (!ModelState.IsValid)
-        //    {
-        //        return View();
-        //    }
-
-        //    var twoFactorInfo = await accountService.GetTwoFactorInfo(model.SelectedProvider);
-        //    if (twoFactorInfo.User == null)
-        //    {
-        //        return View("Error");
-        //    }
-
-        //    if (string.IsNullOrWhiteSpace(twoFactorInfo.TwoFactorToken))
-        //    {
-        //        return View("Error");
-        //    }
-
-        //    if (model.SelectedProvider == "Email")
-        //    {
-        //        await emailSender.SendSecurityCodeEmailAsync(
-        //            Site,
-        //            twoFactorInfo.User.Email,
-        //            sr["Security Code"],
-        //            twoFactorInfo.TwoFactorToken);
-        //    }
-        //    //else if (model.SelectedProvider == "Phone")
-        //    //{
-        //    //    var message = string.Format(sr["Your security code is: {0}"], twoFactorInfo.TwoFactorToken);
-        //    //    await smsSender.SendSmsAsync(Site, twoFactorInfo.User.PhoneNumber, message);
-        //    //}
-
-        //    return RedirectToAction("VerifyCode", new { Provider = model.SelectedProvider, ReturnUrl = model.ReturnUrl, RememberMe = model.RememberMe });
-        //}
-
-
-        //// GET: /Account/VerifyCode
-        //[HttpGet]
-        //[AllowAnonymous]
-        //public async Task<IActionResult> VerifyCode(string provider, string returnUrl, bool rememberMe)
-        //{
-        //    // Require that the user has already logged in via username/password or external login
-        //    var user = await accountService.GetTwoFactorAuthenticationUserAsync();
-        //    if (user == null)
-        //    {
-        //        return View("Error");
-        //    }
-        //    return View(new VerifyCodeViewModel { Provider = provider, ReturnUrl = returnUrl, RememberMe = rememberMe });
-        //}
-
-        //// POST: /Account/VerifyCode
-        //[HttpPost]
-        //[AllowAnonymous]
-        //[ValidateAntiForgeryToken]
-        //public async Task<IActionResult> VerifyCode(VerifyCodeViewModel model)
-        //{
-        //    if (!ModelState.IsValid)
-        //    {
-        //        return View(model);
-        //    }
-
-        //    // The following code protects for brute force attacks against the two factor codes.
-        //    // If a user enters incorrect codes for a specified amount of time then the user account
-        //    // will be locked out for a specified amount of time.
-        //    var result = await accountService.TwoFactorSignInAsync(model.Provider, model.Code, model.RememberMe, model.RememberBrowser);
-        //    if (result.Succeeded)
-        //    {
-        //        if (!string.IsNullOrEmpty(model.ReturnUrl))
-        //        {
-        //            return LocalRedirect(model.ReturnUrl);
-        //        }
-
-        //        return this.RedirectToSiteRoot(Site);
-        //    }
-
-        //    if (result.IsLockedOut)
-        //    {
-        //        return await HandleLockout();
-        //    }
-        //    else
-        //    {
-        //        ModelState.AddModelError("", sr["Invalid code."]);
-        //        return View(model);
-        //    }
-        //}
-
-
 
         #region Helpers
 

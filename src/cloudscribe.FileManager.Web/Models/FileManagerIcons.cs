@@ -8,9 +8,9 @@ namespace cloudscribe.FileManager.Web.Models
     public class FileManagerIcons
     {
 
-        public string Folder { get; set; } = "far fa-folder"; // fa fa-folder
+        public string Folder { get; set; } = "far fa-folder";
 
-        public string FolderOpen { get; set; } = "far fa-folder-open"; //fa fa-folder-open
+        public string FolderOpen { get; set; } = "far fa-folder-open";
 
         public string File { get; set; } = "far fa-file";
         public string FileArchive { get; set; } = "far fa-file-archive";

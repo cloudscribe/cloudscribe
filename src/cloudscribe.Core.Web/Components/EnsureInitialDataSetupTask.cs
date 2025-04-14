@@ -105,7 +105,7 @@ namespace cloudscribe.Core.Web.Components
 
             await output(
                         string.Format(
-                        "ExistingSiteCount {0}", //SetupResources.ExistingSiteCountMessage,
+                        "ExistingSiteCount {0}",
                         existingSiteCount.ToString()),
                         false);
 
@@ -167,32 +167,12 @@ namespace cloudscribe.Core.Web.Components
         private string BuildHomeLink()
         {
             var homeLink = "<a href='" + "/" // TODO: was using Page.ResolveUrl("~/")
-                + "' title='" + "Home" //SetupResources.HomeLink 
+                + "' title='" + "Home"
                 + "'>"
-                + "Home" // SetupResources.HomeLink 
+                + "Home"
                 + "</a>";
 
             return homeLink;
         }
-        
-
-        //public async Task DoSetupStep(HttpResponse response)
-        //{
-        //    var message = "Testing an ISetupStep";
-
-        //        await response.WriteAsync(
-        //            string.Format("{0} - {1}",
-        //            message,
-        //            DateTime.UtcNow));
-
-        //    await response.WriteAsync("<br/>");
-
-
-
-        //}
-
     }
-
-    
-
 }

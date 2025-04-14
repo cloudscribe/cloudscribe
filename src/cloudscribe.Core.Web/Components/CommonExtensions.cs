@@ -13,25 +13,6 @@ namespace cloudscribe.Core.Web.Components
 {
     public static class CommonExtensions
     {
-        //public static DateTime ToLocalTime(this DateTime utcDate, TimeZoneInfo timeZone)
-        //{
-        //    return TimeZoneInfo.ConvertTime(DateTime.SpecifyKind(utcDate, DateTimeKind.Utc), timeZone);
-        //}
-
-        //public static DateTime ToUtc(this DateTime localDate, TimeZoneInfo timeZone)
-        //{
-        //    return TimeZoneInfo.ConvertTime(DateTime.SpecifyKind(localDate, DateTimeKind.Local), TimeZoneInfo.Utc);
-        //}
-
-        /// <summary>
-        /// this is needed to configure a datetime picker to match DateTime.ToString("g")
-        /// http://trentrichardson.com/examples/timepicker/#tp-formatting
-        /// the standard ShortTimePattern uses tt where this time picker expects TT
-        /// in .NET tt means use AM or PM but in this js it means am or pm
-        /// we need TT to get AM or PM
-        /// </summary>
-        /// <param name="t"></param>
-        /// <returns></returns>
         public static string ToDatePickerWithTimeFormat(this DateTimeFormatInfo t)
         {
             return t.ShortTimePattern.Replace("tt", "TT");
@@ -50,41 +31,6 @@ namespace cloudscribe.Core.Web.Components
         {
             return t.ShortDatePattern.Replace("M", "m").Replace("yyyy", "yy");
         }
-
-
-        //public static string StartingSegment(this PathString path, out PathString remaining)
-        //{
-        //    var startingSegment = string.Empty;
-
-        //    var spath = path.ToString();
-        //    for (var i = 1; i < spath.Length; i++)
-        //    {
-        //        if (spath[i] == '/')
-        //        {
-        //            remaining = spath.Substring(i, spath.Length - i);
-        //            return startingSegment;
-        //        }
-
-        //        startingSegment += spath[i];
-        //    }
-
-        //    remaining = PathString.Empty;
-        //    return startingSegment;
-        //}
-
-        //public static string StartingSegment(this PathString path)
-        //{
-        //    PathString remainder;
-        //    return path.StartingSegment(out remainder);
-        //}
-
-        
-
-
-
-
-
-        
 
         public static List<string> ToStringList(this char[] chars)
         {
@@ -133,20 +79,6 @@ namespace cloudscribe.Core.Web.Components
 
             return result;
         }
-
-        /// <summary>
-        /// an extenstion method to avoid the warning when firing an async task without await
-        /// from inside another async task
-        /// for fire and forget scenarios where we don't need to wait for the task to complete
-        /// http://stackoverflow.com/questions/22629951/suppressing-warning-cs4014-because-this-call-is-not-awaited-execution-of-the
-        /// </summary>
-        /// <param name="task"></param>
-        //public static void Forget(this Task task)
-        //{
-
-        //}
-
-
 
     }
 }

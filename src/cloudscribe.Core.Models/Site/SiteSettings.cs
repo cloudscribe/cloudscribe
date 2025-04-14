@@ -9,10 +9,8 @@ using System;
 
 namespace cloudscribe.Core.Models
 {
-    //[Serializable()]
     public class SiteSettings : SiteInfo, ISiteSettings, ISiteContext
     {
-
         public SiteSettings()
         {
             this.Id = Guid.NewGuid();
@@ -32,11 +30,6 @@ namespace cloudscribe.Core.Models
         
         public bool RequireConfirmedPhone { get; set; } = false;
 
-        //public bool UseLdapAuth { get; set; } = false;
-        //public bool AllowDbFallbackWithLdap { get; set; } = false;
-        //public bool EmailLdapDbFallback { get; set; } = false;
-        //public bool AutoCreateLdapUserOnFirstLogin { get; set; } = true;
- 
         public string LdapServer { get; set; }
 
         public string LdapDomain { get; set; }
@@ -231,17 +224,13 @@ namespace cloudscribe.Core.Models
         {
             if(i == null) { return null; }
 
-            // can't we just   return (SiteSettings)i   here..??  - jimk
-
             SiteSettings s = new SiteSettings
             {
                 ConcurrencyStamp           = i.ConcurrencyStamp,
                 AccountApprovalEmailCsv    = i.AccountApprovalEmailCsv,
                 AddThisDotComUsername      = i.AddThisDotComUsername,
-               // AllowDbFallbackWithLdap  = i.AllowDbFallbackWithLdap,
                 AllowNewRegistration       = i.AllowNewRegistration,
                 AllowPersistentLogin       = i.AllowPersistentLogin,
-                //AutoCreateLdapUserOnFirstLogin = i.AutoCreateLdapUserOnFirstLogin,
                 CaptchaOnLogin             = i.CaptchaOnLogin,
                 CaptchaOnRegistration      = i.CaptchaOnRegistration,
                 CompanyCountry             = i.CompanyCountry,
@@ -264,7 +253,6 @@ namespace cloudscribe.Core.Models
                 DkimPrivateKey             = i.DkimPrivateKey,
                 DkimDomain                 = i.DkimDomain,
                 DkimSelector               = i.DkimSelector,
-                //EmailLdapDbFallback      = i.EmailLdapDbFallback,
                 FooterContent              = i.FooterContent,
                 ForcedCulture              = i.ForcedCulture,
                 ForcedUICulture            = i.ForcedUICulture,
@@ -340,7 +328,6 @@ namespace cloudscribe.Core.Models
                 UseInvisibleRecaptcha      = i.UseInvisibleRecaptcha,
                 UseEmailForLogin           = i.UseEmailForLogin,
                 AllowUserToChangeEmail     = i.AllowUserToChangeEmail,
-                //UseLdapAuth              = i.UseLdapAuth,
                 TermsUpdatedUtc            = i.TermsUpdatedUtc,
                 EmailApiEndpoint           = i.EmailApiEndpoint,
                 EmailApiKey                = i.EmailApiKey,

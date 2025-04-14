@@ -37,7 +37,6 @@ namespace cloudscribe.Core.Storage.NoDb
         {
             cancellationToken.ThrowIfCancellationRequested();
 
-            //await EnsureProjectId().ConfigureAwait(false);
             var projectId = "default";
 
             return await countryQueries.FetchAsync(
@@ -52,7 +51,7 @@ namespace cloudscribe.Core.Storage.NoDb
             CancellationToken cancellationToken = default(CancellationToken))
         {
             cancellationToken.ThrowIfCancellationRequested();
-            //await EnsureProjectId().ConfigureAwait(false);
+
             var projectId = "default";
 
             var all = await countryQueries.GetAllAsync(projectId, cancellationToken).ConfigureAwait(false);
@@ -67,7 +66,7 @@ namespace cloudscribe.Core.Storage.NoDb
         public async Task<int> GetCountryCount(CancellationToken cancellationToken = default(CancellationToken))
         {
             cancellationToken.ThrowIfCancellationRequested();
-            //await EnsureProjectId().ConfigureAwait(false);
+
             var projectId = "default";
 
             var all = await countryQueries.GetAllAsync(projectId, cancellationToken).ConfigureAwait(false);
@@ -77,7 +76,7 @@ namespace cloudscribe.Core.Storage.NoDb
         public async Task<List<IGeoCountry>> GetAllCountries(CancellationToken cancellationToken = default(CancellationToken))
         { 
             cancellationToken.ThrowIfCancellationRequested();
-            //await EnsureProjectId().ConfigureAwait(false);
+
             var projectId = "default";
 
             var all = await countryQueries.GetAllAsync(projectId, cancellationToken).ConfigureAwait(false);
@@ -98,7 +97,6 @@ namespace cloudscribe.Core.Storage.NoDb
         {
             cancellationToken.ThrowIfCancellationRequested();
 
-            //await EnsureProjectId().ConfigureAwait(false);
             var projectId = "default";
 
             var all = await countryQueries.GetAllAsync(projectId, cancellationToken).ConfigureAwait(false);
@@ -128,7 +126,7 @@ namespace cloudscribe.Core.Storage.NoDb
             CancellationToken cancellationToken = default(CancellationToken))
         {
             cancellationToken.ThrowIfCancellationRequested();
-            //await EnsureProjectId().ConfigureAwait(false);
+
             var projectId = "default";
 
             return await stateQueries.FetchAsync(
@@ -143,15 +141,13 @@ namespace cloudscribe.Core.Storage.NoDb
             CancellationToken cancellationToken = default(CancellationToken))
         {
             cancellationToken.ThrowIfCancellationRequested();
-            //await EnsureProjectId().ConfigureAwait(false);
+
             var projectId = "default";
 
             var all = await stateQueries.GetAllAsync(projectId, cancellationToken).ConfigureAwait(false);
 
             return all.Where(
                 g => g.CountryId == countryId).ToList().Count;
-
-            
         }
 
         public async Task<List<IGeoZone>> GetGeoZonesByCountry(
@@ -160,7 +156,6 @@ namespace cloudscribe.Core.Storage.NoDb
         {
             cancellationToken.ThrowIfCancellationRequested();
 
-            //await EnsureProjectId().ConfigureAwait(false);
             var projectId = "default";
 
             var all = await stateQueries.GetAllAsync(projectId, cancellationToken).ConfigureAwait(false);
@@ -182,7 +177,6 @@ namespace cloudscribe.Core.Storage.NoDb
         {
             cancellationToken.ThrowIfCancellationRequested();
 
-            //await EnsureProjectId().ConfigureAwait(false);
             var projectId = "default";
 
             var all = await countryQueries.GetAllAsync(projectId, cancellationToken).ConfigureAwait(false);
@@ -209,7 +203,6 @@ namespace cloudscribe.Core.Storage.NoDb
         {
             cancellationToken.ThrowIfCancellationRequested();
 
-            //await EnsureProjectId().ConfigureAwait(false);
             var projectId = "default";
 
             var all = await stateQueries.GetAllAsync(projectId, cancellationToken).ConfigureAwait(false);
@@ -236,7 +229,6 @@ namespace cloudscribe.Core.Storage.NoDb
         {
             cancellationToken.ThrowIfCancellationRequested();
 
-            //await EnsureProjectId().ConfigureAwait(false);
             var projectId = "default";
 
             var all = await stateQueries.GetAllAsync(projectId, cancellationToken).ConfigureAwait(false);

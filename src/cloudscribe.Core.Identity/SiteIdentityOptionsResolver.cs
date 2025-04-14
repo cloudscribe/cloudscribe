@@ -42,31 +42,23 @@ namespace cloudscribe.Core.Identity
 
                 identityOptions.Tokens = _tokenOptions;
 
-                // these tenat properties are not surfaced in the UI but exist in the db so they can be customized
-                // but don't want to invite people to change them casually by making a UI for it.
-                // these are initialized in the db with the default values well chosen by Microsoft as defaults on IdentityOptions
                 identityOptions.Password.RequiredLength = tenant.MinRequiredPasswordLength;
-                identityOptions.Password.RequireNonAlphanumeric = tenant.PwdRequireNonAlpha; //default is true
-                identityOptions.Password.RequireLowercase = tenant.PwdRequireLowercase; //default is true
-                identityOptions.Password.RequireUppercase = tenant.PwdRequireUppercase; //default is true
-                identityOptions.Password.RequireDigit = tenant.PwdRequireDigit; // default is true
+                identityOptions.Password.RequireNonAlphanumeric = tenant.PwdRequireNonAlpha;
+                identityOptions.Password.RequireLowercase = tenant.PwdRequireLowercase;
+                identityOptions.Password.RequireUppercase = tenant.PwdRequireUppercase;
+                identityOptions.Password.RequireDigit = tenant.PwdRequireDigit;
 
                 identityOptions.Lockout.MaxFailedAccessAttempts = tenant.MaxInvalidPasswordAttempts;
 
                 identityOptions.Lockout.AllowedForNewUsers = true;
                 
-
                 identityOptions.SignIn.RequireConfirmedEmail = tenant.RequireConfirmedEmail;
-                // this is a dangerous setting -existing users including admin can't login if they don't have a phone
-                // number configured and there is no way for them to add the needed number
-                //identityOptions.SignIn.RequireConfirmedPhoneNumber = tenant.RequireConfirmedPhone;
 
                 identityOptions.User.RequireUniqueEmail = true;
-                identityOptions.User.AllowedUserNameCharacters = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-._@+"; // default value
+                identityOptions.User.AllowedUserNameCharacters = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-._@+";
                 
                 return identityOptions;
             }
         }
-
     }
 }

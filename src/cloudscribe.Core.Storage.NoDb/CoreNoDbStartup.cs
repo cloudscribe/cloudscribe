@@ -13,7 +13,7 @@ using NoDb;
 using System;
 using System.Threading.Tasks;
 
-namespace Microsoft.AspNetCore.Hosting // so it will show up in startup without a using
+namespace Microsoft.AspNetCore.Hosting
 {
     public static class CoreNoDbStartup
     {
@@ -27,7 +27,6 @@ namespace Microsoft.AspNetCore.Hosting // so it will show up in startup without 
             var geoQueries = serviceProvider.GetService<IGeoQueries>();
             var geoCommands = serviceProvider.GetService<IGeoCommands>();
             var roleQueries = serviceProvider.GetService<IBasicQueries<SiteRole>>();
-            //var projectResolver = serviceProvider.GetService<IProjectResolver>();
             var userBasic = serviceProvider.GetService<IBasicQueries<SiteUser>>();
 
             var siteConfigAccessor = serviceProvider.GetService<IOptions<SiteConfigOptions>>();
@@ -46,7 +45,6 @@ namespace Microsoft.AspNetCore.Hosting // so it will show up in startup without 
 
             
         }
-
 
         private static async Task EnsureData(
             ISiteQueries siteQueries,
@@ -82,7 +80,6 @@ namespace Microsoft.AspNetCore.Hosting // so it will show up in startup without 
             Guid siteId = Guid.Empty;
             if (count == 0)
             {
-                // create first site
                 newSite = InitialData.BuildInitialSite();
                 newSite.Theme = config.FirstSiteTheme;
                 await siteCommands.Create(newSite);
@@ -100,8 +97,6 @@ namespace Microsoft.AspNetCore.Hosting // so it will show up in startup without 
                 return;
             }
 
-            // ensure roles
-            //var projectId = await projectResolver.ResolveProjectId();
             var projectId = siteId.ToString(); ;
 
 
@@ -126,7 +121,6 @@ namespace Microsoft.AspNetCore.Hosting // so it will show up in startup without 
                 
             }
 
-            // ensure admin user
             count = await userBasic.GetCountAsync(projectId);
 
             if (count == 0)

@@ -32,7 +32,7 @@ namespace cloudscribe.Core.Storage.EFCore.Common
             if (geoCountry == null) throw new ArgumentException("geoCountry must not be null");
             if (geoCountry.Id == Guid.Empty) throw new ArgumentException("geoCountry must have a non-empty id");
 
-            var country = GeoCountry.FromIGeoCountry(geoCountry); // convert from IGeoCountry
+            var country = GeoCountry.FromIGeoCountry(geoCountry);
 
             using (var dbContext = _contextFactory.CreateContext())
             {
@@ -52,7 +52,7 @@ namespace cloudscribe.Core.Storage.EFCore.Common
             if (geoCountry == null) throw new ArgumentException("geoCountry must not be null");
             if (geoCountry.Id == Guid.Empty) throw new ArgumentException("geoCountry must have a non-empty id");
 
-            var country = GeoCountry.FromIGeoCountry(geoCountry); // convert from IGeoCountry
+            var country = GeoCountry.FromIGeoCountry(geoCountry);
 
             using (var dbContext = _contextFactory.CreateContext())
             {
@@ -95,7 +95,7 @@ namespace cloudscribe.Core.Storage.EFCore.Common
             if (geoZone == null) throw new ArgumentException("geoZone must not be null");
             if (geoZone.Id == Guid.Empty) throw new ArgumentException("geoZone must have a non-empty id");
 
-            var state = GeoZone.FromIGeoZone(geoZone); // convert from IGeoZone
+            var state = GeoZone.FromIGeoZone(geoZone);
 
             using (var dbContext = _contextFactory.CreateContext())
             {
@@ -116,7 +116,7 @@ namespace cloudscribe.Core.Storage.EFCore.Common
             if (geoZone.Id == Guid.Empty) throw new ArgumentException("geoZone must have a non-empty id");
             if (geoZone.CountryId == Guid.Empty) throw new ArgumentException("geoZone must have a non-empty CountryId");
 
-            var state = GeoZone.FromIGeoZone(geoZone); // convert from IGeoZone
+            var state = GeoZone.FromIGeoZone(geoZone);
 
             using (var dbContext = _contextFactory.CreateContext())
             {

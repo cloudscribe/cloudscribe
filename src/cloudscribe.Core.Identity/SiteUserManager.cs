@@ -93,8 +93,6 @@ namespace cloudscribe.Core.Identity
         private readonly                               IEnumerable<IHandleUserRemovedFromRole> _userRemovedFromRoleHandlers;
         private ILogger                                _log;
 
-        //private CancellationToken CancellationToken => httpContext?.RequestAborted ?? CancellationToken.None;
-
         private ISiteContext _siteSettings = null;
 
         internal IUserLockoutStore<TUser> GetUserLockoutStore()
@@ -117,7 +115,6 @@ namespace cloudscribe.Core.Identity
             return _queries.LoginIsAvailable(siteId, userId, loginName, CancellationToken);
  
         }
-
         
         public Task<PagedResult<IUserInfo>> GetPage(Guid siteId, int pageNumber, int pageSize, string userNameBeginsWith, int sortMode)
         {
@@ -207,7 +204,6 @@ namespace cloudscribe.Core.Identity
             return _queries.Fetch(siteId, userId, CancellationToken);
         }
 
-        
         public Task<bool> EmailExistsInDB(Guid siteId, string email)
         {
             if (_multiTenantOptions.UseRelatedSitesMode) { siteId = _multiTenantOptions.RelatedSiteId; }
@@ -229,7 +225,7 @@ namespace cloudscribe.Core.Identity
 
             var login = email.Substring(0, email.IndexOf("@"));
             var offset = 1;
-            // don't think we should make this async inside a loop
+
             while (await _queries.LoginExistsInDB(siteGuid, login).ConfigureAwait(false))
             {
                 offset += 1;
@@ -350,14 +346,6 @@ namespace cloudscribe.Core.Identity
         public async Task<PagedResult<IUserLocation>> GetUserLocations(Guid siteId, Guid userId, int pageNumber, int pageSize)
         {
             return await _queries.GetUserLocationsByUser(siteId, userId, pageNumber, pageSize);
-            //var result = new PagedResult<IUserLocation>();
-            //var list = await queries.GetUserLocationsByUser(siteId, userId, pageNumber, pageSize);
-            //result.Data = list.ToList();
-            //result.TotalItems = await queries.CountUserLocationsByUser(siteId, userId);
-            //result.PageNumber = pageNumber;
-            //result.PageSize = pageSize;
-
-            //return result;
         }
 
 
@@ -452,7 +440,6 @@ namespace cloudscribe.Core.Identity
             return result;
         }
 
-
         public override async Task<IdentityResult> CreateAsync(TUser user)
         {
             var result = await base.CreateAsync(user);
@@ -488,32 +475,6 @@ namespace cloudscribe.Core.Identity
             return result;
         }
 
-        //public override async Task<string> GenerateEmailConfirmationTokenAsync(TUser user)
-        //{
-        //    Guid registerConfirmGuid = Guid.NewGuid();
-        //    bool result = await userRepo.SetRegistrationConfirmationGuid(user.UserGuid, registerConfirmGuid, CancellationToken.None);
-
-        //    return registerConfirmGuid.ToString();
-        //}
-
-        //public override async Task<IdentityResult> ConfirmEmailAsync(TUser user, string token)
-        //{
-        //    if(token.Length != 36)
-        //    {
-        //        // TODO: log info or warning
-        //        return IdentityResult.Failed();
-        //    }
-        //    Guid confirmGuid = new Guid(token);
-        //    ISiteUser siteUser = await userRepo.FetchByConfirmationGuid(Site.SiteId, confirmGuid, CancellationToken);
-        //    if((siteUser != null)&&(siteUser.UserGuid == user.UserGuid))
-        //    {
-        //        bool result = await userRepo.ConfirmRegistration(confirmGuid, CancellationToken.None);
-        //        if(result) { return IdentityResult.Success; }
-        //    }
-
-        //    return IdentityResult.Failed();
-        //}
-
         /// <summary>
         /// Increments the access failed count for the user as an asynchronous operation. 
         /// If the failed access account is greater than or equal to the configured maximum number of attempts, 
@@ -523,7 +484,6 @@ namespace cloudscribe.Core.Identity
         /// <returns>The <see cref="Task"/> that represents the asynchronous operation, containing the <see cref="IdentityResult"/> of the operation.</returns>
         public override async Task<IdentityResult> AccessFailedAsync(TUser user)
         {
-            //ThrowIfDisposed();
             var store = GetUserLockoutStore();
             if (user == null)
             {
@@ -533,10 +493,8 @@ namespace cloudscribe.Core.Identity
             // If this puts the user over the threshold for lockout, lock them out and reset the access failed count
             var count = await store.IncrementAccessFailedCountAsync(user, CancellationToken);
 
-            //if (count < defaultIdentityOptions.Lockout.MaxFailedAccessAttempts)
             if (count < Site.MaxInvalidPasswordAttempts)
             {
-                //return await UpdateUserAsync(user);
                 await _commands.Update(user, CancellationToken.None);
                 return IdentityResult.Success;
             }
@@ -550,38 +508,10 @@ namespace cloudscribe.Core.Identity
                 CancellationToken);
 
             await store.ResetAccessFailedCountAsync(user, CancellationToken);
-            //return await UpdateUserAsync(user);
             await _commands.Update(user, CancellationToken.None);
 
             return IdentityResult.Success;
         }
-
-        /// <summary>
-        /// Gets a list of valid two factor token providers for the specified <paramref name="user"/>,
-        /// as an asynchronous operation.
-        /// </summary>
-        /// <param name="user">The user the whose two factor authentication providers will be returned.</param>
-        /// <returns>
-        /// The <see cref="Task"/> that represents result of the asynchronous operation, a list of two
-        /// factor authentication providers for the specified user.
-        /// </returns>
-        //public override async Task<IList<string>> GetValidTwoFactorProvidersAsync(TUser user)
-        //{
-        //    ThrowIfDisposed();
-        //    if (user == null)
-        //    {
-        //        throw new ArgumentNullException(nameof(user));
-        //    }
-        //    var results = new List<string>();
-        //    foreach (var f in _tokenProviders)
-        //    {
-        //        if (await f.Value.CanGenerateTwoFactorTokenAsync(this, user))
-        //        {
-        //            results.Add(f.Key);
-        //        }
-        //    }
-        //    return results;
-        //}
 
         public override async Task<bool> VerifyUserTokenAsync(TUser user, string tokenProvider, string purpose, string token)
         {
@@ -602,14 +532,6 @@ namespace cloudscribe.Core.Identity
             return result;
         }
 
-
-
         #endregion
-
-
     }
-
-
-
-
 }

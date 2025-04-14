@@ -85,7 +85,6 @@ namespace Microsoft.Extensions.Configuration // so we don't need another using i
                     }
                 }
 
-                // return the new fileInfo
                 var gzfileInfo = fileProvider.GetFileInfo(subpath + ".gz");
                 if (gzfileInfo != null && gzfileInfo.Exists)
                 {
@@ -168,7 +167,6 @@ namespace Microsoft.Extensions.Configuration // so we don't need another using i
         /// The change token will be notified when one of the change token returned by the provided <see cref="IFileProvider"/> will be notified.</returns>
         public IChangeToken Watch(string pattern)
         {
-            // Watch all file providers
             var changeTokens = new List<IChangeToken>();
             foreach (var fileProvider in _fileProviders)
             {

@@ -19,7 +19,6 @@ using System.Linq;
 namespace cloudscribe.Core.Identity
 {
     public sealed class UserStore<TUser> :
-        //UserStoreBase<TUser, TKey, TUserClaim, TUserLogin, TUserToken>,
         IUserStore<TUser>,
         IUserSecurityStampStore<TUser>,
         IUserPasswordStore<TUser>,
@@ -34,13 +33,7 @@ namespace cloudscribe.Core.Identity
         IUserAuthenticatorKeyStore<TUser>,
         IUserTwoFactorRecoveryCodeStore<TUser>
         where TUser : SiteUser
-        //where TKey : IEquatable<Guid>
-        //where TUserClaim : UserClaim
-        //where TUserLogin : UserLogin
-        //where TUserToken : IdentityUserToken<TKey>, new()
     {
-
-        //private UserStore() { }
 
         public UserStore(
             SiteContext currentSite,
@@ -50,7 +43,7 @@ namespace cloudscribe.Core.Identity
             IOptions<MultiTenantOptions> multiTenantOptionsAccessor,
             IOptions<NewUserOptions> newUserOptionsAccessor,
             IdentityErrorDescriber describer = null
-            ) //: base(describer ?? new IdentityErrorDescriber())
+            )
         {
 
             _log = logger;
@@ -60,8 +53,6 @@ namespace cloudscribe.Core.Identity
 
             _newUserOptions = newUserOptionsAccessor.Value;
             _multiTenantOptions = multiTenantOptionsAccessor.Value;
-
-            //debugLog = config.GetOrDefault("AppSettings:UserStoreDebugEnabled", false);
 
             if (debugLog) { _log.LogInformation("constructor"); }
         }
@@ -204,7 +195,6 @@ namespace cloudscribe.Core.Identity
 
             var siteUser = await _queries.Fetch(siteGuid, userGuid, cancellationToken);
 
-            // jk second chance - this may be a visitor from another tenant
             if (siteUser == null && _multiTenantOptions.RootUserCanSignInToTenants)
             {
                 siteUser = await _queries.Fetch(_multiTenantOptions.RootSiteId, userGuid, cancellationToken);
@@ -226,7 +216,6 @@ namespace cloudscribe.Core.Identity
             var allowEmailFallback = SiteSettings.UseEmailForLogin;
             var siteUser = await _queries.FetchByLoginName(siteGuid, normailzedUserName, allowEmailFallback, cancellationToken);
 
-            // jk second chance - this may be a visitor from another tenant
             if (siteUser == null && _multiTenantOptions.RootUserCanSignInToTenants)
             {
                 siteUser = await _queries.FetchByLoginName(_multiTenantOptions.RootSiteId, normailzedUserName, allowEmailFallback, cancellationToken);
@@ -254,8 +243,6 @@ namespace cloudscribe.Core.Identity
 
             user.UserName = userName;
 
-            //bool result = await repo.Save(user, cancellationToken);
-
             return Task.FromResult(0);
         }
 
@@ -276,13 +263,10 @@ namespace cloudscribe.Core.Identity
             }
 
             user.NormalizedUserName = normalizedUserName;
-            //cancellationToken.ThrowIfCancellationRequested();
-            //bool result = await repo.Save(user);
 
             return Task.FromResult(0);
 
         }
-
 
         //#pragma warning disable 1998
 
@@ -325,8 +309,6 @@ namespace cloudscribe.Core.Identity
                 throw new ArgumentNullException("user");
             }
             return Task.FromResult(user.NormalizedUserName);
-
-            //return user.UserName.ToLowerInvariant();
         }
 
         //#pragma warning restore 1998
@@ -352,7 +334,6 @@ namespace cloudscribe.Core.Identity
             }
             user.SecurityStamp = stamp;
             return Task.FromResult(0);
-            //bool result = await repo.Save(user, cancellationToken);
 
         }
 
@@ -406,8 +387,6 @@ namespace cloudscribe.Core.Identity
             return Task.FromResult(user.NormalizedEmail);
         }
 
-
-
         public Task<bool> GetEmailConfirmedAsync(TUser user, CancellationToken cancellationToken)
         {
             ThrowIfDisposed();
@@ -421,8 +400,6 @@ namespace cloudscribe.Core.Identity
 
             return Task.FromResult(user.EmailConfirmed);
         }
-
-
 
         public Task SetEmailAsync(TUser user, string email, CancellationToken cancellationToken)
         {
@@ -443,9 +420,7 @@ namespace cloudscribe.Core.Identity
             cancellationToken.ThrowIfCancellationRequested();
 
             user.Email = email;
-            //user.NormalizedEmail = email.ToLower();
-            // TODO: are we supposed to save here?
-            //bool result = await repo.Save(user, cancellationToken);
+
             return Task.FromResult(0);
         }
 
@@ -465,12 +440,8 @@ namespace cloudscribe.Core.Identity
                 user.SiteId = SiteSettings.Id;
             }
 
-            //user.Email = email;
             user.NormalizedEmail = normalizedEmail;
 
-            //cancellationToken.ThrowIfCancellationRequested();
-
-            //bool result = await repo.Save(user);
             return Task.FromResult(0);
 
         }
@@ -493,10 +464,6 @@ namespace cloudscribe.Core.Identity
 
             user.EmailConfirmed = confirmed;
 
-
-            // I don't not sure this method is expected to
-            // persist this change to the db
-            //bool result = await repo.Save(user);
             return Task.FromResult(0);
 
         }
@@ -512,7 +479,6 @@ namespace cloudscribe.Core.Identity
 
             ISiteUser siteUser = await _queries.Fetch(siteGuid, email, cancellationToken);
 
-            // jk second chance - this may be a visitor from another tenant
             if (siteUser == null && _multiTenantOptions.RootUserCanSignInToTenants)
             {
                 siteUser = await _queries.Fetch(_multiTenantOptions.RootSiteId, email, cancellationToken);
@@ -524,7 +490,6 @@ namespace cloudscribe.Core.Identity
         #endregion
 
         #region IUserPasswordStore
-
 
         //#pragma warning disable 1998
 
@@ -578,24 +543,6 @@ namespace cloudscribe.Core.Identity
             user.LastPasswordChangeUtc = DateTime.UtcNow;
             user.MustChangePwd = false;
 
-            // I don't think this method is expected to
-            // persist this change to the db
-            // it seems to call this before calling Create
-
-            // for some reason this is called before Create
-            // so this mthod is actually doing the create
-            //if (user.SiteGuid == Guid.Empty)
-            //{
-            //    user.SiteGuid = siteSettings.SiteGuid;
-            //}
-            //if (user.SiteId == -1)
-            //{
-            //    user.SiteId = siteSettings.SiteId;
-            //}   
-            //token.ThrowIfCancellationRequested();
-            //user.PasswordHash = passwordHash;
-            //userRepo.Save(user);
-
             return Task.FromResult(0);
 
         }
@@ -605,8 +552,6 @@ namespace cloudscribe.Core.Identity
         #endregion
 
         #region IUserLockoutStore
-
-
 
 
         /// <summary>
@@ -628,8 +573,7 @@ namespace cloudscribe.Core.Identity
                 throw new ArgumentNullException("user");
             }
 
-            //return Task.FromResult(user.IsLockedOut);
-            return Task.FromResult(true); // any user can be locked out, maybe should not be posible to lockout some users like admin user
+            return Task.FromResult(true);
         }
 
         /// <summary>
@@ -686,7 +630,6 @@ namespace cloudscribe.Core.Identity
 
             return Task.FromResult(user.AccessFailedCount);
         }
-
 
         /// <summary>
         /// Records that a failed access has occurred, incrementing the failed access count.
@@ -750,29 +693,10 @@ namespace cloudscribe.Core.Identity
             cancellationToken.ThrowIfCancellationRequested();
             _log.LogDebug("SetLockoutEnabledAsync");
 
-            // I was confused about this property and tried to map it to IsLockedOut
-            // but really IsLockedOut is determined only by the lockoutenddate
-            // if it is null or less than now the user is not locked out
-            // LockoutEnabled must be for a different purpose
-            // like maybe it should not be possible for some users like admins to get locked out
-
             if (user == null)
             {
                 throw new ArgumentNullException("user");
             }
-
-            //bool result;
-            // EF implementation doesn't save here but I think our save doesn't set lockout so we have to
-
-            // this method is not supposed to do the actual lockout
-            //if (enabled)
-            //{
-            //    result = await repo.LockoutAccount(user.UserGuid, cancellationToken);
-            //}
-            //else
-            //{
-            //    result = await repo.UnLockAccount(user.UserGuid, cancellationToken);
-            //}
 
             return Task.FromResult(0);
 
@@ -796,38 +720,17 @@ namespace cloudscribe.Core.Identity
                 throw new ArgumentNullException("user");
             }
 
-            //bool result;
             if (lockoutEnd.HasValue)
             {
                 user.LockoutEndDateUtc = lockoutEnd.Value.DateTime.ToUniversalTime();
-                //if(user.LockoutEndDateUtc > DateTime.UtcNow)
-                //{
-                //    //result = await repo.LockoutAccount(user.UserGuid, cancellationToken);
-                //    //user.IsLockedOut = true;
-
-                //}
-                //else
-                //{
-                //    //result = await repo.UnLockAccount(user.UserGuid, cancellationToken);
-                //    //user.IsLockedOut = false;
-                //}
-
-                //result = await repo.Save(user, cancellationToken);
             }
             else
             {
                 user.LockoutEndDateUtc = null;
-                //user.IsLockedOut = false;
-                //result = await repo.UnLockAccount(user.UserGuid, cancellationToken);
-                //result = await repo.Save(user, cancellationToken);
             }
 
-            // EF implementation doesn't save here
-            //bool result = await repo.Save(user);
             return Task.FromResult(0);
         }
-
-
 
         #endregion
 
@@ -887,7 +790,6 @@ namespace cloudscribe.Core.Identity
                 await _commands.DeleteClaimByUser(siteGuid, user.Id, claim.Type, claim.Value, cancellationToken);
             }
 
-            // this is so the middleware will sign the user out and in again to get current claims
             user.RolesChanged = true;
             await _commands.Update(user);
 
@@ -918,7 +820,7 @@ namespace cloudscribe.Core.Identity
             };
             cancellationToken.ThrowIfCancellationRequested();
             await _commands.CreateClaim(userClaim, cancellationToken);
-            // this is so the middleware will sign the user out and in again to get current claims
+
             user.RolesChanged = true;
             await _commands.Update(user);
 
@@ -1013,7 +915,6 @@ namespace cloudscribe.Core.Identity
 
             var userlogin = await _queries.FindLogin(siteGuid, loginProvider, providerKey, cancellationToken);
 
-            // jk second chance - this may be a visitor from another tenant
             if (userlogin == null && _multiTenantOptions.RootUserCanSignInToTenants)
             {
                 userlogin = await _queries.FindLogin(_multiTenantOptions.RootSiteId, loginProvider, providerKey, cancellationToken);
@@ -1143,9 +1044,6 @@ namespace cloudscribe.Core.Identity
             }
 
             user.TwoFactorEnabled = enabled;
-
-            //EF implementation doesn't save here
-            //bool result = await repo.Save(user);
 
             return Task.FromResult(0);
         }
@@ -1291,7 +1189,6 @@ namespace cloudscribe.Core.Identity
 
         #region IUserPhoneNumberStore
 
-
         public Task<string> GetPhoneNumberAsync(TUser user, CancellationToken cancellationToken)
         {
             ThrowIfDisposed();
@@ -1320,8 +1217,6 @@ namespace cloudscribe.Core.Identity
             return Task.FromResult(user.PhoneNumberConfirmed);
         }
 
-
-
         public Task SetPhoneNumberAsync(TUser user, string phoneNumber, CancellationToken cancellationToken)
         {
             ThrowIfDisposed();
@@ -1334,8 +1229,7 @@ namespace cloudscribe.Core.Identity
             }
 
             user.PhoneNumber = phoneNumber;
-            // EF implementation doesn't save here
-            //bool result = await repo.Save(user);
+
             return Task.FromResult(0);
         }
 
@@ -1351,8 +1245,7 @@ namespace cloudscribe.Core.Identity
             }
 
             user.PhoneNumberConfirmed = confirmed;
-            // EF implementation does not save here
-            //bool result = await repo.Save(user);
+
             return Task.FromResult(0);
 
         }
@@ -1477,7 +1370,7 @@ namespace cloudscribe.Core.Identity
 
             var login = email.Substring(0, email.IndexOf("@"));
             var offset = 1;
-            // don't think we should make this async inside a loop
+
             while (await _queries.LoginExistsInDB(siteGuid, login).ConfigureAwait(false))
             {
                 offset += 1;

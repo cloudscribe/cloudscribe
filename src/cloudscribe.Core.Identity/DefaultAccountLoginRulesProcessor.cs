@@ -33,7 +33,7 @@ namespace cloudscribe.Core.Identity
         private async Task<bool> RequireConfirmedEmail()
         {
             if (!_userManager.Site.RequireConfirmedEmail) return false;
-            // if true check if it is possible, it is only possible to confirm email if email notification is setup
+            // it is only possible to confirm email if email notification is setup
             return await _capabilitiesProvider.SupportsEmailNotification(_userManager.Site);
         }
 

@@ -44,21 +44,16 @@ namespace cloudscribe.Core.Identity
 
             if(result == PasswordVerificationResult.Failed)
             {
-                //try again with clear text which will be migrated to hashed
                 result = ValidateClearTextFromKnownFormat(hashedPassword, providedPassword);
 
                 if(result == PasswordVerificationResult.Failed)
                 {
-                    //try again with fallback implementation which can be used to migrate from other hash formats if implemented and injected
                     result = _fallbackPasswordHashValidator.VerifyHashedPassword(user, hashedPassword, providedPassword);
                 }
             }
 
             return result;
-
-
         }
-
 
         /// <summary>
         /// this is used for the initial admin user created with password admin||0
@@ -70,13 +65,10 @@ namespace cloudscribe.Core.Identity
         {
             string[] passwordProperties = hashedPassword.Split('|');
 
-            if (passwordProperties.Length == 3) //expected admin||0
+            if (passwordProperties.Length == 3)
             {
                 string passwordHash = passwordProperties[0];
-                //string salt = passwordProperties[1];
 
-                // 0 = clear, 1 = hashed 2 = encrypted
-                //int passwordformat = Convert.ToInt32(passwordProperties[2]);
                 if (string.Equals(
                             providedPassword,
                             passwordHash,
@@ -90,7 +82,5 @@ namespace cloudscribe.Core.Identity
 
             return PasswordVerificationResult.Failed;
         }
-
-
     }
 }

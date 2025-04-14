@@ -71,21 +71,12 @@ namespace cloudscribe.Core.Web.TagHelpers
             Uri uri;
             if (Uri.TryCreate(resolvedPath, UriKind.Absolute, out uri) && !uri.IsFile)
             {
-                // Don't append version if the path is absolute.
                 return path;
             }
 
             string value;
             if (!_cache.TryGetValue(path, out value))
             {
-
-                //this was a breaking change in 3.0, was getting an error here if not setting Size
-                //but according to docs this should not be needed unless setting SizeLimit on the MemoryCache
-                //and I can't find any place where we are doing that.
-                //It seems that EFCore may be doing that as the problem does not happen when using NoDb
-                //The memory size limit does not have a defined unit of measure because the cache has no mechanism to measure the size of entries.
-                //The app could specify the size of all entries as 1, and the size limit is the count of entries.
-                //https://docs.microsoft.com/en-us/aspnet/core/performance/caching/memory?view=aspnetcore-3.0
                 var cacheEntryOptions = new MemoryCacheEntryOptions()
                 { 
                     Size = _multiTenantOptions.ThemeFileCacheSize
@@ -108,7 +99,6 @@ namespace cloudscribe.Core.Web.TagHelpers
                 }
                 else
                 {
-                    // if the file is not in the current server.
                     value = path;
                 }
 
@@ -120,8 +110,6 @@ namespace cloudscribe.Core.Web.TagHelpers
 
         private static string GetHashForFile(IFileInfo fileInfo)
         {
-            //System.Security.Cryptography.SHA256.Create
-            //using (var sha256 = CryptographyAlgorithms.CreateSHA256())
             using (var sha256 = SHA256.Create())
             {
                 using (var readStream = fileInfo.CreateReadStream())

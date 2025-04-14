@@ -24,11 +24,7 @@ namespace Microsoft.Extensions.DependencyInjection
             services.AddCloudscribeCoreEFCommon(useSingletonLifetime);
 
 
-            //   deprecated call in EF Core3:  .AddEntityFrameworkSqlServer()
-            //   https://github.com/aspnet/EntityFrameworkCore/issues/12905 
-
-            services // .AddEntityFrameworkSqlServer()
-                .AddDbContext<CoreDbContext>(options =>
+            services.AddDbContext<CoreDbContext>(options =>
                     options.UseSqlServer(connectionString,
                         sqlServerOptionsAction: sqlOptions =>
                         {

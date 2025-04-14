@@ -12,10 +12,6 @@ namespace cloudscribe.QueryTool.EFCore.PostgreSql
         public QueryToolDbContext(DbContextOptions<QueryToolDbContext> options) : base(options)
         {
         }
-
-        // note new nullable types handling in net6.0
-        // https://docs.microsoft.com/en-us/ef/core/miscellaneous/nullable-reference-types
-
         public DbSet<SavedQuery> SavedQueries => Set<SavedQuery>();
 
 

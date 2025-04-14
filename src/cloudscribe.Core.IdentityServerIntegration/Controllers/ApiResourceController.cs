@@ -49,7 +49,7 @@ namespace cloudscribe.Core.IdentityServerIntegration.Controllers.Mvc
             )
         {
             var selectedSite = await _siteManager.GetSiteForDataOperations(siteId);
-            // only server admin site can edit other sites settings
+
             if (selectedSite.Id != _siteManager.CurrentSite.Id)
             {
                 ViewData["Title"] = string.Format(CultureInfo.CurrentUICulture, sr["{0} - API Resource Management"], selectedSite.SiteName);
@@ -68,10 +68,6 @@ namespace cloudscribe.Core.IdentityServerIntegration.Controllers.Mvc
             model.SiteId = selectedSite.Id.ToString();
             var result = await _apiManager.GetApiResources(selectedSite.Id.ToString(), pageNumber, itemsPerPage);
             model.Apis = result;
-
-            //model.Paging.CurrentPage = pageNumber;
-            //model.Paging.ItemsPerPage = itemsPerPage;
-            //model.Paging.TotalItems = result.TotalItems;
 
             return View(model);
         }
@@ -144,15 +140,10 @@ namespace cloudscribe.Core.IdentityServerIntegration.Controllers.Mvc
                 return RedirectToAction("Index", new { siteId = selectedSite.Id.ToString() });
             }
 
-           // apiResource.AllowUnrestrictedIntrospection = model.AllowUnrestrictedIntrospection;
-            //apiResource.ClaimsRule = model.ClaimsRule;
             apiResource.Description = model.Description;
             apiResource.DisplayName = model.DisplayName;
-           // apiResource.Emphasize = model.Emphasize;
             apiResource.Enabled = model.Enabled;
-            //apiResource.IncludeAllClaimsForUser = model.IncludeAllClaimsForUser;
-            //apiResource.Required = model.Required;
-            //apiResource.ShowInDiscoveryDocument = model.ShowInDiscoveryDocument;
+
             await _apiManager.UpdateApiResource(selectedSite.Id.ToString(), apiResource);
 
             var successFormat = sr["The API Resource <b>{0}</b> was successfully updated."];
@@ -233,9 +224,6 @@ namespace cloudscribe.Core.IdentityServerIntegration.Controllers.Mvc
             return RedirectToAction("Index");
         }
 
-        // Scope Claims
-        // List of user claims that should be included in the identity (identity scope) or access token (resource scope).
-
         [HttpPost]
         public async Task<IActionResult> AddApiClaim(NewApiClaimViewModel model)
         {
@@ -257,9 +245,6 @@ namespace cloudscribe.Core.IdentityServerIntegration.Controllers.Mvc
                 this.AlertDanger(sr["Invalid request, API Resource not found."], true);
                 return RedirectToAction("Index");
             }
-
-            //var claim = new ScopeClaim(model.Name, model.AlwaysIncludeInIdToken);
-            //claim.Description = model.Description;
 
             if (apiResource.UserClaims.Contains(model.Name))
             {

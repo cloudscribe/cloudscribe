@@ -5,7 +5,6 @@
 // Last Modified:           2019-07-01
 // 
 
-using cloudscribe.FileManager.Web.Events;
 using cloudscribe.FileManager.Web.Models;
 using cloudscribe.FileManager.Web.Models.TreeView;
 using Microsoft.AspNetCore.Http;
@@ -27,7 +26,6 @@ namespace cloudscribe.FileManager.Web.Services
             IImageResizer imageResizer,
             IFileManagerNameRules fileManagerNameRules,
             IStringLocalizer<FileManagerStringResources> stringLocalizer,
-            //IEnumerable<IHandleFilesUploaded> uploadHandlers,
             IOptions<FileManagerIcons> iconsAccessor,
             ILogger<FileManagerService> logger
             )
@@ -35,7 +33,6 @@ namespace cloudscribe.FileManager.Web.Services
             _mediaPathResolver = mediaPathResolver;
             _imageResizer = imageResizer;
             _nameRules = fileManagerNameRules;
-            //_uploadHandlers = uploadHandlers;
             _icons = iconsAccessor.Value;
             _sr = stringLocalizer;
             _log = logger;
@@ -46,7 +43,6 @@ namespace cloudscribe.FileManager.Web.Services
         private MediaRootPathInfo _rootPath;
         private FileManagerIcons _icons;
         private IFileManagerNameRules _nameRules;
-       // private readonly IEnumerable<IHandleFilesUploaded> _uploadHandlers;
         private IStringLocalizer<FileManagerStringResources> _sr;
         private ILogger _log;
 
@@ -216,24 +212,6 @@ namespace cloudscribe.FileManager.Web.Services
                 ResizedUrl = currentVirtualPath + Path.GetFileName(targetFsPath)
             };
 
-            //var list = new List<UploadResult>()
-            //{
-            //    result
-            //};
-
-            //foreach(var handler in _uploadHandlers)
-            //{
-            //    try
-            //    {
-            //        await handler.Handle(list);
-            //    }
-            //    catch(Exception ex)
-            //    {
-            //        _log.LogError($"{ex.Message}-{ex.StackTrace}");
-            //    }
-            //}
-
-
             return result;
         }
 
@@ -266,7 +244,6 @@ namespace cloudscribe.FileManager.Web.Services
                     var requestedFsPath = Path.Combine(_rootPath.RootFileSystemPath, Path.Combine(segments));
                     if (!Directory.Exists(requestedFsPath))
                     {
-                        //_log.LogError("directory not found for currentPath " + requestedFsPath);
                         // user has file system permission and could manually create the needed folder so auto ensure
                         // since it is a sub path of the root
                         EnsureSubFolders(_rootPath.RootFileSystemPath, segments);
@@ -534,9 +511,6 @@ namespace cloudscribe.FileManager.Web.Services
                 result.Message = _sr["Server error"];
                 return result;
             }
-
-            
-
         }
 
         public async Task<OperationResult> RenameFolder(string requestedVirtualPath, string newNameSegment)
@@ -620,9 +594,6 @@ namespace cloudscribe.FileManager.Web.Services
                 result.Message = _sr["A error was logged while processing the request"];
                 return result;
             }
-
-
-
         }
 
         public async Task<OperationResult> DeleteFile(string requestedVirtualPath)
@@ -680,8 +651,6 @@ namespace cloudscribe.FileManager.Web.Services
                 result.Message = _sr["A error was logged while processing the request"];
                 return result;
             }
-
-
         }
 
         public async Task<FileDownloadInfo> GetInfoForDownload(string requestedVirtualPath)
@@ -725,8 +694,6 @@ namespace cloudscribe.FileManager.Web.Services
             };
 
             return result;
-
-
         }
 
         public async Task<OperationResult> RenameFile(string requestedVirtualPath, string newNameSegment)
@@ -784,7 +751,6 @@ namespace cloudscribe.FileManager.Web.Services
 
             if (Path.HasExtension(newNameSegment) && Path.GetExtension(newNameSegment) == ext)
             {
-                // all good
             }
             else
             {
@@ -824,13 +790,7 @@ namespace cloudscribe.FileManager.Web.Services
                 result.Message = _sr["A error was logged while processing the request"];
                 return result;
             }
-
-
-
         }
-
-        
-
 
         public async Task<List<Node>> GetFileTree(string fileType, string virtualStartPath)
         {
@@ -846,7 +806,6 @@ namespace cloudscribe.FileManager.Web.Services
 
             DirectoryInfo currentDirectory;
             IEnumerable<DirectoryInfo> folders;
-            //bool isRoot = false;
             string currentFsPath = _rootPath.RootFileSystemPath;
             string currentVirtualPath = _rootPath.RootVirtualPath;
 
@@ -870,7 +829,6 @@ namespace cloudscribe.FileManager.Web.Services
             }
             else
             {
-                //isRoot = true;
                 currentDirectory = new DirectoryInfo(_rootPath.RootFileSystemPath);
             }
             
@@ -1175,8 +1133,6 @@ namespace cloudscribe.FileManager.Web.Services
 
             string fileType = fileExtension.ToLower().Replace(".", string.Empty);
             if (fileType == "pdf") { return true; }
-            //if (fileType == "wmv") { return true; } //necessary?
-
 
             return false;
         }

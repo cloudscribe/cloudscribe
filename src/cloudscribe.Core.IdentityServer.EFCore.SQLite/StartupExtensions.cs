@@ -28,12 +28,9 @@ namespace Microsoft.Extensions.DependencyInjection
             builder.Services.AddMemoryCache(); // TODO: remove once update idsvr since it does this
             builder.AddInMemoryCaching();
 
-            // these need to be registered as concrete classes in DI for
-            // the caching decorators to work
             builder.Services.AddTransient<ClientStore>();
             builder.Services.AddTransient<ResourceStore>();
 
-            // add the caching decorators
             builder.AddClientStoreCache<ClientStore>();
             builder.AddResourceStoreCache<ResourceStore>();
 

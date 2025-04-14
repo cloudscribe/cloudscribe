@@ -23,20 +23,8 @@ namespace Microsoft.Extensions.DependencyInjection
             services.TryAddScoped<FileManagerService>();
             services.TryAddScoped<IImageResizer, ImageSharpResizer>();
             services.TryAddScoped<IFileManagerNameRules, DefaultFileManagerNameRules>();
-            //services.TryAddScoped<IFileExtensionValidationRegexBuilder, FileExtensionValidationRegexBuilder>();
             services.TryAddScoped<IMediaPathResolver, DefaultMediaPathResolver>();
             services.AddScoped<IVersionProvider, FileManagerVersionProvider>();
-
-
-
-            // Angular's default header name for sending the XSRF token.
-            //services.AddAntiforgery(options =>
-            //{
-            //    options.HeaderName = "X-XSRF-TOKEN";
-            //    options.Cookie.
-            //}
-                  
-            //);
 
             if(configuration != null)
             {
@@ -85,41 +73,7 @@ namespace Microsoft.Extensions.DependencyInjection
                , defaults: new { controller = "FileManager", action = "css" }
                );
 
-           
-
             return routes;
         }
-
-        //[Obsolete("AddBootstrap3EmbeddedViewsForFileManager is deprecated, please use AddCloudscribeFileManagerBootstrap3Views instead.")]
-        //public static RazorViewEngineOptions AddBootstrap3EmbeddedViewsForFileManager(this RazorViewEngineOptions options)
-        //{
-        //    options.FileProviders.Add(new EmbeddedFileProvider(
-        //            typeof(FileManagerController).GetTypeInfo().Assembly,
-        //            "cloudscribe.FileManager.Web"
-        //        ));
-
-        //    return options;
-        //}
-
-        //public static RazorViewEngineOptions AddCloudscribeFileManagerBootstrap3Views(this RazorViewEngineOptions options)
-        //{
-        //    options.FileProviders.Add(new EmbeddedFileProvider(
-        //            typeof(FileManagerController).GetTypeInfo().Assembly,
-        //            "cloudscribe.FileManager.Web"
-        //        ));
-
-        //    return options;
-        //}
-
-        //public static RazorViewEngineOptions AddCloudscribeFileManagerBootstrap4Views(this RazorViewEngineOptions options)
-        //{
-        //    options.FileProviders.Add(new EmbeddedFileProvider(
-        //            typeof(FileManagerController).GetTypeInfo().Assembly,
-        //            "cloudscribe.FileManager.Web"
-        //        ));
-
-        //    return options;
-        //}
-
     }
 }
