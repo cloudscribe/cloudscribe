@@ -3,6 +3,7 @@
 @using Microsoft.AspNetCore.Authorization
 @inject IAuthorizationService authorizationService
 @inject ISummernoteOptionsResolver summernoteOptionsResolver
+@inject ICkeditorOptionsResolver ckeditorOptionsResolver
 @using Microsoft.AspNetCore.Antiforgery
 @inject IAntiforgery antiforgery
 @{
@@ -11,6 +12,7 @@
     var canUploadAuth = await authorizationService.AuthorizeAsync(User, "FileUploadPolicy");
     var canUpload = canUploadAuth.Succeeded;
     var summernoteOptions = await summernoteOptionsResolver.GetSummernoteOptions();
+    var ckOptions = await ckeditorOptionsResolver.GetCkeditorOptions();
     var tokens = antiforgery.GetAndStoreTokens(Context);
 }
 @functions{

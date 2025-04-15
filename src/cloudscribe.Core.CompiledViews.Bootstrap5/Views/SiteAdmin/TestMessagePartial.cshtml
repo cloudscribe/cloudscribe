@@ -1,8 +1,10 @@
 ﻿@model cloudscribe.Core.Web.Components.Messaging.SiteMessageModel
 @inject ISummernoteOptionsResolver summernoteOptionsResolver
+@inject ICkeditorOptionsResolver ckeditorOptionsResolver
 @inject IStringLocalizer<CloudscribeCore> sr
 @{
     var summernoteOptions = await summernoteOptionsResolver.GetSummernoteOptions();
+    var ckOptions = await ckeditorOptionsResolver.GetCkeditorOptions();
     var ckBaseRef = Context.Request.GetCurrentBaseUrl();
 }
 <h3>@sr["Send Test Message"]</h3>

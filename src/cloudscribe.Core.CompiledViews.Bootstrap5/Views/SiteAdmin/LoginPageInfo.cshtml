@@ -1,5 +1,6 @@
 ﻿@model cloudscribe.Core.Web.ViewModels.SiteSettings.LoginInfoViewModel
 @inject ISummernoteOptionsResolver summernoteOptionsResolver
+@inject ICkeditorOptionsResolver ckeditorOptionsResolver
 @inject IStringLocalizer<CloudscribeCore> sr
 @inject ICoreThemeHelper themeHelper
 @{
@@ -7,6 +8,7 @@
     if (themeSettings.AdminSideNavExpanded) { ViewData["SideNavToggle"] = "show"; }
     ViewData["SideNavVisible"] = true;
     var summernoteOptions = await summernoteOptionsResolver.GetSummernoteOptions();
+    var ckOptions = await ckeditorOptionsResolver.GetCkeditorOptions();
 }
 <h2>@ViewBag.Title</h2>
 <form method="post" role="form" asp-antiforgery="true" data-submit-once="true">

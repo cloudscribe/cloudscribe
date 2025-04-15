@@ -2,6 +2,7 @@
 @inject ICoreThemeHelper themeHelper
 @inject IStringLocalizer<CloudscribeCore> sr
 @inject ISummernoteOptionsResolver summernoteOptionsResolver
+@inject ICkeditorOptionsResolver ckeditorOptionsResolver
 @inject IOptions<MultiTenantOptions> multiTenantOptionsAccessor
 @{
     MultiTenantOptions multiTenantOptions = multiTenantOptionsAccessor.Value;
@@ -10,6 +11,7 @@
     bool useHostTenants = true;
     if (multiTenantOptions.Mode != MultiTenantMode.HostName) { useHostTenants = false; }
     var summernoteOptions = await summernoteOptionsResolver.GetSummernoteOptions();
+    var ckOptions = await ckeditorOptionsResolver.GetCkeditorOptions();
     var baseUrl = this.Context.Request.GetCurrentBaseUrl() + "/";
     var themeSettings = themeHelper.GetThemeSettings();
     if (themeSettings.AdminSideNavExpanded) { ViewData["SideNavToggle"] = "show"; }
