@@ -1,8 +1,8 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <Description>Classes that provide a common interface for sending email with smtp or popular email apis including SendGrid, Mailgun, and ElasticEmail</Description>
-    <Version>8.0.1</Version>
+    <Version>8.1.0</Version>
     <AssemblyVersion>8.0.1</AssemblyVersion>
     <Authors>Joe Audette</Authors>
     <TargetFramework>net8.0</TargetFramework>
