@@ -1,26 +1,26 @@
 (function () {
-    var fileManager2 = {
+    var fileMover = {
         headers: {
-            'X-CSRFToken': $("#fmconfig2").data("anti-forgery-token")
+            'X-CSRFToken': $("#fileMoverConfig").data("anti-forgery-token")
         },
-        treeDataApiUrl2: $("#fmconfig2").data("filetree-url"),
-        canSelect2: $("#fmconfig2").data("can-select"),
-        rootVirtualPath2: $("#fmconfig2").data("root-virtual-path"),
-        fileSelectorButton2: $('#btnSelector'),
-        fileSelectorButtonAlt2: $('#btnSelectorAlt'),
+        treeDataApiUrl: $("#fileMoverConfig").data("filetree-url"),
+        canSelect: $("#fileMoverConfig").data("can-select"),
+        rootVirtualPath: $("#fileMoverConfig").data("root-virtual-path"),
+        fileSelectorButton: $('#btnSelector'),
+        fileSelectorButtonAlt: $('#btnSelectorAlt'),
         moveFileButton: $('#btnMoveFile'),
         moveFilePromptButton: $('#btnMoveFilePrompt'),
-        moveFileApiUrl: $("#fmconfig2").data("movefile-url"),
-        selectedFileInput2: $("#fileSelection"),
-        progressUI2: $('#progress'),
+        moveFileApiUrl: $("#fileMoverConfig").data("movefile-url"),
+        selectedFileInput: $("#fileSelection"),
+        progressUI: $('#progress'),
         refresh: $('#btnRefresh'),
-        setCurrentDirectory2: function (virtualPath) {
+        setFolderToMoveTo: function (virtualPath) {
             $("#folderToMoveTo").val(virtualPath);
         },
-        clearCurrentDirectory2: function () {
+        clearFolderToMoveTo: function () {
             $("#folderToMoveTo").html('');
         },
-        notify2: function (message, cssClass) {
+        notify: function (message, cssClass) {
             $('#alert_placeholder').html('<div class="alert ' + cssClass + '"><button type="button" data-bs-dismiss="alert" class="btn-close me-2" style="float:right" aria-label="Close"></button><span>' + message + '</span></div>');
         },
         moveFilePrompt: function () {
@@ -41,7 +41,7 @@
             if (currentPath === '') {
                 return false;
             }
-            if (currentPath === fileManager2.rootVirtualPath2) {
+            if (currentPath === fileMover.rootVirtualPath) {
                 return false;
             }
 
@@ -49,27 +49,27 @@
 
             $.ajax({
                 method: "POST",
-                url: fileManager2.moveFileApiUrl,
-                headers: fileManager2.headers,
+                url: fileMover.moveFileApiUrl,
+                headers: fileMover.headers,
                 data: formData
             }).done(function (data) {
                 if (data.succeeded) {
                     fileManager.backToRoot();
                 } else {
-                    fileManager2.notify2(data.message, 'alert-danger');
+                    fileMover.notify(data.message, 'alert-danger');
                 }
             }).fail(function () {
-                fileManager2.notify2('An error occured', 'alert-danger');
+                fileMover.notify('An error occured', 'alert-danger');
             });
 
             return false;
         },
-        loadTree2: function () {
-            $('#tree2').treeview({
+        loadTree: function () {
+            $('#fileMoverTree').treeview({
                 dataUrl: {
                     method: 'GET',
                     dataType: 'json',
-                    url: fileManager2.treeDataApiUrl2,
+                    url: fileMover.treeDataApiUrl,
                     cache: false
                 },
                 nodeIcon: 'far fa-folder mr-1',
@@ -87,7 +87,7 @@
                 lazyLoad: function (node, dataFunc) {
                     $.ajax({
                         dataType: "json",
-                        url: fileManager2.treeDataApiUrl2 + '&virtualStartPath=' + node.virtualPath
+                        url: fileMover.treeDataApiUrl + '&virtualStartPath=' + node.virtualPath
 
                     })
                         .done(function (data) {
@@ -97,7 +97,7 @@
                 },
                 onNodeSelected: function (event, node) {
                     if (node.type === "d") {
-                        fileManager2.setCurrentDirectory2(node.virtualPath);
+                        fileMover.setFolderToMoveTo(node.virtualPath);
                         $('#btnMoveFile').prop('disabled', false);
                     }
                     else
@@ -120,20 +120,20 @@
         },
         init: function () {
             $(document).bind('drop dragover', function (e) { e.preventDefault(); });
-            this.progressUI2.hide();
-            this.loadTree2();
-            this.fileSelectorButton2.on('click', fileManager2.selectfile);
-            this.fileSelectorButtonAlt2.on('click', fileManager2.selectfile);
-            this.moveFileButton.on('click', fileManager2.moveFile);
-            this.moveFilePromptButton.on('click', fileManager2.moveFilePrompt);
-            this.setCurrentDirectory2(this.rootVirtualPath2);
+            this.progressUI.hide();
+            this.loadTree();
+            this.fileSelectorButton.on('click', fileMover.selectfile);
+            this.fileSelectorButtonAlt.on('click', fileMover.selectfile);
+            this.moveFileButton.on('click', fileMover.moveFile);
+            this.moveFilePromptButton.on('click', fileMover.moveFilePrompt);
+            this.setFolderToMoveTo(this.rootVirtualPath);
 
-            if (fileManager2.canSelect2 === "false" || fileManager2.canSelect2 === false) {
-                this.fileSelectorButton2.hide();
-                this.fileSelectorButtonAlt2.hide();
+            if (fileMover.canSelect === "false" || fileMover.canSelect === false) {
+                this.fileSelectorButton.hide();
+                this.fileSelectorButtonAlt.hide();
             }
         }
     };
 
-    fileManager2.init();
+    fileMover.init();
 })();
