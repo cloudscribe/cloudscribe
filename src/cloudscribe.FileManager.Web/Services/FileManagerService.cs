@@ -1203,9 +1203,16 @@ namespace cloudscribe.FileManager.Web.Services
             fileNameOnly = fileNameOnly.TrimStart('/');
             segments = segments.Take(segments.Count() - 1).ToArray();
 
-            string folderToMoveToSlashes = folderToMoveTo.TrimStart('/').Replace('/', '\\');
+            // avoidance of tenant specific bug
+            string folderToMoveToWithinTenant = folderToMoveTo.Substring(_rootPath.RootVirtualPath.Length);
+
+            string folderToMoveToSlashes = folderToMoveToWithinTenant.TrimStart('/').Replace('/', '\\');
             string fullPathToFolder = _rootPath.RootFileSystemPath + "\\" + folderToMoveToSlashes;
             string newFullPath = Path.Combine(fullPathToFolder, fileNameOnly);
+
+            // strings we need to pass to the event handler allowing search and replace in documents
+            string oldUrl = virtualSubPath;
+            string newUrl = folderToMoveToWithinTenant + "/" + fileNameOnly;
 
             try
             {
@@ -1213,6 +1220,8 @@ namespace cloudscribe.FileManager.Web.Services
 
                 result = new OperationResult(true);
                 result.Message = _sr["File Moved"];
+                // _log.LogInformation($"MoveFile: {fileToMove} moved successfully from {currentFsPath} to {newFullPath}");
+                // (best not be quite so explicit about file paths, from a security point of view...)
                 _log.LogInformation($"MoveFile: {fileToMove} moved successfully");
             
                 return result;
@@ -1221,7 +1230,8 @@ namespace cloudscribe.FileManager.Web.Services
             {
                 result = new OperationResult(false);
                 result.Message = _sr[$"There has been an error. {ex.Message}"];
-                _log.LogError($"MoveFile: {fileToMove} error. {ex.Message}");
+                //_log.LogError($"MoveFile: {fileToMove} error attempting to move file from {currentFsPath} to {newFullPath}. {ex.Message}");
+                _log.LogError($"MoveFile: {fileToMove} error attempting to move file");
 
                 return result;
             }
