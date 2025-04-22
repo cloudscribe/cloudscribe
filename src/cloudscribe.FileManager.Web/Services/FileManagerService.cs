@@ -5,6 +5,8 @@
 // Last Modified:           2019-07-01
 // 
 
+using cloudscribe.Core.Models;
+using cloudscribe.Core.Models.EventHandlers;
 using cloudscribe.FileManager.Web.Events;
 using cloudscribe.FileManager.Web.Models;
 using cloudscribe.FileManager.Web.Models.TreeView;
@@ -14,6 +16,7 @@ using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using System;
 using System.Collections.Generic;
+using System.Data;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
@@ -29,26 +32,34 @@ namespace cloudscribe.FileManager.Web.Services
             IStringLocalizer<FileManagerStringResources> stringLocalizer,
             //IEnumerable<IHandleFilesUploaded> uploadHandlers,
             IOptions<FileManagerIcons> iconsAccessor,
+            SiteContext currentSite,
+            IEnumerable<IHandleFileMoved> fileMovedHandlers,  // injected event handlers
             ILogger<FileManagerService> logger
             )
         {
             _mediaPathResolver = mediaPathResolver;
-            _imageResizer = imageResizer;
-            _nameRules = fileManagerNameRules;
-            //_uploadHandlers = uploadHandlers;
-            _icons = iconsAccessor.Value;
-            _sr = stringLocalizer;
-            _log = logger;
+            _imageResizer      = imageResizer;
+            _nameRules         = fileManagerNameRules;
+            //_uploadHandlers  = uploadHandlers;
+            _icons             = iconsAccessor.Value;
+            _sr                = stringLocalizer;
+            _currentSite       = currentSite;
+            _currentSiteId     = currentSite.Id;
+            _fileMovedHandlers = fileMovedHandlers;
+            _log               = logger;
         }
 
-        private IImageResizer _imageResizer;
-        private IMediaPathResolver _mediaPathResolver;
-        private MediaRootPathInfo _rootPath;
-        private FileManagerIcons _icons;
-        private IFileManagerNameRules _nameRules;
+        private IImageResizer                                _imageResizer;
+        private IMediaPathResolver                           _mediaPathResolver;
+        private MediaRootPathInfo                            _rootPath;
+        private FileManagerIcons                             _icons;
+        private IFileManagerNameRules                        _nameRules;
        // private readonly IEnumerable<IHandleFilesUploaded> _uploadHandlers;
         private IStringLocalizer<FileManagerStringResources> _sr;
-        private ILogger _log;
+        private SiteContext                                  _currentSite;
+        private Guid                                         _currentSiteId;
+        private ILogger                                      _log;
+        private IEnumerable<IHandleFileMoved>                _fileMovedHandlers;
 
         private async Task EnsureProjectSettings()
         {
@@ -1210,9 +1221,10 @@ namespace cloudscribe.FileManager.Web.Services
             string fullPathToFolder = _rootPath.RootFileSystemPath + "\\" + folderToMoveToSlashes;
             string newFullPath = Path.Combine(fullPathToFolder, fileNameOnly);
 
-            // strings we need to pass to the event handler allowing search and replace in documents
+            // strings we need to pass to the event handler(s) allowing search and replace in documents
             string oldUrl = virtualSubPath;
             string newUrl = folderToMoveToWithinTenant + "/" + fileNameOnly;
+            string siteId = _currentSiteId.ToString();
 
             try
             {
@@ -1223,7 +1235,19 @@ namespace cloudscribe.FileManager.Web.Services
                 // _log.LogInformation($"MoveFile: {fileToMove} moved successfully from {currentFsPath} to {newFullPath}");
                 // (best not be quite so explicit about file paths, from a security point of view...)
                 _log.LogInformation($"MoveFile: {fileToMove} moved successfully");
-            
+
+                foreach (var handler in _fileMovedHandlers)
+                {
+                    try
+                    {
+                        await handler.Handle(siteId, oldUrl, newUrl);
+                    }
+                    catch (Exception ex)
+                    {
+                        _log.LogError($"{ex.Message}-{ex.StackTrace}");
+                    }
+                }
+
                 return result;
             }
             catch (IOException ex)
