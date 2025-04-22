@@ -116,6 +116,11 @@
             <input class="form-input" asp-for="PasswordExpiryWarningDays" type="number" id="PasswordExpiryWarningDays" />
             @Html.ValidationMessage("PasswordExpiryWarningDays", new { @class = "text-danger" })
         </div>
+        <div class="mb-2">
+            <form method="post" class="form-horizontal" role="form" asp-antiforgery="true" data-submit-once="true" asp-controller="SiteAdmin" asp-action="RestartApplication">
+                <button name="submit" type="submit" class="btn btn-warning" data-enabled-text="'@sr["Restart Application"]'">@sr["Restart Application"]</button>
+            </form>
+        </div>
     </div>
     <partial name="LdapSettingsPartial" model="Model" />
 

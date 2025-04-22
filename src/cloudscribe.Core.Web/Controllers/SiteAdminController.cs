@@ -20,9 +20,11 @@ using Microsoft.AspNetCore.Authentication.OpenIdConnect;
 using Microsoft.AspNetCore.Authentication.Twitter;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Localization;
 using Microsoft.Extensions.Options;
 using System;
@@ -55,7 +57,8 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
             IOptionsMonitorCache<GoogleOptions>        googleOptionsCache,
             IOptionsMonitorCache<TwitterOptions>       twitterOptionsCache,
             ISiteQueries                               siteQueries,
-            IConfiguration                             configuration
+            IConfiguration                             configuration,
+            IHostApplicationLifetime applicationLifetime
             )
         {
             if (multiTenantOptions == null) { throw new ArgumentNullException(nameof(multiTenantOptions)); }
@@ -92,7 +95,7 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
         protected IEnumerable<IEmailSender> EmailSenders { get; private set; }
         protected ISiteMessageEmailSender MessageSender { get; private set; }
 
-
+        private readonly IHostApplicationLifetime applicationLifetime;
         protected IStringLocalizer StringLocalizer { get; private set; }
         protected IThemeListBuilder LayoutListBuilder { get; private set; }
         protected UIOptions UIOptions;
@@ -1907,5 +1910,14 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
             return RedirectToAction("SiteHostMappings", new { siteId, slp });
         }
 
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        [Authorize(Policy = PolicyConstants.ServerAdminPolicy)]
+        public virtual Task<ActionResult> RestartApplication()
+        {
+            applicationLifetime.StopApplication();
+
+            return Task.FromResult<ActionResult>(RedirectToAction("Index"));
+        }
     }
 }
