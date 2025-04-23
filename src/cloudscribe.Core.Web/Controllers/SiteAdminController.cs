@@ -82,6 +82,7 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
             TwitterOptionsCache  = twitterOptionsCache;
             SiteQueries          = siteQueries;
             Configuration        = configuration;
+            _applicationLifetime = applicationLifetime;
         }
 
         protected SiteContext CurrentSite;
@@ -95,7 +96,7 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
         protected IEnumerable<IEmailSender> EmailSenders { get; private set; }
         protected ISiteMessageEmailSender MessageSender { get; private set; }
 
-        private readonly IHostApplicationLifetime applicationLifetime;
+        private readonly IHostApplicationLifetime _applicationLifetime;
         protected IStringLocalizer StringLocalizer { get; private set; }
         protected IThemeListBuilder LayoutListBuilder { get; private set; }
         protected UIOptions UIOptions;
@@ -1135,6 +1136,8 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
                 PasswordExpiresDays = selectedSite.PasswordExpiresDays
             };
 
+            model.ShowRestartApplicationButton = UIOptions.ShowRestartApplicationButton;
+            
             return View(model);
         }
 
@@ -1915,7 +1918,7 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
         [Authorize(Policy = PolicyConstants.ServerAdminPolicy)]
         public virtual Task<ActionResult> RestartApplication()
         {
-            applicationLifetime.StopApplication();
+            _applicationLifetime.StopApplication();
 
             return Task.FromResult<ActionResult>(RedirectToAction("Index"));
         }
