@@ -30,6 +30,10 @@
                 return false;
             }
 
+            // bug that if new folders have been added in the main FM tree, 
+            // they won't show in the file mover tree unless we reload.
+            this.loadTree();
+
             $("#mdlMoveFile").modal('show');
 
             return false;
@@ -125,7 +129,11 @@
             this.fileSelectorButton.on('click', fileMover.selectfile);
             this.fileSelectorButtonAlt.on('click', fileMover.selectfile);
             this.moveFileButton.on('click', fileMover.moveFile);
-            this.moveFilePromptButton.on('click', fileMover.moveFilePrompt);
+
+            // NB - arrow func assignment here preserves the context of 'this' = the fileMover itself
+            // not the bound button that is clicked - so we can call other fileMover funcs from inside moveFilePrompt()
+            this.moveFilePromptButton.on('click', () => fileMover.moveFilePrompt());
+
             this.setFolderToMoveTo(this.rootVirtualPath);
 
             if (fileMover.canSelect === "false" || fileMover.canSelect === false) {
