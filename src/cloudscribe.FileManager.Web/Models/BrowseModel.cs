@@ -31,6 +31,7 @@
         public string DeleteFolderServiceUrl { get; set; }
 
         public string RenameFolderServiceUrl { get; set; }
+        public string MoveFileServiceUrl { get; set; }
 
         public string DeleteFileServiceUrl { get; set; }
 
