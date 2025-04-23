@@ -39,45 +39,45 @@ namespace cloudscribe.FileManager.Web.Controllers
             ILogger<FileManagerController> logger
             )
         {
-            _fileManagerService = fileManagerService;
-            _uploadHandlers = uploadHandlers;
-            _authorizationService = authorizationService;
+            _fileManagerService         = fileManagerService;
+            _uploadHandlers             = uploadHandlers;
+            _authorizationService       = authorizationService;
            // _allowedFilesRegexBuilder = allowedFilesRegexBuilder;
-            _autoUploadOptions = autoUploadOptionsAccessor.Value;
-            _antiforgery = antiforgery;
-            _resourceHelper = resourceHelper;
-            _log = logger;
+            _autoUploadOptions          = autoUploadOptionsAccessor.Value;
+            _antiforgery                = antiforgery;
+            _resourceHelper             = resourceHelper;
+            _log                        = logger;
         }
 
-        private FileManagerService _fileManagerService;
+        private FileManagerService                         _fileManagerService;
         private readonly IEnumerable<IHandleFilesUploaded> _uploadHandlers;
-        private IAuthorizationService _authorizationService;
-        //private IFileExtensionValidationRegexBuilder _allowedFilesRegexBuilder;
-        private AutomaticUploadOptions _autoUploadOptions;
-        private readonly IAntiforgery _antiforgery;
-        private IResourceHelper _resourceHelper;
+        private IAuthorizationService                      _authorizationService;
+        //private IFileExtensionValidationRegexBuilder     _allowedFilesRegexBuilder;
+        private AutomaticUploadOptions                     _autoUploadOptions;
+        private readonly IAntiforgery                      _antiforgery;
+        private IResourceHelper                            _resourceHelper;
         // Get the default form options so that we can use them to set the default limits for
         // request body data
-        private static readonly FormOptions _defaultFormOptions = new FormOptions();
-        private ILogger _log;
+        private static readonly FormOptions                _defaultFormOptions = new FormOptions();
+        private ILogger                                    _log;
 
         [HttpGet]
         //[GenerateAntiforgeryTokenCookieForAjax]
         [Authorize(Policy = "FileManagerPolicy")]
         public async Task<IActionResult> Index(BrowseModel model)
         {
-            model.InitialVirtualPath = await _fileManagerService.GetRootVirtualPath().ConfigureAwait(false);
-            model.FileTreeServiceUrl = Url.Action("GetFileTreeJson", "FileManager", new { fileType = model.Type });
-            model.UploadServiceUrl = Url.Action("Upload", "FileManager");
+            model.InitialVirtualPath     = await _fileManagerService.GetRootVirtualPath().ConfigureAwait(false);
+            model.FileTreeServiceUrl     = Url.Action("GetFileTreeJson", "FileManager", new { fileType = model.Type });
+            model.UploadServiceUrl       = Url.Action("Upload", "FileManager");
             model.FileDownloadServiceUrl = Url.Action("DownloadFile", "FileManager");
             model.CreateFolderServiceUrl = Url.Action("CreateFolder", "FileManager");
             model.DeleteFolderServiceUrl = Url.Action("DeleteFolder", "FileManager");
             model.RenameFolderServiceUrl = Url.Action("RenameFolder", "FileManager");
-            model.MoveFileServiceUrl = Url.Action("MoveFile", "FileManager");
-            model.DeleteFileServiceUrl = Url.Action("DeleteFile", "FileManager");
-            model.RenameFileServiceUrl = Url.Action("RenameFile", "FileManager");
-            var authResult = await _authorizationService.AuthorizeAsync(User, "FileManagerDeletePolicy");
-            model.CanDelete = authResult.Succeeded;
+            model.MoveFileServiceUrl     = Url.Action("MoveFile", "FileManager");
+            model.DeleteFileServiceUrl   = Url.Action("DeleteFile", "FileManager");
+            model.RenameFileServiceUrl   = Url.Action("RenameFile", "FileManager");
+            var authResult               = await _authorizationService.AuthorizeAsync(User, "FileManagerDeletePolicy");
+            model.CanDelete              = authResult.Succeeded;
 
             //model.AllowedFileExtensionsRegex = @"/(\.|\/)(gif|GIF|jpg|JPG|jpeg|JPEG|png|PNG|flv|FLV|swf|SWF|wmv|WMV|mp3|MP3|mp4|MP4|m4a|M4A|m4v|M4V|oga|OGA|ogv|OGV|webma|WEBMA|webmv|WEBMV|webm|WEBM|wav|WAV|fla|FLA|tif|TIF|asf|ASF|asx|ASX|avi|AVI|mov|MOV|mpeg|MPEG|mpg|MPG|zip|ZIP|pdf|PDF|doc|DOC|docx|DOCX|xls|XLS|xlsx|XLSX|ppt|PPT|pptx|PPTX|pps|PPS|csv|CSV|txt|TXT|htm|HTM|html|HTML|css|CSS)$/i";
             switch (model.Type)
@@ -119,17 +119,18 @@ namespace cloudscribe.FileManager.Web.Controllers
         [Authorize(Policy = "FileManagerPolicy")]
         public async Task<IActionResult> FileDialog(BrowseModel model)
         {
-            model.InitialVirtualPath = await _fileManagerService.GetRootVirtualPath().ConfigureAwait(false);
-            model.FileTreeServiceUrl = Url.Action("GetFileTreeJson","FileManager", new { fileType = model.Type});
-            model.UploadServiceUrl = Url.Action("Upload", "FileManager");
+            model.InitialVirtualPath       = await _fileManagerService.GetRootVirtualPath().ConfigureAwait(false);
+            model.FileTreeServiceUrl       = Url.Action("GetFileTreeJson","FileManager", new { fileType = model.Type});
+            model.UploadServiceUrl         = Url.Action("Upload", "FileManager");
             //model.FileDownloadServiceUrl = Url.Action("DownloadFile", "FileManager");
-            model.CreateFolderServiceUrl = Url.Action("CreateFolder", "FileManager");
-            model.DeleteFolderServiceUrl = Url.Action("DeleteFolder", "FileManager");
-            model.RenameFolderServiceUrl = Url.Action("RenameFolder", "FileManager");
-            model.DeleteFileServiceUrl = Url.Action("DeleteFile", "FileManager");
-            model.RenameFileServiceUrl = Url.Action("RenameFile", "FileManager");
-            var authResult = await _authorizationService.AuthorizeAsync(User, "FileManagerDeletePolicy");
-            model.CanDelete = authResult.Succeeded;
+            model.CreateFolderServiceUrl   = Url.Action("CreateFolder", "FileManager");
+            model.DeleteFolderServiceUrl   = Url.Action("DeleteFolder", "FileManager");
+            model.RenameFolderServiceUrl   = Url.Action("RenameFolder", "FileManager");
+            model.MoveFileServiceUrl       = Url.Action("MoveFile", "FileManager");
+            model.DeleteFileServiceUrl     = Url.Action("DeleteFile", "FileManager");
+            model.RenameFileServiceUrl     = Url.Action("RenameFile", "FileManager");
+            var authResult                 = await _authorizationService.AuthorizeAsync(User, "FileManagerDeletePolicy");
+            model.CanDelete                = authResult.Succeeded;
 
             //model.AllowedFileExtensionsRegex = @"/(\.|\/)(gif|GIF|jpg|JPG|jpeg|JPEG|png|PNG|flv|FLV|swf|SWF|wmv|WMV|mp3|MP3|mp4|MP4|m4a|M4A|m4v|M4V|oga|OGA|ogv|OGV|webma|WEBMA|webmv|WEBMV|webm|WEBM|wav|WAV|fla|FLA|tif|TIF|asf|ASF|asx|ASX|avi|AVI|mov|MOV|mpeg|MPEG|mpg|MPG|zip|ZIP|pdf|PDF|doc|DOC|docx|DOCX|xls|XLS|xlsx|XLSX|ppt|PPT|pptx|PPTX|pps|PPS|csv|CSV|txt|TXT|htm|HTM|html|HTML|css|CSS)$/i";
             
