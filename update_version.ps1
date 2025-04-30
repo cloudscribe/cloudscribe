@@ -15,9 +15,11 @@
 # Define the directory containing the .csproj files
 $directory = "src"
 
-# Define the new version
-$newVersion = "8.1.0"
-$newWildcardVersion = "8.1.*"
+# Define the old & new versions
+$oldVersion = '8\.1'   # slash needed !
+$newVersion = "8.2.0"
+$newWildcardVersion = "8.2.*"
+	
 
 # Get all .csproj files in the directory and subdirectories
 $csprojFiles = Get-ChildItem -Path $directory -Recurse -Filter *.csproj
@@ -27,11 +29,18 @@ foreach ($file in $csprojFiles) {
     $content = Get-Content -Path $file.FullName
 
     # Update the version of cloudscribe package references, except for cloudscribe.HtmlAgilityPack and cloudscribe.DbHelpers
-    $updatedContent = $content -replace '(?<=<PackageReference Include="cloudscribe\.(?!HtmlAgilityPack|DbHelpers)[^"]+" Version=")8\.0\.\*', $newWildcardVersion
-    $updatedContent = $updatedContent -replace '(?<=<PackageReference Include="cloudscribe\.(?!HtmlAgilityPack|DbHelpers)[^"]+" Version=")8\.0\.\d+', $newVersion
+	
+	$wildCardPattern = '(?<=<PackageReference Include="cloudscribe\.(?!HtmlAgilityPack|DbHelpers)[^"]+" Version=")' + $oldVersion + '\.\*'
+	$updatedContent = $content -replace $wildCardPattern, $newWildcardVersion
 
-    # Update the <Version> element if it matches the 8.0.* pattern
-    $updatedContent = $updatedContent -replace '<Version>8\.0\.\d+</Version>', "<Version>$newVersion</Version>"
+	$digitPattern = '(?<=<PackageReference Include="cloudscribe\.(?!HtmlAgilityPack|DbHelpers)[^"]+" Version=")' + $oldVersion + '\.\d+'
+	$updatedContent = $updatedContent -replace $digitPattern, $newVersion
+
+    # Update the <Version> element if it matches the pattern
+	$versionPattern = '<Version>' + $oldVersion + '\.\d+</Version>'
+	$replacement = "<Version>$newVersion</Version>"
+	$updatedContent = $updatedContent -replace $versionPattern, $replacement
+
 
     # Write the updated content back to the .csproj file
     Set-Content -Path $file.FullName -Value $updatedContent
