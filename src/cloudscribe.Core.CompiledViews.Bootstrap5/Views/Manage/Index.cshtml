@@ -7,7 +7,7 @@
     var currentSite = await siteResolver.ResolveSite(Context.Request.Host.Host, Context.Request.Path);
     var showExternal = currentSite.HasAnySocialAuthEnabled();
 }
-<h2>@ViewData["Title"]</h2>
+<h1>@ViewData["Title"]</h1>
 
 
 <h4>@sr["Change your account settings"]</h4>
@@ -21,19 +21,22 @@
         [ <a asp-controller="Manage" asp-action="UserInfo">@sr["Edit"]</a> ]
         [ <a asp-controller="Manage" asp-action="PersonalData">@sr["Personal Data"]</a> ]
     </dd>
-    <dt>@sr["Password:"]</dt>
-    <dd>
-        [
-        @if (Model.HasPassword)
-        {
-            <a asp-controller="Manage" asp-action="ChangePassword">@sr["Change"]</a>
-        }
-        else
-        {
-            <a asp-controller="Manage" asp-action="SetPassword">@sr["Create"]</a>
-        }
-        ]
-    </dd>
+    @if (!currentSite.DisableDbAuth)
+    {
+        <dt>@sr["Password:"]</dt>
+        <dd>
+            [
+            @if (Model.HasPassword)
+            {
+                <a asp-controller="Manage" asp-action="ChangePassword">@sr["Change"]</a>
+            }
+            else
+            {
+                <a asp-controller="Manage" asp-action="SetPassword">@sr["Create"]</a>
+            }
+            ]
+        </dd>
+    }
     @if (showExternal)
     {
         <dt>@sr["External Logins:"]</dt>
