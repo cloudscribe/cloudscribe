@@ -5,6 +5,8 @@
 @{
     var lastLogin = "";
     var lastPasswordChange = "";
+    var userCreatedDate = tzHelper.ConvertToLocalTime(Model.CreatedUtc, Model.TimeZoneId).ToString("g"); ;
+
     if (Model.LastLoginUtc != null)
     {
         lastLogin = tzHelper.ConvertToLocalTime(Model.LastLoginUtc.Value, Model.TimeZoneId).ToString("g");
@@ -23,6 +25,9 @@
 <a asp-controller="UserAdmin" asp-action="UserEdit" asp-route-siteid="@Model.SiteId" asp-route-userid="@Model.UserId" title="Manage">
     <img gravatar-email="@Model.Email" gravatar-size="60" gravatar-enabled="@themeSettings.AllowGravatar" override-url="@Model.AvatarUrl" disabled-default-url="@themeSettings.DefaultAvatarUrl" />
 </a>
+<div class="mb-3 mt-3">
+    <a asp-controller="UserAdmin" asp-action="UserEdit" asp-route-siteid="@Model.SiteId" asp-route-userid="@Model.UserId" title="Manage">@sr["Manage User"]</a>
+</div>
 <table class="mt-2 table table-striped">
     <tr>
         <th>@sr["Email"]</th>
@@ -34,7 +39,7 @@
     </tr>
     <tr>
         <th>@sr["Created"]</th>
-        <td>@Model.CreatedUtc</td>
+        <td>@userCreatedDate</td>
     </tr>
     <tr>
         <th>@sr["Last Login"]</th>
@@ -134,11 +139,17 @@
 }
 
 @section SideNav {
-    @{ await Html.RenderPartialAsync("AdminSideNav"); }
+    @{
+        await Html.RenderPartialAsync("AdminSideNav");
+    }
 }
-@section Toolbar{
-    @{ await Html.RenderPartialAsync("AdminSideNavToggle"); }
+@section Toolbar {
+    @{
+        await Html.RenderPartialAsync("AdminSideNavToggle");
+    }
 }
 @section scripts {
-    @{ await Html.RenderPartialAsync("AdminSideNavScripts"); }
+    @{
+        await Html.RenderPartialAsync("AdminSideNavScripts");
+    }
 }

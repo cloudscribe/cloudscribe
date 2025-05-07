@@ -1,9 +1,9 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <Description>PostgreSql Entity Framework Core conventions for snake case object names</Description>
     <Authors>Joe Audette</Authors>
-    <Version>8.0.0</Version>
+    <Version>8.2.0</Version>
     <TargetFramework>net8.0</TargetFramework>
     <PackageIcon>icon.png</PackageIcon>
     <PackageProjectUrl>https://github.com/cloudscribe/cloudscribe</PackageProjectUrl>

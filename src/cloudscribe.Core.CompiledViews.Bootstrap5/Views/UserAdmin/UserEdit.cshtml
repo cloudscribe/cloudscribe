@@ -60,9 +60,15 @@
             </div>
         </div>
     </div>
+    <div class="mb-3">
+        <label class="control-label">
+            <a asp-controller="UserAdmin" asp-action="UserActivity" asp-route-siteid="@Model.SiteId" asp-route-userid="@Model.UserId" title="Activty">@sr["View User Activity"]</a>
+        </label>
+    </div>
     @if (Model.UserId != Guid.Empty)
     {
         <div class="mb-3">
+            
             <label class="form-label" asp-for="UserId">@sr["UserId"]</label>
             -
             <label class="control-label">@Model.UserId.ToString()</label>
