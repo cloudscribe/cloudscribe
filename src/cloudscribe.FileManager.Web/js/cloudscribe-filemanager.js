@@ -497,22 +497,33 @@
             return false; //cancel form submit
         },
         selectfile: function () {
-            var funcNum = $("#fmconfig").data("ckfunc");
+			var funcNum = $("#fmconfig").data("ckfunc");
             var fileUrl = fileManager.selectedFileInput.val();
-            //alert(funcNum);
+			var thisWindow = window.parent.window.parent.document.querySelectorAll('#serverimage');
+
+			if (thisWindow.length > 0) {
+				var summernoteInstance = window.frameElement.getAttribute('data-wysiwyg-instance');
+			}
+
             if (fileUrl.length === 0) {
                 fileManager.notify('Please select a file in the browse tab', 'alert-danger');
-            }
-            else {
+            } else {
                 if (window.parent && window.parent.FileSelectCallback) {
                     window.parent.FileSelectCallback(fileUrl);
+                } else {
+					if (thisWindow.length > 0) {
+						if (window.parent && typeof window.parent.handleMessageFromChild === 'function') {
+							window.parent.handleMessageFromChild({
+								url: fileUrl,
+								filename: "image_name",
+								instance: summernoteInstance
+							});
+						}
+					} else {
+						window.opener.CKEDITOR.tools.callFunction(funcNum, fileUrl);
+						window.close();
+					}
                 }
-                else {
-                    window.opener.CKEDITOR.tools.callFunction(funcNum, fileUrl);
-                    window.close();
-                }
-
-
             }
         },
         removeNode: function (id) {
@@ -523,7 +534,7 @@
         reloadSubTree: function (folderIdToReload) {
             var tree = $('#tree').treeview(true);
             var currentFolderId = folderIdToReload || $("#uploadCurrentDir").val();
-            //alert(currentFolderId);
+
             if (currentFolderId.length === 0 || currentFolderId === fileManager.rootVirtualPath) {
                 fileManager.loadTree();
                 return;
@@ -539,8 +550,6 @@
 
 
                 var theNode = matchingNodes[0];
-                //alert(JSON.stringify(theNode));
-                //alert(theNode.id)
                 var newNode = {
                     text: theNode.text,
                     id: theNode.id,
