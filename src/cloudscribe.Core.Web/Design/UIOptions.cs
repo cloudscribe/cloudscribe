@@ -22,6 +22,7 @@ namespace cloudscribe.Core.Web.Components
         // I considered whether this really should be a "UISetting" but it is only used for whether to show the delete button in the UI
         // so decided it was reasonable here
         public bool AllowDeleteChildSites { get; set; } = false;
+        public bool ShowRestartApplicationButton { get; set; } = false;
         public bool AllowAdminsToChangeUserPasswords { get; set; } = true;
 
         public int DefaultPageSize_CountryList { get; set; } = 10;
