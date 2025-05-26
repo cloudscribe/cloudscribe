@@ -84,7 +84,14 @@
 					// Set the Body of the Dialog.
 					body: body,
 					callback: function (t) {
-						t.find(".modal-dialog").addClass("modal-xl");
+						// t.find(".modal-dialog").addClass("modal-xl");
+
+						t.find('.modal-dialog')
+							.css({
+								width: '85vw', // 85% of the viewport width
+								maxWidth: '1500px' // remove Bootstrap's default max width
+							});
+
 						$(document.body).find('[aria-label="serverimage"]').attr('id', 'serverimage');
 					},
 				})
