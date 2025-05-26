@@ -153,7 +153,7 @@
 });
 
 window.handleMessageFromChild = function(message) {
-    var modal = document.querySelectorAll('#serverimage');
+    var modal = document.querySelectorAll('.note-modal');
 
     $("#" + message.instance + "").summernote('insertImage', message.url, message.filename);
 	
@@ -164,3 +164,5 @@ window.handleMessageFromChild = function(message) {
 		$('.modal-backdrop').toggle();
 	}
 };
+
+
