@@ -499,11 +499,7 @@
         selectfile: function () {
 			var funcNum = $("#fmconfig").data("ckfunc");
             var fileUrl = fileManager.selectedFileInput.val();
-			var thisWindow = window.parent.window.parent.document.querySelectorAll('#serverimage');
-
-			if (thisWindow.length > 0) {
-				var summernoteInstance = window.frameElement.getAttribute('data-wysiwyg-instance');
-			}
+            var isSummernote = window.frameElement && window.frameElement.getAttribute('data-wysiwyg-instance') !== null;
 
             if (fileUrl.length === 0) {
                 fileManager.notify('Please select a file in the browse tab', 'alert-danger');
@@ -511,17 +507,17 @@
                 if (window.parent && window.parent.FileSelectCallback) {
                     window.parent.FileSelectCallback(fileUrl);
                 } else {
-					if (thisWindow.length > 0) {
-						if (window.parent && typeof window.parent.handleMessageFromChild === 'function') {
+                    if (isSummernote) {
+                        if (window.parent && typeof window.parent.handleMessageFromChild === 'function') {
 							window.parent.handleMessageFromChild({
 								url: fileUrl,
 								filename: "image_name",
-								instance: summernoteInstance
-							});
-						}
+                                instance: window.frameElement.getAttribute('data-wysiwyg-instance')
+                            });
+                        }
 					} else {
 						window.opener.CKEDITOR.tools.callFunction(funcNum, fileUrl);
-						window.close();
+                        window.close();
 					}
                 }
             }

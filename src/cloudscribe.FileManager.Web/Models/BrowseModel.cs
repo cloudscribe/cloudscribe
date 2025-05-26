@@ -43,6 +43,6 @@
 
         public bool CanDelete { get; set; }
 
-
+        public bool ShowModalHeader { get; set; } = true;
     }
 }

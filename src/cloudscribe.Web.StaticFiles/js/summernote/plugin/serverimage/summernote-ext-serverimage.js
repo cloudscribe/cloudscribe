@@ -76,11 +76,11 @@
 				var $container = options.dialogsInBody ? $(document.body) : $editor;
 
 				// Build the Body HTML of the Dialog.
-				var body = '<div class="ratio ratio-16x9"><iframe src="/filemanager/filedialog" data-wysiwyg-instance="' + $($container).prev("textarea")[0]["id"] + '" id="instanceId"/></div>';
+				var body = '<div class="ratio ratio-16x9"><iframe src="/filemanager/filedialog?Type=image&ShowModalHeader=false" data-wysiwyg-instance="' + $($container).prev("textarea")[0]["id"] + '" id="instanceId"/></div>';
 
 				this.$dialog = ui.dialog({
 					// Set the title for the Dialog.
-					title: lang.serverimage.dialogTitle,
+					title: lang.serverimage.title,
 					// Set the Body of the Dialog.
 					body: body,
 					callback: function (t) {
