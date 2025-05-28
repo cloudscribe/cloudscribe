@@ -21,20 +21,18 @@
 			}
 
 			if (configPath) {
-				let configSummernote;
-				let jsonStyles;
-				let summerStyle = [["style"],["font"],["color"],["para"],["table"],["insert"],["view"],["custom"],["serverimagebutton"]];
+				let summernoteConfig;				
+				let toolbarConfig;
 						
 				await getConfigSettings(configPath);
-				await getToolbarSettings(configToolbarPath);
-				await setupToolbar();
+				await getToolbarSettings(configToolbarPath);			
 				await setupSummernote();
 				
 				async function getToolbarSettings(file) {
 					await fetch(file)
 					.then((response) => response.json())
 					.then((json) => {
-						jsonStyles = json;
+						toolbarConfig = json;
 					});
 				}
 				
@@ -42,27 +40,15 @@
 					await fetch(file)
 					.then((response) => response.json())
 					.then((json) => {
-						configSummernote = json;
+						summernoteConfig = json;
 
 						if (configLanguage) {
-							configSummernote.lang = configLanguage;
+							summernoteConfig.lang = configLanguage;
 						} else {
-							configSummernote.lang = "en-US";
+							summernoteConfig.lang = "en-US";
 						}
 					});
-				}
-				
-				async function setupToolbar() {
-					summerStyle[0][1] = jsonStyles["style"];
-					summerStyle[1][1] = jsonStyles["font"];
-					summerStyle[2][1] = jsonStyles["color"];
-					summerStyle[3][1] = jsonStyles["para"];
-					summerStyle[4][1] = jsonStyles["table"];
-					summerStyle[5][1] = jsonStyles["insert"];
-					summerStyle[6][1] = jsonStyles["view"];
-					summerStyle[7][1] = jsonStyles["custom"];
-					summerStyle[8][1] = jsonStyles["serverimagebutton"];
-				}
+				}							
 
 				function setupSummernote() {
 					$(summernoteInstance).each(function (i) {
@@ -74,8 +60,8 @@
 									onDropped(files);
 								}
 							},
-							toolbar: summerStyle,
-							...configSummernote
+							toolbar: toolbarConfig,
+							...summernoteConfig
 						});
 					});
 				}
