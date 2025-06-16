@@ -1365,6 +1365,7 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
 
             if (result.IdentityResult.Succeeded)
             {
+                await SetUserConfirmedEmail(model.Email);
                 return RedirectToAction("SetInitialPasswordConfirmation", "Account");
             }
 
@@ -1381,6 +1382,16 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
             }
 
             return View();
+        }
+
+        private async Task SetUserConfirmedEmail(string email)
+        {
+            var user = await AccountService.GetUserInfo(email);
+            if (user != null)
+            {
+                user.EmailConfirmed = true;
+                await UserManager.UpdateAsync(user);
+            }
         }
 
         // GET: /Account/SetInitialPasswordConfirmation
