@@ -126,7 +126,6 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
                 }
 
             }
-
             return this.RedirectToSiteRoot(CurrentSite);
         }
 
@@ -187,7 +186,6 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
 
                 }
             }
-
             return this.RedirectToSiteRoot(CurrentSite);
         }
 
@@ -363,7 +361,7 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
 
             if (user == null)
             {
-                throw new ApplicationException($"Unable to load two-factor authentication user.");
+                throw new ApplicationException(StringLocalizer["Unable to load two-factor authentication user."]);
             }
 
             var model = new LoginWith2faViewModel { RememberMe = rememberMe };
@@ -428,7 +426,7 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
             var user = await AccountService.GetTwoFactorAuthenticationUserAsync();
             if (user == null)
             {
-                throw new ApplicationException($"Unable to load two-factor authentication user.");
+                throw new ApplicationException(StringLocalizer["Unable to load two-factor authentication user."]);
             }
 
             ViewData["ReturnUrl"] = returnUrl;
@@ -652,7 +650,7 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
                 }
 
                 var te = result.RejectReasons.FirstOrDefault();
-                if(string.IsNullOrEmpty(te)) { te = "unknown"; }
+                if(string.IsNullOrEmpty(te)) { te = StringLocalizer["unknown"]; }
 
                 await Analytics.HandleRegisterFail("Onsite", te);
 
