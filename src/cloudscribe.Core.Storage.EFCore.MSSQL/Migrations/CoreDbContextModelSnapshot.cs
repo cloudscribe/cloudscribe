@@ -22,6 +22,48 @@ namespace cloudscribe.Core.Storage.EFCore.MSSQL.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
+            modelBuilder.Entity("cloudscribe.Core.Models.BlackWhiteListedIpAddressesModel", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime>("CreatedDate")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("datetime")
+                        .HasDefaultValueSql("getutcdate()");
+
+                    b.Property<string>("IpAddress")
+                        .IsRequired()
+                        .HasMaxLength(39)
+                        .HasColumnType("nvarchar(39)");
+
+                    b.Property<bool>("IsWhitelisted")
+                        .HasColumnType("bit");
+
+                    b.Property<DateTime>("LastUpdated")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("datetime")
+                        .HasDefaultValueSql("getutcdate()");
+
+                    b.Property<string>("Reason")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<Guid>("SiteId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("IpAddress");
+
+                    b.ToTable("cs_BlackWhiteListIpAddresses", null, t =>
+                        {
+                            t.HasTrigger("cs_BlackWhiteListIpAddresses_Trigger");
+                        });
+
+                    b.HasAnnotation("SqlServer:UseSqlOutputClause", false);
+                });
+
             modelBuilder.Entity("cloudscribe.Core.Models.Geography.GeoCountry", b =>
                 {
                     b.Property<Guid>("Id")

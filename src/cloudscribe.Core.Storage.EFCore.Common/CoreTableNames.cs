@@ -26,6 +26,6 @@
         public string GeoZoneTableName { get; set; } = "GeoZone";
         public string CurrencyTableName { get; set; } = "Currency";
         public string LanguageTableName { get; set; } = "Language";
-        
+        public string BlackWhiteListIpAddressesTableName { get; set; } = "BlackWhiteListIpAddresses";
     }
 }

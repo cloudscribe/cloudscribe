@@ -10,6 +10,16 @@ namespace Microsoft.AspNetCore.Builder
             return builder.UseMiddleware<EnforceSiteRulesMiddleware>();
         }
 
+        public static IApplicationBuilder UseCloudscribeIpWhitelistMiddleware(this IApplicationBuilder builder)
+        {
+            return builder.UseMiddleware<IpWhitelistMiddleware>();
+        }
+
+        public static IApplicationBuilder UseCloudscribeIpBlacklistMiddleware(this IApplicationBuilder builder)
+        {
+            return builder.UseMiddleware<IpBlacklistMiddleware>();
+        }
+
         //public static IApplicationBuilder UseCommonExceptionHandler(this IApplicationBuilder builder)
         //{
         //    return builder.UseMiddleware<CommonExceptionHandlerMiddleware>();

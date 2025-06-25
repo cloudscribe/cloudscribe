@@ -565,7 +565,24 @@
                 iconCssClass="fas fa-bug"
               componentVisibility="breadcrumbs,childtree,parenttree"
               authorizationPolicy="SystemLogPolicy" />
-
+        <NavNode key="WhitelistIpAddresses"
+                 controller="WhitelistIpAddresses"
+                 action="Index"
+                 text="Whitelist IP Addresses"
+                 iconCssClass="fas fa-check"
+                 componentVisibility="breadcrumbs,childtree,parenttree"
+                 authorizationPolicy="AdminPolicy">
+              <Children />
+        </NavNode>
+	  <NavNode key="BlacklistIpAddresses"
+                 controller="BlacklistIpAddresses"
+                 action="Index"
+                 text="Blacklist IP Addresses"
+                 iconCssClass="fas fa-ban"
+                 componentVisibility="breadcrumbs,childtree,parenttree"
+                 authorizationPolicy="AdminPolicy">
+              <Children />
+        </NavNode>
       </Children>
     </NavNode>
   </Children>

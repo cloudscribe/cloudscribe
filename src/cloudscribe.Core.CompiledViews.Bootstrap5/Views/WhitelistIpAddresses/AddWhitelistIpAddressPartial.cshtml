@@ -1,0 +1,33 @@
+@model cloudscribe.Core.Web.ViewModels.IpAddresses.IpAddressesViewModel
+@inject IStringLocalizer<CloudscribeCore> sr
+
+<form method="post" class="form-horizontal" role="form" asp-antiforgery="true" data-submit-once="true" asp-controller="WhitelistIpAddresses" asp-action="AddWhitelistedIpAddress">
+    <div asp-validation-summary="All" class="text-danger"></div>
+    <input asp-for="SiteId" type="text" hidden />
+    <input asp-for="CreatedDate" type="text" hidden />
+    <input asp-for="LastUpdated" type="text" hidden />
+    <input asp-for="IsWhitelisted" type="text" hidden />
+    <div class="row">
+        <div class="col mb-3">
+            <h1>Add a new IP Address</h1>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col d-flex">
+            <div class="mb-3">
+                <label asp-for="IpAddress" class="form-label">@sr["Whitelabeled IP"]*</label>
+                <input asp-for="IpAddress" class="form-control" />
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col">
+            <div class="mb-3">
+                <label asp-for="Reason" class="form-label">@sr["Reason"]</label>
+                <textarea asp-for="Reason" class="form-control" rows="2"></textarea>
+            </div>
+        </div>
+    </div>
+    <button name="submit" type="submit" class="btn btn-primary" data-enabled-text='@sr["Save"]' data-disabled-text='@sr["Working..."]'>@sr["Save"]</button>
+    <button name="cancel" class="btn btn-secondary" data-bs-dismiss="modal">@sr["Cancel"]</button>
+</form>

@@ -33,4 +33,9 @@
   <ItemGroup>
     <ProjectReference Include="..\cloudscribe.Core.Web\cloudscribe.Core.Web.csproj" />
   </ItemGroup>
+
+
+  <ItemGroup>
+    <Folder Include="Views\BlacklistIpAddresses\" />
+  </ItemGroup>
 </Project>

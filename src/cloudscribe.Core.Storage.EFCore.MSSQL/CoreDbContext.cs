@@ -34,7 +34,6 @@ namespace cloudscribe.Core.Storage.EFCore.MSSQL
 
             var tableNames = new CoreTableNames();
 
-
             modelBuilder.Entity<SiteSettings>(entity =>
             {
                 entity.ToTable(tableNames.TablePrefix + tableNames.SiteTableName);
@@ -891,9 +890,32 @@ namespace cloudscribe.Core.Storage.EFCore.MSSQL
                 //entity.HasIndex(p => p.Longitude);
             });
 
-            
+            modelBuilder.Entity<BlackWhiteListedIpAddressesModel>(entity =>
+            {
+                entity.ToTable(tableNames.TablePrefix + tableNames.BlackWhiteListIpAddressesTableName);
 
+                entity.HasKey(p => p.Id);
+
+                entity.Property(p => p.IpAddress)
+                .IsRequired()
+                .HasMaxLength(39);
+
+                entity.HasIndex(p => p.IpAddress);
+
+                entity.Property(p => p.LastUpdated)
+                .HasColumnType("datetime")
+                .HasDefaultValueSql("getutcdate()");
+
+                entity.Property(p => p.CreatedDate)
+                .HasColumnType("datetime")
+                .HasDefaultValueSql("getutcdate()");
+
+                entity.Property(p => p.Reason);
+
+                entity.Property(p => p.SiteId)
+                .HasColumnType("uniqueidentifier")
+                .IsRequired();
+            });
         }
-
     }
 }

@@ -98,6 +98,8 @@ namespace Microsoft.AspNetCore.Builder
             app.UseAuthentication();
             app.UseAuthorization();
             app.UseCloudscribeEnforceSiteRulesMiddleware();
+            app.UseCloudscribeIpWhitelistMiddleware();
+            app.UseCloudscribeIpBlacklistMiddleware();
 
             return app;
 
