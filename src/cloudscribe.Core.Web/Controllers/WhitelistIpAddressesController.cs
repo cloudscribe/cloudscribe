@@ -55,6 +55,13 @@ namespace cloudscribe.Core.Web.Controllers
                         BlackWhitelistIpAddresses = await _whitelistService.GetWhitelistedIpAddressesAsync(User.GetUserSiteIdAsGuid(), pageNumber, itemsPerPage, CancellationToken.None)
                     };
 
+                    var loc = await UserManager.GetUserLocations(User.GetUserSiteIdAsGuid(), User.GetUserIdAsGuid(), 1, 1);
+
+                    foreach (var item in loc.Data)
+                    {
+                        ViewBag.UsersIpAddress = item.IpAddress ?? "Unknown";
+                    }
+
                     return View(whiteListedIps);
                 }
             }

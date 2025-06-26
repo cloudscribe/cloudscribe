@@ -8,6 +8,11 @@
 }
 
 <h2>@ViewBag.Title</h2>
+<div class="row">
+    <div class="col mb-3">
+        <h4>Your IP Address: @ViewBag.UsersIpAddress</h4>
+    </div>
+</div>
 @{
     if (@ViewBag.status != null)
     {
