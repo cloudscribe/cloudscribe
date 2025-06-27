@@ -25,14 +25,18 @@
     }
     else
     {
-        <form method="post" class="form-horizontal" role="form" asp-antiforgery="true" data-submit-once="true" asp-controller="WhitelistIpAddresses" asp-action="SearchWhitelistedIpAddresses">
-            <div class="row">
-                <div class="col d-flex">
+        <div class="row">
+            <div class="col d-flex">
+                <form method="post" class="form-horizontal" role="form" asp-antiforgery="true" data-submit-once="true" asp-controller="BlacklistIpAddresses" asp-action="SearchBlacklistedIpAddresses">
                     <input type="text" class="me-3" id="searchTerm" name="searchTerm" />
                     <button id="searchButton" class="btn btn-primary" type="submit" name="submit" aria-expanded="false">@sr["Search"]</button>
-                </div>
+                </form>
             </div>
-        </form>
+            <div class="col d-flex justify-content-end">
+                <button name="AddNewRow" class="btn btn-secondary mt-2 me-3" data-bs-toggle="modal" data-bs-target="#AddNewIpAddress">@sr["Add New IP Address"]</button>
+                <button name="BulkUpload" class="btn btn-secondary mt-2" data-bs-toggle="modal" data-bs-target="#BulkUploadIpAddresses">@sr["Bulk Upload IP Addresses"]</button>
+            </div>
+        </div>
         <div asp-validation-summary="All" class="text-danger"></div>
 
         @foreach (var item in Model.BlackWhitelistIpAddresses.Data)
@@ -83,8 +87,6 @@
           cs-pager-link-current-class="page-link"
           cs-pager-link-other-class="page-link"></cs-pager>
 
-<button name="AddNewRow" class="btn btn-secondary mt-2" data-bs-toggle="modal" data-bs-target="#AddNewIpAddress">@sr["Add New IP Address"]</button>
-
 <div class="modal fade" id="AddNewIpAddress" tabindex="-1" role="dialog" aria-labelledby="AddNewIpAddress">
     <div class="modal-dialog modal-md" role="document">
         <div class="modal-content" style="padding:1rem;">
@@ -97,6 +99,14 @@
     <div class="modal-dialog modal-md" role="document">
         <div class="modal-content" style="padding:1rem;">
             <partial name="DeleteWhitelistedIpAddressPartial" model="string.Empty" />
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="BulkUploadIpAddresses" tabindex="-1" role="dialog" aria-labelledby="BulkUploadIpAddresses">
+    <div class="modal-dialog modal-md" role="document">
+        <div class="modal-content" style="padding:1rem;">
+            <partial name="BulkUploadIpAddressesPartial" model="new cloudscribe.Core.Web.ViewModels.IpAddresses.BulkUploadIpAddressesModel()" />
         </div>
     </div>
 </div>

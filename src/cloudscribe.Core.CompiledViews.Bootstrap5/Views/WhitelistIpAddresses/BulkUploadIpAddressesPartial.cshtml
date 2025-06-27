@@ -1,7 +1,7 @@
-@model cloudscribe.Core.Web.ViewModels.IpAddresses.IpAddressesViewModel
+@model cloudscribe.Core.Web.ViewModels.IpAddresses.BulkUploadIpAddressesModel
 @inject IStringLocalizer<CloudscribeCore> sr
 
-<form method="post" class="form-horizontal" role="form" asp-antiforgery="true" data-submit-once="true" asp-controller="BlacklistIpAddresses" asp-action="AddBlacklistedIpAddress">
+<form method="post" class="form-horizontal" role="form" asp-antiforgery="true" enctype="multipart/form-data" data-submit-once="true" asp-controller="WhitelistIpAddresses" asp-action="BulkUploadWhitelistedIpAddress">
     <div asp-validation-summary="All" class="text-danger"></div>
     <input asp-for="SiteId" type="text" hidden />
     <input asp-for="CreatedDate" type="text" hidden />
@@ -9,22 +9,15 @@
     <input asp-for="IsWhitelisted" type="text" hidden />
     <div class="row">
         <div class="col mb-3">
-            <h1>Add a new IP Address</h1>
+            <h1>Bulk Upload IP Addresses</h1>
         </div>
     </div>
     <div class="row">
         <div class="col d-flex">
             <div class="mb-3">
-                <label asp-for="IpAddress" class="form-label">@sr["Blacklsited IP"]*</label>
-                <input asp-for="IpAddress" class="form-control" />
-            </div>
-        </div>
-    </div>
-    <div class="row">
-        <div class="col">
-            <div class="mb-3">
-                <label asp-for="Reason" class="form-label">@sr["Reason"]</label>
-                <textarea asp-for="Reason" class="form-control" rows="2"></textarea>
+                <p>@sr["Your CSV file should be comma separated, starting with the IP Address, comma, reason for adding (optional, leave blank if not required but you MUST include the comma), comma, repeat. E.g. 123.0.0.0,Spamming website,124.0.0.0,,124.1.1.1,Another reason"]</p>
+                <label asp-for="BulkIpAddresses" class="form-label">@sr["Upload IP Addresses"]*</label>
+                <input type="file" asp-for="BulkIpAddresses" class="form-control" />
             </div>
         </div>
     </div>

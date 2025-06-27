@@ -19,7 +19,7 @@ namespace cloudscribe.Core.Web.ViewModels.IpAddresses
         public Guid SiteId { get; set; }
         public bool IsWhitelisted { get; set; }
 
-        public static ValidationResult ValidateIpAddress(string ipAddress, ValidationContext context)
+        public static ValidationResult ValidateIpAddress(string ipAddress)
         {
             if (string.IsNullOrWhiteSpace(ipAddress))
             {

@@ -8,8 +8,12 @@ using Microsoft.Extensions.Localization;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using System;
+using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace cloudscribe.Core.Web.Controllers
 {
@@ -106,7 +110,7 @@ namespace cloudscribe.Core.Web.Controllers
             {
                 await _blacklistService.AddBlacklistedIpAddress(ipAddressModel, CancellationToken.None);
 
-                return RedirectToAction("Index");
+                return RedirectToAction("Index", new { status = "Success! IP Address has been added." });
             }
             catch (Exception e)
             {
@@ -284,6 +288,89 @@ namespace cloudscribe.Core.Web.Controllers
                 ViewBag.status = $"{blacklistedIps.BlackWhitelistIpAddresses.TotalItems} result(s) found for '{searchTerm}'";
 
                 return View("Index", blacklistedIps);
+            }
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        [Authorize(Policy = PolicyConstants.AdminPolicy)]
+        public async Task<IActionResult> BulkUploadBlacklistedIpAddress(BulkUploadIpAddressesModel model)
+        {
+            if (!ModelState.IsValid)
+            {
+                _log.LogError("Model is invalid");
+                return RedirectToAction("Index", new { status = "Error: The Model is invalid" });
+            }
+
+            Stream ipAddresses = model.BulkIpAddresses.OpenReadStream();
+
+            if (ipAddresses == null)
+            {
+                _log.LogError("No IP Addresses found in the uploaded file");
+                return RedirectToAction("Index", new { status = "Error: No IP Addresses found in the uploaded file" });
+            }
+
+            var errors = new List<string>();
+            int successCount = 0;
+
+            using (StreamReader reader = new StreamReader(ipAddresses))
+            {
+                string content = await reader.ReadToEndAsync();
+
+                if (!string.IsNullOrWhiteSpace(content))
+                {
+                    string[] entries = content.Split(new[] { ',' }, StringSplitOptions.None);
+
+                    for (int i = 0; i < entries.Length; i += 2)
+                    {
+                        string ip = entries[i]?.Trim();
+                        string reason = (i + 1 < entries.Length) ? entries[i + 1]?.Trim() : string.Empty;
+
+                        if (!string.IsNullOrWhiteSpace(ip))
+                        {
+                            ValidationResult validationResult = ValidateIpAddress.IpAddressValidation(ip);
+
+                            if (validationResult != null)
+                            {
+                                errors.Add($"{validationResult.ErrorMessage} {ip}");
+                                _log.LogError($"{validationResult.ErrorMessage} {ip}");
+                                continue;
+                            }
+
+                            var ipAddressModel = new BlackWhiteListedIpAddressesModel
+                            {
+                                Id = Guid.NewGuid(),
+                                IpAddress = ip,
+                                Reason = string.IsNullOrEmpty(reason) ? string.Empty : reason,
+                                CreatedDate = DateTime.UtcNow,
+                                LastUpdated = DateTime.UtcNow,
+                                SiteId = User.GetUserSiteIdAsGuid(),
+                                IsWhitelisted = false
+                            };
+
+                            try
+                            {
+                                await _blacklistService.AddBlacklistedIpAddress(ipAddressModel, CancellationToken.None);
+                                successCount++;
+                            }
+                            catch (Exception e)
+                            {
+                                errors.Add($"Error adding {ip}: {e.Message}");
+                                _log.LogError(e, $"Error adding blacklisted IP Address from bulk upload: {ip}");
+                            }
+                        }
+                    }
+                }
+            }
+            if (errors.Count > 0)
+            {
+                string errorSummary = string.Join("; ", errors);
+
+                return RedirectToAction("Index", new { status = $"Added {successCount} IP(s). Errors: {errorSummary}" });
+            }
+            else
+            {
+                return RedirectToAction("Index", new { status = $"Success! {successCount} IP Address(es) have been added." });
             }
         }
     }
