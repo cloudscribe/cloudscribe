@@ -35,7 +35,7 @@ namespace Microsoft.Extensions.DependencyInjection
                     var useSingletons = true;
                     services.AddCloudscribeCoreNoDbStorage(useSingletons);
                     services.AddCloudscribeLoggingNoDbStorage(config);
-                    //services.AddCloudscribeKvpNoDbStorage();
+                    //services.AddCloudscribeKvpNoDbStorage(); 
 
                     //if(useMiniProfiler)
                     //{
