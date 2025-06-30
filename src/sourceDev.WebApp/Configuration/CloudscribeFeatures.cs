@@ -101,7 +101,7 @@ namespace Microsoft.Extensions.DependencyInjection
                             break;
 
 
-                        case "myqql":
+                        case "mysql":
                             var mysqlConnection = config.GetConnectionString("MySqlEntityFrameworkConnectionString");
                             services.AddCloudscribeCoreEFStorageMySql(mysqlConnection);
                             services.AddCloudscribeLoggingEFStorageMySQL(mysqlConnection);
