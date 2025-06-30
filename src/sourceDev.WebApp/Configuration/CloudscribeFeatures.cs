@@ -35,7 +35,7 @@ namespace Microsoft.Extensions.DependencyInjection
                     var useSingletons = true;
                     services.AddCloudscribeCoreNoDbStorage(useSingletons);
                     services.AddCloudscribeLoggingNoDbStorage(config);
-                    //services.AddCloudscribeKvpNoDbStorage();
+                    //services.AddCloudscribeKvpNoDbStorage(); 
 
                     //if(useMiniProfiler)
                     //{
@@ -101,7 +101,7 @@ namespace Microsoft.Extensions.DependencyInjection
                             break;
 
 
-                        case "myqql":
+                        case "mysql":
                             var mysqlConnection = config.GetConnectionString("MySqlEntityFrameworkConnectionString");
                             services.AddCloudscribeCoreEFStorageMySql(mysqlConnection);
                             services.AddCloudscribeLoggingEFStorageMySQL(mysqlConnection);
