@@ -7,11 +7,11 @@ namespace cloudscribe.Core.Web.ViewModels.IpAddresses
     {
         public PaginatedIpAddressesViewModel()
         {
-            BlackWhitelistIpAddresses = new PagedResult<IpAddressesViewModel>();
+            BlockedPermittedIpAddresses = new PagedResult<IpAddressesViewModel>();
 
         }
 
-        public PagedResult<IpAddressesViewModel> BlackWhitelistIpAddresses { get; set; }
+        public PagedResult<IpAddressesViewModel> BlockedPermittedIpAddresses { get; set; }
         public string SearchTerm { get; set; }
     }
 }

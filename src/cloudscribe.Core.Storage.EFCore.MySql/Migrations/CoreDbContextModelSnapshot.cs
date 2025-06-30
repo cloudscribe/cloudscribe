@@ -19,7 +19,7 @@ namespace cloudscribe.Core.Storage.EFCore.MySql.Migrations
                 .HasAnnotation("ProductVersion", "8.0.0")
                 .HasAnnotation("Relational:MaxIdentifierLength", 64);
 
-            modelBuilder.Entity("cloudscribe.Core.Models.BlackWhiteListedIpAddressesModel", b =>
+            modelBuilder.Entity("cloudscribe.Core.Models.BlockedPermittedIpAddressesModel", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -31,7 +31,7 @@ namespace cloudscribe.Core.Storage.EFCore.MySql.Migrations
                     b.Property<string>("IpAddress")
                         .HasColumnType("longtext");
 
-                    b.Property<bool>("IsWhitelisted")
+                    b.Property<bool>("IsPermitted")
                         .HasColumnType("tinyint(1)");
 
                     b.Property<DateTime>("LastUpdated")
@@ -45,7 +45,7 @@ namespace cloudscribe.Core.Storage.EFCore.MySql.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("BlackWhiteListedIpAddresses");
+                    b.ToTable("BlockedPermittedIpAddresses");
                 });
 
             modelBuilder.Entity("cloudscribe.Core.Models.Geography.GeoCountry", b =>

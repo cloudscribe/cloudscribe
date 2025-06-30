@@ -6,13 +6,13 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace cloudscribe.Core.Storage.EFCore.MSSQL.Migrations
 {
     /// <inheritdoc />
-    public partial class cscoreblackwhitelistingipaddresses20250623 : Migration
+    public partial class cscore20250630 : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.CreateTable(
-                name: "cs_BlackWhiteListIpAddresses",
+                name: "cs_BlockedPermittedIpAddresses",
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
@@ -20,17 +20,17 @@ namespace cloudscribe.Core.Storage.EFCore.MSSQL.Migrations
                     Reason = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     CreatedDate = table.Column<DateTime>(type: "datetime", nullable: false, defaultValueSql: "getutcdate()"),
                     LastUpdated = table.Column<DateTime>(type: "datetime", nullable: false, defaultValueSql: "getutcdate()"),
-                    UserId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    SiteId = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
+                    SiteId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    IsPermitted = table.Column<bool>(type: "bit", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_cs_BlackWhiteListIpAddresses", x => x.Id);
+                    table.PrimaryKey("PK_cs_BlockedPermittedIpAddresses", x => x.Id);
                 });
 
             migrationBuilder.CreateIndex(
-                name: "IX_cs_BlackWhiteListIpAddresses_IpAddress",
-                table: "cs_BlackWhiteListIpAddresses",
+                name: "IX_cs_BlockedPermittedIpAddresses_IpAddress",
+                table: "cs_BlockedPermittedIpAddresses",
                 column: "IpAddress");
         }
 
@@ -38,7 +38,7 @@ namespace cloudscribe.Core.Storage.EFCore.MSSQL.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
-                name: "cs_BlackWhiteListIpAddresses");
+                name: "cs_BlockedPermittedIpAddresses");
         }
     }
 }

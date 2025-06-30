@@ -890,9 +890,9 @@ namespace cloudscribe.Core.Storage.EFCore.MSSQL
                 //entity.HasIndex(p => p.Longitude);
             });
 
-            modelBuilder.Entity<BlackWhiteListedIpAddressesModel>(entity =>
+            modelBuilder.Entity<BlockedPermittedIpAddressesModel>(entity =>
             {
-                entity.ToTable(tableNames.TablePrefix + tableNames.BlackWhiteListIpAddressesTableName);
+                entity.ToTable(tableNames.TablePrefix + tableNames.BlockedPermittedIpAddressesTableName);
 
                 entity.HasKey(p => p.Id);
 
@@ -914,6 +914,9 @@ namespace cloudscribe.Core.Storage.EFCore.MSSQL
 
                 entity.Property(p => p.SiteId)
                 .HasColumnType("uniqueidentifier")
+                .IsRequired();
+
+                entity.Property(p => p.IsPermitted)
                 .IsRequired();
             });
         }

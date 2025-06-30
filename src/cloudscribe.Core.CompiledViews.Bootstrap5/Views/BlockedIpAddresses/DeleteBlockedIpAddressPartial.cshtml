@@ -1,7 +1,7 @@
 @inject IStringLocalizer<CloudscribeCore> sr
 @model string
 
-<form method="post" class="form-horizontal" role="form" asp-antiforgery="true" data-submit-once="true" asp-controller="WhitelistIpAddresses" asp-action="DeleteWhitelistedIpAddress">
+<form method="post" class="form-horizontal" role="form" asp-antiforgery="true" data-submit-once="true" asp-controller="BlockedIpAddresses" asp-action="DeleteBlockedIpAddress">
     <div class="modal-header">
         @sr["Delete Confirmation"]
     </div>

@@ -179,8 +179,8 @@ namespace Microsoft.Extensions.DependencyInjection
 
             services.TryAddScoped<ILdapSslCertificateValidator, AlwaysValidLdapSslCertificateValidator>();
             services.TryAddScoped<IEmailValidationService, EmailValidationService>();
-            services.TryAddTransient<IWhitelistService, WhitelistService>();
-            services.TryAddTransient<IBlacklistService, BlacklistService>();
+            services.TryAddTransient<IPermittedIpService, PermittedIpService>();
+            services.TryAddTransient<IBlockedIpService, BlockedIpService>();
 
             return services;
         }

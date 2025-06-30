@@ -6,23 +6,23 @@ using System.Threading.Tasks;
 
 namespace cloudscribe.Core.Web.Middleware
 {
-    public class IpBlacklistMiddleware
+    public class IpBlockedMiddleware
     {
         private readonly RequestDelegate _next;
         
 
-        public IpBlacklistMiddleware(RequestDelegate next)
+        public IpBlockedMiddleware(RequestDelegate next)
         {
             _next = next;
         }
 
-        public async Task Invoke(HttpContext context, IBlacklistService blacklistService)
+        public async Task Invoke(HttpContext context, IBlockedIpService blockedIpService)
         {
             IPAddress remoteIp = context.Connection.RemoteIpAddress;
             SiteContext tenant = context.GetTenant<SiteContext>();
-            bool isBlacklisted = blacklistService.IsBlacklisted(remoteIp!, tenant.Id);
+            bool isBlocked = blockedIpService.IsBlockedIp(remoteIp!, tenant.Id);
 
-            if (isBlacklisted)
+            if (isBlocked)
             {
                 context.Response.StatusCode = (int)HttpStatusCode.Forbidden;
                 return;

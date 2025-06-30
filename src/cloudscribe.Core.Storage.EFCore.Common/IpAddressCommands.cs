@@ -20,44 +20,44 @@ namespace cloudscribe.Core.Storage.EFCore.Common
             _log = logger;
         }
 
-        public async Task<PagedResult<BlackWhiteListedIpAddressesModel>> GetWhitelistedIpAddresses(Guid siteId, int pageNumber, int pageSize, CancellationToken cancellationToken = default(CancellationToken), bool? IsFromService = false)
+        public async Task<PagedResult<BlockedPermittedIpAddressesModel>> GetPermittedIpAddresses(Guid siteId, int pageNumber, int pageSize, CancellationToken cancellationToken = default(CancellationToken), bool? IsFromService = false)
         {
             cancellationToken.ThrowIfCancellationRequested();
 
             if (siteId.ToString().Length <= 0) throw new ArgumentNullException("must include site ID");
 
             int offset = (pageSize * pageNumber) - pageSize;
-            IQueryable<BlackWhiteListedIpAddressesModel> query;
+            IQueryable<BlockedPermittedIpAddressesModel> query;
 
             using (ICoreDbContext dbContext = _contextFactory.CreateContext())
             {
                 if ((bool)IsFromService)
                 {
-                    query = dbContext.BlackWhiteListedIpAddresses.OrderBy
+                    query = dbContext.BlockedPermittedIpAddresses.OrderBy
                                 (x => x.CreatedDate)
-                                .Where(s => s.SiteId == siteId && s.IsWhitelisted == true)
+                                .Where(s => s.SiteId == siteId && s.IsPermitted == true)
                                 .Skip(offset);
                 }
                 else
                 {
-                    query = dbContext.BlackWhiteListedIpAddresses.OrderBy
+                    query = dbContext.BlockedPermittedIpAddresses.OrderBy
                                 (x => x.CreatedDate)
-                                .Where(s => s.SiteId == siteId && s.IsWhitelisted == true)
+                                .Where(s => s.SiteId == siteId && s.IsPermitted == true)
                                 .Skip(offset)
                                 .Take(pageSize);
                 }
                 var data = await query
                     .AsNoTracking()
-                    .ToListAsync<BlackWhiteListedIpAddressesModel>(cancellationToken)
+                    .ToListAsync<BlockedPermittedIpAddressesModel>(cancellationToken)
                     .ConfigureAwait(false);
 
-                var result = new PagedResult<BlackWhiteListedIpAddressesModel>();
+                var result = new PagedResult<BlockedPermittedIpAddressesModel>();
 
-                result.Data = data.Where(x => x.SiteId == siteId && x.IsWhitelisted == true).ToList();
+                result.Data = data.Where(x => x.SiteId == siteId && x.IsPermitted == true).ToList();
                 result.PageNumber = pageNumber;
                 result.PageSize = pageSize;
-                result.TotalItems = await dbContext.BlackWhiteListedIpAddresses
-                    .Where(s => s.SiteId == siteId && s.IsWhitelisted == true)
+                result.TotalItems = await dbContext.BlockedPermittedIpAddresses
+                    .Where(s => s.SiteId == siteId && s.IsPermitted == true)
                     .CountAsync(cancellationToken)
                     .ConfigureAwait(false);
 
@@ -65,19 +65,19 @@ namespace cloudscribe.Core.Storage.EFCore.Common
             };
         }
 
-        public async Task<bool> AddWhitelistedIpAddress(BlackWhiteListedIpAddressesModel blackWhiteListedIpAddressesModel, CancellationToken cancellationToken = default(CancellationToken))
+        public async Task<bool> AddPermittedIpAddress(BlockedPermittedIpAddressesModel blockedPermittedIpAddressesModel, CancellationToken cancellationToken = default(CancellationToken))
         {
-            if (blackWhiteListedIpAddressesModel == null)
+            if (blockedPermittedIpAddressesModel == null)
             {
                 _log.LogError($"IP Address Model is required");
                 throw new ArgumentException($"IP Address Model is required");
             }
-            if (blackWhiteListedIpAddressesModel.IpAddress.Length <= 0)
+            if (blockedPermittedIpAddressesModel.IpAddress.Length <= 0)
             {
                 _log.LogError($"IP Address is required");
                 throw new ArgumentException($"IP Address is required");
             }
-            if (blackWhiteListedIpAddressesModel.SiteId.ToString() == null)
+            if (blockedPermittedIpAddressesModel.SiteId.ToString() == null)
             {
                 _log.LogError($"Site ID is required");
                 throw new ArgumentException($"Site ID is required");
@@ -87,7 +87,7 @@ namespace cloudscribe.Core.Storage.EFCore.Common
 
             using (var dbContext = _contextFactory.CreateContext())
             {
-                dbContext.BlackWhiteListedIpAddresses.Add(blackWhiteListedIpAddressesModel);
+                dbContext.BlockedPermittedIpAddresses.Add(blockedPermittedIpAddressesModel);
 
                 rowsAffected = await dbContext.SaveChangesAsync(cancellationToken).ConfigureAwait(false);
             }
@@ -102,19 +102,19 @@ namespace cloudscribe.Core.Storage.EFCore.Common
             }
         }
 
-        public async Task<bool> UpdateWhitelistedIpAddress(BlackWhiteListedIpAddressesModel blackWhiteListedIpAddressesModel, CancellationToken cancellationToken = default(CancellationToken))
+        public async Task<bool> UpdatePermittedIpAddress(BlockedPermittedIpAddressesModel blockedPermittedIpAddressesModel, CancellationToken cancellationToken = default(CancellationToken))
         {
-            if (blackWhiteListedIpAddressesModel == null)
+            if (blockedPermittedIpAddressesModel == null)
             {
                 _log.LogError($"IP Address Model is required");
                 throw new ArgumentException($"IP Address Model is required");
             }
-            if (blackWhiteListedIpAddressesModel.IpAddress.Length <= 0)
+            if (blockedPermittedIpAddressesModel.IpAddress.Length <= 0)
             {
                 _log.LogError($"IP Address is required");
                 throw new ArgumentException($"IP Address is required");
             }
-            if (blackWhiteListedIpAddressesModel.SiteId.ToString() == null)
+            if (blockedPermittedIpAddressesModel.SiteId.ToString() == null)
             {
                 _log.LogError($"Site ID is required");
                 throw new ArgumentException($"Site ID is required");
@@ -124,15 +124,15 @@ namespace cloudscribe.Core.Storage.EFCore.Common
 
             using (var dbContext = _contextFactory.CreateContext())
             {
-                var entity = await dbContext.BlackWhiteListedIpAddresses
-                    .FirstOrDefaultAsync(x => x.Id == blackWhiteListedIpAddressesModel.Id && x.SiteId == blackWhiteListedIpAddressesModel.SiteId && blackWhiteListedIpAddressesModel.IsWhitelisted == true, cancellationToken);
+                var entity = await dbContext.BlockedPermittedIpAddresses
+                    .FirstOrDefaultAsync(x => x.Id == blockedPermittedIpAddressesModel.Id && x.SiteId == blockedPermittedIpAddressesModel.SiteId && blockedPermittedIpAddressesModel.IsPermitted == true, cancellationToken);
 
                 if (entity == null)
                     return false;
 
-                entity.IpAddress = blackWhiteListedIpAddressesModel.IpAddress;
-                entity.Reason = blackWhiteListedIpAddressesModel.Reason;
-                entity.LastUpdated = blackWhiteListedIpAddressesModel.LastUpdated;
+                entity.IpAddress = blockedPermittedIpAddressesModel.IpAddress;
+                entity.Reason = blockedPermittedIpAddressesModel.Reason;
+                entity.LastUpdated = blockedPermittedIpAddressesModel.LastUpdated;
 
                 rowsAffected = await dbContext.SaveChangesAsync(cancellationToken).ConfigureAwait(false);
             }
@@ -147,7 +147,7 @@ namespace cloudscribe.Core.Storage.EFCore.Common
             }
         }
 
-        public async Task<bool> DeleteWhitelistedIpAddress(Guid id, Guid siteId, CancellationToken cancellationToken = default(CancellationToken))
+        public async Task<bool> DeletePermittedIpAddress(Guid id, Guid siteId, CancellationToken cancellationToken = default(CancellationToken))
         {
             if (id == Guid.Empty || siteId == Guid.Empty)
             {
@@ -157,14 +157,14 @@ namespace cloudscribe.Core.Storage.EFCore.Common
 
             using (var dbContext = _contextFactory.CreateContext())
             {
-                var ipAddress = await dbContext.BlackWhiteListedIpAddresses
-                    .Where(s => s.Id == id && s.SiteId == siteId && s.IsWhitelisted == true)
+                var ipAddress = await dbContext.BlockedPermittedIpAddresses
+                    .Where(s => s.Id == id && s.SiteId == siteId && s.IsPermitted == true)
                     .FirstOrDefaultAsync(cancellationToken)
                     .ConfigureAwait(false);
 
                 if (ipAddress != null)
                 {
-                    dbContext.BlackWhiteListedIpAddresses.Remove(ipAddress);
+                    dbContext.BlockedPermittedIpAddresses.Remove(ipAddress);
                     await dbContext.SaveChangesAsync(cancellationToken).ConfigureAwait(false);
 
                     return true;
@@ -176,36 +176,36 @@ namespace cloudscribe.Core.Storage.EFCore.Common
             }
         }
 
-        public async Task<PagedResult<BlackWhiteListedIpAddressesModel>> SearchWhitelistedIpAddressesAsync(Guid siteId, int pageNumber, int pageSize, string searchTerm, CancellationToken cancellationToken = default(CancellationToken))
+        public async Task<PagedResult<BlockedPermittedIpAddressesModel>> SearchPermittedIpAddressesAsync(Guid siteId, int pageNumber, int pageSize, string searchTerm, CancellationToken cancellationToken = default(CancellationToken))
         {
             cancellationToken.ThrowIfCancellationRequested();
 
             if (siteId.ToString().Length <= 0) throw new ArgumentNullException("must include site ID");
 
             int offset = (pageSize * pageNumber) - pageSize;
-            IQueryable<BlackWhiteListedIpAddressesModel> query;
+            IQueryable<BlockedPermittedIpAddressesModel> query;
 
             using (ICoreDbContext dbContext = _contextFactory.CreateContext())
             {
-                query = dbContext.BlackWhiteListedIpAddresses.OrderBy
+                query = dbContext.BlockedPermittedIpAddresses.OrderBy
                             (x => x.CreatedDate)
-                            .Where(s => s.SiteId == siteId && s.IsWhitelisted == true)
+                            .Where(s => s.SiteId == siteId && s.IsPermitted == true)
                             .Where(s => s.IpAddress.Contains(searchTerm.ToLower()) || (s.Reason != null && s.Reason.Contains(searchTerm.ToLower())))
                             .Skip(offset)
                             .Take(pageSize);
 
                 var data = await query
                     .AsNoTracking()
-                    .ToListAsync<BlackWhiteListedIpAddressesModel>(cancellationToken)
+                    .ToListAsync<BlockedPermittedIpAddressesModel>(cancellationToken)
                     .ConfigureAwait(false);
 
-                var result = new PagedResult<BlackWhiteListedIpAddressesModel>();
+                var result = new PagedResult<BlockedPermittedIpAddressesModel>();
 
-                result.Data = data.Where(x => x.SiteId == siteId && x.IsWhitelisted == true).ToList();
+                result.Data = data.Where(x => x.SiteId == siteId && x.IsPermitted == true).ToList();
                 result.PageNumber = pageNumber;
                 result.PageSize = pageSize;
-                result.TotalItems = await dbContext.BlackWhiteListedIpAddresses
-                    .Where(s => s.SiteId == siteId && s.IsWhitelisted == true)
+                result.TotalItems = await dbContext.BlockedPermittedIpAddresses
+                    .Where(s => s.SiteId == siteId && s.IsPermitted == true)
                     .Where(s => s.IpAddress.Contains(searchTerm.ToLower()) || (s.Reason != null && s.Reason.Contains(searchTerm.ToLower())))
                     .CountAsync(cancellationToken)
                     .ConfigureAwait(false);
@@ -215,48 +215,48 @@ namespace cloudscribe.Core.Storage.EFCore.Common
         }
 
 
-        public async Task<PagedResult<BlackWhiteListedIpAddressesModel>> GetBlacklistedIpAddresses(Guid siteId, int pageNumber, int pageSize, CancellationToken cancellationToken = default(CancellationToken), bool? IsFromService = false)
+        public async Task<PagedResult<BlockedPermittedIpAddressesModel>> GetBlockedIpAddresses(Guid siteId, int pageNumber, int pageSize, CancellationToken cancellationToken = default(CancellationToken), bool? IsFromService = false)
         {
             cancellationToken.ThrowIfCancellationRequested();
 
             if (siteId.ToString().Length <= 0)
             {
-                _log.LogError("Site ID must be provided to retrieve blacklisted IP addresses");
+                _log.LogError("Site ID must be provided to retrieve blocked IP addresses");
                 throw new ArgumentNullException("Site ID is required");
             }
 
             int offset = (pageSize * pageNumber) - pageSize;
-            IQueryable<BlackWhiteListedIpAddressesModel> query;
+            IQueryable<BlockedPermittedIpAddressesModel> query;
 
             using (ICoreDbContext dbContext = _contextFactory.CreateContext())
             {
                 if ((bool)IsFromService)
                 {
-                    query = dbContext.BlackWhiteListedIpAddresses.OrderBy
+                    query = dbContext.BlockedPermittedIpAddresses.OrderBy
                                 (x => x.CreatedDate)
-                                .Where(s => s.SiteId == siteId && s.IsWhitelisted == false)
+                                .Where(s => s.SiteId == siteId && s.IsPermitted == false)
                                 .Skip(offset);
                 }
                 else
                 {
-                    query = dbContext.BlackWhiteListedIpAddresses.OrderBy
+                    query = dbContext.BlockedPermittedIpAddresses.OrderBy
                                 (x => x.CreatedDate)
-                                .Where(s => s.SiteId == siteId && s.IsWhitelisted == false)
+                                .Where(s => s.SiteId == siteId && s.IsPermitted == false)
                                 .Skip(offset)
                                 .Take(pageSize);
                 }
                 var data = await query
                     .AsNoTracking()
-                    .ToListAsync<BlackWhiteListedIpAddressesModel>(cancellationToken)
+                    .ToListAsync<BlockedPermittedIpAddressesModel>(cancellationToken)
                     .ConfigureAwait(false);
 
-                var result = new PagedResult<BlackWhiteListedIpAddressesModel>();
+                var result = new PagedResult<BlockedPermittedIpAddressesModel>();
 
-                result.Data = data.Where(x => x.SiteId == siteId && x.IsWhitelisted == false).ToList();
+                result.Data = data.Where(x => x.SiteId == siteId && x.IsPermitted == false).ToList();
                 result.PageNumber = pageNumber;
                 result.PageSize = pageSize;
-                result.TotalItems = await dbContext.BlackWhiteListedIpAddresses
-                    .Where(s => s.SiteId == siteId && s.IsWhitelisted == false)
+                result.TotalItems = await dbContext.BlockedPermittedIpAddresses
+                    .Where(s => s.SiteId == siteId && s.IsPermitted == false)
                     .CountAsync(cancellationToken)
                     .ConfigureAwait(false);
 
@@ -264,19 +264,19 @@ namespace cloudscribe.Core.Storage.EFCore.Common
             };
         }
 
-        public async Task<bool> AddBlacklistedIpAddress(BlackWhiteListedIpAddressesModel blackWhiteListedIpAddressesModel, CancellationToken cancellationToken = default(CancellationToken))
+        public async Task<bool> AddBlockedIpAddress(BlockedPermittedIpAddressesModel blockedPermittedIpAddressesModel, CancellationToken cancellationToken = default(CancellationToken))
         {
-            if (blackWhiteListedIpAddressesModel == null)
+            if (blockedPermittedIpAddressesModel == null)
             {
                 _log.LogError($"IP Address Model is required");
                 throw new ArgumentException($"IP Address Model is required");
             }
-            if (blackWhiteListedIpAddressesModel.IpAddress.Length <= 0)
+            if (blockedPermittedIpAddressesModel.IpAddress.Length <= 0)
             {
                 _log.LogError($"IP Address is required");
                 throw new ArgumentException($"IP Address is required");
             }
-            if (blackWhiteListedIpAddressesModel.SiteId.ToString() == null)
+            if (blockedPermittedIpAddressesModel.SiteId.ToString() == null)
             {
                 _log.LogError($"Site ID is required");
                 throw new ArgumentException($"Site ID is required");
@@ -286,7 +286,7 @@ namespace cloudscribe.Core.Storage.EFCore.Common
 
             using (var dbContext = _contextFactory.CreateContext())
             {
-                dbContext.BlackWhiteListedIpAddresses.Add(blackWhiteListedIpAddressesModel);
+                dbContext.BlockedPermittedIpAddresses.Add(blockedPermittedIpAddressesModel);
 
                 rowsAffected = await dbContext.SaveChangesAsync(cancellationToken).ConfigureAwait(false);
             }
@@ -301,19 +301,19 @@ namespace cloudscribe.Core.Storage.EFCore.Common
             }
         }
 
-        public async Task<bool> UpdateBlacklistedIpAddress(BlackWhiteListedIpAddressesModel blackWhiteListedIpAddressesModel, CancellationToken cancellationToken = default(CancellationToken))
+        public async Task<bool> UpdateBlockedIpAddress(BlockedPermittedIpAddressesModel blockedPermittedIpAddressesModel, CancellationToken cancellationToken = default(CancellationToken))
         {
-            if (blackWhiteListedIpAddressesModel == null)
+            if (blockedPermittedIpAddressesModel == null)
             {
                 _log.LogError($"IP Address Model is required");
                 throw new ArgumentException($"IP Address Model is required");
             }
-            if (blackWhiteListedIpAddressesModel.IpAddress.Length <= 0)
+            if (blockedPermittedIpAddressesModel.IpAddress.Length <= 0)
             {
                 _log.LogError($"IP Address is required");
                 throw new ArgumentException($"IP Address is required");
             }
-            if (blackWhiteListedIpAddressesModel.SiteId.ToString() == null)
+            if (blockedPermittedIpAddressesModel.SiteId.ToString() == null)
             {
                 _log.LogError($"Site ID is required");
                 throw new ArgumentException($"Site ID is required");
@@ -323,15 +323,15 @@ namespace cloudscribe.Core.Storage.EFCore.Common
 
             using (var dbContext = _contextFactory.CreateContext())
             {
-                var entity = await dbContext.BlackWhiteListedIpAddresses
-                    .FirstOrDefaultAsync(x => x.Id == blackWhiteListedIpAddressesModel.Id && x.SiteId == blackWhiteListedIpAddressesModel.SiteId && blackWhiteListedIpAddressesModel.IsWhitelisted == false, cancellationToken);
+                var entity = await dbContext.BlockedPermittedIpAddresses
+                    .FirstOrDefaultAsync(x => x.Id == blockedPermittedIpAddressesModel.Id && x.SiteId == blockedPermittedIpAddressesModel.SiteId && blockedPermittedIpAddressesModel.IsPermitted == false, cancellationToken);
 
                 if (entity == null)
                     return false;
 
-                entity.IpAddress = blackWhiteListedIpAddressesModel.IpAddress;
-                entity.Reason = blackWhiteListedIpAddressesModel.Reason;
-                entity.LastUpdated = blackWhiteListedIpAddressesModel.LastUpdated;
+                entity.IpAddress = blockedPermittedIpAddressesModel.IpAddress;
+                entity.Reason = blockedPermittedIpAddressesModel.Reason;
+                entity.LastUpdated = blockedPermittedIpAddressesModel.LastUpdated;
 
                 rowsAffected = await dbContext.SaveChangesAsync(cancellationToken).ConfigureAwait(false);
             }
@@ -346,7 +346,7 @@ namespace cloudscribe.Core.Storage.EFCore.Common
             }
         }
 
-        public async Task<bool> DeleteBlacklistedIpAddress(Guid id, Guid siteId, CancellationToken cancellationToken = default(CancellationToken))
+        public async Task<bool> DeleteBlockedIpAddress(Guid id, Guid siteId, CancellationToken cancellationToken = default(CancellationToken))
         {
             if (id == Guid.Empty || siteId == Guid.Empty)
             {
@@ -356,14 +356,14 @@ namespace cloudscribe.Core.Storage.EFCore.Common
 
             using (var dbContext = _contextFactory.CreateContext())
             {
-                var ipAddress = await dbContext.BlackWhiteListedIpAddresses
-                    .Where(s => s.Id == id && s.SiteId == siteId && s.IsWhitelisted == false)
+                var ipAddress = await dbContext.BlockedPermittedIpAddresses
+                    .Where(s => s.Id == id && s.SiteId == siteId && s.IsPermitted == false)
                     .FirstOrDefaultAsync(cancellationToken)
                     .ConfigureAwait(false);
 
                 if (ipAddress != null)
                 {
-                    dbContext.BlackWhiteListedIpAddresses.Remove(ipAddress);
+                    dbContext.BlockedPermittedIpAddresses.Remove(ipAddress);
                     await dbContext.SaveChangesAsync(cancellationToken).ConfigureAwait(false);
 
                     return true;
@@ -375,36 +375,36 @@ namespace cloudscribe.Core.Storage.EFCore.Common
             }
         }
 
-        public async Task<PagedResult<BlackWhiteListedIpAddressesModel>> SearchBlacklistedIpAddressesAsync(Guid siteId, int pageNumber, int pageSize, string searchTerm, CancellationToken cancellationToken = default(CancellationToken))
+        public async Task<PagedResult<BlockedPermittedIpAddressesModel>> SearchBlockedIpAddressesAsync(Guid siteId, int pageNumber, int pageSize, string searchTerm, CancellationToken cancellationToken = default(CancellationToken))
         {
             cancellationToken.ThrowIfCancellationRequested();
 
             if (siteId.ToString().Length <= 0) throw new ArgumentNullException("must include site ID");
 
             int offset = (pageSize * pageNumber) - pageSize;
-            IQueryable<BlackWhiteListedIpAddressesModel> query;
+            IQueryable<BlockedPermittedIpAddressesModel> query;
 
             using (ICoreDbContext dbContext = _contextFactory.CreateContext())
             {
-                query = dbContext.BlackWhiteListedIpAddresses.OrderBy
+                query = dbContext.BlockedPermittedIpAddresses.OrderBy
                             (x => x.CreatedDate)
-                            .Where(s => s.SiteId == siteId && s.IsWhitelisted == false)
+                            .Where(s => s.SiteId == siteId && s.IsPermitted == false)
                             .Where(s => s.IpAddress.Contains(searchTerm.ToLower()) || (s.Reason != null && s.Reason.Contains(searchTerm.ToLower())))
                             .Skip(offset)
                             .Take(pageSize);
 
                 var data = await query
                     .AsNoTracking()
-                    .ToListAsync<BlackWhiteListedIpAddressesModel>(cancellationToken)
+                    .ToListAsync<BlockedPermittedIpAddressesModel>(cancellationToken)
                     .ConfigureAwait(false);
 
-                var result = new PagedResult<BlackWhiteListedIpAddressesModel>();
+                var result = new PagedResult<BlockedPermittedIpAddressesModel>();
 
-                result.Data = data.Where(x => x.SiteId == siteId && x.IsWhitelisted == false).ToList();
+                result.Data = data.Where(x => x.SiteId == siteId && x.IsPermitted == false).ToList();
                 result.PageNumber = pageNumber;
                 result.PageSize = pageSize;
-                result.TotalItems = await dbContext.BlackWhiteListedIpAddresses
-                    .Where(s => s.SiteId == siteId && s.IsWhitelisted == false)
+                result.TotalItems = await dbContext.BlockedPermittedIpAddresses
+                    .Where(s => s.SiteId == siteId && s.IsPermitted == false)
                     .Where(s => s.IpAddress.Contains(searchTerm.ToLower()) || (s.Reason != null && s.Reason.Contains(searchTerm.ToLower())))
                     .CountAsync(cancellationToken)
                     .ConfigureAwait(false);

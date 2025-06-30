@@ -22,7 +22,7 @@ namespace cloudscribe.Core.Storage.EFCore.Common
         DbSet<UserRole> UserRoles { get; set; }
         DbSet<SiteUser> Users { get; set; }
         DbSet<UserToken> UserTokens { get; set; }
-        DbSet<BlackWhiteListedIpAddressesModel> BlackWhiteListedIpAddresses { get; set; }
+        DbSet<BlockedPermittedIpAddressesModel> BlockedPermittedIpAddresses { get; set; }
         ChangeTracker ChangeTracker { get; }
 
         DatabaseFacade Database { get; }

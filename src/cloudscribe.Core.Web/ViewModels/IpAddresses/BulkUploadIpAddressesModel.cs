@@ -14,6 +14,6 @@ namespace cloudscribe.Core.Web.ViewModels.IpAddresses
 
         [Required(ErrorMessage = "Site ID is required")]
         public Guid SiteId { get; set; }
-        public bool IsWhitelisted { get; set; }
+        public bool IsPermitted { get; set; }
     }
 }

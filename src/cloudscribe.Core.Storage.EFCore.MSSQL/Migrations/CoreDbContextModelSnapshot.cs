@@ -22,7 +22,7 @@ namespace cloudscribe.Core.Storage.EFCore.MSSQL.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
-            modelBuilder.Entity("cloudscribe.Core.Models.BlackWhiteListedIpAddressesModel", b =>
+            modelBuilder.Entity("cloudscribe.Core.Models.BlockedPermittedIpAddressesModel", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -38,7 +38,7 @@ namespace cloudscribe.Core.Storage.EFCore.MSSQL.Migrations
                         .HasMaxLength(39)
                         .HasColumnType("nvarchar(39)");
 
-                    b.Property<bool>("IsWhitelisted")
+                    b.Property<bool>("IsPermitted")
                         .HasColumnType("bit");
 
                     b.Property<DateTime>("LastUpdated")
@@ -56,9 +56,9 @@ namespace cloudscribe.Core.Storage.EFCore.MSSQL.Migrations
 
                     b.HasIndex("IpAddress");
 
-                    b.ToTable("cs_BlackWhiteListIpAddresses", null, t =>
+                    b.ToTable("cs_BlockedPermittedIpAddresses", null, t =>
                         {
-                            t.HasTrigger("cs_BlackWhiteListIpAddresses_Trigger");
+                            t.HasTrigger("cs_BlockedPermittedIpAddresses_Trigger");
                         });
 
                     b.HasAnnotation("SqlServer:UseSqlOutputClause", false);

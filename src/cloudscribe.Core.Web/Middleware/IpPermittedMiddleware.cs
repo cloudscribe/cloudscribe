@@ -6,22 +6,22 @@ using System.Threading.Tasks;
 
 namespace cloudscribe.Core.Web.Middleware
 {
-    public class IpWhitelistMiddleware
+    public class IpPermittedMiddleware
     {
         private readonly RequestDelegate _next;
 
-        public IpWhitelistMiddleware(RequestDelegate next)
+        public IpPermittedMiddleware(RequestDelegate next)
         {
             _next = next;
         }
 
-        public async Task Invoke(HttpContext context, IWhitelistService whitelistService)
+        public async Task Invoke(HttpContext context, IPermittedIpService permittedIpService)
         {
             IPAddress remoteIp = context.Connection.RemoteIpAddress;
             SiteContext tenant = context.GetTenant<SiteContext>();
-            bool isWhitelisted = whitelistService.IsWhitelisted(remoteIp!, tenant.Id);
+            bool isPermitted = permittedIpService.IsPermittedIp(remoteIp!, tenant.Id);
 
-            if (!isWhitelisted)
+            if (!isPermitted)
             {
                 context.Response.StatusCode = (int)HttpStatusCode.Forbidden;
                 return;

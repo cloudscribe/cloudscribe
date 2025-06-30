@@ -7,16 +7,16 @@ namespace cloudscribe.Core.Models
 {
     public interface IipAddressCommands
     {
-        Task<PagedResult<BlackWhiteListedIpAddressesModel>> GetWhitelistedIpAddresses(Guid siteId, int pageNumber, int pageSize, CancellationToken cancellationToken = default(CancellationToken), bool? IsFromService = false);
-        Task<bool> AddWhitelistedIpAddress(BlackWhiteListedIpAddressesModel blackWhiteListedIpAddressesModel, CancellationToken cancellationToken);
-        Task<bool> UpdateWhitelistedIpAddress(BlackWhiteListedIpAddressesModel blackWhiteListedIpAddressesModel, CancellationToken cancellationToken);
-        Task<bool> DeleteWhitelistedIpAddress(Guid id, Guid siteId, CancellationToken cancellationToken = default(CancellationToken));
-        Task<PagedResult<BlackWhiteListedIpAddressesModel>> SearchWhitelistedIpAddressesAsync(Guid siteId, int pageNumber, int pageSize, string searchTerm, CancellationToken cancellationToken = default(CancellationToken));
+        Task<PagedResult<BlockedPermittedIpAddressesModel>> GetPermittedIpAddresses(Guid siteId, int pageNumber, int pageSize, CancellationToken cancellationToken = default(CancellationToken), bool? IsFromService = false);
+        Task<bool> AddPermittedIpAddress(BlockedPermittedIpAddressesModel blockedPermittedIpAddressesModel, CancellationToken cancellationToken);
+        Task<bool> UpdatePermittedIpAddress(BlockedPermittedIpAddressesModel blockedPermittedIpAddressesModel, CancellationToken cancellationToken);
+        Task<bool> DeletePermittedIpAddress(Guid id, Guid siteId, CancellationToken cancellationToken = default(CancellationToken));
+        Task<PagedResult<BlockedPermittedIpAddressesModel>> SearchPermittedIpAddressesAsync(Guid siteId, int pageNumber, int pageSize, string searchTerm, CancellationToken cancellationToken = default(CancellationToken));
 
-        Task<PagedResult<BlackWhiteListedIpAddressesModel>> GetBlacklistedIpAddresses(Guid siteId, int pageNumber, int pageSize, CancellationToken cancellationToken = default(CancellationToken), bool? IsFromService = false);
-        Task<bool> AddBlacklistedIpAddress(BlackWhiteListedIpAddressesModel blackWhiteListedIpAddressesModel, CancellationToken cancellationToken);
-        Task<bool> UpdateBlacklistedIpAddress(BlackWhiteListedIpAddressesModel blackWhiteListedIpAddressesModel, CancellationToken cancellationToken);
-        Task<bool> DeleteBlacklistedIpAddress(Guid id, Guid siteId, CancellationToken cancellationToken = default(CancellationToken));
-        Task<PagedResult<BlackWhiteListedIpAddressesModel>> SearchBlacklistedIpAddressesAsync(Guid siteId, int pageNumber, int pageSize, string searchTerm, CancellationToken cancellationToken = default(CancellationToken));
+        Task<PagedResult<BlockedPermittedIpAddressesModel>> GetBlockedIpAddresses(Guid siteId, int pageNumber, int pageSize, CancellationToken cancellationToken = default(CancellationToken), bool? IsFromService = false);
+        Task<bool> AddBlockedIpAddress(BlockedPermittedIpAddressesModel blockedPermittedIpAddressesModel, CancellationToken cancellationToken);
+        Task<bool> UpdateBlockedIpAddress(BlockedPermittedIpAddressesModel blockedPermittedIpAddressesModel, CancellationToken cancellationToken);
+        Task<bool> DeleteBlockedIpAddress(Guid id, Guid siteId, CancellationToken cancellationToken = default(CancellationToken));
+        Task<PagedResult<BlockedPermittedIpAddressesModel>> SearchBlockedIpAddressesAsync(Guid siteId, int pageNumber, int pageSize, string searchTerm, CancellationToken cancellationToken = default(CancellationToken));
     }
 }

@@ -1,0 +1,141 @@
+@model cloudscribe.Core.Web.ViewModels.IpAddresses.PaginatedIpAddressesViewModel
+@inject IStringLocalizer<CloudscribeCore> sr
+@inject ICoreThemeHelper themeHelper
+@{
+    var themeSettings = themeHelper.GetThemeSettings();
+    if (themeSettings.AdminSideNavExpanded) { ViewData["SideNavToggle"] = "show"; }
+    ViewData["SideNavVisible"] = true;
+}
+
+<h2>@ViewBag.Title</h2>
+<div class="row">
+    <div class="col mb-3">
+        <h4>Your IP Address: @ViewBag.UsersIpAddress</h4>
+    </div>
+</div>
+@{
+    if (@ViewBag.status != null)
+    {
+        <div class="alert alert-info">@ViewBag.status</div>
+    }
+}
+<div class="row align-items-center">
+    @{
+        if (Model.BlockedPermittedIpAddresses.Data.Count == 0)
+        {
+            <div class="alert alert-info">@sr["No IP addresses have been permitted."]</div>
+            <div class="col d-flex">
+                <button name="AddNewRow" class="btn btn-secondary mt-2 me-3" data-bs-toggle="modal" data-bs-target="#AddNewIpAddress">@sr["Add New IP Address"]</button>
+                <button name="BulkUpload" class="btn btn-secondary mt-2" data-bs-toggle="modal" data-bs-target="#BulkUploadIpAddresses">@sr["Bulk Upload IP Addresses"]</button>
+            </div>
+        }
+        else
+        {
+            <div class="col d-flex">
+                <form method="post" class="form-horizontal" role="form" asp-antiforgery="true" data-submit-once="true" asp-controller="PermittedIpAddresses" asp-action="SearchPermittedIpAddresses">
+                    <input type="text" class="me-3" id="searchTerm" name="searchTerm" />
+                    <button id="searchButton" class="btn btn-primary" type="submit" name="submit" aria-expanded="false">@sr["Search"]</button>
+                </form>
+            </div>
+            <div class="col d-flex justify-content-end">
+                <button name="AddNewRow" class="btn btn-secondary mt-2 me-3" data-bs-toggle="modal" data-bs-target="#AddNewIpAddress">@sr["Add New IP Address"]</button>
+                <button name="BulkUpload" class="btn btn-secondary mt-2" data-bs-toggle="modal" data-bs-target="#BulkUploadIpAddresses">@sr["Bulk Upload IP Addresses"]</button>
+            </div>
+        }
+    }
+</div>
+
+<div asp-validation-summary="All" class="text-danger"></div>
+
+@for (var i = 0; i < Model.BlockedPermittedIpAddresses.Data.Count; i++)
+{
+    var safeId = Model.BlockedPermittedIpAddresses.Data[i].Id.ToString().Replace("-", "_");
+    <form method="post" class="form-horizontal" role="form" asp-antiforgery="true" data-submit-once="true" asp-controller="PermittedIpAddresses" asp-action="UpdatePermittedIpAddress">
+        <input asp-for="@Model.BlockedPermittedIpAddresses.Data[i].Id" name="Id" id="Id" type="hidden" />
+        <input asp-for="@Model.BlockedPermittedIpAddresses.Data[i].SiteId" name="SiteId" id="SiteId" type="hidden" />
+        <input asp-for="@Model.BlockedPermittedIpAddresses.Data[i].CreatedDate" name="CreatedDate" id="CreatedDate" type="hidden" />
+        <input asp-for="@Model.BlockedPermittedIpAddresses.Data[i].LastUpdated" name="LastUpdated" id="LastUpdated" type="hidden" />
+        <div class="row bg-light">
+            <div class="col-sm-12 col-md-3 mb-3 d-flex flex-wrap align-items-center">
+                <div id="@("EditButton" + @safeId)">
+                    <button name="edit" type="button" class="btn btn-primary m-1" data-disabled-text='@sr["Working..."]' data-enabled-text='@sr["Edit"]' onclick="EditItem('@safeId')">@sr["Edit"]</button>
+                </div>
+                <div id="@("EditingButtons" + @safeId)" style="display: none;">
+                    <button name="submit" type="submit" class="btn btn-primary m-1" data-disabled-text='@sr["Working..."]' data-enabled-text='@sr["Save"]'>@sr["Save"]</button>
+                    <button name="delete" id="delete" type="button" class="btn btn-danger m-1" data-disabled-text='@sr["Working..."]' data-enabled-text='@sr["Delete"]' data-bs-toggle="modal" data-bs-target="#DeleteConfirmation" data-id="@safeId">@sr["Delete"]</button>
+                    <button name="cancel" type="button" class="btn btn-secondary m-1" data-disabled-text='@sr["Working..."]' data-enabled-text='@sr["Cancel"]' onclick="CancelEditing('@safeId')">@sr["Cancel"]</button>
+                </div>
+            </div>
+            <div class="col-sm-12 col-md-4 mb-3 align-items-center">
+                @if (i == 0)
+                {
+                    <label asp-for="@Model.BlockedPermittedIpAddresses.Data[i].IpAddress" name="IpAddress" id="IpAddress" class="form-label">@sr["Permitted IP"]</label>
+                }
+                <input asp-for="@Model.BlockedPermittedIpAddresses.Data[i].IpAddress" name="IpAddress" id="IpAddress" disabled="true" class="form-control" />
+            </div>
+            <div class="col-sm-12 col-md-5 mb-3 align-items-center">
+                @if (i == 0)
+                {
+                    <label asp-for="@Model.BlockedPermittedIpAddresses.Data[i].Reason" name="Reason" id="Reason" class="form-label">@sr["Reason"]</label>
+                }
+                <input asp-for="@Model.BlockedPermittedIpAddresses.Data[i].Reason" name="Reason" id="Reason" disabled="true" class="form-control" />
+            </div>
+        </div>
+    </form>
+}
+<cs-pager asp-action="Index" asp-controller="PermittedIpAddresses"
+          asp-route-pagesize="@Model.BlockedPermittedIpAddresses.PageSize"
+          cs-paging-pagenumber="@Model.BlockedPermittedIpAddresses.PageNumber"
+          cs-paging-totalitems="@Model.BlockedPermittedIpAddresses.TotalItems"
+          asp-route-q="@Model.SearchTerm"
+          cs-first-page-title='@sr["First Page"]'
+          cs-last-page-title='@sr["Last Page"]'
+          cs-previous-page-title='@sr["Previous page"]'
+          cs-next-page-title='@sr["Next page"]'
+          cs-pager-ul-class="pagination mt-3 d-flex flex-wrap"
+          cs-pager-li-current-class="page-item active"
+          cs-pager-li-other-class="page-item"
+          cs-pager-li-non-active-class="page-item disabled"
+          cs-pager-link-current-class="page-link"
+          cs-pager-link-other-class="page-link"></cs-pager>
+
+<div class="modal fade" id="AddNewIpAddress" tabindex="-1" role="dialog" aria-labelledby="AddNewIpAddress">
+    <div class="modal-dialog modal-md" role="document">
+        <div class="modal-content" style="padding:1rem;">
+            <partial name="AddPermittedIpAddressPartial" model="new cloudscribe.Core.Web.ViewModels.IpAddresses.IpAddressesViewModel()" />
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="DeleteConfirmation" tabindex="-1" role="dialog" aria-labelledby="DeleteConfirmation">
+    <div class="modal-dialog modal-md" role="document">
+        <div class="modal-content" style="padding:1rem;">
+            <partial name="DeletePermittedIpAddressPartial" model="string.Empty" />
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="BulkUploadIpAddresses" tabindex="-1" role="dialog" aria-labelledby="BulkUploadIpAddresses">
+    <div class="modal-dialog modal-md" role="document">
+        <div class="modal-content" style="padding:1rem;">
+            <partial name="BulkUploadIpAddressesPartial" model="new cloudscribe.Core.Web.ViewModels.IpAddresses.BulkUploadIpAddressesModel()" />
+        </div>
+    </div>
+</div>
+
+@section SideNav {
+    <partial name="AdminSideNav" />
+}
+@section Toolbar {
+    <partial name="AdminSideNavToggle" />
+}
+@section Scripts {
+    <partial name="AdminSideNavScripts" />
+    <script src="~/cr/js/jquery.validate.min.js"></script>
+    <script src="~/cr/js/jquery.validate.unobtrusive.min.js"></script>
+    <script src="~/cr/js/unobtrusive-validation-bs4.min.js"></script>
+    <script src="~/cr/js/cloudscribe-cascade-unobtrusive.min.js"></script>
+    <script src="~/cr/js/jquery.validate.hooks.min.js"></script>
+    <script src="~/cr/js/jqueryvaildation.submitonce-unobtrusive.min.js"></script>
+    <script src="~/cr/js/IpAddressStateAndValidation.min.js"></script>
+}

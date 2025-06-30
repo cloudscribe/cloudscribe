@@ -12,8 +12,8 @@ using cloudscribe.Core.Storage.EFCore.PostgreSql;
 namespace cloudscribe.Core.Storage.EFCore.PostgreSql.Migrations
 {
     [DbContext(typeof(CoreDbContext))]
-    [Migration("20250624140424_cs-core-20250624")]
-    partial class cscore20250624
+    [Migration("20250630104519_cs-core-20250630")]
+    partial class cscore20250630
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -26,7 +26,7 @@ namespace cloudscribe.Core.Storage.EFCore.PostgreSql.Migrations
             NpgsqlModelBuilderExtensions.HasPostgresExtension(modelBuilder, "uuid-ossp");
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
 
-            modelBuilder.Entity("cloudscribe.Core.Models.BlackWhiteListedIpAddressesModel", b =>
+            modelBuilder.Entity("cloudscribe.Core.Models.BlockedPermittedIpAddressesModel", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -41,9 +41,9 @@ namespace cloudscribe.Core.Storage.EFCore.PostgreSql.Migrations
                         .HasColumnType("text")
                         .HasColumnName("ip_address");
 
-                    b.Property<bool>("IsWhitelisted")
+                    b.Property<bool>("IsPermitted")
                         .HasColumnType("boolean")
-                        .HasColumnName("is_whitelisted");
+                        .HasColumnName("is_permitted");
 
                     b.Property<DateTime>("LastUpdated")
                         .HasColumnType("timestamp with time zone")
@@ -58,9 +58,9 @@ namespace cloudscribe.Core.Storage.EFCore.PostgreSql.Migrations
                         .HasColumnName("site_id");
 
                     b.HasKey("Id")
-                        .HasName("pk_black_white_listed_ip_addresses");
+                        .HasName("pk_blocked_permitted_ip_addresses");
 
-                    b.ToTable("black_white_listed_ip_addresses");
+                    b.ToTable("blocked_permitted_ip_addresses");
                 });
 
             modelBuilder.Entity("cloudscribe.Core.Models.Geography.GeoCountry", b =>

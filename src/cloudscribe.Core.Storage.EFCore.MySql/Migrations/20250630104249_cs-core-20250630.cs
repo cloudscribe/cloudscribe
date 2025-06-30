@@ -6,13 +6,13 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace cloudscribe.Core.Storage.EFCore.MySql.Migrations
 {
     /// <inheritdoc />
-    public partial class cscoreblackwhitelistingips20250624 : Migration
+    public partial class cscore20250630 : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.CreateTable(
-                name: "BlackWhiteListedIpAddresses",
+                name: "BlockedPermittedIpAddresses",
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "char(36)", nullable: false, collation: "ascii_general_ci"),
@@ -23,11 +23,11 @@ namespace cloudscribe.Core.Storage.EFCore.MySql.Migrations
                     CreatedDate = table.Column<DateTime>(type: "datetime(6)", nullable: false),
                     LastUpdated = table.Column<DateTime>(type: "datetime(6)", nullable: false),
                     SiteId = table.Column<Guid>(type: "char(36)", nullable: false, collation: "ascii_general_ci"),
-                    IsWhitelisted = table.Column<bool>(type: "tinyint(1)", nullable: false)
+                    IsPermitted = table.Column<bool>(type: "tinyint(1)", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_BlackWhiteListedIpAddresses", x => x.Id);
+                    table.PrimaryKey("PK_BlockedPermittedIpAddresses", x => x.Id);
                 })
                 .Annotation("MySql:CharSet", "utf8mb4");
         }
@@ -36,7 +36,7 @@ namespace cloudscribe.Core.Storage.EFCore.MySql.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
-                name: "BlackWhiteListedIpAddresses");
+                name: "BlockedPermittedIpAddresses");
         }
     }
 }

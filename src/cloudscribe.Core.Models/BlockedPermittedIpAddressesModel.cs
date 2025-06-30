@@ -2,7 +2,7 @@
 
 namespace cloudscribe.Core.Models
 {
-    public class BlackWhiteListedIpAddressesModel
+    public class BlockedPermittedIpAddressesModel
     {
         public Guid Id { get; set; }
         public string IpAddress { get; set; }
@@ -10,6 +10,6 @@ namespace cloudscribe.Core.Models
         public DateTime CreatedDate { get; set; }
         public DateTime LastUpdated { get; set; }
         public Guid SiteId { get; set; }
-        public bool IsWhitelisted { get; set; }
+        public bool IsPermitted { get; set; }
     }
 }

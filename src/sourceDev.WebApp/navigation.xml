@@ -565,19 +565,19 @@
                 iconCssClass="fas fa-bug"
               componentVisibility="breadcrumbs,childtree,parenttree"
               authorizationPolicy="SystemLogPolicy" />
-        <NavNode key="WhitelistIpAddresses"
-                 controller="WhitelistIpAddresses"
+        <NavNode key="PermittedIpAddresses"
+                 controller="PermittedIpAddresses"
                  action="Index"
-                 text="Whitelist IP Addresses"
+                 text="Permitted IP Addresses"
                  iconCssClass="fas fa-check"
                  componentVisibility="breadcrumbs,childtree,parenttree"
                  authorizationPolicy="AdminPolicy">
               <Children />
         </NavNode>
-	  <NavNode key="BlacklistIpAddresses"
-                 controller="BlacklistIpAddresses"
+	  <NavNode key="BlockedIpAddresses"
+                 controller="BlockedIpAddresses"
                  action="Index"
-                 text="Blacklist IP Addresses"
+                 text="Blocked IP Addresses"
                  iconCssClass="fas fa-ban"
                  componentVisibility="breadcrumbs,childtree,parenttree"
                  authorizationPolicy="AdminPolicy">
