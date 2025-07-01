@@ -13,6 +13,7 @@ using System.ComponentModel.DataAnnotations;
 using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace cloudscribe.Core.Web.Controllers
 {
@@ -92,6 +93,12 @@ namespace cloudscribe.Core.Web.Controllers
             {
                 _log.LogError("Model is invalid");
                 return RedirectToAction("Index", new { status = StringLocalizer["Error: The Model is invalid"] });
+            }
+            ValidationResult validationResult = ValidateIpAddress.IpAddressValidation(model.IpAddress);
+            if (validationResult != null)
+            {
+                _log.LogError($"{validationResult.ErrorMessage} {model.IpAddress}");
+                return RedirectToAction("Index", new { status = $"{validationResult.ErrorMessage}  {model.IpAddress}" });
             }
 
             BlockedPermittedIpAddressesModel ipAddressModel = new BlockedPermittedIpAddressesModel
