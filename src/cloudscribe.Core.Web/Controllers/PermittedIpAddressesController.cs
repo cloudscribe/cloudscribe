@@ -2,6 +2,8 @@
 using cloudscribe.Core.Models;
 using cloudscribe.Core.Web.Components;
 using cloudscribe.Core.Web.ViewModels.IpAddresses;
+using CsvHelper;
+using CsvHelper.Configuration;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Localization;
@@ -10,6 +12,7 @@ using Microsoft.Extensions.Options;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.Globalization;
 using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
@@ -316,52 +319,51 @@ namespace cloudscribe.Core.Web.Controllers
 
             var errors = new List<string>();
             int successCount = 0;
+            CsvConfiguration csvReaderConfig = new CsvConfiguration(CultureInfo.InvariantCulture)
+            {
+                HasHeaderRecord = false,
+                MissingFieldFound = null
+            };
 
             using (StreamReader reader = new StreamReader(ipAddresses))
+            using (var csv = new CsvReader(reader, csvReaderConfig))
             {
-                string content = await reader.ReadToEndAsync();
-
-                if (!string.IsNullOrWhiteSpace(content))
+                while (await csv.ReadAsync())
                 {
-                    string[] entries = content.Split(new[] { ',' }, StringSplitOptions.None);
+                    string ip = csv.GetField(0)?.Trim();
+                    string reason = csv.GetField(1)?.Trim().Length > 1 ? csv.GetField(1)?.Trim() : string.Empty;
 
-                    for (int i = 0; i < entries.Length; i += 2)
+                    if (!string.IsNullOrWhiteSpace(ip))
                     {
-                        string ip = entries[i]?.Trim();
-                        string reason = (i + 1 < entries.Length) ? entries[i + 1]?.Trim() : string.Empty;
+                        ValidationResult validationResult = ValidateIpAddress.IpAddressValidation(ip);
 
-                        if (!string.IsNullOrWhiteSpace(ip))
+                        if (validationResult != null)
                         {
-                            ValidationResult validationResult = ValidateIpAddress.IpAddressValidation(ip);
+                            errors.Add($"{validationResult.ErrorMessage} {ip}");
+                            _log.LogError($"{validationResult.ErrorMessage} {ip}");
+                            continue;
+                        }
 
-                            if (validationResult != null)
-                            {
-                                errors.Add($"{validationResult.ErrorMessage} {ip}");
-                                _log.LogError($"{validationResult.ErrorMessage} {ip}");
-                                continue;
-                            }
+                        var ipAddressModel = new BlockedPermittedIpAddressesModel
+                        {
+                            Id = Guid.NewGuid(),
+                            IpAddress = ip,
+                            Reason = string.IsNullOrEmpty(reason) ? string.Empty : reason,
+                            CreatedDate = DateTime.UtcNow,
+                            LastUpdated = DateTime.UtcNow,
+                            SiteId = User.GetUserSiteIdAsGuid(),
+                            IsPermitted = true
+                        };
 
-                            var ipAddressModel = new BlockedPermittedIpAddressesModel
-                            {
-                                Id = Guid.NewGuid(),
-                                IpAddress = ip,
-                                Reason = string.IsNullOrEmpty(reason) ? string.Empty : reason,
-                                CreatedDate = DateTime.UtcNow,
-                                LastUpdated = DateTime.UtcNow,
-                                SiteId = User.GetUserSiteIdAsGuid(),
-                                IsPermitted = true
-                            };
-
-                            try
-                            {
-                                await _permittedIpService.AddPermittedIpAddress(ipAddressModel, CancellationToken.None);
-                                successCount++;
-                            }
-                            catch (Exception e)
-                            {
-                                errors.Add($"Error adding {ip}: {e.Message}");
-                                _log.LogError(e, $"Error adding permitted IP Address from bulk upload: {ip}");
-                            }
+                        try
+                        {
+                            await _permittedIpService.AddPermittedIpAddress(ipAddressModel, CancellationToken.None);
+                            successCount++;
+                        }
+                        catch (Exception e)
+                        {
+                            errors.Add($"Error adding {ip}: {e.Message}");
+                            _log.LogError(e, $"Error adding permitted IP Address from bulk upload: {ip}");
                         }
                     }
                 }

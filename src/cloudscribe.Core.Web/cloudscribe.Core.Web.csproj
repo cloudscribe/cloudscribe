@@ -35,6 +35,7 @@
   <ItemGroup>
     <PackageReference Include="cloudscribe.Web.Pagination" Version="8.2.0" />
     <PackageReference Include="cloudscribe.Web.SiteMap.FromNavigation" Version="8.2.0" />
+    <PackageReference Include="CsvHelper" Version="33.1.0" />
 
     <PackageReference Include="Microsoft.Extensions.Caching.Abstractions" Version="8.0.0" />
     <PackageReference Include="Microsoft.Extensions.Configuration.Abstractions" Version="8.0.0" />
