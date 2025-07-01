@@ -360,11 +360,17 @@ namespace cloudscribe.Core.Web.Controllers
                     }
                 }
             }
-            if (errors.Count > 0)
+            if (errors.Count > 0 && errors.Count <= 10)
             {
                 string errorSummary = string.Join("; ", errors);
 
                 return RedirectToAction("Index", new { status = StringLocalizer[$"Added {successCount} IP(s). Errors: {errorSummary}"] });
+            }
+            else if (errors.Count > 10)
+            {
+                string errorSummary = string.Join("; ", errors.GetRange(0, 10));
+
+                return RedirectToAction("Index", new { status = StringLocalizer[$"Added {successCount} IP(s). First 10 errors: {errorSummary}"] });
             }
             else
             {
