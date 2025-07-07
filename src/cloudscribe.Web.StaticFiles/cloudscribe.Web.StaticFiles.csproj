@@ -123,6 +123,7 @@
     <EmbeddedResource Include="js\jquery.validate.unobtrusive.min.js" />
     <EmbeddedResource Include="js\jqueryvaildation.submitonce-unobtrusive.js" />
     <EmbeddedResource Include="js\jqueryvaildation.submitonce-unobtrusive.min.js" />
+	<EmbeddedResource Include="js\IpAddressStateAndValidation.min.js" />
     <EmbeddedResource Include="js\knockout-3.4.2.js" />
     <EmbeddedResource Include="js\knockout-3.5.1.js" />
     <EmbeddedResource Include="js\metisMenu.min.js" />

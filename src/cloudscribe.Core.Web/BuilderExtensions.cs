@@ -98,7 +98,7 @@ namespace Microsoft.AspNetCore.Builder
             app.UseAuthentication();
             app.UseAuthorization();
             app.UseCloudscribeEnforceSiteRulesMiddleware();
-
+            app.UseCloudscribeBlockedOrPermittedIpAddress();
             return app;
 
         }
