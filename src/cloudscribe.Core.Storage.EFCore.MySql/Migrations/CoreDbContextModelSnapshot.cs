@@ -34,6 +34,9 @@ namespace cloudscribe.Core.Storage.EFCore.MySql.Migrations
                     b.Property<bool>("IsPermitted")
                         .HasColumnType("tinyint(1)");
 
+                    b.Property<bool>("IsRange")
+                        .HasColumnType("tinyint(1)");
+
                     b.Property<DateTime>("LastUpdated")
                         .HasColumnType("datetime(6)");
 

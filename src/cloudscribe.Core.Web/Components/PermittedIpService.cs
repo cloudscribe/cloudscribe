@@ -4,6 +4,7 @@ using cloudscribe.Pagination.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Logging;
+using NetTools;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -46,15 +47,6 @@ namespace cloudscribe.Core.Web.Components
             {
                 _permittedIps = new List<BlockedPermittedIpAddressesModel>();
             }
-        }
-
-        public bool IsPermittedIp(IPAddress ipAddress, Guid siteId)
-        {
-            if (_permittedIps == null || _permittedIps.Count <= 0 || siteId == Guid.Empty)
-            {
-                return true;
-            }
-            return _permittedIps.Any(x => x.IpAddress == ipAddress.ToString() && x.SiteId == siteId);
         }
 
         public Task<bool> AddPermittedIpAddress(BlockedPermittedIpAddressesModel ipAddress, CancellationToken cancellationToken = default(CancellationToken))
@@ -139,7 +131,8 @@ namespace cloudscribe.Core.Web.Components
                         CreatedDate = x.CreatedDate,
                         LastUpdated = x.LastUpdated,
                         IsPermitted = x.IsPermitted,
-                        Reason = x.Reason
+                        Reason = x.Reason,
+                        IsRange = x.IsRange
                     }).ToList()
                 };
             }

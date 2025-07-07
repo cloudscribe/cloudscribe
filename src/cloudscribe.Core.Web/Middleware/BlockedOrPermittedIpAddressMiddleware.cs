@@ -6,26 +6,28 @@ using System.Threading.Tasks;
 
 namespace cloudscribe.Core.Web.Middleware
 {
-    public class IpPermittedMiddleware
+    public class BlockedOrPermittedIpAddressMiddleware
     {
         private readonly RequestDelegate _next;
 
-        public IpPermittedMiddleware(RequestDelegate next)
+        public BlockedOrPermittedIpAddressMiddleware(RequestDelegate next)
         {
             _next = next;
         }
 
-        public async Task Invoke(HttpContext context, IPermittedIpService permittedIpService)
+        public async Task Invoke(HttpContext context, IBlockedOrPermittedIpService blockedOrPermittedIpService)
         {
             IPAddress remoteIp = context.Connection.RemoteIpAddress;
             SiteContext tenant = context.GetTenant<SiteContext>();
-            bool isPermitted = permittedIpService.IsPermittedIp(remoteIp!, tenant.Id);
+            bool isBlocked = blockedOrPermittedIpService.IsBlockedOrPermittedIp(remoteIp!, tenant.Id);
 
-            if (!isPermitted)
+            if (isBlocked)
             {
                 context.Response.StatusCode = (int)HttpStatusCode.Forbidden;
+
                 return;
             }
+
             await _next.Invoke(context);
         }
     }

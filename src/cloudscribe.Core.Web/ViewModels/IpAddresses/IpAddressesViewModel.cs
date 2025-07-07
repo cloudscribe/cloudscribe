@@ -1,4 +1,5 @@
-﻿using System;
+﻿using NetTools;
+using System;
 using System.ComponentModel.DataAnnotations;
 
 namespace cloudscribe.Core.Web.ViewModels.IpAddresses
@@ -18,6 +19,7 @@ namespace cloudscribe.Core.Web.ViewModels.IpAddresses
         [Required(ErrorMessage = "Site ID is required")]
         public Guid SiteId { get; set; }
         public bool IsPermitted { get; set; }
+        public bool IsRange { get; set; }
 
         public static ValidationResult ValidateIpAddress(string ipAddress)
         {
@@ -28,7 +30,13 @@ namespace cloudscribe.Core.Web.ViewModels.IpAddresses
             // Simple validation for IPv4 and IPv6 formats
             if (!System.Net.IPAddress.TryParse(ipAddress, out _))
             {
-                return new ValidationResult("Invalid IP Address format");
+                //could be a range
+                IPAddressRange result = IPAddressRange.Parse(ipAddress);
+
+                if (result == null || result.AddressCount <= 0)
+                {
+                    return new ValidationResult("Invalid IP Address format");
+                }
             }
             return ValidationResult.Success;
         }

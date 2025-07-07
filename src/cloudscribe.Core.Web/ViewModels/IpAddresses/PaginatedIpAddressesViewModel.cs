@@ -1,5 +1,4 @@
-﻿using cloudscribe.Core.Models;
-using cloudscribe.Pagination.Models;
+﻿using cloudscribe.Pagination.Models;
 
 namespace cloudscribe.Core.Web.ViewModels.IpAddresses
 {

@@ -11,5 +11,6 @@ namespace cloudscribe.Core.Models
         public DateTime LastUpdated { get; set; }
         public Guid SiteId { get; set; }
         public bool IsPermitted { get; set; }
+        public bool IsRange { get; set; }
     }
 }

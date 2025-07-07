@@ -9,6 +9,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Localization;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
+using NetTools;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -89,29 +90,54 @@ namespace cloudscribe.Core.Web.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize(Policy = PolicyConstants.AdminPolicy)]
-        public virtual async Task<IActionResult> AddBlockedIpAddress(IpAddressesViewModel model)
+        public virtual async Task<IActionResult> AddBlockedIpAddress(string ipAddress, string? reason, string ipTypeRadio)
         {
-            if (!ModelState.IsValid)
+            if (ipAddress.Length <= 0)
             {
-                _log.LogError("Model is invalid");
-                return RedirectToAction("Index", new { status = StringLocalizer["Error: The Model is invalid"] });
+                _log.LogError("IP Address missing");
+
+                return RedirectToAction("Index", new { status = StringLocalizer["Error: IP Address missing"] });
             }
-            ValidationResult validationResult = ValidateIpAddress.IpAddressValidation(model.IpAddress);
-            if (validationResult != null)
+            if (ipTypeRadio.Length <= 0)
             {
-                _log.LogError($"{validationResult.ErrorMessage} {model.IpAddress}");
-                return RedirectToAction("Index", new { status = $"{validationResult.ErrorMessage}  {model.IpAddress}" });
+                _log.LogError("IP Type is required");
+
+                return RedirectToAction("Index", new { status = StringLocalizer["Error: The IP Type is required"] });
+            }
+
+            if (ipTypeRadio == "singleIpAddress")
+            {
+                ValidationResult validationResult = ValidateIpAddress.IpAddressValidation(ipAddress);
+
+                if (validationResult != null)
+                {
+                    _log.LogError($"{validationResult.ErrorMessage} {ipAddress}");
+
+                    return RedirectToAction("Index", new { status = $"{validationResult.ErrorMessage}  {ipAddress}" });
+                }
+            }
+            else
+            {
+                bool validIpRange = IPAddressRange.TryParse(ipAddress, out IPAddressRange ipRange);
+
+                if (!validIpRange)
+                {
+                    _log.LogError($"Invalid IP Range {ipAddress}");
+
+                    return RedirectToAction("Index", new { status = $"Invalid IP Address Range: {ipAddress}" });
+                }
             }
 
             BlockedPermittedIpAddressesModel ipAddressModel = new BlockedPermittedIpAddressesModel
             {
                 Id = Guid.NewGuid(),
-                IpAddress = model.IpAddress,
-                Reason = model.Reason,
+                IpAddress = ipAddress,
+                Reason = reason,
                 CreatedDate = DateTime.UtcNow,
                 LastUpdated = DateTime.UtcNow,
                 SiteId = User.GetUserSiteIdAsGuid(),
-                IsPermitted = false
+                IsPermitted = false,
+                IsRange = ipTypeRadio == "ipAddressRange" ? true : false
             };
 
             try
@@ -143,19 +169,58 @@ namespace cloudscribe.Core.Web.Controllers
             if (!ModelState.IsValid)
             {
                 _log.LogError("Model is invalid");
+
                 return RedirectToAction("Index", new { status = StringLocalizer["Error: The Model is invalid"] });
             }
 
-            BlockedPermittedIpAddressesModel ipAddressModel = new BlockedPermittedIpAddressesModel
+            BlockedPermittedIpAddressesModel ipAddressModel;
+
+            if (!model.IsRange)
             {
-                Id = model.Id,
-                IpAddress = model.IpAddress,
-                Reason = model.Reason,
-                CreatedDate = model.CreatedDate,
-                LastUpdated = DateTime.UtcNow,
-                SiteId = User.GetUserSiteIdAsGuid(),
-                IsPermitted = false
-            };
+                ValidationResult validationResult = ValidateIpAddress.IpAddressValidation(model.IpAddress);
+
+                if (validationResult != null)
+                {
+                    _log.LogError($"{validationResult.ErrorMessage} {model.IpAddress}");
+
+                    return RedirectToAction("Index", new { status = $"{validationResult.ErrorMessage}  {model.IpAddress}" });
+                }
+
+                ipAddressModel = new BlockedPermittedIpAddressesModel
+                {
+                    Id = model.Id,
+                    IpAddress = model.IpAddress,
+                    Reason = model.Reason,
+                    CreatedDate = model.CreatedDate,
+                    LastUpdated = DateTime.UtcNow,
+                    SiteId = User.GetUserSiteIdAsGuid(),
+                    IsPermitted = false,
+                    IsRange = false
+                };
+            }
+            else
+            {
+                bool validIpRange = IPAddressRange.TryParse(model.IpAddress, out IPAddressRange ipRange);
+
+                if (!validIpRange)
+                {
+                    _log.LogError($"Invalid IP Range {model.IpAddress}");
+
+                    return RedirectToAction("Index", new { status = $"Invalid IP Address Range: {model.IpAddress}" });
+                }
+
+                ipAddressModel = new BlockedPermittedIpAddressesModel
+                {
+                    Id = model.Id,
+                    IpAddress = model.IpAddress,
+                    Reason = model.Reason,
+                    CreatedDate = model.CreatedDate,
+                    LastUpdated = DateTime.UtcNow,
+                    SiteId = User.GetUserSiteIdAsGuid(),
+                    IsPermitted = false,
+                    IsRange = true
+                };
+            }
 
             try
             {
@@ -320,6 +385,8 @@ namespace cloudscribe.Core.Web.Controllers
 
             var errors = new List<string>();
             int successCount = 0;
+            bool isRange = false;
+
             CsvConfiguration csvReaderConfig = new CsvConfiguration(CultureInfo.InvariantCulture)
             {
                 HasHeaderRecord = false,
@@ -338,11 +405,24 @@ namespace cloudscribe.Core.Web.Controllers
                     {
                         ValidationResult validationResult = ValidateIpAddress.IpAddressValidation(ip);
 
-                        if (validationResult != null)
+                        if (validationResult == null)
                         {
-                            errors.Add($"{validationResult.ErrorMessage} {ip}");
-                            _log.LogError($"{validationResult.ErrorMessage} {ip}");
-                            continue;
+                            isRange = false;
+                        }
+                        else
+                        {
+                            bool validIpRange = IPAddressRange.TryParse(ip, out IPAddressRange ipRange);
+
+                            if (validIpRange)
+                            {
+                                isRange = true;
+                            }
+                            else
+                            {
+                                errors.Add($"Invalid IP Address or Range: {ip}");
+                                _log.LogError($"Invalid IP Address or Range: {ip}");
+                                continue;
+                            }
                         }
 
                         var ipAddressModel = new BlockedPermittedIpAddressesModel
@@ -353,7 +433,8 @@ namespace cloudscribe.Core.Web.Controllers
                             CreatedDate = DateTime.UtcNow,
                             LastUpdated = DateTime.UtcNow,
                             SiteId = User.GetUserSiteIdAsGuid(),
-                            IsPermitted = false
+                            IsPermitted = false,
+                            IsRange = isRange
                         };
 
                         try

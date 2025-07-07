@@ -133,6 +133,7 @@ namespace cloudscribe.Core.Storage.EFCore.Common
                 entity.IpAddress = blockedPermittedIpAddressesModel.IpAddress;
                 entity.Reason = blockedPermittedIpAddressesModel.Reason;
                 entity.LastUpdated = blockedPermittedIpAddressesModel.LastUpdated;
+                entity.IsRange = blockedPermittedIpAddressesModel.IsRange;
 
                 rowsAffected = await dbContext.SaveChangesAsync(cancellationToken).ConfigureAwait(false);
             }
@@ -332,6 +333,7 @@ namespace cloudscribe.Core.Storage.EFCore.Common
                 entity.IpAddress = blockedPermittedIpAddressesModel.IpAddress;
                 entity.Reason = blockedPermittedIpAddressesModel.Reason;
                 entity.LastUpdated = blockedPermittedIpAddressesModel.LastUpdated;
+                entity.IsRange = blockedPermittedIpAddressesModel.IsRange;
 
                 rowsAffected = await dbContext.SaveChangesAsync(cancellationToken).ConfigureAwait(false);
             }

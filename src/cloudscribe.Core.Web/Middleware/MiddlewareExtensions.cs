@@ -10,14 +10,9 @@ namespace Microsoft.AspNetCore.Builder
             return builder.UseMiddleware<EnforceSiteRulesMiddleware>();
         }
 
-        public static IApplicationBuilder UseCloudscribeIpPermittedMiddleware(this IApplicationBuilder builder)
+        public static IApplicationBuilder UseCloudscribeBlockedOrPermittedIpAddress(this IApplicationBuilder builder)
         {
-            return builder.UseMiddleware<IpPermittedMiddleware>();
-        }
-
-        public static IApplicationBuilder UseCloudscribeIpBlockedMiddleware(this IApplicationBuilder builder)
-        {
-            return builder.UseMiddleware<IpBlockedMiddleware>();
+            return builder.UseMiddleware<BlockedOrPermittedIpAddressMiddleware>();
         }
 
         //public static IApplicationBuilder UseCommonExceptionHandler(this IApplicationBuilder builder)

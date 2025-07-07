@@ -11,8 +11,6 @@ namespace cloudscribe.Core.Web.Components
 {
     public interface IPermittedIpService
     {
-        bool IsPermittedIp(IPAddress ipAddress, Guid siteId);
-        
         Task<bool> AddPermittedIpAddress(BlockedPermittedIpAddressesModel ipAddress, CancellationToken cancellationToken = default(CancellationToken));
         
         Task<bool> UpdatePermittedIpAddress(BlockedPermittedIpAddressesModel ipAddress, CancellationToken cancellationToken = default(CancellationToken));
