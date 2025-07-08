@@ -153,6 +153,15 @@
     <EmbeddedResource Include="js\unsaved-changes-prompt.js" />
     <EmbeddedResource Include="js\unsaved-changes-prompt.min.js" />
     <EmbeddedResource Include="js\user-lookup-modal-callback.js" />
+	<EmbeddedResource Include="js\summernote\summernote-bs5.min.js" />
+	<EmbeddedResource Include="js\cloudscribe-summernote-unobtrusive.js" />
+	<EmbeddedResource Include="js\summernote\plugin\specialchars\summernote-ext-specialchars.js" />
+	<EmbeddedResource Include="js\summernote\plugin\serverimage\summernote-ext-serverimage.js" />
+	<EmbeddedResource Include="js\summernote-config.json" />
+	<EmbeddedResource Include="js\summernote-toolbar-config.json" />
+	<EmbeddedResource Include="js\summernote\lang\summernote-it-IT.js" />
+	<EmbeddedResource Include="js\summernote\lang\summernote-fr-FR.js" />
+	<EmbeddedResource Include="js\summernote\lang\summernote-cy.js" />
     <EmbeddedResource Include="css\1x1.gif" />
     <EmbeddedResource Include="css\baguetteBox.min.css" />
     <EmbeddedResource Include="css\bootstrap-datetimepicker-old.css" />
@@ -182,6 +191,10 @@
     <EmbeddedResource Include="css\jquery.smartmenus.bootstrap.min.css" />
     <EmbeddedResource Include="css\plyr.css" />
     <EmbeddedResource Include="css\simplemde.min.css" />
+	<EmbeddedResource Include="css\summernote-bs5.min.css" />
+	<EmbeddedResource Include="css\font\summernote.woff2" />
+	<EmbeddedResource Include="css\font\summernote.woff" />
+	<EmbeddedResource Include="css\font\summernote.ttf" />
     <EmbeddedResource Include="webfonts\fa-brands-400.eot" />
     <EmbeddedResource Include="webfonts\fa-brands-400.svg" />
     <EmbeddedResource Include="webfonts\fa-brands-400.ttf" />
