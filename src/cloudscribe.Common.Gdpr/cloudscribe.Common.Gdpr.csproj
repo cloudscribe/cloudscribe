@@ -21,5 +21,9 @@
     <PackageReference Include="System.ComponentModel.Annotations" Version="4.7.0" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\cloudscribe.Versioning\cloudscribe.Versioning.csproj" />
+  </ItemGroup>
+
 
 </Project>

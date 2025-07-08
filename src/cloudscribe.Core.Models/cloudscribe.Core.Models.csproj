@@ -25,6 +25,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\cloudscribe.Common.Gdpr\cloudscribe.Common.Gdpr.csproj" />
+    <ProjectReference Include="..\cloudscribe.Versioning\cloudscribe.Versioning.csproj" />
   </ItemGroup>
 
 </Project>

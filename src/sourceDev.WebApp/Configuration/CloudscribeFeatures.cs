@@ -152,6 +152,18 @@ namespace Microsoft.Extensions.DependencyInjection
             )
         {
             services.AddScoped<cloudscribe.Versioning.IVersionProvider, cloudscribe.Web.StaticFiles.VersionProvider>();
+            services.AddScoped<cloudscribe.Versioning.IVersionProvider, cloudscribe.QueryTool.Web.VersionProvider>();
+            services.AddScoped<cloudscribe.Versioning.IVersionProvider, cloudscribe.QueryTool.Services.VersionProvider>();
+            services.AddScoped<cloudscribe.Versioning.IVersionProvider, cloudscribe.QueryTool.Models.VersionProvider>();
+            services.AddScoped<cloudscribe.Versioning.IVersionProvider, cloudscribe.FileManager.CoreIntegration.VersionProvider>();
+            services.AddScoped<cloudscribe.Versioning.IVersionProvider, cloudscribe.Email.Senders.VersionProvider>();
+            services.AddScoped<cloudscribe.Versioning.IVersionProvider, cloudscribe.DateTimeUtils.VersionProvider>();
+            services.AddScoped<cloudscribe.Versioning.IVersionProvider, cloudscribe.Core.Models.VersionProvider>();
+            services.AddScoped<cloudscribe.Versioning.IVersionProvider, cloudscribe.Core.Ldap.Windows.VersionProvider>();
+            services.AddScoped<cloudscribe.Versioning.IVersionProvider, cloudscribe.Core.Ldap.VersionProvider>();
+            services.AddScoped<cloudscribe.Versioning.IVersionProvider, cloudscribe.Core.CompiledViews.Bootstrap5.VersionProvider>();
+            services.AddScoped<cloudscribe.Versioning.IVersionProvider, cloudscribe.Common.Gdpr.VersionProvider>();
+            services.AddScoped<cloudscribe.Versioning.IVersionProvider, cloudscribe.IdentityServerIntegration.CompiledViews.Bootstrap5.VersionProvider>();
             /* optional and only needed if you are using cloudscribe Logging  */
             services.AddCloudscribeLogging();
 
