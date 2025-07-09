@@ -259,7 +259,7 @@ namespace cloudscribe.FileManager.Web.Controllers
             string newFileName = string.Empty;
             var allowRootPath = false;
             var createThumbnail = false;
-            var requestedFilePath = Request.Form["targetPath"].ToString();
+            var requestedFilePath = HttpContext.Request.Form["targetPath"].ToString();
 
             //TODO: refactor, this is very cloudscribe core specific
             if(requestedFilePath == "/media/user-avatars")
