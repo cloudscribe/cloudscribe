@@ -1,0 +1,29 @@
+@model cloudscribe.Core.Web.ViewModels.IpAddresses.BulkUploadIpAddressesModel
+@inject IStringLocalizer<CloudscribeCore> sr
+
+<form method="post" class="form-horizontal" role="form" asp-antiforgery="true" enctype="multipart/form-data" data-submit-once="true" asp-controller="PermittedIpAddresses" asp-action="BulkUploadPermittedIpAddress">
+    <div asp-validation-summary="All" class="text-danger"></div>
+    <input asp-for="SiteId" type="text" hidden />
+    <input asp-for="CreatedDate" type="text" hidden />
+    <input asp-for="LastUpdated" type="text" hidden />
+    <input asp-for="IsPermitted" type="text" hidden />
+    <div class="row">
+        <div class="col mb-3">
+            <h1>Bulk Upload IP Addresses</h1>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col d-flex">
+            <div class="mb-3">
+                <p>@sr["Your CSV file should be comma separated, starting with the IP Address or range, comma, reason for adding (optional), new line, repeat. E.g.:"]
+                    <br/>@sr["123.0.0.0,Spamming website"]
+                    <br/>@sr["124.0.0.0"]
+                    <br/>@sr["124.1.1.1,Another reason"]</p>
+                <label asp-for="BulkIpAddresses" class="form-label">@sr["Upload IP Addresses"]*</label>
+                <input type="file" asp-for="BulkIpAddresses" class="form-control" />
+            </div>
+        </div>
+    </div>
+    <button name="submit" type="submit" class="btn btn-primary" data-enabled-text='@sr["Ok"]' data-disabled-text='@sr["Working..."]'>@sr["Ok"]</button>
+    <button type="button" name="cancel" class="btn btn-secondary" data-bs-dismiss="modal">@sr["Cancel"]</button>
+</form>

@@ -30,7 +30,7 @@ namespace cloudscribe.Core.Web.Components
         public int DefaultPageSize_RoleMemberList { get; set; } = 10;
         public int DefaultPageSize_UserList { get; set; } = 10;
         public int DefaultPageSize_LogView { get; set; } = 10;
-
+        public int DefaultPageSize_IpAddresses { get; set; } = 10;
 
         // these props should be deprecated, keeping for backward compat with bootstrap3 themes
         public string IconEmail { get; set; } = "glyphicon glyphicon-envelope";
