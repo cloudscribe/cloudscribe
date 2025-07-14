@@ -15,7 +15,10 @@
     <div class="row">
         <div class="col d-flex">
             <div class="mb-3">
-                <p>@sr["Your CSV file should be comma separated, starting with the IP Address, comma, reason for adding (optional, leave blank if not required but you MUST include the comma), comma, repeat. E.g. 123.0.0.0,Spamming website,124.0.0.0,,124.1.1.1,Another reason"]</p>
+                <p>@sr["Your CSV file should be comma separated, starting with the IP Address or range, comma, reason for adding (optional), new line, repeat. E.g.:"]
+                    <br/>@sr["123.0.0.0,Spamming website"]
+                    <br/>@sr["124.0.0.0"]
+                    <br/>@sr["124.1.1.1,Another reason"]</p>
                 <label asp-for="BulkIpAddresses" class="form-label">@sr["Upload IP Addresses"]*</label>
                 <input type="file" asp-for="BulkIpAddresses" class="form-control" />
             </div>
