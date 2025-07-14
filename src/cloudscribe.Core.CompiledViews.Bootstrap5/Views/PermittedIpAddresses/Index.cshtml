@@ -10,7 +10,8 @@
 <h2>@ViewBag.Title</h2>
 <div class="row">
     <div class="col mb-3">
-        <h4>Your IP Address: @ViewBag.UsersIpAddress</h4>
+        <h4>@sr["Your IP Address:"] @ViewBag.UsersIpAddress</h4>
+        <p>@sr["Use this functionality wisely, not including your own IP address here (either singularly or within a range) will instantly lock you out of your website."]</p>
     </div>
 </div>
 @{
