@@ -73,7 +73,7 @@ namespace Microsoft.Extensions.DependencyInjection
                 services.AddNoDb<GeoCountry>();
                 services.AddNoDb<GeoZone>();
 
-                services.AddNoDbSingleton<BlockedPermittedIpAddressesModel>();
+                services.AddNoDb<BlockedPermittedIpAddressesModel>();
             }
 
             services.AddScoped<ISiteCommands, SiteCommands>();
@@ -86,7 +86,9 @@ namespace Microsoft.Extensions.DependencyInjection
             services.AddScoped<IGeoQueries, GeoQueries>();
 
             services.AddScoped<IDataPlatformInfo, DataPlatformInfo>();
-            
+
+            services.AddScoped<IipAddressCommands, IpAddressCommands>();
+
             return services;
         }
     }
