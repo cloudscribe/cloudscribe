@@ -108,7 +108,7 @@ namespace sourceDev.WebApp
 
             switch (storage)
             {
-                case "NoDb":
+                case "nodb":
                     CoreNoDbStartup.InitializeDataAsync(services).Wait();
 
                     // you can use this hack to add clients and scopes into the db during startup if needed

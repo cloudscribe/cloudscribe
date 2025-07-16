@@ -49,7 +49,7 @@ namespace cloudscribe.Core.Web.Components
             }
         }
 
-        public Task<bool> AddBlockedIpAddress(BlockedPermittedIpAddressesModel ipAddress, CancellationToken cancellationToken = default(CancellationToken))
+        public Task<bool> AddBlockedIpAddress(BlockedPermittedIpAddressesModel ipAddress, Guid currentSiteId, CancellationToken cancellationToken = default(CancellationToken))
         {
             if (ipAddress == null || string.IsNullOrWhiteSpace(ipAddress.IpAddress))
             {
@@ -67,7 +67,7 @@ namespace cloudscribe.Core.Web.Components
             {
                 _memoryCache.Remove("BlockedIpAddresses");
 
-                return _iipAddressCommands.AddBlockedIpAddress(ipAddress, cancellationToken);
+                return _iipAddressCommands.AddBlockedIpAddress(ipAddress, currentSiteId, cancellationToken);
             }
             catch (Exception e)
             {
@@ -120,7 +120,7 @@ namespace cloudscribe.Core.Web.Components
             return result;
         }
 
-        public Task<bool> UpdateBlockedIpAddress(BlockedPermittedIpAddressesModel ipAddress, CancellationToken cancellationToken = default(CancellationToken))
+        public Task<bool> UpdateBlockedIpAddress(BlockedPermittedIpAddressesModel ipAddress, Guid currentSiteId, CancellationToken cancellationToken = default(CancellationToken))
         {
             if (ipAddress == null || string.IsNullOrWhiteSpace(ipAddress.IpAddress))
             {
@@ -132,7 +132,7 @@ namespace cloudscribe.Core.Web.Components
             {
                 _memoryCache.Remove("BlockedIpAddresses");
 
-                return _iipAddressCommands.UpdateBlockedIpAddress(ipAddress, cancellationToken).ContinueWith(t => true, cancellationToken);
+                return _iipAddressCommands.UpdateBlockedIpAddress(ipAddress, currentSiteId, cancellationToken).ContinueWith(t => true, cancellationToken);
             }
             catch (Exception e)
             {
