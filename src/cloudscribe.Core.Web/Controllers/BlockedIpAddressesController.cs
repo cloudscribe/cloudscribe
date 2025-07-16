@@ -142,7 +142,7 @@ namespace cloudscribe.Core.Web.Controllers
 
             try
             {
-                await _blockedIpService.AddBlockedIpAddress(ipAddressModel, CancellationToken.None);
+                await _blockedIpService.AddBlockedIpAddress(ipAddressModel, CurrentSite.Id, CancellationToken.None);
 
                 return RedirectToAction("Index", new { status = StringLocalizer["Success! IP Address has been added."] });
             }
@@ -224,7 +224,7 @@ namespace cloudscribe.Core.Web.Controllers
 
             try
             {
-                await _blockedIpService.UpdateBlockedIpAddress(ipAddressModel, CancellationToken.None);
+                await _blockedIpService.UpdateBlockedIpAddress(ipAddressModel, CurrentSite.Id, CancellationToken.None);
 
                 return RedirectToAction("Index", new { status = StringLocalizer["Success! IP Address updated."] });
             }
@@ -439,7 +439,7 @@ namespace cloudscribe.Core.Web.Controllers
 
                         try
                         {
-                            await _blockedIpService.AddBlockedIpAddress(ipAddressModel, CancellationToken.None);
+                            await _blockedIpService.AddBlockedIpAddress(ipAddressModel, CurrentSite.Id, CancellationToken.None);
                             successCount++;
                         }
                         catch (Exception e)

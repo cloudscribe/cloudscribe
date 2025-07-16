@@ -40,7 +40,9 @@ namespace Microsoft.Extensions.DependencyInjection
 
                 services.AddNoDbSingleton<GeoCountry>();
                 services.AddNoDbSingleton<GeoZone>();
-                
+
+                services.AddNoDbSingleton<BlockedPermittedIpAddressesModel>();
+
                 services.AddSingleton<ISiteCommandsSingleton, SiteCommands>();
                 services.AddSingleton<ISiteQueriesSingleton, SiteQueries>();
 
@@ -49,6 +51,8 @@ namespace Microsoft.Extensions.DependencyInjection
 
                 services.AddSingleton<IGeoCommandsSingleton, GeoCommands>();
                 services.AddSingleton<IGeoQueriesSingleton, GeoQueries>();
+
+                services.AddSingleton<IipAddressCommands, IpAddressCommands>();
             }
             else
             {
@@ -68,8 +72,8 @@ namespace Microsoft.Extensions.DependencyInjection
 
                 services.AddNoDb<GeoCountry>();
                 services.AddNoDb<GeoZone>();
-                
-                
+
+                services.AddNoDbSingleton<BlockedPermittedIpAddressesModel>();
             }
 
             services.AddScoped<ISiteCommands, SiteCommands>();

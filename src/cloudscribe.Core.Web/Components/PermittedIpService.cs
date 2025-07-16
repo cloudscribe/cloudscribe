@@ -69,7 +69,9 @@ namespace cloudscribe.Core.Web.Components
             {
                 _memoryCache.Remove("PermittedIpAddresses");
 
-                return _iipAddressCommands.AddPermittedIpAddress(ipAddress, cancellationToken).ContinueWith(t => true, cancellationToken);
+                Guid currentSiteId = _currentSite.Id;
+
+                return _iipAddressCommands.AddPermittedIpAddress(ipAddress, currentSiteId, cancellationToken).ContinueWith(t => true, cancellationToken);
             }
             catch (Exception e)
             {
@@ -92,7 +94,9 @@ namespace cloudscribe.Core.Web.Components
             {
                 _memoryCache.Remove("PermittedIpAddresses");
 
-                return _iipAddressCommands.UpdatePermittedIpAddress(ipAddress, cancellationToken).ContinueWith(t => true, cancellationToken);
+                Guid currentSiteId = _currentSite.Id;
+
+                return _iipAddressCommands.UpdatePermittedIpAddress(ipAddress, currentSiteId, cancellationToken).ContinueWith(t => true, cancellationToken);
             }
             catch (Exception e)
             {

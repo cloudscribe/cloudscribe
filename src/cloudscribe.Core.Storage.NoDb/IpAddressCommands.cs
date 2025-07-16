@@ -1,22 +1,27 @@
 ﻿using cloudscribe.Core.Models;
 using cloudscribe.Pagination.Models;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
+using NoDb;
 using System;
+using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
-namespace cloudscribe.Core.Storage.EFCore.Common
+namespace cloudscribe.Core.Storage.NoDb
 {
     public class IpAddressCommands : IipAddressCommands
     {
-        private readonly ICoreDbContextFactory _contextFactory;
+        private IBasicCommands<BlockedPermittedIpAddressesModel> _blockedPermittedIpAddressesCommands;
+        private IBasicQueries<BlockedPermittedIpAddressesModel> _blockedPermittedIpAddressesQueries;
         private ILogger _log;
 
-        public IpAddressCommands(ICoreDbContextFactory coreDbContextFactory, ILogger<IpAddressCommands> logger)
+        public IpAddressCommands(IBasicCommands<BlockedPermittedIpAddressesModel> blockedPermittedIpAddressesCommands, IBasicQueries<BlockedPermittedIpAddressesModel> blockedPermittedIpAddressesQueries, ILogger<IpAddressCommands> logger)
         {
-            _contextFactory = coreDbContextFactory;
+            _blockedPermittedIpAddressesCommands = blockedPermittedIpAddressesCommands;
+            _blockedPermittedIpAddressesQueries = blockedPermittedIpAddressesQueries;
             _log = logger;
         }
 
@@ -27,42 +32,33 @@ namespace cloudscribe.Core.Storage.EFCore.Common
             if (siteId.ToString().Length <= 0) throw new ArgumentNullException("must include site ID");
 
             int offset = (pageSize * pageNumber) - pageSize;
-            IQueryable<BlockedPermittedIpAddressesModel> query;
+            IEnumerable<BlockedPermittedIpAddressesModel> data;
+            IEnumerable<BlockedPermittedIpAddressesModel> results = await _blockedPermittedIpAddressesQueries.GetAllAsync(siteId.ToString(), cancellationToken).ConfigureAwait(false);
 
-            using (ICoreDbContext dbContext = _contextFactory.CreateContext())
+            if ((bool)IsFromService)
             {
-                if ((bool)IsFromService)
-                {
-                    query = dbContext.BlockedPermittedIpAddresses.OrderBy
-                                (x => x.CreatedDate)
-                                .Where(s => s.SiteId == siteId && s.IsPermitted == true)
-                                .Skip(offset);
-                }
-                else
-                {
-                    query = dbContext.BlockedPermittedIpAddresses.OrderBy
-                                (x => x.CreatedDate)
-                                .Where(s => s.SiteId == siteId && s.IsPermitted == true)
-                                .Skip(offset)
-                                .Take(pageSize);
-                }
-                var data = await query
-                    .AsNoTracking()
-                    .ToListAsync<BlockedPermittedIpAddressesModel>(cancellationToken)
-                    .ConfigureAwait(false);
+                data = results.OrderBy(x => x.CreatedDate)
+                            .Where(x => x.SiteId == siteId && x.IsPermitted == true)
+                            .ToList().Skip(offset);
+            }
+            else
+            {
+                data = results.OrderBy(x => x.CreatedDate)
+                        .Where(x => x.SiteId == siteId && x.IsPermitted == true)
+                        .ToList()
+                        .Skip(offset)
+                        .Take(pageSize);
+            }
 
-                var result = new PagedResult<BlockedPermittedIpAddressesModel>();
+            PagedResult<BlockedPermittedIpAddressesModel> result = new PagedResult<BlockedPermittedIpAddressesModel>();
 
-                result.Data = data.Where(x => x.SiteId == siteId && x.IsPermitted == true).ToList();
-                result.PageNumber = pageNumber;
-                result.PageSize = pageSize;
-                result.TotalItems = await dbContext.BlockedPermittedIpAddresses
-                    .Where(s => s.SiteId == siteId && s.IsPermitted == true)
-                    .CountAsync(cancellationToken)
-                    .ConfigureAwait(false);
+            result.Data = data.Where(x => x.SiteId == siteId && x.IsPermitted == true).ToList();
+            result.PageNumber = pageNumber;
+            result.PageSize = pageSize;
 
-                return result;
-            };
+            result.TotalItems = results.Where(s => s.SiteId == siteId && s.IsPermitted == true).Count();
+
+            return result;
         }
 
         public async Task<bool> AddPermittedIpAddress(BlockedPermittedIpAddressesModel blockedPermittedIpAddressesModel, Guid currentSiteId, CancellationToken cancellationToken = default(CancellationToken))
@@ -83,21 +79,15 @@ namespace cloudscribe.Core.Storage.EFCore.Common
                 throw new ArgumentException($"Site ID is required");
             }
 
-            int rowsAffected = 0;
-
-            using (var dbContext = _contextFactory.CreateContext())
+            try
             {
-                dbContext.BlockedPermittedIpAddresses.Add(blockedPermittedIpAddressesModel);
+                await _blockedPermittedIpAddressesCommands.CreateAsync(currentSiteId.ToString(), blockedPermittedIpAddressesModel.Id.ToString(), blockedPermittedIpAddressesModel).ConfigureAwait(false);
 
-                rowsAffected = await dbContext.SaveChangesAsync(cancellationToken).ConfigureAwait(false);
-            }
-
-            if (rowsAffected > 0)
-            {
                 return true;
             }
-            else
+            catch (Exception e)
             {
+                _log.LogError($"Error creating permitted IP Address");
                 return false;
             }
         }
@@ -114,18 +104,17 @@ namespace cloudscribe.Core.Storage.EFCore.Common
                 _log.LogError($"IP Address is required");
                 throw new ArgumentException($"IP Address is required");
             }
-            if (currentSiteId.ToString() == null)
+            if (blockedPermittedIpAddressesModel.SiteId.ToString() == null)
             {
                 _log.LogError($"Site ID is required");
                 throw new ArgumentException($"Site ID is required");
             }
 
-            int rowsAffected = 0;
-
-            using (var dbContext = _contextFactory.CreateContext())
+            try
             {
-                var entity = await dbContext.BlockedPermittedIpAddresses
-                    .FirstOrDefaultAsync(x => x.Id == blockedPermittedIpAddressesModel.Id && x.SiteId == currentSiteId && blockedPermittedIpAddressesModel.IsPermitted == true, cancellationToken);
+                IEnumerable<BlockedPermittedIpAddressesModel> results = await _blockedPermittedIpAddressesQueries.GetAllAsync(currentSiteId.ToString(), cancellationToken).ConfigureAwait(false);
+
+                var entity = results.FirstOrDefault(x => x.Id == blockedPermittedIpAddressesModel.Id && x.SiteId == blockedPermittedIpAddressesModel.SiteId && blockedPermittedIpAddressesModel.IsPermitted == true);
 
                 if (entity == null)
                     return false;
@@ -135,15 +124,13 @@ namespace cloudscribe.Core.Storage.EFCore.Common
                 entity.LastUpdated = blockedPermittedIpAddressesModel.LastUpdated;
                 entity.IsRange = blockedPermittedIpAddressesModel.IsRange;
 
-                rowsAffected = await dbContext.SaveChangesAsync(cancellationToken).ConfigureAwait(false);
-            }
+                await _blockedPermittedIpAddressesCommands.UpdateAsync(currentSiteId.ToString(), blockedPermittedIpAddressesModel.Id.ToString(), entity).ConfigureAwait(false);
 
-            if (rowsAffected > 0)
-            {
                 return true;
             }
-            else
+            catch (Exception e)
             {
+                _log.LogError($"Error updating permitted IP Address");
                 return false;
             }
         }
@@ -156,17 +143,16 @@ namespace cloudscribe.Core.Storage.EFCore.Common
                 throw new ArgumentException("ID or Site ID cannot be empty");
             }
 
-            using (var dbContext = _contextFactory.CreateContext())
+            try
             {
-                var ipAddress = await dbContext.BlockedPermittedIpAddresses
-                    .Where(s => s.Id == id && s.SiteId == siteId && s.IsPermitted == true)
-                    .FirstOrDefaultAsync(cancellationToken)
-                    .ConfigureAwait(false);
+                IEnumerable<BlockedPermittedIpAddressesModel> results = await _blockedPermittedIpAddressesQueries.GetAllAsync(siteId.ToString(), cancellationToken).ConfigureAwait(false);
+
+                BlockedPermittedIpAddressesModel ipAddress = results.Where(x => x.Id == id && x.SiteId == siteId && x.IsPermitted == true).FirstOrDefault();
 
                 if (ipAddress != null)
                 {
-                    dbContext.BlockedPermittedIpAddresses.Remove(ipAddress);
-                    await dbContext.SaveChangesAsync(cancellationToken).ConfigureAwait(false);
+
+                    await _blockedPermittedIpAddressesCommands.DeleteAsync(siteId.ToString(), ipAddress.Id.ToString()).ConfigureAwait(false);
 
                     return true;
                 }
@@ -174,6 +160,11 @@ namespace cloudscribe.Core.Storage.EFCore.Common
                 {
                     return false;
                 }
+            }
+            catch (Exception e)
+            {
+                _log.LogError($"Error updating permitted IP Address");
+                return false;
             }
         }
 
@@ -184,35 +175,27 @@ namespace cloudscribe.Core.Storage.EFCore.Common
             if (siteId.ToString().Length <= 0) throw new ArgumentNullException("must include site ID");
 
             int offset = (pageSize * pageNumber) - pageSize;
-            IQueryable<BlockedPermittedIpAddressesModel> query;
 
-            using (ICoreDbContext dbContext = _contextFactory.CreateContext())
-            {
-                query = dbContext.BlockedPermittedIpAddresses.OrderBy
+            IEnumerable<BlockedPermittedIpAddressesModel> results = await _blockedPermittedIpAddressesQueries.GetAllAsync(siteId.ToString(), cancellationToken).ConfigureAwait(false);
+
+            IEnumerable<BlockedPermittedIpAddressesModel> data = results.OrderBy
                             (x => x.CreatedDate)
                             .Where(s => s.SiteId == siteId && s.IsPermitted == true)
                             .Where(s => s.IpAddress.Contains(searchTerm.ToLower()) || (s.Reason != null && s.Reason.Contains(searchTerm.ToLower())))
                             .Skip(offset)
                             .Take(pageSize);
 
-                var data = await query
-                    .AsNoTracking()
-                    .ToListAsync<BlockedPermittedIpAddressesModel>(cancellationToken)
-                    .ConfigureAwait(false);
 
-                var result = new PagedResult<BlockedPermittedIpAddressesModel>();
+            PagedResult<BlockedPermittedIpAddressesModel> result = new PagedResult<BlockedPermittedIpAddressesModel>();
 
-                result.Data = data.Where(x => x.SiteId == siteId && x.IsPermitted == true).ToList();
-                result.PageNumber = pageNumber;
-                result.PageSize = pageSize;
-                result.TotalItems = await dbContext.BlockedPermittedIpAddresses
-                    .Where(s => s.SiteId == siteId && s.IsPermitted == true)
+            result.Data = data.Where(x => x.SiteId == siteId && x.IsPermitted == true).ToList();
+            result.PageNumber = pageNumber;
+            result.PageSize = pageSize;
+            result.TotalItems = results.Where(s => s.SiteId == siteId && s.IsPermitted == true)
                     .Where(s => s.IpAddress.Contains(searchTerm.ToLower()) || (s.Reason != null && s.Reason.Contains(searchTerm.ToLower())))
-                    .CountAsync(cancellationToken)
-                    .ConfigureAwait(false);
+                    .Count();
 
-                return result;
-            };
+            return result;
         }
 
 
@@ -229,40 +212,34 @@ namespace cloudscribe.Core.Storage.EFCore.Common
             int offset = (pageSize * pageNumber) - pageSize;
             IQueryable<BlockedPermittedIpAddressesModel> query;
 
-            using (ICoreDbContext dbContext = _contextFactory.CreateContext())
+            IEnumerable<BlockedPermittedIpAddressesModel> data;
+            IEnumerable<BlockedPermittedIpAddressesModel> results = await _blockedPermittedIpAddressesQueries.GetAllAsync(siteId.ToString(), cancellationToken).ConfigureAwait(false);
+
+            if ((bool)IsFromService)
             {
-                if ((bool)IsFromService)
-                {
-                    query = dbContext.BlockedPermittedIpAddresses.OrderBy
+                data = results.OrderBy
                                 (x => x.CreatedDate)
                                 .Where(s => s.SiteId == siteId && s.IsPermitted == false)
                                 .Skip(offset);
-                }
-                else
-                {
-                    query = dbContext.BlockedPermittedIpAddresses.OrderBy
+            }
+            else
+            {
+                data = results.OrderBy
                                 (x => x.CreatedDate)
                                 .Where(s => s.SiteId == siteId && s.IsPermitted == false)
                                 .Skip(offset)
                                 .Take(pageSize);
-                }
-                var data = await query
-                    .AsNoTracking()
-                    .ToListAsync<BlockedPermittedIpAddressesModel>(cancellationToken)
-                    .ConfigureAwait(false);
+            }
 
-                var result = new PagedResult<BlockedPermittedIpAddressesModel>();
+            PagedResult<BlockedPermittedIpAddressesModel> result = new PagedResult<BlockedPermittedIpAddressesModel>();
 
-                result.Data = data.Where(x => x.SiteId == siteId && x.IsPermitted == false).ToList();
-                result.PageNumber = pageNumber;
-                result.PageSize = pageSize;
-                result.TotalItems = await dbContext.BlockedPermittedIpAddresses
-                    .Where(s => s.SiteId == siteId && s.IsPermitted == false)
-                    .CountAsync(cancellationToken)
-                    .ConfigureAwait(false);
+            result.Data = data.Where(x => x.SiteId == siteId && x.IsPermitted == false).ToList();
+            result.PageNumber = pageNumber;
+            result.PageSize = pageSize;
 
-                return result;
-            };
+            result.TotalItems = results.Where(s => s.SiteId == siteId && s.IsPermitted == false).Count();
+
+            return result;
         }
 
         public async Task<bool> AddBlockedIpAddress(BlockedPermittedIpAddressesModel blockedPermittedIpAddressesModel, Guid currentSiteId, CancellationToken cancellationToken = default(CancellationToken))
@@ -283,21 +260,15 @@ namespace cloudscribe.Core.Storage.EFCore.Common
                 throw new ArgumentException($"Site ID is required");
             }
 
-            int rowsAffected = 0;
-
-            using (var dbContext = _contextFactory.CreateContext())
+            try
             {
-                dbContext.BlockedPermittedIpAddresses.Add(blockedPermittedIpAddressesModel);
+                await _blockedPermittedIpAddressesCommands.CreateAsync(currentSiteId.ToString(), blockedPermittedIpAddressesModel.Id.ToString(), blockedPermittedIpAddressesModel).ConfigureAwait(false);
 
-                rowsAffected = await dbContext.SaveChangesAsync(cancellationToken).ConfigureAwait(false);
-            }
-
-            if (rowsAffected > 0)
-            {
                 return true;
             }
-            else
+            catch (Exception e)
             {
+                _log.LogError($"Error creating blocked IP Address");
                 return false;
             }
         }
@@ -314,18 +285,17 @@ namespace cloudscribe.Core.Storage.EFCore.Common
                 _log.LogError($"IP Address is required");
                 throw new ArgumentException($"IP Address is required");
             }
-            if (currentSiteId.ToString() == null)
+            if (blockedPermittedIpAddressesModel.SiteId.ToString() == null)
             {
                 _log.LogError($"Site ID is required");
                 throw new ArgumentException($"Site ID is required");
             }
 
-            int rowsAffected = 0;
-
-            using (var dbContext = _contextFactory.CreateContext())
+            try
             {
-                var entity = await dbContext.BlockedPermittedIpAddresses
-                    .FirstOrDefaultAsync(x => x.Id == blockedPermittedIpAddressesModel.Id && x.SiteId == currentSiteId && blockedPermittedIpAddressesModel.IsPermitted == false, cancellationToken);
+                IEnumerable<BlockedPermittedIpAddressesModel> results = await _blockedPermittedIpAddressesQueries.GetAllAsync(currentSiteId.ToString(), cancellationToken).ConfigureAwait(false);
+
+                var entity = results.FirstOrDefault(x => x.Id == blockedPermittedIpAddressesModel.Id && x.SiteId == blockedPermittedIpAddressesModel.SiteId && blockedPermittedIpAddressesModel.IsPermitted == false);
 
                 if (entity == null)
                     return false;
@@ -335,15 +305,13 @@ namespace cloudscribe.Core.Storage.EFCore.Common
                 entity.LastUpdated = blockedPermittedIpAddressesModel.LastUpdated;
                 entity.IsRange = blockedPermittedIpAddressesModel.IsRange;
 
-                rowsAffected = await dbContext.SaveChangesAsync(cancellationToken).ConfigureAwait(false);
-            }
+                await _blockedPermittedIpAddressesCommands.UpdateAsync(currentSiteId.ToString(), blockedPermittedIpAddressesModel.Id.ToString(), entity).ConfigureAwait(false);
 
-            if (rowsAffected > 0)
-            {
                 return true;
             }
-            else
+            catch (Exception e)
             {
+                _log.LogError($"Error updating blocked IP Address");
                 return false;
             }
         }
@@ -356,17 +324,15 @@ namespace cloudscribe.Core.Storage.EFCore.Common
                 throw new ArgumentException("ID or Site ID cannot be empty");
             }
 
-            using (var dbContext = _contextFactory.CreateContext())
+            try
             {
-                var ipAddress = await dbContext.BlockedPermittedIpAddresses
-                    .Where(s => s.Id == id && s.SiteId == siteId && s.IsPermitted == false)
-                    .FirstOrDefaultAsync(cancellationToken)
-                    .ConfigureAwait(false);
+                IEnumerable<BlockedPermittedIpAddressesModel> results = await _blockedPermittedIpAddressesQueries.GetAllAsync(siteId.ToString(), cancellationToken).ConfigureAwait(false);
+
+                BlockedPermittedIpAddressesModel ipAddress = results.Where(x => x.Id == id && x.SiteId == siteId && x.IsPermitted == false).FirstOrDefault();
 
                 if (ipAddress != null)
                 {
-                    dbContext.BlockedPermittedIpAddresses.Remove(ipAddress);
-                    await dbContext.SaveChangesAsync(cancellationToken).ConfigureAwait(false);
+                    await _blockedPermittedIpAddressesCommands.DeleteAsync(siteId.ToString(), ipAddress.Id.ToString()).ConfigureAwait(false);
 
                     return true;
                 }
@@ -374,6 +340,11 @@ namespace cloudscribe.Core.Storage.EFCore.Common
                 {
                     return false;
                 }
+            }
+            catch (Exception e)
+            {
+                _log.LogError($"Error updating permitted IP Address");
+                return false;
             }
         }
 
@@ -384,35 +355,27 @@ namespace cloudscribe.Core.Storage.EFCore.Common
             if (siteId.ToString().Length <= 0) throw new ArgumentNullException("must include site ID");
 
             int offset = (pageSize * pageNumber) - pageSize;
-            IQueryable<BlockedPermittedIpAddressesModel> query;
 
-            using (ICoreDbContext dbContext = _contextFactory.CreateContext())
-            {
-                query = dbContext.BlockedPermittedIpAddresses.OrderBy
+            IEnumerable<BlockedPermittedIpAddressesModel> results = await _blockedPermittedIpAddressesQueries.GetAllAsync(siteId.ToString(), cancellationToken).ConfigureAwait(false);
+
+            IEnumerable<BlockedPermittedIpAddressesModel> data = results.OrderBy
                             (x => x.CreatedDate)
                             .Where(s => s.SiteId == siteId && s.IsPermitted == false)
                             .Where(s => s.IpAddress.Contains(searchTerm.ToLower()) || (s.Reason != null && s.Reason.Contains(searchTerm.ToLower())))
                             .Skip(offset)
                             .Take(pageSize);
 
-                var data = await query
-                    .AsNoTracking()
-                    .ToListAsync<BlockedPermittedIpAddressesModel>(cancellationToken)
-                    .ConfigureAwait(false);
 
-                var result = new PagedResult<BlockedPermittedIpAddressesModel>();
+            PagedResult<BlockedPermittedIpAddressesModel> result = new PagedResult<BlockedPermittedIpAddressesModel>();
 
-                result.Data = data.Where(x => x.SiteId == siteId && x.IsPermitted == false).ToList();
-                result.PageNumber = pageNumber;
-                result.PageSize = pageSize;
-                result.TotalItems = await dbContext.BlockedPermittedIpAddresses
-                    .Where(s => s.SiteId == siteId && s.IsPermitted == false)
+            result.Data = data.Where(x => x.SiteId == siteId && x.IsPermitted == false).ToList();
+            result.PageNumber = pageNumber;
+            result.PageSize = pageSize;
+            result.TotalItems = results.Where(s => s.SiteId == siteId && s.IsPermitted == false)
                     .Where(s => s.IpAddress.Contains(searchTerm.ToLower()) || (s.Reason != null && s.Reason.Contains(searchTerm.ToLower())))
-                    .CountAsync(cancellationToken)
-                    .ConfigureAwait(false);
+                    .Count();
 
-                return result;
-            };
+            return result;
         }
     }
 }
