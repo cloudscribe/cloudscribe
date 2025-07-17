@@ -2,53 +2,16 @@
 using cloudscribe.Core.Web.ViewModels.IpAddresses;
 using cloudscribe.Pagination.Models;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Logging;
-using NetTools;
 using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Net;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace cloudscribe.Core.Web.Components
+namespace cloudscribe.Core.Web.Components.IPService
 {
-    public class PermittedIpService : IPermittedIpService
+    public partial class BlockedOrPermittedIpService : IBlockedOrPermittedIpService
     {
-        private readonly List<BlockedPermittedIpAddressesModel> _permittedIps;
-        private readonly IipAddressCommands _iipAddressCommands;
-        private SiteContext _currentSite;
-        private ILogger _log;
-        private readonly IMemoryCache _memoryCache;
-
-        public PermittedIpService(SiteContext currentSite, IipAddressCommands iipAddressCommands, ILogger<PermittedIpService> logger, IMemoryCache memoryCache, CancellationToken cancellationToken = default(CancellationToken))
-        {
-            _currentSite = currentSite;
-            Guid currentSiteId = _currentSite.Id;
-            _iipAddressCommands = iipAddressCommands;
-            _log = logger;
-            _memoryCache = memoryCache;
-
-            PagedResult<BlockedPermittedIpAddressesModel> permittedIpAddresses = _memoryCache.TryGetValue<PagedResult<BlockedPermittedIpAddressesModel>>("PermittedIpAddresses", out permittedIpAddresses) ? permittedIpAddresses : new PagedResult<BlockedPermittedIpAddressesModel>();
-
-            if (permittedIpAddresses == null || permittedIpAddresses.Data.Count <= 0)
-            {
-                permittedIpAddresses = _iipAddressCommands.GetPermittedIpAddresses(currentSiteId, 1, -1, cancellationToken, true).ConfigureAwait(true).GetAwaiter().GetResult();
-                
-                _memoryCache.Set("PermittedIpAddresses", permittedIpAddresses);
-            }
-
-            if (permittedIpAddresses != null && permittedIpAddresses.Data.Count > 0)
-            {
-                _permittedIps = permittedIpAddresses.Data ?? new List<BlockedPermittedIpAddressesModel>();
-            }
-            else
-            {
-                _permittedIps = new List<BlockedPermittedIpAddressesModel>();
-            }
-        }
-
         public Task<bool> AddPermittedIpAddress(BlockedPermittedIpAddressesModel ipAddress, CancellationToken cancellationToken = default(CancellationToken))
         {
             cancellationToken.ThrowIfCancellationRequested();

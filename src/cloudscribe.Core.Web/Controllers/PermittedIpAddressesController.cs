@@ -2,13 +2,12 @@
 using cloudscribe.Core.Models;
 using cloudscribe.Core.Web.Components;
 using cloudscribe.Core.Web.ViewModels.IpAddresses;
+using cloudscribe.Web.Common.Extensions;
 using CsvHelper;
 using CsvHelper.Configuration;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Localization;
 using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Options;
 using NetTools;
 using System;
 using System.Collections.Generic;
@@ -18,33 +17,18 @@ using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace cloudscribe.Core.Web.Controllers
+namespace cloudscribe.Core.Web.Controllers.Mvc
 {
-    public class PermittedIpAddressesController : Controller
+    public partial class SiteAdminController : Controller
     {
-        protected IStringLocalizer StringLocalizer { get; private set; }
-        protected SiteUserManager<SiteUser> UserManager { get; private set; }
-        protected ISiteContext CurrentSite { get; private set; }
-        protected IPermittedIpService _permittedIpService;
-        protected UIOptions UIOptions { get; private set; }
-        private ILogger _log;
-
-        public PermittedIpAddressesController(IStringLocalizer<CloudscribeCore> localizer, SiteContext currentSite, SiteUserManager<SiteUser> userManager, IPermittedIpService permittedIpService, ILogger<PermittedIpAddressesController> logger, IOptions<UIOptions> uiOptionsAccessor)
-        {
-            StringLocalizer = localizer;
-            CurrentSite = currentSite;
-            UserManager = userManager;
-            _permittedIpService = permittedIpService;
-            _log = logger;
-            UIOptions = uiOptionsAccessor.Value;
-        }
-
+        [HttpGet]
         [Authorize(Policy = PolicyConstants.AdminMenuPolicy)]
-        public virtual async Task<IActionResult > Index(string? status, string? q, int pageNumber = 1, int pageSize = -1)
+        public virtual async Task<IActionResult > PermittedIpAddresses(string? status, string? q, int pageNumber = 1, int pageSize = -1)
         {
             ViewData["Title"] = StringLocalizer["Permitted IP Addresses"];
             ViewBag.status = status;
             int itemsPerPage = UIOptions.DefaultPageSize_IpAddresses;
+            string usersIpAddress = string.Empty;
 
             if (pageSize > 0)
                 itemsPerPage = pageSize;
@@ -59,15 +43,25 @@ namespace cloudscribe.Core.Web.Controllers
                 {
                     PaginatedIpAddressesViewModel permittedIps = new PaginatedIpAddressesViewModel
                     {
-                        BlockedPermittedIpAddresses = await _permittedIpService.GetPermittedIpAddressesAsync(User.GetUserSiteIdAsGuid(), pageNumber, itemsPerPage, CancellationToken.None)
+                        BlockedPermittedIpAddresses = await _blockedOrPermittedIpService.GetPermittedIpAddressesAsync(User.GetUserSiteIdAsGuid(), pageNumber, itemsPerPage, CancellationToken.None)
                     };
 
-                    var loc = await UserManager.GetUserLocations(User.GetUserSiteIdAsGuid(), User.GetUserIdAsGuid(), 1, 1);
+                    var loc = await _userManager.GetUserLocations(User.GetUserSiteIdAsGuid(), User.GetUserIdAsGuid(), 1, 1);
 
                     foreach (var item in loc.Data)
                     {
-                        ViewBag.UsersIpAddress = item.IpAddress ?? StringLocalizer["Unknown"];
+                        usersIpAddress = item.IpAddress ?? StringLocalizer["Unknown"];
                     }
+
+                    if (usersIpAddress != StringLocalizer["Unknown"])
+                    {
+                        if (usersIpAddress == "0.0.0.1")
+                        {
+                            usersIpAddress = "::1";
+                        }
+                    }
+
+                    ViewBag.UsersIpAddress = usersIpAddress;
 
                     return View(permittedIps);
                 }
@@ -78,11 +72,13 @@ namespace cloudscribe.Core.Web.Controllers
 
                 if (e.Message != null)
                 {
-                    return RedirectToAction("Index", new { status = $"{e.Message}" });
+                    this.AlertDanger(StringLocalizer[$"Error: {e.Message}"]);
+                    return RedirectToAction("Index");
                 }
                 else
                 {
-                    return RedirectToAction("Index", new { status = StringLocalizer["There has been an error. Please try again later or contact your administrator."] });
+                    this.AlertDanger(StringLocalizer[$"Error: There has been an error. Please try again later or contact your administrator."]);
+                    return RedirectToAction("Index");
                 }
             }
         }
@@ -95,14 +91,16 @@ namespace cloudscribe.Core.Web.Controllers
             if (ipAddress.Length <= 0)
             {
                 _log.LogError("IP Address missing");
+                this.AlertWarning(StringLocalizer[$"Error: IP Address missing"]);
 
-                return RedirectToAction("Index", new { status = StringLocalizer["Error: IP Address missing"] });
+                return RedirectToAction("PermittedIpAddresses");
             }
             if (ipTypeRadio.Length <= 0)
             {
                 _log.LogError("IP Type is required");
+                this.AlertWarning(StringLocalizer[$"Error: The IP Type is required"]);
 
-                return RedirectToAction("Index", new { status = StringLocalizer["Error: The IP Type is required"] });
+                return RedirectToAction("PermittedIpAddresses");
             }           
 
             if (ipTypeRadio == "singleIpAddress")
@@ -112,8 +110,9 @@ namespace cloudscribe.Core.Web.Controllers
                 if (validationResult != null)
                 {
                     _log.LogError($"{validationResult.ErrorMessage} {ipAddress}");
+                    this.AlertWarning(StringLocalizer[$"Error: {validationResult.ErrorMessage}  {ipAddress}"]);
 
-                    return RedirectToAction("Index", new { status = $"{validationResult.ErrorMessage}  {ipAddress}" });
+                    return RedirectToAction("PermittedIpAddresses");
                 }
             }
             else
@@ -123,8 +122,9 @@ namespace cloudscribe.Core.Web.Controllers
                 if (!validIpRange)
                 {
                     _log.LogError($"Invalid IP Range {ipAddress}");
+                    this.AlertWarning(StringLocalizer[$"Error: Invalid IP Address Range: { ipAddress}"]);
 
-                    return RedirectToAction("Index", new { status = $"Invalid IP Address Range: {ipAddress}" });
+                    return RedirectToAction("PermittedIpAddresses");
                 }
             }
 
@@ -142,9 +142,11 @@ namespace cloudscribe.Core.Web.Controllers
 
             try
             {
-                await _permittedIpService.AddPermittedIpAddress(ipAddressModel, CancellationToken.None);
+                await _blockedOrPermittedIpService.AddPermittedIpAddress(ipAddressModel, CancellationToken.None);
 
-                return RedirectToAction("Index", new { status = StringLocalizer["Success! IP Address added."] });
+                this.AlertSuccess(StringLocalizer[$"Success! IP Address added."]);
+
+                return RedirectToAction("PermittedIpAddresses");
             }
             catch (Exception e)
             {
@@ -152,11 +154,15 @@ namespace cloudscribe.Core.Web.Controllers
 
                 if (e.Message != null)
                 {
-                    return RedirectToAction("Index", new { status = $"{e.Message}" });
+                    this.AlertDanger(StringLocalizer[$"Error: {e.Message}"]);
+
+                    return RedirectToAction("PermittedIpAddresses");
                 }
                 else
                 {
-                    return RedirectToAction("Index", new { status = StringLocalizer["There has been an error. Please try again later or contact your administrator."] });
+                    this.AlertDanger(StringLocalizer[$"There has been an error. Please try again later or contact your administrator."]);
+
+                    return RedirectToAction("PermittedIpAddresses");
                 }
             }
         }
@@ -169,8 +175,9 @@ namespace cloudscribe.Core.Web.Controllers
             if (!ModelState.IsValid)
             {
                 _log.LogError("Model is invalid");
+                this.AlertWarning(StringLocalizer[$"Error: The Model is invalid"]);
 
-                return RedirectToAction("Index", new { status = StringLocalizer["Error: The Model is invalid"] });
+                return RedirectToAction("PermittedIpAddresses");
             }
 
             BlockedPermittedIpAddressesModel ipAddressModel;
@@ -182,8 +189,9 @@ namespace cloudscribe.Core.Web.Controllers
                 if (validationResult != null)
                 {
                     _log.LogError($"{validationResult.ErrorMessage} {model.IpAddress}");
+                    this.AlertWarning(StringLocalizer[$"{validationResult.ErrorMessage}  {model.IpAddress}"]);
 
-                    return RedirectToAction("Index", new { status = $"{validationResult.ErrorMessage}  {model.IpAddress}" });
+                    return RedirectToAction("PermittedIpAddresses");
                 }
 
                 ipAddressModel = new BlockedPermittedIpAddressesModel
@@ -205,8 +213,9 @@ namespace cloudscribe.Core.Web.Controllers
                 if (!validIpRange)
                 {
                     _log.LogError($"Invalid IP Range {model.IpAddress}");
-                
-                    return RedirectToAction("Index", new { status = $"Invalid IP Address Range: {model.IpAddress}" });
+                    this.AlertWarning(StringLocalizer[$"Invalid IP Address Range: {model.IpAddress}"]);
+
+                    return RedirectToAction("PermittedIpAddresses");
                 }
                 
                 ipAddressModel = new BlockedPermittedIpAddressesModel
@@ -223,24 +232,29 @@ namespace cloudscribe.Core.Web.Controllers
             }
 
             try
-                {
-                    await _permittedIpService.UpdatePermittedIpAddress(ipAddressModel, CancellationToken.None);
+            {
+                await _blockedOrPermittedIpService.UpdatePermittedIpAddress(ipAddressModel, CancellationToken.None);
+                this.AlertSuccess(StringLocalizer[$"Success! IP Address updated."]);
 
-                    return RedirectToAction("Index", new { status = StringLocalizer["Success! IP Address updated."] });
-                }
-                catch (Exception e)
-                {
-                    _log.LogError(e, "Error updating permitted IP Address");
+                return RedirectToAction("PermittedIpAddresses");
+            }
+            catch (Exception e)
+            {
+                _log.LogError(e, "Error updating permitted IP Address");
 
-                    if (e.Message != null)
-                    {
-                        return RedirectToAction("Index", new { status = $"{e.Message}" });
-                    }
-                    else
-                    {
-                        return RedirectToAction("Index", new { status = StringLocalizer["There has been an error. Please try again later or contact your administrator."] });
-                    }
+                if (e.Message != null)
+                {
+                    this.AlertDanger(StringLocalizer[$"{e.Message}"]);
+
+                    return RedirectToAction("PermittedIpAddresses");
                 }
+                else
+                {
+                    this.AlertDanger(StringLocalizer[$"There has been an error. Please try again later or contact your administrator."]);
+
+                    return RedirectToAction("PermittedIpAddresses");
+                }
+            }
         }
 
         [HttpPost]
@@ -251,7 +265,9 @@ namespace cloudscribe.Core.Web.Controllers
             if (ipAddressId == string.Empty)
             {
                 _log.LogError("Invalid IP Address");
-                return RedirectToAction("Index", new { status = StringLocalizer["Error: Invalid IP Address"] });
+                this.AlertWarning(StringLocalizer[$"Error: Invalid IP Address"]);
+
+                return RedirectToAction("PermittedIpAddresses");
             }
 
             Guid siteId = User.GetUserSiteIdAsGuid();
@@ -259,16 +275,19 @@ namespace cloudscribe.Core.Web.Controllers
             if (siteId == Guid.Empty)
             {
                 _log.LogError("Invalid Site ID");
-                return RedirectToAction("Index", new { status = StringLocalizer["Error: Invalid Site ID"] });
+                this.AlertWarning(StringLocalizer[$"Error: Invalid Site ID"]);
+
+                return RedirectToAction("PermittedIpAddresses");
             }
 
             Guid parsedId = new Guid(ipAddressId.Replace("_", "-"));
 
             try
             {
-                await _permittedIpService.DeletePermittedIpAddress(parsedId, siteId, CancellationToken.None);
+                await _blockedOrPermittedIpService.DeletePermittedIpAddress(parsedId, siteId, CancellationToken.None);
+                this.AlertSuccess(StringLocalizer[$"Success! The IP Address has been removed"]);
 
-                return RedirectToAction("Index", new { status = StringLocalizer["Success! The IP Address has been removed"] });
+                return RedirectToAction("PermittedIpAddresses");
             }
             catch (Exception e)
             {
@@ -276,11 +295,15 @@ namespace cloudscribe.Core.Web.Controllers
 
                 if (e.Message != null)
                 {
-                    return RedirectToAction("Index", new { status = $"{e.Message}" });
+                    this.AlertDanger(StringLocalizer[$"{e.Message}"]);
+
+                    return RedirectToAction("PermittedIpAddresses");
                 }
                 else
                 {
-                    return RedirectToAction("Index", new { status = StringLocalizer["There has been an error.Please try again later or contact your administrator."] });
+                    this.AlertDanger(StringLocalizer[$"There has been an error.Please try again later or contact your administrator."]);
+
+                    return RedirectToAction("PermittedIpAddresses");
                 }
             }
         }
@@ -303,10 +326,10 @@ namespace cloudscribe.Core.Web.Controllers
                 {
                     permittedIps = new PaginatedIpAddressesViewModel
                     {
-                        BlockedPermittedIpAddresses = await _permittedIpService.GetPermittedIpAddressesAsync(User.GetUserSiteIdAsGuid(), pageNumber, itemsPerPage, CancellationToken.None)
+                        BlockedPermittedIpAddresses = await _blockedOrPermittedIpService.GetPermittedIpAddressesAsync(User.GetUserSiteIdAsGuid(), pageNumber, itemsPerPage, CancellationToken.None)
                     };
 
-                    return View("Index", permittedIps);
+                    return View("PermittedIpAddresses", permittedIps);
                 }
                 catch (Exception e)
                 {
@@ -314,11 +337,15 @@ namespace cloudscribe.Core.Web.Controllers
 
                     if (e.Message != null)
                     {
-                        return RedirectToAction("Index", new { status = $"{e.Message}" });
+                        this.AlertDanger(StringLocalizer[$"{e.Message}"]);
+
+                        return RedirectToAction("PermittedIpAddresses");
                     }
                     else
                     {
-                        return RedirectToAction("Index", new { status = StringLocalizer["There has been an error. Please try again later or contact your administrator."] });
+                        this.AlertDanger(StringLocalizer[$"There has been an error. Please try again later or contact your administrator."]);
+
+                        return RedirectToAction("PermittedIpAddresses");
                     }
                 }
             }
@@ -327,7 +354,7 @@ namespace cloudscribe.Core.Web.Controllers
             {
                 permittedIps = new PaginatedIpAddressesViewModel
                 {
-                    BlockedPermittedIpAddresses = await _permittedIpService.SearchPermittedIpAddressesAsync(User.GetUserSiteIdAsGuid(), pageNumber, itemsPerPage, searchTerm, CancellationToken.None)
+                    BlockedPermittedIpAddresses = await _blockedOrPermittedIpService.SearchPermittedIpAddressesAsync(User.GetUserSiteIdAsGuid(), pageNumber, itemsPerPage, searchTerm, CancellationToken.None)
                 };
             }
             catch (Exception e)
@@ -336,11 +363,15 @@ namespace cloudscribe.Core.Web.Controllers
 
                 if (e.Message != null)
                 {
-                    return RedirectToAction("Index", new { status = $"{e.Message}" });
+                    this.AlertDanger(StringLocalizer[$"{e.Message}"]);
+
+                    return RedirectToAction("PermittedIpAddresses");
                 }
                 else
                 {
-                    return RedirectToAction("Index", new { status = StringLocalizer["There has been an error. Please try again later or contact your administrator."] });
+                    this.AlertDanger(StringLocalizer[$"There has been an error. Please try again later or contact your administrator."]);
+
+                    return RedirectToAction("PermittedIpAddresses");
                 }
             }
 
@@ -350,17 +381,17 @@ namespace cloudscribe.Core.Web.Controllers
 
                 permittedIps = new PaginatedIpAddressesViewModel
                 {
-                    BlockedPermittedIpAddresses = await _permittedIpService.GetPermittedIpAddressesAsync(User.GetUserSiteIdAsGuid(), pageNumber, itemsPerPage, CancellationToken.None)
+                    BlockedPermittedIpAddresses = await _blockedOrPermittedIpService.GetPermittedIpAddressesAsync(User.GetUserSiteIdAsGuid(), pageNumber, itemsPerPage, CancellationToken.None)
                 };
 
-                return View("Index", permittedIps);
+                return View("PermittedIpAddresses", permittedIps);
             }
             else
             {
                 permittedIps.SearchTerm = searchTerm;
                 ViewBag.status = StringLocalizer[$"{permittedIps.BlockedPermittedIpAddresses.TotalItems} result(s) found for '{searchTerm}'"];
 
-                return View("Index", permittedIps);
+                return View("PermittedIpAddresses", permittedIps);
             }
         }
 
@@ -372,7 +403,9 @@ namespace cloudscribe.Core.Web.Controllers
             if (!ModelState.IsValid)
             {
                 _log.LogError("Model is invalid");
-                return RedirectToAction("Index", new { status = StringLocalizer["Error: The Model is invalid"] });
+                this.AlertWarning(StringLocalizer[$"Error: The Model is invalid"]);
+
+                return RedirectToAction("PermittedIpAddresses");
             }
 
             Stream ipAddresses = model.BulkIpAddresses.OpenReadStream();
@@ -380,7 +413,9 @@ namespace cloudscribe.Core.Web.Controllers
             if (ipAddresses == null)
             {
                 _log.LogError("No IP Addresses found in the uploaded file");
-                return RedirectToAction("Index", new { status = StringLocalizer["Error: No IP Addresses found in the uploaded file"] });
+                this.AlertWarning(StringLocalizer[$"Error: No IP Addresses found in the uploaded file"]);
+
+                return RedirectToAction("PermittedIpAddresses");
             }
 
             var errors = new List<string>();
@@ -439,7 +474,7 @@ namespace cloudscribe.Core.Web.Controllers
 
                         try
                         {
-                            await _permittedIpService.AddPermittedIpAddress(ipAddressModel, CancellationToken.None);
+                            await _blockedOrPermittedIpService.AddPermittedIpAddress(ipAddressModel, CancellationToken.None);
                             successCount++;
                         }
                         catch (Exception e)
@@ -453,18 +488,22 @@ namespace cloudscribe.Core.Web.Controllers
             if (errors.Count > 0 && errors.Count <= 10)
             {
                 string errorSummary = string.Join("; ", errors);
+                this.AlertWarning(StringLocalizer[$"Added {successCount} IP(s). Errors: {errorSummary}"]);
 
-                return RedirectToAction("Index", new { status = StringLocalizer[$"Added {successCount} IP(s). Errors: {errorSummary}"] });
+                return RedirectToAction("PermittedIpAddresses");
             }
             else if (errors.Count > 10)
             {
                 string errorSummary = string.Join("; ", errors.GetRange(0, 10));
+                this.AlertWarning(StringLocalizer[$"Added {successCount} IP(s). First 10 errors: {errorSummary}"]);
 
-                return RedirectToAction("Index", new { status = StringLocalizer[$"Added {successCount} IP(s). First 10 errors: {errorSummary}"] });
+                return RedirectToAction("PermittedIpAddresses");
             }
             else
             {
-                return RedirectToAction("Index", new { status = StringLocalizer[$"Success! {successCount} IP Address(es) have been added."] });
+                this.AlertSuccess(StringLocalizer[$"Success! {successCount} IP Address(es) have been added."]);
+
+                return RedirectToAction("PermittedIpAddresses");
             }
         }
     }

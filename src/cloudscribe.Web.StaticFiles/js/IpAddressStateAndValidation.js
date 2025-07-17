@@ -13,11 +13,13 @@ function CancelEditing(id) {
 $('#singleIpAddress').click(function () {
     $('#addNewSingleIp').show();
     $('#addNewIpRange').hide();
+    $('#allowedIpRanges').hide();
     $('#ipTypeNextButton').prop('disabled', false);
 });
 $('#ipAddressRange').click(function () {
     $('#addNewSingleIp').hide();
     $('#addNewIpRange').show();
+    $('#allowedIpRanges').show();
     $('#ipTypeNextButton').prop('disabled', false);
 });
 $('#ipAddressEntryBackButton').click(function () {
