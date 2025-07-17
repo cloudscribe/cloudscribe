@@ -1,5 +1,5 @@
 ﻿using cloudscribe.Core.Models;
-using cloudscribe.Core.Web.Components;
+using cloudscribe.Core.Web.Components.IPService;
 using Microsoft.AspNetCore.Http;
 using System.Net;
 using System.Threading.Tasks;

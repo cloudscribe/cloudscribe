@@ -566,8 +566,8 @@
               componentVisibility="breadcrumbs,childtree,parenttree"
               authorizationPolicy="SystemLogPolicy" />
         <NavNode key="PermittedIpAddresses"
-                 controller="PermittedIpAddresses"
-                 action="Index"
+                 controller="SiteAdmin"
+                 action="PermittedIpAddresses"
                  text="Permitted IP Addresses"
                  iconCssClass="fas fa-check"
                  componentVisibility="breadcrumbs,childtree,parenttree"
@@ -575,8 +575,8 @@
               <Children />
         </NavNode>
 	  <NavNode key="BlockedIpAddresses"
-                 controller="BlockedIpAddresses"
-                 action="Index"
+                 controller="SiteAdmin"
+                 action="BlockedIpAddresses"
                  text="Blocked IP Addresses"
                  iconCssClass="fas fa-ban"
                  componentVisibility="breadcrumbs,childtree,parenttree"

@@ -1,7 +1,7 @@
 @model cloudscribe.Core.Web.ViewModels.IpAddresses.IpAddressesViewModel
 @inject IStringLocalizer<CloudscribeCore> sr
 
-<form method="post" class="form-horizontal" role="form" asp-antiforgery="true" data-submit-once="true" asp-controller="PermittedIpAddresses" asp-action="AddPermittedIpAddress">
+<form method="post" class="form-horizontal" role="form" asp-antiforgery="true" data-submit-once="true" asp-controller="SiteAdmin" asp-action="AddPermittedIpAddress">
     <div class="accordion" id="addNewIpAddress">
         <div class="accordion-item">
             <h2 class="accordion-header" id="ipType">
@@ -34,8 +34,20 @@
                 <div class="accordion-body">
                     <div asp-validation-summary="All" class="text-danger"></div>
                     <div class="row mb-3" id="errorMsg" style="display:none;"></div>
+                    <div class="row" id="allowedIpRanges" style="display:none;">
+                        <div class="col mb-3">
+                            <p>The following range formats are accepted:</p>
+                            <ul>
+                                <li>192.168.0.0/255.255.255.0</li>
+                                <li>192.168.0.10 - 192.168.10.20</li>
+                                <li>192.168.10.10-20</li>
+                                <li>fe80::/10</li>
+                                <li>192.168.0.0/16</li>
+                            </ul>
+                        </div>
+                    </div>
                     <div class="row">
-                        <div class="col d-flex">
+                        <div class="col">
                             <div class="mb-3">
                                 <label asp-for="IpAddress" class="form-label" id="addNewIpRange" style="display:none;">@sr["Permitted IP Address Range"]*</label>
                                 <label asp-for="IpAddress" class="form-label" id="addNewSingleIp" style="display:none;">@sr["Permitted IP Address"]*</label>
