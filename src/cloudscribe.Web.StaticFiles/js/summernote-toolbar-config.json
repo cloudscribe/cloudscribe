@@ -3,7 +3,7 @@
 			"style", ["style"]
 		],
 		[
-			"font",	["bold", "italic", "underline", "strikethrough", "superscript", "subscript", "clear"]
+			"font",	["bold", "italic", "underline", "strikethrough", "superscript", "subscript", "hr", "clear"]
 		],
 		[
 			"color", []
@@ -15,10 +15,10 @@
 			"table", ["table"]
 		],
 		[
-			"insert",	["link", "picture"]
+			"insert",	["link", "picture", "video"]
 		],
 		[
-			"view",	["fullscreen", "codeview"]
+			"view",	["fullscreen", "codeview", "undo", "redo", "help"]
 		],
 		[
 			"custom",	[]
