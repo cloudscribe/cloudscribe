@@ -107,8 +107,16 @@ namespace cloudscribe.Core.Web.Components.IPService
                 }
             } else if (_blockedIps.Any(x => x.IpAddress == ipAddress.ToString() && x.SiteId == siteId && x.IsRange == false))
             {
-                //blocked ip specifically mentioned
-                isBlocked = true;
+                if (_permittedIps.Any(x => x.IpAddress == ipAddress.ToString() && x.SiteId == siteId && x.IsRange == false))
+                {
+                    //permitted ip specifically mentioned
+                    isBlocked = false;
+                }
+                else
+                {
+                    //blocked ip specifically mentioned
+                    isBlocked = true;
+                }
             }
             else if (_permittedIps.Any(x => x.IpAddress == ipAddress.ToString() && x.SiteId == siteId && x.IsRange == false))
             {
