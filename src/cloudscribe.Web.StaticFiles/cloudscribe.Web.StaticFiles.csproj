@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <Description>common static resources for web applications including ckeditor datepickers, and other js and css</Description>
@@ -25,6 +25,7 @@
     <None Remove="js\emaillist-signup-recaptcha-callback.js" />
     <None Remove="js\knockout-3.5.1.js" />
     <None Remove="js\moment-with-locales.min.js" />
+    <None Remove="js\purify.min.js" />
   </ItemGroup>
 
   <ItemGroup>
@@ -129,6 +130,7 @@
     <EmbeddedResource Include="js\metisMenu.min.js" />
     <EmbeddedResource Include="js\moment-with-locales.min.js" />
     <EmbeddedResource Include="js\plyr.min.js" />
+    <EmbeddedResource Include="js\purify.min.js" />
     <EmbeddedResource Include="js\qrcode.js" />
     <EmbeddedResource Include="js\qrcode.min.js" />
     <EmbeddedResource Include="js\remote-validation-onblur-unobtrusive.js" />

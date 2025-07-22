@@ -50,7 +50,10 @@
 					});
 				}							
 
-				function setupSummernote() {
+
+
+				function setupSummernoteCallback() {
+
 					$(summernoteInstance).each(function (i) {
 						$(summernoteInstance).eq(i).summernote({
 							callbacks: {
@@ -58,6 +61,21 @@
 									summernoteNumber = i;
 									summerInst = summernoteInstance;
 									onDropped(files);
+								},
+								onChange: function (contents, $editable) {
+									if (typeof DOMPurify !== 'undefined') {
+										const clean = DOMPurify.sanitize(contents, {
+											// we'll need a lot more than these... - jk
+											ALLOWED_TAGS: ['style', 'b', 'i', 'u', 'span', 'p', 'div', 'h1', 'h2', 'h3', 'ul', 'li', 'ol', 'a', 'img', 'blockquote', 'table', 'tr', 'td'],
+											ALLOWED_ATTR: ['style', 'href', 'src', 'alt', 'class']
+										});
+
+										if (clean !== contents) {   // recursive madness if we don't include this... Only update if different - jk
+											$(this).summernote('code', clean); 
+										}
+									} else {
+										console.warn('DOMPurify not available — skipping sanitation.');
+									}
 								}
 							},
 							toolbar: toolbarConfig,
@@ -65,6 +83,28 @@
 						});
 					});
 				}
+
+				function loadDOMPurify(callback) {
+					const script = document.createElement('script');
+					script.src = '/cr/js/purify.min.js';
+					script.onload = () => {
+						console.log('DOMPurify loaded');
+						if (callback) callback();
+					};
+					script.onerror = () => {
+						console.error('Failed to load DOMPurify');
+					};
+					document.head.appendChild(script);
+				}
+
+				function setupSummernote() {
+
+					loadDOMPurify(function () {
+						// Now it's safe to use DOMPurify in setupSummernote()
+						setupSummernoteCallback();
+					});
+				}
+
 			}
 		}
 
