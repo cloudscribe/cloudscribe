@@ -27,43 +27,74 @@ namespace cloudscribe.Core.IdentityServer.EFCore
 
         private readonly IConfigurationDbContextFactory _contextFactory;
 
-        public async Task CreateClient(string siteId, Client client, CancellationToken cancellationToken = default(CancellationToken))
+
+        public async Task UpdateClient(string siteId, Client client, CancellationToken cancellationToken = default)
+        {
+            if (client == null) return;
+            cancellationToken.ThrowIfCancellationRequested();
+
+            using (var context = _contextFactory.CreateContext())
+            {
+                await using var transaction = await context.Database.BeginTransactionAsync(cancellationToken).ConfigureAwait(false);
+
+                try
+                {
+                    await DeleteClient(siteId, client.ClientId, context, cancellationToken).ConfigureAwait(false);
+                    await CreateClient(siteId, client, context, cancellationToken).ConfigureAwait(false);
+
+                    await context.SaveChangesAsync(cancellationToken).ConfigureAwait(false);
+                    await transaction.CommitAsync(cancellationToken).ConfigureAwait(false);
+                }
+                catch
+                {
+                    await transaction.RollbackAsync(cancellationToken).ConfigureAwait(false);
+                    throw;
+                }
+            }
+        }
+
+
+        public async Task CreateClient(string siteId, Client client, CancellationToken cancellationToken = default)
         {
             cancellationToken.ThrowIfCancellationRequested();
+
             var ent = client.ToEntity();
             ent.SiteId = siteId;
 
             using (var context = _contextFactory.CreateContext())
             {
-                context.Clients.Add(ent);
-                await context.SaveChangesAsync().ConfigureAwait(false);
+                await CreateClient(siteId, client, context, cancellationToken).ConfigureAwait(false);
+                await context.SaveChangesAsync(cancellationToken).ConfigureAwait(false);
             }
-
-                
         }
 
-        public async Task UpdateClient(string siteId, Client client, CancellationToken cancellationToken = default(CancellationToken))
+        private async Task CreateClient(string siteId, Client client, IConfigurationDbContext context, CancellationToken cancellationToken)
         {
-            if (client == null) return;
-            // since the Client doesn't have the ids of the scope entity child objects
-            // updating creates duplicate child objects ie Scopes and Secrets
-            // therefore we need to actually delete the found client
-            // and re-create it - we don't care about the storage ids
-
             cancellationToken.ThrowIfCancellationRequested();
 
-            await DeleteClient(siteId, client.ClientId, cancellationToken).ConfigureAwait(false);
-            await CreateClient(siteId, client, cancellationToken).ConfigureAwait(false);
-            
+            var ent = client.ToEntity();
+            ent.SiteId = siteId;
+
+            context.Clients.Add(ent);
         }
 
-        public async Task DeleteClient(string siteId, string clientId, CancellationToken cancellationToken = default(CancellationToken))
+
+        public async Task DeleteClient(string siteId, string clientId, CancellationToken cancellationToken = default)
         {
             cancellationToken.ThrowIfCancellationRequested();
 
             using (var context = _contextFactory.CreateContext())
             {
-                var client = context.Clients
+                await DeleteClient(siteId, clientId, context, cancellationToken).ConfigureAwait(false);
+                await context.SaveChangesAsync(cancellationToken).ConfigureAwait(false);
+            }
+        }
+
+        private async Task DeleteClient(string siteId, string clientId, IConfigurationDbContext context, CancellationToken cancellationToken)
+        {
+            cancellationToken.ThrowIfCancellationRequested();
+
+            var client = context.Clients
                 .Include(x => x.AllowedGrantTypes)
                 .Include(x => x.RedirectUris)
                 .Include(x => x.PostLogoutRedirectUris)
@@ -74,12 +105,12 @@ namespace cloudscribe.Core.IdentityServer.EFCore
                 .Include(x => x.AllowedCorsOrigins)
                 .FirstOrDefault(x => x.SiteId == siteId && x.ClientId == clientId);
 
+            if (client != null)
+            {
                 context.Clients.Remove(client);
-                await context.SaveChangesAsync().ConfigureAwait(false);
             }
-
-            
         }
+
 
     }
 }
