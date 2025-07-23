@@ -63,6 +63,16 @@
 							toolbar: toolbarConfig,
 							...summernoteConfig
 						});
+						
+						$(summernoteInstance).on('summernote.codeview.change', function (we, contents, $editable) {
+							var $textarea = $(this);
+							var $editor = $textarea.nextAll('.note-editor.note-frame.card.codeview');
+							var $editablee = $editor.find('.note-editable.card-block');
+							var $originalTextarea = $editor.prev(summernoteInstance);
+
+							$editablee.html(contents);
+							$originalTextarea.val(contents);
+						});
 					});
 				}
 			}
