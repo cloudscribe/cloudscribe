@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <Description>Multi-tenant web application foundation with management for sites, users, roles, claims, and geographic data.</Description>
-    <Version>8.3.0</Version>
+    <Version>8.4.0</Version>
     <TargetFramework>net8.0</TargetFramework>
     <Authors>Joe Audette</Authors>
     <PackageTags>cloudscribe;multi-tenant;asp.net core;site management</PackageTags>
@@ -11,7 +11,12 @@
     <PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
     <RepositoryUrl>https://github.com/cloudscribe/cloudscribe.git</RepositoryUrl>
     <RepositoryType>git</RepositoryType>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
   </PropertyGroup>
+
+  <ItemGroup>
+    <None Include="README.md" Pack="true" PackagePath="" />
+  </ItemGroup>
 
   <ItemGroup>
     <None Include="icon.png" Pack="true" PackagePath="\" />
@@ -35,8 +40,8 @@
   <ItemGroup>
     <PackageReference Include="CsvHelper" Version="33.1.0" />
     <PackageReference Include="IPAddressRange" Version="6.2.0" />
-    <PackageReference Include="cloudscribe.Web.Pagination" Version="8.3.0" />
-    <PackageReference Include="cloudscribe.Web.SiteMap.FromNavigation" Version="8.3.0" />
+    <PackageReference Include="cloudscribe.Web.Pagination" Version="8.4.0" />
+    <PackageReference Include="cloudscribe.Web.SiteMap.FromNavigation" Version="8.4.0" />
 
     <PackageReference Include="Microsoft.Extensions.Caching.Abstractions" Version="8.0.0" />
     <PackageReference Include="Microsoft.Extensions.Configuration.Abstractions" Version="8.0.0" />
