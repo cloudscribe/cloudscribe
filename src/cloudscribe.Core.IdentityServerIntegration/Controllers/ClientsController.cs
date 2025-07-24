@@ -409,6 +409,17 @@ namespace cloudscribe.Core.IdentityServerIntegration.Controllers.Mvc
             var secret = new Secret(secretValue, model.Description, model.Expiration);
             secret.Type = model.Type;
 
+            // Fix for timezone issues / PgSQL:
+            // always take what the user has entered literally
+            // and store it as UTC with no offset
+            if (model.Expiration != null && model.Expiration.Value.Kind != DateTimeKind.Utc)
+                secret.Expiration = new DateTime(model.Expiration.Value.Year,
+                                                model.Expiration.Value.Month,
+                                                model.Expiration.Value.Day,
+                                                0, 0, 0, DateTimeKind.Utc);
+
+
+
             if (client.ClientSecrets.Contains(secret))
             {
                 this.AlertDanger(sr["Client already has a secret with that value."], true);
