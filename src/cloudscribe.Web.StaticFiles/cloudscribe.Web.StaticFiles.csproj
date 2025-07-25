@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <Description>common static resources for web applications including ckeditor datepickers, and other js and css</Description>
-    <Version>8.2.0</Version>
+    <Version>8.4.0</Version>
     <TargetFramework>net8.0</TargetFramework>
     <Authors>Joe Audette</Authors>
     <PackageTags>cloudscribe</PackageTags>
@@ -11,7 +11,12 @@
     <PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
     <RepositoryUrl>https://github.com/cloudscribe/cloudscribe.git</RepositoryUrl>
     <RepositoryType>git</RepositoryType>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
   </PropertyGroup>
+
+  <ItemGroup>
+    <None Include="README.md" Pack="true" PackagePath="" />
+  </ItemGroup>
 
   <ItemGroup>
     <None Remove="js\bootstrap4-datetimepicker.min.js" />
@@ -123,6 +128,7 @@
     <EmbeddedResource Include="js\jquery.validate.unobtrusive.min.js" />
     <EmbeddedResource Include="js\jqueryvaildation.submitonce-unobtrusive.js" />
     <EmbeddedResource Include="js\jqueryvaildation.submitonce-unobtrusive.min.js" />
+	<EmbeddedResource Include="js\IpAddressStateAndValidation.min.js" />
     <EmbeddedResource Include="js\knockout-3.4.2.js" />
     <EmbeddedResource Include="js\knockout-3.5.1.js" />
     <EmbeddedResource Include="js\metisMenu.min.js" />

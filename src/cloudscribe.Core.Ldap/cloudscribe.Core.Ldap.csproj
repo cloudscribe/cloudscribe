@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <Description>ILdapHelper implementation for cloudscribe Core LDAP authentication support</Description>
-    <Version>8.2.0</Version>
+    <Version>8.4.0</Version>
     <TargetFramework>net8.0</TargetFramework>
     <Authors>Joe Audette, Simon Annetts Idox Software</Authors>
     <PackageTags>cloudscribe;LDAP;Active Directory</PackageTags>
@@ -11,7 +11,12 @@
     <PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
     <RepositoryUrl>https://github.com/cloudscribe/cloudscribe.git</RepositoryUrl>
     <RepositoryType>git</RepositoryType>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
   </PropertyGroup>
+
+  <ItemGroup>
+    <None Include="README.md" Pack="true" PackagePath="" />
+  </ItemGroup>
 
   <ItemGroup>
     <None Include="icon.png" Pack="true" PackagePath="\" />

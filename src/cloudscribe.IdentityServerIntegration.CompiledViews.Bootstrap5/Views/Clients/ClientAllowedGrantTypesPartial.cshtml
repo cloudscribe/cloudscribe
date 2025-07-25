@@ -5,7 +5,7 @@
     var gIndex = 0;
 }
 
-<h3>@sr["Allowed Grant Types"] </h3>
+<h3 class="mt-3">@sr["Allowed Grant Types"] </h3>
 @{ await Html.RenderPartialAsync("AddClientAllowedGrantTypePartial", Model);}
 @if (Model.Client.AllowedGrantTypes.Count() > 0)
 {
@@ -36,7 +36,7 @@
                 </div>
             </form>
             <button type="button" class="btn btn-danger btn-sm" data-bs-toggle="modal" data-bs-target="@("#confirmDeleteGrantModal" + gIndex)">
-                @sr["Delete"]
+                    @sr["Delete Grant Type"]
             </button>
             @c
         </li>
