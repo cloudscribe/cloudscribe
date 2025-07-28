@@ -64,8 +64,15 @@
 							toolbar: toolbarConfig,
 							...summernoteConfig
 						});
-						
+
 						$(summernoteInstance).on('summernote.codeview.change', function (we, contents, $editable) {
+
+							if (!$(summernoteInstance).summernote('codeview.isActivated')) {
+								// This is not code view, so ignore
+								return;
+							}
+
+                            // Update the original textarea and editable content
 							var $textarea = $(this);
 							var $editor = $textarea.nextAll('.note-editor.note-frame.card.codeview');
 							var $editablee = $editor.find('.note-editable.card-block');
