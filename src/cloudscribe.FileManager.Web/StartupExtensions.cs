@@ -1,4 +1,5 @@
 ﻿using cloudscribe.FileManager.Web.Controllers;
+using cloudscribe.FileManager.Web.Events;
 using cloudscribe.FileManager.Web.Models;
 using cloudscribe.FileManager.Web.Services;
 using cloudscribe.Versioning;
@@ -26,7 +27,7 @@ namespace Microsoft.Extensions.DependencyInjection
             //services.TryAddScoped<IFileExtensionValidationRegexBuilder, FileExtensionValidationRegexBuilder>();
             services.TryAddScoped<IMediaPathResolver, DefaultMediaPathResolver>();
             services.AddScoped<IVersionProvider, FileManagerVersionProvider>();
-
+            services.AddScoped<IHandleFileMoved, DummyHandleFileMoved>();
 
 
             // Angular's default header name for sending the XSRF token.

@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <Description>common static resources for web applications including ckeditor datepickers, and other js and css</Description>
-    <Version>8.0.6</Version>
+    <Version>8.4.0</Version>
     <TargetFramework>net8.0</TargetFramework>
     <Authors>Joe Audette</Authors>
     <PackageTags>cloudscribe</PackageTags>
@@ -11,7 +11,12 @@
     <PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
     <RepositoryUrl>https://github.com/cloudscribe/cloudscribe.git</RepositoryUrl>
     <RepositoryType>git</RepositoryType>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
   </PropertyGroup>
+
+  <ItemGroup>
+    <None Include="README.md" Pack="true" PackagePath="" />
+  </ItemGroup>
 
   <ItemGroup>
     <None Remove="js\bootstrap4-datetimepicker.min.js" />
@@ -65,6 +70,7 @@
     <EmbeddedResource Include="js\cloudscribe-datepicker-jqui-unobtrusive.js" />
     <EmbeddedResource Include="js\cloudscribe-datepicker-jqui-unobtrusive.min.js" />
     <EmbeddedResource Include="js\cloudscribe-login-page.js" />
+	  <EmbeddedResource Include="js\cloudscribe-forgot-password-page.js" />
     <EmbeddedResource Include="js\cloudscribe-logout-link.js" />
     <EmbeddedResource Include="js\cloudscribe-modaldialog-bootstrap.js" />
     <EmbeddedResource Include="js\cloudscribe-modaldialog-bootstrap.min.js" />
@@ -122,6 +128,7 @@
     <EmbeddedResource Include="js\jquery.validate.unobtrusive.min.js" />
     <EmbeddedResource Include="js\jqueryvaildation.submitonce-unobtrusive.js" />
     <EmbeddedResource Include="js\jqueryvaildation.submitonce-unobtrusive.min.js" />
+	<EmbeddedResource Include="js\IpAddressStateAndValidation.min.js" />
     <EmbeddedResource Include="js\knockout-3.4.2.js" />
     <EmbeddedResource Include="js\knockout-3.5.1.js" />
     <EmbeddedResource Include="js\metisMenu.min.js" />
@@ -152,6 +159,15 @@
     <EmbeddedResource Include="js\unsaved-changes-prompt.js" />
     <EmbeddedResource Include="js\unsaved-changes-prompt.min.js" />
     <EmbeddedResource Include="js\user-lookup-modal-callback.js" />
+	<EmbeddedResource Include="js\summernote\summernote-bs5.min.js" />
+	<EmbeddedResource Include="js\cloudscribe-summernote-unobtrusive.min.js" />
+	<EmbeddedResource Include="js\summernote\plugin\specialchars\summernote-ext-specialchars.js" />
+	<EmbeddedResource Include="js\summernote\plugin\serverimage\summernote-ext-serverimage.js" />
+	<EmbeddedResource Include="js\summernote-config.json" />
+	<EmbeddedResource Include="js\summernote-toolbar-config.json" />
+	<EmbeddedResource Include="js\summernote\lang\summernote-it-IT.js" />
+	<EmbeddedResource Include="js\summernote\lang\summernote-fr-FR.js" />
+	<EmbeddedResource Include="js\summernote\lang\summernote-cy.js" />
     <EmbeddedResource Include="css\1x1.gif" />
     <EmbeddedResource Include="css\baguetteBox.min.css" />
     <EmbeddedResource Include="css\bootstrap-datetimepicker-old.css" />
@@ -181,6 +197,10 @@
     <EmbeddedResource Include="css\jquery.smartmenus.bootstrap.min.css" />
     <EmbeddedResource Include="css\plyr.css" />
     <EmbeddedResource Include="css\simplemde.min.css" />
+	<EmbeddedResource Include="css\summernote-bs5.min.css" />
+	<EmbeddedResource Include="css\font\summernote.woff2" />
+	<EmbeddedResource Include="css\font\summernote.woff" />
+	<EmbeddedResource Include="css\font\summernote.ttf" />
     <EmbeddedResource Include="webfonts\fa-brands-400.eot" />
     <EmbeddedResource Include="webfonts\fa-brands-400.svg" />
     <EmbeddedResource Include="webfonts\fa-brands-400.ttf" />

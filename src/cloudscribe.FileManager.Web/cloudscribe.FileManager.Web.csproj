@@ -1,8 +1,8 @@
-﻿<Project Sdk="Microsoft.NET.Sdk.Razor">
+<Project Sdk="Microsoft.NET.Sdk.Razor">
 
   <PropertyGroup>
     <Description>media file management</Description>
-    <Version>8.0.2</Version>
+    <Version>8.4.0</Version>
     <TargetFramework>net8.0</TargetFramework>
     <Authors>Joe Audette</Authors>
     <AddRazorSupportForMvc>true</AddRazorSupportForMvc>
@@ -12,7 +12,12 @@
     <PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
     <RepositoryUrl>https://github.com/cloudscribe/cloudscribe.git</RepositoryUrl>
     <RepositoryType>git</RepositoryType>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
   </PropertyGroup>
+
+  <ItemGroup>
+    <None Include="README.md" Pack="true" PackagePath="" />
+  </ItemGroup>
 
   <ItemGroup>
     <None Include="icon.png" Pack="true" PackagePath="\" />
@@ -40,6 +45,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\cloudscribe.Core.Models\cloudscribe.Core.Models.csproj" />
     <ProjectReference Include="..\cloudscribe.Web.Common\cloudscribe.Web.Common.csproj" />
   </ItemGroup>
 

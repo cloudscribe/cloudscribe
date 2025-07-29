@@ -2,7 +2,8 @@
 @inject IStringLocalizer<CloudscribeCore> sr
 @using Microsoft.AspNetCore.Authorization
 @inject IAuthorizationService authorizationService
-@inject ICkeditorOptionsResolver editorOptionsResolver
+@inject ISummernoteOptionsResolver summernoteOptionsResolver
+@inject ICkeditorOptionsResolver ckeditorOptionsResolver
 @using Microsoft.AspNetCore.Antiforgery
 @inject IAntiforgery antiforgery
 @{
@@ -10,7 +11,8 @@
     ViewData["BodyClass"] = "manage-section user-info";
     var canUploadAuth = await authorizationService.AuthorizeAsync(User, "FileUploadPolicy");
     var canUpload = canUploadAuth.Succeeded;
-    var ckOptions = await editorOptionsResolver.GetCkeditorOptions();
+    var summernoteOptions = await summernoteOptionsResolver.GetSummernoteOptions();
+    var ckOptions = await ckeditorOptionsResolver.GetCkeditorOptions();
     var tokens = antiforgery.GetAndStoreTokens(Context);
 }
 @functions{
@@ -23,7 +25,7 @@
 @section Styles {
     <partial name="UserInfoStylePartial" />
 }
-<h2>@ViewData["Title"]</h2>
+<h1>@ViewData["Title"]</h1>
 <p>
     @sr["Username"]: @Model.UserName | @sr["Not you?"] <a id="linkLogout" href="#" onclick="document.getElementById('lnkLogout').click();">@sr["Log off"]</a>
 </p>
@@ -42,8 +44,8 @@
                          data-dropzone=""
                          data-upload-url="@Url.Action("DropFile", "FileManager")"
                          data-anti-forgery-token="@tokens.RequestToken"
-                         data-file-browse-url="@ckOptions.ImageBrowseUrl"
-                         data-file-crop-url="@ckOptions.CropFileUrl"
+                         data-file-browse-url="@summernoteOptions.ImageBrowseUrl"
+                         data-file-crop-url="@summernoteOptions.CropFileUrl"
                          data-target-path="/media/user-avatars"
                          data-create-thumb="false"
                          data-resize-image="true"
