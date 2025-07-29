@@ -38,6 +38,10 @@
     
     <PackageReference Include="Microsoft.Extensions.Configuration.FileExtensions" Version="8.0.0" />
     <PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="8.0.0" />
+
+    <!-- pulling up transitive deps to resolve security vulns -->
+    <PackageReference Include="Microsoft.Data.SqlClient" Version="5.1.6" />
+    
   </ItemGroup>
 
 </Project>
