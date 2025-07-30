@@ -1,11 +1,8 @@
-using System;
-using System.Collections.Generic;
+using cloudscribe.Core.Models;
+using cloudscribe.Pagination.Models;
+using Moq;
 using System.Net;
 using Xunit;
-using cloudscribe.Core.Web.Components.IPService;
-using cloudscribe.Core.Models;
-using Moq;
-using cloudscribe.Pagination.Models;
 
 namespace cloudscribe.Core.Web.Components.IPService.Tests
 {
@@ -40,6 +37,10 @@ namespace cloudscribe.Core.Web.Components.IPService.Tests
             return new BlockedOrPermittedIpService(siteContext, mockIpCommands.Object, mockLogger.Object, mockCache.Object);
         }
 
+        /// <summary>
+        /// In all below - returning true means you ARE blocked - jk
+        /// </summary>
+
         [Fact]
         public void ReturnsFalse_WhenNoBlockedOrPermitted()
         {
@@ -70,7 +71,7 @@ namespace cloudscribe.Core.Web.Components.IPService.Tests
         }
 
         [Fact]
-        public void ReturnsTrue_WhenAnyUsersIpIsNotInPermittedRange()
+        public void ReturnsTrue_WhenIpIsNotInPermittedSet()
         {
             var permitted = new List<BlockedPermittedIpAddressesModel>
             {
@@ -91,7 +92,18 @@ namespace cloudscribe.Core.Web.Components.IPService.Tests
             };
             var service = CreateService(blocked: blocked);
             Assert.True(service.IsBlockedOrPermittedIp(IPAddress.Parse("1.2.3.100"), _siteId));
-        } 
+        }
+
+        [Fact]
+        public void ReturnsFalse_WhenIpIsOutsideBlockedRange()
+        {
+            var blocked = new List<BlockedPermittedIpAddressesModel>
+            {
+                new BlockedPermittedIpAddressesModel { IpAddress = "1.2.3.0/24", SiteId = _siteId, IsRange = true }
+            };
+            var service = CreateService(blocked: blocked);
+            Assert.False(service.IsBlockedOrPermittedIp(IPAddress.Parse("1.2.99.100"), _siteId));
+        }
 
         [Fact]
         public void ReturnsFalse_WhenIpIsInPermittedRange()
@@ -102,7 +114,18 @@ namespace cloudscribe.Core.Web.Components.IPService.Tests
             };
             var service = CreateService(permitted: permitted);
             Assert.False(service.IsBlockedOrPermittedIp(IPAddress.Parse("1.2.3.100"), _siteId));
-        } 
+        }
+
+        [Fact]
+        public void ReturnsTree_WhenIpIsOutsidePermittedRange()
+        {
+            var permitted = new List<BlockedPermittedIpAddressesModel>
+            {
+                new BlockedPermittedIpAddressesModel { IpAddress = "1.2.3.0/24", SiteId = _siteId, IsRange = true }
+            };
+            var service = CreateService(permitted: permitted);
+            Assert.True(service.IsBlockedOrPermittedIp(IPAddress.Parse("1.2.5.100"), _siteId));
+        }
 
         [Fact]
         public void ReturnsFalse_WhenIpIsBothBlockedAndPermitted_PermittedTakesPriority()
@@ -132,6 +155,49 @@ namespace cloudscribe.Core.Web.Components.IPService.Tests
             };
             var service = CreateService(blocked: blocked, permitted: permitted);
             Assert.False(service.IsBlockedOrPermittedIp(IPAddress.Parse("1.2.3.100"), _siteId));
-        } 
+        }
+
+        /// <summary>
+        /// testing a mix of single IP and range: being permitted always overrides being blocked
+        /// </summary>
+        [Fact]
+        public void ReturnsFalse_WhenUserIsWithinPermittedRangeEvenIfSpecificallyBlocked()
+        {
+
+            var blocked = new List<BlockedPermittedIpAddressesModel>
+            {
+                new BlockedPermittedIpAddressesModel { IpAddress = "1.2.3.100", SiteId = _siteId, IsRange = false }
+            };
+            var permitted = new List<BlockedPermittedIpAddressesModel>
+            {
+                new BlockedPermittedIpAddressesModel { IpAddress = "1.2.3.0 - 1.2.3.100", SiteId = _siteId, IsRange = true }
+            };
+            var service = CreateService(blocked: blocked, permitted: permitted);
+            Assert.False(service.IsBlockedOrPermittedIp(IPAddress.Parse("1.2.3.100"), _siteId));
+        }
+
+        /// <summary>
+        /// test a complicated mix of types here
+        /// </summary>
+        [Fact]
+        public void ReturnsCorrectly_WhenIpIsInMixtureOfPermittedRanges()
+        {
+            var permitted = new List<BlockedPermittedIpAddressesModel>
+            {
+                new BlockedPermittedIpAddressesModel { IpAddress = "1.2.3.0 - 1.2.3.50", SiteId = _siteId, IsRange = true },
+                new BlockedPermittedIpAddressesModel { IpAddress = "1.2.3.40 - 1.2.3.60", SiteId = _siteId, IsRange = true },
+                new BlockedPermittedIpAddressesModel { IpAddress = "1.2.3.8", SiteId = _siteId, IsRange = false }
+            };
+            var blocked = new List<BlockedPermittedIpAddressesModel>
+            {
+                new BlockedPermittedIpAddressesModel { IpAddress = "1.2.3.4", SiteId = _siteId, IsRange = false },
+                new BlockedPermittedIpAddressesModel { IpAddress = "1.2.3.0 - 1.2.3.90", SiteId = _siteId, IsRange = true }
+            };
+
+            var service = CreateService(permitted: permitted);
+            Assert.False(service.IsBlockedOrPermittedIp(IPAddress.Parse("1.2.3.41"), _siteId));
+            Assert.True (service.IsBlockedOrPermittedIp(IPAddress.Parse("1.2.3.61"), _siteId));
+            Assert.True (service.IsBlockedOrPermittedIp(IPAddress.Parse("1.2.3.99"), _siteId));
+        }
     }
 }
