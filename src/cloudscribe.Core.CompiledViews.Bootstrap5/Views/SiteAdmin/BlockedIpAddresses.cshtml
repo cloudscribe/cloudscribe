@@ -34,8 +34,11 @@
         {
             <div class="col-sm-12 col-md-6 mb-3 d-flex">
                 <form method="post" class="form-horizontal" role="form" asp-antiforgery="true" data-submit-once="true" asp-controller="SiteAdmin" asp-action="SearchBlockedIpAddresses">
-                    <input type="text" class="me-3" id="searchTerm" name="searchTerm" />
-                    <button id="searchButton" class="btn btn-primary" type="submit" name="submit" aria-expanded="false">@sr["Search"]</button>
+                    <div class="input-group">
+                        <input asp-for="@Model.SearchTerm" type="text" id="searchTerm" name="searchTerm" />
+                        <button class="btn btn-outline-secondary" type="button" id="RemoveSearch" disabled="true" onclick="location.href='@Url.Action("BlockedIpAddresses", "SiteAdmin")'">X</button>
+                        <button id="searchButton" class="btn btn-primary ms-3" type="submit" name="submit" aria-expanded="false" disabled="true">@sr["Search"]</button>
+                    </div>
                 </form>
             </div>
             <div class="col-sm-12 col-md-6 mb-3 d-flex justify-content-end">
@@ -76,7 +79,8 @@
                 {
                     <label asp-for="@Model.BlockedPermittedIpAddresses.Data[i].IpAddress" name="IpAddress" id="IpAddress" class="form-label">@sr["Blocked IP"]</label>
                 }
-                <input asp-for="@Model.BlockedPermittedIpAddresses.Data[i].IpAddress" name="IpAddress" id="IpAddress" disabled="true" class="form-control" />
+                <div class="mb-3" id="errorMessage-@safeId" style="display:none;"></div>
+                <input asp-for="@Model.BlockedPermittedIpAddresses.Data[i].IpAddress" name="IpAddress" id="IpAddress-@safeId" disabled="true" class="form-control ip-address-input" data-safeid="@safeId" />
                 <div class="form-check form-switch mt-1 mx-2 align-items-center" style="display:none;" id="@("ipRangeSwitch" + @safeId)">
                     <input asp-for="@Model.BlockedPermittedIpAddresses.Data[i].IsRange" class="form-check-input" type="checkbox" id="IsRange" name="IsRange">
                     <label class="form-check-label" for="IsRange">IP Range</label>
