@@ -235,12 +235,10 @@ namespace sourceDev.WebApp
             // NWebSec https://docs.nwebsec.com/en/latest/nwebsec/getting-started.html
             var cspConfig = cspOptionsAccessor.Value;
 
-            if (env.IsDevelopment() || env.EnvironmentName == "Testing")
+            if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
                 app.UseForwardedHeaders(); // integration testing
-                //app.UseDatabaseErrorPage();
-
             }
             else
             {
