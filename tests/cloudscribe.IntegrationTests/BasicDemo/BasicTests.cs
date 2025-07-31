@@ -1,17 +1,21 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Builder;
+﻿using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.AspNetCore.TestHost;
 using Microsoft.Extensions.DependencyInjection;
+using System.Net;
 using Xunit;
 
-namespace cloudscribe.IntegrationTests
+// Demo of how to set up a WebApplication & Client and run it against various endpoints 
+// in the DevWebApp - note that such requests go via the middleware,
+// so our client needs to state its IP address - for which we need ForwardedHeaders:
+// see startup.cs line: if (env.IsDevelopment()) app.UseForwardedHeaders();
+// and must also deal with https requirement.
+// These tests seem s-l-o-w to spin up - but do work in the end -- jk
+
+
+namespace cloudscribe.IntegrationTests.BasicDemo
 {
     public class BasicTests : IClassFixture<WebApplicationFactory<sourceDev.WebApp.Startup>>
     {
@@ -61,6 +65,8 @@ namespace cloudscribe.IntegrationTests
         {
             var client = _factory.WithWebHostBuilder(builder =>
             {
+                // builder.UseEnvironment("Testing");
+
                 builder.ConfigureTestServices(services =>
                 {
                     services.PostConfigure<ForwardedHeadersOptions>(options =>
