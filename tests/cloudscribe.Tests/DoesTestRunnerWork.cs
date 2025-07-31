@@ -1,6 +1,6 @@
 using Xunit;
 
-namespace cloudscribe.Tests
+namespace cloudscribe.UnitTests
 {
     public class DoesTestRunnerWork
     {

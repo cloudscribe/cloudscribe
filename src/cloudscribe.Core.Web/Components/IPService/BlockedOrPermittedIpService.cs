@@ -62,6 +62,10 @@ namespace cloudscribe.Core.Web.Components.IPService
             {
                 _permittedIps = new List<BlockedPermittedIpAddressesModel>();
             }
+
+            // Defensive: Ensure no null entries in the lists - jk
+            _blockedIps   = (_blockedIps   ?? new List<BlockedPermittedIpAddressesModel>()).Where(x => x != null && x.IpAddress != null).ToList();
+            _permittedIps = (_permittedIps ?? new List<BlockedPermittedIpAddressesModel>()).Where(x => x != null && x.IpAddress != null).ToList();
         }
 
         public bool IsBlockedOrPermittedIp(IPAddress ipAddress, Guid siteId)

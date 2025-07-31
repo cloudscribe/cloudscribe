@@ -96,7 +96,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "cloudscribe.QueryTool.Web",
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{FAC56F62-30B2-4891-84FC-8BC62C94A28B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "cloudscribe.Tests", "tests\cloudscribe.Tests\cloudscribe.Tests.csproj", "{CF5E3304-C1E1-481D-8813-63403E9DA872}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "cloudscribe.UnitTests", "tests\cloudscribe.Tests\cloudscribe.UnitTests.csproj", "{CF5E3304-C1E1-481D-8813-63403E9DA872}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "cloudscribe.IntegrationTests", "tests\cloudscribe.IntegrationTests\cloudscribe.IntegrationTests.csproj", "{1BBB150B-86AA-4B08-987A-EB4D5985DD5A}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -276,6 +278,10 @@ Global
 		{CF5E3304-C1E1-481D-8813-63403E9DA872}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{CF5E3304-C1E1-481D-8813-63403E9DA872}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{CF5E3304-C1E1-481D-8813-63403E9DA872}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1BBB150B-86AA-4B08-987A-EB4D5985DD5A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1BBB150B-86AA-4B08-987A-EB4D5985DD5A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1BBB150B-86AA-4B08-987A-EB4D5985DD5A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1BBB150B-86AA-4B08-987A-EB4D5985DD5A}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -324,6 +330,7 @@ Global
 		{DC124528-3BF5-4FF4-B60E-28D5DF872C74} = {9C16B47A-B712-4237-B62F-B4403ACF1CD5}
 		{BDADC452-F40A-44DF-A669-186D18DC0D7A} = {9C16B47A-B712-4237-B62F-B4403ACF1CD5}
 		{CF5E3304-C1E1-481D-8813-63403E9DA872} = {FAC56F62-30B2-4891-84FC-8BC62C94A28B}
+		{1BBB150B-86AA-4B08-987A-EB4D5985DD5A} = {FAC56F62-30B2-4891-84FC-8BC62C94A28B}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {3FDA23E8-B945-4001-92C5-F6A70186E3B0}
