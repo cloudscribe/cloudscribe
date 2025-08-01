@@ -41,10 +41,12 @@ namespace Microsoft.Extensions.DependencyInjection
 
             //services.TryAddScoped<ITimeZoneIdResolver, GmtTimeZoneIdResolver>();
             services.TryAddScoped<ICkeditorOptionsResolver, DefaultCkeditorOptionsResolver>();
+            services.TryAddScoped<ISummernoteOptionsResolver, DefaultSummernoteOptionsResolver>();
 
             if (configuration != null)
             {
                 services.Configure<CkeditorOptions>(configuration.GetSection("CkeditorOptions"));
+                services.Configure<SummernoteOptions>(configuration.GetSection("SummernoteOptions"));
                 services.Configure<BannerImageMap>(configuration.GetSection("BannerImageMap"));
                 services.TryAddScoped<IBannerService, ConfigBannerService>();
 
@@ -59,6 +61,7 @@ namespace Microsoft.Extensions.DependencyInjection
                 {
                     // not doing anything just configuring the default
                 });
+                services.Configure<SummernoteOptions>(c => { });
             }
 
             services.AddScoped<GoogleAnalyticsApiService>();

@@ -2,6 +2,7 @@
 @using cloudscribe.Core.IdentityServerIntegration
 @inject ICoreThemeHelper themeHelper
 @inject IStringLocalizer<CloudscribeIds4Resources> sr
+
 @{
     var themeSettings = themeHelper.GetThemeSettings();
     if (themeSettings.AdminSideNavExpanded) { ViewData["SideNavToggle"] = "show"; }
@@ -16,17 +17,27 @@ else
 {
     <h2>@ViewData["Title"]</h2>
     <partial name="EditClientPartial" model="Model.CurrentClient" />
+    <hr class="blue-divider" />
     <partial name="ClientRedirectsPartial" model="Model.CurrentClient" />
+    <hr class="blue-divider" />
     <partial name="ClientLogoutRedirectsPartial" model="Model.CurrentClient" />
+    <hr class="blue-divider" />
     <partial name="ClientAllowedCorsOriginsPartial" model="Model.CurrentClient" />
+    <hr class="blue-divider" />
     <partial name="ClientSecretsPartial" model="Model.CurrentClient" />
+    <hr class="blue-divider" />
     <partial name="ClientClaimsPartial" model="Model.CurrentClient" />
+    <hr class="blue-divider" />
     <partial name="ClientAllowedGrantTypesPartial" model="Model.CurrentClient" />
+    <hr class="blue-divider" />
     <partial name="ClientAllowedScopesPartial" model="Model.CurrentClient" />
+    <hr class="blue-divider" />
     <partial name="ClientProviderRestrictionsPartial" model="Model.CurrentClient" />
+    <hr class="blue-divider" />
     <partial name="ClientPropertiesPartial" model="Model.CurrentClient" />
-
+    <div class="mt-3"></div>
 }
+
 
 @section SideNav {
     <partial name="AdminSideNav" />

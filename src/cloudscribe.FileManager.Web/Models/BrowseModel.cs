@@ -13,6 +13,8 @@
         public string CKEditor { get; set; }
 
         public string CKEditorFuncNum { get; set; }
+        public string Summernote { get; set; }
+        public string SummernoteFuncNum { get; set; }
 
         public string LangCode { get; set; } = "en";
 
@@ -31,6 +33,7 @@
         public string DeleteFolderServiceUrl { get; set; }
 
         public string RenameFolderServiceUrl { get; set; }
+        public string MoveFileServiceUrl { get; set; }
 
         public string DeleteFileServiceUrl { get; set; }
 
@@ -40,6 +43,6 @@
 
         public bool CanDelete { get; set; }
 
-
+        public bool ShowModalHeader { get; set; } = true;
     }
 }

@@ -238,8 +238,7 @@ namespace sourceDev.WebApp
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
-                //app.UseDatabaseErrorPage();
-                
+                app.UseForwardedHeaders(); // integration testing
             }
             else
             {

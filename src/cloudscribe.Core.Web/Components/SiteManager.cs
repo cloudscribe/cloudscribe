@@ -37,7 +37,7 @@ namespace cloudscribe.Core.Web.Components
             IHttpContextAccessor contextAccessor,
             ILogger<SiteManager> logger,
             IOptions<MultiTenantOptions> multiTenantOptionsAccessor,
-            IOptions<SiteConfigOptions> setupOptionsAccessor,
+            IOptions<SiteConfigOptions> siteConfigOptionsAccessor,
             CacheHelper cacheHelper,
             ITreeCache treeCache,
             SiteRoleManager<SiteRole> roleManager
@@ -49,7 +49,7 @@ namespace cloudscribe.Core.Web.Components
             _userCommands       = userCommands;
             _userQueries        = userQueries;
             _multiTenantOptions = multiTenantOptionsAccessor.Value;
-            _setupOptions       = setupOptionsAccessor.Value;
+            _siteConfigOptions  = siteConfigOptionsAccessor.Value;
             _context            = contextAccessor?.HttpContext;
             _dataProtector      = dataProtector;
             _log                = logger;
@@ -66,7 +66,7 @@ namespace cloudscribe.Core.Web.Components
         private SiteDataProtector _dataProtector;
         private CacheHelper _cacheHelper;
         private MultiTenantOptions _multiTenantOptions;
-        private SiteConfigOptions _setupOptions;
+        private SiteConfigOptions _siteConfigOptions;
         private ISiteCommands _commands;
         private ISiteQueries _queries;
         private IUserQueries _userQueries;
@@ -258,7 +258,7 @@ namespace cloudscribe.Core.Web.Components
         public async Task<SiteSettings> CreateNewSite(bool isServerAdminSite)
         {
             var newSite = InitialData.BuildInitialSite();
-            newSite.Theme = _setupOptions.FirstSiteTheme;
+            newSite.Theme = _siteConfigOptions.FirstSiteTheme;
             newSite.IsServerAdminSite = isServerAdminSite;
             var siteNumber = 1 + await _queries.CountOtherSites(Guid.Empty);
             newSite.AliasId = $"s{siteNumber}";
@@ -274,7 +274,7 @@ namespace cloudscribe.Core.Web.Components
             
             if(string.IsNullOrEmpty(newSite.Theme))
             {
-                newSite.Theme = _setupOptions.DefaultTheme;
+                newSite.Theme = _siteConfigOptions.DefaultTheme;
             }
            
             await _commands.Create(newSite, CancellationToken.None);
@@ -296,7 +296,7 @@ namespace cloudscribe.Core.Web.Components
             if (string.IsNullOrEmpty(newSite.Theme))
             {
                 if (string.IsNullOrEmpty(sourceSite.Theme))
-                    newSite.Theme = _setupOptions.DefaultTheme;
+                    newSite.Theme = _siteConfigOptions.DefaultTheme;
                 else
                     newSite.Theme = sourceSite.Theme;
             }
@@ -654,5 +654,16 @@ namespace cloudscribe.Core.Web.Components
             
         }
 
+        public bool CheckSiteNameIsAllowed(string siteName)
+        {
+            string ReservedSiteNames = _siteConfigOptions.ReservedSiteNames;
+
+            if (ReservedSiteNames.Contains(siteName.ToLower()))
+            {
+                return false;
+            }
+
+            return true;
+        }
     }
 }

@@ -228,6 +228,10 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
         {
             if (AccountService.IsSignedIn(User))
             {
+                if (returnUrl != null)
+                {
+                    return LocalRedirect(returnUrl);
+                }
                 return this.RedirectToSiteRoot(CurrentSite);
             }
 

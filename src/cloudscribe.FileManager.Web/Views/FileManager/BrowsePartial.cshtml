@@ -1,11 +1,14 @@
 ﻿@using cloudscribe.FileManager.Web.Models
 @using Microsoft.Extensions.Localization
 @using Microsoft.Extensions.Options
+@using Microsoft.AspNetCore.Antiforgery
 @addTagHelper "*, Microsoft.AspNetCore.Mvc.TagHelpers"
 @model BrowseModel
 @inject IStringLocalizer<FileManagerStringResources> sr
 @inject IOptions<FileManagerIcons> iconsAccessor
+@inject IAntiforgery antiforgery
 @{
+    var tokens = antiforgery.GetAndStoreTokens(Context);
     var icons = iconsAccessor.Value;
 }
 <div class="row">
@@ -24,7 +27,7 @@
     <div class="col-md-7">
         <div id="divPreview" class="collapse">
             <div style="margin-bottom:5px;">
-                <img id="filePreview" src="~/cr/css/1x1.gif" height="400" alt='@sr["Preview selected image"]' />
+                <img id="filePreview" src="~/cr/css/1x1.gif" class="img-fluid" alt='@sr["Preview selected image"]' />
             </div>
 
             <button class="btn btn-primary" id="btnSelectorAlt">@sr["Select"]</button>
@@ -166,6 +169,40 @@
                     </div>
                 </div>
 
+            </form>
+
+            <form id="frmMoveFile" asp-action="MoveFile" asp-controller="FileManager" class="collapse my-2">
+                <input type="hidden" id="fileToMove" name="filetoMove" />
+                <input type="hidden" id="folderToMoveTo" name="folderToMoveTo" />
+                <button id="btnMoveFilePrompt" type="button" class="btn btn-primary btn-ok"><i class="@icons.MoveRight" aria-hidden="true"></i> @sr["Move File"]</button>
+
+                <div id="mdlMoveFile" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="confirmMoveFileHeading">
+                    <div class="modal-dialog modal-lg" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h4 class="modal-title" id="confirmMoveFileHeading">@sr["Select Folder To Move File To"]</h4>
+                                <button type="button" data-bs-dismiss="modal" class="btn-close" aria-label='@sr["Close"]'></button>
+                            </div>
+                            <div id="moveFileModalBody" class="modal-body">
+                                <span id="fileMoverConfig" aria-hidden="true" class="collapse"
+                                      data-filetree-url="@Model.FileTreeServiceUrl"
+                                      data-anti-forgery-token="@tokens.RequestToken"
+                                      data-ckfunc="@Model.CKEditorFuncNum"
+                                      data-can-delete="@Model.CanDelete"
+                                      data-can-select="true"
+                                      data-can-download="false"
+                                      data-root-virtual-path="@Model.InitialVirtualPath"
+                                      data-movefile-url="@Model.MoveFileServiceUrl"
+                                      data-allowed-file-extensions=""></span>
+                                <partial name="FileManagerTreePartial" />
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-primary" data-bs-dismiss="modal">@sr["Cancel"]</button>
+                                <button id="btnMoveFile" disabled="true" type="button" class="btn btn-danger btn-ok"><i class="@icons.MoveRight" aria-hidden="true"></i> @sr["Move File"]</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </form>
         </div>
 

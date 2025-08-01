@@ -32,7 +32,7 @@ namespace Microsoft.Extensions.DependencyInjection
             switch (storage.ToLower())
             {
                 case "nodb":
-                    var useSingletons = true;
+                    var useSingletons = false; //this matches what the template delivers
                     services.AddCloudscribeCoreNoDbStorage(useSingletons);
                     services.AddCloudscribeLoggingNoDbStorage(config);
                     //services.AddCloudscribeKvpNoDbStorage();
@@ -78,14 +78,6 @@ namespace Microsoft.Extensions.DependencyInjection
 
                             break;
 
-                        case "pgsql-old":
-                            var pgConnection = config.GetConnectionString("PostgreSqlEntityFrameworkConnectionString");
-                            services.AddCloudscribeCoreEFStoragePostgreSql(pgConnection);
-                            services.AddCloudscribeLoggingEFStoragePostgreSql(pgConnection);
-                            //services.AddCloudscribeKvpEFStoragePostgreSql(pgConnection);
-
-                            break;
-
                         case "pgsql":
                             var pgsConnection = config.GetConnectionString("PostgreSqlConnectionString");
                             services.AddCloudscribeCorePostgreSqlStorage(pgsConnection);
@@ -101,7 +93,7 @@ namespace Microsoft.Extensions.DependencyInjection
                             break;
 
 
-                        case "myqql":
+                        case "mysql":
                             var mysqlConnection = config.GetConnectionString("MySqlEntityFrameworkConnectionString");
                             services.AddCloudscribeCoreEFStorageMySql(mysqlConnection);
                             services.AddCloudscribeLoggingEFStorageMySQL(mysqlConnection);

@@ -180,6 +180,7 @@
             $("#newFolderCurrentDir").val(virtualPath.substring(0,virtualPath.lastIndexOf("/")));
             $("#fileToRename").val(virtualPath);
             $("#fileToDelete").val(virtualPath);
+            $("#fileToMove").val(virtualPath);
             if (fileName) {
                 $("#newFileNameSegment").val(fileName);
                 if (fileManager.downloadFileApiUrl && fileManager.downloadFileApiUrl.length > 0) {
@@ -195,6 +196,7 @@
             $("#fileToRename").val('');
             $("#fileToDelete").val('');
             $("#newFileNameSegment").val('');
+            $("#fileToMove").val('');
             fileManager.hideFileTools();
             fileManager.clearPreview();
 
@@ -230,6 +232,7 @@
             if (fileManager.canDelete) {
                 $('#frmDeleteFile').show();
                 $("#frmRenameFile").show();
+                $('#frmMoveFile').show();
                 if (fileManager.downloadFileApiUrl) {
                     $("#lnkDownloadFile").show();
                 }
@@ -240,7 +243,7 @@
             $('#frmDeleteFile').hide();
             $("#frmRenameFile").hide();
             $("#lnkDownloadFile").hide();
-
+            $('#frmMoveFile').hide();
         },
         notify: function (message, cssClass) {
             $('#alert_placeholder').html('<div class="alert ' + cssClass + '"><button type="button" data-bs-dismiss="alert" class="btn-close me-2" style="float:right" aria-label="Close"></button><span>' + message + '</span></div>');
@@ -494,22 +497,29 @@
             return false; //cancel form submit
         },
         selectfile: function () {
-            var funcNum = $("#fmconfig").data("ckfunc");
+			var funcNum = $("#fmconfig").data("ckfunc");
             var fileUrl = fileManager.selectedFileInput.val();
-            //alert(funcNum);
+            var isSummernote = window.frameElement && window.frameElement.getAttribute('data-wysiwyg-instance') !== null;
+
             if (fileUrl.length === 0) {
                 fileManager.notify('Please select a file in the browse tab', 'alert-danger');
-            }
-            else {
+            } else {
                 if (window.parent && window.parent.FileSelectCallback) {
                     window.parent.FileSelectCallback(fileUrl);
+                } else {
+                    if (isSummernote) {
+                        if (window.parent && typeof window.parent.handleMessageFromChild === 'function') {
+							window.parent.handleMessageFromChild({
+								url: fileUrl,
+								filename: "image_name",
+                                instance: window.frameElement.getAttribute('data-wysiwyg-instance')
+                            });
+                        }
+					} else {
+						window.opener.CKEDITOR.tools.callFunction(funcNum, fileUrl);
+                        window.close();
+					}
                 }
-                else {
-                    window.opener.CKEDITOR.tools.callFunction(funcNum, fileUrl);
-                    window.close();
-                }
-
-
             }
         },
         removeNode: function (id) {
@@ -520,7 +530,7 @@
         reloadSubTree: function (folderIdToReload) {
             var tree = $('#tree').treeview(true);
             var currentFolderId = folderIdToReload || $("#uploadCurrentDir").val();
-            //alert(currentFolderId);
+
             if (currentFolderId.length === 0 || currentFolderId === fileManager.rootVirtualPath) {
                 fileManager.loadTree();
                 return;
@@ -536,8 +546,6 @@
 
 
                 var theNode = matchingNodes[0];
-                //alert(JSON.stringify(theNode));
-                //alert(theNode.id)
                 var newNode = {
                     text: theNode.text,
                     id: theNode.id,
@@ -784,6 +792,8 @@
             this.renameFilePromptButton.on('click', fileManager.renameFilePrompt);
             this.renameFileButton.on('click', fileManager.renameFile);
             this.selectForCropButton.on('click', fileManager.setCropImageFromServer);
+            //this.moveFileButton.on('click', fileManager.moveFile);
+            //this.moveFilePromptButton.on('click', fileManager.moveFilePrompt);
             this.setCurrentDirectory(this.rootVirtualPath);
             this.rootButton.on('click', fileManager.backToRoot);
             if (fileManager.canSelect === "false" || fileManager.canSelect === false) {
@@ -1218,6 +1228,8 @@
             return false; //cancel form submit
         }
     };
+
+    window.fileManager = fileManager;
 
     $('a[data-bs-toggle="tab"]').on('shown.bs.tab', function (e) {
         var target = $(e.target).attr("href"); // activated tab
