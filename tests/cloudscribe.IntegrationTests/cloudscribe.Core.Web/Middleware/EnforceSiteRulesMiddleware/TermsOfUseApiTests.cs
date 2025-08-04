@@ -11,6 +11,11 @@ using Xunit;
 
 namespace cloudscribe.Core.Web.Middleware.EnforceSiteRulesMiddleware.Tests
 {
+    /// <summary>
+    /// When hitting an API endpoint (specifically at /api/*** ) 
+    /// an authenticated user may have been required to agree to the Terms of Use.
+    /// If they have not done this... they're prohibited :) 
+    /// </summary>
     public class TermsOfUseApiTests : IClassFixture<WebApplicationFactory<sourceDev.WebApp.Startup>>
     {
         private readonly WebApplicationFactory<sourceDev.WebApp.Startup> _factory;
@@ -20,7 +25,9 @@ namespace cloudscribe.Core.Web.Middleware.EnforceSiteRulesMiddleware.Tests
             _factory = factory;
         }
 
-        private HttpClient CreateTestClient(DateTime? agreementAcceptedUtc, DateTime termsUpdatedUtc)
+        private HttpClient CreateTestClient(DateTime? agreementAcceptedUtc, 
+                                            DateTime  termsUpdatedUtc,
+                                            string    agreementText)
         {
             return _factory.WithWebHostBuilder(builder =>
             {
@@ -36,10 +43,10 @@ namespace cloudscribe.Core.Web.Middleware.EnforceSiteRulesMiddleware.Tests
                     mockUserResolver.Setup(x => x.GetCurrentUser(It.IsAny<CancellationToken>()))
                         .ReturnsAsync(new UserContext(new SiteUser
                         {
-                            Id = Guid.NewGuid(),
-                            SiteId = Guid.NewGuid(),
+                            Id       = Guid.NewGuid(),
+                            SiteId   = Guid.NewGuid(),
                             UserName = "testuser",
-                            Email = "test@example.com",
+                            Email    = "test@example.com",
                             AgreementAcceptedUtc = agreementAcceptedUtc
                         }));
                     services.AddScoped(_ => mockUserResolver.Object);
@@ -47,8 +54,8 @@ namespace cloudscribe.Core.Web.Middleware.EnforceSiteRulesMiddleware.Tests
                     // Mock SiteContext with terms of use
                     var siteSettings = new SiteSettings
                     {
-                        RegistrationAgreement = "Some agreement text",
-                        TermsUpdatedUtc = termsUpdatedUtc
+                        RegistrationAgreement = agreementText,
+                        TermsUpdatedUtc       = termsUpdatedUtc
                     };
                     var siteContext = new SiteContext(siteSettings);
                     services.AddScoped(_ => siteContext);
@@ -79,7 +86,7 @@ namespace cloudscribe.Core.Web.Middleware.EnforceSiteRulesMiddleware.Tests
         public async Task ApiRequest_ReturnsForbidden_WhenTermsNotAgreed()
         {
             // Arrange
-            var client = CreateTestClient(null, DateTime.UtcNow.Subtract(TimeSpan.FromDays(1)));
+            var client = CreateTestClient(null, DateTime.UtcNow.Subtract(TimeSpan.FromDays(1)), "You must agree");
 
             // we need an IP address so we don't get blocked by the IP middleware
             client.DefaultRequestHeaders.Add("X-Forwarded-For", "127.0.0.1");
@@ -108,7 +115,9 @@ namespace cloudscribe.Core.Web.Middleware.EnforceSiteRulesMiddleware.Tests
         public async Task ApiRequest_ReturnsOK_WhenTermsAgreed()
         {
             // Arrange
-            var client = CreateTestClient(DateTime.UtcNow, DateTime.UtcNow.Subtract(TimeSpan.FromDays(1)));
+            var client = CreateTestClient(DateTime.UtcNow, 
+                                          DateTime.UtcNow.Subtract(TimeSpan.FromDays(1)), 
+                                          "These are our terms");
 
             // we need an IP address so we don't get blocked by the IP middleware
             client.DefaultRequestHeaders.Add("X-Forwarded-For", "127.0.0.1");
@@ -136,7 +145,9 @@ namespace cloudscribe.Core.Web.Middleware.EnforceSiteRulesMiddleware.Tests
         public async Task ApiRequest_ReturnsOK_WhenTermsChangesSinceLastAgreed()
         {
             // Arrange
-            var client = CreateTestClient(DateTime.UtcNow.Subtract(TimeSpan.FromDays(2)), DateTime.UtcNow.Subtract(TimeSpan.FromDays(1)));
+            var client = CreateTestClient(DateTime.UtcNow.Subtract(TimeSpan.FromDays(2)), 
+                                          DateTime.UtcNow.Subtract(TimeSpan.FromDays(1)),
+                                          "Our updated terms");
             
             // we need an IP address so we don't get blocked by the IP middleware
             client.DefaultRequestHeaders.Add("X-Forwarded-For", "127.0.0.1");
@@ -157,6 +168,33 @@ namespace cloudscribe.Core.Web.Middleware.EnforceSiteRulesMiddleware.Tests
             Assert.Equal("Forbidden: user has not accepted the terms of use.", result.error);
         }
 
+        /// <summary>
+        /// Middleware should allow user through when there are no Terms of Use
+        /// </summary>
+        [Fact]
+        public async Task ApiRequest_ReturnsOK_WhenNoTermsExist()
+        {
+            // Arrange
+            var client = CreateTestClient(null, DateTime.UtcNow.Subtract(TimeSpan.FromDays(2)), "");
+
+            // we need an IP address so we don't get blocked by the IP middleware
+            client.DefaultRequestHeaders.Add("X-Forwarded-For", "127.0.0.1");
+
+            // Act
+            HttpResponseMessage response = await client.GetAsync("/api/testauth");
+
+            // Assert
+            Assert.NotNull(response);
+            Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+            Assert.NotNull(response.Content);
+            Assert.NotNull(response.Content.Headers.ContentType);
+            Assert.Equal("application/json", response.Content.Headers.ContentType.MediaType);
+
+            var responseBody = await response.Content.ReadAsStringAsync();
+            var result = JsonSerializer.Deserialize<TestResponse>(responseBody);
+            Assert.NotNull(result);
+            Assert.Equal("Authenticated to test controller", result.message);
+        }
 
         private class TestResponse
         {
