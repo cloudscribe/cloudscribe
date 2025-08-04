@@ -198,6 +198,7 @@
     <EmbeddedResource Include="css\plyr.css" />
     <EmbeddedResource Include="css\simplemde.min.css" />
 	<EmbeddedResource Include="css\summernote-bs5.min.css" />
+	<EmbeddedResource Include="css\summernote-styles.css" />
 	<EmbeddedResource Include="css\font\summernote.woff2" />
 	<EmbeddedResource Include="css\font\summernote.woff" />
 	<EmbeddedResource Include="css\font\summernote.ttf" />
