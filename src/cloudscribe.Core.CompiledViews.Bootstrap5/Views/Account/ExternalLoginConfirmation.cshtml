@@ -1,11 +1,11 @@
 ﻿@model cloudscribe.Core.Web.ViewModels.SiteUser.ExternalLoginConfirmationViewModel
 @inject IStringLocalizer<CloudscribeCore> sr
 @{
-    ViewData["Title"] = sr["Register"];
+    ViewData["Title"] = sr["register"];
     ViewData["BodyClass"] = "account-section external-confirm";
     var loginProvider = ViewData["LoginProvider"];
-    var subHeadMessage = string.Format(CultureInfo.CurrentUICulture, sr["Associate your {0} account"], loginProvider);
-    var successMessage = string.Format(CultureInfo.CurrentUICulture, sr["You've successfully authenticated with <strong>{0}</strong>."], loginProvider);
+    var subHeadMessage = string.Format(CultureInfo.CurrentUICulture, sr["associate_your_account"], loginProvider);
+    var successMessage = string.Format(CultureInfo.CurrentUICulture, sr["successfully_authenticated_with"], loginProvider);
 }
 <h1>@ViewData["Title"]</h1>
 <h2>@subHeadMessage</h2>
@@ -14,7 +14,7 @@
     <div asp-validation-summary="All" class="text-danger"></div>
     <p class="text-info">
         @Html.Raw(successMessage)
-        @sr["Please enter a valid email for this site below and click the Register button to finish logging in."]
+        @sr["enter_email_to_finish_login"]
     </p>
 
     @if (!string.IsNullOrWhiteSpace(Model.RegistrationPreamble))
@@ -25,7 +25,7 @@
     }
 
     <div class="mb-3">
-        <label class="form-label" asp-for="Email">@sr["Email"]</label>
+        <label class="form-label" asp-for="Email">@sr["email"]</label>
         <input asp-for="Email" class="form-control" />
         <span asp-validation-for="Email" class="invalid-feedback"></span>
     </div>
@@ -39,8 +39,8 @@
         <div class="mb-3">
             <input type="hidden" asp-for="AgreementRequired" />
             <div class="form-check">
-                <input asp-for="AgreeToTerms" class="form-check-input" data-val-enforcetrue='@sr["You must agree to the terms"]' />
-                <label asp-for="AgreeToTerms" class="form-check-label">@sr["I Agree to these terms of use."]</label>
+                <input asp-for="AgreeToTerms" class="form-check-input" data-val-enforcetrue='@sr["must_agree_to_terms"]' />
+                <label asp-for="AgreeToTerms" class="form-check-label">@sr["i_agree_to_terms"]</label>
                 <span asp-validation-for="AgreeToTerms" class="invalid-feedback"></span>
                 @Html.ValidationMessage("agreementerror", new { @class = "text-danger" })
             </div>
@@ -51,7 +51,7 @@
         <input name="AgreeToTerms" value="true" type="hidden" />
     }
     <div class="mb-3">
-        <button name="submit" type="submit" class="btn btn-primary">@sr["Register"]</button>
+        <button name="submit" type="submit" class="btn btn-primary">@sr["register"]</button>
     </div>
 </form>
 @section Scripts {

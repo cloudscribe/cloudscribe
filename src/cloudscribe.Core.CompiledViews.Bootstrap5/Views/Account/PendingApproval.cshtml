@@ -1,13 +1,13 @@
 ﻿@model cloudscribe.Core.Web.ViewModels.SiteUser.PendingNotificationViewModel
 @inject IStringLocalizer<CloudscribeCore> sr
 @{
-    ViewData["Title"] = sr["Thanks for registering!"];
+    ViewData["Title"] = sr["thanks_for_registering"];
     ViewData["BodyClass"] = "account-section account-pending";
 }
 
 <h1>@ViewData["Title"]</h1>
 
 <p>
-    @sr["Sorry for the delay, but this site requires approval of new accounts. An email has been sent to the site managers notifying them of your registration request. You should receive an email notifying you once your account has been approved."]
+    @sr["sorry_for_the_delay_but_this_site_requires_approval_of_new_accounts_an_email_has_been_sent_to_the_site_managers_notifying_them_of_your_registration_request_you_should_receive_an_email_notifying_you_once_your_account_has_been_approved"]
 </p>
 
