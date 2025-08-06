@@ -5,8 +5,8 @@
 @{
     var themeSettings = themeHelper.GetThemeSettings();
     ViewData["BodyClass"] = "account-section login-page";
-    ViewData["SocialFormat"] = sr["Log in using your {0} account"];
-    ViewData["SocialHeading"] = sr["Use an existing account to log in"];
+    ViewData["SocialFormat"] = sr["log_in_using_your_account"];
+    ViewData["SocialHeading"] = sr["use_existing_account_to_log_in"];
     var site = await siteResolver.ResolveSite(Context.Request.Host.Host, Context.Request.Path);
 
 }
@@ -38,7 +38,7 @@
                 <div class="mb-3">
                     @if (Model.UseEmailForLogin)
                     {
-                        <label class="form-label" asp-for="UserName">@sr["Email or Username"]</label>
+                        <label class="form-label" asp-for="UserName">@sr["email_or_username"]</label>
                     }
                     else
                     {
@@ -65,7 +65,7 @@
                     <div class="mb-3">
                         <div class="form-check">
                             <input asp-for="RememberMe" class="form-check-input" />
-                            <label asp-for="RememberMe" class="form-check-label">@sr["Remember Me"] </label>
+                            <label asp-for="RememberMe" class="form-check-label">@sr["remember_me"] </label>
                         </div>
                     </div>
                 }
@@ -80,11 +80,11 @@
 
                     @if (!string.IsNullOrWhiteSpace(Model.RecaptchaSiteKey) && Model.UseInvisibleCaptcha)
                     {
-                        <button class="btn btn-primary g-recaptcha" data-sitekey="@Model.RecaptchaSiteKey" data-callback='onCaptchaSubmit' data-enabled-text='@sr["log in"]' data-disabled-text='@sr["Working..."]'>@sr["Log in"]</button>
+                        <button class="btn btn-primary g-recaptcha" data-sitekey="@Model.RecaptchaSiteKey" data-callback='onCaptchaSubmit' data-enabled-text='@sr["log_in"]' data-disabled-text='@sr["working"]'>@sr["log_in"]</button>
                     }
                     else
                     {
-                        <button name="submit" type="submit" class="btn btn-primary" data-enabled-text='@sr["Log in"]' data-disabled-text='@sr["Working..."]'>@sr["Log in"]</button>
+                        <button name="submit" type="submit" class="btn btn-primary" data-enabled-text='@sr["log_in"]' data-disabled-text='@sr["working"]'>@sr["log_in"]</button>
                     }
 
 
@@ -94,11 +94,11 @@
             @if (site.AllowNewRegistration)
             {
                 <p>
-                    <a asp-action="Register" asp-route-returnurl="@ViewData["ReturnUrl"]">@sr["Register as a new user?"]</a>
+                    <a asp-action="Register" asp-route-returnurl="@ViewData["ReturnUrl"]">@sr["register_as_new_user"]</a>
                 </p>
             }
             <p>
-                <a asp-action="ForgotPassword">@sr["Forgot your password?"]</a>
+                <a asp-action="ForgotPassword">@sr["forgot_your_password"]</a>
             </p>
         </div>
     }

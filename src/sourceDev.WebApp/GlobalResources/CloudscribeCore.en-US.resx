@@ -192,6 +192,10 @@
   <data name="Email Confirmed" xml:space="preserve">
     <value>Email Confirmed</value>
   </data>
+  <data name="email_confirmed" xml:space="preserve">
+    <value>Email Confirmed</value>
+    <comment>verified - 2025-08-06</comment>
+  </data>
   <data name="Facebook App Id" xml:space="preserve">
     <value>Facebook App Id</value>
   </data>
@@ -243,8 +247,16 @@
   <data name="Please Click here to log in" xml:space="preserve">
     <value>Please Click here to Log in</value>
   </data>
+  <data name="please_click_here_to_log_in" xml:space="preserve">
+    <value>Please click here to log in</value>
+    <comment>verified - 2025-08-06</comment>
+  </data>
   <data name="Please Confirm Email Address" xml:space="preserve">
     <value>Please Confirm Email Address</value>
+  </data>
+  <data name="please_confirm_email_address" xml:space="preserve">
+    <value>Please Confirm Email Address</value>
+    <comment>verified - 2025-08-06</comment>
   </data>
   <data name="Port" xml:space="preserve">
     <value>Port</value>
@@ -260,6 +272,10 @@
   </data>
   <data name="Re-Send Verification Email" xml:space="preserve">
     <value>Re-Send Verification Email</value>
+  </data>
+  <data name="re_send_verification_email" xml:space="preserve">
+    <value>Re-Send Verification Email</value>
+    <comment>verified - 2025-08-06</comment>
   </data>
   <data name="Really Delete Users" xml:space="preserve">
     <value>Really Delete Users</value>
@@ -324,6 +340,10 @@
   <data name="Thank you for confirming your email." xml:space="preserve">
     <value>Thank you for confirming your email.</value>
   </data>
+  <data name="thank_you_for_confirming_email" xml:space="preserve">
+    <value>Thank you for confirming your email.</value>
+    <comment>verified - 2025-08-06</comment>
+  </data>
   <data name="Twitter Consumer Key" xml:space="preserve">
     <value>Twitter Consumer Key</value>
   </data>
@@ -381,11 +401,23 @@
   <data name="Email" xml:space="preserve">
     <value>Email</value>
   </data>
+  <data name="email_or_username" xml:space="preserve">
+    <value>Email or Username</value>
+    <comment>verified - 2025-08-06</comment>
+  </data>
   <data name="Forgot Password Confirmation" xml:space="preserve">
     <value>Forgot Password Confirmation</value>
   </data>
+  <data name="forgot_password_confirmation" xml:space="preserve">
+    <value>Forgot Password Confirmation</value>
+    <comment>verified - 2025-08-06</comment>
+  </data>
   <data name="Forgot your password?" xml:space="preserve">
     <value>Forgot your password?</value>
+  </data>
+  <data name="forgot_your_password" xml:space="preserve">
+    <value>Forgot your password?</value>
+    <comment>verified - 2025-08-06</comment>
   </data>
   <data name="Log In" xml:space="preserve">
     <value>Log In</value>
@@ -417,14 +449,26 @@
   <data name="Please check your email to reset your password." xml:space="preserve">
     <value>Please check your email to reset your password.</value>
   </data>
+  <data name="please_check_email_to_reset_password" xml:space="preserve">
+    <value>Please check your email to reset your password.</value>
+    <comment>verified - 2025-08-06</comment>
+  </data>
   <data name="Register" xml:space="preserve">
     <value>Register</value>
   </data>
   <data name="Register as a new user?" xml:space="preserve">
     <value>Register as a new user?</value>
   </data>
+  <data name="register_as_new_user" xml:space="preserve">
+    <value>Register as a new user?</value>
+    <comment>verified - 2025-08-06</comment>
+  </data>
   <data name="Remember Me" xml:space="preserve">
     <value>Remember Me</value>
+  </data>
+  <data name="remember_me" xml:space="preserve">
+    <value>Remember Me</value>
+    <comment>verified - 2025-08-06</comment>
   </data>
   <data name="Remember this web browser" xml:space="preserve">
     <value>Remember this web browser</value>
@@ -456,6 +500,10 @@
   <data name="Submit" xml:space="preserve">
     <value>Submit</value>
   </data>
+  <data name="submit_code_from_email" xml:space="preserve">
+    <value>Or submit the code provided in the email.</value>
+    <comment>verified - 2025-08-06</comment>
+  </data>
   <data name="Thanks for registering!" xml:space="preserve">
     <value>Thanks for registering!</value>
   </data>
@@ -473,6 +521,14 @@
   </data>
   <data name="You must agree to the terms" xml:space="preserve">
     <value>You must agree to the terms</value>
+  </data>
+  <data name="you_must_agree_to_terms" xml:space="preserve">
+    <value>You must agree to the terms</value>
+    <comment>verified - 2025-08-06</comment>
+  </data>
+  <data name="youve_successfully_authenticated_with" xml:space="preserve">
+    <value>You've successfully authenticated with &lt;strong&gt;{0}&lt;/strong&gt;.</value>
+    <comment>verified - 2025-08-06</comment>
   </data>
   <data name="Your password has been reset." xml:space="preserve">
     <value>Your password has been reset.</value>
@@ -951,12 +1007,28 @@
   <data name="Access Denied" xml:space="preserve">
     <value>Access Denied</value>
   </data>
+  <data name="access_denied" xml:space="preserve">
+    <value>Access Denied</value>
+    <comment>verified - 2025-08-06</comment>
+  </data>
   <data name="Back To List" xml:space="preserve">
     <value>Back To List</value>
   </data>
   <data name="Before you can Log in, we need to confirm that the email address you provided is valid. We sent an email to the address you&#xD;&#xA;    provided with a link that you need to click in order to confirm your email address is valid." xml:space="preserve">
     <value>Before you can Log in, we need to confirm that the email address you provided is valid. We sent an email to the address you
     provided with a link that you need to click in order to confirm your email address is valid.</value>
+  </data>
+  <data name="before_you_can_log_in_email_verification" xml:space="preserve">
+    <value>Before you can Log in, we need to confirm that the email address you provided is valid. We sent an email to the address you provided with a link that you need to click in order to confirm your email address is valid.</value>
+    <comment>verified - 2025-08-06</comment>
+  </data>
+  <data name="enter_code_from_email" xml:space="preserve">
+    <value>You must enter the code sent to your email address</value>
+    <comment>verified - 2025-08-06</comment>
+  </data>
+  <data name="enter_your_email" xml:space="preserve">
+    <value>Enter your email.</value>
+    <comment>verified - 2025-08-06</comment>
   </data>
   <data name="Enter your email." xml:space="preserve">
     <value>Enter your email.</value>
@@ -966,6 +1038,10 @@
   </data>
   <data name="I Agree to these terms of use." xml:space="preserve">
     <value>I Agree to these terms of use.</value>
+  </data>
+  <data name="i_agree_to_terms_of_use" xml:space="preserve">
+    <value>I Agree to these terms of use.</value>
+    <comment>verified - 2025-08-06</comment>
   </data>
   <data name="ISOCode2" xml:space="preserve">
     <value>ISOCode2</value>
@@ -979,8 +1055,20 @@
   <data name="Log in using your {0} account" xml:space="preserve">
     <value>Log in using your {0} account</value>
   </data>
+  <data name="log_in_using_your_account" xml:space="preserve">
+    <value>Log in using your {0} account</value>
+    <comment>verified - 2025-08-06</comment>
+  </data>
   <data name="Login Failure" xml:space="preserve">
     <value>Login Failure</value>
+  </data>
+  <data name="log_in" xml:space="preserve">
+    <value>Log in</value>
+    <comment>verified - 2025-08-06</comment>
+  </data>
+  <data name="login_failure" xml:space="preserve">
+    <value>Login Failure</value>
+    <comment>verified - 2025-08-06</comment>
   </data>
   <data name="Oops something went wrong" xml:space="preserve">
     <value>Oops something went wrong</value>
@@ -990,6 +1078,10 @@
   </data>
   <data name="Please enter a valid email for this site below and click the Register button to finish logging in." xml:space="preserve">
     <value>Please enter a valid email for this site below and click the Register button to finish logging in.</value>
+  </data>
+  <data name="please_enter_valid_email_for_site" xml:space="preserve">
+    <value>Please enter a valid email for this site below and click the Register button to finish logging in.</value>
+    <comment>verified - 2025-08-06</comment>
   </data>
   <data name="Registration Agreement Required" xml:space="preserve">
     <value>Registration Agreement Required</value>
@@ -1006,8 +1098,20 @@
   <data name="This account has been locked out, please try again later." xml:space="preserve">
     <value>This account has been locked out, please try again later.</value>
   </data>
+  <data name="account_locked_out_try_again_later" xml:space="preserve">
+    <value>This account has been locked out, please try again later.</value>
+    <comment>verified - 2025-08-06</comment>
+  </data>
   <data name="Unsuccessful login with service." xml:space="preserve">
     <value>Unsuccessful login with service.</value>
+  </data>
+  <data name="unsuccessful_login_with_service" xml:space="preserve">
+    <value>Unsuccessful login with service.</value>
+    <comment>verified - 2025-08-06</comment>
+  </data>
+  <data name="use_existing_account_to_log_in" xml:space="preserve">
+    <value>Use an existing account to log in</value>
+    <comment>verified - 2025-08-06</comment>
   </data>
   <data name="Your time zone has been updated." xml:space="preserve">
     <value>Your time zone has been updated.</value>
@@ -1135,6 +1239,10 @@
   <data name="Website Url" xml:space="preserve">
     <value>Website Url</value>
   </data>
+  <data name="working" xml:space="preserve">
+    <value>Working...</value>
+    <comment>verified - 2025-08-06</comment>
+  </data>
   <data name="Must Change Password" xml:space="preserve">
     <value>Must Change Password</value>
   </data>
@@ -1231,6 +1339,10 @@
   <data name="Your login is protected with an authenticator app. Enter your authenticator code below." xml:space="preserve">
     <value>Your login is protected with an authenticator app. Enter your authenticator code below.</value>
   </data>
+  <data name="your_login_protected_authenticator_app" xml:space="preserve">
+    <value>Your login is protected with an authenticator app. Enter your authenticator code below.</value>
+    <comment>verified - 2025-08-06</comment>
+  </data>
   <data name="Disable 2 Factor Authentication" xml:space="preserve">
     <value>Disable 2 Factor Authentication</value>
   </data>
@@ -1272,6 +1384,14 @@
   </data>
   <data name="Registration Permitted Top Level Domain(s)" xml:space="preserve">
     <value>Registration Permitted Top Level Domain(s)</value>
+  </data>
+  <data name="associate_your_account" xml:space="preserve">
+    <value>Associate your {0} account</value>
+    <comment>verified - 2025-08-06</comment>
+  </data>
+  <data name="auto_logout_security_message" xml:space="preserve">
+    <value>For your security, you have been automatically logged out.&lt;br /&gt;This is to protect your personal data, in case you are away from your computer.</value>
+    <comment>verified - 2025-08-06</comment>
   </data>
   <data name="Auto logout time (in minutes, leave blank to disable)" xml:space="preserve">
 	<value>Auto logout time (in minutes, leave blank to disable)</value>
@@ -1320,5 +1440,93 @@
   </data>
   <data name="View User Activity" xml:space="preserve">
 	<value>View User Activity</value>
+  </data>
+  <data name="recovery_code_login_warning" xml:space="preserve">
+    <value>You have requested to login with a recovery code. This login will not be remembered until you provide an authenticator app code at login or disable 2FA and login again.</value>
+    <comment>verified - 2025-08-06</comment>
+  </data>
+  <data name="thanks_for_registering" xml:space="preserve">
+    <value>Thanks for registering!</value>
+    <comment>verified - 2025-08-06</comment>
+  </data>
+  <data name="account_approval_pending_message" xml:space="preserve">
+    <value>Sorry for the delay, but this site requires approval of new accounts. An email has been sent to the site managers notifying them of your registration request. You should receive an email notifying you once your account has been approved.</value>
+    <comment>verified - 2025-08-06</comment>
+  </data>
+  <data name="register_using_account" xml:space="preserve">
+    <value>Register using your {0} account</value>
+    <comment>verified - 2025-08-06</comment>
+  </data>
+  <data name="use_existing_account" xml:space="preserve">
+    <value>Use an existing account</value>
+    <comment>verified - 2025-08-06</comment>
+  </data>
+  <data name="create_new_account" xml:space="preserve">
+    <value>Create a new account.</value>
+    <comment>verified - 2025-08-06</comment>
+  </data>
+  <data name="passwords_must_have_at_least_one_digit" xml:space="preserve">
+    <value>Passwords must have at least one digit ('0'-'9').</value>
+    <comment>verified - 2025-08-06</comment>
+  </data>
+  <data name="passwords_must_have_at_least_one_lowercase" xml:space="preserve">
+    <value>Passwords must have at least one lowercase character ('a'-'z').</value>
+    <comment>verified - 2025-08-06</comment>
+  </data>
+  <data name="passwords_must_have_at_least_one_non_alphanumeric" xml:space="preserve">
+    <value>Passwords must have at least one non alphanumeric character</value>
+    <comment>verified - 2025-08-06</comment>
+  </data>
+  <data name="passwords_must_have_at_least_one_uppercase" xml:space="preserve">
+    <value>Passwords must have at least one uppercase character ('A'-'Z').</value>
+    <comment>verified - 2025-08-06</comment>
+  </data>
+  <data name="username_letters_digits_no_spaces" xml:space="preserve">
+    <value>Username can only contain letters or digits, with no spaces</value>
+    <comment>verified - 2025-08-06</comment>
+  </data>
+  <data name="password_minimum_length" xml:space="preserve">
+    <value>The password must be at least {0} characters long.</value>
+    <comment>verified - 2025-08-06</comment>
+  </data>
+  <data name="confirm_password" xml:space="preserve">
+    <value>Confirm Password</value>
+    <comment>verified - 2025-08-06</comment>
+  </data>
+  <data name="reset_your_password" xml:space="preserve">
+    <value>Reset your password</value>
+    <comment>verified - 2025-08-06</comment>
+  </data>
+  <data name="password_must_be_different_from_current" xml:space="preserve">
+    <value>Password must be different from current password</value>
+    <comment>verified - 2025-08-06</comment>
+  </data>
+  <data name="new_password_minimum_length" xml:space="preserve">
+    <value>The new password must be at least {0} characters long.</value>
+    <comment>verified - 2025-08-06</comment>
+  </data>
+  <data name="reset_password_confirmation" xml:space="preserve">
+    <value>Reset password confirmation</value>
+    <comment>verified - 2025-08-06</comment>
+  </data>
+  <data name="your_password_has_been_reset" xml:space="preserve">
+    <value>Your password has been reset.</value>
+    <comment>verified - 2025-08-06</comment>
+  </data>
+  <data name="set_your_password" xml:space="preserve">
+    <value>Set your password</value>
+    <comment>verified - 2025-08-06</comment>
+  </data>
+  <data name="set_password_confirmation" xml:space="preserve">
+    <value>Set password confirmation</value>
+    <comment>verified - 2025-08-06</comment>
+  </data>
+  <data name="your_password_has_been_set" xml:space="preserve">
+    <value>Your password has been set.</value>
+    <comment>verified - 2025-08-06</comment>
+  </data>
+  <data name="agreement_terms_as_of" xml:space="preserve">
+    <value>Agreement  Terms as of:</value>
+    <comment>verified - 2025-08-06</comment>
   </data>
 </root>

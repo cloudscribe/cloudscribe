@@ -6,7 +6,7 @@
 <h1>@ViewData["Title"]</h1>
 <hr />
 <p>
-    @sr["You have requested to login with a recovery code. This login will not be remembered until you provide an authenticator app code at login or disable 2FA and login again."]
+    @sr["recovery_code_login_warning"]
 </p>
 <form method="post">
     <div asp-validation-summary="All" class="text-danger"></div>
@@ -15,7 +15,7 @@
         <input asp-for="RecoveryCode" class="form-control" autocomplete="off" />
         <span asp-validation-for="RecoveryCode" class="invalid-feedback"></span>
     </div>
-    <button type="submit" class="btn btn-primary">@sr["Log in"]</button>
+    <button type="submit" class="btn btn-primary">@sr["log_in"]</button>
 </form>
 
 @section Scripts {

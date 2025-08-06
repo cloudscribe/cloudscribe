@@ -1,19 +1,19 @@
 ﻿@model cloudscribe.Core.Web.ViewModels.SiteUser.PendingNotificationViewModel
 @inject IStringLocalizer<CloudscribeCore> sr
 @{
-    ViewData["Title"] = sr["Please Confirm Email Address"];
+    ViewData["Title"] = sr["please_confirm_email_address"];
     ViewData["BodyClass"] = "account-section email-confirm";
 }
 <h1>@ViewData["Title"]</h1>
 <p>
-    @sr["Before you can Log in, we need to confirm that the email address you provided is valid. We sent an email to the address you provided with a link that you need to click in order to confirm your email address is valid."]
+    @sr["before_you_can_log_in_email_verification"]
 </p>
 @if (!Model.DidSend)
 {
     <form asp-controller="Account" asp-action="VerifyEmail" method="post" role="form">
         <input name="userGuid" value="@Model.UserId" type="hidden" />
         <div class="mb-3">
-            <button name="submit" type="submit" class="btn btn-primary">@sr["Re-Send Verification Email"]</button>
+            <button name="submit" type="submit" class="btn btn-primary">@sr["re_send_verification_email"]</button>
         </div>
     </form>
 }
@@ -21,8 +21,8 @@
     <input name="userId" value="@Model.UserId" type="hidden" />
     <input name="returnUrl" value="@Model.ReturnUrl" type="hidden" />
     <div class="mb-3">
-        <label class="visually-hidden" asp-for="Code">@sr["Or submit the code provided in the email."]</label>
-        <input asp-for="Code" class="form-control" style="min-width:300px" placeholder="@sr["Or submit the code provided in the email."]" data-val="true" data-val-required="@sr["You must enter the code sent to your email address"]" />
+        <label class="visually-hidden" asp-for="Code">@sr["submit_code_from_email"]</label>
+        <input asp-for="Code" class="form-control" style="min-width:300px" placeholder="@sr["submit_code_from_email"]" data-val="true" data-val-required="@sr["enter_code_from_email"]" />
         <span class="invalid-feedback field-validation-valid" data-valmsg-for="Code" data-valmsg-replace="true"></span>
     </div>
     <button name="submit" type="submit" class="btn btn-primary">@sr["Submit"]</button>

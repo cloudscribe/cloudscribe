@@ -4,8 +4,8 @@
     ViewData["Title"] = sr["Register"];
     ViewData["BodyClass"] = "account-section external-confirm";
     var loginProvider = ViewData["LoginProvider"];
-    var subHeadMessage = string.Format(CultureInfo.CurrentUICulture, sr["Associate your {0} account"], loginProvider);
-    var successMessage = string.Format(CultureInfo.CurrentUICulture, sr["You've successfully authenticated with <strong>{0}</strong>."], loginProvider);
+    var subHeadMessage = string.Format(CultureInfo.CurrentUICulture, sr["associate_your_account"], loginProvider);
+    var successMessage = string.Format(CultureInfo.CurrentUICulture, sr["youve_successfully_authenticated_with"], loginProvider);
 }
 <h1>@ViewData["Title"]</h1>
 <h2>@subHeadMessage</h2>
@@ -14,7 +14,7 @@
     <div asp-validation-summary="All" class="text-danger"></div>
     <p class="text-info">
         @Html.Raw(successMessage)
-        @sr["Please enter a valid email for this site below and click the Register button to finish logging in."]
+        @sr["please_enter_valid_email_for_site"]
     </p>
 
     @if (!string.IsNullOrWhiteSpace(Model.RegistrationPreamble))
@@ -39,8 +39,8 @@
         <div class="mb-3">
             <input type="hidden" asp-for="AgreementRequired" />
             <div class="form-check">
-                <input asp-for="AgreeToTerms" class="form-check-input" data-val-enforcetrue='@sr["You must agree to the terms"]' />
-                <label asp-for="AgreeToTerms" class="form-check-label">@sr["I Agree to these terms of use."]</label>
+                <input asp-for="AgreeToTerms" class="form-check-input" data-val-enforcetrue='@sr["you_must_agree_to_terms"]' />
+                <label asp-for="AgreeToTerms" class="form-check-label">@sr["i_agree_to_terms_of_use"]</label>
                 <span asp-validation-for="AgreeToTerms" class="invalid-feedback"></span>
                 @Html.ValidationMessage("agreementerror", new { @class = "text-danger" })
             </div>

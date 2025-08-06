@@ -5,7 +5,7 @@
 }
 <h1>@ViewData["Title"]</h1>
 <hr />
-<p>@sr["Your login is protected with an authenticator app. Enter your authenticator code below."]</p>
+<p>@sr["your_login_protected_authenticator_app"]</p>
 
 <form method="post" asp-route-returnUrl="@ViewData["ReturnUrl"]">
     <input asp-for="RememberMe" type="hidden" />
@@ -22,7 +22,7 @@
         </div>
     </div>
     <div class="mb-3">
-        <button type="submit" class="btn btn-primary">@sr["Log in"]</button>
+        <button type="submit" class="btn btn-primary">@sr["log_in"]</button>
     </div>
 </form>
 

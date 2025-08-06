@@ -120,6 +120,14 @@
   <data name="AliasId" xml:space="preserve">
     <value>AliasId</value>
   </data>
+  <data name="access_denied" xml:space="preserve">
+    <value>Mynediad wedi ei Wrthod</value>
+    <comment>verified - 2025-08-06</comment>
+  </data>
+  <data name="before_you_can_log_in_email_verification" xml:space="preserve">
+    <value>Cyn y gallwch fewngofnodi, mae angen i ni gadarnhau bod y cyfeiriad e-bost a roddwyd gennych yn ddilys. Anfonwyd e-bost atom at y cyfeiriad a roddwyd gennych gyda dolen y mae angen i chi ei chlicio er mwyn cadarnhau bod eich cyfeiriad e-bost yn ddilys.</value>
+    <comment>verified - 2025-08-06</comment>
+  </data>
   <data name="Are you sure you want to delete the site {0} and all related data? You cannot undo this action." xml:space="preserve">
     <value>Are you sure you want to delete the site {0} and all related data? You cannot undo this action.</value>
   </data>
@@ -192,6 +200,22 @@
   <data name="Email Confirmed" xml:space="preserve">
     <value>Email Confirmed</value>
   </data>
+  <data name="email_confirmed" xml:space="preserve">
+    <value>E-bost wedi'i Gadarnhau</value>
+    <comment>verified - 2025-08-06</comment>
+  </data>
+  <data name="enter_code_from_email" xml:space="preserve">
+    <value>Rhaid i chi nodi'r cod a anfonwyd i'ch cyfeiriad e-bost</value>
+    <comment>verified - 2025-08-06</comment>
+  </data>
+  <data name="enter_your_email" xml:space="preserve">
+    <value>Nodwch eich e-bost.</value>
+    <comment>verified - 2025-08-06</comment>
+  </data>
+  <data name="i_agree_to_terms_of_use" xml:space="preserve">
+    <value>Cytunaf â'r telerau defnydd hyn.</value>
+    <comment>verified - 2025-08-06</comment>
+  </data>
   <data name="Facebook App Id" xml:space="preserve">
     <value>Facebook App Id</value>
   </data>
@@ -243,8 +267,20 @@
   <data name="Please Click here to Log in" xml:space="preserve">
     <value>Please Click here to Log in</value>
   </data>
+  <data name="please_click_here_to_log_in" xml:space="preserve">
+    <value>Cliciwch yma i fewngofnodi</value>
+    <comment>verified - 2025-08-06</comment>
+  </data>
   <data name="Please Confirm Email Address" xml:space="preserve">
     <value>Please Confirm Email Address</value>
+  </data>
+  <data name="please_confirm_email_address" xml:space="preserve">
+    <value>Cadarnhewch Cyfeiriad E-bost</value>
+    <comment>verified - 2025-08-06</comment>
+  </data>
+  <data name="please_enter_valid_email_for_site" xml:space="preserve">
+    <value>Nodwch e-bost dilys ar gyfer y safle hwn isod a chliciwch y botwm Cofrestru i orffen mewngofnodi.</value>
+    <comment>verified - 2025-08-06</comment>
   </data>
   <data name="Port" xml:space="preserve">
     <value>Port</value>
@@ -260,6 +296,10 @@
   </data>
   <data name="Re-Send Verification Email" xml:space="preserve">
     <value>Re-Send Verification Email</value>
+  </data>
+  <data name="re_send_verification_email" xml:space="preserve">
+    <value>Ailalyrru E-bost Gwirio</value>
+    <comment>verified - 2025-08-06</comment>
   </data>
   <data name="Really Delete Users" xml:space="preserve">
     <value>Really Delete Users</value>
@@ -324,6 +364,10 @@
   <data name="Thank you for confirming your email." xml:space="preserve">
     <value>Thank you for confirming your email.</value>
   </data>
+  <data name="thank_you_for_confirming_email" xml:space="preserve">
+    <value>Diolch am gadarnhau eich e-bost.</value>
+    <comment>verified - 2025-08-06</comment>
+  </data>
   <data name="Twitter Consumer Key" xml:space="preserve">
     <value>Twitter Consumer Key</value>
   </data>
@@ -381,14 +425,38 @@
   <data name="Email" xml:space="preserve">
     <value>E-bost</value>
   </data>
+  <data name="email_or_username" xml:space="preserve">
+    <value>E-bost neu Enw Defnyddiwr</value>
+    <comment>verified - 2025-08-06</comment>
+  </data>
   <data name="Forgot Password Confirmation" xml:space="preserve">
     <value>Forgot Password Confirmation</value>
+  </data>
+  <data name="forgot_password_confirmation" xml:space="preserve">
+    <value>Cadarnhad Anghofio Cyfrinair</value>
+    <comment>verified - 2025-08-06</comment>
   </data>
   <data name="Forgot your password?" xml:space="preserve">
     <value>Wedi anghofio eich cyfrinair?</value>
   </data>
+  <data name="forgot_your_password" xml:space="preserve">
+    <value>Wedi anghofio eich cyfrinair?</value>
+    <comment>verified - 2025-08-06</comment>
+  </data>
   <data name="Log in" xml:space="preserve">
     <value>Mewngofnodi</value>
+  </data>
+  <data name="log_in" xml:space="preserve">
+    <value>Mewngofnodi</value>
+    <comment>verified - 2025-08-06</comment>
+  </data>
+  <data name="log_in_using_your_account" xml:space="preserve">
+    <value>Mewngofnodi gan ddefnyddio eich cyfrif {0}</value>
+    <comment>verified - 2025-08-06</comment>
+  </data>
+  <data name="login_failure" xml:space="preserve">
+    <value>Methiant Mewngofnodi</value>
+    <comment>verified - 2025-08-06</comment>
   </data>
   <data name="Must match password" xml:space="preserve">
     <value>Must match password</value>
@@ -417,14 +485,26 @@
   <data name="Please check your email to reset your password." xml:space="preserve">
     <value>Please check your email to reset your password.</value>
   </data>
+  <data name="please_check_email_to_reset_password" xml:space="preserve">
+    <value>Gwirio eich e-bost i ailosod eich cyfrinair.</value>
+    <comment>verified - 2025-08-06</comment>
+  </data>
   <data name="Register" xml:space="preserve">
     <value>cofrestr</value>
   </data>
   <data name="Register as a new user?" xml:space="preserve">
     <value>Register as a new user?</value>
   </data>
+  <data name="register_as_new_user" xml:space="preserve">
+    <value>Cofrestru fel defnyddiwr newydd?</value>
+    <comment>verified - 2025-08-06</comment>
+  </data>
   <data name="Remember Me" xml:space="preserve">
     <value>Cofiwch fi</value>
+  </data>
+  <data name="remember_me" xml:space="preserve">
+    <value>Cofiwch fi</value>
+    <comment>verified - 2025-08-06</comment>
   </data>
   <data name="Remember this web browser" xml:space="preserve">
     <value>Remember this web browser</value>
@@ -456,6 +536,10 @@
   <data name="Submit" xml:space="preserve">
     <value>Submit</value>
   </data>
+  <data name="submit_code_from_email" xml:space="preserve">
+    <value>Neu gyflwynwch y cod a ddarparwyd yn yr e-bost.</value>
+    <comment>verified - 2025-08-06</comment>
+  </data>
   <data name="Thanks for registering!" xml:space="preserve">
     <value>Thanks for registering!</value>
   </data>
@@ -473,6 +557,30 @@
   </data>
   <data name="You must agree to the terms" xml:space="preserve">
     <value>You must agree to the terms</value>
+  </data>
+  <data name="you_must_agree_to_terms" xml:space="preserve">
+    <value>Rhaid i chi gytuno â'r telerau</value>
+    <comment>verified - 2025-08-06</comment>
+  </data>
+  <data name="youve_successfully_authenticated_with" xml:space="preserve">
+    <value>Rydych wedi dilysu'n llwyddiannus gyda &lt;strong&gt;{0}&lt;/strong&gt;.</value>
+    <comment>verified - 2025-08-06</comment>
+  </data>
+  <data name="your_login_protected_authenticator_app" xml:space="preserve">
+    <value>Mae eich mewngofnod wedi'i ddiogelu gydag ap dilysu. Nodwch eich cod dilysu isod.</value>
+    <comment>verified - 2025-08-06</comment>
+  </data>
+  <data name="unsuccessful_login_with_service" xml:space="preserve">
+    <value>Mewngofnodi aflwyddiannus gyda gwasanaeth.</value>
+    <comment>verified - 2025-08-06</comment>
+  </data>
+  <data name="use_existing_account_to_log_in" xml:space="preserve">
+    <value>Defnyddiwch gyfrif sy'n bodoli eisoes i fewngofnodi</value>
+    <comment>verified - 2025-08-06</comment>
+  </data>
+  <data name="working" xml:space="preserve">
+    <value>Gweithio...</value>
+    <comment>verified - 2025-08-06</comment>
   </data>
   <data name="Your password has been reset." xml:space="preserve">
     <value>Your password has been reset.</value>
@@ -951,6 +1059,18 @@
   <data name="Registration Permitted Top Level Domain(s)" xml:space="preserve">
     <value>Parth(au) Lefel Uchaf a Ganiateir Cofrestru</value>
   </data>
+  <data name="account_locked_out_try_again_later" xml:space="preserve">
+    <value>Mae'r cyfrif hwn wedi cael ei gloi allan, rhowch gynnig arall arni yn nes ymlaen.</value>
+    <comment>verified - 2025-08-06</comment>
+  </data>
+  <data name="associate_your_account" xml:space="preserve">
+    <value>Cysylltwch eich cyfrif {0}</value>
+    <comment>verified - 2025-08-06</comment>
+  </data>
+  <data name="auto_logout_security_message" xml:space="preserve">
+    <value>Er eich diogelwch, rydych wedi cael eich allgofnodi yn awtomatig.&lt;br /&gt;Mae hyn i ddiogelu eich data personol, rhag ofn eich bod i ffwrdd o'ch cyfrifiadur.</value>
+    <comment>verified - 2025-08-06</comment>
+  </data>
   <data name="Auto logout time (in minutes, leave blank to disable)" xml:space="preserve">
 	<value>Amser allgofnodi awtomatig (mewn munudau, gadewch yn wag i analluogi)</value>
   </data>
@@ -998,5 +1118,93 @@
   </data>
   <data name="View User Activity" xml:space="preserve">
 	<value>Gweld Gweithgaredd Defnyddiwr</value>
+  </data>
+  <data name="recovery_code_login_warning" xml:space="preserve">
+    <value>Rydych chi wedi gofyn am fewngofnodi gyda chod adfer. Ni fydd y mewngofnod hwn yn cael ei gofio nes i chi ddarparu cod ap dilysu wrth fewngofnodi neu analluogi 2FA a mewngofnodi eto.</value>
+    <comment>verified - 2025-08-06</comment>
+  </data>
+  <data name="thanks_for_registering" xml:space="preserve">
+    <value>Diolch am gofrestru!</value>
+    <comment>verified - 2025-08-06</comment>
+  </data>
+  <data name="account_approval_pending_message" xml:space="preserve">
+    <value>Mae'n ddrwg gennym am yr oedi, ond mae'r safle hwn yn ei gwneud yn ofynnol i gyfrif newydd gael eu cymeradwyo. Mae e-bost wedi'i anfon at reolwyr y safle yn eu hysbysu o'ch cais cofrestru. Dylech dderbyn e-bost yn eich hysbysu unwaith y bydd eich cyfrif wedi'i gymeradwyo.</value>
+    <comment>verified - 2025-08-06</comment>
+  </data>
+  <data name="register_using_account" xml:space="preserve">
+    <value>Cofrestrwch gan ddefnyddio eich cyfrif {0}</value>
+    <comment>verified - 2025-08-06</comment>
+  </data>
+  <data name="use_existing_account" xml:space="preserve">
+    <value>Defnyddiwch gyfrif presennol</value>
+    <comment>verified - 2025-08-06</comment>
+  </data>
+  <data name="create_new_account" xml:space="preserve">
+    <value>Creu cyfrif newydd.</value>
+    <comment>verified - 2025-08-06</comment>
+  </data>
+  <data name="passwords_must_have_at_least_one_digit" xml:space="preserve">
+    <value>Rhaid i gyfrineiriau gael o leiaf un digid ('0'-'9').</value>
+    <comment>verified - 2025-08-06</comment>
+  </data>
+  <data name="passwords_must_have_at_least_one_lowercase" xml:space="preserve">
+    <value>Rhaid i gyfrineiriau gael o leiaf un nod bach ('a'-'z').</value>
+    <comment>verified - 2025-08-06</comment>
+  </data>
+  <data name="passwords_must_have_at_least_one_non_alphanumeric" xml:space="preserve">
+    <value>Rhaid i gyfrineiriau gael o leiaf un nod nad yw'n alffaniwmerig</value>
+    <comment>verified - 2025-08-06</comment>
+  </data>
+  <data name="passwords_must_have_at_least_one_uppercase" xml:space="preserve">
+    <value>Rhaid i gyfrineiriau gael o leiaf un nod mawr ('A'-'Z').</value>
+    <comment>verified - 2025-08-06</comment>
+  </data>
+  <data name="username_letters_digits_no_spaces" xml:space="preserve">
+    <value>Gall enw defnyddiwr ddim ond cynnwys llythrennau neu rifau, heb fylchau</value>
+    <comment>verified - 2025-08-06</comment>
+  </data>
+  <data name="password_minimum_length" xml:space="preserve">
+    <value>Rhaid i'r cyfrinair fod o leiaf {0} nod o hyd.</value>
+    <comment>verified - 2025-08-06</comment>
+  </data>
+  <data name="confirm_password" xml:space="preserve">
+    <value>Cadarnhau Cyfrinair</value>
+    <comment>verified - 2025-08-06</comment>
+  </data>
+  <data name="reset_your_password" xml:space="preserve">
+    <value>Ailosod eich cyfrinair</value>
+    <comment>verified - 2025-08-06</comment>
+  </data>
+  <data name="password_must_be_different_from_current" xml:space="preserve">
+    <value>Rhaid i'r cyfrinair fod yn wahanol i'r cyfrinair presennol</value>
+    <comment>verified - 2025-08-06</comment>
+  </data>
+  <data name="new_password_minimum_length" xml:space="preserve">
+    <value>Rhaid i'r cyfrinair newydd fod o leiaf {0} nod o hyd.</value>
+    <comment>verified - 2025-08-06</comment>
+  </data>
+  <data name="reset_password_confirmation" xml:space="preserve">
+    <value>Cadarnhau ailosod cyfrinair</value>
+    <comment>verified - 2025-08-06</comment>
+  </data>
+  <data name="your_password_has_been_reset" xml:space="preserve">
+    <value>Mae eich cyfrinair wedi'i ailosod.</value>
+    <comment>verified - 2025-08-06</comment>
+  </data>
+  <data name="set_your_password" xml:space="preserve">
+    <value>Gosod eich cyfrinair</value>
+    <comment>verified - 2025-08-06</comment>
+  </data>
+  <data name="set_password_confirmation" xml:space="preserve">
+    <value>Cadarnhau gosod cyfrinair</value>
+    <comment>verified - 2025-08-06</comment>
+  </data>
+  <data name="your_password_has_been_set" xml:space="preserve">
+    <value>Mae eich cyfrinair wedi'i osod.</value>
+    <comment>verified - 2025-08-06</comment>
+  </data>
+  <data name="agreement_terms_as_of" xml:space="preserve">
+    <value>Telerau Cytundeb fel y'u diweddarwyd ar:</value>
+    <comment>verified - 2025-08-06</comment>
   </data>
 </root>
