@@ -41,7 +41,7 @@
     <input asp-for="SiteId" type="hidden" />
     <div class="row">
         <div class="col-md-2">
-            <a asp-controller="UserAdmin" asp-action="UserActivity" asp-route-siteid="@Model.SiteId" asp-route-userid="@Model.UserId" title="Activty">
+            <a asp-controller="UserAdmin" asp-action="UserActivity" asp-route-siteid="@Model.SiteId" asp-route-userid="@Model.UserId" title="@sr["activity"]">
                 <img class="pull-right" gravatar-email="@Model.Email" gravatar-size="60" gravatar-enabled="@themeSettings.AllowGravatar" override-url="@Model.AvatarUrl" disabled-default-url="@themeSettings.DefaultAvatarUrl" />
             </a>
         </div>
@@ -49,7 +49,7 @@
             <div class="mb-3">
                 <div class="form-check">
                     <input asp-for="EmailConfirmed" class="form-check-input" />
-                    <label asp-for="EmailConfirmed" class="form-check-label">@sr["Email Confirmed"]</label>
+                    <label asp-for="EmailConfirmed" class="form-check-label">@sr["email_confirmed"]</label>
                 </div>
             </div>
             <div class="mb-3">
@@ -62,7 +62,7 @@
     </div>
     <div class="mb-3">
         <label class="control-label">
-            <a asp-controller="UserAdmin" asp-action="UserActivity" asp-route-siteid="@Model.SiteId" asp-route-userid="@Model.UserId" title="Activty">@sr["View User Activity"]</a>
+            <a asp-controller="UserAdmin" asp-action="UserActivity" asp-route-siteid="@Model.SiteId" asp-route-userid="@Model.UserId" title="@sr["activity"]">@sr["View User Activity"]</a>
         </label>
     </div>
     @if (Model.UserId != Guid.Empty)
@@ -78,19 +78,19 @@
     @if (Model.UserId != Guid.Empty && Model.TwoFactorEnabled)
     {
         <div class="mb-3">
-            <label class="form-label" for="TFA">@sr["Two Factor Authentication"]</label>
+            <label class="form-label" for="TFA">@sr["two_factor_authentication"]</label>
             -
             <label id="TFA" class="control-label">@sr["Enabled"]</label>
             <br />
              <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#confirmDisable2FA">
-                @sr["Disable Two Factor Auth."]
+                @sr["disable_two_factor_auth"]
             </button>
         </div>
     }
     else
     {
          <div class="mb-3">
-            <label class="form-label" for="TFA">@sr["Two Factor Authentication"]</label>
+            <label class="form-label" for="TFA">@sr["two_factor_authentication"]</label>
             -
             <label id="TFA" class="control-label">@sr["Disabled"]</label>
         </div>
@@ -109,7 +109,7 @@
                data-additional-input-ids="UserId"
                data-validation-url='@Url.Action("UsernameAvailable", "Account")' />
         <span asp-validation-for="Username" class="invalid-feedback"></span>
-        <span id="spnUserNameWarn" class="text-danger" data-error-message='@sr["Username is already in use"]'></span>
+        <span id="spnUserNameWarn" class="text-danger" data-error-message='@sr["username_is_already_in_use"]'></span>
         @Html.ValidationMessage("usernameerror", new { @class = "text-danger" })
     </div>
     <div class="mb-3">
@@ -166,7 +166,7 @@
     </div>
 
     <div class="mb-3">
-        <button id="btnSave" type="submit" class="btn btn-primary" data-enabled-text='@sr["Save"]' data-disabled-text='@sr["Working..."]'>@sr["Save"]</button>
+        <button id="btnSave" type="submit" class="btn btn-primary" data-enabled-text='@sr["Save"]' data-disabled-text='@sr["working"]'>@sr["Save"]</button>
         @if (Model.UserId != Guid.Empty)
         {
 
@@ -188,14 +188,14 @@
             <div class="modal-dialog modal-sm" role="document">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h4 class="modal-title" id="confirmDeleteHeading">@sr["Confirm Delete"]</h4>
+                        <h4 class="modal-title" id="confirmDeleteHeading">@sr["confirm_delete"]</h4>
                         <button type="button" data-bs-dismiss="modal" class="btn-close" aria-label='@sr["Close"]'></button>
                     </div>
                     <div class="modal-body">
                         @string.Format(sr["Are you sure you want to delete the user {0}? You cannot undo this action."], Model.DisplayName)
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-primary" data-bs-dismiss="modal">@sr["Cancel"]</button>
+                        <button type="button" class="btn btn-primary" data-bs-dismiss="modal">@sr["cancel"]</button>
                         <input type="submit" value='@sr["Delete"]' class="btn btn-danger btn-ok" />
                     </div>
                 </div>
@@ -211,14 +211,14 @@
             <div class="modal-dialog modal-sm" role="document">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h4 class="modal-title" id="confirmDisable2FAHeading">@sr["Confirm Disable Two Factor Authentication"]</h4>
+                        <h4 class="modal-title" id="confirmDisable2FAHeading">@sr["confirm_disable_two_factor_authentication"]</h4>
                         <button type="button" data-bs-dismiss="modal" class="btn-close" aria-label='@sr["Close"]'></button>
                     </div>
                     <div class="modal-body">
-                        @string.Format(sr["Are you sure you want to disable two factor authentication for the user {0}? Disabling 2FA does not change any stored keys used by this user's authenticator apps."], Model.DisplayName)
+                        @string.Format(sr["are_you_sure_disable_two_factor"], Model.DisplayName)
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-primary" data-bs-dismiss="modal">@sr["Cancel"]</button>
+                        <button type="button" class="btn btn-primary" data-bs-dismiss="modal">@sr["cancel"]</button>
                         <input type="submit" value='@sr["Disable"]' class="btn btn-danger btn-ok" />
                     </div>
                 </div>
@@ -235,8 +235,8 @@
         <input asp-for="SiteId" type="hidden" />
 
         <div class="mb-3 mt-2">
-            <span>@sr["Password Reset Email"]</span>
-            <button type="submit" id="btn_resetpwd" class="ms-2 btn btn-primary">@sr["Send"]</button>
+            <span>@sr["password_reset_email"]</span>
+            <button type="submit" id="btn_resetpwd" class="ms-2 btn btn-primary">@sr["send"]</button>
         </div>
     </form>
 }

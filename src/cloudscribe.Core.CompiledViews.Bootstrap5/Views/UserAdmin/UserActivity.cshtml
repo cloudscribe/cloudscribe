@@ -22,11 +22,11 @@
 }
 
 <h2>@ViewData["Title"]</h2>
-<a asp-controller="UserAdmin" asp-action="UserEdit" asp-route-siteid="@Model.SiteId" asp-route-userid="@Model.UserId" title="Manage">
+<a asp-controller="UserAdmin" asp-action="UserEdit" asp-route-siteid="@Model.SiteId" asp-route-userid="@Model.UserId" title="@sr["Manage"]">
     <img gravatar-email="@Model.Email" gravatar-size="60" gravatar-enabled="@themeSettings.AllowGravatar" override-url="@Model.AvatarUrl" disabled-default-url="@themeSettings.DefaultAvatarUrl" />
 </a>
 <div class="mb-3 mt-3">
-    <a asp-controller="UserAdmin" asp-action="UserEdit" asp-route-siteid="@Model.SiteId" asp-route-userid="@Model.UserId" title="Manage">@sr["Manage User"]</a>
+    <a asp-controller="UserAdmin" asp-action="UserEdit" asp-route-siteid="@Model.SiteId" asp-route-userid="@Model.UserId" title="@sr["Manage"]">@sr["Manage User"]</a>
 </div>
 <table class="mt-2 table table-striped">
     <tr>
@@ -34,7 +34,7 @@
         <td>@Model.Email</td>
     </tr>
     <tr>
-        <th>@sr["Name"]</th>
+        <th>@sr["name"]</th>
         <td>@Model.DisplayName @Model.FirstName @Model.LastName</td>
     </tr>
     <tr>
@@ -42,23 +42,23 @@
         <td>@userCreatedDate</td>
     </tr>
     <tr>
-        <th>@sr["Last Login"]</th>
+        <th>@sr["last_login"]</th>
         <td>
             @lastLogin
         </td>
     </tr>
     <tr>
-        <th>@sr["Failed Logins"]</th>
+        <th>@sr["failed_logins"]</th>
         <td>@Model.AccessFailedCount</td>
     </tr>
     <tr>
-        <th>@sr["Last Password Change"]</th>
+        <th>@sr["last_password_change"]</th>
         <td>
             @lastPasswordChange
         </td>
     </tr>
     <tr>
-        <th>@sr["2 Factor Enabled"]</th>
+        <th>@sr["two_factor_enabled"]</th>
         <td>@Model.TwoFactor</td>
     </tr>
     <tr>
@@ -69,7 +69,7 @@
     {
         <tr>
             <th>
-                @sr["Social Logins"]
+                @sr["social_logins"]
             </th>
             <td>
                 @foreach (var account in Model.Logins)

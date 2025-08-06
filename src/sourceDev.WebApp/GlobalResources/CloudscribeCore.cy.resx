@@ -1207,4 +1207,108 @@
     <value>Telerau Cytundeb fel y'u diweddarwyd ar:</value>
     <comment>verified - 2025-08-06</comment>
   </data>
+  <data name="user_must_change_password" xml:space="preserve">
+    <value>Rhaid i'r defnyddiwr newid cyfrinair</value>
+    <comment>verified - 2025-08-06</comment>
+  </data>
+  <data name="new_password_is_required" xml:space="preserve">
+    <value>Mae angen cyfrinair newydd</value>
+    <comment>verified - 2025-08-06</comment>
+  </data>
+  <data name="search_by_ip_address" xml:space="preserve">
+    <value>Chwilio Yn Ôl Cyfeiriad IP</value>
+    <comment>verified - 2025-08-06</comment>
+  </data>
+  <data name="username_is_already_in_use" xml:space="preserve">
+    <value>Mae'r enw defnyddiwr eisoes yn cael ei ddefnyddio</value>
+    <comment>verified - 2025-08-06</comment>
+  </data>
+  <data name="email_an_account_activation_link_to_the_user" xml:space="preserve">
+    <value>E-bostio dolen actifadu cyfrif i'r defnyddiwr</value>
+    <comment>verified - 2025-08-06</comment>
+  </data>
+  <data name="must_change_password" xml:space="preserve">
+    <value>Rhaid Newid Cyfrinair</value>
+    <comment>verified - 2025-08-06</comment>
+  </data>
+  <data name="last_login" xml:space="preserve">
+    <value>Mewngofnodi Diwethaf</value>
+    <comment>verified - 2025-08-06</comment>
+  </data>
+  <data name="failed_logins" xml:space="preserve">
+    <value>Mewngofnodiadau Methedig</value>
+    <comment>verified - 2025-08-06</comment>
+  </data>
+  <data name="last_password_change" xml:space="preserve">
+    <value>Newid Cyfrinair Diwethaf</value>
+    <comment>verified - 2025-08-06</comment>
+  </data>
+  <data name="two_factor_enabled" xml:space="preserve">
+    <value>2 Ffactor Wedi'i Alluogi</value>
+    <comment>verified - 2025-08-06</comment>
+  </data>
+  <data name="social_logins" xml:space="preserve">
+    <value>Mewngofnodiadau Cymdeithasol</value>
+    <comment>verified - 2025-08-06</comment>
+  </data>
+  <data name="confirm_delete" xml:space="preserve">
+    <value>Cadarnhau Dileu</value>
+    <comment>verified - 2025-08-06</comment>
+  </data>
+  <data name="cancel" xml:space="preserve">
+    <value>Canslo</value>
+    <comment>verified - 2025-08-06</comment>
+  </data>
+  <data name="two_factor_authentication" xml:space="preserve">
+    <value>Dilysu Dau Ffactor</value>
+    <comment>verified - 2025-08-06</comment>
+  </data>
+  <data name="disable_two_factor_auth" xml:space="preserve">
+    <value>Analluogi Dilysiad Dau Ffactor</value>
+    <comment>verified - 2025-08-06</comment>
+  </data>
+  <data name="confirm_disable_two_factor_authentication" xml:space="preserve">
+    <value>Cadarnhau Analluogi Dilysu Dau Ffactor</value>
+    <comment>verified - 2025-08-06</comment>
+  </data>
+  <data name="are_you_sure_disable_two_factor" xml:space="preserve">
+    <value>Ydych chi'n siŵr eich bod am analluogi dilysu dau ffactor ar gyfer y defnyddiwr {0}? Nid yw analluogi 2FA yn newid unrhyw allweddi wedi'u storio a ddefnyddir gan apiau dilysydd y defnyddiwr hwn.</value>
+    <comment>verified - 2025-08-06</comment>
+  </data>
+  <data name="password_reset_email" xml:space="preserve">
+    <value>E-bost Ailosod Cyfrinair</value>
+    <comment>verified - 2025-08-06</comment>
+  </data>
+  <data name="send" xml:space="preserve">
+    <value>Anfon</value>
+    <comment>verified - 2025-08-06</comment>
+  </data>
+  <data name="activity" xml:space="preserve">
+    <value>Gweithgaredd</value>
+    <comment>verified - 2025-08-06</comment>
+  </data>
+  <data name="export_users" xml:space="preserve">
+    <value>Allforio Defnyddwyr</value>
+    <comment>verified - 2025-08-06</comment>
+  </data>
+  <data name="search_users" xml:space="preserve">
+    <value>Chwilio Defnyddwyr</value>
+    <comment>verified - 2025-08-06</comment>
+  </data>
+  <data name="select" xml:space="preserve">
+    <value>Dewis</value>
+    <comment>verified - 2025-08-06</comment>
+  </data>
+  <data name="user_roles" xml:space="preserve">
+    <value>Rolau Defnyddwyr</value>
+    <comment>verified - 2025-08-06</comment>
+  </data>
+  <data name="are_you_sure_remove_role" xml:space="preserve">
+    <value>Ydych chi'n siŵr eich bod am dynnu'r rôl {0}?</value>
+    <comment>verified - 2025-08-06</comment>
+  </data>
+  <data name="add_roles" xml:space="preserve">
+    <value>Ychwanegu Rolau</value>
+    <comment>verified - 2025-08-06</comment>
+  </data>
 </root>

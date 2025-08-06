@@ -1,0 +1,128 @@
+Keys Added During Account Folder String Localization - 2025-08-06
+
+Tracker for new keys added to ResX files during processing:
+
+--- Keys will be logged below as files are processed ---
+
+AccessDenied.cshtml:
+- access_denied (added to en-US.resx and cy.resx)
+
+AutoLogoutNotification.cshtml:
+- auto_logout_security_message (added to en-US.resx and cy.resx)
+
+ConfirmEmail.cshtml:
+- email_confirmed (added to en-US.resx and cy.resx)
+- thank_you_for_confirming_email (added to en-US.resx and cy.resx)
+- please_click_here_to_log_in (added to en-US.resx and cy.resx)
+
+EmailConfirmationRequired.cshtml:
+- please_confirm_email_address (added to en-US.resx and cy.resx)
+- before_you_can_log_in_email_verification (added to en-US.resx and cy.resx)
+- re_send_verification_email (added to en-US.resx and cy.resx)
+- submit_code_from_email (added to en-US.resx and cy.resx)
+- enter_code_from_email (added to en-US.resx and cy.resx)
+- submit (added to en-US.resx and cy.resx)
+
+ExternalLoginConfirmation.cshtml:
+- register (added to en-US.resx and cy.resx)
+- associate_your_account (added to en-US.resx and cy.resx)
+- youve_successfully_authenticated_with (added to en-US.resx and cy.resx)
+- please_enter_valid_email_for_site (added to en-US.resx and cy.resx)
+- email (added to en-US.resx and cy.resx)
+- you_must_agree_to_terms (added to en-US.resx and cy.resx)
+- i_agree_to_terms_of_use (added to en-US.resx and cy.resx)
+
+ExternalLoginFailure.cshtml:
+- login_failure (added to en-US.resx and cy.resx)
+- unsuccessful_login_with_service (added to en-US.resx and cy.resx)
+
+FailSafeLoginPartial.cshtml:
+- log_in (added to en-US.resx and cy.resx)
+
+ForgotPassword.cshtml:
+- forgot_your_password (added to en-US.resx and cy.resx)
+- enter_your_email (added to en-US.resx and cy.resx)
+- working (added to en-US.resx and cy.resx)
+
+ForgotPasswordConfirmation.cshtml:
+- forgot_password_confirmation (added to en-US.resx and cy.resx)
+- please_check_email_to_reset_password (added to en-US.resx and cy.resx)
+
+Lockout.cshtml:
+- account_locked_out_try_again_later (added to en-US.resx and cy.resx)
+
+Login.cshtml:
+- log_in_using_your_account (added to en-US.resx and cy.resx)
+- use_existing_account_to_log_in (added to en-US.resx and cy.resx)
+- email_or_username (added to en-US.resx and cy.resx)
+- username (added to en-US.resx and cy.resx)
+- password (added to en-US.resx and cy.resx)
+- remember_me (added to en-US.resx and cy.resx)
+- register_as_new_user (added to en-US.resx and cy.resx)
+
+LoginWith2fa.cshtml:
+- your_login_protected_authenticator_app (added to en-US.resx and cy.resx)
+
+LoginWithRecoveryCode.cshtml:
+- recovery_code_login_warning (added to en-US.resx and cy.resx)
+
+PendingApproval.cshtml:
+- thanks_for_registering (added to en-US.resx and cy.resx)
+- account_approval_pending_message (added to en-US.resx and cy.resx)
+
+Register.cshtml:
+- register_using_account (added to en-US.resx and cy.resx)
+- use_existing_account (added to en-US.resx and cy.resx)
+- create_new_account (added to en-US.resx and cy.resx)
+- passwords_must_have_at_least_one_digit (added to en-US.resx and cy.resx)
+- passwords_must_have_at_least_one_lowercase (added to en-US.resx and cy.resx)
+- passwords_must_have_at_least_one_non_alphanumeric (added to en-US.resx and cy.resx)
+- passwords_must_have_at_least_one_uppercase (added to en-US.resx and cy.resx)
+- username_letters_digits_no_spaces (added to en-US.resx and cy.resx)
+- password_minimum_length (added to en-US.resx and cy.resx)
+- confirm_password (added to en-US.resx and cy.resx)
+- register (added to en-US.resx and cy.resx)
+
+RegisterAgreementPartial.cshtml:
+- No new keys needed (used existing: you_must_agree_to_terms, i_agree_to_terms_of_use)
+
+RegisterBottom.cshtml:
+- No string references found - file contains only model declaration
+
+RegisterMiddle.cshtml:
+- No string references found - file contains only model declaration
+
+RegisterPreamblePartial.cshtml:
+- No string references found - file displays HTML from Model.RegistrationPreamble
+
+RegistrationScriptsPartial.cshtml:
+- No string references found - file contains only script tags
+
+RegistrationStylePartial.cshtml:
+- No string references found - file contains only CSS link tag
+
+ResetPassword.cshtml:
+- reset_your_password (added to en-US.resx and cy.resx)
+- password_must_be_different_from_current (added to en-US.resx and cy.resx)
+- new_password_minimum_length (added to en-US.resx and cy.resx)
+- reset (added to en-US.resx and cy.resx)
+
+ResetPasswordConfirmation.cshtml:
+- reset_password_confirmation (added to en-US.resx and cy.resx)
+- your_password_has_been_reset (added to en-US.resx and cy.resx)
+
+SetInitialPassword.cshtml:
+- set_your_password (added to en-US.resx and cy.resx)
+
+SetInitialPasswordConfirmation.cshtml:
+- set_password_confirmation (added to en-US.resx and cy.resx)
+- your_password_has_been_set (added to en-US.resx and cy.resx)
+
+SocialLoginPartial.cshtml:
+- No string references found - file uses ViewData from other files
+
+TenantLoginPartial.cshtml:
+- No new keys needed (used existing: log_in)
+
+TermsOfUse.cshtml:
+- agreement_terms_as_of (added to en-US.resx and cy.resx)

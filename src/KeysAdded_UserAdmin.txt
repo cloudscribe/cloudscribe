@@ -1,0 +1,50 @@
+Keys Added During UserAdmin Localization Process
+Date: 2025-08-06
+===========================================
+
+ChangeUserPassword.cshtml:
+- user_must_change_password (new key added)
+- new_password_is_required (new key added)
+
+Index.cshtml:
+- search_by_ip_address (new key added)
+
+NewUser.cshtml:
+- username_is_already_in_use (new key added)
+- email_an_account_activation_link_to_the_user (new key added)
+- must_change_password (new key added)
+
+UserActivity.cshtml:
+- last_login (new key added)
+- failed_logins (new key added)
+- last_password_change (new key added)
+- two_factor_enabled (new key added)
+- social_logins (new key added)
+
+UserClaims.cshtml:
+- confirm_delete (new key added)
+- cancel (new key added)
+
+UserEdit.cshtml:
+- two_factor_authentication (new key added)
+- disable_two_factor_auth (new key added)
+- confirm_disable_two_factor_authentication (new key added)
+- are_you_sure_disable_two_factor (new key added)
+- password_reset_email (new key added)
+- send (new key added)
+- activity (new key added)
+
+UserExportPartial.cshtml:
+- export_users (new key added)
+
+UserLookupModal.cshtml:
+- search_users (new key added)
+
+UserModalGridPartial.cshtml:
+- select (new key added)
+
+UserRoles.cshtml:
+- user_roles (new key added)
+- are_you_sure_remove_role (new key added)
+- add_roles (new key added)
+

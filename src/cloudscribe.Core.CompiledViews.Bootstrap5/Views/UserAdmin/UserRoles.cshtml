@@ -12,7 +12,7 @@
 }
 @if (Model.UserRoles.Count > 0)
 {
-    <h3>@sr["User Roles"]</h3>
+    <h3>@sr["user_roles"]</h3>
     <ul class="list-unstyled">
         @foreach (var item in Model.UserRoles)
         {
@@ -35,14 +35,14 @@
                             <div class="modal-dialog modal-sm" role="document">
                                 <div class="modal-content">
                                     <div class="modal-header">
-                                        <h4 class="modal-title" id="@("confirmRoleDeleteHeading" + Model.UserRoles.IndexOf(item))">@sr["Confirm Delete"]</h4>
+                                        <h4 class="modal-title" id="@("confirmRoleDeleteHeading" + Model.UserRoles.IndexOf(item))">@sr["confirm_delete"]</h4>
                                         <button type="button" data-bs-dismiss="modal" class="btn-close float-end" aria-label='@sr["Close"]'></button>
                                     </div>
                                     <div class="modal-body">
-                                        @string.Format(sr["Are you sure you want to remove the role {0}?"], item)
+                                        @string.Format(sr["are_you_sure_remove_role"], item)
                                     </div>
                                     <div class="modal-footer">
-                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">@sr["Cancel"]</button>
+                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">@sr["cancel"]</button>
                                         <input type="submit" value='@sr["Remove"]' class="btn btn-danger btn-ok" />
                                     </div>
                                 </div>
@@ -64,6 +64,6 @@
        asp-route-siteId="@Model.SiteId"
        asp-route-userId="@Model.UserId"
        asp-route-pageSize="12"
-       bs-modal-link="true">@sr["Add Roles"]</a>
+       bs-modal-link="true">@sr["add_roles"]</a>
 </div>
 
