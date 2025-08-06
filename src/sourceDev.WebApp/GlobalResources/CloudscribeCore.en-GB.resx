@@ -1569,4 +1569,280 @@
     <value>Agreement  Terms as of:</value>
     <comment>verified - 2025-08-06</comment>
   </data>
+  <data name="password_must_be_different_from_current" xml:space="preserve">
+    <value>Password must be different from current password</value>
+    <comment>verified - 2025-08-06</comment>
+  </data>
+  <data name="passwords_must_have_at_least_one_digit" xml:space="preserve">
+    <value>Passwords must have at least one digit ('0'-'9').</value>
+    <comment>verified - 2025-08-06</comment>
+  </data>
+  <data name="passwords_must_have_at_least_one_lowercase" xml:space="preserve">
+    <value>Passwords must have at least one lowercase character ('a'-'z').</value>
+    <comment>verified - 2025-08-06</comment>
+  </data>
+  <data name="passwords_must_have_at_least_one_non_alphanumeric" xml:space="preserve">
+    <value>Passwords must have at least one non alphanumeric character</value>
+    <comment>verified - 2025-08-06</comment>
+  </data>
+  <data name="passwords_must_have_at_least_one_uppercase" xml:space="preserve">
+    <value>Passwords must have at least one uppercase character ('A'-'Z').</value>
+    <comment>verified - 2025-08-06</comment>
+  </data>
+  <data name="new_password_must_be_at_least_characters_long" xml:space="preserve">
+    <value>The new password must be at least {0} characters long.</value>
+    <comment>verified - 2025-08-06</comment>
+  </data>
+  <data name="user_must_change_password" xml:space="preserve">
+    <value>User must change password</value>
+    <comment>verified - 2025-08-06</comment>
+  </data>
+  <data name="save" xml:space="preserve">
+    <value>Save</value>
+    <comment>verified - 2025-08-06</comment>
+  </data>
+  <data name="search" xml:space="preserve">
+    <value>Search</value>
+    <comment>verified - 2025-08-06</comment>
+  </data>
+  <data name="search_by_ip_address" xml:space="preserve">
+    <value>Search By IP Address</value>
+    <comment>verified - 2025-08-06</comment>
+  </data>
+  <data name="user_id" xml:space="preserve">
+    <value>UserId</value>
+    <comment>verified - 2025-08-06</comment>
+  </data>
+  <data name="username_is_already_in_use" xml:space="preserve">
+    <value>Username is already in use</value>
+    <comment>verified - 2025-08-06</comment>
+  </data>
+  <data name="must_change_password" xml:space="preserve">
+    <value>Must Change Password</value>
+    <comment>verified - 2025-08-06</comment>
+  </data>
+  <data name="email_an_account_activation_link_to_the_user" xml:space="preserve">
+    <value>Email an account activation link to the user</value>
+    <comment>verified - 2025-08-06</comment>
+  </data>
+  <data name="manage_user" xml:space="preserve">
+    <value>Manage User</value>
+    <comment>verified - 2025-08-06</comment>
+  </data>
+  <data name="name" xml:space="preserve">
+    <value>Name</value>
+    <comment>verified - 2025-08-06</comment>
+  </data>
+  <data name="created" xml:space="preserve">
+    <value>Created</value>
+    <comment>verified - 2025-08-06</comment>
+  </data>
+  <data name="last_login" xml:space="preserve">
+    <value>Last Login</value>
+    <comment>verified - 2025-08-06</comment>
+  </data>
+  <data name="failed_logins" xml:space="preserve">
+    <value>Failed Logins</value>
+    <comment>verified - 2025-08-06</comment>
+  </data>
+  <data name="last_password_change" xml:space="preserve">
+    <value>Last Password Change</value>
+    <comment>verified - 2025-08-06</comment>
+  </data>
+  <data name="two_factor_enabled" xml:space="preserve">
+    <value>2 Factor Enabled</value>
+    <comment>verified - 2025-08-06</comment>
+  </data>
+  <data name="social_logins" xml:space="preserve">
+    <value>Social Logins</value>
+    <comment>verified - 2025-08-06</comment>
+  </data>
+  <data name="ip_address" xml:space="preserve">
+    <value>Ip Address</value>
+    <comment>verified - 2025-08-06</comment>
+  </data>
+  <data name="capture_count" xml:space="preserve">
+    <value>Capture Count</value>
+    <comment>verified - 2025-08-06</comment>
+  </data>
+  <data name="first_capture" xml:space="preserve">
+    <value>First Capture</value>
+    <comment>verified - 2025-08-06</comment>
+  </data>
+  <data name="last_capture" xml:space="preserve">
+    <value>Last Capture</value>
+    <comment>verified - 2025-08-06</comment>
+  </data>
+  <data name="first_page" xml:space="preserve">
+    <value>First Page</value>
+    <comment>verified - 2025-08-06</comment>
+  </data>
+  <data name="last_page" xml:space="preserve">
+    <value>Last Page</value>
+    <comment>verified - 2025-08-06</comment>
+  </data>
+  <data name="previous_page" xml:space="preserve">
+    <value>Previous page</value>
+    <comment>verified - 2025-08-06</comment>
+  </data>
+  <data name="next_page" xml:space="preserve">
+    <value>Next page</value>
+    <comment>verified - 2025-08-06</comment>
+  </data>
+  <data name="add_claim" xml:space="preserve">
+    <value>Add Claim</value>
+    <comment>verified - 2025-08-06</comment>
+  </data>
+  <data name="claim_type" xml:space="preserve">
+    <value>Claim Type</value>
+    <comment>verified - 2025-08-06</comment>
+  </data>
+  <data name="claim_value" xml:space="preserve">
+    <value>Claim Value</value>
+    <comment>verified - 2025-08-06</comment>
+  </data>
+  <data name="remove" xml:space="preserve">
+    <value>Remove</value>
+    <comment>verified - 2025-08-06</comment>
+  </data>
+  <data name="confirm_delete" xml:space="preserve">
+    <value>Confirm Delete</value>
+    <comment>verified - 2025-08-06</comment>
+  </data>
+  <data name="close" xml:space="preserve">
+    <value>Close</value>
+    <comment>verified - 2025-08-06</comment>
+  </data>
+  <data name="are_you_sure_remove_claim" xml:space="preserve">
+    <value>Are you sure you want to remove the claim {0}?</value>
+    <comment>verified - 2025-08-06</comment>
+  </data>
+  <data name="cancel" xml:space="preserve">
+    <value>Cancel</value>
+    <comment>verified - 2025-08-06</comment>
+  </data>
+  <data name="send_email_notification" xml:space="preserve">
+    <value>Send Email Notification</value>
+    <comment>verified - 2025-08-06</comment>
+  </data>
+  <data name="approve_this_account" xml:space="preserve">
+    <value>Approve this account</value>
+    <comment>verified - 2025-08-06</comment>
+  </data>
+  <data name="email_confirmed" xml:space="preserve">
+    <value>Email Confirmed</value>
+    <comment>verified - 2025-08-06</comment>
+  </data>
+  <data name="account_locked" xml:space="preserve">
+    <value>Account Locked</value>
+    <comment>verified - 2025-08-06</comment>
+  </data>
+  <data name="view_user_activity" xml:space="preserve">
+    <value>View User Activity</value>
+    <comment>verified - 2025-08-06</comment>
+  </data>
+  <data name="two_factor_authentication" xml:space="preserve">
+    <value>Two Factor Authentication</value>
+    <comment>verified - 2025-08-06</comment>
+  </data>
+  <data name="enabled" xml:space="preserve">
+    <value>Enabled</value>
+    <comment>verified - 2025-08-06</comment>
+  </data>
+  <data name="disable_two_factor_auth" xml:space="preserve">
+    <value>Disable Two Factor Auth.</value>
+    <comment>verified - 2025-08-06</comment>
+  </data>
+  <data name="disabled" xml:space="preserve">
+    <value>Disabled</value>
+    <comment>verified - 2025-08-06</comment>
+  </data>
+  <data name="date_of_birth" xml:space="preserve">
+    <value>Date of Birth</value>
+    <comment>verified - 2025-08-06</comment>
+  </data>
+  <data name="website_url" xml:space="preserve">
+    <value>Website Url</value>
+    <comment>verified - 2025-08-06</comment>
+  </data>
+  <data name="delete" xml:space="preserve">
+    <value>Delete</value>
+    <comment>verified - 2025-08-06</comment>
+  </data>
+  <data name="change_password" xml:space="preserve">
+    <value>Change Password</value>
+    <comment>verified - 2025-08-06</comment>
+  </data>
+  <data name="are_you_sure_delete_user" xml:space="preserve">
+    <value>Are you sure you want to delete the user {0}? You cannot undo this action.</value>
+    <comment>verified - 2025-08-06</comment>
+  </data>
+  <data name="confirm_disable_two_factor_authentication" xml:space="preserve">
+    <value>Confirm Disable Two Factor Authentication</value>
+    <comment>verified - 2025-08-06</comment>
+  </data>
+  <data name="are_you_sure_disable_two_factor" xml:space="preserve">
+    <value>Are you sure you want to disable two factor authentication for the user {0}? Disabling 2FA does not change any stored keys used by this user's authenticator apps.</value>
+    <comment>verified - 2025-08-06</comment>
+  </data>
+  <data name="disable" xml:space="preserve">
+    <value>Disable</value>
+    <comment>verified - 2025-08-06</comment>
+  </data>
+  <data name="password_reset_email" xml:space="preserve">
+    <value>Password Reset Email</value>
+    <comment>verified - 2025-08-06</comment>
+  </data>
+  <data name="send" xml:space="preserve">
+    <value>Send</value>
+    <comment>verified - 2025-08-06</comment>
+  </data>
+  <data name="export_users" xml:space="preserve">
+    <value>Export Users</value>
+    <comment>verified - 2025-08-06</comment>
+  </data>
+  <data name="new_user" xml:space="preserve">
+    <value>New User</value>
+    <comment>verified - 2025-08-06</comment>
+  </data>
+  <data name="email_login" xml:space="preserve">
+    <value>Email/Login</value>
+    <comment>verified - 2025-08-06</comment>
+  </data>
+  <data name="manage" xml:space="preserve">
+    <value>Manage</value>
+    <comment>verified - 2025-08-06</comment>
+  </data>
+  <data name="activity" xml:space="preserve">
+    <value>Activity</value>
+    <comment>verified - 2025-08-06</comment>
+  </data>
+  <data name="total_users" xml:space="preserve">
+    <value>{0} - Users</value>
+    <comment>verified - 2025-08-06</comment>
+  </data>
+  <data name="all" xml:space="preserve">
+    <value>All</value>
+    <comment>verified - 2025-08-06</comment>
+  </data>
+  <data name="search_users" xml:space="preserve">
+    <value>Search Users</value>
+    <comment>verified - 2025-08-06</comment>
+  </data>
+  <data name="select" xml:space="preserve">
+    <value>Select</value>
+    <comment>verified - 2025-08-06</comment>
+  </data>
+  <data name="user_roles" xml:space="preserve">
+    <value>User Roles</value>
+    <comment>verified - 2025-08-06</comment>
+  </data>
+  <data name="are_you_sure_remove_role" xml:space="preserve">
+    <value>Are you sure you want to remove the role {0}?</value>
+    <comment>verified - 2025-08-06</comment>
+  </data>
+  <data name="add_roles" xml:space="preserve">
+    <value>Add Roles</value>
+    <comment>verified - 2025-08-06</comment>
+  </data>
 </root>

@@ -26,50 +26,50 @@
     <img gravatar-email="@Model.Email" gravatar-size="60" gravatar-enabled="@themeSettings.AllowGravatar" override-url="@Model.AvatarUrl" disabled-default-url="@themeSettings.DefaultAvatarUrl" />
 </a>
 <div class="mb-3 mt-3">
-    <a asp-controller="UserAdmin" asp-action="UserEdit" asp-route-siteid="@Model.SiteId" asp-route-userid="@Model.UserId" title="Manage">@sr["Manage User"]</a>
+    <a asp-controller="UserAdmin" asp-action="UserEdit" asp-route-siteid="@Model.SiteId" asp-route-userid="@Model.UserId" title="Manage">@sr["manage_user"]</a>
 </div>
 <table class="mt-2 table table-striped">
     <tr>
-        <th>@sr["Email"]</th>
+        <th>@sr["email"]</th>
         <td>@Model.Email</td>
     </tr>
     <tr>
-        <th>@sr["Name"]</th>
+        <th>@sr["name"]</th>
         <td>@Model.DisplayName @Model.FirstName @Model.LastName</td>
     </tr>
     <tr>
-        <th>@sr["Created"]</th>
+        <th>@sr["created"]</th>
         <td>@userCreatedDate</td>
     </tr>
     <tr>
-        <th>@sr["Last Login"]</th>
+        <th>@sr["last_login"]</th>
         <td>
             @lastLogin
         </td>
     </tr>
     <tr>
-        <th>@sr["Failed Logins"]</th>
+        <th>@sr["failed_logins"]</th>
         <td>@Model.AccessFailedCount</td>
     </tr>
     <tr>
-        <th>@sr["Last Password Change"]</th>
+        <th>@sr["last_password_change"]</th>
         <td>
             @lastPasswordChange
         </td>
     </tr>
     <tr>
-        <th>@sr["2 Factor Enabled"]</th>
+        <th>@sr["two_factor_enabled"]</th>
         <td>@Model.TwoFactor</td>
     </tr>
     <tr>
-        <th>@sr["Time Zone"]</th>
+        <th>@sr["time_zone"]</th>
         <td>@Model.UserTimeZone</td>
     </tr>
     @if (Model.Logins.Count > 0)
     {
         <tr>
             <th>
-                @sr["Social Logins"]
+                @sr["social_logins"]
             </th>
             <td>
                 @foreach (var account in Model.Logins)
@@ -87,16 +87,16 @@
     <table class="table table-striped">
         <tr>
             <th>
-                @sr["Ip Address"]
+                @sr["ip_address"]
             </th>
             <th>
-                @sr["Capture Count"]
+                @sr["capture_count"]
             </th>
             <th>
-                @sr["First Capture"]
+                @sr["first_capture"]
             </th>
             <th>
-                @sr["Last Capture"]
+                @sr["last_capture"]
             </th>
         </tr>
         @foreach (var loc in Model.Locations.Data)
@@ -125,10 +125,10 @@
                   cs-paging-pagenumber="@Model.Locations.PageNumber"
                   cs-paging-totalitems="@Model.Locations.TotalItems"
                   cs-paging-maxpageritems="@Model.Locations.PageSize"
-                  cs-first-page-title='@sr["First Page"]'
-                  cs-last-page-title='@sr["Last Page"]'
-                  cs-previous-page-title='@sr["Previous page"]'
-                  cs-next-page-title='@sr["Next page"]'
+                  cs-first-page-title='@sr["first_page"]'
+                  cs-last-page-title='@sr["last_page"]'
+                  cs-previous-page-title='@sr["previous_page"]'
+                  cs-next-page-title='@sr["next_page"]'
                   cs-pager-ul-class="pagination d-flex flex-wrap"
                   cs-pager-li-current-class="page-item active"
                   cs-pager-li-other-class="page-item"

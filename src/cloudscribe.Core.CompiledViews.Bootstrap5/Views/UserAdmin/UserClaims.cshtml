@@ -16,7 +16,7 @@
             <input name="claimValue" type="text" class="form-control" placeholder="Claim Value" />
         </div>
         <div class="col-auto">
-            <button type="submit" value="submit" class="btn btn-primary" data-enabled-text='@sr["Add Claim"]' data-disabled-text='@sr["Working..."]'>@sr["Add Claim"]</button>
+            <button type="submit" value="submit" class="btn btn-primary" data-enabled-text='@sr["add_claim"]' data-disabled-text='@sr["working"]'>@sr["add_claim"]</button>
         </div>
     </div>
 
@@ -30,10 +30,10 @@
             <tr>
                 <th></th>
                 <th>
-                    @sr["Claim Type"]
+                    @sr["claim_type"]
                 </th>
                 <th>
-                    @sr["Claim Value"]
+                    @sr["claim_value"]
                 </th>
             </tr>
             @foreach (var item in Model.UserClaims)
@@ -41,7 +41,7 @@
                 <tr>
                     <td>
                         <button type="button" class="btn btn-danger btn-xs" data-bs-toggle="modal" data-bs-target="@("#confirmDeleteModal" + Model.UserClaims.IndexOf(item))">
-                            @sr["Remove"]
+                            @sr["remove"]
                         </button>
                         <form asp-controller="UserAdmin" asp-action="RemoveClaim">
                             <input name="claimType" value="@item.Type" type="hidden" />
@@ -51,15 +51,15 @@
                                 <div class="modal-dialog modal-sm" role="document">
                                     <div class="modal-content">
                                         <div class="modal-header">
-                                            <h4 class="modal-title" id="@("confirmDeleteHeading" + Model.UserClaims.IndexOf(item))">@sr["Confirm Delete"]</h4>
-                                            <button type="button" data-bs-dismiss="modal" class="btn-close" aria-label='@sr["Close"]'></button>
+                                            <h4 class="modal-title" id="@("confirmDeleteHeading" + Model.UserClaims.IndexOf(item))">@sr["confirm_delete"]</h4>
+                                            <button type="button" data-bs-dismiss="modal" class="btn-close" aria-label='@sr["close"]'></button>
                                         </div>
                                         <div class="modal-body">
-                                            @string.Format(sr["Are you sure you want to remove the claim {0}?"], item.Type)
+                                            @string.Format(sr["are_you_sure_remove_claim"], item.Type)
                                         </div>
                                         <div class="modal-footer">
-                                            <button type="button" class="btn btn-primary" data-bs-dismiss="modal">@sr["Cancel"]</button>
-                                            <input type="submit" value='@sr["Remove"]' class="btn btn-danger btn-ok" />
+                                            <button type="button" class="btn btn-primary" data-bs-dismiss="modal">@sr["cancel"]</button>
+                                            <input type="submit" value='@sr["remove"]' class="btn btn-danger btn-ok" />
                                         </div>
                                     </div>
                                 </div>

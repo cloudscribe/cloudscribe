@@ -17,68 +17,68 @@
     @if (Model.UserId != Guid.Empty)
     {
         <div class="mb-3">
-            <label class="form-label" asp-for="UserId">@sr["UserId"]</label>
+            <label class="form-label" asp-for="UserId">@sr["user_id"]</label>
             <label class="control-label">@Model.UserId.ToString()</label>
         </div>
     }
     <div class="mb-3">
-        <label class="form-label" asp-for="Email">@sr["Email"]</label>
+        <label class="form-label" asp-for="Email">@sr["email"]</label>
         <input asp-for="Email" class="form-control" />
         <span asp-validation-for="Email" class="invalid-feedback"></span>
     </div>
     <div class="mb-3">
-        <label class="form-label" asp-for="Username">@sr["Username"]</label>
+        <label class="form-label" asp-for="Username">@sr["username"]</label>
         <input asp-for="Username" class="form-control"
                data-remote-validate-onblur="true"
                data-error-target-id="spnUserNameWarn"
                data-additional-input-ids="UserId"
                data-validation-url='@Url.Action("UsernameAvailable", "Account")' />
         <span asp-validation-for="Username" class="invalid-feedback"></span>
-        <span id="spnUserNameWarn" class="text-danger" data-error-message='@sr["Username is already in use"]'></span>
+        <span id="spnUserNameWarn" class="text-danger" data-error-message='@sr["username_is_already_in_use"]'></span>
         @Html.ValidationMessage("usernameerror", new { @class = "text-danger" })
     </div>
     <div class="mb-3">
-        <label class="form-label" asp-for="DisplayName">@sr["Display Name"]</label>
+        <label class="form-label" asp-for="DisplayName">@sr["display_name"]</label>
         <input asp-for="DisplayName" class="form-control" />
         <span asp-validation-for="DisplayName" class="text-danger"></span>
     </div>
     <div class="mb-3">
-        <label class="form-label" asp-for="FirstName">@sr["First Name"]</label>
+        <label class="form-label" asp-for="FirstName">@sr["first_name"]</label>
         <input asp-for="FirstName" class="form-control" />
     </div>
     <div class="mb-3">
-        <label class="form-label" asp-for="LastName">@sr["Last Name"]</label>
+        <label class="form-label" asp-for="LastName">@sr["last_name"]</label>
         <input asp-for="LastName" class="form-control" />
     </div>
     @if (Model.UserId == Guid.Empty)
     {
         <div class="mb-3">
-            <label class="form-label" asp-for="Password">@sr["Password"]</label>
+            <label class="form-label" asp-for="Password">@sr["password"]</label>
             <input asp-for="Password" type="password" class="form-control" />
             <span asp-validation-for="Password" class="invalid-feedback"></span>
         </div>
         <div class="mb-3">
-            <label class="form-label" asp-for="ConfirmPassword">@sr["Confirm Password"]</label>
+            <label class="form-label" asp-for="ConfirmPassword">@sr["confirm_password"]</label>
             <input asp-for="ConfirmPassword" type="password" class="form-control" />
             <span asp-validation-for="ConfirmPassword" class="invalid-feedback"></span>
         </div>
         <div class="mb-3">
             <div class="form-check">
                 <input asp-for="MustChangePwd" class="form-check-input" />
-                <label asp-for="MustChangePwd" class="form-check-label">@sr["Must Change Password"]</label>
+                <label asp-for="MustChangePwd" class="form-check-label">@sr["must_change_password"]</label>
             </div>
         </div>
         <div class="mb-3">
             <div class="form-check">
                 <input asp-for="SendPasswordActivationEmail" class="form-check-input" />
-                <label asp-for="SendPasswordActivationEmail" class="form-check-label">@sr["Email an account activation link to the user"]</label>
+                <label asp-for="SendPasswordActivationEmail" class="form-check-label">@sr["email_an_account_activation_link_to_the_user"]</label>
             </div>
         </div>
     }
 
     <partial name="NewUserMiddlePartial" model="Model" />
     <div class="mb-3">
-        <button type="submit" class="btn btn-primary" data-disabled-text='@sr["Working..."]' data-enabled-text='@sr["Save"]'>@sr["Save"]</button>
+        <button type="submit" class="btn btn-primary" data-disabled-text='@sr["working"]' data-enabled-text='@sr["save"]'>@sr["save"]</button>
     </div>
     <div asp-validation-summary="All" class="text-danger"></div>
 </form>
