@@ -1260,9 +1260,6 @@
   <data name="TimeZone" xml:space="preserve">
     <value />
   </data>
-  <data name="Before you can Log in, we need to confirm that the email address you provided is valid. We sent an email to the address you&#xD;&#xA;    provided with a link that you need to click in order to confirm your email address is valid." xml:space="preserve">
-    <value />
-  </data>
   <data name="Comment" xml:space="preserve">
     <value />
   </data>
@@ -1446,14 +1443,6 @@
   </data>
   <data name="Allow email for login in addition to username" xml:space="preserve">
     <value>Allow email for login in addition to username</value>
-    <comment>verified - 2025-08-07 - SiteAdmin</comment>
-  </data>
-  <data name="Allow new registrations" xml:space="preserve">
-    <value>Allow new registrations</value>
-    <comment>verified - 2025-08-07 - SiteAdmin</comment>
-  </data>
-  <data name="Allow persistent login" xml:space="preserve">
-    <value>Allow persistent login</value>
     <comment>verified - 2025-08-07 - SiteAdmin</comment>
   </data>
   <data name="Allow user to change email address" xml:space="preserve">
@@ -1704,14 +1693,6 @@
     <value>Requested Site Folder Name is not available, please try another value</value>
     <comment>verified - 2025-08-07 - SiteAdmin</comment>
   </data>
-  <data name="Require approval before login" xml:space="preserve">
-    <value>Require approval before login</value>
-    <comment>verified - 2025-08-07 - SiteAdmin</comment>
-  </data>
-  <data name="Require confirmed email" xml:space="preserve">
-    <value>Require confirmed email</value>
-    <comment>verified - 2025-08-07 - SiteAdmin</comment>
-  </data>
   <data name="Require cookie consent?" xml:space="preserve">
     <value>Require cookie consent?</value>
     <comment>verified - 2025-08-07 - SiteAdmin</comment>
@@ -1804,16 +1785,8 @@
     <value>username@LDAP Domain (Active Directory using userPrincipalName)</value>
     <comment>verified - 2025-08-07 - SiteAdmin</comment>
   </data>
-  <data name="LDAP Domain\\username (Active Directory using sAMAccountName)" xml:space="preserve">
-    <value>LDAP Domain\\username (Active Directory using sAMAccountName)</value>
-    <comment>verified - 2025-08-07 - SiteAdmin</comment>
-  </data>
   <data name="Learn More" xml:space="preserve">
     <value>Learn More</value>
-    <comment>verified - 2025-01-27 - Shared</comment>
-  </data>
-  <data name="Log in" xml:space="preserve">
-    <value>Log in</value>
     <comment>verified - 2025-01-27 - Shared</comment>
   </data>
   <data name="Revoke Cookie Consent" xml:space="preserve">
@@ -1872,10 +1845,6 @@
     <value>Disabling 2FA does not change the keys used in authenticator apps. If you wish to change the key used in an authenticator app you should {0}reset your authenticator keys{1}.</value>
     <comment>verified - 2025-01-27</comment>
   </data>
-  <data name="Before you can Log in, we need to confirm that the email address you provided is valid. We sent an email to the address you provided with a link that you need to click in order to confirm your email address is valid." xml:space="preserve">
-    <value>Before you can Log in, we need to confirm that the email address you provided is valid. We sent an email to the address you provided with a link that you need to click in order to confirm your email address is valid.</value>
-    <comment>verified - 2025-01-27</comment>
-  </data>
   <data name="An Email Address is Required" xml:space="preserve">
     <value>An Email Address is Required</value>
     <comment>verified - 2025-01-27</comment>
@@ -1886,10 +1855,6 @@
   </data>
   <data name="Scan the QR Code or enter this key {0} into your two factor authenticator app. Spaces and casing do not matter." xml:space="preserve">
     <value>Scan the QR Code or enter this key {0} into your two factor authenticator app. Spaces and casing do not matter.</value>
-    <comment>verified - 2025-01-27</comment>
-  </data>
-  <data name="Date Of Birth" xml:space="preserve">
-    <value>Date Of Birth</value>
     <comment>verified - 2025-01-27</comment>
   </data>
   <data name="Clear Image" xml:space="preserve">
