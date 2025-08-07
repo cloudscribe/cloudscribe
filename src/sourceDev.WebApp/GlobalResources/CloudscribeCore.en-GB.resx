@@ -1,52 +1,110 @@
-<?xml version='1.0' encoding='utf-8'?>
-<root xmlns:ns1="urn:schemas-microsoft-com:xml-msdata" xmlns:xs="http://www.w3.org/2001/XMLSchema">
-  
-  <xs:schema id="root">
-    <xs:import namespace="http://www.w3.org/XML/1998/namespace" />
-    <xs:element name="root" ns1:IsDataSet="true">
-      <xs:complexType>
-        <xs:choice maxOccurs="unbounded">
-          <xs:element name="metadata">
-            <xs:complexType>
-              <xs:sequence>
-                <xs:element name="value" type="xsd:string" minOccurs="0" />
-              </xs:sequence>
-              <xs:attribute name="name" use="required" type="xsd:string" />
-              <xs:attribute name="type" type="xsd:string" />
-              <xs:attribute name="mimetype" type="xsd:string" />
-              <xs:attribute ref="xml:space" />
-            </xs:complexType>
-          </xs:element>
-          <xs:element name="assembly">
-            <xs:complexType>
-              <xs:attribute name="alias" type="xsd:string" />
-              <xs:attribute name="name" type="xsd:string" />
-            </xs:complexType>
-          </xs:element>
-          <xs:element name="data">
-            <xs:complexType>
-              <xs:sequence>
-                <xs:element name="value" type="xsd:string" minOccurs="0" ns1:Ordinal="1" />
-                <xs:element name="comment" type="xsd:string" minOccurs="0" ns1:Ordinal="2" />
-              </xs:sequence>
-              <xs:attribute name="name" type="xsd:string" use="required" ns1:Ordinal="1" />
-              <xs:attribute name="type" type="xsd:string" ns1:Ordinal="3" />
-              <xs:attribute name="mimetype" type="xsd:string" ns1:Ordinal="4" />
-              <xs:attribute ref="xml:space" />
-            </xs:complexType>
-          </xs:element>
-          <xs:element name="resheader">
-            <xs:complexType>
-              <xs:sequence>
-                <xs:element name="value" type="xsd:string" minOccurs="0" ns1:Ordinal="1" />
-              </xs:sequence>
-              <xs:attribute name="name" type="xsd:string" use="required" />
-            </xs:complexType>
-          </xs:element>
-        </xs:choice>
-      </xs:complexType>
-    </xs:element>
-  </xs:schema>
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <!-- 
+    Microsoft ResX Schema 
+    
+    Version 2.0
+    
+    The primary goals of this format is to allow a simple XML format 
+    that is mostly human readable. The generation and parsing of the 
+    various data types are done through the TypeConverter classes 
+    associated with the data types.
+    
+    Example:
+    
+    ... ado.net/XML headers & schema ...
+    <resheader name="resmimetype">text/microsoft-resx</resheader>
+    <resheader name="version">2.0</resheader>
+    <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
+    <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
+    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
+    <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
+    <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
+        <value>[base64 mime encoded serialized .NET Framework object]</value>
+    </data>
+    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
+        <comment>This is a comment</comment>
+    </data>
+                
+    There are any number of "resheader" rows that contain simple 
+    name/value pairs.
+    
+    Each data row contains a name, and value. The row also contains a 
+    type or mimetype. Type corresponds to a .NET class that support 
+    text/value conversion through the TypeConverter architecture. 
+    Classes that don't support this are serialized and stored with the 
+    mimetype set.
+    
+    The mimetype is used for serialized objects, and tells the 
+    ResXResourceReader how to depersist the object. This is currently not 
+    extensible. For a given mimetype the value must be set accordingly:
+    
+    Note - application/x-microsoft.net.object.binary.base64 is the format 
+    that the ResXResourceWriter will generate, however the reader can 
+    read any of the formats listed below.
+    
+    mimetype: application/x-microsoft.net.object.binary.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
+            : and then encoded with base64 encoding.
+    
+    mimetype: application/x-microsoft.net.object.soap.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
+            : and then encoded with base64 encoding.
+
+    mimetype: application/x-microsoft.net.object.bytearray.base64
+    value   : The object must be serialized into a byte array 
+            : using a System.ComponentModel.TypeConverter
+            : and then encoded with base64 encoding.
+    -->
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
   <resheader name="resmimetype">
     <value>text/microsoft-resx</value>
   </resheader>
@@ -896,9 +954,8 @@
   <data name="Back To List" xml:space="preserve">
     <value>Back To List</value>
   </data>
-  <data name="Before you can Log in, we need to confirm that the email address you provided is valid. We sent an email to the address you&#13;&#10;    provided with a link that you need to click in order to confirm your email address is valid." xml:space="preserve">
-    <value>Before you can Log in, we need to confirm that the email address you provided is valid. We sent an email to the address you
-    provided with a link that you need to click in order to confirm your email address is valid.</value>
+  <data name="Before you can Log in, we need to confirm that the email address you provided is valid. We sent an email to the address you provided with a link that you need to click in order to confirm your email address is valid." xml:space="preserve">
+    <value>Before you can Log in, we need to confirm that the email address you provided is valid. We sent an email to the address you provided with a link that you need to click in order to confirm your email address is valid.</value>
   </data>
   <data name="Enter your email." xml:space="preserve">
     <value>Enter your email.</value>
@@ -1063,7 +1120,7 @@
     <value>Require Users To Accept Changed Agreement?</value>
   </data>
   <data name="Send Email Notification" xml:space="preserve">
-    <value>Send Email Notification Of Approval</value>
+    <value>Send Email Notification</value>
   </data>
   <data name="Use Invisible reCaptcha?" xml:space="preserve">
     <value>Use Invisible reCaptcha?</value>
@@ -1179,89 +1236,26 @@
   <data name="Reset Authenticator" xml:space="preserve">
     <value>Reset Authenticator</value>
   </data>
-  <data name="Allow user to change email address" xml:space="preserve">
-    <value>Allow user to change email address</value>
-  </data>
-  <data name="Change Email" xml:space="preserve">
-    <value>Change Email</value>
-  </data>
-  <data name="Email address" xml:space="preserve">
-    <value>Email address</value>
-  </data>
-  <data name="Email is not configured for this site." xml:space="preserve">
-    <value>Email is not configured for this site.</value>
-  </data>
-  <data name="The site is not configured to allow email changing." xml:space="preserve">
-    <value>The site is not configured to allow email changing.</value>
-  </data>
-  <data name="This user account is not currently approved." xml:space="preserve">
-    <value>This user account is not currently approved.</value>
-  </data>
-  <data name="You must re-enter your password to change your email address." xml:space="preserve">
-    <value>You must re-enter your password to change your email address.</value>
-  </data>
-  <data name="Error - email could not be changed. Contact the site administrator for support." xml:space="preserve">
-    <value>Error - email could not be changed. Contact the site administrator for support.</value>
-  </data>
-  <data name="A notification email will be sent your old email address." xml:space="preserve">
-    <value>A notification email will be sent your old email address.</value>
-  </data>
-  <data name="Email address was changed successfully." xml:space="preserve">
-    <value>Email address was changed successfully.</value>
-  </data>
-  <data name="Notification emails will be sent to old and new addresses." xml:space="preserve">
-    <value>Notification emails will be sent to old and new addresses.</value>
-  </data>
-  <data name="Registration Permitted Top Level Domain(s)" xml:space="preserve">
-    <value>Registration Permitted Top Level Domain(s)</value>
-  </data>
-  <data name="Auto logout time (in minutes, leave blank to disable)" xml:space="preserve">
-	<value>Auto logout time (in minutes, leave blank to disable)</value>
-  </data>
-  <data name="Session Expiry" xml:space="preserve">
-	<value>Session Expiry</value>
+  <data name="For your security, you have been automatically logged out.&lt;br /&gt;This is to protect your personal data, in case you are away from your computer." xml:space="preserve">
+    <value>For your security, you have been automatically logged out.&lt;br /&gt;This is to protect your personal data, in case you are away from your computer.</value>
   </data>
   <data name="For your security, your session will time out in {0} seconds..." xml:space="preserve">
-	<value>For your security, your session will time out in {0} seconds...</value>
+    <value>For your security, your session will time out in {0} seconds...</value>
   </data>
   <data name="Log out" xml:space="preserve">
-	<value>Log out</value>
+    <value>Log out</value>
   </data>
   <data name="Stay logged in" xml:space="preserve">
-	<value>Stay logged in</value>
+    <value>Stay logged in</value>
   </data>
-  <data name="Not you?" xml:space="preserve">
-	<value>Not you?</value>
+  <data name="Timed out" xml:space="preserve">
+    <value>Timed out</value>
   </data>
-  <data name="Password Settings" xml:space="preserve">
-	<value>Password Settings</value>
+  <data name="Forced Culture" xml:space="preserve">
+    <value>Forced Culture (used for formatting dates, numbers etc.)</value>
   </data>
-  <data name="Require passwords to have at least one digit" xml:space="preserve">
-	<value>Require passwords to have at least one digit</value>
-  </data>
-  <data name="Require passwords to have at least one lowercase character" xml:space="preserve">
-	<value>Require passwords to have at least one lowercase character</value>
-  </data>
-  <data name="Require passwords to have at least one uppercase character" xml:space="preserve">
-	<value>Require passwords to have at least one uppercase character</value>
-  </data>
-  <data name="Require passwords to have at least one non-alphanumeric character" xml:space="preserve">
-	<value>Require passwords to have at least one non-alphanumeric character</value>
-  </data>
-  <data name="Maximum invalid password attempts before account is locked" xml:space="preserve">
-	<value>Maximum invalid password attempts before account is locked</value>
-  </data>
-  <data name="Minimum required password length (the system will not allow a number less than seven)" xml:space="preserve">
-	<value>Minimum required password length (the system will not allow a number less than seven)</value>
-  </data>
-  <data name="Number of days until password expires, 0 to disable" xml:space="preserve">
-	<value>Number of days until password expires, 0 to disable</value>
-  </data>
-  <data name="Password expiry alert display (days)" xml:space="preserve">
-	<value>Password expiry alert display (days)</value>
-  </data>
-  <data name="View User Activity" xml:space="preserve">
-	<value>View User Activity</value>
+  <data name="Forced UI Culture" xml:space="preserve">
+    <value>Forced UI Culture (used for text strings, i.e. language)</value>
   </data>
   <data name="Or submit the code provided in the email." xml:space="preserve">
     <value>Or submit the code provided in the email.</value>
@@ -1379,6 +1373,10 @@
     <value>Username is already in use</value>
     <comment>verified - 2025-08-07</comment>
   </data>
+  <data name="View User Activity" xml:space="preserve">
+    <value>View User Activity</value>
+    <comment>verified - 2025-08-07</comment>
+  </data>
   <data name="123.0.0.0,Spamming website" xml:space="preserve">
     <value>123.0.0.0,Spamming website</value>
     <comment>verified - 2025-08-07 - SiteAdmin</comment>
@@ -1411,8 +1409,16 @@
     <value>Allow email for login in addition to username</value>
     <comment>verified - 2025-08-07 - SiteAdmin</comment>
   </data>
+  <data name="Allow user to change email address" xml:space="preserve">
+    <value>Allow user to change email address</value>
+    <comment>verified - 2025-08-07 - SiteAdmin</comment>
+  </data>
   <data name="Are you sure you want to delete this IP address?" xml:space="preserve">
     <value>Are you sure you want to delete this IP address?</value>
+    <comment>verified - 2025-08-07 - SiteAdmin</comment>
+  </data>
+  <data name="Auto logout time (in minutes, leave blank to disable)" xml:space="preserve">
+    <value>Auto logout time (in minutes, leave blank to disable)</value>
     <comment>verified - 2025-08-07 - SiteAdmin</comment>
   </data>
   <data name="Blocked IP" xml:space="preserve">
@@ -1559,8 +1565,16 @@
     <value>Last Updated</value>
     <comment>verified - 2025-08-07 - SiteAdmin</comment>
   </data>
+  <data name="Maximum invalid password attempts before account is locked" xml:space="preserve">
+    <value>Maximum invalid password attempts before account is locked</value>
+    <comment>verified - 2025-08-07 - SiteAdmin</comment>
+  </data>
   <data name="Message" xml:space="preserve">
     <value>Message</value>
+    <comment>verified - 2025-08-07 - SiteAdmin</comment>
+  </data>
+  <data name="Minimum required password length (the system will not allow a number less than seven)" xml:space="preserve">
+    <value>Minimum required password length (the system will not allow a number less than seven)</value>
     <comment>verified - 2025-08-07 - SiteAdmin</comment>
   </data>
   <data name="New Site Administrator" xml:space="preserve">
@@ -1583,12 +1597,24 @@
     <value>Note that this installation is using related sites mode, so any new sites will use the same users and roles as the master site. Therefore the administrative user you are creating here will not really be able to login. The purpose of this user is just as a fail safe measure in case you later change the configuration to not use related sites mode, then you would be able to login with this account.</value>
     <comment>verified - 2025-08-07 - SiteAdmin</comment>
   </data>
+  <data name="Number of days until password expires, 0 to disable" xml:space="preserve">
+    <value>Number of days until password expires, 0 to disable</value>
+    <comment>verified - 2025-08-07 - SiteAdmin</comment>
+  </data>
   <data name="Ok" xml:space="preserve">
     <value>Ok</value>
     <comment>verified - 2025-08-07 - SiteAdmin</comment>
   </data>
   <data name="OpenIdConnect Scopes (comma separated)" xml:space="preserve">
     <value>OpenIdConnect Scopes (comma separated)</value>
+    <comment>verified - 2025-08-07 - SiteAdmin</comment>
+  </data>
+  <data name="Password Settings" xml:space="preserve">
+    <value>Password Settings</value>
+    <comment>verified - 2025-08-07 - SiteAdmin</comment>
+  </data>
+  <data name="Password expiry alert display (days)" xml:space="preserve">
+    <value>Password expiry alert display (days)</value>
     <comment>verified - 2025-08-07 - SiteAdmin</comment>
   </data>
   <data name="Permitted IP" xml:space="preserve">
@@ -1623,12 +1649,32 @@
     <value>Reason</value>
     <comment>verified - 2025-08-07 - SiteAdmin</comment>
   </data>
+  <data name="Registration Permitted Top Level Domain(s)" xml:space="preserve">
+    <value>Registration Permitted Top Level Domain(s)</value>
+    <comment>verified - 2025-08-07 - SiteAdmin</comment>
+  </data>
   <data name="Requested Site Folder Name is not available, please try another value" xml:space="preserve">
     <value>Requested Site Folder Name is not available, please try another value</value>
     <comment>verified - 2025-08-07 - SiteAdmin</comment>
   </data>
   <data name="Require cookie consent?" xml:space="preserve">
     <value>Require cookie consent?</value>
+    <comment>verified - 2025-08-07 - SiteAdmin</comment>
+  </data>
+  <data name="Require passwords to have at least one digit" xml:space="preserve">
+    <value>Require passwords to have at least one digit</value>
+    <comment>verified - 2025-08-07 - SiteAdmin</comment>
+  </data>
+  <data name="Require passwords to have at least one lowercase character" xml:space="preserve">
+    <value>Require passwords to have at least one lowercase character</value>
+    <comment>verified - 2025-08-07 - SiteAdmin</comment>
+  </data>
+  <data name="Require passwords to have at least one non-alphanumeric character" xml:space="preserve">
+    <value>Require passwords to have at least one non-alphanumeric character</value>
+    <comment>verified - 2025-08-07 - SiteAdmin</comment>
+  </data>
+  <data name="Require passwords to have at least one uppercase character" xml:space="preserve">
+    <value>Require passwords to have at least one uppercase character</value>
     <comment>verified - 2025-08-07 - SiteAdmin</comment>
   </data>
   <data name="Require users to configure 2 factor authentication. Recommended ONLY for extreme security needs not for most sites, because a user must install an authenticator app on their phone and take a picture of the QR code using the authenticator app to get an access code. Note this will only be enforced when using https and it won't be enforced for users in Administrators role. Presumably administrators can and will voluntarily enable 2 factor authentication, but we don't want administrators to get locked out." xml:space="preserve">
@@ -1711,6 +1757,10 @@
     <value>Revoke Cookie Consent</value>
     <comment>verified - 2025-01-27 - Shared</comment>
   </data>
+  <data name="Session Expiry" xml:space="preserve">
+    <value>Session Expiry</value>
+    <comment>verified - 2025-01-27 - Shared</comment>
+  </data>
   <data name="Toggle Side Menu" xml:space="preserve">
     <value>Toggle Side Menu</value>
     <comment>verified - 2025-01-27 - Shared</comment>
@@ -1723,8 +1773,24 @@
     <value>New password is required</value>
     <comment>verified - 2025-01-27</comment>
   </data>
+  <data name="Change Email" xml:space="preserve">
+    <value>Change Email</value>
+    <comment>verified - 2025-01-27</comment>
+  </data>
   <data name="Change Email Address" xml:space="preserve">
     <value>Change Email Address</value>
+    <comment>verified - 2025-01-27</comment>
+  </data>
+  <data name="The site is not configured to allow email changing." xml:space="preserve">
+    <value>The site is not configured to allow email changing.</value>
+    <comment>verified - 2025-01-27</comment>
+  </data>
+  <data name="This user account is not currently approved." xml:space="preserve">
+    <value>This user account is not currently approved.</value>
+    <comment>verified - 2025-01-27</comment>
+  </data>
+  <data name="You must re-enter your password to change your email address." xml:space="preserve">
+    <value>You must re-enter your password to change your email address.</value>
     <comment>verified - 2025-01-27</comment>
   </data>
   <data name="Delete Personal Data" xml:space="preserve">
@@ -1769,6 +1835,10 @@
   </data>
   <data name="Email address:" xml:space="preserve">
     <value>Email address:</value>
+    <comment>verified - 2025-01-27</comment>
+  </data>
+  <data name="Not you?" xml:space="preserve">
+    <value>Not you?</value>
     <comment>verified - 2025-01-27</comment>
   </data>
   <data name="Other Personal Data" xml:space="preserve">
