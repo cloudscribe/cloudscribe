@@ -1316,4 +1316,104 @@
     <value>Email or Username</value>
     <comment>verified - 2025-08-07</comment>
   </data>
+  <data name="Password must be different from current password" xml:space="preserve">
+    <value>Password must be different from current password</value>
+    <comment>verified - 2025-08-07</comment>
+  </data>
+  <data name="2 Factor Enabled" xml:space="preserve">
+    <value>2 Factor Enabled</value>
+    <comment>verified - 2025-08-07</comment>
+  </data>
+  <data name="Add Roles" xml:space="preserve">
+    <value>Add Roles</value>
+    <comment>verified - 2025-08-07</comment>
+  </data>
+  <data name="Cancel" xml:space="preserve">
+    <value>Cancel</value>
+    <comment>verified - 2025-08-07</comment>
+  </data>
+  <data name="Confirm Delete" xml:space="preserve">
+    <value>Confirm Delete</value>
+    <comment>verified - 2025-08-07</comment>
+  </data>
+  <data name="Confirm Disable Two Factor Authentication" xml:space="preserve">
+    <value>Confirm Disable Two Factor Authentication</value>
+    <comment>verified - 2025-08-07</comment>
+  </data>
+  <data name="Disable Two Factor Auth." xml:space="preserve">
+    <value>Disable Two Factor Auth.</value>
+    <comment>verified - 2025-08-07</comment>
+  </data>
+  <data name="Email an account activation link to the user" xml:space="preserve">
+    <value>Email an account activation link to the user</value>
+    <comment>verified - 2025-08-07</comment>
+  </data>
+  <data name="Export Users" xml:space="preserve">
+    <value>Export Users</value>
+    <comment>verified - 2025-08-07</comment>
+  </data>
+  <data name="Failed Logins" xml:space="preserve">
+    <value>Failed Logins</value>
+    <comment>verified - 2025-08-07</comment>
+  </data>
+  <data name="Last Login" xml:space="preserve">
+    <value>Last Login</value>
+    <comment>verified - 2025-08-07</comment>
+  </data>
+  <data name="Last Password Change" xml:space="preserve">
+    <value>Last Password Change</value>
+    <comment>verified - 2025-08-07</comment>
+  </data>
+  <data name="Password Reset Email" xml:space="preserve">
+    <value>Password Reset Email</value>
+    <comment>verified - 2025-08-07</comment>
+  </data>
+  <data name="Passwords must have at least one digit ('0'-'9')." xml:space="preserve">
+    <value>Passwords must have at least one digit ('0'-'9').</value>
+    <comment>verified - 2025-08-07</comment>
+  </data>
+  <data name="Passwords must have at least one lowercase character ('a'-'z')." xml:space="preserve">
+    <value>Passwords must have at least one lowercase character ('a'-'z').</value>
+    <comment>verified - 2025-08-07</comment>
+  </data>
+  <data name="Passwords must have at least one non alphanumeric character" xml:space="preserve">
+    <value>Passwords must have at least one non alphanumeric character</value>
+    <comment>verified - 2025-08-07</comment>
+  </data>
+  <data name="Passwords must have at least one uppercase character ('A'-'Z')." xml:space="preserve">
+    <value>Passwords must have at least one uppercase character ('A'-'Z').</value>
+    <comment>verified - 2025-08-07</comment>
+  </data>
+  <data name="Search Users" xml:space="preserve">
+    <value>Search Users</value>
+    <comment>verified - 2025-08-07</comment>
+  </data>
+  <data name="Select" xml:space="preserve">
+    <value>Select</value>
+    <comment>verified - 2025-08-07</comment>
+  </data>
+  <data name="Send" xml:space="preserve">
+    <value>Send</value>
+    <comment>verified - 2025-08-07</comment>
+  </data>
+  <data name="Social Logins" xml:space="preserve">
+    <value>Social Logins</value>
+    <comment>verified - 2025-08-07</comment>
+  </data>
+  <data name="Two Factor Authentication" xml:space="preserve">
+    <value>Two Factor Authentication</value>
+    <comment>verified - 2025-08-07</comment>
+  </data>
+  <data name="User must change password" xml:space="preserve">
+    <value>User must change password</value>
+    <comment>verified - 2025-08-07</comment>
+  </data>
+  <data name="Username is already in use" xml:space="preserve">
+    <value>Username is already in use</value>
+    <comment>verified - 2025-08-07</comment>
+  </data>
+  <data name="View User Activity" xml:space="preserve">
+    <value>View User Activity</value>
+    <comment>verified - 2025-08-07</comment>
+  </data>
 </root>
