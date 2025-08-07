@@ -1832,4 +1832,104 @@
     <value>user avatar</value>
     <comment>verified - 2025-01-27 - Shared</comment>
   </data>
+  <data name="New password is required" xml:space="preserve">
+    <value>New password is required</value>
+    <comment>verified - 2025-01-27</comment>
+  </data>
+  <data name="Change Email" xml:space="preserve">
+    <value>Change Email</value>
+    <comment>verified - 2025-01-27</comment>
+  </data>
+  <data name="Change Email Address" xml:space="preserve">
+    <value>Change Email Address</value>
+    <comment>verified - 2025-01-27</comment>
+  </data>
+  <data name="The site is not configured to allow email changing." xml:space="preserve">
+    <value>The site is not configured to allow email changing.</value>
+    <comment>verified - 2025-01-27</comment>
+  </data>
+  <data name="This user account is not currently approved." xml:space="preserve">
+    <value>This user account is not currently approved.</value>
+    <comment>verified - 2025-01-27</comment>
+  </data>
+  <data name="You must re-enter your password to change your email address." xml:space="preserve">
+    <value>You must re-enter your password to change your email address.</value>
+    <comment>verified - 2025-01-27</comment>
+  </data>
+  <data name="Delete Personal Data" xml:space="preserve">
+    <value>Delete Personal Data</value>
+    <comment>verified - 2025-01-27</comment>
+  </data>
+  <data name="Delete data and close my account" xml:space="preserve">
+    <value>Delete data and close my account</value>
+    <comment>verified - 2025-01-27</comment>
+  </data>
+  <data name="Deleting this data will permanently remove your account, and this cannot be recovered." xml:space="preserve">
+    <value>Deleting this data will permanently remove your account, and this cannot be recovered.</value>
+    <comment>verified - 2025-01-27</comment>
+  </data>
+  <data name="Disabling 2FA does not change the keys used in authenticator apps. If you wish to change the key used in an authenticator app you should {0}reset your authenticator keys{1}." xml:space="preserve">
+    <value>Disabling 2FA does not change the keys used in authenticator apps. If you wish to change the key used in an authenticator app you should {0}reset your authenticator keys{1}.</value>
+    <comment>verified - 2025-01-27</comment>
+  </data>
+  <data name="Before you can Log in, we need to confirm that the email address you provided is valid. We sent an email to the address you provided with a link that you need to click in order to confirm your email address is valid." xml:space="preserve">
+    <value>Before you can Log in, we need to confirm that the email address you provided is valid. We sent an email to the address you provided with a link that you need to click in order to confirm your email address is valid.</value>
+    <comment>verified - 2025-01-27</comment>
+  </data>
+  <data name="An Email Address is Required" xml:space="preserve">
+    <value>An Email Address is Required</value>
+    <comment>verified - 2025-01-27</comment>
+  </data>
+  <data name="Download a two-factor authenticator app like Microsoft Authenticator for {0}Android{1} and {2}iOS{3} or Google Authenticator for {4}Android{5} and {6}iOS{7}." xml:space="preserve">
+    <value>Download a two-factor authenticator app like Microsoft Authenticator for {0}Android{1} and {2}iOS{3} or Google Authenticator for {4}Android{5} and {6}iOS{7}.</value>
+    <comment>verified - 2025-01-27</comment>
+  </data>
+  <data name="Scan the QR Code or enter this key {0} into your two factor authenticator app. Spaces and casing do not matter." xml:space="preserve">
+    <value>Scan the QR Code or enter this key {0} into your two factor authenticator app. Spaces and casing do not matter.</value>
+    <comment>verified - 2025-01-27</comment>
+  </data>
+  <data name="Date Of Birth" xml:space="preserve">
+    <value>Date Of Birth</value>
+    <comment>verified - 2025-01-27</comment>
+  </data>
+  <data name="Clear Image" xml:space="preserve">
+    <value>Clear Image</value>
+    <comment>verified - 2025-01-27</comment>
+  </data>
+  <data name="Don't forget to click the Update button below if you change your profile image." xml:space="preserve">
+    <value>Don't forget to click the Update button below if you change your profile image.</value>
+    <comment>verified - 2025-01-27</comment>
+  </data>
+  <data name="Download" xml:space="preserve">
+    <value>Download</value>
+    <comment>verified - 2025-01-27</comment>
+  </data>
+  <data name="Email address:" xml:space="preserve">
+    <value>Email address:</value>
+    <comment>verified - 2025-01-27</comment>
+  </data>
+  <data name="Not you?" xml:space="preserve">
+    <value>Not you?</value>
+    <comment>verified - 2025-01-27</comment>
+  </data>
+  <data name="Other Personal Data" xml:space="preserve">
+    <value>Other Personal Data</value>
+    <comment>verified - 2025-01-27</comment>
+  </data>
+  <data name="Personal Data" xml:space="preserve">
+    <value>Personal Data</value>
+    <comment>verified - 2025-01-27</comment>
+  </data>
+  <data name="Profile Image/Avatar" xml:space="preserve">
+    <value>Profile Image/Avatar</value>
+    <comment>verified - 2025-01-27</comment>
+  </data>
+  <data name="The administrators of this site require all users to enable 2 factor authentication to meet the security requirements of this site." xml:space="preserve">
+    <value>The administrators of this site require all users to enable 2 factor authentication to meet the security requirements of this site.</value>
+    <comment>verified - 2025-01-27</comment>
+  </data>
+  <data name="Your account contains personal data that you have given us. This page allows you to download or delete that data." xml:space="preserve">
+    <value>Your account contains personal data that you have given us. This page allows you to download or delete that data.</value>
+    <comment>verified - 2025-01-27</comment>
+  </data>
 </root>
