@@ -1808,4 +1808,28 @@
     <value>LDAP Domain\\username (Active Directory using sAMAccountName)</value>
     <comment>verified - 2025-08-07 - SiteAdmin</comment>
   </data>
+  <data name="Learn More" xml:space="preserve">
+    <value>Learn More</value>
+    <comment>verified - 2025-01-27 - Shared</comment>
+  </data>
+  <data name="Log in" xml:space="preserve">
+    <value>Log in</value>
+    <comment>verified - 2025-01-27 - Shared</comment>
+  </data>
+  <data name="Revoke Cookie Consent" xml:space="preserve">
+    <value>Revoke Cookie Consent</value>
+    <comment>verified - 2025-01-27 - Shared</comment>
+  </data>
+  <data name="Session Expiry" xml:space="preserve">
+    <value>Session Expiry</value>
+    <comment>verified - 2025-01-27 - Shared</comment>
+  </data>
+  <data name="Toggle Side Menu" xml:space="preserve">
+    <value>Toggle Side Menu</value>
+    <comment>verified - 2025-01-27 - Shared</comment>
+  </data>
+  <data name="user avatar" xml:space="preserve">
+    <value>user avatar</value>
+    <comment>verified - 2025-01-27 - Shared</comment>
+  </data>
 </root>
