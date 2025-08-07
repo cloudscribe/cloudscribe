@@ -10,8 +10,8 @@
 <h2>@ViewBag.Title</h2>
 <div class="row">
     <div class="col mb-3">
-        <h4>@sr["Your IP Address:"] @ViewBag.UsersIpAddress</h4>
-        <p>@sr["Permitting one or more IP addresses here will automatically block access from all other IP addresses, unless specific blocked IP addresses or ranges have been defined. If an IP address is both blocked and permitted, the permit will take precedence."]</p>
+        <h4>@sr["your_ip_address"] @ViewBag.UsersIpAddress</h4>
+        <p>@sr["permitted_ip_addresses_description"]</p>
     </div>
 </div>
 @{
@@ -24,10 +24,10 @@
     @{
         if (Model.BlockedPermittedIpAddresses.Data.Count == 0)
         {
-            <div class="alert alert-info">@sr["No IP addresses have been permitted."]</div>
+            <div class="alert alert-info">@sr["no_ip_addresses_permitted"]</div>
             <div class="col d-flex">
-                <button name="AddNewRow" class="btn btn-secondary mt-2 me-3" data-bs-toggle="modal" data-bs-target="#AddNewIpAddress">@sr["Add New IP Address"]</button>
-                <button name="BulkUpload" class="btn btn-secondary mt-2" data-bs-toggle="modal" data-bs-target="#BulkUploadIpAddresses">@sr["Bulk Upload IP Addresses"]</button>
+                <button name="AddNewRow" class="btn btn-secondary mt-2 me-3" data-bs-toggle="modal" data-bs-target="#AddNewIpAddress">@sr["add_new_ip_address"]</button>
+                <button name="BulkUpload" class="btn btn-secondary mt-2" data-bs-toggle="modal" data-bs-target="#BulkUploadIpAddresses">@sr["bulk_upload_ip_addresses"]</button>
             </div>
         }
         else
@@ -42,8 +42,8 @@
                 </form>
             </div>
             <div class="col-sm-12 col-md-6 mb-3 d-flex justify-content-end">
-                <button name="AddNewRow" class="btn btn-secondary mt-2 me-3" data-bs-toggle="modal" data-bs-target="#AddNewIpAddress">@sr["Add New IP Address"]</button>
-                <button name="BulkUpload" class="btn btn-secondary mt-2" data-bs-toggle="modal" data-bs-target="#BulkUploadIpAddresses">@sr["Bulk Upload IP Addresses"]</button>
+                <button name="AddNewRow" class="btn btn-secondary mt-2 me-3" data-bs-toggle="modal" data-bs-target="#AddNewIpAddress">@sr["add_new_ip_address"]</button>
+                <button name="BulkUpload" class="btn btn-secondary mt-2" data-bs-toggle="modal" data-bs-target="#BulkUploadIpAddresses">@sr["bulk_upload_ip_addresses"]</button>
             </div>
         }
     }
@@ -66,18 +66,18 @@
                     <label class="form-label" style="display: block;width: 100%;margin-bottom: 0.15rem;">&nbsp;</label>
                 }
                 <div id="@("EditButton" + @safeId)">
-                    <button name="edit" type="button" class="btn btn-primary m-1" data-disabled-text='@sr["Working..."]' data-enabled-text='@sr["Edit"]' onclick="EditItem('@safeId')">@sr["Edit"]</button>
+                    <button name="edit" type="button" class="btn btn-primary m-1" data-disabled-text='@sr["working"]' data-enabled-text='@sr["Edit"]' onclick="EditItem('@safeId')">@sr["Edit"]</button>
                 </div>
                 <div id="@("EditingButtons" + @safeId)" style="display: none;">
-                    <button name="submit" type="submit" class="btn btn-primary m-1" data-disabled-text='@sr["Working..."]' data-enabled-text='@sr["Save"]'>@sr["Save"]</button>
-                    <button name="delete" id="delete" type="button" class="btn btn-danger m-1" data-disabled-text='@sr["Working..."]' data-enabled-text='@sr["Delete"]' data-bs-toggle="modal" data-bs-target="#DeleteConfirmation" data-id="@safeId">@sr["Delete"]</button>
-                    <button name="cancel" type="button" class="btn btn-secondary m-1" data-disabled-text='@sr["Working..."]' data-enabled-text='@sr["Cancel"]' onclick="CancelEditing('@safeId')">@sr["Cancel"]</button>
+                    <button name="submit" type="submit" class="btn btn-primary m-1" data-disabled-text='@sr["working"]' data-enabled-text='@sr["Save"]'>@sr["Save"]</button>
+                    <button name="delete" id="delete" type="button" class="btn btn-danger m-1" data-disabled-text='@sr["working"]' data-enabled-text='@sr["Delete"]' data-bs-toggle="modal" data-bs-target="#DeleteConfirmation" data-id="@safeId">@sr["Delete"]</button>
+                    <button name="cancel" type="button" class="btn btn-secondary m-1" data-disabled-text='@sr["working"]' data-enabled-text='@sr["cancel"]' onclick="CancelEditing('@safeId')">@sr["cancel"]</button>
                 </div>
             </div>
             <div class="col-sm-12 col-md-2 mb-3 align-items-center">
                 @if (i == 0)
                 {
-                    <label asp-for="@Model.BlockedPermittedIpAddresses.Data[i].IpAddress" name="IpAddress" id="IpAddress" class="form-label">@sr["Permitted IP"]</label>
+                    <label asp-for="@Model.BlockedPermittedIpAddresses.Data[i].IpAddress" name="IpAddress" id="IpAddress" class="form-label">@sr["permitted_ip"]</label>
                 }
                 <div class="mb-3" id="errorMessage-@safeId" style="display:none;"></div>
                 <input asp-for="@Model.BlockedPermittedIpAddresses.Data[i].IpAddress" name="IpAddress" id="IpAddress-@safeId" disabled="true" class="form-control ip-address-input" data-safeid="@safeId" />
@@ -89,21 +89,21 @@
             <div class="col-sm-12 col-md-4 mb-3 align-items-center">
                 @if (i == 0)
                 {
-                    <label asp-for="@Model.BlockedPermittedIpAddresses.Data[i].Reason" name="Reason" id="Reason" class="form-label">@sr["Reason"]</label>
+                    <label asp-for="@Model.BlockedPermittedIpAddresses.Data[i].Reason" name="Reason" id="Reason" class="form-label">@sr["reason"]</label>
                 }
                 <input asp-for="@Model.BlockedPermittedIpAddresses.Data[i].Reason" name="Reason" id="Reason" disabled="true" class="form-control" />
             </div>
             <div class="col-sm-12 col-md-2 mb-3 align-items-center">
                 @if (i == 0)
                 {
-                    <label asp-for="@Model.BlockedPermittedIpAddresses.Data[i].CreatedDate" name="CreatedDate" id="CreatedDate" class="form-label">@sr["Created Date"]</label>
+                    <label asp-for="@Model.BlockedPermittedIpAddresses.Data[i].CreatedDate" name="CreatedDate" id="CreatedDate" class="form-label">@sr["created_date"]</label>
                 }
                 <label asp-for="@Model.BlockedPermittedIpAddresses.Data[i].CreatedDate" style="background-color: #e9ecef;opacity: 1;" class="form-control">@Model.BlockedPermittedIpAddresses.Data[i].CreatedDate.ToString(@"dd\/MM\/yyyy")</label>
             </div>
             <div class="col-sm-12 col-md-2 mb-3 align-items-center">
                 @if (i == 0)
                 {
-                    <label asp-for="@Model.BlockedPermittedIpAddresses.Data[i].LastUpdated" name="LastUpdated" id="LastUpdated" class="form-label">@sr["Last Updated"]</label>
+                    <label asp-for="@Model.BlockedPermittedIpAddresses.Data[i].LastUpdated" name="LastUpdated" id="LastUpdated" class="form-label">@sr["last_updated"]</label>
                 }
                 <label asp-for="@Model.BlockedPermittedIpAddresses.Data[i].LastUpdated" style="background-color: #e9ecef;opacity: 1;" class="form-control">@Model.BlockedPermittedIpAddresses.Data[i].LastUpdated.ToString(@"dd\/MM\/yyyy")</label>
             </div>

@@ -3,7 +3,7 @@
 
 <form method="post" class="form-horizontal" role="form" asp-antiforgery="true" data-submit-once="true" asp-controller="SiteAdmin" asp-action="DeletePermittedIpAddress">
     <div class="modal-header">
-        @sr["Delete Confirmation"]
+        @sr["delete_confirmation"]
     </div>
     <div class="modal-body">
         @sr["Are you sure you want to delete this IP address?"]
@@ -11,6 +11,6 @@
     </div>
     <div class="modal-footer">
         <button type="submit" class="btn btn-danger" name="submit">@sr["Delete"]</button>
-        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">@sr["Cancel"]</button>
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">@sr["cancel"]</button>
     </div>
 </form>

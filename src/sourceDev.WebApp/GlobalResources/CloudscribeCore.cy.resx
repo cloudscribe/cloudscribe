@@ -1311,4 +1311,288 @@
     <value>Ychwanegu Rolau</value>
     <comment>verified - 2025-08-06</comment>
   </data>
+  <data name="your_ip_address" xml:space="preserve">
+    <value>Eich Cyfeiriad IP:</value>
+    <comment>verified - 2025-08-06</comment>
+  </data>
+  <data name="blocked_ip_addresses_description" xml:space="preserve">
+    <value>Ychwanegwch un neu fwy o gyfeiriadau IP yma i'w rhwystro rhag cael mynediad i'r safle. Os yw cyfeiriad IP wedi'i rwystro a'i ganiatáu, bydd y caniatâd yn cymryd blaenoriaeth. Nodwch unwaith y caniatëir unrhyw IP yn benodol, mae pob IP arall wedi'i rwystro oni bai bod rhwystrau penodol wedi'u diffinio yma.</value>
+    <comment>verified - 2025-08-06</comment>
+  </data>
+  <data name="no_ip_addresses_blocked" xml:space="preserve">
+    <value>Nid oes cyfeiriadau IP wedi'u rhwystro.</value>
+    <comment>verified - 2025-08-06</comment>
+  </data>
+  <data name="add_new_ip_address" xml:space="preserve">
+    <value>Ychwanegu Cyfeiriad IP Newydd</value>
+    <comment>verified - 2025-08-06</comment>
+  </data>
+  <data name="bulk_upload_ip_addresses" xml:space="preserve">
+    <value>Uwchlwytho Cyfeiriadau IP mewn Swmp</value>
+    <comment>verified - 2025-08-06</comment>
+  </data>
+  <data name="blocked_ip" xml:space="preserve">
+    <value>IP wedi'i Rwystro</value>
+    <comment>verified - 2025-08-06</comment>
+  </data>
+  <data name="reason" xml:space="preserve">
+    <value>Rheswm</value>
+    <comment>verified - 2025-08-06</comment>
+  </data>
+  <data name="created_date" xml:space="preserve">
+    <value>Dyddiad Creu</value>
+    <comment>verified - 2025-08-06</comment>
+  </data>
+  <data name="last_updated" xml:space="preserve">
+    <value>Diweddarwyd Diwethaf</value>
+    <comment>verified - 2025-08-06</comment>
+  </data>
+  <data name="ip_address_type" xml:space="preserve">
+    <value>Math Cyfeiriad IP</value>
+    <comment>verified - 2025-08-06</comment>
+  </data>
+  <data name="are_you_adding_single_or_range" xml:space="preserve">
+    <value>Ydych chi'n ychwanegu IP sengl neu amrediad o gyfeiriadau IP?</value>
+    <comment>verified - 2025-08-06</comment>
+  </data>
+  <data name="single_ip_address" xml:space="preserve">
+    <value>Cyfeiriad IP Sengl</value>
+    <comment>verified - 2025-08-06</comment>
+  </data>
+  <data name="ip_address_range" xml:space="preserve">
+    <value>Amrediad Cyfeiriad IP</value>
+    <comment>verified - 2025-08-06</comment>
+  </data>
+  <data name="next" xml:space="preserve">
+    <value>Nesaf</value>
+    <comment>verified - 2025-08-06</comment>
+  </data>
+  <data name="blocked_ip_address_range" xml:space="preserve">
+    <value>Amrediad Cyfeiriad IP wedi'i Rwystro</value>
+    <comment>verified - 2025-08-06</comment>
+  </data>
+  <data name="blocked_ip_address" xml:space="preserve">
+    <value>Cyfeiriad IP wedi'i Rwystro</value>
+    <comment>verified - 2025-08-06</comment>
+  </data>
+  <data name="following_range_formats_accepted" xml:space="preserve">
+    <value>Derbynnir y fformatau amrediad canlynol:</value>
+    <comment>verified - 2025-08-06</comment>
+  </data>
+  <data name="back" xml:space="preserve">
+    <value>Yn ôl</value>
+    <comment>verified - 2025-08-06</comment>
+  </data>
+  <data name="upload_ip_addresses" xml:space="preserve">
+    <value>Uwchlwytho Cyfeiriadau IP</value>
+    <comment>verified - 2025-08-06</comment>
+  </data>
+  <data name="ok" xml:space="preserve">
+    <value>Iawn</value>
+    <comment>verified - 2025-08-06</comment>
+  </data>
+  <data name="Your CSV file should be comma separated, starting with the IP Address or range, comma, reason for adding (optional), new line, repeat. E.g.:" xml:space="preserve">
+    <value>Dylai eich ffeil CSV fod wedi'i wahanu gan goma, gan ddechrau gyda'r Cyfeiriad IP neu amrediad, coma, rheswm dros ychwanegu (dewisol), llinell newydd, ailadrodd. E.e.:</value>
+    <comment>verified - 2025-08-06</comment>
+  </data>
+  <data name="123.0.0.0,Spamming website" xml:space="preserve">
+    <value>123.0.0.0,Gwefan sbam</value>
+    <comment>verified - 2025-08-06</comment>
+  </data>
+  <data name="124.0.0.0" xml:space="preserve">
+    <value>124.0.0.0</value>
+    <comment>verified - 2025-08-06</comment>
+  </data>
+  <data name="124.1.1.1,Another reason" xml:space="preserve">
+    <value>124.1.1.1,Rheswm arall</value>
+    <comment>verified - 2025-08-06</comment>
+  </data>
+  <data name="delete_confirmation" xml:space="preserve">
+    <value>Cadarnhad Dileu</value>
+    <comment>verified - 2025-08-06</comment>
+  </data>
+  <data name="are_you_sure_delete_ip_address" xml:space="preserve">
+    <value>Ydych chi'n siŵr eich bod am ddileu'r cyfeiriad IP hwn?</value>
+    <comment>verified - 2025-08-06</comment>
+  </data>
+  <data name="create_from_source_site" xml:space="preserve">
+    <value>Creu o Safle Ffynhonnell</value>
+    <comment>verified - 2025-08-06</comment>
+  </data>
+  <data name="choose_site_to_clone_from" xml:space="preserve">
+    <value>Dewiswch safle yr ydych am glonio'r cynnwys ohono</value>
+    <comment>verified - 2025-08-06</comment>
+  </data>
+  <data name="please_select_one" xml:space="preserve">
+    <value>Dewiswch un os gwelwch yn dda</value>
+    <comment>verified - 2025-08-06</comment>
+  </data>
+  <data name="new_site_name" xml:space="preserve">
+    <value>Enw Safle Newydd</value>
+    <comment>verified - 2025-08-06</comment>
+  </data>
+  <data name="new_site_administrator" xml:space="preserve">
+    <value>Gweinyddwr Safle Newydd</value>
+    <comment>verified - 2025-08-06</comment>
+  </data>
+  <data name="note_related_sites_mode" xml:space="preserve">
+    <value>Sylwch bod y gosodiad hwn yn defnyddio modd safleoedd cysylltiedig, felly bydd unrhyw safleoedd newydd yn defnyddio'r un defnyddwyr a rolau â'r prif safle. Felly ni fydd y defnyddiwr gweinyddol rydych chi'n ei greu yma mewn gwirionedd yn gallu mewngofnodi. Diben y defnyddiwr hwn yw dim ond fel mesur diogelwch rhag ofn i chi newid y cyfluniad yn ddiweddarach i beidio â defnyddio modd safleoedd cysylltiedig, yna byddech chi'n gallu mewngofnodi gyda'r cyfrif hwn.</value>
+    <comment>verified - 2025-08-06</comment>
+  </data>
+  <data name="Website" xml:space="preserve">
+    <value>Gwefan</value>
+    <comment>verified - 2025-08-06</comment>
+  </data>
+  <data name="ldap_active_directory_settings" xml:space="preserve">
+    <value>Gosodiadau LDAP / Active Directory</value>
+    <comment>verified - 2025-08-06</comment>
+  </data>
+  <data name="ldap_servers" xml:space="preserve">
+    <value>Gweinydd(ion) LDAP</value>
+    <comment>verified - 2025-08-06</comment>
+  </data>
+  <data name="hostname_comma_separated" xml:space="preserve">
+    <value>Enw gwesteiwr, neu restr wedi'i wahanu gan goma o enwau gwesteiwyr</value>
+    <comment>verified - 2025-08-06</comment>
+  </data>
+  <data name="ldap_server_port" xml:space="preserve">
+    <value>Porth Gweinydd LDAP</value>
+    <comment>verified - 2025-08-06</comment>
+  </data>
+  <data name="usually_389_or_636_ssl" xml:space="preserve">
+    <value>Fel arfer 389, neu 636 os yn defnyddio SSL</value>
+    <comment>verified - 2025-08-06</comment>
+  </data>
+  <data name="ldap_user_dn_format" xml:space="preserve">
+    <value>Fformat DN Defnyddiwr LDAP</value>
+    <comment>verified - 2025-08-06</comment>
+  </data>
+  <data name="username_ldap_domain_ad" xml:space="preserve">
+    <value>enw defnyddiwr@Parth LDAP (Active Directory gan ddefnyddio userPrincipalName)</value>
+    <comment>verified - 2025-08-06</comment>
+  </data>
+  <data name="ldap_domain_username_ad" xml:space="preserve">
+    <value>Parth LDAP\enw defnyddiwr (Active Directory gan ddefnyddio sAMAccountName)</value>
+    <comment>verified - 2025-08-06</comment>
+  </data>
+  <data name="uid_username_base_dn" xml:space="preserve">
+    <value>uid=enw defnyddiwr,DN Sylfaen (Open LDAP / 389 Directory Server)</value>
+    <comment>verified - 2025-08-06</comment>
+  </data>
+  <data name="ldap_domain_base_dn" xml:space="preserve">
+    <value>Parth LDAP / DN Sylfaen</value>
+    <comment>verified - 2025-08-06</comment>
+  </data>
+  <data name="ldap_uses_ssl" xml:space="preserve">
+    <value>Mae LDAP yn defnyddio SSL</value>
+    <comment>verified - 2025-08-06</comment>
+  </data>
+  <data name="test_ldap_authentication" xml:space="preserve">
+    <value>Profi Dilysu LDAP</value>
+    <comment>verified - 2025-08-06</comment>
+  </data>
+  <data name="verify_ldap_settings_message" xml:space="preserve">
+    <value>Dylech wirio bod y gosodiadau LDAP yn ddilys ac yn gweithio drwy brofi gyda enw defnyddiwr a chyfrinair LDAP dilys.</value>
+    <comment>verified - 2025-08-06</comment>
+  </data>
+  <data name="ldap_username" xml:space="preserve">
+    <value>Enw Defnyddiwr LDAP</value>
+    <comment>verified - 2025-08-06</comment>
+  </data>
+  <data name="ldap_password" xml:space="preserve">
+    <value>Cyfrinair LDAP</value>
+    <comment>verified - 2025-08-06</comment>
+  </data>
+  <data name="test" xml:space="preserve">
+    <value>Profi</value>
+    <comment>verified - 2025-08-06</comment>
+  </data>
+  <data name="email_sender" xml:space="preserve">
+    <value>Anfonwr E-bost</value>
+    <comment>verified - 2025-08-06</comment>
+  </data>
+  <data name="email_api_key" xml:space="preserve">
+    <value>Allwedd API E-bost</value>
+    <comment>verified - 2025-08-06</comment>
+  </data>
+  <data name="email_api_endpoint" xml:space="preserve">
+    <value>Pwynt Diwedd API E-bost</value>
+    <comment>verified - 2025-08-06</comment>
+  </data>
+  <data name="smtp_settings" xml:space="preserve">
+    <value>Gosodiadau SMTP</value>
+    <comment>verified - 2025-08-06</comment>
+  </data>
+  <data name="no_ip_addresses_permitted" xml:space="preserve">
+    <value>Nid oes cyfeiriadau IP wedi'u caniatáu.</value>
+    <comment>verified - 2025-08-06</comment>
+  </data>
+  <data name="permitted_ip" xml:space="preserve">
+    <value>IP wedi'i Ganiatáu</value>
+    <comment>verified - 2025-08-06</comment>
+  </data>
+  <data name="permitted_ip_addresses_description" xml:space="preserve">
+    <value>Bydd caniatáu un neu fwy o gyfeiriadau IP yma yn rhwystro mynediad yn awtomatig o bob cyfeiriad IP arall, oni bai bod cyfeiriadau IP neu ystodau wedi'u rhwystro'n benodol wedi'u diffinio. Os yw cyfeiriad IP wedi'i rwystro a'i ganiatáu, bydd y caniatâd yn cymryd blaenoriaeth.</value>
+    <comment>verified - 2025-08-06</comment>
+  </data>
+  <data name="permitted_ip_address_range" xml:space="preserve">
+    <value>Amrediad Cyfeiriad IP wedi'i Ganiatáu</value>
+    <comment>verified - 2025-08-06</comment>
+  </data>
+  <data name="permitted_ip_address" xml:space="preserve">
+    <value>Cyfeiriad IP wedi'i Ganiatáu</value>
+    <comment>verified - 2025-08-06</comment>
+  </data>
+  <data name="cookie_policy_summary" xml:space="preserve">
+    <value>Crynodeb Polisi Cwcis</value>
+    <comment>verified - 2025-08-06</comment>
+  </data>
+  <data name="privacy_policy" xml:space="preserve">
+    <value>Polisi Preifatrwydd</value>
+    <comment>verified - 2025-08-06</comment>
+  </data>
+  <data name="require_cookie_consent" xml:space="preserve">
+    <value>Gofyn am ganiatâd cwcis?</value>
+    <comment>verified - 2025-08-06</comment>
+  </data>
+  <data name="addthis_profileid" xml:space="preserve">
+    <value>ID Proffil AddThis.com</value>
+    <comment>verified - 2025-08-06</comment>
+  </data>
+  <data name="alias_id_colon" xml:space="preserve">
+    <value>ID Alias:</value>
+    <comment>verified - 2025-08-06</comment>
+  </data>
+  <data name="allow_email_login" xml:space="preserve">
+    <value>Caniatáu e-bost ar gyfer mewngofnodi yn ychwanegol at enw defnyddiwr</value>
+    <comment>verified - 2025-08-06</comment>
+  </data>
+  <data name="allow_new_registrations" xml:space="preserve">
+    <value>Caniatáu cofrestriadau newydd</value>
+    <comment>verified - 2025-08-06</comment>
+  </data>
+  <data name="allow_persistent_login" xml:space="preserve">
+    <value>Caniatáu mewngofnodi parhaol</value>
+    <comment>verified - 2025-08-06</comment>
+  </data>
+  <data name="browse_server" xml:space="preserve">
+    <value>Pori Gweinydd</value>
+    <comment>verified - 2025-08-06</comment>
+  </data>
+  <data name="check_system_log_message" xml:space="preserve">
+    <value>Gwiriwch y log system am wallau os nad yw'r neges yn cyrraedd.</value>
+    <comment>verified - 2025-08-06</comment>
+  </data>
+  <data name="clear_logo" xml:space="preserve">
+    <value>Clirio Logo</value>
+    <comment>verified - 2025-08-06</comment>
+  </data>
+  <data name="clone_existing_site" xml:space="preserve">
+    <value>Clonio Safle Presennol</value>
+    <comment>verified - 2025-08-06</comment>
+  </data>
+  <data name="confirm_delete" xml:space="preserve">
+    <value>Cadarnhau Dileu</value>
+    <comment>verified - 2025-08-06</comment>
+  </data>
 </root>

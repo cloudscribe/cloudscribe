@@ -1,0 +1,34 @@
+SiteAdmin String Localization Tracking
+Started: 2025-08-06
+
+Keys Added to ResX Files:
+
+From BlockedIpAddresses.cshtml:
+- your_ip_address
+- blocked_ip_addresses_description  
+- no_ip_addresses_blocked
+- add_new_ip_address
+- bulk_upload_ip_addresses
+- blocked_ip
+- reason
+- created_date
+- last_updated
+
+From BlockedIpAddresses/AddBlockedIpAddressPartial.cshtml:
+- ip_address_type
+- are_you_adding_single_or_range
+- single_ip_address
+- ip_address_range
+- next
+- blocked_ip_address_range
+- blocked_ip_address
+- following_range_formats_accepted
+- back
+
+From BlockedIpAddresses/BulkUploadIpAddressesPartial.cshtml:
+- upload_ip_addresses
+- ok
+- Your CSV file should be comma separated, starting with the IP Address or range, comma, reason for adding (optional), new line, repeat. E.g.:
+- 123.0.0.0,Spamming website
+- 124.0.0.0
+- 124.1.1.1,Another reason

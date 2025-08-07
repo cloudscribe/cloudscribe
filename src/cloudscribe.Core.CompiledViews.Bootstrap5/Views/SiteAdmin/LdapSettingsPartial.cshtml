@@ -4,38 +4,38 @@
 @if (ldap.IsImplemented)
 {
 <fieldset class="border p-2">
-    <legend class="w-auto">@sr["LDAP / Active Directory Settings"]</legend>
+    <legend class="w-auto">@sr["ldap_active_directory_settings"]</legend>
     <div class="mb-3">
-        <label class="form-label" asp-for="LdapServer">@sr["LDAP Server(s)"]</label>
-        <input asp-for="LdapServer" class="form-control" placeholder="@sr["Hostname, or a comma separated list of hostnames"]" />
+        <label class="form-label" asp-for="LdapServer">@sr["ldap_servers"]</label>
+        <input asp-for="LdapServer" class="form-control" placeholder="@sr["hostname_comma_separated"]" />
         <span asp-validation-for="LdapServer" class="invalid-feedback"></span>
     </div>
     <div class="mb-3">
-        <label class="form-label" asp-for="LdapPort">@sr["LDAP Server Port"]</label>
-        <input asp-for="LdapPort" class="form-control" placeholder="@sr["Usually 389, or 636 if using SSL"]" />
+        <label class="form-label" asp-for="LdapPort">@sr["ldap_server_port"]</label>
+        <input asp-for="LdapPort" class="form-control" placeholder="@sr["usually_389_or_636_ssl"]" />
         <span asp-validation-for="LdapPort" class="invalid-feedback"></span>
     </div>
     <input type="hidden" asp-for="LdapRootDN" />
     <input type="hidden" asp-for="LdapUserDNKey" />
     <div class="mb-3">
-        <label class="form-label" asp-for="LdapUserDNFormat">@sr["LDAP User DN Format"]</label>
+        <label class="form-label" asp-for="LdapUserDNFormat">@sr["ldap_user_dn_format"]</label>
         <select asp-for="LdapUserDNFormat" class="form-select">
-            <option value="username@LDAPDOMAIN">@sr["username@LDAP Domain (Active Directory using userPrincipalName)"]</option>
-            <option value="LDAPDOMAIN">@sr["LDAP Domain\\username (Active Directory using sAMAccountName)"]</option>
-            <option value="uid=username,LDAPDOMAIN">@sr["uid=username,Base DN (Open LDAP / 389 Directory Server)"]</option>
+            <option value="username@LDAPDOMAIN">@sr["username_ldap_domain_ad"]</option>
+            <option value="LDAPDOMAIN">@sr["ldap_domain_username_ad"]</option>
+            <option value="uid=username,LDAPDOMAIN">@sr["uid_username_base_dn"]</option>
 
         </select>
         <span asp-validation-for="LdapUserDNKey" class="invalid-feedback"></span>
     </div>
     <div class="mb-3">
-        <label class="form-label" asp-for="LdapDomain">@sr["LDAP Domain / Base DN"]</label>
+        <label class="form-label" asp-for="LdapDomain">@sr["ldap_domain_base_dn"]</label>
         <input asp-for="LdapDomain" class="form-control" />
         <span asp-validation-for="LdapDomain" class="invalid-feedback"></span>
     </div>
     <div class="mb-3">
         <div class="form-check">
             <input asp-for="LdapUseSsl" class="form-check-input" />
-            <label asp-for="LdapUseSsl" class="form-check-label">@sr["LDAP Uses SSL"]</label>
+            <label asp-for="LdapUseSsl" class="form-check-label">@sr["ldap_uses_ssl"]</label>
         </div>
     </div>
 

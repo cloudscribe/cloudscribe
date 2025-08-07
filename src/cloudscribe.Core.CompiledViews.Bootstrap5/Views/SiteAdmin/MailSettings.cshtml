@@ -11,17 +11,17 @@
     <div asp-validation-summary="All" class="text-danger"></div>
     <input asp-for="SiteId" type="hidden" />
     <div class="mb-3">
-        <label class="form-label" asp-for="EmailSenderName">@sr["Email Sender"]</label>
+        <label class="form-label" asp-for="EmailSenderName">@sr["email_sender"]</label>
         <select id="EmailSenderName" asp-for="EmailSenderName" asp-items="Model.AvailableEmailProviders" class="form-control"></select>
         <span asp-validation-for="EmailSenderName" class="invalid-feedback"></span>
     </div>
     <div class="mb-3">
-        <label class="form-label" asp-for="EmailApiKey">@sr["Email Api Key"]</label>
+        <label class="form-label" asp-for="EmailApiKey">@sr["email_api_key"]</label>
         <input asp-for="EmailApiKey" class="form-control" />
         <span asp-validation-for="EmailApiKey" class="invalid-feedback"></span>
     </div>
     <div class="mb-3">
-        <label class="form-label" asp-for="EmailApiEndpoint">@sr["Email Api Endpoint"]</label>
+        <label class="form-label" asp-for="EmailApiEndpoint">@sr["email_api_endpoint"]</label>
         <input asp-for="EmailApiEndpoint" class="form-control" />
         <span asp-validation-for="EmailApiEndpoint" class="invalid-feedback"></span>
     </div>
@@ -36,7 +36,7 @@
         <span asp-validation-for="DefaultEmailFromAlias" class="invalid-feedback"></span>
     </div>
     <fieldset>
-        <legend>@sr["SMTP Settings"]</legend>
+        <legend>@sr["smtp_settings"]</legend>
 
         <div class="mb-3">
             <label class="form-label" asp-for="SmtpUser">@sr["Smtp User"]</label>
@@ -73,7 +73,7 @@
     </fieldset>
 
     <div class="mb-3">
-        <button name="submit" type="submit" class="btn btn-primary" data-disabled-text='@sr["Working..."]' data-enabled-text='@sr["Save"]'>@sr["Save"]</button>
+        <button name="submit" type="submit" class="btn btn-primary" data-disabled-text='@sr["working"]' data-enabled-text='@sr["Save"]'>@sr["Save"]</button>
     </div>
 </form>
 <partial name="TestMessagePartial" model="Model.TestMessage" />

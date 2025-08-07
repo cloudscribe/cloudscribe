@@ -10,12 +10,12 @@
     <form class="mb-4" asp-action="TestLdap" asp-controller="SiteAdmin" asp-area="" data-submit-once="true">
         <input id="ldap-siteid" asp-for="SiteId" type="hidden" />
         <fieldset>
-            <legend>@sr["Test LDAP Authentication"]</legend>
+            <legend>@sr["test_ldap_authentication"]</legend>
         </fieldset>
-        <p>@sr["You should verify that the LDAP settings are valid and working by testing with a valid LDAP username and password."]</p>
+        <p>@sr["verify_ldap_settings_message"]</p>
         <div class="mb-3">
 
-            <label class="form-label" asp-for="LdapTestUsername">@sr["LDAP Username"]</label>
+            <label class="form-label" asp-for="LdapTestUsername">@sr["ldap_username"]</label>
             <div class="input-group">
                 <div class="input-group-prepend">
                     <span class="input-group-text"><i class="@themeSettings.Icons.Username" aria-hidden="true"></i></span>
@@ -26,7 +26,7 @@
         </div>
 
         <div class="mb-3">
-            <label class="form-label" asp-for="LdapTestPassword">@sr["LDAP Password"]</label>
+            <label class="form-label" asp-for="LdapTestPassword">@sr["ldap_password"]</label>
             <div class="input-group">
                 <div class="input-group-prepend">
                     <span class="input-group-text"><i class="@themeSettings.Icons.Password" aria-hidden="true"></i></span>
@@ -36,7 +36,7 @@
             </div>
 
         </div>
-        <button name="submit" type="submit" class="btn btn-primary" data-enabled-text='@sr["Test"]' data-disabled-text='@sr["Working..."]'>@sr["Test"]</button>
+        <button name="submit" type="submit" class="btn btn-primary" data-enabled-text='@sr["test"]' data-disabled-text='@sr["working"]'>@sr["test"]</button>
     </form>
 
 }

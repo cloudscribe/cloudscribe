@@ -49,8 +49,8 @@
                     <div class="row">
                         <div class="col">
                             <div class="mb-3">
-                                <label asp-for="IpAddress" class="form-label" id="addNewIpRange" style="display:none;">@sr["Permitted IP Address Range"]*</label>
-                                <label asp-for="IpAddress" class="form-label" id="addNewSingleIp" style="display:none;">@sr["Permitted IP Address"]*</label>
+                                <label asp-for="IpAddress" class="form-label" id="addNewIpRange" style="display:none;">@sr["permitted_ip_address_range"]*</label>
+                                <label asp-for="IpAddress" class="form-label" id="addNewSingleIp" style="display:none;">@sr["permitted_ip_address"]*</label>
                                 <input asp-for="IpAddress" id="IpAddressNew" class="form-control" />
                             </div>
                         </div>
@@ -58,15 +58,15 @@
                     <div class="row">
                         <div class="col">
                             <div class="mb-3">
-                                <label asp-for="Reason" class="form-label">@sr["Reason"]</label>
+                                <label asp-for="Reason" class="form-label">@sr["reason"]</label>
                                 <input asp-for="Reason" class="form-control" />
                             </div>
                         </div>
                     </div>
                     
                     <button class="btn btn-secondary" type="button" data-bs-toggle="collapse" data-bs-target="#ipAddressType" aria-expanded="false" aria-controls="ipAddressType" id="ipAddressEntryBackButton">Back</button>
-                    <button name="submit" type="submit" id="saveNew" class="btn btn-primary" data-enabled-text='@sr["Save"]' data-disabled-text='@sr["Working..."]' disabled>@sr["Save"]</button>
-                    <button type="button" name="cancel" class="btn btn-secondary" data-bs-dismiss="modal">@sr["Cancel"]</button>
+                    <button name="submit" type="submit" id="saveNew" class="btn btn-primary" data-enabled-text='@sr["Save"]' data-disabled-text='@sr["working"]' disabled>@sr["Save"]</button>
+                    <button type="button" name="cancel" class="btn btn-secondary" data-bs-dismiss="modal">@sr["cancel"]</button>
                 </div>
             </div>
         </div>

@@ -6,28 +6,28 @@
         <div class="accordion-item">
             <h2 class="accordion-header" id="ipType">
                 <button class="accordion-button" type="button" aria-expanded="true">
-                    IP Address Type
+                    @sr["ip_address_type"]
                 </button>
             </h2>
             <div id="ipAddressType" class="accordion-collapse collapse show" aria-labelledby="ipType" data-bs-parent="#addNewIpAddress">
                 <div class="accordion-body">
-                    <p>Are you adding a single IP or a range of IP addresses?</p>
+                    <p>@sr["are_you_adding_single_or_range"]</p>
                     <div class="form-check">
                         <input type="radio" class="form-check-input" id="singleIpAddress" value="singleIpAddress" name="ipTypeRadio" />
-                        <label class="form-check-label" for="singleIpAddress">Single IP Address</label>
+                        <label class="form-check-label" for="singleIpAddress">@sr["single_ip_address"]</label>
                     </div>
                     <div class="form-check">
                         <input type="radio" class="form-check-input" id="ipAddressRange" value="ipAddressRange" name="ipTypeRadio" />
-                        <label class="form-check-label" for="ipAddressRange">IP Address Range</label>
+                        <label class="form-check-label" for="ipAddressRange">@sr["ip_address_range"]</label>
                     </div>
-                    <button class="btn btn-secondary mt-2" type="button" data-bs-toggle="collapse" data-bs-target="#newIp" id="ipTypeNextButton" disabled aria-expanded="false" aria-controls="newIp">Next</button>
+                    <button class="btn btn-secondary mt-2" type="button" data-bs-toggle="collapse" data-bs-target="#newIp" id="ipTypeNextButton" disabled aria-expanded="false" aria-controls="newIp">@sr["next"]</button>
                 </div>
             </div>
         </div>
         <div class="accordion-item">
             <h2 class="accordion-header" id="addIp">
                 <button class="accordion-button" type="button" aria-expanded="true">
-                    Add New IP Address
+                    @sr["add_new_ip_address"]
                 </button>
             </h2>
             <div id="newIp" class="accordion-collapse collapse" aria-labelledby="addIp" data-bs-parent="#addNewIpAddress">
@@ -36,7 +36,7 @@
                     <div class="row mb-3" id="errorMsg" style="display:none;"></div>
                     <div class="row" id="allowedIpRanges" style="display:none;">
                         <div class="col mb-3">
-                            <p>The following range formats are accepted:</p>
+                            <p>@sr["following_range_formats_accepted"]</p>
                             <ul>
                                 <li>192.168.0.0/255.255.255.0</li>
                                 <li>192.168.0.10 - 192.168.10.20</li>
@@ -49,8 +49,8 @@
                     <div class="row">
                         <div class="col">
                             <div class="mb-3">
-                                <label asp-for="IpAddress" class="form-label" id="addNewIpRange" style="display:none;">@sr["Blocked IP Address Range"]*</label>
-                                <label asp-for="IpAddress" class="form-label" id="addNewSingleIp" style="display:none;">@sr["Blocked IP Address"]*</label>
+                                <label asp-for="IpAddress" class="form-label" id="addNewIpRange" style="display:none;">@sr["blocked_ip_address_range"]*</label>
+                                <label asp-for="IpAddress" class="form-label" id="addNewSingleIp" style="display:none;">@sr["blocked_ip_address"]*</label>
                                 <input asp-for="IpAddress" id="IpAddressNew" class="form-control" />
                             </div>
                         </div>
@@ -58,15 +58,15 @@
                     <div class="row">
                         <div class="col">
                             <div class="mb-3">
-                                <label asp-for="Reason" class="form-label">@sr["Reason"]</label>
+                                <label asp-for="Reason" class="form-label">@sr["reason"]</label>
                                 <input asp-for="Reason" class="form-control" />
                             </div>
                         </div>
                     </div>
 
-                    <button class="btn btn-secondary" type="button" data-bs-toggle="collapse" data-bs-target="#ipAddressType" aria-expanded="false" aria-controls="ipAddressType" id="ipAddressEntryBackButton">Back</button>
-                    <button name="submit" type="submit" id="saveNew" class="btn btn-primary" data-enabled-text='@sr["Save"]' data-disabled-text='@sr["Working..."]' disabled>@sr["Save"]</button>
-                    <button type="button" name="cancel" class="btn btn-secondary" data-bs-dismiss="modal">@sr["Cancel"]</button>
+                    <button class="btn btn-secondary" type="button" data-bs-toggle="collapse" data-bs-target="#ipAddressType" aria-expanded="false" aria-controls="ipAddressType" id="ipAddressEntryBackButton">@sr["back"]</button>
+                    <button name="submit" type="submit" id="saveNew" class="btn btn-primary" data-enabled-text='@sr["Save"]' data-disabled-text='@sr["working"]' disabled>@sr["Save"]</button>
+                    <button type="button" name="cancel" class="btn btn-secondary" data-bs-dismiss="modal">@sr["cancel"]</button>
                 </div>
             </div>
         </div>

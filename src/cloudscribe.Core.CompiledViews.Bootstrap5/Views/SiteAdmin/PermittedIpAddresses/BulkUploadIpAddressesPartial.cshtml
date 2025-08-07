@@ -19,11 +19,11 @@
                     <br/>@sr["123.0.0.0,Spamming website"]
                     <br/>@sr["124.0.0.0"]
                     <br/>@sr["124.1.1.1,Another reason"]</p>
-                <label asp-for="BulkIpAddresses" class="form-label">@sr["Upload IP Addresses"]*</label>
+                <label asp-for="BulkIpAddresses" class="form-label">@sr["upload_ip_addresses"]*</label>
                 <input type="file" asp-for="BulkIpAddresses" class="form-control" />
             </div>
         </div>
     </div>
-    <button name="submit" type="submit" class="btn btn-primary" data-enabled-text='@sr["Ok"]' data-disabled-text='@sr["Working..."]'>@sr["Ok"]</button>
-    <button type="button" name="cancel" class="btn btn-secondary" data-bs-dismiss="modal">@sr["Cancel"]</button>
+    <button name="submit" type="submit" class="btn btn-primary" data-enabled-text='@sr["ok"]' data-disabled-text='@sr["working"]'>@sr["ok"]</button>
+    <button type="button" name="cancel" class="btn btn-secondary" data-bs-dismiss="modal">@sr["cancel"]</button>
 </form>

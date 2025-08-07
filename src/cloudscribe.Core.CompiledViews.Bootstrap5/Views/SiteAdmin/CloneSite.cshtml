@@ -24,13 +24,13 @@
 
      <div class="row">
         <div class="mb-3">
-            <label asp-for="CloneFromSiteId" class="form-label">@sr["Create From Source Site"]</label>
+            <label asp-for="CloneFromSiteId" class="form-label">@sr["create_from_source_site"]</label>
             <select asp-for="CloneFromSiteId"
                 asp-items="@(new SelectList(Model.CloneFromSites, nameof(NewSiteFromCloneViewModel.SiteDetails.SiteId), nameof(NewSiteFromCloneViewModel.SiteDetails.SiteDescriptor)))"
                 class="form-select" data-bs-toggle="tooltip" data-bs-placement="top"
-                title='@sr["Choose a site that you wish to clone the content from"]'
+                title='@sr["choose_site_to_clone_from"]'
                 onchange="this.form.submit();">
-                <option value="">@sr["Please select one"]</option>
+                <option value="">@sr["please_select_one"]</option>
             </select>
             <span asp-validation-for="CloneFromSiteId" class="text-danger"></span>
         </div>
@@ -39,7 +39,7 @@
 
 
     <div class="mb-3">
-        <label class="form-label" asp-for="SiteName">@sr["New Site Name"]</label>
+        <label class="form-label" asp-for="SiteName">@sr["new_site_name"]</label>
         <input asp-for="SiteName" class="form-control" />
         <span asp-validation-for="SiteName" class="invalid-feedback"></span>
     </div>
@@ -104,10 +104,10 @@
         <span asp-validation-for="ClosedMessage" class="invalid-feedback"></span>
     </div>*@
 
-    <h2>@sr["New Site Administrator"]</h2>
+    <h2>@sr["new_site_administrator"]</h2>
     @if(multiTenantOptions.UseRelatedSitesMode && multiTenantOptions.RelatedSiteId != Guid.Empty)
     {
-        <p>@sr["Note that this installation is using related sites mode, so any new sites will use the same users and roles as the master site. Therefore the administrative user you are creating here will not really be able to login. The purpose of this user is just as a fail safe measure in case you later change the configuration to not use related sites mode, then you would be able to login with this account."]</p>
+        <p>@sr["note_related_sites_mode"]</p>
     }
     <div class="mb-3">
         <label class="form-label" asp-for="Email">@sr["Email"]</label>
@@ -135,7 +135,7 @@
         <span asp-validation-for="ConfirmPassword" class="invalid-feedback"></span>
     </div>
     <div class="mb-3">
-        <button name="submit" type="submit" class="btn btn-primary" data-disabled-text='@sr["Working..."]' data-enabled-text='@sr["Save"]'>@sr["Save"]</button>
+        <button name="submit" type="submit" class="btn btn-primary" data-disabled-text='@sr["working"]' data-enabled-text='@sr["Save"]'>@sr["Save"]</button>
     </div>
 </form>
 @section SideNav {

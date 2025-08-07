@@ -1633,4 +1633,288 @@
     <value>Add Roles</value>
     <comment>verified - 2025-08-06</comment>
   </data>
+  <data name="your_ip_address" xml:space="preserve">
+    <value>Your IP Address:</value>
+    <comment>verified - 2025-08-06</comment>
+  </data>
+  <data name="blocked_ip_addresses_description" xml:space="preserve">
+    <value>Add one or more IP addresses here to prevent them accessing the site. If an IP address is both blocked and permitted, the permit will take precedence. Note that once any IP is specifically permitted, all other IPs are blocked unless specific blocks are defined here.</value>
+    <comment>verified - 2025-08-06</comment>
+  </data>
+  <data name="no_ip_addresses_blocked" xml:space="preserve">
+    <value>No IP addresses have been blocked.</value>
+    <comment>verified - 2025-08-06</comment>
+  </data>
+  <data name="add_new_ip_address" xml:space="preserve">
+    <value>Add New IP Address</value>
+    <comment>verified - 2025-08-06</comment>
+  </data>
+  <data name="bulk_upload_ip_addresses" xml:space="preserve">
+    <value>Bulk Upload IP Addresses</value>
+    <comment>verified - 2025-08-06</comment>
+  </data>
+  <data name="blocked_ip" xml:space="preserve">
+    <value>Blocked IP</value>
+    <comment>verified - 2025-08-06</comment>
+  </data>
+  <data name="reason" xml:space="preserve">
+    <value>Reason</value>
+    <comment>verified - 2025-08-06</comment>
+  </data>
+  <data name="created_date" xml:space="preserve">
+    <value>Created Date</value>
+    <comment>verified - 2025-08-06</comment>
+  </data>
+  <data name="last_updated" xml:space="preserve">
+    <value>Last Updated</value>
+    <comment>verified - 2025-08-06</comment>
+  </data>
+  <data name="ip_address_type" xml:space="preserve">
+    <value>IP Address Type</value>
+    <comment>verified - 2025-08-06</comment>
+  </data>
+  <data name="are_you_adding_single_or_range" xml:space="preserve">
+    <value>Are you adding a single IP or a range of IP addresses?</value>
+    <comment>verified - 2025-08-06</comment>
+  </data>
+  <data name="single_ip_address" xml:space="preserve">
+    <value>Single IP Address</value>
+    <comment>verified - 2025-08-06</comment>
+  </data>
+  <data name="ip_address_range" xml:space="preserve">
+    <value>IP Address Range</value>
+    <comment>verified - 2025-08-06</comment>
+  </data>
+  <data name="next" xml:space="preserve">
+    <value>Next</value>
+    <comment>verified - 2025-08-06</comment>
+  </data>
+  <data name="blocked_ip_address_range" xml:space="preserve">
+    <value>Blocked IP Address Range</value>
+    <comment>verified - 2025-08-06</comment>
+  </data>
+  <data name="blocked_ip_address" xml:space="preserve">
+    <value>Blocked IP Address</value>
+    <comment>verified - 2025-08-06</comment>
+  </data>
+  <data name="following_range_formats_accepted" xml:space="preserve">
+    <value>The following range formats are accepted:</value>
+    <comment>verified - 2025-08-06</comment>
+  </data>
+  <data name="back" xml:space="preserve">
+    <value>Back</value>
+    <comment>verified - 2025-08-06</comment>
+  </data>
+  <data name="upload_ip_addresses" xml:space="preserve">
+    <value>Upload IP Addresses</value>
+    <comment>verified - 2025-08-06</comment>
+  </data>
+  <data name="ok" xml:space="preserve">
+    <value>Ok</value>
+    <comment>verified - 2025-08-06</comment>
+  </data>
+  <data name="Your CSV file should be comma separated, starting with the IP Address or range, comma, reason for adding (optional), new line, repeat. E.g.:" xml:space="preserve">
+    <value>Your CSV file should be comma separated, starting with the IP Address or range, comma, reason for adding (optional), new line, repeat. E.g.:</value>
+    <comment>verified - 2025-08-06</comment>
+  </data>
+  <data name="123.0.0.0,Spamming website" xml:space="preserve">
+    <value>123.0.0.0,Spamming website</value>
+    <comment>verified - 2025-08-06</comment>
+  </data>
+  <data name="124.0.0.0" xml:space="preserve">
+    <value>124.0.0.0</value>
+    <comment>verified - 2025-08-06</comment>
+  </data>
+  <data name="124.1.1.1,Another reason" xml:space="preserve">
+    <value>124.1.1.1,Another reason</value>
+    <comment>verified - 2025-08-06</comment>
+  </data>
+  <data name="delete_confirmation" xml:space="preserve">
+    <value>Delete Confirmation</value>
+    <comment>verified - 2025-08-06</comment>
+  </data>
+  <data name="are_you_sure_delete_ip_address" xml:space="preserve">
+    <value>Are you sure you want to delete this IP address?</value>
+    <comment>verified - 2025-08-06</comment>
+  </data>
+  <data name="create_from_source_site" xml:space="preserve">
+    <value>Create From Source Site</value>
+    <comment>verified - 2025-08-06</comment>
+  </data>
+  <data name="choose_site_to_clone_from" xml:space="preserve">
+    <value>Choose a site that you wish to clone the content from</value>
+    <comment>verified - 2025-08-06</comment>
+  </data>
+  <data name="please_select_one" xml:space="preserve">
+    <value>Please select one</value>
+    <comment>verified - 2025-08-06</comment>
+  </data>
+  <data name="new_site_name" xml:space="preserve">
+    <value>New Site Name</value>
+    <comment>verified - 2025-08-06</comment>
+  </data>
+  <data name="new_site_administrator" xml:space="preserve">
+    <value>New Site Administrator</value>
+    <comment>verified - 2025-08-06</comment>
+  </data>
+  <data name="note_related_sites_mode" xml:space="preserve">
+    <value>Note that this installation is using related sites mode, so any new sites will use the same users and roles as the master site. Therefore the administrative user you are creating here will not really be able to login. The purpose of this user is just as a fail safe measure in case you later change the configuration to not use related sites mode, then you would be able to login with this account.</value>
+    <comment>verified - 2025-08-06</comment>
+  </data>
+  <data name="Website" xml:space="preserve">
+    <value>Website</value>
+    <comment>verified - 2025-08-06</comment>
+  </data>
+  <data name="ldap_active_directory_settings" xml:space="preserve">
+    <value>LDAP / Active Directory Settings</value>
+    <comment>verified - 2025-08-06</comment>
+  </data>
+  <data name="ldap_servers" xml:space="preserve">
+    <value>LDAP Server(s)</value>
+    <comment>verified - 2025-08-06</comment>
+  </data>
+  <data name="hostname_comma_separated" xml:space="preserve">
+    <value>Hostname, or a comma separated list of hostnames</value>
+    <comment>verified - 2025-08-06</comment>
+  </data>
+  <data name="ldap_server_port" xml:space="preserve">
+    <value>LDAP Server Port</value>
+    <comment>verified - 2025-08-06</comment>
+  </data>
+  <data name="usually_389_or_636_ssl" xml:space="preserve">
+    <value>Usually 389, or 636 if using SSL</value>
+    <comment>verified - 2025-08-06</comment>
+  </data>
+  <data name="ldap_user_dn_format" xml:space="preserve">
+    <value>LDAP User DN Format</value>
+    <comment>verified - 2025-08-06</comment>
+  </data>
+  <data name="username_ldap_domain_ad" xml:space="preserve">
+    <value>username@LDAP Domain (Active Directory using userPrincipalName)</value>
+    <comment>verified - 2025-08-06</comment>
+  </data>
+  <data name="ldap_domain_username_ad" xml:space="preserve">
+    <value>LDAP Domain\username (Active Directory using sAMAccountName)</value>
+    <comment>verified - 2025-08-06</comment>
+  </data>
+  <data name="uid_username_base_dn" xml:space="preserve">
+    <value>uid=username,Base DN (Open LDAP / 389 Directory Server)</value>
+    <comment>verified - 2025-08-06</comment>
+  </data>
+  <data name="ldap_domain_base_dn" xml:space="preserve">
+    <value>LDAP Domain / Base DN</value>
+    <comment>verified - 2025-08-06</comment>
+  </data>
+  <data name="ldap_uses_ssl" xml:space="preserve">
+    <value>LDAP Uses SSL</value>
+    <comment>verified - 2025-08-06</comment>
+  </data>
+  <data name="test_ldap_authentication" xml:space="preserve">
+    <value>Test LDAP Authentication</value>
+    <comment>verified - 2025-08-06</comment>
+  </data>
+  <data name="verify_ldap_settings_message" xml:space="preserve">
+    <value>You should verify that the LDAP settings are valid and working by testing with a valid LDAP username and password.</value>
+    <comment>verified - 2025-08-06</comment>
+  </data>
+  <data name="ldap_username" xml:space="preserve">
+    <value>LDAP Username</value>
+    <comment>verified - 2025-08-06</comment>
+  </data>
+  <data name="ldap_password" xml:space="preserve">
+    <value>LDAP Password</value>
+    <comment>verified - 2025-08-06</comment>
+  </data>
+  <data name="test" xml:space="preserve">
+    <value>Test</value>
+    <comment>verified - 2025-08-06</comment>
+  </data>
+  <data name="email_sender" xml:space="preserve">
+    <value>Email Sender</value>
+    <comment>verified - 2025-08-06</comment>
+  </data>
+  <data name="email_api_key" xml:space="preserve">
+    <value>Email Api Key</value>
+    <comment>verified - 2025-08-06</comment>
+  </data>
+  <data name="email_api_endpoint" xml:space="preserve">
+    <value>Email Api Endpoint</value>
+    <comment>verified - 2025-08-06</comment>
+  </data>
+  <data name="smtp_settings" xml:space="preserve">
+    <value>SMTP Settings</value>
+    <comment>verified - 2025-08-06</comment>
+  </data>
+  <data name="no_ip_addresses_permitted" xml:space="preserve">
+    <value>No IP addresses have been permitted.</value>
+    <comment>verified - 2025-08-06</comment>
+  </data>
+  <data name="permitted_ip" xml:space="preserve">
+    <value>Permitted IP</value>
+    <comment>verified - 2025-08-06</comment>
+  </data>
+  <data name="permitted_ip_addresses_description" xml:space="preserve">
+    <value>Permitting one or more IP addresses here will automatically block access from all other IP addresses, unless specific blocked IP addresses or ranges have been defined. If an IP address is both blocked and permitted, the permit will take precedence.</value>
+    <comment>verified - 2025-08-06</comment>
+  </data>
+  <data name="permitted_ip_address_range" xml:space="preserve">
+    <value>Permitted IP Address Range</value>
+    <comment>verified - 2025-08-06</comment>
+  </data>
+  <data name="permitted_ip_address" xml:space="preserve">
+    <value>Permitted IP Address</value>
+    <comment>verified - 2025-08-06</comment>
+  </data>
+  <data name="cookie_policy_summary" xml:space="preserve">
+    <value>Cookie Policy Summary</value>
+    <comment>verified - 2025-08-06</comment>
+  </data>
+  <data name="privacy_policy" xml:space="preserve">
+    <value>Privacy Policy</value>
+    <comment>verified - 2025-08-06</comment>
+  </data>
+  <data name="require_cookie_consent" xml:space="preserve">
+    <value>Require cookie consent?</value>
+    <comment>verified - 2025-08-06</comment>
+  </data>
+  <data name="addthis_profileid" xml:space="preserve">
+    <value>AddThis.com ProfileId</value>
+    <comment>verified - 2025-08-06</comment>
+  </data>
+  <data name="alias_id_colon" xml:space="preserve">
+    <value>AliasId:</value>
+    <comment>verified - 2025-08-06</comment>
+  </data>
+  <data name="allow_email_login" xml:space="preserve">
+    <value>Allow email for login in addition to username</value>
+    <comment>verified - 2025-08-06</comment>
+  </data>
+  <data name="allow_new_registrations" xml:space="preserve">
+    <value>Allow new registrations</value>
+    <comment>verified - 2025-08-06</comment>
+  </data>
+  <data name="allow_persistent_login" xml:space="preserve">
+    <value>Allow persistent login</value>
+    <comment>verified - 2025-08-06</comment>
+  </data>
+  <data name="browse_server" xml:space="preserve">
+    <value>Browse Server</value>
+    <comment>verified - 2025-08-06</comment>
+  </data>
+  <data name="check_system_log_message" xml:space="preserve">
+    <value>Check the system log for errors if the message does not arrive.</value>
+    <comment>verified - 2025-08-06</comment>
+  </data>
+  <data name="clear_logo" xml:space="preserve">
+    <value>Clear Logo</value>
+    <comment>verified - 2025-08-06</comment>
+  </data>
+  <data name="clone_existing_site" xml:space="preserve">
+    <value>Clone Existing Site</value>
+    <comment>verified - 2025-08-06</comment>
+  </data>
+  <data name="confirm_delete" xml:space="preserve">
+    <value>Confirm Delete</value>
+    <comment>verified - 2025-08-06</comment>
+  </data>
 </root>
