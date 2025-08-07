@@ -1416,4 +1416,396 @@
     <value>View User Activity</value>
     <comment>verified - 2025-08-07</comment>
   </data>
+  <data name="123.0.0.0,Spamming website" xml:space="preserve">
+    <value>123.0.0.0,Spamming website</value>
+    <comment>verified - 2025-08-07 - SiteAdmin</comment>
+  </data>
+  <data name="124.0.0.0" xml:space="preserve">
+    <value>124.0.0.0</value>
+    <comment>verified - 2025-08-07 - SiteAdmin</comment>
+  </data>
+  <data name="124.1.1.1,Another reason" xml:space="preserve">
+    <value>124.1.1.1,Another reason</value>
+    <comment>verified - 2025-08-07 - SiteAdmin</comment>
+  </data>
+  <data name="Add New IP Address" xml:space="preserve">
+    <value>Add New IP Address</value>
+    <comment>verified - 2025-08-07 - SiteAdmin</comment>
+  </data>
+  <data name="Add one or more IP addresses here to prevent them accessing the site. If an IP address is both blocked and permitted, the permit will take precedence. Note that once any IP is specifically permitted, all other IPs are blocked unless specific blocks are defined here." xml:space="preserve">
+    <value>Add one or more IP addresses here to prevent them accessing the site. If an IP address is both blocked and permitted, the permit will take precedence. Note that once any IP is specifically permitted, all other IPs are blocked unless specific blocks are defined here.</value>
+    <comment>verified - 2025-08-07 - SiteAdmin</comment>
+  </data>
+  <data name="AddThis.com ProfileId" xml:space="preserve">
+    <value>AddThis.com ProfileId</value>
+    <comment>verified - 2025-08-07 - SiteAdmin</comment>
+  </data>
+  <data name="AliasId:" xml:space="preserve">
+    <value>AliasId:</value>
+    <comment>verified - 2025-08-07 - SiteAdmin</comment>
+  </data>
+  <data name="Allow email for login in addition to username" xml:space="preserve">
+    <value>Allow email for login in addition to username</value>
+    <comment>verified - 2025-08-07 - SiteAdmin</comment>
+  </data>
+  <data name="Allow new registrations" xml:space="preserve">
+    <value>Allow new registrations</value>
+    <comment>verified - 2025-08-07 - SiteAdmin</comment>
+  </data>
+  <data name="Allow persistent login" xml:space="preserve">
+    <value>Allow persistent login</value>
+    <comment>verified - 2025-08-07 - SiteAdmin</comment>
+  </data>
+  <data name="Allow user to change email address" xml:space="preserve">
+    <value>Allow user to change email address</value>
+    <comment>verified - 2025-08-07 - SiteAdmin</comment>
+  </data>
+  <data name="Are you sure you want to delete this IP address?" xml:space="preserve">
+    <value>Are you sure you want to delete this IP address?</value>
+    <comment>verified - 2025-08-07 - SiteAdmin</comment>
+  </data>
+  <data name="Auto logout time (in minutes, leave blank to disable)" xml:space="preserve">
+    <value>Auto logout time (in minutes, leave blank to disable)</value>
+    <comment>verified - 2025-08-07 - SiteAdmin</comment>
+  </data>
+  <data name="Blocked IP" xml:space="preserve">
+    <value>Blocked IP</value>
+    <comment>verified - 2025-08-07 - SiteAdmin</comment>
+  </data>
+  <data name="Blocked IP Address" xml:space="preserve">
+    <value>Blocked IP Address</value>
+    <comment>verified - 2025-08-07 - SiteAdmin</comment>
+  </data>
+  <data name="Blocked IP Address Range" xml:space="preserve">
+    <value>Blocked IP Address Range</value>
+    <comment>verified - 2025-08-07 - SiteAdmin</comment>
+  </data>
+  <data name="Browse Server" xml:space="preserve">
+    <value>Browse Server</value>
+    <comment>verified - 2025-08-07 - SiteAdmin</comment>
+  </data>
+  <data name="Bulk Upload IP Addresses" xml:space="preserve">
+    <value>Bulk Upload IP Addresses</value>
+    <comment>verified - 2025-08-07 - SiteAdmin</comment>
+  </data>
+  <data name="Check the system log for errors if the message does not arrive." xml:space="preserve">
+    <value>Check the system log for errors if the message does not arrive.</value>
+    <comment>verified - 2025-08-07 - SiteAdmin</comment>
+  </data>
+  <data name="Choose a site that you wish to clone the content from" xml:space="preserve">
+    <value>Choose a site that you wish to clone the content from</value>
+    <comment>verified - 2025-08-07 - SiteAdmin</comment>
+  </data>
+  <data name="Clear Logo" xml:space="preserve">
+    <value>Clear Logo</value>
+    <comment>verified - 2025-08-07 - SiteAdmin</comment>
+  </data>
+  <data name="Clone Existing Site" xml:space="preserve">
+    <value>Clone Existing Site</value>
+    <comment>verified - 2025-08-07 - SiteAdmin</comment>
+  </data>
+  <data name="Cookie Policy Summary" xml:space="preserve">
+    <value>Cookie Policy Summary</value>
+    <comment>verified - 2025-08-07 - SiteAdmin</comment>
+  </data>
+  <data name="Create From Source Site" xml:space="preserve">
+    <value>Create From Source Site</value>
+    <comment>verified - 2025-08-07 - SiteAdmin</comment>
+  </data>
+  <data name="Created Date" xml:space="preserve">
+    <value>Created Date</value>
+    <comment>verified - 2025-08-07 - SiteAdmin</comment>
+  </data>
+  <data name="Danger, be very cautious about the setting below. If you check this box you may not be able to login again. Verify that you have LDAP Authentication working and that at least one Administrator can login using LDAP before disabling database authentication. If you do get locked out the only way to fix it is to change this setting directly in the database." xml:space="preserve">
+    <value>Danger, be very cautious about the setting below. If you check this box you may not be able to login again. Verify that you have LDAP Authentication working and that at least one Administrator can login using LDAP before disabling database authentication. If you do get locked out the only way to fix it is to change this setting directly in the database.</value>
+    <comment>verified - 2025-08-07 - SiteAdmin</comment>
+  </data>
+  <data name="Danger, be very cautious about the setting below. If you want to use Social Authentication only, then you can disable database authentication, but make sure that you as administrator can login with a social account before disabling database authentication. You can easily get yourself locked out with this setting, and the only way to fix it is to change the setting directly in the database." xml:space="preserve">
+    <value>Danger, be very cautious about the setting below. If you want to use Social Authentication only, then you can disable database authentication, but make sure that you as administrator can login with a social account before disabling database authentication. You can easily get yourself locked out with this setting, and the only way to fix it is to change the setting directly in the database.</value>
+    <comment>verified - 2025-08-07 - SiteAdmin</comment>
+  </data>
+  <data name="Delete Confirmation" xml:space="preserve">
+    <value>Delete Confirmation</value>
+    <comment>verified - 2025-08-07 - SiteAdmin</comment>
+  </data>
+  <data name="Disable database authentication" xml:space="preserve">
+    <value>Disable database authentication</value>
+    <comment>verified - 2025-08-07 - SiteAdmin</comment>
+  </data>
+  <data name="Drop file here or click to browse device for file." xml:space="preserve">
+    <value>Drop file here or click to browse device for file.</value>
+    <comment>verified - 2025-08-07 - SiteAdmin</comment>
+  </data>
+  <data name="Email Api Endpoint" xml:space="preserve">
+    <value>Email Api Endpoint</value>
+    <comment>verified - 2025-08-07 - SiteAdmin</comment>
+  </data>
+  <data name="Email Api Key" xml:space="preserve">
+    <value>Email Api Key</value>
+    <comment>verified - 2025-08-07 - SiteAdmin</comment>
+  </data>
+  <data name="Email Sender" xml:space="preserve">
+    <value>Email Sender</value>
+    <comment>verified - 2025-08-07 - SiteAdmin</comment>
+  </data>
+  <data name="Email addresses (csv) to notify of new users" xml:space="preserve">
+    <value>Email addresses (csv) to notify of new users</value>
+    <comment>verified - 2025-08-07 - SiteAdmin</comment>
+  </data>
+  <data name="Enforce one active browser session per user" xml:space="preserve">
+    <value>Enforce one active browser session per user</value>
+    <comment>verified - 2025-08-07 - SiteAdmin</comment>
+  </data>
+  <data name="Footer Content" xml:space="preserve">
+    <value>Footer Content</value>
+    <comment>verified - 2025-08-07 - SiteAdmin</comment>
+  </data>
+  <data name="Google Analytics Tracking Id" xml:space="preserve">
+    <value>Google Analytics Tracking Id</value>
+    <comment>verified - 2025-08-07 - SiteAdmin</comment>
+  </data>
+  <data name="Header Content" xml:space="preserve">
+    <value>Header Content</value>
+    <comment>verified - 2025-08-07 - SiteAdmin</comment>
+  </data>
+  <data name="Hostname, or a comma separated list of hostnames" xml:space="preserve">
+    <value>Hostname, or a comma separated list of hostnames</value>
+    <comment>verified - 2025-08-07 - SiteAdmin</comment>
+  </data>
+  <data name="LDAP / Active Directory Settings" xml:space="preserve">
+    <value>LDAP / Active Directory Settings</value>
+    <comment>verified - 2025-08-07 - SiteAdmin</comment>
+  </data>
+  <data name="LDAP Domain / Base DN" xml:space="preserve">
+    <value>LDAP Domain / Base DN</value>
+    <comment>verified - 2025-08-07 - SiteAdmin</comment>
+  </data>
+  <data name="LDAP Domain\\username (Active Directory using sAMAccountName)" xml:space="preserve">
+    <value>LDAP Domain\\username (Active Directory using sAMAccountName)</value>
+    <comment>verified - 2025-08-07 - SiteAdmin</comment>
+  </data>
+  <data name="LDAP Password" xml:space="preserve">
+    <value>LDAP Password</value>
+    <comment>verified - 2025-08-07 - SiteAdmin</comment>
+  </data>
+  <data name="LDAP Server Port" xml:space="preserve">
+    <value>LDAP Server Port</value>
+    <comment>verified - 2025-08-07 - SiteAdmin</comment>
+  </data>
+  <data name="LDAP Server(s)" xml:space="preserve">
+    <value>LDAP Server(s)</value>
+    <comment>verified - 2025-08-07 - SiteAdmin</comment>
+  </data>
+  <data name="LDAP User DN Format" xml:space="preserve">
+    <value>LDAP User DN Format</value>
+    <comment>verified - 2025-08-07 - SiteAdmin</comment>
+  </data>
+  <data name="LDAP Username" xml:space="preserve">
+    <value>LDAP Username</value>
+    <comment>verified - 2025-08-07 - SiteAdmin</comment>
+  </data>
+  <data name="LDAP Uses SSL" xml:space="preserve">
+    <value>LDAP Uses SSL</value>
+    <comment>verified - 2025-08-07 - SiteAdmin</comment>
+  </data>
+  <data name="Last Updated" xml:space="preserve">
+    <value>Last Updated</value>
+    <comment>verified - 2025-08-07 - SiteAdmin</comment>
+  </data>
+  <data name="Maximum invalid password attempts before account is locked" xml:space="preserve">
+    <value>Maximum invalid password attempts before account is locked</value>
+    <comment>verified - 2025-08-07 - SiteAdmin</comment>
+  </data>
+  <data name="Message" xml:space="preserve">
+    <value>Message</value>
+    <comment>verified - 2025-08-07 - SiteAdmin</comment>
+  </data>
+  <data name="Minimum required password length (the system will not allow a number less than seven)" xml:space="preserve">
+    <value>Minimum required password length (the system will not allow a number less than seven)</value>
+    <comment>verified - 2025-08-07 - SiteAdmin</comment>
+  </data>
+  <data name="New Site Administrator" xml:space="preserve">
+    <value>New Site Administrator</value>
+    <comment>verified - 2025-08-07 - SiteAdmin</comment>
+  </data>
+  <data name="New Site Name" xml:space="preserve">
+    <value>New Site Name</value>
+    <comment>verified - 2025-08-07 - SiteAdmin</comment>
+  </data>
+  <data name="No IP addresses have been blocked." xml:space="preserve">
+    <value>No IP addresses have been blocked.</value>
+    <comment>verified - 2025-08-07 - SiteAdmin</comment>
+  </data>
+  <data name="No IP addresses have been permitted." xml:space="preserve">
+    <value>No IP addresses have been permitted.</value>
+    <comment>verified - 2025-08-07 - SiteAdmin</comment>
+  </data>
+  <data name="Note that this installation is using related sites mode, so any new sites will use the same users and roles as the master site. Therefore the administrative user you are creating here will not really be able to login. The purpose of this user is just as a fail safe measure in case you later change the configuration to not use related sites mode, then you would be able to login with this account." xml:space="preserve">
+    <value>Note that this installation is using related sites mode, so any new sites will use the same users and roles as the master site. Therefore the administrative user you are creating here will not really be able to login. The purpose of this user is just as a fail safe measure in case you later change the configuration to not use related sites mode, then you would be able to login with this account.</value>
+    <comment>verified - 2025-08-07 - SiteAdmin</comment>
+  </data>
+  <data name="Number of days until password expires, 0 to disable" xml:space="preserve">
+    <value>Number of days until password expires, 0 to disable</value>
+    <comment>verified - 2025-08-07 - SiteAdmin</comment>
+  </data>
+  <data name="Ok" xml:space="preserve">
+    <value>Ok</value>
+    <comment>verified - 2025-08-07 - SiteAdmin</comment>
+  </data>
+  <data name="OpenIdConnect Scopes (comma separated)" xml:space="preserve">
+    <value>OpenIdConnect Scopes (comma separated)</value>
+    <comment>verified - 2025-08-07 - SiteAdmin</comment>
+  </data>
+  <data name="Password Settings" xml:space="preserve">
+    <value>Password Settings</value>
+    <comment>verified - 2025-08-07 - SiteAdmin</comment>
+  </data>
+  <data name="Password expiry alert display (days)" xml:space="preserve">
+    <value>Password expiry alert display (days)</value>
+    <comment>verified - 2025-08-07 - SiteAdmin</comment>
+  </data>
+  <data name="Permitted IP" xml:space="preserve">
+    <value>Permitted IP</value>
+    <comment>verified - 2025-08-07 - SiteAdmin</comment>
+  </data>
+  <data name="Permitted IP Address" xml:space="preserve">
+    <value>Permitted IP Address</value>
+    <comment>verified - 2025-08-07 - SiteAdmin</comment>
+  </data>
+  <data name="Permitted IP Address Range" xml:space="preserve">
+    <value>Permitted IP Address Range</value>
+    <comment>verified - 2025-08-07 - SiteAdmin</comment>
+  </data>
+  <data name="Permitting one or more IP addresses here will automatically block access from all other IP addresses, unless specific blocked IP addresses or ranges have been defined. If an IP address is both blocked and permitted, the permit will take precedence." xml:space="preserve">
+    <value>Permitting one or more IP addresses here will automatically block access from all other IP addresses, unless specific blocked IP addresses or ranges have been defined. If an IP address is both blocked and permitted, the permit will take precedence.</value>
+    <comment>verified - 2025-08-07 - SiteAdmin</comment>
+  </data>
+  <data name="Please note that adding header or footer content can mess up the layout of your page and may require CSS changes to accomodate your content." xml:space="preserve">
+    <value>Please note that adding header or footer content can mess up the layout of your page and may require CSS changes to accomodate your content.</value>
+    <comment>verified - 2025-08-07 - SiteAdmin</comment>
+  </data>
+  <data name="Please select one" xml:space="preserve">
+    <value>Please select one</value>
+    <comment>verified - 2025-08-07 - SiteAdmin</comment>
+  </data>
+  <data name="Privacy Policy" xml:space="preserve">
+    <value>Privacy Policy</value>
+    <comment>verified - 2025-08-07 - SiteAdmin</comment>
+  </data>
+  <data name="Reason" xml:space="preserve">
+    <value>Reason</value>
+    <comment>verified - 2025-08-07 - SiteAdmin</comment>
+  </data>
+  <data name="Registration Permitted Top Level Domain(s)" xml:space="preserve">
+    <value>Registration Permitted Top Level Domain(s)</value>
+    <comment>verified - 2025-08-07 - SiteAdmin</comment>
+  </data>
+  <data name="Requested Site Folder Name is not available, please try another value" xml:space="preserve">
+    <value>Requested Site Folder Name is not available, please try another value</value>
+    <comment>verified - 2025-08-07 - SiteAdmin</comment>
+  </data>
+  <data name="Require approval before login" xml:space="preserve">
+    <value>Require approval before login</value>
+    <comment>verified - 2025-08-07 - SiteAdmin</comment>
+  </data>
+  <data name="Require confirmed email" xml:space="preserve">
+    <value>Require confirmed email</value>
+    <comment>verified - 2025-08-07 - SiteAdmin</comment>
+  </data>
+  <data name="Require cookie consent?" xml:space="preserve">
+    <value>Require cookie consent?</value>
+    <comment>verified - 2025-08-07 - SiteAdmin</comment>
+  </data>
+  <data name="Require passwords to have at least one digit" xml:space="preserve">
+    <value>Require passwords to have at least one digit</value>
+    <comment>verified - 2025-08-07 - SiteAdmin</comment>
+  </data>
+  <data name="Require passwords to have at least one lowercase character" xml:space="preserve">
+    <value>Require passwords to have at least one lowercase character</value>
+    <comment>verified - 2025-08-07 - SiteAdmin</comment>
+  </data>
+  <data name="Require passwords to have at least one non-alphanumeric character" xml:space="preserve">
+    <value>Require passwords to have at least one non-alphanumeric character</value>
+    <comment>verified - 2025-08-07 - SiteAdmin</comment>
+  </data>
+  <data name="Require passwords to have at least one uppercase character" xml:space="preserve">
+    <value>Require passwords to have at least one uppercase character</value>
+    <comment>verified - 2025-08-07 - SiteAdmin</comment>
+  </data>
+  <data name="Require users to configure 2 factor authentication. Recommended ONLY for extreme security needs not for most sites, because a user must install an authenticator app on their phone and take a picture of the QR code using the authenticator app to get an access code. Note this will only be enforced when using https and it won't be enforced for users in Administrators role. Presumably administrators can and will voluntarily enable 2 factor authentication, but we don't want administrators to get locked out." xml:space="preserve">
+    <value>Require users to configure 2 factor authentication. Recommended ONLY for extreme security needs not for most sites, because a user must install an authenticator app on their phone and take a picture of the QR code using the authenticator app to get an access code. Note this will only be enforced when using https and it won't be enforced for users in Administrators role. Presumably administrators can and will voluntarily enable 2 factor authentication, but we don't want administrators to get locked out.</value>
+    <comment>verified - 2025-08-07 - SiteAdmin</comment>
+  </data>
+  <data name="SMTP Settings" xml:space="preserve">
+    <value>SMTP Settings</value>
+    <comment>verified - 2025-08-07 - SiteAdmin</comment>
+  </data>
+  <data name="Save Crop" xml:space="preserve">
+    <value>Save Crop</value>
+    <comment>verified - 2025-08-07 - SiteAdmin</comment>
+  </data>
+  <data name="Send Test Message" xml:space="preserve">
+    <value>Send Test Message</value>
+    <comment>verified - 2025-08-07 - SiteAdmin</comment>
+  </data>
+  <data name="Show Site Name Link in Header" xml:space="preserve">
+    <value>Show Site Name Link in Header</value>
+    <comment>verified - 2025-08-07 - SiteAdmin</comment>
+  </data>
+  <data name="Site Logo" xml:space="preserve">
+    <value>Site Logo</value>
+    <comment>verified - 2025-08-07 - SiteAdmin</comment>
+  </data>
+  <data name="Subject" xml:space="preserve">
+    <value>Subject</value>
+    <comment>verified - 2025-08-07 - SiteAdmin</comment>
+  </data>
+  <data name="Template Heading" xml:space="preserve">
+    <value>Template Heading</value>
+    <comment>verified - 2025-08-07 - SiteAdmin</comment>
+  </data>
+  <data name="Test" xml:space="preserve">
+    <value>Test</value>
+    <comment>verified - 2025-08-07 - SiteAdmin</comment>
+  </data>
+  <data name="Test LDAP Authentication" xml:space="preserve">
+    <value>Test LDAP Authentication</value>
+    <comment>verified - 2025-08-07 - SiteAdmin</comment>
+  </data>
+  <data name="To CSV" xml:space="preserve">
+    <value>To CSV</value>
+    <comment>verified - 2025-08-07 - SiteAdmin</comment>
+  </data>
+  <data name="Upload IP Addresses" xml:space="preserve">
+    <value>Upload IP Addresses</value>
+    <comment>verified - 2025-08-07 - SiteAdmin</comment>
+  </data>
+  <data name="Usually 389, or 636 if using SSL" xml:space="preserve">
+    <value>Usually 389, or 636 if using SSL</value>
+    <comment>verified - 2025-08-07 - SiteAdmin</comment>
+  </data>
+  <data name="You should verify that the LDAP settings are valid and working by testing with a valid LDAP username and password." xml:space="preserve">
+    <value>You should verify that the LDAP settings are valid and working by testing with a valid LDAP username and password.</value>
+    <comment>verified - 2025-08-07 - SiteAdmin</comment>
+  </data>
+  <data name="Your CSV file should be comma separated, starting with the IP Address or range, comma, reason for adding (optional), new line, repeat. E.g.:" xml:space="preserve">
+    <value>Your CSV file should be comma separated, starting with the IP Address or range, comma, reason for adding (optional), new line, repeat. E.g.:</value>
+    <comment>verified - 2025-08-07 - SiteAdmin</comment>
+  </data>
+  <data name="Your IP Address:" xml:space="preserve">
+    <value>Your IP Address:</value>
+    <comment>verified - 2025-08-07 - SiteAdmin</comment>
+  </data>
+  <data name="uid=username,Base DN (Open LDAP / 389 Directory Server)" xml:space="preserve">
+    <value>uid=username,Base DN (Open LDAP / 389 Directory Server)</value>
+    <comment>verified - 2025-08-07 - SiteAdmin</comment>
+  </data>
+  <data name="username@LDAP Domain (Active Directory using userPrincipalName)" xml:space="preserve">
+    <value>username@LDAP Domain (Active Directory using userPrincipalName)</value>
+    <comment>verified - 2025-08-07 - SiteAdmin</comment>
+  </data>
+  <data name="LDAP Domain\\username (Active Directory using sAMAccountName)" xml:space="preserve">
+    <value>LDAP Domain\\username (Active Directory using sAMAccountName)</value>
+    <comment>verified - 2025-08-07 - SiteAdmin</comment>
+  </data>
 </root>
