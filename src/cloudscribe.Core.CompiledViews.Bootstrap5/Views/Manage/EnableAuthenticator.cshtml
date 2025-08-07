@@ -9,11 +9,16 @@
     <ol class="list">
         <li>
             <p>
-                @sr["Download a two-factor authenticator app like Microsoft Authenticator for {0}Android{1} and {2}iOS{3} or Google Authenticator for {4}Android{5} and {6}iOS{7}.", "<a href=\"https://go.microsoft.com/fwlink/?Linkid=825072\">", "</a>", "<a href=\"https://go.microsoft.com/fwlink/?Linkid=825073\">", "</a>", "<a href=\"https://play.google.com/store/apps/details?id=com.google.android.apps.authenticator2&amp;hl=en\">", "</a>", "<a href=\"https://itunes.apple.com/us/app/google-authenticator/id388497605?mt=8\">", "</a>"]
+                Download a two-factor authenticator app like Microsoft Authenticator for
+                <a href="https://go.microsoft.com/fwlink/?Linkid=825072">Android</a> and
+                <a href="https://go.microsoft.com/fwlink/?Linkid=825073">iOS</a> or
+                Google Authenticator for
+                <a href="https://play.google.com/store/apps/details?id=com.google.android.apps.authenticator2&amp;hl=en">Android</a> and
+                <a href="https://itunes.apple.com/us/app/google-authenticator/id388497605?mt=8">iOS</a>.
             </p>
         </li>
         <li>
-            <p>@sr["Scan the QR Code or enter this key {0} into your two factor authenticator app. Spaces and casing do not matter.", $"<kbd>{Model.SharedKey}</kbd>"]</p>
+            <p>Scan the QR Code or enter this key <kbd>@Model.SharedKey</kbd> into your two factor authenticator app. Spaces and casing do not matter.</p>
             <div id="qrCode"></div>
             <div id="qrCodeData" data-url="@Html.Raw(Model.AuthenticatorUri)"></div>
         </li>
@@ -43,7 +48,7 @@
     <script src="~/cr/js/jquery.validate.unobtrusive.min.js"></script>
     <script src="~/cr/js/unobtrusive-validation-bs4.min.js"></script>
     <script type="text/javascript" src="~/cr/js/qrcode.min.js"></script>
-    
+
     @* Get rid of inline scripts - jk
         <script type="text/javascript">
         new QRCode(document.getElementById("qrCode"),
