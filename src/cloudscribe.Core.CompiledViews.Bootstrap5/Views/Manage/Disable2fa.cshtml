@@ -11,11 +11,9 @@
         <strong>@sr["This action only disables 2FA."]</strong>
     </p>
     <p>
-        Disabling 2FA does not change the keys used in authenticator apps. If you wish to change the key
-        used in an authenticator app you should <a asp-action="ResetAuthenticatorWarning">
-            reset your
-            authenticator keys.
-        </a>
+        @Html.Raw(string.Format(sr["disable_2fa_warning_message"],
+            "<a asp-action=\"ResetAuthenticatorWarning\">",
+            "</a>"))
     </p>
 </div>
 

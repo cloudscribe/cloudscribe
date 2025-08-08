@@ -1848,5 +1848,17 @@
   <data name="Your account contains personal data that you have given us. This page allows you to download or delete that data." xml:space="preserve">
     <value>Your account contains personal data that you have given us. This page allows you to download or delete that data.</value>
     <comment>verified - 2025-01-27</comment>
-  </data>  
+  </data>
+  <data name="authenticator_download_instructions" xml:space="preserve">
+    <value>Download a two-factor authenticator app like Microsoft Authenticator for {0}Android{1} and {2}iOS{3} or Google Authenticator for {4}Android{5} and {6}iOS{7}.</value>
+    <comment>verified - 2025-01-27 - Uses placeholders for HTML links</comment>
+  </data>
+  <data name="authenticator_scan_qr_instructions" xml:space="preserve">
+    <value>Scan the QR Code or enter this key {0} into your two factor authenticator app. Spaces and casing do not matter.</value>
+    <comment>verified - 2025-01-27 - Uses placeholder for key display</comment>
+  </data>
+  <data name="disable_2fa_warning_message" xml:space="preserve">
+    <value>Disabling 2FA does not change the keys used in authenticator apps. If you wish to change the key used in an authenticator app you should {0}reset your authenticator keys.{1}</value>
+    <comment>verified - 2025-01-27 - Uses placeholders for HTML link</comment>
+  </data>
 </root>
