@@ -9,16 +9,15 @@
     <ol class="list">
         <li>
             <p>
-                Download a two-factor authenticator app like Microsoft Authenticator for
-                <a href="https://go.microsoft.com/fwlink/?Linkid=825072">Android</a> and
-                <a href="https://go.microsoft.com/fwlink/?Linkid=825073">iOS</a> or
-                Google Authenticator for
-                <a href="https://play.google.com/store/apps/details?id=com.google.android.apps.authenticator2&amp;hl=en">Android</a> and
-                <a href="https://itunes.apple.com/us/app/google-authenticator/id388497605?mt=8">iOS</a>.
+                @Html.Raw(string.Format(sr["authenticator_download_instructions"],
+                    "<a href=\"https://go.microsoft.com/fwlink/?Linkid=825072\">", "</a>",
+                    "<a href=\"https://go.microsoft.com/fwlink/?Linkid=825073\">", "</a>",
+                    "<a href=\"https://play.google.com/store/apps/details?id=com.google.android.apps.authenticator2&amp;hl=en\">", "</a>",
+                    "<a href=\"https://itunes.apple.com/us/app/google-authenticator/id388497605?mt=8\">", "</a>"))
             </p>
         </li>
         <li>
-            <p>Scan the QR Code or enter this key <kbd>@Model.SharedKey</kbd> into your two factor authenticator app. Spaces and casing do not matter.</p>
+            <p>@Html.Raw(string.Format(sr["authenticator_scan_qr_instructions"], $"<kbd>{Model.SharedKey}</kbd>"))</p>
             <div id="qrCode"></div>
             <div id="qrCodeData" data-url="@Html.Raw(Model.AuthenticatorUri)"></div>
         </li>
