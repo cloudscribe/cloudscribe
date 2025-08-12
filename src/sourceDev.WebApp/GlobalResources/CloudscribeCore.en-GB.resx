@@ -1861,4 +1861,20 @@
     <value>Disabling 2FA does not change the keys used in authenticator apps. If you wish to change the key used in an authenticator app you should {0}reset your authenticator keys.{1}</value>
     <comment>verified - 2025-01-27 - Uses placeholders for HTML link</comment>
   </data>
+  <data name="Accept" xml:space="preserve">
+    <value>Accept</value>
+    <comment>Cookie consent - Accept button</comment>
+  </data>
+  <data name="Decline" xml:space="preserve">
+    <value>Decline</value>
+    <comment>Cookie consent - Decline button</comment>
+  </data>
+  <data name="Change cookie preferences" xml:space="preserve">
+    <value>Change cookie preferences</value>
+    <comment>Cookie consent - Link to reset preferences</comment>
+  </data>
+  <data name="To ensure you get the best experience, this website uses cookies." xml:space="preserve">
+    <value>To ensure you get the best experience, this website uses cookies.</value>
+    <comment>Cookie consent - Default banner message</comment>
+  </data>
 </root>

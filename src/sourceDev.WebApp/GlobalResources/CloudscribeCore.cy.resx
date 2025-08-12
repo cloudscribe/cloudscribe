@@ -2136,4 +2136,20 @@
     <value>Disabling 2FA does not newid y keys used in authenticator apps. If chi wish i newid y key used in an authenticator app chi should {0}reset eich authenticator keys.{1}</value>
     <comment>Translated to Welsh - 2025-01-27 - Final review</comment>
   </data>
+  <data name="Accept" xml:space="preserve">
+    <value>Derbyn</value>
+    <comment>Cookie consent - Translated to Welsh - 2025-08-12</comment>
+  </data>
+  <data name="Decline" xml:space="preserve">
+    <value>Gwrthod</value>
+    <comment>Cookie consent - Translated to Welsh - 2025-08-12</comment>
+  </data>
+  <data name="Change cookie preferences" xml:space="preserve">
+    <value>Newid dewisiadau cwcis</value>
+    <comment>Cookie consent - Translated to Welsh - 2025-08-12</comment>
+  </data>
+  <data name="To ensure you get the best experience, this website uses cookies." xml:space="preserve">
+    <value>I sicrhau eich bod yn cael y profiad gorau, mae'r wefan hon yn defnyddio cwcis.</value>
+    <comment>Cookie consent - Translated to Welsh - 2025-08-12</comment>
+  </data>
 </root>
