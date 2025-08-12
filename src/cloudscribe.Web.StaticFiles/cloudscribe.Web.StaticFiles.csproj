@@ -24,6 +24,8 @@
     <None Remove="js\bootstrap5.bundle.min.js" />
     <None Remove="js\cloudscribe-autologout-warning.js" />
     <None Remove="js\cloudscribe-autologout-warning.min.js" />
+    <None Remove="js\cloudscribe-cookie-consent-three-state.js" />
+    <None Remove="js\cloudscribe-cookie-consent-three-state.min.js" />
     <None Remove="js\cloudscribe-modaldialog-pagination.js" />
     <None Remove="js\cloudscribe-modaldialog-pagination.min.js" />
     <None Remove="js\emaillist-formbuttons.js" />
@@ -37,6 +39,8 @@
   </ItemGroup>
 
 <ItemGroup>
+    <EmbeddedResource Include="js\cloudscribe-cookie-consent-three-state.js" />
+    <EmbeddedResource Include="js\cloudscribe-cookie-consent-three-state.min.js" />
     <EmbeddedResource Include="js\emaillist-formbuttons.js" />
     <EmbeddedResource Include="js\emaillist-signup-recaptcha-callback.js" />
     <EmbeddedResource Include="js\baguetteBox.min.js" />
