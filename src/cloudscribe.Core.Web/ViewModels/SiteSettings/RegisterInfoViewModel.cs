@@ -15,7 +15,7 @@ namespace cloudscribe.Core.Web.ViewModels.SiteSettings
         public string RegistrationPreamble { get; set; } = string.Empty;
         public string RegistrationAgreement { get; set; } = string.Empty;
 
-        public bool RequireUsersToAcceptChangedAgreement { get; set; } = true;
+        public bool RequireUsersToAcceptChangedAgreement { get; set; } = false;
 
         
     }
