@@ -1058,8 +1058,8 @@
   <data name="Registration Agreement/Terms of Use" xml:space="preserve">
     <value>Registration Agreement/Terms of Use</value>
   </data>
-  <data name="Require Users To Accept Changed Agreement?" xml:space="preserve">
-    <value>Require Users To Accept Changed Agreement?</value>
+  <data name="On saving, force existing users to accept this changed agreement?" xml:space="preserve">
+    <value>On saving, force existing users to accept this changed agreement?</value>
   </data>
   <data name="Send Email Notification" xml:space="preserve">
     <value>Send Email Notification Of Approval</value>

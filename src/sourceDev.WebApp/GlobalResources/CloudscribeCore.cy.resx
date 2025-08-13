@@ -1344,9 +1344,9 @@
     <value>Cofrestriad Agreement/Terms of Use</value>
     <comment>Translated to Welsh - 2025-01-27</comment>
   </data>
-  <data name="Require Users To Accept Changed Agreement?" xml:space="preserve">
-    <value>Require Defnyddwyr To Accept Changed Agreement?</value>
-    <comment>Translated to Welsh - 2025-01-27</comment>
+  <data name="On saving, force existing users to accept this changed agreement?" xml:space="preserve">
+    <value>Wrth gadw, gorfodi defnyddwyr presennol i dderbyn y cytundeb newidiwyd hwn?</value>
+    <comment>Translated to Welsh - 2025-08-13</comment>
   </data>
   <data name="Send Email Notification" xml:space="preserve">
     <value>Send E-bost Notification</value>
