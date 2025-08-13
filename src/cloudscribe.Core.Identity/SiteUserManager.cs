@@ -468,7 +468,15 @@ namespace cloudscribe.Core.Identity
         {
             await _eventHandlers.HandleUserPreDelete(user.SiteId, user.Id).ConfigureAwait(false);
 
-            return await base.DeleteAsync(user);
+            var result = await base.DeleteAsync(user);
+            
+            // Only execute post-delete handlers if deletion was successful
+            if (result.Succeeded)
+            {
+                await _eventHandlers.HandleUserPostDelete(user.SiteId, user.Id).ConfigureAwait(false);
+            }
+
+            return result;
         }
 
         public override async Task<IdentityResult> UpdateAsync(TUser user)
