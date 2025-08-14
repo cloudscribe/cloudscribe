@@ -10,8 +10,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		.a11yrc = .a11yrc
 	EndProjectSection
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "test", "test", "{18722DAD-1668-4F56-A915-F6C65C1A6B74}"
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "cloudscribe.Core.Models", "src\cloudscribe.Core.Models\cloudscribe.Core.Models.csproj", "{88448767-8DE6-4167-838A-71DB859A4644}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "cloudscribe.Core.Identity", "src\cloudscribe.Core.Identity\cloudscribe.Core.Identity.csproj", "{1FCC067D-392A-41CF-B5FD-B01FA0807F81}"
@@ -21,8 +19,6 @@ EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "cloudscribe.Core.Storage.NoDb", "src\cloudscribe.Core.Storage.NoDb\cloudscribe.Core.Storage.NoDb.csproj", "{2CC25CD6-2EAD-4608-95E9-F16A43BE767B}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "cloudscribe.Core.Web", "src\cloudscribe.Core.Web\cloudscribe.Core.Web.csproj", "{E3434F61-5FF1-4DAF-83F0-CDBFA2D8FB47}"
-EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "cloudscribe.Core.Web.Test", "test\cloudscribe.Core.Web.Test\cloudscribe.Core.Web.Test.csproj", "{FA25ABC0-74D2-479A-B8F0-18A6463BBB08}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "cloudscribe.Core.IdentityServerIntegration", "src\cloudscribe.Core.IdentityServerIntegration\cloudscribe.Core.IdentityServerIntegration.csproj", "{061E1C0E-3214-47B7-810F-04DEF8324BF4}"
 EndProject
@@ -59,8 +55,6 @@ EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "cloudscribe.Web.StaticFiles", "src\cloudscribe.Web.StaticFiles\cloudscribe.Web.StaticFiles.csproj", "{7A3CD248-89E5-4FD4-AEA0-8E575968E876}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "cloudscribe.Common.Gdpr", "src\cloudscribe.Common.Gdpr\cloudscribe.Common.Gdpr.csproj", "{BB74EACD-99B4-40B4-9E09-C127252C7BDC}"
-EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "app.IntegrationTests", "test\app.IntegrationTests\app.IntegrationTests.csproj", "{525CCB49-117D-437F-B049-15D26186A321}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "cloudscribe.Core.Storage.EFCore.PostgreSql", "src\cloudscribe.Core.Storage.EFCore.PostgreSql\cloudscribe.Core.Storage.EFCore.PostgreSql.csproj", "{0B1FE93D-46F2-4C0A-A5EE-38C9AD85A368}"
 EndProject
@@ -100,6 +94,12 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "cloudscribe.QueryTool.Servi
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "cloudscribe.QueryTool.Web", "src\cloudscribe.QueryTool.Web\cloudscribe.QueryTool.Web.csproj", "{BDADC452-F40A-44DF-A669-186D18DC0D7A}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{FAC56F62-30B2-4891-84FC-8BC62C94A28B}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "cloudscribe.UnitTests", "tests\cloudscribe.Tests\cloudscribe.UnitTests.csproj", "{CF5E3304-C1E1-481D-8813-63403E9DA872}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "cloudscribe.IntegrationTests", "tests\cloudscribe.IntegrationTests\cloudscribe.IntegrationTests.csproj", "{1BBB150B-86AA-4B08-987A-EB4D5985DD5A}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -126,10 +126,6 @@ Global
 		{E3434F61-5FF1-4DAF-83F0-CDBFA2D8FB47}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{E3434F61-5FF1-4DAF-83F0-CDBFA2D8FB47}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{E3434F61-5FF1-4DAF-83F0-CDBFA2D8FB47}.Release|Any CPU.Build.0 = Release|Any CPU
-		{FA25ABC0-74D2-479A-B8F0-18A6463BBB08}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{FA25ABC0-74D2-479A-B8F0-18A6463BBB08}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{FA25ABC0-74D2-479A-B8F0-18A6463BBB08}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{FA25ABC0-74D2-479A-B8F0-18A6463BBB08}.Release|Any CPU.Build.0 = Release|Any CPU
 		{061E1C0E-3214-47B7-810F-04DEF8324BF4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{061E1C0E-3214-47B7-810F-04DEF8324BF4}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{061E1C0E-3214-47B7-810F-04DEF8324BF4}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -202,10 +198,6 @@ Global
 		{BB74EACD-99B4-40B4-9E09-C127252C7BDC}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{BB74EACD-99B4-40B4-9E09-C127252C7BDC}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{BB74EACD-99B4-40B4-9E09-C127252C7BDC}.Release|Any CPU.Build.0 = Release|Any CPU
-		{525CCB49-117D-437F-B049-15D26186A321}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{525CCB49-117D-437F-B049-15D26186A321}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{525CCB49-117D-437F-B049-15D26186A321}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{525CCB49-117D-437F-B049-15D26186A321}.Release|Any CPU.Build.0 = Release|Any CPU
 		{0B1FE93D-46F2-4C0A-A5EE-38C9AD85A368}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{0B1FE93D-46F2-4C0A-A5EE-38C9AD85A368}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{0B1FE93D-46F2-4C0A-A5EE-38C9AD85A368}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -282,6 +274,14 @@ Global
 		{BDADC452-F40A-44DF-A669-186D18DC0D7A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{BDADC452-F40A-44DF-A669-186D18DC0D7A}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{BDADC452-F40A-44DF-A669-186D18DC0D7A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CF5E3304-C1E1-481D-8813-63403E9DA872}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CF5E3304-C1E1-481D-8813-63403E9DA872}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CF5E3304-C1E1-481D-8813-63403E9DA872}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CF5E3304-C1E1-481D-8813-63403E9DA872}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1BBB150B-86AA-4B08-987A-EB4D5985DD5A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1BBB150B-86AA-4B08-987A-EB4D5985DD5A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1BBB150B-86AA-4B08-987A-EB4D5985DD5A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1BBB150B-86AA-4B08-987A-EB4D5985DD5A}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -292,7 +292,6 @@ Global
 		{1431289E-CB67-47D7-971F-0E38E6AB24EB} = {9C16B47A-B712-4237-B62F-B4403ACF1CD5}
 		{2CC25CD6-2EAD-4608-95E9-F16A43BE767B} = {9C16B47A-B712-4237-B62F-B4403ACF1CD5}
 		{E3434F61-5FF1-4DAF-83F0-CDBFA2D8FB47} = {9C16B47A-B712-4237-B62F-B4403ACF1CD5}
-		{FA25ABC0-74D2-479A-B8F0-18A6463BBB08} = {18722DAD-1668-4F56-A915-F6C65C1A6B74}
 		{061E1C0E-3214-47B7-810F-04DEF8324BF4} = {9C16B47A-B712-4237-B62F-B4403ACF1CD5}
 		{DC4E488D-A128-4023-9570-841EA0258016} = {9C16B47A-B712-4237-B62F-B4403ACF1CD5}
 		{CCC22BD3-7F83-48FB-82CA-938BE238C740} = {9C16B47A-B712-4237-B62F-B4403ACF1CD5}
@@ -311,7 +310,6 @@ Global
 		{40D844B6-EDA4-4A34-82D1-FB99A780ADE8} = {9C16B47A-B712-4237-B62F-B4403ACF1CD5}
 		{7A3CD248-89E5-4FD4-AEA0-8E575968E876} = {9C16B47A-B712-4237-B62F-B4403ACF1CD5}
 		{BB74EACD-99B4-40B4-9E09-C127252C7BDC} = {9C16B47A-B712-4237-B62F-B4403ACF1CD5}
-		{525CCB49-117D-437F-B049-15D26186A321} = {18722DAD-1668-4F56-A915-F6C65C1A6B74}
 		{0B1FE93D-46F2-4C0A-A5EE-38C9AD85A368} = {9C16B47A-B712-4237-B62F-B4403ACF1CD5}
 		{769E46F1-55E9-4FAF-8A13-EFB1CA3EE59C} = {9C16B47A-B712-4237-B62F-B4403ACF1CD5}
 		{12D82ABB-B599-4D5C-8ACB-52F6E0E40863} = {9C16B47A-B712-4237-B62F-B4403ACF1CD5}
@@ -331,6 +329,8 @@ Global
 		{F46AF3DE-5383-4BC8-9E90-884B6D369700} = {9C16B47A-B712-4237-B62F-B4403ACF1CD5}
 		{DC124528-3BF5-4FF4-B60E-28D5DF872C74} = {9C16B47A-B712-4237-B62F-B4403ACF1CD5}
 		{BDADC452-F40A-44DF-A669-186D18DC0D7A} = {9C16B47A-B712-4237-B62F-B4403ACF1CD5}
+		{CF5E3304-C1E1-481D-8813-63403E9DA872} = {FAC56F62-30B2-4891-84FC-8BC62C94A28B}
+		{1BBB150B-86AA-4B08-987A-EB4D5985DD5A} = {FAC56F62-30B2-4891-84FC-8BC62C94A28B}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {3FDA23E8-B945-4001-92C5-F6A70186E3B0}

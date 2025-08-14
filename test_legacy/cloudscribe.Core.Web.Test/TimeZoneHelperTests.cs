@@ -16,6 +16,9 @@ namespace cloudscribe.Core.Web.Test
 {
     public class TimeZoneHelperTests
     {
+        /// ## jk - this is Joe Audette's legacy TimeZoneHelper tests - note they fail and need a rewrite
+
+
         // this test fials in CI on linux/mac because Eastern Standard Time is not a valid timezone on linux
         //[Fact]
         //public void Resolves_Correct_LocalTime()
