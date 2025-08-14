@@ -35,7 +35,7 @@ namespace Microsoft.Extensions.DependencyInjection
                     var useSingletons = false; //this matches what the template delivers
                     services.AddCloudscribeCoreNoDbStorage(useSingletons);
                     services.AddCloudscribeLoggingNoDbStorage(config);
-                    //services.AddCloudscribeKvpNoDbStorage();
+                    //services.AddCloudscribeKvpNoDbStorage(); 
 
                     //if(useMiniProfiler)
                     //{
@@ -75,14 +75,6 @@ namespace Microsoft.Extensions.DependencyInjection
                                 maxConnectionRetryCount: 0,
                                 maxConnectionRetryDelaySeconds: 30,
                                 commandTimeout: 30);
-
-                            break;
-
-                        case "pgsql-old":
-                            var pgConnection = config.GetConnectionString("PostgreSqlEntityFrameworkConnectionString");
-                            services.AddCloudscribeCoreEFStoragePostgreSql(pgConnection);
-                            services.AddCloudscribeLoggingEFStoragePostgreSql(pgConnection);
-                            //services.AddCloudscribeKvpEFStoragePostgreSql(pgConnection);
 
                             break;
 

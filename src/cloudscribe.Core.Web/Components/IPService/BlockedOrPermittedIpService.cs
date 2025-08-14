@@ -13,19 +13,24 @@ namespace cloudscribe.Core.Web.Components.IPService
 {
     public partial class BlockedOrPermittedIpService : IBlockedOrPermittedIpService
     {
-        private readonly List<BlockedPermittedIpAddressesModel> _blockedIps, _permittedIps;
+        private List<BlockedPermittedIpAddressesModel> _blockedIps, _permittedIps, _blockedSingleIps, _permittedSingleIps;
+        private IEnumerable<BlockedPermittedIpAddressesModel> _permittedRanges, _blockedRanges;
         private readonly IipAddressCommands _iipAddressCommands;
         private SiteContext _currentSite;
         private ILogger _log;
         private readonly IMemoryCache _memoryCache;
 
-        public BlockedOrPermittedIpService(SiteContext currentSite, IipAddressCommands iipAddressCommands, ILogger<BlockedOrPermittedIpService> logger, IMemoryCache memoryCache, CancellationToken cancellationToken = default(CancellationToken))
+        public BlockedOrPermittedIpService(SiteContext currentSite, 
+                                           IipAddressCommands iipAddressCommands, 
+                                           ILogger<BlockedOrPermittedIpService> logger, 
+                                           IMemoryCache memoryCache, 
+                                           CancellationToken cancellationToken = default(CancellationToken))
         {
-            _currentSite = currentSite;
-            Guid currentSiteId = _currentSite.Id;
+            _currentSite        = currentSite;
+            Guid currentSiteId  = _currentSite.Id;
             _iipAddressCommands = iipAddressCommands;
-            _log = logger;
-            _memoryCache = memoryCache;
+            _log                = logger;
+            _memoryCache        = memoryCache;
 
             PagedResult<BlockedPermittedIpAddressesModel> blockedIpAddresses = _memoryCache.TryGetValue<PagedResult<BlockedPermittedIpAddressesModel>>("BlockedIpAddresses", out blockedIpAddresses) ? blockedIpAddresses : new PagedResult<BlockedPermittedIpAddressesModel>();
 
@@ -64,82 +69,78 @@ namespace cloudscribe.Core.Web.Components.IPService
             }
         }
 
+
         public bool IsBlockedOrPermittedIp(IPAddress ipAddress, Guid siteId)
         {
-            if (siteId == Guid.Empty)
+            if (siteId == Guid.Empty || ipAddress == null)
             {
+                _log.LogWarning("IsBlockedOrPermittedIp called with null IP address or site ID.");
                 return false;
             }
 
+            if (_blockedIps.Count <= 0 && _permittedIps.Count <= 0)
+            {
+                _log.LogWarning("Blocked or permitted IP lists are not initialized.");
+                return false;
+            }
+
+            _permittedRanges     = _permittedIps.Where(x => x.SiteId == siteId && x.IsRange == true);
+            _blockedRanges       = _blockedIps  .Where(x => x.SiteId == siteId && x.IsRange == true);
+            _blockedSingleIps    = _blockedIps  .Where(x => x.SiteId == siteId && x.IsRange == false).ToList();
+            _permittedSingleIps  = _permittedIps.Where(x => x.SiteId == siteId && x.IsRange == false).ToList();
+
+
+            ////////// permitted always wins out...
+            
+            // individual permitted IPs
+            if (_permittedSingleIps.Any())
+            {
+                bool isPermittedByIndividualRule = _permittedSingleIps.Any(x => x.IpAddress == ipAddress.ToString() && x.SiteId == siteId);
+
+                if (isPermittedByIndividualRule) return false; 
+            }
+
+            // Check permitted ranges
+            if (_permittedRanges.Any())
+            {
+                if(IsIpInAnyRange(ipAddress, _permittedRanges)) return false;
+            }
+
+            //////// Having any permitted rules will always prohibit anything NOT in the permitted rules.
+            //////// So if we were not permitted by the above checks, we're prohibited now.
+            if (_permittedSingleIps.Any() || _permittedRanges.Any()) return true;
+
+
+            //////////////////////
+            // Just worry about blocked now 
             bool isBlocked = false;
 
-            if (_blockedIps == null || _blockedIps.Count <= 0)
+            if (_blockedSingleIps.Count > 0)
             {
-                if (_permittedIps != null && _permittedIps.Count > 0)
-                {
-                    // if there are no blocked ips, but there are permitted ips, then the ip is blocked unless specifically permitted
-                    bool isPermitted = _permittedIps.Any(x => x.IpAddress == ipAddress.ToString() && x.SiteId == siteId && x.IsRange == false);
-
-                    // If blocked, check permitted ranges
-                    if (!isPermitted)
-                    {
-                        IEnumerable<BlockedPermittedIpAddressesModel> permittedRanges = _permittedIps.Where(x => x.SiteId == siteId && x.IsRange == true);
-
-                        foreach (BlockedPermittedIpAddressesModel range in permittedRanges)
-                        {
-                            IPAddressRange ipRange = IPAddressRange.Parse(range.IpAddress);
-
-                            if (ipRange.Contains(ipAddress))
-                            {
-                                isPermitted = true;
-
-                                break;
-                            }
-                        }
-                    }
-
-                    isBlocked = !isPermitted;
-                }
-                else
-                {
-                    // if there are no blocked or permitted ips, then we do not block the ip
-                    isBlocked = false;
-                }
-            } else if (_blockedIps.Any(x => x.IpAddress == ipAddress.ToString() && x.SiteId == siteId && x.IsRange == false))
-            {
-                if (_permittedIps.Any(x => x.IpAddress == ipAddress.ToString() && x.SiteId == siteId && x.IsRange == false))
-                {
-                    //permitted ip specifically mentioned
-                    isBlocked = false;
-                }
-                else
-                {
-                    //blocked ip specifically mentioned
-                    isBlocked = true;
-                }
+                isBlocked = _blockedSingleIps.Any(x => x.IpAddress == ipAddress.ToString() && x.SiteId == siteId);
             }
-            else if (_permittedIps.Any(x => x.IpAddress == ipAddress.ToString() && x.SiteId == siteId && x.IsRange == false))
-            {
-                //permitted ip specifically mentioned
-                isBlocked = false;
-            }
-            else
-            {
-                //check for ranges
-                List<BlockedPermittedIpAddressesModel> blockedIpRanges = _blockedIps.Where(x => x.SiteId == siteId && x.IsRange == true).ToList();
 
-                foreach (var range in blockedIpRanges)
-                {
-                    IPAddressRange ipRange = IPAddressRange.Parse(range.IpAddress);
-
-                    if (ipRange.Contains(ipAddress))
-                    {
-                        isBlocked = true;
-                    }
-                }
+            if (!isBlocked && _blockedRanges.Any())
+            {
+                isBlocked = IsIpInAnyRange(ipAddress, _blockedRanges);
             }
 
             return isBlocked;
+        }
+
+        private bool IsIpInAnyRange(IPAddress ipAddress, IEnumerable<BlockedPermittedIpAddressesModel> ranges)
+        {
+            foreach (var range in ranges)
+            {
+                IPAddressRange ipRange = IPAddressRange.Parse(range.IpAddress);
+
+                if (ipRange.Contains(ipAddress))
+                {
+                    return true;
+                }
+            }
+
+            return false;
         }
     }
 }
