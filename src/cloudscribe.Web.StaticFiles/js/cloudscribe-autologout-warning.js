@@ -133,7 +133,10 @@ function btnManualLogout(event) {
     if (logoutForm) {
         logoutForm.submit();
     }
-    event.preventDefault();
+    // Only prevent default if event exists (when called from click handler)
+    if (event) {
+        event.preventDefault();
+    }
 }
 
 
