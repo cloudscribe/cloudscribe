@@ -108,6 +108,7 @@ function pollForKeepAlive(retrievalFunction, source, timeout, interval) {
 window.addEventListener("DOMContentLoaded", () => {
     
     let dom            = $("#sessionExpiry")[0];
+    let source         = dom.dataset.urlKeepAlive;  
     let target         = dom.dataset.urlTarget;
     let alertThreshold = Number(dom.dataset.alertThreshold)  || 60;
     let interval       = Number(dom.dataset.pollingInterval) || 5;
