@@ -1,7 +1,8 @@
 ﻿$(async function () {
 	let $elems = $('textarea[data-summernote-unobtrusive]').toArray();
-	let dropFileUploadUrl;
+	let dropFileUploadUrl = [];
 	let summernoteNumber = 0;
+    let summerNumber = 0;
 	let summerInst;
 	let dropFileXsrfToken;
     
@@ -11,7 +12,7 @@
 			let configPath = $(elem).data('summernote-config-url');
 			let configToolbarPath = $(elem).data('summernote-toolbar-config-url');
 			let configLanguage = $(elem).data('summernote-config-language');
-			dropFileUploadUrl = $(elem).data('summernote-config-dropfileuploadurl');
+			dropFileUploadUrl.push({ number: summerNumber, url: $(elem).data('summernote-config-dropfileuploadurl') });
 			dropFileXsrfToken = $('[name="__RequestVerificationToken"]:first').val();
 
 			if (summernoteInstance) {
@@ -21,48 +22,34 @@
 			}
 
 			if (configPath) {
-				let configSummernote;
-				let jsonStyles;
-				let summerStyle = [["style"],["font"],["color"],["para"],["table"],["insert"],["view"],["custom"],["serverimagebutton"]];
+				let summernoteConfig;				
+				let toolbarConfig;
 						
 				await getConfigSettings(configPath);
-				await getToolbarSettings(configToolbarPath);
-				await setupToolbar();
+				await getToolbarSettings(configToolbarPath);			
 				await setupSummernote();
 				
 				async function getToolbarSettings(file) {
-					await fetch(file)
+					await fetch(file, { headers: { 'Cache-Control': 'no-cache, no-store' } })
 					.then((response) => response.json())
 					.then((json) => {
-						jsonStyles = json;
+						toolbarConfig = json;
 					});
 				}
 				
 				async function getConfigSettings(file) {
-					await fetch(file)
+					await fetch(file, { headers: { 'Cache-Control': 'no-cache, no-store' } })
 					.then((response) => response.json())
 					.then((json) => {
-						configSummernote = json;
+						summernoteConfig = json;
 
 						if (configLanguage) {
-							configSummernote.lang = configLanguage;
+							summernoteConfig.lang = configLanguage;
 						} else {
-							configSummernote.lang = "en-US";
+							summernoteConfig.lang = "en-US";
 						}
 					});
-				}
-				
-				async function setupToolbar() {
-					summerStyle[0][1] = jsonStyles["style"];
-					summerStyle[1][1] = jsonStyles["font"];
-					summerStyle[2][1] = jsonStyles["color"];
-					summerStyle[3][1] = jsonStyles["para"];
-					summerStyle[4][1] = jsonStyles["table"];
-					summerStyle[5][1] = jsonStyles["insert"];
-					summerStyle[6][1] = jsonStyles["view"];
-					summerStyle[7][1] = jsonStyles["custom"];
-					summerStyle[8][1] = jsonStyles["serverimagebutton"];
-				}
+				}							
 
 				function setupSummernote() {
 					$(summernoteInstance).each(function (i) {
@@ -74,12 +61,30 @@
 									onDropped(files);
 								}
 							},
-							toolbar: summerStyle,
-							...configSummernote
+							toolbar: toolbarConfig,
+							...summernoteConfig
+						});
+
+						$(summernoteInstance).on('summernote.codeview.change', function (we, contents, $editable) {
+
+							if (!$(summernoteInstance).summernote('codeview.isActivated')) {
+								// This is not code view, so ignore
+								return;
+							}
+
+                            // Update the original textarea and editable content
+							var $textarea = $(this);
+							var $editor = $textarea.nextAll('.note-editor.note-frame.card.codeview');
+							var $editablee = $editor.find('.note-editable.card-block');
+							var $originalTextarea = $editor.prev(summernoteInstance);
+
+							$editablee.html(contents);
+							$originalTextarea.val(contents);
 						});
 					});
 				}
 			}
+			summerNumber++;
 		}
 
 		function onDropped(contents) {
@@ -116,14 +121,15 @@
 
 					var formData = new FormData();
 					formData.append("__RequestVerificationToken", dropFileXsrfToken);
-					formData.append(file.name, file);                 
+					formData.append(file.name, file);
+					let summInstance = dropFileUploadUrl.find(x => x.number === summernoteNumber);
 
 					$.ajax({
 						type: "POST",
 						processData: false,
 						contentType: false,
 						dataType: "json",
-						url: dropFileUploadUrl,
+						url: summInstance.url,
 						data: formData,
 						success: uploadSuccess
 					});
@@ -153,7 +159,7 @@
 });
 
 window.handleMessageFromChild = function(message) {
-    var modal = document.querySelectorAll('#serverimage');
+    var modal = document.querySelectorAll('.note-modal');
 
     $("#" + message.instance + "").summernote('insertImage', message.url, message.filename);
 	
@@ -164,3 +170,5 @@ window.handleMessageFromChild = function(message) {
 		$('.modal-backdrop').toggle();
 	}
 };
+
+

@@ -11,6 +11,7 @@ using cloudscribe.Core.Models;
 using cloudscribe.Core.Models.Identity;
 using cloudscribe.Core.Web.Analytics;
 using cloudscribe.Core.Web.Components;
+using cloudscribe.Core.Web.Components.IPService;
 using cloudscribe.Core.Web.Components.Messaging;
 using cloudscribe.Core.Web.Design;
 using cloudscribe.Core.Web.ExtensionPoints;
@@ -179,6 +180,7 @@ namespace Microsoft.Extensions.DependencyInjection
 
             services.TryAddScoped<ILdapSslCertificateValidator, AlwaysValidLdapSslCertificateValidator>();
             services.TryAddScoped<IEmailValidationService, EmailValidationService>();
+            services.TryAddTransient<IBlockedOrPermittedIpService, BlockedOrPermittedIpService>();
 
             return services;
         }

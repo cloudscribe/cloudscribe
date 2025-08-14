@@ -76,15 +76,22 @@
 				var $container = options.dialogsInBody ? $(document.body) : $editor;
 
 				// Build the Body HTML of the Dialog.
-				var body = '<div class="ratio ratio-16x9"><iframe src="/filemanager/filedialog" data-wysiwyg-instance="' + $($container).prev("textarea")[0]["id"] + '" id="instanceId"/></div>';
+				var body = '<div class="ratio ratio-16x9"><iframe src="/filemanager/filedialog?Type=image&ShowModalHeader=false" data-wysiwyg-instance="' + $($container).prev("textarea")[0]["id"] + '" id="instanceId"/></div>';
 
 				this.$dialog = ui.dialog({
 					// Set the title for the Dialog.
-					title: lang.serverimage.dialogTitle,
+					title: lang.serverimage.title,
 					// Set the Body of the Dialog.
 					body: body,
 					callback: function (t) {
-						t.find(".modal-dialog").addClass("modal-xl");
+						// t.find(".modal-dialog").addClass("modal-xl");
+
+						t.find('.modal-dialog')
+							.css({
+								width: '85vw', // 85% of the viewport width
+								maxWidth: '1500px' // remove Bootstrap's default max width
+							});
+
 						$(document.body).find('[aria-label="serverimage"]').attr('id', 'serverimage');
 					},
 				})
