@@ -21,9 +21,11 @@ using Microsoft.AspNetCore.Authentication.OpenIdConnect;
 using Microsoft.AspNetCore.Authentication.Twitter;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Localization;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
@@ -1144,6 +1146,8 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
                 PasswordExpiresDays = selectedSite.PasswordExpiresDays
             };
 
+            model.ShowRestartApplicationButton = UIOptions.ShowRestartApplicationButton;
+            
             return View(model);
         }
 
@@ -1919,5 +1923,14 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
             return RedirectToAction("SiteHostMappings", new { siteId, slp });
         }
 
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        [Authorize(Policy = PolicyConstants.ServerAdminPolicy)]
+        public virtual Task<ActionResult> RestartApplication()
+        {
+            _applicationLifetime.StopApplication();
+
+            return Task.FromResult<ActionResult>(RedirectToAction("Index"));
+        }
     }
 }
