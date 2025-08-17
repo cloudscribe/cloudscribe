@@ -9,6 +9,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\cloudscribe.Versioning\cloudscribe.Versioning.csproj" />
     <None Include="README.md" Pack="true" PackagePath="" />
   </ItemGroup>
 

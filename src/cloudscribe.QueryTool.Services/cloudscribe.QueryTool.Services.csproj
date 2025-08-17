@@ -14,6 +14,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\cloudscribe.QueryTool.EFCore.Common\cloudscribe.QueryTool.EFCore.Common.csproj" />
+    <ProjectReference Include="..\cloudscribe.Versioning\cloudscribe.Versioning.csproj" />
   </ItemGroup>
 
 </Project>
