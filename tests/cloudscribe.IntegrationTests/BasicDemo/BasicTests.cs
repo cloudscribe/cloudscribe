@@ -1,5 +1,4 @@
 ﻿using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.AspNetCore.TestHost;
@@ -65,7 +64,8 @@ namespace cloudscribe.IntegrationTests.BasicDemo
         {
             var client = _factory.WithWebHostBuilder(builder =>
             {
-                // builder.UseEnvironment("Testing");
+                // if we want these to run on the CI server, might need to consider what env to use
+                // builder.UseEnvironment("Development");  
 
                 builder.ConfigureTestServices(services =>
                 {
