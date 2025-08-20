@@ -1,8 +1,8 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <Description>PostgreSql Entity Framework Core implementation of cloudscribe core storage using snake case tables and fields</Description>
-    <Version>8.1.0</Version>
+    <Version>8.4.0</Version>
     <TargetFramework>net8.0</TargetFramework>
     <Authors>Joe Audette</Authors>
     <PackageTags>cloudscribe;commands;queries;ef</PackageTags>
@@ -32,6 +32,9 @@
     <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="8.0.0" />
 
     <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="8.0.0" />
+
+    <!-- pulling up transitive deps to resolve security vulns -->
+    <PackageReference Include="Npgsql" Version="8.0.7" />
   </ItemGroup>
 
 </Project>

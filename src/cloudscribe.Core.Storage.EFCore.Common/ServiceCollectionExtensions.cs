@@ -35,6 +35,8 @@ namespace cloudscribe.Core.Storage.EFCore.Common
 
                 services.AddScoped<IGeoCommands, GeoCommands>();
                 services.AddScoped<IGeoQueries, GeoQueries>();
+
+                services.AddScoped<IipAddressCommands, IpAddressCommands>();
             }
             
             // graphql likes singletons so these are alternate singleton versions
@@ -50,7 +52,6 @@ namespace cloudscribe.Core.Storage.EFCore.Common
 
             services.AddSingleton<ISiteCommandsSingleton, SiteCommands>();
             services.AddSingleton<ISiteQueriesSingleton, SiteQueries>();
-
 
             return services;
         }

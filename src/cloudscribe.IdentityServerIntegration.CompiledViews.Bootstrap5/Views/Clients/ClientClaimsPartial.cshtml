@@ -5,7 +5,7 @@
     var claimIndex = 0;
 }
 
-<h3>@sr["Claims"] </h3>
+<h3 class="mt-3">@sr["Claims"] </h3>
 @{ await Html.RenderPartialAsync("AddClientClaimPartial", Model);}
 @if (Model.Client.Claims.Count > 0)
 {
@@ -24,7 +24,7 @@
             <tr>
                 <td>
                     <button type="button" class="btn btn-danger btn-sm" data-bs-toggle="modal" data-bs-target="@("#confirmDeleteClaimModal" + claimIndex)">
-                        @sr["Delete"]
+                        @sr["Delete Claim"]
                     </button>
                     <form asp-controller="Clients" asp-action="DeleteClientClaim">
                         <input asp-for="SiteId" type="hidden" />
