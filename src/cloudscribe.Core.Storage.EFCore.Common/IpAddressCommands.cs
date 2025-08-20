@@ -35,6 +35,7 @@ namespace cloudscribe.Core.Storage.EFCore.Common
                 {
                     query = dbContext.BlockedPermittedIpAddresses.OrderBy
                                 (x => x.CreatedDate)
+                                .AsSingleQuery()
                                 .Where(s => s.SiteId == siteId && s.IsPermitted == true)
                                 .Skip(offset);
                 }
@@ -42,6 +43,7 @@ namespace cloudscribe.Core.Storage.EFCore.Common
                 {
                     query = dbContext.BlockedPermittedIpAddresses.OrderBy
                                 (x => x.CreatedDate)
+                                .AsSingleQuery()
                                 .Where(s => s.SiteId == siteId && s.IsPermitted == true)
                                 .Skip(offset)
                                 .Take(pageSize);
@@ -190,6 +192,7 @@ namespace cloudscribe.Core.Storage.EFCore.Common
             {
                 query = dbContext.BlockedPermittedIpAddresses.OrderBy
                             (x => x.CreatedDate)
+                            .AsSingleQuery()
                             .Where(s => s.SiteId == siteId && s.IsPermitted == true)
                             .Where(s => s.IpAddress.Contains(searchTerm.ToLower()) || (s.Reason != null && s.Reason.Contains(searchTerm.ToLower())))
                             .Skip(offset)
@@ -235,6 +238,7 @@ namespace cloudscribe.Core.Storage.EFCore.Common
                 {
                     query = dbContext.BlockedPermittedIpAddresses.OrderBy
                                 (x => x.CreatedDate)
+                                .AsSingleQuery()
                                 .Where(s => s.SiteId == siteId && s.IsPermitted == false)
                                 .Skip(offset);
                 }
@@ -242,6 +246,7 @@ namespace cloudscribe.Core.Storage.EFCore.Common
                 {
                     query = dbContext.BlockedPermittedIpAddresses.OrderBy
                                 (x => x.CreatedDate)
+                                .AsSingleQuery()
                                 .Where(s => s.SiteId == siteId && s.IsPermitted == false)
                                 .Skip(offset)
                                 .Take(pageSize);
@@ -390,6 +395,7 @@ namespace cloudscribe.Core.Storage.EFCore.Common
             {
                 query = dbContext.BlockedPermittedIpAddresses.OrderBy
                             (x => x.CreatedDate)
+                            .AsSingleQuery()
                             .Where(s => s.SiteId == siteId && s.IsPermitted == false)
                             .Where(s => s.IpAddress.Contains(searchTerm.ToLower()) || (s.Reason != null && s.Reason.Contains(searchTerm.ToLower())))
                             .Skip(offset)
