@@ -193,7 +193,7 @@ namespace sourceDev.WebApp
             {
                 // This lambda determines whether user consent for non-essential cookies is needed for a given request.
                 options.CheckConsentNeeded = cloudscribe.Core.Identity.SiteCookieConsent.NeedsConsent;
-                options.MinimumSameSitePolicy = SameSiteMode.None;
+                options.MinimumSameSitePolicy = SameSiteMode.Lax;
                 options.ConsentCookie.Name = "cookieconsent_status";
             });
 
@@ -238,8 +238,7 @@ namespace sourceDev.WebApp
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
-                //app.UseDatabaseErrorPage();
-                
+                app.UseForwardedHeaders(); // integration testing
             }
             else
             {

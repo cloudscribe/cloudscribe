@@ -139,13 +139,12 @@
         <partial name="_CookieConsentRevokePartial" />
     </footer>
     @RenderSection("Toolbar", required: false)
+    <script src="@Url.Content("~/cr/js/jquery.min.js")"></script>
     <environment names="Development">
-        <script src="~/js/jquery.js"></script>
         <script src="~/js/bootstrap.bundle.js"></script>
         <script src="~/cr/js/bs4.smartmenus.min.js"></script>
     </environment>
     <environment names="Staging,Production">
-        <script src="~/js/jquery.min.js"></script>
         <script src="~/js/bootstrap.bundle.min.js"></script>
         <script src="~/cr/js/bs4.smartmenus.min.js"></script>
     </environment>

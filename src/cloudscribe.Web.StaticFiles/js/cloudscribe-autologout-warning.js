@@ -108,6 +108,7 @@ function pollForKeepAlive(retrievalFunction, source, timeout, interval) {
 window.addEventListener("DOMContentLoaded", () => {
     
     let dom            = $("#sessionExpiry")[0];
+    let source         = dom.dataset.urlKeepAlive;  
     let target         = dom.dataset.urlTarget;
     let alertThreshold = Number(dom.dataset.alertThreshold)  || 60;
     let interval       = Number(dom.dataset.pollingInterval) || 5;
@@ -132,7 +133,10 @@ function btnManualLogout(event) {
     if (logoutForm) {
         logoutForm.submit();
     }
-    event.preventDefault();
+    // Only prevent default if event exists (when called from click handler)
+    if (event) {
+        event.preventDefault();
+    }
 }
 
 
