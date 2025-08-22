@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <Description>asp.net identity implementation for cloudscribe web application foundation</Description>
-    <Version>8.4.0</Version>
+    <Version>8.5.0</Version>
     <Authors>Joe Audette</Authors>
     <TargetFramework>net8.0</TargetFramework>
     <PackageTags>cloudscribe;identity</PackageTags>
@@ -32,7 +32,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="cloudscribe.Pagination.Models" Version="8.4.0" />
+    <PackageReference Include="cloudscribe.Pagination.Models" Version="8.5.0" />
     <PackageReference Include="IdentityModel" Version="4.0.0" />
     
 
