@@ -1116,7 +1116,6 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
         public virtual async Task<ActionResult> ApproveUserAccount(
             Guid siteId,
             Guid userId,
-            bool sendApprovalEmail,
             string returnUrl = null)
         {
             var selectedSite = await SiteManager.GetSiteForDataOperations(siteId);
@@ -1124,7 +1123,7 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
             if (selectedSite != null)
             {
                 var user = await UserManager.Fetch(selectedSite.Id, userId);
-                if(user != null)
+                if (user != null)
                 {
                     user.AccountApproved = true;
                     await UserManager.UpdateAsync((SiteUser)user);
@@ -1132,18 +1131,15 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
                     this.AlertSuccess(string.Format(StringLocalizer["user account for {0} was successfully approved."],
                             user.DisplayName), true);
 
-                    if(sendApprovalEmail)
-                    {
-                        var loginUrl = Url.Action("Login", "Account",
-                            null,
-                            protocol: HttpContext.Request.Scheme);
+                    var loginUrl = Url.Action("Login", "Account",
+                        null,
+                        protocol: HttpContext.Request.Scheme);
 
-                        await EmailSender.SendAccountApprovalNotificationAsync(
-                            selectedSite,
-                            user.Email,
-                            StringLocalizer["Account Approved"],
-                            loginUrl);
-                    }
+                    await EmailSender.SendAccountApprovalNotificationAsync(
+                        selectedSite,
+                        user.Email,
+                        StringLocalizer["Account Approved"],
+                        loginUrl);
                 }
             }
 
