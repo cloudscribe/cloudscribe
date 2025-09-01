@@ -1,10 +1,19 @@
-﻿
-function doCountdownPromise(secondsLeft, delay, alertThreshold, alerted) {
+﻿function doCountdownPromise(secondsLeft, delay, alertThreshold, alerted) {
+    delay = delay * 1000 || 10000;  // work in ms
+    let startingTime = new Date();
 
-    delay = delay * 1000 || 10000;  // work in ms for setTimeout
-    var startingTime = new Date();
-    var checkTimer = function (resolve, reject) {
-    var secondsremaining = Number(secondsLeft) - (Number(new Date() - Number(startingTime)) / 1000.0);
+    const resetTimer = () => {
+        startingTime = new Date();  // 🔁 Reset countdown
+        console.log("Session timer reset due to user activity");
+    };
+
+    // Add activity listeners to reset the timer
+    ["mousemove", "keydown", "touchstart", "scroll"].forEach(event =>
+        document.addEventListener(event, resetTimer)
+    );
+
+    const checkTimer = function (resolve, reject) {
+        let secondsremaining = secondsLeft - ((new Date() - startingTime) / 1000.0);
 
         if (alertThreshold > 0 && secondsremaining > alertThreshold) {
             $("#sessionExpiryWarning").modal("hide");
@@ -14,136 +23,150 @@ function doCountdownPromise(secondsLeft, delay, alertThreshold, alerted) {
         if (alertThreshold > 0 && secondsremaining <= alertThreshold) {
             let dom = $("#sessionExpiryWarning");
 
-            if (dom != null && parseInt(secondsremaining) >=0) {
+            if (dom && parseInt(secondsremaining) >= 0) {
                 $("#sessionExpiryWarningSeconds").text(parseInt(secondsremaining));
             }
 
             if (!alerted) {
-                var backupDelay = delay;
+                let backupDelay = delay;
                 delay = 1000;
-                $("#sessionExpiryWarning").modal("show")
+                dom.modal("show");
 
-                $("#sessionKeepAlive").off();  // prevent binding this multiple times
+                $("#sessionKeepAlive").off().click(() => {
+                    let source = dom[0].dataset.urlKeepAlive + "?t=" + Math.random();
 
-                $("#sessionKeepAlive").click(() => {
-                    let domKeepAlive = $("#sessionExpiryWarning")[0];
-                    let source = domKeepAlive.dataset.urlKeepAlive;
-                    source = source + "?t=" + Math.random();  // prevent cache
-
-                    // for reasons unknown the server often fails to refresh the cookie on first polling request 
-                    pollForKeepAlive(getRemainingTimePromise, source, 5000, 800).then(function (result) {
-                        if (Number(result) - Number(secondsremaining) > 10) {
-                            secondsLeft  = result;
+                    pollForKeepAlive(getRemainingTimePromise, source, 5000, 800).then(result => {
+                        if (result - secondsremaining > 10) {
+                            secondsLeft = result;
                             startingTime = new Date();
-                            delay        = backupDelay;
-                            dom.hide();
-                        }
-                        else {   // so brute force a second attempt
-                            pollForKeepAlive(getRemainingTimePromise, source, 5000, 800).then(function (result) {
-                                if (Number(result) - Number(secondsremaining) > 10) {
-                                    secondsLeft  = result;
+                            delay = backupDelay;
+                            dom.modal("hide");
+                        } else {
+                            pollForKeepAlive(getRemainingTimePromise, source, 5000, 800).then(result => {
+                                if (result - secondsremaining > 10) {
+                                    secondsLeft = result;
                                     startingTime = new Date();
-                                    delay        = backupDelay;
-                                    dom.hide();
+                                    delay = backupDelay;
+                                    dom.modal("hide");
                                 }
-                            }).catch(function () {
-                            });
+                            }).catch(() => { });
                         }
-                    }).catch(function () {
-                    });
+                    }).catch(() => { });
                 });
 
                 hookupLogoutButton();
-
                 alerted = true;
             }
         }
 
-        if (secondsremaining < -2) {  // build in a small delay for safety if the timer here has got here quicker than the server
+        if (secondsremaining < -2) {
             resolve();
-        }
-        else {
+        } else {
             setTimeout(checkTimer, delay, resolve, reject);
         }
-    }
+    };
 
     return new Promise(checkTimer);
 }
 
-
 function getRemainingTimePromise(source) {
-    return $.ajax({
-        url: source
-    });
+    return $.ajax({ url: source });
 }
 
 function pollForKeepAlive(retrievalFunction, source, timeout, interval) {
-    var endTime = Number(new Date()) + (timeout || 5000);
+    let endTime = Date.now() + (timeout || 5000);
 
-    var checkCondition = function (resolve, reject) {
-
-        var result = retrievalFunction(source);
-
-        // got a value for session time remaining from server
-        if (result) {
-            resolve(result);
-        }
-
-        //  failure to get a session value back fromn the endpoint 
-        //  keep trying until endTime
-        else if (Number(new Date()) < endTime) {
-            setTimeout(checkCondition, interval, resolve, reject);
-        }
-
-        // timeout of the poller in general
-        else {
-            reject(new Error('session checker timed out'));
-        }
+    const checkCondition = function (resolve, reject) {
+        retrievalFunction(source).then(result => {
+            if (result) {
+                resolve(result);
+            } else if (Date.now() < endTime) {
+                setTimeout(checkCondition, interval, resolve, reject);
+            } else {
+                reject(new Error("session checker timed out"));
+            }
+        }).catch(() => {
+            if (Date.now() < endTime) {
+                setTimeout(checkCondition, interval, resolve, reject);
+            } else {
+                reject(new Error("session checker failed"));
+            }
+        });
     };
 
     return new Promise(checkCondition);
 }
 
-
 window.addEventListener("DOMContentLoaded", () => {
-    
-    let dom            = $("#sessionExpiry")[0];
-    let source         = dom.dataset.urlKeepAlive;  
-    let target         = dom.dataset.urlTarget;
-    let alertThreshold = Number(dom.dataset.alertThreshold)  || 60;
-    let interval       = Number(dom.dataset.pollingInterval) || 5;
-    var secondsLeft    = Number(dom.dataset.secondsLeft)     || Number(getRemainingTimePromise(source)) || 0.0;
+    let dom = $("#sessionExpiry")[0];
+    let source = dom.dataset.urlKeepAlive;
+    let target = dom.dataset.urlTarget;
+    let jax = dom.dataset.urlJax;
+    let userID = String(dom.dataset.userid);
+    let alertThreshold = Number(dom.dataset.alertThreshold) || 60;
+    let interval = Number(dom.dataset.pollingInterval) || 5;
 
-    // fix for arriving at the 'timed out' page whilst still being logged in
-    if (window.location.href == target) {
-        btnManualLogout();
-    }
+    getRemainingTimePromise(source).then(result => {
+        let secondsLeft = Number(dom.dataset.secondsLeft) || Number(result) || 0.0;
 
-    if (secondsLeft > 0) {
-        doCountdownPromise(secondsLeft, interval, alertThreshold, false).then(function () {
-            window.location.href = target;
-        }).catch(function () { 
-        });
-    }
+        if (window.location.href === target) {
+            btnManualLogout();
+        }
+
+        if (secondsLeft > 0) {
+            doCountdownPromise(secondsLeft, interval, alertThreshold, false).then(() => {
+                //window.location.href = target + "?" +"userid=" + userID;
+                AutoLogoutNotification(target,jax ,userID);
+            }).catch(() => { });
+        }
+    });
 });
 
-
 function btnManualLogout(event) {
-    var logoutForm = document.getElementById("logoutForm");
-    if (logoutForm) {
-        logoutForm.submit();
-    }
-    // Only prevent default if event exists (when called from click handler)
-    if (event) {
-        event.preventDefault();
-    }
+    let logoutForm = document.getElementById("logoutForm");
+    if (logoutForm) logoutForm.submit();
+    if (event) event.preventDefault();
 }
 
-
 function hookupLogoutButton() {
-    var logoutBtn = document.getElementById("btnSessionLogOut");
-    if (logoutBtn) {
-        logoutBtn.addEventListener('click', btnManualLogout, false);
-    }
+    let logoutBtn = document.getElementById("btnSessionLogOut");
+    if (logoutBtn) logoutBtn.addEventListener("click", btnManualLogout, false);
+}
+
+window.addEventListener("load", () => {
+    const dom = document.getElementById("sessionExpiryWarning");
+    if (!dom || !dom.dataset.urlKeepAlive) return;
+
+    const source = dom.dataset.urlKeepAlive;
+    const timeout = 5000;  // total time to keep trying
+    const interval = 800;  // time between attempts
+
+    pollForKeepAlive(getRemainingTimePromise, source, timeout, interval)
+        .then(result => {
+            if (result && !isNaN(result)) {
+                dom.dataset.secondsLeft = Number(result);
+                console.log("Session secondsLeft populated via polling:", result);
+            }
+        })
+        .catch(err => {
+            console.warn("Polling failed to retrieve session time:", err);
+        });
+});
+
+function AutoLogoutNotification(targetUrl,urlJax,userid) {
+    $.ajax({
+        url: urlJax, // Replace with your actual endpoint
+        method: "GET",        
+        data:{userid: userid},
+        success: function (response) {
+            if (response.redirect) {
+                window.location.href = targetUrl;
+            }
+            console.log("User details received:", response);           
+        },
+        error: function (xhr, status, error) {
+            console.error("Error fetching user details:", error);
+        }
+    });
 }
 

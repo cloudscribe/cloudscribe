@@ -16,6 +16,7 @@ using cloudscribe.Core.Web.ViewModels.SiteUser;
 using cloudscribe.Web.Common.Extensions;
 using cloudscribe.Web.Common.Models;
 using cloudscribe.Web.Common.Recaptcha;
+using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
@@ -23,10 +24,13 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Routing;
 using Microsoft.Extensions.Localization;
 using Microsoft.Extensions.Logging;
+using Org.BouncyCastle.Bcpg;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Net.Mail;
 using System.Security.Claims;
+using System.Text.Json;
 using System.Threading.Tasks;
 
 namespace cloudscribe.Core.Web.Controllers.Mvc
@@ -265,7 +269,7 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
             var externalSchemes = await AccountService.GetExternalAuthenticationSchemes();
             model.ExternalAuthenticationList = externalSchemes.ToList();
             // don't disable db auth if there are no social auth providers configured
-            model.DisableDbAuth = CurrentSite.DisableDbAuth && CurrentSite.HasAnySocialAuthEnabled();
+            model.DisableDbAuth = CurrentSite.DisableDbAuth && CurrentSite.HasAnySocialAuthEnabled();            
 
             return View(model);
         }
@@ -318,6 +322,7 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
             if (result.SignInResult.Succeeded)
             {
                 Log.LogInformation($"login succeeded for {model.UserName}");
+                var authResult = await HttpContextAccessor.HttpContext.AuthenticateAsync();                
                 return await HandleLoginSuccess(result, returnUrl);
             }
 
@@ -939,21 +944,104 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
             //if (SignInManager.IsSignedIn(User))
             //{
             //    await SignInManager.RefreshSignInAsync(user);
+            double result = 0;
+            List<UserAuthViewModel> sessionList = new List<UserAuthViewModel>();
+            string jsonAuthResult = HttpContext.Session.GetString("AuthResults");
+            if(jsonAuthResult == null)
+            {
+                var authResult = await HttpContextAccessor.HttpContext.AuthenticateAsync();
+                UserAuthViewModel userAuth = new UserAuthViewModel();               
+                userAuth.UserID = User.GetUserId();
+                userAuth.UserName = authResult.Principal.Identity.Name;
+                userAuth.IsAuthenticated = authResult.Principal.Identity.IsAuthenticated;
+                userAuth.IssueDate = authResult.Properties.IssuedUtc.Value.UtcDateTime;
+                userAuth.ExpirationDate = authResult.Properties.ExpiresUtc.Value.UtcDateTime;
+                sessionList.Add(userAuth);
+                jsonAuthResult = JsonSerializer.Serialize(sessionList);
+                HttpContext.Session.SetString("AuthResults", jsonAuthResult);
+                result = ((DateTimeOffset)authResult.Properties.ExpiresUtc - DateTimeOffset.UtcNow).TotalSeconds;
+            }
+            else
+            {
+                var authResult2 = await HttpContextAccessor.HttpContext.AuthenticateAsync();
+                var authResults = JsonSerializer.Deserialize<List<UserAuthViewModel>>(jsonAuthResult);
+                if (authResults.Count > 0)
+                {
+                    var UserId = User.GetUserId();
+                    var authResult = authResults.Where(a => a.UserID == UserId).FirstOrDefault();
+                    {
+                        if (authResult == null)
+                        {
+                            UserAuthViewModel userAuth2 = new UserAuthViewModel();
+                            userAuth2.UserID = User.GetUserId();
+                            userAuth2.UserName = authResult2.Principal.Identity.Name;
+                            userAuth2.IsAuthenticated = authResult2.Principal.Identity.IsAuthenticated;
+                            userAuth2.IssueDate = authResult2.Properties.IssuedUtc.Value.UtcDateTime;
+                            userAuth2.ExpirationDate = authResult2.Properties.ExpiresUtc.Value.UtcDateTime;
+                            authResults.Add(userAuth2);
+                            jsonAuthResult = JsonSerializer.Serialize(authResults);
+                            HttpContext.Session.SetString("AuthResults", jsonAuthResult);
+                            result = ((DateTimeOffset)authResult2.Properties.ExpiresUtc - DateTimeOffset.UtcNow).TotalSeconds;                            
+                        }
+                        else
+                        {                            
+                            var totalSessionTime = authResult.ExpirationDate - authResult.IssueDate;
+                            result = totalSessionTime.TotalSeconds;
+                            if (result < 0)
+                            {
+                                result = 0;
+                            }
 
-            var result = await RemainingSessionTimeResolver.RemainingSessionTimeInSeconds();
+                        }
+                    }
+                    
+                }
+            }         
+                //var result = await RemainingSessionTimeResolver.RemainingSessionTimeInSeconds();          
 
-            // answer in seconds
-            return new JsonResult(result);
+                return new JsonResult(result);
         }
-
 
         // GET: /Account/AutoLogoutNotification
         [HttpGet]
         [AllowAnonymous]
-        public virtual async Task<IActionResult> AutoLogoutNotification()
+        public virtual async Task<IActionResult> PreAutoLogoutNotification(string userid)
         {
+            string jsonAuthResult = HttpContext.Session.GetString("AuthResults");
+            if (jsonAuthResult != null)
+            {
+                var authResults = JsonSerializer.Deserialize<List<UserAuthViewModel>>(jsonAuthResult);
+                if (authResults != null)
+                {
+                    var authResult = authResults.Where(a => a.UserID == userid).FirstOrDefault();
+                    if (authResult != null)
+                    {
+                        authResults.Remove(authResult);
+                        if (authResults.Count == 0)
+                        {
+                            HttpContext.Session.Remove("AuthResults");
+                        }
+                        else
+                        {
+                            HttpContext.Session.Remove("AuthResults");
+                            jsonAuthResult = JsonSerializer.Serialize(authResults);
+                            HttpContext.Session.SetString("AuthResults", jsonAuthResult);
+                        }
+                    }
+                }
+            }          
+            string redirecturl = Url.Action("AutoLogoutNotification", "Account");
+            return Json(new { redirect = redirecturl });
+        }
+        // GET: /Account/AutoLogoutNotification
+        [HttpGet]
+        [AllowAnonymous]
+        public virtual async Task<IActionResult> AutoLogoutNotification()
+        {           
+            
             ViewData["Title"] = StringLocalizer["Timed out"];
             await Analytics.HandleLogout("Login Timed Out");
+            
             return View();
         }
 
@@ -1140,6 +1228,24 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
         public virtual async Task<IActionResult> LogOff()
         {
             await AccountService.SignOutAsync();
+            string jsonAuthResult = HttpContext.Session.GetString("AuthResults");
+            var authResults = JsonSerializer.Deserialize<List<UserAuthViewModel>>(jsonAuthResult);
+            var UserId = User.GetUserId(); 
+            var authResult = authResults.Where(a => a.UserID == UserId).FirstOrDefault();
+            if(authResult != null)
+            {
+                authResults.Remove(authResult);
+                if(authResults.Count == 0)
+                {
+                    HttpContext.Session.Remove("AuthResults");
+                }
+                else
+                {
+                    HttpContext.Session.Remove("AuthResults");
+                    jsonAuthResult = JsonSerializer.Serialize(authResults);
+                    HttpContext.Session.SetString("AuthResults", jsonAuthResult);
+                }
+            }
 
             if (CurrentSite.SingleBrowserSessions)
             {
