@@ -20,10 +20,10 @@ namespace cloudscribe.Core.Web.Components.IPService
         private ILogger _log;
         private readonly IMemoryCache _memoryCache;
 
-        public BlockedOrPermittedIpService(SiteContext currentSite, 
-                                           IipAddressCommands iipAddressCommands, 
-                                           ILogger<BlockedOrPermittedIpService> logger, 
-                                           IMemoryCache memoryCache, 
+        public BlockedOrPermittedIpService(SiteContext currentSite,
+                                           IipAddressCommands iipAddressCommands,
+                                           ILogger<BlockedOrPermittedIpService> logger,
+                                           IMemoryCache memoryCache,
                                            CancellationToken cancellationToken = default(CancellationToken))
         {
             _currentSite        = currentSite;
@@ -80,7 +80,8 @@ namespace cloudscribe.Core.Web.Components.IPService
 
             if (_blockedIps.Count <= 0 && _permittedIps.Count <= 0)
             {
-                _log.LogWarning("Blocked or permitted IP lists are not initialized.");
+                //commented out due to log spam on *every* request!!
+                //_log.LogWarning("Blocked or permitted IP lists are not initialized.");
                 return false;
             }
 
@@ -91,13 +92,13 @@ namespace cloudscribe.Core.Web.Components.IPService
 
 
             ////////// permitted always wins out...
-            
+
             // individual permitted IPs
             if (_permittedSingleIps.Any())
             {
                 bool isPermittedByIndividualRule = _permittedSingleIps.Any(x => x.IpAddress == ipAddress.ToString() && x.SiteId == siteId);
 
-                if (isPermittedByIndividualRule) return false; 
+                if (isPermittedByIndividualRule) return false;
             }
 
             // Check permitted ranges
@@ -112,7 +113,7 @@ namespace cloudscribe.Core.Web.Components.IPService
 
 
             //////////////////////
-            // Just worry about blocked now 
+            // Just worry about blocked now
             bool isBlocked = false;
 
             if (_blockedSingleIps.Count > 0)
