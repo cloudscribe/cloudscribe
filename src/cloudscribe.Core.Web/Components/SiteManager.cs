@@ -407,6 +407,7 @@ namespace cloudscribe.Core.Web.Components
             newSite.AllowUserToChangeEmail     = sourceSite.AllowUserToChangeEmail;
             newSite.PasswordExpiryWarningDays = sourceSite.PasswordExpiryWarningDays;
             newSite.PasswordExpiresDays = sourceSite.PasswordExpiresDays;
+            newSite.MaximumInactivityInMinutes = sourceSite.MaximumInactivityInMinutes;
 
             /// end clone 
 
