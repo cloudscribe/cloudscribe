@@ -49,6 +49,7 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
             Analytics.IHandleAccountAnalytics analyticsHandler,
             IHttpContextAccessor httpContextAccessor,
             RemainingSessionTimeResolver remainingSessionTimeResolver,
+            Services.ISessionActivityService sessionActivityService,
             SiteUserManager<SiteUser> userManager,
             SignInManager<SiteUser> signInManager,
             ILogger<AccountController> logger,
@@ -69,6 +70,7 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
             Analytics                    = analyticsHandler;
             HttpContextAccessor          = httpContextAccessor;
             RemainingSessionTimeResolver = remainingSessionTimeResolver;
+            SessionActivityService       = sessionActivityService;
             UserManager = userManager;
             SignInManager = signInManager;
             EmailValidationService = emailValidationService;
@@ -87,6 +89,7 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
         protected IHandleCustomRegistration CustomRegistration { get; private set; }
         protected Analytics.IHandleAccountAnalytics Analytics { get; private set; }
         protected RemainingSessionTimeResolver RemainingSessionTimeResolver { get; private set; }
+        protected Services.ISessionActivityService SessionActivityService { get; private set; }
         protected IHttpContextAccessor HttpContextAccessor;
         protected SiteUserManager<SiteUser> UserManager { get; private set; }
         public SignInManager<SiteUser> SignInManager { get; }
@@ -955,6 +958,51 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
             ViewData["Title"] = StringLocalizer["Timed out"];
             await Analytics.HandleLogout("Login Timed Out");
             return View();
+        }
+
+        // GET: /Account/GetActualSessionTime
+        [HttpGet]
+        [AllowAnonymous]
+        public virtual IActionResult GetActualSessionTime()
+        {
+            // This endpoint checks the CACHED time, not the cookie
+            // Therefore it doesn't extend the session by calling AuthenticateAsync()
+            
+            // Manual authentication check without extending session
+            if (!User?.Identity?.IsAuthenticated ?? true)
+            {
+                return Json(new { expired = true });
+            }
+
+            var userId = User.FindFirst("sub")?.Value
+                        ?? User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value;
+
+            if (string.IsNullOrEmpty(userId))
+            {
+                return Json(new { expired = true });
+            }
+
+            var siteId = CurrentSite?.Id.ToString();
+            if (string.IsNullOrEmpty(siteId))
+            {
+                return Json(new { expired = true });
+            }
+
+            var expiry = SessionActivityService.GetSessionExpiry(userId, siteId);
+
+            if (expiry == null || expiry <= DateTime.UtcNow)
+            {
+                return Json(new { expired = true });
+            }
+
+            var remainingSeconds = (expiry.Value - DateTime.UtcNow).TotalSeconds;
+
+            return Json(new
+            {
+                remainingSeconds = Math.Max(0, Math.Round(remainingSeconds)),
+                expiresAt = ((DateTimeOffset)expiry.Value).ToUnixTimeSeconds(),
+                expired = false
+            });
         }
 
 

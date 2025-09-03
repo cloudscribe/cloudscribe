@@ -65,25 +65,16 @@ function checkActualSessionTime() {
                 window.location.href = $("#sessionExpiry").data("url-target");
             } else if (data.remainingSeconds > sessionState.alertThreshold) {
                 // Session was extended by other activity (AJAX, other tabs, etc)
-                var currentExpected = Math.round((sessionState.expiresAt - Date.now()) / 1000);
-                if (data.remainingSeconds > currentExpected + 5) {
-                    // Significant extension - real server activity happened
-                    sessionState.expiresAt = Date.now() + (data.remainingSeconds * 1000);
-                    sessionState.warningShown = false;
-                    $("#sessionExpiryWarning").modal("hide");
-                    console.log('Session extended by server activity - remaining: ' + data.remainingSeconds + 's');
-                    
-                    // Update localStorage for cross-tab sync (only when extended)
-                    localStorage.setItem('sessionExtended', JSON.stringify({
-                        expiresAt: sessionState.expiresAt,
-                        timestamp: Date.now()
-                    }));
-                } else {
-                    // Just normal countdown, update our local state to match server
-                    sessionState.expiresAt = Date.now() + (data.remainingSeconds * 1000);
-                    console.log('Session time confirmed from server - remaining: ' + data.remainingSeconds + 's');
-                    // Don't update localStorage for normal countdown
-                }
+                sessionState.expiresAt = Date.now() + (data.remainingSeconds * 1000);
+                sessionState.warningShown = false;
+                $("#sessionExpiryWarning").modal("hide");
+                console.log('Session extended by server activity - remaining: ' + data.remainingSeconds + 's');
+                
+                // Update localStorage for cross-tab sync
+                localStorage.setItem('sessionExtended', JSON.stringify({
+                    expiresAt: sessionState.expiresAt,
+                    timestamp: Date.now()
+                }));
             }
             // If remaining time is still low, keep showing warning
         },
@@ -140,14 +131,10 @@ window.addEventListener("DOMContentLoaded", () => {
     initializeSessionTracking();
 
     // Fix for arriving at the 'timed out' page whilst still being logged in
-    // Only auto-logout if we were actually tracking a session
     const dom = $("#sessionExpiry")[0];
     if (dom) {
         const target = dom.dataset.urlTarget;
-        if (window.location.href.includes(target.split('/').pop()) && 
-            sessionState.autoLogoutEnabled && 
-            sessionState.expiresAt) {
-            console.log('Auto-logout triggered - user reached timeout page while session was being tracked');
+        if (window.location.href.includes(target.split('/').pop())) {
             btnManualLogout();
         }
     }
@@ -155,7 +142,7 @@ window.addEventListener("DOMContentLoaded", () => {
     // Setup button event handlers
     $("#sessionKeepAlive").click(function() {
         $.ajax({
-            url: '/Account/RemainingSessionTime', // This DOES extend session <<- should be renamed really - jk
+            url: '/Account/RemainingSessionTime', // This DOES extend session
             cache: false,
             success: function(data) {
                 if (typeof data === 'number' && data > 0) {

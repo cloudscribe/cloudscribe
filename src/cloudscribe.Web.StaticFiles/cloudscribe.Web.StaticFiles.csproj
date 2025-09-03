@@ -23,7 +23,6 @@
     <None Remove="js\bootstrap5.bundle.js" />
     <None Remove="js\bootstrap5.bundle.min.js" />
     <None Remove="js\cloudscribe-autologout-warning.js" />
-    <None Remove="js\cloudscribe-autologout-warning.min.js" />
     <None Remove="js\cloudscribe-cookie-consent-three-state.js" />
     <None Remove="js\cloudscribe-cookie-consent-three-state.min.js" />
     <None Remove="js\cloudscribe-modaldialog-pagination.js" />
@@ -39,6 +38,9 @@
   </ItemGroup>
 
 <ItemGroup>
+    <EmbeddedResource Include="js\cloudscribe-autologout-warning.min.js" />
+    <EmbeddedResource Include="js\cloudscribe-autologout-warning - Copy - Ignore.js" />
+    <EmbeddedResource Include="js\cloudscribe-autologout-warning - Copy.js" />
     <EmbeddedResource Include="js\cloudscribe-cookie-consent-three-state.js" />
     <EmbeddedResource Include="js\cloudscribe-cookie-consent-three-state.min.js" />
     <EmbeddedResource Include="js\emaillist-formbuttons.js" />
@@ -56,7 +58,6 @@
     <EmbeddedResource Include="js\bs-toast.min.js" />
     <EmbeddedResource Include="js\bs4.smartmenus.min.js" />
     <EmbeddedResource Include="js\ckeditor4114\**\*.*" />
-    <EmbeddedResource Include="js\cloudscribe-autologout-warning.min.js" />
     <EmbeddedResource Include="js\cloudscribe-autologout-warning.js" />
     <EmbeddedResource Include="js\cloudscribe-autosuggest-unobtrusive.js" />
     <EmbeddedResource Include="js\cloudscribe-autosuggest-unobtrusive.min.js" />
