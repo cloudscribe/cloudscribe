@@ -65,25 +65,16 @@ function checkActualSessionTime() {
                 window.location.href = $("#sessionExpiry").data("url-target");
             } else if (data.remainingSeconds > sessionState.alertThreshold) {
                 // Session was extended by other activity (AJAX, other tabs, etc)
-                var currentExpected = Math.round((sessionState.expiresAt - Date.now()) / 1000);
-                if (data.remainingSeconds > currentExpected + 5) {
-                    // Significant extension - real server activity happened
-                    sessionState.expiresAt = Date.now() + (data.remainingSeconds * 1000);
-                    sessionState.warningShown = false;
-                    $("#sessionExpiryWarning").modal("hide");
-                    console.log('Session extended by server activity - remaining: ' + data.remainingSeconds + 's');
-                    
-                    // Update localStorage for cross-tab sync (only when extended)
-                    localStorage.setItem('sessionExtended', JSON.stringify({
-                        expiresAt: sessionState.expiresAt,
-                        timestamp: Date.now()
-                    }));
-                } else {
-                    // Just normal countdown, update our local state to match server
-                    sessionState.expiresAt = Date.now() + (data.remainingSeconds * 1000);
-                    console.log('Session time confirmed from server - remaining: ' + data.remainingSeconds + 's');
-                    // Don't update localStorage for normal countdown
-                }
+                sessionState.expiresAt = Date.now() + (data.remainingSeconds * 1000);
+                sessionState.warningShown = false;
+                $("#sessionExpiryWarning").modal("hide");
+                console.log('Session extended by server activity - remaining: ' + data.remainingSeconds + 's');
+                
+                // Update localStorage for cross-tab sync
+                localStorage.setItem('sessionExtended', JSON.stringify({
+                    expiresAt: sessionState.expiresAt,
+                    timestamp: Date.now()
+                }));
             }
             // If remaining time is still low, keep showing warning
         },
