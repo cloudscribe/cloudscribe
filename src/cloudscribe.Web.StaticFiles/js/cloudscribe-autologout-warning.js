@@ -140,10 +140,14 @@ window.addEventListener("DOMContentLoaded", () => {
     initializeSessionTracking();
 
     // Fix for arriving at the 'timed out' page whilst still being logged in
+    // Only auto-logout if we were actually tracking a session
     const dom = $("#sessionExpiry")[0];
     if (dom) {
         const target = dom.dataset.urlTarget;
-        if (window.location.href.includes(target.split('/').pop())) {
+        if (window.location.href.includes(target.split('/').pop()) && 
+            sessionState.autoLogoutEnabled && 
+            sessionState.expiresAt) {
+            console.log('Auto-logout triggered - user reached timeout page while session was being tracked');
             btnManualLogout();
         }
     }
@@ -151,7 +155,7 @@ window.addEventListener("DOMContentLoaded", () => {
     // Setup button event handlers
     $("#sessionKeepAlive").click(function() {
         $.ajax({
-            url: '/Account/RemainingSessionTime', // This DOES extend session
+            url: '/Account/RemainingSessionTime', // This DOES extend session <<- should be renamed really - jk
             cache: false,
             success: function(data) {
                 if (typeof data === 'number' && data > 0) {
