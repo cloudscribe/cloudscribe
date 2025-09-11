@@ -32,5 +32,4 @@
     <ProjectReference Include="..\cloudscribe.Core.Web\cloudscribe.Core.Web.csproj" />
   </ItemGroup>
 
-
 </Project>

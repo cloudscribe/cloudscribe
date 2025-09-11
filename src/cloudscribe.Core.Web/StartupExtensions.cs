@@ -118,7 +118,9 @@ namespace Microsoft.Extensions.DependencyInjection
 
             services.TryAddSingleton<IDateTimeZoneProvider>(new DateTimeZoneCache(TzdbDateTimeZoneSource.Default));
             services.AddScoped<cloudscribe.DateTimeUtils.ITimeZoneIdResolver, SiteTimeZoneIdResolver>();
+            
             services.TryAddScoped<cloudscribe.DateTimeUtils.ITimeZoneHelper, cloudscribe.DateTimeUtils.TimeZoneHelper>();
+            services.AddScoped<cloudscribe.Versioning.IVersionProvider, cloudscribe.DateTimeUtils.VersionProvider>();
 
             services.TryAddScoped<IHandleCustomRegistration, NoRegistrationCustomization>();
             services.TryAddScoped<IHandleCustomUserInfo, NoUserInfoCustomization>();

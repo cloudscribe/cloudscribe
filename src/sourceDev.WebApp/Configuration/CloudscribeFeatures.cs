@@ -11,6 +11,7 @@ using Microsoft.Extensions.Configuration;
 using sourceDev.WebApp.Components;
 using System;
 using System.IO;
+using Microsoft.AspNetCore.Builder;
 
 
 namespace Microsoft.Extensions.DependencyInjection
@@ -143,22 +144,17 @@ namespace Microsoft.Extensions.DependencyInjection
             IConfiguration config
             )
         {
-            services.AddScoped<cloudscribe.Versioning.IVersionProvider, cloudscribe.Web.StaticFiles.VersionProvider>();
             services.AddScoped<cloudscribe.Versioning.IVersionProvider, cloudscribe.QueryTool.Web.VersionProvider>();
             services.AddScoped<cloudscribe.Versioning.IVersionProvider, cloudscribe.QueryTool.Services.VersionProvider>();
             services.AddScoped<cloudscribe.Versioning.IVersionProvider, cloudscribe.QueryTool.Models.VersionProvider>();
-            services.AddScoped<cloudscribe.Versioning.IVersionProvider, cloudscribe.FileManager.CoreIntegration.VersionProvider>();
-            services.AddScoped<cloudscribe.Versioning.IVersionProvider, cloudscribe.Email.Senders.VersionProvider>();
-            services.AddScoped<cloudscribe.Versioning.IVersionProvider, cloudscribe.DateTimeUtils.VersionProvider>();
-            services.AddScoped<cloudscribe.Versioning.IVersionProvider, cloudscribe.Core.Models.VersionProvider>();
-            
-            // experimental / still versioned as beta
-            // services.AddScoped<cloudscribe.Versioning.IVersionProvider, cloudscribe.Core.Ldap.Windows.VersionProvider>();
-            
-            services.AddScoped<cloudscribe.Versioning.IVersionProvider, cloudscribe.Core.Ldap.VersionProvider>();
+            services.AddScoped<cloudscribe.Versioning.IVersionProvider, cloudscribe.Core.Models.VersionProvider>();            
             services.AddScoped<cloudscribe.Versioning.IVersionProvider, cloudscribe.Core.CompiledViews.Bootstrap5.VersionProvider>();
             services.AddScoped<cloudscribe.Versioning.IVersionProvider, cloudscribe.Common.Gdpr.VersionProvider>();
             services.AddScoped<cloudscribe.Versioning.IVersionProvider, cloudscribe.IdentityServerIntegration.CompiledViews.Bootstrap5.VersionProvider>();
+
+            // experimental / still versioned as beta
+            // services.AddScoped<cloudscribe.Versioning.IVersionProvider, cloudscribe.Core.Ldap.Windows.VersionProvider>();
+
             /* optional and only needed if you are using cloudscribe Logging  */
             services.AddCloudscribeLogging();
 
@@ -222,7 +218,7 @@ namespace Microsoft.Extensions.DependencyInjection
             //services.Configure<DataProtectionTokenProviderOptions>(options =>
             //         options.TokenLifespan = TimeSpan.FromMinutes(3));
 
-
+            services.AddCloudscribeWebStaticFiles();
             return services;
         }
 

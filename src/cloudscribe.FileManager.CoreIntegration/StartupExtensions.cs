@@ -5,7 +5,6 @@ using System.Threading.Tasks;
 using cloudscribe.FileManager.CoreIntegration;
 using Microsoft.Extensions.Configuration;
 using cloudscribe.FileManager.Web.Models;
-using cloudscribe.FileManager.Web;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 
 namespace Microsoft.Extensions.DependencyInjection
@@ -19,6 +18,8 @@ namespace Microsoft.Extensions.DependencyInjection
         {
             services.TryAddScoped<IMediaPathResolver, MediaPathResolver>();
             services.AddCloudscribeFileManager(configuration);
+
+            services.AddScoped<cloudscribe.Versioning.IVersionProvider, VersionProvider>();
 
             return services;
         }
