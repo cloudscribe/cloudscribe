@@ -151,7 +151,10 @@ namespace Microsoft.Extensions.DependencyInjection
             services.AddScoped<cloudscribe.Versioning.IVersionProvider, cloudscribe.Email.Senders.VersionProvider>();
             services.AddScoped<cloudscribe.Versioning.IVersionProvider, cloudscribe.DateTimeUtils.VersionProvider>();
             services.AddScoped<cloudscribe.Versioning.IVersionProvider, cloudscribe.Core.Models.VersionProvider>();
-            services.AddScoped<cloudscribe.Versioning.IVersionProvider, cloudscribe.Core.Ldap.Windows.VersionProvider>();
+            
+            // experimental / still versioned as beta
+            // services.AddScoped<cloudscribe.Versioning.IVersionProvider, cloudscribe.Core.Ldap.Windows.VersionProvider>();
+            
             services.AddScoped<cloudscribe.Versioning.IVersionProvider, cloudscribe.Core.Ldap.VersionProvider>();
             services.AddScoped<cloudscribe.Versioning.IVersionProvider, cloudscribe.Core.CompiledViews.Bootstrap5.VersionProvider>();
             services.AddScoped<cloudscribe.Versioning.IVersionProvider, cloudscribe.Common.Gdpr.VersionProvider>();
