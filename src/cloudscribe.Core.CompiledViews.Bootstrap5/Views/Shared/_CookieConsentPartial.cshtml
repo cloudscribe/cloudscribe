@@ -3,7 +3,13 @@
 @inject ISiteContextResolver siteResolver
 @{
     var consentFeature = Context.Features.Get<ITrackingConsentFeature>();
-    var showBanner = !consentFeature?.CanTrack ?? false;
+    var hasConsented = consentFeature?.CanTrack ?? false; // Tracking logic UNCHANGED
+    
+    var hasDismissedBanner = Context.Request.Cookies["cookieconsent_dismissed"] != null;
+    
+    // Hide banner if EITHER consented OR dismissed (but tracking only works if consented)
+    var showBanner = !hasConsented && !hasDismissedBanner;
+    
     var cookieString = consentFeature?.CreateConsentCookie();
     var policySummary = sr["To ensure you get the best experience, this website uses cookies."];
     var tenant = await siteResolver.ResolveSite(Context.Request.Host.Host, Context.Request.Path);
@@ -21,8 +27,14 @@
             </p>
             <div class="d-flex gap-2">
                 <a asp-controller="Privacy" asp-action="Index" class="btn btn-info">@sr["Learn More"]</a>
-                <button type="button" class="btn btn-primary" data-cookie-string="@cookieString">Accept</button>
+                <button type="button" class="btn btn-primary" data-cookie-action="accept" data-cookie-string="@cookieString">@sr["Accept"]</button>
+                <button type="button" class="btn btn-secondary" data-cookie-action="dismiss">@sr["Decline"]</button>
             </div>
         </div>
-        <script src="~/cr/js/cloudscribe-cookie-consent-click-handler.js"></script>
+        <environment names="Development">
+            <script src="~/cr/js/cloudscribe-cookie-consent-three-state.js"></script>
+        </environment>
+        <environment names="Staging,Production">
+            <script src="~/cr/js/cloudscribe-cookie-consent-three-state.min.js"></script>
+        </environment>
 }

@@ -1719,13 +1719,12 @@ namespace cloudscribe.Core.Storage.EFCore.Common
             using (var dbContext = _contextFactory.CreateContext())
             {
                 var query = dbContext.UserLocations
+                .AsSingleQuery()
                 .Where(x => x.UserId == userId)
                 .OrderByDescending(x => x.LastCaptureUtc)
                 //.Select(p => p)
                 .Skip(offset)
-                .Take(pageSize)
-
-                ;
+                .Take(pageSize);
 
                 var data = await query
                     .AsNoTracking()

@@ -1,7 +1,8 @@
 ﻿$(async function () {
 	let $elems = $('textarea[data-summernote-unobtrusive]').toArray();
-	let dropFileUploadUrl;
+	let dropFileUploadUrl = [];
 	let summernoteNumber = 0;
+    let summerNumber = 0;
 	let summerInst;
 	let dropFileXsrfToken;
     
@@ -11,7 +12,7 @@
 			let configPath = $(elem).data('summernote-config-url');
 			let configToolbarPath = $(elem).data('summernote-toolbar-config-url');
 			let configLanguage = $(elem).data('summernote-config-language');
-			dropFileUploadUrl = $(elem).data('summernote-config-dropfileuploadurl');
+			dropFileUploadUrl.push({ number: summerNumber, url: $(elem).data('summernote-config-dropfileuploadurl') });
 			dropFileXsrfToken = $('[name="__RequestVerificationToken"]:first').val();
 
 			if (summernoteInstance) {
@@ -29,7 +30,7 @@
 				await setupSummernote();
 				
 				async function getToolbarSettings(file) {
-					await fetch(file)
+					await fetch(file, { headers: { 'Cache-Control': 'no-cache, no-store' } })
 					.then((response) => response.json())
 					.then((json) => {
 						toolbarConfig = json;
@@ -37,7 +38,7 @@
 				}
 				
 				async function getConfigSettings(file) {
-					await fetch(file)
+					await fetch(file, { headers: { 'Cache-Control': 'no-cache, no-store' } })
 					.then((response) => response.json())
 					.then((json) => {
 						summernoteConfig = json;
@@ -63,9 +64,27 @@
 							toolbar: toolbarConfig,
 							...summernoteConfig
 						});
+
+						$(summernoteInstance).on('summernote.codeview.change', function (we, contents, $editable) {
+
+							if (!$(summernoteInstance).summernote('codeview.isActivated')) {
+								// This is not code view, so ignore
+								return;
+							}
+
+                            // Update the original textarea and editable content
+							var $textarea = $(this);
+							var $editor = $textarea.nextAll('.note-editor.note-frame.card.codeview');
+							var $editablee = $editor.find('.note-editable.card-block');
+							var $originalTextarea = $editor.prev(summernoteInstance);
+
+							$editablee.html(contents);
+							$originalTextarea.val(contents);
+						});
 					});
 				}
 			}
+			summerNumber++;
 		}
 
 		function onDropped(contents) {
@@ -102,14 +121,15 @@
 
 					var formData = new FormData();
 					formData.append("__RequestVerificationToken", dropFileXsrfToken);
-					formData.append(file.name, file);                 
+					formData.append(file.name, file);
+					let summInstance = dropFileUploadUrl.find(x => x.number === summernoteNumber);
 
 					$.ajax({
 						type: "POST",
 						processData: false,
 						contentType: false,
 						dataType: "json",
-						url: dropFileUploadUrl,
+						url: summInstance.url,
 						data: formData,
 						success: uploadSuccess
 					});

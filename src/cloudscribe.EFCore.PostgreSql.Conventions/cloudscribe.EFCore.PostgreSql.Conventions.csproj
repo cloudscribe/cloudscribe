@@ -3,7 +3,7 @@
   <PropertyGroup>
     <Description>PostgreSql Entity Framework Core conventions for snake case object names</Description>
     <Authors>Joe Audette</Authors>
-    <Version>8.4.0</Version>
+    <Version>8.5.0</Version>
     <TargetFramework>net8.0</TargetFramework>
     <PackageIcon>icon.png</PackageIcon>
     <PackageProjectUrl>https://github.com/cloudscribe/cloudscribe</PackageProjectUrl>
@@ -30,6 +30,9 @@
     <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="8.0.0" />
 
     <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="8.0.0" />
+    
+    <!-- pulling up transitive deps to resolve security vulns -->
+    <PackageReference Include="Npgsql" Version="8.0.7" />
   </ItemGroup>
 
 </Project>
