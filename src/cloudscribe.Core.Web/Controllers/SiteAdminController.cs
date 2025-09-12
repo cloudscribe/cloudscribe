@@ -1929,7 +1929,7 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize(Policy = PolicyConstants.ServerAdminPolicy)]
-        public virtual Task<ActionResult> RestartApplication()
+        public virtual IActionResult RestartApplication()
         {
             var userId = User.GetUserId();
             var userEmail = User.GetEmail();
@@ -1942,9 +1942,121 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
                 userId, 
                 ipAddress);
             
-            _applicationLifetime.StopApplication();
+            // Return a simple HTML page that will auto-refresh
+            var html = @"
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset='utf-8' />
+    <meta name='viewport' content='width=device-width, initial-scale=1.0' />
+    <title>Restarting Application</title>
+    <style>
+        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; 
+               display: flex; justify-content: center; align-items: center; height: 100vh; 
+               margin: 0; background: #f5f5f5; }
+        .container { text-align: center; padding: 2rem; background: white; 
+                     border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
+        .spinner { border: 3px solid #f3f3f3; border-top: 3px solid #3498db; 
+                   border-radius: 50%; width: 40px; height: 40px; 
+                   animation: spin 1s linear infinite; margin: 0 auto 1rem; }
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+        h2 { color: #333; margin-bottom: 0.5rem; }
+        p { color: #666; margin-top: 0.5rem; }
+    </style>
+    <script>
+        // Wait for the app to shut down, then start polling for restart
+        var hasShutDown = false;
+        var attempts = 0;
+        var maxAttempts = 30; // Try for about 30 seconds after shutdown
+        
+        function checkStatus() {
+            // Use XMLHttpRequest for better control over connection errors
+            var xhr = new XMLHttpRequest();
+            xhr.open('HEAD', '/siteadmin', true);
+            xhr.timeout = 2000; // 2 second timeout
+            
+            xhr.onload = function() {
+                if (xhr.status === 200) {
+                    if (hasShutDown) {
+                        // App is back online after shutdown
+                        window.location.href = '/siteadmin';
+                    } else {
+                        // Still running, check again soon
+                        setTimeout(checkStatus, 500);
+                    }
+                }
+            };
+            
+            xhr.onerror = function() {
+                if (!hasShutDown) {
+                    // First connection error means app is shutting down
+                    hasShutDown = true;
+                    document.getElementById('message').innerHTML = 'Application is shutting down...';
+                    // Wait a bit longer before trying to reconnect
+                    setTimeout(checkStatus, 3000);
+                } else {
+                    // App is down, keep trying to reconnect
+                    attempts++;
+                    if (attempts < maxAttempts) {
+                        setTimeout(checkStatus, 2000);
+                    } else {
+                        document.getElementById('message').innerHTML = 
+                            'Restart is taking longer than expected.<br>Please <a href=""/siteadmin"">click here</a> to continue.';
+                    }
+                }
+            };
+            
+            xhr.ontimeout = xhr.onerror; // Treat timeout same as error
+            
+            try {
+                xhr.send();
+            } catch(e) {
+                xhr.onerror();
+            }
+        }
+        
+        // Start checking after a small delay to ensure this page loads
+        setTimeout(checkStatus, 1500);
+    </script>
+</head>
+<body>
+    <div class='container'>
+        <div class='spinner'></div>
+        <h2>Restarting Application</h2>
+        <p id='message'>Please wait while the application restarts...</p>
+    </div>
+</body>
+</html>";
 
-            return Task.FromResult<ActionResult>(RedirectToAction("Index"));
+            // In development/IIS Express, just trigger restart and redirect
+            // The fancy waiting page doesn't work well with IIS Express
+            if (StringLocalizer["Development"].Value == "Development" || 
+                Request.Host.Host == "localhost" || 
+                Request.Host.Host == "127.0.0.1")
+            {
+                Task.Run(async () => 
+                {
+                    await Task.Delay(100); // Small delay to ensure response is sent
+                    _applicationLifetime.StopApplication();
+                });
+                
+                // Simple message that will show briefly before shutdown
+                return Content(@"<!DOCTYPE html><html><head><meta charset='utf-8' /><title>Restarting</title></head>
+                    <body style='font-family: sans-serif; padding: 2rem; text-align: center;'>
+                    <h2>Application is restarting...</h2>
+                    <p>The application will shut down. Please restart it manually if running locally in Development / IIS Express.</p>
+                    </body></html>", "text/html");
+            }
+            
+            // Production IIS - use the fancy auto-refresh page
+            // Schedule the restart after sending the response
+            Task.Run(async () => 
+            {
+                await Task.Delay(500); // Small delay to ensure response is sent
+                _applicationLifetime.StopApplication();
+            });
+            
+            return Content(html, "text/html");
         }
     }
 }
