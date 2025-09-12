@@ -144,6 +144,18 @@
         <button name="submit" type="submit" class="btn btn-primary" data-disabled-text='@sr["Working..."]' data-enabled-text='@sr["Save"]'>@sr["Save"]</button>
     </div>
 </form>
+@{
+    if (Model.ShowRestartApplicationButton)
+    {
+        <form method="post" class="form-horizontal" role="form" asp-antiforgery="true" data-submit-once="true" asp-controller="SiteAdmin" asp-action="RestartApplication">
+            <div class="mb-2">
+                <hr />
+                <p>Use with caution! The below will attempt to restart your application.<br />This may take some time depending on your hosting environment.</p>
+                <button name="submit" type="submit" class="btn btn-danger" data-enabled-text="'@sr["Restart Application"]'">@sr["Restart Application"]</button>
+            </div>
+        </form>
+    }
+}
 <partial name="LdapTestFormPartial" model="Model" />
 
 @section SideNav {

@@ -21,9 +21,11 @@ using Microsoft.AspNetCore.Authentication.OpenIdConnect;
 using Microsoft.AspNetCore.Authentication.Twitter;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Localization;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
@@ -60,7 +62,8 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
             IConfiguration                             configuration,
             SiteUserManager<SiteUser> userManager,
             IBlockedOrPermittedIpService blockedOrPermittedIpService, 
-            ILogger<SiteAdminController> logger
+            ILogger<SiteAdminController> logger,
+            IHostApplicationLifetime applicationLifetime
             )
         {
             if (multiTenantOptions == null) { throw new ArgumentNullException(nameof(multiTenantOptions)); }
@@ -89,6 +92,7 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
             _userManager = userManager;
             _blockedOrPermittedIpService = blockedOrPermittedIpService;
             _log = logger;
+            _applicationLifetime = applicationLifetime;
             UIOptions = uiOptionsAccessor.Value;
         }
 
@@ -105,6 +109,7 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
         private ILogger _log;
         protected SiteUserManager<SiteUser> _userManager;
         protected IBlockedOrPermittedIpService _blockedOrPermittedIpService;
+        private readonly IHostApplicationLifetime _applicationLifetime;
         protected IStringLocalizer StringLocalizer { get; private set; }
         protected IThemeListBuilder LayoutListBuilder { get; private set; }
         protected UIOptions UIOptions;
@@ -1144,6 +1149,8 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
                 PasswordExpiresDays = selectedSite.PasswordExpiresDays
             };
 
+            model.ShowRestartApplicationButton = UIOptions.ShowRestartApplicationButton;
+            
             return View(model);
         }
 
@@ -1919,5 +1926,25 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
             return RedirectToAction("SiteHostMappings", new { siteId, slp });
         }
 
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        [Authorize(Policy = PolicyConstants.ServerAdminPolicy)]
+        public virtual Task<ActionResult> RestartApplication()
+        {
+            var userId = User.GetUserId();
+            var userEmail = User.GetEmail();
+            var displayName = User.GetDisplayName() ?? User.Identity?.Name ?? "Unknown";
+            var ipAddress = HttpContext.Connection.RemoteIpAddress?.ToString() ?? "Unknown";
+            
+            _log.LogWarning("Application restart initiated - User: {DisplayName}, Email: {Email}, UserId: {UserId}, IP: {IpAddress}", 
+                displayName, 
+                userEmail, 
+                userId, 
+                ipAddress);
+            
+            _applicationLifetime.StopApplication();
+
+            return Task.FromResult<ActionResult>(RedirectToAction("Index"));
+        }
     }
 }
