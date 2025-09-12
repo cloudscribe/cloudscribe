@@ -1964,59 +1964,78 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
         p { color: #666; margin-top: 0.5rem; }
     </style>
     <script>
-        // Wait for the app to shut down, then start polling for restart
-        var hasShutDown = false;
+        // Simple approach: just keep polling until the site comes back
         var attempts = 0;
-        var maxAttempts = 30; // Try for about 30 seconds after shutdown
+        var maxAttempts = 60; // Try for about 60 seconds
+        var checkInterval = null;
         
-        function checkStatus() {
-            // Use XMLHttpRequest for better control over connection errors
-            var xhr = new XMLHttpRequest();
-            xhr.open('HEAD', '/siteadmin', true);
-            xhr.timeout = 2000; // 2 second timeout
+        console.log('[Restart] Page loaded, will start checking in 3 seconds...');
+        
+        function checkIfOnline() {
+            attempts++;
+            console.log('[Restart] Attempt ' + attempts + ' of ' + maxAttempts + ' - Checking /siteadmin...');
             
-            xhr.onload = function() {
-                if (xhr.status === 200) {
-                    if (hasShutDown) {
-                        // App is back online after shutdown
+            // Try to fetch the admin page
+            var xhr = new XMLHttpRequest();
+            xhr.open('GET', '/siteadmin', true);
+            xhr.timeout = 3000; // 3 second timeout
+            
+            xhr.onreadystatechange = function() {
+                if (xhr.readyState === 4) {
+                    console.log('[Restart] Response received - Status: ' + xhr.status + ', ReadyState: ' + xhr.readyState);
+                    
+                    if (xhr.status === 200) {
+                        // Site is back online!
+                        console.log('[Restart] SUCCESS! Site is back online. Redirecting to /siteadmin...');
+                        clearInterval(checkInterval);
                         window.location.href = '/siteadmin';
-                    } else {
-                        // Still running, check again soon
-                        setTimeout(checkStatus, 500);
+                    } else if (xhr.status === 503) {
+                        console.log('[Restart] Site still unavailable (503). Will keep trying...');
+                    } else if (xhr.status > 0) {
+                        console.log('[Restart] Unexpected status: ' + xhr.status + '. Will keep trying...');
                     }
+                    
+                    if (attempts >= maxAttempts) {
+                        // Timeout - show manual link
+                        console.log('[Restart] Max attempts reached. Showing manual link.');
+                        clearInterval(checkInterval);
+                        document.getElementById('message').innerHTML = 
+                            'Restart is taking longer than expected.<br>Please <a href=""/siteadmin"">click here</a> to continue.';
+                    }
+                    // Otherwise, keep trying (interval will call this again)
                 }
             };
             
             xhr.onerror = function() {
-                if (!hasShutDown) {
-                    // First connection error means app is shutting down
-                    hasShutDown = true;
-                    document.getElementById('message').innerHTML = 'Application is shutting down...';
-                    // Wait a bit longer before trying to reconnect
-                    setTimeout(checkStatus, 3000);
-                } else {
-                    // App is down, keep trying to reconnect
-                    attempts++;
-                    if (attempts < maxAttempts) {
-                        setTimeout(checkStatus, 2000);
-                    } else {
-                        document.getElementById('message').innerHTML = 
-                            'Restart is taking longer than expected.<br>Please <a href=""/siteadmin"">click here</a> to continue.';
-                    }
+                // Connection error - site is down, keep trying
+                console.log('[Restart] Connection error (site is down or restarting). Attempt ' + attempts);
+                
+                if (attempts >= maxAttempts) {
+                    console.log('[Restart] Max attempts reached after errors. Showing manual link.');
+                    clearInterval(checkInterval);
+                    document.getElementById('message').innerHTML = 
+                        'Restart is taking longer than expected.<br>Please <a href=""/siteadmin"">click here</a> to continue.';
                 }
             };
             
-            xhr.ontimeout = xhr.onerror; // Treat timeout same as error
+            xhr.ontimeout = function() {
+                console.log('[Restart] Request timed out after 3 seconds. Attempt ' + attempts);
+            };
             
             try {
                 xhr.send();
             } catch(e) {
-                xhr.onerror();
+                // Error sending - site is probably down
+                console.log('[Restart] Error sending request: ' + e.message);
             }
         }
         
-        // Start checking after a small delay to ensure this page loads
-        setTimeout(checkStatus, 1500);
+        // Start checking after 3 seconds, then every second
+        setTimeout(function() {
+            console.log('[Restart] Starting polling...');
+            checkIfOnline(); // First check
+            checkInterval = setInterval(checkIfOnline, 1000); // Then check every second
+        }, 3000);
     </script>
 </head>
 <body>
