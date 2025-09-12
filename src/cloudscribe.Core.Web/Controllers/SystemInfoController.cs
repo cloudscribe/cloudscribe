@@ -53,6 +53,7 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
             serverInfo.DatabasePlatform = SystemInfo.DatabasePlatform;
             serverInfo.CloudscribeCoreVersion = SystemInfo.CloudscribeCoreVersion;
             serverInfo.OtherVersions = SystemInfo.GetOtherVersions();
+            serverInfo.ShowRestartApplicationButton = UIOptions.ShowRestartApplicationButton;
             
             return View(serverInfo);
         }
