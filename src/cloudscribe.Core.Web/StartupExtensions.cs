@@ -17,6 +17,7 @@ using cloudscribe.Core.Web.Design;
 using cloudscribe.Core.Web.ExtensionPoints;
 using cloudscribe.Core.Web.Mvc.Components;
 using cloudscribe.Core.Web.Navigation;
+using cloudscribe.Core.Web.Services;
 using cloudscribe.Email;
 using cloudscribe.Email.ElasticEmail;
 using cloudscribe.Email.Mailgun;
@@ -106,6 +107,7 @@ namespace Microsoft.Extensions.DependencyInjection
             services.AddScoped<SiteTimeZoneService, SiteTimeZoneService>();
 
             services.AddTransient<RemainingSessionTimeResolver, RemainingSessionTimeResolver>();
+            services.TryAddScoped<ISessionActivityService, SessionActivityService>();
 
             services.AddScoped<SiteDataProtector>();
 
@@ -116,7 +118,9 @@ namespace Microsoft.Extensions.DependencyInjection
 
             services.TryAddSingleton<IDateTimeZoneProvider>(new DateTimeZoneCache(TzdbDateTimeZoneSource.Default));
             services.AddScoped<cloudscribe.DateTimeUtils.ITimeZoneIdResolver, SiteTimeZoneIdResolver>();
+            
             services.TryAddScoped<cloudscribe.DateTimeUtils.ITimeZoneHelper, cloudscribe.DateTimeUtils.TimeZoneHelper>();
+            services.AddScoped<cloudscribe.Versioning.IVersionProvider, cloudscribe.DateTimeUtils.VersionProvider>();
 
             services.TryAddScoped<IHandleCustomRegistration, NoRegistrationCustomization>();
             services.TryAddScoped<IHandleCustomUserInfo, NoUserInfoCustomization>();

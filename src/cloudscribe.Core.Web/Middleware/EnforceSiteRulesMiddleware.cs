@@ -12,7 +12,6 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using System.Linq;
-using System.Net;
 using System.Threading.Tasks;
 
 namespace cloudscribe.Core.Web.Middleware
@@ -123,7 +122,7 @@ namespace cloudscribe.Core.Web.Middleware
                         var logMessage = $"site closed so redirecting to closed for requested path {context.Request.Path}";
                         _logger.LogWarning(logMessage);
                         context.Response.Redirect(closedUrl);
-
+                        return;
                     }
                 }
 
@@ -136,6 +135,7 @@ namespace cloudscribe.Core.Web.Middleware
                         var logMessage = $"user {userContext.UserName} has must provide an email adddress so redirecting to email required page from requested path {context.Request.Path}";
                         _logger.LogWarning(logMessage);
                         context.Response.Redirect(setEmailUrl);
+                        return;
                     }
                 }
 
@@ -149,6 +149,7 @@ namespace cloudscribe.Core.Web.Middleware
                         var logMessage = $"user {userContext.Email} has must change password so redirecting to change password page from requested path {context.Request.Path}";
                         _logger.LogWarning(logMessage);
                         context.Response.Redirect(changePasswordUrl);
+                        return;
                     }
                 }
 
@@ -162,6 +163,7 @@ namespace cloudscribe.Core.Web.Middleware
                         var logMessage = $"user {userContext.Email} has must setup 2fa so redirecting to 2fa path from requested path {context.Request.Path}";
                         _logger.LogWarning(logMessage);
                         context.Response.Redirect(twoFactorUrl1);
+                        return;
                     }
 
                 }
@@ -188,11 +190,13 @@ namespace cloudscribe.Core.Web.Middleware
                             var logMessage = $"user {userContext.Email} has not accepted terms of use so redirecting to terms of use acceptance page from requested path {context.Request.Path}";
                             _logger.LogWarning(logMessage);
                             context.Response.Redirect(agreementUrl);
+                            return;
                         }
                         else
                         {
                             // unauth response for /api calls
                             await ReturnErrorResponse(context);
+                            return; // Do not call _next(context)
                         }
                     }
                 }
@@ -205,8 +209,9 @@ namespace cloudscribe.Core.Web.Middleware
         private async Task ReturnErrorResponse(HttpContext context)
         {
             context.Response.ContentType = "application/json";
-            context.Response.StatusCode = (int)HttpStatusCode.Forbidden;
-            await context.Response.StartAsync();
+            context.Response.StatusCode = StatusCodes.Status403Forbidden;
+            await context.Response.WriteAsync("{\"error\": \"Forbidden: user has not accepted the terms of use.\"}");
+            return; 
         }
     }
 }
