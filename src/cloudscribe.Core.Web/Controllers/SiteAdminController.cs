@@ -62,7 +62,8 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
             IConfiguration                             configuration,
             SiteUserManager<SiteUser> userManager,
             IBlockedOrPermittedIpService blockedOrPermittedIpService, 
-            ILogger<SiteAdminController> logger
+            ILogger<SiteAdminController> logger,
+            IHostApplicationLifetime applicationLifetime
             )
         {
             if (multiTenantOptions == null) { throw new ArgumentNullException(nameof(multiTenantOptions)); }
@@ -91,6 +92,7 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
             _userManager = userManager;
             _blockedOrPermittedIpService = blockedOrPermittedIpService;
             _log = logger;
+            _applicationLifetime = applicationLifetime;
             UIOptions = uiOptionsAccessor.Value;
         }
 
@@ -107,6 +109,7 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
         private ILogger _log;
         protected SiteUserManager<SiteUser> _userManager;
         protected IBlockedOrPermittedIpService _blockedOrPermittedIpService;
+        private readonly IHostApplicationLifetime _applicationLifetime;
         protected IStringLocalizer StringLocalizer { get; private set; }
         protected IThemeListBuilder LayoutListBuilder { get; private set; }
         protected UIOptions UIOptions;
@@ -1928,6 +1931,17 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
         [Authorize(Policy = PolicyConstants.ServerAdminPolicy)]
         public virtual Task<ActionResult> RestartApplication()
         {
+            var userId = User.GetUserId();
+            var userEmail = User.GetEmail();
+            var displayName = User.GetDisplayName() ?? User.Identity?.Name ?? "Unknown";
+            var ipAddress = HttpContext.Connection.RemoteIpAddress?.ToString() ?? "Unknown";
+            
+            _log.LogWarning("Application restart initiated - User: {DisplayName}, Email: {Email}, UserId: {UserId}, IP: {IpAddress}", 
+                displayName, 
+                userEmail, 
+                userId, 
+                ipAddress);
+            
             _applicationLifetime.StopApplication();
 
             return Task.FromResult<ActionResult>(RedirectToAction("Index"));
