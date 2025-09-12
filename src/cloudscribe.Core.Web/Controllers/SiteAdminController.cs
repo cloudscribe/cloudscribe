@@ -1965,7 +1965,7 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
             // Schedule the restart after sending the response
             Task.Run(async () => 
             {
-                await Task.Delay(500); // Small delay to ensure response is sent
+                await Task.Delay(2000); // 2 second delay to ensure view loads, JS downloads, and starts polling
                 _applicationLifetime.StopApplication();
             });
             
