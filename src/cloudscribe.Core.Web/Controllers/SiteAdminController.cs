@@ -2030,8 +2030,7 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
 
             // In development/IIS Express, just trigger restart and redirect
             // The fancy waiting page doesn't work well with IIS Express
-            if (StringLocalizer["Development"].Value == "Development" || 
-                Request.Host.Host == "localhost" || 
+            if (Request.Host.Host == "localhost" || 
                 Request.Host.Host == "127.0.0.1")
             {
                 Task.Run(async () => 
