@@ -1941,111 +1941,6 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
                 userEmail, 
                 userId, 
                 ipAddress);
-            
-            // Return a simple HTML page that will auto-refresh
-            var html = @"
-<!DOCTYPE html>
-<html>
-<head>
-    <meta charset='utf-8' />
-    <meta name='viewport' content='width=device-width, initial-scale=1.0' />
-    <title>Restarting Application</title>
-    <style>
-        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; 
-               display: flex; justify-content: center; align-items: center; height: 100vh; 
-               margin: 0; background: #f5f5f5; }
-        .container { text-align: center; padding: 2rem; background: white; 
-                     border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
-        .spinner { border: 3px solid #f3f3f3; border-top: 3px solid #3498db; 
-                   border-radius: 50%; width: 40px; height: 40px; 
-                   animation: spin 1s linear infinite; margin: 0 auto 1rem; }
-        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
-        h2 { color: #333; margin-bottom: 0.5rem; }
-        p { color: #666; margin-top: 0.5rem; }
-    </style>
-    <script>
-        // Simple approach: just keep polling until the site comes back
-        var attempts = 0;
-        var maxAttempts = 60; // Try for about 60 seconds
-        var checkInterval = null;
-        
-        console.log('[Restart] Page loaded, will start checking in 3 seconds...');
-        
-        function checkIfOnline() {
-            attempts++;
-            console.log('[Restart] Attempt ' + attempts + ' of ' + maxAttempts + ' - Checking /siteadmin...');
-            
-            // Try to fetch the admin page
-            var xhr = new XMLHttpRequest();
-            xhr.open('GET', '/siteadmin', true);
-            xhr.timeout = 3000; // 3 second timeout
-            
-            xhr.onreadystatechange = function() {
-                if (xhr.readyState === 4) {
-                    console.log('[Restart] Response received - Status: ' + xhr.status + ', ReadyState: ' + xhr.readyState);
-                    
-                    if (xhr.status === 200) {
-                        // Site is back online!
-                        console.log('[Restart] SUCCESS! Site is back online. Redirecting to /siteadmin...');
-                        clearInterval(checkInterval);
-                        window.location.href = '/siteadmin';
-                    } else if (xhr.status === 503) {
-                        console.log('[Restart] Site still unavailable (503). Will keep trying...');
-                    } else if (xhr.status > 0) {
-                        console.log('[Restart] Unexpected status: ' + xhr.status + '. Will keep trying...');
-                    }
-                    
-                    if (attempts >= maxAttempts) {
-                        // Timeout - show manual link
-                        console.log('[Restart] Max attempts reached. Showing manual link.');
-                        clearInterval(checkInterval);
-                        document.getElementById('message').innerHTML = 
-                            'Restart is taking longer than expected.<br>Please <a href=""/siteadmin"">click here</a> to continue.';
-                    }
-                    // Otherwise, keep trying (interval will call this again)
-                }
-            };
-            
-            xhr.onerror = function() {
-                // Connection error - site is down, keep trying
-                console.log('[Restart] Connection error (site is down or restarting). Attempt ' + attempts);
-                
-                if (attempts >= maxAttempts) {
-                    console.log('[Restart] Max attempts reached after errors. Showing manual link.');
-                    clearInterval(checkInterval);
-                    document.getElementById('message').innerHTML = 
-                        'Restart is taking longer than expected.<br>Please <a href=""/siteadmin"">click here</a> to continue.';
-                }
-            };
-            
-            xhr.ontimeout = function() {
-                console.log('[Restart] Request timed out after 3 seconds. Attempt ' + attempts);
-            };
-            
-            try {
-                xhr.send();
-            } catch(e) {
-                // Error sending - site is probably down
-                console.log('[Restart] Error sending request: ' + e.message);
-            }
-        }
-        
-        // Start checking after 3 seconds, then every second
-        setTimeout(function() {
-            console.log('[Restart] Starting polling...');
-            checkIfOnline(); // First check
-            checkInterval = setInterval(checkIfOnline, 1000); // Then check every second
-        }, 3000);
-    </script>
-</head>
-<body>
-    <div class='container'>
-        <div class='spinner'></div>
-        <h2>Restarting Application</h2>
-        <p id='message'>Please wait while the application restarts...</p>
-    </div>
-</body>
-</html>";
 
             // In development/IIS Express, just trigger restart and redirect
             // The fancy waiting page doesn't work well with IIS Express
@@ -2066,7 +1961,7 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
                     </body></html>", "text/html");
             }
             
-            // Production IIS - use the fancy auto-refresh page
+            // Production IIS - use the proper view with polling
             // Schedule the restart after sending the response
             Task.Run(async () => 
             {
@@ -2074,7 +1969,7 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
                 _applicationLifetime.StopApplication();
             });
             
-            return Content(html, "text/html");
+            return View("RestartingApplication");
         }
     }
 }

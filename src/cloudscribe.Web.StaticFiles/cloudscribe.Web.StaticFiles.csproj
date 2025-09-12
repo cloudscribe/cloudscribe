@@ -43,6 +43,8 @@
     <EmbeddedResource Include="js\cloudscribe-autologout-warning - Copy.js" />
     <EmbeddedResource Include="js\cloudscribe-cookie-consent-three-state.js" />
     <EmbeddedResource Include="js\cloudscribe-cookie-consent-three-state.min.js" />
+    <EmbeddedResource Include="js\restart-polling.js" />
+    <EmbeddedResource Include="js\restart-polling.min.js" />
     <EmbeddedResource Include="js\emaillist-formbuttons.js" />
     <EmbeddedResource Include="js\emaillist-signup-recaptcha-callback.js" />
     <EmbeddedResource Include="js\baguetteBox.min.js" />
