@@ -58,11 +58,8 @@
 @{
     if (Model.ShowRestartApplicationButton)
     {
-        <div class="mt-4">
-            <hr />
-            <h4>@sr["Application Management"]</h4>
-            <form method="post" class="d-inline" asp-antiforgery="true" data-submit-once="true" asp-controller="SiteAdmin" asp-action="RestartApplication" 
-                  onsubmit="return confirm('@sr["Are you sure you want to restart the application? This will temporarily make the site unavailable."]');">
+        <div class="mt-4 mb-4">
+            <form method="post" class="d-inline" asp-antiforgery="true" data-submit-once="true" asp-controller="SiteAdmin" asp-action="RestartApplication">
                 <button name="submit" type="submit" class="btn btn-danger" data-enabled-text="@sr["Restart Application"]">
                     <i class="fas fa-power-off me-1"></i>@sr["Restart Application"]
                 </button>
