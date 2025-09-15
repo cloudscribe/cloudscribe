@@ -1953,7 +1953,7 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
                     _applicationLifetime.StopApplication();
                 });
                 
-                // Simple message that will show briefly before shutdown
+                // Simple message that will show briefly before shutdown... no need to ResX localize this one
                 return Content(@"<!DOCTYPE html><html><head><meta charset='utf-8' /><title>Restarting</title></head>
                     <body style='font-family: sans-serif; padding: 2rem; text-align: center;'>
                     <h2>Application is restarting...</h2>
