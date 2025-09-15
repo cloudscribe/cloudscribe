@@ -1,5 +1,110 @@
-<?xml version='1.0' encoding='utf-8'?>
+<?xml version="1.0" encoding="utf-8"?>
 <root>
+  <!-- 
+    Microsoft ResX Schema 
+    
+    Version 2.0
+    
+    The primary goals of this format is to allow a simple XML format 
+    that is mostly human readable. The generation and parsing of the 
+    various data types are done through the TypeConverter classes 
+    associated with the data types.
+    
+    Example:
+    
+    ... ado.net/XML headers & schema ...
+    <resheader name="resmimetype">text/microsoft-resx</resheader>
+    <resheader name="version">2.0</resheader>
+    <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
+    <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
+    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
+    <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
+    <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
+        <value>[base64 mime encoded serialized .NET Framework object]</value>
+    </data>
+    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
+        <comment>This is a comment</comment>
+    </data>
+                
+    There are any number of "resheader" rows that contain simple 
+    name/value pairs.
+    
+    Each data row contains a name, and value. The row also contains a 
+    type or mimetype. Type corresponds to a .NET class that support 
+    text/value conversion through the TypeConverter architecture. 
+    Classes that don't support this are serialized and stored with the 
+    mimetype set.
+    
+    The mimetype is used for serialized objects, and tells the 
+    ResXResourceReader how to depersist the object. This is currently not 
+    extensible. For a given mimetype the value must be set accordingly:
+    
+    Note - application/x-microsoft.net.object.binary.base64 is the format 
+    that the ResXResourceWriter will generate, however the reader can 
+    read any of the formats listed below.
+    
+    mimetype: application/x-microsoft.net.object.binary.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
+            : and then encoded with base64 encoding.
+    
+    mimetype: application/x-microsoft.net.object.soap.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
+            : and then encoded with base64 encoding.
+
+    mimetype: application/x-microsoft.net.object.bytearray.base64
+    value   : The object must be serialized into a byte array 
+            : using a System.ComponentModel.TypeConverter
+            : and then encoded with base64 encoding.
+    -->
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
   <resheader name="resmimetype">
     <value>text/microsoft-resx</value>
   </resheader>
@@ -362,7 +467,6 @@
   </data>
   <data name="Email" xml:space="preserve">
     <value>E-bost</value>
-    <comment />
   </data>
   <data name="Forgot Password Confirmation" xml:space="preserve">
     <value>Forgot Cyfrinair Confirmation</value>
@@ -370,7 +474,6 @@
   </data>
   <data name="Forgot your password?" xml:space="preserve">
     <value>Wedi anghofio eich cyfrinair?</value>
-    <comment />
   </data>
   <data name="Log In" xml:space="preserve">
     <value>Log In</value>
@@ -406,7 +509,6 @@
   </data>
   <data name="Password" xml:space="preserve">
     <value>cyfrinair</value>
-    <comment />
   </data>
   <data name="Please check your email to reset your password." xml:space="preserve">
     <value>Gwiriwch eich e-bost i ailosod eich cyfrinair.</value>
@@ -414,7 +516,6 @@
   </data>
   <data name="Register" xml:space="preserve">
     <value>cofrestr</value>
-    <comment />
   </data>
   <data name="Register as a new user?" xml:space="preserve">
     <value>Cofrestru fel defnyddiwr newydd?</value>
@@ -422,7 +523,6 @@
   </data>
   <data name="Remember Me" xml:space="preserve">
     <value>Cofiwch fi</value>
-    <comment />
   </data>
   <data name="Remember this web browser" xml:space="preserve">
     <value>Cofio'r porwr gwe hwn</value>
@@ -598,7 +698,6 @@
   </data>
   <data name="Manage" xml:space="preserve">
     <value>rheoli</value>
-    <comment />
   </data>
   <data name="Manage your account" xml:space="preserve">
     <value>Manage your account</value>
@@ -734,7 +833,6 @@
   </data>
   <data name="reCAPTCHA Error occured. Please try again" xml:space="preserve">
     <value>Gwall reCAPTCHA. Rhowch gynnig arall arni</value>
-    <comment />
   </data>
   <data name="Role Management" xml:space="preserve">
     <value>Rôl Rheolaeth</value>
@@ -1114,11 +1212,9 @@
   </data>
   <data name="Hello {0}!" xml:space="preserve">
     <value>Helo {0}!</value>
-    <comment />
   </data>
   <data name="Log off" xml:space="preserve">
     <value>allgofnodi</value>
-    <comment />
   </data>
   <data name="Access Denied" xml:space="preserve">
     <value>Access Denied</value>
@@ -1510,15 +1606,12 @@
   </data>
   <data name="For your security, your session will time out in {0} seconds..." xml:space="preserve">
     <value>Er eich diogelwch, bydd eich sesiwn yn dod i ben ymhen {0} eiliad...</value>
-    <comment />
   </data>
   <data name="Log out" xml:space="preserve">
     <value>Allgofnodi</value>
-    <comment />
   </data>
   <data name="Stay logged in" xml:space="preserve">
     <value>Arhoswch wedi mewngofnodi</value>
-    <comment />
   </data>
   <data name="Timed out" xml:space="preserve">
     <value>Timed out</value>
@@ -1650,7 +1743,6 @@
   </data>
   <data name="View User Activity" xml:space="preserve">
     <value>Gweld Gweithgaredd Defnyddiwr</value>
-    <comment />
   </data>
   <data name="123.0.0.0,Spamming website" xml:space="preserve">
     <value>123.0.0.0,Spamming website</value>
@@ -1694,7 +1786,6 @@
   </data>
   <data name="Auto logout time (in minutes, leave blank to disable)" xml:space="preserve">
     <value>Amser allgofnodi awtomatig (mewn munudau, gadewch yn wag i analluogi)</value>
-    <comment />
   </data>
   <data name="Blocked IP" xml:space="preserve">
     <value>IP wedi'i Rwystro</value>
@@ -1842,7 +1933,6 @@
   </data>
   <data name="Maximum invalid password attempts before account is locked" xml:space="preserve">
     <value>Uchafswm ymdrechion cyfrinair annilys cyn cloi'r cyfrif</value>
-    <comment />
   </data>
   <data name="Message" xml:space="preserve">
     <value>Neges</value>
@@ -1850,7 +1940,6 @@
   </data>
   <data name="Minimum required password length (the system will not allow a number less than seven)" xml:space="preserve">
     <value>Isafswm hyd cyfrinair gofynnol (ni fydd y system yn caniatáu rhif llai na saith)</value>
-    <comment />
   </data>
   <data name="New Site Administrator" xml:space="preserve">
     <value>Gweinyddwr Safle Newydd</value>
@@ -1874,7 +1963,6 @@
   </data>
   <data name="Number of days until password expires, 0 to disable" xml:space="preserve">
     <value>Nifer y dyddiau nes bod y cyfrinair yn dod i ben, 0 i'w analluogi</value>
-    <comment />
   </data>
   <data name="Ok" xml:space="preserve">
     <value>Iawn</value>
@@ -1886,11 +1974,9 @@
   </data>
   <data name="Password Settings" xml:space="preserve">
     <value>Gosodiadau Cyfrinair</value>
-    <comment />
   </data>
   <data name="Password expiry alert display (days)" xml:space="preserve">
     <value>Arddangosfa rhybudd dod i ben cyfrinair (diwrnodau)</value>
-    <comment />
   </data>
   <data name="Permitted IP" xml:space="preserve">
     <value>Permitted IP</value>
@@ -1926,7 +2012,6 @@
   </data>
   <data name="Registration Permitted Top Level Domain(s)" xml:space="preserve">
     <value>Parth(au) Lefel Uchaf a Ganiateir Cofrestru</value>
-    <comment />
   </data>
   <data name="Requested Site Folder Name is not available, please try another value" xml:space="preserve">
     <value>Nid yw'r Enw Ffolder Safle a ofynnir ar gael, rhowch gynnig ar werth arall</value>
@@ -1938,19 +2023,15 @@
   </data>
   <data name="Require passwords to have at least one digit" xml:space="preserve">
     <value>Ei gwneud yn ofynnol i gyfrineiriau gael o leiaf un digid</value>
-    <comment />
   </data>
   <data name="Require passwords to have at least one lowercase character" xml:space="preserve">
     <value>Ei gwneud yn ofynnol i gyfrineiriau gael o leiaf un nod llythrennau bach</value>
-    <comment />
   </data>
   <data name="Require passwords to have at least one non-alphanumeric character" xml:space="preserve">
     <value>Ei gwneud yn ofynnol i gyfrineiriau fod ag o leiaf un nod nad yw'n alffaniwmerig</value>
-    <comment />
   </data>
   <data name="Require passwords to have at least one uppercase character" xml:space="preserve">
     <value>Ei gwneud yn ofynnol i gyfrineiriau gael o leiaf un nod mawr</value>
-    <comment />
   </data>
   <data name="Require users to configure 2 factor authentication. Recommended ONLY for extreme security needs not for most sites, because a user must install an authenticator app on their phone and take a picture of the QR code using the authenticator app to get an access code. Note this will only be enforced when using https and it won't be enforced for users in Administrators role. Presumably administrators can and will voluntarily enable 2 factor authentication, but we don't want administrators to get locked out." xml:space="preserve">
     <value>Gofyn users i configure 2 factor authentication. Recommended ONLY am extreme security needs not am most sites, because a user rhaid install an authenticator app on their phone a take a picture o y QR code using y authenticator app i get an access code. Note y will only be enforced when using https a it won't be enforced am users in Administrators role. Presumably administrators can a will voluntarily enable 2 factor authentication, but we don't eisiau administrators i get locked out.</value>
@@ -2034,7 +2115,6 @@
   </data>
   <data name="Session Expiry" xml:space="preserve">
     <value>Sesiwn yn dod i ben</value>
-    <comment />
   </data>
   <data name="Toggle Side Menu" xml:space="preserve">
     <value>Toglu Dewislen Ochr</value>
@@ -2102,7 +2182,6 @@
   </data>
   <data name="Not you?" xml:space="preserve">
     <value>Nid chi?</value>
-    <comment />
   </data>
   <data name="Other Personal Data" xml:space="preserve">
     <value>Other Personal Data</value>
@@ -2151,5 +2230,14 @@
   <data name="To ensure you get the best experience, this website uses cookies." xml:space="preserve">
     <value>I sicrhau eich bod yn cael y profiad gorau, mae'r wefan hon yn defnyddio cwcis.</value>
     <comment>Cookie consent - Translated to Welsh - 2025-08-12</comment>
+  </data>
+  <data name="Restart Application" xml:space="preserve">
+    <value>Ailgychwyn y Cais</value>
+  </data>
+  <data name="Restarting Application" xml:space="preserve">
+    <value>Ailgychwyn y Cais</value>
+  </data>
+  <data name="Please wait while the application restarts..." xml:space="preserve">
+    <value>Arhoswch tra bod y rhaglen yn ailgychwyn...</value>
   </data>
 </root>
