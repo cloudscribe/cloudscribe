@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <Description>Easy cross platform timezone conversion for .NET Core</Description>
-    <Version>8.3.0</Version>
+    <Version>8.5.0</Version>
     <TargetFramework>net8.0</TargetFramework>
     <Authors>Joe Audette</Authors>
 
@@ -12,7 +12,12 @@
     <PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
     <RepositoryUrl>https://github.com/cloudscribe/cloudscribe.git</RepositoryUrl>
     <RepositoryType>git</RepositoryType>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
   </PropertyGroup>
+
+  <ItemGroup>
+    <None Include="README.md" Pack="true" PackagePath="" />
+  </ItemGroup>
 
   <ItemGroup>
     <None Include="icon.png" Pack="true" PackagePath="\" />
@@ -24,6 +29,10 @@
     
     <PackageReference Include="NodaTime" Version="2.4.7" />
    
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\cloudscribe.Versioning\cloudscribe.Versioning.csproj" />
   </ItemGroup>
 
 </Project>

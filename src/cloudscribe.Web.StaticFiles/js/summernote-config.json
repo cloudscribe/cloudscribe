@@ -27,7 +27,7 @@
 		"pencil": "fa fa-pencil",
 		"picture": "fa fa-image",
 		"question": "fa fa-question",
-		"redo": "fa fa-repeat",
+		"redo": "fa fa-redo",
 		"square": "fa fa-square",
 		"strikethrough": "fa fa-strikethrough",
 		"subscript": "fa fa-subscript",
@@ -39,5 +39,8 @@
 		"undo": "fa fa-undo",
 		"unorderedlist": "fa fa-list-ul",
 		"video": "fa fa-video"
-	}
+	},
+	"codeviewFilter": false,
+	"codeviewIframeFilter": false,
+	"styleWithSpan": true
 }

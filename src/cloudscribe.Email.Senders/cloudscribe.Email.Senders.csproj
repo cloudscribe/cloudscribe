@@ -2,8 +2,8 @@
 
   <PropertyGroup>
     <Description>Classes that provide a common interface for sending email with smtp or popular email apis including SendGrid, Mailgun, and ElasticEmail</Description>
-    <Version>8.3.0</Version>
-    <AssemblyVersion>8.0.1</AssemblyVersion>
+    <Version>8.5.0</Version>
+    <AssemblyVersion>8.5.0</AssemblyVersion>
     <Authors>Joe Audette</Authors>
     <TargetFramework>net8.0</TargetFramework>
     <PackageTags>smtp;email;SendGrid,Mailgun,ElasticEmail</PackageTags>
@@ -12,10 +12,12 @@
     <PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
     <RepositoryUrl>https://github.com/cloudscribe/cloudscribe.git</RepositoryUrl>
     <RepositoryType>git</RepositoryType>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
   </PropertyGroup>
 
   <ItemGroup>
-    <None Include="icon.png" Pack="true" PackagePath="\"/>
+    <None Include="icon.png" Pack="true" PackagePath="\" />
+    <None Include="README.md" Pack="true" PackagePath="" />
   </ItemGroup>
 
   <ItemGroup>
@@ -27,6 +29,10 @@
     <PackageReference Include="MailKit" Version="4.8.0" />
     <PackageReference Include="MimeKit" Version="4.8.0" />
     <PackageReference Include="SendGrid" Version="9.29.2" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\cloudscribe.Versioning\cloudscribe.Versioning.csproj" />
   </ItemGroup>
 
 </Project>

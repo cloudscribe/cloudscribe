@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <Description>An implementation of the cloudscribe IFallbackPasswordHashValidator that can migrate hashed passwords migrated in from mojoortal database users to cloudscribe users in the format Pwd|PasswordSalt. On first login the users password will be updated to the asp.net Identity hash format.</Description>
-    <Version>8.3.0</Version>
+    <Version>8.5.0</Version>
     <TargetFramework>net8.0</TargetFramework>
     <Authors>Joe Audette</Authors>
     <PackageTags>cloudscribe;mojoportal;migration</PackageTags>
@@ -11,7 +11,12 @@
     <PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
     <RepositoryUrl>https://github.com/cloudscribe/cloudscribe.git</RepositoryUrl>
     <RepositoryType>git</RepositoryType>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
   </PropertyGroup>
+
+  <ItemGroup>
+    <None Include="README.md" Pack="true" PackagePath="" />
+  </ItemGroup>
 
   <ItemGroup>
     <None Include="icon.png" Pack="true" PackagePath="\" />

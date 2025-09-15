@@ -96,9 +96,10 @@ namespace Microsoft.AspNetCore.Builder
             });
             app.UseRouting();
             app.UseAuthentication();
+            app.UseCloudscribeSessionActivityTracking();
             app.UseAuthorization();
             app.UseCloudscribeEnforceSiteRulesMiddleware();
-
+            app.UseCloudscribeBlockedOrPermittedIpAddress();
             return app;
 
         }

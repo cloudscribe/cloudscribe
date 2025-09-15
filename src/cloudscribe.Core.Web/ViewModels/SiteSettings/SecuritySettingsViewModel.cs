@@ -95,5 +95,6 @@ namespace cloudscribe.Core.Web.ViewModels.SiteSettings
         public int MinRequiredPasswordLength { get; set; }
         public int PasswordExpiryWarningDays { get; set; }
         public int PasswordExpiresDays { get; set; }
+        public bool ShowRestartApplicationButton { get; set; } = false;
     }
 }

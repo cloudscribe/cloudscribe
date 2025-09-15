@@ -565,7 +565,24 @@
                 iconCssClass="fas fa-bug"
               componentVisibility="breadcrumbs,childtree,parenttree"
               authorizationPolicy="SystemLogPolicy" />
-
+        <NavNode key="PermittedIpAddresses"
+                 controller="SiteAdmin"
+                 action="PermittedIpAddresses"
+                 text="Permitted IP Addresses"
+                 iconCssClass="fas fa-check"
+                 componentVisibility="breadcrumbs,childtree,parenttree"
+                 authorizationPolicy="AdminPolicy">
+              <Children />
+        </NavNode>
+	  <NavNode key="BlockedIpAddresses"
+                 controller="SiteAdmin"
+                 action="BlockedIpAddresses"
+                 text="Blocked IP Addresses"
+                 iconCssClass="fas fa-ban"
+                 componentVisibility="breadcrumbs,childtree,parenttree"
+                 authorizationPolicy="AdminPolicy">
+              <Children />
+        </NavNode>
       </Children>
     </NavNode>
   </Children>

@@ -5,10 +5,11 @@
 // Last Modified:			2019-04-20
 //
 
+using cloudscribe.Core.Identity;
 using cloudscribe.Core.Models;
-using cloudscribe.Core.Models.EventHandlers;
 using cloudscribe.Core.Models.Identity;
 using cloudscribe.Core.Web.Components;
+using cloudscribe.Core.Web.Components.IPService;
 using cloudscribe.Core.Web.Components.Messaging;
 using cloudscribe.Core.Web.ViewModels.SiteSettings;
 using cloudscribe.Email;
@@ -20,10 +21,13 @@ using Microsoft.AspNetCore.Authentication.OpenIdConnect;
 using Microsoft.AspNetCore.Authentication.Twitter;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Localization;
+using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using System;
 using System.Collections.Generic;
@@ -34,7 +38,7 @@ using System.Threading.Tasks;
 namespace cloudscribe.Core.Web.Controllers.Mvc
 {
 
-    public class SiteAdminController : Controller
+    public partial class SiteAdminController : Controller
     {
         public SiteAdminController(
             SiteManager                                siteManager,
@@ -55,7 +59,11 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
             IOptionsMonitorCache<GoogleOptions>        googleOptionsCache,
             IOptionsMonitorCache<TwitterOptions>       twitterOptionsCache,
             ISiteQueries                               siteQueries,
-            IConfiguration                             configuration
+            IConfiguration                             configuration,
+            SiteUserManager<SiteUser> userManager,
+            IBlockedOrPermittedIpService blockedOrPermittedIpService, 
+            ILogger<SiteAdminController> logger,
+            IHostApplicationLifetime applicationLifetime
             )
         {
             if (multiTenantOptions == null) { throw new ArgumentNullException(nameof(multiTenantOptions)); }
@@ -79,6 +87,13 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
             TwitterOptionsCache  = twitterOptionsCache;
             SiteQueries          = siteQueries;
             Configuration        = configuration;
+            StringLocalizer = localizer;
+            CurrentSite = currentSite;
+            _userManager = userManager;
+            _blockedOrPermittedIpService = blockedOrPermittedIpService;
+            _log = logger;
+            _applicationLifetime = applicationLifetime;
+            UIOptions = uiOptionsAccessor.Value;
         }
 
         protected SiteContext CurrentSite;
@@ -91,8 +106,10 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
         protected ISiteAccountCapabilitiesProvider SiteCapabilities { get; private set; }
         protected IEnumerable<IEmailSender> EmailSenders { get; private set; }
         protected ISiteMessageEmailSender MessageSender { get; private set; }
-
-
+        private ILogger _log;
+        protected SiteUserManager<SiteUser> _userManager;
+        protected IBlockedOrPermittedIpService _blockedOrPermittedIpService;
+        private readonly IHostApplicationLifetime _applicationLifetime;
         protected IStringLocalizer StringLocalizer { get; private set; }
         protected IThemeListBuilder LayoutListBuilder { get; private set; }
         protected UIOptions UIOptions;
@@ -1132,6 +1149,8 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
                 PasswordExpiresDays = selectedSite.PasswordExpiresDays
             };
 
+            model.ShowRestartApplicationButton = UIOptions.ShowRestartApplicationButton;
+            
             return View(model);
         }
 
@@ -1907,5 +1926,50 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
             return RedirectToAction("SiteHostMappings", new { siteId, slp });
         }
 
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        [Authorize(Policy = PolicyConstants.ServerAdminPolicy)]
+        public virtual IActionResult RestartApplication()
+        {
+            var userId = User.GetUserId();
+            var userEmail = User.GetEmail();
+            var displayName = User.GetDisplayName() ?? User.Identity?.Name ?? "Unknown";
+            var ipAddress = HttpContext.Connection.RemoteIpAddress?.ToString() ?? "Unknown";
+            
+            _log.LogWarning("Application restart initiated - User: {DisplayName}, Email: {Email}, UserId: {UserId}, IP: {IpAddress}", 
+                displayName, 
+                userEmail, 
+                userId, 
+                ipAddress);
+
+            // In development/IIS Express, just trigger restart and redirect
+            // The fancy waiting page doesn't work well with IIS Express
+            if (Request.Host.Host == "localhost" || 
+                Request.Host.Host == "127.0.0.1")
+            {
+                Task.Run(async () => 
+                {
+                    await Task.Delay(100); // Small delay to ensure response is sent
+                    _applicationLifetime.StopApplication();
+                });
+                
+                // Simple message that will show briefly before shutdown... no need to ResX localize this one
+                return Content(@"<!DOCTYPE html><html><head><meta charset='utf-8' /><title>Restarting</title></head>
+                    <body style='font-family: sans-serif; padding: 2rem; text-align: center;'>
+                    <h2>Application is restarting...</h2>
+                    <p>The application will shut down. Please restart it manually if running locally in Development / IIS Express.</p>
+                    </body></html>", "text/html");
+            }
+            
+            // Production IIS - use the proper view with polling
+            // Schedule the restart after sending the response
+            Task.Run(async () => 
+            {
+                await Task.Delay(2000); // 2 second delay to ensure view loads, JS downloads, and starts polling
+                _applicationLifetime.StopApplication();
+            });
+            
+            return View("RestartingApplication");
+        }
     }
 }
