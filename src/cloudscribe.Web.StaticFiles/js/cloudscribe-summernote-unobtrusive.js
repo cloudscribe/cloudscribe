@@ -59,6 +59,24 @@
 									summernoteNumber = i;
 									summerInst = summernoteInstance;
 									onDropped(files);
+								},
+								onDialogShown: function(dialog) {
+									// Uncheck "Open in new window" checkbox when link dialog opens
+									// Use requestAnimationFrame for faster, smoother update
+									requestAnimationFrame(function() {
+										var $checkbox = $('.modal:visible .sn-checkbox-open-in-new-window input[type=checkbox]');
+										if ($checkbox.length > 0) {
+											$checkbox.prop('checked', false);
+										} else {
+											// If not found immediately, try again with minimal delay
+											setTimeout(function() {
+												var $checkbox = $('.modal:visible .sn-checkbox-open-in-new-window input[type=checkbox]');
+												if ($checkbox.length > 0) {
+													$checkbox.prop('checked', false);
+												}
+											}, 10);
+										}
+									});
 								}
 							},
 							toolbar: toolbarConfig,
