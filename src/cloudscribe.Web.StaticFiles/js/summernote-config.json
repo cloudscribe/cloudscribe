@@ -1,6 +1,7 @@
 {
 	"dialogsFade": true,
 	"height": 300,
+	"linkTargetBlank": false,
 	"icons": {
 		"align": "fa fa-align",
 		"alignCenter": "fa fa-align-center",
