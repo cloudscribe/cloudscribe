@@ -59,6 +59,44 @@
 									summernoteNumber = i;
 									summerInst = summernoteInstance;
 									onDropped(files);
+								},
+								onInit: function() {
+									// Completely replace HR button functionality to prevent double insertion
+									setTimeout(function() {
+										var $hrButton = $(summernoteInstance).eq(i).parent().find('.note-toolbar button[data-bs-original-title*="Insert Horizontal Rule"]');
+										if ($hrButton.length) {
+											// Remove all existing event handlers
+											$hrButton.off();
+											// Add our clean handler
+											$hrButton.on('click', function(e) {
+												e.preventDefault();
+												e.stopPropagation();
+												e.stopImmediatePropagation();
+												console.log('HR button clicked - inserting smart <hr>');
+												
+												// Get current content and cursor position
+												var $editor = $(summernoteInstance).eq(i);
+												var range = $editor.summernote('createRange');
+												
+												if (range) {
+													// Check if we're in an empty paragraph
+													var $currentElement = $(range.sc).closest('p');
+													if ($currentElement.length && ($currentElement.html() === '<br>' || $currentElement.html().trim() === '')) {
+														// Replace empty paragraph with HR + new paragraph
+														$currentElement.replaceWith('<hr><p><br></p>');
+													} else {
+														// Insert HR at cursor position with proper spacing
+														$editor.summernote('pasteHTML', '<hr>');
+													}
+												} else {
+													// Fallback: just insert clean HR
+													$editor.summernote('pasteHTML', '<hr>');
+												}
+												
+												return false;
+											});
+										}
+									}, 50); // Increased timeout to ensure Summernote is fully initialized
 								}
 							},
 							toolbar: toolbarConfig,
