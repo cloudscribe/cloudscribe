@@ -61,21 +61,33 @@
 									onDropped(files);
 								},
 								onDialogShown: function(dialog) {
-									// Uncheck "Open in new window" checkbox when link dialog opens
-									// Use requestAnimationFrame for faster, smoother update
+									// Only uncheck "Open in new window" for NEW links, not when editing existing ones
 									requestAnimationFrame(function() {
-										var $checkbox = $('.modal:visible .sn-checkbox-open-in-new-window input[type=checkbox]');
-										if ($checkbox.length > 0) {
+										var $modal = $('.modal:visible');
+										var $checkbox = $modal.find('.sn-checkbox-open-in-new-window input[type=checkbox]');
+										var $urlField = $modal.find('.note-link-url');
+										
+										// Check if we're editing an existing link
+										// If URL field has a value other than "http://", we're likely editing
+										var isEditing = $urlField.length > 0 && $urlField.val() && $urlField.val() !== 'http://';
+										
+										if ($checkbox.length > 0 && !isEditing) {
+											// Only uncheck for new links
 											$checkbox.prop('checked', false);
-										} else {
+										} else if ($checkbox.length === 0) {
 											// If not found immediately, try again with minimal delay
 											setTimeout(function() {
-												var $checkbox = $('.modal:visible .sn-checkbox-open-in-new-window input[type=checkbox]');
-												if ($checkbox.length > 0) {
+												var $modal = $('.modal:visible');
+												var $checkbox = $modal.find('.sn-checkbox-open-in-new-window input[type=checkbox]');
+												var $urlField = $modal.find('.note-link-url');
+												var isEditing = $urlField.length > 0 && $urlField.val() && $urlField.val() !== 'http://';
+												
+												if ($checkbox.length > 0 && !isEditing) {
 													$checkbox.prop('checked', false);
 												}
 											}, 10);
 										}
+										// If editing existing link, leave checkbox as-is (Summernote will set it correctly)
 									});
 								}
 							},
