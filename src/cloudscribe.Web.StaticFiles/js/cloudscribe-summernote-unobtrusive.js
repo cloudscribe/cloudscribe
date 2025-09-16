@@ -59,36 +59,6 @@
 									summernoteNumber = i;
 									summerInst = summernoteInstance;
 									onDropped(files);
-								},
-								onDialogShown: function(dialog) {
-									// Only uncheck "Open in new window" for NEW links, not when editing existing ones
-									requestAnimationFrame(function() {
-										var $modal = $('.modal:visible');
-										var $checkbox = $modal.find('.sn-checkbox-open-in-new-window input[type=checkbox]');
-										var $urlField = $modal.find('.note-link-url');
-										
-										// Check if we're editing an existing link
-										// If URL field has a value other than "http://", we're likely editing
-										var isEditing = $urlField.length > 0 && $urlField.val() && $urlField.val() !== 'http://';
-										
-										if ($checkbox.length > 0 && !isEditing) {
-											// Only uncheck for new links
-											$checkbox.prop('checked', false);
-										} else if ($checkbox.length === 0) {
-											// If not found immediately, try again with minimal delay
-											setTimeout(function() {
-												var $modal = $('.modal:visible');
-												var $checkbox = $modal.find('.sn-checkbox-open-in-new-window input[type=checkbox]');
-												var $urlField = $modal.find('.note-link-url');
-												var isEditing = $urlField.length > 0 && $urlField.val() && $urlField.val() !== 'http://';
-												
-												if ($checkbox.length > 0 && !isEditing) {
-													$checkbox.prop('checked', false);
-												}
-											}, 10);
-										}
-										// If editing existing link, leave checkbox as-is (Summernote will set it correctly)
-									});
 								}
 							},
 							toolbar: toolbarConfig,
