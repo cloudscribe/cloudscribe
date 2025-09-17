@@ -52,7 +52,10 @@
 				clickToSelect: true,
 				showTags: ['P', 'H1', 'H2', 'H3', 'H4', 'H5', 'H6', 'BLOCKQUOTE', 
 				           'PRE', 'LI', 'OL', 'UL', 'TD', 'TH', 'TR', 'TABLE', 'DIV', 
-				           'STRONG', 'B', 'EM', 'I', 'U', 'S', 'STRIKE', 'SUP', 'SUB', 'A', 'CODE', 'SPAN']
+				           'STRONG', 'B', 'EM', 'I', 'U', 'S', 'STRIKE', 'SUP', 'SUB', 'A', 'CODE', 'SPAN',
+				           'SMALL', 'CITE', 'CAPTION', 'THEAD', 'TBODY', 'TFOOT', 'ARTICLE', 'DL', 'DT', 'DD',
+				           'HEADER', 'FOOTER', 'MAIN', 'SECTION', 'ASIDE', 'NAV', 'FIGURE', 'FIGCAPTION', 
+				           'MARK', 'HR', 'FIELDSET', 'LEGEND', 'LABEL', 'ADDRESS', 'INPUT']
 			};
 			
 			// Merge options
@@ -66,8 +69,8 @@
 			 */
 			this.initialize = function () {
 				console.log('[ElementPath] Initializing plugin, enabled:', elementPathOptions.enabled);
-				console.log('[ElementPath] $statusbar:', $statusbar, 'length:', $statusbar.length);
-				console.log('[ElementPath] $editable:', $editable[0]);
+				// console.log('[ElementPath] $statusbar:', $statusbar, 'length:', $statusbar.length);
+				// console.log('[ElementPath] $editable:', $editable[0]);
 				
 				if (!elementPathOptions.enabled) return;
 				
@@ -75,7 +78,7 @@
 				if ($statusbar.length > 0) {
 					// Check if this statusbar already has an element path (for this specific instance)
 					if ($statusbar.find('.note-element-path').length > 0) {
-						console.log('[ElementPath] Element path already exists for this editor, skipping...');
+						// console.log('[ElementPath] Element path already exists for this editor, skipping...');
 						return;
 					}
 					
@@ -99,7 +102,7 @@
 					});
 					$statusOutput.append($elementPath);
 					
-					console.log('[ElementPath] Created element path for editor:', editorId);
+					// console.log('[ElementPath] Created element path for editor:', editorId);
 					
 					// Bind events
 					this.bindEvents();
@@ -113,22 +116,22 @@
 				var path = [];
 				var selection = window.getSelection();
 				
-				console.log('[ElementPath] Getting element path...');
-				console.log('[ElementPath] Selection rangeCount:', selection.rangeCount);
+				// console.log('[ElementPath] Getting element path...');
+				// console.log('[ElementPath] Selection rangeCount:', selection.rangeCount);
 				
 				if (selection.rangeCount > 0) {
 					var range = selection.getRangeAt(0);
 					var node = range.startContainer;
 					
-					console.log('[ElementPath] Initial node:', node);
-					console.log('[ElementPath] Node is inside editable?', $editable[0].contains(node));
+					// console.log('[ElementPath] Initial node:', node);
+					// console.log('[ElementPath] Node is inside editable?', $editable[0].contains(node));
 					
 					// Make sure we're inside the editor
 					if (!$editable[0].contains(node)) {
-						console.log('[ElementPath] Selection is outside editor, checking if editor has focus...');
+						// console.log('[ElementPath] Selection is outside editor, checking if editor has focus...');
 						// Try to get the last known position in the editor
 						var savedRange = context.invoke('editor.getLastRange');
-						console.log('[ElementPath] Saved range:', savedRange);
+						// console.log('[ElementPath] Saved range:', savedRange);
 						if (savedRange && savedRange.sc) {
 							node = savedRange.sc;
 						} else {
@@ -141,14 +144,14 @@
 						node = node.parentElement;
 					}
 					
-					console.log('[ElementPath] After text node check:', node);
-					console.log('[ElementPath] $editable[0]:', $editable[0]);
+					// console.log('[ElementPath] After text node check:', node);
+					// console.log('[ElementPath] $editable[0]:', $editable[0]);
 					
 					// Build path from current node to editable root
 					while (node && node !== $editable[0] && !$(node).hasClass('note-editable')) {
 						var nodeName = node.nodeName.toUpperCase();
 						
-						console.log('[ElementPath] Checking node:', nodeName, 'in showTags:', elementPathOptions.showTags);
+						// console.log('[ElementPath] Checking node:', nodeName, 'in showTags:', elementPathOptions.showTags);
 						
 						// Only add if it's in the showTags list
 						if (elementPathOptions.showTags.indexOf(nodeName) !== -1) {
@@ -185,14 +188,14 @@
 			 * Update the element path display
 			 */
 			this.updateDisplay = function () {
-				console.log('[ElementPath] updateDisplay called, $elementPath:', $elementPath);
+				// console.log('[ElementPath] updateDisplay called, $elementPath:', $elementPath);
 				if (!$elementPath) return;
 				
 				var path = this.getElementPath();
-				console.log('[ElementPath] Path found:', path);
+				// console.log('[ElementPath] Path found:', path);
 				
 				// Always start with "body" as the base
-				var pathHtml = ['<span style="color: #999;">body</span>'];
+				var pathHtml = ['<span style="color: #999; padding-right: 4px;">body</span>'];
 				
 				// Add elements from the path
 				if (path.length > 0) {
@@ -200,12 +203,12 @@
 						if (elementPathOptions.clickToSelect) {
 							// Make elements clickable
 							pathHtml.push('<a href="#" class="note-element-path-item" data-element-index="' + 
-							              index + '" style="color: #337ab7; text-decoration: none; padding: 2px 4px; ' +
-							              'border-radius: 2px;" onmouseover="this.style.backgroundColor=\'#f0f0f0\'" ' +
+							              index + '" style="color: #303030; font-weight: 600; text-decoration: none; padding: 2px 4px; ' +
+							              'border-radius: 2px;" onmouseover="this.style.backgroundColor=\'#e0e8f0\'" ' +
 							              'onmouseout="this.style.backgroundColor=\'transparent\'">' + 
 							              element.displayName + '</a>');
 						} else {
-							pathHtml.push('<span>' + element.displayName + '</span>');
+							pathHtml.push('<span style="color: #303030; font-weight: 600;">' + element.displayName + '</span>');
 						}
 					});
 				}
@@ -217,14 +220,14 @@
 				if (elementPathOptions.clickToSelect) {
 					$elementPath.find('.note-element-path-item').on('click', function (e) {
 						e.preventDefault();
-						console.log('[ElementPath] Element path item clicked');
+						// console.log('[ElementPath] Element path item clicked');
 						var index = parseInt($(this).data('element-index'));
-						console.log('[ElementPath] Clicked index:', index, 'Path length:', path.length);
+						// console.log('[ElementPath] Clicked index:', index, 'Path length:', path.length);
 						if (index >= 0 && index < path.length) {
-							console.log('[ElementPath] Selecting element:', path[index]);
+							// console.log('[ElementPath] Selecting element:', path[index]);
 							self.selectElement(path[index].node);
 						} else {
-							console.error('[ElementPath] Invalid index:', index);
+							// console.error('[ElementPath] Invalid index:', index);
 						}
 					});
 				}
@@ -234,32 +237,34 @@
 			 * Select an element in the editor
 			 */
 			this.selectElement = function (element) {
-				console.log('[ElementPath] selectElement called with:', element);
+				// console.log('[ElementPath] selectElement called with:', element);
 				if (!element) {
-					console.log('[ElementPath] No element provided to selectElement');
+					// console.log('[ElementPath] No element provided to selectElement');
 					return;
 				}
 				
 				try {
+					// Focus the editor first
+					$editable.focus();
+					
 					// Create a range that selects the entire element
 					var range = document.createRange();
 					range.selectNodeContents(element);
-					console.log('[ElementPath] Created range:', range);
+					// console.log('[ElementPath] Created range:', range);
 					
 					// Apply the selection
 					var selection = window.getSelection();
 					selection.removeAllRanges();
 					selection.addRange(range);
-					console.log('[ElementPath] Applied selection, rangeCount:', selection.rangeCount);
+					// console.log('[ElementPath] Applied selection, rangeCount:', selection.rangeCount);
 					
-					// Focus the editor
-					$editable.focus();
-					console.log('[ElementPath] Focused editor');
+					// Notify Summernote of the range change (but don't trigger events that cause loops)
+					context.invoke('editor.saveRange');
 					
-					// Update display
-					this.updateDisplay();
+					// console.log('[ElementPath] Selection completed');
+					
 				} catch (error) {
-					console.error('[ElementPath] Error in selectElement:', error);
+					// console.error('[ElementPath] Error in selectElement:', error);
 				}
 			};
 			
@@ -278,9 +283,24 @@
 				// Bind events directly to the editable area for this instance
 				updateEvents.forEach(function (eventName) {
 					$editable.on(eventName, function (e) {
-						console.log('[ElementPath] Event triggered:', eventName, 'for editor:', $editable[0]);
-						self.updateDisplay();
+						// console.log('[ElementPath] Event triggered:', eventName, 'for editor:', $editable[0]);
+						// Add delay for mouseup to ensure selection has updated
+						if (eventName === 'mouseup') {
+							setTimeout(function() {
+								self.updateDisplay();
+							}, 10);
+						} else {
+							self.updateDisplay();
+						}
 					});
+				});
+				
+				// Add immediate click handler for faster response to selection changes
+				$editable.on('click', function (e) {
+					// console.log('[ElementPath] Click event triggered for editor:', $editable[0]);
+					setTimeout(function() {
+						self.updateDisplay();
+					}, 20);
 				});
 				
 				// Also bind to editor-level summernote events
@@ -292,14 +312,14 @@
 				
 				summernoteEvents.forEach(function (eventName) {
 					$editor.on(eventName, function () {
-						console.log('[ElementPath] Summernote event triggered:', eventName);
+						// console.log('[ElementPath] Summernote event triggered:', eventName);
 						self.updateDisplay();
 					});
 				});
 				
 				// Bind to toolbar button clicks for immediate formatting updates
 				$editor.on('click', '.note-toolbar .note-btn', function(e) {
-					console.log('[ElementPath] Toolbar button clicked:', $(this));
+					// console.log('[ElementPath] Toolbar button clicked:', $(this));
 					// Small delay to allow formatting to be applied before updating
 					setTimeout(function() {
 						self.updateDisplay();
@@ -308,7 +328,7 @@
 				
 				// Bind to dropdown menu item clicks (for style dropdown H1, H2, etc.)
 				$editor.on('click', '.dropdown-style .dropdown-item', function(e) {
-					console.log('[ElementPath] Style dropdown item clicked:', $(this), 'data-value:', $(this).data('value'));
+					// console.log('[ElementPath] Style dropdown item clicked:', $(this), 'data-value:', $(this).data('value'));
 					// Longer delay for dropdown selections as they may take more time to apply
 					setTimeout(function() {
 						self.updateDisplay();
@@ -323,7 +343,7 @@
 				
 				formatEvents.forEach(function (eventName) {
 					$editor.on(eventName, function () {
-						console.log('[ElementPath] Format event triggered:', eventName);
+						// console.log('[ElementPath] Format event triggered:', eventName);
 						setTimeout(function() {
 							self.updateDisplay();
 						}, 100);
@@ -332,7 +352,7 @@
 				
 				// Initial update with delay to ensure editor is ready
 				setTimeout(function () {
-					console.log('[ElementPath] Initial update for editor:', $editable[0]);
+					// console.log('[ElementPath] Initial update for editor:', $editable[0]);
 					self.updateDisplay();
 				}, 100);
 			};
