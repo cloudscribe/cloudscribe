@@ -191,6 +191,14 @@
 				// console.log('[ElementPath] updateDisplay called, $elementPath:', $elementPath);
 				if (!$elementPath) return;
 				
+				// Hide element path content in source code mode but maintain space
+				if ($editor.hasClass('codeview')) {
+					$elementPath.css('visibility', 'hidden');
+					return;
+				} else {
+					$elementPath.css('visibility', 'visible');
+				}
+				
 				var path = this.getElementPath();
 				// console.log('[ElementPath] Path found:', path);
 				
