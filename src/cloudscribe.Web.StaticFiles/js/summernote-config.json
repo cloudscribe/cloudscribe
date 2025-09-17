@@ -50,6 +50,6 @@
 		"clickToSelect": true,
 		"showTags": ["P", "H1", "H2", "H3", "H4", "H5", "H6", "BLOCKQUOTE", 
 		             "PRE", "LI", "OL", "UL", "TD", "TH", "TR", "TABLE", "DIV", 
-		             "STRONG", "B", "EM", "U", "S", "STRIKE", "SUP", "SUB", "A", "CODE", "SPAN"]
+		             "STRONG", "B", "EM", "I", "U", "S", "STRIKE", "SUP", "SUB", "A", "CODE", "SPAN"]
 	}
 }

@@ -52,7 +52,7 @@
 				clickToSelect: true,
 				showTags: ['P', 'H1', 'H2', 'H3', 'H4', 'H5', 'H6', 'BLOCKQUOTE', 
 				           'PRE', 'LI', 'OL', 'UL', 'TD', 'TH', 'TR', 'TABLE', 'DIV', 
-				           'STRONG', 'B', 'EM', 'U', 'S', 'STRIKE', 'SUP', 'SUB', 'A', 'CODE', 'SPAN']
+				           'STRONG', 'B', 'EM', 'I', 'U', 'S', 'STRIKE', 'SUP', 'SUB', 'A', 'CODE', 'SPAN']
 			};
 			
 			// Merge options
@@ -294,6 +294,39 @@
 					$editor.on(eventName, function () {
 						console.log('[ElementPath] Summernote event triggered:', eventName);
 						self.updateDisplay();
+					});
+				});
+				
+				// Bind to toolbar button clicks for immediate formatting updates
+				$editor.on('click', '.note-toolbar .note-btn', function(e) {
+					console.log('[ElementPath] Toolbar button clicked:', $(this));
+					// Small delay to allow formatting to be applied before updating
+					setTimeout(function() {
+						self.updateDisplay();
+					}, 50);
+				});
+				
+				// Bind to dropdown menu item clicks (for style dropdown H1, H2, etc.)
+				$editor.on('click', '.dropdown-style .dropdown-item', function(e) {
+					console.log('[ElementPath] Style dropdown item clicked:', $(this), 'data-value:', $(this).data('value'));
+					// Longer delay for dropdown selections as they may take more time to apply
+					setTimeout(function() {
+						self.updateDisplay();
+					}, 100);
+				});
+				
+				// Also listen for format changes via summernote events
+				var formatEvents = [
+					'summernote.paste',
+					'summernote.enter'
+				];
+				
+				formatEvents.forEach(function (eventName) {
+					$editor.on(eventName, function () {
+						console.log('[ElementPath] Format event triggered:', eventName);
+						setTimeout(function() {
+							self.updateDisplay();
+						}, 100);
 					});
 				});
 				
