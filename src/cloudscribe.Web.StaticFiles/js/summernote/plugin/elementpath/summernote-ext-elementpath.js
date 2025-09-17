@@ -2,9 +2,10 @@
  * Summernote Element Path Plugin
  * Displays the current element path (like body > h2 > strong) in the status bar
  * Similar to CKEditor/TinyMCE element path display
+ * copyright 2024 ESDM, an Idox Company.
  * 
  * @summary Summernote Element Path Plugin
- * @author cloudscribe
+ * @author Jim K - Idox plc.
  * @license MIT
  */
 
@@ -55,7 +56,9 @@
 				           'STRONG', 'B', 'EM', 'I', 'U', 'S', 'STRIKE', 'SUP', 'SUB', 'A', 'CODE', 'SPAN',
 				           'SMALL', 'CITE', 'CAPTION', 'THEAD', 'TBODY', 'TFOOT', 'ARTICLE', 'DL', 'DT', 'DD',
 				           'HEADER', 'FOOTER', 'MAIN', 'SECTION', 'ASIDE', 'NAV', 'FIGURE', 'FIGCAPTION', 
-				           'MARK', 'HR', 'FIELDSET', 'LEGEND', 'LABEL', 'ADDRESS', 'INPUT']
+				           'MARK', 'HR', 'FIELDSET', 'LEGEND', 'LABEL', 'ADDRESS', 'INPUT',
+				           'DETAILS', 'SUMMARY', 'IFRAME', 'AUDIO', 'VIDEO', 'SOURCE', 'DIALOG', 
+				           'PROGRESS', 'METER', 'OUTPUT', 'CANVAS', 'SVG']
 			};
 			
 			// Merge options
