@@ -217,8 +217,15 @@
 				if (elementPathOptions.clickToSelect) {
 					$elementPath.find('.note-element-path-item').on('click', function (e) {
 						e.preventDefault();
+						console.log('[ElementPath] Element path item clicked');
 						var index = parseInt($(this).data('element-index'));
-						self.selectElement(path[index].node);
+						console.log('[ElementPath] Clicked index:', index, 'Path length:', path.length);
+						if (index >= 0 && index < path.length) {
+							console.log('[ElementPath] Selecting element:', path[index]);
+							self.selectElement(path[index].node);
+						} else {
+							console.error('[ElementPath] Invalid index:', index);
+						}
 					});
 				}
 			};
@@ -227,22 +234,33 @@
 			 * Select an element in the editor
 			 */
 			this.selectElement = function (element) {
-				if (!element) return;
+				console.log('[ElementPath] selectElement called with:', element);
+				if (!element) {
+					console.log('[ElementPath] No element provided to selectElement');
+					return;
+				}
 				
-				// Create a range that selects the entire element
-				var range = document.createRange();
-				range.selectNodeContents(element);
-				
-				// Apply the selection
-				var selection = window.getSelection();
-				selection.removeAllRanges();
-				selection.addRange(range);
-				
-				// Focus the editor
-				$editable.focus();
-				
-				// Update display
-				this.updateDisplay();
+				try {
+					// Create a range that selects the entire element
+					var range = document.createRange();
+					range.selectNodeContents(element);
+					console.log('[ElementPath] Created range:', range);
+					
+					// Apply the selection
+					var selection = window.getSelection();
+					selection.removeAllRanges();
+					selection.addRange(range);
+					console.log('[ElementPath] Applied selection, rangeCount:', selection.rangeCount);
+					
+					// Focus the editor
+					$editable.focus();
+					console.log('[ElementPath] Focused editor');
+					
+					// Update display
+					this.updateDisplay();
+				} catch (error) {
+					console.error('[ElementPath] Error in selectElement:', error);
+				}
 			};
 			
 			/**
