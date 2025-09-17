@@ -43,5 +43,13 @@
 	},
 	"codeviewFilter": false,
 	"codeviewIframeFilter": false,
-	"styleWithSpan": true
+	"styleWithSpan": true,
+	"elementPath": {
+		"enabled": true,
+		"separator": " > ",
+		"clickToSelect": true,
+		"showTags": ["P", "H1", "H2", "H3", "H4", "H5", "H6", "BLOCKQUOTE", 
+		             "PRE", "LI", "OL", "UL", "TD", "TH", "TABLE", "DIV", 
+		             "STRONG", "EM", "U", "S", "A", "CODE", "SPAN"]
+	}
 }

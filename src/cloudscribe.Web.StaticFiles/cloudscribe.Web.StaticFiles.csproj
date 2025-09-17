@@ -170,6 +170,8 @@
 	<EmbeddedResource Include="js\cloudscribe-summernote-unobtrusive.min.js" />
 	<EmbeddedResource Include="js\summernote\plugin\specialchars\summernote-ext-specialchars.js" />
 	<EmbeddedResource Include="js\summernote\plugin\serverimage\summernote-ext-serverimage.js" />
+	<EmbeddedResource Include="js\summernote\plugin\elementpath\summernote-ext-elementpath.js" />
+	<EmbeddedResource Include="js\summernote\plugin\elementpath\summernote-ext-elementpath.min.js" />
 	<EmbeddedResource Include="js\summernote-config.json" />
 	<EmbeddedResource Include="js\summernote-toolbar-config.json" />
 	<EmbeddedResource Include="js\summernote\lang\summernote-it-IT.js" />
