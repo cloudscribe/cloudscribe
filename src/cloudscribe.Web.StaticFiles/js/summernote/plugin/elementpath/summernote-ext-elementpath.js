@@ -53,7 +53,7 @@
 				clickToSelect: true,
 				showTags: ['P', 'H1', 'H2', 'H3', 'H4', 'H5', 'H6', 'BLOCKQUOTE', 
 				           'PRE', 'LI', 'OL', 'UL', 'TD', 'TH', 'TR', 'TABLE', 'DIV', 
-				           'STRONG', 'B', 'EM', 'I', 'U', 'S', 'STRIKE', 'SUP', 'SUB', 'A', 'CODE', 'SPAN',
+				           'STRONG', 'B', 'EM', 'I', 'U', 'S', 'STRIKE', 'SUP', 'SUB', 'A', 'CODE', 'SPAN', 'IMG',
 				           'SMALL', 'CITE', 'CAPTION', 'THEAD', 'TBODY', 'TFOOT', 'ARTICLE', 'DL', 'DT', 'DD',
 				           'HEADER', 'FOOTER', 'MAIN', 'SECTION', 'ASIDE', 'NAV', 'FIGURE', 'FIGCAPTION', 
 				           'MARK', 'HR', 'FIELDSET', 'LEGEND', 'LABEL', 'ADDRESS', 'INPUT',
