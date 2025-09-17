@@ -48,11 +48,11 @@
 			// Default options
 			var defaultOptions = {
 				enabled: true,
-				separator: ' > ',
+				separator: '  ',
 				clickToSelect: true,
 				showTags: ['P', 'H1', 'H2', 'H3', 'H4', 'H5', 'H6', 'BLOCKQUOTE', 
-				           'PRE', 'LI', 'OL', 'UL', 'TD', 'TH', 'TABLE', 'DIV', 
-				           'STRONG', 'EM', 'U', 'S', 'A', 'CODE', 'SPAN']
+				           'PRE', 'LI', 'OL', 'UL', 'TD', 'TH', 'TR', 'TABLE', 'DIV', 
+				           'STRONG', 'B', 'EM', 'U', 'S', 'STRIKE', 'SUP', 'SUB', 'A', 'CODE', 'SPAN']
 			};
 			
 			// Merge options
@@ -92,6 +92,8 @@
 					$elementPath.css({
 						'display': 'inline-block',
 						'margin-right': '10px',
+						'padding-left': '8px',
+						'padding-top': '5px',
 						'color': '#666',
 						'font-size': '12px'
 					});
@@ -189,28 +191,26 @@
 				var path = this.getElementPath();
 				console.log('[ElementPath] Path found:', path);
 				
-				if (path.length === 0) {
-					$elementPath.html('<span style="color: #999;">body</span>');
-					return;
+				// Always start with "body" as the base
+				var pathHtml = ['<span style="color: #999;">body</span>'];
+				
+				// Add elements from the path
+				if (path.length > 0) {
+					path.forEach(function (element, index) {
+						if (elementPathOptions.clickToSelect) {
+							// Make elements clickable
+							pathHtml.push('<a href="#" class="note-element-path-item" data-element-index="' + 
+							              index + '" style="color: #337ab7; text-decoration: none; padding: 2px 4px; ' +
+							              'border-radius: 2px;" onmouseover="this.style.backgroundColor=\'#f0f0f0\'" ' +
+							              'onmouseout="this.style.backgroundColor=\'transparent\'">' + 
+							              element.displayName + '</a>');
+						} else {
+							pathHtml.push('<span>' + element.displayName + '</span>');
+						}
+					});
 				}
 				
-				// Build HTML for path display
-				var pathHtml = [];
-				
-				path.forEach(function (element, index) {
-					if (elementPathOptions.clickToSelect) {
-						// Make elements clickable
-						pathHtml.push('<a href="#" class="note-element-path-item" data-element-index="' + 
-						              index + '" style="color: #337ab7; text-decoration: none; padding: 2px 4px; ' +
-						              'border-radius: 2px;" onmouseover="this.style.backgroundColor=\'#f0f0f0\'" ' +
-						              'onmouseout="this.style.backgroundColor=\'transparent\'">' + 
-						              element.displayName + '</a>');
-					} else {
-						pathHtml.push('<span>' + element.displayName + '</span>');
-					}
-				});
-				
-				$elementPath.html(pathHtml.join('<span style="color: #999; margin: 0 2px;">' + 
+				$elementPath.html(pathHtml.join('<span style="color: #999;">' + 
 				                                 elementPathOptions.separator + '</span>'));
 				
 				// Attach click handlers if enabled
