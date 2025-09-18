@@ -53,7 +53,7 @@
 				clickToSelect: true,
 				showTags: ['P', 'H1', 'H2', 'H3', 'H4', 'H5', 'H6', 'BLOCKQUOTE', 
 				           'PRE', 'LI', 'OL', 'UL', 'TD', 'TH', 'TR', 'TABLE', 'DIV', 
-				           'STRONG', 'B', 'EM', 'I', 'U', 'S', 'STRIKE', 'SUP', 'SUB', 'A', 'CODE', 'SPAN',
+				           'STRONG', 'B', 'EM', 'I', 'U', 'S', 'STRIKE', 'SUP', 'SUB', 'A', 'CODE', 'SPAN', 'IMG',
 				           'SMALL', 'CITE', 'CAPTION', 'THEAD', 'TBODY', 'TFOOT', 'ARTICLE', 'DL', 'DT', 'DD',
 				           'HEADER', 'FOOTER', 'MAIN', 'SECTION', 'ASIDE', 'NAV', 'FIGURE', 'FIGCAPTION', 
 				           'MARK', 'HR', 'FIELDSET', 'LEGEND', 'LABEL', 'ADDRESS', 'INPUT',
@@ -85,6 +85,19 @@
 						return;
 					}
 					
+					// Inject CSS styles once for CSP compliance (if not already injected)
+					if ($('#summernote-elementpath-styles').length === 0) {
+						var styleElement = $('<style id="summernote-elementpath-styles">' +
+							'.note-element-path { display: inline-block; margin-right: 10px; padding-left: 8px; padding-top: 5px; color: #666; font-size: 12px; }' +
+							'.note-element-path-body { color: #999; padding-right: 4px; }' +
+							'.note-element-path-separator { color: #999; }' +
+							'.note-element-path-item { color: #303030; font-weight: 600; text-decoration: none; padding: 2px 4px; border-radius: 2px; }' +
+							'.note-element-path-item:hover { background-color: #e0e8f0 !important; }' +
+							'.note-element-path-static { color: #303030; font-weight: 600; }' +
+							'</style>');
+						$('head').append(styleElement);
+					}
+					
 					// Check if status output area exists, if not create it
 					var $statusOutput = $statusbar.find('.note-status-output');
 					if ($statusOutput.length === 0) {
@@ -92,17 +105,10 @@
 						$statusbar.prepend($statusOutput);
 					}
 					
-					// Create element path display with unique identifier
+					// Create element path display with unique identifier (no inline styles)
 					var editorId = $editable.attr('id') || Math.random().toString(36).substr(2, 9);
 					$elementPath = $('<div class="note-element-path" data-editor-id="' + editorId + '"></div>');
-					$elementPath.css({
-						'display': 'inline-block',
-						'margin-right': '10px',
-						'padding-left': '8px',
-						'padding-top': '5px',
-						'color': '#666',
-						'font-size': '12px'
-					});
+					// Removed inline styles - now using CSS classes
 					$statusOutput.append($elementPath);
 					
 					// console.log('[ElementPath] Created element path for editor:', editorId);
@@ -126,7 +132,7 @@
 					var range = selection.getRangeAt(0);
 					var node = range.startContainer;
 					
-					// console.log('[ElementPath] Initial node:', node);
+					// console.log('[ElementPath] Initial node:', node, 'nodeType:', node.nodeType, 'nodeName:', node.nodeName);
 					// console.log('[ElementPath] Node is inside editable?', $editable[0].contains(node));
 					
 					// Make sure we're inside the editor
@@ -147,8 +153,31 @@
 						node = node.parentElement;
 					}
 					
-					// console.log('[ElementPath] After text node check:', node);
+					// console.log('[ElementPath] After text node check:', node, 'nodeType:', node.nodeType, 'nodeName:', node.nodeName);
 					// console.log('[ElementPath] $editable[0]:', $editable[0]);
+					
+					// Check if we just clicked on an IMG element and include it
+					if (this.lastClickedElement && this.lastClickedElement.nodeName === 'IMG' && 
+						elementPathOptions.showTags.indexOf('IMG') !== -1 && 
+						$(this.lastClickedElement).closest($editable).length > 0) {
+						// console.log('[ElementPath] Adding clicked IMG element to path');
+						var imgInfo = {
+							node: this.lastClickedElement,
+							name: 'img',
+							displayName: 'img'
+						};
+						if (this.lastClickedElement.id) {
+							imgInfo.displayName += '#' + this.lastClickedElement.id;
+						} else if (this.lastClickedElement.className && typeof this.lastClickedElement.className === 'string') {
+							var imgClasses = this.lastClickedElement.className.split(' ').filter(function(c) {
+								return c && !c.startsWith('note-');
+							});
+							if (imgClasses.length > 0) {
+								imgInfo.displayName += '.' + imgClasses[0];
+							}
+						}
+						path.unshift(imgInfo);
+					}
 					
 					// Build path from current node to editable root
 					while (node && node !== $editable[0] && !$(node).hasClass('note-editable')) {
@@ -205,30 +234,29 @@
 				var path = this.getElementPath();
 				// console.log('[ElementPath] Path found:', path);
 				
-				// Always start with "body" as the base
-				var pathHtml = ['<span style="color: #999; padding-right: 4px;">body</span>'];
+				// Always start with "body" as the base (using CSS class)
+				var pathHtml = ['<span class="note-element-path-body">body</span>'];
 				
 				// Add elements from the path
 				if (path.length > 0) {
 					path.forEach(function (element, index) {
 						if (elementPathOptions.clickToSelect) {
-							// Make elements clickable
+							// Make elements clickable (using CSS classes for CSP compliance)
 							pathHtml.push('<a href="#" class="note-element-path-item" data-element-index="' + 
-							              index + '" style="color: #303030; font-weight: 600; text-decoration: none; padding: 2px 4px; ' +
-							              'border-radius: 2px;" onmouseover="this.style.backgroundColor=\'#e0e8f0\'" ' +
-							              'onmouseout="this.style.backgroundColor=\'transparent\'">' + 
+							              index + '">' + 
 							              element.displayName + '</a>');
 						} else {
-							pathHtml.push('<span style="color: #303030; font-weight: 600;">' + element.displayName + '</span>');
+							pathHtml.push('<span class="note-element-path-static">' + element.displayName + '</span>');
 						}
 					});
 				}
 				
-				$elementPath.html(pathHtml.join('<span style="color: #999;">' + 
+				$elementPath.html(pathHtml.join('<span class="note-element-path-separator">' + 
 				                                 elementPathOptions.separator + '</span>'));
 				
-				// Attach click handlers if enabled
+				// Attach event handlers if enabled (CSP-compliant approach)
 				if (elementPathOptions.clickToSelect) {
+					// Attach click handlers
 					$elementPath.find('.note-element-path-item').on('click', function (e) {
 						e.preventDefault();
 						// console.log('[ElementPath] Element path item clicked');
@@ -241,6 +269,9 @@
 							// console.error('[ElementPath] Invalid index:', index);
 						}
 					});
+					
+					// Note: Hover effects are now handled by CSS :hover rule (.note-element-path-item:hover)
+					// No JavaScript needed for hover effects - better for CSP compliance
 				}
 			};
 			
@@ -308,11 +339,24 @@
 				
 				// Add immediate click handler for faster response to selection changes
 				$editable.on('click', function (e) {
-					// console.log('[ElementPath] Click event triggered for editor:', $editable[0]);
+					// Store the actual clicked element for IMG detection
+					self.lastClickedElement = e.target;
+					// console.log('[ElementPath] Click handler fired!');
+					// console.log('[ElementPath] Clicked element:', e.target, 'nodeName:', e.target.nodeName);
+					// console.log('[ElementPath] Event target type:', typeof e.target, 'constructor:', e.target.constructor.name);
 					setTimeout(function() {
 						self.updateDisplay();
 					}, 20);
 				});
+				
+				// Also add a capturing event listener to catch clicks before Summernote's image handling
+				$editable[0].addEventListener('click', function(e) {
+					// console.log('[ElementPath] Capture click on:', e.target, 'nodeName:', e.target.nodeName);
+					if (e.target.nodeName === 'IMG') {
+						self.lastClickedElement = e.target;
+						// console.log('[ElementPath] Captured IMG click before Summernote!');
+					}
+				}, true); // true = use capture phase
 				
 				// Also bind to editor-level summernote events
 				var summernoteEvents = [
@@ -327,6 +371,33 @@
 						self.updateDisplay();
 					});
 				});
+				
+				// Try to hook into Summernote's image selection events
+				$editor.on('summernote.image.upload summernote.image.inserted summernote.change', function() {
+					// console.log('[ElementPath] Image-related event detected');
+					setTimeout(function() {
+						// Check if there's a selected image
+						var selectedImg = $editable.find('img.note-selected, img:focus');
+						if (selectedImg.length > 0) {
+							// console.log('[ElementPath] Found selected image:', selectedImg[0]);
+							self.lastClickedElement = selectedImg[0];
+						}
+						self.updateDisplay();
+					}, 100);
+				});
+				
+				// Also try mousedown instead of click to catch before image handling
+				$editable[0].addEventListener('mousedown', function(e) {
+					// console.log('[ElementPath] Mousedown on:', e.target, 'nodeName:', e.target.nodeName);
+					if (e.target.nodeName === 'IMG') {
+						self.lastClickedElement = e.target;
+						// console.log('[ElementPath] Captured IMG mousedown!');
+						// Update display after a short delay
+						setTimeout(function() {
+							self.updateDisplay();
+						}, 50);
+					}
+				}, true);
 				
 				// Bind to toolbar button clicks for immediate formatting updates
 				$editor.on('click', '.note-toolbar .note-btn', function(e) {
