@@ -126,7 +126,7 @@
 					var range = selection.getRangeAt(0);
 					var node = range.startContainer;
 					
-					// console.log('[ElementPath] Initial node:', node);
+					// console.log('[ElementPath] Initial node:', node, 'nodeType:', node.nodeType, 'nodeName:', node.nodeName);
 					// console.log('[ElementPath] Node is inside editable?', $editable[0].contains(node));
 					
 					// Make sure we're inside the editor
@@ -147,8 +147,31 @@
 						node = node.parentElement;
 					}
 					
-					// console.log('[ElementPath] After text node check:', node);
+					// console.log('[ElementPath] After text node check:', node, 'nodeType:', node.nodeType, 'nodeName:', node.nodeName);
 					// console.log('[ElementPath] $editable[0]:', $editable[0]);
+					
+					// Check if we just clicked on an IMG element and include it
+					if (this.lastClickedElement && this.lastClickedElement.nodeName === 'IMG' && 
+						elementPathOptions.showTags.indexOf('IMG') !== -1 && 
+						$(this.lastClickedElement).closest($editable).length > 0) {
+						// console.log('[ElementPath] Adding clicked IMG element to path');
+						var imgInfo = {
+							node: this.lastClickedElement,
+							name: 'img',
+							displayName: 'img'
+						};
+						if (this.lastClickedElement.id) {
+							imgInfo.displayName += '#' + this.lastClickedElement.id;
+						} else if (this.lastClickedElement.className && typeof this.lastClickedElement.className === 'string') {
+							var imgClasses = this.lastClickedElement.className.split(' ').filter(function(c) {
+								return c && !c.startsWith('note-');
+							});
+							if (imgClasses.length > 0) {
+								imgInfo.displayName += '.' + imgClasses[0];
+							}
+						}
+						path.unshift(imgInfo);
+					}
 					
 					// Build path from current node to editable root
 					while (node && node !== $editable[0] && !$(node).hasClass('note-editable')) {
@@ -308,11 +331,24 @@
 				
 				// Add immediate click handler for faster response to selection changes
 				$editable.on('click', function (e) {
-					// console.log('[ElementPath] Click event triggered for editor:', $editable[0]);
+					// Store the actual clicked element for IMG detection
+					self.lastClickedElement = e.target;
+					// console.log('[ElementPath] Click handler fired!');
+					// console.log('[ElementPath] Clicked element:', e.target, 'nodeName:', e.target.nodeName);
+					// console.log('[ElementPath] Event target type:', typeof e.target, 'constructor:', e.target.constructor.name);
 					setTimeout(function() {
 						self.updateDisplay();
 					}, 20);
 				});
+				
+				// Also add a capturing event listener to catch clicks before Summernote's image handling
+				$editable[0].addEventListener('click', function(e) {
+					// console.log('[ElementPath] Capture click on:', e.target, 'nodeName:', e.target.nodeName);
+					if (e.target.nodeName === 'IMG') {
+						self.lastClickedElement = e.target;
+						// console.log('[ElementPath] Captured IMG click before Summernote!');
+					}
+				}, true); // true = use capture phase
 				
 				// Also bind to editor-level summernote events
 				var summernoteEvents = [
@@ -327,6 +363,33 @@
 						self.updateDisplay();
 					});
 				});
+				
+				// Try to hook into Summernote's image selection events
+				$editor.on('summernote.image.upload summernote.image.inserted summernote.change', function() {
+					// console.log('[ElementPath] Image-related event detected');
+					setTimeout(function() {
+						// Check if there's a selected image
+						var selectedImg = $editable.find('img.note-selected, img:focus');
+						if (selectedImg.length > 0) {
+							// console.log('[ElementPath] Found selected image:', selectedImg[0]);
+							self.lastClickedElement = selectedImg[0];
+						}
+						self.updateDisplay();
+					}, 100);
+				});
+				
+				// Also try mousedown instead of click to catch before image handling
+				$editable[0].addEventListener('mousedown', function(e) {
+					// console.log('[ElementPath] Mousedown on:', e.target, 'nodeName:', e.target.nodeName);
+					if (e.target.nodeName === 'IMG') {
+						self.lastClickedElement = e.target;
+						// console.log('[ElementPath] Captured IMG mousedown!');
+						// Update display after a short delay
+						setTimeout(function() {
+							self.updateDisplay();
+						}, 50);
+					}
+				}, true);
 				
 				// Bind to toolbar button clicks for immediate formatting updates
 				$editor.on('click', '.note-toolbar .note-btn', function(e) {
