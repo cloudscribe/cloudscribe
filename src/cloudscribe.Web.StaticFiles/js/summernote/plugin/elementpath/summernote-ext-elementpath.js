@@ -85,6 +85,19 @@
 						return;
 					}
 					
+					// Inject CSS styles once for CSP compliance (if not already injected)
+					if ($('#summernote-elementpath-styles').length === 0) {
+						var styleElement = $('<style id="summernote-elementpath-styles">' +
+							'.note-element-path { display: inline-block; margin-right: 10px; padding-left: 8px; padding-top: 5px; color: #666; font-size: 12px; }' +
+							'.note-element-path-body { color: #999; padding-right: 4px; }' +
+							'.note-element-path-separator { color: #999; }' +
+							'.note-element-path-item { color: #303030; font-weight: 600; text-decoration: none; padding: 2px 4px; border-radius: 2px; }' +
+							'.note-element-path-item:hover { background-color: #e0e8f0 !important; }' +
+							'.note-element-path-static { color: #303030; font-weight: 600; }' +
+							'</style>');
+						$('head').append(styleElement);
+					}
+					
 					// Check if status output area exists, if not create it
 					var $statusOutput = $statusbar.find('.note-status-output');
 					if ($statusOutput.length === 0) {
@@ -92,17 +105,10 @@
 						$statusbar.prepend($statusOutput);
 					}
 					
-					// Create element path display with unique identifier
+					// Create element path display with unique identifier (no inline styles)
 					var editorId = $editable.attr('id') || Math.random().toString(36).substr(2, 9);
 					$elementPath = $('<div class="note-element-path" data-editor-id="' + editorId + '"></div>');
-					$elementPath.css({
-						'display': 'inline-block',
-						'margin-right': '10px',
-						'padding-left': '8px',
-						'padding-top': '5px',
-						'color': '#666',
-						'font-size': '12px'
-					});
+					// Removed inline styles - now using CSS classes
 					$statusOutput.append($elementPath);
 					
 					// console.log('[ElementPath] Created element path for editor:', editorId);
@@ -228,30 +234,29 @@
 				var path = this.getElementPath();
 				// console.log('[ElementPath] Path found:', path);
 				
-				// Always start with "body" as the base
-				var pathHtml = ['<span style="color: #999; padding-right: 4px;">body</span>'];
+				// Always start with "body" as the base (using CSS class)
+				var pathHtml = ['<span class="note-element-path-body">body</span>'];
 				
 				// Add elements from the path
 				if (path.length > 0) {
 					path.forEach(function (element, index) {
 						if (elementPathOptions.clickToSelect) {
-							// Make elements clickable
+							// Make elements clickable (using CSS classes for CSP compliance)
 							pathHtml.push('<a href="#" class="note-element-path-item" data-element-index="' + 
-							              index + '" style="color: #303030; font-weight: 600; text-decoration: none; padding: 2px 4px; ' +
-							              'border-radius: 2px;" onmouseover="this.style.backgroundColor=\'#e0e8f0\'" ' +
-							              'onmouseout="this.style.backgroundColor=\'transparent\'">' + 
+							              index + '">' + 
 							              element.displayName + '</a>');
 						} else {
-							pathHtml.push('<span style="color: #303030; font-weight: 600;">' + element.displayName + '</span>');
+							pathHtml.push('<span class="note-element-path-static">' + element.displayName + '</span>');
 						}
 					});
 				}
 				
-				$elementPath.html(pathHtml.join('<span style="color: #999;">' + 
+				$elementPath.html(pathHtml.join('<span class="note-element-path-separator">' + 
 				                                 elementPathOptions.separator + '</span>'));
 				
-				// Attach click handlers if enabled
+				// Attach event handlers if enabled (CSP-compliant approach)
 				if (elementPathOptions.clickToSelect) {
+					// Attach click handlers
 					$elementPath.find('.note-element-path-item').on('click', function (e) {
 						e.preventDefault();
 						// console.log('[ElementPath] Element path item clicked');
@@ -264,6 +269,9 @@
 							// console.error('[ElementPath] Invalid index:', index);
 						}
 					});
+					
+					// Note: Hover effects are now handled by CSS :hover rule (.note-element-path-item:hover)
+					// No JavaScript needed for hover effects - better for CSP compliance
 				}
 			};
 			
