@@ -1,8 +1,8 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <Description>common static resources for web applications including ckeditor datepickers, and other js and css</Description>
-    <Version>8.4.0</Version>
+    <Version>8.5.0</Version>
     <TargetFramework>net8.0</TargetFramework>
     <Authors>Joe Audette</Authors>
     <PackageTags>cloudscribe</PackageTags>
@@ -23,7 +23,6 @@
     <None Remove="js\bootstrap5.bundle.js" />
     <None Remove="js\bootstrap5.bundle.min.js" />
     <None Remove="js\cloudscribe-autologout-warning.js" />
-    <None Remove="js\cloudscribe-autologout-warning.min.js" />
     <None Remove="js\cloudscribe-cookie-consent-three-state.js" />
     <None Remove="js\cloudscribe-cookie-consent-three-state.min.js" />
     <None Remove="js\cloudscribe-modaldialog-pagination.js" />
@@ -39,8 +38,13 @@
   </ItemGroup>
 
 <ItemGroup>
+    <EmbeddedResource Include="js\cloudscribe-autologout-warning.min.js" />
+    <EmbeddedResource Include="js\cloudscribe-autologout-warning - Copy - Ignore.js" />
+    <EmbeddedResource Include="js\cloudscribe-autologout-warning - Copy.js" />
     <EmbeddedResource Include="js\cloudscribe-cookie-consent-three-state.js" />
     <EmbeddedResource Include="js\cloudscribe-cookie-consent-three-state.min.js" />
+    <EmbeddedResource Include="js\restart-polling.js" />
+    <EmbeddedResource Include="js\restart-polling.min.js" />
     <EmbeddedResource Include="js\emaillist-formbuttons.js" />
     <EmbeddedResource Include="js\emaillist-signup-recaptcha-callback.js" />
     <EmbeddedResource Include="js\baguetteBox.min.js" />
@@ -56,7 +60,6 @@
     <EmbeddedResource Include="js\bs-toast.min.js" />
     <EmbeddedResource Include="js\bs4.smartmenus.min.js" />
     <EmbeddedResource Include="js\ckeditor4114\**\*.*" />
-    <EmbeddedResource Include="js\cloudscribe-autologout-warning.min.js" />
     <EmbeddedResource Include="js\cloudscribe-autologout-warning.js" />
     <EmbeddedResource Include="js\cloudscribe-autosuggest-unobtrusive.js" />
     <EmbeddedResource Include="js\cloudscribe-autosuggest-unobtrusive.min.js" />
@@ -167,6 +170,8 @@
 	<EmbeddedResource Include="js\cloudscribe-summernote-unobtrusive.min.js" />
 	<EmbeddedResource Include="js\summernote\plugin\specialchars\summernote-ext-specialchars.js" />
 	<EmbeddedResource Include="js\summernote\plugin\serverimage\summernote-ext-serverimage.js" />
+	<EmbeddedResource Include="js\summernote\plugin\elementpath\summernote-ext-elementpath.js" />
+	<EmbeddedResource Include="js\summernote\plugin\elementpath\summernote-ext-elementpath.min.js" />
 	<EmbeddedResource Include="js\summernote-config.json" />
 	<EmbeddedResource Include="js\summernote-toolbar-config.json" />
 	<EmbeddedResource Include="js\summernote\lang\summernote-it-IT.js" />

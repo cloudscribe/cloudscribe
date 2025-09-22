@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk.Web">
+<Project Sdk="Microsoft.NET.Sdk.Web">
 
   <PropertyGroup>
     <TargetFramework>net8.0</TargetFramework>
@@ -66,7 +66,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="cloudscribe.Web.Localization" Version="8.4.*" />
+    <PackageReference Include="cloudscribe.Web.Localization" Version="8.5.*" />
     
     <!-- avoiding circularity in our build / increment process here... -->
     <!-- we're referencing Logger, but it has dependencies on other packages back in this repo -->

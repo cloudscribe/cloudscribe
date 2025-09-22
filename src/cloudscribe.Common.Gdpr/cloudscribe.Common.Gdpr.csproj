@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <Description>Attributes and helpers that can be used as tools to help meet GDPR requirements</Description>
-    <Version>8.4.0</Version>
+    <Version>8.5.0</Version>
     <Authors>Joe Audette</Authors>
     <TargetFramework>net8.0</TargetFramework>
     <PackageTags>cloudscribe;gdpr</PackageTags>
@@ -24,6 +24,10 @@
 
   <ItemGroup>
     <PackageReference Include="System.ComponentModel.Annotations" Version="4.7.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\cloudscribe.Versioning\cloudscribe.Versioning.csproj" />
   </ItemGroup>
 
 

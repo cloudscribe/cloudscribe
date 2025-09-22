@@ -54,6 +54,20 @@
         </tr>
     }
 </table>
+
+@{
+    if (Model.ShowRestartApplicationButton)
+    {
+        <div class="mt-4 mb-4">
+            <form method="post" class="d-inline" asp-antiforgery="true" data-submit-once="true" asp-controller="SiteAdmin" asp-action="RestartApplication">
+                <button name="submit" type="submit" class="btn btn-danger" data-enabled-text="@sr["Restart Application"]">
+                    <i class="fas fa-power-off me-1"></i>@sr["Restart Application"]
+                </button>
+            </form>
+        </div>
+    }
+}
+
 <partial name="CustomContentPartial" model="Model" />
 @section SideNav {
     <partial name="AdminSideNav" />

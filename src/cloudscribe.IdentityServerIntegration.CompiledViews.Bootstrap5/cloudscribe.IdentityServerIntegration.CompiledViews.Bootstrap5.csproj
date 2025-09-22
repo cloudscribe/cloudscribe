@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <Description>Bootstrap 5 pre-compiled views for cloudscribe.Core.IdentityServerIntegration</Description>
-    <Version>8.4.0</Version>
+    <Version>8.5.0</Version>
     <TargetFramework>net8.0</TargetFramework>
     <AddRazorSupportForMvc>true</AddRazorSupportForMvc>
     <Authors>Joe Audette</Authors>
@@ -31,6 +31,5 @@
     <ProjectReference Include="..\cloudscribe.Core.IdentityServerIntegration\cloudscribe.Core.IdentityServerIntegration.csproj" />
     <ProjectReference Include="..\cloudscribe.Core.Web\cloudscribe.Core.Web.csproj" />
   </ItemGroup>
-
 
 </Project>
