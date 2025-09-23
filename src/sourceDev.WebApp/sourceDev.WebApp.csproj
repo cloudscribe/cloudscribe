@@ -66,7 +66,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="cloudscribe.Web.Localization" Version="8.5.*" />
+    <PackageReference Include="cloudscribe.Web.Localization" Version="8.6.*" />
     
     <!-- avoiding circularity in our build / increment process here... -->
     <!-- we're referencing Logger, but it has dependencies on other packages back in this repo -->

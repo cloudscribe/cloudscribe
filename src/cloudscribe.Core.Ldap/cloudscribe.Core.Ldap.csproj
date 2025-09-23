@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <Description>ILdapHelper implementation for cloudscribe Core LDAP authentication support</Description>
-    <Version>8.5.0</Version>
+    <Version>8.6.0</Version>
     <TargetFramework>net8.0</TargetFramework>
     <Authors>Joe Audette, Simon Annetts Idox Software</Authors>
     <PackageTags>cloudscribe;LDAP;Active Directory</PackageTags>
