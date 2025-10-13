@@ -3,10 +3,13 @@ using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.AspNetCore.TestHost;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Options;
+using System.Linq;
 using System.Net;
 using System.Net.Http.Headers;
 using System.Text.Json;
 using Xunit;
+using IdentityServer4.AccessTokenValidation;
 
 namespace cloudscribe.Core.Identity.IntegrationTests
 {
@@ -133,7 +136,7 @@ namespace cloudscribe.Core.Identity.IntegrationTests
                 var tokenContent = await tokenResponse.Content.ReadAsStringAsync();
                 var tokenDoc = JsonDocument.Parse(tokenContent);
                 var accessToken = tokenDoc.RootElement.GetProperty("access_token").GetString();
-                
+
                 // Act - Try to access a protected endpoint WITH the valid token
                 client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", accessToken);
                 var protectedResponse = await client.GetAsync("/api/idserver/claims");
@@ -192,12 +195,34 @@ namespace cloudscribe.Core.Identity.IntegrationTests
                         options.ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto;
                     });
                 });
+
+                // The API Bearer validation is configured in src / sourceDev.WebApp / Configuration /
+                // IdentityServerIntegration.cs:132,
+                // setting options.Authority = "https://localhost:44399" and options.ApiName = "idserverapi".
+                // But we override this configuration locally in these tests (below)
+                // since we might want this test to run in Azure DevOps or gitHub CI 
+                // in which case the port will be wrong.
+                // Assume the test server uses a dynamically assigned port, so we need to configure
+                // the Authority to match the actual server address for JWT validation to work
+                builder.ConfigureServices((context, services) =>
+                {
+                    // Re-register with test server's authority
+                    services.PostConfigure<IdentityServerAuthenticationOptions>(
+                        IdentityServerAuthenticationDefaults.AuthenticationScheme,
+                        options =>
+                        {
+                            // Use the test server's base address (with dynamic port)
+                            // This will be https://localhost:{random_port}
+                            options.Authority = "https://localhost";
+                            options.RequireHttpsMetadata = false; // Test environment
+                        });
+                });
             }).CreateClient(new WebApplicationFactoryClientOptions
             {
                 AllowAutoRedirect = false,
                 BaseAddress = new Uri("https://localhost")
             });
-            
+
             client.DefaultRequestHeaders.Add("X-Forwarded-For", "127.0.0.1");
             return client;
         }
