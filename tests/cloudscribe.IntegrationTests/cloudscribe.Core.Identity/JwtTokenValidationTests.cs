@@ -200,7 +200,7 @@ namespace cloudscribe.Core.Identity.IntegrationTests
                 // IdentityServerIntegration.cs:132,
                 // setting options.Authority = "https://localhost:44399" and options.ApiName = "idserverapi".
                 // But we override this configuration locally in these tests (below)
-                // since we might want this test to run in Azure DevOps
+                // since we might want this test to run in Azure DevOps or gitHub CI 
                 // in which case the port will be wrong.
                 // Assume the test server uses a dynamically assigned port, so we need to configure
                 // the Authority to match the actual server address for JWT validation to work
