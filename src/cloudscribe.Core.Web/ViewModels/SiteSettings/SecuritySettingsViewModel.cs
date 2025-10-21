@@ -53,6 +53,12 @@ namespace cloudscribe.Core.Web.ViewModels.SiteSettings
 
         public bool SingleBrowserSessions { get; set; }
 
+        [Display(Name = "Allow user to change display name")]
+        public bool AllowUserToEditDisplayName { get; set; }
+
+        [Display(Name = "Allow user to change first name / last name")]
+        public bool AllowUserToEditFirstAndLastName { get; set; }
+
         //LDAP
 
         //public bool UseLdapAuth { get; set; } = false;

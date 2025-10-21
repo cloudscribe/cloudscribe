@@ -18,6 +18,18 @@
     </div>
     <div class="mb-3">
         <div class="form-check">
+            <input asp-for="AllowUserToEditFirstAndLastName" class="form-check-input" />
+            <label asp-for="AllowUserToEditFirstAndLastName" class="form-check-label">@sr["Allow user to change first name / last name"]</label>
+        </div>
+    </div>
+    <div class="mb-3">
+        <div class="form-check">
+            <input asp-for="AllowUserToEditDisplayName" class="form-check-input" />
+            <label asp-for="AllowUserToEditDisplayName" class="form-check-label">@sr["Allow user to change display name"]</label>
+        </div>
+    </div>
+    <div class="mb-3">
+        <div class="form-check">
             <input asp-for="AllowUserToChangeEmail" class="form-check-input" />
             <label asp-for="AllowUserToChangeEmail" class="form-check-label">@sr["Allow user to change email address"]</label>
         </div>

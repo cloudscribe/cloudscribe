@@ -1122,6 +1122,8 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
                 RequireConfirmedEmail      = selectedSite.RequireConfirmedEmail,
                 UseEmailForLogin           = selectedSite.UseEmailForLogin,
                 AllowUserToChangeEmail     = selectedSite.AllowUserToChangeEmail,
+                AllowUserToEditDisplayName      = selectedSite.AllowUserToEditDisplayName,
+                AllowUserToEditFirstAndLastName = selectedSite.AllowUserToEditFirstAndLastName,
                 RequireConfirmedPhone      = selectedSite.RequireConfirmedPhone,
                 AccountApprovalEmailCsv    = selectedSite.AccountApprovalEmailCsv,
                 EmailIsConfigured          = await SiteCapabilities.SupportsEmailNotification(new SiteContext(selectedSite)),
@@ -1197,9 +1199,11 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
             selectedSite.RequireApprovalBeforeLogin = model.RequireApprovalBeforeLogin;
             selectedSite.RequireConfirmedEmail      = model.RequireConfirmedEmail;
             selectedSite.RequireConfirmedPhone      = model.RequireConfirmedPhone;
-            selectedSite.UseEmailForLogin           = model.UseEmailForLogin;
-            selectedSite.AllowUserToChangeEmail     = model.AllowUserToChangeEmail;
-            selectedSite.Require2FA                 = model.Require2FA;
+              selectedSite.UseEmailForLogin           = model.UseEmailForLogin;
+              selectedSite.AllowUserToChangeEmail     = model.AllowUserToChangeEmail;
+              selectedSite.AllowUserToEditDisplayName      = model.AllowUserToEditDisplayName;
+              selectedSite.AllowUserToEditFirstAndLastName = model.AllowUserToEditFirstAndLastName;
+              selectedSite.Require2FA                 = model.Require2FA;
             selectedSite.SingleBrowserSessions      = model.SingleBrowserSessions;
 
             selectedSite.LdapDomain                 = model.LdapDomain;
