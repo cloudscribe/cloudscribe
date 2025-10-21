@@ -16,6 +16,7 @@ using cloudscribe.Web.Common.Extensions;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.AspNetCore.Mvc.Routing;
 using Microsoft.Extensions.Localization;
@@ -510,7 +511,8 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
                 WebSiteUrl  = user.WebSiteUrl,
                 PhoneNumber = user.PhoneNumber,
                 AvatarUrl   = user.AvatarUrl,
-                UserName = user.UserName
+                UserName    = user.UserName,
+                DisplayName = user.DisplayName
             };
 
             var viewName = await CustomUserInfo.GetUserInfoViewName(CurrentSite, user, HttpContext);
@@ -531,6 +533,32 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
         {
             var user = await UserManager.FindByIdAsync(HttpContext.User.GetUserId());
             var viewName = await CustomUserInfo.GetUserInfoViewName(CurrentSite, user, HttpContext);
+
+            // DisplayName server-side normalization and length check when site allows editing
+            if (CurrentSite is ISiteSettings siteSettings && siteSettings.AllowUserToEditDisplayName)
+            {
+                var trimmed = (model.DisplayName ?? string.Empty).Trim();
+                if (trimmed.Length > 100)
+                {
+                    ModelState.AddModelError(nameof(model.DisplayName), StringLocalizer["Display Name must be 100 characters or fewer."]);
+                }
+
+                // normalize whitespace
+                model.DisplayName = trimmed;
+
+                if (!string.IsNullOrWhiteSpace(trimmed) && user != null)
+                {
+                    var upper = trimmed.ToUpper();
+                    // Enforce case-insensitive uniqueness within current site (no DB constraint)
+                    var exists = await UserManager.Users
+                        .Where(u => u.SiteId == CurrentSite.Id && u.Id != user.Id)
+                        .AnyAsync(u => u.DisplayName != null && u.DisplayName.ToUpper() == upper);
+                    if (exists)
+                    {
+                        ModelState.AddModelError(nameof(model.DisplayName), StringLocalizer["That display name is already taken on this site."]);
+                    }
+                }
+            }
 
             bool isValid = ModelState.IsValid;
             bool customDataIsValid = await CustomUserInfo.HandleUserInfoValidation(
@@ -560,6 +588,12 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
                 user.RolesChanged = (user.AvatarUrl != model.AvatarUrl);
                 user.WebSiteUrl   = model.WebSiteUrl;
                 user.AvatarUrl    = model.AvatarUrl;
+
+                if (CurrentSite is ISiteSettings siteSettings2 && siteSettings2.AllowUserToEditDisplayName)
+                {
+                    // allow blank to clear; case-insensitive uniqueness already enforced above
+                    user.DisplayName = model.DisplayName;
+                }
 
                 await CustomUserInfo.HandleUserInfoPostSuccess(
                         CurrentSite,
