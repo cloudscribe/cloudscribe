@@ -615,6 +615,8 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
 
 
                 await UserManager.UpdateAsync(user);
+                // Re-issue the auth cookie so DisplayName and other claims reflect latest values in the header
+                await SignInManager.RefreshSignInAsync(user);
 
                 this.AlertSuccess(StringLocalizer["Your information has been updated."]);
             }
