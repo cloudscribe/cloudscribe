@@ -566,7 +566,9 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
                         string.Equals(u.DisplayName, trimmed, StringComparison.OrdinalIgnoreCase));
                     if (exists)
                     {
-                        ModelState.AddModelError(nameof(model.DisplayName), StringLocalizer["That display name is already taken on this site."]);
+                        ModelState.AddModelError(
+                            nameof(model.DisplayName),
+                            StringLocalizer["Display Name is not valid for this site - please try a different one."]);
                     }
                 }
             }
