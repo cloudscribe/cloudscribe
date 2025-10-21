@@ -37,6 +37,8 @@ namespace cloudscribe.Core.Models
         //bool ReallyDeleteUsers { get; }
         bool AllowNewRegistration { get; }
         bool AllowPersistentLogin { get; }
+        bool AllowUserToEditDisplayName { get; }
+        bool AllowUserToEditFirstAndLastName { get; }
         bool CaptchaOnLogin { get; }
         bool CaptchaOnRegistration { get; }
         string RecaptchaPrivateKey { get; }

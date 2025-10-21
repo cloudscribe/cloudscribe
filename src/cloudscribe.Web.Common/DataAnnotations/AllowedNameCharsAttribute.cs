@@ -7,15 +7,18 @@ using System.Text.RegularExpressions;
 namespace cloudscribe.Web.Common.DataAnnotations
 {
     /// <summary>
-    /// Validates that a string only contains allowed name characters:
-    /// Unicode letters, combining marks, digits, space, underscore, hyphen, period, and apostrophe.
+    /// Negative validation for DisplayName: blocks obvious dangerous characters only.
+    /// Disallows control characters (C0 + C1) and HTML angle brackets. Allows everything else.
     /// Empty/null values are treated as valid (use [Required] to enforce non-empty).
     /// </summary>
     public class AllowedNameCharsAttribute : ValidationAttribute, IClientModelValidator
     {
-        public const string AllowedPattern = "^[\\p{L}\\p{M}\\p{N} _\\-.']+$";
+        // .NET regex: forbid control chars (C0/C1) and angle brackets
+        public const string NetPattern = @"^[^\x00-\x1F\x7F-\x9F<>]+$";
+        // JS regex (browser): same as server; jQuery Validate uses JS regex engine
+        public const string JsPattern  = "^[^\\x00-\\x1F\\x7F-\\x9F<>]+$";
 
-        private static readonly Regex _regex = new Regex(AllowedPattern, RegexOptions.Compiled | RegexOptions.CultureInvariant);
+        private static readonly Regex _regex = new Regex(NetPattern, RegexOptions.Compiled | RegexOptions.CultureInvariant);
 
         public AllowedNameCharsAttribute()
         {
@@ -40,7 +43,8 @@ namespace cloudscribe.Web.Common.DataAnnotations
 
             MergeAttribute(context.Attributes, "data-val", "true");
             MergeAttribute(context.Attributes, "data-val-regex", ErrorMessageString ?? "Contains invalid characters");
-            MergeAttribute(context.Attributes, "data-val-regex-pattern", AllowedPattern);
+            // Use JS-safe regex matching server behavior
+            MergeAttribute(context.Attributes, "data-val-regex-pattern", JsPattern);
         }
 
         private static bool MergeAttribute(IDictionary<string, string> attributes, string key, string value)
@@ -51,4 +55,3 @@ namespace cloudscribe.Web.Common.DataAnnotations
         }
     }
 }
-

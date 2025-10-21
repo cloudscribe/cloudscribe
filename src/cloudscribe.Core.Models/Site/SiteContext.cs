@@ -194,6 +194,14 @@ namespace cloudscribe.Core.Models
         {
             get { return site.AllowPersistentLogin; }
         }
+        public bool AllowUserToEditDisplayName
+        {
+            get { return site.AllowUserToEditDisplayName; }
+        }
+        public bool AllowUserToEditFirstAndLastName
+        {
+            get { return site.AllowUserToEditFirstAndLastName; }
+        }
         public bool CaptchaOnRegistration
         {
             get { return site.CaptchaOnRegistration; }

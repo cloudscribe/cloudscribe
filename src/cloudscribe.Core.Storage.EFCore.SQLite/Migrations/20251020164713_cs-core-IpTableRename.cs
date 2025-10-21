@@ -59,7 +59,7 @@ namespace cloudscribe.Core.Storage.EFCore.SQLite.Migrations
                 },
                 constraints: table =>
                 {
-                    migrationBuilder.PrimaryKey("PK_BlackWhiteListedIpAddresses", x => x.Id);
+                    table.PrimaryKey("PK_BlackWhiteListedIpAddresses", x => x.Id);
                 });
 
             // 2) Copy data back from the new table
@@ -73,3 +73,4 @@ namespace cloudscribe.Core.Storage.EFCore.SQLite.Migrations
         }
     }
 }
+
