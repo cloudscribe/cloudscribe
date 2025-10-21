@@ -187,6 +187,12 @@ namespace cloudscribe.Core.Storage.EFCore.MySql.Migrations
                     b.Property<bool>("AllowUserToChangeEmail")
                         .HasColumnType("tinyint(1)");
 
+                    b.Property<bool>("AllowUserToEditDisplayName")
+                        .HasColumnType("tinyint(1)");
+
+                    b.Property<bool>("AllowUserToEditFirstAndLastName")
+                        .HasColumnType("tinyint(1)");
+
                     b.Property<bool>("CaptchaOnLogin")
                         .HasColumnType("tinyint(1)");
 

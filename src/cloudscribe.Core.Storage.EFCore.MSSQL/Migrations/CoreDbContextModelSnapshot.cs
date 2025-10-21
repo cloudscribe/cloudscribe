@@ -227,6 +227,12 @@ namespace cloudscribe.Core.Storage.EFCore.MSSQL.Migrations
                     b.Property<bool>("AllowUserToChangeEmail")
                         .HasColumnType("bit");
 
+                    b.Property<bool>("AllowUserToEditDisplayName")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("AllowUserToEditFirstAndLastName")
+                        .HasColumnType("bit");
+
                     b.Property<bool>("CaptchaOnLogin")
                         .HasColumnType("bit");
 

@@ -410,6 +410,14 @@ namespace cloudscribe.Core.Storage.EFCore.MSSQL
 
                 entity.Property(p => p.ShowSiteNameLink);
 
+                // Allow end-user editing of name fields
+                entity.Property(p => p.AllowUserToEditDisplayName)
+                    .IsRequired()
+                    .HasColumnType("bit");
+                entity.Property(p => p.AllowUserToEditFirstAndLastName)
+                    .IsRequired()
+                    .HasColumnType("bit");
+
                 entity.Property(p => p.LogoUrl)
                 .HasMaxLength(250);
                 ;
