@@ -631,5 +631,54 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
             return RedirectToAction("RoleMembers", new { siteId = selectedSite.Id, roleId });
         }
 
+        [HttpPost]
+        [Authorize(Policy = PolicyConstants.RoleAdminPolicy)]
+        [ValidateAntiForgeryToken]
+        public virtual async Task<IActionResult> CopyRole(CopyRoleViewModel model)
+        {
+            var selectedSite = await SiteManager.GetSiteForDataOperations(null, true);
+            
+            if (!ModelState.IsValid)
+            {
+                return RedirectToAction("Index");
+            }
+
+            var sourceRole = await RoleManager.FindByIdAsync(model.SourceRoleId.ToString());
+            if (sourceRole == null)
+            {
+                this.AlertDanger(StringLocalizer["The source role no longer exists. Please refresh the page."], true);
+                return RedirectToAction("Index");
+            }
+
+            // Check if source role is a protected role
+            if (sourceRole.NormalizedRoleName == "ADMINISTRATORS")
+            {
+                this.AlertDanger(StringLocalizer["The Administrators role is a system role and cannot be copied."], true);
+                return RedirectToAction("Index");
+            }
+
+            // Check if new role name already exists
+            var existingRole = await RoleManager.FindByNameAsync(model.NewRoleName);
+            if (existingRole != null)
+            {
+                this.AlertDanger(StringLocalizer["A role with this name already exists. Please choose a different name."], true);
+                return RedirectToAction("Index");
+            }
+
+            // Copy the role
+            var result = await RoleManager.CopyRoleAsync(sourceRole, model.NewRoleName);
+            
+            if (result.Succeeded)
+            {
+                this.AlertSuccess(string.Format(StringLocalizer["Role '{0}' created successfully."], model.NewRoleName), true);
+            }
+            else
+            {
+                this.AlertDanger(StringLocalizer["Failed to copy role. Please try again."], true);
+            }
+
+            return RedirectToAction("Index");
+        }
+
     }
 }
