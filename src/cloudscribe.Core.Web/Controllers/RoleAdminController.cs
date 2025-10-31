@@ -7,6 +7,7 @@
 
 using cloudscribe.Core.Identity;
 using cloudscribe.Core.Models;
+using cloudscribe.Core.Models.EventHandlers;
 using cloudscribe.Core.Web.Components;
 using cloudscribe.Core.Web.ViewModels.RoleAdmin;
 using cloudscribe.Web.Common.Extensions;
@@ -34,7 +35,8 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
             IStringLocalizer<CloudscribeCore> localizer,
             IOptions<UIOptions> uiOptionsAccessor,
             IOptions<SiteConfigOptions> setupOptionsAccessor,
-            IEnumerable<IGuardNeededRoles> roleGuards
+            IEnumerable<IGuardNeededRoles> roleGuards,
+            IEnumerable<IHandleRoleCopied> roleCopiedHandlers
             )
         {
             UserManager = userManager;
@@ -45,6 +47,7 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
             AuthorizationService = authorizationService;
             StringLocalizer = localizer;
             RoleGuards = roleGuards;
+            RoleCopiedHandlers = roleCopiedHandlers;
         }
 
         protected SiteManager SiteManager { get; private set; }
@@ -55,6 +58,7 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
         protected SiteUserManager<SiteUser> UserManager { get; private set; }
         protected SiteRoleManager<SiteRole> RoleManager { get; private set; }
         protected IEnumerable<IGuardNeededRoles> RoleGuards { get; private set; }
+        protected IEnumerable<IHandleRoleCopied> RoleCopiedHandlers { get; private set; }
 
 
         [HttpGet]
@@ -92,6 +96,10 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
                 searchInput,
                 pageNumber,
                 itemsPerPage);
+            
+            // Check if Dynamic Authorization Policy integration is installed
+            ViewData["HasDynamicPolicyHandlers"] = RoleCopiedHandlers.Any(h => 
+                h.GetType().Namespace?.Contains("DynamicPolicy") == true);
             
             return View(model);
 
