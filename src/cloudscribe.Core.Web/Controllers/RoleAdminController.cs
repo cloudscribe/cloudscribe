@@ -651,9 +651,10 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
             }
 
             // Check if source role is a protected role
-            if (sourceRole.NormalizedRoleName == "ADMINISTRATORS")
+            if (sourceRole.NormalizedRoleName == "ADMINISTRATORS" || 
+                sourceRole.NormalizedRoleName == "AUTHENTICATED USERS")
             {
-                this.AlertDanger(StringLocalizer["The Administrators role is a system role and cannot be copied."], true);
+                this.AlertDanger(StringLocalizer["This is a system role and cannot be copied."], true);
                 return RedirectToAction("Index");
             }
 
@@ -666,11 +667,14 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
             }
 
             // Copy the role
-            var result = await RoleManager.CopyRoleAsync(sourceRole, model.NewRoleName);
+            var result = await RoleManager.CopyRoleAsync(sourceRole, model.NewRoleName, model.IncludeExistingUsers);
             
             if (result.Succeeded)
             {
-                this.AlertSuccess(string.Format(StringLocalizer["Role '{0}' created successfully."], model.NewRoleName), true);
+                var message = model.IncludeExistingUsers 
+                    ? string.Format(StringLocalizer["Role '{0}' created successfully (with users copied)."], model.NewRoleName)
+                    : string.Format(StringLocalizer["Role '{0}' created successfully."], model.NewRoleName);
+                this.AlertSuccess(message, true);
             }
             else
             {
