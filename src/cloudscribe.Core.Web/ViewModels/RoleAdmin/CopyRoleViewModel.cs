@@ -19,5 +19,7 @@ namespace cloudscribe.Core.Web.ViewModels.RoleAdmin
         [Required(ErrorMessage = "Role Name is required")]
         [StringLength(50, ErrorMessage = "RoleNameLengthError", MinimumLength = 3)]
         public string NewRoleName { get; set; } = string.Empty;
+        
+        public bool IncludeExistingUsers { get; set; } = false;
     }
 }

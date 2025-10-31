@@ -265,7 +265,7 @@ namespace cloudscribe.Core.Identity
             }
         }
 
-        public async Task<IdentityResult> CopyRoleAsync(TRole sourceRole, string newRoleName)
+        public async Task<IdentityResult> CopyRoleAsync(TRole sourceRole, string newRoleName, bool includeExistingUsers = false)
         {
             if (sourceRole == null) { throw new ArgumentNullException(nameof(sourceRole)); }
             if (string.IsNullOrWhiteSpace(newRoleName)) { throw new ArgumentException("New role name cannot be empty", nameof(newRoleName)); }
@@ -281,6 +281,24 @@ namespace cloudscribe.Core.Identity
             
             if (result.Succeeded)
             {
+                // Copy users if requested
+                if (includeExistingUsers)
+                {
+                    var usersInRole = await _queries.GetUsersInRole(sourceRole.SiteId, sourceRole.NormalizedRoleName, CancellationToken);
+                    
+                    foreach (var user in usersInRole)
+                    {
+                        try
+                        {
+                            await AddUserToRole(user, newRole);
+                        }
+                        catch (Exception ex)
+                        {
+                            _log.LogError($"Error adding user {user.Id} to new role {newRole.RoleName}: {ex.Message}-{ex.StackTrace}");
+                        }
+                    }
+                }
+
                 // Invoke all role copied handlers
                 foreach (var handler in _roleCopiedHandlers)
                 {
