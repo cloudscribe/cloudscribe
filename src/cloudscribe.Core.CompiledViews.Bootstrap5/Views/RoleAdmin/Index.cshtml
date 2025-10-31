@@ -36,6 +36,16 @@
                        asp-route-siteId="@Model.SiteId"
                        asp-route-roleId="@item.Id">@sr["Edit"]</a>
                 }
+                @if (item.NormalizedRoleName != "ADMINISTRATORS")
+                {
+                    <button type="button" class="btn btn-secondary" 
+                            data-bs-toggle="modal" 
+                            data-bs-target="#copyRoleModal"
+                            data-role-id="@item.Id"
+                            data-role-name="@item.RoleName">
+                        @sr["Copy"]
+                    </button>
+                }
 
             </div>
         </li>
@@ -57,6 +67,34 @@
           cs-pager-li-non-active-class="page-item disabled"
           cs-pager-link-current-class="page-link"
           cs-pager-link-other-class="page-link"></cs-pager>
+
+<!-- Copy Role Modal -->
+<div class="modal fade" id="copyRoleModal" tabindex="-1" aria-labelledby="copyRoleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <form asp-action="CopyRole" asp-controller="RoleAdmin" method="post">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="copyRoleModalLabel">@sr["Copy Role"]</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <input type="hidden" id="sourceRoleId" name="SourceRoleId" />
+                    <input type="hidden" id="sourceRoleName" name="SourceRoleName" />
+                    <div class="mb-3">
+                        <label for="newRoleName" class="form-label">@sr["New Role Name"]</label>
+                        <input type="text" class="form-control" id="newRoleName" name="NewRoleName" required maxlength="50" minlength="3" />
+                        <div class="form-text">@sr["This will create a new role. Any dynamic authorization policies that reference the copied role will also reference the new one."]</div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">@sr["Cancel"]</button>
+                    <button type="submit" class="btn btn-primary">@sr["Copy Role"]</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
 @section SideNav {
     <partial name="AdminSideNav" />
 }
@@ -65,4 +103,29 @@
 }
 @section scripts {
     <partial name="AdminSideNavScripts" />
+    <script>
+        // Copy Role Modal handler
+        document.addEventListener('DOMContentLoaded', function() {
+            var copyRoleModal = document.getElementById('copyRoleModal');
+            if (copyRoleModal) {
+                copyRoleModal.addEventListener('show.bs.modal', function (event) {
+                    var button = event.relatedTarget;
+                    var roleId = button.getAttribute('data-role-id');
+                    var roleName = button.getAttribute('data-role-name');
+                    
+                    // Set hidden fields
+                    document.getElementById('sourceRoleId').value = roleId;
+                    document.getElementById('sourceRoleName').value = roleName;
+                    
+                    // Set default new role name
+                    document.getElementById('newRoleName').value = roleName + '-Copy';
+                    
+                    // Select the text for easy editing
+                    setTimeout(function() {
+                        document.getElementById('newRoleName').select();
+                    }, 100);
+                });
+            }
+        });
+    </script>
 }
