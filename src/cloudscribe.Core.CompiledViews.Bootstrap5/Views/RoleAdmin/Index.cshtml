@@ -36,7 +36,7 @@
                        asp-route-siteId="@Model.SiteId"
                        asp-route-roleId="@item.Id">@sr["Edit"]</a>
                 }
-                @if (item.NormalizedRoleName != "ADMINISTRATORS" && item.NormalizedRoleName != "AUTHENTICATED USERS")
+                @if (item.NormalizedRoleName != "ADMINISTRATORS")
                 {
                     <button type="button" class="btn btn-secondary" 
                             data-bs-toggle="modal" 
@@ -88,7 +88,7 @@
                             @sr["This will create a new role."]
                             @if (ViewData["HasDynamicPolicyHandlers"] as bool? == true)
                             {
-                                @:@sr[" If checked, any dynamic authorization policies that reference the source role will also reference the new role."]
+                                @:@sr[" Any dynamic authorization policies that reference the source role will also reference the new role."]
                             }
                         </div>
                     </div>
@@ -98,7 +98,7 @@
                             @sr["Include existing users"]
                         </label>
                     </div>
-                    <div class="form-text mb-3">@sr["Any existing users in the source role will also become members of the new role."]</div>
+                    <div class="form-text mb-3">@sr["If checked, any existing users in the source role will also become members of the new role."]</div>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">@sr["Cancel"]</button>
@@ -117,29 +117,5 @@
 }
 @section scripts {
     <partial name="AdminSideNavScripts" />
-    <script>
-        // Copy Role Modal handler
-        document.addEventListener('DOMContentLoaded', function() {
-            var copyRoleModal = document.getElementById('copyRoleModal');
-            if (copyRoleModal) {
-                copyRoleModal.addEventListener('show.bs.modal', function (event) {
-                    var button = event.relatedTarget;
-                    var roleId = button.getAttribute('data-role-id');
-                    var roleName = button.getAttribute('data-role-name');
-                    
-                    // Set hidden fields
-                    document.getElementById('sourceRoleId').value = roleId;
-                    document.getElementById('sourceRoleName').value = roleName;
-                    
-                    // Set default new role name
-                    document.getElementById('newRoleName').value = roleName + '-Copy';
-                    
-                    // Select the text for easy editing
-                    setTimeout(function() {
-                        document.getElementById('newRoleName').select();
-                    }, 100);
-                });
-            }
-        });
-    </script>
+    <script src="~/js/cloudscribe-copy-role-modal.js"></script>
 }

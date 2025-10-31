@@ -659,8 +659,7 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
             }
 
             // Check if source role is a protected role
-            if (sourceRole.NormalizedRoleName == "ADMINISTRATORS" || 
-                sourceRole.NormalizedRoleName == "AUTHENTICATED USERS")
+            if (sourceRole.NormalizedRoleName == "ADMINISTRATORS")
             {
                 this.AlertDanger(StringLocalizer["This is a system role and cannot be copied."], true);
                 return RedirectToAction("Index");
