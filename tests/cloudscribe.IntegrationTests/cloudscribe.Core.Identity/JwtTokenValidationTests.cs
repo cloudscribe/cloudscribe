@@ -1,21 +1,27 @@
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.AspNetCore.TestHost;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
+using Microsoft.IdentityModel.Tokens;
+using System;
 using System.Linq;
 using System.Net;
 using System.Net.Http.Headers;
 using System.Text.Json;
+using System.Threading.Tasks;
 using Xunit;
-using IdentityServer4.AccessTokenValidation;
 
 namespace cloudscribe.Core.Identity.IntegrationTests
 {
     /// <summary>
-    /// Integration tests to verify JWT token validation works correctly with 
-    /// System.IdentityModel.Tokens.Jwt v8.2.* and related Microsoft.IdentityModel.* packages.
+    /// Integration tests to verify JWT token validation works correctly with
+    /// modern Microsoft.AspNetCore.Authentication.JwtBearer and System.IdentityModel.Tokens.Jwt v8.2.*.
+    /// These tests demonstrate the correct pattern for external applications that need to validate
+    /// JWT tokens issued by cloudscribe's IdentityServer4 v3.0.1 endpoint.
     /// </summary>
     public class JwtTokenValidationTests : IClassFixture<WebApplicationFactory<sourceDev.WebApp.Startup>>
     {
@@ -196,25 +202,53 @@ namespace cloudscribe.Core.Identity.IntegrationTests
                     });
                 });
 
-                // The API Bearer validation is configured in src / sourceDev.WebApp / Configuration /
-                // IdentityServerIntegration.cs:132,
-                // setting options.Authority = "https://localhost:44399" and options.ApiName = "idserverapi".
+                // The API Bearer validation is configured in src/sourceDev.WebApp/Configuration/IdentityServerIntegration.cs
                 // But we override this configuration locally in these tests (below)
-                // since we might want this test to run in Azure DevOps or gitHub CI 
+                // since we might want this test to run in Azure DevOps or GitHub CI
                 // in which case the port will be wrong.
-                // Assume the test server uses a dynamically assigned port, so we need to configure
-                // the Authority to match the actual server address for JWT validation to work
+                // The test server uses a dynamically assigned port, so we need to configure
+                // the Authority to match the actual server address for JWT validation to work.
+                //
+                // IMPORTANT: This demonstrates the modern approach using JwtBearer that external
+                // applications must use (IdentityServer4.AccessTokenValidation is no longer available).
                 builder.ConfigureServices((context, services) =>
                 {
-                    // Re-register with test server's authority
-                    services.PostConfigure<IdentityServerAuthenticationOptions>(
-                        IdentityServerAuthenticationDefaults.AuthenticationScheme,
+                    // Re-configure JWT Bearer authentication with test server's authority
+                    services.PostConfigure<JwtBearerOptions>(
+                        JwtBearerDefaults.AuthenticationScheme,
                         options =>
                         {
                             // Use the test server's base address (with dynamic port)
                             // This will be https://localhost:{random_port}
                             options.Authority = "https://localhost";
-                            options.RequireHttpsMetadata = false; // Test environment
+                            options.RequireHttpsMetadata = false; // Test environment only
+
+                            // Configure token validation for IS4 v3.0.1 compatibility with modern packages
+                            options.TokenValidationParameters = new TokenValidationParameters
+                            {
+                                ValidateAudience = false,
+                                ValidateIssuer = true,
+                                ValidIssuer = "https://localhost",
+                                ValidateLifetime = true,
+                                ClockSkew = TimeSpan.FromMinutes(5)
+                            };
+
+                            // Handle key refresh for v8.2.* package compatibility
+                            options.RefreshOnIssuerKeyNotFound = true;
+
+                            // Add event handler for debugging token validation failures
+                            options.Events = new JwtBearerEvents
+                            {
+                                OnAuthenticationFailed = context =>
+                                {
+                                    var logger = context.HttpContext.RequestServices
+                                        .GetService<ILogger<JwtTokenValidationTests>>();
+                                    logger?.LogError(context.Exception,
+                                        "JWT token validation failed: {Message}",
+                                        context.Exception.Message);
+                                    return Task.CompletedTask;
+                                }
+                            };
                         });
                 });
             }).CreateClient(new WebApplicationFactoryClientOptions

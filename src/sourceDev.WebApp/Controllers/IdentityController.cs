@@ -1,4 +1,4 @@
-﻿using IdentityServer4.AccessTokenValidation;
+﻿using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Linq;
@@ -6,14 +6,13 @@ using System.Linq;
 namespace sourceDev.WebApp.Controllers
 {
     [Route("api/[controller]")]
-    
+
     public class IdentityController : ControllerBase
     {
-        private const string AuthSchemes = "Identity.Application," + IdentityServerAuthenticationDefaults.AuthenticationScheme;
+        private const string AuthSchemes = "Identity.Application," + JwtBearerDefaults.AuthenticationScheme;
 
-        //[Authorize]
         //[Authorize(Policy ="AdminPolicy", AuthenticationSchemes = AuthSchemes)]
-        [Authorize(Policy = "AdminPolicy", AuthenticationSchemes = IdentityServerAuthenticationDefaults.AuthenticationScheme)]
+        [Authorize(Policy = "AdminPolicy", AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
         [HttpGet]
         public IActionResult Get()
         {
