@@ -77,8 +77,6 @@
     <PackageReference Include="cloudscribe.Logging.EFCore.PostgreSql" Version="8.*" />
     <PackageReference Include="cloudscribe.Logging.EFCore.SQLite" Version="8.*" />
     <PackageReference Include="cloudscribe.Logging.NoDb" Version="8.*" />
-    
-	  <PackageReference Include="IdentityServer4.AccessTokenValidation" Version="3.0.0" />
   </ItemGroup>
 
 </Project>
