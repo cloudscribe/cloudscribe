@@ -85,7 +85,7 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        [Authorize(Policy = PolicyConstants.AdminPolicy)]
+        [Authorize(Policy = PolicyConstants.IPAddressRestrictionPolicy)]
         public virtual async Task<IActionResult> AddPermittedIpAddress(string ipAddress, string? reason, string ipTypeRadio)
         {
             if (ipAddress.Length <= 0)
@@ -169,7 +169,7 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        [Authorize(Policy = PolicyConstants.AdminPolicy)]
+        [Authorize(Policy = PolicyConstants.IPAddressRestrictionPolicy)]
         public virtual async Task<IActionResult> UpdatePermittedIpAddress(IpAddressesViewModel model)
         {
             if (!ModelState.IsValid)
@@ -259,7 +259,7 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        [Authorize(Policy = PolicyConstants.AdminPolicy)]
+        [Authorize(Policy = PolicyConstants.IPAddressRestrictionPolicy)]
         public virtual async Task<IActionResult> DeletePermittedIpAddress(string ipAddressId)
         {
             if (ipAddressId == string.Empty)
@@ -309,7 +309,7 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
         }
 
         [HttpPost]
-        [Authorize(Policy = PolicyConstants.AdminPolicy)]
+        [Authorize(Policy = PolicyConstants.AdminMenuPolicy)]
         public async virtual Task<IActionResult> SearchPermittedIpAddresses(string searchTerm, int pageNumber = 1, int pageSize = -1, CancellationToken cancellationToken = default)
         {
             PaginatedIpAddressesViewModel permittedIps;
@@ -397,7 +397,7 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        [Authorize(Policy = PolicyConstants.AdminPolicy)]
+        [Authorize(Policy = PolicyConstants.IPAddressRestrictionPolicy)]
         public async Task<IActionResult> BulkUploadPermittedIpAddress(BulkUploadIpAddressesModel model)
         {
             if (!ModelState.IsValid)

@@ -87,7 +87,7 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        [Authorize(Policy = PolicyConstants.AdminPolicy)]
+        [Authorize(Policy = PolicyConstants.IPAddressRestrictionPolicy)]
         public virtual async Task<IActionResult> AddBlockedIpAddress(string ipAddress, string? reason, string ipTypeRadio)
         {
             if (ipAddress.Length <= 0)
@@ -171,7 +171,7 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        [Authorize(Policy = PolicyConstants.AdminPolicy)]
+        [Authorize(Policy = PolicyConstants.IPAddressRestrictionPolicy)]
         public virtual async Task<IActionResult> UpdateBlockedIpAddress(IpAddressesViewModel model)
         {
             if (!ModelState.IsValid)
@@ -261,7 +261,7 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        [Authorize(Policy = PolicyConstants.AdminPolicy)]
+        [Authorize(Policy = PolicyConstants.IPAddressRestrictionPolicy)]
         public virtual async Task<IActionResult> DeleteBlockedIpAddress(string ipAddressId)
         {
             if (ipAddressId == string.Empty)
@@ -311,7 +311,7 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
         }
 
         [HttpPost]
-        [Authorize(Policy = PolicyConstants.AdminPolicy)]
+        [Authorize(Policy = PolicyConstants.AdminMenuPolicy)]
         public async virtual Task<IActionResult> SearchBlockedIpAddresses(string searchTerm, int pageNumber = 1, int pageSize = -1, CancellationToken cancellationToken = default)
         {
             PaginatedIpAddressesViewModel blockedIps;
@@ -399,7 +399,7 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        [Authorize(Policy = PolicyConstants.AdminPolicy)]
+        [Authorize(Policy = PolicyConstants.IPAddressRestrictionPolicy)]
         public async Task<IActionResult> BulkUploadBlockedIpAddress(BulkUploadIpAddressesModel model)
         {
             if (!ModelState.IsValid)

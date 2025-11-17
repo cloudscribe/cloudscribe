@@ -281,6 +281,13 @@ namespace Microsoft.Extensions.DependencyInjection
                     authBuilder.RequireRole("Role Administrators", "Administrators", "Content Administrators");
                 });
 
+            options.AddPolicy(
+                "IPAddressRestrictionPolicy",
+                authBuilder =>
+                {
+                    authBuilder.RequireRole("ServerAdmins", "Administrators");
+                });
+
             return options;
         }
 
