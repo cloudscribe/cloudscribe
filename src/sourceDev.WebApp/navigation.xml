@@ -571,7 +571,7 @@
                  text="Permitted IP Addresses"
                  iconCssClass="fas fa-check"
                  componentVisibility="breadcrumbs,childtree,parenttree"
-                 authorizationPolicy="AdminPolicy">
+                 authorizationPolicy="AdminMenuPolicy">
               <Children />
         </NavNode>
 	  <NavNode key="BlockedIpAddresses"
@@ -580,7 +580,7 @@
                  text="Blocked IP Addresses"
                  iconCssClass="fas fa-ban"
                  componentVisibility="breadcrumbs,childtree,parenttree"
-                 authorizationPolicy="AdminPolicy">
+                 authorizationPolicy="AdminMenuPolicy">
               <Children />
         </NavNode>
       </Children>

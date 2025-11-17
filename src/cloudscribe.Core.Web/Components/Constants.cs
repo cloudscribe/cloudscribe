@@ -1,11 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace cloudscribe.Core.Web
+﻿namespace cloudscribe.Core.Web
 {
-
-
     public static class PolicyConstants
     {
         public const string AdminMenuPolicy = "AdminMenuPolicy";
@@ -16,7 +10,6 @@ namespace cloudscribe.Core.Web
         public const string UserManagementPolicy = "UserManagementPolicy";
         public const string UserLookupPolicy = "UserLookupPolicy";
         public const string CoreDataPolicy = "CoreDataPolicy";
+        public const string IPAddressRestrictionPolicy = "IPAddressRestrictionPolicy";
     }
-
-
 }
