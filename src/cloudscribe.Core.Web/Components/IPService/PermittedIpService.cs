@@ -22,19 +22,11 @@ namespace cloudscribe.Core.Web.Components.IPService
                 throw new ArgumentException("IP address cannot be null or empty.");
             }
 
-            if (_permittedIps.Any(i => i.IpAddress == ipAddress.IpAddress))
-            {
-                _log.LogWarning($"IP address {ipAddress.IpAddress} is already permitted.");
-                throw new ArgumentException($"IP address {ipAddress.IpAddress} is already permitted.");
-            }
-
             try
             {
-                _memoryCache.Remove("PermittedIpAddresses");
+                _ipCache.InvalidatePermittedIps(ipAddress.SiteId);
 
-                Guid currentSiteId = _currentSite.Id;
-
-                return _iipAddressCommands.AddPermittedIpAddress(ipAddress, currentSiteId, cancellationToken).ContinueWith(t => true, cancellationToken);
+                return _iipAddressCommands.AddPermittedIpAddress(ipAddress, ipAddress.SiteId, cancellationToken).ContinueWith(t => true, cancellationToken);
             }
             catch (Exception e)
             {
@@ -55,11 +47,9 @@ namespace cloudscribe.Core.Web.Components.IPService
 
             try
             {
-                _memoryCache.Remove("PermittedIpAddresses");
+                _ipCache.InvalidatePermittedIps(ipAddress.SiteId);
 
-                Guid currentSiteId = _currentSite.Id;
-
-                return _iipAddressCommands.UpdatePermittedIpAddress(ipAddress, currentSiteId, cancellationToken).ContinueWith(t => true, cancellationToken);
+                return _iipAddressCommands.UpdatePermittedIpAddress(ipAddress, ipAddress.SiteId, cancellationToken).ContinueWith(t => true, cancellationToken);
             }
             catch (Exception e)
             {
@@ -128,7 +118,7 @@ namespace cloudscribe.Core.Web.Components.IPService
 
                 if (result)
                 {
-                    _memoryCache.Remove("PermittedIpAddresses");
+                    _ipCache.InvalidatePermittedIps(siteId);
 
                     return new OkResult();
                 }

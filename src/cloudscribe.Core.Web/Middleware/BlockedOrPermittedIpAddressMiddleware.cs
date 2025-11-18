@@ -19,7 +19,7 @@ namespace cloudscribe.Core.Web.Middleware
         {
             IPAddress remoteIp = context.Connection.RemoteIpAddress;
             SiteContext tenant = context.GetTenant<SiteContext>();
-            bool isBlocked = blockedOrPermittedIpService.IsBlockedOrPermittedIp(remoteIp!, tenant.Id);
+            bool isBlocked = await blockedOrPermittedIpService.IsBlockedOrPermittedIpAsync(remoteIp!, tenant.Id, context.RequestAborted);
 
             if (isBlocked)
             {
