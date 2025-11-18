@@ -28,7 +28,6 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
             ViewData["Title"] = StringLocalizer["Blocked IP Addresses"];
             ViewBag.status = status;
             int itemsPerPage = UIOptions.DefaultPageSize_IpAddresses;
-            string usersIpAddress = string.Empty;
 
             if (pageSize > 0)
                 itemsPerPage = pageSize;
@@ -46,22 +45,22 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
                         BlockedPermittedIpAddresses = await _blockedOrPermittedIpService.GetBlockedIpAddressesAsync(User.GetUserSiteIdAsGuid(), pageNumber, itemsPerPage, CancellationToken.None)
                     };
 
-                    var loc = await _userManager.GetUserLocations(User.GetUserSiteIdAsGuid(), User.GetUserIdAsGuid(), 1, 1);
-
-                    foreach (var item in loc.Data)
+                    // Get current request IP address
+                    var currentIp = HttpContext.Connection.RemoteIpAddress?.ToString();
+                    
+                    if (!string.IsNullOrEmpty(currentIp))
                     {
-                        usersIpAddress = item.IpAddress.ToString() ?? StringLocalizer["Unknown"];
-                    }
-
-                    if (usersIpAddress != StringLocalizer["Unknown"])
-                    {
-                        if (usersIpAddress == "0.0.0.1")
+                        // Normalize localhost representations
+                        if (currentIp == "::1" || currentIp == "127.0.0.1")
                         {
-                            usersIpAddress = "::1";
+                            currentIp = "::1 (localhost)";
                         }
+                        ViewBag.UsersIpAddress = currentIp;
                     }
-
-                    ViewBag.UsersIpAddress = usersIpAddress;
+                    else
+                    {
+                        ViewBag.UsersIpAddress = StringLocalizer["Unknown"];
+                    }
 
                     return View(blockedIps);
                 }
