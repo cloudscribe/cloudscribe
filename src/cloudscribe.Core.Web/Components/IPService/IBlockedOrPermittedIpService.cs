@@ -11,7 +11,7 @@ namespace cloudscribe.Core.Web.Components.IPService
 {
     public interface IBlockedOrPermittedIpService
     {
-        bool IsBlockedOrPermittedIp(IPAddress ipAddress, Guid siteId);
+        Task<bool> IsBlockedOrPermittedIpAsync(IPAddress ipAddress, Guid siteId, CancellationToken cancellationToken = default);
         Task<bool> AddBlockedIpAddress(BlockedPermittedIpAddressesModel ipAddress, Guid currentSiteId, CancellationToken cancellationToken = default);
 
         Task<bool> UpdateBlockedIpAddress(BlockedPermittedIpAddressesModel ipAddress, Guid currentSiteId, CancellationToken cancellationToken = default);

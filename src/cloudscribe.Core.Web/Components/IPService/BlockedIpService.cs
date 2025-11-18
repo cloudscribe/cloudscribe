@@ -20,15 +20,9 @@ namespace cloudscribe.Core.Web.Components.IPService
                 throw new ArgumentException("IP address cannot be null or empty.");
             }
 
-            if (_blockedIps.Any(i => i.IpAddress == ipAddress.IpAddress))
-            {
-                _log.LogWarning($"IP address {ipAddress.IpAddress} is already blocked.");
-                throw new ArgumentException($"IP address {ipAddress.IpAddress} is already blocked.");
-            }
-
             try
             {
-                _memoryCache.Remove("BlockedIpAddresses");
+                _ipCache.InvalidateBlockedIps(currentSiteId);
 
                 return _iipAddressCommands.AddBlockedIpAddress(ipAddress, currentSiteId, cancellationToken);
             }
@@ -93,7 +87,7 @@ namespace cloudscribe.Core.Web.Components.IPService
 
             try
             {
-                _memoryCache.Remove("BlockedIpAddresses");
+                _ipCache.InvalidateBlockedIps(currentSiteId);
 
                 return _iipAddressCommands.UpdateBlockedIpAddress(ipAddress, currentSiteId, cancellationToken).ContinueWith(t => true, cancellationToken);
             }
@@ -118,7 +112,7 @@ namespace cloudscribe.Core.Web.Components.IPService
 
                 if (result)
                 {
-                    _memoryCache.Remove("BlockedIpAddresses");
+                    _ipCache.InvalidateBlockedIps(siteId);
 
                     return new OkResult();
                 }

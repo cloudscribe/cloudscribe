@@ -35,7 +35,7 @@ namespace cloudscribe.Core.Web.Middleware.EnforceSiteRulesMiddleware.Tests
                 {
                     // IP service mock
                     var mockIpService = new Mock<Web.Components.IPService.IBlockedOrPermittedIpService>();
-                    mockIpService.Setup(x => x.IsBlockedOrPermittedIp(It.IsAny<IPAddress>(), It.IsAny<Guid>())).Returns(false);
+                    mockIpService.Setup(x => x.IsBlockedOrPermittedIpAsync(It.IsAny<IPAddress>(), It.IsAny<Guid>(), It.IsAny<CancellationToken>())).ReturnsAsync(false);
                     services.AddScoped(_ => mockIpService.Object);
 
                     // User resolver mock
