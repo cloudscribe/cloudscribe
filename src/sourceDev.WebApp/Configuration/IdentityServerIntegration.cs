@@ -1,10 +1,11 @@
 ﻿using cloudscribe.Core.IdentityServerIntegration;
-using IdentityServer4.AccessTokenValidation;
 using IdentityServer4.Validation;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
+using Microsoft.IdentityModel.Tokens;
 using System.IO;
 
 namespace Microsoft.Extensions.DependencyInjection
@@ -124,14 +125,23 @@ namespace Microsoft.Extensions.DependencyInjection
 
         public static IServiceCollection SetupIdentityServerApiAuthentication(this IServiceCollection services)
         {
-            services.AddAuthentication()
-                .AddIdentityServerAuthentication(IdentityServerAuthenticationDefaults.AuthenticationScheme, options =>
+            services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+                .AddJwtBearer(JwtBearerDefaults.AuthenticationScheme, options =>
                 {
                     options.Authority = "https://localhost:44399";
-
-                    options.ApiName = "idserverapi";
-                    options.ApiSecret = "secret";
                     options.RequireHttpsMetadata = false;
+
+                    options.TokenValidationParameters = new TokenValidationParameters
+                    {
+                        ValidateAudience = false,
+                        ValidateIssuer = true,
+                        ValidIssuer = "https://localhost:44399",
+                        ValidateLifetime = true,
+                        ClockSkew = System.TimeSpan.FromMinutes(5)
+                    };
+
+                    // Handle key refresh for modern package compatibility
+                    options.RefreshOnIssuerKeyNotFound = true;
                 });
 
             return services;

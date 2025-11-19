@@ -28,7 +28,6 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
             ViewData["Title"] = StringLocalizer["Blocked IP Addresses"];
             ViewBag.status = status;
             int itemsPerPage = UIOptions.DefaultPageSize_IpAddresses;
-            string usersIpAddress = string.Empty;
 
             if (pageSize > 0)
                 itemsPerPage = pageSize;
@@ -46,22 +45,25 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
                         BlockedPermittedIpAddresses = await _blockedOrPermittedIpService.GetBlockedIpAddressesAsync(User.GetUserSiteIdAsGuid(), pageNumber, itemsPerPage, CancellationToken.None)
                     };
 
-                    var loc = await _userManager.GetUserLocations(User.GetUserSiteIdAsGuid(), User.GetUserIdAsGuid(), 1, 1);
-
-                    foreach (var item in loc.Data)
+                    // Get current request IP address
+                    var currentIp = HttpContext.Connection.RemoteIpAddress?.ToString();
+                    
+                    if (!string.IsNullOrEmpty(currentIp))
                     {
-                        usersIpAddress = item.IpAddress.ToString() ?? StringLocalizer["Unknown"];
-                    }
-
-                    if (usersIpAddress != StringLocalizer["Unknown"])
-                    {
-                        if (usersIpAddress == "0.0.0.1")
+                        // Normalize localhost representations
+                        if (currentIp == "::1" || currentIp == "127.0.0.1")
                         {
-                            usersIpAddress = "::1";
+                            currentIp = "::1 (localhost)";
                         }
+                        ViewBag.UsersIpAddress = currentIp;
+                    }
+                    else
+                    {
+                        ViewBag.UsersIpAddress = StringLocalizer["Unknown"];
                     }
 
-                    ViewBag.UsersIpAddress = usersIpAddress;
+                    // Indicate if IP restrictions are globally disabled
+                    ViewBag.IpRestrictionsEnabled = SiteConfigOptions.EnableIpAddressRestrictions;
 
                     return View(blockedIps);
                 }
@@ -87,7 +89,7 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        [Authorize(Policy = PolicyConstants.AdminPolicy)]
+        [Authorize(Policy = PolicyConstants.IPAddressRestrictionPolicy)]
         public virtual async Task<IActionResult> AddBlockedIpAddress(string ipAddress, string? reason, string ipTypeRadio)
         {
             if (ipAddress.Length <= 0)
@@ -171,7 +173,7 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        [Authorize(Policy = PolicyConstants.AdminPolicy)]
+        [Authorize(Policy = PolicyConstants.IPAddressRestrictionPolicy)]
         public virtual async Task<IActionResult> UpdateBlockedIpAddress(IpAddressesViewModel model)
         {
             if (!ModelState.IsValid)
@@ -261,7 +263,7 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        [Authorize(Policy = PolicyConstants.AdminPolicy)]
+        [Authorize(Policy = PolicyConstants.IPAddressRestrictionPolicy)]
         public virtual async Task<IActionResult> DeleteBlockedIpAddress(string ipAddressId)
         {
             if (ipAddressId == string.Empty)
@@ -311,7 +313,7 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
         }
 
         [HttpPost]
-        [Authorize(Policy = PolicyConstants.AdminPolicy)]
+        [Authorize(Policy = PolicyConstants.AdminMenuPolicy)]
         public async virtual Task<IActionResult> SearchBlockedIpAddresses(string searchTerm, int pageNumber = 1, int pageSize = -1, CancellationToken cancellationToken = default)
         {
             PaginatedIpAddressesViewModel blockedIps;
@@ -399,7 +401,7 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        [Authorize(Policy = PolicyConstants.AdminPolicy)]
+        [Authorize(Policy = PolicyConstants.IPAddressRestrictionPolicy)]
         public async Task<IActionResult> BulkUploadBlockedIpAddress(BulkUploadIpAddressesModel model)
         {
             if (!ModelState.IsValid)

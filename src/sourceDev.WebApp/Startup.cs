@@ -18,7 +18,6 @@ using Microsoft.Extensions.Options;
 using sourceDev.WebApp.Configuration;
 //using cloudscribe.UserProperties.Services;
 //using cloudscribe.UserProperties.Models;
-using IdentityServer4.AccessTokenValidation;
 using Microsoft.AspNetCore.Http;
 using System.Security.Claims;
 using Microsoft.AspNetCore.Authentication;

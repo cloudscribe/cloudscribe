@@ -223,6 +223,10 @@ namespace cloudscribe.Core.Models
         string HeaderContent { get; set; }
         string FooterContent { get; set; }
 
+        // Controls whether end users may edit their own profile name fields
+        bool AllowUserToEditDisplayName { get; set; }
+        bool AllowUserToEditFirstAndLastName { get; set; }
+
         /// <summary>
         /// false by default, if true a random guid will be generated upon login, saved in SiteUser.BrowserKey and in BrowserKey claim on claimsprincipal.
         /// Site Rules middleware will signout any user whose current BrowserKey claim doesn't match SiteUser.BrowserKey

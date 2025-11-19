@@ -17,7 +17,7 @@ namespace cloudscribe.Core.Storage.EFCore.SQLite.Migrations
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "8.0.0");
 
-            modelBuilder.Entity("cloudscribe.Core.Models.BlackWhiteListedIpAddressesModel", b =>
+            modelBuilder.Entity("cloudscribe.Core.Models.BlockedPermittedIpAddressesModel", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -29,7 +29,10 @@ namespace cloudscribe.Core.Storage.EFCore.SQLite.Migrations
                     b.Property<string>("IpAddress")
                         .HasColumnType("TEXT");
 
-                    b.Property<bool>("IsWhitelisted")
+                    b.Property<bool>("IsPermitted")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<bool>("IsRange")
                         .HasColumnType("INTEGER");
 
                     b.Property<DateTime>("LastUpdated")
@@ -43,7 +46,7 @@ namespace cloudscribe.Core.Storage.EFCore.SQLite.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("BlackWhiteListedIpAddresses");
+                    b.ToTable("BlockedPermittedIpAddresses");
                 });
 
             modelBuilder.Entity("cloudscribe.Core.Models.Geography.GeoCountry", b =>
@@ -180,6 +183,12 @@ namespace cloudscribe.Core.Storage.EFCore.SQLite.Migrations
                         .HasColumnType("INTEGER");
 
                     b.Property<bool>("AllowUserToChangeEmail")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<bool>("AllowUserToEditDisplayName")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<bool>("AllowUserToEditFirstAndLastName")
                         .HasColumnType("INTEGER");
 
                     b.Property<bool>("CaptchaOnLogin")

@@ -39,7 +39,8 @@ namespace cloudscribe.Core.Identity
             IEnumerable<IHandleUserAddedToRole> userAddedToRoleHandlers,
             IEnumerable<IHandleUserRemovedFromRole> userRemovedFromRoleHandlers,
             IEnumerable<IHandleRoleUpdated> roleUpdatedHandlers,
-            IEnumerable<IHandleRoleDeleted> roleDeletedHandlers
+            IEnumerable<IHandleRoleDeleted> roleDeletedHandlers,
+            IEnumerable<IHandleRoleCopied> roleCopiedHandlers
             ) : base(
                 roleStore, 
                 roleValidators,
@@ -58,6 +59,7 @@ namespace cloudscribe.Core.Identity
             _userRemovedFromRoleHandlers = userRemovedFromRoleHandlers;
             _roleUpdatedHandlers         = roleUpdatedHandlers;
             _roleDeletedHandlers         = roleDeletedHandlers;
+            _roleCopiedHandlers          = roleCopiedHandlers;
         }
 
         private readonly HttpContext _context;
@@ -71,6 +73,7 @@ namespace cloudscribe.Core.Identity
         private readonly IEnumerable<IHandleUserRemovedFromRole> _userRemovedFromRoleHandlers;
         private readonly IEnumerable<IHandleRoleUpdated>         _roleUpdatedHandlers;
         private readonly IEnumerable<IHandleRoleDeleted>         _roleDeletedHandlers;
+        private readonly IEnumerable<IHandleRoleCopied>          _roleCopiedHandlers;
 
 
         private ISiteContext _siteSettings = null;
@@ -260,6 +263,57 @@ namespace cloudscribe.Core.Identity
                     _log.LogError($"{ex.Message}-{ex.StackTrace}");
                 }
             }
+        }
+
+        public async Task<IdentityResult> CopyRoleAsync(TRole sourceRole, string newRoleName, bool includeExistingUsers = false)
+        {
+            if (sourceRole == null) { throw new ArgumentNullException(nameof(sourceRole)); }
+            if (string.IsNullOrWhiteSpace(newRoleName)) { throw new ArgumentException("New role name cannot be empty", nameof(newRoleName)); }
+
+            // Create new role
+            var newRole = Activator.CreateInstance<TRole>();
+            newRole.SiteId = sourceRole.SiteId;
+            newRole.RoleName = newRoleName;
+            newRole.NormalizedRoleName = newRoleName.ToUpperInvariant();
+
+            // Create the role using base CreateAsync
+            var result = await CreateAsync(newRole);
+            
+            if (result.Succeeded)
+            {
+                // Copy users if requested
+                if (includeExistingUsers)
+                {
+                    var usersInRole = await _queries.GetUsersInRole(sourceRole.SiteId, sourceRole.NormalizedRoleName, CancellationToken);
+                    
+                    foreach (var user in usersInRole)
+                    {
+                        try
+                        {
+                            await AddUserToRole(user, newRole);
+                        }
+                        catch (Exception ex)
+                        {
+                            _log.LogError($"Error adding user {user.Id} to new role {newRole.RoleName}: {ex.Message}-{ex.StackTrace}");
+                        }
+                    }
+                }
+
+                // Invoke all role copied handlers
+                foreach (var handler in _roleCopiedHandlers)
+                {
+                    try
+                    {
+                        await handler.Handle(sourceRole, newRole);
+                    }
+                    catch (Exception ex)
+                    {
+                        _log.LogError($"{ex.Message}-{ex.StackTrace}");
+                    }
+                }
+            }
+
+            return result;
         }
     }
 }

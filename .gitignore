@@ -225,3 +225,21 @@ tools/**
 # any test SQLite databases
 **/*.db
 
+# Local development files (keep these files local only)
+IDENTITYSERVER4-ACCESSTOKENVALIDATION-DEPRECATION.md
+IS4-JWT-TOKEN-VALIDATION-BUG.md
+RELEASE-NOTES.md
+src/AUTO-LOGOUT-ANALYSIS.md
+src/AUTO-LOGOUT-FLOW-DIAGRAM.md
+src/AUTO-LOGOUT-IMPLEMENTATION-PLAN.md
+src/CLAUDE.md
+src/ELEMENTPATH-CSP-COMPLIANCE-PLAN.md
+src/PR-1211-ANALYSIS.md
+src/PR-1211-FEEDBACK.md
+src/SERVER-SIDE-SESSION-TRACKING-PLAN.md
+src/SUMMERNOTE-PLUGIN-ARCHITECTURE-WALKTHROUGH.md
+src/cloudscribe-v8.5-release-notes.html
+src/cloudscribe-v8.5-release-notes.md
+src/nuget-push-batch.sh
+src/nuget-push-completed.txt
+

@@ -50,6 +50,7 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
             ISiteMessageEmailSender                    messageSender,
             IOptions<MultiTenantOptions>               multiTenantOptions,
             IOptions<UIOptions>                        uiOptionsAccessor,
+            IOptions<SiteConfigOptions>                siteConfigOptionsAccessor,
             IThemeListBuilder                          layoutListBuilder,
             IStringLocalizer<CloudscribeCore>          localizer,
             DateTimeUtils.ITimeZoneHelper              timeZoneHelper,
@@ -72,6 +73,7 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
             SiteManager          = siteManager ?? throw new ArgumentNullException(nameof(siteManager));
             GeoDataManager       = geoDataManager ?? throw new ArgumentNullException(nameof(geoDataManager));
             UIOptions            = uiOptionsAccessor.Value;
+            SiteConfigOptions    = siteConfigOptionsAccessor.Value;
             LayoutListBuilder    = layoutListBuilder;
             StringLocalizer      = localizer;
             TimeZoneHelper       = timeZoneHelper;
@@ -103,6 +105,7 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
         protected GeoDataManager GeoDataManager { get; private set; }
         protected ILdapHelper LdapHelper { get; private set; }
         protected MultiTenantOptions MultiTenantOptions { get; private set; }
+        protected SiteConfigOptions SiteConfigOptions { get; private set; }
         protected ISiteAccountCapabilitiesProvider SiteCapabilities { get; private set; }
         protected IEnumerable<IEmailSender> EmailSenders { get; private set; }
         protected ISiteMessageEmailSender MessageSender { get; private set; }
@@ -1122,6 +1125,8 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
                 RequireConfirmedEmail      = selectedSite.RequireConfirmedEmail,
                 UseEmailForLogin           = selectedSite.UseEmailForLogin,
                 AllowUserToChangeEmail     = selectedSite.AllowUserToChangeEmail,
+                AllowUserToEditDisplayName      = selectedSite.AllowUserToEditDisplayName,
+                AllowUserToEditFirstAndLastName = selectedSite.AllowUserToEditFirstAndLastName,
                 RequireConfirmedPhone      = selectedSite.RequireConfirmedPhone,
                 AccountApprovalEmailCsv    = selectedSite.AccountApprovalEmailCsv,
                 EmailIsConfigured          = await SiteCapabilities.SupportsEmailNotification(new SiteContext(selectedSite)),
@@ -1197,9 +1202,11 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
             selectedSite.RequireApprovalBeforeLogin = model.RequireApprovalBeforeLogin;
             selectedSite.RequireConfirmedEmail      = model.RequireConfirmedEmail;
             selectedSite.RequireConfirmedPhone      = model.RequireConfirmedPhone;
-            selectedSite.UseEmailForLogin           = model.UseEmailForLogin;
-            selectedSite.AllowUserToChangeEmail     = model.AllowUserToChangeEmail;
-            selectedSite.Require2FA                 = model.Require2FA;
+              selectedSite.UseEmailForLogin           = model.UseEmailForLogin;
+              selectedSite.AllowUserToChangeEmail     = model.AllowUserToChangeEmail;
+              selectedSite.AllowUserToEditDisplayName      = model.AllowUserToEditDisplayName;
+              selectedSite.AllowUserToEditFirstAndLastName = model.AllowUserToEditFirstAndLastName;
+              selectedSite.Require2FA                 = model.Require2FA;
             selectedSite.SingleBrowserSessions      = model.SingleBrowserSessions;
 
             selectedSite.LdapDomain                 = model.LdapDomain;

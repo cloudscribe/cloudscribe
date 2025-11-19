@@ -184,7 +184,8 @@ namespace Microsoft.Extensions.DependencyInjection
 
             services.TryAddScoped<ILdapSslCertificateValidator, AlwaysValidLdapSslCertificateValidator>();
             services.TryAddScoped<IEmailValidationService, EmailValidationService>();
-            services.TryAddTransient<IBlockedOrPermittedIpService, BlockedOrPermittedIpService>();
+            services.TryAddSingleton<IIpAddressCache, IpAddressCache>();
+            services.TryAddScoped<IBlockedOrPermittedIpService, BlockedOrPermittedIpService>();
 
             return services;
         }
@@ -279,6 +280,13 @@ namespace Microsoft.Extensions.DependencyInjection
                 authBuilder =>
                 {
                     authBuilder.RequireRole("Role Administrators", "Administrators", "Content Administrators");
+                });
+
+            options.AddPolicy(
+                "IPAddressRestrictionPolicy",
+                authBuilder =>
+                {
+                    authBuilder.RequireRole("ServerAdmins", "Administrators");
                 });
 
             return options;

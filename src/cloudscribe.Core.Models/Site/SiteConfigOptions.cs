@@ -15,5 +15,12 @@ namespace cloudscribe.Core.Models
         public string RolesThatCannotBeDeleted { get; set; } = string.Empty;
         public bool AllowAdminsToChangeUserPasswords { get; set; }
         public string ReservedSiteNames { get; set; } = string.Empty;
+
+        /// <summary>
+        /// Enable or disable IP address blocking/permitting functionality.
+        /// When disabled, the IP restriction middleware will be bypassed entirely.
+        /// Default: true
+        /// </summary>
+        public bool EnableIpAddressRestrictions { get; set; } = true;
     }
 }

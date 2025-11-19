@@ -220,6 +220,10 @@ namespace cloudscribe.Core.Models
 
         public string FooterContent { get; set; }
 
+        // Controls whether end users may edit their own profile name fields
+        public bool AllowUserToEditDisplayName { get; set; } = false;
+        public bool AllowUserToEditFirstAndLastName { get; set; } = false;
+
         public bool SingleBrowserSessions { get; set; }
         public string MaximumInactivityInMinutes { get; set; }
 
@@ -340,15 +344,17 @@ namespace cloudscribe.Core.Models
                 UseInvisibleRecaptcha      = i.UseInvisibleRecaptcha,
                 UseEmailForLogin           = i.UseEmailForLogin,
                 AllowUserToChangeEmail     = i.AllowUserToChangeEmail,
+                AllowUserToEditDisplayName      = i.AllowUserToEditDisplayName,
+                AllowUserToEditFirstAndLastName = i.AllowUserToEditFirstAndLastName,
                 //UseLdapAuth              = i.UseLdapAuth,
                 TermsUpdatedUtc            = i.TermsUpdatedUtc,
                 EmailApiEndpoint           = i.EmailApiEndpoint,
                 EmailApiKey                = i.EmailApiKey,
                 EmailSenderName            = i.EmailSenderName,
                 MaximumInactivityInMinutes = i.MaximumInactivityInMinutes,
-                RegRestrictionTld = i.RegRestrictionTld,
-                PasswordExpiryWarningDays = i.PasswordExpiryWarningDays,
-                PasswordExpiresDays = i.PasswordExpiresDays
+                RegRestrictionTld          = i.RegRestrictionTld,
+                PasswordExpiryWarningDays  = i.PasswordExpiryWarningDays,
+                PasswordExpiresDays        = i.PasswordExpiresDays
             };
 
             return s;

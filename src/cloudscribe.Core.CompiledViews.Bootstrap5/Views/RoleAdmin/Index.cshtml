@@ -36,6 +36,16 @@
                        asp-route-siteId="@Model.SiteId"
                        asp-route-roleId="@item.Id">@sr["Edit"]</a>
                 }
+                @if (item.NormalizedRoleName != "ADMINISTRATORS")
+                {
+                    <button type="button" class="btn btn-secondary" 
+                            data-bs-toggle="modal" 
+                            data-bs-target="#copyRoleModal"
+                            data-role-id="@item.Id"
+                            data-role-name="@item.RoleName">
+                        @sr["Copy"]
+                    </button>
+                }
 
             </div>
         </li>
@@ -57,6 +67,48 @@
           cs-pager-li-non-active-class="page-item disabled"
           cs-pager-link-current-class="page-link"
           cs-pager-link-other-class="page-link"></cs-pager>
+
+<!-- Copy Role Modal -->
+<div class="modal fade" id="copyRoleModal" tabindex="-1" aria-labelledby="copyRoleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <form asp-action="CopyRole" asp-controller="RoleAdmin" method="post">
+                @Html.AntiForgeryToken()
+                <div class="modal-header">
+                    <h5 class="modal-title" id="copyRoleModalLabel">@sr["Copy Role"]</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <input type="hidden" id="sourceRoleId" name="SourceRoleId" />
+                    <input type="hidden" id="sourceRoleName" name="SourceRoleName" />
+                    <div class="mb-4">
+                        <label for="newRoleName" class="form-label">@sr["New role name"]</label>
+                        <input type="text" class="form-control" id="newRoleName" name="NewRoleName" required maxlength="50" minlength="3" />
+                        <div class="form-text">
+                            @sr["This will create a new role."]
+                            @if (ViewData["HasDynamicPolicyHandlers"] as bool? == true)
+                            {
+                                @:@sr[" Any dynamic authorization policies that reference the source role will also reference the new role."]
+                            }
+                        </div>
+                    </div>
+                    <div class="form-check">
+                        <input type="checkbox" class="form-check-input" id="includeExistingUsers" name="IncludeExistingUsers" value="true" />
+                        <label class="form-check-label" for="includeExistingUsers">
+                            @sr["Include existing users"]
+                        </label>
+                    </div>
+                    <div class="form-text mb-3">@sr["If checked, any existing users in the source role will also become members of the new role."]</div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">@sr["Cancel"]</button>
+                    <button type="submit" class="btn btn-primary">@sr["Copy Role"]</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
 @section SideNav {
     <partial name="AdminSideNav" />
 }
@@ -65,4 +117,5 @@
 }
 @section scripts {
     <partial name="AdminSideNavScripts" />
+    <script src="~/cr/js/cloudscribe-copy-role-modal.js"></script>
 }

@@ -234,6 +234,14 @@ namespace cloudscribe.Core.Storage.EFCore.PostgreSql.Migrations
                         .HasColumnType("boolean")
                         .HasColumnName("allow_user_to_change_email");
 
+                    b.Property<bool>("AllowUserToEditDisplayName")
+                        .HasColumnType("boolean")
+                        .HasColumnName("allow_user_to_edit_display_name");
+
+                    b.Property<bool>("AllowUserToEditFirstAndLastName")
+                        .HasColumnType("boolean")
+                        .HasColumnName("allow_user_to_edit_first_and_last_name");
+
                     b.Property<bool>("CaptchaOnLogin")
                         .HasColumnType("boolean")
                         .HasColumnName("captcha_on_login");
