@@ -8,6 +8,14 @@
 }
 
 <h2>@ViewBag.Title</h2>
+
+@if (ViewBag.IpRestrictionsEnabled == false)
+{
+    <div class="alert alert-warning" role="alert">
+        <strong>⚠️ @sr["Warning:"]</strong> @sr["IP address restrictions are currently disabled in the application configuration. Any IP addresses you configure here will be stored but will not be enforced until the feature is enabled in appsettings.json (SiteConfigOptions:EnableIpAddressRestrictions)."]
+    </div>
+}
+
 <div class="row">
     <div class="col mb-3">
         <h4>@sr["Your IP Address:"] @ViewBag.UsersIpAddress</h4>
