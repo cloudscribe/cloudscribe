@@ -63,6 +63,9 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
 
                     ViewBag.UsersIpAddress = usersIpAddress;
 
+                    // Indicate if IP restrictions are globally disabled
+                    ViewBag.IpRestrictionsEnabled = SiteConfigOptions.EnableIpAddressRestrictions;
+
                     return View(blockedIps);
                 }
             }
