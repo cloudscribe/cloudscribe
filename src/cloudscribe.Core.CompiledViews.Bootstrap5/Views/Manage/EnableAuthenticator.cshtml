@@ -9,7 +9,13 @@
     <ol class="list">
         <li>
             <p>
-                @Html.Raw(string.Format(sr["authenticator_download_instructions"],
+                @{
+                    var downloadInstructions = sr["authenticator_download_instructions"];
+                    var instructionText = string.IsNullOrEmpty(downloadInstructions) || downloadInstructions == "authenticator_download_instructions"
+                        ? "Download a two-factor authenticator app like Microsoft Authenticator for {0}Android{1} and {2}iOS{3} or Google Authenticator for {4}Android{5} and {6}iOS{7}."
+                        : downloadInstructions.ToString();
+                }
+                @Html.Raw(string.Format(instructionText,
                     "<a href=\"https://go.microsoft.com/fwlink/?Linkid=825072\">", "</a>",
                     "<a href=\"https://go.microsoft.com/fwlink/?Linkid=825073\">", "</a>",
                     "<a href=\"https://play.google.com/store/apps/details?id=com.google.android.apps.authenticator2&amp;hl=en\">", "</a>",
@@ -17,7 +23,15 @@
             </p>
         </li>
         <li>
-            <p>@Html.Raw(string.Format(sr["authenticator_scan_qr_instructions"], $"<kbd>{Model.SharedKey}</kbd>"))</p>
+            <p>
+                @{
+                    var scanQrInstructions = sr["authenticator_scan_qr_instructions"];
+                    var scanQrText = string.IsNullOrEmpty(scanQrInstructions) || scanQrInstructions == "authenticator_scan_qr_instructions"
+                        ? "Scan the QR Code or enter this key {0} into your two factor authenticator app. Spaces and casing do not matter."
+                        : scanQrInstructions.ToString();
+                }
+                @Html.Raw(string.Format(scanQrText, $"<kbd>{Model.SharedKey}</kbd>"))
+            </p>
             <div id="qrCode"></div>
             <div id="qrCodeData" data-url="@Html.Raw(Model.AuthenticatorUri)"></div>
         </li>
