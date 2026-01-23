@@ -35,7 +35,7 @@ else
     var returnUrl = isOnLoginOrRegister ? null : Context.Request.PathAndQuery();
     
     <ul class="navbar-nav ms-auto my-2 my-lg-0">
-        @if (!site.AllowNewRegistration)
+        @if (site.AllowNewRegistration)
         {
             <li role="menuitem" class="nav-item"><a class="nav-link" id="registerLink" asp-controller="Account" asp-action="Register">@sr["Register"]</a></li>
         }
