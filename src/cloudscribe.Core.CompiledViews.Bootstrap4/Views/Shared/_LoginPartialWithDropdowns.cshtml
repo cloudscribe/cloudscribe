@@ -29,11 +29,16 @@
 }
 else
 {
+    var currentPath = Context.Request.Path.Value ?? "";
+    var isOnLoginOrRegister = currentPath.EndsWith("/Account/Login", StringComparison.OrdinalIgnoreCase) ||
+                               currentPath.EndsWith("/Account/Register", StringComparison.OrdinalIgnoreCase);
+    var returnUrl = isOnLoginOrRegister ? null : Context.Request.PathAndQuery();
+    
     <ul class="navbar-nav ml-auto my-2 my-lg-0">
         @if (site.AllowNewRegistration)
         {
             <li class="nav-item"><a class="nav-link" id="registerLink" asp-controller="Account" asp-action="Register">@sr["Register"]</a></li>
         }
-        <li class="nav-item"><a class="nav-link" id="loginLink" asp-controller="Account" asp-action="Login" asp-route-returnurl="@Context.Request.PathAndQuery()">@sr["Log in"]</a></li>
+        <li class="nav-item"><a class="nav-link" id="loginLink" asp-controller="Account" asp-action="Login" asp-route-returnurl="@returnUrl">@sr["Log in"]</a></li>
     </ul>
 }

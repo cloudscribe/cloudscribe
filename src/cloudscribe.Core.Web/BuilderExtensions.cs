@@ -95,6 +95,7 @@ namespace Microsoft.AspNetCore.Builder
                 
             });
             app.UseRouting();
+            app.UseCloudscribeMalformedUrlValidation();
             app.UseAuthentication();
             app.UseCloudscribeSessionActivityTracking();
             app.UseAuthorization();
