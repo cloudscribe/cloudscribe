@@ -47,6 +47,10 @@
     {
         <tr>
             <td>
+                <a class="btn btn-xs btn-primary" asp-action="UserEdit"
+                   asp-controller="UserAdmin"
+                   asp-route-siteId="@Model.SiteId"
+                   asp-route-userId="@item.Id">@sr["Manage"]</a>
                 <button type="button" class="btn btn-danger btn-xs" data-bs-toggle="modal" data-bs-target="@("#confirmModal" + item.Id)">
                     @sr["Remove"]
                 </button>
