@@ -448,6 +448,9 @@ namespace cloudscribe.Core.Storage.EFCore.MySql.Migrations
                     b.Property<bool>("Require2FA")
                         .HasColumnType("tinyint(1)");
 
+                    b.Property<string>("Require2FARolesCsv")
+                        .HasColumnType("longtext");
+
                     b.Property<bool>("RequireApprovalBeforeLogin")
                         .HasColumnType("tinyint(1)");
 

@@ -68,6 +68,17 @@
         </div>
     </div>
     <div class="mb-3">
+        <label asp-for="Require2FARolesCsv" class="form-label">
+            @sr["Roles requiring 2FA (if not enforced for all users)"]
+        </label>
+        <input asp-for="Require2FARolesCsv" class="form-control"
+               placeholder="" />
+        <div class="form-text">
+            @sr["Enter role names separated by commas. Role names are Case Sensitive. Only applies when global 2FA requirement above is not checked. Leave empty to disable role-based enforcement."]
+        </div>
+        <span asp-validation-for="Require2FARolesCsv" class="invalid-feedback"></span>
+    </div>
+    <div class="mb-3">
         <label class="form-label" asp-for="AccountApprovalEmailCsv">@sr["Email addresses (csv) to notify of new users"]</label>
         <input asp-for="AccountApprovalEmailCsv" class="form-control" />
         <span asp-validation-for="AccountApprovalEmailCsv" class="invalid-feedback"></span>

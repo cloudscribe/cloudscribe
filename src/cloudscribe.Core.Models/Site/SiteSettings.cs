@@ -214,6 +214,8 @@ namespace cloudscribe.Core.Models
 
         public bool Require2FA { get; set; }
 
+        public string Require2FARolesCsv { get; set; } = string.Empty;
+
         public bool ShowSiteNameLink { get; set; } = true;
 
         public string HeaderContent { get; set; }
@@ -314,6 +316,7 @@ namespace cloudscribe.Core.Models
                 RegistrationAgreement      = i.RegistrationAgreement,
                 RegistrationPreamble       = i.RegistrationPreamble,
                 Require2FA                 = i.Require2FA,
+                Require2FARolesCsv         = i.Require2FARolesCsv,
                 RequireApprovalBeforeLogin = i.RequireApprovalBeforeLogin,
                 RequireConfirmedEmail      = i.RequireConfirmedEmail,
                 RequireConfirmedPhone      = i.RequireConfirmedPhone,
