@@ -71,34 +71,36 @@
 				return button.render();
 			});
 
-			this.initialize = function() {
-				// get the correct container for the plugin where's it's attached to the document DOM.
-				var $container = options.dialogsInBody ? $(document.body) : $editor;
 
-				// Build the Body HTML of the Dialog.
-				var body = '<div class="ratio ratio-16x9"><iframe src="/filemanager/filedialog?Type=image&ShowModalHeader=false" data-wysiwyg-instance="' + $($container).prev("textarea")[0]["id"] + '" id="instanceId"/></div>';
+
+			this.initialize = function () {
+				this.placeholderId = `serverimage-placeholder-${Math.random().toString(36).substr(2, 9)}`;
+				// get the correct container for the plugin where's it's attached to the document DOM.				
+				const $container = options.dialogsInBody ? $(document.body) : $editor;
+
+				const body = `
+					<div class="ratio ratio-16x9">
+						<div id="${this.placeholderId}"></div>
+					</div>
+				`;
+
+				// create an empty dialog container first
+				//moved the creation of the iframe showserverimageDialog
+				//pages with lots of comments were getting swamped with resource requests from the iframe loading
 
 				this.$dialog = ui.dialog({
-					// Set the title for the Dialog.
 					title: lang.serverimage.title,
-					// Set the Body of the Dialog.
 					body: body,
 					callback: function (t) {
-						// t.find(".modal-dialog").addClass("modal-xl");
+						t.find('.modal-dialog').css({
+							width: '85vw',
+							maxWidth: '1500px'
+						});
+					}
+				}).render().appendTo($container)
 
-						t.find('.modal-dialog')
-							.css({
-								width: '85vw', // 85% of the viewport width
-								maxWidth: '1500px' // remove Bootstrap's default max width
-							});
-
-						$(document.body).find('[aria-label="serverimage"]').attr('id', 'serverimage');
-					},
-				})
-				.render()
-				.appendTo($container);
-			}
-	
+			};
+				
 			this.destroy = function () {
 				ui.hideDialog(this.$dialog);
 				this.$dialog.remove();
@@ -128,14 +130,32 @@
 				});
 			};
 			
-			this.showserverimageDialog = function(editorInfo) {
+			this.showserverimageDialog = function (editorInfo) {
 				return $.Deferred(function (deferred) {
-					ui.onDialogShown(self.$dialog,function () {
+
+					const placeholder = self.$dialog.find(`#${self.placeholderId}`);
+
+					// Lazy load iframe ONLY once
+					if (placeholder.is(':empty')) {
+						const iframeHtml = `
+											<iframe 
+												src="/filemanager/filedialog?Type=image&ShowModalHeader=false" 
+												data-wysiwyg-instance="${$($editor).prev("textarea")[0].id}"
+												class="w-100 h-100"
+											></iframe>
+										`;
+
+						placeholder.html(iframeHtml);
+					}
+
+					ui.onDialogShown(self.$dialog, function () {
 						context.triggerEvent('dialog.shown');
 					});
-					ui.onDialogHidden(self.$dialog,function () {
+
+					ui.onDialogHidden(self.$dialog, function () {
 						if (deferred.state() === 'pending') deferred.reject();
 					});
+
 					ui.showDialog(self.$dialog);
 				});
 			};
