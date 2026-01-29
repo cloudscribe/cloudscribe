@@ -446,6 +446,9 @@ namespace cloudscribe.Core.Storage.EFCore.SQLite.Migrations
                     b.Property<bool>("Require2FA")
                         .HasColumnType("INTEGER");
 
+                    b.Property<string>("Require2FARolesCsv")
+                        .HasColumnType("TEXT");
+
                     b.Property<bool>("RequireApprovalBeforeLogin")
                         .HasColumnType("INTEGER");
 

@@ -1133,6 +1133,7 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
                 SmsIsConfigured            = selectedSite.SmsIsConfigured(),
                 HasAnySocialAuthEnabled    = selectedSite.HasAnySocialAuthEnabled(),
                 Require2FA                 = selectedSite.Require2FA,
+                Require2FARolesCsv         = selectedSite.Require2FARolesCsv,
                 SingleBrowserSessions      = selectedSite.SingleBrowserSessions,
 
                 LdapDomain                 = selectedSite.LdapDomain,
@@ -1207,6 +1208,7 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
               selectedSite.AllowUserToEditDisplayName      = model.AllowUserToEditDisplayName;
               selectedSite.AllowUserToEditFirstAndLastName = model.AllowUserToEditFirstAndLastName;
               selectedSite.Require2FA                 = model.Require2FA;
+            selectedSite.Require2FARolesCsv         = model.Require2FARolesCsv ?? string.Empty;
             selectedSite.SingleBrowserSessions      = model.SingleBrowserSessions;
 
             selectedSite.LdapDomain                 = model.LdapDomain;

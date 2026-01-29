@@ -119,6 +119,8 @@ namespace cloudscribe.Core.Models
 
         bool Require2FA { get; }
 
+        string Require2FARolesCsv { get; }
+
         bool ShowSiteNameLink { get; }
         string HeaderContent { get; }
         string FooterContent { get; }

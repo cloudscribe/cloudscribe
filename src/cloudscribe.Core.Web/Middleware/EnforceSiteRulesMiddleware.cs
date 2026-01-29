@@ -11,7 +11,9 @@ using cloudscribe.Web.Common.Extensions;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
+using System;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
 
 namespace cloudscribe.Core.Web.Middleware
@@ -153,7 +155,7 @@ namespace cloudscribe.Core.Web.Middleware
                     }
                 }
 
-                else if (userContext != null && currentSite.Require2FA && !userContext.TwoFactorEnabled && !context.User.IsInRole("Administrators"))
+                else if (userContext != null && !userContext.TwoFactorEnabled && UserRequires2FA(context.User, currentSite))
                 {
                     var twoFactorUrl1 = folderSegment + "/manage/twofactorauthentication";
                     var twoFactorUrl2 = folderSegment + "/manage/enableauthenticator";
@@ -205,6 +207,45 @@ namespace cloudscribe.Core.Web.Middleware
             await _next(context);
         }
 
+
+        /// <summary>
+        /// Determines if a user is required to configure 2FA based on site settings.
+        /// Priority 1: Global enforcement (Require2FA = true) - all users except Administrators
+        /// Priority 2: Role-based enforcement (Require2FA = false, Require2FARolesCsv populated) - users in listed roles
+        /// Priority 3: No enforcement (both settings inactive) - 2FA optional
+        /// </summary>
+        private bool UserRequires2FA(ClaimsPrincipal user, ISiteContext site)
+        {
+            // Priority 1: Global enforcement - EXISTING BEHAVIOR PRESERVED
+            if (site.Require2FA)
+            {
+                // Hardcoded exception: Administrators are ALWAYS exempt when global checkbox is on
+                // This behavior is unchanged from the original implementation
+                return !user.IsInRole("Administrators");
+            }
+
+            // Priority 2: Role-based enforcement - NEW BEHAVIOR (only when global checkbox is off)
+            if (!string.IsNullOrWhiteSpace(site.Require2FARolesCsv))
+            {
+                // Parse tenant-specific role list (supports comma and semicolon delimiters)
+                var requiredRoles = site.Require2FARolesCsv
+                    .Split(new[] { ',', ';' }, StringSplitOptions.RemoveEmptyEntries)
+                    .Select(r => r.Trim());
+
+                // Check if user is in ANY of the specified roles
+                // Note: "Administrators" CAN be in this list - no hardcoded exemption here
+                foreach (var role in requiredRoles)
+                {
+                    if (user.IsInRole(role))
+                    {
+                        return true;
+                    }
+                }
+            }
+
+            // Priority 3: No enforcement - 2FA optional
+            return false;
+        }
 
         private async Task ReturnErrorResponse(HttpContext context)
         {

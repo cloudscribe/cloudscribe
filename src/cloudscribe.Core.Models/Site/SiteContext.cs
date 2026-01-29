@@ -534,6 +534,11 @@ namespace cloudscribe.Core.Models
             get { return site.Require2FA; }
         }
 
+        public string Require2FARolesCsv
+        {
+            get { return site.Require2FARolesCsv; }
+        }
+
         public bool ShowSiteNameLink
         {
             get { return site.ShowSiteNameLink; }
