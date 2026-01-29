@@ -74,7 +74,7 @@
         <input asp-for="Require2FARolesCsv" class="form-control"
                placeholder="" />
         <small class="form-text text-muted">
-            @sr["Enter role names separated by commas. Role names are Case Sensitive. Only applies when global 2FA requirement above is not checked. Leave empty to disable role-based enforcement."]
+            @sr["Enter role names (case sensitive) separated by commas. Only applies when the global 2FA requirement above is not checked. Leave this empty to disable role-based enforcement."]
         </small>
         <span asp-validation-for="Require2FARolesCsv" class="invalid-feedback"></span>
     </div>

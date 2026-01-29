@@ -74,9 +74,18 @@
         <input asp-for="Require2FARolesCsv" class="form-control"
                placeholder="" />
         <div class="form-text">
-            @sr["Enter role names separated by commas. Role names are Case Sensitive. Only applies when global 2FA requirement above is not checked. Leave empty to disable role-based enforcement."]
+            @sr["Enter role names (case sensitive) separated by commas. Only applies when the global 2FA requirement above is not checked. Leave this empty to disable role-based enforcement."]
         </div>
         <span asp-validation-for="Require2FARolesCsv" class="invalid-feedback"></span>
+        <a class="btn btn-sm btn-primary mt-2"
+           href="@Url.Action("Modal", "RoleAdmin", new { siteId = Model.SiteId })"
+           data-ajax="true"
+           data-ajax-begin="roleSelector.prepareModal('Require2FARolesCsv','')"
+           data-ajax-failure="roleSelector.clearModal()"
+           data-ajax-method="GET"
+           data-ajax-mode="replace"
+           data-ajax-success="roleSelector.openModal()"
+           data-ajax-update="#roledialog">@sr["Select Roles"]</a>
     </div>
     <div class="mb-3">
         <label class="form-label" asp-for="AccountApprovalEmailCsv">@sr["Email addresses (csv) to notify of new users"]</label>
@@ -98,7 +107,7 @@
     <div class="mb-3">
         <label class="form-label" asp-for="RegRestrictionTld">@sr["Registration Permitted Top Level Domain(s)"]</label>
         <input asp-for="RegRestrictionTld" class="form-control" />
-        <p class="small">To restrict user registration to specific TLD's. E.g. entering: <i>mycompany.com</i> will restrict registration to users whose emails end with <i>@@mycompany.com</i>. To have multiple TLD's, separate them with a comma: <i>mycompany.com, mycompany2.com</i></p>
+        <p class="form-text">To restrict user registration to specific TLD's. E.g. entering: <i>mycompany.com</i> will restrict registration to users whose emails end with <i>@@mycompany.com</i>. To have multiple TLD's, separate them with a comma: <i>mycompany.com, mycompany2.com</i></p>
         @Html.ValidationMessage("RegRestrictionTld", new { @class = "text-danger" })
     </div>
     <div class="mb-4">
@@ -183,7 +192,8 @@
     <script src="~/cr/js/jquery.validate.hooks.min.js"></script>
     <script src="~/cr/js/jqueryvaildation.submitonce-unobtrusive.min.js"></script>
     <script src="~/cr/js/bootstrap-tooltip-toggle.js"></script>
-    
+    <script src="~/cr/js/jquery.unobtrusive-ajax.min.js"></script>
+    <script src="~/cr/js/cloudscribe-role-selector.min.js"></script>
 }
 
 
