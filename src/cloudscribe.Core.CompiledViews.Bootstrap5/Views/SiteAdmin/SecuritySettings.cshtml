@@ -75,11 +75,8 @@
                placeholder="" />
         <div class="form-text">
             @sr["Enter role names (case sensitive) separated by commas. Only applies when the global 2FA requirement above is not checked."]
-            @if (User.IsInRole("Administrators"))
-            {
-                <br />
-                @sr["Caution: if you include your own role (e.g. 'Administators') in this list, be prepared to configure your own 2FA app immediately, otherwise you will be locked out."]
-            }
+            <br />
+            @sr["Caution: if you include your own role (e.g. 'Administators') in this list, be prepared to configure your own 2FA app immediately, otherwise you will be locked out."]
         </div>
         <span asp-validation-for="Require2FARolesCsv" class="invalid-feedback"></span>
         <a class="btn btn-sm btn-primary mt-2"
