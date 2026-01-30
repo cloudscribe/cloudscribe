@@ -564,6 +564,11 @@ namespace cloudscribe.Core.Models
             get { return site.SingleBrowserSessions; }
         }
 
+        public string HideNavigationOnAuthPages
+        {
+            get { return site.HideNavigationOnAuthPages; }
+        }
+
         public string MaximumInactivityInMinutes
         {
             get { return site.MaximumInactivityInMinutes; }

@@ -239,6 +239,9 @@ namespace cloudscribe.Core.Storage.EFCore.PostgreSql
                 entity.Property(p => p.MaximumInactivityInMinutes);
                 entity.Property(p => p.PasswordExpiresDays);
                 entity.Property(p => p.PasswordExpiryWarningDays);
+
+                entity.Property(p => p.HideNavigationOnAuthPages)
+                .HasMaxLength(50);
             });
 
             modelBuilder.Entity<SiteHost>(entity =>

@@ -16,6 +16,7 @@ using cloudscribe.Core.Web.ViewModels.SiteUser;
 using cloudscribe.Web.Common.Extensions;
 using cloudscribe.Web.Common.Models;
 using cloudscribe.Web.Common.Recaptcha;
+using cloudscribe.Web.Navigation;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
@@ -270,6 +271,8 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
             // don't disable db auth if there are no social auth providers configured
             model.DisableDbAuth = CurrentSite.DisableDbAuth && CurrentSite.HasAnySocialAuthEnabled();
 
+            SuppressNavigationFor(isLogin: true);
+
             return View(model);
         }
 
@@ -296,6 +299,8 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
             model.ExternalAuthenticationList = await AccountService.GetExternalAuthenticationSchemes();
             // don't disable db auth if there are no social auth providers configured
             model.DisableDbAuth = CurrentSite.DisableDbAuth && CurrentSite.HasAnySocialAuthEnabled();
+
+            SuppressNavigationFor(isLogin: true);
 
             if (!ModelState.IsValid)
             {
@@ -543,6 +548,8 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
                 HttpContext,
                 ViewData);
 
+            SuppressNavigationFor(isLogin: false);
+
             return View(viewName, model);
         }
 
@@ -567,6 +574,8 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
             model.RegistrationAgreement = CurrentSite.RegistrationAgreement;
             model.AgreementRequired = !string.IsNullOrWhiteSpace(CurrentSite.RegistrationAgreement);
             model.ExternalAuthenticationList = await AccountService.GetExternalAuthenticationSchemes();
+
+            SuppressNavigationFor(isLogin: false);
 
             bool isValid = ModelState.IsValid;
 
@@ -1084,6 +1093,7 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
             {
                 return this.RedirectToSiteRoot(CurrentSite);
             }
+
             var model = new PendingNotificationViewModel
             {
                 UserId = userId,
@@ -1139,6 +1149,7 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
             {
                 return this.RedirectToSiteRoot(CurrentSite);
             }
+
             if (userId == null || code == null)
             {
                 return this.RedirectToSiteRoot(CurrentSite);
@@ -1270,6 +1281,8 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
         [AllowAnonymous]
         public virtual async Task<IActionResult> ForgotPasswordAsync()
         {
+            SuppressNavigationFor(isLogin: false);
+
             ForgotPasswordViewModel forgotPasswordViewModel = new ForgotPasswordViewModel();
             var recaptchaKeys = await RecaptchaKeysProvider.GetKeys().ConfigureAwait(false);
 
@@ -1293,6 +1306,8 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
         [ValidateAntiForgeryToken]
         public virtual async Task<IActionResult> ForgotPassword(ForgotPasswordViewModel model)
         {
+            SuppressNavigationFor(isLogin: false);
+
             if (ModelState.IsValid)
             {
                 var recaptchaKeys = await RecaptchaKeysProvider.GetKeys().ConfigureAwait(false);
@@ -1378,6 +1393,8 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
             {
                 return this.RedirectToSiteRoot(CurrentSite);
             }
+
+            SuppressNavigationFor(isLogin: false);
 
             return View();
         }
@@ -1621,6 +1638,28 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
 
         #region Helpers
 
+
+        private void SuppressNavigationFor(bool isLogin)
+        {
+            var setting = CurrentSite.HideNavigationOnAuthPages;
+            if (string.IsNullOrWhiteSpace(setting)) return;
+
+            bool suppress = false;
+            if (setting == "LoginOnly")
+            {
+                suppress = isLogin;
+            }
+            else if (setting == "LoginRegisterForgotPwd")
+            {
+                suppress = true;
+            }
+
+            if (suppress)
+            {
+                NavigationSuppressor.SuppressFilter(HttpContext, NamedNavigationFilters.TopNav);
+                NavigationSuppressor.SuppressFilter(HttpContext, NamedNavigationFilters.Breadcrumbs);
+            }
+        }
 
         private bool IsValidEmail(string emailaddress)
         {

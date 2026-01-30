@@ -127,6 +127,7 @@ namespace cloudscribe.Core.Models
         string LogoUrl { get; }
 
         bool SingleBrowserSessions { get; }
+        string HideNavigationOnAuthPages { get; }
         string MaximumInactivityInMinutes { get; }
         string RegRestrictionTld { get; }
         int PasswordExpiryWarningDays { get; }

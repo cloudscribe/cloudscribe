@@ -212,6 +212,7 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
                 IsClosed = selectedSite.SiteIsClosed,
                 ClosedMessage = selectedSite.SiteIsClosedMessage,
                 ShowSiteNameLink = selectedSite.ShowSiteNameLink,
+                HideNavigationOnAuthPages = selectedSite.HideNavigationOnAuthPages ?? string.Empty,
                 HeaderContent = selectedSite.HeaderContent,
                 FooterContent = selectedSite.FooterContent,
                 LogoUrl = selectedSite.LogoUrl
@@ -383,6 +384,7 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
             selectedSite.ForcedUICulture = model.ForcedUICulture;
 
             selectedSite.ShowSiteNameLink = model.ShowSiteNameLink;
+            selectedSite.HideNavigationOnAuthPages = model.HideNavigationOnAuthPages ?? string.Empty;
             selectedSite.HeaderContent = model.HeaderContent;
             selectedSite.FooterContent = model.FooterContent;
             selectedSite.LogoUrl = model.LogoUrl;
