@@ -89,6 +89,10 @@ namespace cloudscribe.Core.Web.ViewModels.SiteSettings
         public bool IsClosed { get; set; } = false;
 
         public bool ShowSiteNameLink { get; set; } = true;
+
+        [Display(Name = "Hide Navigation On Auth Pages")]
+        public string HideNavigationOnAuthPages { get; set; } = string.Empty;
+
         public string HeaderContent { get; set; }
         public string FooterContent { get; set; }
 

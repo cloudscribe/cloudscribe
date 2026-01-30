@@ -61,19 +61,6 @@
             <label asp-for="SingleBrowserSessions" class="form-check-label">@sr["Enforce one active browser session per user"]</label>
         </div>
     </div>
-    <div class="mb-3">
-        <label asp-for="HideNavigationOnAuthPages" class="form-label">
-            @sr["Hide navigation on authentication pages"]
-        </label>
-        <select asp-for="HideNavigationOnAuthPages" class="form-select">
-            <option value="">@sr["Don't hide"]</option>
-            <option value="LoginOnly">@sr["Login page only"]</option>
-            <option value="LoginRegisterForgotPwd">@sr["Login, Register, and Forgot Password pages"]</option>
-        </select>
-        <div class="form-text">
-            @sr["When set, the top navigation and breadcrumbs will not render on the selected authentication pages, improving page load performance."]
-        </div>
-    </div>
 
     <div class="mb-3">
         <label class="form-label" asp-for="AccountApprovalEmailCsv">@sr["Email addresses (csv) to notify of new users"]</label>
