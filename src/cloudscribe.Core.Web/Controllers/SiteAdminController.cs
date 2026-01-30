@@ -1135,6 +1135,7 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
                 Require2FA                 = selectedSite.Require2FA,
                 Require2FARolesCsv         = selectedSite.Require2FARolesCsv,
                 SingleBrowserSessions      = selectedSite.SingleBrowserSessions,
+                HideNavigationOnAuthPages  = selectedSite.HideNavigationOnAuthPages ?? string.Empty,
 
                 LdapDomain                 = selectedSite.LdapDomain,
                 LdapPort                   = selectedSite.LdapPort,
@@ -1210,6 +1211,7 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
               selectedSite.Require2FA                 = model.Require2FA;
             selectedSite.Require2FARolesCsv         = model.Require2FARolesCsv ?? string.Empty;
             selectedSite.SingleBrowserSessions      = model.SingleBrowserSessions;
+            selectedSite.HideNavigationOnAuthPages  = model.HideNavigationOnAuthPages ?? string.Empty;
 
             selectedSite.LdapDomain                 = model.LdapDomain;
             selectedSite.LdapPort                   = model.LdapPort;

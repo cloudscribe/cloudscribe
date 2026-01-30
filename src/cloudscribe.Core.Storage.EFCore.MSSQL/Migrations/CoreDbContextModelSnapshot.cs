@@ -365,6 +365,10 @@ namespace cloudscribe.Core.Storage.EFCore.MSSQL.Migrations
                     b.Property<string>("HeaderContent")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("HideNavigationOnAuthPages")
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
+
                     b.Property<bool>("IsDataProtected")
                         .HasColumnType("bit");
 

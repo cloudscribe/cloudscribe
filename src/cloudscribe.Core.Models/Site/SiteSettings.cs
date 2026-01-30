@@ -227,6 +227,7 @@ namespace cloudscribe.Core.Models
         public bool AllowUserToEditFirstAndLastName { get; set; } = false;
 
         public bool SingleBrowserSessions { get; set; }
+        public string HideNavigationOnAuthPages { get; set; } = string.Empty;
         public string MaximumInactivityInMinutes { get; set; }
 
         public string RegRestrictionTld { get; set; }
@@ -324,6 +325,7 @@ namespace cloudscribe.Core.Models
                 RequireCookieConsent       = i.RequireCookieConsent,
                 SignEmailWithDkim          = i.SignEmailWithDkim,
                 SingleBrowserSessions      = i.SingleBrowserSessions,
+                HideNavigationOnAuthPages  = i.HideNavigationOnAuthPages ?? string.Empty,
                 SiteFolderName             = i.SiteFolderName,
                 Id                         = i.Id,
                 AliasId                    = i.AliasId,

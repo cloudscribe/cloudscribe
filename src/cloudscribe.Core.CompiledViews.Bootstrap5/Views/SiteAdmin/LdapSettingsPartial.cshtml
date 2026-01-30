@@ -3,8 +3,10 @@
 @inject cloudscribe.Core.Models.Identity.ILdapHelper ldap
 @if (ldap.IsImplemented)
 {
-<fieldset class="border p-2">
-    <legend class="w-auto">@sr["LDAP / Active Directory Settings"]</legend>
+    
+    <h3>@sr["LDAP / Active Directory Settings"]</h3>
+
+<fieldset class="p-0">
     <div class="mb-3">
         <label class="form-label" asp-for="LdapServer">@sr["LDAP Server(s)"]</label>
         <input asp-for="LdapServer" class="form-control" placeholder="@sr["Hostname, or a comma separated list of hostnames"]" />

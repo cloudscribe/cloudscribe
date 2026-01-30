@@ -321,6 +321,10 @@ namespace cloudscribe.Core.Storage.EFCore.SQLite.Migrations
                     b.Property<string>("HeaderContent")
                         .HasColumnType("TEXT");
 
+                    b.Property<string>("HideNavigationOnAuthPages")
+                        .HasMaxLength(50)
+                        .HasColumnType("TEXT");
+
                     b.Property<bool>("IsDataProtected")
                         .HasColumnType("INTEGER");
 

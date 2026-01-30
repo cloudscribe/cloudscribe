@@ -57,6 +57,9 @@ namespace cloudscribe.Core.Web.ViewModels.SiteSettings
 
         public bool SingleBrowserSessions { get; set; }
 
+        [Display(Name = "Hide Navigation On Auth Pages")]
+        public string HideNavigationOnAuthPages { get; set; } = string.Empty;
+
         [Display(Name = "Allow user to change display name")]
         public bool AllowUserToEditDisplayName { get; set; }
 
