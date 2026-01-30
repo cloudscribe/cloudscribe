@@ -1,12 +1,16 @@
 ﻿@using Microsoft.AspNetCore.Http.Features
 @inject IStringLocalizer<CloudscribeCore> sr
+@inject SiteContext siteContext
 @{
     var consentFeature = Context.Features.Get<ITrackingConsentFeature>();
     var hasConsented = consentFeature?.CanTrack ?? false;
     var hasDismissed = Context.Request.Cookies["cookieconsent_dismissed"] != null;
-    
+
+    // If the site is configured not to require consent, then this UI never gets rendered
+    var requiresConsent = siteContext.RequireCookieConsent;
+
     // Show the link if user has made any choice (either consented or dismissed)
-    var showChangePreferences = hasConsented || hasDismissed;
+    var showChangePreferences = requiresConsent && (hasConsented || hasDismissed);
 }
 @if (showChangePreferences)
 {
