@@ -1,5 +1,6 @@
 ﻿using cloudscribe.Core.Ldap;
 using cloudscribe.Core.Models.Identity;
+using cloudscribe.Versioning;
 using Microsoft.Extensions.Configuration;
 
 namespace Microsoft.Extensions.DependencyInjection
@@ -10,10 +11,8 @@ namespace Microsoft.Extensions.DependencyInjection
             this IServiceCollection services, 
             IConfiguration config)
         {
-            
-
             services.AddScoped<ILdapHelper, LdapHelper>();
-
+            services.AddScoped<IVersionProvider, VersionProvider>();
 
             return services;
         }

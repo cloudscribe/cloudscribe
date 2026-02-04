@@ -27,5 +27,7 @@ namespace cloudscribe.Core.Web.ViewModels.SystemInfo
         public DateTime ServerTimeUtc { get; } = DateTime.UtcNow;
 
         public List<KeyValuePair<string, string>> OtherVersions { get; set; }
+        
+        public bool ShowRestartApplicationButton { get; set; } = false;
     }
 }

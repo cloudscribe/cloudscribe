@@ -18,6 +18,18 @@
     </div>
     <div class="form-group">
         <div class="form-check">
+            <input asp-for="AllowUserToEditFirstAndLastName" class="form-check-input" />
+            <label asp-for="AllowUserToEditFirstAndLastName" class="form-check-label">@sr["Allow user to change first name / last name"]</label>
+        </div>
+    </div>
+    <div class="form-group">
+        <div class="form-check">
+            <input asp-for="AllowUserToEditDisplayName" class="form-check-input" />
+            <label asp-for="AllowUserToEditDisplayName" class="form-check-label">@sr["Allow user to change display name"]</label>
+        </div>
+    </div>
+    <div class="form-group">
+        <div class="form-check">
             <input asp-for="AllowUserToChangeEmail" class="form-check-input" />
             <label asp-for="AllowUserToChangeEmail" class="form-check-label">@sr["Allow user to change email address"]</label>
         </div>
@@ -54,6 +66,17 @@
             <input asp-for="Require2FA" class="form-check-input" />
             <label asp-for="Require2FA" class="form-check-label">@sr["Require users to configure 2 factor authentication. Recommended ONLY for extreme security needs not for most sites, because a user must install an authenticator app on their phone and take a picture of the QR code using the authenticator app to get an access code. Note this will only be enforced when using https and it won't be enforced for users in Administrators role. Presumably administrators can and will voluntarily enable 2 factor authentication, but we don't want administrators to get locked out."]</label>
         </div>
+    </div>
+    <div class="form-group">
+        <label asp-for="Require2FARolesCsv">
+            @sr["Roles requiring 2FA (if not enforced for all users)"]
+        </label>
+        <input asp-for="Require2FARolesCsv" class="form-control"
+               placeholder="" />
+        <small class="form-text text-muted">
+            @sr["Enter role names (case sensitive) separated by commas. Only applies when the global 2FA requirement above is not checked. Leave this empty to disable role-based enforcement."]
+        </small>
+        <span asp-validation-for="Require2FARolesCsv" class="invalid-feedback"></span>
     </div>
     <div class="form-group">
         <label asp-for="AccountApprovalEmailCsv">@sr["Email addresses (csv) to notify of new users"]</label>

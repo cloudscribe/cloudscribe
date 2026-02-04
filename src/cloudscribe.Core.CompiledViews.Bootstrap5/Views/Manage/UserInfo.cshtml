@@ -2,7 +2,9 @@
 @inject IStringLocalizer<CloudscribeCore> sr
 @using Microsoft.AspNetCore.Authorization
 @inject IAuthorizationService authorizationService
-@inject ICkeditorOptionsResolver editorOptionsResolver
+@inject ISummernoteOptionsResolver summernoteOptionsResolver
+@inject ICkeditorOptionsResolver ckeditorOptionsResolver
+@inject ISiteContextResolver siteResolver
 @using Microsoft.AspNetCore.Antiforgery
 @inject IAntiforgery antiforgery
 @{
@@ -10,8 +12,10 @@
     ViewData["BodyClass"] = "manage-section user-info";
     var canUploadAuth = await authorizationService.AuthorizeAsync(User, "FileUploadPolicy");
     var canUpload = canUploadAuth.Succeeded;
-    var ckOptions = await editorOptionsResolver.GetCkeditorOptions();
+    var summernoteOptions = await summernoteOptionsResolver.GetSummernoteOptions();
+    var ckOptions = await ckeditorOptionsResolver.GetCkeditorOptions();
     var tokens = antiforgery.GetAndStoreTokens(Context);
+    var currentSite = await siteResolver.ResolveSite(Context.Request.Host.Host, Context.Request.Path);
 }
 @functions{
     public string GetImageUrl(string imageUrl)
@@ -42,8 +46,8 @@
                          data-dropzone=""
                          data-upload-url="@Url.Action("DropFile", "FileManager")"
                          data-anti-forgery-token="@tokens.RequestToken"
-                         data-file-browse-url="@ckOptions.ImageBrowseUrl"
-                         data-file-crop-url="@ckOptions.CropFileUrl"
+                         data-file-browse-url="@summernoteOptions.ImageBrowseUrl"
+                         data-file-crop-url="@summernoteOptions.CropFileUrl"
                          data-target-path="/media/user-avatars"
                          data-create-thumb="false"
                          data-resize-image="true"
@@ -86,11 +90,12 @@
         <input asp-for="AvatarUrl" type="hidden" />
     }
 
-    @if (string.IsNullOrWhiteSpace(Model.FirstName))
+    @if (currentSite.AllowUserToEditFirstAndLastName || string.IsNullOrWhiteSpace(Model.FirstName))
     {
         <div class="mb-3">
             <label class="form-label" asp-for="FirstName">@sr["First Name"]</label>
             <input asp-for="FirstName" class="form-control" />
+            <span asp-validation-for="FirstName" class="invalid-feedback"></span>
         </div>
     }
     else
@@ -101,11 +106,12 @@
             <span class="form-control">@Model.FirstName</span>
         </div>
     }
-    @if (string.IsNullOrWhiteSpace(Model.LastName))
+    @if (currentSite.AllowUserToEditFirstAndLastName || string.IsNullOrWhiteSpace(Model.LastName))
     {
         <div class="mb-3">
             <label class="form-label" asp-for="LastName">@sr["Last Name"]</label>
             <input asp-for="LastName" class="form-control" />
+            <span asp-validation-for="LastName" class="invalid-feedback"></span>
         </div>
     }
     else
@@ -114,6 +120,24 @@
             <label class="form-label" asp-for="LastName">@sr["Last Name"]</label>
             <input asp-for="LastName" type="hidden" />
             <span class="form-control">@Model.LastName</span>
+        </div>
+    }
+
+    @* Display Name field toggled by site settings *@
+    @if (currentSite.AllowUserToEditDisplayName)
+    {
+        <div class="mb-3">
+            <label class="form-label" asp-for="DisplayName">@sr["Display Name"]</label>
+            <input asp-for="DisplayName" class="form-control" />
+            <span asp-validation-for="DisplayName" class="invalid-feedback"></span>
+        </div>
+    }
+    else
+    {
+        <div class="mb-3">
+            <label class="form-label" asp-for="DisplayName">@sr["Display Name"]</label>
+            <input asp-for="DisplayName" type="hidden" />
+            <span class="form-control">@Model.DisplayName</span>
         </div>
     }
     <div class="mb-3">

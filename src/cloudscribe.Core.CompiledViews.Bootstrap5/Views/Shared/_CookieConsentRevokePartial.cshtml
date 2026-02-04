@@ -1,17 +1,20 @@
 ﻿@using Microsoft.AspNetCore.Http.Features
 @inject IStringLocalizer<CloudscribeCore> sr
+@inject SiteContext siteContext
 @{
-    bool showRevoke = false;
     var consentFeature = Context.Features.Get<ITrackingConsentFeature>();
-    if(consentFeature != null && consentFeature.IsConsentNeeded)
-    {
-        showRevoke = consentFeature.CanTrack;
-    }
+    var hasConsented = consentFeature?.CanTrack ?? false;
+    var hasDismissed = Context.Request.Cookies["cookieconsent_dismissed"] != null;
 
+    // If the site is configured not to require consent, then this UI never gets rendered
+    var requiresConsent = siteContext.RequireCookieConsent;
+
+    // Show the link if user has made any choice (either consented or dismissed)
+    var showChangePreferences = requiresConsent && (hasConsented || hasDismissed);
 }
-@if (showRevoke)
+@if (showChangePreferences)
 {
-    <form style="display:inline" asp-controller="Privacy" asp-action="WithdrawCookieConsent" method="post">
-        <button type="submit" class="btn btn-link">@sr["Revoke Cookie Consent"]</button>
+    <form style="display:inline" asp-controller="Privacy" asp-action="ResetCookiePreferences" method="post">
+        <button type="submit" class="btn btn-link">@sr["Change cookie preferences"]</button>
     </form>
 }

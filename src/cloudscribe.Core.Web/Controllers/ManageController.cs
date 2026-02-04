@@ -27,6 +27,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Text.Encodings.Web;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace cloudscribe.Core.Web.Controllers.Mvc
@@ -48,7 +49,8 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
             ISiteMessageEmailSender           emailSender,
             IEmailChangeHandler               emailChangeHandler,
             IOptions<MultiTenantOptions>      multiTenantOptionsAccessor,
-            SiteManager                       siteManager
+            SiteManager                       siteManager,
+            IUserQueries                      userQueries
             )
         {
             CurrentSite        = currentSite;
@@ -66,6 +68,7 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
             EmailChangeHandler = emailChangeHandler;
             SiteManager        = siteManager;
             MultiTenantOptions = multiTenantOptionsAccessor.Value;
+            UserQueries        = userQueries;
         }
 
         protected IAccountService                  AccountService     { get; private set; }
@@ -81,6 +84,7 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
         protected IEmailChangeHandler              EmailChangeHandler { get; private set; }
         protected SiteManager                      SiteManager        { get; private set; }
         protected MultiTenantOptions               MultiTenantOptions { get; private set; }
+        protected IUserQueries                     UserQueries        { get; private set; }
 
 
         protected cloudscribe.DateTimeUtils.ITimeZoneIdResolver TimeZoneIdResolver { get; private set; }
@@ -510,7 +514,8 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
                 WebSiteUrl  = user.WebSiteUrl,
                 PhoneNumber = user.PhoneNumber,
                 AvatarUrl   = user.AvatarUrl,
-                UserName = user.UserName
+                UserName    = user.UserName,
+                DisplayName = user.DisplayName
             };
 
             var viewName = await CustomUserInfo.GetUserInfoViewName(CurrentSite, user, HttpContext);
@@ -531,6 +536,42 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
         {
             var user = await UserManager.FindByIdAsync(HttpContext.User.GetUserId());
             var viewName = await CustomUserInfo.GetUserInfoViewName(CurrentSite, user, HttpContext);
+
+            // DisplayName server-side normalization and length check when site allows editing
+            if (CurrentSite.AllowUserToEditDisplayName)
+            {
+                var trimmed = (model.DisplayName ?? string.Empty).Trim();
+                if (trimmed.Length > 100)
+                {
+                    ModelState.AddModelError(nameof(model.DisplayName), StringLocalizer["Display Name must be 100 characters or fewer."]);
+                }
+
+                // normalize whitespace
+                model.DisplayName = trimmed;
+
+                if (!string.IsNullOrWhiteSpace(trimmed) && user != null)
+                {
+                    // Enforce case-insensitive uniqueness within current site (no DB constraint) using IUserQueries
+                    // Pull a small candidate set via admin search and check for exact match
+                    var page = await UserQueries.GetUserAdminSearchPage(
+                        CurrentSite.Id,
+                        pageNumber: 1,
+                        pageSize: 5,
+                        searchInput: trimmed,
+                        sortMode: 0,
+                        CancellationToken.None);
+
+                    var exists = page.Data.Any(u => u.Id != user.Id &&
+                        !string.IsNullOrEmpty(u.DisplayName) &&
+                        string.Equals(u.DisplayName, trimmed, StringComparison.OrdinalIgnoreCase));
+                    if (exists)
+                    {
+                        ModelState.AddModelError(
+                            nameof(model.DisplayName),
+                            StringLocalizer["Display Name is not valid for this site - please try a different one."]);
+                    }
+                }
+            }
 
             bool isValid = ModelState.IsValid;
             bool customDataIsValid = await CustomUserInfo.HandleUserInfoValidation(
@@ -561,6 +602,12 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
                 user.WebSiteUrl   = model.WebSiteUrl;
                 user.AvatarUrl    = model.AvatarUrl;
 
+                if (CurrentSite.AllowUserToEditDisplayName)
+                {
+                    // allow blank to clear; case-insensitive uniqueness already enforced above
+                    user.DisplayName = model.DisplayName;
+                }
+
                 await CustomUserInfo.HandleUserInfoPostSuccess(
                         CurrentSite,
                         user,
@@ -570,6 +617,8 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
 
 
                 await UserManager.UpdateAsync(user);
+                // Re-issue the auth cookie so DisplayName and other claims reflect latest values in the header
+                await SignInManager.RefreshSignInAsync(user);
 
                 this.AlertSuccess(StringLocalizer["Your information has been updated."]);
             }

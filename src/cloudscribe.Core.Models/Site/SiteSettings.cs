@@ -214,13 +214,20 @@ namespace cloudscribe.Core.Models
 
         public bool Require2FA { get; set; }
 
+        public string Require2FARolesCsv { get; set; } = string.Empty;
+
         public bool ShowSiteNameLink { get; set; } = true;
 
         public string HeaderContent { get; set; }
 
         public string FooterContent { get; set; }
 
+        // Controls whether end users may edit their own profile name fields
+        public bool AllowUserToEditDisplayName { get; set; } = false;
+        public bool AllowUserToEditFirstAndLastName { get; set; } = false;
+
         public bool SingleBrowserSessions { get; set; }
+        public string HideNavigationOnAuthPages { get; set; } = string.Empty;
         public string MaximumInactivityInMinutes { get; set; }
 
         public string RegRestrictionTld { get; set; }
@@ -310,6 +317,7 @@ namespace cloudscribe.Core.Models
                 RegistrationAgreement      = i.RegistrationAgreement,
                 RegistrationPreamble       = i.RegistrationPreamble,
                 Require2FA                 = i.Require2FA,
+                Require2FARolesCsv         = i.Require2FARolesCsv,
                 RequireApprovalBeforeLogin = i.RequireApprovalBeforeLogin,
                 RequireConfirmedEmail      = i.RequireConfirmedEmail,
                 RequireConfirmedPhone      = i.RequireConfirmedPhone,
@@ -317,6 +325,7 @@ namespace cloudscribe.Core.Models
                 RequireCookieConsent       = i.RequireCookieConsent,
                 SignEmailWithDkim          = i.SignEmailWithDkim,
                 SingleBrowserSessions      = i.SingleBrowserSessions,
+                HideNavigationOnAuthPages  = i.HideNavigationOnAuthPages ?? string.Empty,
                 SiteFolderName             = i.SiteFolderName,
                 Id                         = i.Id,
                 AliasId                    = i.AliasId,
@@ -340,15 +349,17 @@ namespace cloudscribe.Core.Models
                 UseInvisibleRecaptcha      = i.UseInvisibleRecaptcha,
                 UseEmailForLogin           = i.UseEmailForLogin,
                 AllowUserToChangeEmail     = i.AllowUserToChangeEmail,
+                AllowUserToEditDisplayName      = i.AllowUserToEditDisplayName,
+                AllowUserToEditFirstAndLastName = i.AllowUserToEditFirstAndLastName,
                 //UseLdapAuth              = i.UseLdapAuth,
                 TermsUpdatedUtc            = i.TermsUpdatedUtc,
                 EmailApiEndpoint           = i.EmailApiEndpoint,
                 EmailApiKey                = i.EmailApiKey,
                 EmailSenderName            = i.EmailSenderName,
                 MaximumInactivityInMinutes = i.MaximumInactivityInMinutes,
-                RegRestrictionTld = i.RegRestrictionTld,
-                PasswordExpiryWarningDays = i.PasswordExpiryWarningDays,
-                PasswordExpiresDays = i.PasswordExpiresDays
+                RegRestrictionTld          = i.RegRestrictionTld,
+                PasswordExpiryWarningDays  = i.PasswordExpiryWarningDays,
+                PasswordExpiresDays        = i.PasswordExpiresDays
             };
 
             return s;

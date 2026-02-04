@@ -23,6 +23,47 @@ namespace cloudscribe.Core.Storage.EFCore.PostgreSql.Migrations
             NpgsqlModelBuilderExtensions.HasPostgresExtension(modelBuilder, "uuid-ossp");
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
 
+            modelBuilder.Entity("cloudscribe.Core.Models.BlockedPermittedIpAddressesModel", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid")
+                        .HasColumnName("id");
+
+                    b.Property<DateTime>("CreatedDate")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("created_date");
+
+                    b.Property<string>("IpAddress")
+                        .HasColumnType("text")
+                        .HasColumnName("ip_address");
+
+                    b.Property<bool>("IsPermitted")
+                        .HasColumnType("boolean")
+                        .HasColumnName("is_permitted");
+
+                    b.Property<bool>("IsRange")
+                        .HasColumnType("boolean")
+                        .HasColumnName("is_range");
+
+                    b.Property<DateTime>("LastUpdated")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("last_updated");
+
+                    b.Property<string>("Reason")
+                        .HasColumnType("text")
+                        .HasColumnName("reason");
+
+                    b.Property<Guid>("SiteId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("site_id");
+
+                    b.HasKey("Id")
+                        .HasName("pk_blocked_permitted_ip_addresses");
+
+                    b.ToTable("blocked_permitted_ip_addresses");
+                });
+
             modelBuilder.Entity("cloudscribe.Core.Models.Geography.GeoCountry", b =>
                 {
                     b.Property<Guid>("Id")
@@ -193,6 +234,14 @@ namespace cloudscribe.Core.Storage.EFCore.PostgreSql.Migrations
                         .HasColumnType("boolean")
                         .HasColumnName("allow_user_to_change_email");
 
+                    b.Property<bool>("AllowUserToEditDisplayName")
+                        .HasColumnType("boolean")
+                        .HasColumnName("allow_user_to_edit_display_name");
+
+                    b.Property<bool>("AllowUserToEditFirstAndLastName")
+                        .HasColumnType("boolean")
+                        .HasColumnName("allow_user_to_edit_first_and_last_name");
+
                     b.Property<bool>("CaptchaOnLogin")
                         .HasColumnType("boolean")
                         .HasColumnName("captcha_on_login");
@@ -358,6 +407,11 @@ namespace cloudscribe.Core.Storage.EFCore.PostgreSql.Migrations
                         .HasColumnType("text")
                         .HasColumnName("header_content");
 
+                    b.Property<string>("HideNavigationOnAuthPages")
+                        .HasMaxLength(50)
+                        .HasColumnType("character varying(50)")
+                        .HasColumnName("hide_navigation_on_auth_pages");
+
                     b.Property<bool>("IsDataProtected")
                         .HasColumnType("boolean")
                         .HasColumnName("is_data_protected");
@@ -519,6 +573,10 @@ namespace cloudscribe.Core.Storage.EFCore.PostgreSql.Migrations
                     b.Property<bool>("Require2FA")
                         .HasColumnType("boolean")
                         .HasColumnName("require2_fa");
+
+                    b.Property<string>("Require2FARolesCsv")
+                        .HasColumnType("text")
+                        .HasColumnName("require2fa_roles_csv");
 
                     b.Property<bool>("RequireApprovalBeforeLogin")
                         .HasColumnType("boolean")

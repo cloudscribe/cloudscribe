@@ -33,6 +33,7 @@ namespace cloudscribe.Core.Storage.EFCore.Common
         public DbSet<UserLocation> UserLocations { get; set; }
         public DbSet<UserRole> UserRoles { get; set; }
         public DbSet<UserToken> UserTokens { get; set; }
+        public DbSet<BlockedPermittedIpAddressesModel> BlockedPermittedIpAddresses { get; set; }
 
         //protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         //{    

@@ -7,6 +7,7 @@
 
 using cloudscribe.Core.Identity;
 using cloudscribe.Core.Models;
+using cloudscribe.Core.Models.EventHandlers;
 using cloudscribe.Core.Web.Components;
 using cloudscribe.Core.Web.ViewModels.RoleAdmin;
 using cloudscribe.Web.Common.Extensions;
@@ -34,7 +35,8 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
             IStringLocalizer<CloudscribeCore> localizer,
             IOptions<UIOptions> uiOptionsAccessor,
             IOptions<SiteConfigOptions> setupOptionsAccessor,
-            IEnumerable<IGuardNeededRoles> roleGuards
+            IEnumerable<IGuardNeededRoles> roleGuards,
+            IEnumerable<IHandleRoleCopied> roleCopiedHandlers
             )
         {
             UserManager = userManager;
@@ -45,6 +47,7 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
             AuthorizationService = authorizationService;
             StringLocalizer = localizer;
             RoleGuards = roleGuards;
+            RoleCopiedHandlers = roleCopiedHandlers;
         }
 
         protected SiteManager SiteManager { get; private set; }
@@ -55,6 +58,7 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
         protected SiteUserManager<SiteUser> UserManager { get; private set; }
         protected SiteRoleManager<SiteRole> RoleManager { get; private set; }
         protected IEnumerable<IGuardNeededRoles> RoleGuards { get; private set; }
+        protected IEnumerable<IHandleRoleCopied> RoleCopiedHandlers { get; private set; }
 
 
         [HttpGet]
@@ -92,6 +96,10 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
                 searchInput,
                 pageNumber,
                 itemsPerPage);
+            
+            // Check if Dynamic Authorization Policy integration is installed
+            ViewData["HasDynamicPolicyHandlers"] = RoleCopiedHandlers.Any(h => 
+                h.GetType().Namespace?.Contains("DynamicPolicy") == true);
             
             return View(model);
 
@@ -629,6 +637,58 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
             }
 
             return RedirectToAction("RoleMembers", new { siteId = selectedSite.Id, roleId });
+        }
+
+        [HttpPost]
+        [Authorize(Policy = PolicyConstants.RoleAdminPolicy)]
+        [ValidateAntiForgeryToken]
+        public virtual async Task<IActionResult> CopyRole(CopyRoleViewModel model)
+        {
+            var selectedSite = await SiteManager.GetSiteForDataOperations(null, true);
+            
+            if (!ModelState.IsValid)
+            {
+                return RedirectToAction("Index");
+            }
+
+            var sourceRole = await RoleManager.FindByIdAsync(model.SourceRoleId.ToString());
+            if (sourceRole == null)
+            {
+                this.AlertDanger(StringLocalizer["The source role no longer exists. Please refresh the page."], true);
+                return RedirectToAction("Index");
+            }
+
+            // Check if source role is a protected role
+            if (sourceRole.NormalizedRoleName == "ADMINISTRATORS")
+            {
+                this.AlertDanger(StringLocalizer["This is a system role and cannot be copied."], true);
+                return RedirectToAction("Index");
+            }
+
+            // Check if new role name already exists
+            var existingRole = await RoleManager.FindByNameAsync(model.NewRoleName);
+            if (existingRole != null)
+            {
+                this.AlertDanger(StringLocalizer["A role with this name already exists. Please choose a different name."], true);
+                return RedirectToAction("Index");
+            }
+
+            // Copy the role
+            var result = await RoleManager.CopyRoleAsync(sourceRole, model.NewRoleName, model.IncludeExistingUsers);
+            
+            if (result.Succeeded)
+            {
+                var message = model.IncludeExistingUsers 
+                    ? string.Format(StringLocalizer["Role '{0}' created successfully (with users copied)."], model.NewRoleName)
+                    : string.Format(StringLocalizer["Role '{0}' created successfully."], model.NewRoleName);
+                this.AlertSuccess(message, true);
+            }
+            else
+            {
+                this.AlertDanger(StringLocalizer["Failed to copy role. Please try again."], true);
+            }
+
+            return RedirectToAction("Index");
         }
 
     }

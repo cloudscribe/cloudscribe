@@ -80,11 +80,11 @@
 
                     @if (!string.IsNullOrWhiteSpace(Model.RecaptchaSiteKey) && Model.UseInvisibleCaptcha)
                     {
-                        <button class="btn btn-primary g-recaptcha" data-sitekey="@Model.RecaptchaSiteKey" data-callback='onCaptchaSubmit' data-enabled-text='@sr["log in"]' data-disabled-text='@sr["Working..."]'>@sr["Log in"]</button>
+                        <button class="btn btn-primary g-recaptcha" data-sitekey="@Model.RecaptchaSiteKey" data-callback='onCaptchaSubmit' data-enabled-text='@sr["Log In"]' data-disabled-text='@sr["Working..."]'>@sr["Log In"]</button>
                     }
                     else
                     {
-                        <button name="submit" type="submit" class="btn btn-primary" data-enabled-text='@sr["Log in"]' data-disabled-text='@sr["Working..."]'>@sr["Log in"]</button>
+                        <button name="submit" type="submit" class="btn btn-primary" data-enabled-text='@sr["Log In"]' data-disabled-text='@sr["Working..."]'>@sr["Log In"]</button>
                     }
 
 

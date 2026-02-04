@@ -22,6 +22,51 @@ namespace cloudscribe.Core.Storage.EFCore.MSSQL.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
+            modelBuilder.Entity("cloudscribe.Core.Models.BlockedPermittedIpAddressesModel", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime>("CreatedDate")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("datetime")
+                        .HasDefaultValueSql("getutcdate()");
+
+                    b.Property<string>("IpAddress")
+                        .IsRequired()
+                        .HasMaxLength(39)
+                        .HasColumnType("nvarchar(39)");
+
+                    b.Property<bool>("IsPermitted")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("IsRange")
+                        .HasColumnType("bit");
+
+                    b.Property<DateTime>("LastUpdated")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("datetime")
+                        .HasDefaultValueSql("getutcdate()");
+
+                    b.Property<string>("Reason")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<Guid>("SiteId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("IpAddress");
+
+                    b.ToTable("cs_BlockedPermittedIpAddresses", null, t =>
+                        {
+                            t.HasTrigger("cs_BlockedPermittedIpAddresses_Trigger");
+                        });
+
+                    b.HasAnnotation("SqlServer:UseSqlOutputClause", false);
+                });
+
             modelBuilder.Entity("cloudscribe.Core.Models.Geography.GeoCountry", b =>
                 {
                     b.Property<Guid>("Id")
@@ -182,6 +227,12 @@ namespace cloudscribe.Core.Storage.EFCore.MSSQL.Migrations
                     b.Property<bool>("AllowUserToChangeEmail")
                         .HasColumnType("bit");
 
+                    b.Property<bool>("AllowUserToEditDisplayName")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("AllowUserToEditFirstAndLastName")
+                        .HasColumnType("bit");
+
                     b.Property<bool>("CaptchaOnLogin")
                         .HasColumnType("bit");
 
@@ -314,6 +365,10 @@ namespace cloudscribe.Core.Storage.EFCore.MSSQL.Migrations
                     b.Property<string>("HeaderContent")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("HideNavigationOnAuthPages")
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
+
                     b.Property<bool>("IsDataProtected")
                         .HasColumnType("bit");
 
@@ -438,6 +493,9 @@ namespace cloudscribe.Core.Storage.EFCore.MSSQL.Migrations
 
                     b.Property<bool>("Require2FA")
                         .HasColumnType("bit");
+
+                    b.Property<string>("Require2FARolesCsv")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<bool>("RequireApprovalBeforeLogin")
                         .HasColumnType("bit");

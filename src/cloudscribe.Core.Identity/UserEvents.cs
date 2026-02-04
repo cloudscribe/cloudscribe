@@ -21,6 +21,7 @@ namespace cloudscribe.Core.Identity
             IEnumerable<IHandleUserCreated> createdHandlers,
             IEnumerable<IHandleUserPreUpdate> preUpdateHandlers,
             IEnumerable<IHandleUserPreDelete> preDeleteHandlers,
+            IEnumerable<IHandleUserPostDelete> postDeleteHandlers,
             IEnumerable<IHandleUserUpdated> updateHandlers,
             ILogger<UserEvents> logger
             )
@@ -28,6 +29,7 @@ namespace cloudscribe.Core.Identity
             this.createdHandlers = createdHandlers;
             this.preUpdateHandlers = preUpdateHandlers;
             this.preDeleteHandlers = preDeleteHandlers;
+            this.postDeleteHandlers = postDeleteHandlers;
             this.updateHandlers = updateHandlers;
             log = logger;
         }
@@ -36,6 +38,7 @@ namespace cloudscribe.Core.Identity
         private IEnumerable<IHandleUserCreated> createdHandlers;
         private IEnumerable<IHandleUserPreUpdate> preUpdateHandlers;
         private IEnumerable<IHandleUserPreDelete> preDeleteHandlers;
+        private IEnumerable<IHandleUserPostDelete> postDeleteHandlers;
         private IEnumerable<IHandleUserUpdated> updateHandlers;
 
 
@@ -87,6 +90,25 @@ namespace cloudscribe.Core.Identity
                 try
                 {
                     await handler.HandleUserPreDelete(siteId, userId, cancellationToken).ConfigureAwait(false);
+                }
+                catch (Exception ex)
+                {
+                    log.LogError(ex.Message + " " + ex.StackTrace);
+                }
+            }
+        }
+
+        public async Task HandleUserPostDelete(
+            Guid siteId,
+            Guid userId,
+            CancellationToken cancellationToken = default(CancellationToken)
+            )
+        {
+            foreach (var handler in postDeleteHandlers)
+            {
+                try
+                {
+                    await handler.HandleUserPostDelete(siteId, userId, cancellationToken).ConfigureAwait(false);
                 }
                 catch (Exception ex)
                 {

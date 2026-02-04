@@ -22,11 +22,11 @@
 }
 
 <h2>@ViewData["Title"]</h2>
-<a asp-controller="UserAdmin" asp-action="UserEdit" asp-route-siteid="@Model.SiteId" asp-route-userid="@Model.UserId" title="Manage">
+<a asp-controller="UserAdmin" asp-action="UserEdit" asp-route-siteid="@Model.SiteId" asp-route-userid="@Model.UserId" title="@sr["Manage"]">
     <img gravatar-email="@Model.Email" gravatar-size="60" gravatar-enabled="@themeSettings.AllowGravatar" override-url="@Model.AvatarUrl" disabled-default-url="@themeSettings.DefaultAvatarUrl" />
 </a>
 <div class="mb-3 mt-3">
-    <a asp-controller="UserAdmin" asp-action="UserEdit" asp-route-siteid="@Model.SiteId" asp-route-userid="@Model.UserId" title="Manage">@sr["Manage User"]</a>
+    <a asp-controller="UserAdmin" asp-action="UserEdit" asp-route-siteid="@Model.SiteId" asp-route-userid="@Model.UserId" title="@sr["Manage"]">@sr["Manage User"]</a>
 </div>
 <table class="mt-2 table table-striped">
     <tr>

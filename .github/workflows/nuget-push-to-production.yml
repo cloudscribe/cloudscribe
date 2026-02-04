@@ -30,7 +30,7 @@ jobs:
         run: dotnet nuget add source ${{ secrets.ESDM_NUGET_HOSTED_URL }} -u ${{ secrets.NUGET_USERNAME }} -p ${{ secrets.NUGET_PASSWORD }}  --store-password-in-clear-text --name esdm-nuget-hosted
       - name: Find and Push NuGet packages to Nexus
         run: |
-          PACKAGES=$(find . -name "*.nupkg" | grep -E "cloudscribe|sts\.Common")
+          PACKAGES=$(find . -name "*.nupkg" | grep -E "cloudscribe|sts\.")
           if [ -z "$PACKAGES" ]; then
             echo "No matching package found. Exiting."
             exit 1
@@ -41,6 +41,8 @@ jobs:
             dotnet nuget push "$PACKAGE" --source esdm-nuget-hosted --skip-duplicate || echo "WARNING - skipping duplicate package: $PACKAGE"
           done
       - name: Find and Push NuGet packages to nuget.org
+        env:
+          NUGET_ORG_API_KEY: ${{ secrets.NUGET_ORG_API_KEY }}
         run: |
           PACKAGES=$(find . -name "*.nupkg" | grep -E "cloudscribe|sts\.Common")
           if [ -z "$PACKAGES" ]; then
@@ -50,5 +52,5 @@ jobs:
           echo "Found packages: $PACKAGES"
           for PACKAGE in $PACKAGES; do
             echo "Pushing $PACKAGE to nuget.org"
-            dotnet nuget push "$PACKAGE" --api-key "$NUGET_ORG_API_KEY" --source "https://api.nuget.org/v3/index.json" --skip-duplicate || echo "WARNING - failed to upload package: $PACKAGE"
+            dotnet nuget push "$PACKAGE" --api-key "$NUGET_ORG_API_KEY" --source "https://api.nuget.org/v3/index.json" --skip-duplicate || { echo "WARNING - failed to upload package: $PACKAGE"; exit 1; }
           done

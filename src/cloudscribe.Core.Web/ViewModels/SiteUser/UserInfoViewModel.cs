@@ -10,6 +10,10 @@ namespace cloudscribe.Core.Web.ViewModels.SiteUser
 
         [StringLength(100, ErrorMessage = "Last Name has a maximum length of 100 characters")]
         public string LastName { get; set; }
+
+        [StringLength(100, ErrorMessage = "Display Name has a maximum length of 100 characters")]
+        [cloudscribe.Web.Common.DataAnnotations.AllowedNameChars]
+        public string DisplayName { get; set; }
         public DateTime? DateOfBirth { get; set; }
 
         [Phone]
@@ -24,3 +28,4 @@ namespace cloudscribe.Core.Web.ViewModels.SiteUser
         public string UserName { get; set; }
     }
 }
+

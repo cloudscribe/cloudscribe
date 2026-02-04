@@ -5,7 +5,7 @@
     var rIndex = 0;
 }
 
-<h3>@sr["Redirect Urls"] </h3>
+<h3 class="mt-3">@sr["Redirect Urls"] </h3>
 @{ await Html.RenderPartialAsync("AddClientRedirectPartial", Model);}
 @if (Model.Client.RedirectUris.Count > 0)
 {
@@ -36,7 +36,7 @@
                 </div>
             </form>
             <button type="button" class="btn btn-danger btn-sm" data-bs-toggle="modal" data-bs-target="@("#confirmDeleteRedirectModal" + rIndex)">
-                @sr["Delete"]
+                    @sr["Delete Redirect Url"]
             </button>
             @c
         </li>

@@ -1,0 +1,19 @@
+@{
+    ViewData["Title"] = "Restarting Application";
+    ViewData["NoSideNav"] = true;
+}
+@inject IStringLocalizer<CloudscribeCore> sr
+
+<div class="d-flex align-items-center justify-content-center" style="min-height: 60vh;">
+    <div class="text-center p-4 bg-white rounded shadow" style="max-width: 500px; margin-top: -100px;">
+        <div class="spinner-border text-primary mb-3" role="status" style="width: 3rem; height: 3rem;">
+            <span class="visually-hidden">Loading...</span>
+        </div>
+        <h2 class="h4 mb-3">@sr["Restarting Application"]</h2>
+        <p id="restart-message" class="text-muted">@sr["Please wait while the application restarts..."]</p>
+    </div>
+</div>
+
+@section Scripts {
+    <script src="~/cr/js/restart-polling.min.js" asp-append-version="true"></script>
+}

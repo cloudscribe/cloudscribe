@@ -1,0 +1,51 @@
+@using Microsoft.AspNetCore.Http.Features
+@inject IStringLocalizer<CloudscribeCore> sr
+@{
+    var consentFeature = Context.Features.Get<ITrackingConsentFeature>();
+    var hasConsented = consentFeature?.CanTrack ?? false;
+    var hasDismissed = Context.Request.Cookies["cookieconsent_dismissed"] != null;
+    
+    var statusMessage = "";
+    var statusClass = "";
+    var actionText = "";
+    var actionMethod = "";
+    var showAction = true;
+    
+    if (hasConsented) {
+        statusMessage = sr["You have accepted cookies. Tracking and analytics are enabled."];
+        statusClass = "alert-success";
+        actionText = sr["Withdraw Consent"];
+        actionMethod = "WithdrawCookieConsent";
+    } else if (hasDismissed) {
+        statusMessage = sr["You have declined cookies. Tracking is disabled."];
+        statusClass = "alert-info";
+        actionText = sr["Show Cookie Options"];
+        actionMethod = "ShowCookieBanner";
+    } else {
+        statusMessage = sr["You have not set cookie preferences yet."];
+        statusClass = "alert-warning";
+        actionText = sr["Set Preferences"];
+        actionMethod = "ShowCookieBanner";
+    }
+}
+
+<div class="cookie-status-container my-3">
+    <div class="alert @statusClass" role="status">
+        <h5 class="alert-heading">@sr["Cookie Preferences"]</h5>
+        <p class="mb-2">@statusMessage</p>
+        @if(showAction)
+        {
+            <div class="d-flex gap-2">
+                <form style="display:inline" asp-controller="Privacy" asp-action="@actionMethod" method="post">
+                    <button type="submit" class="btn btn-sm btn-outline-primary">@actionText</button>
+                </form>
+                @if(hasConsented || hasDismissed)
+                {
+                    <form style="display:inline" asp-controller="Privacy" asp-action="ResetCookiePreferences" method="post">
+                        <button type="submit" class="btn btn-sm btn-outline-secondary">@sr["Reset All Preferences"]</button>
+                    </form>
+                }
+            </div>
+        }
+    </div>
+</div>

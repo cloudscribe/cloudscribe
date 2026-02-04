@@ -19,6 +19,38 @@ namespace cloudscribe.Core.Storage.EFCore.MySql.Migrations
                 .HasAnnotation("ProductVersion", "8.0.0")
                 .HasAnnotation("Relational:MaxIdentifierLength", 64);
 
+            modelBuilder.Entity("cloudscribe.Core.Models.BlockedPermittedIpAddressesModel", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("char(36)");
+
+                    b.Property<DateTime>("CreatedDate")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<string>("IpAddress")
+                        .HasColumnType("longtext");
+
+                    b.Property<bool>("IsPermitted")
+                        .HasColumnType("tinyint(1)");
+
+                    b.Property<bool>("IsRange")
+                        .HasColumnType("tinyint(1)");
+
+                    b.Property<DateTime>("LastUpdated")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<string>("Reason")
+                        .HasColumnType("longtext");
+
+                    b.Property<Guid>("SiteId")
+                        .HasColumnType("char(36)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("BlockedPermittedIpAddresses");
+                });
+
             modelBuilder.Entity("cloudscribe.Core.Models.Geography.GeoCountry", b =>
                 {
                     b.Property<Guid>("Id")
@@ -155,6 +187,12 @@ namespace cloudscribe.Core.Storage.EFCore.MySql.Migrations
                     b.Property<bool>("AllowUserToChangeEmail")
                         .HasColumnType("tinyint(1)");
 
+                    b.Property<bool>("AllowUserToEditDisplayName")
+                        .HasColumnType("tinyint(1)");
+
+                    b.Property<bool>("AllowUserToEditFirstAndLastName")
+                        .HasColumnType("tinyint(1)");
+
                     b.Property<bool>("CaptchaOnLogin")
                         .HasColumnType("tinyint(1)");
 
@@ -285,6 +323,10 @@ namespace cloudscribe.Core.Storage.EFCore.MySql.Migrations
                     b.Property<string>("HeaderContent")
                         .HasColumnType("longtext");
 
+                    b.Property<string>("HideNavigationOnAuthPages")
+                        .HasMaxLength(50)
+                        .HasColumnType("varchar(50)");
+
                     b.Property<bool>("IsDataProtected")
                         .HasColumnType("tinyint(1)");
 
@@ -409,6 +451,9 @@ namespace cloudscribe.Core.Storage.EFCore.MySql.Migrations
 
                     b.Property<bool>("Require2FA")
                         .HasColumnType("tinyint(1)");
+
+                    b.Property<string>("Require2FARolesCsv")
+                        .HasColumnType("longtext");
 
                     b.Property<bool>("RequireApprovalBeforeLogin")
                         .HasColumnType("tinyint(1)");

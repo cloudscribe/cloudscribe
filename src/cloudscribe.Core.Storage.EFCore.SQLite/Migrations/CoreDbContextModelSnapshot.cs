@@ -17,6 +17,38 @@ namespace cloudscribe.Core.Storage.EFCore.SQLite.Migrations
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "8.0.0");
 
+            modelBuilder.Entity("cloudscribe.Core.Models.BlockedPermittedIpAddressesModel", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("TEXT");
+
+                    b.Property<DateTime>("CreatedDate")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("IpAddress")
+                        .HasColumnType("TEXT");
+
+                    b.Property<bool>("IsPermitted")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<bool>("IsRange")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<DateTime>("LastUpdated")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Reason")
+                        .HasColumnType("TEXT");
+
+                    b.Property<Guid>("SiteId")
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("BlockedPermittedIpAddresses");
+                });
+
             modelBuilder.Entity("cloudscribe.Core.Models.Geography.GeoCountry", b =>
                 {
                     b.Property<Guid>("Id")
@@ -153,6 +185,12 @@ namespace cloudscribe.Core.Storage.EFCore.SQLite.Migrations
                     b.Property<bool>("AllowUserToChangeEmail")
                         .HasColumnType("INTEGER");
 
+                    b.Property<bool>("AllowUserToEditDisplayName")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<bool>("AllowUserToEditFirstAndLastName")
+                        .HasColumnType("INTEGER");
+
                     b.Property<bool>("CaptchaOnLogin")
                         .HasColumnType("INTEGER");
 
@@ -283,6 +321,10 @@ namespace cloudscribe.Core.Storage.EFCore.SQLite.Migrations
                     b.Property<string>("HeaderContent")
                         .HasColumnType("TEXT");
 
+                    b.Property<string>("HideNavigationOnAuthPages")
+                        .HasMaxLength(50)
+                        .HasColumnType("TEXT");
+
                     b.Property<bool>("IsDataProtected")
                         .HasColumnType("INTEGER");
 
@@ -407,6 +449,9 @@ namespace cloudscribe.Core.Storage.EFCore.SQLite.Migrations
 
                     b.Property<bool>("Require2FA")
                         .HasColumnType("INTEGER");
+
+                    b.Property<string>("Require2FARolesCsv")
+                        .HasColumnType("TEXT");
 
                     b.Property<bool>("RequireApprovalBeforeLogin")
                         .HasColumnType("INTEGER");

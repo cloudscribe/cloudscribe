@@ -51,7 +51,17 @@ namespace cloudscribe.Core.Web.ViewModels.SiteSettings
 
         public bool Require2FA { get; set; }
 
+        [Display(Name = "Roles requiring 2FA (comma-separated)")]
+        [MaxLength(500)]
+        public string Require2FARolesCsv { get; set; } = string.Empty;
+
         public bool SingleBrowserSessions { get; set; }
+
+        [Display(Name = "Allow user to change display name")]
+        public bool AllowUserToEditDisplayName { get; set; }
+
+        [Display(Name = "Allow user to change first name / last name")]
+        public bool AllowUserToEditFirstAndLastName { get; set; }
 
         //LDAP
 
@@ -95,5 +105,6 @@ namespace cloudscribe.Core.Web.ViewModels.SiteSettings
         public int MinRequiredPasswordLength { get; set; }
         public int PasswordExpiryWarningDays { get; set; }
         public int PasswordExpiresDays { get; set; }
+        public bool ShowRestartApplicationButton { get; set; } = false;
     }
 }

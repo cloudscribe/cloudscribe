@@ -16,6 +16,7 @@ using cloudscribe.Core.Web.ViewModels.SiteUser;
 using cloudscribe.Web.Common.Extensions;
 using cloudscribe.Web.Common.Models;
 using cloudscribe.Web.Common.Recaptcha;
+using cloudscribe.Web.Navigation;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
@@ -49,6 +50,7 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
             Analytics.IHandleAccountAnalytics analyticsHandler,
             IHttpContextAccessor httpContextAccessor,
             RemainingSessionTimeResolver remainingSessionTimeResolver,
+            Services.ISessionActivityService sessionActivityService,
             SiteUserManager<SiteUser> userManager,
             SignInManager<SiteUser> signInManager,
             ILogger<AccountController> logger,
@@ -69,6 +71,7 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
             Analytics                    = analyticsHandler;
             HttpContextAccessor          = httpContextAccessor;
             RemainingSessionTimeResolver = remainingSessionTimeResolver;
+            SessionActivityService       = sessionActivityService;
             UserManager = userManager;
             SignInManager = signInManager;
             EmailValidationService = emailValidationService;
@@ -87,6 +90,7 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
         protected IHandleCustomRegistration CustomRegistration { get; private set; }
         protected Analytics.IHandleAccountAnalytics Analytics { get; private set; }
         protected RemainingSessionTimeResolver RemainingSessionTimeResolver { get; private set; }
+        protected Services.ISessionActivityService SessionActivityService { get; private set; }
         protected IHttpContextAccessor HttpContextAccessor;
         protected SiteUserManager<SiteUser> UserManager { get; private set; }
         public SignInManager<SiteUser> SignInManager { get; }
@@ -267,6 +271,8 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
             // don't disable db auth if there are no social auth providers configured
             model.DisableDbAuth = CurrentSite.DisableDbAuth && CurrentSite.HasAnySocialAuthEnabled();
 
+            SuppressNavigationFor(isLogin: true);
+
             return View(model);
         }
 
@@ -293,6 +299,8 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
             model.ExternalAuthenticationList = await AccountService.GetExternalAuthenticationSchemes();
             // don't disable db auth if there are no social auth providers configured
             model.DisableDbAuth = CurrentSite.DisableDbAuth && CurrentSite.HasAnySocialAuthEnabled();
+
+            SuppressNavigationFor(isLogin: true);
 
             if (!ModelState.IsValid)
             {
@@ -540,6 +548,8 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
                 HttpContext,
                 ViewData);
 
+            SuppressNavigationFor(isLogin: false);
+
             return View(viewName, model);
         }
 
@@ -564,6 +574,8 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
             model.RegistrationAgreement = CurrentSite.RegistrationAgreement;
             model.AgreementRequired = !string.IsNullOrWhiteSpace(CurrentSite.RegistrationAgreement);
             model.ExternalAuthenticationList = await AccountService.GetExternalAuthenticationSchemes();
+
+            SuppressNavigationFor(isLogin: false);
 
             bool isValid = ModelState.IsValid;
 
@@ -957,6 +969,51 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
             return View();
         }
 
+        // GET: /Account/GetActualSessionTime
+        [HttpGet]
+        [AllowAnonymous]
+        public virtual IActionResult GetActualSessionTime()
+        {
+            // This endpoint checks the CACHED time, not the cookie
+            // Therefore it doesn't extend the session by calling AuthenticateAsync()
+            
+            // Manual authentication check without extending session
+            if (!User?.Identity?.IsAuthenticated ?? true)
+            {
+                return Json(new { expired = true });
+            }
+
+            var userId = User.FindFirst("sub")?.Value
+                        ?? User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value;
+
+            if (string.IsNullOrEmpty(userId))
+            {
+                return Json(new { expired = true });
+            }
+
+            var siteId = CurrentSite?.Id.ToString();
+            if (string.IsNullOrEmpty(siteId))
+            {
+                return Json(new { expired = true });
+            }
+
+            var expiry = SessionActivityService.GetSessionExpiry(userId, siteId);
+
+            if (expiry == null || expiry <= DateTime.UtcNow)
+            {
+                return Json(new { expired = true });
+            }
+
+            var remainingSeconds = (expiry.Value - DateTime.UtcNow).TotalSeconds;
+
+            return Json(new
+            {
+                remainingSeconds = Math.Max(0, Math.Round(remainingSeconds)),
+                expiresAt = ((DateTimeOffset)expiry.Value).ToUnixTimeSeconds(),
+                expired = false
+            });
+        }
+
 
         [HttpGet]
         [AllowAnonymous]
@@ -1036,6 +1093,7 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
             {
                 return this.RedirectToSiteRoot(CurrentSite);
             }
+
             var model = new PendingNotificationViewModel
             {
                 UserId = userId,
@@ -1091,6 +1149,7 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
             {
                 return this.RedirectToSiteRoot(CurrentSite);
             }
+
             if (userId == null || code == null)
             {
                 return this.RedirectToSiteRoot(CurrentSite);
@@ -1222,6 +1281,8 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
         [AllowAnonymous]
         public virtual async Task<IActionResult> ForgotPasswordAsync()
         {
+            SuppressNavigationFor(isLogin: false);
+
             ForgotPasswordViewModel forgotPasswordViewModel = new ForgotPasswordViewModel();
             var recaptchaKeys = await RecaptchaKeysProvider.GetKeys().ConfigureAwait(false);
 
@@ -1245,6 +1306,8 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
         [ValidateAntiForgeryToken]
         public virtual async Task<IActionResult> ForgotPassword(ForgotPasswordViewModel model)
         {
+            SuppressNavigationFor(isLogin: false);
+
             if (ModelState.IsValid)
             {
                 var recaptchaKeys = await RecaptchaKeysProvider.GetKeys().ConfigureAwait(false);
@@ -1331,6 +1394,8 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
                 return this.RedirectToSiteRoot(CurrentSite);
             }
 
+            SuppressNavigationFor(isLogin: false);
+
             return View();
         }
 
@@ -1365,6 +1430,7 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
 
             if (result.IdentityResult.Succeeded)
             {
+                await SetUserConfirmedEmail(model.Email);
                 return RedirectToAction("SetInitialPasswordConfirmation", "Account");
             }
 
@@ -1381,6 +1447,16 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
             }
 
             return View();
+        }
+
+        private async Task SetUserConfirmedEmail(string email)
+        {
+            var user = await AccountService.GetUserInfo(email);
+            if (user != null)
+            {
+                user.EmailConfirmed = true;
+                await UserManager.UpdateAsync(user);
+            }
         }
 
         // GET: /Account/SetInitialPasswordConfirmation
@@ -1452,116 +1528,30 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
             return View();
         }
 
-        // GET: /Account/SendCode
-        //[HttpGet]
-        //[AllowAnonymous]
-        //public async Task<IActionResult> SendCode(string returnUrl = null, bool rememberMe = false)
-        //{
-        //    var twoFactorInfo = await accountService.GetTwoFactorInfo();
-
-        //    if (twoFactorInfo.User == null)
-        //    {
-        //        return View("Error");
-        //    }
-
-        //    var factorOptions = twoFactorInfo.UserFactors.Select(purpose => new SelectListItem { Text = purpose, Value = purpose }).ToList();
-        //    return View(new SendCodeViewModel { Providers = factorOptions, ReturnUrl = returnUrl, RememberMe = rememberMe });
-        //}
-
-        //// POST: /Account/SendCode
-        //[HttpPost]
-        //[AllowAnonymous]
-        //[ValidateAntiForgeryToken]
-        //public async Task<ActionResult> SendCode(SendCodeViewModel model)
-        //{
-        //    if (!ModelState.IsValid)
-        //    {
-        //        return View();
-        //    }
-
-        //    var twoFactorInfo = await accountService.GetTwoFactorInfo(model.SelectedProvider);
-        //    if (twoFactorInfo.User == null)
-        //    {
-        //        return View("Error");
-        //    }
-
-        //    if (string.IsNullOrWhiteSpace(twoFactorInfo.TwoFactorToken))
-        //    {
-        //        return View("Error");
-        //    }
-
-        //    if (model.SelectedProvider == "Email")
-        //    {
-        //        await emailSender.SendSecurityCodeEmailAsync(
-        //            Site,
-        //            twoFactorInfo.User.Email,
-        //            sr["Security Code"],
-        //            twoFactorInfo.TwoFactorToken);
-        //    }
-        //    //else if (model.SelectedProvider == "Phone")
-        //    //{
-        //    //    var message = string.Format(sr["Your security code is: {0}"], twoFactorInfo.TwoFactorToken);
-        //    //    await smsSender.SendSmsAsync(Site, twoFactorInfo.User.PhoneNumber, message);
-        //    //}
-
-        //    return RedirectToAction("VerifyCode", new { Provider = model.SelectedProvider, ReturnUrl = model.ReturnUrl, RememberMe = model.RememberMe });
-        //}
-
-
-        //// GET: /Account/VerifyCode
-        //[HttpGet]
-        //[AllowAnonymous]
-        //public async Task<IActionResult> VerifyCode(string provider, string returnUrl, bool rememberMe)
-        //{
-        //    // Require that the user has already logged in via username/password or external login
-        //    var user = await accountService.GetTwoFactorAuthenticationUserAsync();
-        //    if (user == null)
-        //    {
-        //        return View("Error");
-        //    }
-        //    return View(new VerifyCodeViewModel { Provider = provider, ReturnUrl = returnUrl, RememberMe = rememberMe });
-        //}
-
-        //// POST: /Account/VerifyCode
-        //[HttpPost]
-        //[AllowAnonymous]
-        //[ValidateAntiForgeryToken]
-        //public async Task<IActionResult> VerifyCode(VerifyCodeViewModel model)
-        //{
-        //    if (!ModelState.IsValid)
-        //    {
-        //        return View(model);
-        //    }
-
-        //    // The following code protects for brute force attacks against the two factor codes.
-        //    // If a user enters incorrect codes for a specified amount of time then the user account
-        //    // will be locked out for a specified amount of time.
-        //    var result = await accountService.TwoFactorSignInAsync(model.Provider, model.Code, model.RememberMe, model.RememberBrowser);
-        //    if (result.Succeeded)
-        //    {
-        //        if (!string.IsNullOrEmpty(model.ReturnUrl))
-        //        {
-        //            return LocalRedirect(model.ReturnUrl);
-        //        }
-
-        //        return this.RedirectToSiteRoot(Site);
-        //    }
-
-        //    if (result.IsLockedOut)
-        //    {
-        //        return await HandleLockout();
-        //    }
-        //    else
-        //    {
-        //        ModelState.AddModelError("", sr["Invalid code."]);
-        //        return View(model);
-        //    }
-        //}
-
-
 
         #region Helpers
 
+        private void SuppressNavigationFor(bool isLogin)
+        {
+            var setting = CurrentSite.HideNavigationOnAuthPages;
+            if (string.IsNullOrWhiteSpace(setting)) return;
+
+            bool suppress = false;
+            if (setting == "LoginOnly")
+            {
+                suppress = isLogin;
+            }
+            else if (setting == "LoginRegisterForgotPwd")
+            {
+                suppress = true;
+            }
+
+            if (suppress)
+            {
+                NavigationSuppressor.SuppressFilter(HttpContext, NamedNavigationFilters.TopNav);
+                NavigationSuppressor.SuppressFilter(HttpContext, NamedNavigationFilters.Breadcrumbs);
+            }
+        }
 
         private bool IsValidEmail(string emailaddress)
         {

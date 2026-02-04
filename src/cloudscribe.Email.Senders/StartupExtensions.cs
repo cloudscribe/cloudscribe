@@ -4,6 +4,7 @@ using cloudscribe.Email.Mailgun;
 using cloudscribe.Email.Senders;
 using cloudscribe.Email.SendGrid;
 using cloudscribe.Email.Smtp;
+using cloudscribe.Versioning;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 
@@ -35,6 +36,8 @@ namespace Microsoft.Extensions.DependencyInjection
             services.TryAddScoped<IEmailSenderResolver, ConfigEmailSenderResolver>();
 
             services.TryAddSingleton<IServiceClientProvider, DefaultServiceClientProvider>();
+
+            services.AddScoped<IVersionProvider, VersionProvider>();
 
             return services;
         }

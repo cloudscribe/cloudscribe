@@ -18,7 +18,6 @@ using Microsoft.Extensions.Options;
 using sourceDev.WebApp.Configuration;
 //using cloudscribe.UserProperties.Services;
 //using cloudscribe.UserProperties.Models;
-using IdentityServer4.AccessTokenValidation;
 using Microsoft.AspNetCore.Http;
 using System.Security.Claims;
 using Microsoft.AspNetCore.Authentication;
@@ -193,7 +192,7 @@ namespace sourceDev.WebApp
             {
                 // This lambda determines whether user consent for non-essential cookies is needed for a given request.
                 options.CheckConsentNeeded = cloudscribe.Core.Identity.SiteCookieConsent.NeedsConsent;
-                options.MinimumSameSitePolicy = SameSiteMode.None;
+                options.MinimumSameSitePolicy = SameSiteMode.Lax;
                 options.ConsentCookie.Name = "cookieconsent_status";
             });
 
@@ -238,8 +237,7 @@ namespace sourceDev.WebApp
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
-                //app.UseDatabaseErrorPage();
-                
+                app.UseForwardedHeaders(); // integration testing
             }
             else
             {

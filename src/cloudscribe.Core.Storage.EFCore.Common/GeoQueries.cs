@@ -101,11 +101,10 @@ namespace cloudscribe.Core.Storage.EFCore.Common
             using (var dbContext = _contextFactory.CreateContext())
             {
                 var query = dbContext.Countries.OrderBy(x => x.Name)
+                .AsSingleQuery()
                 .Select(p => p)
                 .Skip(offset)
-                .Take(pageSize)
-                ;
-
+                .Take(pageSize);
 
                 var data = await query
                      .AsNoTracking()
@@ -188,6 +187,7 @@ namespace cloudscribe.Core.Storage.EFCore.Common
             using (var dbContext = _contextFactory.CreateContext())
             {
                 var listQuery = dbContext.Countries
+                            .AsSingleQuery()
                             .Where(x => x.Name.Contains(query) || x.ISOCode2.Contains(query))
                             .OrderBy(x => x.Name)
                             .Take(maxRows)
@@ -214,6 +214,7 @@ namespace cloudscribe.Core.Storage.EFCore.Common
             using (var dbContext = _contextFactory.CreateContext())
             {
                 var listQuery = dbContext.States
+                            .AsSingleQuery()
                             .Where(x =>
                            x.CountryId == countryId &&
                            (x.Code.Contains(query))
@@ -243,12 +244,12 @@ namespace cloudscribe.Core.Storage.EFCore.Common
             using (var dbContext = _contextFactory.CreateContext())
             {
                 var query = dbContext.States
+                   .AsSingleQuery()
                    .Where(x => x.CountryId == countryId)
                    .OrderBy(x => x.Name)
                    .Skip(offset)
                    .Take(pageSize)
-                   .Select(p => p)
-                   ;
+                   .Select(p => p);
 
                 var data = await query
                     .AsNoTracking()

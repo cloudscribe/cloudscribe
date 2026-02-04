@@ -11,7 +11,7 @@ $(function () {
     var ele_send    = document.getElementById("btnSend");
 
 
-    if (ele_delete != null & ele_delete != undefined) {
+    if (ele_delete && deleteform) {
         ele_delete.addEventListener("click", function () {
             var message = ele_delete.dataset.message;
             if (confirm(message)) {
@@ -20,7 +20,7 @@ $(function () {
         });
     }
 
-    if (ele_confirm != null & ele_confirm != undefined) {
+    if (ele_confirm && confirmform) {
         ele_confirm.addEventListener("click", function () {
             var message = ele_confirm.dataset.message;
             if (confirm(message)) {
@@ -29,14 +29,14 @@ $(function () {
         });
     }
 
-    if (ele_send != null & ele_send != undefined) {
+    if (ele_send) {
         ele_send.addEventListener("click", function () {
             var message = ele_send.dataset.sendprompt;
             return confirm(message);
         });
     }
 
-})();
+});
 
 
 

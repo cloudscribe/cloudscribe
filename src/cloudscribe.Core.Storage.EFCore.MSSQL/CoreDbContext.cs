@@ -34,7 +34,6 @@ namespace cloudscribe.Core.Storage.EFCore.MSSQL
 
             var tableNames = new CoreTableNames();
 
-
             modelBuilder.Entity<SiteSettings>(entity =>
             {
                 entity.ToTable(tableNames.TablePrefix + tableNames.SiteTableName);
@@ -411,6 +410,14 @@ namespace cloudscribe.Core.Storage.EFCore.MSSQL
 
                 entity.Property(p => p.ShowSiteNameLink);
 
+                // Allow end-user editing of name fields
+                entity.Property(p => p.AllowUserToEditDisplayName)
+                    .IsRequired()
+                    .HasColumnType("bit");
+                entity.Property(p => p.AllowUserToEditFirstAndLastName)
+                    .IsRequired()
+                    .HasColumnType("bit");
+
                 entity.Property(p => p.LogoUrl)
                 .HasMaxLength(250);
                 ;
@@ -422,6 +429,9 @@ namespace cloudscribe.Core.Storage.EFCore.MSSQL
                 entity.Property(p => p.PasswordExpiresDays);
 
                 entity.Property(p => p.PasswordExpiryWarningDays);
+
+                entity.Property(p => p.HideNavigationOnAuthPages)
+                .HasMaxLength(50);
             });
 
             modelBuilder.Entity<SiteHost>(entity =>
@@ -891,9 +901,35 @@ namespace cloudscribe.Core.Storage.EFCore.MSSQL
                 //entity.HasIndex(p => p.Longitude);
             });
 
-            
+            modelBuilder.Entity<BlockedPermittedIpAddressesModel>(entity =>
+            {
+                entity.ToTable(tableNames.TablePrefix + tableNames.BlockedPermittedIpAddressesTableName);
 
+                entity.HasKey(p => p.Id);
+
+                entity.Property(p => p.IpAddress)
+                .IsRequired()
+                .HasMaxLength(39);
+
+                entity.HasIndex(p => p.IpAddress);
+
+                entity.Property(p => p.LastUpdated)
+                .HasColumnType("datetime")
+                .HasDefaultValueSql("getutcdate()");
+
+                entity.Property(p => p.CreatedDate)
+                .HasColumnType("datetime")
+                .HasDefaultValueSql("getutcdate()");
+
+                entity.Property(p => p.Reason);
+
+                entity.Property(p => p.SiteId)
+                .HasColumnType("uniqueidentifier")
+                .IsRequired();
+
+                entity.Property(p => p.IsPermitted)
+                .IsRequired();
+            });
         }
-
     }
 }

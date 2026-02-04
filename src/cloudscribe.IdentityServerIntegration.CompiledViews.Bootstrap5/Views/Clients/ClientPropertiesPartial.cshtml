@@ -5,7 +5,7 @@
     var propIndex = 0;
 }
 
-<h3>@sr["Custom Properties"] </h3>
+<h3 class="mt-3">@sr["Custom Properties"] </h3>
 @{ await Html.RenderPartialAsync("AddClientPropertyPartial", Model);} 
 @if (Model.Client.Properties.Count > 0)
 {
@@ -24,7 +24,7 @@
             <tr>
                 <td>
                     <button type="button" class="btn btn-danger btn-sm" data-bs-toggle="modal" data-bs-target="@("#confirmDeletePropModal" + propIndex)">
-                        @sr["Delete"]
+                        @sr["Delete Custom Property"]
                     </button>
                     <form asp-controller="Clients" asp-action="DeleteClientProperty">
                         <input asp-for="SiteId" type="hidden" />

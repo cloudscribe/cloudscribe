@@ -11,8 +11,9 @@ using cloudscribe.Web.Common.Extensions;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
+using System;
 using System.Linq;
-using System.Net;
+using System.Security.Claims;
 using System.Threading.Tasks;
 
 namespace cloudscribe.Core.Web.Middleware
@@ -123,7 +124,7 @@ namespace cloudscribe.Core.Web.Middleware
                         var logMessage = $"site closed so redirecting to closed for requested path {context.Request.Path}";
                         _logger.LogWarning(logMessage);
                         context.Response.Redirect(closedUrl);
-
+                        return;
                     }
                 }
 
@@ -136,6 +137,7 @@ namespace cloudscribe.Core.Web.Middleware
                         var logMessage = $"user {userContext.UserName} has must provide an email adddress so redirecting to email required page from requested path {context.Request.Path}";
                         _logger.LogWarning(logMessage);
                         context.Response.Redirect(setEmailUrl);
+                        return;
                     }
                 }
 
@@ -149,10 +151,11 @@ namespace cloudscribe.Core.Web.Middleware
                         var logMessage = $"user {userContext.Email} has must change password so redirecting to change password page from requested path {context.Request.Path}";
                         _logger.LogWarning(logMessage);
                         context.Response.Redirect(changePasswordUrl);
+                        return;
                     }
                 }
 
-                else if (userContext != null && currentSite.Require2FA && !userContext.TwoFactorEnabled && !context.User.IsInRole("Administrators"))
+                else if (userContext != null && !userContext.TwoFactorEnabled && UserRequires2FA(context.User, currentSite))
                 {
                     var twoFactorUrl1 = folderSegment + "/manage/twofactorauthentication";
                     var twoFactorUrl2 = folderSegment + "/manage/enableauthenticator";
@@ -162,6 +165,7 @@ namespace cloudscribe.Core.Web.Middleware
                         var logMessage = $"user {userContext.Email} has must setup 2fa so redirecting to 2fa path from requested path {context.Request.Path}";
                         _logger.LogWarning(logMessage);
                         context.Response.Redirect(twoFactorUrl1);
+                        return;
                     }
 
                 }
@@ -188,11 +192,13 @@ namespace cloudscribe.Core.Web.Middleware
                             var logMessage = $"user {userContext.Email} has not accepted terms of use so redirecting to terms of use acceptance page from requested path {context.Request.Path}";
                             _logger.LogWarning(logMessage);
                             context.Response.Redirect(agreementUrl);
+                            return;
                         }
                         else
                         {
                             // unauth response for /api calls
                             await ReturnErrorResponse(context);
+                            return; // Do not call _next(context)
                         }
                     }
                 }
@@ -202,11 +208,51 @@ namespace cloudscribe.Core.Web.Middleware
         }
 
 
+        /// <summary>
+        /// Determines if a user is required to configure 2FA based on site settings.
+        /// Priority 1: Global enforcement (Require2FA = true) - all users except Administrators
+        /// Priority 2: Role-based enforcement (Require2FA = false, Require2FARolesCsv populated) - users in listed roles
+        /// Priority 3: No enforcement (both settings inactive) - 2FA optional
+        /// </summary>
+        private bool UserRequires2FA(ClaimsPrincipal user, ISiteContext site)
+        {
+            // Priority 1: Global enforcement - EXISTING BEHAVIOR PRESERVED
+            if (site.Require2FA)
+            {
+                // Hardcoded exception: Administrators are ALWAYS exempt when global checkbox is on
+                // This behavior is unchanged from the original implementation
+                return !user.IsInRole("Administrators");
+            }
+
+            // Priority 2: Role-based enforcement - NEW BEHAVIOR (only when global checkbox is off)
+            if (!string.IsNullOrWhiteSpace(site.Require2FARolesCsv))
+            {
+                // Parse tenant-specific role list (supports comma and semicolon delimiters)
+                var requiredRoles = site.Require2FARolesCsv
+                    .Split(new[] { ',', ';' }, StringSplitOptions.RemoveEmptyEntries)
+                    .Select(r => r.Trim());
+
+                // Check if user is in ANY of the specified roles
+                // Note: "Administrators" CAN be in this list - no hardcoded exemption here
+                foreach (var role in requiredRoles)
+                {
+                    if (user.IsInRole(role))
+                    {
+                        return true;
+                    }
+                }
+            }
+
+            // Priority 3: No enforcement - 2FA optional
+            return false;
+        }
+
         private async Task ReturnErrorResponse(HttpContext context)
         {
             context.Response.ContentType = "application/json";
-            context.Response.StatusCode = (int)HttpStatusCode.Forbidden;
-            await context.Response.StartAsync();
+            context.Response.StatusCode = StatusCodes.Status403Forbidden;
+            await context.Response.WriteAsync("{\"error\": \"Forbidden: user has not accepted the terms of use.\"}");
+            return; 
         }
     }
 }

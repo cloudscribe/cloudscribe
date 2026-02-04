@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <root>
   <!-- 
     Microsoft ResX Schema 
@@ -118,829 +118,1097 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="AliasId" xml:space="preserve">
-    <value>AliasId</value>
+    <value>ID Alias</value>
+    <comment>Translated to Welsh - 2025-01-27</comment>
   </data>
   <data name="Are you sure you want to delete the site {0} and all related data? You cannot undo this action." xml:space="preserve">
-    <value>Are you sure you want to delete the site {0} and all related data? You cannot undo this action.</value>
+    <value>Ydych chi'n siŵr eich bod am ddileu'r safle {0} a'r holl ddata cysylltiedig? Ni allwch ddadwneud y weithred hon.</value>
+    <comment>Translated to Welsh - 2025-01-27</comment>
   </data>
   <data name="Close Site To Public" xml:space="preserve">
-    <value>Close Site To Public</value>
+    <value>Cau'r Safle i'r Cyhoedd</value>
+    <comment>Translated to Welsh - 2025-01-27</comment>
   </data>
   <data name="Closed Message" xml:space="preserve">
-    <value>Closed Message</value>
+    <value>Neges Gau</value>
+    <comment>Translated to Welsh - 2025-01-27</comment>
   </data>
   <data name="Delete" xml:space="preserve">
-    <value>Delete</value>
+    <value>Dileu</value>
+    <comment>Translated to Welsh - 2025-01-27</comment>
   </data>
   <data name="Domain Mappings" xml:space="preserve">
-    <value>Domain Mappings</value>
+    <value>Mapiadau Parth</value>
+    <comment>Translated to Welsh - 2025-01-27</comment>
   </data>
   <data name="only digits, numbers, - and _ allowed, no spaces allowed" xml:space="preserve">
-    <value>only digits, numbers, - and _ allowed, no spaces allowed</value>
+    <value>dim ond digidau, rhifau, - a _ yn cael eu caniatáu, dim bylchau yn cael eu caniatáu</value>
+    <comment>Translated to Welsh - 2025-01-27</comment>
   </data>
   <data name="Save" xml:space="preserve">
-    <value>Save</value>
+    <value>Cadw</value>
+    <comment>Translated to Welsh - 2025-01-27</comment>
   </data>
   <data name="Site Folder Name" xml:space="preserve">
-    <value>Site Folder Name</value>
+    <value>Enw Ffolder Safle</value>
+    <comment>Translated to Welsh - 2025-01-27</comment>
   </data>
   <data name="Site Name" xml:space="preserve">
-    <value>Site Name</value>
+    <value>Enw Safle</value>
+    <comment>Translated to Welsh - 2025-01-27</comment>
   </data>
   <data name="Theme" xml:space="preserve">
-    <value>Theme</value>
+    <value>Thema</value>
+    <comment>Translated to Welsh - 2025-01-27</comment>
   </data>
   <data name="Time Zone" xml:space="preserve">
-    <value>Time Zone</value>
+    <value>Amser Zone</value>
+    <comment>Translated to Welsh - 2025-01-27</comment>
   </data>
   <data name="Add Host Mapping" xml:space="preserve">
-    <value>Add Host Mapping</value>
+    <value>Ychwanegu Host Mapping</value>
+    <comment>Translated to Welsh - 2025-01-27</comment>
   </data>
   <data name="Address1" xml:space="preserve">
     <value>Address1</value>
+    <comment>Translated to Welsh - 2025-01-27</comment>
   </data>
   <data name="Address2" xml:space="preserve">
     <value>Address2</value>
+    <comment>Translated to Welsh - 2025-01-27</comment>
   </data>
   <data name="Allow New Registrations" xml:space="preserve">
-    <value>Allow New Registrations</value>
+    <value>Allow Newydd Registrations</value>
+    <comment>Translated to Welsh - 2025-01-27</comment>
   </data>
   <data name="Allow Persistent Login" xml:space="preserve">
-    <value>Allow Persistent Login</value>
+    <value>Allow Persistent Mewngofnodi</value>
+    <comment>Translated to Welsh - 2025-01-27</comment>
   </data>
   <data name="Are you sure you want to delete the host/domain name mapping {0}" xml:space="preserve">
-    <value>Are you sure you want to delete the host/domain name mapping {0}</value>
+    <value>Ydych chi'n siŵr eich bod am ddileu'r mapio enw gwesteiwr/parth {0}</value>
+    <comment>Translated to Welsh - 2025-01-27 - Final review</comment>
   </data>
   <data name="Back to site list" xml:space="preserve">
-    <value>Back to site list</value>
+    <value>Yn Ôl to site list</value>
+    <comment>Translated to Welsh - 2025-01-27</comment>
   </data>
   <data name="City" xml:space="preserve">
     <value>City</value>
+    <comment>Translated to Welsh - 2025-01-27</comment>
   </data>
   <data name="Country" xml:space="preserve">
     <value>Country</value>
+    <comment>Translated to Welsh - 2025-01-27</comment>
   </data>
   <data name="Default Email From Address" xml:space="preserve">
-    <value>Default Email From Address</value>
+    <value>Default E-bost From Cyfeiriad</value>
+    <comment>Translated to Welsh - 2025-01-27</comment>
   </data>
   <data name="Default Email From Name" xml:space="preserve">
-    <value>Default Email From Name</value>
+    <value>Default E-bost From Enw</value>
+    <comment>Translated to Welsh - 2025-01-27</comment>
   </data>
   <data name="Email addresses (csv) to notify of new unapproved users" xml:space="preserve">
-    <value>Email addresses (csv) to notify of new unapproved users</value>
+    <value>E-bost addresses (csv) i notify o new unapproved users</value>
+    <comment>Translated to Welsh - 2025-01-27 - Final review</comment>
   </data>
   <data name="Email Confirmed" xml:space="preserve">
-    <value>Email Confirmed</value>
+    <value>E-bost Confirmed</value>
+    <comment>Translated to Welsh - 2025-01-27</comment>
   </data>
   <data name="Facebook App Id" xml:space="preserve">
     <value>Facebook App Id</value>
+    <comment>Translated to Welsh - 2025-01-27</comment>
   </data>
   <data name="Facebook App Secret" xml:space="preserve">
     <value>Facebook App Secret</value>
+    <comment>Translated to Welsh - 2025-01-27</comment>
   </data>
   <data name="Fax" xml:space="preserve">
     <value>Fax</value>
+    <comment>Translated to Welsh - 2025-01-27</comment>
   </data>
   <data name="Folder" xml:space="preserve">
     <value>Folder</value>
+    <comment>Translated to Welsh - 2025-01-27</comment>
   </data>
   <data name="Google Client Id" xml:space="preserve">
     <value>Google Client Id</value>
+    <comment>Translated to Welsh - 2025-01-27</comment>
   </data>
   <data name="Google Client Secret" xml:space="preserve">
     <value>Google Client Secret</value>
+    <comment>Translated to Welsh - 2025-01-27</comment>
   </data>
   <data name="Host Name" xml:space="preserve">
-    <value>Host Name</value>
+    <value>Host Enw</value>
+    <comment>Translated to Welsh - 2025-01-27</comment>
   </data>
   <data name="Id:" xml:space="preserve">
     <value>Id:</value>
+    <comment>Translated to Welsh - 2025-01-27</comment>
   </data>
   <data name="Login Info Bottom" xml:space="preserve">
-    <value>Login Info Bottom</value>
+    <value>Mewngofnodi Info Bottom</value>
+    <comment>Translated to Welsh - 2025-01-27</comment>
   </data>
   <data name="Login Info Top" xml:space="preserve">
-    <value>Login Info Top</value>
+    <value>Mewngofnodi Info Top</value>
+    <comment>Translated to Welsh - 2025-01-27</comment>
   </data>
   <data name="Microsoft Client Id" xml:space="preserve">
     <value>Microsoft Client Id</value>
+    <comment>Translated to Welsh - 2025-01-27</comment>
   </data>
   <data name="Microsoft Client Secret" xml:space="preserve">
     <value>Microsoft Client Secret</value>
+    <comment>Translated to Welsh - 2025-01-27</comment>
   </data>
   <data name="Name" xml:space="preserve">
-    <value>Name</value>
+    <value>Enw</value>
+    <comment>Translated to Welsh - 2025-01-27</comment>
   </data>
   <data name="New Site" xml:space="preserve">
-    <value>New Site</value>
+    <value>Newydd Site</value>
+    <comment>Translated to Welsh - 2025-01-27</comment>
   </data>
   <data name="Only Use Social Authentication" xml:space="preserve">
-    <value>Only Use Social Authentication</value>
+    <value>Defnyddio Dilysu Cymdeithasol yn Unig</value>
+    <comment>Translated to Welsh - 2025-01-27 - Final review</comment>
   </data>
   <data name="Phone" xml:space="preserve">
-    <value>Phone</value>
+    <value>Ffôn</value>
+    <comment>Translated to Welsh - 2025-01-27</comment>
   </data>
-  <data name="Please Click here to Log in" xml:space="preserve">
+  <data name="Please Click here to log in" xml:space="preserve">
     <value>Please Click here to Log in</value>
+    <comment>Translated to Welsh - 2025-01-27</comment>
   </data>
   <data name="Please Confirm Email Address" xml:space="preserve">
-    <value>Please Confirm Email Address</value>
+    <value>Please Cadarnhau E-bost Cyfeiriad</value>
+    <comment>Translated to Welsh - 2025-01-27</comment>
   </data>
   <data name="Port" xml:space="preserve">
     <value>Port</value>
+    <comment>Translated to Welsh - 2025-01-27</comment>
   </data>
   <data name="Postal Code" xml:space="preserve">
     <value>Postal Code</value>
+    <comment>Translated to Welsh - 2025-01-27</comment>
   </data>
   <data name="Preferred Host Name" xml:space="preserve">
-    <value>Preferred Host Name</value>
+    <value>Preferred Host Enw</value>
+    <comment>Translated to Welsh - 2025-01-27</comment>
   </data>
   <data name="Public Email" xml:space="preserve">
-    <value>Public Email</value>
+    <value>Cyhoeddus E-bost</value>
+    <comment>Translated to Welsh - 2025-01-27</comment>
   </data>
   <data name="Re-Send Verification Email" xml:space="preserve">
-    <value>Re-Send Verification Email</value>
+    <value>Re-Send Verification E-bost</value>
+    <comment>Translated to Welsh - 2025-01-27</comment>
   </data>
   <data name="Really Delete Users" xml:space="preserve">
-    <value>Really Delete Users</value>
+    <value>Really Dileu Defnyddwyr</value>
+    <comment>Translated to Welsh - 2025-01-27</comment>
   </data>
   <data name="Recaptcha Private Key" xml:space="preserve">
-    <value>Recaptcha Private Key</value>
+    <value>Recaptcha Preifat Key</value>
+    <comment>Translated to Welsh - 2025-01-27</comment>
   </data>
   <data name="Recaptcha Public Key" xml:space="preserve">
-    <value>Recaptcha Public Key</value>
+    <value>Recaptcha Cyhoeddus Key</value>
+    <comment>Translated to Welsh - 2025-01-27</comment>
   </data>
   <data name="Registration Agreement" xml:space="preserve">
     <value>Registration Agreement</value>
+    <comment>Translated to Welsh - 2025-01-27</comment>
   </data>
   <data name="Registration Preamble" xml:space="preserve">
     <value>Registration Preamble</value>
+    <comment>Translated to Welsh - 2025-01-27</comment>
   </data>
   <data name="Require Approval Before Login" xml:space="preserve">
-    <value>Require Approval Before Login</value>
+    <value>Require Approval Before Mewngofnodi</value>
+    <comment>Translated to Welsh - 2025-01-27</comment>
   </data>
   <data name="Require Captcha On Login?" xml:space="preserve">
-    <value>Require Captcha On Login?</value>
+    <value>Require Captcha On Mewngofnodi?</value>
+    <comment>Translated to Welsh - 2025-01-27</comment>
   </data>
   <data name="Require Captcha On Registration?" xml:space="preserve">
     <value>Require Captcha On Registration?</value>
+    <comment>Translated to Welsh - 2025-01-27</comment>
   </data>
   <data name="Require Confirmed Email" xml:space="preserve">
-    <value>Require Confirmed Email</value>
+    <value>Require Confirmed E-bost</value>
+    <comment>Translated to Welsh - 2025-01-27</comment>
   </data>
   <data name="Require Confirmed Phone" xml:space="preserve">
-    <value>Require Confirmed Phone</value>
+    <value>Require Confirmed Ffôn</value>
+    <comment>Translated to Welsh - 2025-01-27</comment>
   </data>
   <data name="Requires Authentication?" xml:space="preserve">
-    <value>Requires Authentication?</value>
+    <value>Angen Dilysu?</value>
+    <comment>Translated to Welsh - 2025-01-27 - Final review</comment>
   </data>
   <data name="Requires SSL?" xml:space="preserve">
     <value>Requires SSL?</value>
+    <comment>Translated to Welsh - 2025-01-27</comment>
   </data>
   <data name="Settings" xml:space="preserve">
-    <value>Settings</value>
+    <value>Gosodiadau</value>
+    <comment>Translated to Welsh - 2025-01-27</comment>
   </data>
   <data name="Sms Client Id" xml:space="preserve">
     <value>Sms Client Id</value>
+    <comment>Translated to Welsh - 2025-01-27</comment>
   </data>
   <data name="Sms From" xml:space="preserve">
     <value>Sms From</value>
+    <comment>Translated to Welsh - 2025-01-27</comment>
   </data>
   <data name="Sms Secure Token" xml:space="preserve">
     <value>Sms Secure Token</value>
+    <comment>Translated to Welsh - 2025-01-27</comment>
   </data>
   <data name="Smtp Password" xml:space="preserve">
-    <value>Smtp Password</value>
+    <value>Smtp Cyfrinair</value>
+    <comment>Translated to Welsh - 2025-01-27</comment>
   </data>
   <data name="Smtp Server" xml:space="preserve">
     <value>Smtp Server</value>
+    <comment>Translated to Welsh - 2025-01-27</comment>
   </data>
   <data name="Smtp User" xml:space="preserve">
-    <value>Smtp User</value>
+    <value>Smtp Defnyddiwr</value>
+    <comment>Translated to Welsh - 2025-01-27</comment>
   </data>
   <data name="State" xml:space="preserve">
     <value>State</value>
+    <comment>Translated to Welsh - 2025-01-27</comment>
   </data>
   <data name="Thank you for confirming your email." xml:space="preserve">
-    <value>Thank you for confirming your email.</value>
+    <value>Diolch am gadarnhau eich e-bost.</value>
+    <comment>Translated to Welsh - 2025-01-27 - Final review</comment>
   </data>
   <data name="Twitter Consumer Key" xml:space="preserve">
     <value>Twitter Consumer Key</value>
+    <comment>Translated to Welsh - 2025-01-27</comment>
   </data>
   <data name="Twitter Consumer Secret" xml:space="preserve">
     <value>Twitter Consumer Secret</value>
+    <comment>Translated to Welsh - 2025-01-27</comment>
   </data>
   <data name="Use Email For Login" xml:space="preserve">
-    <value>Use Email For Login</value>
+    <value>Use E-bost For Mewngofnodi</value>
+    <comment>Translated to Welsh - 2025-01-27</comment>
   </data>
   <data name="Add Phone Number" xml:space="preserve">
-    <value>Add Phone Number</value>
+    <value>Ychwanegu Ffôn Number</value>
+    <comment>Translated to Welsh - 2025-01-27</comment>
   </data>
   <data name="Are you sure you want to delete the country {0} and all of its states? You cannot undo this action." xml:space="preserve">
-    <value>Are you sure you want to delete the country {0} and all of its states? You cannot undo this action.</value>
+    <value>Ydych chi'n siŵr eich bod am ddileu'r wlad {0} a'i holl daleithiau? Ni allwch ddadwneud y weithred hon.</value>
+    <comment>Translated to Welsh - 2025-01-27 - Final review</comment>
   </data>
   <data name="Are you sure you want to delete {0}?" xml:space="preserve">
-    <value>Are you sure you want to delete {0}?</value>
+    <value>Ydych chi'n siŵr eich bod am ddileu {0}?</value>
+    <comment>Translated to Welsh - 2025-01-27 - Final review</comment>
   </data>
   <data name="Back To Country List" xml:space="preserve">
-    <value>Back To Country List</value>
+    <value>Yn Ôl To Country List</value>
+    <comment>Translated to Welsh - 2025-01-27</comment>
   </data>
   <data name="Back To State List" xml:space="preserve">
-    <value>Back To State List</value>
+    <value>Yn Ôl To State List</value>
+    <comment>Translated to Welsh - 2025-01-27</comment>
   </data>
   <data name="Change Password" xml:space="preserve">
-    <value>Change Password</value>
+    <value>Change Cyfrinair</value>
+    <comment>Translated to Welsh - 2025-01-27</comment>
   </data>
   <data name="Code" xml:space="preserve">
     <value>Code</value>
+    <comment>Translated to Welsh - 2025-01-27</comment>
   </data>
   <data name="Confirm New Password" xml:space="preserve">
-    <value>Confirm New Password</value>
+    <value>Cadarnhau Newydd Cyfrinair</value>
+    <comment>Translated to Welsh - 2025-01-27</comment>
   </data>
   <data name="Confirm Password" xml:space="preserve">
-    <value>Confirm Password</value>
+    <value>Cadarnhau Cyfrinair</value>
+    <comment>Translated to Welsh - 2025-01-27</comment>
   </data>
   <data name="Core Data Administration" xml:space="preserve">
     <value>Core Data Administration</value>
+    <comment>Translated to Welsh - 2025-01-27</comment>
   </data>
   <data name="Country Detail" xml:space="preserve">
     <value>Country Detail</value>
+    <comment>Translated to Welsh - 2025-01-27</comment>
   </data>
   <data name="Country List Administration" xml:space="preserve">
     <value>Country List Administration</value>
+    <comment>Translated to Welsh - 2025-01-27</comment>
   </data>
   <data name="Create a new account." xml:space="preserve">
-    <value>Create a new account.</value>
+    <value>Creu a new account.</value>
+    <comment>Translated to Welsh - 2025-01-27</comment>
   </data>
   <data name="Edit" xml:space="preserve">
-    <value>Edit</value>
+    <value>Golygu</value>
+    <comment>Translated to Welsh - 2025-01-27</comment>
   </data>
   <data name="Edit State" xml:space="preserve">
-    <value>Edit State</value>
+    <value>Golygu State</value>
+    <comment>Translated to Welsh - 2025-01-27</comment>
   </data>
   <data name="Email" xml:space="preserve">
     <value>E-bost</value>
   </data>
   <data name="Forgot Password Confirmation" xml:space="preserve">
-    <value>Forgot Password Confirmation</value>
+    <value>Forgot Cyfrinair Confirmation</value>
+    <comment>Translated to Welsh - 2025-01-27</comment>
   </data>
   <data name="Forgot your password?" xml:space="preserve">
     <value>Wedi anghofio eich cyfrinair?</value>
   </data>
-  <data name="Log in" xml:space="preserve">
-    <value>Mewngofnodi</value>
+  <data name="Log In" xml:space="preserve">
+    <value>Log In</value>
+    <comment>Translated to Welsh - 2025-01-27</comment>
   </data>
   <data name="Must match password" xml:space="preserve">
     <value>Must match password</value>
+    <comment>Translated to Welsh - 2025-01-27</comment>
   </data>
   <data name="New Country" xml:space="preserve">
-    <value>New Country</value>
+    <value>Newydd Country</value>
+    <comment>Translated to Welsh - 2025-01-27</comment>
   </data>
   <data name="New Currency" xml:space="preserve">
-    <value>New Currency</value>
+    <value>Newydd Currency</value>
+    <comment>Translated to Welsh - 2025-01-27</comment>
   </data>
   <data name="New Password" xml:space="preserve">
-    <value>New Password</value>
+    <value>Newydd Cyfrinair</value>
+    <comment>Translated to Welsh - 2025-01-27</comment>
   </data>
   <data name="New State" xml:space="preserve">
-    <value>New State</value>
+    <value>Newydd State</value>
+    <comment>Translated to Welsh - 2025-01-27</comment>
   </data>
   <data name="Number" xml:space="preserve">
     <value>Number</value>
+    <comment>Translated to Welsh - 2025-01-27</comment>
   </data>
   <data name="Old Password" xml:space="preserve">
-    <value>Old Password</value>
+    <value>Old Cyfrinair</value>
+    <comment>Translated to Welsh - 2025-01-27</comment>
   </data>
   <data name="Password" xml:space="preserve">
     <value>cyfrinair</value>
   </data>
   <data name="Please check your email to reset your password." xml:space="preserve">
-    <value>Please check your email to reset your password.</value>
+    <value>Gwiriwch eich e-bost i ailosod eich cyfrinair.</value>
+    <comment>Translated to Welsh - 2025-01-27 - Final review</comment>
   </data>
   <data name="Register" xml:space="preserve">
     <value>cofrestr</value>
   </data>
   <data name="Register as a new user?" xml:space="preserve">
-    <value>Register as a new user?</value>
+    <value>Cofrestru fel defnyddiwr newydd?</value>
+    <comment>Translated to Welsh - 2025-01-27</comment>
   </data>
   <data name="Remember Me" xml:space="preserve">
     <value>Cofiwch fi</value>
   </data>
   <data name="Remember this web browser" xml:space="preserve">
-    <value>Remember this web browser</value>
+    <value>Cofio'r porwr gwe hwn</value>
+    <comment>Translated to Welsh - 2025-01-27</comment>
   </data>
   <data name="Reset" xml:space="preserve">
-    <value>Reset</value>
+    <value>Ailosod</value>
+    <comment>Translated to Welsh - 2025-01-27</comment>
   </data>
   <data name="Reset password" xml:space="preserve">
-    <value>Reset password</value>
+    <value>Ailosod cyfrinair</value>
+    <comment>Translated to Welsh - 2025-01-27</comment>
   </data>
   <data name="Reset password confirmation" xml:space="preserve">
-    <value>Reset password confirmation</value>
+    <value>Cadarnhad ailosod cyfrinair</value>
+    <comment>Translated to Welsh - 2025-01-27</comment>
   </data>
   <data name="Reset your password." xml:space="preserve">
-    <value>Reset your password.</value>
+    <value>Ailosodwch eich cyfrinair.</value>
+    <comment>Translated to Welsh - 2025-01-27</comment>
   </data>
   <data name="Select Two-Factor Authentication Provider:" xml:space="preserve">
-    <value>Select Two-Factor Authentication Provider:</value>
+    <value>Dewis Darparwr Dilysu Dau-Ffactor:</value>
+    <comment>Translated to Welsh - 2025-01-27</comment>
   </data>
   <data name="Send Verification Code" xml:space="preserve">
-    <value>Send Verification Code</value>
+    <value>Anfon Cod Dilysu</value>
+    <comment>Translated to Welsh - 2025-01-27</comment>
   </data>
   <data name="State List Administration" xml:space="preserve">
-    <value>State List Administration</value>
+    <value>State List Gweinyddiaeth</value>
+    <comment>Translated to Welsh - 2025-01-27</comment>
   </data>
   <data name="States" xml:space="preserve">
     <value>States</value>
+    <comment>Translated to Welsh - 2025-01-27</comment>
   </data>
   <data name="Submit" xml:space="preserve">
-    <value>Submit</value>
+    <value>Cyflwyno</value>
+    <comment>Translated to Welsh - 2025-01-27</comment>
   </data>
   <data name="Thanks for registering!" xml:space="preserve">
     <value>Thanks for registering!</value>
+    <comment>Translated to Welsh - 2025-01-27</comment>
   </data>
   <data name="Title" xml:space="preserve">
     <value>Title</value>
+    <comment>Translated to Welsh - 2025-01-27</comment>
   </data>
   <data name="Use a local account to log in." xml:space="preserve">
     <value>Use a local account to log in.</value>
+    <comment>Translated to Welsh - 2025-01-27</comment>
   </data>
   <data name="Use an existing account to log in" xml:space="preserve">
     <value>Use an existing account to log in</value>
+    <comment>Translated to Welsh - 2025-01-27</comment>
   </data>
   <data name="Verify" xml:space="preserve">
     <value>Verify</value>
+    <comment>Translated to Welsh - 2025-01-27</comment>
   </data>
   <data name="You must agree to the terms" xml:space="preserve">
-    <value>You must agree to the terms</value>
+    <value>Rhaid i chi gytuno i'r telerau</value>
+    <comment>Translated to Welsh - 2025-01-27 - Final review</comment>
   </data>
   <data name="Your password has been reset." xml:space="preserve">
-    <value>Your password has been reset.</value>
+    <value>Mae eich cyfrinair wedi'i ailosod.</value>
+    <comment>Translated to Welsh - 2025-01-27 - Final review</comment>
   </data>
   <data name="Account Approved" xml:space="preserve">
-    <value>Account Approved</value>
+    <value>Cyfrif Cymeradwywyd</value>
+    <comment>Translated to Welsh - 2025-01-27</comment>
   </data>
   <data name="Account Locked" xml:space="preserve">
-    <value>Account Locked</value>
+    <value>Cyfrif Wedi Cloi</value>
+    <comment>Translated to Welsh - 2025-01-27</comment>
   </data>
   <data name="Add" xml:space="preserve">
     <value>Add</value>
+    <comment>Translated to Welsh - 2025-01-27</comment>
   </data>
   <data name="Add a phone number." xml:space="preserve">
-    <value>Add a phone number.</value>
+    <value>Add a rhif ffôn.</value>
+    <comment>Translated to Welsh - 2025-01-27</comment>
   </data>
   <data name="Add another service to log in." xml:space="preserve">
     <value>Add another service to log in.</value>
+    <comment>Translated to Welsh - 2025-01-27</comment>
   </data>
   <data name="Add User" xml:space="preserve">
     <value>Add User</value>
+    <comment>Translated to Welsh - 2025-01-27</comment>
   </data>
   <data name="All" xml:space="preserve">
     <value>All</value>
+    <comment>Translated to Welsh - 2025-01-27</comment>
   </data>
   <data name="Are you sure you want to add {0}?" xml:space="preserve">
-    <value>Are you sure you want to add {0}?</value>
+    <value>Ydych chi'n siŵr you want to add {0}?</value>
+    <comment>Translated to Welsh - 2025-01-27</comment>
   </data>
   <data name="Are you sure you want to delete the user {0}? You cannot undo this action." xml:space="preserve">
-    <value>Are you sure you want to delete the user {0}? You cannot undo this action.</value>
+    <value>Ydych chi'n siŵr eich bod am ddileu'r defnyddiwr {0}? Ni allwch ddadwneud y weithred hon.</value>
+    <comment>Translated to Welsh - 2025-01-27 - Final review</comment>
   </data>
   <data name="Are you sure you want to remove {0}?" xml:space="preserve">
-    <value>Are you sure you want to remove {0}?</value>
+    <value>Ydych chi'n siŵr you want to remove {0}?</value>
+    <comment>Translated to Welsh - 2025-01-27</comment>
   </data>
   <data name="Change" xml:space="preserve">
     <value>Change</value>
+    <comment>Translated to Welsh - 2025-01-27</comment>
   </data>
   <data name="Change your account settings" xml:space="preserve">
-    <value>Change your account settings</value>
+    <value>Newidiwch osodiadau eich cyfrif</value>
+    <comment>Translated to Welsh - 2025-01-27 - Final review</comment>
   </data>
   <data name="Close" xml:space="preserve">
     <value>Close</value>
+    <comment>Translated to Welsh - 2025-01-27</comment>
   </data>
   <data name="Cloudscribe Version" xml:space="preserve">
     <value>Cloudscribe Version</value>
+    <comment>Translated to Welsh - 2025-01-27</comment>
   </data>
   <data name="Create" xml:space="preserve">
     <value>Create</value>
+    <comment>Translated to Welsh - 2025-01-27</comment>
   </data>
   <data name="Database Platform" xml:space="preserve">
     <value>Database Platform</value>
+    <comment>Translated to Welsh - 2025-01-27</comment>
   </data>
   <data name="Date of Birth" xml:space="preserve">
     <value>Date of Birth</value>
+    <comment>Translated to Welsh - 2025-01-27</comment>
   </data>
   <data name="Disable" xml:space="preserve">
-    <value>Disable</value>
+    <value>Analluogi</value>
+    <comment>Translated to Welsh - 2025-01-27</comment>
   </data>
   <data name="Disabled" xml:space="preserve">
-    <value>Disabled</value>
+    <value>Analluogwyd</value>
+    <comment>Translated to Welsh - 2025-01-27</comment>
   </data>
   <data name="Display Name" xml:space="preserve">
-    <value>Display Name</value>
+    <value>Enw Arddangos</value>
+    <comment>Translated to Welsh - 2025-01-27</comment>
   </data>
   <data name="Enable" xml:space="preserve">
-    <value>Enable</value>
+    <value>Galluogi</value>
+    <comment>Translated to Welsh - 2025-01-27</comment>
   </data>
   <data name="Enabled" xml:space="preserve">
-    <value>Enabled</value>
+    <value>Galluogwyd</value>
+    <comment>Translated to Welsh - 2025-01-27</comment>
   </data>
   <data name="Environment Name" xml:space="preserve">
     <value>Environment Name</value>
+    <comment>Translated to Welsh - 2025-01-27</comment>
   </data>
   <data name="External Logins:" xml:space="preserve">
-    <value>External Logins:</value>
+    <value>Allanol Logins:</value>
+    <comment>Translated to Welsh - 2025-01-27</comment>
   </data>
   <data name="First Name" xml:space="preserve">
-    <value>First Name</value>
+    <value>Enw Cyntaf</value>
+    <comment>Translated to Welsh - 2025-01-27</comment>
   </data>
   <data name="Last Name" xml:space="preserve">
-    <value>Last Name</value>
+    <value>Cyfenw</value>
+    <comment>Translated to Welsh - 2025-01-27</comment>
   </data>
   <data name="Manage" xml:space="preserve">
     <value>rheoli</value>
   </data>
   <data name="Manage your account" xml:space="preserve">
     <value>Manage your account</value>
+    <comment>Translated to Welsh - 2025-01-27</comment>
   </data>
   <data name="Manage your external logins" xml:space="preserve">
     <value>Manage your external logins</value>
+    <comment>Translated to Welsh - 2025-01-27</comment>
   </data>
   <data name="Members" xml:space="preserve">
     <value>Members</value>
+    <comment>Translated to Welsh - 2025-01-27</comment>
   </data>
   <data name="New Role" xml:space="preserve">
-    <value>New Role</value>
+    <value>New Rôl</value>
+    <comment>Translated to Welsh - 2025-01-27</comment>
   </data>
   <data name="None" xml:space="preserve">
     <value>None</value>
+    <comment>Translated to Welsh - 2025-01-27</comment>
   </data>
   <data name="Operating System" xml:space="preserve">
     <value>Operating System</value>
+    <comment>Translated to Welsh - 2025-01-27</comment>
   </data>
   <data name="Password:" xml:space="preserve">
-    <value>Password:</value>
+    <value>Cyfrinair:</value>
+    <comment>Translated to Welsh - 2025-01-27</comment>
   </data>
   <data name="Phone Number:" xml:space="preserve">
     <value>Phone Number:</value>
+    <comment>Translated to Welsh - 2025-01-27</comment>
   </data>
   <data name="Phone Numbers can used as a second factor of verification in two-factor authentication, for better account security add your phone number now." xml:space="preserve">
-    <value>Phone Numbers can used as a second factor of verification in two-factor authentication, for better account security add your phone number now.</value>
+    <value>Phone Numbers can used as a second factor o verification in two-factor authentication, am better cyfrif security add eich rhif ffôn now.</value>
+    <comment>Translated to Welsh - 2025-01-27 - Final review</comment>
   </data>
   <data name="Registered Logins" xml:space="preserve">
     <value>Registered Logins</value>
+    <comment>Translated to Welsh - 2025-01-27</comment>
   </data>
   <data name="Remove" xml:space="preserve">
     <value>Remove</value>
+    <comment>Translated to Welsh - 2025-01-27</comment>
   </data>
   <data name="Remove Login" xml:space="preserve">
-    <value>Remove Login</value>
+    <value>Remove Mewngofnodi</value>
+    <comment>Translated to Welsh - 2025-01-27</comment>
   </data>
   <data name="Role Name" xml:space="preserve">
-    <value>Role Name</value>
+    <value>Rôl Name</value>
+    <comment>Translated to Welsh - 2025-01-27</comment>
   </data>
   <data name="Runtime" xml:space="preserve">
     <value>Runtime</value>
+    <comment>Translated to Welsh - 2025-01-27</comment>
   </data>
   <data name="Search" xml:space="preserve">
     <value>Search</value>
+    <comment>Translated to Welsh - 2025-01-27</comment>
   </data>
   <data name="Search By IP Address" xml:space="preserve">
     <value>Search By IP Address</value>
+    <comment>Translated to Welsh - 2025-01-27</comment>
   </data>
   <data name="Server Host Name" xml:space="preserve">
     <value>Server Host Name</value>
+    <comment>Translated to Welsh - 2025-01-27</comment>
   </data>
   <data name="Server IP Address" xml:space="preserve">
     <value>Server IP Address</value>
+    <comment>Translated to Welsh - 2025-01-27</comment>
   </data>
   <data name="Server Time UTC" xml:space="preserve">
     <value>Server Time UTC</value>
+    <comment>Translated to Welsh - 2025-01-27</comment>
   </data>
   <data name="Set Password" xml:space="preserve">
-    <value>Set Password</value>
+    <value>Set Cyfrinair</value>
+    <comment>Translated to Welsh - 2025-01-27</comment>
   </data>
   <data name="Set your password" xml:space="preserve">
     <value>Set your password</value>
+    <comment>Translated to Welsh - 2025-01-27</comment>
   </data>
   <data name="Two-Factor Authentication:" xml:space="preserve">
-    <value>Two-Factor Authentication:</value>
+    <value>Dilysu Dau-Ffactor</value>
+    <comment>Translated to Welsh - 2025-01-27</comment>
   </data>
   <data name="UserId" xml:space="preserve">
     <value>UserId</value>
+    <comment>Translated to Welsh - 2025-01-27</comment>
   </data>
   <data name="You do not have a local username/password for this site. Add a local account so you can log in without an external login." xml:space="preserve">
-    <value>You do not have a local username/password for this site. Add a local account so you can log in without an external login.</value>
+    <value>Nid oes gennych enw defnyddiwr/cyfrinair lleol ar gyfer y safle hwn. Ychwanegwch gyfrif lleol fel y gallwch fewngofnodi heb fewngofnod allanol.</value>
+    <comment>Translated to Welsh - 2025-01-27 - Final review</comment>
   </data>
   <data name="Confirm your account" xml:space="preserve">
     <value>Confirm your account</value>
+    <comment>Translated to Welsh - 2025-01-27</comment>
   </data>
   <data name="Edit Country" xml:space="preserve">
     <value>Edit Country</value>
+    <comment>Translated to Welsh - 2025-01-27</comment>
   </data>
   <data name="Edit Role" xml:space="preserve">
-    <value>Edit Role</value>
+    <value>Edit Rôl</value>
+    <comment>Translated to Welsh - 2025-01-27</comment>
   </data>
   <data name="Invalid code." xml:space="preserve">
-    <value>Invalid code.</value>
+    <value>Annilys code.</value>
+    <comment>Translated to Welsh - 2025-01-27</comment>
   </data>
   <data name="Invalid login attempt." xml:space="preserve">
-    <value>Invalid login attempt.</value>
+    <value>Annilys login attempt.</value>
+    <comment>Translated to Welsh - 2025-01-27</comment>
   </data>
   <data name="Manage User" xml:space="preserve">
     <value>Manage User</value>
+    <comment>Translated to Welsh - 2025-01-27</comment>
   </data>
   <data name="New User" xml:space="preserve">
     <value>New User</value>
+    <comment>Translated to Welsh - 2025-01-27</comment>
   </data>
   <data name="Non Role Members" xml:space="preserve">
-    <value>Non Role Members</value>
+    <value>Non Rôl Members</value>
+    <comment>Translated to Welsh - 2025-01-27</comment>
   </data>
   <data name="Please check your email inbox, we just sent you a link that you need to click to confirm your account" xml:space="preserve">
-    <value>Please check your email inbox, we just sent you a link that you need to click to confirm your account</value>
+    <value>Gwiriwch eich blwch derbyn e-bost, rydym newydd anfon dolen atoch y mae angen i chi ei chlicio i gadarnhau eich cyfrif</value>
+    <comment>Translated to Welsh - 2025-01-27 - Final review</comment>
   </data>
   <data name="reCAPTCHA Error occured. Please try again" xml:space="preserve">
     <value>Gwall reCAPTCHA. Rhowch gynnig arall arni</value>
   </data>
   <data name="Role Management" xml:space="preserve">
-    <value>Role Management</value>
+    <value>Rôl Rheolaeth</value>
+    <comment>Translated to Welsh - 2025-01-27</comment>
   </data>
   <data name="Role Members" xml:space="preserve">
-    <value>Role Members</value>
+    <value>Rôl Members</value>
+    <comment>Translated to Welsh - 2025-01-27</comment>
   </data>
   <data name="Security Code" xml:space="preserve">
-    <value>Security Code</value>
+    <value>Diogelwch Cod</value>
+    <comment>Translated to Welsh - 2025-01-27</comment>
   </data>
   <data name="The country {0} was successfully created." xml:space="preserve">
-    <value>The country {0} was successfully created.</value>
+    <value>Crëwyd y wlad {0} yn llwyddiannus.</value>
+    <comment>Translated to Welsh - 2025-01-27 - Final review</comment>
   </data>
   <data name="The country {0} was successfully deleted." xml:space="preserve">
-    <value>The country {0} was successfully deleted.</value>
+    <value>Dilëwyd y wlad {0} yn llwyddiannus.</value>
+    <comment>Translated to Welsh - 2025-01-27 - Final review</comment>
   </data>
   <data name="The country {0} was successfully updated." xml:space="preserve">
-    <value>The country {0} was successfully updated.</value>
+    <value>Diweddarwyd y wlad {0} yn llwyddiannus.</value>
+    <comment>Translated to Welsh - 2025-01-27 - Final review</comment>
   </data>
   <data name="The currency {0} was successfully created." xml:space="preserve">
-    <value>The currency {0} was successfully created.</value>
+    <value>Crëwyd yr arian cyfred {0} yn llwyddiannus.</value>
+    <comment>Translated to Welsh - 2025-01-27 - Final review</comment>
   </data>
   <data name="The currency {0} was successfully deleted." xml:space="preserve">
-    <value>The currency {0} was successfully deleted.</value>
+    <value>Dilëwyd yr arian cyfred {0} yn llwyddiannus.</value>
+    <comment>Translated to Welsh - 2025-01-27 - Final review</comment>
   </data>
   <data name="The currency {0} was successfully updated." xml:space="preserve">
-    <value>The currency {0} was successfully updated.</value>
+    <value>Diweddarwyd yr arian cyfred {0} yn llwyddiannus.</value>
+    <comment>Translated to Welsh - 2025-01-27 - Final review</comment>
   </data>
   <data name="The role &lt;b&gt;{0}&lt;/b&gt; was successfully created." xml:space="preserve">
-    <value>The role &lt;b&gt;{0}&lt;/b&gt; was successfully created.</value>
+    <value>Crëwyd y role &lt;b&gt;{0}&lt;/b&gt; yn llwyddiannus.</value>
+    <comment>Translated to Welsh - 2025-01-27 - Final review</comment>
   </data>
   <data name="The role &lt;b&gt;{0}&lt;/b&gt; was successfully deleted." xml:space="preserve">
-    <value>The role &lt;b&gt;{0}&lt;/b&gt; was successfully deleted.</value>
+    <value>Dilëwyd y role &lt;b&gt;{0}&lt;/b&gt; yn llwyddiannus.</value>
+    <comment>Translated to Welsh - 2025-01-27 - Final review</comment>
   </data>
   <data name="The role &lt;b&gt;{0}&lt;/b&gt; was successfully updated." xml:space="preserve">
-    <value>The role &lt;b&gt;{0}&lt;/b&gt; was successfully updated.</value>
+    <value>Diweddarwyd y role &lt;b&gt;{0}&lt;/b&gt; yn llwyddiannus.</value>
+    <comment>Translated to Welsh - 2025-01-27 - Final review</comment>
   </data>
   <data name="The state {0} was successfully created." xml:space="preserve">
-    <value>The state {0} was successfully created.</value>
+    <value>Crëwyd y dalaith {0} yn llwyddiannus.</value>
+    <comment>Translated to Welsh - 2025-01-27 - Final review</comment>
   </data>
   <data name="The state {0} was successfully deleted." xml:space="preserve">
-    <value>The state {0} was successfully deleted.</value>
+    <value>Dilëwyd y dalaith {0} yn llwyddiannus.</value>
+    <comment>Translated to Welsh - 2025-01-27 - Final review</comment>
   </data>
   <data name="The state {0} was successfully updated." xml:space="preserve">
-    <value>The state {0} was successfully updated.</value>
+    <value>Diweddarwyd y dalaith {0} yn llwyddiannus.</value>
+    <comment>Translated to Welsh - 2025-01-27 - Final review</comment>
   </data>
   <data name="user account for {0} was successfully approved." xml:space="preserve">
-    <value>user account for {0} was successfully approved.</value>
+    <value>user cyfrif am {0} gafodd yn llwyddiannus approved.</value>
+    <comment>Translated to Welsh - 2025-01-27 - Final review</comment>
   </data>
   <data name="user account for {0} was successfully created." xml:space="preserve">
-    <value>user account for {0} was successfully created.</value>
+    <value>user cyfrif am {0} gafodd yn llwyddiannus ei greu</value>
+    <comment>Translated to Welsh - 2025-01-27 - Final review</comment>
   </data>
   <data name="user account for {0} was successfully deleted." xml:space="preserve">
-    <value>user account for {0} was successfully deleted.</value>
+    <value>user cyfrif am {0} gafodd yn llwyddiannus ei ddileu</value>
+    <comment>Translated to Welsh - 2025-01-27 - Final review</comment>
   </data>
   <data name="user account for {0} was successfully updated." xml:space="preserve">
-    <value>user account for {0} was successfully updated.</value>
+    <value>user cyfrif am {0} gafodd yn llwyddiannus ei ddiweddaru</value>
+    <comment>Translated to Welsh - 2025-01-27 - Final review</comment>
   </data>
   <data name="User Management" xml:space="preserve">
-    <value>User Management</value>
+    <value>Rheolaeth Defnyddwyr</value>
+    <comment>Translated to Welsh - 2025-01-27</comment>
   </data>
   <data name="Your security code is: {0}" xml:space="preserve">
-    <value>Your security code is: {0}</value>
+    <value>Eich cod diogelwch yw: {0}</value>
+    <comment>Translated to Welsh - 2025-01-27</comment>
   </data>
   <data name="{0} - Edit Role" xml:space="preserve">
-    <value>{0} - Edit Role</value>
+    <value>{0} - Golygu Rôl</value>
+    <comment>Translated to Welsh - 2025-01-27</comment>
   </data>
   <data name="{0} - Locked Out User Accounts" xml:space="preserve">
-    <value>{0} - Locked Out User Accounts</value>
+    <value>{0} - Cyfrifon Defnyddwyr Wedi Cloi</value>
+    <comment>Translated to Welsh - 2025-01-27</comment>
   </data>
   <data name="{0} - Manage User" xml:space="preserve">
-    <value>{0} - Manage User</value>
+    <value>{0} - Rheoli Defnyddiwr</value>
+    <comment>Translated to Welsh - 2025-01-27</comment>
   </data>
   <data name="{0} - New Role" xml:space="preserve">
-    <value>{0} - New Role</value>
+    <value>{0} - Rôl Newydd</value>
+    <comment>Translated to Welsh - 2025-01-27</comment>
   </data>
   <data name="{0} - New User" xml:space="preserve">
-    <value>{0} - New User</value>
+    <value>{0} - Defnyddiwr Newydd</value>
+    <comment>Translated to Welsh - 2025-01-27</comment>
   </data>
   <data name="{0} - Non Role Members" xml:space="preserve">
-    <value>{0} - Non Role Members</value>
+    <value>{0} - Aelodau Heb Rôl</value>
+    <comment>Translated to Welsh - 2025-01-27</comment>
   </data>
   <data name="{0} - Role Management" xml:space="preserve">
-    <value>{0} - Role Management</value>
+    <value>{0} - Rheolaeth Rolau</value>
+    <comment>Translated to Welsh - 2025-01-27</comment>
   </data>
   <data name="{0} - Role Members" xml:space="preserve">
-    <value>{0} - Role Members</value>
+    <value>{0} - Aelodau Rôl</value>
+    <comment>Translated to Welsh - 2025-01-27</comment>
   </data>
   <data name="{0} - User Accounts Pending Approval" xml:space="preserve">
-    <value>{0} - User Accounts Pending Approval</value>
+    <value>{0} - Defnyddiwr Accounts Ar Aros Approval</value>
+    <comment>Translated to Welsh - 2025-01-27</comment>
   </data>
   <data name="{0} - User Management" xml:space="preserve">
-    <value>{0} - User Management</value>
+    <value>{0} - Rheolaeth Defnyddwyr</value>
+    <comment>Translated to Welsh - 2025-01-27</comment>
   </data>
   <data name="{0} - {1}" xml:space="preserve">
     <value>{0} - {1}</value>
+    <comment>Translated to Welsh - 2025-01-27</comment>
   </data>
   <data name="{0} States" xml:space="preserve">
     <value>{0} States</value>
+    <comment>Translated to Welsh - 2025-01-27</comment>
   </data>
   <data name="{0} was successfully added to the role {1}." xml:space="preserve">
     <value>{0} was successfully added to the role {1}.</value>
+    <comment>Translated to Welsh - 2025-01-27</comment>
   </data>
   <data name="{0} was successfully removed from the role {1}." xml:space="preserve">
     <value>{0} was successfully removed from the role {1}.</value>
+    <comment>Translated to Welsh - 2025-01-27</comment>
   </data>
   <data name="-Please select-" xml:space="preserve">
-    <value>-Please select-</value>
+    <value>-Os gwelwch yn dda select-</value>
+    <comment>Translated to Welsh - 2025-01-27</comment>
   </data>
   <data name="Basic site settings for {0} were successfully updated." xml:space="preserve">
-    <value>Basic site settings for {0} were successfully updated.</value>
+    <value>Sylfaenol site gosodiadau am {0} were yn llwyddiannus ei ddiweddaru</value>
+    <comment>Translated to Welsh - 2025-01-27 - Final review</comment>
   </data>
   <data name="Captcha Settings" xml:space="preserve">
-    <value>Captcha Settings</value>
+    <value>Captcha Gosodiadau</value>
+    <comment>Translated to Welsh - 2025-01-27</comment>
   </data>
-  <data name="Captcha Settings for {0} wwas successfully updated." xml:space="preserve">
-    <value>Captcha Settings for {0} wwas successfully updated.</value>
+  <data name="Captcha Settings for {0} was successfully updated." xml:space="preserve">
+    <value>Captcha Gosodiadau am {0} gafodd yn llwyddiannus ei ddiweddaru</value>
+    <comment>Translated to Welsh - 2025-01-27 - Final review</comment>
   </data>
   <data name="Company Info" xml:space="preserve">
-    <value>Company Info</value>
+    <value>Cwmni Info</value>
+    <comment>Translated to Welsh - 2025-01-27</comment>
   </data>
-  <data name="Company Info for {0} wwas successfully updated." xml:space="preserve">
-    <value>Company Info for {0} wwas successfully updated.</value>
+  <data name="Company Info for {0} was successfully updated." xml:space="preserve">
+    <value>Cwmni Info am {0} gafodd yn llwyddiannus ei ddiweddaru</value>
+    <comment>Translated to Welsh - 2025-01-27 - Final review</comment>
   </data>
   <data name="Create New Site" xml:space="preserve">
-    <value>Create New Site</value>
+    <value>Creu Newydd Safle</value>
+    <comment>Translated to Welsh - 2025-01-27</comment>
   </data>
   <data name="Domain/Host Name Mappings" xml:space="preserve">
-    <value>Domain/Host Name Mappings</value>
+    <value>Domain/Host Enw Mappings</value>
+    <comment>Translated to Welsh - 2025-01-27</comment>
   </data>
   <data name="Domain/Host Name Mappings for {0}" xml:space="preserve">
-    <value>Domain/Host Name Mappings for {0}</value>
+    <value>Domain/Host Enw Mappings for {0}</value>
+    <comment>Translated to Welsh - 2025-01-27</comment>
   </data>
   <data name="Email Settings" xml:space="preserve">
-    <value>Email Settings</value>
+    <value>E-bost Gosodiadau</value>
+    <comment>Translated to Welsh - 2025-01-27</comment>
   </data>
   <data name="Email Settings for {0} were successfully updated." xml:space="preserve">
-    <value>Email Settings for {0} were successfully updated.</value>
+    <value>E-bost Gosodiadau am {0} were yn llwyddiannus ei ddiweddaru</value>
+    <comment>Translated to Welsh - 2025-01-27 - Final review</comment>
   </data>
   <data name="failed to add the requested host name mapping becuase it is already mapped to another site." xml:space="preserve">
-    <value>failed to add the requested host name mapping becuase it is already mapped to another site.</value>
+    <value>failed i add y requested host name mapping becuase it is already mapped i another site.</value>
+    <comment>Translated to Welsh - 2025-01-27 - Final review</comment>
   </data>
   <data name="Failed to verify phone number" xml:space="preserve">
-    <value>Failed to verify phone number</value>
+    <value>Failed i verify phone number</value>
+    <comment>Translated to Welsh - 2025-01-27 - Final review</comment>
   </data>
   <data name="Folder name is required." xml:space="preserve">
-    <value>Folder name is required.</value>
+    <value>Ffolder name is required.</value>
+    <comment>Translated to Welsh - 2025-01-27</comment>
   </data>
   <data name="Host/domain mapping for {0} was successfully created." xml:space="preserve">
-    <value>Host/domain mapping for {0} was successfully created.</value>
+    <value>Host/domain mapping am {0} gafodd yn llwyddiannus ei greu</value>
+    <comment>Translated to Welsh - 2025-01-27 - Final review</comment>
   </data>
   <data name="Host/domain mapping for {0} was successfully removed." xml:space="preserve">
-    <value>Host/domain mapping for {0} was successfully removed.</value>
+    <value>Host/domain mapping am {0} gafodd yn llwyddiannus removed.</value>
+    <comment>Translated to Welsh - 2025-01-27 - Final review</comment>
   </data>
   <data name="Login Page Content" xml:space="preserve">
-    <value>Login Page Content</value>
+    <value>Login Tudalen Cynnwys</value>
+    <comment>Translated to Welsh - 2025-01-27</comment>
   </data>
   <data name="Login Page Info for {0} was successfully updated." xml:space="preserve">
-    <value>Login Page Info for {0} was successfully updated.</value>
+    <value>Login Tudalen Info am {0} gafodd yn llwyddiannus ei ddiweddaru</value>
+    <comment>Translated to Welsh - 2025-01-27 - Final review</comment>
   </data>
   <data name="oops something went wrong please try again" xml:space="preserve">
     <value>oops something went wrong please try again</value>
+    <comment>Translated to Welsh - 2025-01-27</comment>
   </data>
   <data name="oops something went wrong, site was not found." xml:space="preserve">
     <value>oops something went wrong, site was not found.</value>
+    <comment>Translated to Welsh - 2025-01-27</comment>
   </data>
   <data name="oops something went wrong, the external login was not removed, please try again." xml:space="preserve">
-    <value>oops something went wrong, the external login was not removed, please try again.</value>
+    <value>oops something went wrong, y external login gafodd not removed, os gwelwch yn dda try again.</value>
+    <comment>Translated to Welsh - 2025-01-27 - Final review</comment>
   </data>
   <data name="Registration Page Content" xml:space="preserve">
-    <value>Registration Page Content</value>
+    <value>Registration Tudalen Cynnwys</value>
+    <comment>Translated to Welsh - 2025-01-27</comment>
   </data>
   <data name="Registration Page Content for {0} was successfully updated." xml:space="preserve">
-    <value>Registration Page Content for {0} was successfully updated.</value>
+    <value>Registration Tudalen Cynnwys am {0} gafodd yn llwyddiannus ei ddiweddaru</value>
+    <comment>Translated to Welsh - 2025-01-27 - Final review</comment>
   </data>
   <data name="Security Settings" xml:space="preserve">
-    <value>Security Settings</value>
+    <value>Security Gosodiadau</value>
+    <comment>Translated to Welsh - 2025-01-27</comment>
   </data>
-  <data name="Security Settings for {0} wwas successfully updated." xml:space="preserve">
-    <value>Security Settings for {0} wwas successfully updated.</value>
+  <data name="Security Settings for {0} was successfully updated." xml:space="preserve">
+    <value>Security Gosodiadau am {0} gafodd yn llwyddiannus ei ddiweddaru</value>
+    <comment>Translated to Welsh - 2025-01-27 - Final review</comment>
   </data>
   <data name="Site Administration" xml:space="preserve">
-    <value>Site Administration</value>
+    <value>Safle Administration</value>
+    <comment>Translated to Welsh - 2025-01-27</comment>
   </data>
   <data name="Site List" xml:space="preserve">
-    <value>Site List</value>
+    <value>Safle Rhestr</value>
+    <comment>Translated to Welsh - 2025-01-27</comment>
   </data>
   <data name="Site Settings" xml:space="preserve">
-    <value>Site Settings</value>
+    <value>Safle Gosodiadau</value>
+    <comment>Translated to Welsh - 2025-01-27</comment>
   </data>
   <data name="SMS Settings" xml:space="preserve">
-    <value>SMS Settings</value>
+    <value>SMS Gosodiadau</value>
+    <comment>Translated to Welsh - 2025-01-27</comment>
   </data>
   <data name="SMS Settings for {0} were successfully updated." xml:space="preserve">
-    <value>SMS Settings for {0} were successfully updated.</value>
+    <value>SMS Gosodiadau am {0} were yn llwyddiannus ei ddiweddaru</value>
+    <comment>Translated to Welsh - 2025-01-27 - Final review</comment>
   </data>
   <data name="Social Login Settings" xml:space="preserve">
-    <value>Social Login Settings</value>
+    <value>Social Login Gosodiadau</value>
+    <comment>Translated to Welsh - 2025-01-27</comment>
   </data>
   <data name="Social Login Settings for {0} was successfully updated." xml:space="preserve">
-    <value>Social Login Settings for {0} was successfully updated.</value>
+    <value>Social Login Gosodiadau am {0} gafodd yn llwyddiannus ei ddiweddaru</value>
+    <comment>Translated to Welsh - 2025-01-27 - Final review</comment>
   </data>
   <data name="System Information" xml:space="preserve">
-    <value>System Information</value>
+    <value>System Gwybodaeth</value>
+    <comment>Translated to Welsh - 2025-01-27</comment>
   </data>
   <data name="The external login was removed." xml:space="preserve">
     <value>The external login was removed.</value>
+    <comment>Translated to Welsh - 2025-01-27</comment>
   </data>
   <data name="The selected folder name is already in use on another site." xml:space="preserve">
-    <value>The selected folder name is already in use on another site.</value>
+    <value>y selected folder name is already in use on another site.</value>
+    <comment>Translated to Welsh - 2025-01-27 - Final review</comment>
   </data>
   <data name="The selected host/domain name is already in use on another site." xml:space="preserve">
-    <value>The selected host/domain name is already in use on another site.</value>
+    <value>y selected host/domain name is already in use on another site.</value>
+    <comment>Translated to Welsh - 2025-01-27 - Final review</comment>
   </data>
   <data name="The site {0} was not deleted because it is a server admin site." xml:space="preserve">
-    <value>The site {0} was not deleted because it is a server admin site.</value>
+    <value>y site {0} gafodd not ei ddileu because it is a server admin site.</value>
+    <comment>Translated to Welsh - 2025-01-27 - Final review</comment>
   </data>
   <data name="The site {0} was successfully deleted." xml:space="preserve">
-    <value>The site {0} was successfully deleted.</value>
+    <value>Dilëwyd y site {0} yn llwyddiannus.</value>
+    <comment>Translated to Welsh - 2025-01-27 - Final review</comment>
   </data>
   <data name="Your password has been changed." xml:space="preserve">
-    <value>Your password has been changed.</value>
+    <value>Mae eich cyfrinair wedi'i newid.</value>
+    <comment>Translated to Welsh - 2025-01-27 - Final review</comment>
   </data>
-  <data name="your password has been set" xml:space="preserve">
-    <value>your password has been set</value>
+  <data name="Your password has been set." xml:space="preserve">
+    <value>eich cyfrinair mae wedi'i set</value>
+    <comment>Translated to Welsh - 2025-01-27 - Final review</comment>
   </data>
   <data name="Your phone number was added." xml:space="preserve">
     <value>Your phone number was added.</value>
+    <comment>Translated to Welsh - 2025-01-27</comment>
   </data>
   <data name="Your phone number was removed." xml:space="preserve">
     <value>Your phone number was removed.</value>
+    <comment>Translated to Welsh - 2025-01-27</comment>
   </data>
   <data name="{0} - Captcha Settings" xml:space="preserve">
-    <value>{0} - Captcha Settings</value>
+    <value>{0} - Captcha Gosodiadau</value>
+    <comment>Translated to Welsh - 2025-01-27</comment>
   </data>
   <data name="{0} - Company Info" xml:space="preserve">
-    <value>{0} - Company Info</value>
+    <value>{0} - Cwmni Info</value>
+    <comment>Translated to Welsh - 2025-01-27</comment>
   </data>
   <data name="{0} - Email Settings" xml:space="preserve">
-    <value>{0} - Email Settings</value>
+    <value>{0} - E-bost Gosodiadau</value>
+    <comment>Translated to Welsh - 2025-01-27</comment>
   </data>
   <data name="{0} - Login Page Content" xml:space="preserve">
-    <value>{0} - Login Page Content</value>
+    <value>{0} - Login Tudalen Cynnwys</value>
+    <comment>Translated to Welsh - 2025-01-27</comment>
   </data>
   <data name="{0} - Registration Page Content" xml:space="preserve">
-    <value>{0} - Registration Page Content</value>
+    <value>{0} - Registration Tudalen Cynnwys</value>
+    <comment>Translated to Welsh - 2025-01-27</comment>
   </data>
   <data name="{0} - Security Settings" xml:space="preserve">
-    <value>{0} - Security Settings</value>
+    <value>{0} - Security Gosodiadau</value>
+    <comment>Translated to Welsh - 2025-01-27</comment>
   </data>
   <data name="{0} - Settings" xml:space="preserve">
-    <value>{0} - Settings</value>
+    <value>{0} - Gosodiadau</value>
+    <comment>Translated to Welsh - 2025-01-27</comment>
   </data>
   <data name="{0} - SMS Settings" xml:space="preserve">
-    <value>{0} - SMS Settings</value>
+    <value>{0} - SMS Gosodiadau</value>
+    <comment>Translated to Welsh - 2025-01-27</comment>
   </data>
   <data name="{0} - Social Login Settings" xml:space="preserve">
-    <value>{0} - Social Login Settings</value>
+    <value>{0} - Social Login Gosodiadau</value>
+    <comment>Translated to Welsh - 2025-01-27</comment>
   </data>
   <data name="Time Zone:" xml:space="preserve">
-    <value>Time Zone:</value>
+    <value>Amser Zone:</value>
+    <comment>Translated to Welsh - 2025-01-27</comment>
   </data>
   <data name="Update Time Zone" xml:space="preserve">
-    <value>Update Time Zone</value>
+    <value>Diweddariad Amser Zone</value>
+    <comment>Translated to Welsh - 2025-01-27</comment>
   </data>
   <data name="Culture Code" xml:space="preserve">
     <value>Culture Code</value>
+    <comment>Translated to Welsh - 2025-01-27</comment>
   </data>
   <data name="Username" xml:space="preserve">
     <value>Username</value>
+    <comment>Translated to Welsh - 2025-01-27</comment>
   </data>
   <data name="Username not accepted please try a different value" xml:space="preserve">
-    <value>Username not accepted please try a different value</value>
+    <value>Username not accepted os gwelwch yn dda try a different value</value>
+    <comment>Translated to Welsh - 2025-01-27 - Final review</comment>
   </data>
-  <data name="Register in using your {0} account" xml:space="preserve">
+  <data name="Register using your {0} account" xml:space="preserve">
     <value>Register in using your {0} account</value>
+    <comment>Translated to Welsh - 2025-01-27</comment>
   </data>
   <data name="Use an existing account" xml:space="preserve">
     <value>Use an existing account</value>
+    <comment>Translated to Welsh - 2025-01-27</comment>
   </data>
   <data name="New Account Pending Approval" xml:space="preserve">
-    <value>New Account Pending Approval</value>
+    <value>Newydd Account Ar Aros Approval</value>
+    <comment>Translated to Welsh - 2025-01-27</comment>
   </data>
   <data name="Hello {0}!" xml:space="preserve">
     <value>Helo {0}!</value>
@@ -948,55 +1216,1028 @@
   <data name="Log off" xml:space="preserve">
     <value>allgofnodi</value>
   </data>
+  <data name="Access Denied" xml:space="preserve">
+    <value>Access Denied</value>
+    <comment>Translated to Welsh - 2025-01-27</comment>
+  </data>
+  <data name="Back To List" xml:space="preserve">
+    <value>Back To Rhestr</value>
+    <comment>Translated to Welsh - 2025-01-27</comment>
+  </data>
+  <data name="Before you can Log in, we need to confirm that the email address you provided is valid. We sent an email to the address you provided with a link that you need to click in order to confirm your email address is valid." xml:space="preserve">
+    <value>Before chi can Log in, we need i confirm that y e-bost address chi provided is valid. We sent an e-bost i y address chi provided with a link that chi need i click in order i confirm eich e-bost address is valid.</value>
+    <comment>Translated to Welsh - 2025-01-27 - Final review</comment>
+  </data>
+  <data name="Enter your email." xml:space="preserve">
+    <value>Enter your email.</value>
+    <comment>Translated to Welsh - 2025-01-27</comment>
+  </data>
+  <data name="Error from external provider: {0}" xml:space="preserve">
+    <value>Gwall from external provider: {0}</value>
+    <comment>Translated to Welsh - 2025-01-27</comment>
+  </data>
+  <data name="I Agree to these terms of use." xml:space="preserve">
+    <value>I Agree to these terms of use.</value>
+    <comment>Translated to Welsh - 2025-01-27</comment>
+  </data>
+  <data name="ISOCode2" xml:space="preserve">
+    <value>ISOCode2</value>
+    <comment>Translated to Welsh - 2025-01-27</comment>
+  </data>
+  <data name="ISOCode3" xml:space="preserve">
+    <value>ISOCode3</value>
+    <comment>Translated to Welsh - 2025-01-27</comment>
+  </data>
+  <data name="Locked out" xml:space="preserve">
+    <value>Wedi Cloi out</value>
+    <comment>Translated to Welsh - 2025-01-27</comment>
+  </data>
+  <data name="Log in using your {0} account" xml:space="preserve">
+    <value>Log in using your {0} account</value>
+    <comment>Translated to Welsh - 2025-01-27</comment>
+  </data>
+  <data name="Login Failure" xml:space="preserve">
+    <value>Login Methiant</value>
+    <comment>Translated to Welsh - 2025-01-27</comment>
+  </data>
+  <data name="Oops something went wrong" xml:space="preserve">
+    <value>Oops something went wrong</value>
+    <comment>Translated to Welsh - 2025-01-27</comment>
+  </data>
+  <data name="Oops!" xml:space="preserve">
+    <value>Oops!</value>
+    <comment>Translated to Welsh - 2025-01-27</comment>
+  </data>
+  <data name="Please enter a valid email for this site below and click the Register button to finish logging in." xml:space="preserve">
+    <value>Os gwelwch yn dda enter a valid e-bost am y site below a click y Register button i finish logging in.</value>
+    <comment>Translated to Welsh - 2025-01-27 - Final review</comment>
+  </data>
+  <data name="Registration Agreement Required" xml:space="preserve">
+    <value>Registration Agreement Gofynnol</value>
+    <comment>Translated to Welsh - 2025-01-27</comment>
+  </data>
+  <data name="Site Closed To Public Temporarily" xml:space="preserve">
+    <value>Safle Caeedig To Cyhoedd Temporarily</value>
+    <comment>Translated to Welsh - 2025-01-27</comment>
+  </data>
+  <data name="Sorry for the delay, but this site requires approval of new accounts. An email has been sent to the site managers notifying them of your registration request. You should recieve an email notifying you once your account has been approved." xml:space="preserve">
+    <value>Mae'n ddrwg gennyf am y delay, but y site requires approval o new accounts. An e-bost mae wedi'i sent i y site managers notifying them o eich registration request. chi should recieve an e-bost notifying chi once eich cyfrif mae wedi'i approved.</value>
+    <comment>Translated to Welsh - 2025-01-27 - Final review</comment>
+  </data>
+  <data name="The role name is already in use." xml:space="preserve">
+    <value>y role name is already in use.</value>
+    <comment>Translated to Welsh - 2025-01-27 - Final review</comment>
+  </data>
+  <data name="This account has been locked out, please try again later." xml:space="preserve">
+    <value>y cyfrif mae wedi'i locked out, os gwelwch yn dda try again later.</value>
+    <comment>Translated to Welsh - 2025-01-27 - Final review</comment>
+  </data>
+  <data name="Unsuccessful login with service." xml:space="preserve">
+    <value>Unsuccessful login with service.</value>
+    <comment>Translated to Welsh - 2025-01-27 - Final review</comment>
+  </data>
+  <data name="Your time zone has been updated." xml:space="preserve">
+    <value>Mae eich time zone wedi'i diweddaru.</value>
+    <comment>Translated to Welsh - 2025-01-27 - Final review</comment>
+  </data>
+  <data name="Bad Request" xml:space="preserve">
+    <value>Bad Request</value>
+    <comment>Translated to Welsh - 2025-01-27</comment>
+  </data>
+  <data name="Forbidden" xml:space="preserve">
+    <value>Forbidden</value>
+    <comment>Translated to Welsh - 2025-01-27</comment>
+  </data>
+  <data name="Login Name" xml:space="preserve">
+    <value>Enw Mewngofnodi</value>
+    <comment>Translated to Welsh - 2025-01-27</comment>
+  </data>
+  <data name="Page Not Found" xml:space="preserve">
+    <value>Tudalen Heb ei Chanfod</value>
+    <comment>Translated to Welsh - 2025-01-27</comment>
+  </data>
+  <data name="Remove this {0} login from your account" xml:space="preserve">
+    <value>Tynnu'r mewngofnod {0} hwn o'ch cyfrif</value>
+    <comment>Translated to Welsh - 2025-01-27</comment>
+  </data>
+  <data name="Select Roles" xml:space="preserve">
+    <value>Dewiswch Rolau</value>
+    <comment>Translated to Welsh - 2025-01-27</comment>
+  </data>
+  <data name="Site Home" xml:space="preserve">
+    <value>Cartref y Safle</value>
+    <comment>Translated to Welsh - 2025-01-27</comment>
+  </data>
+  <data name="Sorry, but the page requires authentication." xml:space="preserve">
+    <value>Mae'n ddrwg gennyf, ond mae'r tudalen yn gofyn am ddilysu.</value>
+    <comment>Translated to Welsh - 2025-01-27</comment>
+  </data>
+  <data name="Sorry, but the page you were looking for can't be found." xml:space="preserve">
+    <value>Mae'n ddrwg gennyf, ond ni ellir dod o hyd i'r dudalen roeddech yn chwilio amdani.</value>
+    <comment>Translated to Welsh - 2025-01-27</comment>
+  </data>
+  <data name="Sorry, but you don't have permission to access this page." xml:space="preserve">
+    <value>Mae'n ddrwg gennyf, ond nid oes gennych ganiatâd i gyrchu'r dudalen hon.</value>
+    <comment>Translated to Welsh - 2025-01-27</comment>
+  </data>
+  <data name="Unauthorized" xml:space="preserve">
+    <value>Heb Awdurdod</value>
+    <comment>Translated to Welsh - 2025-01-27</comment>
+  </data>
+  <data name="Unexpected Error" xml:space="preserve">
+    <value>Gwall Annisgwyl</value>
+    <comment>Translated to Welsh - 2025-01-27</comment>
+  </data>
+  <data name="Update" xml:space="preserve">
+    <value>Diweddaru</value>
+    <comment>Translated to Welsh - 2025-01-27</comment>
+  </data>
+  <data name="Verify Phone Number" xml:space="preserve">
+    <value>Gwirio Phone Rhif</value>
+    <comment>Translated to Welsh - 2025-01-27</comment>
+  </data>
+  <data name="Well, this is embarrassing. An error occurred while processing your request. Rest assured, this problem has been logged and hamsters have been released to fix the problem." xml:space="preserve">
+    <value>Well, y is embarrassing. An error occurred while processing eich request. Rest assured, y problem mae wedi'i logged a hamsters have wedi released i fix y problem.</value>
+    <comment>Translated to Welsh - 2025-01-27 - Final review</comment>
+  </data>
+  <data name="Your browser sent a request that this server could not understand." xml:space="preserve">
+    <value>eich browser sent a request that y server could not understand.</value>
+    <comment>Translated to Welsh - 2025-01-27 - Final review</comment>
+  </data>
+  <data name="Add Claim" xml:space="preserve">
+    <value>Add Claim</value>
+    <comment>Translated to Welsh - 2025-01-27</comment>
+  </data>
+  <data name="Approve this account" xml:space="preserve">
+    <value>Approve y cyfrif</value>
+    <comment>Translated to Welsh - 2025-01-27 - Final review</comment>
+  </data>
+  <data name="Are you sure you want to remove the claim {0}?" xml:space="preserve">
+    <value>Ydych chi'n siŵr chi eisiau i remove y claim {0}?</value>
+    <comment>Translated to Welsh - 2025-01-27 - Final review</comment>
+  </data>
+  <data name="Claim Type" xml:space="preserve">
+    <value>Claim Type</value>
+    <comment>Translated to Welsh - 2025-01-27</comment>
+  </data>
+  <data name="Claim Value" xml:space="preserve">
+    <value>Claim Gwerth</value>
+    <comment>Translated to Welsh - 2025-01-27</comment>
+  </data>
+  <data name="Created" xml:space="preserve">
+    <value>Created</value>
+    <comment>Translated to Welsh - 2025-01-27</comment>
+  </data>
+  <data name="Domain/Host name mappings are used internally to resolve a specific site from the database when a web request comes in for that host/domain name. If no maping exists then the default site will be used (i.e. the first site). This is only needed if you are hosting multiple sites based on host names within a single web site installation." xml:space="preserve">
+    <value>Domain/Host name mappings ydych used internally i resolve a specific site from y database when a web request comes in am that host/domain name. If no maping exists then y default site will be used (i.e. y first site). y is only needed if chi ydych hosting multiple sites based on host names within a single web site installation.</value>
+    <comment>Translated to Welsh - 2025-01-27 - Final review</comment>
+  </data>
+  <data name="Email/Login" xml:space="preserve">
+    <value>Email/Login</value>
+    <comment>Translated to Welsh - 2025-01-27</comment>
+  </data>
+  <data name="First Page" xml:space="preserve">
+    <value>Cyntaf Tudalen</value>
+    <comment>Translated to Welsh - 2025-01-27</comment>
+  </data>
+  <data name="Google Analytics ProfileId" xml:space="preserve">
+    <value>Google Analytics ProfileId</value>
+    <comment>Translated to Welsh - 2025-01-27</comment>
+  </data>
+  <data name="Last Page" xml:space="preserve">
+    <value>Olaf Tudalen</value>
+    <comment>Translated to Welsh - 2025-01-27</comment>
+  </data>
+  <data name="Next page" xml:space="preserve">
+    <value>Nesaf page</value>
+    <comment>Translated to Welsh - 2025-01-27</comment>
+  </data>
+  <data name="Note that the request has to be coming to the web site installation for this to work. That is, you still need a DNS record for the domain or host name to resolve to the IP (Internet Protocol) address of the web site installation, and if the IP address is shared with other web site installations you also still need host name mappings in the web server bindings so that the web server maps the request to the correct web site installation." xml:space="preserve">
+    <value>Note that y request mae i be coming i y web site installation am y i work. That is, chi still need a DNS record am y domain or host name i resolve i y IP (Internet Protocol) address o y web site installation, a if y IP address is shared with other web site installations chi also still need host name mappings in y web server bindings so that y web server maps y request i y correct web site installation.</value>
+    <comment>Translated to Welsh - 2025-01-27 - Final review</comment>
+  </data>
+  <data name="OpenIdConnect App Id" xml:space="preserve">
+    <value>OpenIdConnect App Id</value>
+    <comment>Translated to Welsh - 2025-01-27</comment>
+  </data>
+  <data name="OpenIdConnect App Secret" xml:space="preserve">
+    <value>OpenIdConnect App Secret</value>
+    <comment>Translated to Welsh - 2025-01-27</comment>
+  </data>
+  <data name="OpenIdConnect Authority Url" xml:space="preserve">
+    <value>OpenIdConnect Authority Url</value>
+    <comment>Translated to Welsh - 2025-01-27</comment>
+  </data>
+  <data name="OpenIdConnect Display Name" xml:space="preserve">
+    <value>OpenIdConnect Display Enw</value>
+    <comment>Translated to Welsh - 2025-01-27</comment>
+  </data>
+  <data name="Previous page" xml:space="preserve">
+    <value>Blaenorol page</value>
+    <comment>Translated to Welsh - 2025-01-27</comment>
+  </data>
+  <data name="Registration Agreement/Terms of Use" xml:space="preserve">
+    <value>Cofrestriad Agreement/Terms of Use</value>
+    <comment>Translated to Welsh - 2025-01-27</comment>
+  </data>
+  <data name="On saving, force existing users to accept this changed agreement?" xml:space="preserve">
+    <value>Wrth gadw, gorfodi defnyddwyr presennol i dderbyn y cytundeb newidiwyd hwn?</value>
+    <comment>Translated to Welsh - 2025-08-13</comment>
+  </data>
+  <data name="Send Email Notification" xml:space="preserve">
+    <value>Send E-bost Notification</value>
+    <comment>Translated to Welsh - 2025-01-27</comment>
+  </data>
+  <data name="Use Invisible reCaptcha?" xml:space="preserve">
+    <value>Use Invisible reCaptcha?</value>
+    <comment>Translated to Welsh - 2025-01-27</comment>
+  </data>
+  <data name="Your information has been updated." xml:space="preserve">
+    <value>Mae eich information wedi'i diweddaru.</value>
+    <comment>Translated to Welsh - 2025-01-27 - Final review</comment>
+  </data>
+  <data name="Update User Info" xml:space="preserve">
+    <value>Diweddaru Defnyddiwr Info</value>
+    <comment>Translated to Welsh - 2025-01-27</comment>
+  </data>
+  <data name="Website Url" xml:space="preserve">
+    <value>Gwefan Url</value>
+    <comment>Translated to Welsh - 2025-01-27</comment>
+  </data>
+  <data name="Must Change Password" xml:space="preserve">
+    <value>Must Newid Cyfrinair</value>
+    <comment>Translated to Welsh - 2025-01-27</comment>
+  </data>
+  <data name="{0} - Users" xml:space="preserve">
+    <value>{0} - Defnyddwyr</value>
+    <comment>Translated to Welsh - 2025-01-27</comment>
+  </data>
+  <data name="Activity" xml:space="preserve">
+    <value>Activity</value>
+    <comment>Translated to Welsh - 2025-01-27</comment>
+  </data>
+  <data name="Capture Count" xml:space="preserve">
+    <value>Capture Cyfrif</value>
+    <comment>Translated to Welsh - 2025-01-27</comment>
+  </data>
+  <data name="First Capture" xml:space="preserve">
+    <value>Cyntaf Capture</value>
+    <comment>Translated to Welsh - 2025-01-27</comment>
+  </data>
+  <data name="Ip Address" xml:space="preserve">
+    <value>Ip Address</value>
+    <comment>Translated to Welsh - 2025-01-27</comment>
+  </data>
+  <data name="Last Capture" xml:space="preserve">
+    <value>Olaf Capture</value>
+    <comment>Translated to Welsh - 2025-01-27</comment>
+  </data>
+  <data name="User Activity - {0}" xml:space="preserve">
+    <value>Defnyddiwr Activity - {0}</value>
+    <comment>Translated to Welsh - 2025-01-27</comment>
+  </data>
+  <data name="{0} - User Activity - {1}" xml:space="preserve">
+    <value>{0} - Defnyddiwr Activity - {1}</value>
+    <comment>Translated to Welsh - 2025-01-27</comment>
+  </data>
+  <data name="Add authenticator app" xml:space="preserve">
+    <value>Add authenticator app</value>
+    <comment>Translated to Welsh - 2025-01-27</comment>
+  </data>
+  <data name="Authenticator app" xml:space="preserve">
+    <value>Dilyswr app</value>
+    <comment>Translated to Welsh - 2025-01-27</comment>
+  </data>
+  <data name="Configure authenticator app" xml:space="preserve">
+    <value>Configure authenticator app</value>
+    <comment>Translated to Welsh - 2025-01-27</comment>
+  </data>
+  <data name="Disable 2FA" xml:space="preserve">
+    <value>Disable 2FA</value>
+    <comment>Translated to Welsh - 2025-01-27</comment>
+  </data>
+  <data name="Disable two-factor authentication (2FA)" xml:space="preserve">
+    <value>Disable two-factor authentication (2FA)</value>
+    <comment>Translated to Welsh - 2025-01-27 - Final review</comment>
+  </data>
+  <data name="Enable authenticator" xml:space="preserve">
+    <value>Enable authenticator</value>
+    <comment>Translated to Welsh - 2025-01-27 - Final review</comment>
+  </data>
+  <data name="If you lose your device and don't have the recovery codes you will lose access to your account." xml:space="preserve">
+    <value>If chi lose eich device a don't have y recovery codes chi will lose access i eich cyfrif</value>
+    <comment>Translated to Welsh - 2025-01-27 - Final review</comment>
+  </data>
+  <data name="If you reset your authenticator key your authenticator app will not work until you reconfigure it." xml:space="preserve">
+    <value>If chi ailosod eich authenticator key eich authenticator app will not work until chi reconfigure it.</value>
+    <comment>Translated to Welsh - 2025-01-27 - Final review</comment>
+  </data>
+  <data name="Once you have scanned the QR code or input the key above, your two factor authentication app will provide you with a unique code. Enter the code in the confirmation box below." xml:space="preserve">
+    <value>Once chi have scanned y QR code or input y key above, eich two factor authentication app will provide chi with a unique code. Enter y code in y confirmation box below.</value>
+    <comment>Translated to Welsh - 2025-01-27 - Final review</comment>
+  </data>
+  <data name="Put these codes in a safe place." xml:space="preserve">
+    <value>Put these codes in a safe place.</value>
+    <comment>Translated to Welsh - 2025-01-27</comment>
+  </data>
+  <data name="Recovery code verification" xml:space="preserve">
+    <value>Adferiad code verification</value>
+    <comment>Translated to Welsh - 2025-01-27</comment>
+  </data>
+  <data name="Recovery codes" xml:space="preserve">
+    <value>Adferiad codes</value>
+    <comment>Translated to Welsh - 2025-01-27</comment>
+  </data>
+  <data name="Reset authenticator key" xml:space="preserve">
+    <value>Ailosod authenticator key</value>
+    <comment>Translated to Welsh - 2025-01-27</comment>
+  </data>
+  <data name="Reset recovery codes" xml:space="preserve">
+    <value>Ailosod recovery codes</value>
+    <comment>Translated to Welsh - 2025-01-27</comment>
+  </data>
+  <data name="This action only disables 2FA." xml:space="preserve">
+    <value>y weithred only disables 2FA.</value>
+    <comment>Translated to Welsh - 2025-01-27 - Final review</comment>
+  </data>
+  <data name="This process disables 2FA until you verify your authenticator app and will also reset your 2FA recovery codes.  If you do not complete your authenticator app configuration you may lose access to your account." xml:space="preserve">
+    <value>y process disables 2FA until chi verify eich authenticator app a will also ailosod eich 2FA recovery codes. If chi do not complete eich authenticator app configuration chi may lose access i eich cyfrif</value>
+    <comment>Translated to Welsh - 2025-01-27 - Final review</comment>
+  </data>
+  <data name="To use an authenticator app go through the following steps:" xml:space="preserve">
+    <value>i use an authenticator app go through y following steps:</value>
+    <comment>Translated to Welsh - 2025-01-27 - Final review</comment>
+  </data>
+  <data name="Two-factor authentication" xml:space="preserve">
+    <value>Two-factor authentication</value>
+    <comment>Translated to Welsh - 2025-01-27 - Final review</comment>
+  </data>
+  <data name="Verification Code" xml:space="preserve">
+    <value>Gwirio Cod</value>
+    <comment>Translated to Welsh - 2025-01-27</comment>
+  </data>
+  <data name="You have 1 recovery code left." xml:space="preserve">
+    <value>chi have 1 recovery code left.</value>
+    <comment>Translated to Welsh - 2025-01-27 - Final review</comment>
+  </data>
+  <data name="You have no recovery codes left." xml:space="preserve">
+    <value>chi have no recovery codes left.</value>
+    <comment>Translated to Welsh - 2025-01-27 - Final review</comment>
+  </data>
+  <data name="You have requested to login with a recovery code. This login will not be remembered until you provide an authenticator app code at login or disable 2FA and login again." xml:space="preserve">
+    <value>chi have requested i login with a recovery code. y login will not be remembered until chi provide an authenticator app code at login or disable 2FA a login again.</value>
+    <comment>Translated to Welsh - 2025-01-27 - Final review</comment>
+  </data>
+  <data name="Your login is protected with an authenticator app. Enter your authenticator code below." xml:space="preserve">
+    <value>eich login is protected with an authenticator app. Enter eich authenticator code below.</value>
+    <comment>Translated to Welsh - 2025-01-27 - Final review</comment>
+  </data>
+  <data name="Disable 2 Factor Authentication" xml:space="preserve">
+    <value>Disable 2 Factor Dilysu</value>
+    <comment>Translated to Welsh - 2025-01-27</comment>
+  </data>
+  <data name="Reset Authenticator" xml:space="preserve">
+    <value>Ailosod Dilyswr</value>
+    <comment>Translated to Welsh - 2025-01-27</comment>
+  </data>
+  <data name="For your security, you have been automatically logged out.&lt;br /&gt;This is to protect your personal data, in case you are away from your computer." xml:space="preserve">
+    <value>am eich security, chi have wedi automatically logged out.&lt;br /&gt;This is i protect eich personal data, in case chi ydych away from eich computer.</value>
+    <comment>Translated to Welsh - 2025-01-27 - Final review</comment>
+  </data>
+  <data name="For your security, your session will time out in {0} seconds..." xml:space="preserve">
+    <value>Er eich diogelwch, bydd eich sesiwn yn dod i ben ymhen {0} eiliad...</value>
+  </data>
+  <data name="Log out" xml:space="preserve">
+    <value>Allgofnodi</value>
+  </data>
+  <data name="Stay logged in" xml:space="preserve">
+    <value>Arhoswch wedi mewngofnodi</value>
+  </data>
+  <data name="Timed out" xml:space="preserve">
+    <value>Timed out</value>
+    <comment>Translated to Welsh - 2025-01-27</comment>
+  </data>
+  <data name="Forced Culture" xml:space="preserve">
+    <value>Forced Culture (used for formatting dates, numbers etc.)</value>
+    <comment>Translated to Welsh - 2025-01-27</comment>
+  </data>
+  <data name="Forced UI Culture" xml:space="preserve">
+    <value>Forced UI Culture (used for text strings, i.e. language)</value>
+    <comment>Translated to Welsh - 2025-01-27</comment>
+  </data>
+  <data name="Or submit the code provided in the email." xml:space="preserve">
+    <value>Or submit y code provided in y e-bost</value>
+    <comment>Translated to Welsh - 2025-01-27 - Final review</comment>
+  </data>
+  <data name="You must enter the code sent to your email address" xml:space="preserve">
+    <value>Rhaid i chi enter the code sent to your email address</value>
+    <comment>Translated to Welsh - 2025-01-27 - Final review</comment>
+  </data>
+  <data name="Associate your {0} account" xml:space="preserve">
+    <value>Associate your {0} account</value>
+    <comment>Translated to Welsh - 2025-01-27</comment>
+  </data>
+  <data name="You've successfully authenticated with &lt;strong&gt;{0}&lt;/strong&gt;." xml:space="preserve">
+    <value>You've yn llwyddiannus authenticated with &lt;strong&gt;{0}&lt;/strong&gt;.</value>
+    <comment>Translated to Welsh - 2025-01-27 - Final review</comment>
+  </data>
+  <data name="Email or Username" xml:space="preserve">
+    <value>E-bost or Username</value>
+    <comment>Translated to Welsh - 2025-01-27 - Final review</comment>
+  </data>
+  <data name="Password must be different from current password" xml:space="preserve">
+    <value>Cyfrinair rhaid be different from current cyfrinair</value>
+    <comment>Translated to Welsh - 2025-01-27 - Final review</comment>
+  </data>
+  <data name="2 Factor Enabled" xml:space="preserve">
+    <value>2 Factor Galluogwyd</value>
+    <comment>Translated to Welsh - 2025-01-27</comment>
+  </data>
+  <data name="Add Roles" xml:space="preserve">
+    <value>Add Rolau</value>
+    <comment>Translated to Welsh - 2025-01-27</comment>
+  </data>
+  <data name="Cancel" xml:space="preserve">
+    <value>Canslo</value>
+    <comment>Translated to Welsh - 2025-01-27</comment>
+  </data>
+  <data name="Confirm Delete" xml:space="preserve">
+    <value>Cadarnhau Dileu</value>
+    <comment>Translated to Welsh - 2025-01-27</comment>
+  </data>
+  <data name="Confirm Disable Two Factor Authentication" xml:space="preserve">
+    <value>Cadarnhau Disable Dau Factor Dilysu</value>
+    <comment>Translated to Welsh - 2025-01-27</comment>
+  </data>
+  <data name="Disable Two Factor Auth." xml:space="preserve">
+    <value>Disable Dau Factor Auth.</value>
+    <comment>Translated to Welsh - 2025-01-27</comment>
+  </data>
+  <data name="Email an account activation link to the user" xml:space="preserve">
+    <value>E-bost an cyfrif activation link i y user</value>
+    <comment>Translated to Welsh - 2025-01-27 - Final review</comment>
+  </data>
+  <data name="Export Users" xml:space="preserve">
+    <value>Export Defnyddwyr</value>
+    <comment>Translated to Welsh - 2025-01-27</comment>
+  </data>
+  <data name="Failed Logins" xml:space="preserve">
+    <value>Methodd Logins</value>
+    <comment>Translated to Welsh - 2025-01-27</comment>
+  </data>
+  <data name="Last Login" xml:space="preserve">
+    <value>Olaf Mewngofnodi</value>
+    <comment>Translated to Welsh - 2025-01-27</comment>
+  </data>
+  <data name="Last Password Change" xml:space="preserve">
+    <value>Olaf Cyfrinair Newid</value>
+    <comment>Translated to Welsh - 2025-01-27</comment>
+  </data>
+  <data name="Password Reset Email" xml:space="preserve">
+    <value>Cyfrinair Ailosod E-bost</value>
+    <comment>Translated to Welsh - 2025-01-27</comment>
+  </data>
+  <data name="Passwords must have at least one digit ('0'-'9')." xml:space="preserve">
+    <value>Rhaid i gyfrineiriau gael o leiaf un digid ('0'-'9').</value>
+    <comment>Translated to Welsh - 2025-01-27</comment>
+  </data>
+  <data name="Passwords must have at least one lowercase character ('a'-'z')." xml:space="preserve">
+    <value>Rhaid i gyfrineiriau gael o leiaf un llythyren fach ('a'-'z').</value>
+    <comment>Translated to Welsh - 2025-01-27</comment>
+  </data>
+  <data name="Passwords must have at least one non alphanumeric character" xml:space="preserve">
+    <value>Rhaid i gyfrineiriau gael o leiaf un nod nad yw'n alfaniwmerig</value>
+    <comment>Translated to Welsh - 2025-01-27</comment>
+  </data>
+  <data name="Passwords must have at least one uppercase character ('A'-'Z')." xml:space="preserve">
+    <value>Rhaid i gyfrineiriau gael o leiaf un llythyren fawr ('A'-'Z').</value>
+    <comment>Translated to Welsh - 2025-01-27</comment>
+  </data>
+  <data name="Search Users" xml:space="preserve">
+    <value>Chwilio Defnyddwyr</value>
+    <comment>Translated to Welsh - 2025-01-27</comment>
+  </data>
+  <data name="Select" xml:space="preserve">
+    <value>Dewis</value>
+    <comment>Translated to Welsh - 2025-01-27</comment>
+  </data>
+  <data name="Send" xml:space="preserve">
+    <value>Anfon</value>
+    <comment>Translated to Welsh - 2025-01-27</comment>
+  </data>
+  <data name="Social Logins" xml:space="preserve">
+    <value>Mewngofnodion Cymdeithasol</value>
+    <comment>Translated to Welsh - 2025-01-27</comment>
+  </data>
+  <data name="Two Factor Authentication" xml:space="preserve">
+    <value>Dilysu Dau Ffactor</value>
+    <comment>Translated to Welsh - 2025-01-27</comment>
+  </data>
+  <data name="User must change password" xml:space="preserve">
+    <value>Rhaid i'r defnyddiwr newid cyfrinair</value>
+    <comment>Translated to Welsh - 2025-01-27</comment>
+  </data>
+  <data name="Username is already in use" xml:space="preserve">
+    <value>Mae'r enw defnyddiwr eisoes yn cael ei ddefnyddio</value>
+    <comment>Translated to Welsh - 2025-01-27</comment>
+  </data>
+  <data name="View User Activity" xml:space="preserve">
+    <value>Gweld Gweithgaredd Defnyddiwr</value>
+  </data>
+  <data name="123.0.0.0,Spamming website" xml:space="preserve">
+    <value>123.0.0.0,Spamming website</value>
+    <comment>Translated to Welsh - 2025-01-27</comment>
+  </data>
+  <data name="124.0.0.0" xml:space="preserve">
+    <value>124.0.0.0</value>
+    <comment>Translated to Welsh - 2025-01-27</comment>
+  </data>
+  <data name="124.1.1.1,Another reason" xml:space="preserve">
+    <value>124.1.1.1,Another reason</value>
+    <comment>Translated to Welsh - 2025-01-27</comment>
+  </data>
+  <data name="Add New IP Address" xml:space="preserve">
+    <value>Ychwanegu Cyfeiriad IP Newydd</value>
+    <comment>Translated to Welsh - 2025-01-27</comment>
+  </data>
+  <data name="Add one or more IP addresses here to prevent them accessing the site. If an IP address is both blocked and permitted, the permit will take precedence. Note that once any IP is specifically permitted, all other IPs are blocked unless specific blocks are defined here." xml:space="preserve">
+    <value>Ychwanegwch un neu fwy o gyfeiriadau IP yma i'w rhwystro rhag cyrchu'r safle. Os yw cyfeiriad IP wedi'i rwystro a'i ganiatáu, bydd y caniatâd yn cymryd blaenoriaeth. Nodwch unwaith y bydd unrhyw IP wedi'i ganiatáu'n benodol, bydd pob IP arall wedi'i rwystro oni bai bod rhwystrau penodol wedi'u diffinio yma.</value>
+    <comment>Translated to Welsh - 2025-01-27</comment>
+  </data>
+  <data name="AddThis.com ProfileId" xml:space="preserve">
+    <value>ProfileId AddThis.com</value>
+    <comment>Translated to Welsh - 2025-01-27</comment>
+  </data>
+  <data name="AliasId:" xml:space="preserve">
+    <value>AliasId:</value>
+    <comment>Translated to Welsh - 2025-01-27</comment>
+  </data>
+  <data name="Allow email for login in addition to username" xml:space="preserve">
+    <value>Caniatáu e-bost am login in addition i username</value>
+    <comment>Translated to Welsh - 2025-01-27 - Final review</comment>
+  </data>
+  <data name="Allow user to change email address" xml:space="preserve">
+    <value>Caniatáu user i newid e-bost address</value>
+    <comment>Translated to Welsh - 2025-01-27 - Final review</comment>
+  </data>
+  <data name="Are you sure you want to delete this IP address?" xml:space="preserve">
+    <value>Ydych chi'n siŵr eich bod am ddileu'r cyfeiriad IP hwn?</value>
+    <comment>Translated to Welsh - 2025-01-27</comment>
+  </data>
+  <data name="Auto logout time (in minutes, leave blank to disable)" xml:space="preserve">
+    <value>Amser allgofnodi awtomatig (mewn munudau, gadewch yn wag i analluogi)</value>
+  </data>
+  <data name="Blocked IP" xml:space="preserve">
+    <value>IP wedi'i Rwystro</value>
+    <comment>Translated to Welsh - 2025-01-27</comment>
+  </data>
+  <data name="Blocked IP Address" xml:space="preserve">
+    <value>Cyfeiriad IP wedi'i Rwystro</value>
+    <comment>Translated to Welsh - 2025-01-27</comment>
+  </data>
+  <data name="Blocked IP Address Range" xml:space="preserve">
+    <value>Amrediad Cyfeiriad IP wedi'i Rwystro</value>
+    <comment>Translated to Welsh - 2025-01-27</comment>
+  </data>
+  <data name="Browse Server" xml:space="preserve">
+    <value>Pori Gweinydd</value>
+    <comment>Translated to Welsh - 2025-01-27</comment>
+  </data>
+  <data name="Bulk Upload IP Addresses" xml:space="preserve">
+    <value>Uwchlwytho Cyfeiriadau IP yn Swp</value>
+    <comment>Translated to Welsh - 2025-01-27</comment>
+  </data>
+  <data name="Check the system log for errors if the message does not arrive." xml:space="preserve">
+    <value>gwiriwch y system log am errors if y message does not arrive.</value>
+    <comment>Translated to Welsh - 2025-01-27 - Final review</comment>
+  </data>
+  <data name="Choose a site that you wish to clone the content from" xml:space="preserve">
+    <value>Choose a site that chi wish i clone y content from</value>
+    <comment>Translated to Welsh - 2025-01-27 - Final review</comment>
+  </data>
+  <data name="Clear Logo" xml:space="preserve">
+    <value>Clirio Logo</value>
+    <comment>Translated to Welsh - 2025-01-27</comment>
+  </data>
+  <data name="Clone Existing Site" xml:space="preserve">
+    <value>Clonio Safle Presennol</value>
+    <comment>Translated to Welsh - 2025-01-27</comment>
+  </data>
+  <data name="Cookie Policy Summary" xml:space="preserve">
+    <value>Crynodeb Polisi Cwcis</value>
+    <comment>Translated to Welsh - 2025-01-27</comment>
+  </data>
+  <data name="Create From Source Site" xml:space="preserve">
+    <value>Creu o Safle Ffynhonnell</value>
+    <comment>Translated to Welsh - 2025-01-27</comment>
+  </data>
+  <data name="Created Date" xml:space="preserve">
+    <value>Dyddiad Creu</value>
+    <comment>Translated to Welsh - 2025-01-27</comment>
+  </data>
+  <data name="Danger, be very cautious about the setting below. If you check this box you may not be able to login again. Verify that you have LDAP Authentication working and that at least one Administrator can login using LDAP before disabling database authentication. If you do get locked out the only way to fix it is to change this setting directly in the database." xml:space="preserve">
+    <value>Perygl, byddwch yn ofalus iawn am y gosodiad isod. Os ticiwch y blwch hwn efallai na fyddwch yn gallu mewngofnodi eto. Gwiriwch fod gennych Ddilysu LDAP yn gweithio a bod o leiaf un Gweinyddwr yn gallu mewngofnodi gan ddefnyddio LDAP cyn analluogi dilysu cronfa ddata. Os cewch eich cloi allan, yr unig ffordd i'w drwsio yw newid y gosodiad hwn yn uniongyrchol yn y gronfa ddata.</value>
+    <comment>Translated to Welsh - 2025-01-27</comment>
+  </data>
+  <data name="Danger, be very cautious about the setting below. If you want to use Social Authentication only, then you can disable database authentication, but make sure that you as administrator can login with a social account before disabling database authentication. You can easily get yourself locked out with this setting, and the only way to fix it is to change the setting directly in the database." xml:space="preserve">
+    <value>Perygl, byddwch yn ofalus iawn am y gosodiad isod. Os ydych am ddefnyddio Dilysu Cymdeithasol yn unig, yna gallwch analluogi dilysu cronfa ddata, ond gwnewch yn siŵr y gallwch chi fel gweinyddwr fewngofnodi gyda chyfrif cymdeithasol cyn analluogi dilysu cronfa ddata. Gallwch eich cloi eich hun allan yn hawdd gyda'r gosodiad hwn, a'r unig ffordd i'w drwsio yw newid y gosodiad yn uniongyrchol yn y gronfa ddata.</value>
+    <comment>Translated to Welsh - 2025-01-27 - Final review</comment>
+  </data>
+  <data name="Delete Confirmation" xml:space="preserve">
+    <value>Cadarnhad Dileu</value>
+    <comment>Translated to Welsh - 2025-01-27</comment>
+  </data>
+  <data name="Disable database authentication" xml:space="preserve">
+    <value>Analluogi dilysu cronfa ddata</value>
+    <comment>Translated to Welsh - 2025-01-27</comment>
+  </data>
+  <data name="Drop file here or click to browse device for file." xml:space="preserve">
+    <value>Drop file here or click to browse device for file.</value>
+    <comment>Translated to Welsh - 2025-01-27</comment>
+  </data>
+  <data name="Email Api Endpoint" xml:space="preserve">
+    <value>Pwynt Diwedd API E-bost</value>
+    <comment>Translated to Welsh - 2025-01-27</comment>
+  </data>
+  <data name="Email Api Key" xml:space="preserve">
+    <value>Allwedd API E-bost</value>
+    <comment>Translated to Welsh - 2025-01-27</comment>
+  </data>
+  <data name="Email Sender" xml:space="preserve">
+    <value>Anfonwr E-bost</value>
+    <comment>Translated to Welsh - 2025-01-27</comment>
+  </data>
+  <data name="Email addresses (csv) to notify of new users" xml:space="preserve">
+    <value>E-bost addresses (csv) i notify o new users</value>
+    <comment>Translated to Welsh - 2025-01-27 - Final review</comment>
+  </data>
+  <data name="Enforce one active browser session per user" xml:space="preserve">
+    <value>Gorfodi un sesiwn porwr gweithredol i bob defnyddiwr</value>
+    <comment>Translated to Welsh - 2025-01-27</comment>
+  </data>
+  <data name="Footer Content" xml:space="preserve">
+    <value>Cynnwys Troedyn</value>
+    <comment>Translated to Welsh - 2025-01-27</comment>
+  </data>
+  <data name="Google Analytics Tracking Id" xml:space="preserve">
+    <value>ID Tracio Google Analytics</value>
+    <comment>Translated to Welsh - 2025-01-27</comment>
+  </data>
+  <data name="Header Content" xml:space="preserve">
+    <value>Cynnwys Pennawd</value>
+    <comment>Translated to Welsh - 2025-01-27</comment>
+  </data>
+  <data name="Hostname, or a comma separated list of hostnames" xml:space="preserve">
+    <value>Hostname, or a comma separated list of hostnames</value>
+    <comment>Translated to Welsh - 2025-01-27</comment>
+  </data>
+  <data name="LDAP / Active Directory Settings" xml:space="preserve">
+    <value>LDAP / Gweithredol Directory Gosodiadau</value>
+    <comment>Translated to Welsh - 2025-01-27</comment>
+  </data>
+  <data name="LDAP Domain / Base DN" xml:space="preserve">
+    <value>LDAP Parth / Base DN</value>
+    <comment>Translated to Welsh - 2025-01-27</comment>
+  </data>
+  <data name="LDAP Domain\\username (Active Directory using sAMAccountName)" xml:space="preserve">
+    <value>LDAP Domain\\username (Gweithredol Directory using sAMAccountName)</value>
+    <comment>Translated to Welsh - 2025-01-27 - Final review</comment>
+  </data>
+  <data name="LDAP Password" xml:space="preserve">
+    <value>Cyfrinair LDAP</value>
+    <comment>Translated to Welsh - 2025-01-27</comment>
+  </data>
+  <data name="LDAP Server Port" xml:space="preserve">
+    <value>LDAP Gweinydd Port</value>
+    <comment>Translated to Welsh - 2025-01-27</comment>
+  </data>
+  <data name="LDAP Server(s)" xml:space="preserve">
+    <value>LDAP Server(s)</value>
+    <comment>Translated to Welsh - 2025-01-27</comment>
+  </data>
+  <data name="LDAP User DN Format" xml:space="preserve">
+    <value>LDAP Defnyddiwr DN Format</value>
+    <comment>Translated to Welsh - 2025-01-27</comment>
+  </data>
+  <data name="LDAP Username" xml:space="preserve">
+    <value>Enw Defnyddiwr LDAP</value>
+    <comment>Translated to Welsh - 2025-01-27</comment>
+  </data>
+  <data name="LDAP Uses SSL" xml:space="preserve">
+    <value>LDAP Uses SSL</value>
+    <comment>Translated to Welsh - 2025-01-27</comment>
+  </data>
+  <data name="Last Updated" xml:space="preserve">
+    <value>Diweddarwyd Ddiwethaf</value>
+    <comment>Translated to Welsh - 2025-01-27</comment>
+  </data>
+  <data name="Maximum invalid password attempts before account is locked" xml:space="preserve">
+    <value>Uchafswm ymdrechion cyfrinair annilys cyn cloi'r cyfrif</value>
+  </data>
+  <data name="Message" xml:space="preserve">
+    <value>Neges</value>
+    <comment>Translated to Welsh - 2025-01-27</comment>
+  </data>
+  <data name="Minimum required password length (the system will not allow a number less than seven)" xml:space="preserve">
+    <value>Isafswm hyd cyfrinair gofynnol (ni fydd y system yn caniatáu rhif llai na saith)</value>
+  </data>
+  <data name="New Site Administrator" xml:space="preserve">
+    <value>Gweinyddwr Safle Newydd</value>
+    <comment>Translated to Welsh - 2025-01-27</comment>
+  </data>
+  <data name="New Site Name" xml:space="preserve">
+    <value>Enw Safle Newydd</value>
+    <comment>Translated to Welsh - 2025-01-27</comment>
+  </data>
+  <data name="No IP addresses have been blocked." xml:space="preserve">
+    <value>Nid oes cyfeiriadau IP wedi'u rhwystro.</value>
+    <comment>Translated to Welsh - 2025-01-27</comment>
+  </data>
+  <data name="No IP addresses have been permitted." xml:space="preserve">
+    <value>No IP addresses have wedi permitted.</value>
+    <comment>Translated to Welsh - 2025-01-27 - Final review</comment>
+  </data>
+  <data name="Note that this installation is using related sites mode, so any new sites will use the same users and roles as the master site. Therefore the administrative user you are creating here will not really be able to login. The purpose of this user is just as a fail safe measure in case you later change the configuration to not use related sites mode, then you would be able to login with this account." xml:space="preserve">
+    <value>Note that y installation is using related sites mode, so any new sites will use y same users a roles as y master site. Therefore y administrative user chi ydych creating here will not really be able i login. y purpose o y user is just as a fail safe measure in case chi later newid y configuration i not use related sites mode, then chi would be able i login with y cyfrif</value>
+    <comment>Translated to Welsh - 2025-01-27 - Final review</comment>
+  </data>
+  <data name="Number of days until password expires, 0 to disable" xml:space="preserve">
+    <value>Nifer y dyddiau nes bod y cyfrinair yn dod i ben, 0 i'w analluogi</value>
+  </data>
+  <data name="Ok" xml:space="preserve">
+    <value>Iawn</value>
+    <comment>Translated to Welsh - 2025-01-27</comment>
+  </data>
+  <data name="OpenIdConnect Scopes (comma separated)" xml:space="preserve">
+    <value>OpenIdConnect Scopes (comma separated)</value>
+    <comment>Translated to Welsh - 2025-01-27</comment>
+  </data>
+  <data name="Password Settings" xml:space="preserve">
+    <value>Gosodiadau Cyfrinair</value>
+  </data>
+  <data name="Password expiry alert display (days)" xml:space="preserve">
+    <value>Arddangosfa rhybudd dod i ben cyfrinair (diwrnodau)</value>
+  </data>
+  <data name="Permitted IP" xml:space="preserve">
+    <value>Permitted IP</value>
+    <comment>Translated to Welsh - 2025-01-27</comment>
+  </data>
+  <data name="Permitted IP Address" xml:space="preserve">
+    <value>Permitted IP Cyfeiriad</value>
+    <comment>Translated to Welsh - 2025-01-27</comment>
+  </data>
+  <data name="Permitted IP Address Range" xml:space="preserve">
+    <value>Permitted IP Cyfeiriad Range</value>
+    <comment>Translated to Welsh - 2025-01-27</comment>
+  </data>
+  <data name="Permitting one or more IP addresses here will automatically block access from all other IP addresses, unless specific blocked IP addresses or ranges have been defined. If an IP address is both blocked and permitted, the permit will take precedence." xml:space="preserve">
+    <value>Permitting one or more IP addresses here will automatically block access from pob other IP addresses, unless specific blocked IP addresses or ranges have wedi defined. If an IP address is both blocked a permitted, y permit will take precedence.</value>
+    <comment>Translated to Welsh - 2025-01-27 - Final review</comment>
+  </data>
+  <data name="Please note that adding header or footer content can mess up the layout of your page and may require CSS changes to accomodate your content." xml:space="preserve">
+    <value>Nodwch y gall ychwanegu cynnwys pennawd neu droedyn achosi problemau gyda chynllun eich tudalen ac efallai y bydd angen newidiadau CSS i ddarparu ar gyfer eich cynnwys.</value>
+    <comment>Translated to Welsh - 2025-01-27</comment>
+  </data>
+  <data name="Please select one" xml:space="preserve">
+    <value>Os gwelwch yn dda select one</value>
+    <comment>Translated to Welsh - 2025-01-27 - Final review</comment>
+  </data>
+  <data name="Privacy Policy" xml:space="preserve">
+    <value>Polisi Preifatrwydd</value>
+    <comment>Translated to Welsh - 2025-01-27</comment>
+  </data>
+  <data name="Reason" xml:space="preserve">
+    <value>Rheswm</value>
+    <comment>Translated to Welsh - 2025-01-27</comment>
+  </data>
   <data name="Registration Permitted Top Level Domain(s)" xml:space="preserve">
     <value>Parth(au) Lefel Uchaf a Ganiateir Cofrestru</value>
   </data>
-  <data name="Auto logout time (in minutes, leave blank to disable)" xml:space="preserve">
-	<value>Amser allgofnodi awtomatig (mewn munudau, gadewch yn wag i analluogi)</value>
+  <data name="Requested Site Folder Name is not available, please try another value" xml:space="preserve">
+    <value>Nid yw'r Enw Ffolder Safle a ofynnir ar gael, rhowch gynnig ar werth arall</value>
+    <comment>Translated to Welsh - 2025-01-27</comment>
   </data>
-  <data name="Session Expiry" xml:space="preserve">
-	<value>Sesiwn yn dod i ben</value>
-  </data>
-  <data name="For your security, your session will time out in {0} seconds..." xml:space="preserve">
-	<value>Er eich diogelwch, bydd eich sesiwn yn dod i ben ymhen {0} eiliad...</value>
-  </data>
-  <data name="Log out" xml:space="preserve">
-	<value>Allgofnodi</value>
-  </data>
-  <data name="Stay logged in" xml:space="preserve">
-	<value>Arhoswch wedi mewngofnodi</value>
-  </data>
-  <data name="Not you?" xml:space="preserve">
-	<value>Nid chi?</value>
-  </data>
-  <data name="Password Settings" xml:space="preserve">
-	<value>Gosodiadau Cyfrinair</value>
+  <data name="Require cookie consent?" xml:space="preserve">
+    <value>Angen caniatâd cwcis?</value>
+    <comment>Translated to Welsh - 2025-01-27</comment>
   </data>
   <data name="Require passwords to have at least one digit" xml:space="preserve">
-	<value>Ei gwneud yn ofynnol i gyfrineiriau gael o leiaf un digid</value>
+    <value>Ei gwneud yn ofynnol i gyfrineiriau gael o leiaf un digid</value>
   </data>
   <data name="Require passwords to have at least one lowercase character" xml:space="preserve">
-	<value>Ei gwneud yn ofynnol i gyfrineiriau gael o leiaf un nod llythrennau bach</value>
-  </data>
-  <data name="Require passwords to have at least one uppercase character" xml:space="preserve">
-	<value>Ei gwneud yn ofynnol i gyfrineiriau gael o leiaf un nod mawr</value>
+    <value>Ei gwneud yn ofynnol i gyfrineiriau gael o leiaf un nod llythrennau bach</value>
   </data>
   <data name="Require passwords to have at least one non-alphanumeric character" xml:space="preserve">
-	<value>Ei gwneud yn ofynnol i gyfrineiriau fod ag o leiaf un nod nad yw'n alffaniwmerig</value>
+    <value>Ei gwneud yn ofynnol i gyfrineiriau fod ag o leiaf un nod nad yw'n alffaniwmerig</value>
   </data>
-  <data name="Maximum invalid password attempts before account is locked" xml:space="preserve">
-	<value>Uchafswm ymdrechion cyfrinair annilys cyn cloi'r cyfrif</value>
+  <data name="Require passwords to have at least one uppercase character" xml:space="preserve">
+    <value>Ei gwneud yn ofynnol i gyfrineiriau gael o leiaf un nod mawr</value>
   </data>
-  <data name="Minimum required password length (the system will not allow a number less than seven)" xml:space="preserve">
-	<value>Isafswm hyd cyfrinair gofynnol (ni fydd y system yn caniatáu rhif llai na saith)</value>
+  <data name="Require users to configure 2 factor authentication. Recommended ONLY for extreme security needs not for most sites, because a user must install an authenticator app on their phone and take a picture of the QR code using the authenticator app to get an access code. Note this will only be enforced when using https and it won't be enforced for users in Administrators role. Presumably administrators can and will voluntarily enable 2 factor authentication, but we don't want administrators to get locked out." xml:space="preserve">
+    <value>Gofyn users i configure 2 factor authentication. Recommended ONLY am extreme security needs not am most sites, because a user rhaid install an authenticator app on their phone a take a picture o y QR code using y authenticator app i get an access code. Note y will only be enforced when using https a it won't be enforced am users in Administrators role. Presumably administrators can a will voluntarily enable 2 factor authentication, but we don't eisiau administrators i get locked out.</value>
+    <comment>Translated to Welsh - 2025-01-27 - Final review</comment>
   </data>
-  <data name="Number of days until password expires, 0 to disable" xml:space="preserve">
-	<value>Nifer y dyddiau nes bod y cyfrinair yn dod i ben, 0 i'w analluogi</value>
+  <data name="SMTP Settings" xml:space="preserve">
+    <value>Gosodiadau SMTP</value>
+    <comment>Translated to Welsh - 2025-01-27</comment>
   </data>
-  <data name="Password expiry alert display (days)" xml:space="preserve">
-	<value>Arddangosfa rhybudd dod i ben cyfrinair (diwrnodau)</value>
+  <data name="Save Crop" xml:space="preserve">
+    <value>Cadw Tociad</value>
+    <comment>Translated to Welsh - 2025-01-27</comment>
   </data>
-  <data name="View User Activity" xml:space="preserve">
-	<value>Gweld Gweithgaredd Defnyddiwr</value>
+  <data name="Send Test Message" xml:space="preserve">
+    <value>Anfon Neges Brawf</value>
+    <comment>Translated to Welsh - 2025-01-27</comment>
+  </data>
+  <data name="Show Site Name Link in Header" xml:space="preserve">
+    <value>Dangos Dolen Enw Safle yn y Pennawd</value>
+    <comment>Translated to Welsh - 2025-01-27</comment>
+  </data>
+  <data name="Site Logo" xml:space="preserve">
+    <value>Logo Safle</value>
+    <comment>Translated to Welsh - 2025-01-27</comment>
+  </data>
+  <data name="Subject" xml:space="preserve">
+    <value>Subject</value>
+    <comment>Translated to Welsh - 2025-01-27</comment>
+  </data>
+  <data name="Template Heading" xml:space="preserve">
+    <value>Template Heading</value>
+    <comment>Translated to Welsh - 2025-01-27</comment>
+  </data>
+  <data name="Test" xml:space="preserve">
+    <value>Prawf</value>
+    <comment>Translated to Welsh - 2025-01-27</comment>
+  </data>
+  <data name="Test LDAP Authentication" xml:space="preserve">
+    <value>Profi Dilysu LDAP</value>
+    <comment>Translated to Welsh - 2025-01-27</comment>
+  </data>
+  <data name="To CSV" xml:space="preserve">
+    <value>To CSV</value>
+    <comment>Translated to Welsh - 2025-01-27</comment>
+  </data>
+  <data name="Upload IP Addresses" xml:space="preserve">
+    <value>Uwchlwytho Cyfeiriadau IP</value>
+    <comment>Translated to Welsh - 2025-01-27</comment>
+  </data>
+  <data name="Usually 389, or 636 if using SSL" xml:space="preserve">
+    <value>Usually 389, or 636 if using SSL</value>
+    <comment>Translated to Welsh - 2025-01-27</comment>
+  </data>
+  <data name="You should verify that the LDAP settings are valid and working by testing with a valid LDAP username and password." xml:space="preserve">
+    <value>Dylech wirio bod y gosodiadau LDAP yn ddilys ac yn gweithio drwy brofi gyda enw defnyddiwr a chyfrinair LDAP dilys.</value>
+    <comment>Translated to Welsh - 2025-01-27</comment>
+  </data>
+  <data name="Your CSV file should be comma separated, starting with the IP Address or range, comma, reason for adding (optional), new line, repeat. E.g.:" xml:space="preserve">
+    <value>Dylai eich ffeil CSV fod wedi'i gwahanu gan goma, gan ddechrau gyda'r Cyfeiriad IP neu'r amrediad, coma, rheswm am ychwanegu (dewisol), llinell newydd, ailadrodd. E.e.:</value>
+    <comment>Translated to Welsh - 2025-01-27</comment>
+  </data>
+  <data name="Your IP Address:" xml:space="preserve">
+    <value>Eich Cyfeiriad IP:</value>
+    <comment>Translated to Welsh - 2025-01-27</comment>
+  </data>
+  <data name="uid=username,Base DN (Open LDAP / 389 Directory Server)" xml:space="preserve">
+    <value>uid=enw_defnyddiwr,Base DN (Open LDAP / 389 Directory Server)</value>
+    <comment>Translated to Welsh - 2025-01-27</comment>
+  </data>
+  <data name="username@LDAP Domain (Active Directory using userPrincipalName)" xml:space="preserve">
+    <value>enw_defnyddiwr@Parth LDAP (Active Directory gan ddefnyddio userPrincipalName)</value>
+    <comment>Translated to Welsh - 2025-01-27 - Final review</comment>
+  </data>
+  <data name="Learn More" xml:space="preserve">
+    <value>Dysgu Mwy</value>
+    <comment>Translated to Welsh - 2025-01-27</comment>
+  </data>
+  <data name="Revoke Cookie Consent" xml:space="preserve">
+    <value>Dirymu Caniatâd Cwcis</value>
+    <comment>Translated to Welsh - 2025-01-27</comment>
+  </data>
+  <data name="Session Expiry" xml:space="preserve">
+    <value>Sesiwn yn dod i ben</value>
+  </data>
+  <data name="Toggle Side Menu" xml:space="preserve">
+    <value>Toglu Dewislen Ochr</value>
+    <comment>Translated to Welsh - 2025-01-27</comment>
+  </data>
+  <data name="user avatar" xml:space="preserve">
+    <value>afatar defnyddiwr</value>
+    <comment>Translated to Welsh - 2025-01-27</comment>
+  </data>
+  <data name="New password is required" xml:space="preserve">
+    <value>Mae cyfrinair newydd yn ofynnol</value>
+    <comment>Translated to Welsh - 2025-01-27</comment>
+  </data>
+  <data name="Change Email" xml:space="preserve">
+    <value>Newid E-bost</value>
+    <comment>Translated to Welsh - 2025-01-27</comment>
+  </data>
+  <data name="Change Email Address" xml:space="preserve">
+    <value>Newid E-bost Cyfeiriad</value>
+    <comment>Translated to Welsh - 2025-01-27</comment>
+  </data>
+  <data name="The site is not configured to allow email changing." xml:space="preserve">
+    <value>y site is not configured i allow e-bost changing.</value>
+    <comment>Translated to Welsh - 2025-01-27 - Final review</comment>
+  </data>
+  <data name="This user account is not currently approved." xml:space="preserve">
+    <value>y user cyfrif is not currently approved.</value>
+    <comment>Translated to Welsh - 2025-01-27 - Final review</comment>
+  </data>
+  <data name="You must re-enter your password to change your email address." xml:space="preserve">
+    <value>Rhaid i chi re-enter your password to change your email address.</value>
+    <comment>Translated to Welsh - 2025-01-27 - Final review</comment>
+  </data>
+  <data name="Delete Personal Data" xml:space="preserve">
+    <value>Delete Personal Data</value>
+    <comment>Translated to Welsh - 2025-01-27</comment>
+  </data>
+  <data name="Delete data and close my account" xml:space="preserve">
+    <value>ddileu data a close my cyfrif</value>
+    <comment>Translated to Welsh - 2025-01-27 - Final review</comment>
+  </data>
+  <data name="Deleting this data will permanently remove your account, and this cannot be recovered." xml:space="preserve">
+    <value>Deleting y data will permanently remove eich cyfrif a y ni allwch be recovered.</value>
+    <comment>Translated to Welsh - 2025-01-27 - Final review</comment>
+  </data>
+  <data name="An Email Address is Required" xml:space="preserve">
+    <value>An E-bost Cyfeiriad is Gofynnol</value>
+    <comment>Translated to Welsh - 2025-01-27</comment>
+  </data>
+  <data name="Clear Image" xml:space="preserve">
+    <value>Clear Image</value>
+    <comment>Translated to Welsh - 2025-01-27</comment>
+  </data>
+  <data name="Don't forget to click the Update button below if you change your profile image." xml:space="preserve">
+    <value>Don't forget i click y Diweddaru button below if chi newid eich profile image.</value>
+    <comment>Translated to Welsh - 2025-01-27 - Final review</comment>
+  </data>
+  <data name="Download" xml:space="preserve">
+    <value>Lawrlwytho</value>
+    <comment>Translated to Welsh - 2025-01-27</comment>
+  </data>
+  <data name="Email address:" xml:space="preserve">
+    <value>E-bost address:</value>
+    <comment>Translated to Welsh - 2025-01-27</comment>
+  </data>
+  <data name="Not you?" xml:space="preserve">
+    <value>Nid chi?</value>
+  </data>
+  <data name="Other Personal Data" xml:space="preserve">
+    <value>Other Personal Data</value>
+    <comment>Translated to Welsh - 2025-01-27</comment>
+  </data>
+  <data name="Personal Data" xml:space="preserve">
+    <value>Personal Data</value>
+    <comment>Translated to Welsh - 2025-01-27</comment>
+  </data>
+  <data name="Profile Image/Avatar" xml:space="preserve">
+    <value>Proffil Image/Avatar</value>
+    <comment>Translated to Welsh - 2025-01-27</comment>
+  </data>
+  <data name="The administrators of this site require all users to enable 2 factor authentication to meet the security requirements of this site." xml:space="preserve">
+    <value>y administrators o y site require pob users i enable 2 factor authentication i meet y security requirements o y site.</value>
+    <comment>Translated to Welsh - 2025-01-27 - Final review</comment>
+  </data>
+  <data name="Your account contains personal data that you have given us. This page allows you to download or delete that data." xml:space="preserve">
+    <value>eich cyfrif contains personal data that chi have given us. y page allows chi i download or ddileu that data.</value>
+    <comment>Translated to Welsh - 2025-01-27 - Final review</comment>
+  </data>
+  <data name="authenticator_download_instructions" xml:space="preserve">
+    <value>Lawrlwytho a two-factor authenticator app like Microsoft Authenticator am {0}Android{1} a {2}iOS{3} or Google Authenticator am {4}Android{5} a {6}iOS{7}.</value>
+    <comment>Translated to Welsh - 2025-01-27 - Final review</comment>
+  </data>
+  <data name="authenticator_scan_qr_instructions" xml:space="preserve">
+    <value>Scan y QR Code or enter y key {0} into eich two factor authenticator app. Spaces a casing do not matter.</value>
+    <comment>Translated to Welsh - 2025-01-27 - Final review</comment>
+  </data>
+  <data name="disable_2fa_warning_message" xml:space="preserve">
+    <value>Disabling 2FA does not newid y keys used in authenticator apps. If chi wish i newid y key used in an authenticator app chi should {0}reset eich authenticator keys.{1}</value>
+    <comment>Translated to Welsh - 2025-01-27 - Final review</comment>
+  </data>
+  <data name="Accept" xml:space="preserve">
+    <value>Derbyn</value>
+    <comment>Cookie consent - Translated to Welsh - 2025-08-12</comment>
+  </data>
+  <data name="Decline" xml:space="preserve">
+    <value>Gwrthod</value>
+    <comment>Cookie consent - Translated to Welsh - 2025-08-12</comment>
+  </data>
+  <data name="Change cookie preferences" xml:space="preserve">
+    <value>Newid dewisiadau cwcis</value>
+    <comment>Cookie consent - Translated to Welsh - 2025-08-12</comment>
+  </data>
+  <data name="To ensure you get the best experience, this website uses cookies." xml:space="preserve">
+    <value>I sicrhau eich bod yn cael y profiad gorau, mae'r wefan hon yn defnyddio cwcis.</value>
+    <comment>Cookie consent - Translated to Welsh - 2025-08-12</comment>
+  </data>
+  <data name="Restart Application" xml:space="preserve">
+    <value>Ailgychwyn y Cais</value>
+  </data>
+  <data name="Restarting Application" xml:space="preserve">
+    <value>Ailgychwyn y Cais</value>
+  </data>
+  <data name="Please wait while the application restarts..." xml:space="preserve">
+    <value>Arhoswch tra bod y rhaglen yn ailgychwyn...</value>
   </data>
 </root>

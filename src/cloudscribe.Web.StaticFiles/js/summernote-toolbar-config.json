@@ -1,0 +1,30 @@
+ [
+		[
+			"style", ["style"]
+		],
+		[
+			"font",	["bold", "italic", "underline", "strikethrough", "superscript", "subscript", "hr", "clear"]
+		],
+		[
+			"color", []
+		],
+		[
+			"para",	["ul", "ol", "paragraph"]
+		],
+		[
+			"table", ["table"]
+		],
+		[
+			"insert",	["link", "picture", "video"]
+		],
+		[
+			"view",	["fullscreen", "codeview", "undo", "redo", "help"]
+		],
+		[
+			"custom",	[]
+		],
+		[
+			"serverimagebutton", ["serverimage" ]
+		]
+]
+

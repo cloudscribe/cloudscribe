@@ -69,7 +69,13 @@ namespace cloudscribe.Core.Web.Components
         {
             var list = new List<KeyValuePair<string,string>>();
 
-            foreach(var v in _versionProviders.VersionProviders.OrderBy(v => v.Name))
+            // Use GroupBy to handle duplicate registrations - take first of each name
+            var uniqueProviders = _versionProviders.VersionProviders
+                .GroupBy(v => v.Name)
+                .Select(g => g.First())
+                .OrderBy(v => v.Name);
+
+            foreach(var v in uniqueProviders)
             {
                 if(v.Name != "cloudscribe.Core.Web")
                 {

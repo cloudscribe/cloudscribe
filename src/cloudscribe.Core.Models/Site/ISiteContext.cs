@@ -37,6 +37,8 @@ namespace cloudscribe.Core.Models
         //bool ReallyDeleteUsers { get; }
         bool AllowNewRegistration { get; }
         bool AllowPersistentLogin { get; }
+        bool AllowUserToEditDisplayName { get; }
+        bool AllowUserToEditFirstAndLastName { get; }
         bool CaptchaOnLogin { get; }
         bool CaptchaOnRegistration { get; }
         string RecaptchaPrivateKey { get; }
@@ -117,12 +119,15 @@ namespace cloudscribe.Core.Models
 
         bool Require2FA { get; }
 
+        string Require2FARolesCsv { get; }
+
         bool ShowSiteNameLink { get; }
         string HeaderContent { get; }
         string FooterContent { get; }
         string LogoUrl { get; }
 
         bool SingleBrowserSessions { get; }
+        string HideNavigationOnAuthPages { get; }
         string MaximumInactivityInMinutes { get; }
         string RegRestrictionTld { get; }
         int PasswordExpiryWarningDays { get; }

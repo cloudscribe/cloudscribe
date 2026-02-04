@@ -1,6 +1,7 @@
 ﻿@model cloudscribe.Core.Web.ViewModels.SiteSettings.SiteBasicSettingsViewModel
 @inject IStringLocalizer<CloudscribeCore> sr
-@inject ICkeditorOptionsResolver editorOptionsResolver
+@inject ISummernoteOptionsResolver summernoteOptionsResolver
+@inject ICkeditorOptionsResolver ckeditorOptionsResolver
 @inject IOptions<MultiTenantOptions> multiTenantOptionsAccessor
 @inject ICoreThemeHelper themeHelper
 @using Microsoft.AspNetCore.Antiforgery
@@ -12,7 +13,8 @@
     if (multiTenantOptions.Mode != MultiTenantMode.FolderName) { useFolderTenants = false; }
     bool useHostTenants = true;
     if (multiTenantOptions.Mode != MultiTenantMode.HostName) { useHostTenants = false; }
-    var ckOptions = await editorOptionsResolver.GetCkeditorOptions();
+    var summernoteOptions = await summernoteOptionsResolver.GetSummernoteOptions();
+    var ckOptions = await ckeditorOptionsResolver.GetCkeditorOptions();
     var baseUrl = this.Context.Request.GetCurrentBaseUrl() + "/";
     var themeSettings = themeHelper.GetThemeSettings();
 }
@@ -92,8 +94,8 @@
                      data-dropzone=""
                      data-upload-url="@Url.Action("DropFile", "FileManager")"
                      data-anti-forgery-token="@tokens.RequestToken"
-                     data-file-browse-url="@ckOptions.ImageBrowseUrl"
-                     data-file-crop-url="@ckOptions.CropFileUrl"
+                     data-file-browse-url="@summernoteOptions.ImageBrowseUrl"
+                     data-file-crop-url="@summernoteOptions.CropFileUrl"
                      data-target-path="/media/logos"
                      data-create-thumb="false"
                      data-resize-image="@themeSettings.ResizeLogoOnUpload.ToString().ToLowerInvariant()"
@@ -135,36 +137,53 @@
         </div>
     </div>
 
+
+
     @if (themeSettings.EnableHeaderFooterEditingInSiteSettings)
     {
 
         <p>@sr["Please note that adding header or footer content can mess up the layout of your page and may require CSS changes to accomodate your content."]</p>
         <div class="mb-3">
             <label class="form-label" asp-for="HeaderContent">@sr["Header Content"]</label>
-            <textarea class="form-control" rows="5" asp-for="HeaderContent"
-                      data-ckeditor-unobtrusive=""
-                      data-ckeditor-config-url="@ckOptions.CustomConfigPath"
-                      data-ckeditor-config-language="@ckOptions.LanguageCode"
-                      data-ckeditor-config-dropfileuploadurl="@ckOptions.DropFileUrl"
-                      data-ckeditor-config-filebrowserurl="@ckOptions.FileBrowseUrl"
-                      data-ckeditor-config-imagebrowseurl="@ckOptions.ImageBrowseUrl"
-                      data-ckeditor-config-height="100"></textarea>
+            <textarea asp-for="HeaderContent" rows="5"
+                data-summernote-unobtrusive=""
+                data-summernote-config-url="@summernoteOptions.CustomConfigPath"
+                data-summernote-toolbar-config-url="@summernoteOptions.CustomToolbarConfigPath"
+                data-summernote-config-language="@summernoteOptions.LanguageCode"
+                data-summernote-config-dropfileuploadurl="@summernoteOptions.DropFileUrl"
+                data-summernote-config-filebrowserurl="@summernoteOptions.FileBrowseUrl"
+                data-summernote-config-imagebrowseurl="@summernoteOptions.ImageBrowseUrl">
+            </textarea>
             <span asp-validation-for="ClosedMessage" class="invalid-feedback"></span>
         </div>
         <div class="mb-3">
             <label class="form-label" asp-for="FooterContent">@sr["Footer Content"]</label>
-            <textarea class="form-control" rows="5" asp-for="FooterContent"
-                      data-ckeditor-unobtrusive=""
-                      data-ckeditor-config-url="@ckOptions.CustomConfigPath"
-                      data-ckeditor-config-language="@ckOptions.LanguageCode"
-                      data-ckeditor-config-dropfileuploadurl="@ckOptions.DropFileUrl"
-                      data-ckeditor-config-filebrowserurl="@ckOptions.FileBrowseUrl"
-                      data-ckeditor-config-imagebrowseurl="@ckOptions.ImageBrowseUrl"
-                      data-ckeditor-config-height="100"></textarea>
+            <textarea asp-for="FooterContent" rows="5"
+                data-summernote-unobtrusive=""
+                data-summernote-config-url="@summernoteOptions.CustomConfigPath"
+                data-summernote-toolbar-config-url="@summernoteOptions.CustomToolbarConfigPath"
+                data-summernote-config-language="@summernoteOptions.LanguageCode"
+                data-summernote-config-dropfileuploadurl="@summernoteOptions.DropFileUrl"
+                data-summernote-config-filebrowserurl="@summernoteOptions.FileBrowseUrl"
+                data-summernote-config-imagebrowseurl="@summernoteOptions.ImageBrowseUrl">
+            </textarea>
             <span asp-validation-for="ClosedMessage" class="invalid-feedback"></span>
         </div>
     }
 
+    <div class="mb-3">
+        <label asp-for="HideNavigationOnAuthPages" class="form-label">
+            @sr["Hide navigation on authentication pages"]
+        </label>
+        <select asp-for="HideNavigationOnAuthPages" class="form-select">
+            <option value="">@sr["Don't hide"]</option>
+            <option value="LoginOnly">@sr["Login page only"]</option>
+            <option value="LoginRegisterForgotPwd">@sr["Login, Register, and Forgot Password pages"]</option>
+        </select>
+        <div class="form-text">
+            @sr["When set, the top navigation and breadcrumbs will not render on the selected authentication pages, improving page load performance."]
+        </div>
+    </div>
 
     @if (Model.AvailableCultures.Count > 0)
     {
@@ -200,13 +219,15 @@
     </div>
     <div class="mb-3">
         <label class="form-label" asp-for="ClosedMessage">@sr["Closed Message"]</label>
-        <textarea class="form-control" rows="5" asp-for="ClosedMessage"
-                  data-ckeditor-unobtrusive=""
-                  data-ckeditor-config-url="@ckOptions.CustomConfigPath"
-                  data-ckeditor-config-language="@ckOptions.LanguageCode"
-                  data-ckeditor-config-dropfileuploadurl="@ckOptions.DropFileUrl"
-                  data-ckeditor-config-filebrowserurl="@ckOptions.FileBrowseUrl"
-                  data-ckeditor-config-imagebrowseurl="@ckOptions.ImageBrowseUrl"></textarea>
+        <textarea asp-for="ClosedMessage" rows="5"
+            data-summernote-unobtrusive=""
+            data-summernote-config-url="@summernoteOptions.CustomConfigPath"
+            data-summernote-toolbar-config-url="@summernoteOptions.CustomToolbarConfigPath"
+            data-summernote-config-language="@summernoteOptions.LanguageCode"
+            data-summernote-config-dropfileuploadurl="@summernoteOptions.DropFileUrl"
+            data-summernote-config-filebrowserurl="@summernoteOptions.FileBrowseUrl"
+            data-summernote-config-imagebrowseurl="@summernoteOptions.ImageBrowseUrl">
+        </textarea>
         <span asp-validation-for="ClosedMessage" class="invalid-feedback"></span>
     </div>
     <div class="mb-3">

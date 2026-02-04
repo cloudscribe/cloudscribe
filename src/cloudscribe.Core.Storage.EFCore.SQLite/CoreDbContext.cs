@@ -194,6 +194,10 @@ namespace cloudscribe.Core.Storage.EFCore.SQLite
 
                 entity.Property(p => p.CookiePolicySummary).HasMaxLength(255);
 
+                // Allow end-user editing of name fields
+                entity.Property(p => p.AllowUserToEditDisplayName).IsRequired();
+                entity.Property(p => p.AllowUserToEditFirstAndLastName).IsRequired();
+
                 entity.Property(p => p.LogoUrl)
                .HasMaxLength(250);
                 ;
@@ -201,6 +205,9 @@ namespace cloudscribe.Core.Storage.EFCore.SQLite
                 entity.Property(p => p.MaximumInactivityInMinutes);
                 entity.Property(p => p.PasswordExpiresDays);
                 entity.Property(p => p.PasswordExpiryWarningDays);
+
+                entity.Property(p => p.HideNavigationOnAuthPages)
+                .HasMaxLength(50);
             });
 
             modelBuilder.Entity<SiteHost>(entity =>
