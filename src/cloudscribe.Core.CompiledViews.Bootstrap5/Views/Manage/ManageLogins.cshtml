@@ -52,21 +52,23 @@ public string GetDisplayName(string displayName, SiteContext tenant)
         <ul class="list-unstyled">
             @foreach (var account in Model.CurrentLogins)
             {
-            <li>
+            var providerDisplayName = String.IsNullOrEmpty(account.ProviderDisplayName) ? account.LoginProvider : account.ProviderDisplayName;
+            providerDisplayName = GetDisplayName(providerDisplayName, Tenant);
 
+            <li>
                 @if (Model.ShowRemoveButton)
                 {
                 <form asp-controller="Manage" asp-action="RemoveLogin" method="post" role="form" class="form-inline">
-                    @account.LoginProvider
+                        @providerDisplayName
                     <input name="LoginProvider" type="hidden" value="@account.LoginProvider" />
                     <input name="ProviderKey" type="hidden" value="@account.ProviderKey" />
-                    <input type="submit" class="btn btn-primary btn-sm ms-2" value='@sr["Remove"]' title="@string.Format(removeFormat, @account.LoginProvider)" />
+                    <input type="submit" class="btn btn-primary btn-sm ms-2" value='@sr["Remove"]' title="@string.Format(removeFormat, providerDisplayName)" />
 
                 </form>
                 }
                 else
                 {
-                    @account.LoginProvider
+                    @providerDisplayName
                 }
             </li>
                  
