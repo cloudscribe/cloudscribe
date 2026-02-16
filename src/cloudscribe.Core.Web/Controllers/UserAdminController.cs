@@ -43,7 +43,8 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
             DateTimeUtils.ITimeZoneIdResolver timeZoneIdResolver,
             DateTimeUtils.ITimeZoneHelper     timeZoneHelper,
             IHandleCustomUserInfoAdmin        customUserEdit,
-            IAccountService                   accountService
+            IAccountService                   accountService,
+            IUserInputValidator               userInputValidator
             )
         {
             UserManager          = userManager;
@@ -56,6 +57,7 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
             TimeZoneHelper       = timeZoneHelper;
             CustomUserInfo       = customUserEdit;
             AccountService       = accountService;
+            UserInputValidator   = userInputValidator;
         }
 
         protected SiteManager                SiteManager { get; private set; }
@@ -68,6 +70,7 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
         public IAccountService AccountService { get; }
         protected cloudscribe.DateTimeUtils.ITimeZoneIdResolver TimeZoneIdResolver { get; private set; }
         protected cloudscribe.DateTimeUtils.ITimeZoneHelper     TimeZoneHelper { get; private set; }
+        protected IUserInputValidator        UserInputValidator { get; private set; }
 
         [Authorize(Policy = PolicyConstants.UserManagementPolicy)]
         [HttpGet]
@@ -901,6 +904,14 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
                 isValid = false;
             }
 
+            // Security: Validate DisplayName doesn't contain HTML/JavaScript
+            // DisplayName appears in alert messages rendered with Html.Raw(), so XSS prevention is critical
+            if (!string.IsNullOrEmpty(model.DisplayName) && !UserInputValidator.IsSafeForDisplay(model.DisplayName))
+            {
+                ModelState.AddModelError(nameof(model.DisplayName), StringLocalizer[UserInputValidator.GetErrorMessageKey("Display Name")]);
+                isValid = false;
+            }
+
             bool customDataIsValid = await CustomUserInfo.HandleUserEditValidation(
                 UserManager.Site,
                 model,
@@ -916,6 +927,10 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
                 model.AccountApproved = user.AccountApproved;
                 model.UserClaims = await UserManager.GetClaimsAsync((SiteUser)user);
                 model.UserRoles = await UserManager.GetRolesAsync((SiteUser)user);
+                
+                // Show prominent error alert for validation failures
+                this.AlertDanger(StringLocalizer["Update failed - please see the validation errors below."], true);
+                
                 return View(viewName, model);
             }
 

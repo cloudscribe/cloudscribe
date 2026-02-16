@@ -27,6 +27,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Text.Encodings.Web;
+using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -50,7 +51,8 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
             IEmailChangeHandler               emailChangeHandler,
             IOptions<MultiTenantOptions>      multiTenantOptionsAccessor,
             SiteManager                       siteManager,
-            IUserQueries                      userQueries
+            IUserQueries                      userQueries,
+            IUserInputValidator               userInputValidator
             )
         {
             CurrentSite        = currentSite;
@@ -69,6 +71,7 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
             SiteManager        = siteManager;
             MultiTenantOptions = multiTenantOptionsAccessor.Value;
             UserQueries        = userQueries;
+            UserInputValidator = userInputValidator;
         }
 
         protected IAccountService                  AccountService     { get; private set; }
@@ -85,6 +88,7 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
         protected SiteManager                      SiteManager        { get; private set; }
         protected MultiTenantOptions               MultiTenantOptions { get; private set; }
         protected IUserQueries                     UserQueries        { get; private set; }
+        protected IUserInputValidator              UserInputValidator { get; private set; }
 
 
         protected cloudscribe.DateTimeUtils.ITimeZoneIdResolver TimeZoneIdResolver { get; private set; }
@@ -546,6 +550,14 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
                     ModelState.AddModelError(nameof(model.DisplayName), StringLocalizer["Display Name must be 100 characters or fewer."]);
                 }
 
+                // Security: Validate DisplayName doesn't contain HTML/JavaScript
+                // DisplayName appears in alert messages rendered with Html.Raw(), so XSS prevention is critical
+                // Users can edit their own DisplayName if AllowUserToEditDisplayName is enabled
+                if (!UserInputValidator.IsSafeForDisplay(trimmed))
+                {
+                    ModelState.AddModelError(nameof(model.DisplayName), StringLocalizer[UserInputValidator.GetErrorMessageKey("Display Name")]);
+                }
+
                 // normalize whitespace
                 model.DisplayName = trimmed;
 
@@ -584,6 +596,9 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
 
             if (!isValid || !customDataIsValid)
             {
+                // Show prominent error alert for validation failures
+                this.AlertDanger(StringLocalizer["Update failed - please see the validation errors below."], true);
+                
                 return View(viewName, model);
             }
 
