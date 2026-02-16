@@ -28,6 +28,7 @@ using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using cloudscribe.Web.Common.Serialization;
+using System.Threading;
 
 namespace cloudscribe.Core.Web.Controllers.Mvc
 {
@@ -44,7 +45,8 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
             DateTimeUtils.ITimeZoneHelper     timeZoneHelper,
             IHandleCustomUserInfoAdmin        customUserEdit,
             IAccountService                   accountService,
-            IUserInputValidator               userInputValidator
+            IUserInputValidator               userInputValidator,
+            IUserQueries                      userQueries
             )
         {
             UserManager          = userManager;
@@ -58,6 +60,7 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
             CustomUserInfo       = customUserEdit;
             AccountService       = accountService;
             UserInputValidator   = userInputValidator;
+            UserQueries          = userQueries;
         }
 
         protected SiteManager                SiteManager { get; private set; }
@@ -71,6 +74,7 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
         protected cloudscribe.DateTimeUtils.ITimeZoneIdResolver TimeZoneIdResolver { get; private set; }
         protected cloudscribe.DateTimeUtils.ITimeZoneHelper     TimeZoneHelper { get; private set; }
         protected IUserInputValidator        UserInputValidator { get; private set; }
+        protected IUserQueries               UserQueries { get; private set; }
 
         [Authorize(Policy = PolicyConstants.UserManagementPolicy)]
         [HttpGet]
@@ -904,12 +908,41 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
                 isValid = false;
             }
 
+            var trimmedDisplayName = (model.DisplayName ?? string.Empty).Trim();
+            if (trimmedDisplayName.Length > 100)
+            {
+                ModelState.AddModelError(nameof(model.DisplayName), StringLocalizer["Display Name must be 100 characters or fewer."]);
+            }
+
             // Security: Validate DisplayName doesn't contain HTML/JavaScript
             // DisplayName appears in alert messages rendered with Html.Raw(), so XSS prevention is critical
-            if (!string.IsNullOrEmpty(model.DisplayName) && !UserInputValidator.IsSafeForDisplay(model.DisplayName))
+            if (!string.IsNullOrEmpty(trimmedDisplayName) && !UserInputValidator.IsSafeForDisplay(trimmedDisplayName))
             {
                 ModelState.AddModelError(nameof(model.DisplayName), StringLocalizer[UserInputValidator.GetErrorMessageKey("Display Name")]);
                 isValid = false;
+            }
+
+            // Validate DisplayName uniqueness within current site (case-insensitive)
+            if (!string.IsNullOrWhiteSpace(trimmedDisplayName))
+            {
+                var page = await UserQueries.GetUserAdminSearchPage(
+                    selectedSite.Id,
+                    pageNumber: 1,
+                    pageSize: 5,
+                    searchInput: trimmedDisplayName,
+                    sortMode: 0,
+                    CancellationToken.None);
+
+                var exists = page.Data.Any(u => u.Id != model.UserId &&
+                    !string.IsNullOrEmpty(u.DisplayName) &&
+                    string.Equals(u.DisplayName, trimmedDisplayName, StringComparison.OrdinalIgnoreCase));
+                if (exists)
+                {
+                    ModelState.AddModelError(
+                        nameof(model.DisplayName),
+                        StringLocalizer["Display Name is already in use by another user."]);
+                    isValid = false;
+                }
             }
 
             bool customDataIsValid = await CustomUserInfo.HandleUserEditValidation(
