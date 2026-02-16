@@ -184,6 +184,7 @@ namespace Microsoft.Extensions.DependencyInjection
 
             services.TryAddScoped<ILdapSslCertificateValidator, AlwaysValidLdapSslCertificateValidator>();
             services.TryAddScoped<IEmailValidationService, EmailValidationService>();
+            services.TryAddScoped<IUserInputValidator, UserInputValidator>();
             services.TryAddSingleton<IIpAddressCache, IpAddressCache>();
             services.TryAddScoped<IBlockedOrPermittedIpService, BlockedOrPermittedIpService>();
 
