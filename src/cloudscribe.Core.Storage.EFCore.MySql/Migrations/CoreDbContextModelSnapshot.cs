@@ -323,6 +323,10 @@ namespace cloudscribe.Core.Storage.EFCore.MySql.Migrations
                     b.Property<string>("HeaderContent")
                         .HasColumnType("longtext");
 
+                    b.Property<string>("HideNavigationOnAuthPages")
+                        .HasMaxLength(50)
+                        .HasColumnType("varchar(50)");
+
                     b.Property<bool>("IsDataProtected")
                         .HasColumnType("tinyint(1)");
 
@@ -447,6 +451,9 @@ namespace cloudscribe.Core.Storage.EFCore.MySql.Migrations
 
                     b.Property<bool>("Require2FA")
                         .HasColumnType("tinyint(1)");
+
+                    b.Property<string>("Require2FARolesCsv")
+                        .HasColumnType("longtext");
 
                     b.Property<bool>("RequireApprovalBeforeLogin")
                         .HasColumnType("tinyint(1)");

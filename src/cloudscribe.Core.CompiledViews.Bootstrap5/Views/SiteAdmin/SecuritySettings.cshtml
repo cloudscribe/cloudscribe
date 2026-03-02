@@ -61,12 +61,7 @@
             <label asp-for="SingleBrowserSessions" class="form-check-label">@sr["Enforce one active browser session per user"]</label>
         </div>
     </div>
-    <div class="mb-3">
-        <div class="form-check">
-            <input asp-for="Require2FA" class="form-check-input" />
-            <label asp-for="Require2FA" class="form-check-label">@sr["Require users to configure 2 factor authentication. Recommended ONLY for extreme security needs not for most sites, because a user must install an authenticator app on their phone and take a picture of the QR code using the authenticator app to get an access code. Note this will only be enforced when using https and it won't be enforced for users in Administrators role. Presumably administrators can and will voluntarily enable 2 factor authentication, but we don't want administrators to get locked out."]</label>
-        </div>
-    </div>
+
     <div class="mb-3">
         <label class="form-label" asp-for="AccountApprovalEmailCsv">@sr["Email addresses (csv) to notify of new users"]</label>
         <input asp-for="AccountApprovalEmailCsv" class="form-control" />
@@ -87,9 +82,49 @@
     <div class="mb-3">
         <label class="form-label" asp-for="RegRestrictionTld">@sr["Registration Permitted Top Level Domain(s)"]</label>
         <input asp-for="RegRestrictionTld" class="form-control" />
-        <p class="small">To restrict user registration to specific TLD's. E.g. entering: <i>mycompany.com</i> will restrict registration to users whose emails end with <i>@@mycompany.com</i>. To have multiple TLD's, separate them with a comma: <i>mycompany.com, mycompany2.com</i></p>
+        <p class="form-text">To restrict user registration to specific TLD's. E.g. entering: <i>mycompany.com</i> will restrict registration to users whose emails end with <i>@@mycompany.com</i>. To have multiple TLD's, separate them with a comma: <i>mycompany.com, mycompany2.com</i></p>
         @Html.ValidationMessage("RegRestrictionTld", new { @class = "text-danger" })
     </div>
+
+
+
+
+    <hr />
+    <div class="mb-3">
+        <h3>@sr["Two Factor Authentication Settings"]</h3>
+        <div class="form-check">
+            <input asp-for="Require2FA" class="form-check-input" />
+            <label asp-for="Require2FA" class="form-check-label">@sr["Require users to configure 2 factor authentication. Recommended ONLY for extreme security needs not for most sites, because a user must install an authenticator app on their phone and take a picture of the QR code using the authenticator app to get an access code. Note this will only be enforced when using https and it won't be enforced for users in Administrators role. Presumably administrators can and will voluntarily enable 2 factor authentication, but we don't want administrators to get locked out."]</label>
+        </div>
+    </div>
+    <div class="mb-3">
+        <label asp-for="Require2FARolesCsv" class="form-label">
+            @sr["Roles requiring 2FA (if not enforced for all users)"]
+        </label>
+        <input asp-for="Require2FARolesCsv" class="form-control"
+               placeholder="" />
+        <div class="form-text">
+            @sr["Enter role names (case sensitive) separated by commas. Only applies when the global 2FA requirement above is not checked."]
+            <br />
+            @sr["Caution: if you include your own role (e.g. 'Administators') in this list, be prepared to configure your own 2FA app immediately, otherwise you will be locked out."]
+        </div>
+        <span asp-validation-for="Require2FARolesCsv" class="invalid-feedback"></span>
+        <a class="btn btn-sm btn-primary mt-2"
+           href="@Url.Action("Modal", "RoleAdmin", new { siteId = Model.SiteId })"
+           data-ajax="true"
+           data-ajax-begin="roleSelector.prepareModal('Require2FARolesCsv','')"
+           data-ajax-failure="roleSelector.clearModal()"
+           data-ajax-method="GET"
+           data-ajax-mode="replace"
+           data-ajax-success="roleSelector.openModal()"
+           data-ajax-update="#roledialog">@sr["Select Roles"]</a>
+    </div>
+    <hr />
+
+
+
+
+
     <div class="mb-4">
         <h3>@sr["Password Settings"]</h3>
         <div class="form-check form-switch mb-2">
@@ -129,6 +164,7 @@
             @Html.ValidationMessage("PasswordExpiryWarningDays", new { @class = "text-danger" })
         </div>
     </div>
+    <hr />
     <partial name="LdapSettingsPartial" model="Model" />
 
     @if (Model.HasAnySocialAuthEnabled || (!string.IsNullOrWhiteSpace(Model.LdapDomain) && !string.IsNullOrWhiteSpace(Model.LdapServer)))
@@ -172,7 +208,8 @@
     <script src="~/cr/js/jquery.validate.hooks.min.js"></script>
     <script src="~/cr/js/jqueryvaildation.submitonce-unobtrusive.min.js"></script>
     <script src="~/cr/js/bootstrap-tooltip-toggle.js"></script>
-    
+    <script src="~/cr/js/jquery.unobtrusive-ajax.min.js"></script>
+    <script src="~/cr/js/cloudscribe-role-selector.min.js"></script>
 }
 
 

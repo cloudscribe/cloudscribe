@@ -137,6 +137,8 @@
         </div>
     </div>
 
+
+
     @if (themeSettings.EnableHeaderFooterEditingInSiteSettings)
     {
 
@@ -168,6 +170,20 @@
             <span asp-validation-for="ClosedMessage" class="invalid-feedback"></span>
         </div>
     }
+
+    <div class="mb-3">
+        <label asp-for="HideNavigationOnAuthPages" class="form-label">
+            @sr["Hide navigation on authentication pages"]
+        </label>
+        <select asp-for="HideNavigationOnAuthPages" class="form-select">
+            <option value="">@sr["Don't hide"]</option>
+            <option value="LoginOnly">@sr["Login page only"]</option>
+            <option value="LoginRegisterForgotPwd">@sr["Login, Register, and Forgot Password pages"]</option>
+        </select>
+        <div class="form-text">
+            @sr["When set, the top navigation and breadcrumbs will not render on the selected authentication pages, improving page load performance."]
+        </div>
+    </div>
 
     @if (Model.AvailableCultures.Count > 0)
     {

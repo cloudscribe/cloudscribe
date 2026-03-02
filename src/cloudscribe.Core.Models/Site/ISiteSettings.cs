@@ -219,6 +219,13 @@ namespace cloudscribe.Core.Models
 
         bool Require2FA { get; set; }
 
+        /// <summary>
+        /// Comma-separated list of role names that require 2FA when Require2FA is false.
+        /// If Require2FA is true, this setting is ignored.
+        /// Role names are tenant-specific.
+        /// </summary>
+        string Require2FARolesCsv { get; set; }
+
         bool ShowSiteNameLink { get; set; }
         string HeaderContent { get; set; }
         string FooterContent { get; set; }
@@ -234,6 +241,8 @@ namespace cloudscribe.Core.Models
         /// Newest login wins. This option is for preventing sharing of user accounts.
         /// </summary>
         bool SingleBrowserSessions { get; set; }
+
+        string HideNavigationOnAuthPages { get; set; }
 
         string RegRestrictionTld { get; set; }
         // TODO: drop

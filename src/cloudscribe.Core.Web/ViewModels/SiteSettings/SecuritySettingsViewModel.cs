@@ -51,6 +51,10 @@ namespace cloudscribe.Core.Web.ViewModels.SiteSettings
 
         public bool Require2FA { get; set; }
 
+        [Display(Name = "Roles requiring 2FA (comma-separated)")]
+        [MaxLength(500)]
+        public string Require2FARolesCsv { get; set; } = string.Empty;
+
         public bool SingleBrowserSessions { get; set; }
 
         [Display(Name = "Allow user to change display name")]

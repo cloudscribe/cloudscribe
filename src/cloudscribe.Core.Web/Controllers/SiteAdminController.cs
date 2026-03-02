@@ -212,6 +212,7 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
                 IsClosed = selectedSite.SiteIsClosed,
                 ClosedMessage = selectedSite.SiteIsClosedMessage,
                 ShowSiteNameLink = selectedSite.ShowSiteNameLink,
+                HideNavigationOnAuthPages = selectedSite.HideNavigationOnAuthPages ?? string.Empty,
                 HeaderContent = selectedSite.HeaderContent,
                 FooterContent = selectedSite.FooterContent,
                 LogoUrl = selectedSite.LogoUrl
@@ -383,6 +384,7 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
             selectedSite.ForcedUICulture = model.ForcedUICulture;
 
             selectedSite.ShowSiteNameLink = model.ShowSiteNameLink;
+            selectedSite.HideNavigationOnAuthPages = model.HideNavigationOnAuthPages ?? string.Empty;
             selectedSite.HeaderContent = model.HeaderContent;
             selectedSite.FooterContent = model.FooterContent;
             selectedSite.LogoUrl = model.LogoUrl;
@@ -1133,6 +1135,7 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
                 SmsIsConfigured            = selectedSite.SmsIsConfigured(),
                 HasAnySocialAuthEnabled    = selectedSite.HasAnySocialAuthEnabled(),
                 Require2FA                 = selectedSite.Require2FA,
+                Require2FARolesCsv         = selectedSite.Require2FARolesCsv,
                 SingleBrowserSessions      = selectedSite.SingleBrowserSessions,
 
                 LdapDomain                 = selectedSite.LdapDomain,
@@ -1207,6 +1210,7 @@ namespace cloudscribe.Core.Web.Controllers.Mvc
               selectedSite.AllowUserToEditDisplayName      = model.AllowUserToEditDisplayName;
               selectedSite.AllowUserToEditFirstAndLastName = model.AllowUserToEditFirstAndLastName;
               selectedSite.Require2FA                 = model.Require2FA;
+            selectedSite.Require2FARolesCsv         = model.Require2FARolesCsv ?? string.Empty;
             selectedSite.SingleBrowserSessions      = model.SingleBrowserSessions;
 
             selectedSite.LdapDomain                 = model.LdapDomain;

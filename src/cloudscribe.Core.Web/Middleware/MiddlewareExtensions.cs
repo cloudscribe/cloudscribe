@@ -21,6 +21,12 @@ namespace Microsoft.AspNetCore.Builder
             return builder.UseMiddleware<SessionActivityTrackingMiddleware>();
         }
 
+        // validates and rejects malformed returnUrl parameters
+        public static IApplicationBuilder UseCloudscribeMalformedUrlValidation(this IApplicationBuilder builder)
+        {
+            return builder.UseMiddleware<MalformedUrlValidationMiddleware>();
+        }
+
         //public static IApplicationBuilder UseCommonExceptionHandler(this IApplicationBuilder builder)
         //{
         //    return builder.UseMiddleware<CommonExceptionHandlerMiddleware>();

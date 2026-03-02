@@ -214,6 +214,8 @@ namespace cloudscribe.Core.Models
 
         public bool Require2FA { get; set; }
 
+        public string Require2FARolesCsv { get; set; } = string.Empty;
+
         public bool ShowSiteNameLink { get; set; } = true;
 
         public string HeaderContent { get; set; }
@@ -225,6 +227,7 @@ namespace cloudscribe.Core.Models
         public bool AllowUserToEditFirstAndLastName { get; set; } = false;
 
         public bool SingleBrowserSessions { get; set; }
+        public string HideNavigationOnAuthPages { get; set; } = string.Empty;
         public string MaximumInactivityInMinutes { get; set; }
 
         public string RegRestrictionTld { get; set; }
@@ -314,6 +317,7 @@ namespace cloudscribe.Core.Models
                 RegistrationAgreement      = i.RegistrationAgreement,
                 RegistrationPreamble       = i.RegistrationPreamble,
                 Require2FA                 = i.Require2FA,
+                Require2FARolesCsv         = i.Require2FARolesCsv,
                 RequireApprovalBeforeLogin = i.RequireApprovalBeforeLogin,
                 RequireConfirmedEmail      = i.RequireConfirmedEmail,
                 RequireConfirmedPhone      = i.RequireConfirmedPhone,
@@ -321,6 +325,7 @@ namespace cloudscribe.Core.Models
                 RequireCookieConsent       = i.RequireCookieConsent,
                 SignEmailWithDkim          = i.SignEmailWithDkim,
                 SingleBrowserSessions      = i.SingleBrowserSessions,
+                HideNavigationOnAuthPages  = i.HideNavigationOnAuthPages ?? string.Empty,
                 SiteFolderName             = i.SiteFolderName,
                 Id                         = i.Id,
                 AliasId                    = i.AliasId,

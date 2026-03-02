@@ -321,6 +321,10 @@ namespace cloudscribe.Core.Storage.EFCore.SQLite.Migrations
                     b.Property<string>("HeaderContent")
                         .HasColumnType("TEXT");
 
+                    b.Property<string>("HideNavigationOnAuthPages")
+                        .HasMaxLength(50)
+                        .HasColumnType("TEXT");
+
                     b.Property<bool>("IsDataProtected")
                         .HasColumnType("INTEGER");
 
@@ -445,6 +449,9 @@ namespace cloudscribe.Core.Storage.EFCore.SQLite.Migrations
 
                     b.Property<bool>("Require2FA")
                         .HasColumnType("INTEGER");
+
+                    b.Property<string>("Require2FARolesCsv")
+                        .HasColumnType("TEXT");
 
                     b.Property<bool>("RequireApprovalBeforeLogin")
                         .HasColumnType("INTEGER");

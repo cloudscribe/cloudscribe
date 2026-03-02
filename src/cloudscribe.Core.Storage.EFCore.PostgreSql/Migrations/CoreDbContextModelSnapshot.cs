@@ -407,6 +407,11 @@ namespace cloudscribe.Core.Storage.EFCore.PostgreSql.Migrations
                         .HasColumnType("text")
                         .HasColumnName("header_content");
 
+                    b.Property<string>("HideNavigationOnAuthPages")
+                        .HasMaxLength(50)
+                        .HasColumnType("character varying(50)")
+                        .HasColumnName("hide_navigation_on_auth_pages");
+
                     b.Property<bool>("IsDataProtected")
                         .HasColumnType("boolean")
                         .HasColumnName("is_data_protected");
@@ -568,6 +573,10 @@ namespace cloudscribe.Core.Storage.EFCore.PostgreSql.Migrations
                     b.Property<bool>("Require2FA")
                         .HasColumnType("boolean")
                         .HasColumnName("require2_fa");
+
+                    b.Property<string>("Require2FARolesCsv")
+                        .HasColumnType("text")
+                        .HasColumnName("require2fa_roles_csv");
 
                     b.Property<bool>("RequireApprovalBeforeLogin")
                         .HasColumnType("boolean")

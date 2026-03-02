@@ -200,6 +200,9 @@ namespace cloudscribe.Core.Web.Components
                 await _commands.Update(site, CancellationToken.None);
             }
 
+            // Update the in-memory timestamp to match what was saved to the database
+            // This ensures the distributed cache timestamp is accurate for cache invalidation
+            site.LastModifiedUtc = DateTime.UtcNow;
             await _cacheHelper.SetDistributedCacheTimestamp(site.Id, site.LastModifiedUtc).ConfigureAwait(false);
 
             if (_multiTenantOptions.Mode == MultiTenantMode.FolderName)
@@ -224,13 +227,13 @@ namespace cloudscribe.Core.Web.Components
             {
                 if (_context != null && !string.IsNullOrEmpty(_context.Request.Host.Value))
                 {
-                    _cacheHelper.ClearLocalCache(_context.Request.Host.Value);
+                    _cacheHelper.ClearLocalCache(_context.Request.Host.Value.ToLowerInvariant());
                 }
                     
 
                 if (!string.IsNullOrWhiteSpace(site.PreferredHostName))
                 {
-                    _cacheHelper.ClearLocalCache(site.PreferredHostName);
+                    _cacheHelper.ClearLocalCache(site.PreferredHostName.ToLowerInvariant());
                 }
                 
                 var siteHosts = await GetSiteHosts(site.Id);
@@ -238,7 +241,7 @@ namespace cloudscribe.Core.Web.Components
                 {
                     foreach(ISiteHost siteHostName in siteHosts)
                     {
-                        _cacheHelper.ClearLocalCache(siteHostName.HostName);
+                        _cacheHelper.ClearLocalCache(siteHostName.HostName.ToLowerInvariant());
                     }
                 }
             }
