@@ -16,9 +16,9 @@
 $directory = "src"
 
 # Define the old & new versions
-$oldVersion = '8\.6'   # slash needed !
-$newVersion = "8.7.0"
-$newWildcardVersion = "8.7.*"
+$oldVersion = '8\.7'   # slash needed !
+$newVersion = "8.8.0"
+$newWildcardVersion = "8.8.*"
 	
 
 # Get all .csproj files in the directory and subdirectories
