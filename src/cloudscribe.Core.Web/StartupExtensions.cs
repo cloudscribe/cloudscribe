@@ -71,6 +71,7 @@ namespace Microsoft.Extensions.DependencyInjection
 
 
             services.TryAddSingleton<IHttpContextAccessor, HttpContextAccessor>();
+            services.TryAddSingleton<Microsoft.AspNetCore.Mvc.Infrastructure.IActionContextAccessor, Microsoft.AspNetCore.Mvc.Infrastructure.ActionContextAccessor>();
             services.AddOptions();
 
             services.Configure<MultiTenantOptions>(configuration.GetSection("MultiTenantOptions"));
