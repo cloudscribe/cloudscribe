@@ -8,12 +8,15 @@ using Microsoft.Extensions.Logging;
 using sourceDev.WebApp.Configuration;
 using System;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace sourceDev.WebApp
 {
     public class Program
     {
-        public static int Main(string[] args) => StartWebServer(args);
+        // Changed to async Task<int> to avoid blocking .Wait() calls during startup (FR-4)
+        // See: https://aka.ms/aspnet/async-guidance
+        public static async Task<int> Main(string[] args) => await StartWebServerAsync(args);
 
         //public static void Main(string[] args)
         //{
@@ -45,7 +48,7 @@ namespace sourceDev.WebApp
         //    host.Run();
         //}
 
-        public static int StartWebServer(string[] args)
+        public static async Task<int> StartWebServerAsync(string[] args)
         {
 
             //Log.Logger =
@@ -67,7 +70,7 @@ namespace sourceDev.WebApp
 
                     try
                     {
-                        EnsureDataStorageIsReady(config, services);
+                        await EnsureDataStorageIsReady(config, services);
 
                     }
                     catch (Exception ex)
@@ -81,7 +84,7 @@ namespace sourceDev.WebApp
                 var loggerFactory = host.Services.GetRequiredService<ILoggerFactory>();
                 ConfigureLogging(env, loggerFactory, host.Services, config);
 
-                host.Run();
+                await host.RunAsync();
 
                 return 0;
             }
@@ -102,14 +105,16 @@ namespace sourceDev.WebApp
         }
 
 
-        private static void EnsureDataStorageIsReady(IConfiguration config, IServiceProvider services)
+        // FR-4: Changed to async to avoid blocking .Wait() calls during database initialization
+        // This prevents thread pool starvation and potential deadlocks during startup
+        private static async Task EnsureDataStorageIsReady(IConfiguration config, IServiceProvider services)
         {
             var storage = config["DevOptions:DbPlatform"];
 
             switch (storage)
             {
                 case "nodb":
-                    CoreNoDbStartup.InitializeDataAsync(services).Wait();
+                    await CoreNoDbStartup.InitializeDataAsync(services);
 
                     // you can use this hack to add clients and scopes into the db during startup if needed
                     // I used this before we implemented the UI for adding them
@@ -123,13 +128,13 @@ namespace sourceDev.WebApp
                     // replace null with your siteid and run the app, then change it back to null since it can only be a one time task
                     string sId = null;
 
-                    CloudscribeIdentityServerIntegrationNoDbStorage.InitializeDatabaseAsync(
+                    await CloudscribeIdentityServerIntegrationNoDbStorage.InitializeDatabaseAsync(
                         services,
                         sId,
                         IdServerClients.Get(),
                         IdServerResources.GetApiResources(),
                         IdServerResources.GetIdentityResources()
-                        ).Wait();
+                        );
 
                     break;
 
@@ -137,16 +142,18 @@ namespace sourceDev.WebApp
                 default:
 
                     // this one is only needed if using cloudscribe Logging with EF as the logging storage
-                    LoggingEFStartup.InitializeDatabaseAsync(services).Wait();
+
+                    // Note - temporarily disabled as part of net10 upgrade because it throws whilst Logger still at net8 - jk
+                    // await LoggingEFStartup.InitializeDatabaseAsync(services);
 
                     // this creates ensures the database is created and initial data
-                    CoreEFStartup.InitializeDatabaseAsync(services).Wait();
+                    await CoreEFStartup.InitializeDatabaseAsync(services);
 
                     // query tool
-                    QueryToolStartup.InitializeDatabaseAsync(services).Wait();
+                    await QueryToolStartup.InitializeDatabaseAsync(services);
 
 
-                    //KvpEFCoreStartup.InitializeDatabaseAsync(services).Wait();
+                    //await KvpEFCoreStartup.InitializeDatabaseAsync(services);
 
                     // you can use this hack to add clients and scopes into the db during startup if needed
                     // I used this before we implemented the UI for adding them
@@ -160,13 +167,13 @@ namespace sourceDev.WebApp
                     // replace null with your siteid and run the app, then change it back to null since it can only be a one time task
                     string siteId = null;
 
-                    CloudscribeIdentityServerIntegrationEFCoreStorage.InitializeDatabaseAsync(
+                    await CloudscribeIdentityServerIntegrationEFCoreStorage.InitializeDatabaseAsync(
                         services,
                         siteId,
                         IdServerClients.Get(),
                         IdServerResources.GetApiResources(),
                         IdServerResources.GetIdentityResources()
-                        ).Wait();
+                        );
 
                     break;
             }
