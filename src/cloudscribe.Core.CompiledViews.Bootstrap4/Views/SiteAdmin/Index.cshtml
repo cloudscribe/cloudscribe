@@ -1,5 +1,0 @@
-﻿@{ 
-    ViewData["BodyClass"] = "admin-section admin-index";
-}
-<h2>@ViewData["Title"]</h2>
-@await Component.InvokeAsync("Navigation", new { viewName = "Bs4ChildTree", filterName = NamedNavigationFilters.ChildTree, startingNodeKey = "SiteAdmin" })

@@ -2,8 +2,8 @@
 
   <PropertyGroup>
     <Description>NoDb implementation of cloudscribe core commands and queries</Description>
-    <Version>8.8.0</Version>
-    <TargetFramework>net8.0</TargetFramework>
+    <Version>10.0.0</Version>
+    <TargetFramework>net10.0</TargetFramework>
     <Authors>Joe Audette</Authors>
     <PackageTags>cloudscribe;commands;queries;NoDb</PackageTags>
     <PackageIcon>icon.png</PackageIcon>
@@ -28,11 +28,21 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="cloudscribe.Pagination.Models" Version="8.8.0" />
-    <PackageReference Include="NoDb" Version="1.2.1" />
+    <PackageReference Include="cloudscribe.Pagination.Models" Version="10.0.0" />
     
-    <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="8.0.0" />
-    <PackageReference Include="Microsoft.Extensions.Options" Version="8.0.0" />
+    <!-- Upgraded from 1.2.1 to 1.2.2 at net10 upgrade - jk -->
+    <PackageReference Include="NoDb" Version="1.2.2" />
+    
+    <!-- Explicit references to fix security vulnerabilities from NoDb transitive dependencies at net10 upgrade - jk -->
+    <!-- GHSA-5crp-9r3c-p9vr: DoS vulnerability in Newtonsoft.Json < 13.0.1 -->
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
+    <!-- GHSA-7jgj-8wvc-jh57: Information Disclosure in System.Net.Http < 4.3.4 -->
+    <PackageReference Include="System.Net.Http" Version="4.3.4" />
+    <!-- GHSA-ghhp-997w-qr28: Critical vulnerability in System.Text.Encodings.Web < 4.5.1 -->
+    <PackageReference Include="System.Text.Encodings.Web" Version="10.0.0" />
+    
+    <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="10.0.0" />
+    <PackageReference Include="Microsoft.Extensions.Options" Version="10.0.0" />
 
     <PackageReference Include="System.Linq.Queryable" Version="4.3.0" />
   </ItemGroup>

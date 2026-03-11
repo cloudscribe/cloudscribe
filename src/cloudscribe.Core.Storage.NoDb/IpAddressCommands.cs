@@ -85,7 +85,7 @@ namespace cloudscribe.Core.Storage.NoDb
 
                 return true;
             }
-            catch (Exception e)
+            catch
             {
                 _log.LogError($"Error creating permitted IP Address");
                 return false;
@@ -128,7 +128,7 @@ namespace cloudscribe.Core.Storage.NoDb
 
                 return true;
             }
-            catch (Exception e)
+            catch
             {
                 _log.LogError($"Error updating permitted IP Address");
                 return false;
@@ -161,7 +161,7 @@ namespace cloudscribe.Core.Storage.NoDb
                     return false;
                 }
             }
-            catch (Exception e)
+            catch
             {
                 _log.LogError($"Error updating permitted IP Address");
                 return false;
@@ -266,7 +266,7 @@ namespace cloudscribe.Core.Storage.NoDb
 
                 return true;
             }
-            catch (Exception e)
+            catch
             {
                 _log.LogError($"Error creating blocked IP Address");
                 return false;
@@ -309,7 +309,7 @@ namespace cloudscribe.Core.Storage.NoDb
 
                 return true;
             }
-            catch (Exception e)
+            catch
             {
                 _log.LogError($"Error updating blocked IP Address");
                 return false;
@@ -341,7 +341,7 @@ namespace cloudscribe.Core.Storage.NoDb
                     return false;
                 }
             }
-            catch (Exception e)
+            catch
             {
                 _log.LogError($"Error updating permitted IP Address");
                 return false;

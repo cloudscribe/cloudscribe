@@ -84,7 +84,7 @@ namespace sourceDev.WebApp
                 var loggerFactory = host.Services.GetRequiredService<ILoggerFactory>();
                 ConfigureLogging(env, loggerFactory, host.Services, config);
 
-                host.Run();
+                await host.RunAsync();
 
                 return 0;
             }
@@ -142,7 +142,9 @@ namespace sourceDev.WebApp
                 default:
 
                     // this one is only needed if using cloudscribe Logging with EF as the logging storage
-                    await LoggingEFStartup.InitializeDatabaseAsync(services);
+
+                    // Note - temporarily disabled as part of net10 upgrade because it throws whilst Logger still at net8 - jk
+                    // await LoggingEFStartup.InitializeDatabaseAsync(services);
 
                     // this creates ensures the database is created and initial data
                     await CoreEFStartup.InitializeDatabaseAsync(services);

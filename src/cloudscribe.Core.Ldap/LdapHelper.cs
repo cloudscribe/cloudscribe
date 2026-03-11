@@ -319,7 +319,7 @@ namespace cloudscribe.Core.Ldap
                     // Console.WriteLine(entry.ToString());
                     if(entry.Dn == userDn) return entry;
                 }
-                catch (LdapException e)
+                catch (LdapException)
                 {
                     continue;
                 }
