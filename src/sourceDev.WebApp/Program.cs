@@ -71,7 +71,6 @@ namespace sourceDev.WebApp
                     try
                     {
                         await EnsureDataStorageIsReady(config, services);
-
                     }
                     catch (Exception ex)
                     {

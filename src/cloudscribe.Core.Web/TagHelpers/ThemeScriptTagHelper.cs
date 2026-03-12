@@ -6,7 +6,7 @@
 
 using cloudscribe.Core.Models;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Mvc.Infrastructure;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc.Routing;
 using Microsoft.AspNetCore.Razor.TagHelpers;
 using Microsoft.Extensions.Caching.Memory;
@@ -27,8 +27,8 @@ namespace cloudscribe.Core.Web.TagHelpers
             IWebHostEnvironment hostingEnvironment,
             IMemoryCache cache,
             IUrlHelperFactory urlHelperFactory,
-            IActionContextAccessor actionContextAccessor
-            ) : base(multiTenantOptionsAccessor, hostingEnvironment, cache, urlHelperFactory, actionContextAccessor)
+            IHttpContextAccessor httpContextAccessor
+            ) : base(multiTenantOptionsAccessor, hostingEnvironment, cache, urlHelperFactory, httpContextAccessor)
         {
             
         }

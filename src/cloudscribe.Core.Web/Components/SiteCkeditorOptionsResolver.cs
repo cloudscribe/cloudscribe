@@ -7,9 +7,10 @@
 
 using cloudscribe.Web.Common.Components;
 using cloudscribe.Web.Common.Models;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.AspNetCore.Mvc.Routing;
+using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.Options;
 using System.Threading.Tasks;
 
@@ -20,17 +21,17 @@ namespace cloudscribe.Core.Web.Components
         public SiteCkeditorOptionsResolver(
             IOptions<CkeditorOptions> ckOptionsAccessor,
             IUrlHelperFactory urlHelperFactory,
-            IActionContextAccessor actionContextAccesor
+            IHttpContextAccessor httpContextAccessor
             )
         {
             _urlHelperFactory = urlHelperFactory;
-            _actionContextAccesor = actionContextAccesor;
+            _httpContextAccessor = httpContextAccessor;
             _options = ckOptionsAccessor.Value;
         }
 
         private CkeditorOptions _options;
         private IUrlHelperFactory _urlHelperFactory;
-        private IActionContextAccessor _actionContextAccesor;
+        private IHttpContextAccessor _httpContextAccessor;
 
         public Task<CkeditorOptions> GetCkeditorOptions()
         {
@@ -40,7 +41,13 @@ namespace cloudscribe.Core.Web.Components
 
             var result = new CkeditorOptions();
 
-            var urlHelper = _urlHelperFactory.GetUrlHelper(_actionContextAccesor.ActionContext);
+            // Use IHttpContextAccessor instead of deprecated IActionContextAccessor
+            var actionContext = new ActionContext(
+                _httpContextAccessor.HttpContext,
+                _httpContextAccessor.HttpContext.GetRouteData(),
+                new Microsoft.AspNetCore.Mvc.Abstractions.ActionDescriptor());
+            
+            var urlHelper = _urlHelperFactory.GetUrlHelper(actionContext);
 
             result.CustomConfigPath = urlHelper.Content(_options.CustomConfigPath);
 

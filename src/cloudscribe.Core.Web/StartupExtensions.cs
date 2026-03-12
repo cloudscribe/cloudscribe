@@ -71,7 +71,7 @@ namespace Microsoft.Extensions.DependencyInjection
 
 
             services.TryAddSingleton<IHttpContextAccessor, HttpContextAccessor>();
-            services.TryAddSingleton<Microsoft.AspNetCore.Mvc.Infrastructure.IActionContextAccessor, Microsoft.AspNetCore.Mvc.Infrastructure.ActionContextAccessor>();
+            // IActionContextAccessor removed - deprecated in .NET 10. Use IHttpContextAccessor instead.
             services.AddOptions();
 
             services.Configure<MultiTenantOptions>(configuration.GetSection("MultiTenantOptions"));

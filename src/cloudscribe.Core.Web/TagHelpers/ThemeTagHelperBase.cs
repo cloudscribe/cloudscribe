@@ -7,9 +7,10 @@
 
 using cloudscribe.Core.Models;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Mvc.Infrastructure;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc.Routing;
 using Microsoft.AspNetCore.Razor.TagHelpers;
+using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.FileProviders;
 using Microsoft.Extensions.Options;
@@ -32,12 +33,12 @@ namespace cloudscribe.Core.Web.TagHelpers
             IWebHostEnvironment hostingEnvironment,
             IMemoryCache cache,
             IUrlHelperFactory urlHelperFactory,
-            IActionContextAccessor actionContextAccessor
+            IHttpContextAccessor httpContextAccessor
             )
         {
             options = multiTenantOptionsAccessor.Value;
             this.urlHelperFactory = urlHelperFactory;
-            this.actionContextAccesor = actionContextAccessor;
+            this.httpContextAccessor = httpContextAccessor;
             HostingEnvironment = hostingEnvironment;
             Cache = cache;
         }
@@ -45,7 +46,7 @@ namespace cloudscribe.Core.Web.TagHelpers
         private ThemeFileVersionProvider fileVersionProvider;
         protected MultiTenantOptions options;
         protected IUrlHelperFactory urlHelperFactory;
-        protected IActionContextAccessor actionContextAccesor;
+        protected IHttpContextAccessor httpContextAccessor;
         protected IWebHostEnvironment HostingEnvironment { get; }
         protected IMemoryCache Cache { get; }
 
@@ -120,7 +121,13 @@ namespace cloudscribe.Core.Web.TagHelpers
                 result = AppendVersionToUrl(result, inputUrl.Replace("~",""));
             }
 
-            var urlHelper = urlHelperFactory.GetUrlHelper(actionContextAccesor.ActionContext);
+            // Use IHttpContextAccessor instead of deprecated IActionContextAccessor
+            var actionContext = new Microsoft.AspNetCore.Mvc.ActionContext(
+                httpContextAccessor.HttpContext,
+                httpContextAccessor.HttpContext.GetRouteData(),
+                new Microsoft.AspNetCore.Mvc.Abstractions.ActionDescriptor());
+            
+            var urlHelper = urlHelperFactory.GetUrlHelper(actionContext);
             var url = urlHelper.Content(result);
 
             return url;
