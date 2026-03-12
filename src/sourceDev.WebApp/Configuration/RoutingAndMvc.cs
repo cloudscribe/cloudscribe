@@ -136,9 +136,7 @@ namespace Microsoft.AspNetCore.Builder
                         options.AddCloudscribeViewLocationFormats();
                         options.ViewLocationExpanders.Add(new cloudscribe.Core.Web.Components.SiteViewLocationExpander());
 
-                    })
-                    //.SetCompatibilityVersion(CompatibilityVersion.Version_2_2)
-                    ;
+                    });
 
             return services;
         }

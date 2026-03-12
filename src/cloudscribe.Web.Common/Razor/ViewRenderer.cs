@@ -11,6 +11,7 @@ using Microsoft.AspNetCore.Builder;
 //using Microsoft.AspNetCore.Builder.Internal;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Routing;
 using Microsoft.AspNetCore.Mvc.Abstractions;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
@@ -36,7 +37,6 @@ namespace cloudscribe.Web.Common.Razor
             IRazorViewEngine viewEngine,
             ITempDataProvider tempDataProvider,
             IHttpContextAccessor httpContextAccessor,
-            IActionContextAccessor actionContextAccesor,
             IServiceProvider serviceProvider,
             IViewRendererRouteProvider viewRendererRouteProvider
             )
@@ -44,7 +44,6 @@ namespace cloudscribe.Web.Common.Razor
             _viewEngine = viewEngine;
             _tempDataProvider = tempDataProvider;
             _httpContextAccessor = httpContextAccessor;
-            _actionContextAccesor = actionContextAccesor;
             _serviceProvider = serviceProvider;
             _viewRendererRouteProvider = viewRendererRouteProvider;
 
@@ -56,7 +55,6 @@ namespace cloudscribe.Web.Common.Razor
         private readonly ITempDataProvider _tempDataProvider;
         private readonly IServiceProvider _serviceProvider;
         private readonly IHttpContextAccessor _httpContextAccessor;
-        private IActionContextAccessor _actionContextAccesor;
         private readonly IViewRendererRouteProvider _viewRendererRouteProvider;
 
 
@@ -113,17 +111,15 @@ namespace cloudscribe.Web.Common.Razor
 
         private ActionContext GetActionContext()
         {
-            if(_actionContextAccesor.ActionContext != null)
+            // .NET 10: IActionContextAccessor is deprecated
+            // Try to use current HttpContext if available in a request context
+            if (_httpContextAccessor.HttpContext != null)
             {
-                return _actionContextAccesor.ActionContext;
+                var routeData = _httpContextAccessor.HttpContext.GetRouteData() ?? new RouteData();
+                return new ActionContext(_httpContextAccessor.HttpContext, routeData, new ActionDescriptor());
             }
 
-            // this breaks redirects in controller after execution
-            //if (_httpContextAccessor.HttpContext != null)
-            //{
-            //    return new ActionContext(_httpContextAccessor.HttpContext, new RouteData(), new ActionDescriptor());
-            //}
-
+            // Fallback: create a new DefaultHttpContext (e.g., for background email rendering)
             var httpContext = new DefaultHttpContext
             {
                 RequestServices = _serviceProvider

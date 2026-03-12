@@ -1,32 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using cloudscribe.Core.Models;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Logging;
-using System.IO;
-using Microsoft.AspNetCore.DataProtection;
-using System.Globalization;
-using Microsoft.Extensions.Localization;
-using Microsoft.AspNetCore.Localization;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Razor;
-using Microsoft.Extensions.Options;
-using sourceDev.WebApp.Configuration;
-//using cloudscribe.UserProperties.Services;
-//using cloudscribe.UserProperties.Models;
-using Microsoft.AspNetCore.Http;
-using System.Security.Claims;
-using Microsoft.AspNetCore.Authentication;
-using Microsoft.AspNetCore.Authentication.OAuth;
-using System.Net.Http;
-using System.Net.Http.Headers;
-using Newtonsoft.Json.Linq;
-using cloudscribe.Core.Models;
 using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
 
 namespace sourceDev.WebApp
 {
@@ -302,11 +283,7 @@ namespace sourceDev.WebApp
                 //    name: "default",
                 //    pattern: "{controller=Home}/{action=Index}/{id?}");
                 //endpoints.MapRazorPages();
-
-
-
             });
-
 
             //app.UseMvc(routes =>
             //{
@@ -317,8 +294,6 @@ namespace sourceDev.WebApp
             //    routes.UseCustomRoutes(useFolders);
 
             //});
-            
-
         }
         
     }
