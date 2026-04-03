@@ -266,7 +266,11 @@ namespace cloudscribe.Core.Ldap
                 // make this support ssl/tls
                 //http://stackoverflow.com/questions/386982/novell-ldap-c-novell-directory-ldap-has-anybody-made-it-work
                 conn.SecureSocketLayer = true;
+                
                 conn.UserDefinedServerCertValidationDelegate += LdapSSLCertificateValidator;
+
+                // Use modern SessionOptions.VerifyServerCertificate instead of deprecated UserDefinedServerCertValidationDelegate
+                // conn.SessionOptions.VerifyServerCertificate = new Novell.Directory.Ldap.VerifyServerCertificateDelegate(LdapSSLCertificateValidator);
             }
 
             conn.Connect(server, port);
@@ -319,7 +323,7 @@ namespace cloudscribe.Core.Ldap
                     // Console.WriteLine(entry.ToString());
                     if(entry.Dn == userDn) return entry;
                 }
-                catch (LdapException e)
+                catch (LdapException)
                 {
                     continue;
                 }

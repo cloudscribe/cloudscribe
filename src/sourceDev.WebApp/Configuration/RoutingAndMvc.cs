@@ -6,6 +6,8 @@ using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Localization;
+using Microsoft.Extensions.Options;
+using sourceDev.WebApp.Configuration;
 
 namespace Microsoft.AspNetCore.Builder
 {
@@ -119,17 +121,14 @@ namespace Microsoft.AspNetCore.Builder
             
 
            
+            // Fix for BuildServiceProvider() anti-pattern (FR-3):
+            // Previously, this code called services.BuildServiceProvider() inside AddMvc(options => {})
+            // which creates memory leaks and lifecycle issues.
+            // Now using IConfigureOptions<MvcOptions> for proper dependency injection.
+            // See ConfigureModelBindingLocalization.cs for implementation.
+            services.AddSingleton<IConfigureOptions<MvcOptions>, ConfigureModelBindingLocalization>();
 
-            services.AddMvc(options => {
-                //options.EnableEndpointRouting = false;
-
-                // https://stackoverflow.com/questions/45927545/asp-net-core-model-binding-error-messages-localization-in-asp-net-core-2-0
-
-                var F = services.BuildServiceProvider().GetService<IStringLocalizerFactory>();
-                var L = F.Create("ModelBindingMessages", null);
-                options.ModelBindingMessageProvider.SetAttemptedValueIsInvalidAccessor(
-                        (x, y) => L["The value supplied for {0} is invalid.", y]);
-            })
+            services.AddMvc()
                     .AddViewLocalization(LanguageViewLocationExpanderFormat.Suffix)
                     .AddDataAnnotationsLocalization()
                     .AddRazorOptions(options =>
@@ -137,9 +136,7 @@ namespace Microsoft.AspNetCore.Builder
                         options.AddCloudscribeViewLocationFormats();
                         options.ViewLocationExpanders.Add(new cloudscribe.Core.Web.Components.SiteViewLocationExpander());
 
-                    })
-                    //.SetCompatibilityVersion(CompatibilityVersion.Version_2_2)
-                    ;
+                    });
 
             return services;
         }

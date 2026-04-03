@@ -36,9 +36,9 @@ namespace Microsoft.Extensions.DependencyInjection
 
             services.AddTransient<IRedirectUriValidator, IdServerRedirectValidator>();
 
-            switch (storage)
+            switch (storage.ToLower())
             {
-                case "NoDb":
+                case "nodb":
                     services.AddIdentityServerConfiguredForCloudscribe()
                         .AddCloudscribeCoreNoDbIdentityServerStorage()
                         .AddCloudscribeIdentityServerIntegrationMvc()
@@ -50,13 +50,10 @@ namespace Microsoft.Extensions.DependencyInjection
                 case "ef":
                 default:
 
-                    switch (efProvider)
+                    switch (efProvider.ToLower())
                     {
                         case "sqlite":
-                            //var slConnection = config.GetConnectionString("SQLiteEntityFrameworkConnectionString");
-                            var dbName = config.GetConnectionString("SQLiteDbName");
-                            var dbPath = Path.Combine(environment.ContentRootPath, dbName);
-                            var slConnection = $"Data Source={dbPath}";
+                            var slConnection = config.GetConnectionString("SQLiteEntityFrameworkConnectionString");
 
                             services.AddIdentityServerConfiguredForCloudscribe()
                                 .AddCloudscribeCoreEFIdentityServerStorageSQLite(slConnection)
@@ -77,7 +74,7 @@ namespace Microsoft.Extensions.DependencyInjection
 
                             break;
 
-                        case "MySql":
+                        case "mysql":
                             var mysqlConnection = config.GetConnectionString("MySqlEntityFrameworkConnectionString");
                             
                             services.AddIdentityServerConfiguredForCloudscribe()
@@ -88,7 +85,7 @@ namespace Microsoft.Extensions.DependencyInjection
                            
                             break;
 
-                        case "MSSQL":
+                        case "mssql":
                         default:
                             var connectionString = config.GetConnectionString("EntityFrameworkConnectionString");
                             

@@ -1,5 +1,6 @@
-﻿using Microsoft.AspNetCore.Mvc.Infrastructure;
+﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc.Routing;
+using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.Options;
 using cloudscribe.Web.Common.Components;
 using cloudscribe.Web.Common.Models;
@@ -13,18 +14,18 @@ namespace cloudscribe.Core.Web.Components
         public SiteSummernoteOptionsResolver(
             IOptions<SummernoteOptions> summernoteOptionsAccessor,
             IUrlHelperFactory urlHelperFactory,
-            IActionContextAccessor actionContextAccesor
+            IHttpContextAccessor httpContextAccessor
             )
         {
             _urlHelperFactory = urlHelperFactory;
-            _actionContextAccesor = actionContextAccesor;
+            _httpContextAccessor = httpContextAccessor;
             _options = summernoteOptionsAccessor.Value;
             _options = summernoteOptionsAccessor.Value;
         }
 
         private SummernoteOptions _options;
         private IUrlHelperFactory _urlHelperFactory;
-        private IActionContextAccessor _actionContextAccesor;
+        private IHttpContextAccessor _httpContextAccessor;
 
         public Task<SummernoteOptions> GetSummernoteOptions()
         {
@@ -34,7 +35,13 @@ namespace cloudscribe.Core.Web.Components
 
             var result = new SummernoteOptions();
 
-            var urlHelper = _urlHelperFactory.GetUrlHelper(_actionContextAccesor.ActionContext);
+            // Use IHttpContextAccessor instead of deprecated IActionContextAccessor
+            var actionContext = new ActionContext(
+                _httpContextAccessor.HttpContext,
+                _httpContextAccessor.HttpContext.GetRouteData(),
+                new Microsoft.AspNetCore.Mvc.Abstractions.ActionDescriptor());
+            
+            var urlHelper = _urlHelperFactory.GetUrlHelper(actionContext);
 
             result.CustomConfigPath = urlHelper.Content(_options.CustomConfigPath);
             result.CustomToolbarConfigPath = urlHelper.Content(_options.CustomToolbarConfigPath);

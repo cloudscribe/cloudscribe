@@ -2,8 +2,8 @@
 
   <PropertyGroup>
     <Description>Entity Framework Core implementation of cloudscribe core commands and queries - typically you do not use this directly, use cloudscribe.Core.Storage.EFCore.MSSQL</Description>
-    <Version>8.7.0</Version>
-    <TargetFramework>net8.0</TargetFramework>
+    <Version>10.0.0</Version>
+    <TargetFramework>net10.0</TargetFramework>
     <Authors>Joe Audette</Authors>
     <PackageTags>cloudscribe;commands;queries;ef</PackageTags>
     <PackageIcon>icon.png</PackageIcon>
@@ -27,14 +27,14 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="cloudscribe.Pagination.Models" Version="8.7.0" />
+    <PackageReference Include="cloudscribe.Pagination.Models" Version="10.0.0" />
     
-    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="8.0.0" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.Relational" Version="8.0.0" />
-    <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="8.0.2" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="10.0.0" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Relational" Version="10.0.0" />
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="10.0.0" />
 
     <!-- pulling up transitive deps to resolve security vulns -->
-    <PackageReference Include="Microsoft.Extensions.Caching.Memory" Version="8.0.1" />
+    <PackageReference Include="Microsoft.Extensions.Caching.Memory" Version="10.0.0" />
     
   </ItemGroup>
 
