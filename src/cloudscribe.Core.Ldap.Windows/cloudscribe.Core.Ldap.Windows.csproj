@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <Description>ILdapHelper implementation for cloudscribe Core LDAP authentication support using windows compatibility shim</Description>
-    <Version>10.0.0</Version>
+    <Version>10.1.0</Version>
     <Authors>Joe Audette, Simon Annetts Idox Software</Authors>
     <TargetFramework>net10.0</TargetFramework>
     <PackageTags>cloudscribe;LDAP;Active Directory</PackageTags>

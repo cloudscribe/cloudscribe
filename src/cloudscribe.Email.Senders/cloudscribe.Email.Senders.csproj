@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <Description>Classes that provide a common interface for sending email with smtp or popular email apis including SendGrid, Mailgun, and ElasticEmail</Description>
-    <Version>10.0.0</Version>
+    <Version>10.1.0</Version>
     <Authors>Joe Audette</Authors>
     <TargetFramework>net10.0</TargetFramework>
     <PackageTags>smtp;email;SendGrid,Mailgun,ElasticEmail</PackageTags>
