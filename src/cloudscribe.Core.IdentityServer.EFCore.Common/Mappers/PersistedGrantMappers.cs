@@ -2,21 +2,12 @@
 // Licensed under the Apache License, Version 2.0. See LICENSE in the project root for license information.
 
 
-using AutoMapper;
 using IdentityServer4.Models;
 
 namespace cloudscribe.Core.IdentityServer.EFCore.Mappers
 {
     public static class PersistedGrantMappers
     {
-        static PersistedGrantMappers()
-        {
-            Mapper = new MapperConfiguration(cfg => cfg.AddProfile<PersistedGrantMapperProfile>())
-                .CreateMapper();
-        }
-
-        internal static IMapper Mapper { get; }
-
         /// <summary>
         /// Maps an entity to a model.
         /// </summary>
@@ -24,7 +15,18 @@ namespace cloudscribe.Core.IdentityServer.EFCore.Mappers
         /// <returns></returns>
         public static PersistedGrant ToModel(this Entities.PersistedGrant entity)
         {
-            return entity == null ? null : Mapper.Map<PersistedGrant>(entity);
+            if (entity == null) return null;
+
+            return new PersistedGrant
+            {
+                Key          = entity.Key,
+                Type         = entity.Type,
+                SubjectId    = entity.SubjectId,
+                ClientId     = entity.ClientId,
+                CreationTime = entity.CreationTime,
+                Expiration   = entity.Expiration,
+                Data         = entity.Data
+            };
         }
 
         /// <summary>
@@ -34,7 +36,18 @@ namespace cloudscribe.Core.IdentityServer.EFCore.Mappers
         /// <returns></returns>
         public static Entities.PersistedGrant ToEntity(this PersistedGrant model)
         {
-            return model == null ? null : Mapper.Map<Entities.PersistedGrant>(model);
+            if (model == null) return null;
+
+            return new Entities.PersistedGrant
+            {
+                Key          = model.Key,
+                Type         = model.Type,
+                SubjectId    = model.SubjectId,
+                ClientId     = model.ClientId,
+                CreationTime = model.CreationTime,
+                Expiration   = model.Expiration,
+                Data         = model.Data
+            };
         }
 
         /// <summary>
@@ -44,7 +57,13 @@ namespace cloudscribe.Core.IdentityServer.EFCore.Mappers
         /// <param name="entity">The entity.</param>
         public static void UpdateEntity(this PersistedGrant model, Entities.PersistedGrant entity)
         {
-            Mapper.Map(model, entity);
+            entity.Key          = model.Key;
+            entity.Type         = model.Type;
+            entity.SubjectId    = model.SubjectId;
+            entity.ClientId     = model.ClientId;
+            entity.CreationTime = model.CreationTime;
+            entity.Expiration   = model.Expiration;
+            entity.Data         = model.Data;
         }
     }
 }
